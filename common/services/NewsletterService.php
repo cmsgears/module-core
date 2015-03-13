@@ -1,11 +1,11 @@
 <?php
-namespace cmsgears\modules\core\common\services;
+namespace cmsgears\core\common\services;
 
 // Yii Imports
 use \Yii;
 
 // CMG Imports
-use cmsgears\modules\core\common\models\entities\Newsletter;
+use cmsgears\core\common\models\entities\Newsletter;
 
 class NewsletterService extends Service {
 
@@ -22,12 +22,12 @@ class NewsletterService extends Service {
 
 		$members 		= User::findNewsletterMembers();
 		$membersList	= [];
-		
+
 		foreach ( $members as $member ) {
-			
+
 			$membersList[ $member->getEmail() ]	= $member->getName();
 		}
-		
+
 		return $membersList; 
 	}
 }

@@ -1,13 +1,13 @@
 <?php
-namespace cmsgears\modules\core\common\models\entities;
+namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use yii\db\ActiveRecord;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\modules\core\common\utilities\MessageUtil;
+use cmsgears\core\common\utilities\MessageUtil;
 
 class LocaleMessage extends ActiveRecord {
 
@@ -81,10 +81,8 @@ class LocaleMessage extends ActiveRecord {
     public function validateKeyCreate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
-			
-			$message = self::findByLocaleKey( $this->getLocaleId(), $this->getKey() );
 
-            if( $message ) {
+            if( self::isExistByLocaleIdKey( $this->getLocaleId(), $this->getKey() ) ) {
 
 				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
             }
@@ -95,7 +93,7 @@ class LocaleMessage extends ActiveRecord {
 
         if( !$this->hasErrors() ) {
 
-			$existingMessage = self::findByLocaleKey( $this->getLocaleId(), $this->getKey() );
+			$existingMessage = self::findByLocaleIdKey( $this->getLocaleId(), $this->getKey() );
 
 			if( isset( $existingMessage ) && $existingMessage->getId() != $this->getId() && 
 				strcmp( $existingMessage->getKey(), $this->getKey() ) == 0 && $existingMessage->getLocaleId() == $this->getLocaleId() ) {
@@ -139,6 +137,13 @@ class LocaleMessage extends ActiveRecord {
 	public static function findByLocaleIdKey( $localeId, $key ) {
 
 		return self::find()->where( 'message_locale=:id', [ ':id' => $localeId ] )->andWhere( 'message_key=:id', [ ':id' => $key ] )->one();
+	}
+	
+	public static function isExistByLocaleIdKey( $localeId, $key ) {
+
+		$message = self::find()->where( 'message_locale=:id', [ ':id' => $localeId ] )->andWhere( 'message_key=:id', [ ':id' => $key ] )->one();
+		
+		return isset( $message );
 	}
 }
 

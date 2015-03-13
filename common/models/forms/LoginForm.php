@@ -1,20 +1,20 @@
 <?php
-namespace cmsgears\modules\core\common\models\forms;
+namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
 use \Yii;
 use yii\base\Model;
 
 // CMg Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\modules\core\common\models\entities\User;
-use cmsgears\modules\core\common\models\entities\Permission;
+use cmsgears\core\common\models\entities\User;
+use cmsgears\core\common\models\entities\Permission;
 
-use cmsgears\modules\core\common\services\UserService;
+use cmsgears\core\common\services\UserService;
 
-use cmsgears\modules\core\common\utilities\MessageUtil;
-use cmsgears\modules\core\common\utilities\DateUtil;
+use cmsgears\core\common\utilities\MessageUtil;
+use cmsgears\core\common\utilities\DateUtil;
 
 class LoginForm extends Model {
 

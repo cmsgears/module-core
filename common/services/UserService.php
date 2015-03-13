@@ -1,19 +1,19 @@
 <?php
-namespace cmsgears\modules\core\common\services;
+namespace cmsgears\core\common\services;
 
 // Yii Imports
 use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\modules\core\common\models\entities\CmgFile;
-use cmsgears\modules\core\common\models\entities\User;
-use cmsgears\modules\core\common\models\entities\Role;
+use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\core\common\models\entities\User;
+use cmsgears\core\common\models\entities\Role;
 
-use cmsgears\modules\core\common\utilities\DateUtil;
-use cmsgears\modules\core\common\utilities\MessageUtil;
+use cmsgears\core\common\utilities\DateUtil;
+use cmsgears\core\common\utilities\MessageUtil;
 
 class UserService extends Service {
 

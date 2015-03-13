@@ -1,35 +1,21 @@
 <?php
-namespace cmsgears\modules\core\common\components;
+namespace cmsgears\core\common\components;
 
+// Yii Imports
 use \Yii;
 use yii\base\Component;
 
 // CMG Imports
-use cmsgears\modules\core\common\validators\CoreValidator;
+use cmsgears\core\common\validators\CoreValidator;
 
 /**
- * The core component for CMSGears based sites. It must be initialised for app bootstrap using the name cmgCore. It defines the various mappings for modules, 
- * themes and widgets available for the app. It also define the post login and logout path to redirect user to a different path than the default one. Though
- * ajax based login need to specify the path within the javascript code. 
+ * The core component for CMSGears based sites. It must be initialised for app bootstrap using the name cmgCore. 
+ * It define the post login and logout path to redirect user to a different path than the default one. Though ajax 
+ * based login need to specify the path within the javascript code.
  * 
  * All the admin sites must set useRbac to true to get the admin functional since the admin controllers use it for almost every action. 
  */
 class Core extends Component {
-
-	/**
-	 * @var Modules map having name as key and root path as value for conditional usage.
-	 */
-    public $modulesMap 	= [];
-
-	/**
-	 * @var Themes map having name as key and root path as value for conditional usage.
-	 */
-    public $themesMap 	= [];
-
-	/**
-	 * @var Widgets map having name as key and root path as value for conditional usage.
-	 */
-    public $widgetsMap 	= [];
 
 	/**
 	 * @var Redirect path to be used for post login. It will be used by login action of Site Controller to redirect users after successful login.
@@ -50,7 +36,7 @@ class Core extends Component {
 	/**
 	 * @var The default filter class available for CMG RBAC system. A different filter can be used based on project needs.
 	 */
-	public $rbacFilterClass		= "cmsgears\modules\core\common\\filters\RbacFilter";
+	public $rbacFilterClass		= "cmsgears\core\common\\filters\RbacFilter"; 
 	
 	/**
 	 * @var The WYSIWYG editor widget class.
@@ -66,17 +52,21 @@ class Core extends Component {
 
 		// Initialise core validators
         CoreValidator::initValidators();
+		
+		// Set CMSGears alias
+		Yii::setAlias( "cmsgears", dirname( dirname( dirname( __DIR__ ) ) ) );
     }
 
 	/**
-	 * The hasModule method check whether a module is available for the app. We can use it for conditional cases. Ex: Sidebar can show the 
-	 * module links if it's available.
+	 * The hasModule method check whether a module is available for the app. We can use it for conditional cases.
 	 * @param string $name the module name
 	 * @return whether module name and root path are set in app config file 
 	 */
     public function hasModule( $name ) {
 
-        return isset( $this->modulesMap[$name] );
+		$module = \Yii::$app->getModule( $name );
+
+        return isset( $module );
     }
 
 	/**
@@ -87,7 +77,7 @@ class Core extends Component {
 	 */
     public function hasTheme( $name ) {
 
-        return isset( $this->themesMap[$name] );
+		//TODO - Add code to check availability of a theme from themes folder
     }
 
 	/**
@@ -97,7 +87,7 @@ class Core extends Component {
 	 */
     public function hasWidget( $name ) {
 
-        return isset( $this->widgetsMap[$name] );
+		//TODO - Add code to check availability of a widget from widgets folder
     }
 
 	/**
@@ -137,7 +127,7 @@ class Core extends Component {
 	}
 
 	/**
-	 * The method getEditorClass is used by the views to make a text area to edit html.
+	 * The method getEditorClass is used by the views to make a text area to edit html. It must be set 
 	 * @return the class name
 	 */	
 	public function getEditorClass() {

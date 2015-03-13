@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\common\utilities;
+namespace cmsgears\core\common\utilities;
 
    # ========================================================================#
    #

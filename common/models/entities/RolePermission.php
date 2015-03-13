@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\common\models\entities;
+namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use yii\db\ActiveRecord;
@@ -15,6 +15,11 @@ class RolePermission extends ActiveRecord {
 		return $this->role_id;
 	}
 
+	public function getRole() {
+
+		return $this->hasOne( Role::className(), [ 'role_id' => 'role_id' ] );
+	}
+
 	public function setRoleId( $roleId ) {
 
 		$this->role_id = $roleId;
@@ -23,6 +28,11 @@ class RolePermission extends ActiveRecord {
 	public function getPermissionId() {
 
 		return $this->permission_id;
+	}
+
+	public function getPermission() {
+
+		return $this->hasOne( Permission::className(), [ 'permission_id' => 'permission_id' ] );
 	}
 
 	public function setPermissionId( $permissionId ) {

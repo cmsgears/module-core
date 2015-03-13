@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\common\models\entities;
+namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use yii\db\ActiveRecord;
@@ -76,10 +76,8 @@ class Option extends ActiveRecord {
     public function validateKeyCreate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
-			
-			$option = self::findByCategoryIdKey( $this->getCategoryId(), $this->getKey() );
 
-            if( $option ) {
+            if( self::isExistByCategoryIdKey( $this->getCategoryId(), $this->getKey() ) ) {
 
 				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
             }
@@ -140,10 +138,17 @@ class Option extends ActiveRecord {
 
 		return self::find()->where( 'option_category=:id', [ ':id' => $categoryId ] )->andWhere( 'option_key=:key', [ ':key' => $key ] )->one();
 	}
-	
+
+	public static function isExistByCategoryIdKey( $categoryId, $key ) {
+
+		$option = self::find()->where( 'option_category=:id', [ ':id' => $categoryId ] )->andWhere( 'option_key=:key', [ ':key' => $key ] )->one();
+		
+		return isset( $option );
+	}
+
 	public static function findByCategoryNameKey( $categoryName, $key ) {
 
-		return self::find()->joinWith('category')->where( 'category_name=:name', [ ':name' => $categoryName ] )->andWhere( 'option_key=:key', [ ':key' => $key ] )->one();
+		return self::find()->joinWith( 'category' )->where( 'category_name=:name', [ ':name' => $categoryName ] )->andWhere( 'option_key=:key', [ ':key' => $key ] )->one();
 	}
 }
 

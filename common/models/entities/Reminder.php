@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\common\models\entities;
+namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use yii\db\ActiveRecord;
@@ -112,11 +112,6 @@ class Reminder extends ActiveRecord {
 	public static function findById( $id ) {
 
 		return self::find()->where( 'reminder_id=:id', [ ':id' => $id ] )->one();
-	}
-
-	public static function findByUserId( $userId ) {
-
-		return self::find()->where( 'reminder_user=:id', [ ':id' => $userId ] )->one();
 	}
 }
 

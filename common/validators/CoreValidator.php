@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\common\validators;
+namespace cmsgears\core\common\validators;
 
 // Yii Imports
 use yii\validators\Validator;
@@ -7,13 +7,13 @@ use yii\validators\Validator;
 class CoreValidator {
 
     public static $builtInValidators = [
-        'alphanumspace' => 'cmsgears\modules\core\common\validators\AlphaNumWithSpaceValidator',
-        'alphanumpun' => 'cmsgears\modules\core\common\validators\AlphaNumWithPunctuationValidator',
-        'alphanumhyphen' => 'cmsgears\modules\core\common\validators\AlphaNumWithHyphenValidator',
-        'alphanumhyphenspace' => 'cmsgears\modules\core\common\validators\AlphaNumWithHyphenSpaceValidator',
-        'alphanumdotu' => 'cmsgears\modules\core\common\validators\AlphaNumWithDotUnderscoreValidator',
-        'phone' => 'cmsgears\modules\core\common\validators\PhoneValidator',
-        'password' => 'cmsgears\modules\core\common\validators\PasswordValidator'
+        'alphanumspace' => 'cmsgears\core\common\validators\AlphaNumWithSpaceValidator',
+        'alphanumpun' => 'cmsgears\core\common\validators\AlphaNumWithPunctuationValidator',
+        'alphanumhyphen' => 'cmsgears\core\common\validators\AlphaNumWithHyphenValidator',
+        'alphanumhyphenspace' => 'cmsgears\core\common\validators\AlphaNumWithHyphenSpaceValidator',
+        'alphanumdotu' => 'cmsgears\core\common\validators\AlphaNumWithDotUnderscoreValidator',
+        'phone' => 'cmsgears\core\common\validators\PhoneValidator',
+        'password' => 'cmsgears\core\common\validators\PasswordValidator'
         
     ];
 

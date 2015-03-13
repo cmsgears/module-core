@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\common\models\entities;
+namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use yii\db\ActiveRecord;
@@ -13,6 +13,21 @@ class Notification extends ActiveRecord {
 	public function getId() {
 
 		return $this->notification_id;
+	}
+
+	public function getNotifierId() {
+
+		return $this->notification_from;
+	}
+
+	public function getNotifier() {
+
+		return $this->hasOne( User::className(), [ 'user_id' => 'notification_from' ] );
+	}
+
+	public function setNotifierId( $userId ) {
+
+		$this->notification_from = $userId;
 	}
 
 	public function getUserId() {
@@ -86,7 +101,7 @@ class Notification extends ActiveRecord {
 
         return [
             [ [ 'notification_user', 'notification_message', 'notification_type' ], 'required' ],
-			[ [ 'notification_flag' ], 'safe' ]
+			[ [ 'notification_from', 'notification_flag' ], 'safe' ]
         ];
     }
 
@@ -112,11 +127,6 @@ class Notification extends ActiveRecord {
 	public static function findById( $id ) {
 
 		return self::find()->where( 'notification_id=:id', [ ':id' => $id ] )->one();
-	}
-
-	public static function findByUserId( $userId ) {
-
-		return self::find()->where( 'notification_user=:id', [ ':id' => $userId ] )->one();
 	}
 }
 

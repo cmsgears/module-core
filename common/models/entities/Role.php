@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\common\models\entities;
+namespace cmsgears\core\common\models\entities;
 
 class Role extends NamedActiveRecord {
 
@@ -10,6 +10,36 @@ class Role extends NamedActiveRecord {
 	public function getId() {
 
 		return $this->role_id;
+	}
+
+	public function getCreatorId() {
+
+		return $this->role_created_by;
+	}
+
+	public function getCreator() {
+
+		return $this->hasOne( User::className(), [ 'user_id' => 'role_created_by' ] );
+	}
+
+	public function setCreatorId( $id ) {
+
+		$this->role_created_by = $id;
+	}
+
+	public function getModifierId() {
+
+		return $this->role_modified_by;
+	}
+
+	public function getModifier() {
+
+		return $this->hasOne( User::className(), [ 'user_id' => 'role_modified_by' ] );
+	}
+
+	public function setModifierId( $id ) {
+
+		$this->role_modified_by = $id;
 	}
 
 	public function getName() {
@@ -40,6 +70,36 @@ class Role extends NamedActiveRecord {
 	public function setHome( $home ) {
 
 		$this->role_home = $home;
+	}
+
+	public function getType() {
+
+		return $this->role_type;
+	}
+
+	public function setType( $type ) {
+
+		$this->role_home = $type;
+	}
+
+	public function getCreatedOn() {
+
+		return $this->role_created_on;
+	}
+
+	public function setCreatedOn( $date ) {
+
+		$this->role_created_on = $date;
+	}
+
+	public function getModifiedOn() {
+
+		return $this->role_modified_on;
+	}
+
+	public function setModifiedOn( $date ) {
+
+		$this->role_modified_on = $date;
 	}
 
 	public function getPermissions() {
@@ -84,11 +144,11 @@ class Role extends NamedActiveRecord {
 	public function rules() {
 
         return [
-            [ [ 'role_name' ], 'required' ],
+            [ [ 'role_name', 'role_created_by' ], 'required' ],
             [ 'role_name', 'alphanumhyphenspace' ],
             [ 'role_name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'role_name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-			[ [ 'role_desc', 'role_home' ], 'safe' ]
+			[ [ 'role_desc', 'role_home', 'role_modified_by' ], 'safe' ]
         ];
     }
 

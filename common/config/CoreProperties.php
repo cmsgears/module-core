@@ -1,19 +1,21 @@
 <?php
-namespace cmsgears\modules\core\common\config;
+namespace cmsgears\core\common\config;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreGlobal;
  
-use cmsgears\modules\core\common\models\entities\Config;
+use cmsgears\core\common\models\entities\Config;
 
-use cmsgears\modules\core\common\services\OptionService;
-use cmsgears\modules\core\common\services\ConfigService;
+use cmsgears\core\common\services\OptionService;
+use cmsgears\core\common\services\ConfigService;
 
 /**
  * The CoreProperties class provides methods to access the core properties defined in database.
  * It also define the accessor methods for pre-defined properties.
  */
 class CoreProperties {
+
+	//TODO Add code for caching the properties
 
 	const DIR_TEMP					= "temp/";
 	const DIR_AVATAR				= "avatar/";
@@ -61,7 +63,10 @@ class CoreProperties {
  	private function __construct() {
 
 	}
-
+	
+	/**
+	 * Return Singleton instance.
+	 */
 	public static function getInstance() {
 
 		if( !isset( self::$instance ) ) {
@@ -73,58 +78,91 @@ class CoreProperties {
 
 		return self::$instance;
 	}
-
+	
+	/*
+	 * Initialise the properties from database.
+	 */ 
 	public function init() {
 
 		$type				= OptionService::findByCategoryNameKey( CoreGlobal::CATEGORY_CONFIG_TYPE, CoreGlobal::CONFIG_CORE );
 		$this->properties	= ConfigService::getKeyValueMapByType( $type->getValue() );
 	}
 
+	/**
+	 * Returns Temp directory to store temporary files.
+	 */
+	public function getTempDir() {
+
+		return Yii::$app->fileManager->uploadDir . self::DIR_TEMP;
+	}
+
+	/**
+	 * Returns Avatar directory to store avatars.
+	 */
+	public function getAvatarDir() {
+
+		return Yii::$app->fileManager->uploadDir . self::DIR_AVATAR;
+	}
+	
+	/**
+	 * Return core property for the specified key.
+	 */
 	public function getProperty( $key ) {
 
 		return $this->properties[ key ];
 	}
 
+	/**
+	 * It can be used to identify whether database based Locale message is required.
+	 */
 	public function useLocaleMessage() {
 
 		return $this->properties[ self::PROP_LOCALE_MESSAGE ];
 	}
 
-	public function getTempDir() {
-		
-		return $this->properties[ self::PROP_UPLOAD_DIR ] . self::DIR_TEMP;
-	}
-
-	public function getAvatarDir() {
-		
-		return $this->properties[ self::PROP_UPLOAD_DIR ] . self::DIR_AVATAR;
-	}
-
+	/**
+	 * Returns Language to be used by Browser.
+	 */
 	public function getLanguage() {
 		
 		return $this->properties[ self::PROP_LANGUAGE ];
 	}
-	
+
+	/**
+	 * Returns Charset to be used by Browser.
+	 */
 	public function getCharset() {
 		
 		return $this->properties[ self::PROP_CHARSET ];
 	}
 
+	/**
+	 * Returns Site Title to be used for Browser title.
+	 */
 	public function getSiteTitle() {
 		
 		return $this->properties[ self::PROP_SITE_TITLE ]; 
 	}
 	
+	/**
+	 * Returns Site Name to be used at generic places like footer etc.
+	 */
 	public function getSiteName() {
 		
 		return $this->properties[ self::PROP_SITE_NAME ]; 
 	}
 
+	/** 
+	 * Returns the site URL for the app. It can be used by admin app to refer to web app.
+	 */
 	public function getSiteUrl() {
 		
 		return $this->properties[ self::PROP_SITE_URL ]; 
 	}
-	
+
+	/** 
+	 * Returns the root URL for the app
+	 */
 	public function getRootUrl() {
 		
 		return $this->properties[ self::PROP_SITE_URL ] . \Yii::getAlias( '@web' ) ; 

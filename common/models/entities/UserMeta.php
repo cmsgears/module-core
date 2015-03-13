@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\common\models\entities;
+namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use yii\db\ActiveRecord;
@@ -87,12 +87,14 @@ class UserMeta extends ActiveRecord {
 
 	public static function findByUserMetaKey( $user, $key ) {
 
-		return self::find()->where( [ 'user_meta_parent' => $user->getId() ] )->andWhere( 'user_meta_key=:key', [ ':key' => $key ] )->one();
+		return self::find()->where( [ 'user_meta_parent' => $user->getId() ] )
+							->andWhere( 'user_meta_key=:key', [ ':key' => $key ] )->one();
 	}
 
 	public static function findByUserIdMetaKey( $userId, $key ) {
 
-		return self::find()->where( [ 'user_meta_parent=:id', [ ':id' => $userId ] ] )->andWhere( 'user_meta_key=:key', [ ':key' => $key ] )->one();
+		return self::find()->where( [ 'user_meta_parent=:id', [ ':id' => $userId ] ] )
+							->andWhere( 'user_meta_key=:key', [ ':key' => $key ] )->one();
 	}
 
 	// Delete
@@ -109,12 +111,12 @@ class UserMeta extends ActiveRecord {
 
 	public static function deleteByUserMetaKey( $user, $key ) {
 
-		self::deleteAll()->where( [ 'user_meta_parent' => $user->getId() ] )->andWhere( 'user_meta_key=:key', [ ':key' => $key ] );
+		self::deleteAll( [ 'user_meta_parent' => $user->getId(), 'user_meta_key' => $key ] );
 	}
 
 	public static function deleteByUserIdMetaKey( $id, $key ) {
 
-		self::deleteAll()->where( [ 'user_meta_parent=:id', [ ':id' => $userId ] ] )->andWhere( 'user_meta_key=:key', [ ':key' => $key ] );
+		self::deleteAll( [ 'user_meta_parent' => $id, 'user_meta_key' => $key ] );
 	}
 }
 

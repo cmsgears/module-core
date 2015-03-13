@@ -1,11 +1,11 @@
 <?php
-namespace cmsgears\modules\core\common\models\entities;
+namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use yii\db\ActiveRecord;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreProperties;
+use cmsgears\core\common\config\CoreProperties;
 
 class CmgFile extends ActiveRecord {
 
@@ -201,11 +201,6 @@ class CmgFile extends ActiveRecord {
 	public static function findById( $id ) {
 
 		return self::find()->where( 'file_id=:id', [ ':id' => $id ] )->one();
-	}
-
-	public static function findByAuthor( $author ) {
-
-		return self::find()->where( 'file_author=:id', [ ':id' => $author->getId() ] )->one();
 	}
 }
 

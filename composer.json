@@ -1,5 +1,5 @@
 {
-	"name": "cmsgears/modules/core",
+	"name": "cmsgears/module-core",
 	"description": "The core module for all the projects based on CMSGears.",
 	"homepage": "http://www.cmsgears.org", 
 	"type": "package",

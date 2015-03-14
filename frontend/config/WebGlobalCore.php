@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\frontend\config;
+namespace cmsgears\core\frontend\config;
 
 class WebGlobalCore {
 
@@ -11,10 +11,12 @@ class WebGlobalCore {
 	const LAYOUT_PUBLIC			= "//layout-public";
 	const LAYOUT_PRIVATE		= "//layout-private";
 
-	// Pages
+	// Pages - Generic
 	const PAGE_INDEX			= "index";
 	const PAGE_CONTACT			= "contact";
 	const PAGE_FEEDBACK			= "feedback";
+
+	// Pages - User Account
 	const PAGE_REGISTER			= "register";
 	const PAGE_ACCOUNT_CONFIRM	= "confirm-account";
 	const PAGE_ACCOUNT_ACTIVATE	= "activate-account";

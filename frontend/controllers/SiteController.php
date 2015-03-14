@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\frontend\controllers;
+namespace cmsgears\core\frontend\controllers;
 
 // Yii Imports
 use Yii;
@@ -7,18 +7,18 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
-use cmsgears\modules\core\frontend\config\WebGlobalCore;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\frontend\config\WebGlobalCore;
 
-use cmsgears\modules\core\common\models\forms\LoginForm;
-use cmsgears\modules\core\frontend\models\forms\RegisterForm;
-use cmsgears\modules\core\frontend\models\forms\ResetPasswordForm;
-use cmsgears\modules\core\frontend\models\forms\ForgotPasswordForm;
+use cmsgears\core\common\models\forms\LoginForm;
+use cmsgears\core\frontend\models\forms\RegisterForm;
+use cmsgears\core\frontend\models\forms\ResetPasswordForm;
+use cmsgears\core\frontend\models\forms\ForgotPasswordForm;
 
-use cmsgears\modules\core\frontend\services\UserService;
-use cmsgears\modules\core\frontend\services\rbac\RoleService;
+use cmsgears\core\frontend\services\UserService;
+use cmsgears\core\frontend\services\rbac\RoleService;
 
-use cmsgears\modules\core\common\utilities\MessageUtil;
+use cmsgears\core\common\utilities\MessageUtil;
 
 class SiteController extends BaseController {
 
@@ -219,7 +219,7 @@ class SiteController extends BaseController {
 			if( isset( $user ) && UserService::forgotPassword( $user ) ) {
 
 				// Send Forgot Password Mail
-				Yii::$app->cmgCoreMailer->sendForgotPasswordMail( $this->getCoreProperties(), $this->getMailProperties(), $user );
+				Yii::$app->cmgCoreMailer->sendPasswordResetMail( $this->getCoreProperties(), $this->getMailProperties(), $user );
 
 				// Set Flash Message
 				Yii::$app->session->setFlash( "success", MessageUtil::getMessage( CoreGlobal::MESSAGE_FORGOT_PASSWORD ) );

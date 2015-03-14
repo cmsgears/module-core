@@ -1,18 +1,18 @@
 <?php
-namespace cmsgears\modules\core\admin;
+namespace cmsgears\core\admin;
 
 // Yii Imports
 use \Yii;
 
 class Module extends \yii\base\Module {
 
-    public $controllerNamespace = 'cmsgears\modules\core\admin\controllers';
+    public $controllerNamespace = 'cmsgears\core\admin\controllers';
 
     public function init() {
 
         parent::init();
 
-        $this->setViewPath( '@cmsgears/modules/core/admin/views' );
+        $this->setViewPath( '@cmsgears/module-core/admin/views' );
     }
 }
 

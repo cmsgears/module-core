@@ -1,15 +1,15 @@
 <?php
-namespace cmsgears\modules\core\admin\services;
+namespace cmsgears\core\admin\services;
 
 // Yii Imports
 use \Yii;
 
 // CMG Imports
-use cmsgears\modules\core\common\models\entities\CmgFile;
+use cmsgears\core\common\models\entities\CmgFile;
 
-use cmsgears\modules\core\common\utilities\DateUtil;
+use cmsgears\core\common\utilities\DateUtil;
 
-class FileService extends \cmsgears\modules\core\common\services\FileService {
+class FileService extends \cmsgears\core\common\services\FileService {
 
 	// Static Methods ----------------------------------------------
 

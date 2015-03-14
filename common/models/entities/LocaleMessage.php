@@ -35,6 +35,26 @@ class LocaleMessage extends ActiveRecord {
 		$this->message_locale = $localeId;
 	}
 
+	public function getType() {
+
+		return $this->message_type;
+	}
+
+	public function setType( $type ) {
+
+		$this->message_type = $type;
+	}
+
+	public function getParent() {
+
+		return $this->message_parent;
+	}
+
+	public function setParent( $parent ) {
+
+		$this->message_parent = $parent;
+	}
+
 	public function getKey() {
 
 		return $this->message_key;
@@ -60,7 +80,8 @@ class LocaleMessage extends ActiveRecord {
 	public function rules() {
 
         return [
-            [ [ 'message_locale', 'message_key', 'message_value' ], 'required' ],
+            [ [ 'message_locale', 'message_type', 'message_key', 'message_value' ], 'required' ],
+            [ 'message_parent', 'safe' ],
             [ 'message_key', 'alphanumhyphenspace' ],
             [ 'message_key', 'validateKeyCreate', 'on' => [ 'create' ] ],
             [ 'message_key', 'validateKeyUpdate', 'on' => [ 'update' ] ]

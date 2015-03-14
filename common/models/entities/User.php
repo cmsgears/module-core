@@ -366,7 +366,7 @@ class User extends ActiveRecord implements IdentityInterface {
 
             if( self::isExistByEmail( $this->user_email ) ) {
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_USER_EXIST ) );
+				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
             }
         }
     }
@@ -379,7 +379,7 @@ class User extends ActiveRecord implements IdentityInterface {
 
 			if( $this->getId() != $existingUser->getId() && strcmp( $existingUser->user_email, $this->user_email) == 0 ) {
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_USER_EXIST ) );
+				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
 			}
         }
     }

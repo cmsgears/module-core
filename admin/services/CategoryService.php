@@ -1,14 +1,14 @@
 <?php
-namespace cmsgears\modules\core\admin\services;
+namespace cmsgears\core\admin\services;
 
 // Yii Imports
 use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\modules\core\common\models\entities\Category;
+use cmsgears\core\common\models\entities\Category;
 
-class CategoryService extends \cmsgears\modules\core\common\services\CategoryService {
+class CategoryService extends \cmsgears\core\common\services\CategoryService {
 
 	// Static Methods ----------------------------------------------
 

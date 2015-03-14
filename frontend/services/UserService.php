@@ -1,16 +1,16 @@
 <?php
-namespace cmsgears\modules\core\frontend\services;
+namespace cmsgears\core\frontend\services;
 
 // Yii Imports
 use \Yii;
 
 // CMG Imports
-use cmsgears\modules\core\common\models\entities\User;
-use cmsgears\modules\core\common\models\entities\CmgFile;
+use cmsgears\core\common\models\entities\User;
+use cmsgears\core\common\models\entities\CmgFile;
 
-use cmsgears\modules\core\common\utilities\DateUtil;
+use cmsgears\core\common\utilities\DateUtil;
 
-class UserService extends cmsgears\modules\core\common\services\UserService {
+class UserService extends cmsgears\core\common\services\UserService {
 
 	// Static Methods ----------------------------------------------
 

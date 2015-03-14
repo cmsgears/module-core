@@ -18,6 +18,9 @@ class Permission extends NamedActiveRecord {
 	// Newsletter
 	const PERM_NEWSLETTER			= "newsletter";
 
+	// Category
+	const PERM_CATEGORY				= "category";
+
 	// Instance Methods --------------------------------------------
 
 	// db columns

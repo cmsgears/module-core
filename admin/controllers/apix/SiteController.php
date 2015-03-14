@@ -1,16 +1,17 @@
 <?php
-namespace cmsgears\modules\core\admin\controllers\apix;
+namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
 use \Yii;
-use yii\web\Controller;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 
 // CMG Imports
-use cmsgears\modules\core\common\utilities\AjaxUtil;
+use cmsgears\core\admin\controllers\BaseController;
 
-class SiteController extends Controller {
+use cmsgears\core\common\utilities\AjaxUtil;
+
+class SiteController extends BaseController {
 
 	// Constructor and Initialisation ------------------------------
 

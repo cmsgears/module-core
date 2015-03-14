@@ -1,17 +1,17 @@
 <?php
-namespace cmsgears\modules\core\admin\controllers;
+namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
 use \Yii;
 use yii\web\Controller;
 
 // CMG Imports
-use cmsgears\modules\core\admin\config\AdminGlobalCore;
+use cmsgears\core\admin\config\AdminGlobalCore;
 
-use cmsgears\modules\core\common\config\CoreProperties;
-use cmsgears\modules\core\common\config\MailProperties;
+use cmsgears\core\common\config\CoreProperties;
+use cmsgears\core\common\config\MailProperties;
 
-use cmsgears\modules\core\admin\config\AdminProperties;
+use cmsgears\core\admin\config\AdminProperties;
 
 class BaseController extends Controller {
 

@@ -1,24 +1,25 @@
 <?php
-namespace cmsgears\modules\core\admin\controllers\apix;
+namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
 use \Yii;
-use yii\web\Controller;
 use yii\filters\VerbFilter;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\modules\core\common\models\entities\Permission;
+use cmsgears\core\common\models\entities\Permission;
 
-use cmsgears\modules\core\admin\models\forms\RoleBinderForm;
+use cmsgears\core\admin\models\forms\RoleBinderForm;
 
-use cmsgears\modules\core\admin\services\PermissionService;
+use cmsgears\core\admin\services\PermissionService;
 
-use cmsgears\modules\core\common\utilities\MessageUtil;
-use cmsgears\modules\core\common\utilities\AjaxUtil;
+use cmsgears\core\admin\controllers\BaseController;
 
-class PermissionController extends Controller {
+use cmsgears\core\common\utilities\MessageUtil;
+use cmsgears\core\common\utilities\AjaxUtil;
+
+class PermissionController extends BaseController {
 
 	// Constructor and Initialisation ------------------------------
 

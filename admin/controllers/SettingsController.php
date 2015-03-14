@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\admin\controllers;
+namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
 use \Yii;
@@ -7,14 +7,14 @@ use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
-use cmsgears\modules\core\admin\config\AdminGlobalCore;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\admin\config\AdminGlobalCore;
 
-use cmsgears\modules\core\common\models\entities\Permission;
-use cmsgears\modules\core\common\models\entities\Config;
+use cmsgears\core\common\models\entities\Permission;
+use cmsgears\core\common\models\entities\Config;
 
-use cmsgears\modules\core\admin\services\OptionService;
-use cmsgears\modules\core\admin\services\ConfigService;
+use cmsgears\core\admin\services\OptionService;
+use cmsgears\core\admin\services\ConfigService;
 
 use common\utilities\MessageUtil;
 
@@ -77,4 +77,5 @@ class SettingsController extends BaseController {
 	    ]);
     }
 }
+
 ?>

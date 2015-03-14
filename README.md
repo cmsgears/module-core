@@ -17,5 +17,6 @@ Module Features
 9. Category options can be set for each category.
 10. Database based localisation can be used to store custom messages in various languages supperted by the project.
 11. Manage files using database.
+12. Manage themes, sidebars and widgets from admin control panel. We can install latest themes and widgets by browsing the marketplate - http://www.cmsgears.com. Though the modules must be installed manually by updating the composer.json file.
 
 Notes: The detailed description for each feature can be found at http://www.cmsgears.org/modules/core

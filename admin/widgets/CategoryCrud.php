@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\admin\widgets;
+namespace cmsgears\core\admin\widgets;
 
 // Yii Imports
 use \Yii;

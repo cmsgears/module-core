@@ -1,13 +1,13 @@
 <?php
-namespace cmsgears\modules\core\common\models\entities;
+namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use yii\db\ActiveRecord;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\modules\core\common\utilities\MessageUtil;
+use cmsgears\core\common\utilities\MessageUtil;
 
 class Province extends ActiveRecord {
 

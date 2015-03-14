@@ -1,12 +1,12 @@
 <?php
-namespace cmsgears\modules\core\admin\services;
+namespace cmsgears\core\admin\services;
 
 // Yii Imports
 use \Yii;
 
 // CMG Imports
 
-class OptionService extends \cmsgears\modules\core\common\services\OptionService {
+class OptionService extends \cmsgears\core\common\services\OptionService {
 
 }
 

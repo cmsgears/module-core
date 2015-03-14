@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\common\services;
+namespace cmsgears\core\common\services;
 
 // Yii Imports
 use \Yii;
@@ -7,7 +7,7 @@ use yii\db\Query;
 use yii\data\Pagination;
 use yii\helpers\HtmlPurifier;
 
-use cmsgears\modules\core\common\models\entities\CMGEntity;
+use cmsgears\core\common\models\entities\CMGEntity;
 
 class Service {
 
@@ -105,9 +105,9 @@ class Service {
 
 	// Array Lists
 	/**
-	 * The method findKeyValueArrayList returns an array of associative arrays having key and value as keys for the defined columns.
+	 * The method findKeyValueList returns an array of associative arrays having key and value as keys for the defined columns.
 	 */
-	public static function findKeyValueArrayList( $key, $value, $model, $conditions = [] ) {
+	public static function findKeyValueList( $key, $value, $model, $conditions = [] ) {
 
 		$query 		= new Query();
 
@@ -133,9 +133,9 @@ class Service {
 	}
 
 	/**
-	 * The method findIdNameArrayList returns an array of associative arrays having id and name as keys for the defined columns.
+	 * The method findIdNameList returns an array of associative arrays having id and name as keys for the defined columns.
 	 */
-	public static function findIdNameArrayList( $key, $value, $model, $conditions = [] ) {
+	public static function findIdNameList( $key, $value, $model, $conditions = [] ) {
 
 		$query 		= new Query();
 

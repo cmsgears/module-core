@@ -1,15 +1,15 @@
 <?php
-namespace cmsgears\modules\core\frontend\models\forms;
+namespace cmsgears\core\frontend\models\forms;
 
 // Yii Imports
 use \Yii;
 use yii\base\Model;
 
 // CMG Imports
-use cmsgears\modules\core\common\services\UserService;
+use cmsgears\core\common\services\UserService;
 
-use cmsgears\modules\core\common\config\CoreGlobal;
-use cmsgears\modules\core\common\utilities\MessageUtil;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\utilities\MessageUtil;
 
 class RegisterForm extends Model {
 
@@ -20,7 +20,7 @@ class RegisterForm extends Model {
 	public $email;
 	public $password;
 	public $password_repeat;
-	public $nickName;
+	public $username;
 	public $firstName;
 	public $lastName;
 	public $mobile;
@@ -34,13 +34,13 @@ class RegisterForm extends Model {
 	public function rules() {
 		
 		return  [
-			[ [ 'email', 'password', 'password_repeat', 'nickName', 'terms' ], 'required' ],
+			[ [ 'email', 'password', 'password_repeat', 'username', 'terms' ], 'required' ],
 			[ 'email', 'email' ],
 			[ 'password', 'compare' ],
 			[ 'password', 'password' ],
 			[ 'email', 'validateEmail' ],
-			[ 'nickName', 'validateUsername' ],
-			[ 'nickName', 'alphanumdotu' ],
+			[ 'username', 'validateUsername' ],
+			[ 'username', 'alphanumdotu' ],
 			[ 'mobile', 'phone' ],
 			[ [ 'firstName', 'lastName' ], 'alphanumspace' ],
 			[ 'terms', 'termsValidator' ],
@@ -54,7 +54,7 @@ class RegisterForm extends Model {
 			'email' => 'Email',
 			'password' => 'Password',
 			'password_repeat' => 'Confirm Password',
-			'nickName' => 'Username',
+			'username' => 'Username',
 			'firstName' => 'First Name',
 			'lastName' => 'Last Name',
 			'terms' => '',
@@ -68,7 +68,7 @@ class RegisterForm extends Model {
 
             if( UserService::isExistByEmail( $this->email ) ) {
             	
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_USER_EXIST ) );
+				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
             }
         }
     }
@@ -77,7 +77,7 @@ class RegisterForm extends Model {
 
         if( !$this->hasErrors() ) {
 
-            if( UserService::isExistByUsername( $this->nickName ) ) {
+            if( UserService::isExistByUsername( $this->username ) ) {
 
                 $this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
             }

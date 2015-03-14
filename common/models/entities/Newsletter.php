@@ -1,10 +1,10 @@
 <?php
-namespace cmsgears\modules\core\common\models\entities;
+namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use yii\db\ActiveRecord;
 
-use cmsgears\modules\core\common\utilities\MessageUtil;
+use cmsgears\core\common\utilities\MessageUtil;
 
 class Newsletter extends NamedActiveRecord {
 

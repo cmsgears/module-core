@@ -10,7 +10,9 @@ use cmsgears\modules\core\common\services\OptionService;
 use cmsgears\modules\core\common\services\ConfigService;
 
 class MailProperties {
-	
+
+	//TODO Add code for caching the properties
+
 	/**
 	 * The property to find whether SMTP is required.
 	 */
@@ -82,6 +84,9 @@ class MailProperties {
 
 	}
 
+	/**
+	 * Return Singleton instance.
+	 */
 	public static function getInstance() {
 
 		if( !isset( self::$instance ) ) {
@@ -94,72 +99,114 @@ class MailProperties {
 		return self::$instance;
 	}
 
+	/*
+	 * Initialise the properties from database.
+	 */ 
 	public function init() {
 
 		$type				= OptionService::findByCategoryNameKey( CoreGlobal::CATEGORY_CONFIG_TYPE, CoreGlobal::CONFIG_MAIL );
 		$this->properties	= ConfigService::getKeyValueMapByType( $type->getValue() );
 	}
 
+	/**
+	 * Return mail property for the specified key.
+	 */
 	public function getProperty( $key ) {
 		
 		return $this->properties[ key ];
 	}
 
+	/**
+	 * Returns whether smtp is required for sending mails.
+	 */
 	public function isSmtp() {
 
 		return $this->properties[ self::PROP_SMTP ];
 	}
 
+	/**
+	 * Returns smtp username for mails sent via smtp.
+	 */
 	public function getSmtpUsername() {
 
 		return $this->properties[ self::PROP_SMTP_USERNAME ];
 	}
 
+	/**
+	 * Returns smtp password for mails sent via smtp.
+	 */
 	public function getSmtpPassword() {
 
 		return $this->properties[ self::PROP_SMTP_PASSWORD ];
 	}
 
+	/**
+	 * Returns smtp host for mails sent via smtp.
+	 */
 	public function getSmtpHost() {
 
 		return $this->properties[ self::PROP_SMTP_HOST ];
 	}
-	
+
+	/**
+	 * Returns smtp port for mails sent via smtp.
+	 */
 	public function getSmtpPort() {
 
 		return $this->properties[ self::PROP_SMTP_PORT ];
 	}
 
+	/**
+	 * Returns whether debugging is required for mail api.
+	 */
 	public function isDebug() {
 
 		return $this->properties[ self::PROP_DEBUG ];
 	}
 
+	/**
+	 * Returns name for email sender.
+	 */
 	public function getSenderName() {
 
 		return $this->properties[ self::PROP_SENDER_NAME ];
 	}
-	
+
+	/**
+	 * Returns email for email sender.
+	 */
 	public function getSenderEmail() {
 
 		return $this->properties[ self::PROP_SENDER_EMAIL ];
 	}
-	
+
+	/**
+	 * Returns name for contact form.
+	 */
 	public function getContactName() {
 
 		return $this->properties[ self::PROP_CONTACT_NAME ];
 	}
-	
+
+	/**
+	 * Returns email for contact form.
+	 */
 	public function getContactEmail() {
 
 		return $this->properties[ self::PROP_CONTACT_EMAIL ];
 	}
-	
+
+	/**
+	 * Returns name for info.
+	 */
 	public function getInfoName() {
 
 		return $this->properties[ self::PROP_INFO_NAME ];
 	}
 	
+	/**
+	 * Returns email for info.
+	 */
 	public function getInfoEmail() {
 
 		return $this->properties[ self::PROP_INFO_EMAIL ];

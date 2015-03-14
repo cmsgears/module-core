@@ -203,14 +203,14 @@ class User extends ActiveRecord implements IdentityInterface {
 		$this->user_dob = $dob;
 	}
 
-	public function getMobile() {
+	public function getPhone() {
 
-		return $this->user_mobile;
+		return $this->user_phone;
 	}
 
-	public function setMobile( $mobile ) {
+	public function setPhone( $phone ) {
 
-		$this->user_mobile = $mobile;
+		$this->user_phone = $phone;
 	}
 
 	public function getNewsletter() {
@@ -339,7 +339,7 @@ class User extends ActiveRecord implements IdentityInterface {
             [ 'user_username', 'validateUsernameCreate', 'on' => [ 'create' ] ],
             [ 'user_username', 'validateUsernameUpdate', 'on' => [ 'update' ] ],
             [ [ 'user_firstname', 'user_lastname' ], 'alphanumspace' ],
-			[ [ 'user_firstname', 'user_lastname', 'user_gender', 'user_status', 'user_mobile', 'user_newsletter' ], 'safe' ]
+			[ [ 'user_firstname', 'user_lastname', 'user_gender', 'user_status', 'user_phone', 'user_newsletter' ], 'safe' ]
         ];
     }
 
@@ -353,7 +353,7 @@ class User extends ActiveRecord implements IdentityInterface {
 			'user_firstname' => 'First Name',
 			'user_lastname' => 'Last Name',
 			'user_gender' => 'Gender',
-			'user_mobile' => 'Mobile',
+			'user_phone' => 'Phone',
 			'user_newsletter' => 'Newsletter'
 		];
 	}
@@ -366,7 +366,7 @@ class User extends ActiveRecord implements IdentityInterface {
 
             if( self::isExistByEmail( $this->user_email ) ) {
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_USER_EXIST ) );
+				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
             }
         }
     }
@@ -379,7 +379,7 @@ class User extends ActiveRecord implements IdentityInterface {
 
 			if( $this->getId() != $existingUser->getId() && strcmp( $existingUser->user_email, $this->user_email) == 0 ) {
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_USER_EXIST ) );
+				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
 			}
         }
     }

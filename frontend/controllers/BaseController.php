@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\frontend\controllers;
+namespace cmsgears\core\frontend\controllers;
 
 // Yii Imports
 use Yii;
@@ -8,12 +8,12 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
-use cmsgears\modules\core\common\config\CoreProperties;
-use cmsgears\modules\core\common\config\MailProperties;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\frontend\config\WebGlobalCore;
 
-use cmsgears\modules\core\frontend\config\WebGlobalCore;
-use cmsgears\modules\core\frontend\config\WebProperties;
+use cmsgears\core\common\config\CoreProperties;
+use cmsgears\core\common\config\MailProperties;
+use cmsgears\core\frontend\config\WebProperties;
 
 class BaseController extends Controller {
 
@@ -21,8 +21,6 @@ class BaseController extends Controller {
 	private $mailProperties;
 
 	private $webProperties;
-
-	protected $page;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -33,9 +31,10 @@ class BaseController extends Controller {
 		$this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
 	}
 
+	// For development purpose only - Publish assets for each request
 	public function beforeAction( $action ) {
 
-	    if( defined('YII_DEBUG') && YII_DEBUG ) {
+	    if( defined( 'YII_DEBUG' ) && YII_DEBUG ) {
 
 	        Yii::$app->assetManager->forceCopy = true;
 	    }
@@ -73,11 +72,6 @@ class BaseController extends Controller {
 		}
 
 		return $this->webProperties;
-	}
-
-	public function getPage() {
-
-		return $this->page;
 	}
 }
 

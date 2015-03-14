@@ -1,13 +1,13 @@
 <?php
-namespace cmsgears\modules\core\admin\services;
+namespace cmsgears\core\admin\services;
 
 // Yii Imports
 use \Yii;
 
 // CMG Imports
-use cmsgears\modules\core\common\models\entities\Config;
+use cmsgears\core\common\models\entities\Config;
 
-class ConfigService extends \cmsgears\modules\core\common\services\ConfigService {
+class ConfigService extends \cmsgears\core\common\services\ConfigService {
 	
 	// Static Methods ----------------------------------------------
 

@@ -1,12 +1,12 @@
 <?php
-namespace cmsgears\modules\core\common\validators;
+namespace cmsgears\core\common\validators;
 
 // Yii Imports
 use yii\validators\Validator;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
-use cmsgears\modules\core\common\utilities\MessageUtil;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\utilities\MessageUtil;
 
 class PhoneValidator extends Validator {
 

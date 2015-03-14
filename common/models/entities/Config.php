@@ -1,12 +1,12 @@
 <?php
-namespace cmsgears\modules\core\common\models\entities;
+namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use yii\db\ActiveRecord;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
-use cmsgears\modules\core\common\utilities\MessageUtil;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\utilities\MessageUtil;
 
 class Config extends ActiveRecord {
 
@@ -99,9 +99,7 @@ class Config extends ActiveRecord {
 
         if( !$this->hasErrors() ) {
 
-			$config = self::findByTypeKey( $this->getType(), $this->getKey() );
-
-            if( $config ) {
+            if( self::isExistByTypeKey( $this->getType(), $this->getKey() ) ) {
 
 				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
             }
@@ -151,6 +149,13 @@ class Config extends ActiveRecord {
 	public static function findByTypeKey( $type, $key ) {
 
 		return self::find()->where( 'config_key=:key', [ ':key' => $key ] )->andWhere( 'config_type=:type', [ ':type' => $type ] )->one();
+	}
+
+	public static function isExistByTypeKey( $type, $key ) {
+
+		$config = self::findByTypeKey( $type, $key );
+		
+		return isset( $config );
 	}
 }
 

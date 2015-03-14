@@ -1,16 +1,16 @@
 <?php
-namespace cmsgears\modules\core\admin\controllers;
+namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
 use \Yii;
 use yii\filters\AccessControl;
 
 // CMG Imports
-use cmsgears\modules\core\admin\config\AdminGlobalCore;
+use cmsgears\core\admin\config\AdminGlobalCore;
 
-use cmsgears\modules\core\common\models\forms\LoginForm;
+use cmsgears\core\common\models\forms\LoginForm;
 
-use cmsgears\modules\core\common\utilities\AjaxUtil;
+use cmsgears\core\common\utilities\AjaxUtil;
 
 class SiteController extends BaseController {
 

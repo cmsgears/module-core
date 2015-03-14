@@ -1,15 +1,15 @@
 <?php
-namespace cmsgears\modules\core\admin\services;
+namespace cmsgears\core\admin\services;
 
 // Yii Imports
 use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\modules\core\common\models\entities\Role;
-use cmsgears\modules\core\common\models\entities\RolePermission;
+use cmsgears\core\common\models\entities\Role;
+use cmsgears\core\common\models\entities\RolePermission;
 
-class RoleService extends \cmsgears\modules\core\common\services\RoleService {
+class RoleService extends \cmsgears\core\common\services\RoleService {
 
 	// Static Methods ----------------------------------------------
 

@@ -1,14 +1,14 @@
 <?php
-namespace cmsgears\modules\core\common\services;
+namespace cmsgears\core\common\services;
 
 // Yii Imports
 use \Yii;
 
 // CMG Imports
-use cmsgears\modules\core\common\models\entities\CoreTables;
-use cmsgears\modules\core\common\models\entities\Permission;
+use cmsgears\core\common\models\entities\CoreTables;
+use cmsgears\core\common\models\entities\Permission;
 
-use cmsgears\modules\core\common\services\Service;
+use cmsgears\core\common\services\Service;
 
 class PermissionService extends Service {
 
@@ -21,9 +21,9 @@ class PermissionService extends Service {
 		return Permission::findOne( $id );
 	}
 
-	public static function getIdNameArrayList() {
+	public static function getIdNameList() {
 
-		return self::findIdNameArrayList( 'permission_id', 'permission_name', CoreTables::TABLE_PERMISSION );
+		return self::findIdNameList( 'permission_id', 'permission_name', CoreTables::TABLE_PERMISSION );
 	}
 }
 

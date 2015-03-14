@@ -1,13 +1,13 @@
 <?php
-namespace cmsgears\modules\core\common\models\entities;
+namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use yii\db\ActiveRecord;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\modules\core\common\utilities\MessageUtil;
+use cmsgears\core\common\utilities\MessageUtil;
 
 class Category extends ActiveRecord {
 
@@ -103,10 +103,8 @@ class Category extends ActiveRecord {
     public function validateNameCreate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
-			
-			$category = self::findByTypeName( $this->category_type, $this->category_name );
 
-            if( $category ) {
+            if( self::isExistByTypeName( $this->category_type, $this->category_name ) ) {
 
 				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
             }
@@ -154,6 +152,13 @@ class Category extends ActiveRecord {
 	public static function findByTypeName( $type, $name ) {
 
 		return self::find()->where( 'category_name=:name', [ ':name' => $name ] )->andWhere( 'category_type=:type', [ ':type' => $type ] )->one();
+	}
+	
+	public static function isExistByTypeName( $type, $name ) {
+
+		$category = self::findByTypeName( $type, $name );
+		
+		return isset( $category );
 	}
 }
 

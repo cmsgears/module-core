@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\frontend\controllers;
+namespace cmsgears\core\frontend\controllers;
 
 // Yii Imports
 use Yii;
@@ -7,12 +7,12 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
-use cmsgears\modules\core\frontend\config\WebGlobalCore;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\frontend\config\WebGlobalCore;
 
-use cmsgears\modules\core\frontend\services\UserService;
+use cmsgears\core\frontend\services\UserService;
 
-use cmsgears\modules\core\common\utilities\MessageUtil;
+use cmsgears\core\common\utilities\MessageUtil;
 
 class UserController extends BaseController {
 

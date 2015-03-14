@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\common\models\entities;
+namespace cmsgears\core\common\models\entities;
 
 class Permission extends NamedActiveRecord {
 
@@ -18,7 +18,7 @@ class Permission extends NamedActiveRecord {
 	// Newsletter
 	const PERM_NEWSLETTER			= "newsletter";
 
-	// Category Module
+	// Category
 	const PERM_CATEGORY				= "category";
 
 	// Instance Methods --------------------------------------------
@@ -28,6 +28,36 @@ class Permission extends NamedActiveRecord {
 	public function getId() {
 
 		return $this->permission_id;
+	}
+
+	public function getCreatorId() {
+
+		return $this->permission_created_by;
+	}
+
+	public function getCreator() {
+
+		return $this->hasOne( User::className(), [ 'user_id' => 'permission_created_by' ] );
+	}
+
+	public function setCreatorId( $id ) {
+
+		$this->permission_created_by = $id;
+	}
+
+	public function getModifierId() {
+
+		return $this->permission_modified_by;
+	}
+
+	public function getModifier() {
+
+		return $this->hasOne( User::className(), [ 'user_id' => 'permission_modified_by' ] );
+	}
+
+	public function setModifierId( $id ) {
+
+		$this->permission_modified_by = $id;
 	}
 
 	public function getName() {
@@ -48,6 +78,26 @@ class Permission extends NamedActiveRecord {
 	public function setDesc( $desc ) {
 
 		$this->permission_desc = $desc;
+	}
+
+	public function getCreatedOn() {
+
+		return $this->permission_created_on;
+	}
+
+	public function setCreatedOn( $date ) {
+
+		$this->permission_created_on = $date;
+	}
+
+	public function getModifiedOn() {
+
+		return $this->permission_modified_on;
+	}
+
+	public function setModifiedOn( $date ) {
+
+		$this->permission_modified_on = $date;
 	}
 
 	public function getRoles() {
@@ -79,11 +129,11 @@ class Permission extends NamedActiveRecord {
 	public function rules() {
 
         return [
-            [ [ 'permission_name' ], 'required' ],
+            [ [ 'permission_name', 'permission_created_by' ], 'required' ],
             [ 'permission_name', 'alphanumhyphenspace' ],
             [ 'permission_name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'permission_name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-			[ [ 'permission_desc' ], 'safe' ]
+			[ [ 'permission_desc', 'permission_modified_by' ], 'safe' ]
         ];
     }
 

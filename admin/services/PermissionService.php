@@ -1,15 +1,15 @@
 <?php
-namespace cmsgears\modules\core\admin\services;
+namespace cmsgears\core\admin\services;
 
 // Yii Imports
 use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\modules\core\common\models\entities\Permission;
-use cmsgears\modules\core\common\models\entities\RolePermission;
+use cmsgears\core\common\models\entities\Permission;
+use cmsgears\core\common\models\entities\RolePermission;
 
-class PermissionService extends \cmsgears\modules\core\common\services\PermissionService {
+class PermissionService extends \cmsgears\core\common\services\PermissionService {
 
 	// Static Methods ----------------------------------------------
 

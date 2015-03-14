@@ -1,24 +1,24 @@
 <?php
-namespace cmsgears\modules\core\admin\controllers\apix;
+namespace cmsgears\core\admin\controllers\apix;
 
 use \Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
-use cmsgears\modules\core\admin\config\AdminGlobalCore;
-use cmsgears\modules\cms\common\config\CMSGlobal;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\admin\config\AdminGlobalCore;
+use cmsgears\cms\common\config\CMSGlobal;
 
-use cmsgears\modules\core\common\models\entities\Config;
-use cmsgears\modules\core\common\models\entities\Permission;
+use cmsgears\core\common\models\entities\Config;
+use cmsgears\core\common\models\entities\Permission;
 
-use cmsgears\modules\core\admin\services\ConfigService;
+use cmsgears\core\admin\services\ConfigService;
 
-use cmsgears\modules\core\admin\controllers\BaseController;
+use cmsgears\core\admin\controllers\BaseController;
 
-use cmsgears\modules\core\common\utilities\MessageUtil;
-use cmsgears\modules\core\common\utilities\AjaxUtil;
+use cmsgears\core\common\utilities\MessageUtil;
+use cmsgears\core\common\utilities\AjaxUtil;
 
 class SettingsController extends BaseController {
 

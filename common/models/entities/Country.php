@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\common\models\entities;
+namespace cmsgears\core\common\models\entities;
 
 class Country extends NamedActiveRecord {
 	

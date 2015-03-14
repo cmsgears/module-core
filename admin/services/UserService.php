@@ -1,22 +1,22 @@
 <?php
-namespace cmsgears\modules\core\admin\services;
+namespace cmsgears\core\admin\services;
 
 // Yii Imports
 use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\modules\core\common\models\entities\User;
+use cmsgears\core\common\models\entities\User;
 
-use cmsgears\modules\core\common\utilities\DateUtil;
+use cmsgears\core\common\utilities\DateUtil;
 
-class UserService extends \cmsgears\modules\core\common\services\UserService {
+class UserService extends \cmsgears\core\common\services\UserService {
 
 	// Static Methods ----------------------------------------------
 
 	// Pagination -------
 
-	public static function getPagination( $newsletter = null ) {
+	public static function getPagination( $conditions = [] ) {
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -61,24 +61,12 @@ class UserService extends \cmsgears\modules\core\common\services\UserService {
 			$conditions['user_status'] = $status;
 		}
 
-		if( isset( $newsletter ) ) {
-
-			$conditions['user_newsletter'] = 1;
-		}
-
-		if( count( $conditions ) > 0 ) {
-
-			return self::getPaginationDetails( new User(), [ 'conditions' => $conditions, 'sort' => $sort, 'search-col' => 'user_firstname' ] );
-		}
-		else {
-
-			return self::getPaginationDetails( new User(), [ 'sort' => $sort, 'search-col' => 'user_firstname' ] );
-		}
+		return self::getPaginationDetails( new User(), [ 'conditions' => $conditions, 'sort' => $sort, 'search-col' => 'user_firstname' ] );
 	}
 
 	public static function getPaginationByNewsletter() {
 
-		return self::getPagination( 1 );
+		return self::getPagination( [ 'user_newsletter' => 1 ] );
 	}
 
 	// Create -----------

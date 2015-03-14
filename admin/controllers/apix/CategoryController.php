@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\admin\controllers\apix;
+namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
 use \Yii;
@@ -7,22 +7,20 @@ use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
-use cmsgears\modules\core\admin\config\AdminGlobalCore;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\admin\config\AdminGlobalCore;
 
-use cmsgears\modules\core\common\models\entities\Category;
-use cmsgears\modules\core\common\models\entities\Permission;
+use cmsgears\core\common\models\entities\Category;
+use cmsgears\core\common\models\entities\Permission;
 
-use cmsgears\modules\core\admin\services\CategoryService;
+use cmsgears\core\admin\services\CategoryService;
 
-use cmsgears\modules\core\admin\controllers\BaseController;
+use cmsgears\core\admin\controllers\BaseController;
 
-use cmsgears\modules\core\common\utilities\MessageUtil;
-use cmsgears\modules\core\common\utilities\AjaxUtil;
+use cmsgears\core\common\utilities\MessageUtil;
+use cmsgears\core\common\utilities\AjaxUtil;
 
 class CategoryController extends BaseController {
-
-	const URL_ALL	= 'category/all';
 
 	// Constructor and Initialisation ------------------------------
 

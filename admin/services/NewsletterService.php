@@ -1,16 +1,16 @@
 <?php
-namespace cmsgears\modules\core\admin\services;
+namespace cmsgears\core\admin\services;
 
 // Yii Imports
 use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\modules\core\common\models\entities\Newsletter;
+use cmsgears\core\common\models\entities\Newsletter;
 
-use cmsgears\modules\core\common\utilities\DateUtil;
+use cmsgears\core\common\utilities\DateUtil;
 
-class NewsletterService extends \cmsgears\modules\core\common\services\NewsletterService {
+class NewsletterService extends \cmsgears\core\common\services\NewsletterService {
 
 	// Static Methods ----------------------------------------------
 

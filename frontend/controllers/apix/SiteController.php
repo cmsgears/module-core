@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\frontend\controllers\apix;
+namespace cmsgears\core\frontend\controllers\apix;
 
 // Yii Imports
 use Yii;
@@ -7,19 +7,19 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\modules\core\frontend\models\forms\ContactForm;
-use cmsgears\modules\core\frontend\models\forms\RegisterForm;
-use cmsgears\modules\core\common\models\forms\LoginForm;
+use cmsgears\core\frontend\models\forms\ContactForm;
+use cmsgears\core\frontend\models\forms\RegisterForm;
+use cmsgears\core\common\models\forms\LoginForm;
 
-use cmsgears\modules\core\frontend\services\UserService;
-use cmsgears\modules\core\frontend\services\forms\FormService;
+use cmsgears\core\frontend\services\UserService;
+use cmsgears\core\frontend\services\forms\FormService;
 
-use cmsgears\modules\core\frontend\controllers\BaseController;
+use cmsgears\core\frontend\controllers\BaseController;
 
-use cmsgears\modules\core\common\utilities\MessageUtil;
-use cmsgears\modules\core\common\utilities\AjaxUtil;
+use cmsgears\core\common\utilities\MessageUtil;
+use cmsgears\core\common\utilities\AjaxUtil;
 
 class SiteController extends BaseController {
 
@@ -109,8 +109,6 @@ class SiteController extends BaseController {
         	AjaxUtil::generateFailure( MessageUtil::getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
     }
-
-	// SiteController
 
     public function actionLogout() {
 

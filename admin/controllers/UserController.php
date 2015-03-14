@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\admin\controllers;
+namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
 use \Yii;
@@ -7,26 +7,24 @@ use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
-use cmsgears\modules\core\admin\config\AdminGlobalCore;
+use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\admin\config\AdminGlobalCore;
 
-use cmsgears\modules\core\common\models\entities\CmgFile;
-use cmsgears\modules\core\common\models\entities\User;
-use cmsgears\modules\core\common\models\entities\Category;
-use cmsgears\modules\core\common\models\entities\Option;
-use cmsgears\modules\core\common\models\entities\Role;
-use cmsgears\modules\core\common\models\entities\Permission;
+use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\core\common\models\entities\User;
+use cmsgears\core\common\models\entities\Category;
+use cmsgears\core\common\models\entities\Option;
+use cmsgears\core\common\models\entities\Role;
+use cmsgears\core\common\models\entities\Permission;
 
-use cmsgears\modules\core\admin\services\CategoryService;
-use cmsgears\modules\core\admin\services\UserService;
-use cmsgears\modules\core\admin\services\RoleService;
+use cmsgears\core\admin\services\CategoryService;
+use cmsgears\core\admin\services\UserService;
+use cmsgears\core\admin\services\RoleService;
 
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
-use cmsgears\modules\core\common\utilities\MessageUtil;
+use cmsgears\core\common\utilities\CodeGenUtil;
+use cmsgears\core\common\utilities\MessageUtil;
 
 class UserController extends BaseController {
-
-	const URL_ALL 		= 'user/all';
 
 	// Constructor and Initialisation ------------------------------
 
@@ -69,7 +67,7 @@ class UserController extends BaseController {
 
 	public function actionIndex() {
 
-		$this->redirect( self::URL_ALL );
+		$this->redirect( "all" );
 	}
 
 	public function actionAll() {

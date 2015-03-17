@@ -1,80 +1,20 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
-
 use cmsgears\core\common\utilities\MessageUtil;
 
 class Newsletter extends NamedActiveRecord {
 
 	// Instance Methods --------------------------------------------
-	
-	// db columns
-	
-	public function getId() {
 
-		return $this->newsletter_id;
-	}
+	public function getCreator() {
 
-	public function getName() {
-		
-		return $this->newsletter_name;	
-	}
+		return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] );
+	}	
 
-	public function setName( $name ) {
-		
-		$this->newsletter_name = $name;
-	}
+	public function getModifier() {
 
-	public function getDesc() {
-		
-		return $this->newsletter_desc;	
-	}
-
-	public function setDesc( $desc ) {
-		
-		$this->newsletter_desc = $desc;
-	}
-
-	public function getContent() {
-		
-		return $this->newsletter_content;
-	}
-
-	public function setContent( $content ) {
-		
-		$this->newsletter_content = $content;	
-	}
-
-	public function getCreatedOn() {
-		
-		return $this->newsletter_created_on;
-	}
-	
-	public function setCreatedOn( $date ) {
-		
-		$this->newsletter_created_on = $date;
-	}
-
-	public function getUpdatedOn() {
-		
-		return $this->newsletter_updated_on;
-	}
-	
-	public function setUpdatedOn( $updatedOn ) {
-		
-		$this->newsletter_updated_on = $updatedOn;
-	}
-
-	public function getLastSentOn() {
-		
-		return $this->newsletter_last_sent_on;
-	}
-	
-	public function setLastSentOn( $updatedOn ) {
-		
-		$this->newsletter_last_sent_on = $updatedOn;
+		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] );
 	}
 
 	// yii\base\Model
@@ -82,20 +22,20 @@ class Newsletter extends NamedActiveRecord {
 	public function rules() {
 
         return [
-            [ [ 'newsletter_name' ], 'required' ],
-            [ 'newsletter_name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'newsletter_name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ 'newsletter_name', 'alphanumhyphenspace' ],
-            [ [ 'newsletter_id', 'newsletter_desc', 'newsletter_content' ], 'safe' ]
+            [ [ 'name' ], 'required' ],
+            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ 'name', 'alphanumhyphenspace' ],
+            [ [ 'id', 'description', 'content' ], 'safe' ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'newsletter_name' => 'Name',
-			'newsletter_desc' => 'Description',
-			'newsletter_content' => ''
+			'name' => 'Name',
+			'description' => 'Description',
+			'content' => ''
 		];
 	}
 
@@ -112,12 +52,12 @@ class Newsletter extends NamedActiveRecord {
 
 	public static function findById( $id ) {
 
-		return Newsletter::find()->where( 'newsletter_id=:id', [ ':id' => $id ] )->one();
+		return Newsletter::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 
 	public static function findByName( $name ) {
 
-		return Newsletter::find()->where( 'newsletter_name=:name', [ ':name' => $name ] )->one();
+		return Newsletter::find()->where( 'name=:name', [ ':name' => $name ] )->one();
 	}
 }
 

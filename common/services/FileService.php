@@ -15,7 +15,7 @@ class FileService extends Service {
 
 	public static function findById( $id ) {
 
-		return CmgFile::findOne( $id );
+		return CmgFile::findById( $id );
 	}
 }
 

@@ -30,7 +30,7 @@ class RoleService extends Service {
 
 	public static function getIdNameList() {
 
-		return self::findIdNameList( 'role_id', 'role_name', CoreTables::TABLE_ROLE );
+		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_ROLE );
 	}
 }
 

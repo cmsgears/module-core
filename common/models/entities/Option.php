@@ -1,53 +1,13 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
-
-class Option extends ActiveRecord {
+class Option extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
-	public function getId() {
-
-		return $this->option_id;
-	}
-
-	public function getCategoryId() {
-
-		return $this->option_category;
-	}
-
 	public function getCategory() {
 
-		return $this->hasOne( Category::className(), [ 'category_id' => 'option_category' ] );
-	}
-
-	public function setCategoryId( $categoryId ) {
-
-		$this->option_category = $categoryId;
-	}
-
-	public function getKey() {
-
-		return $this->option_key;
-	}
-
-	public function setKey( $key ) {
-
-		$this->option_key = $key;
-	}
-
-	public function getValue() {
-
-		return $this->option_value;
-	}
-
-	public function setValue( $value ) {
-
-		$this->option_value = $value;
+		return $this->hasOne( Category::className(), [ 'id' => 'categoryId' ] );
 	}
 
 	// yii\base\Model
@@ -55,19 +15,19 @@ class Option extends ActiveRecord {
 	public function rules() {
 
         return [
-            [ [ 'option_key', 'option_value' ], 'required' ],
-            [ 'option_key', 'alphanumhyphenspace' ],
-            [ 'option_key', 'validateKeyCreate', 'on' => [ 'create' ] ],
-            [ 'option_key', 'validateKeyUpdate', 'on' => [ 'update' ] ],
-			[ [ 'option_category' ], 'safe' ]
+            [ [ 'key', 'value' ], 'required' ],
+            [ 'key', 'alphanumhyphenspace' ],
+            [ 'key', 'validateKeyCreate', 'on' => [ 'create' ] ],
+            [ 'key', 'validateKeyUpdate', 'on' => [ 'update' ] ],
+			[ [ 'categoryId' ], 'safe' ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'option_key' => 'Key',
-			'option_value' => 'Value'
+			'key' => 'Key',
+			'value' => 'Value'
 		];
 	}
 
@@ -77,7 +37,7 @@ class Option extends ActiveRecord {
 
         if( !$this->hasErrors() ) {
 
-            if( self::isExistByCategoryIdKey( $this->getCategoryId(), $this->getKey() ) ) {
+            if( self::isExistByCategoryIdKey( $this->categoryId, $this->key ) ) {
 
 				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
             }
@@ -88,10 +48,10 @@ class Option extends ActiveRecord {
 
         if( !$this->hasErrors() ) {
 
-			$existingOption = self::findByCategoryIdKey( $this->getCategoryId(), $this->getKey() );
+			$existingOption = self::findByCategoryIdKey( $this->categoryId, $this->key );
 
-			if( isset( $existingOption ) && $existingOption->getId() != $this->getId() && 
-				strcmp( $existingOption->getKey(), $this->getKey() ) == 0 && $existingOption->getCategoryId() == $this->getCategoryId() ) {
+			if( isset( $existingOption ) && $existingOption->id != $this->id && 
+				strcmp( $existingOption->key, $this->key ) == 0 && $existingOption->categoryId == $this->categoryId ) {
 
 				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
 			}
@@ -111,44 +71,44 @@ class Option extends ActiveRecord {
 
 	public static function findById( $id ) {
 
-		return self::find()->where( 'option_id=:id', [ ':id' => $id ] )->one();
+		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 
 	public static function findByCategory( $category ) {
 
-		return self::find()->where( [ 'option_category' => $category->getId() ] )->one();
+		return self::find()->where( [ 'categoryId' => $category->id ] )->one();
 	}
 
 	public static function findByCategoryId( $categoryId ) {
 
-		return self::find()->where( 'option_category=:id', [ ':id' => $categoryId ] )->one();
+		return self::find()->where( 'categoryId=:id', [ ':id' => $categoryId ] )->one();
 	}
 
 	public static function findByKey( $key ) {
 
-		return self::find()->where( 'option_key=:key', [ ':key' => $key ] )->one();
+		return self::find()->where( 'key=:key', [ ':key' => $key ] )->one();
 	}
 
 	public static function findByCategoryKey( $category, $key ) {
 
-		return self::find()->where( [ 'option_category' => $category->getId() ] )->andWhere( 'option_key=:key', [ ':key' => $key ] )->one();
+		return self::find()->where( [ 'categoryId' => $category->id ] )->andWhere( 'key=:key', [ ':key' => $key ] )->one();
 	}
 
 	public static function findByCategoryIdKey( $categoryId, $key ) {
 
-		return self::find()->where( 'option_category=:id', [ ':id' => $categoryId ] )->andWhere( 'option_key=:key', [ ':key' => $key ] )->one();
+		return self::find()->where( 'categoryId=:id', [ ':id' => $categoryId ] )->andWhere( 'key=:key', [ ':key' => $key ] )->one();
 	}
 
 	public static function isExistByCategoryIdKey( $categoryId, $key ) {
 
-		$option = self::find()->where( 'option_category=:id', [ ':id' => $categoryId ] )->andWhere( 'option_key=:key', [ ':key' => $key ] )->one();
+		$option = self::find()->where( 'categoryId=:id', [ ':id' => $categoryId ] )->andWhere( 'key=:key', [ ':key' => $key ] )->one();
 		
 		return isset( $option );
 	}
 
 	public static function findByCategoryNameKey( $categoryName, $key ) {
 
-		return self::find()->joinWith( 'category' )->where( 'category_name=:name', [ ':name' => $categoryName ] )->andWhere( 'option_key=:key', [ ':key' => $key ] )->one();
+		return self::find()->joinWith( 'category' )->where( '`cmg_category`.`name`=:name', [ ':name' => $categoryName ] )->andWhere( '`key`=:key', [ ':key' => $key ] )->one();
 	}
 }
 

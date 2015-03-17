@@ -56,7 +56,7 @@ class Mailer extends Component {
 
 		// Send Mail
         $this->getMailer()->compose( self::MAIL_ACCOUNT_CREATE, [ 'coreProperties' => $coreProperties, 'user' => $user ] )
-            ->setTo( $user->getEmail() )
+            ->setTo( $user->email )
             ->setFrom( [ $fromEmail => $fromName ] )
             ->setSubject( "Registration | " . $coreProperties->getSiteName() )
             //->setTextBody( "heroor" )
@@ -73,7 +73,7 @@ class Mailer extends Component {
 
 		// Send Mail
         $this->getMailer()->compose( self::MAIL_ACCOUNT_ACTIVATE, [ 'coreProperties' => $coreProperties, 'user' => $user ] )
-            ->setTo( $user->getEmail() )
+            ->setTo( $user->email )
             ->setFrom( [ $fromEmail => $fromName ] )
             ->setSubject( "Registration | " . $coreProperties->getSiteName() )
             //->setTextBody( $contact->contact_message )
@@ -90,7 +90,7 @@ class Mailer extends Component {
 
 		// Send Mail
         $this->getMailer()->compose( self::MAIL_REG, [ 'coreProperties' => $coreProperties, 'user' => $user ] )
-            ->setTo( $user->getEmail() )
+            ->setTo( $user->email )
             ->setFrom( [ $fromEmail => $fromName ] )
             ->setSubject( "Registration | " . $coreProperties->getSiteName() )
             //->setTextBody( $contact->contact_message )
@@ -107,7 +107,7 @@ class Mailer extends Component {
 
 		// Send Mail
         $this->getMailer()->compose( self::MAIL_REG_CONFIRM, [ 'coreProperties' => $coreProperties, 'user' => $user ] )
-            ->setTo( $user->getEmail() )
+            ->setTo( $user->email )
             ->setFrom( [ $fromEmail => $fromName ] )
             ->setSubject( "Registration | " . $coreProperties->getSiteName() )
             //->setTextBody( $contact->contact_message )
@@ -124,7 +124,7 @@ class Mailer extends Component {
 
 		// Send Mail
         $this->getMailer()->compose( self::MAIL_PASSWORD_RESET, [ 'coreProperties' => $coreProperties, 'user' => $user ] )
-            ->setTo( $user->getEmail() )
+            ->setTo( $user->email )
             ->setFrom( [ $fromEmail => $fromName ] )
             ->setSubject( "Password Reset | " . $coreProperties->getSiteName() )
             //->setTextBody( "heroor" )

@@ -1,10 +1,11 @@
 <?php
+// Yii Imports
 use \Yii;
 use yii\helpers\Html; 
 use yii\widgets\LinkPager;
 
 // CMG Imports
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
+use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | All Users";
@@ -82,7 +83,7 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $page as $user ) {
 
-						$id = $user->user_id;
+						$id = $user->id;
 				?>
 					<tr>
 						<td> <input type='checkbox' /> </td>
@@ -92,24 +93,24 @@ if( !isset( $sortOrder ) ) {
 
 								if( isset( $avatar ) ) { 
 							?> 
-								<img class="avatar" src="<?=$uploadUrl?><?= $avatar->getThumb() ?>">
+								<img class="avatar" src="<?=$uploadUrl?><?= $avatar->thumb ?>">
 							<?php 
 								} else { 
 							?>
-								<img class="avatar" src="<?=Yii::getAlias('@web')?>/assets/images/avatar.png">
+								<img class="avatar" src="<?=Yii::getAlias('@images')?>/avatar.png">
 							<?php } ?>
 						</td>
-						<td><?= $user->getUsername() ?></td>
-						<td><?= $user->getFirstname() ?> <?= $user->getLastname() ?></td>
-						<td><?= $user->getEmail() ?></td>
-						<td><?= $roles[ $user->getRoleId() ] ?></td>
-						<td><?= $user->getStatusStr() ?></td>
-						<td><?= $user->getMobile() ?></td>
-						<td><?= $user->getRegOn() ?></td>
-						<td><?= $user->getLastLogin() ?></td>
+						<td><?= $user->username ?></td>
+						<td><?= $user->getName() ?></td>
+						<td><?= $user->email ?></td>
+						<td><?= $roles[ $user->roleId ] ?></td>
+						<td><?= $user->statusStr ?></td>
+						<td><?= $user->phone ?></td>
+						<td><?= $user->registeredOn ?></td>
+						<td><?= $user->lastLogin ?></td>
 						<td>
-							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcore/user/update/?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
-							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcore/user/delete/?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
+							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcore/user/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
+							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcore/user/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>
@@ -122,5 +123,5 @@ if( !isset( $sortOrder ) ) {
 	</div>
 </div>
 <script type="text/javascript">
-	initSidebar( "sidebar-newsletter", 2 );
+	initSidebar( "sidebar-newsletter", 1 );
 </script>

@@ -15,7 +15,7 @@ class NewsletterService extends Service {
 
 	public static function findById( $id ) {
 
-		return Newsletter::findOne( $id );
+		return Newsletter::findById( $id );
 	}
 
 	public static function getMembersEmailList() {

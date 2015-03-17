@@ -8,76 +8,14 @@ class Reminder extends ActiveRecord {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
-	public function getId() {
-
-		return $this->reminder_id;
-	}
-
-	public function getUserId() {
-
-		return $this->reminder_user;
-	}
-
 	public function getUser() {
 
-		return $this->hasOne( User::className(), [ 'user_id' => 'reminder_user' ] );
-	}
-
-	public function setUserId( $userId ) {
-
-		$this->reminder_user = $userId;
-	}
-
-	public function getMessage() {
-
-		return $this->reminder_message;
-	}
-
-	public function setMessage( $message ) {
-
-		$this->reminder_message = $message;
-	}
-
-	public function getTypeId() {
-
-		return $this->reminder_type;
-	}
-
-	public function getType() {
-
-		return $this->hasOne( Option::className(), [ 'option_id' => 'reminder_type' ] );
-	}
-
-	public function setTypeId( $type ) {
-
-		$this->reminder_type = $type;
-	}
-
-	public function getTime() {
-
-		return $this->reminder_time;
-	}
-
-	public function setTime( $time ) {
-
-		$this->reminder_time = $time;
-	}
-
-	public function getFlag() {
-
-		return $this->reminder_flag;
+		return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
 	}
 
 	public function getFlagStr() {
 
-		return $this->reminder_flag ? 'yes' : 'no';
-	}
-
-	public function setFlag( $flag ) {
-
-		$this->reminder_flag = $flag;
+		return $this->flag ? 'yes' : 'no';
 	}
 
 	// yii\base\Model
@@ -85,18 +23,18 @@ class Reminder extends ActiveRecord {
 	public function rules() {
 
         return [
-            [ [ 'reminder_user', 'reminder_message', 'reminder_type' ], 'required' ],
-			[ [ 'reminder_flag' ], 'safe' ]
+            [ [ 'userId', 'message', 'type' ], 'required' ],
+			[ [ 'flag' ], 'safe' ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'reminder_user' => 'User',
-			'reminder_message' => 'Message',
-			'reminder_type' => 'Type',
-			'reminder_flag' => 'Read'
+			'userId' => 'User',
+			'message' => 'Message',
+			'type' => 'Type',
+			'flag' => 'Read'
 		];
 	}
 
@@ -111,7 +49,7 @@ class Reminder extends ActiveRecord {
 
 	public static function findById( $id ) {
 
-		return self::find()->where( 'reminder_id=:id', [ ':id' => $id ] )->one();
+		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 }
 

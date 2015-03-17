@@ -19,12 +19,12 @@ use yii\widgets\ActiveForm;
 
 						foreach ( $settings as $key => $setting ) {
 
-							$id = $setting->getId();
+							$id = $setting->id;
 					?>
 					<li>
 						<form id="frm-settings-core-<?=$id?>" group="0" key="35" class="frm-settings" action="<?= Url::toRoute('/cmgcore/apix/settings/update?id='. $id ) ?>" method="POST" keepData="true">
-							<label> <?=  $setting->getKey() ?> </label>
-							<span> <input type="text" name="Config[config_value]" value="<?= strcmp( $setting->getFieldType(), "password" ) == 0 ? '' : $setting->getValue() ?>" > </span>
+							<label> <?=  $setting->key ?> </label>
+							<span> <input type="text" name="Config[config_value]" value="<?= strcmp( $setting->fieldType, "password" ) == 0 ? '' : $setting->value ?>" > </span>
 							<input type="submit" name="submit" value="Save" />
 							<div class="spinner"></div>
 							<div class="frm-message"></div>

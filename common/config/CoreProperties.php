@@ -85,7 +85,7 @@ class CoreProperties {
 	public function init() {
 
 		$type				= OptionService::findByCategoryNameKey( CoreGlobal::CATEGORY_CONFIG_TYPE, CoreGlobal::CONFIG_CORE );
-		$this->properties	= ConfigService::getKeyValueMapByType( $type->getValue() );
+		$this->properties	= ConfigService::getKeyValueMapByType( $type->value );
 	}
 
 	/**

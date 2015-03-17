@@ -1,19 +1,11 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\MessageUtil;
 
-abstract class NamedActiveRecord extends ActiveRecord {
-
-	// Abstract Methods --------------------------------------------
-
-	abstract protected function getId();
-    abstract protected function getName();
+abstract class NamedActiveRecord extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
@@ -21,7 +13,7 @@ abstract class NamedActiveRecord extends ActiveRecord {
 
         if( !$this->hasErrors() ) {
 
-			$entity = static::findByName( $this->getName() );
+			$entity = static::findByName( $this->name );
 
             if( $entity ) {
 
@@ -34,9 +26,9 @@ abstract class NamedActiveRecord extends ActiveRecord {
 
         if( !$this->hasErrors() ) {
 
-			$existingEntity = static::findByName( $this->getName() );
+			$existingEntity = static::findByName( $this->name );
 
-			if( isset( $existingEntity ) && $existingEntity->getId() != $this->getId() && strcmp( $existingEntity->getName(), $this->getName() ) == 0 ) {
+			if( isset( $existingEntity ) && $existingEntity->id != $this->id && strcmp( $existingEntity->name, $this->name ) == 0 ) {
 
 				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
 			}

@@ -1,95 +1,35 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\MessageUtil;
 
-class Config extends ActiveRecord {
+class Config extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
-
-	// db columns
-
-	public function getId() {
-
-		return $this->config_id;
-	}
-
-	public function getKey() {
-
-		return $this->config_key;
-	}
-
-	public function setKey( $key ) {
-
-		$this->config_key = $key;
-	}
-
-	public function getValue() {
-
-		return $this->config_value;
-	}
-
-	public function setValue( $value ) {
-
-		$this->config_value = $value;
-	}
-
-	public function getType() {
-
-		return $this->config_type;
-	}
-
-	public function setType( $type ) {
-
-		$this->config_type = $type;
-	}
-
-	public function getFieldType() {
-
-		return $this->config_field_type;
-	}
-
-	public function setFieldType( $type ) {
-
-		$this->config_field_type = $type;
-	}
-
-	public function getFieldData() {
-
-		return $this->config_field_data;
-	}
-
-	public function setFieldData( $type ) {
-
-		$this->config_field_data = $type;
-	}
 
 	// yii\base\Model
 
 	public function rules() {
 
         return [
-            [ [ 'config_key', 'config_value', 'config_type', 'config_field_type' ], 'required' ],
-            [ 'config_key', 'alphanumhyphenspace' ],
-            [ 'config_key', 'validateKeyCreate', 'on' => [ 'create' ] ],
-            [ 'config_key', 'validateKeyUpdate', 'on' => [ 'update' ] ],
-            [ 'config_field_data', 'safe' ]
+            [ [ 'key', 'value', 'type', 'fieldType' ], 'required' ],
+            [ 'key', 'alphanumhyphenspace' ],
+            [ 'key', 'validateKeyCreate', 'on' => [ 'create' ] ],
+            [ 'key', 'validateKeyUpdate', 'on' => [ 'update' ] ],
+            [ 'fieldMeta', 'safe' ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'config_key' => 'Key',
-			'config_value' => 'Value',
-			'config_type' => 'Type',
-			'config_field_type' => 'Field Type',
-			'config_field_data' => 'Field Data'
+			'key' => 'Key',
+			'value' => 'Value',
+			'type' => 'Type',
+			'fieldType' => 'Field Type',
+			'fieldMata' => 'Field Json Meta'
 		];
 	}
 
@@ -99,7 +39,7 @@ class Config extends ActiveRecord {
 
         if( !$this->hasErrors() ) {
 
-            if( self::isExistByTypeKey( $this->getType(), $this->getKey() ) ) {
+            if( self::isExistByTypeKey( $this->type, $this->key ) ) {
 
 				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
             }
@@ -110,10 +50,10 @@ class Config extends ActiveRecord {
 
         if( !$this->hasErrors() ) {
 
-			$existingConfig = self::findByTypeKey( $this->getType(), $this->getKey() );
+			$existingConfig = self::findByTypeKey( $this->type, $this->key );
 
-			if( isset( $existingConfig ) && $existingConfig->getId() != $this->getId() && 
-				strcmp( $existingConfig->getKey(), $this->getKey() ) == 0 && $existingConfig->getType() == $this->getType() ) {
+			if( isset( $existingConfig ) && $existingConfig->id != $this->id && 
+				strcmp( $existingConfig->key, $this->key ) == 0 && $existingConfig->type == $this->type ) {
 
 				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
 			}
@@ -133,28 +73,28 @@ class Config extends ActiveRecord {
 
 	public static function findById( $id ) {
 
-		return self::find()->where( 'config_id=:id', [ ':id' => $id ] )->one();
+		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 
 	public static function findByType( $type ) {
 
-		return self::find()->where( 'config_type=:type', [ ':type' => $type ] )->all();
+		return self::find()->where( 'type=:type', [ ':type' => $type ] )->all();
 	}
 
 	public static function findByKey( $key ) {
 
-		return self::find()->where( 'config_key=:key', [ ':key' => $key ] )->all();
+		return self::find()->where( 'key=:key', [ ':key' => $key ] )->all();
 	}
 
 	public static function findByTypeKey( $type, $key ) {
 
-		return self::find()->where( 'config_key=:key', [ ':key' => $key ] )->andWhere( 'config_type=:type', [ ':type' => $type ] )->one();
+		return self::find()->where( 'key=:key', [ ':key' => $key ] )->andWhere( 'type=:type', [ ':type' => $type ] )->one();
 	}
 
 	public static function isExistByTypeKey( $type, $key ) {
-
-		$config = self::findByTypeKey( $type, $key );
 		
+		$config = self::findByTypeKey( $type, $key );
+
 		return isset( $config );
 	}
 }

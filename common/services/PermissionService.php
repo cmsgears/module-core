@@ -23,7 +23,7 @@ class PermissionService extends Service {
 
 	public static function getIdNameList() {
 
-		return self::findIdNameList( 'permission_id', 'permission_name', CoreTables::TABLE_PERMISSION );
+		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_PERMISSION );
 	}
 }
 

@@ -18,6 +18,9 @@ class Permission extends NamedActiveRecord {
 	// Newsletter
 	const PERM_NEWSLETTER			= "newsletter";
 
+	// Slider
+	const PERM_SLIDER				= "slider";
+
 	// Category
 	const PERM_CATEGORY				= "category";
 
@@ -25,90 +28,25 @@ class Permission extends NamedActiveRecord {
 
 	// db columns
 
-	public function getId() {
-
-		return $this->permission_id;
-	}
-
-	public function getCreatorId() {
-
-		return $this->permission_created_by;
-	}
-
 	public function getCreator() {
 
-		return $this->hasOne( User::className(), [ 'user_id' => 'permission_created_by' ] );
-	}
-
-	public function setCreatorId( $id ) {
-
-		$this->permission_created_by = $id;
-	}
-
-	public function getModifierId() {
-
-		return $this->permission_modified_by;
+		return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] );
 	}
 
 	public function getModifier() {
 
-		return $this->hasOne( User::className(), [ 'user_id' => 'permission_modified_by' ] );
-	}
-
-	public function setModifierId( $id ) {
-
-		$this->permission_modified_by = $id;
-	}
-
-	public function getName() {
-
-		return $this->permission_name;
-	}
-
-	public function setName( $name ) {
-
-		$this->permission_name = $name;
-	}
-
-	public function getDesc() {
-
-		return $this->permission_desc;
-	}
-
-	public function setDesc( $desc ) {
-
-		$this->permission_desc = $desc;
-	}
-
-	public function getCreatedOn() {
-
-		return $this->permission_created_on;
-	}
-
-	public function setCreatedOn( $date ) {
-
-		$this->permission_created_on = $date;
-	}
-
-	public function getModifiedOn() {
-
-		return $this->permission_modified_on;
-	}
-
-	public function setModifiedOn( $date ) {
-
-		$this->permission_modified_on = $date;
+		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] );
 	}
 
 	public function getRoles() {
 	
-    	return $this->hasMany( Role::className(), [ 'role_id' => 'role_id' ] )
-					->viaTable( CoreTables::TABLE_ROLE_PERMISSION, [ 'permission_id' => 'permission_id' ] );
+    	return $this->hasMany( Role::className(), [ 'id' => 'roleId' ] )
+					->viaTable( CoreTables::TABLE_ROLE_PERMISSION, [ 'permissionId' => 'id' ] );
 	}
 
 	public function getRolesMap() {
 	
-    	return $this->hasMany( RolePermission::className(), [ 'permission_id' => 'permission_id' ] );
+    	return $this->hasMany( RolePermission::className(), [ 'permissionId' => 'id' ] );
 	}
 
 	public function getRolesIdList() {
@@ -118,7 +56,7 @@ class Permission extends NamedActiveRecord {
 		
 		foreach ( $roles as $role ) {
 			
-			array_push( $rolesList, $role->role_id );
+			array_push( $rolesList, $role->roleId );
 		}
 
 		return $rolesList;
@@ -129,19 +67,19 @@ class Permission extends NamedActiveRecord {
 	public function rules() {
 
         return [
-            [ [ 'permission_name', 'permission_created_by' ], 'required' ],
-            [ 'permission_name', 'alphanumhyphenspace' ],
-            [ 'permission_name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'permission_name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-			[ [ 'permission_desc', 'permission_modified_by' ], 'safe' ]
+            [ [ 'name' ], 'required' ],
+            [ 'name', 'alphanumhyphenspace' ],
+            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+			[ [ 'description', 'createdBy', 'modifiedBy' ], 'safe' ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'permission_name' => 'Permission',
-			'permission_desc' => 'Description'
+			'name' => 'Permission',
+			'description' => 'Description'
 		];
 	}
 
@@ -160,12 +98,12 @@ class Permission extends NamedActiveRecord {
 
 	public static function findById( $id ) {
 
-		return Permission::find()->where( 'permission_id=:id', [ ':id' => $id ] )->one();
+		return Permission::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 
 	public static function findByName( $name ) {
 
-		return Permission::find()->where( 'permission_name=:name', [ ':name' => $name ] )->one();
+		return Permission::find()->where( 'name=:name', [ ':name' => $name ] )->one();
 	}
 }
 

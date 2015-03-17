@@ -10,8 +10,8 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Add Permission';
 		<h2>Add Permission</h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-permission-create', 'options' => ['class' => 'frm-split' ] ] );?>
 
-    	<?= $form->field( $model, 'permission_name' ) ?>
-    	<?= $form->field( $model, 'permission_desc' )->textarea() ?>
+    	<?= $form->field( $model, 'name' ) ?>
+    	<?= $form->field( $model, 'description' )->textarea() ?>
 		<h4>Assign Roles</h4>
 		<?php foreach ( $roles as $role ) { ?>
 			<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$role['id']?>" /><?=$role['name']?></span>
@@ -24,5 +24,5 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Add Permission';
 	</div>
 </section>
 <script type="text/javascript">
-	initSidebar( "sidebar-identity", 4 );
+	initSidebar( "sidebar-identity", 2 );
 </script>

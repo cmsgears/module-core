@@ -26,7 +26,7 @@ class MessageUtil {
 		CoreGlobal::ERROR_AN_DOT_U => 'Please provide valid value having alphanumeric, dot(.) or underscore(_) characters.',
 		CoreGlobal::ERROR_PHONE => 'Please provide a valid number having numeric digits or hyphen(-), space or plus(+) at beginning.',
 		// Errors - Create/Register User
-		CoreGlobal::ERROR_USER_EXIST => 'A user already exist with the same Email.',
+		CoreGlobal::ERROR_EMAIL_EXIST => 'A user already exist with the same Email.',
 		CoreGlobal::ERROR_USERNAME_EXIST => 'A user already exist with the same username.',
 		CoreGlobal::ERROR_PASSWORD => 'Please provide a valid password having at least 5 characters.',
 		CoreGlobal::ERROR_TERMS => 'Please accept our terms and conditions to continue.',

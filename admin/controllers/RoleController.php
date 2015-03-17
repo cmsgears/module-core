@@ -86,22 +86,22 @@ class RoleController extends BaseController {
 
 		$model->setScenario( "create" );
 
-		if( $model->load( Yii::$app->request->post( "Role"), "" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post( "Role" ), "" )  && $model->validate() ) {
 
 			if( RoleService::create( $model ) ) {
 
 				$binder = new PermissionBinderForm();
 
-				$binder->roleId	= $model->getId();
+				$binder->roleId	= $model->id;
 				$binder->load( Yii::$app->request->post( "Binder" ), "" );
 
 				RoleService::bindPermissions( $binder );
 
-				return $this->redirect( [ self::URL_ALL ] );
+				return $this->redirect( "all" );
 			}
 		}
 
-		$permissions	= PermissionService::getIdNameArrayList();
+		$permissions	= PermissionService::getIdNameList();
 
     	return $this->render('create', [
     		'model' => $model,
@@ -125,7 +125,7 @@ class RoleController extends BaseController {
 	
 					$binder = new PermissionBinderForm();
 	
-					$binder->roleId	= $model->getId();
+					$binder->roleId	= $model->id;
 					$binder->load( Yii::$app->request->post( "Binder" ), "" );
 	
 					RoleService::bindPermissions( $binder );
@@ -134,7 +134,7 @@ class RoleController extends BaseController {
 				}
 			}
 	
-			$permissions	= PermissionService::getIdNameArrayList();
+			$permissions	= PermissionService::getIdNameList();
 	
 	    	return $this->render('update', [
 	    		'model' => $model,
@@ -158,11 +158,11 @@ class RoleController extends BaseController {
 	
 				if( RoleService::delete( $model ) ) {
 		
-					return $this->redirect( [ self::URL_ALL ] );
+					return $this->redirect( "all" );
 				}
 			}
 
-			$permissions	= PermissionService::getIdNameArrayList();
+			$permissions	= PermissionService::getIdNameList();
 
 	    	return $this->render('delete', [
 	    		'model' => $model,

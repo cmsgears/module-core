@@ -31,12 +31,12 @@ class CategoryService extends Service {
 
 	public static function getIdNameMapByType( $type ) {
 
-		return self::findIdNameArrayList( "category_id", "category_name", CoreTables::TABLE_CATEGORY, [ "category_type" => $type ] );
+		return self::findIdNameArrayList( "id", "name", CoreTables::TABLE_CATEGORY, [ "type" => $type ] );
 	}
 
 	public static function getOptionIdKeyMapById( $id ) {
 
-		return self::findKeyValueMap( "option_id", "option_key", CoreTables::TABLE_OPTION, [ "option_category" => $id ] );
+		return self::findKeyValueMap( "id", "key", CoreTables::TABLE_OPTION, [ "categoryId" => $id ] );
 	}
 
 	public static function getOptionIdKeyMapByName( $name, $prepend = null ) {
@@ -55,7 +55,7 @@ class CategoryService extends Service {
 
 		foreach ( $options as $option ) {
 			
-			$optionsMap[ $option->getId() ] = $option->getKey();
+			$optionsMap[ $option->id ] = $option->key;
 		}
 		
 		return $optionsMap;
@@ -69,7 +69,7 @@ class CategoryService extends Service {
 
 		foreach ( $options as $option ) {
 			
-			$optionsMap[ $option->getValue() ] = $option->getKey();
+			$optionsMap[ $option->value ] = $option->key;
 		}
 		
 		return $optionsMap;
@@ -83,7 +83,7 @@ class CategoryService extends Service {
 
 		foreach ( $options as $option ) {
 			
-			$optionsMap[ $option->getValue() ] = $option->getKey();
+			$optionsMap[ $option->value ] = $option->key;
 		}
 
 		return $optionsMap;

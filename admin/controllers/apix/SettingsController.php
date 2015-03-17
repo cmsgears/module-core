@@ -46,20 +46,23 @@ class SettingsController extends BaseController {
     }
 
 	public function actionUpdate( $id ) {
-			
-		$model		= new Config();
 
-		$model->setScenario( "update" );
+		$config	= Config::findById( $id );
 		
-		if( $model->load( Yii::$app->request->post(), "Config" ) ) {
-				
-			if( ConfigService::update( $model, $id ) ) {
-				
-				AjaxUtil::generateSuccess( MessageUtil::getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
-			}	
+		if( isset( $config ) ) {
+
+			$config->setScenario( "update" );
+
+			if( $config->load( Yii::$app->request->post(), "Config" ) ) {
+
+				if( ConfigService::update( $config ) ) {
+
+					AjaxUtil::generateSuccess( MessageUtil::getMessage( CoreGlobal::MESSAGE_REQUEST ), $config );
+				}	
+			}
+
+			AjaxUtil::generateFailure( MessageUtil::getMessage( CoreGlobal::ERROR_REQUEST ) );
 		}
-		
-		AjaxUtil::generateFailure( MessageUtil::getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
 }
 

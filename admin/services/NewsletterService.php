@@ -21,75 +21,83 @@ class NewsletterService extends \cmsgears\core\common\services\NewsletterService
 	    $sort = new Sort([
 	        'attributes' => [
 	            'name' => [
-	                'asc' => [ 'newsletter_name' => SORT_ASC ],
-	                'desc' => ['newsletter_name' => SORT_DESC ],
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'name',
 	            ],
 	            'cdate' => [
-	                'asc' => [ 'newsletter_created_on' => SORT_ASC ],
-	                'desc' => ['newsletter_created_on' => SORT_DESC ],
+	                'asc' => [ 'createdOn' => SORT_ASC ],
+	                'desc' => ['createdOn' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'cdate',
 	            ],
 	            'udate' => [
-	                'asc' => [ 'newsletter_updated_on' => SORT_ASC ],
-	                'desc' => ['newsletter_updated_on' => SORT_DESC ],
+	                'asc' => [ 'modifiedOn' => SORT_ASC ],
+	                'desc' => ['modifiedOn' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'udate',
 	            ],
 	            'ldate' => [
-	                'asc' => [ 'newsletter_last_sent_on' => SORT_ASC ],
-	                'desc' => ['newsletter_last_sent_on' => SORT_DESC ],
+	                'asc' => [ 'lastSentOn' => SORT_ASC ],
+	                'desc' => ['lastSentOn' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'udate',
 	            ]
 	        ]
 	    ]);
 
-		return self::getPaginationDetails( new Newsletter(), [ 'sort' => $sort, 'search-col' => 'newsletter_name' ] );
+		return self::getPaginationDetails( new Newsletter(), [ 'sort' => $sort, 'search-col' => 'name' ] );
 	}
 
 	// Create -----------
 
 	public static function create( $newsletter ) {
 		
-		$date	= DateUtil::getMysqlDate();
-		
-		$newsletter->setCreatedOn( $date );
-		$newsletter->setUpdatedOn( $date );
+		// Set Attributes
+		$date					= DateUtil::getMysqlDate();
+		$user					= Yii::$app->user->getIdentity();
+		$newsletter->createdBy	= $user->id;
+		$newsletter->createdOn	= $date;
 
+		// Create Newsletter
 		$newsletter->save();
 
-		return true;
+		// Return Newsletter
+		return $newsletter;
 	}
 
 	// Update -----------
 
 	public static function update( $newsletter ) {
 		
-		$date				= DateUtil::getMysqlDate();
-		$newsletterToUpdate	= self::findById( $newsletter->getId() );
+		// Find existing Newsletter
+		$nlToUpdate	= self::findById( $newsletter->id );
+		
+		// Copy and set Attributes	
+		$date					= DateUtil::getMysqlDate();
+		$user					= Yii::$app->user->getIdentity();
+		$nlToUpdate->modifiedBy	= $user->id;
+		$nlToUpdate->modifiedOn	= $date;
 
-		$newsletterToUpdate->setName( $newsletter->getName() );
-		$newsletterToUpdate->setDesc( $newsletter->getDesc() );
-		$newsletterToUpdate->setContent( $newsletter->getContent() );
-		$newsletterToUpdate->setUpdatedOn( $date );
-
-		$newsletterToUpdate->update();
-
-		return true;
+		$nlToUpdate->copyForUpdateFrom( $newsletter, [ 'name', 'description', 'content' ] );
+		
+		// Update Newsletter
+		$nlToUpdate->update();
+		
+		// Return updated Newsletter
+		return $nlToUpdate;
 	}
 
 	// Delete -----------
 
 	public static function delete( $newsletter ) {
 
-		$newsletterId		= $newsletter->getId();
-		$existingNewsletter	= self::findById( $newsletterId );
+		// Find existing Newsletter
+		$nlToDelete	= self::findById( $newsletter->id );
 
 		// Delete Newsletter
-		$existingNewsletter->delete();
+		$nlToDelete->delete();
 
 		return true;
 	}

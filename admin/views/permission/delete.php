@@ -10,8 +10,8 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Permission';
 	<h1>Delete Permission</h1>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-permission-delete', 'options' => ['class' => 'frm-split' ] ] );?>
 
-    	<?= $form->field( $model, 'permission_name' )->textInput( [ 'disabled'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'permission_desc' )->textarea( [ 'disabled'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'name' )->textInput( [ 'disabled'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'description' )->textarea( [ 'disabled'=>'true' ] ) ?>
 
 		<h4>Mapped Roles</h4>
 		<?php 
@@ -39,5 +39,5 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Permission';
 	</div>
 </section>
 <script type="text/javascript">
-	initSidebar( "sidebar-identity", -1 );
+	initSidebar( "sidebar-identity", 2 );
 </script>

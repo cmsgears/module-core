@@ -10,14 +10,14 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Create User";
 		<h2>Create User</h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-user-create', 'options' => ['class' => 'frm-split' ] ] );?>
 
-    	<?= $form->field( $model, 'user_email' ) ?>
-    	<?= $form->field( $model, 'user_username' ) ?>
-		<?= $form->field( $model, 'user_role' )->dropDownList( $roles )  ?>
-		<?= $form->field( $model, 'user_gender' )->dropDownList( $genders )  ?>
-		<?= $form->field( $model, 'user_firstname' ) ?>
-		<?= $form->field( $model, 'user_lastname' ) ?>
-		<?= $form->field( $model, 'user_mobile' ) ?>
-		<?= $form->field( $model, 'user_newsletter' )->checkbox() ?>
+    	<?= $form->field( $model, 'email' ) ?>
+    	<?= $form->field( $model, 'username' ) ?>
+		<?= $form->field( $model, 'roleId' )->dropDownList( $roles )  ?>
+		<?= $form->field( $model, 'gender' )->dropDownList( $genders )  ?>
+		<?= $form->field( $model, 'firstName' ) ?>
+		<?= $form->field( $model, 'lastName' ) ?>
+		<?= $form->field( $model, 'phone' ) ?>
+		<?= $form->field( $model, 'newsletter' )->checkbox() ?>
 		
 		<?=Html::a( "Cancel", [ '/cmgcore/user/all' ], ['class' => 'btn' ] );?>
 		<input type="submit" value="Create" />
@@ -26,5 +26,5 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Create User";
 	</div>	
 </section>
 <script type="text/javascript">
-	initSidebar( "sidebar-identity", 6 );
+	initSidebar( "sidebar-identity", 3 );
 </script>

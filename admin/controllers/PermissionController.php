@@ -29,8 +29,6 @@ class PermissionController extends BaseController {
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-
-		$this->layout	= AdminGlobalCore::LAYOUT_PRIVATE;
 	}
 
 	// Instance Methods --------------------------------------------
@@ -87,7 +85,7 @@ class PermissionController extends BaseController {
 
 		$pagination = PermissionService::getPagination();
 
-		$allRoles	= RoleService::getIdNameArrayList();
+		$allRoles	= RoleService::getIdNameList();
 
 	    return $this->render('matrix', [
 	         'page' => $pagination['page'],
@@ -109,16 +107,16 @@ class PermissionController extends BaseController {
 
 				$binder = new RoleBinderForm();
 
-				$binder->permissionId	= $model->getId();
+				$binder->permissionId	= $model->id;
 				$binder->load( Yii::$app->request->post( "Binder" ), "" );
 
 				PermissionService::bindRoles( $binder );
 
-				return $this->redirect( [ self::URL_ALL ] );
+				return $this->redirect( "all" );
 			}
 		}
 		
-		$roles	= RoleService::getIdNameArrayList();
+		$roles	= RoleService::getIdNameList();
 
     	return $this->render('create', [
     		'model' => $model,
@@ -142,7 +140,7 @@ class PermissionController extends BaseController {
 	
 					$binder = new RoleBinderForm();
 	
-					$binder->permissionId	= $model->getId();
+					$binder->permissionId	= $model->id;
 					$binder->load( Yii::$app->request->post( "Binder" ), "" );
 	
 					PermissionService::bindRoles( $binder );
@@ -151,7 +149,7 @@ class PermissionController extends BaseController {
 				}
 			}
 	
-			$roles	= RoleService::getIdNameArrayList();
+			$roles	= RoleService::getIdNameList();
 	
 	    	return $this->render('update', [
 	    		'model' => $model,
@@ -175,11 +173,11 @@ class PermissionController extends BaseController {
 
 				if( PermissionService::delete( $model ) ) {
 
-					return $this->redirect( [ self::URL_ALL ] );
+					return $this->redirect( "all" );
 				}
 			}
 
-			$roles	= RoleService::getIdNameArrayList();
+			$roles	= RoleService::getIdNameList();
 	
 	    	return $this->render('delete', [
 	    		'model' => $model,

@@ -1,98 +1,23 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
-
-class Notification extends ActiveRecord {
+class Notification extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
-	public function getId() {
-
-		return $this->notification_id;
-	}
-
-	public function getNotifierId() {
-
-		return $this->notification_from;
-	}
-
 	public function getNotifier() {
 
-		return $this->hasOne( User::className(), [ 'user_id' => 'notification_from' ] );
-	}
-
-	public function setNotifierId( $userId ) {
-
-		$this->notification_from = $userId;
-	}
-
-	public function getUserId() {
-
-		return $this->notification_user;
+		return $this->hasOne( User::className(), [ 'id' => 'notifierId' ] );
 	}
 
 	public function getUser() {
 
-		return $this->hasOne( User::className(), [ 'user_id' => 'notification_user' ] );
-	}
-
-	public function setUserId( $userId ) {
-
-		$this->notification_user = $userId;
-	}
-
-	public function getMessage() {
-
-		return $this->notification_message;
-	}
-
-	public function setMessage( $message ) {
-
-		$this->notification_message = $message;
-	}
-
-	public function getTypeId() {
-
-		return $this->notification_type;
-	}
-
-	public function getType() {
-
-		return $this->hasOne( Option::className(), [ 'option_id' => 'notification_type' ] );
-	}
-
-	public function setTypeId( $type ) {
-
-		$this->notification_type = $type;
-	}
-
-	public function getTime() {
-
-		return $this->notification_time;
-	}
-
-	public function setTime( $time ) {
-
-		$this->notification_time = $time;
-	}
-
-	public function getFlag() {
-
-		return $this->notification_flag;
+		return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
 	}
 
 	public function getFlagStr() {
 
-		return $this->notification_flag ? 'yes' : 'no';
-	}
-
-	public function setFlag( $flag ) {
-
-		$this->notification_flag = $flag;
+		return $this->reminder_flag ? 'yes' : 'no';
 	}
 
 	// yii\base\Model
@@ -100,18 +25,18 @@ class Notification extends ActiveRecord {
 	public function rules() {
 
         return [
-            [ [ 'notification_user', 'notification_message', 'notification_type' ], 'required' ],
-			[ [ 'notification_from', 'notification_flag' ], 'safe' ]
+            [ [ 'userId', 'message', 'type' ], 'required' ],
+			[ [ 'notifierId', 'flag' ], 'safe' ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'notification_user' => 'User',
-			'notification_message' => 'Message',
-			'notification_type' => 'Type',
-			'notification_flag' => 'Read'
+			'userId' => 'User',
+			'message' => 'Message',
+			'type' => 'Type',
+			'flag' => 'Read'
 		];
 	}
 
@@ -126,7 +51,7 @@ class Notification extends ActiveRecord {
 
 	public static function findById( $id ) {
 
-		return self::find()->where( 'notification_id=:id', [ ':id' => $id ] )->one();
+		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 }
 

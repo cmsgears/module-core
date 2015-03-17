@@ -1,10 +1,11 @@
 <?php
+// Yii Imports
 use \Yii;
 use yii\helpers\Html; 
 use yii\widgets\LinkPager;
 
 // CMG Imports
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
+use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Categories';

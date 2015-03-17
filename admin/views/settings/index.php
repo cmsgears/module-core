@@ -18,8 +18,8 @@ use yii\helpers\Url;
 				<ul class="view-setting-ul">
 					<?php foreach ( $settings as $key => $setting ) { ?>
 					<li>
-						<label><?= $setting->getKey() ?></label>
-						<span><?= strcmp( $setting->getFieldType(), "password" ) == 0 ? '' : $setting->getValue() ?></span>
+						<label><?= $setting->key ?></label>
+						<span><?= strcmp( $setting->fieldType, "password" ) == 0 ? '' : $setting->value ?></span>
 					</li>
 					<?php } ?>
 				</ul>

@@ -10,9 +10,9 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Role';
 		<h2>Delete Role</h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-role-delete', 'options' => ['class' => 'frm-split' ] ] );?>
 
-    	<?= $form->field( $model, 'role_name' )->textInput( [ 'disabled'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'role_desc' )->textarea( [ 'disabled'=>'true' ] ) ?>
-		<?= $form->field( $model, 'role_home' )->textInput( [ 'disabled'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'name' )->textInput( [ 'disabled'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'description' )->textarea( [ 'disabled'=>'true' ] ) ?>
+		<?= $form->field( $model, 'homeUrl' )->textInput( [ 'disabled'=>'true' ] ) ?>
 
 		<h4>Mapped Permissions</h4>
 		<?php 
@@ -41,5 +41,5 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Role';
 	</div>
 </section>
 <script type="text/javascript">
-	initSidebar( "sidebar-identity", -1 );
+	initSidebar( "sidebar-identity", 1 );
 </script>

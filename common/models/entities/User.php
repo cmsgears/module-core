@@ -1,18 +1,17 @@
 <?php
-namespace cmsgears\modules\core\common\models\entities;
+namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\db\ActiveRecord;
 use yii\db\Query;
 use yii\web\IdentityInterface;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\modules\core\common\utilities\MessageUtil;
+use cmsgears\core\common\utilities\MessageUtil;
 
-class User extends ActiveRecord implements IdentityInterface {
+class User extends CmgEntity implements IdentityInterface {
 
 	const STATUS_NEW		=  0;
 	const STATUS_ACTIVE		= 10;
@@ -33,66 +32,29 @@ class User extends ActiveRecord implements IdentityInterface {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
-	public function getRoleId() {
-		
-		return $this->user_role;
-	}
-
 	public function getRole() {
 
-		return $this->hasOne( Role::className(), [ 'role_id' => 'user_role' ] );
-	}
-
-	public function setRoleId( $roleId ) {
-
-		$this->user_role = $roleId;
-	}
-
-	public function getAvatarId() {
-
-		return $this->user_avatar;
+		return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
 	}
 
 	public function getAvatar() {
 
-		return $this->hasOne( CmgFile::className(), [ 'file_id' => 'user_avatar' ] );
-	}
-
-	public function setAvatarId( $avatarId ) {
-
-		$this->user_avatar = $avatarId;
-	}
-
-	public function getLocaleId() {
-		
-		return $this->user_locale;
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'avatarId' ] );
 	}
 
 	public function getLocale() {
 		
-		return $this->hasOne( Locale::className(), [ 'locale_id' => 'user_locale' ] );
-	}
-
-	public function setLocaleId( $localeId ) {
-		
-		$this->user_locale = $localeId;
-	}
-
-	public function getGenderId() {
-		
-		return $this->user_gender;
+		return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] );
 	}
 
 	public function getGender() {
 
-		return $this->hasOne( Option::className(), [ 'option_id' => 'user_gender' ] );
+		return $this->hasOne( Option::className(), [ 'id' => 'genderId' ] );
 	}
 
 	public function getGenderStr() {
 
-		$option = $this->hasOne( Option::className(), [ 'option_id' => 'user_gender' ] );
+		$option = $this->hasOne( Option::className(), [ 'id' => 'genderId' ] );
 		$gender	= false;
 
 		if( isset( $option ) ) {
@@ -103,205 +65,71 @@ class User extends ActiveRecord implements IdentityInterface {
 		return $gender;
 	}
 
-	public function setGenderId( $genderId ) {
-
-		$this->user_gender = $genderId;
-	}
-
-	public function getStatus() {
-
-		return $this->user_status;
-	}
-
 	public function getStatusStr() {
 
-		return self::$statusMap[ $this->user_status ];
-	}
-
-	public function setStatus( $status ) {
-
-		$this->user_status = $status;
+		return self::$statusMap[ $this->status ];
 	}
 
 	public function isNew() {
 		
-		return $this->user_status == self::STATUS_NEW;		
+		return $this->status == self::STATUS_NEW;		
 	}
 
 	public function isConfirmed() {
 		
-		return $this->user_status > User::STATUS_NEW;	
+		return $this->status > User::STATUS_NEW;	
 	}
 
 	public function isActive() {
 
-		return $this->user_status == self::STATUS_ACTIVE;
+		return $this->status == self::STATUS_ACTIVE;
 	}
 
 	public function isBlocked() {
 
-		return $this->user_status == self::STATUS_BLOCKED;	
-	}
-
-	public function getEmail() {
-
-		return $this->user_email;
-	}
-
-	public function setEmail( $email ) {
-
-		$this->user_email = $email;
-	}
-
-	public function getPassword() {
-
-		return $this->user_password_hash;
+		return $this->status == self::STATUS_BLOCKED;	
 	}
 
 	public function setPassword( $password ) {
 		
-		$this->user_password_hash = Yii::$app->security->generatePasswordHash( $password );
-	}
-
-	public function getUsername() {
-
-		return $this->user_username;
-	}
-
-	public function setUsername( $username ) {
-
-		$this->user_username = $username;
-	}
-
-	public function getFirstname() {
-
-		return $this->user_firstname;
-	}
-
-	public function setFirstname( $firstname ) {
-
-		$this->user_firstname = $firstname;
-	}
-
-	public function getLastname() {
-
-		return $this->user_lastname;
-	}
-
-	public function setLastname( $lastname ) {
-
-		$this->user_lastname = $lastname;
-	}
-
-	public function getDob() {
-
-		return $this->user_dob;
-	}
-
-	public function setDob( $dob ) {
-
-		$this->user_dob = $dob;
-	}
-
-	public function getPhone() {
-
-		return $this->user_phone;
-	}
-
-	public function setPhone( $phone ) {
-
-		$this->user_phone = $phone;
-	}
-
-	public function getNewsletter() {
-
-		return $this->user_newsletter;
+		$this->passwordHash = Yii::$app->security->generatePasswordHash( $password );
 	}
 
 	public function getNewsletterStr() {
 
-		return $this->user_newsletter ? "yes" : "no";
-	}
-
-	public function setNewsletter( $newsletter ) {
-
-		$this->user_newsletter = $newsletter;
-	}
-
-	public function getVerifyToken() {
-
-		return $this->user_verify_token;
+		return $this->newsletter ? "yes" : "no";
 	}
 
     public function generateVerifyToken() {
 
-        $this->user_verify_token = Yii::$app->getSecurity()->generateRandomString();
+        $this->verifyToken = Yii::$app->security->generateRandomString();
     }
 
     public function unsetVerifyToken() {
 
-        $this->user_verify_token = null;
+        $this->verifyToken = null;
     }
-
-	public function getResetToken() {
-
-		return $this->user_reset_token;
-	}
 
     public function generateResetToken() {
 
-        $this->user_reset_token = Yii::$app->getSecurity()->generateRandomString();
+        $this->resetToken = Yii::$app->security->generateRandomString();
     }
 
     public function unsetResetToken() {
 
-        $this->user_reset_token = null;
-    }
-
-	public function getRegOn() {
-
-		return $this->user_reg_on;
-	}
-
-	public function setRegOn( $regOn ) {
-
-		$this->user_reg_on = $regOn;
-	}
-
-	public function getLastLogin() {
-
-		return $this->user_last_login;
-	}
-
-	public function setLastLogin( $lastLogin ) {
-
-		$this->user_last_login = $lastLogin;
-	}
-
-    public function getAccessToken() {
-
-        return $this->user_access_token;
-    }
-
-    public function setAccessToken( $token ) {
-
-        $this->user_access_token = $token;
-    }
-
-    public function getAccessTokenDate() {
-
-        return $this->user_access_token_date;
-    }
-
-    public function setAccessTokenDate( $tokenDate ) {
-
-        $this->user_access_token_date = $tokenDate;
+        $this->resetToken = null;
     }
 
     public function generateAuthKey() {
 
-        $this->user_auth_key = Yii::$app->getSecurity()->generateRandomString();
+        $this->authKey = Yii::$app->security->generateRandomString();
     }
+
+	public function loadPermissions() {
+
+		$role				= $this->role;
+		$this->permissions	= $role->getPermissionsNameList();
+	}
 
 	public function isPermitted( $permission ) {
 
@@ -312,17 +140,17 @@ class User extends ActiveRecord implements IdentityInterface {
 
     public function getId() {
 
-        return $this->getPrimaryKey();
+        return $this->id;
     }
 
     public function getAuthKey() {
 
-        return $this->user_auth_key;
+        return $this->authKey;
     }
 
     public function validateAuthKey( $authKey ) {
 
-		return $this->getAuthKey() === $authKey;
+		return $this->authKey === $authKey;
     }
 
 	// yii\base\Model
@@ -330,31 +158,31 @@ class User extends ActiveRecord implements IdentityInterface {
 	public function rules() {
 
         return [
-            [ [ 'user_email' ], 'required' ],
-            [ [ 'user_role', 'user_username' ], 'required', 'on' => [ 'create', 'update' ] ],
-            [ 'user_email', 'email' ],
-            [ 'user_email', 'validateEmailCreate', 'on' => [ 'create' ] ],
-            [ 'user_email', 'validateEmailUpdate', 'on' => [ 'update' ] ],
-            [ 'user_username', 'alphanumdotu' ],
-            [ 'user_username', 'validateUsernameCreate', 'on' => [ 'create' ] ],
-            [ 'user_username', 'validateUsernameUpdate', 'on' => [ 'update' ] ],
-            [ [ 'user_firstname', 'user_lastname' ], 'alphanumspace' ],
-			[ [ 'user_firstname', 'user_lastname', 'user_gender', 'user_status', 'user_phone', 'user_newsletter' ], 'safe' ]
+            [ [ 'email' ], 'required' ],
+            [ [ 'roleId', 'username' ], 'required', 'on' => [ 'create', 'update' ] ],
+            [ 'email', 'email' ],
+            [ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],
+            [ 'email', 'validateEmailUpdate', 'on' => [ 'update' ] ],
+            [ 'username', 'alphanumdotu' ],
+            [ 'username', 'validateUsernameCreate', 'on' => [ 'create' ] ],
+            [ 'username', 'validateUsernameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'firstName', 'lastName' ], 'alphanumspace' ],
+			[ [ 'firstName', 'lastName', 'genderId', 'status', 'phone', 'newsletter' ], 'safe' ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'user_email' => 'Email',
-			'user_role' => 'Role',
-			'user_status' => 'Status',
-			'user_username' => 'Nickname',
-			'user_firstname' => 'First Name',
-			'user_lastname' => 'Last Name',
-			'user_gender' => 'Gender',
-			'user_phone' => 'Phone',
-			'user_newsletter' => 'Newsletter'
+			'email' => 'Email',
+			'roleId' => 'Role',
+			'status' => 'Status',
+			'username' => 'Username',
+			'firstName' => 'First Name',
+			'lastName' => 'Last Name',
+			'genderId' => 'Gender',
+			'phone' => 'Phone',
+			'newsletter' => 'Newsletter'
 		];
 	}
 	
@@ -364,7 +192,7 @@ class User extends ActiveRecord implements IdentityInterface {
 
         if( !$this->hasErrors() ) {
 
-            if( self::isExistByEmail( $this->user_email ) ) {
+            if( self::isExistByEmail( $this->email ) ) {
 
 				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
             }
@@ -375,9 +203,9 @@ class User extends ActiveRecord implements IdentityInterface {
 
         if( !$this->hasErrors() ) {
 
-			$existingUser = self::findByEmail( $this->user_email );
+			$existingUser = self::findByEmail( $this->email );
 
-			if( $this->getId() != $existingUser->getId() && strcmp( $existingUser->user_email, $this->user_email) == 0 ) {
+			if( $this->id != $existingUser->id && strcmp( $existingUser->email, $this->email) == 0 ) {
 
 				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
 			}
@@ -388,7 +216,7 @@ class User extends ActiveRecord implements IdentityInterface {
 
         if( !$this->hasErrors() ) {
 
-            if( self::isExistByUsername( $this->user_username ) ) {
+            if( self::isExistByUsername( $this->username ) ) {
 
                 $this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
             }
@@ -399,9 +227,9 @@ class User extends ActiveRecord implements IdentityInterface {
 
         if( !$this->hasErrors() ) {
 
-			$existingUser = self::findByUsername( $this->user_username );
+			$existingUser = self::findByUsername( $this->username );
 
-			if( $this->getId() != $existingUser->getId() && strcmp( $existingUser->user_username, $this->user_username ) == 0 ) {
+			if( $this->id != $existingUser->id && strcmp( $existingUser->username, $this->username ) == 0 ) {
 
 				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
 			}
@@ -411,21 +239,21 @@ class User extends ActiveRecord implements IdentityInterface {
 	// Validation for login purpose
 	public function validatePassword( $password ) {
 
-		return Yii::$app->getSecurity()->validatePassword( $password, $this->user_password_hash );
+		return Yii::$app->getSecurity()->validatePassword( $password, $this->passwordHash );
 	}
 
 	// Get a valid name
     public function getName() {
 
-		$name	= $this->user_firstname . " " . $this->user_lastname;
+		$name	= $this->firstName . " " . $this->lastName;
 
 		if( !isset( $name ) || strlen( $name ) <= 2 ) {
 
-			$name	= $this->user_username;
+			$name	= $this->username;
 
 			if( !isset( $name ) || strlen( $name ) <= 2 ) {
 
-				$name	= preg_split( "/@/", $this->user_email );
+				$name	= preg_split( "/@/", $this->email );
 				$name	= $name[0];
 			}
 		}
@@ -433,15 +261,15 @@ class User extends ActiveRecord implements IdentityInterface {
 		if( !isset( $name ) || strlen( $name ) <= 2 ) {
 
 			$attributes	= $this->attributes();
-			$name		= $attributes[ 'user_firstname' ] . " " . $attributes[ 'user_lastname' ];
+			$name		= $attributes[ 'firstName' ] . " " . $attributes[ 'lastName' ];
 
 			if( !isset( $name ) || strlen( $name ) <= 2 ) {
 
-				$name	= $attributes[ 'user_username' ];
+				$name	= $attributes[ 'username' ];
 
 				if( !isset( $name ) || strlen( $name ) <= 2 ) {
 
-					$name	= preg_split( "/@/", $attributes[ 'user_email' ] );
+					$name	= preg_split( "/@/", $attributes[ 'email' ] );
 					$name	= $name[0];
 				}
 			}
@@ -463,14 +291,13 @@ class User extends ActiveRecord implements IdentityInterface {
 	
     public static function findIdentity( $id ) {
 
-		// Find valid User		
-		$user 		= static::findOne( ['user_id' => $id] );
+		// Find valid User
+		$user 		= static::findOne( ['id' => $id ] );
 
 		// Load User Permissions
 		if( isset( $user ) && Yii::$app->cmgCore->isRbac() ) {
 
-			$role				= $user->role;
-			$user->permissions	= $role->getPermissionsNameList();
+			$user->loadPermissions();
 		}
 
         return $user;
@@ -485,29 +312,29 @@ class User extends ActiveRecord implements IdentityInterface {
 
 	public static function findById( $id ) {
 
-		return User::find()->where( 'user_id=:id', [ ':id' => $id ] )->one();
+		return User::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 
 	public static function findByEmail( $email ) {
 
-		return self::find()->where( 'user_email=:email', [ ':email' => $email ] )->one();
+		return self::find()->where( 'email=:email', [ ':email' => $email ] )->one();
 	}
 
 	public static function isExistByEmail( $email ) {
 
-		$user = self::find()->where( 'user_email=:email', [ ':email' => $email ] )->one();
+		$user = self::find()->where( 'email=:email', [ ':email' => $email ] )->one();
 
 		return isset( $user );
 	}
 
 	public static function findByUsername( $username ) {
 
-		return self::find()->where( 'user_username=:username', [ ':username' => $username ] )->one();		
+		return self::find()->where( 'username=:username', [ ':username' => $username ] )->one();		
 	}
 
 	public static function isExistByUsername( $username ) {
 
-		$user = self::find()->where( 'user_username=:username', [ ':username' => $username ] )->one();
+		$user = self::find()->where( 'username=:username', [ ':username' => $username ] )->one();
 
 		return isset( $user );
 	}

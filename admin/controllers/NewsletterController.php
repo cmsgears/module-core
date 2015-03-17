@@ -89,7 +89,7 @@ class NewsletterController extends BaseController {
 
 			if( NewsletterService::create( $model ) ) {
 
-				return $this->redirect( [ self::URL_ALL ] );
+				return $this->redirect( "all" );
 			}
 		}
 
@@ -137,7 +137,7 @@ class NewsletterController extends BaseController {
 	
 				if( NewsletterService::delete( $model ) ) {
 		
-					return $this->redirect( [ self::URL_ALL ] );
+					return $this->redirect( "all" );
 				}
 			}
 
@@ -153,7 +153,7 @@ class NewsletterController extends BaseController {
 	public function actionMembers() {
 
 		$pagination = UserService::getPaginationByNewsletter();
-		$roles 		= RoleService::getIdNameArrayList();
+		$roles 		= RoleService::getIdNameList();
 		$roles 		= CodeGenUtil::generateIdNameArray( $roles );
 
 	    return $this->render('members', [

@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\modules\core\admin\config;
+namespace cmsgears\core\admin\config;
 
 class AdminGlobalCore {
 

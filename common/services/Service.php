@@ -92,7 +92,7 @@ class Service {
 	 */
 	public static function findKeyValueMap( $key, $value, $model, $conditions = [] ) {
 
-		$arrayList  = self::findKeyValueArrayList( $key, $value, $model, $conditions );
+		$arrayList  = self::findKeyValueList( $key, $value, $model, $conditions );
 		$map		= [];
 		
 		foreach ( $arrayList as $item ) {
@@ -104,6 +104,43 @@ class Service {
 	}
 
 	// Array Lists
+
+	/**
+	 * The method findKeyList returns an array of list for given key
+	 */
+	public static function findKeyList( $key, $model, $conditions = [] ) {
+		
+		$query	= new Query();
+
+		// Build Query
+		if( isset( $conditions ) ) {
+
+			$query->select( $key.' as key' )
+			 	  ->from( $model )->where( $conditions );
+		}
+		else {
+
+			$query->select( $key.' as key' )
+				  ->from( $model );
+		}
+
+		// Create command
+		$command 	= $query->createCommand();
+
+		// Execute the command
+		$list 		= $command->queryAll();
+
+
+		$keyList	= array();
+
+		foreach ( $list as $item ) {
+			
+			$keyList[] = $item[ 'key' ]; 
+		}
+
+		return $keyList;
+	}
+
 	/**
 	 * The method findKeyValueList returns an array of associative arrays having key and value as keys for the defined columns.
 	 */

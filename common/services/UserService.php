@@ -28,7 +28,7 @@ class UserService extends Service {
 
 	public static function findById( $id ) {
 
-		return User::findOne( $id );
+		return User::findById( $id );
 	}
 
 	public static function findByEmail( $email ) {

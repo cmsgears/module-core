@@ -110,7 +110,7 @@ class LoginForm extends Model {
 
         if ( $this->validate() ) {
 
-			$this->user->setLastLogin( DateUtil::getMysqlDate() );
+			$this->user->lastLogin = DateUtil::getMysqlDate();
 			$this->user->save();
 
             return Yii::$app->user->login( $this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0 );

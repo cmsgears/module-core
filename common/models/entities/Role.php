@@ -5,112 +5,25 @@ class Role extends NamedActiveRecord {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
-	public function getId() {
-
-		return $this->role_id;
-	}
-
-	public function getCreatorId() {
-
-		return $this->role_created_by;
-	}
-
 	public function getCreator() {
 
-		return $this->hasOne( User::className(), [ 'user_id' => 'role_created_by' ] );
-	}
-
-	public function setCreatorId( $id ) {
-
-		$this->role_created_by = $id;
-	}
-
-	public function getModifierId() {
-
-		return $this->role_modified_by;
+		return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] );
 	}
 
 	public function getModifier() {
 
-		return $this->hasOne( User::className(), [ 'user_id' => 'role_modified_by' ] );
-	}
-
-	public function setModifierId( $id ) {
-
-		$this->role_modified_by = $id;
-	}
-
-	public function getName() {
-
-		return $this->role_name;
-	}
-
-	public function setName( $name ) {
-
-		$this->role_name = $name;
-	}
-
-	public function getDesc() {
-
-		return $this->role_desc;
-	}
-
-	public function setDesc( $desc ) {
-
-		$this->role_desc = $desc;
-	}
-
-	public function getHome() {
-
-		return $this->role_home;
-	}
-
-	public function setHome( $home ) {
-
-		$this->role_home = $home;
-	}
-
-	public function getType() {
-
-		return $this->role_type;
-	}
-
-	public function setType( $type ) {
-
-		$this->role_home = $type;
-	}
-
-	public function getCreatedOn() {
-
-		return $this->role_created_on;
-	}
-
-	public function setCreatedOn( $date ) {
-
-		$this->role_created_on = $date;
-	}
-
-	public function getModifiedOn() {
-
-		return $this->role_modified_on;
-	}
-
-	public function setModifiedOn( $date ) {
-
-		$this->role_modified_on = $date;
+		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] );
 	}
 
 	public function getPermissions() {
 
-    	return $this->hasMany( Permission::className(), [ 'permission_id' => 'permission_id' ] )
-					->viaTable( CoreTables::TABLE_ROLE_PERMISSION, [ 'role_id' => 'role_id' ] );
+    	return $this->hasMany( Permission::className(), [ 'id' => 'permissionId' ] )
+					->viaTable( CoreTables::TABLE_ROLE_PERMISSION, [ 'roleId' => 'id' ] );
 	}
 
 	public function getPermissionsMap() {
 
-    	return $this->hasMany( RolePermission::className(), [ 'role_id' => 'role_id' ] );
+    	return $this->hasMany( RolePermission::className(), [ 'roleId' => 'id' ] );
 	}
 
 	public function getPermissionsIdList() {
@@ -120,7 +33,7 @@ class Role extends NamedActiveRecord {
 
 		foreach ( $permissions as $permission ) {
 
-			array_push( $permissionsList, $permission->permission_id );
+			array_push( $permissionsList, $permission->permissionId );
 		}
 
 		return $permissionsList;
@@ -133,7 +46,7 @@ class Role extends NamedActiveRecord {
 
 		foreach ( $permissions as $permission ) {
 
-			array_push( $permissionsList, $permission->getName() );
+			array_push( $permissionsList, $permission->name );
 		}
 
 		return $permissionsList;
@@ -144,20 +57,20 @@ class Role extends NamedActiveRecord {
 	public function rules() {
 
         return [
-            [ [ 'role_name', 'role_created_by' ], 'required' ],
-            [ 'role_name', 'alphanumhyphenspace' ],
-            [ 'role_name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'role_name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-			[ [ 'role_desc', 'role_home', 'role_modified_by' ], 'safe' ]
+            [ [ 'name' ], 'required' ],
+            [ 'name', 'alphanumhyphenspace' ],
+            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+			[ [ 'description', 'homeUrl', 'createdBy', 'modifiedBy' ], 'safe' ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'role_name' => 'Role',
-			'role_desc' => 'Description',
-			'role_home' => 'Home Url'
+			'name' => 'Role',
+			'description' => 'Description',
+			'homeUrl' => 'Home Url'
 		];
 	}
 
@@ -176,12 +89,12 @@ class Role extends NamedActiveRecord {
 
 	public static function findById( $id ) {
 
-		return Role::find()->where( 'role_id=:roleId', [ ':roleId' => $id ] )->one();
+		return Role::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 
 	public static function findByName( $name ) {
 
-		return Role::find()->where( 'role_name=:roleName', [ ':roleName' => $name ] )->one();
+		return Role::find()->where( 'name=:name', [ ':name' => $name ] )->one();
 	}
 }
 

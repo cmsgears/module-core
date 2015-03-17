@@ -52,7 +52,7 @@ class SettingsController extends BaseController {
 		
 		if( isset( $settingType ) ) {
 
-    		$settings 	= ConfigService::findByType( $settingType->getValue() );
+    		$settings 	= ConfigService::findByType( $settingType->value );
 		}
 		
 	    return $this->render('index', [
@@ -68,7 +68,7 @@ class SettingsController extends BaseController {
 
 		if( isset( $settingType ) ) {
 
-    		$settings 	= ConfigService::findByType( $settingType->getValue() );
+    		$settings 	= ConfigService::findByType( $settingType->value );
 		}
 		
 	    return $this->render('update', [

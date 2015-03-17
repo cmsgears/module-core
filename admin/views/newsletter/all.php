@@ -1,10 +1,11 @@
 <?php
+// Yii Imports
 use \Yii;
 use yii\helpers\Html; 
 use yii\widgets\LinkPager;
 
 // CMG Imports
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
+use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Newsletters';
@@ -71,19 +72,19 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $page as $newsletter ) {
 
-						$id 		= $newsletter->getId();
-						$editUrl	= Html::a( $newsletter->getName(), ["/cmgcore/newsletter/update?id=$id"] );
+						$id 		= $newsletter->id;
+						$editUrl	= Html::a( $newsletter->name, ["/cmgcore/newsletter/update?id=$id"] );
 				?>
 					<tr>
 						<td> <input type='checkbox' /> </td>
 						<td><?= $editUrl ?></td>					
-						<td><?= $newsletter->getDesc() ?></td>
-						<td><?= $newsletter->getCreatedOn() ?></td>
-						<td><?= $newsletter->getUpdatedOn() ?></td>
-						<td><?= $newsletter->getLastSentOn() ?></td>
+						<td><?= $newsletter->description ?></td>
+						<td><?= $newsletter->createdOn ?></td>
+						<td><?= $newsletter->modifiedOn ?></td>
+						<td><?= $newsletter->lastSentOn ?></td>
 						<td>
-							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcore/newsletter/update/?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
-							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcore/newsletter/delete/?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
+							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcore/newsletter/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
+							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcore/newsletter/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

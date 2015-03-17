@@ -73,7 +73,7 @@ class UserController extends BaseController {
 	public function actionAll() {
 
 		$pagination = UserService::getPagination();
-		$roles 		= RoleService::getIdNameArrayList();
+		$roles 		= RoleService::getIdNameList();
 		$roles 		= CodeGenUtil::generateIdNameArray( $roles );
 
 	    return $this->render('all', [
@@ -97,11 +97,11 @@ class UserController extends BaseController {
 				// Send Account Mail
 				Yii::$app->cmgCoreMailer->sendCreateUserMail( $this->getCoreProperties(), $this->getMailProperties(), $model );
 
-				return $this->redirect( [ self::URL_ALL ] );
+				return $this->redirect( "all" );
 			}
 		}
 
-		$roles 		= RoleService::getIdNameArrayList();
+		$roles 		= RoleService::getIdNameList();
 		$roles 		= CodeGenUtil::generateIdNameArray( $roles );
 		$genders 	= CategoryService::getOptionIdKeyMapByName( CoreGlobal::CATEGORY_GENDER );
 
@@ -133,7 +133,7 @@ class UserController extends BaseController {
 				}
 			}
 
-			$roles 		= RoleService::getIdNameArrayList();
+			$roles 		= RoleService::getIdNameList();
 			$roles 		= CodeGenUtil::generateIdNameArray( $roles );
 
 			$genders 	= CategoryService::getOptionIdKeyMapByName( CoreGlobal::CATEGORY_GENDER );
@@ -164,12 +164,12 @@ class UserController extends BaseController {
 	
 				if( UserService::delete( $model ) ) {
 	
-					return $this->redirect( [ self::URL_ALL ] );
+					return $this->redirect( "all" );
 				}
 			}
 			else {
 
-				$roles 		= RoleService::getIdNameArrayList();
+				$roles 		= RoleService::getIdNameList();
 				$roles 		= CodeGenUtil::generateIdNameArray( $roles );
 
 				$genders 	= CategoryService::getOptionIdKeyMapByName( CoreGlobal::CATEGORY_GENDER );

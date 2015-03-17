@@ -16,62 +16,78 @@ class FileService extends \cmsgears\core\common\services\FileService {
 	// Create -----------
 
 	public static function create( $file ) {
-
+		
+		// Create File
 		$file->save();
-
-		return true;
+		
+		// Return File
+		return $file;
 	}
 
 	// Update -----------
 
 	public static function update( $file ) {
-		
-		$date 			= DateUtil::getMysqlDate();
-		$fileToUpdate	= self::findById( $file->getId() );
+
+		// Find existing file
+		$fileToUpdate	= self::findById( $file->id );
 
 		if( isset( $fileToUpdate ) ) {
 
-			$fileToUpdate->setDesc( $file->getDesc() );
-			$fileToUpdate->setAltText( $file->getAltText() );
-			$fileToUpdate->setUpdatedOn( $date );
+			// Copy and set Attributes
+			$date 						= DateUtil::getMysqlDate();
+			$fileToUpdate->updatedOn	= $date;
 	
+			$fileToUpdate->copyForUpdateFrom( $file, [ 'description', 'altText' ] );
+	
+			// Update File
 			$fileToUpdate->update();
+	
+			// Return updated File
+			return $fileToUpdate;
 		}
-
-		return true;
+		
+		return false;
 	}
 
 	public static function updateData( $file ) {
-		
-		$date 			= DateUtil::getMysqlDate();
-		$fileToUpdate	= self::findById( $file->getId() );
+
+		// Find existing file
+		$fileToUpdate	= self::findById( $file->id );
 		
 		if( isset( $fileToUpdate ) ) {
-
-			$fileToUpdate->setDesc( $file->getDesc() );
-			$fileToUpdate->setAltText( $file->getAltText() );
 	
-			// File Data
-			$fileToUpdate->setDirectory( $file->getDirectory() );
-			$fileToUpdate->setCreatedOn( $file->getCreatedOn() );
-			$fileToUpdate->setAuthorId( $file->getAuthorId() );
-			$fileToUpdate->setType( $file->getType() );
-			$fileToUpdate->setUrl( $file->getUrl() );
-			$fileToUpdate->setThumb( $file->getThumb() );
-			$fileToUpdate->setUpdatedOn( $date );
+			// Copy and set Attributes
+			$date 						= DateUtil::getMysqlDate();
+			$fileToUpdate->updatedOn	= $date;
 	
+			$fileToUpdate->copyForUpdateFrom( $file, [ 'description', 'altText', 'directory', 'authorId', 'type', 'url', 'thumb', 'createdOn' ] );
+	
+			// Update File
 			$fileToUpdate->update();
+	
+			// Return updated File
+			return $fileToUpdate;
 		}
-
-		return true;
+		
+		return false;
 	}
+	
+	/**
+	 * Save pre-uploaded image to respective directory.
+	 * @param CmgFile file
+	 * @param User user
+	 * @param CMGEntity model
+	 * @param String attribute
+	 * @param FileManager fileManager
+	 * @param int width
+	 * @param int height
+	 */
+	public static function saveImage( $file, $author, $model, $attribute, $fileManager, $width = null, $height = null ) {
 
-	public static function saveImage( $file, $author, $fileManager, $width = null, $height = null ) {
-
-		if( strlen( $file->getName() ) > 0 ) {
+		if( strlen( $file->name ) > 0 ) {
 
 			// Update Banner
-			$fileId 	= $file->getId();
+			$fileId 	= $file->id;
 			$date 		= DateUtil::getMysqlDate();
 
 			if( $file->changed ) {
@@ -82,9 +98,11 @@ class FileService extends \cmsgears\core\common\services\FileService {
 			// New File
 			if( !isset( $fileId ) || strlen( $fileId ) <= 0 ) {
 
-				$file->unsetId();
+				$file->id = null;
 
 				self::create( $file );
+				
+				$model->setAttribute( $attribute, $file->id );
 			}
 			// Existing File - Image Changed
 			else if( $file->changed ) {
@@ -99,12 +117,20 @@ class FileService extends \cmsgears\core\common\services\FileService {
 		}
 	}
 
-	public static function saveFile( $file, $author, $fileManager ) {
+	/**
+	 * Save pre-uploaded file to respective directory.
+	 * @param CmgFile file
+	 * @param User user
+	 * @param CMGEntity model
+	 * @param String attribute
+	 * @param FileManager fileManager
+	 */
+	public static function saveFile( $file, $author, $model, $attribute, $fileManager ) {
 
-		if( strlen( $file->getName() ) > 0 ) {
+		if( strlen( $file->name ) > 0 ) {
 
 			// Update File
-			$fileId 	= $file->getId();
+			$fileId 	= $file->id;
 			$date 		= DateUtil::getMysqlDate();
 
 			if( $file->changed ) {
@@ -115,7 +141,7 @@ class FileService extends \cmsgears\core\common\services\FileService {
 			// New File
 			if( !isset( $fileId ) || strlen( $fileId ) <= 0 ) {
 
-				$file->unsetId();
+				$file->id = null;
 
 				self::create( $file );
 			}
@@ -135,9 +161,9 @@ class FileService extends \cmsgears\core\common\services\FileService {
 	// Delete -----------
 
 	public static function delete( $file ) {
-
-		$fileId			= $file->getId();
-		$existingFile	= self::findById( $fileId );
+		
+		// Find existing File
+		$existingFile	= self::findById( $file->id );
 
 		// Delete File
 		$existingFile->delete();

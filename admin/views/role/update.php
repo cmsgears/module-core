@@ -10,9 +10,9 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Update Role';
 		<h2>Update Role</h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-role-update', 'options' => ['class' => 'frm-split' ] ] );?>
 
-		<?= $form->field( $model, 'role_name' ) ?>
-		<?= $form->field( $model, 'role_desc' )->textarea() ?>
-		<?= $form->field( $model, 'role_home' ) ?>
+    	<?= $form->field( $model, 'name' ) ?>
+    	<?= $form->field( $model, 'description' )->textarea() ?>
+    	<?= $form->field( $model, 'homeUrl' ) ?>
 
 		<h4>Assign Permissions</h4>
 		<?php
@@ -40,5 +40,5 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Update Role';
 	</div>
 </section>
 <script type="text/javascript">
-	initSidebar( "sidebar-identity", -1 );
+	initSidebar( "sidebar-identity", 1 );
 </script>

@@ -1,48 +1,13 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
-
-class UserMeta extends ActiveRecord {
+class UserMeta extends CmgEntity {
 
 	// Instance methods --------------------------------------------------
 
-	// db columns
-	
-	public function getId() {
+	public function getUser() {
 
-		return $this->user_meta_id;
-	}
-
-	public function getUserId() {
-
-		return $this->user_meta_parent;
-	}
-
-	public function setUserId( $id ) {
-
-		$this->user_meta_parent = $id;
-	}
-	
-	public function getKey() {
-
-		return $this->user_meta_key;
-	}
-
-	public function setKey( $key ) {
-
-		$this->user_meta_key = $key;
-	}
-
-	public function getValue() {
-
-		return $this->user_meta_value;
-	}
-
-	public function setValue( $value ) {
-
-		$this->user_meta_value = $value;
+		return $this->hasOne( User::className(), [ 'id' => 'parentIdId' ] );
 	}
 
 	// yii\base\Model
@@ -50,17 +15,18 @@ class UserMeta extends ActiveRecord {
 	public function rules() {
 
         return [
-            [ [ 'user_meta_parent', 'user_meta_key' ], 'required' ],
-            [ 'user_meta_key', 'alphanumhyphenspace' ],
-			[ [ 'user_meta_value' ], 'safe' ]
+            [ [ 'parentId', 'key' ], 'required' ],
+            [ 'parentId', 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ 'key', 'alphanumhyphenspace' ],
+			[ [ 'value' ], 'safe' ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'user_meta_key' => 'Key',
-			'user_meta_value' => 'Value'
+			'key' => 'Key',
+			'value' => 'Value'
 		];
 	}
 
@@ -77,46 +43,46 @@ class UserMeta extends ActiveRecord {
 
 	public static function findAllByUser( $user ) {
 
-		return self::find()->where( [ 'user_meta_parent' => $user->getId() ] )->all();
+		return self::find()->where( [ 'parentId' => $user->getId() ] )->all();
 	}
 
 	public static function findAllByUserId( $userId ) {
 
-		return self::find()->where( 'user_meta_parent=:id', [ ':id' => $userId ] )->all();
+		return self::find()->where( 'parentId=:id', [ ':id' => $userId ] )->all();
 	}
 
-	public static function findByUserMetaKey( $user, $key ) {
+	public static function findByUserKey( $user, $key ) {
 
-		return self::find()->where( [ 'user_meta_parent' => $user->getId() ] )
-							->andWhere( 'user_meta_key=:key', [ ':key' => $key ] )->one();
+		return self::find()->where( [ 'parentId' => $user->getId() ] )
+							->andWhere( 'key=:key', [ ':key' => $key ] )->one();
 	}
 
-	public static function findByUserIdMetaKey( $userId, $key ) {
+	public static function findByUserIdKey( $userId, $key ) {
 
-		return self::find()->where( [ 'user_meta_parent=:id', [ ':id' => $userId ] ] )
-							->andWhere( 'user_meta_key=:key', [ ':key' => $key ] )->one();
+		return self::find()->where( [ 'parentId=:id', [ ':id' => $userId ] ] )
+							->andWhere( 'key=:key', [ ':key' => $key ] )->one();
 	}
 
 	// Delete
 
 	public static function deleteByUser( $user ) {
 
-		self::deleteAll()->where( [ 'user_meta_parent' => $user->getId() ] );
+		self::deleteAll()->where( [ 'parentId' => $user->getId() ] );
 	}
 
 	public static function deleteByUserId( $id ) {
 
-		self::deleteAll( [ 'user_meta_parent=:id', [ ':id' => $userId ] ] );
+		self::deleteAll( [ 'parentId=:id', [ ':id' => $userId ] ] );
 	}
 
-	public static function deleteByUserMetaKey( $user, $key ) {
+	public static function deleteByUserKey( $user, $key ) {
 
-		self::deleteAll( [ 'user_meta_parent' => $user->getId(), 'user_meta_key' => $key ] );
+		self::deleteAll( [ 'parentId' => $user->getId(), 'key' => $key ] );
 	}
 
-	public static function deleteByUserIdMetaKey( $id, $key ) {
+	public static function deleteByUserIdKey( $id, $key ) {
 
-		self::deleteAll( [ 'user_meta_parent' => $id, 'user_meta_key' => $key ] );
+		self::deleteAll( [ 'parentId' => $id, 'key' => $key ] );
 	}
 }
 

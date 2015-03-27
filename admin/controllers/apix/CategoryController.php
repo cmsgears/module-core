@@ -38,12 +38,12 @@ class CategoryController extends BaseController {
         return [
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'permissions' => [
-	                'index'  => Permission::PERM_CATEGORY,
-	                'all'   => Permission::PERM_CATEGORY,
-	                'create' => Permission::PERM_CATEGORY,
-	                'update' => Permission::PERM_CATEGORY,
-	                'delete' => Permission::PERM_CATEGORY
+                'actions' => [
+	                'index'  => [ 'permission' => Permission::PERM_CATEGORY ],
+	                'all'   => [ 'permission' => Permission::PERM_CATEGORY ],
+	                'create' => [ 'permission' => Permission::PERM_CATEGORY ],
+	                'update' => [ 'permission' => Permission::PERM_CATEGORY ],
+	                'delete' => [ 'permission' => Permission::PERM_CATEGORY ]
                 ]
             ],
             'verbs' => [

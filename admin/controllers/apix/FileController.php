@@ -34,8 +34,8 @@ class FileController extends Controller {
         return [
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'permissions' => [
-	                'fileHandler'  => Permission::PERM_ADMIN
+                'actions' => [
+	                'fileHandler'  => [ 'permission' => Permission::PERM_ADMIN ]
                 ]
             ],
             'verbs' => [

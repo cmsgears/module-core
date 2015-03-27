@@ -38,13 +38,13 @@ class NewsletterController extends BaseController {
         return [
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'permissions' => [
-	                'index'  => Permission::PERM_NEWSLETTER,
-	                'all'   => Permission::PERM_NEWSLETTER,
-	                'create' => Permission::PERM_NEWSLETTER,
-	                'update' => Permission::PERM_NEWSLETTER,
-	                'delete' => Permission::PERM_NEWSLETTER,
-	                'members' => Permission::PERM_NEWSLETTER
+                'actions' => [
+	                'index'  => [ 'permission' => Permission::PERM_NEWSLETTER ],
+	                'all'   => [ 'permission' => Permission::PERM_NEWSLETTER ],
+	                'create' => [ 'permission' => Permission::PERM_NEWSLETTER ],
+	                'update' => [ 'permission' => Permission::PERM_NEWSLETTER ],
+	                'delete' => [ 'permission' => Permission::PERM_NEWSLETTER ],
+	                'members' => [ 'permission' => Permission::PERM_NEWSLETTER ]
                 ]
             ],
             'verbs' => [

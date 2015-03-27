@@ -40,13 +40,13 @@ class PermissionController extends BaseController {
         return [
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'permissions' => [
-	                'index'  => Permission::PERM_RBAC,
-	                'all'   => Permission::PERM_RBAC,
-	                'matrix' => Permission::PERM_RBAC,
-	                'create' => Permission::PERM_RBAC,
-	                'update' => Permission::PERM_RBAC,
-	                'delete' => Permission::PERM_RBAC
+                'actions' => [
+	                'index'  => [ 'permission' => Permission::PERM_RBAC ],
+	                'all'   => [ 'permission' => Permission::PERM_RBAC ],
+	                'matrix' => [ 'permission' => Permission::PERM_RBAC ],
+	                'create' => [ 'permission' => Permission::PERM_RBAC ],
+	                'update' => [ 'permission' => Permission::PERM_RBAC ],
+	                'delete' => [ 'permission' => Permission::PERM_RBAC ]
                 ]
             ],
             'verbs' => [

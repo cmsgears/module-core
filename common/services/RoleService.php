@@ -19,12 +19,12 @@ class RoleService extends Service {
 	// Read ----------------
 
 	public static function findById( $id ) {
-		
+
 		return Role::findById( $id );
 	}
 
 	public static function findByName( $name ) {
-		
+
 		return Role::findByName( $name );
 	}
 

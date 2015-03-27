@@ -24,9 +24,9 @@ class RbacFilter extends Behavior {
 	//TODO Add code for caching the roles and permissions
 
 	/**
-	 * @var maps the action to permission.
+	 * @var maps the action to permission and permissions filters.
 	 */
-	public $permissions = [];
+	public $actions	= [];
 
     public function events() {
 
@@ -39,21 +39,46 @@ class RbacFilter extends Behavior {
 
 	        $action = $event->action->id;
 
-			// Redirect to login page if guest
-			if( Yii::$app->user->isGuest ) {
-
-				Yii::$app->controller->redirect( Yii::$app->urlManager->createUrl( Yii::$app->cmgCore->getLogoutRedirectPage() ) );
-			}
-
 			// Check whether action is permitted
 	        if ( array_key_exists( $action, $this->permissions ) ) {
-	
+
+				// Redirect to post logout page if guest
+				if( Yii::$app->user->isGuest ) {
+
+					Yii::$app->controller->redirect( Yii::$app->urlManager->createUrl( Yii::$app->cmgCore->getLogoutRedirectPage() ) );
+				}
+
 				$user		= Yii::$app->user->getIdentity();
-				$permission = $this->permissions[ $action ];	
-	
+				$action 	= $this->actions[ $action ];
+				$permission	= $action[ 'permission' ];
+
+				// Check whether user is permitted	
 				if( !$user->isPermitted( $permission ) ) {
-	
-					throw new ForbiddenHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+
+					throw new ForbiddenHttpException( MessageUtil::ERROR_NOT_ALLOWED );
+				}
+
+				// Check permission filters
+				if( isset( $action[ 'filters' ] ) ) {
+
+					$filters	= $action[ 'filters' ];
+					$filterKeys	= array_keys( $action[ 'filters' ] );
+
+					foreach ( $filterKeys as $key ) {
+
+						if( is_array( $filters[ $key ] ) ) {
+
+							$filter	= Yii::createObject( Yii::$app->cmgCore->rbacFilters[ $key ] );
+
+							$filter->doFilter( $filters[ $key ] );
+						}
+						else {
+
+							$filter	= Yii::createObject( Yii::$app->cmgCore->rbacFilters[ $filters[ $key ] ] );
+
+							$filter->doFilter();
+						}
+					}
 				}
 	        }
 		}

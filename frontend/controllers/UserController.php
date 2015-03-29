@@ -40,13 +40,19 @@ class UserController extends BaseController {
                         'roles' => ['@']
                     ]
                 ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'index' => ['get']
+                ]
             ]
         ];
     }
 
 	// UserController
 
-    public function actionIndex() {
+    public function actionHome() {
 
         return $this->render( WebGlobalCore::PAGE_INDEX );
     }

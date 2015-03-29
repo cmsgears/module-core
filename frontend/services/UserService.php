@@ -10,7 +10,7 @@ use cmsgears\core\common\models\entities\CmgFile;
 
 use cmsgears\core\common\utilities\DateUtil;
 
-class UserService extends cmsgears\core\common\services\UserService {
+class UserService extends \cmsgears\core\common\services\UserService {
 
 	// Static Methods ----------------------------------------------
 
@@ -22,19 +22,20 @@ class UserService extends cmsgears\core\common\services\UserService {
 		$user 	= new User();
 		$date	= DateUtil::getMysqlDate();
 
-		$user->setEmail( $registerForm->email );
+		$user->email 		= $registerForm->email;
+		$user->username 	= $registerForm->username;
+		$user->firstName	= $registerForm->firstName;
+		$user->lastName		= $registerForm->lastName;
+		$user->newsletter	= $registerForm->newsletter;
+		$user->registeredOn	= $date;
+		$user->status		= User::STATUS_NEW;
+
 		$user->setPassword( $registerForm->password );
-		$user->setUsername( $registerForm->nickName );
-		$user->setFirstname( $registerForm->firstName );
-		$user->setLastname( $registerForm->lastName );
-		$user->setNewsletter( $registerForm->newsletter );
-		$user->setRegOn( $date );
-		$user->setStatus( User::STATUS_NEW );
 		$user->generateVerifyToken();
 		$user->generateAuthKey();
 
 		$user->save();
-			
+
 		return $user;
 	}
 

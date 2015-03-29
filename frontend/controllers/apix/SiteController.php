@@ -18,7 +18,7 @@ use cmsgears\core\frontend\services\forms\FormService;
 
 use cmsgears\core\frontend\controllers\BaseController;
 
-use cmsgears\core\common\utilities\MessageUtil;
+use cmsgears\core\common\components\MessageDbCore;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class SiteController extends BaseController {
@@ -76,7 +76,7 @@ class SiteController extends BaseController {
 				Yii::$app->cmgCoreMailer->sendRegisterMail( $this->getCoreProperties(), $this->getMailProperties(), $user );
 
 				// Trigger Ajax Success
-				AjaxUtil::generateSuccess( MessageUtil::getMessage( CoreGlobal::MESSAGE_REGISTER ) );
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::MESSAGE_REGISTER ) );
 			}
 		}
 		else {
@@ -85,7 +85,7 @@ class SiteController extends BaseController {
 			$errors = AjaxUtil::generateErrorMessage( $model );
 
 			// Trigger Ajax Failure
-        	AjaxUtil::generateFailure( MessageUtil::getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+        	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::ERROR_REQUEST ), $errors );
 		}
     }
 
@@ -98,7 +98,7 @@ class SiteController extends BaseController {
 		if( $model->load( Yii::$app->request->post( "Login" ), "" )  && $model->login() ) {
 
 			// Trigger Ajax Success
-			AjaxUtil::generateSuccess( MessageUtil::getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+			AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::MESSAGE_REQUEST ) );
 		}
 		else {
 
@@ -106,7 +106,7 @@ class SiteController extends BaseController {
 			$errors = AjaxUtil::generateErrorMessage( $model );
 
 			// Trigger Ajax Failure
-        	AjaxUtil::generateFailure( MessageUtil::getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+        	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::ERROR_REQUEST ), $errors );
 		}
     }
 
@@ -115,7 +115,7 @@ class SiteController extends BaseController {
         Yii::$app->user->logout();
 
 		// Trigger Ajax Success
-		AjaxUtil::generateSuccess( MessageUtil::getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+		AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::MESSAGE_REQUEST ) );
     }
 }
 

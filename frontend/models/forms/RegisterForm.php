@@ -8,8 +8,7 @@ use yii\base\Model;
 // CMG Imports
 use cmsgears\core\common\services\UserService;
 
-use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\common\utilities\MessageUtil;
+use cmsgears\core\common\components\MessageDbCore;
 
 class RegisterForm extends Model {
 
@@ -68,7 +67,7 @@ class RegisterForm extends Model {
 
             if( UserService::isExistByEmail( $this->email ) ) {
             	
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::ERROR_EMAIL_EXIST ) );
             }
         }
     }
@@ -79,7 +78,7 @@ class RegisterForm extends Model {
 
             if( UserService::isExistByUsername( $this->username ) ) {
 
-                $this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
+                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::ERROR_USERNAME_EXIST ) );
             }
         }
     }
@@ -88,7 +87,7 @@ class RegisterForm extends Model {
 
 		if( !isset( $this->terms ) || strlen( $this->terms ) <= 0 ) {
 
-			$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_TERMS ) );
+			$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::ERROR_TERMS ) );
 		}
 	}
 }

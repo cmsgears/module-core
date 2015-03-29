@@ -100,16 +100,6 @@ class RoleService extends \cmsgears\core\common\services\RoleService {
 		return true;
 	}
 
-	public static function assignRole( $user, $name ) {
-
-		// Assign Role	
-		$role 			= Role::findByName( $name );
-		$user->roleId	= $role->id;
-
-		// Update User
-		$user->update();
-	}
-
 	// Delete -----------
 
 	public static function delete( $role ) {

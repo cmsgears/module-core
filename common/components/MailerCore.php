@@ -9,7 +9,7 @@ use yii\base\Component;
  * The mail component used for sending possible mails by the CMSGears core module. It must be initialised 
  * for app using the name cmgCoreMailer. It's used by various controllers to trigger mails.  
  */
-class Mailer extends Component {
+class MailerCore extends Component {
 
 	// Various mail views used by the component
 	const MAIL_ACCOUNT_CREATE	= "account-create";	

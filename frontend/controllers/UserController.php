@@ -32,10 +32,10 @@ class UserController extends BaseController {
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => [ 'index' ],
+                'only' => [ 'home' ],
                 'rules' => [
                     [
-                        'actions' => [ 'index' ],
+                        'actions' => [ 'home' ],
                         'allow' => true,
                         'roles' => ['@']
                     ]
@@ -44,7 +44,7 @@ class UserController extends BaseController {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'index' => ['get']
+                    'home' => ['get']
                 ]
             ]
         ];

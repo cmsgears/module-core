@@ -1,10 +1,11 @@
 <?php
-namespace cmsgears\core\admin\controllers\apix;
+namespace cmsgears\core\frontend\controllers\apix;
 
 // Yii Imports
-use \Yii;
-use yii\web\Controller;
+use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\web\Controller;
 
 // CMG Imports
 use cmsgears\core\common\models\entities\Permission;
@@ -27,19 +28,24 @@ class FileController extends Controller {
 
 	// yii\base\Component
 
-	public function behaviors() {
+    public function behaviors() {
 
         return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'fileHandler'  => [ 'permission' => Permission::PERM_ADMIN ]
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['fileHandler'],
+                'rules' => [
+                    [
+                        'actions' => ['fileHandler'],
+                        'allow' => true,
+                        'roles' => ['@']
+                    ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'fileHandler'  => ['post']
+                    'fileHandler' => ['post']
                 ]
             ]
         ];

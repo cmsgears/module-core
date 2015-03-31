@@ -49,7 +49,7 @@ class CmgFile extends CmgEntity {
 
         return [
             [ [ 'name', 'authorId', 'extension', 'directory', 'url' ], 'required' ],
-            [ [ 'id', 'desc', 'altText', 'thumb', 'changed' ], 'safe' ]
+            [ [ 'id', 'description', 'altText', 'thumb', 'changed' ], 'safe' ]
         ];
     }
 
@@ -58,7 +58,7 @@ class CmgFile extends CmgEntity {
 		return [
 			'name' => 'Name',
 			'authorId' => 'Author',
-			'desc' => 'Description'
+			'description' => 'Description'
 		];
 	}
 

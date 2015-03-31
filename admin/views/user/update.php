@@ -41,6 +41,6 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Update User";
 	initFileUploader();
 
 	<?php if( isset( $avatar ) ) { ?>
-		jQuery("#file-avatar .file-image").html( "<img src='<?php echo Yii::$app->fileManager->uploadUrl . $avatar->getDisplayUrl(); ?>' />'" );
+		jQuery("#file-avatar .file-image").html( "<img src='<?php echo Yii::$app->cmgFileManager->uploadUrl . $avatar->getDisplayUrl(); ?>' />'" );
 	<?php } ?>
 </script>

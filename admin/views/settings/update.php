@@ -24,7 +24,11 @@ use yii\widgets\ActiveForm;
 					<li>
 						<form id="frm-settings-core-<?=$id?>" group="0" key="35" class="frm-settings" action="<?= Url::toRoute('/cmgcore/apix/settings/update?id='. $id ) ?>" method="POST" keepData="true">
 							<label> <?=  $setting->key ?> </label>
-							<span> <input type="text" name="Config[config_value]" value="<?= strcmp( $setting->fieldType, "password" ) == 0 ? '' : $setting->value ?>" > </span>
+							<?php if( strcmp( $setting->fieldType, "password" ) == 0 ) { ?>
+								<span> <input type="password" name="Config[value]" value="" > </span>
+							<?php } else { ?>
+								<span> <input type="text" name="Config[value]" value="<?= $setting->value ?>" > </span>
+							<?php } ?>
 							<input type="submit" name="submit" value="Save" />
 							<div class="spinner"></div>
 							<div class="frm-message"></div>

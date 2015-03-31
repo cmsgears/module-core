@@ -33,7 +33,7 @@ class RegisterForm extends Model {
 	public function rules() {
 		
 		return  [
-			[ [ 'email', 'password', 'password_repeat', 'username', 'terms' ], 'required' ],
+			[ [ 'email', 'password', 'password_repeat' ], 'required' ],
 			[ 'email', 'email' ],
 			[ 'password', 'compare' ],
 			[ 'password', 'password' ],

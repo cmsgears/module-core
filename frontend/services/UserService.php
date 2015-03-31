@@ -56,7 +56,7 @@ class UserService extends \cmsgears\core\common\services\UserService {
 	// Verify User registered from website
 	public static function verify( $user ) {
 
-		$user->setStatus( User::STATUS_ACTIVE );
+		$user->status = User::STATUS_ACTIVE;
 		$user->unsetVerifyToken();
 
 		$user->save();
@@ -67,9 +67,7 @@ class UserService extends \cmsgears\core\common\services\UserService {
 	// User forgot password
 	public static function forgotPassword( $user ) {
 
-		$token 	= Yii::$app->getSecurity()->generateRandomString();
-
-		$user->setResetToken( $token );
+		$user->generateResetToken();
 
 		$user->save();
 
@@ -84,7 +82,7 @@ class UserService extends \cmsgears\core\common\services\UserService {
 
 		if( $user->isNew() ) {
 
-			$user->setStatus( User::STATUS_ACTIVE );
+			$user->status = User::STATUS_ACTIVE;
 		}
 
 		$user->save();

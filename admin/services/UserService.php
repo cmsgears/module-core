@@ -100,7 +100,7 @@ class UserService extends \cmsgears\core\common\services\UserService {
 		$userToUpdate->copyForUpdateFrom( $user, [ 'email', 'username', 'firstName', 'lastName', 'newsletter', 'status', 'roleId', 'phone', 'avatarId' ] );
 
 		// Save Avatar
-		FileService::saveImage( $avatar, $userToUpdate, $userToUpdate, 'avatarId', Yii::$app->fileManager );
+		FileService::saveImage( $avatar, $userToUpdate, $userToUpdate, 'avatarId', Yii::$app->cmgFileManager );
 
 		// Update User
 		$userToUpdate->update();

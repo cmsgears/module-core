@@ -16,7 +16,7 @@ use cmsgears\core\admin\services\PermissionService;
 
 use cmsgears\core\admin\controllers\BaseController;
 
-use cmsgears\core\common\utilities\MessageUtil;
+use cmsgears\core\common\components\MessageDbCore;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class PermissionController extends BaseController {
@@ -61,12 +61,12 @@ class PermissionController extends BaseController {
 			if( PermissionService::bindRoles( $binder ) ) {
 
 				// Trigger Ajax Success
-				AjaxUtil::generateSuccess( MessageUtil::getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::MESSAGE_REQUEST ) );
 			}
 		}
 
 		// Trigger Ajax Failure
-        AjaxUtil::generateFailure( MessageUtil::getMessage( CoreGlobal::ERROR_REQUEST ) );
+        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::ERROR_REQUEST ) );
 	}
 }
 

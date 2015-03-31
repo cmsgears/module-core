@@ -14,20 +14,20 @@ class ConfigService extends \cmsgears\core\common\services\ConfigService {
 	// Update
 
 	public static function update( $config ) {
-		
+
 		// Find existing Config
-		$configUpdate	= Config::findById( $config->id );
+		$configToUpdate	= Config::findById( $config->id );
 
-		if( strcmp( $configUpdate->fieldType, "password" ) == 0 ) {
+		if( strcmp( $configToUpdate->fieldType, "password" ) == 0 ) {
 
-			$configUpdate->value = Yii::$app->security->generatePasswordHash( $config->value );
+			$configToUpdate->value = Yii::$app->security->generatePasswordHash( $config->value );
 		}
 		else {
 
-			$configUpdate->copyForUpdateFrom( $config, [ 'value' ] );
+			$configToUpdate->copyForUpdateFrom( $config, [ 'value' ] );
 		}
 
-		$configUpdate->save();
+		$configToUpdate->update();
 
 		return true;
 	}

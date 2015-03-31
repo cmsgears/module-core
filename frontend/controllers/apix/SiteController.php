@@ -72,6 +72,9 @@ class SiteController extends BaseController {
 
 			if( isset( $user ) ) {
 
+				// Assign default role
+				$role	= RoleService::assignRole( $user, "user" );
+
 				// Send Register Mail
 				Yii::$app->cmgCoreMailer->sendRegisterMail( $this->getCoreProperties(), $this->getMailProperties(), $user );
 

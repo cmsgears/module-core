@@ -128,7 +128,7 @@ class SiteController extends BaseController {
 
 			$user	= UserService::findByEmail( $email );
 
-			if( isset( $user ) && strcmp( $user->getVerifyToken(), $token ) == 0 ) {
+			if( isset( $user ) && strcmp( $user->verifyToken, $token ) == 0 ) {
 
 				// Verify User
 				if( UserService::verify( $user ) ) {
@@ -254,7 +254,7 @@ class SiteController extends BaseController {
 			$user	= UserService::findByEmail( $email );
 
 			// If valid user found
-			if( isset( $user ) && strcmp( $user->getResetToken(), $token ) == 0 ) {
+			if( isset( $user ) && strcmp( $user->resetToken, $token ) == 0 ) {
 
 				// Load and Validate Form Model
 				if( $model->load( Yii::$app->request->post() ) && $model->validate() ) {
@@ -314,7 +314,7 @@ class SiteController extends BaseController {
 		return $this->goHome();
     }
 
-	public function checkHome() {
+	private function checkHome() {
 
 		// Send user to home if already logged in
         if ( !\Yii::$app->user->isGuest ) {

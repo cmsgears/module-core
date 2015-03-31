@@ -13,9 +13,9 @@ use cmsgears\core\common\utilities\MessageUtil;
 
 class User extends CmgEntity implements IdentityInterface {
 
-	const STATUS_NEW		=  0;
-	const STATUS_ACTIVE		= 10;
-	const STATUS_BLOCKED	= 20;
+	const STATUS_NEW		=   0;
+	const STATUS_ACTIVE		= 100;
+	const STATUS_BLOCKED	= 200;
 
 	public static $statusMap = [
 		self::STATUS_NEW => "New",

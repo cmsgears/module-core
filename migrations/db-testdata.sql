@@ -11,7 +11,7 @@ INSERT INTO `cmg_config` VALUES
 	(2,'language','en-US',0, 'text', null ),
 	(3,'charset','UTF-8',0, 'text', null ),
 	(4,'site title','CMG Demo',0, 'text', null ),
-	(5,'site name','CMG Demo',0, 'text', null ),
+	(5,'site name','CMSGears',0, 'text', null ),
 	(6,'site url','http://localhost/cmsgears/frontend/web/',0, 'text', null ),
 	(7,'smtp','false',10, 'text', null ),
 	(8,'smtp username','',10, 'text', null ),
@@ -96,9 +96,9 @@ INSERT INTO `cmg_role_permission` VALUES
 --
 
 INSERT INTO `cmg_user` VALUES 
-	(1,1,NULL,NULL,NULL,10,'demomaster@cmsgears.org','demomaster','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','master',NULL,NULL,1,NULL,NULL,'2014-10-11 14:22:54','2014-10-10 08:03:19',NULL,NULL,NULL,NULL),
-	(2,2,NULL,NULL,NULL,10,'demoadmin@cmsgears.org','demoadmin','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','admin',NULL,NULL,1,NULL,NULL,'2014-10-11 14:22:54','2014-10-10 08:03:19',NULL,NULL,NULL,NULL),
-	(3,3,NULL,NULL,NULL,10,'demouser@cmsgears.org','demouser','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','user',NULL,NULL,1,NULL,NULL,'2014-10-11 14:22:54','2014-10-10 08:03:19',NULL,NULL,NULL,NULL),
-	(4,4,NULL,NULL,NULL,10,'demoidentitymanager@cmsgears.org','demoidentitymanager','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','user',NULL,NULL,1,NULL,NULL,'2014-10-11 14:22:54','2014-10-10 08:03:19',NULL,NULL,NULL,NULL);
+	(1,1,NULL,NULL,NULL,100,'demomaster@cmsgears.org','demomaster','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','master',NULL,NULL,1,NULL,NULL,'2014-10-11 14:22:54','2014-10-10 08:03:19',NULL,NULL,NULL,NULL),
+	(2,2,NULL,NULL,NULL,100,'demoadmin@cmsgears.org','demoadmin','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','admin',NULL,NULL,1,NULL,NULL,'2014-10-11 14:22:54','2014-10-10 08:03:19',NULL,NULL,NULL,NULL),
+	(3,3,NULL,NULL,NULL,100,'demouser@cmsgears.org','demouser','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','user',NULL,NULL,1,NULL,NULL,'2014-10-11 14:22:54','2014-10-10 08:03:19',NULL,NULL,NULL,NULL),
+	(4,4,NULL,NULL,NULL,100,'demoidentitymanager@cmsgears.org','demoidentitymanager','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','user',NULL,NULL,1,NULL,NULL,'2014-10-11 14:22:54','2014-10-10 08:03:19',NULL,NULL,NULL,NULL);
 
 SET FOREIGN_KEY_CHECKS=1;

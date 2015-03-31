@@ -40,7 +40,7 @@ class RbacFilter extends Behavior {
 	        $action = $event->action->id;
 
 			// Check whether action is permitted
-	        if ( array_key_exists( $action, $this->permissions ) ) {
+	        if ( array_key_exists( $action, $this->actions ) ) {
 
 				// Redirect to post logout page if guest
 				if( Yii::$app->user->isGuest ) {

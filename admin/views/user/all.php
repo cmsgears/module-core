@@ -80,7 +80,7 @@ if( !isset( $sortOrder ) ) {
 			<tbody>
 				<?php
 					
-					$uploadUrl	= Yii::$app->fileManager->uploadUrl;
+					$uploadUrl	= Yii::$app->cmgFileManager->uploadUrl;
 
 					foreach( $page as $user ) {
 

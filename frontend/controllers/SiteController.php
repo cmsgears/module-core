@@ -62,6 +62,11 @@ class SiteController extends BaseController {
 
     public function actions() {
 
+		if ( !Yii::$app->user->isGuest ) {
+
+			$this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
+		}
+
         return [
             'error' => [
                 'class' => 'yii\web\ErrorAction'

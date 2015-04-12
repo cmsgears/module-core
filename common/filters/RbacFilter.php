@@ -10,8 +10,6 @@ use yii\web\ForbiddenHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\utilities\MessageUtil;
-
 /**
  * The class RbacFilter use the roles and permissions defined for the project using the database tables.
  * It identify whether a user is assigned a permission. It trigger ForbiddenException in case a user does not have
@@ -55,7 +53,7 @@ class RbacFilter extends Behavior {
 				// Check whether user is permitted	
 				if( !$user->isPermitted( $permission ) ) {
 
-					throw new ForbiddenHttpException( MessageUtil::ERROR_NOT_ALLOWED );
+					throw new ForbiddenHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 				}
 
 				// Check permission filters
@@ -70,12 +68,14 @@ class RbacFilter extends Behavior {
 
 							$filter	= Yii::createObject( Yii::$app->cmgCore->rbacFilters[ $key ] );
 
+							// Pass filter config while performing filter
 							$filter->doFilter( $filters[ $key ] );
 						}
 						else {
 
 							$filter	= Yii::createObject( Yii::$app->cmgCore->rbacFilters[ $filters[ $key ] ] );
 
+							// Do filter without any config
 							$filter->doFilter();
 						}
 					}

@@ -3,12 +3,18 @@ namespace cmsgears\core\common\models\entities;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\common\utilities\MessageUtil;
 
+/**
+ * NamedActiveRecord Entity
+ * It's the parent entity for all the CMSGears based entity which need unique name.
+ */
 abstract class NamedActiveRecord extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
-
+	
+	/**
+	 * Validate name on creation to ensure that name is unique for all rows.
+	 */
     public function validateNameCreate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
@@ -17,11 +23,14 @@ abstract class NamedActiveRecord extends CmgEntity {
 
             if( $entity ) {
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
 
+	/**
+	 * Validate name on creation to ensure that name is unique for all rows.
+	 */
     public function validateNameUpdate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
@@ -30,21 +39,23 @@ abstract class NamedActiveRecord extends CmgEntity {
 
 			if( isset( $existingEntity ) && $existingEntity->id != $this->id && strcmp( $existingEntity->name, $this->name ) == 0 ) {
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}
         }
     }
 
 	// Static Methods ----------------------------------------------
 
+	// Read
+
 	public static function findById( $id ) {
 
-		// To be implemented by child classes
+		return Role::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 
 	public static function findByName( $name ) {
 
-		// To be implemented by child classes
+		return Role::find()->where( 'name=:name', [ ':name' => $name ] )->one();
 	}
 }
 

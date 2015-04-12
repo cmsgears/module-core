@@ -4,6 +4,10 @@ namespace cmsgears\core\common\models\entities;
 // Yii Imports
 use yii\db\ActiveRecord;
 
+/**
+ * CmgEntity Entity
+ * It's the parent entity for all the CMSGears based entities and provide the common methods to be utilised by all the entities.
+ */
 class CmgEntity extends ActiveRecord {
 
 	// Instance Methods --------------------------------------------
@@ -31,11 +35,11 @@ class CmgEntity extends ActiveRecord {
 	}
 
 	// Static Methods --------------------------------------------
-	
+
 	/**
-	 * It generate search query from columns by parsing the comma seperated string. 
+	 * It generate search query for a column by parsing the comma seperated string. 
 	 */
-	public static function generatSearchQuery( $field, $searchTerms ) {
+	public static function generateSearchQuery( $culumn, $searchTerms ) {
 
 		$searchTerms	= preg_split( '/,/', $searchTerms );
 		$searchQuery	= "";
@@ -44,14 +48,14 @@ class CmgEntity extends ActiveRecord {
 
 			if( $key  == 0 ) {
 
-				$searchQuery .= "$field like '%$value%'";
+				$searchQuery .= " $field like '%$value%' ";
 			}
 			else {
 
-				$searchQuery .= " or $field like '%$value%'";
+				$searchQuery .= " or $field like '%$value%' ";
 			}				
 		}
-		
+
 		return $searchQuery;
 	}
 }

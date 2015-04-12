@@ -1,11 +1,21 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+/**
+ * UserAddress Entity - It can be used in several scenarios where we need different type of addresss associated with the User.
+ *
+ * @property integer $userId
+ * @property integer $addressId
+ * @property integer $type
+ */
 class UserAddress extends CmgEntity {
 
-	const TYPE_NATIVE 	= 0; 
-	const TYPE_MAILING 	= 1;
-	const TYPE_BILLING 	= 2;
+	/**
+	 * Standard Address types
+	 */
+	const TYPE_NATIVE 	=  0;
+	const TYPE_MAILING 	= 10;
+	const TYPE_BILLING 	= 20;
 
 	// Instance methods --------------------------------------------------
 
@@ -30,12 +40,15 @@ class UserAddress extends CmgEntity {
 
 	public static function findAllByUser( $user ) {
 
-		return UserAddress::find()->where( [ 'userId' => $user->getId() ] )->all();
+		return self::find()->where( 'userId=:id', [ ':id' => $user->id ] )->all();
 	}
 
 	public static function findNativeByUser( $user ) {
 
-		$userAddress 	= UserAddress::find()->where( [ 'userId' => $user->getId(), 'type' => self::TYPE_NATIVE ] )->one();
+		$userAddress	= self::find()->where( [ 'userId=:id', 'type=:type' ] )
+							->addParams( [ ':id' => $user->id, ':type' => self::TYPE_NATIVE ] )
+							->one();
+
 		$address 		= null;
 
 		if( isset( $userAddress ) ) {
@@ -48,7 +61,10 @@ class UserAddress extends CmgEntity {
 
 	public static function findMailingByUser( $user ) {
 
-		$userAddress 	= UserAddress::find()->where( [ 'userId' => $user->getId(), 'type' => self::TYPE_MAILING ] )->one();
+		$userAddress	= self::find()->where( [ 'userId=:id', 'type=:type' ] )
+							->addParams( [ ':id' => $user->id, ':type' => self::TYPE_MAILING ] )
+							->one();
+
 		$address 		= null;
 
 		if( isset( $userAddress ) ) {
@@ -61,7 +77,10 @@ class UserAddress extends CmgEntity {
 
 	public static function findBillingByUser( $user ) {
 
-		$userAddress 	= UserAddress::find()->where( [ 'userId' => $user->getId(), 'type' => self::TYPE_BILLING ] )->one();
+		$userAddress	= self::find()->where( [ 'userId=:id', 'type=:type' ] )
+							->addParams( [ ':id' => $user->id, ':type' => self::TYPE_BILLING ] )
+							->one();
+
 		$address 		= null;
 
 		if( isset( $userAddress ) ) {

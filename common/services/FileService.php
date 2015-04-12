@@ -17,6 +17,11 @@ class FileService extends Service {
 
 		return CmgFile::findById( $id );
 	}
+
+	public static function findByAuthorId( $authorId ) {
+
+		return CmgFile::findByAuthorId( $authorId );
+	}
 }
 
 ?>

@@ -8,8 +8,6 @@ use \Yii;
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\Permission;
 
-use cmsgears\core\common\services\Service;
-
 class PermissionService extends Service {
 
 	// Static Methods ----------------------------------------------

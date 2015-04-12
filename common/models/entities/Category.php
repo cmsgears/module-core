@@ -4,33 +4,46 @@ namespace cmsgears\core\common\models\entities;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\utilities\MessageUtil;
-
+/**
+ * Category Entity
+ *
+ * @property integer $id
+ * @property integer $parentId
+ * @property string $name
+ * @property string $description
+ * @property integer $type
+ */
 class Category extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
+	/**
+	 * @return Category - parent category
+	 */
 	public function getParent() {
 
 		return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] );
 	}
 
+	/**
+	 * @return array - list of Option having all the options belonging to this category
+	 */
 	public function getOptions() {
 
     	return $this->hasMany( Option::className(), [ 'categoryId' => 'id' ] );
 	}
 
-	// yii\base\Model
+	// yii\base\Model --------------------
 
 	public function rules() {
 
         return [
             [ [ 'name' ], 'required' ],
+            [ [ 'id', 'description', 'type' ], 'safe' ],
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ 'parentId', 'number', 'integerOny' => true, MessageUtil::getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'description', 'type' ], 'safe' ]
+            [ 'parentId', 'number', 'integerOny' => true, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_SELECT ) ]
         ];
     }
 
@@ -44,8 +57,11 @@ class Category extends CmgEntity {
 		];
 	}
 
-	// Category
-
+	// Category --------------------------
+	
+	/**
+	 * Validates to ensure that name is used only for one category for a particular type
+	 */
     public function validateNameCreate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
@@ -57,6 +73,9 @@ class Category extends CmgEntity {
         }
     }
 
+	/**
+	 * Validates to ensure that name is used only for one category for a particular type
+	 */
     public function validateNameUpdate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
@@ -73,12 +92,14 @@ class Category extends CmgEntity {
 
 	// Static Methods ----------------------------------------------
 
+	// yii\db\ActiveRecord ---------------
+
 	public static function tableName() {
 
 		return CoreTables::TABLE_CATEGORY;
 	}
 
-	// Category
+	// Category --------------------------
 
 	public static function findById( $id ) {
 
@@ -97,7 +118,9 @@ class Category extends CmgEntity {
 
 	public static function findByTypeName( $type, $name ) {
 
-		return self::find()->where( 'name=:name', [ ':name' => $name ] )->andWhere( 'type=:type', [ ':type' => $type ] )->one();
+		return self::find()->where( [ 'name=:name', 'type=:type' ] )
+							->addParams( [ ':name' => $name, ':type' => $type ] )
+							->one();
 	}
 	
 	public static function isExistByTypeName( $type, $name ) {

@@ -16,7 +16,7 @@ class CategoryService extends Service {
 
 	public static function findById( $id ) {
 
-		return Category::findOne( $id );
+		return Category::findById( $id );
 	}
 
 	public static function findByName( $name ) {

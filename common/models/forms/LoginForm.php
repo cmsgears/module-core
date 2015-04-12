@@ -5,7 +5,7 @@ namespace cmsgears\core\common\models\forms;
 use \Yii;
 use yii\base\Model;
 
-// CMg Imports
+// CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\User;
@@ -45,7 +45,7 @@ class LoginForm extends Model {
 
 		return  [
 			[ [ 'email', 'password' ], 'required' ],
-			['rememberMe', 'boolean'],
+			[ 'rememberMe', 'boolean' ],
 			[ 'email', 'email' ],
 			[ 'email', 'validateUser' ],
 			[ 'password', 'validatePassword' ]
@@ -78,17 +78,17 @@ class LoginForm extends Model {
 
             if( !$this->user ) {
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
             }
 
 			if( !$this->hasErrors() && !$this->user->isConfirmed() ) {
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_USER_VERIFICATION ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_USER_VERIFICATION ) );
 			}
 
 			if( !$this->hasErrors() && $this->user->isBlocked() ) {
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_BLOCKED ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_BLOCKED ) );
 			}
         }
     }
@@ -101,7 +101,7 @@ class LoginForm extends Model {
 
             if( $user && !$user->validatePassword( $this->password ) ) {
 
-                $this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_LOGIN_FAILED ) );
+                $this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_LOGIN_FAILED ) );
             }
         }
     }

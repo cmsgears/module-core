@@ -10,7 +10,15 @@ use \Yii;
 class AjaxUtil {
 
 	// Static Methods ----------------------------------------------
-
+	
+	/**
+	 * The method generate success response array having 3 elements as listed below:
+	 * 1. result - 1 (It indicates that the request is processed successfully)
+	 * 2. message - <message value> (The message to be displayed for success)
+	 * 3. data - <response data array> (The response data to be displayed for success)
+	 * @param message
+	 * @param data 
+	 */
 	public static function generateSuccess( $message, $data = null ) {
 
 		$response				= array();
@@ -26,6 +34,14 @@ class AjaxUtil {
 		die();
 	}
 
+	/**
+	 * The method generate failure response array having 3 elements as listed below:
+	 * 1. result - 0 (It indicates that the request is failed)
+	 * 2. message - <message value> (The message to be displayed for failure)
+	 * 3. errors - <errors array> (The errors to be displayed for failure)
+	 * @param message
+	 * @param errors
+	 */
 	public static function generateFailure( $message, $errors = null ) {
 
 		$response				= array();
@@ -38,7 +54,12 @@ class AjaxUtil {
 
 		die();
 	}
-	
+
+	/**
+	 * The method generate an array of error messages from model validated by Yii.
+	 * @param model
+	 * @return array - error messages
+	 */
 	public static function generateErrorMessage( $model ) {
 
 		$errors 		= $model->getErrors();

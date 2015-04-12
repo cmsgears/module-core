@@ -7,10 +7,17 @@ use yii\db\Query;
 use yii\data\Pagination;
 use yii\helpers\HtmlPurifier;
 
+// CMG Imports
 use cmsgears\core\common\models\entities\CMGEntity;
 
+/**
+ * The class Service defines several static methods used for pagination and generating map and list by specifying the columns.
+ */
 class Service {
 
+	/**
+	 * The default page limit.
+	 */
 	const PAGE_LIMIT	= 10;
 
 	// Pagination -------------------------------------------------
@@ -86,7 +93,8 @@ class Service {
 		return $pagination;
 	}
 
-	// Maps
+	// Maps -------------------------------------------------------
+
 	/**
 	 * The method findKeyValueMap returns an associative array for the defined table and columns. It also apply the provided conditions.
 	 */
@@ -103,7 +111,7 @@ class Service {
 		return $map;
 	}
 
-	// Array Lists
+	// Lists ------------------------------------------------------
 
 	/**
 	 * The method findKeyList returns an array of list for given key

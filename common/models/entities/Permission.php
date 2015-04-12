@@ -1,57 +1,62 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+/**
+ * Permission Entity
+ *
+ * @property integer $id
+ * @property integer $createdBy
+ * @property integer $modifiedBy
+ * @property string $name
+ * @property string $description
+ * @property string $homeUrl
+ * @property short $type
+ * @property datetime $createdAt
+ * @property datetime $modifiedAt
+ */
 class Permission extends NamedActiveRecord {
-
-	// Site Module
-	const PERM_ADMIN				= "admin"; 	// Allows to view Admin Site Home
-	const PERM_USER					= "user"; 	// Allows to view User Site Home
-
-	// Settings
-	const PERM_SETTINGS				= "settings";
-
-	// User Module
-	const PERM_IDENTITY				= "identity";
-	const PERM_IDENTITY_USER		= "identity-user";
-	const PERM_RBAC					= "identity-rbac";
-
-	// Newsletter
-	const PERM_NEWSLETTER			= "newsletter";
-
-	// Slider
-	const PERM_SLIDER				= "slider";
-
-	// Category
-	const PERM_CATEGORY				= "category";
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
+	/**
+	 * @return User
+	 */
 	public function getCreator() {
 
 		return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] );
 	}
 
+	/**
+	 * @return User
+	 */
 	public function getModifier() {
 
 		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] );
 	}
 
+	/**
+	 * @return Role array
+	 */
 	public function getRoles() {
 	
     	return $this->hasMany( Role::className(), [ 'id' => 'roleId' ] )
 					->viaTable( CoreTables::TABLE_ROLE_PERMISSION, [ 'permissionId' => 'id' ] );
 	}
 
-	public function getRolesMap() {
-	
+	/**
+	 * @return array having role element.
+	 */
+	public function getRolesList() {
+
     	return $this->hasMany( RolePermission::className(), [ 'permissionId' => 'id' ] );
 	}
 
+	/**
+	 * @return array having role id element.
+	 */
 	public function getRolesIdList() {
 
-    	$roles 		= $this->rolesMap;
+    	$roles 		= $this->rolesList;
 		$rolesList	= array();
 		
 		foreach ( $roles as $role ) {
@@ -62,16 +67,19 @@ class Permission extends NamedActiveRecord {
 		return $rolesList;
 	}
 
-	// yii\base\Model
+	// yii\base\Model --------------------
 
 	public function rules() {
 
         return [
             [ [ 'name' ], 'required' ],
+            [ [ 'id', 'description' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
+            [ 'name', 'length', 'min'=>1, 'max'=>100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-			[ [ 'description', 'createdBy', 'modifiedBy' ], 'safe' ]
+            [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
         ];
     }
 
@@ -85,26 +93,15 @@ class Permission extends NamedActiveRecord {
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord
+	// yii\db\ActiveRecord ---------------
 	
 	public static function tableName() {
 		
 		return CoreTables::TABLE_PERMISSION;
 	}
 
-	// Permission
+	// Permission ------------------------
 
-	// Read --------
-
-	public static function findById( $id ) {
-
-		return Permission::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	public static function findByName( $name ) {
-
-		return Permission::find()->where( 'name=:name', [ ':name' => $name ] )->one();
-	}
 }
 
 ?>

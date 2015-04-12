@@ -4,29 +4,37 @@ namespace cmsgears\core\common\models\entities;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\utilities\MessageUtil;
-
+/**
+ * Province Entity
+ *
+ * @property integer $id
+ * @property integer $countryId
+ * @property string $code
+ * @property string $name
+ */
 class Province extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
+	/**
+	 * @return Country to which province belongs.
+	 */
 	public function getCountry() {
 
 		return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] );
 	}
 
-	// yii\base\Model
+	// yii\base\Model --------------------
 
 	public function rules() {
 
         return [
             [ [ 'countryId', 'code', 'name' ], 'required' ],
+            [ 'id', 'safe' ],
             [ 'name', 'alphanumspace' ],
+            [ 'name', 'length', 'min'=>1, 'max'=>10 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-			[ [ 'id' ], 'safe' ]
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
     }
 
@@ -39,19 +47,25 @@ class Province extends CmgEntity {
 		];
 	}
 	
-	// Check whether a province existing with the same name for same country
+	// Province --------------------------
+
+	/**
+	 * Validates whether a province existing with the same name for same country.
+	 */
     public function validateNameCreate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
             if( self::isExistByCountryIdName( $this->countryId, $this->name ) ) {
 
-                $this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
+                $this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
 
-	// Check whether a province existing with the same name for same country
+	/**
+	 * Validates whether a province existing with the same name for same country.
+	 */
     public function validateNameUpdate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
@@ -61,17 +75,21 @@ class Province extends CmgEntity {
 			if( isset( $existingProvince ) && $this->countryId == $existingProvince->countryId && 
 				$this->id != $existingProvince->id && strcmp( $existingProvince->name, $this->name ) == 0 ) {
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}
         }
     }
 
 	// Static Methods ----------------------------------------------
 
+	// yii\base\Model --------------------
+
 	public static function tableName() {
 
 		return CoreTables::TABLE_PROVINCE;
 	}
+
+	// Province --------------------------
 
 	public static function findById( $id ) {
 
@@ -80,7 +98,7 @@ class Province extends CmgEntity {
 
 	public static function findByCountryId( $countryId ) {
 
-		return self::find()->where( 'countryId=:cid', [ ':cid' => $countryId ] )->one();
+		return self::find()->where( 'countryId=:id', [ ':id' => $countryId ] )->one();
 	}
 
 	public static function findByName( $name ) {
@@ -97,13 +115,15 @@ class Province extends CmgEntity {
 
 	public static function findByCountryIdName( $countryId, $name ) {
 
-		return self::find()->where( 'countryId=:cid', [ ':cid' => $countryId ] )->andWhere( 'name=:name', [ ':name' => $name ] )->one();
+		return self::find()->where( [ 'countryId=:id', 'name=:name' ] )
+							->addParams( [ ':id' => $countryId, ':name' => $key ] )
+							->one();
 	}
 	
 	public static function isExistByCountryIdName( $countryId, $name ) {
 
-		$province = self::find()->where( 'countryId=:cid', [ ':cid' => $countryId ] )->andWhere( 'name=:name', [ ':name' => $name ] )->one();
-		
+		$province = self::findByCountryIdName( $countryId, $name );
+
 		return isset( $province );
 	}
 }

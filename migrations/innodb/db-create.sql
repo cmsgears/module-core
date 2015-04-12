@@ -11,7 +11,7 @@ CREATE TABLE `cmg_config` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `key` varchar(255) COLLATE utf8_unicode_ci DEFAULT '0',
   `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `type` int(10) DEFAULT 0,
+  `type` int(11) DEFAULT 0,
   `fieldType` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `fieldMeta` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -30,7 +30,7 @@ CREATE TABLE `cmg_locale` (
   `code` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,9 +44,9 @@ CREATE TABLE `cmg_locale_message` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `localeId` bigint(20) DEFAULT NULL,
   `type` smallint(6) DEFAULT 0,
-  `parent` bigint(20) DEFAULT NULL,
-  `key` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `value` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `parentId` bigint(20) DEFAULT NULL,
+  `key` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `value` LONGTEXT COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_locale_message_1` (`localeId`),
   CONSTRAINT `fk_locale_message_1` FOREIGN KEY (`localeId`) REFERENCES `cmg_locale` (`id`) ON DELETE CASCADE
@@ -65,7 +65,7 @@ CREATE TABLE `cmg_category` (
   `parentId` bigint(20) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `type` int(10) DEFAULT 0,
+  `type` int(11) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `fk_category_1` (`parentId`),
   CONSTRAINT `fk_category_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_category` (`id`)
@@ -82,12 +82,12 @@ DROP TABLE IF EXISTS `cmg_option`;
 CREATE TABLE `cmg_option` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `categoryId` bigint(20) NOT NULL,
-  `key` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `key` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_option_1` (`categoryId`),
   CONSTRAINT `fk_option_1` FOREIGN KEY (`categoryId`) REFERENCES `cmg_category` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -102,7 +102,7 @@ CREATE TABLE `cmg_country` (
   `code` varchar(50) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=246 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=246 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -125,12 +125,12 @@ DROP TABLE IF EXISTS `cmg_province`;
 CREATE TABLE `cmg_province` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `countryId` bigint(20) DEFAULT NULL,
-  `code` varchar(50) DEFAULT NULL,
+  `code` varchar(10) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_province_1` (`countryId`),
   CONSTRAINT `fk_province_1` FOREIGN KEY (`countryId`) REFERENCES `cmg_country` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3990 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3990 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -154,19 +154,19 @@ CREATE TABLE `cmg_role` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `createdBy` bigint(20) NOT NULL,
   `modifiedBy` bigint(20) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `homeUrl` varchar(255) DEFAULT NULL,
   `type` smallint(6) DEFAULT 0,
-  `createdOn` datetime NOT NULL,
-  `modifiedOn` datetime DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `modifiedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `role_name_unique` (`name`),
   KEY `fk_role_1` (`createdBy`),
   KEY `fk_role_2` (`modifiedBy`),
   CONSTRAINT `fk_role_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_user` (`id`),
   CONSTRAINT `fk_role_2` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -180,17 +180,17 @@ CREATE TABLE `cmg_permission` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `createdBy` bigint(20) NOT NULL,
   `modifiedBy` bigint(20) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
+  `name` varchar(100) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
-  `createdOn` datetime NOT NULL,
-  `modifiedOn` datetime DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `modifiedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `permission_name_unique` (`name`),
   KEY `fk_permission_1` (`createdBy`),
   KEY `fk_permission_2` (`modifiedBy`),
   CONSTRAINT `fk_permission_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_user` (`id`),
   CONSTRAINT `fk_permission_2` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -208,7 +208,7 @@ CREATE TABLE `cmg_role_permission` (
   KEY `fk_role_permission_2` (`permissionId`),
   CONSTRAINT `fk_role_permission_1` FOREIGN KEY (`roleId`) REFERENCES `cmg_role` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_role_permission_2` FOREIGN KEY (`permissionId`) REFERENCES `cmg_permission` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -259,16 +259,17 @@ CREATE TABLE `cmg_user` (
   `passwordHash` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,  
   `firstName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `lastName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `dob` datetime DEFAULT NULL,
+  `dob` date DEFAULT NULL,
   `phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `newsletter` tinyint(1) DEFAULT NULL,
   `verifyToken` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `resetToken` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `registeredOn` datetime DEFAULT NULL,  
+  `registeredAt` datetime DEFAULT NULL,  
   `lastLogin` datetime DEFAULT NULL,
   `lastActivity` datetime DEFAULT NULL,
   `accessToken` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `accessTokenDate` datetime DEFAULT NULL,
+  `accessTokenCreatedAt` datetime DEFAULT NULL,
+  `accessTokenAccessedAt` datetime DEFAULT NULL,
   `authKey` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_user_1` (`roleId`),
@@ -279,7 +280,7 @@ CREATE TABLE `cmg_user` (
   CONSTRAINT `fk_user_2` FOREIGN KEY (`localeId`) REFERENCES `cmg_locale` (`id`),
   CONSTRAINT `fk_user_3` FOREIGN KEY (`genderId`) REFERENCES `cmg_option` (`id`),
   CONSTRAINT `fk_user_4` FOREIGN KEY (`avatarId`) REFERENCES `cmg_file` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -290,14 +291,13 @@ DROP TABLE IF EXISTS `cmg_user_meta`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_user_meta` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `parentId` bigint(20) NOT NULL,
-  `key` varchar(255) NOT NULL,
+  `userId` bigint(20) NOT NULL,
+  `key` varchar(100) NOT NULL,
   `value` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_user_meta_1` (`parentId`),
-  CONSTRAINT `fk_user_meta_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_user` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`userId`,`key`),
+  KEY `fk_user_meta_1` (`userId`),
+  CONSTRAINT `fk_user_meta_1` FOREIGN KEY (`userId`) REFERENCES `cmg_user` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -333,8 +333,8 @@ CREATE TABLE `cmg_file` (
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `extension` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `directory` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `createdOn` datetime NOT NULL,
-  `updatedOn` datetime DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `updatedAt` datetime DEFAULT NULL,
   `type` smallint(6) NOT NULL DEFAULT '1',
   `url` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `thumb` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -359,9 +359,9 @@ CREATE TABLE `cmg_newsletter` (
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `content` LONGTEXT COLLATE utf8_unicode_ci DEFAULT NULL,
-  `createdOn` datetime DEFAULT NULL,
-  `modifiedOn` datetime DEFAULT NULL,
-  `lastSentOn` datetime DEFAULT NULL,
+  `createdAt` datetime DEFAULT NULL,
+  `modifiedAt` datetime DEFAULT NULL,
+  `lastSentAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_newsletter_1` (`createdBy`),
   KEY `fk_newsletter_2` (`modifiedBy`),
@@ -379,11 +379,11 @@ DROP TABLE IF EXISTS `cmg_notification`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_notification` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `notifierId` bigint(20) DEFAULT NULL,
+  `notifierId` bigint(20) NOT NULL,
   `userId` bigint(20) NOT NULL,
-  `type` smallint(6) DEFAULT 0,
+  `type` smallint(6) NOT NULL DEFAULT '0',
   `message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `time` datetime DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
   `flag` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `fk_notification_1` (`notifierId`),
@@ -403,14 +403,15 @@ DROP TABLE IF EXISTS `cmg_reminder`;
 CREATE TABLE `cmg_reminder` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `userId` bigint(20) NOT NULL,
-  `type` bigint(20) NOT NULL,
+  `type` smallint(6) NOT NULL DEFAULT '0',
   `message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
   `time` datetime DEFAULT NULL,
-  `flag` tinyint(4) DEFAULT '0',
+  `flag` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `fk_reminder_1` (`userId`),
   CONSTRAINT `fk_reminder_1` FOREIGN KEY (`userId`) REFERENCES `cmg_user` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 SET FOREIGN_KEY_CHECKS=1;

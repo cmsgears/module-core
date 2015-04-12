@@ -28,8 +28,10 @@ class CoreTables {
 	// User
 	const TABLE_USER				= "cmg_user";
 	const TABLE_USER_META			= "cmg_user_meta";
+
+	// Marketing
 	const TABLE_NEWSLETTER			= "cmg_newsletter";
-	
+
 	// Messages
 	const TABLE_NOTIFICATION		= "cmg_notification";
 	const TABLE_REMINDER			= "cmg_reminder";

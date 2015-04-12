@@ -1,49 +1,71 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+/**
+ * Option Entity
+ *
+ * @property integer $id
+ * @property integer $categoryId
+ * @property string $key
+ * @property string $value
+ */
 class Option extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
+	/**
+	 * @return Category - The parent Category.
+	 */
 	public function getCategory() {
 
 		return $this->hasOne( Category::className(), [ 'id' => 'categoryId' ] );
 	}
 
-	// yii\base\Model
+	// yii\base\Model --------------------
 
 	public function rules() {
 
         return [
             [ [ 'key', 'value' ], 'required' ],
+            [ [ 'id', 'categoryId' ], 'safe' ],
             [ 'key', 'alphanumhyphenspace' ],
+            [ 'key', 'length', 'min'=>1, 'max'=>100 ],
             [ 'key', 'validateKeyCreate', 'on' => [ 'create' ] ],
             [ 'key', 'validateKeyUpdate', 'on' => [ 'update' ] ],
-			[ [ 'categoryId' ], 'safe' ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
+			'categoryId' => 'Category',
 			'key' => 'Key',
 			'value' => 'Value'
 		];
 	}
 
-	// Config
-
+	// Config ----------------------------
+	
+	/**
+	 * Validates to ensure that only one key exist for a Category.
+	 */
     public function validateKeyCreate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
             if( self::isExistByCategoryIdKey( $this->categoryId, $this->key ) ) {
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
 
+	/**
+	 * Validates to ensure that only one key exist for a Category.
+	 */
     public function validateKeyUpdate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
@@ -53,21 +75,21 @@ class Option extends CmgEntity {
 			if( isset( $existingOption ) && $existingOption->id != $this->id && 
 				strcmp( $existingOption->key, $this->key ) == 0 && $existingOption->categoryId == $this->categoryId ) {
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}
         }
     }
 
-	// Static Methods ----------------------------------------------
+	// Static methods --------------------------------------------------
 
-	// yii\db\ActiveRecord
+	// yii\db\ActiveRecord ----------------
 
 	public static function tableName() {
 		
 		return CoreTables::TABLE_OPTION;
 	}
 
-	// Option
+	// Option -----------------------------
 
 	public static function findById( $id ) {
 
@@ -76,12 +98,17 @@ class Option extends CmgEntity {
 
 	public static function findByCategory( $category ) {
 
-		return self::find()->where( [ 'categoryId' => $category->id ] )->one();
+		return self::find()->where( 'categoryId=:id', [ ':id' => $category->id ] )->one();
 	}
 
 	public static function findByCategoryId( $categoryId ) {
 
 		return self::find()->where( 'categoryId=:id', [ ':id' => $categoryId ] )->one();
+	}
+
+	public static function findByCategoryName( $categoryName ) {
+
+		return self::find()->joinWith( 'category' )->where( '`cmg_category`.`name`=:name', [ ':name' => $categoryName ] )->all();
 	}
 
 	public static function findByKey( $key ) {
@@ -91,24 +118,30 @@ class Option extends CmgEntity {
 
 	public static function findByCategoryKey( $category, $key ) {
 
-		return self::find()->where( [ 'categoryId' => $category->id ] )->andWhere( 'key=:key', [ ':key' => $key ] )->one();
+		return self::find()->where( [ 'categoryId=:id', 'key=:key' ] )
+							->addParams( [ ':id' => $category->id, ':key' => $key ] )
+							->one();
 	}
 
 	public static function findByCategoryIdKey( $categoryId, $key ) {
 
-		return self::find()->where( 'categoryId=:id', [ ':id' => $categoryId ] )->andWhere( 'key=:key', [ ':key' => $key ] )->one();
+		return self::find()->where( [ 'categoryId=:id', 'key=:key' ] )
+							->addParams( [ ':id' => $categoryId, ':key' => $key ] )
+							->one();
 	}
 
 	public static function isExistByCategoryIdKey( $categoryId, $key ) {
 
-		$option = self::find()->where( 'categoryId=:id', [ ':id' => $categoryId ] )->andWhere( 'key=:key', [ ':key' => $key ] )->one();
+		$option = self::findByCategoryIdKey( $category, $key );
 		
 		return isset( $option );
 	}
 
 	public static function findByCategoryNameKey( $categoryName, $key ) {
 
-		return self::find()->joinWith( 'category' )->where( '`cmg_category`.`name`=:name', [ ':name' => $categoryName ] )->andWhere( '`key`=:key', [ ':key' => $key ] )->one();
+		return self::find()->joinWith( 'category' )->where( [ '`cmg_category`.`name`=:name', 'key=:key' ] )
+							->addParams( [ ':name' => $categoryName, ':key' => $key ] )
+							->one();
 	}
 }
 

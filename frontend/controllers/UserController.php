@@ -12,8 +12,6 @@ use cmsgears\core\frontend\config\WebGlobalCore;
 
 use cmsgears\core\frontend\services\UserService;
 
-use cmsgears\core\common\utilities\MessageUtil;
-
 class UserController extends BaseController {
 
 	// Constructor and Initialisation ------------------------------

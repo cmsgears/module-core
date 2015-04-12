@@ -84,8 +84,16 @@ class SiteController extends BaseController {
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post() )  && $model->login() ) {
 
-			// Send User to Home
-			$this->redirect( [ Yii::$app->cmgCore->getLoginRedirectPage() ] );
+			// Redirect user to home set by admin
+			if( isset( $role ) && isset( $role->homeUrl ) ) {
+
+				$this->redirect( [ $role->homeUrl ] );
+			}
+			// Redirect user to home set by app config
+			else {
+
+				$this->redirect( [ Yii::$app->cmgCore->getLoginRedirectPage() ] );
+			}
 		}
 		else {
 

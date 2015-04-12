@@ -3,22 +3,31 @@ namespace cmsgears\core\common\models\entities;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\common\utilities\MessageUtil;
 
+/**
+ * Config Entity
+ *
+ * @property integer $id
+ * @property string $key
+ * @property string $value
+ * @property integer $type
+ * @property string $fieldType
+ * @property string $fieldMeta
+ */
 class Config extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Model
+	// yii\base\Model --------------------
 
 	public function rules() {
 
         return [
             [ [ 'key', 'value', 'type', 'fieldType' ], 'required' ],
+            [ [ 'id', 'fieldMeta' ], 'safe' ],
             [ 'key', 'alphanumhyphenspace' ],
             [ 'key', 'validateKeyCreate', 'on' => [ 'create' ] ],
-            [ 'key', 'validateKeyUpdate', 'on' => [ 'update' ] ],
-            [ 'fieldMeta', 'safe' ]
+            [ 'key', 'validateKeyUpdate', 'on' => [ 'update' ] ]
         ];
     }
 
@@ -29,23 +38,29 @@ class Config extends CmgEntity {
 			'value' => 'Value',
 			'type' => 'Type',
 			'fieldType' => 'Field Type',
-			'fieldMata' => 'Field Json Meta'
+			'fieldMata' => 'Field Meta Json'
 		];
 	}
 
-	// Config
+	// Config ----------------------------
 
+	/**
+	 * Validates to ensure that only one config exist with one key.
+	 */
     public function validateKeyCreate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
             if( self::isExistByTypeKey( $this->type, $this->key ) ) {
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
 
+	/**
+	 * Validates to ensure that only one config exist with one key.
+	 */
     public function validateKeyUpdate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
@@ -55,21 +70,21 @@ class Config extends CmgEntity {
 			if( isset( $existingConfig ) && $existingConfig->id != $this->id && 
 				strcmp( $existingConfig->key, $this->key ) == 0 && $existingConfig->type == $this->type ) {
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}
         }
     }
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord
+	// yii\db\ActiveRecord ---------------
 
 	public static function tableName() {
 
 		return CoreTables::TABLE_CONFIG;
 	}
 
-	// Config
+	// Config ----------------------------
 
 	public static function findById( $id ) {
 
@@ -88,11 +103,13 @@ class Config extends CmgEntity {
 
 	public static function findByTypeKey( $type, $key ) {
 
-		return self::find()->where( 'key=:key', [ ':key' => $key ] )->andWhere( 'type=:type', [ ':type' => $type ] )->one();
+		return self::find()->where( [ 'type=:type', 'key=:key' ] )
+							->addParams( [ ':type' => $type, ':key' => $key ] )
+							->one();
 	}
 
 	public static function isExistByTypeKey( $type, $key ) {
-		
+
 		$config = self::findByTypeKey( $type, $key );
 
 		return isset( $config );

@@ -8,7 +8,7 @@ namespace cmsgears\core\common\models\entities;
  * @property string $code
  * @property string $name
  */
-class Country extends NamedActiveRecord {
+class Country extends NamedCmgEntity {
 	
 	// Instance Methods --------------------------------------------
 
@@ -27,7 +27,7 @@ class Country extends NamedActiveRecord {
         return [
             [ [ 'name', 'code' ], 'required' ],
             [ 'id', 'safe' ],
-            [ 'code', 'length', 'min'=>1, 'max'=>50 ],
+            [ 'code', 'string', 'min'=>1, 'max'=>50 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]

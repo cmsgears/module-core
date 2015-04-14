@@ -118,13 +118,11 @@ class Category extends CmgEntity {
 
 	public static function findByTypeName( $type, $name ) {
 
-		return self::find()->where( [ 'name=:name', 'type=:type' ] )
-							->addParams( [ ':name' => $name, ':type' => $type ] )
-							->one();
+		return self::find()->where( 'type=:type AND name=:name', [ ':type' => $type, ':name' => $name ] )->one();
 	}
-	
+
 	public static function isExistByTypeName( $type, $name ) {
-		
+
 		$category = self::findByTypeName( $type, $name );
 
 		return isset( $category );

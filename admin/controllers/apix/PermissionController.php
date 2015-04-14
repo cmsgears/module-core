@@ -16,7 +16,6 @@ use cmsgears\core\admin\services\PermissionService;
 
 use cmsgears\core\admin\controllers\BaseController;
 
-use cmsgears\core\common\components\MessageDbCore;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class PermissionController extends BaseController {
@@ -38,7 +37,7 @@ class PermissionController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'bindRoles'  => [ 'permission' => Permission::PERM_RBAC ]
+	                'bindRoles'  => [ 'permission' => CoreGlobal::PERM_RBAC ]
                 ]
             ],
             'verbs' => [
@@ -61,12 +60,12 @@ class PermissionController extends BaseController {
 			if( PermissionService::bindRoles( $binder ) ) {
 
 				// Trigger Ajax Success
-				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::MESSAGE_REQUEST ) );
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 			}
 		}
 
 		// Trigger Ajax Failure
-        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::ERROR_REQUEST ) );
+        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
 }
 

@@ -14,19 +14,19 @@ class OptionService extends Service {
 		return Option::findByCategoryId( $categoryId );
 	}
 
-	public static function findByCategoryIdKey( $categoryId, $key ) {
-
-		return Option::findByCategoryIdKey( $categoryId, $key );
-	}
-
 	public static function findByCategoryName( $categoryName ) {
 
 		return Option::findByCategoryName( $categoryName );
 	}
 
-	public static function findByCategoryNameKey( $categoryName, $key ) {
+	public static function findByNameCategoryId( $name, $categoryId ) {
 
-		return Option::findByCategoryNameKey( $categoryName, $key );
+		return Option::findByNameCategoryId( $name, $categoryId, $key );
+	}
+
+	public static function findByNameCategoryName( $name, $categoryName ) {
+
+		return Option::findByNameCategoryName( $name, $categoryName );
 	}
 }
 

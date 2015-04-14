@@ -8,21 +8,15 @@ use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\admin\config\AdminGlobalCore;
 
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
-use cmsgears\core\common\models\entities\Category;
-use cmsgears\core\common\models\entities\Option;
-use cmsgears\core\common\models\entities\Role;
-use cmsgears\core\common\models\entities\Permission;
 
 use cmsgears\core\admin\services\CategoryService;
 use cmsgears\core\admin\services\UserService;
 use cmsgears\core\admin\services\RoleService;
 
 use cmsgears\core\common\utilities\CodeGenUtil;
-use cmsgears\core\common\utilities\MessageUtil;
 
 class UserController extends BaseController {
 
@@ -43,11 +37,11 @@ class UserController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => Permission::PERM_IDENTITY_USER ],
-	                'all'   => [ 'permission' => Permission::PERM_IDENTITY_USER ],
-	                'create' => [ 'permission' => Permission::PERM_IDENTITY_USER ],
-	                'update' => [ 'permission' => Permission::PERM_IDENTITY_USER ],
-	                'delete' => [ 'permission' => Permission::PERM_IDENTITY_USER ]
+	                'index'  => [ 'permission' => CoreGlobal::PERM_IDENTITY_USER ],
+	                'all'   => [ 'permission' => CoreGlobal::PERM_IDENTITY_USER ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY_USER ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY_USER ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY_USER ]
                 ]
             ],
             'verbs' => [
@@ -103,7 +97,7 @@ class UserController extends BaseController {
 
 		$roles 		= RoleService::getIdNameList();
 		$roles 		= CodeGenUtil::generateIdNameArray( $roles );
-		$genders 	= CategoryService::getOptionIdKeyMapByName( CoreGlobal::CATEGORY_GENDER );
+		$genders 	= CategoryService::getOptionIdNameMapByName( CoreGlobal::CATEGORY_GENDER );
 
     	return $this->render('create', [
     		'model' => $model,
@@ -125,7 +119,7 @@ class UserController extends BaseController {
 
 			if( $model->load( Yii::$app->request->post() )  && $model->validate() ) {
 
-				$avatar->load( Yii::$app->request->post( "File" ), "" );
+				$avatar->load( Yii::$app->request->post( "Avatar" ), "" );
 
 				if( UserService::update( $model, $avatar ) ) {
 	
@@ -136,7 +130,7 @@ class UserController extends BaseController {
 			$roles 		= RoleService::getIdNameList();
 			$roles 		= CodeGenUtil::generateIdNameArray( $roles );
 
-			$genders 	= CategoryService::getOptionIdKeyMapByName( CoreGlobal::CATEGORY_GENDER );
+			$genders 	= CategoryService::getOptionIdNameMapByName( CoreGlobal::CATEGORY_GENDER );
 			$avatar		= $model->avatar;
 			
 	    	return $this->render('update', [
@@ -149,7 +143,7 @@ class UserController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
@@ -172,7 +166,7 @@ class UserController extends BaseController {
 				$roles 		= RoleService::getIdNameList();
 				$roles 		= CodeGenUtil::generateIdNameArray( $roles );
 
-				$genders 	= CategoryService::getOptionIdKeyMapByName( CoreGlobal::CATEGORY_GENDER );
+				$genders 	= CategoryService::getOptionIdNameMapByName( CoreGlobal::CATEGORY_GENDER );
 
 	        	return $this->render('delete', [
 	        		'model' => $model,
@@ -184,7 +178,7 @@ class UserController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

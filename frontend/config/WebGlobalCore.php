@@ -3,13 +3,10 @@ namespace cmsgears\core\frontend\config;
 
 class WebGlobalCore {
 
-	// Config Type
-	const CONFIG_SITE			= "Website";
-
 	// Layouts
-	const LAYOUT_LANDING		= "//layout-landing";
-	const LAYOUT_PUBLIC			= "//layout-public";
-	const LAYOUT_PRIVATE		= "//layout-private";
+	const LAYOUT_LANDING		= "//landing";
+	const LAYOUT_PUBLIC			= "//public";
+	const LAYOUT_PRIVATE		= "//private";
 
 	// Pages - Generic
 	const PAGE_INDEX			= "index";

@@ -79,9 +79,9 @@ if( !isset( $sortOrder ) ) {
 						<td> <input type='checkbox' /> </td>
 						<td><?= $editUrl ?></td>					
 						<td><?= $newsletter->description ?></td>
-						<td><?= $newsletter->createdOn ?></td>
-						<td><?= $newsletter->modifiedOn ?></td>
-						<td><?= $newsletter->lastSentOn ?></td>
+						<td><?= $newsletter->createdAt ?></td>
+						<td><?= $newsletter->modifiedAt ?></td>
+						<td><?= $newsletter->lastSentAt ?></td>
 						<td>
 							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcore/newsletter/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
 							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcore/newsletter/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>

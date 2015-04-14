@@ -96,16 +96,16 @@ class Service {
 	// Maps -------------------------------------------------------
 
 	/**
-	 * The method findKeyValueMap returns an associative array for the defined table and columns. It also apply the provided conditions.
+	 * The method findNameValueMap returns an associative array for the defined table and columns. It also apply the provided conditions.
 	 */
-	public static function findKeyValueMap( $key, $value, $model, $conditions = [] ) {
+	public static function findNameValueMap( $nameColumn, $valueColumn, $model, $conditions = [] ) {
 
-		$arrayList  = self::findKeyValueList( $key, $value, $model, $conditions );
+		$arrayList  = self::findNameValueList( $nameColumn, $valueColumn, $model, $conditions );
 		$map		= [];
 		
 		foreach ( $arrayList as $item ) {
 			
-			$map[ $item['key'] ] = $item['value']; 
+			$map[ $item['name'] ] = $item['value']; 
 		}
 
 		return $map;
@@ -114,21 +114,21 @@ class Service {
 	// Lists ------------------------------------------------------
 
 	/**
-	 * The method findKeyList returns an array of list for given key
+	 * The method findNameList returns an array of list for given column
 	 */
-	public static function findKeyList( $key, $model, $conditions = [] ) {
+	public static function findNameList( $column, $model, $conditions = [] ) {
 		
 		$query	= new Query();
 
 		// Build Query
 		if( isset( $conditions ) ) {
 
-			$query->select( $key.' as key' )
+			$query->select( $column.' as name' )
 			 	  ->from( $model )->where( $conditions );
 		}
 		else {
 
-			$query->select( $key.' as key' )
+			$query->select( $column.' as name' )
 				  ->from( $model );
 		}
 
@@ -143,28 +143,28 @@ class Service {
 
 		foreach ( $list as $item ) {
 			
-			$keyList[] = $item[ 'key' ]; 
+			$keyList[] = $item[ 'name' ]; 
 		}
 
 		return $keyList;
 	}
 
 	/**
-	 * The method findKeyValueList returns an array of associative arrays having key and value as keys for the defined columns.
+	 * The method findNameValueList returns an array of associative arrays having name and value as keys for the defined columns.
 	 */
-	public static function findKeyValueList( $key, $value, $model, $conditions = [] ) {
+	public static function findNameValueList( $nameColumn, $valueColumn, $model, $conditions = [] ) {
 
 		$query 		= new Query();
 
 		// Build Query
 		if( isset( $conditions ) ) {
 
-			$query->select( $key.' as key,'. $value .' as value' )
+			$query->select( $nameColumn.' as name,'. $valueColumn .' as value' )
 			 	  ->from( $model )->where( $conditions );
 		}
 		else {
 
-			$query->select( $key.' as key,'. $value .' as value' )
+			$query->select( $nameColumn.' as name,'. $valueColumn .' as value' )
 				  ->from( $model );			
 		}
 
@@ -180,19 +180,19 @@ class Service {
 	/**
 	 * The method findIdNameList returns an array of associative arrays having id and name as keys for the defined columns.
 	 */
-	public static function findIdNameList( $key, $value, $model, $conditions = [] ) {
+	public static function findIdNameList( $idColumn, $nameColumn, $model, $conditions = [] ) {
 
 		$query 		= new Query();
 
 		// Build Query
 		if( isset( $conditions ) ) {
 
-			$query->select( $key.' as id,'. $value .' as name' )
+			$query->select( $idColumn.' as id,'. $nameColumn .' as name' )
 			 	  ->from( $model )->where( $conditions );
 		}
 		else {
 
-			$query->select( $key.' as id,'. $value .' as name' )
+			$query->select( $idColumn.' as id,'. $nameColumn .' as name' )
 				  ->from( $model );
 		}
 

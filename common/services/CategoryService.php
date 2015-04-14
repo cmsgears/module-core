@@ -34,12 +34,12 @@ class CategoryService extends Service {
 		return self::findIdNameArrayList( "id", "name", CoreTables::TABLE_CATEGORY, [ "type" => $type ] );
 	}
 
-	public static function getOptionIdKeyMapById( $id ) {
+	public static function getOptionIdNameMapById( $id ) {
 
-		return self::findKeyValueMap( "id", "key", CoreTables::TABLE_OPTION, [ "categoryId" => $id ] );
+		return self::findNameValueMap( "id", "name", CoreTables::TABLE_OPTION, [ "categoryId" => $id ] );
 	}
 
-	public static function getOptionIdKeyMapByName( $name, $prepend = null ) {
+	public static function getOptionIdNameMapByName( $name, $prepend = null ) {
 
 		$category	= self::findByName( $name );
 		$options	= $category->options;
@@ -55,13 +55,13 @@ class CategoryService extends Service {
 
 		foreach ( $options as $option ) {
 			
-			$optionsMap[ $option->id ] = $option->key;
+			$optionsMap[ $option->id ] = $option->name;
 		}
 		
 		return $optionsMap;
 	}
 
-	public static function getOptionValueKeyMapById( $id ) {
+	public static function getOptionValueNameMapById( $id ) {
 
 		$category	= self::findById( $id );
 		$options	= $category->options;
@@ -69,21 +69,21 @@ class CategoryService extends Service {
 
 		foreach ( $options as $option ) {
 			
-			$optionsMap[ $option->value ] = $option->key;
+			$optionsMap[ $option->value ] = $option->name;
 		}
 		
 		return $optionsMap;
 	}
 
-	public static function getOptionValueKeyMapByName( $name ) {
+	public static function getOptionValueNameMapByName( $name ) {
 
 		$category	= self::findByName( $name );
 		$options	= $category->options;
 		$optionsMap	= array();
 
 		foreach ( $options as $option ) {
-			
-			$optionsMap[ $option->value ] = $option->key;
+
+			$optionsMap[ $option->value ] = $option->name;
 		}
 
 		return $optionsMap;

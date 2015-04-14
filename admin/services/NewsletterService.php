@@ -27,20 +27,20 @@ class NewsletterService extends \cmsgears\core\common\services\NewsletterService
 	                'label' => 'name',
 	            ],
 	            'cdate' => [
-	                'asc' => [ 'createdOn' => SORT_ASC ],
-	                'desc' => ['createdOn' => SORT_DESC ],
+	                'asc' => [ 'createdAt' => SORT_ASC ],
+	                'desc' => ['createdAt' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'cdate',
 	            ],
 	            'udate' => [
-	                'asc' => [ 'modifiedOn' => SORT_ASC ],
-	                'desc' => ['modifiedOn' => SORT_DESC ],
+	                'asc' => [ 'modifiedAt' => SORT_ASC ],
+	                'desc' => ['modifiedAt' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'udate',
 	            ],
 	            'ldate' => [
-	                'asc' => [ 'lastSentOn' => SORT_ASC ],
-	                'desc' => ['lastSentOn' => SORT_DESC ],
+	                'asc' => [ 'lastSentAt' => SORT_ASC ],
+	                'desc' => ['lastSentAt' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'udate',
 	            ]
@@ -53,12 +53,12 @@ class NewsletterService extends \cmsgears\core\common\services\NewsletterService
 	// Create -----------
 
 	public static function create( $newsletter ) {
-		
+
 		// Set Attributes
 		$date					= DateUtil::getMysqlDate();
 		$user					= Yii::$app->user->getIdentity();
 		$newsletter->createdBy	= $user->id;
-		$newsletter->createdOn	= $date;
+		$newsletter->createdAt	= $date;
 
 		// Create Newsletter
 		$newsletter->save();
@@ -70,15 +70,15 @@ class NewsletterService extends \cmsgears\core\common\services\NewsletterService
 	// Update -----------
 
 	public static function update( $newsletter ) {
-		
+
 		// Find existing Newsletter
 		$nlToUpdate	= self::findById( $newsletter->id );
-		
+
 		// Copy and set Attributes	
 		$date					= DateUtil::getMysqlDate();
 		$user					= Yii::$app->user->getIdentity();
 		$nlToUpdate->modifiedBy	= $user->id;
-		$nlToUpdate->modifiedOn	= $date;
+		$nlToUpdate->modifiedAt	= $date;
 
 		$nlToUpdate->copyForUpdateFrom( $newsletter, [ 'name', 'description', 'content' ] );
 		

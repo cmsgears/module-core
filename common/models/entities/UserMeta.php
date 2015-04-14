@@ -5,7 +5,7 @@ namespace cmsgears\core\common\models\entities;
  * UserMeta Entity
  *
  * @property integer $userId
- * @property string $key
+ * @property string $name
  * @property string $value
  */
 class UserMeta extends CmgEntity {
@@ -25,18 +25,18 @@ class UserMeta extends CmgEntity {
 	public function rules() {
 
         return [
-            [ [ 'userId', 'key' ], 'required' ],
+            [ [ 'userId', 'name' ], 'required' ],
 			[ [ 'value' ], 'safe' ],
             [ 'userId', 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ 'key', 'alphanumhyphenspace' ],
-            [ 'key', 'length', 'min'=>1, 'max'=>100 ]
+            [ 'name', 'alphanumhyphenspace' ],
+            [ 'name', 'string', 'min'=>1, 'max'=>100 ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'key' => 'Key',
+			'name' => 'Name',
 			'value' => 'Value'
 		];
 	}
@@ -64,18 +64,14 @@ class UserMeta extends CmgEntity {
 		return self::find()->where( 'userId=:id', [ ':id' => $userId ] )->all();
 	}
 
-	public static function findByUserKey( $user, $key ) {
+	public static function findByUsername( $user, $name ) {
 
-		return self::find()->where( [ 'userId=:id', 'key=:key' ] )
-							->addParams( [ ':id' => $user->id, ':key' => $key ] )
-							->one();
+		return self::find()->where( 'userId=:id AND name=:name', [ ':id' => $user->id, ':name' => $name ] )->one();
 	}
 
-	public static function findByUserIdKey( $userId, $key ) {
+	public static function findByNameUserId( $name, $userId ) {
 
-		return self::find()->where( [ 'userId=:id', 'key=:key' ] )
-							->addParams( [ ':id' => $userId, ':key' => $key ] )
-							->one();
+		return self::find()->where( 'name=:name AND userId=:id', [ ':name' => $name, ':id' => $userId ] )->one();
 	}
 
 	// Delete
@@ -90,14 +86,14 @@ class UserMeta extends CmgEntity {
 		self::deleteAll( 'userId=:id', [ ':id' => $userId ] );
 	}
 
-	public static function deleteByUserKey( $user, $key ) {
+	public static function deleteByNameUser( $name, $user ) {
 
-		self::deleteAll( 'userId=:id AND key=:key', [ ':id' => $user->id, ':key' => $key ] );
+		self::deleteAll( 'name=:name AND userId=:id', [ ':name' => $name, ':id' => $user->id ] );
 	}
 
-	public static function deleteByUserIdKey( $id, $key ) {
+	public static function deleteByNameUserId( $name, $id ) {
 
-		self::deleteAll( 'userId=:id AND key=:key', [ ':id' => $id, ':key' => $key ] );
+		self::deleteAll( 'name=:name AND userId=:id', [ ':name' => $name, ':id' => $id ] );
 	}
 }
 

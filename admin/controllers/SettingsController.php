@@ -8,15 +8,9 @@ use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\admin\config\AdminGlobalCore;
-
-use cmsgears\core\common\models\entities\Permission;
-use cmsgears\core\common\models\entities\Config;
 
 use cmsgears\core\admin\services\OptionService;
 use cmsgears\core\admin\services\ConfigService;
-
-use common\utilities\MessageUtil;
 
 class SettingsController extends BaseController {
 
@@ -31,8 +25,8 @@ class SettingsController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => Permission::PERM_SETTINGS ],
-					'update' => [ 'permission' => Permission::PERM_SETTINGS ]
+	                'index'  => [ 'permission' => CoreGlobal::PERM_SETTINGS ],
+					'update' => [ 'permission' => CoreGlobal::PERM_SETTINGS ]
                 ]
             ],
             'verbs' => [
@@ -47,7 +41,7 @@ class SettingsController extends BaseController {
 
     public function actionIndex( $type ) {
 
-		$settingType	= OptionService::findByCategoryNameKey( CoreGlobal::CATEGORY_CONFIG_TYPE, ucfirst( $type ) );
+		$settingType	= OptionService::findByNameCategoryName( ucfirst( $type ), CoreGlobal::CATEGORY_CONFIG_TYPE );
 		$settings		= null;
 		
 		if( isset( $settingType ) ) {
@@ -63,7 +57,7 @@ class SettingsController extends BaseController {
 
 	public function actionUpdate( $type ) {
 		
-		$settingType	= OptionService::findByCategoryNameKey( CoreGlobal::CATEGORY_CONFIG_TYPE, ucfirst( $type ) );
+		$settingType	= OptionService::findByNameCategoryName( ucfirst( $type ), CoreGlobal::CATEGORY_CONFIG_TYPE );
     	$settings		= null;
 
 		if( isset( $settingType ) ) {

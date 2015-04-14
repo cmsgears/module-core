@@ -79,8 +79,6 @@ if( !isset( $sortOrder ) ) {
 			</thead>
 			<tbody>
 				<?php
-					
-					$uploadUrl	= Yii::$app->cmgFileManager->uploadUrl;
 
 					foreach( $page as $user ) {
 
@@ -94,7 +92,7 @@ if( !isset( $sortOrder ) ) {
 
 								if( isset( $avatar ) ) { 
 							?> 
-								<img class="avatar" src="<?=$uploadUrl?><?= $avatar->thumb ?>">
+								<img class="avatar" src="<?= $avatar->getThumbUrl() ?>">
 							<?php 
 								} else { 
 							?>
@@ -107,7 +105,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $roles[ $user->roleId ] ?></td>
 						<td><?= $user->statusStr ?></td>
 						<td><?= $user->phone ?></td>
-						<td><?= $user->registeredOn ?></td>
+						<td><?= $user->registeredAt ?></td>
 						<td><?= $user->lastLogin ?></td>
 						<td><?= $user->getNewsletterStr() ?></td>
 						<td>

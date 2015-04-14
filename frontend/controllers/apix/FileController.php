@@ -8,9 +8,10 @@ use yii\filters\VerbFilter;
 use yii\web\Controller;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\entities\Permission;
 
-use cmsgears\core\common\components\MessageDbCore;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class FileController extends Controller {
@@ -55,17 +56,17 @@ class FileController extends Controller {
 
 	public function actionFileHandler( $selector ) {
 
-		$data	= Yii::$app->cmgFileManager->handleFileUpload( $selector );
+		$data	= Yii::$app->fileManager->handleFileUpload( $selector );
 
 		if( $data ) {
 
 			// Trigger Ajax Success
-			AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::MESSAGE_REQUEST ), $data );
+			AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 		}
 		else {
 
 			// Trigger Ajax Failure
-	        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::ERROR_REQUEST ) );
+	        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ) );
 		}
 	}
 }

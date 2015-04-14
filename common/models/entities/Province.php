@@ -32,7 +32,7 @@ class Province extends CmgEntity {
             [ [ 'countryId', 'code', 'name' ], 'required' ],
             [ 'id', 'safe' ],
             [ 'name', 'alphanumspace' ],
-            [ 'name', 'length', 'min'=>1, 'max'=>10 ],
+            [ 'name', 'string', 'min'=>1, 'max'=>10 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
@@ -115,9 +115,7 @@ class Province extends CmgEntity {
 
 	public static function findByCountryIdName( $countryId, $name ) {
 
-		return self::find()->where( [ 'countryId=:id', 'name=:name' ] )
-							->addParams( [ ':id' => $countryId, ':name' => $key ] )
-							->one();
+		return self::find()->where( 'countryId=:id AND name=:name', [ ':id' => $countryId, ':name' => $key ] )->one();
 	}
 	
 	public static function isExistByCountryIdName( $countryId, $name ) {

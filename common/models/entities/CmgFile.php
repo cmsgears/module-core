@@ -1,6 +1,9 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreProperties;
 
@@ -45,15 +48,35 @@ class CmgFile extends CmgEntity {
 		return self::$typeMap[ $this->type ];	
 	}
 
-	public function getDisplayUrl() {
+	/**
+	 * The method returns the file url for the file.
+	 */
+	public function getFileUrl() {
 
 		if( $this->changed ) {
 
-			return CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "." . $this->extension;
+			return Yii::$app->fileManager->uploadUrl . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "." . $this->extension;
 		}
 		else if( $this->id > 0 ) {
 
-			return $this->url;
+			return Yii::$app->fileManager->uploadUrl . $this->url;
+		}
+
+		return "";
+	}
+
+	/**
+	 * The method returns the thumb url for the file. It's common usage is for images.
+	 */
+	public function getThumbUrl() {
+
+		if( $this->changed ) {
+
+			return Yii::$app->fileManager->uploadUrl . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "-thumb." . $this->extension;
+		}
+		else if( $this->id > 0 ) {
+
+			return Yii::$app->fileManager->uploadUrl . $this->thumb;
 		}
 
 		return "";
@@ -65,7 +88,8 @@ class CmgFile extends CmgEntity {
 
         return [
             [ [ 'authorId', 'name', 'extension', 'directory', 'url' ], 'required' ],
-            [ [ 'id', 'type', 'description', 'altText', 'thumb', 'changed' ], 'safe' ]
+            [ [ 'id', 'type', 'description', 'altText', 'thumb', 'changed' ], 'safe' ],
+            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
         ];
     }
 

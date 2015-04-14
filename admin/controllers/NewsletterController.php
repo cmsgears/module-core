@@ -8,17 +8,14 @@ use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\admin\config\AdminGlobalCore;
 
 use cmsgears\core\common\models\entities\Newsletter;
-use cmsgears\core\common\models\entities\Permission;
 
 use cmsgears\core\admin\services\NewsletterService;
 use cmsgears\core\admin\services\UserService;
 use cmsgears\core\admin\services\RoleService;
 
 use cmsgears\core\common\utilities\CodeGenUtil;
-use cmsgears\core\common\utilities\MessageUtil;
 
 class NewsletterController extends BaseController {
 
@@ -39,12 +36,12 @@ class NewsletterController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => Permission::PERM_NEWSLETTER ],
-	                'all'   => [ 'permission' => Permission::PERM_NEWSLETTER ],
-	                'create' => [ 'permission' => Permission::PERM_NEWSLETTER ],
-	                'update' => [ 'permission' => Permission::PERM_NEWSLETTER ],
-	                'delete' => [ 'permission' => Permission::PERM_NEWSLETTER ],
-	                'members' => [ 'permission' => Permission::PERM_NEWSLETTER ]
+	                'index'  => [ 'permission' => CoreGlobal::PERM_NEWSLETTER ],
+	                'all'   => [ 'permission' => CoreGlobal::PERM_NEWSLETTER ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_NEWSLETTER ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_NEWSLETTER ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_NEWSLETTER ],
+	                'members' => [ 'permission' => CoreGlobal::PERM_NEWSLETTER ]
                 ]
             ],
             'verbs' => [
@@ -122,7 +119,7 @@ class NewsletterController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
@@ -147,7 +144,7 @@ class NewsletterController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
 	}
 
 	public function actionMembers() {

@@ -10,14 +10,12 @@ use cmsgears\core\admin\config\AdminGlobalCore;
 
 use cmsgears\core\common\config\CoreProperties;
 use cmsgears\core\common\config\MailProperties;
-
 use cmsgears\core\admin\config\AdminProperties;
 
 class BaseController extends Controller {
 
 	private $coreProperties;
 	private $mailProperties;
-
 	private $adminProperties;
 
 	// Constructor and Initialisation ------------------------------

@@ -18,7 +18,7 @@ INSERT INTO `cmg_config` VALUES
 	(9,'smtp password','',10, '', null ),
 	(10,'smtp host','',10, 'text', null ),
 	(11,'smtp port','587',10, 'text', null ),
-	(12,'debug','true',10, 'text', null ),	
+	(12,'debug','true',10, 'text', null ),
 	(13,'sender name','Admin',10, 'text', null ),
 	(14,'sender email','demoadmin@cmsgears.com',10, 'text', null ),
 	(15,'contact name','Contact Us',10, 'text', null ),
@@ -62,10 +62,10 @@ INSERT INTO `cmg_option` VALUES
 --
 
 INSERT INTO `cmg_role` VALUES 
-	(1,1,1,'Super Admin','The Super Admin have all the permisisons to perform operations on the admin site and website.','/',0,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(2,1,1,'Admin','The Admin have all the permisisons to perform operations on the admin site and website except RBAC module.','/',0,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(3,1,1,'User','The role User is limited to website users.','/',0,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(4,1,1,'Identity Manager','The role User Manager is limited to manage users from admin.','/',0,'2014-10-11 14:22:54','2014-10-11 14:22:54');
+	(1,1,1,'Super Admin','The Super Admin have all the permisisons to perform operations on the admin site and website.','/dashboard',0,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(2,1,1,'Admin','The Admin have all the permisisons to perform operations on the admin site and website except RBAC module.','/dashboard',0,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(3,1,1,'User','The role User is limited to website users.','/home',0,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(4,1,1,'Identity Manager','The role User Manager is limited to manage users from admin.','/dashboard',0,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 --
 -- Dumping data for table `cmg_permission`

@@ -7,11 +7,8 @@ use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\admin\config\AdminGlobalCore;
-use cmsgears\cms\common\config\CMSGlobal;
 
 use cmsgears\core\common\models\entities\Config;
-use cmsgears\core\common\models\entities\Permission;
 
 use cmsgears\core\admin\services\ConfigService;
 
@@ -33,7 +30,7 @@ class SettingsController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'update'  => [ 'permission' => Permission::PERM_SETTINGS ]
+	                'update'  => [ 'permission' => CoreGlobal::PERM_SETTINGS ]
                 ]
             ],
             'verbs' => [
@@ -57,11 +54,11 @@ class SettingsController extends BaseController {
 
 				if( ConfigService::update( $config ) ) {
 
-					AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::MESSAGE_REQUEST ), $config );
+					AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), $config );
 				}	
 			}
 
-			AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::ERROR_REQUEST ) );
+			AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ) );
 		}
 	}
 }

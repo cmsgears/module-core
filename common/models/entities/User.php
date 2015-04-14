@@ -269,7 +269,8 @@ class User extends CmgEntity implements IdentityInterface {
             [ 'username', 'validateUsernameCreate', 'on' => [ 'create' ] ],
             [ 'username', 'validateUsernameUpdate', 'on' => [ 'update' ] ],
             [ [ 'firstName', 'lastName' ], 'alphanumspace' ],
-            [ 'dob', 'date', 'format'=>'yyyy-MM-dd' ]
+            [ 'dob', 'date', 'format'=>'yyyy-MM-dd' ],
+            [ [ 'registeredAt', 'lastLogin', 'lastActivity', 'accessTokenCreatedAt', 'accessTokenAccessedAt' ], 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
         ];
     }
 

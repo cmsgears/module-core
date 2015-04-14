@@ -10,8 +10,6 @@ use cmsgears\core\admin\config\AdminGlobalCore;
 
 use cmsgears\core\common\models\forms\LoginForm;
 
-use cmsgears\core\common\utilities\AjaxUtil;
-
 class SiteController extends BaseController {
 
 	// Constructor and Initialisation ------------------------------

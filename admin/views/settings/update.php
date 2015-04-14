@@ -23,7 +23,7 @@ use yii\widgets\ActiveForm;
 					?>
 					<li>
 						<form id="frm-settings-core-<?=$id?>" group="0" key="35" class="frm-settings" action="<?= Url::toRoute('/cmgcore/apix/settings/update?id='. $id ) ?>" method="POST" keepData="true">
-							<label> <?=  $setting->key ?> </label>
+							<label> <?=  $setting->name ?> </label>
 							<?php if( strcmp( $setting->fieldType, "password" ) == 0 ) { ?>
 								<span> <input type="password" name="Config[value]" value="" > </span>
 							<?php } else { ?>

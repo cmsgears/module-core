@@ -45,9 +45,7 @@ class UserAddress extends CmgEntity {
 
 	public static function findNativeByUser( $user ) {
 
-		$userAddress	= self::find()->where( [ 'userId=:id', 'type=:type' ] )
-							->addParams( [ ':id' => $user->id, ':type' => self::TYPE_NATIVE ] )
-							->one();
+		$userAddress	= self::find()->where( 'userId=:id AND type=:type', [ ':id' => $user->id, ':type' => self::TYPE_NATIVE ] )->one();
 
 		$address 		= null;
 
@@ -61,9 +59,7 @@ class UserAddress extends CmgEntity {
 
 	public static function findMailingByUser( $user ) {
 
-		$userAddress	= self::find()->where( [ 'userId=:id', 'type=:type' ] )
-							->addParams( [ ':id' => $user->id, ':type' => self::TYPE_MAILING ] )
-							->one();
+		$userAddress	= self::find()->where( 'userId=:id AND type=:type', [ ':id' => $user->id, ':type' => self::TYPE_MAILING ] )->one();
 
 		$address 		= null;
 
@@ -77,9 +73,7 @@ class UserAddress extends CmgEntity {
 
 	public static function findBillingByUser( $user ) {
 
-		$userAddress	= self::find()->where( [ 'userId=:id', 'type=:type' ] )
-							->addParams( [ ':id' => $user->id, ':type' => self::TYPE_BILLING ] )
-							->one();
+		$userAddress	= self::find()->where( 'userId=:id AND type=:type', [ ':id' => $user->id, ':type' => self::TYPE_BILLING ] )->one();
 
 		$address 		= null;
 

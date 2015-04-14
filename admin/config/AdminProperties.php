@@ -3,8 +3,7 @@ namespace cmsgears\core\admin\config;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\admin\config\AdminGlobalCore;
- 
+
 use cmsgears\core\common\models\entities\Config;
 
 use cmsgears\core\common\services\OptionService;
@@ -53,8 +52,8 @@ class AdminProperties {
 	 */
 	public function init() {
 
-		$type				= OptionService::findByCategoryNameKey( CoreGlobal::CATEGORY_CONFIG_TYPE, AdminGlobalCore::CONFIG_ADMIN );
-		$this->properties	= ConfigService::getKeyValueMapByType( $type->getValue() );
+		$type				= OptionService::findByNameCategoryName( CoreGlobal::CONFIG_ADMIN, CoreGlobal::CATEGORY_CONFIG_TYPE );
+		$this->properties	= ConfigService::getNameValueMapByType( $type->getValue() );
 	}
 
 	/**

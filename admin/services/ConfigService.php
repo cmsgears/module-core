@@ -8,7 +8,7 @@ use \Yii;
 use cmsgears\core\common\models\entities\Config;
 
 class ConfigService extends \cmsgears\core\common\services\ConfigService {
-	
+
 	// Static Methods ----------------------------------------------
 
 	// Update

@@ -14,7 +14,7 @@ namespace cmsgears\core\common\models\entities;
  * @property datetime $modifiedAt
  * @property datetime $lastSentAt
  */
-class Newsletter extends NamedActiveRecord {
+class Newsletter extends NamedCmgEntity {
 
 	// Instance Methods --------------------------------------------
 
@@ -43,7 +43,8 @@ class Newsletter extends NamedActiveRecord {
             [ [ 'id', 'description', 'content' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'createdAt', 'modifiedAt', 'lastSentAt' ], 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
         ];
     }
 

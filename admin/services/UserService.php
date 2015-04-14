@@ -70,12 +70,11 @@ class UserService extends \cmsgears\core\common\services\UserService {
 
 	// Create -----------
 
-	// User created from Admin Panel
 	public static function create( $user ) {
 
 		// Set Attributes
 		$date				= DateUtil::getMysqlDate();
-		$user->registeredOn = $date;
+		$user->registeredAt = $date;
 		$user->status		= User::STATUS_NEW;
 		
 		// Generate Tokens
@@ -92,7 +91,7 @@ class UserService extends \cmsgears\core\common\services\UserService {
 	// Update -----------
 
 	public static function update( $user, $avatar ) {
-		
+
 		// Find existing user
 		$userToUpdate	= User::findById( $user->id );
 
@@ -100,11 +99,11 @@ class UserService extends \cmsgears\core\common\services\UserService {
 		$userToUpdate->copyForUpdateFrom( $user, [ 'email', 'username', 'firstName', 'lastName', 'newsletter', 'status', 'roleId', 'phone', 'avatarId' ] );
 
 		// Save Avatar
-		FileService::saveImage( $avatar, $userToUpdate, $userToUpdate, 'avatarId', Yii::$app->cmgFileManager );
+		FileService::saveImage( $avatar, $userToUpdate, [ 'model' => $userToUpdate, 'attribute' => 'avatarId' ] );
 
 		// Update User
 		$userToUpdate->update();
-		
+
 		// Return updated User
 		return $userToUpdate;
 	}

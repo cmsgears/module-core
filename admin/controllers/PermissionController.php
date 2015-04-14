@@ -8,7 +8,6 @@ use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\admin\config\AdminGlobalCore;
 
 use cmsgears\core\common\models\entities\Permission;
 
@@ -18,9 +17,6 @@ use cmsgears\core\admin\services\PermissionService;
 use cmsgears\core\admin\services\RoleService;
 
 use cmsgears\core\admin\controllers\BaseController;
-
-use cmsgears\core\common\utilities\CodeGenUtil;
-use cmsgears\core\common\utilities\MessageUtil;
 
 class PermissionController extends BaseController {
 
@@ -41,12 +37,12 @@ class PermissionController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => Permission::PERM_RBAC ],
-	                'all'   => [ 'permission' => Permission::PERM_RBAC ],
-	                'matrix' => [ 'permission' => Permission::PERM_RBAC ],
-	                'create' => [ 'permission' => Permission::PERM_RBAC ],
-	                'update' => [ 'permission' => Permission::PERM_RBAC ],
-	                'delete' => [ 'permission' => Permission::PERM_RBAC ]
+	                'index'  => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'all'   => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'matrix' => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_RBAC ]
                 ]
             ],
             'verbs' => [
@@ -158,7 +154,7 @@ class PermissionController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
@@ -186,7 +182,7 @@ class PermissionController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

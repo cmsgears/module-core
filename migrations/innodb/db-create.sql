@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS `cmg_config`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_config` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `key` varchar(255) COLLATE utf8_unicode_ci DEFAULT '0',
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT '0',
   `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` int(11) DEFAULT 0,
   `fieldType` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE `cmg_locale_message` (
   `localeId` bigint(20) DEFAULT NULL,
   `type` smallint(6) DEFAULT 0,
   `parentId` bigint(20) DEFAULT NULL,
-  `key` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `value` LONGTEXT COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_locale_message_1` (`localeId`),
@@ -82,7 +82,7 @@ DROP TABLE IF EXISTS `cmg_option`;
 CREATE TABLE `cmg_option` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `categoryId` bigint(20) NOT NULL,
-  `key` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_option_1` (`categoryId`),
@@ -292,9 +292,9 @@ DROP TABLE IF EXISTS `cmg_user_meta`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_user_meta` (
   `userId` bigint(20) NOT NULL,
-  `key` varchar(100) NOT NULL,
+  `name` varchar(100) NOT NULL,
   `value` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`userId`,`key`),
+  PRIMARY KEY (`userId`,`name`),
   KEY `fk_user_meta_1` (`userId`),
   CONSTRAINT `fk_user_meta_1` FOREIGN KEY (`userId`) REFERENCES `cmg_user` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -334,7 +334,7 @@ CREATE TABLE `cmg_file` (
   `extension` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `directory` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `createdAt` datetime NOT NULL,
-  `updatedAt` datetime DEFAULT NULL,
+  `modifiedAt` datetime DEFAULT NULL,
   `type` smallint(6) NOT NULL DEFAULT '1',
   `url` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `thumb` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,

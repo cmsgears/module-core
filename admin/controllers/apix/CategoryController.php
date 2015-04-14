@@ -8,16 +8,13 @@ use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\admin\config\AdminGlobalCore;
 
 use cmsgears\core\common\models\entities\Category;
-use cmsgears\core\common\models\entities\Permission;
 
 use cmsgears\core\admin\services\CategoryService;
 
 use cmsgears\core\admin\controllers\BaseController;
 
-use cmsgears\core\common\components\MessageDbCore;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class CategoryController extends BaseController {
@@ -39,11 +36,11 @@ class CategoryController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => Permission::PERM_CATEGORY ],
-	                'all'   => [ 'permission' => Permission::PERM_CATEGORY ],
-	                'create' => [ 'permission' => Permission::PERM_CATEGORY ],
-	                'update' => [ 'permission' => Permission::PERM_CATEGORY ],
-	                'delete' => [ 'permission' => Permission::PERM_CATEGORY ]
+	                'index'  => [ 'permission' => CoreGlobal::PERM_CATEGORY ],
+	                'all'   => [ 'permission' => CoreGlobal::PERM_CATEGORY ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_CATEGORY ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_CATEGORY ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_CATEGORY ]
                 ]
             ],
             'verbs' => [
@@ -71,7 +68,7 @@ class CategoryController extends BaseController {
 
 			if( CategoryService::create( $model ) ) {
 
-				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::MESSAGE_REQUEST ), $model );
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 			}
 		}
 		
@@ -79,7 +76,7 @@ class CategoryController extends BaseController {
 		$errors = AjaxUtil::generateErrorMessage( $model );
 
 		// Trigger Ajax Failure
-    	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::ERROR_REQUEST ), $errors );
+    	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 	}
 	
 	public function actionUpdate( $id ) {
@@ -93,7 +90,7 @@ class CategoryController extends BaseController {
 
 			if( CategoryService::update( $model ) ) {
 				
-				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::MESSAGE_REQUEST ), $model );
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 			}
 		}
 		
@@ -101,7 +98,7 @@ class CategoryController extends BaseController {
 		$errors = AjaxUtil::generateErrorMessage( $model );
 
 		// Trigger Ajax Failure
-    	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::ERROR_REQUEST ), $errors );
+    	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 	}
 	
 	public function actionDelete( $id ) {
@@ -113,7 +110,7 @@ class CategoryController extends BaseController {
 				
 			if( CategoryService::delete( $model ) ) {
 	
-				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::MESSAGE_REQUEST ), $model );
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 			}
 		}
 		else {
@@ -122,7 +119,7 @@ class CategoryController extends BaseController {
 			$errors = AjaxUtil::generateErrorMessage( $model );
 
 			// Trigger Ajax Failure
-	    	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( MessageDbCore::ERROR_REQUEST ), $errors );
+	    	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
 	}
 }

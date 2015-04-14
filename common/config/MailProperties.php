@@ -104,15 +104,15 @@ class MailProperties {
 	 */ 
 	public function init() {
 
-		$type				= OptionService::findByCategoryNameKey( CoreGlobal::CATEGORY_CONFIG_TYPE, CoreGlobal::CONFIG_MAIL );
-		$this->properties	= ConfigService::getKeyValueMapByType( $type->value );
+		$type				= OptionService::findByNameCategoryName( CoreGlobal::CONFIG_MAIL, CoreGlobal::CATEGORY_CONFIG_TYPE );
+		$this->properties	= ConfigService::getNameValueMapByType( $type->value );
 	}
 
 	/**
 	 * Return mail property for the specified key.
 	 */
 	public function getProperty( $key ) {
-		
+
 		return $this->properties[ key ];
 	}
 

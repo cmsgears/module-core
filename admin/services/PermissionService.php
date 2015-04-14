@@ -41,7 +41,7 @@ class PermissionService extends \cmsgears\core\common\services\PermissionService
 		$date					= DateUtil::getMysqlDate();
 		$user					= Yii::$app->user->getIdentity();
 		$permission->createdBy	= $user->id;
-		$permission->createdOn	= $date;
+		$permission->createdAt	= $date;
 		
 		// Create Permission
 		$permission->save();
@@ -61,7 +61,7 @@ class PermissionService extends \cmsgears\core\common\services\PermissionService
 		$date							= DateUtil::getMysqlDate();
 		$user							= Yii::$app->user->getIdentity();
 		$permissionToUpdate->modifiedBy	= $user->id;
-		$permissionToUpdate->modifiedOn	= $date;
+		$permissionToUpdate->modifiedAt	= $date;
 
 		$permissionToUpdate->copyForUpdateFrom( $permission, [ 'name', 'description' ] );
 

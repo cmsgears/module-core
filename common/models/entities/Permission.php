@@ -14,7 +14,7 @@ namespace cmsgears\core\common\models\entities;
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
-class Permission extends NamedActiveRecord {
+class Permission extends NamedCmgEntity {
 
 	// Instance Methods --------------------------------------------
 
@@ -75,7 +75,7 @@ class Permission extends NamedActiveRecord {
             [ [ 'name' ], 'required' ],
             [ [ 'id', 'description' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
-            [ 'name', 'length', 'min'=>1, 'max'=>100 ],
+            [ 'name', 'string', 'min'=>1, 'max'=>100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],

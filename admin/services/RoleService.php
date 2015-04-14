@@ -41,7 +41,7 @@ class RoleService extends \cmsgears\core\common\services\RoleService {
 		$date				= DateUtil::getMysqlDate();
 		$user				= Yii::$app->user->getIdentity();
 		$role->createdBy	= $user->id;
-		$role->createdOn	= $date;
+		$role->createdAt	= $date;
 		
 		// Create Role
 		$role->save();
@@ -62,7 +62,7 @@ class RoleService extends \cmsgears\core\common\services\RoleService {
 		$user			= Yii::$app->user->getIdentity();
 
 		$roleToUpdate->modifiedBy	= $user->id;
-		$roleToUpdate->modifiedOn	= $date;
+		$roleToUpdate->modifiedAt	= $date;
 
 		$roleToUpdate->copyForUpdateFrom( $role, [ 'name', 'description', 'homeUrl' ] );
 		

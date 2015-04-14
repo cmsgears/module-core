@@ -19,7 +19,7 @@ class Locale extends NamedActiveRecord {
         return [
             [ [ 'name', 'code' ], 'required' ],
             [ 'id', 'safe' ],
-            [ 'code', 'length', 'min'=>1, 'max'=>50 ],
+            [ 'code', 'string', 'min'=>1, 'max'=>50 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]

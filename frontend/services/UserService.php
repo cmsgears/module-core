@@ -27,7 +27,7 @@ class UserService extends \cmsgears\core\common\services\UserService {
 		$user->firstName	= $registerForm->firstName;
 		$user->lastName		= $registerForm->lastName;
 		$user->newsletter	= $registerForm->newsletter;
-		$user->registeredOn	= $date;
+		$user->registeredAt	= $date;
 		$user->status		= User::STATUS_NEW;
 
 		$user->setPassword( $registerForm->password );
@@ -88,6 +88,21 @@ class UserService extends \cmsgears\core\common\services\UserService {
 		$user->save();
 
 		return true;
+	}
+
+	public function actionUpdateAvatar( $user, $avatar ) {
+
+		// Find existing user
+		$userToUpdate	= User::findById( $user->id );
+
+		// Save Avatar
+		FileService::saveImage( $avatar, $userToUpdate, [ 'model' => $userToUpdate, 'attribute' => 'avatarId' ] );
+
+		// Update User
+		$userToUpdate->update();
+
+		// Return updated User
+		return $userToUpdate;
 	}
 }
 

@@ -15,11 +15,11 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Update User";
     	<h4>User Avatar</h4>
 		<div id="file-avatar" class="file-container" legend="User Avatar" selector="avatar" utype="image" btn-class="btn file-input-wrap" btn-text="Choose Avatar">
 			<div class="file-fields">
-				<input type="hidden" name="File[id]" value="<?php if( isset( $avatar ) ) echo $avatar->id; ?>" />
-				<input type="hidden" name="File[name]" class="file-name" value="<?php if( isset( $avatar ) ) echo $avatar->name; ?>" />
-				<input type="hidden" name="File[extension]" class="file-extension" value="<?php if( isset( $avatar ) ) echo $avatar->extension; ?>" />
-				<input type="hidden" name="File[directory]" value="avatar" value="<?php if( isset( $avatar ) ) echo $avatar->directory; ?>" />
-				<input type="hidden" name="File[changed]" class="file-change" value="<?php if( isset( $avatar ) ) echo $avatar->changed; ?>" />
+				<input type="hidden" name="Avatar[id]" value="<?php if( isset( $avatar ) ) echo $avatar->id; ?>" />
+				<input type="hidden" name="Avatar[name]" class="file-name" value="<?php if( isset( $avatar ) ) echo $avatar->name; ?>" />
+				<input type="hidden" name="Avatar[extension]" class="file-extension" value="<?php if( isset( $avatar ) ) echo $avatar->extension; ?>" />
+				<input type="hidden" name="Avatar[directory]" value="avatar" value="<?php if( isset( $avatar ) ) echo $avatar->directory; ?>" />
+				<input type="hidden" name="Avatar[changed]" class="file-change" value="<?php if( isset( $avatar ) ) echo $avatar->changed; ?>" />
 			</div>
 		</div>
 		<?= $form->field( $model, 'firstName' ) ?>
@@ -41,6 +41,6 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Update User";
 	initFileUploader();
 
 	<?php if( isset( $avatar ) ) { ?>
-		jQuery("#file-avatar .file-image").html( "<img src='<?php echo Yii::$app->cmgFileManager->uploadUrl . $avatar->getDisplayUrl(); ?>' />'" );
+		jQuery("#file-avatar .file-image").html( "<img src='<?php echo $avatar->getFileUrl(); ?>' />'" );
 	<?php } ?>
 </script>

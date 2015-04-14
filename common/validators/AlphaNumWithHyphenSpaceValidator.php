@@ -4,7 +4,6 @@ namespace cmsgears\core\common\validators;
 use yii\validators\Validator;
 
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\common\utilities\MessageUtil;
 
 class AlphaNumWithHyphenSpaceValidator extends Validator {
 
@@ -14,7 +13,7 @@ class AlphaNumWithHyphenSpaceValidator extends Validator {
 
         if ( !preg_match( self::$regex, $model->$attribute ) ) {
 
-            $this->addError( $model, $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_AN_HYPHEN_SPACE ) );
+            $this->addError( $model, $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_AN_HYPHEN_SPACE ) );
         }
     }
 }

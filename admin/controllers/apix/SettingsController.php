@@ -24,6 +24,8 @@ class SettingsController extends BaseController {
         parent::__construct( $id, $module, $config );
 	}
 
+	// yii\base\Component ----------------
+
     public function behaviors() {
 
         return [
@@ -41,6 +43,8 @@ class SettingsController extends BaseController {
             ]
         ];
     }
+	
+	// SettingsController ----------------
 
 	public function actionUpdate( $id ) {
 

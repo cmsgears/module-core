@@ -27,7 +27,7 @@ class SiteController extends BaseController {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Component
+	// yii\base\Component ----------------
 
     public function behaviors() {
 
@@ -46,7 +46,8 @@ class SiteController extends BaseController {
         ];
     }
 
-	// yii\base\Controller
+	// yii\base\Controller ---------------
+
     public function actions() {
 
         return [
@@ -56,7 +57,7 @@ class SiteController extends BaseController {
         ];
     }
 
-	// SiteController
+	// SiteController --------------------
 
     public function actionIndex() {
 

@@ -28,7 +28,7 @@ class CategoryController extends BaseController {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Component
+	// yii\base\Component ----------------
 
     public function behaviors() {
 
@@ -56,7 +56,7 @@ class CategoryController extends BaseController {
         ];
     }
 
-	// UserController
+	// UserController --------------------
 
 	public function actionCreate() {
 

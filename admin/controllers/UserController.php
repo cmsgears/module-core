@@ -29,7 +29,7 @@ class UserController extends BaseController {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Component
+	// yii\base\Component ----------------
 
     public function behaviors() {
 
@@ -57,7 +57,7 @@ class UserController extends BaseController {
         ];
     }
 
-	// UserController
+	// UserController --------------------
 
 	public function actionIndex() {
 
@@ -84,7 +84,7 @@ class UserController extends BaseController {
 
 		$model->setScenario( "create" );
 
-		if( $model->load( Yii::$app->request->post() )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post( "User" ), "" )  && $model->validate() ) {
 
 			if( UserService::create( $model ) ) {
 
@@ -117,7 +117,7 @@ class UserController extends BaseController {
 
 			$model->setScenario( "update" );
 
-			if( $model->load( Yii::$app->request->post() )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post( "User" ), "" )  && $model->validate() ) {
 
 				$avatar->load( Yii::$app->request->post( "Avatar" ), "" );
 
@@ -154,7 +154,7 @@ class UserController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post() ) ) {
+			if( $model->load( Yii::$app->request->post( "User" ), "" ) ) {
 	
 				if( UserService::delete( $model ) ) {
 	

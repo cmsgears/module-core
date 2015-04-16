@@ -47,7 +47,7 @@ class FileService extends Service {
 
 			// Copy and set Attributes
 			$date 						= DateUtil::getMysqlDate();
-			$fileToUpdate->updatedAt	= $date;
+			$fileToUpdate->modifiedAt	= $date;
 
 			$fileToUpdate->copyForUpdateFrom( $file, [ 'description', 'altText' ] );
 
@@ -70,9 +70,9 @@ class FileService extends Service {
 
 			// Copy and set Attributes
 			$date 						= DateUtil::getMysqlDate();
-			$fileToUpdate->updatedAt	= $date;
+			$fileToUpdate->modifiedAt	= $date;
 
-			$fileToUpdate->copyForUpdateFrom( $file, [ 'description', 'altText', 'directory', 'authorId', 'type', 'url', 'thumb', 'createdOn' ] );
+			$fileToUpdate->copyForUpdateFrom( $file, [ 'description', 'altText', 'directory', 'authorId', 'type', 'url', 'thumb', 'createdAt' ] );
 
 			// Update File
 			$fileToUpdate->update();

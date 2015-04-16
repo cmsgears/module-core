@@ -29,7 +29,8 @@ CREATE TABLE `cmg_locale` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `code` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_locale_code` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -67,6 +68,7 @@ CREATE TABLE `cmg_category` (
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` int(11) DEFAULT 0,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_category_name` (`name`),
   KEY `fk_category_1` (`parentId`),
   CONSTRAINT `fk_category_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_category` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -101,7 +103,8 @@ CREATE TABLE `cmg_country` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `code` varchar(50) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_country_code` (`code`)
 ) ENGINE=InnoDB AUTO_INCREMENT=246 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -161,7 +164,7 @@ CREATE TABLE `cmg_role` (
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `role_name_unique` (`name`),
+  UNIQUE KEY `unique_role_name` (`name`),
   KEY `fk_role_1` (`createdBy`),
   KEY `fk_role_2` (`modifiedBy`),
   CONSTRAINT `fk_role_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_user` (`id`),
@@ -185,7 +188,7 @@ CREATE TABLE `cmg_permission` (
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `permission_name_unique` (`name`),
+  UNIQUE KEY `unique_permission_name` (`name`),
   KEY `fk_permission_1` (`createdBy`),
   KEY `fk_permission_2` (`modifiedBy`),
   CONSTRAINT `fk_permission_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_user` (`id`),
@@ -272,6 +275,8 @@ CREATE TABLE `cmg_user` (
   `accessTokenAccessedAt` datetime DEFAULT NULL,
   `authKey` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_user_email` (`email`),
+  UNIQUE KEY `unique_user_username` (`username`),
   KEY `fk_user_1` (`roleId`),
   KEY `fk_user_2` (`localeId`),
   KEY `fk_user_3` (`genderId`),
@@ -363,6 +368,7 @@ CREATE TABLE `cmg_newsletter` (
   `modifiedAt` datetime DEFAULT NULL,
   `lastSentAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_newsletter_name` (`name`),
   KEY `fk_newsletter_1` (`createdBy`),
   KEY `fk_newsletter_2` (`modifiedBy`),
   CONSTRAINT `fk_newsletter_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_user` (`id`),

@@ -29,7 +29,7 @@ class PermissionController extends BaseController {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Component
+	// yii\base\Component ----------------
 
     public function behaviors() {
 
@@ -49,7 +49,7 @@ class PermissionController extends BaseController {
         ];
     }
 
-	// PermissionController
+	// PermissionController --------------
 
 	public function actionBindRoles() {
 

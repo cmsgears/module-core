@@ -29,7 +29,7 @@ class RoleController extends BaseController {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Component
+	// yii\base\Component ----------------
 
     public function behaviors() {
 
@@ -57,7 +57,7 @@ class RoleController extends BaseController {
         ];
     }
 
-	// RoleController
+	// RoleController --------------------
 
 	public function actionIndex() {
 
@@ -149,7 +149,7 @@ class RoleController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( isset($_POST) && count($_POST) > 0 ) {
+			if( $model->load( Yii::$app->request->post( "Role" ), "" ) ) {
 	
 				if( RoleService::delete( $model ) ) {
 		

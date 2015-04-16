@@ -28,7 +28,7 @@ class NewsletterController extends BaseController {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Component
+	// yii\base\Component ----------------
 
     public function behaviors() {
 
@@ -58,7 +58,7 @@ class NewsletterController extends BaseController {
         ];
     }
 
-	// NewsletterController
+	// NewsletterController --------------
 
 	public function actionIndex() {
 
@@ -130,7 +130,7 @@ class NewsletterController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( isset( $_POST ) && count( $_POST ) > 0 ) {
+			if( $model->load( Yii::$app->request->post( "Newsletter" ), "" ) ) {
 	
 				if( NewsletterService::delete( $model ) ) {
 		

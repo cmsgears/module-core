@@ -24,7 +24,7 @@ class FileController extends Controller {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Component
+	// yii\base\Component ----------------
 
 	public function behaviors() {
 
@@ -44,7 +44,7 @@ class FileController extends Controller {
         ];
     }
 
-	// UserController
+	// UserController --------------------
 
 	public function actionFileHandler( $selector ) {
 

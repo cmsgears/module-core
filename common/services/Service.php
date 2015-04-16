@@ -116,19 +116,19 @@ class Service {
 	/**
 	 * The method findNameList returns an array of list for given column
 	 */
-	public static function findNameList( $column, $model, $conditions = [] ) {
+	public static function findList( $column, $model, $conditions = [] ) {
 		
 		$query	= new Query();
 
 		// Build Query
 		if( isset( $conditions ) ) {
 
-			$query->select( $column.' as name' )
+			$query->select( $column.' as col' )
 			 	  ->from( $model )->where( $conditions );
 		}
 		else {
 
-			$query->select( $column.' as name' )
+			$query->select( $column.' as col' )
 				  ->from( $model );
 		}
 
@@ -143,7 +143,7 @@ class Service {
 
 		foreach ( $list as $item ) {
 			
-			$keyList[] = $item[ 'name' ]; 
+			$keyList[] = $item[ 'col' ]; 
 		}
 
 		return $keyList;

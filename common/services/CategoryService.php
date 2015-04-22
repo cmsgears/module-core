@@ -31,12 +31,12 @@ class CategoryService extends Service {
 
 	public static function getIdNameMapByType( $type ) {
 
-		return self::findIdNameArrayList( "id", "name", CoreTables::TABLE_CATEGORY, [ "type" => $type ] );
+		return self::findIdNameList( "id", "name", CoreTables::TABLE_CATEGORY, [ "type" => $type ] );
 	}
 
 	public static function getOptionIdNameMapById( $id ) {
 
-		return self::findNameValueMap( "id", "name", CoreTables::TABLE_OPTION, [ "categoryId" => $id ] );
+		return self::findMap( "id", "name", CoreTables::TABLE_OPTION, [ "categoryId" => $id ] );
 	}
 
 	public static function getOptionIdNameMapByName( $name, $prepend = null ) {

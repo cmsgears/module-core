@@ -73,13 +73,12 @@ if( !isset( $sortOrder ) ) {
 					<th>Mobile</th>
 					<th>Reg Date</th>
 					<th>Last Login</th>
+					<th>Newsletter</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php
-					
-					$uploadUrl	= Yii::$app->cmgFileManager->uploadUrl;
 
 					foreach( $page as $user ) {
 
@@ -93,7 +92,7 @@ if( !isset( $sortOrder ) ) {
 
 								if( isset( $avatar ) ) { 
 							?> 
-								<img class="avatar" src="<?=$uploadUrl?><?= $avatar->thumb ?>">
+								<img class="avatar" src="<?= $avatar->getThumbUrl() ?>">
 							<?php 
 								} else { 
 							?>
@@ -106,8 +105,9 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $roles[ $user->roleId ] ?></td>
 						<td><?= $user->statusStr ?></td>
 						<td><?= $user->phone ?></td>
-						<td><?= $user->registeredOn ?></td>
+						<td><?= $user->registeredAt ?></td>
 						<td><?= $user->lastLogin ?></td>
+						<td><?= $user->getNewsletterStr() ?></td>
 						<td>
 							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcore/user/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
 							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcore/user/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>

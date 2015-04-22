@@ -2,6 +2,7 @@
 namespace cmsgears\core\common\validators;
 
 // Yii Imports
+use \Yii;
 use yii\validators\Validator;
 
 // CMG Imports

@@ -96,11 +96,11 @@ class Service {
 	// Maps -------------------------------------------------------
 
 	/**
-	 * The method findNameValueMap returns an associative array for the defined table and columns. It also apply the provided conditions.
+	 * The method findMap returns an associative array for the defined table and columns. It also apply the provided conditions.
 	 */
-	public static function findNameValueMap( $nameColumn, $valueColumn, $model, $conditions = [] ) {
+	public static function findMap( $keyColumn, $valueColumn, $model, $conditions = [] ) {
 
-		$arrayList  = self::findNameValueList( $nameColumn, $valueColumn, $model, $conditions );
+		$arrayList  = self::findNameValueList( $keyColumn, $valueColumn, $model, $conditions );
 		$map		= [];
 		
 		foreach ( $arrayList as $item ) {

@@ -54,12 +54,12 @@ class UserMeta extends CmgEntity {
 
 	// Find
 
-	public static function findAllByUser( $user ) {
+	public static function findByUser( $user ) {
 
 		return self::find()->where( 'userId=:id', [ ':id' => $user->id ] )->all();
 	}
 
-	public static function findAllByUserId( $userId ) {
+	public static function findByUserId( $userId ) {
 
 		return self::find()->where( 'userId=:id', [ ':id' => $userId ] )->all();
 	}
@@ -81,7 +81,7 @@ class UserMeta extends CmgEntity {
 		self::deleteAll( 'userId=:id', [ ':id' => $user->id ] );
 	}
 
-	public static function deleteByUserId( $id ) {
+	public static function deleteByUserId( $userId ) {
 
 		self::deleteAll( 'userId=:id', [ ':id' => $userId ] );
 	}
@@ -91,9 +91,9 @@ class UserMeta extends CmgEntity {
 		self::deleteAll( 'name=:name AND userId=:id', [ ':name' => $name, ':id' => $user->id ] );
 	}
 
-	public static function deleteByNameUserId( $name, $id ) {
+	public static function deleteByNameUserId( $name, $userId ) {
 
-		self::deleteAll( 'name=:name AND userId=:id', [ ':name' => $name, ':id' => $id ] );
+		self::deleteAll( 'name=:name AND userId=:id', [ ':name' => $name, ':id' => $userId ] );
 	}
 }
 

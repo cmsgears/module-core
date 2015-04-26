@@ -15,6 +15,9 @@ class AjaxLogin extends Widget {
 	// Public Variables --------------------
 
 	public $options;
+	
+	// Actions on Top
+	public $topActions	= false;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -51,6 +54,12 @@ class AjaxLogin extends Widget {
 		$attribs	= implode( " ", $attribs );
 ?>
 		<div <?=$attribs?>>
+			<?php if( $this->topActions ) { ?>
+			<div class="actions clearfix">
+				<div class="colf2" id='box-login-show'>Login</div>
+				<div class="colf2" id='box-signup-show'>Register</div>
+			</div>
+			<?php } ?>
 			<div id="box-login" class='popout-header'>
 				<form class="frm-ajax" id="frm-login" group="0" key="5" action="<?php echo Yii::$app->urlManager->createAbsoluteUrl("apix/login"); ?>" method="post">
 					<div class="max-area-cover frm-spinner"><div class="valign-center fa fa-3x fa-spinner fa-spin"></div></div>
@@ -76,10 +85,12 @@ class AjaxLogin extends Widget {
 					<div class="row clearfix">
 						<div class="frm-message warning"></div>
 					</div>
-		
+					
+					<?php if( !$this->topActions ) { ?>
 					<div class="row clearfix">
 						<?= Html::a( "Sign Up", [ '#' ], [ 'id' => 'box-signup-show'] ) ?>
 					</div>
+					<?php } ?>
 				</form>
 			</div>
 			<div id="box-signup" class='popout-header'>
@@ -127,10 +138,12 @@ class AjaxLogin extends Widget {
 					<div class="row clearfix">
 						<div class="frm-message warning"></div>
 					</div>
-		
+					
+					<?php if( !$this->topActions ) { ?>
 					<div class="row clearfix">
 						<?= Html::a( "Login", [ '#' ], [ 'id' => 'box-login-show'] ) ?>
 					</div>
+					<?php } ?>
 				</form>
 			</div>
 		</div>
@@ -143,18 +156,18 @@ class AjaxLogin extends Widget {
 
 					e.preventDefault();
 			
-					jQuery( '#box-login' ).hide();
+					jQuery( '#box-login' ).slideUp( 'fast' );
 
-					jQuery( '#box-signup' ).show( 'fast' );
+					jQuery( '#box-signup' ).slideDown( 'slow' );
 				});
 	
 				jQuery( '#box-login-show' ).click( function( e ) {
 					
 					e.preventDefault();
-			
-					jQuery( '#box-login' ).show( 'fast' );
-			
-					jQuery( '#box-signup' ).hide();
+
+					jQuery( '#box-signup' ).slideUp( 'fast' );
+
+					jQuery( '#box-login' ).slideDown( 'slow' );
 				});";
 
 		$this->getView()->registerJs( $js, View::POS_READY );

@@ -13,6 +13,10 @@ class CoreGlobal {
 	const CATEGORY_CONFIG_TYPE	= "config type";
 	const CATEGORY_GENDER		= "gender";
 
+	// Meta ------------------------------------------------------------
+	
+	const META_TYPE_USER		= 0;
+	
 	// Config Types ----------------------------------------------------
  
 	const CONFIG_CORE			= "Core";

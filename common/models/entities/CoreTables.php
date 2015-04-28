@@ -27,7 +27,6 @@ class CoreTables {
 
 	// User
 	const TABLE_USER				= "cmg_user";
-	const TABLE_USER_META			= "cmg_user_meta";
 
 	// Marketing
 	const TABLE_NEWSLETTER			= "cmg_newsletter";
@@ -35,6 +34,11 @@ class CoreTables {
 	// Messages
 	const TABLE_NOTIFICATION		= "cmg_notification";
 	const TABLE_REMINDER			= "cmg_reminder";
+
+	// Traits
+	const TABLE_MODEL_CATEGORY		= "cmg_model_category";
+	const TABLE_MODEL_META			= "cmg_model_meta";
+	const TABLE_MODEL_FILE			= "cmg_model_file";
 }
 
 ?>

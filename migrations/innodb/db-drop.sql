@@ -24,8 +24,6 @@ DROP TABLE IF EXISTS `cmg_address`;
 
 DROP TABLE IF EXISTS `cmg_user`;
 
-DROP TABLE IF EXISTS `cmg_user_meta`;
-
 DROP TABLE IF EXISTS `cmg_user_address`;
 
 DROP TABLE IF EXISTS `cmg_file`;
@@ -35,5 +33,11 @@ DROP TABLE IF EXISTS `cmg_newsletter`;
 DROP TABLE IF EXISTS `cmg_notification`;
 
 DROP TABLE IF EXISTS `cmg_reminder`;
+
+DROP TABLE IF EXISTS `cmg_model_category`;
+
+DROP TABLE IF EXISTS `cmg_model_meta`;
+
+DROP TABLE IF EXISTS `cmg_model_file`;
 
 SET FOREIGN_KEY_CHECKS=1;

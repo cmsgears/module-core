@@ -63,7 +63,11 @@ class User extends CmgEntity implements IdentityInterface {
 		self::STATUS_ACTIVE => "Active",
 		self::STATUS_BLOCKED => "Blocked"
 	];
-	
+
+	use MetaTrait;
+
+	public $metaType	= CoreGlobal::META_TYPE_USER;
+
 	public $permissions	= [];
 
 	// Instance Methods --------------------------------------------
@@ -114,14 +118,6 @@ class User extends CmgEntity implements IdentityInterface {
 		}
 
 		return $gender;
-	}
-
-	/**
-	 * @return array - list of user meta
-	 */
-	public function getMetas() {
-
-    	return $this->hasMany( UserMeta::className(), [ 'userId' => 'id' ] );
 	}
 
 	/**

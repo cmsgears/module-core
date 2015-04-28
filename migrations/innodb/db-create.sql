@@ -15,7 +15,7 @@ CREATE TABLE `cmg_config` (
   `fieldType` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `fieldMeta` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,7 +71,7 @@ CREATE TABLE `cmg_category` (
   UNIQUE KEY `unique_category_name` (`name`),
   KEY `fk_category_1` (`parentId`),
   CONSTRAINT `fk_category_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_category` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -289,23 +289,6 @@ CREATE TABLE `cmg_user` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `cmg_user_meta`
---
-
-DROP TABLE IF EXISTS `cmg_user_meta`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cmg_user_meta` (
-  `userId` bigint(20) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `value` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`userId`,`name`),
-  KEY `fk_user_meta_1` (`userId`),
-  CONSTRAINT `fk_user_meta_1` FOREIGN KEY (`userId`) REFERENCES `cmg_user` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `cmg_user_address`
 --
 
@@ -419,5 +402,56 @@ CREATE TABLE `cmg_reminder` (
   CONSTRAINT `fk_reminder_1` FOREIGN KEY (`userId`) REFERENCES `cmg_user` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+
+-- ======================== Traits =================================
+
+
+--
+-- Table structure for table `cmg_model_category`
+--
+
+DROP TABLE IF EXISTS `cmg_model_category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmg_model_category` (
+  `parentId` bigint(20) NOT NULL,
+  `parentType` int(11) NOT NULL,
+  `categoryId` bigint(20) NOT NULL,
+  PRIMARY KEY (`parentId`,`parentType`,`categoryId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cmg_model_meta`
+--
+
+DROP TABLE IF EXISTS `cmg_model_meta`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmg_model_meta` (
+  `parentId` bigint(20) NOT NULL,
+  `parentType` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`parentId`,`parentType`,`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cmg_model_file`
+--
+
+DROP TABLE IF EXISTS `cmg_model_file`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmg_model_meta` (
+  `parentId` bigint(20) NOT NULL,
+  `parentType` int(11) NOT NULL,
+  `fileId` bigint(20) NOT NULL,
+  PRIMARY KEY (`parentId`,`parentType`,`fileId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 
 SET FOREIGN_KEY_CHECKS=1;

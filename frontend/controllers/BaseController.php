@@ -19,7 +19,6 @@ class BaseController extends Controller {
 
 	private $coreProperties;
 	private $mailProperties;
-
 	private $webProperties;
 
 	// Constructor and Initialisation ------------------------------

@@ -50,17 +50,17 @@ class CategoryCrud extends Widget {
 								<ul>
 									<li class='clearfix'>
 										<label>Category Name</label>
-										<input type='text' name='Category[category_name]'>
-										<span class='form-error' formError='category_name'></span>
+										<input type='text' name='Category[name]'>
+										<span class='form-error' formError='name'></span>
 									</li>
 									<li class='clearfix'>
 										<label>Description</label>
-										<textarea name='Category[category_desc]'> </textarea>
-										<span class='form-error' formError='category_desc'></span>
+										<textarea name='Category[description]'> </textarea>
+										<span class='form-error' formError='description'></span>
 									</li>
 									<li>
 										<input type='hidden' name='_csrf' value='$csrfToken' />
-										<input type='hidden' name='Category[category_type]' value='$type' />
+										<input type='hidden' name='Category[type]' value='$type' />
 										<input type='submit' class='btn' value='Add Category'>
 									</li>
 								</ul>
@@ -79,17 +79,17 @@ class CategoryCrud extends Widget {
 								<ul>
 									<li class='clearfix'>
 										<label>Category Name</label>
-										<input class='cat-name' type='text' name='Category[category_name]'>
-										<span class='form-error' formError='category_name'></span>
+										<input class='cat-name' type='text' name='Category[name]'>
+										<span class='form-error' formError='name'></span>
 									</li>
 									<li class='clearfix'>
 										<label>Description</label>
-										<textarea class='cat-desc' name='Category[category_desc]'> </textarea>
-										<span class='form-error' formError='category_desc'></span>
+										<textarea class='cat-desc' name='Category[description]'> </textarea>
+										<span class='form-error' formError='description'></span>
 									</li>
 									<li>
 										<input type='hidden' name='_csrf' value='$csrfToken' />
-										<input type='hidden' name='Category[category_type]' value='$type' />
+										<input type='hidden' name='Category[type]' value='$type' />
 										<input type='submit' class='btn' value='Save'>
 									</li>
 								</ul>
@@ -108,17 +108,17 @@ class CategoryCrud extends Widget {
 								<ul>
 									<li class='clearfix'>
 										<label>Category Name</label>
-										<input class='cat-name' disabled='true' type='text' name='Category[category_name]'>
-										<span class='form-error' formError='category_name'></span>
+										<input class='cat-name' disabled='true' type='text' name='Category[name]'>
+										<span class='form-error' formError='name'></span>
 									</li>
 									<li class='clearfix'>
 										<label>Description</label>
-										<textarea class='cat-desc'  disabled='true' name='Category[category_desc]'> </textarea>
-										<span class='form-error' formError='category_desc'></span>
+										<textarea class='cat-desc'  disabled='true' name='Category[description]'> </textarea>
+										<span class='form-error' formError='description'></span>
 									</li>
 									<li>
 										<input type='hidden' name='_csrf' value='$csrfToken' />
-										<input type='hidden' name='Category[category_type]' value='$type' />
+										<input type='hidden' name='Category[type]' value='$type' />
 										<input type='submit' class='btn' value='Delete Category'>
 									</li>
 								</ul>

@@ -8,16 +8,13 @@ use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\admin\config\AdminGlobalCore;
 
 use cmsgears\core\common\models\entities\Category;
-use cmsgears\core\common\models\entities\Permission;
 
 use cmsgears\core\admin\services\CategoryService;
 
 use cmsgears\core\admin\controllers\BaseController;
 
-use cmsgears\core\common\utilities\MessageUtil;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class CategoryController extends BaseController {
@@ -31,19 +28,19 @@ class CategoryController extends BaseController {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Component
+	// yii\base\Component ----------------
 
     public function behaviors() {
 
         return [
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'permissions' => [
-	                'index'  => Permission::PERM_CATEGORY,
-	                'all'   => Permission::PERM_CATEGORY,
-	                'create' => Permission::PERM_CATEGORY,
-	                'update' => Permission::PERM_CATEGORY,
-	                'delete' => Permission::PERM_CATEGORY
+                'actions' => [
+	                'index'  => [ 'permission' => CoreGlobal::PERM_CATEGORY ],
+	                'all'   => [ 'permission' => CoreGlobal::PERM_CATEGORY ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_CATEGORY ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_CATEGORY ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_CATEGORY ]
                 ]
             ],
             'verbs' => [
@@ -59,7 +56,7 @@ class CategoryController extends BaseController {
         ];
     }
 
-	// UserController
+	// UserController --------------------
 
 	public function actionCreate() {
 
@@ -71,7 +68,7 @@ class CategoryController extends BaseController {
 
 			if( CategoryService::create( $model ) ) {
 
-				AjaxUtil::generateSuccess( MessageUtil::getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 			}
 		}
 		
@@ -79,7 +76,7 @@ class CategoryController extends BaseController {
 		$errors = AjaxUtil::generateErrorMessage( $model );
 
 		// Trigger Ajax Failure
-    	AjaxUtil::generateFailure( MessageUtil::getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+    	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 	}
 	
 	public function actionUpdate( $id ) {
@@ -93,7 +90,7 @@ class CategoryController extends BaseController {
 
 			if( CategoryService::update( $model ) ) {
 				
-				AjaxUtil::generateSuccess( MessageUtil::getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 			}
 		}
 		
@@ -101,7 +98,7 @@ class CategoryController extends BaseController {
 		$errors = AjaxUtil::generateErrorMessage( $model );
 
 		// Trigger Ajax Failure
-    	AjaxUtil::generateFailure( MessageUtil::getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+    	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 	}
 	
 	public function actionDelete( $id ) {
@@ -113,16 +110,16 @@ class CategoryController extends BaseController {
 				
 			if( CategoryService::delete( $model ) ) {
 	
-				AjaxUtil::generateSuccess( MessageUtil::getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 			}
 		}
 		else {
-				
+
 			// Generate Errors
 			$errors = AjaxUtil::generateErrorMessage( $model );
 
 			// Trigger Ajax Failure
-	    	AjaxUtil::generateFailure( MessageUtil::getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+	    	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
 	}
 }

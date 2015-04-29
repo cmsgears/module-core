@@ -9,9 +9,6 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Permission;
-
-use cmsgears\core\common\utilities\MessageUtil;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class FileController extends Controller {
@@ -27,15 +24,15 @@ class FileController extends Controller {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Component
+	// yii\base\Component ----------------
 
 	public function behaviors() {
 
         return [
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'permissions' => [
-	                'fileHandler'  => Permission::PERM_ADMIN
+                'actions' => [
+	                'fileHandler'  => [ 'permission' => CoreGlobal::PERM_ADMIN ]
                 ]
             ],
             'verbs' => [
@@ -47,7 +44,7 @@ class FileController extends Controller {
         ];
     }
 
-	// UserController
+	// UserController --------------------
 
 	public function actionFileHandler( $selector ) {
 
@@ -56,12 +53,12 @@ class FileController extends Controller {
 		if( $data ) {
 
 			// Trigger Ajax Success
-			AjaxUtil::generateSuccess( MessageUtil::getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+			AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 		}
 		else {
 
 			// Trigger Ajax Failure
-	        AjaxUtil::generateFailure( MessageUtil::getMessage( CoreGlobal::ERROR_REQUEST ) );
+	        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ) );
 		}
 	}
 }

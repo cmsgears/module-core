@@ -1,125 +1,107 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\utilities\MessageUtil;
-
-class LocaleMessage extends ActiveRecord {
+/**
+ * LocaleMessage Entity
+ *
+ * @property integer $id
+ * @property integer $localeId 
+ * @property short $type
+ * @property integer $parentId 
+ * @property string $name
+ * @property string $value
+ */
+class LocaleMessage extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
-	public function getId() {
-
-		return $this->message_id;
-	}
-
-	public function getLocaleId() {
-
-		return $this->message_locale;
-	}
-
+	/**
+	 * @return Locale - parent Locale.
+	 */
 	public function getLocale() {
 
-		return $this->hasOne( Locale::className(), [ 'locale_id' => 'message_locale' ] );
+		return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] );
 	}
 
-	public function setLocaleId( $localeId ) {
-
-		$this->message_locale = $localeId;
-	}
-
-	public function getType() {
-
-		return $this->message_type;
-	}
-
-	public function setType( $type ) {
-
-		$this->message_type = $type;
-	}
-
-	public function getParent() {
-
-		return $this->message_parent;
-	}
-
-	public function setParent( $parent ) {
-
-		$this->message_parent = $parent;
-	}
-
-	public function getKey() {
-
-		return $this->message_key;
-	}
-
-	public function setKey( $key ) {
-
-		$this->message_key = $key;
-	}
-
-	public function getValue() {
-
-		return $this->message_value;
-	}
-
-	public function setValue( $value ) {
-
-		$this->message_value = $value;
-	}
-
-	// yii\base\Model
+	// yii\base\Model --------------------
 
 	public function rules() {
 
         return [
-            [ [ 'message_locale', 'message_type', 'message_key', 'message_value' ], 'required' ],
-            [ 'message_parent', 'safe' ],
-            [ 'message_key', 'alphanumhyphenspace' ],
-            [ 'message_key', 'validateKeyCreate', 'on' => [ 'create' ] ],
-            [ 'message_key', 'validateKeyUpdate', 'on' => [ 'update' ] ]
+            [ [ 'localeId', 'type', 'name', 'value' ], 'required' ],
+            [ [ 'id', 'parentId' ], 'safe' ],
+            [ 'name', 'alphanumhyphenspace' ],
+            [ 'name', 'string', 'min'=>1, 'max'=>100 ],
+            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'message_locale' => 'Locale',
-			'message_key' => 'Key',
-			'message_value' => 'Value'
+			'locale' => 'Locale',
+			'name' => 'Name',
+			'value' => 'Value'
 		];
 	}
 
-	// Config
-
-    public function validateKeyCreate( $attribute, $params ) {
+	// Config ----------------------------
+	
+	/**
+	 * Validates to ensure that only one message exist with one name.
+	 */
+    public function validateNameCreate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
-            if( self::isExistByLocaleIdKey( $this->getLocaleId(), $this->getKey() ) ) {
+			if( isset( $this->parentId ) ) {
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
-            }
+	            if( self::isExistByLocaleIdNameParentId( $this->localeId, $this->name, $this->parentId, $this->type ) ) {
+
+					$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
+	            }
+			}
+			else {
+
+	            if( self::isExistByLocaleIdName( $this->localeId, $this->name ) ) {
+	
+					$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
+	            }
+			}
         }
     }
 
-    public function validateKeyUpdate( $attribute, $params ) {
+	/**
+	 * Validates to ensure that only one message exist with one name.
+	 */
+    public function validateNameUpdate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
-			$existingMessage = self::findByLocaleIdKey( $this->getLocaleId(), $this->getKey() );
+			if( isset( $this->parentId ) ) {
 
-			if( isset( $existingMessage ) && $existingMessage->getId() != $this->getId() && 
-				strcmp( $existingMessage->getKey(), $this->getKey() ) == 0 && $existingMessage->getLocaleId() == $this->getLocaleId() ) {
+				$existingMessage = self::findByLocaleIdNameParentId( $this->localeId, $this->name, $this->parentId, $this->type );
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
+				if( isset( $existingMessage ) && $existingMessage->id != $this->id && 
+					strcmp( $existingMessage->name, $this->name ) == 0 && $existingMessage->localeId == $this->localeId 
+					&& $existingMessage->parentId == $this->parentId && $existingMessage->type == $this->type ) {
+	
+					$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
+				}
+			}
+			else {
+
+				$existingMessage = self::findByLocaleIdName( $this->localeId, $this->name );
+	
+				if( isset( $existingMessage ) && $existingMessage->id != $this->id && 
+					strcmp( $existingMessage->name, $this->name ) == 0 && $existingMessage->localeId == $this->localeId ) {
+	
+					$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
+				}
 			}
         }
     }
@@ -137,34 +119,44 @@ class LocaleMessage extends ActiveRecord {
 
 	public static function findById( $id ) {
 
-		return self::find()->where( [ 'message_id' => $id ] )->one();
+		return Role::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 
 	public static function findByLocale( $locale ) {
 
-		return self::find()->where( [ 'message_locale' => $locale->getId() ] )->one();
+		return self::find()->where( 'localeId=:id', [ ':id' => $locale->id ] )->one();
 	}
 
 	public static function findByLocaleId( $localeId ) {
 
-		return self::find()->where( 'message_locale=:id', [ ':id' => $localeId ] )->one();
+		return self::find()->where( 'localeId=:id', [ ':id' => $localeId ] )->one();
 	}
 
-	public static function findByLocaleKey( $locale, $key ) {
+	public static function findByLocaleName( $locale, $name ) {
 
-		return self::find()->where( 'message_locale=:id', [ ':id' => $locale->getId() ] )->andWhere( 'message_key=:id', [ ':id' => $key ] )->one();
+		return self::find()->where( 'localeId=:id AND name=:name', [ ':id' => $locale->id, ':name' => $name ] )->one();
 	}
 
-	public static function findByLocaleIdKey( $localeId, $key ) {
+	public static function findByLocaleIdName( $localeId, $name ) {
 
-		return self::find()->where( 'message_locale=:id', [ ':id' => $localeId ] )->andWhere( 'message_key=:id', [ ':id' => $key ] )->one();
+		return self::find()->where( 'localeId=:id AND name=:name', [ ':id' => $localeId, ':name' => $name ] )->one();
 	}
-	
-	public static function isExistByLocaleIdKey( $localeId, $key ) {
 
-		$message = self::find()->where( 'message_locale=:id', [ ':id' => $localeId ] )->andWhere( 'message_key=:id', [ ':id' => $key ] )->one();
-		
-		return isset( $message );
+	public static function isExistByLocaleIdName( $localeId, $name ) {
+
+		return isset( self::findByLocaleIdName( $localeId, $name ) );
+	}
+
+	public static function findByLocaleIdNameParentId( $localeId, $name, $parentId, $type ) {
+
+		return self::find()->where( 'localeId=:id AND name=:name AND parentId=:pid AND type=:type' )
+							->addParams( [ ':id' => $localeId, ':name' => $name, ':pid' => $parentId, ':type' => $type ] )
+							->one();
+	}
+
+	public static function isExistByLocaleIdNameParentId( $localeId, $name, $parentId, $type ) {
+
+		return isset( self::findByLocaleIdNameParentId( $localeId, $name, $parentId, $type ) );
 	}
 }
 

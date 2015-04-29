@@ -9,7 +9,7 @@ use yii\base\Component;
  * The mail component used for sending possible mails by the CMSGears core module. It must be initialised 
  * for app using the name cmgCoreMailer. It's used by various controllers to trigger mails.  
  */
-class Mailer extends Component {
+class MailerCore extends Component {
 
 	// Various mail views used by the component
 	const MAIL_ACCOUNT_CREATE	= "account-create";	
@@ -56,7 +56,7 @@ class Mailer extends Component {
 
 		// Send Mail
         $this->getMailer()->compose( self::MAIL_ACCOUNT_CREATE, [ 'coreProperties' => $coreProperties, 'user' => $user ] )
-            ->setTo( $user->getEmail() )
+            ->setTo( $user->email )
             ->setFrom( [ $fromEmail => $fromName ] )
             ->setSubject( "Registration | " . $coreProperties->getSiteName() )
             //->setTextBody( "heroor" )
@@ -73,7 +73,7 @@ class Mailer extends Component {
 
 		// Send Mail
         $this->getMailer()->compose( self::MAIL_ACCOUNT_ACTIVATE, [ 'coreProperties' => $coreProperties, 'user' => $user ] )
-            ->setTo( $user->getEmail() )
+            ->setTo( $user->email )
             ->setFrom( [ $fromEmail => $fromName ] )
             ->setSubject( "Registration | " . $coreProperties->getSiteName() )
             //->setTextBody( $contact->contact_message )
@@ -90,7 +90,7 @@ class Mailer extends Component {
 
 		// Send Mail
         $this->getMailer()->compose( self::MAIL_REG, [ 'coreProperties' => $coreProperties, 'user' => $user ] )
-            ->setTo( $user->getEmail() )
+            ->setTo( $user->email )
             ->setFrom( [ $fromEmail => $fromName ] )
             ->setSubject( "Registration | " . $coreProperties->getSiteName() )
             //->setTextBody( $contact->contact_message )
@@ -107,7 +107,7 @@ class Mailer extends Component {
 
 		// Send Mail
         $this->getMailer()->compose( self::MAIL_REG_CONFIRM, [ 'coreProperties' => $coreProperties, 'user' => $user ] )
-            ->setTo( $user->getEmail() )
+            ->setTo( $user->email )
             ->setFrom( [ $fromEmail => $fromName ] )
             ->setSubject( "Registration | " . $coreProperties->getSiteName() )
             //->setTextBody( $contact->contact_message )
@@ -124,7 +124,7 @@ class Mailer extends Component {
 
 		// Send Mail
         $this->getMailer()->compose( self::MAIL_PASSWORD_RESET, [ 'coreProperties' => $coreProperties, 'user' => $user ] )
-            ->setTo( $user->getEmail() )
+            ->setTo( $user->email )
             ->setFrom( [ $fromEmail => $fromName ] )
             ->setSubject( "Password Reset | " . $coreProperties->getSiteName() )
             //->setTextBody( "heroor" )

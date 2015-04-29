@@ -8,25 +8,26 @@ use \Yii;
 use cmsgears\core\common\models\entities\Config;
 
 class ConfigService extends \cmsgears\core\common\services\ConfigService {
-	
+
 	// Static Methods ----------------------------------------------
 
 	// Update
 
-	public static function update(  $modle, $id ) {
+	public static function update( $config ) {
 
-		$configUpdate	= Config::findById( $id );
+		// Find existing Config
+		$configToUpdate	= Config::findById( $config->id );
 
-		if( strcmp( $configUpdate->getFieldType(), "password" ) == 0 ) {
+		if( strcmp( $configToUpdate->fieldType, "password" ) == 0 ) {
 
-			$configUpdate->setValue( Yii::$app->security->generatePasswordHash( $modle->getValue() ) );
+			$configToUpdate->value = Yii::$app->security->generatePasswordHash( $config->value );
 		}
 		else {
 
-			$configUpdate->setValue( $modle->getValue() );
+			$configToUpdate->copyForUpdateFrom( $config, [ 'value' ] );
 		}
 
-		$configUpdate->save();
+		$configToUpdate->update();
 
 		return true;
 	}

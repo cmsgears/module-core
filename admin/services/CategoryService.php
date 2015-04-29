@@ -14,68 +14,64 @@ class CategoryService extends \cmsgears\core\common\services\CategoryService {
 
 	// Pagination -------
 
-	public static function getPagination( $type = null ) {
+	public static function getPagination( $conditions = [] ) {
 
 	    $sort = new Sort([
 	        'attributes' => [
 	            'name' => [
-	                'asc' => [ 'category_name' => SORT_ASC ],
-	                'desc' => ['category_name' => SORT_DESC ],
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'name',
 	            ]
 	        ]
 	    ]);
 
-		if( isset( $type ) ) {
-
-			return self::getPaginationDetails( new Category(), [ 'sort' => $sort, 'conditions' => [ "category_type" => $type ], 'search-col' => 'category_name' ] );
-		}
-		else {
-
-			return self::getPaginationDetails( new Category(), [ 'sort' => $sort, 'search-col' => 'category_name' ] );
-		}
+		return self::getPaginationDetails( new Category(), [ 'sort' => $sort, 'conditions' => $conditions, 'search-col' => 'name' ] );
 	}
 
 	public static function getPaginationByType( $type ) {
 
-		return self::getPagination( $type );
+		return self::getPagination( [ "type" => $type ] );
 	}
 
 	// Create -----------
 
 	public static function create( $category ) {
-
+		
+		// Create Category
 		$category->save();
-
-		return true;
+		
+		// Return Category
+		return $category;
 	}
 
 	// Update -----------
 
 	public static function update( $category ) {
-
-		$categoryToUpdate	= self::findById( $category->getId() );
-
-		$categoryToUpdate->setName( $category->getName() );
-		$categoryToUpdate->setDesc( $category->getDesc() );
-		$categoryToUpdate->setType( $category->getType() );
-
+		
+		// Find existing Category
+		$categoryToUpdate	= self::findById( $category->id );
+		
+		// Copy Attributes
+		$categoryToUpdate->copyForUpdateFrom( $category, [ 'name', 'description', 'type' ] );
+		
+		// Update Category
 		$categoryToUpdate->update();
-
-		return true;
+		
+		// Return updated Category
+		return $categoryToUpdate;
 	}
 
 	// Delete -----------
 
 	public static function delete( $category ) {
 
-		$categoryId			= $category->getId();
-		$categoryType		= $category->getType();
-		$existingCategory	= self::findById( $categoryId );
+		// Find existing Category
+		$categoryToDelete	= self::findById( $category->id );
 
 		// Delete Category
-		$existingCategory->delete();
+		$categoryToDelete->delete();
 
 		return true;
 	}

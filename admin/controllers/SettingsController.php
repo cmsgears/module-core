@@ -8,15 +8,9 @@ use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\admin\config\AdminGlobalCore;
-
-use cmsgears\core\common\models\entities\Permission;
-use cmsgears\core\common\models\entities\Config;
 
 use cmsgears\core\admin\services\OptionService;
 use cmsgears\core\admin\services\ConfigService;
-
-use common\utilities\MessageUtil;
 
 class SettingsController extends BaseController {
 
@@ -25,14 +19,16 @@ class SettingsController extends BaseController {
         parent::__construct( $id, $module, $config );
 	}
 
+	// yii\base\Component ----------------
+
 	public function behaviors() {
 
         return [
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'permissions' => [
-	                'index'  => Permission::PERM_SETTINGS,
-					'update' => Permission::PERM_SETTINGS
+                'actions' => [
+	                'index'  => [ 'permission' => CoreGlobal::PERM_SETTINGS ],
+					'update' => [ 'permission' => CoreGlobal::PERM_SETTINGS ]
                 ]
             ],
             'verbs' => [
@@ -44,15 +40,17 @@ class SettingsController extends BaseController {
             ]
         ];
     }
+	
+	// SettingsController ----------------
 
     public function actionIndex( $type ) {
 
-		$settingType	= OptionService::findByCategoryNameKey( CoreGlobal::CATEGORY_CONFIG_TYPE, ucfirst( $type ) );
+		$settingType	= OptionService::findByNameCategoryName( ucfirst( $type ), CoreGlobal::CATEGORY_CONFIG_TYPE );
 		$settings		= null;
 		
 		if( isset( $settingType ) ) {
 
-    		$settings 	= ConfigService::findByType( $settingType->getValue() );
+    		$settings 	= ConfigService::findByType( $settingType->value );
 		}
 		
 	    return $this->render('index', [
@@ -63,12 +61,12 @@ class SettingsController extends BaseController {
 
 	public function actionUpdate( $type ) {
 		
-		$settingType	= OptionService::findByCategoryNameKey( CoreGlobal::CATEGORY_CONFIG_TYPE, ucfirst( $type ) );
+		$settingType	= OptionService::findByNameCategoryName( ucfirst( $type ), CoreGlobal::CATEGORY_CONFIG_TYPE );
     	$settings		= null;
 
 		if( isset( $settingType ) ) {
 
-    		$settings 	= ConfigService::findByType( $settingType->getValue() );
+    		$settings 	= ConfigService::findByType( $settingType->value );
 		}
 		
 	    return $this->render('update', [

@@ -7,17 +7,14 @@ use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\admin\config\AdminGlobalCore;
-use cmsgears\cms\common\config\CMSGlobal;
 
 use cmsgears\core\common\models\entities\Config;
-use cmsgears\core\common\models\entities\Permission;
 
 use cmsgears\core\admin\services\ConfigService;
 
 use cmsgears\core\admin\controllers\BaseController;
 
-use cmsgears\core\common\utilities\MessageUtil;
+use cmsgears\core\common\components\MessageDbCore;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class SettingsController extends BaseController {
@@ -27,13 +24,15 @@ class SettingsController extends BaseController {
         parent::__construct( $id, $module, $config );
 	}
 
+	// yii\base\Component ----------------
+
     public function behaviors() {
 
         return [
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'permissions' => [
-	                'update'  => Permission::PERM_SETTINGS
+                'actions' => [
+	                'update'  => [ 'permission' => CoreGlobal::PERM_SETTINGS ]
                 ]
             ],
             'verbs' => [
@@ -44,22 +43,27 @@ class SettingsController extends BaseController {
             ]
         ];
     }
+	
+	// SettingsController ----------------
 
 	public function actionUpdate( $id ) {
-			
-		$model		= new Config();
 
-		$model->setScenario( "update" );
+		$config	= Config::findById( $id );
 		
-		if( $model->load( Yii::$app->request->post(), "Config" ) ) {
-				
-			if( ConfigService::update( $model, $id ) ) {
-				
-				AjaxUtil::generateSuccess( MessageUtil::getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
-			}	
+		if( isset( $config ) ) {
+
+			$config->setScenario( "update" );
+
+			if( $config->load( Yii::$app->request->post( "Config" ), "" ) ) {
+
+				if( ConfigService::update( $config ) ) {
+
+					AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), $config );
+				}	
+			}
+
+			AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ) );
 		}
-		
-		AjaxUtil::generateFailure( MessageUtil::getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
 }
 

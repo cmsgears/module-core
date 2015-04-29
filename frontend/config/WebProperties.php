@@ -3,7 +3,6 @@ namespace cmsgears\core\frontend\config;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\frontend\config\WebGlobalCore;
 
 use cmsgears\core\common\models\entities\Config;
 
@@ -56,8 +55,8 @@ class WebProperties {
 	 */
 	public function init() {
 
-		$type				= OptionService::findByCategoryNameKey( CoreGlobal::CATEGORY_CONFIG_TYPE, WebGlobalCore::CONFIG_SITE );
-		$this->properties	= ConfigService::getKeyValueMapByType( $type->getValue() );
+		$type				= OptionService::findByNameCategoryName( CoreGlobal::CONFIG_SITE, CoreGlobal::CATEGORY_CONFIG_TYPE );
+		$this->properties	= ConfigService::getNameValueMapByType( $type->getValue() );
 	}
 
 	/**

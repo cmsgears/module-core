@@ -1,10 +1,11 @@
 <?php
+// Yii Imports
 use \Yii;
 use yii\helpers\Html; 
 use yii\widgets\LinkPager;
 
 // CMG Imports
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
+use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Permissions';
@@ -53,15 +54,15 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $page as $permission ) {
 
-						$id = $permission->getId();
+						$id = $permission->id;
 				?>
 					<tr>
 						<td> <input type='checkbox' /> </td>
-						<td><?= $permission->getName() ?></td>
-						<td><?= $permission->getDesc() ?></td>
+						<td><?= $permission->name ?></td>
+						<td><?= $permission->description ?></td>
 						<td>
-							<span class="wrap-icon-action" title="Update Permission"><?= Html::a( "", ["/cmgcore/permission/update/?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
-							<span class="wrap-icon-action" title="Delete Permission"><?= Html::a( "", ["/cmgcore/permission/delete/?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
+							<span class="wrap-icon-action" title="Update Permission"><?= Html::a( "", ["/cmgcore/permission/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
+							<span class="wrap-icon-action" title="Delete Permission"><?= Html::a( "", ["/cmgcore/permission/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>
@@ -74,5 +75,5 @@ if( !isset( $sortOrder ) ) {
 	</div>
 </div>
 <script type="text/javascript">
-	initSidebar( "sidebar-identity", 3 );
+	initSidebar( "sidebar-identity", 2 );
 </script>

@@ -10,8 +10,6 @@ use cmsgears\core\admin\config\AdminGlobalCore;
 
 use cmsgears\core\common\models\forms\LoginForm;
 
-use cmsgears\core\common\utilities\AjaxUtil;
-
 class SiteController extends BaseController {
 
 	// Constructor and Initialisation ------------------------------
@@ -29,7 +27,7 @@ class SiteController extends BaseController {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Component
+	// yii\base\Component ----------------
 
     public function behaviors() {
 
@@ -48,7 +46,8 @@ class SiteController extends BaseController {
         ];
     }
 
-	// yii\base\Controller
+	// yii\base\Controller ---------------
+
     public function actions() {
 
         return [
@@ -58,7 +57,7 @@ class SiteController extends BaseController {
         ];
     }
 
-	// SiteController
+	// SiteController --------------------
 
     public function actionIndex() {
 
@@ -84,8 +83,16 @@ class SiteController extends BaseController {
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post() )  && $model->login() ) {
 
-			// Send User to Home
-			$this->redirect( [ Yii::$app->cmgCore->getLoginRedirectPage() ] );
+			// Redirect user to home set by admin
+			if( isset( $role ) && isset( $role->homeUrl ) ) {
+
+				$this->redirect( [ $role->homeUrl ] );
+			}
+			// Redirect user to home set by app config
+			else {
+
+				$this->redirect( [ Yii::$app->cmgCore->getLoginRedirectPage() ] );
+			}
 		}
 		else {
 

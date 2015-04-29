@@ -1,81 +1,64 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
-class Country extends NamedActiveRecord {
+/**
+ * Locale Entity
+ *
+ * @property integer $id
+ * @property string $code
+ * @property string $name
+ */
+class Country extends NamedCmgEntity {
 	
 	// Instance Methods --------------------------------------------
 
-	// db columns
+	/**
+	 * @return array - list of Province having all the provinces belonging to this country
+	 */
+	public function getProvinces() {
 
-	public function getId() {
-
-		return $this->country_id;
+    	return $this->hasMany( Province::className(), [ 'countryId' => 'id' ] );
 	}
 
-	public function getCode() {
-
-		return $this->country_code;
-	}
-
-	public function setCode( $code ) {
-
-		$this->country_code = $code;
-	}
-
-	public function getName() {
-
-		return $this->country_name;
-	}
-
-	public function setName( $name ) {
-
-		$this->country_name = $name;
-	}
-
-	// yii\base\Model
+	// yii\base\Model --------------------
 
 	public function rules() {
 
         return [
-            [ [ 'country_name', 'country_code' ], 'required' ],
-            [ 'country_name', 'alphanumhyphenspace' ],
-            [ 'country_name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'country_name', 'validateNameUpdate', 'on' => [ 'update' ] ]
+            [ [ 'name', 'code' ], 'required' ],
+            [ 'id', 'safe' ],
+            [ 'code', 'string', 'min'=>1, 'max'=>50 ],
+            [ 'name', 'alphanumhyphenspace' ],
+            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'country_name' => 'Name',
-			'country_code' => 'Code'
+			'name' => 'Name',
+			'code' => 'Code'
 		];
 	}
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord
+	// yii\db\ActiveRecord ---------------
 
 	public static function tableName() {
 		
 		return CoreTables::TABLE_COUNTRY;
 	}
 	
-	// Country
-
-	public static function findById( $id ) {
-
-		return self::find()->where( 'country_id=:id', [ ':id' => $id ] )->one();
-	}
-
+	// Country ---------------------------
+	
+	/**
+	 * @return Country by code
+	 */
 	public static function findByCode( $code ) {
 
-		return self::find()->where( 'country_code=:code', [ ':code' => $code ] )->one();
-	}
-
-	public static function findByName( $name ) {
-
-		return self::find()->where( 'country_name=:name', [ ':name' => $name ] )->one();
+		return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
 	}
 }
 

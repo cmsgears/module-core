@@ -21,110 +21,102 @@ class UserService extends \cmsgears\core\common\services\UserService {
 	    $sort = new Sort([
 	        'attributes' => [
 	            'name' => [
-	                'asc' => [ 'user_firstname' => SORT_ASC, 'user_lastname' => SORT_ASC ],
-	                'desc' => [ 'user_firstname' => SORT_DESC, 'user_lastname' => SORT_DESC ],
+	                'asc' => [ 'firstName' => SORT_ASC, 'lastName' => SORT_ASC ],
+	                'desc' => [ 'firstName' => SORT_DESC, 'lastName' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'name',
 	            ],
 	            'username' => [
-	                'asc' => [ 'user_username' => SORT_ASC ],
-	                'desc' => ['user_username' => SORT_DESC ],
+	                'asc' => [ 'username' => SORT_ASC ],
+	                'desc' => ['username' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'username',
 	            ],
 	            'role' => [
-	                'asc' => [ 'user_role' => SORT_ASC ],
-	                'desc' => ['user_role' => SORT_DESC ],
+	                'asc' => [ 'roleId' => SORT_ASC ],
+	                'desc' => ['roleId' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'role',
 	            ],
 	            'status' => [
-	                'asc' => [ 'user_status' => SORT_ASC ],
-	                'desc' => ['user_status' => SORT_DESC ],
+	                'asc' => [ 'status' => SORT_ASC ],
+	                'desc' => ['status' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'status',
 	            ],
 	            'email' => [
-	                'asc' => [ 'user_email' => SORT_ASC ],
-	                'desc' => ['user_email' => SORT_DESC ],
+	                'asc' => [ 'email' => SORT_ASC ],
+	                'desc' => ['email' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'email',
 	            ]
 	        ]
 	    ]);
 		
-		$status		= Yii::$app->request->getQueryParam( "status" );
-		$conditions	= [];
+		$status	= Yii::$app->request->getQueryParam( "status" );
 
 		if( isset( $status ) ) {
 
-			$conditions['user_status'] = $status;
+			$conditions['status'] = $status;
 		}
 
-		return self::getPaginationDetails( new User(), [ 'conditions' => $conditions, 'sort' => $sort, 'search-col' => 'user_firstname' ] );
+		return self::getPaginationDetails( new User(), [ 'conditions' => $conditions, 'sort' => $sort, 'search-col' => 'firstName' ] );
 	}
 
 	public static function getPaginationByNewsletter() {
 
-		return self::getPagination( [ 'user_newsletter' => 1 ] );
+		return self::getPagination( [ 'newsletter' => 1 ] );
 	}
 
 	// Create -----------
 
-	// User created from Admin Panel
 	public static function create( $user ) {
 
-		$date	= DateUtil::getMysqlDate();
-
-		$user->setRegOn( $date );
-		$user->setStatus( User::STATUS_NEW );
+		// Set Attributes
+		$date				= DateUtil::getMysqlDate();
+		$user->registeredAt = $date;
+		$user->status		= User::STATUS_NEW;
+		
+		// Generate Tokens
 		$user->generateVerifyToken();
 		$user->generateAuthKey();
-
+		
+		// Create User
 		$user->save();
 
-		return true;
+		// Return User
+		return $user;
 	}
 
 	// Update -----------
 
 	public static function update( $user, $avatar ) {
 
-		$existingUser	= User::findById( $user->user_id );
+		// Find existing user
+		$userToUpdate	= User::findById( $user->id );
 
-		$existingUser->setEmail( $user->getEmail() );
-		$existingUser->setUsername( $user->getUsername() );
-		$existingUser->setFirstname( $user->getFirstname() );
-		$existingUser->setLastname( $user->getLastName() );
-		$existingUser->setNewsletter( $user->getNewsletter() );
-		$existingUser->setStatus( $user->getStatus() );
-		$existingUser->setRoleId( $user->getRoleId() );
-		$existingUser->setMobile( $user->getMobile() );
-		$existingUser->setAvatarId( $user->getAvatarId() );
+		// Copy Attributes		
+		$userToUpdate->copyForUpdateFrom( $user, [ 'email', 'username', 'firstName', 'lastName', 'newsletter', 'status', 'roleId', 'phone', 'avatarId' ] );
 
 		// Save Avatar
-		FileService::saveImage( $avatar, $user, Yii::$app->fileManager );
+		FileService::saveImage( $avatar, $userToUpdate, [ 'model' => $userToUpdate, 'attribute' => 'avatarId' ] );
 
-		// New Avatar
-		$avatarId 	= $avatar->getId();
+		// Update User
+		$userToUpdate->update();
 
-		if( isset( $avatarId ) && intval( $avatarId ) > 0 ) {
-
-			$existingUser->setAvatarId( $avatarId );
-		}
-
-		$existingUser->update();
-
-		return true;
+		// Return updated User
+		return $userToUpdate;
 	}
 
 	// Delete -----------
 
 	public static function delete( $user ) {
 
-		$existingUser	= User::findById( $user->getId() );
+		// Find existing user
+		$userToDelete	= User::findById( $user->getId() );
 
-		$existingUser->delete();
+		// Delete User
+		$userToDelete->delete();
 
 		return true;
 	}

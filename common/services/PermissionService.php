@@ -8,8 +8,6 @@ use \Yii;
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\Permission;
 
-use cmsgears\core\common\services\Service;
-
 class PermissionService extends Service {
 
 	// Static Methods ----------------------------------------------
@@ -23,7 +21,7 @@ class PermissionService extends Service {
 
 	public static function getIdNameList() {
 
-		return self::findIdNameList( 'permission_id', 'permission_name', CoreTables::TABLE_PERMISSION );
+		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_PERMISSION );
 	}
 }
 

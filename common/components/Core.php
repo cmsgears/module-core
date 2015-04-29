@@ -18,7 +18,8 @@ use cmsgears\core\common\validators\CoreValidator;
 class Core extends Component {
 
 	/**
-	 * @var Redirect path to be used for post login. It will be used by login action of Site Controller to redirect users after successful login.
+	 * @var default redirect path to be used for post login. It will be used by login action of Site Controller to redirect users 
+	 * after successful login in case use role home url is not set.
 	 */
 	public $loginRedirectPage	= "site/index";
 
@@ -37,9 +38,20 @@ class Core extends Component {
 	 * @var The default filter class available for CMG RBAC system. A different filter can be used based on project needs.
 	 */
 	public $rbacFilterClass		= "cmsgears\core\common\\filters\RbacFilter"; 
-	
+
 	/**
-	 * @var The WYSIWYG editor widget class.
+	 * @var It store the list of filters available for the Rbac Filter and works only when rbac is enabled.
+	 * A Controller can define filters to be performed for each action while checking the permission.
+	 */
+	public $rbacFilters			= [];
+
+	/**
+	 * @var It can be used to ckeck whether apis are available for the app. Most probable apis are provided using OAuth 2.0.
+	 */
+	public $apis				= null;
+
+	/**
+	 * @var The WYSIWYG editor widget class. It will be used by Core Module to edit newsletter content. The dependent modules can also use it to edit the html content.
 	 */
 	public $editorClass			= null;
 
@@ -52,8 +64,8 @@ class Core extends Component {
 
 		// Initialise core validators
         CoreValidator::initValidators();
-		
-		// Set CMSGears alias
+
+		// Set CMSGears alias to be used by all modules, plugins, widgets and themes
 		Yii::setAlias( "cmsgears", dirname( dirname( dirname( __DIR__ ) ) ) );
     }
 
@@ -87,11 +99,11 @@ class Core extends Component {
 	 */
     public function hasWidget( $name ) {
 
-		//TODO - Add code to check availability of a widget from widgets folder
+		//TODO - Add code to check availability of a widget from database and widgets folder
     }
 
 	/**
-	 * The method getLoginRedirectPage returns the path to be redirected after login using the non-ajax based form.
+	 * The method getLoginRedirectPage returns the default path to be redirected after login using the non-ajax based form.
 	 * @return path used for post login
 	 */
 	public function getLoginRedirectPage() {
@@ -100,7 +112,7 @@ class Core extends Component {
 	}
 
 	/**
-	 * The method getLogoutRedirectPage returns the path to be redirected after logout using the non-ajax based form.
+	 * The method getLogoutRedirectPage returns the default path to be redirected after logout using the non-ajax based form.
 	 * @return path used for post logout
 	 */
 	public function getLogoutRedirectPage() {
@@ -109,7 +121,7 @@ class Core extends Component {
 	}
 
 	/**
-	 * The method isRbac is used by the User class.
+	 * The method isRbac is used by the User class to check whether RBAC is enabled. It can be used by any other class or code snippet.
 	 * @return whether CMSGears simplified RBAC system has to be used
 	 */	
 	public function isRbac() {
@@ -124,6 +136,20 @@ class Core extends Component {
 	public function getRbacFilterClass() {
 
 		return $this->rbacFilterClass;
+	}
+
+	public function getRbacFilter( $filter ) {
+
+		return $this->rbacFilters[ $filter ];
+	}
+
+	/**
+	 * The method isApis is used to check whether apis are supported by the applications. 
+	 * @return the class name
+	 */	
+	public function isApis() {
+
+		return $this->apis;
 	}
 
 	/**

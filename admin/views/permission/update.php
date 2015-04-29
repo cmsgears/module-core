@@ -10,8 +10,8 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Update Permission';
 		<h1>Update Permission</h1>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-permission-update', 'options' => ['class' => 'frm-split' ] ] );?>
 
-    	<?= $form->field( $model, 'permission_name' ) ?>
-    	<?= $form->field( $model, 'permission_desc' )->textarea() ?>
+    	<?= $form->field( $model, 'name' ) ?>
+    	<?= $form->field( $model, 'description' )->textarea() ?>
 		
 		<h4>Assign Roles</h4>
 		<?php 
@@ -39,5 +39,5 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Update Permission';
 	</div>
 </section>
 <script type="text/javascript">
-	initSidebar( "sidebar-identity", -1 );
+	initSidebar( "sidebar-identity", 2 );
 </script>

@@ -9,6 +9,8 @@ use yii\data\Sort;
 use cmsgears\core\common\models\entities\Role;
 use cmsgears\core\common\models\entities\RolePermission;
 
+use cmsgears\core\common\utilities\DateUtil;
+
 class RoleService extends \cmsgears\core\common\services\RoleService {
 
 	// Static Methods ----------------------------------------------
@@ -20,39 +22,55 @@ class RoleService extends \cmsgears\core\common\services\RoleService {
 	    $sort = new Sort([
 	        'attributes' => [
 	            'name' => [
-	                'asc' => [ 'role_name' => SORT_ASC ],
-	                'desc' => ['role_name' => SORT_DESC ],
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'name',
 	            ]
 	        ]
 	    ]);
 
-		return self::getPaginationDetails( new Role(), [ 'sort' => $sort, 'search-col' => 'role_name' ] );
+		return self::getPaginationDetails( new Role(), [ 'sort' => $sort, 'search-col' => 'name' ] );
 	}
 
 	// Create -----------
 
 	public static function create( $role ) {
-
+		
+		// Set Attributes
+		$date				= DateUtil::getMysqlDate();
+		$user				= Yii::$app->user->getIdentity();
+		$role->createdBy	= $user->id;
+		$role->createdAt	= $date;
+		
+		// Create Role
 		$role->save();
-
-		return true;
+		
+		// Return Role
+		return $role;
 	}
 
 	// Update -----------
 
 	public static function update( $role ) {
 
-		$roleToUpdate	= self::findById( $role->getId() );
+		// Find existing role
+		$roleToUpdate	= self::findById( $role->id );
 
-		$roleToUpdate->setName( $role->getName() );
-		$roleToUpdate->setDesc( $role->getDesc() );
-		$roleToUpdate->setHome( $role->getHome() );
+		// Copy and set Attributes		
+		$date			= DateUtil::getMysqlDate();
+		$user			= Yii::$app->user->getIdentity();
 
+		$roleToUpdate->modifiedBy	= $user->id;
+		$roleToUpdate->modifiedAt	= $date;
+
+		$roleToUpdate->copyForUpdateFrom( $role, [ 'name', 'description', 'homeUrl' ] );
+		
+		// Update Role
 		$roleToUpdate->update();
-
-		return true;
+		
+		// Return updated Role
+		return $roleToUpdate;
 	}
 
 	public static function bindPermissions( $binder ) {
@@ -67,13 +85,12 @@ class RoleService extends \cmsgears\core\common\services\RoleService {
 		if( isset( $permissions ) && count( $permissions ) > 0 ) {
 
 			foreach ( $permissions as $key => $value ) {
-				
+
 				if( isset( $value ) ) {
 
-					$toSave	= new RolePermission();
-	
-					$toSave->setRoleId( $roleId );
-					$toSave->setPermissionId( $value );
+					$toSave					= new RolePermission();
+					$toSave->roleId			= $roleId;
+					$toSave->permissionId	= $value;
 
 					$toSave->save();
 				}
@@ -83,20 +100,15 @@ class RoleService extends \cmsgears\core\common\services\RoleService {
 		return true;
 	}
 
-	public static function assignRole( $name, $user ) {
-		
-		$role = Role::findByName( $name );
-
-		$user->setRoleId( $role->getId() );
-
-		$user->update();
-	}
-
 	// Delete -----------
 
 	public static function delete( $role ) {
 
-		$role->delete();
+		// Find existing Role
+		$roleToDelete	= self::findById( $role->id );
+
+		// Delete Role
+		$roleToDelete->delete();
 
 		return true;
 	}

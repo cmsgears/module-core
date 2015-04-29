@@ -8,10 +8,8 @@ use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\admin\config\AdminGlobalCore;
 
 use cmsgears\core\common\models\entities\Role;
-use cmsgears\core\common\models\entities\Permission;
 
 use cmsgears\core\admin\models\forms\PermissionBinderForm;
 
@@ -19,9 +17,6 @@ use cmsgears\core\admin\services\RoleService;
 use cmsgears\core\admin\services\PermissionService;
 
 use cmsgears\core\admin\controllers\BaseController;
-
-use cmsgears\core\common\utilities\CodeGenUtil;
-use cmsgears\core\common\utilities\MessageUtil;
 
 class RoleController extends BaseController {
 
@@ -34,19 +29,19 @@ class RoleController extends BaseController {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Component
+	// yii\base\Component ----------------
 
     public function behaviors() {
 
         return [
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'permissions' => [
-	                'index'  => Permission::PERM_RBAC,
-	                'all'   => Permission::PERM_RBAC,
-	                'create' => Permission::PERM_RBAC,
-	                'update' => Permission::PERM_RBAC,
-	                'delete' => Permission::PERM_RBAC
+                'actions' => [
+	                'index'  => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'all'   => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_RBAC ]
                 ]
             ],
             'verbs' => [
@@ -62,7 +57,7 @@ class RoleController extends BaseController {
         ];
     }
 
-	// RoleController
+	// RoleController --------------------
 
 	public function actionIndex() {
 
@@ -86,22 +81,22 @@ class RoleController extends BaseController {
 
 		$model->setScenario( "create" );
 
-		if( $model->load( Yii::$app->request->post( "Role"), "" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post( "Role" ), "" )  && $model->validate() ) {
 
 			if( RoleService::create( $model ) ) {
 
 				$binder = new PermissionBinderForm();
 
-				$binder->roleId	= $model->getId();
+				$binder->roleId	= $model->id;
 				$binder->load( Yii::$app->request->post( "Binder" ), "" );
 
 				RoleService::bindPermissions( $binder );
 
-				return $this->redirect( [ self::URL_ALL ] );
+				return $this->redirect( "all" );
 			}
 		}
 
-		$permissions	= PermissionService::getIdNameArrayList();
+		$permissions	= PermissionService::getIdNameList();
 
     	return $this->render('create', [
     		'model' => $model,
@@ -125,7 +120,7 @@ class RoleController extends BaseController {
 	
 					$binder = new PermissionBinderForm();
 	
-					$binder->roleId	= $model->getId();
+					$binder->roleId	= $model->id;
 					$binder->load( Yii::$app->request->post( "Binder" ), "" );
 	
 					RoleService::bindPermissions( $binder );
@@ -134,7 +129,7 @@ class RoleController extends BaseController {
 				}
 			}
 	
-			$permissions	= PermissionService::getIdNameArrayList();
+			$permissions	= PermissionService::getIdNameList();
 	
 	    	return $this->render('update', [
 	    		'model' => $model,
@@ -143,7 +138,7 @@ class RoleController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
@@ -154,15 +149,15 @@ class RoleController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( isset($_POST) && count($_POST) > 0 ) {
+			if( $model->load( Yii::$app->request->post( "Role" ), "" ) ) {
 	
 				if( RoleService::delete( $model ) ) {
 		
-					return $this->redirect( [ self::URL_ALL ] );
+					return $this->redirect( "all" );
 				}
 			}
 
-			$permissions	= PermissionService::getIdNameArrayList();
+			$permissions	= PermissionService::getIdNameList();
 
 	    	return $this->render('delete', [
 	    		'model' => $model,
@@ -171,7 +166,7 @@ class RoleController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

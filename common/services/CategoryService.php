@@ -16,7 +16,7 @@ class CategoryService extends Service {
 
 	public static function findById( $id ) {
 
-		return Category::findOne( $id );
+		return Category::findById( $id );
 	}
 
 	public static function findByName( $name ) {
@@ -31,15 +31,15 @@ class CategoryService extends Service {
 
 	public static function getIdNameMapByType( $type ) {
 
-		return self::findIdNameArrayList( "category_id", "category_name", CoreTables::TABLE_CATEGORY, [ "category_type" => $type ] );
+		return self::findIdNameList( "id", "name", CoreTables::TABLE_CATEGORY, [ "type" => $type ] );
 	}
 
-	public static function getOptionIdKeyMapById( $id ) {
+	public static function getOptionIdNameMapById( $id ) {
 
-		return self::findKeyValueMap( "option_id", "option_key", CoreTables::TABLE_OPTION, [ "option_category" => $id ] );
+		return self::findMap( "id", "name", CoreTables::TABLE_OPTION, [ "categoryId" => $id ] );
 	}
 
-	public static function getOptionIdKeyMapByName( $name, $prepend = null ) {
+	public static function getOptionIdNameMapByName( $name, $prepend = null ) {
 
 		$category	= self::findByName( $name );
 		$options	= $category->options;
@@ -55,13 +55,13 @@ class CategoryService extends Service {
 
 		foreach ( $options as $option ) {
 			
-			$optionsMap[ $option->getId() ] = $option->getKey();
+			$optionsMap[ $option->id ] = $option->name;
 		}
 		
 		return $optionsMap;
 	}
 
-	public static function getOptionValueKeyMapById( $id ) {
+	public static function getOptionValueNameMapById( $id ) {
 
 		$category	= self::findById( $id );
 		$options	= $category->options;
@@ -69,21 +69,21 @@ class CategoryService extends Service {
 
 		foreach ( $options as $option ) {
 			
-			$optionsMap[ $option->getValue() ] = $option->getKey();
+			$optionsMap[ $option->value ] = $option->name;
 		}
 		
 		return $optionsMap;
 	}
 
-	public static function getOptionValueKeyMapByName( $name ) {
+	public static function getOptionValueNameMapByName( $name ) {
 
 		$category	= self::findByName( $name );
 		$options	= $category->options;
 		$optionsMap	= array();
 
 		foreach ( $options as $option ) {
-			
-			$optionsMap[ $option->getValue() ] = $option->getKey();
+
+			$optionsMap[ $option->value ] = $option->name;
 		}
 
 		return $optionsMap;

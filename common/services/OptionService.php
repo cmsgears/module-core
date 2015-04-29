@@ -5,21 +5,28 @@ namespace cmsgears\core\common\services;
 use \Yii;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\models\entities\Category;
 use cmsgears\core\common\models\entities\Option;
 
 class OptionService extends Service {
 
-	public static function findByCategoryIdKey( $categoryId, $key ) {
+	public static function findByCategoryId( $categoryId ) {
 
-		return Option::findByCategoryIdKey( $categoryId, $key );
+		return Option::findByCategoryId( $categoryId );
 	}
-	
-	public static function findByCategoryNameKey( $categoryName, $key ) {
 
-		return Option::findByCategoryNameKey( $categoryName, $key );
+	public static function findByCategoryName( $categoryName ) {
+
+		return Option::findByCategoryName( $categoryName );
+	}
+
+	public static function findByNameCategoryId( $name, $categoryId ) {
+
+		return Option::findByNameCategoryId( $name, $categoryId, $key );
+	}
+
+	public static function findByNameCategoryName( $name, $categoryName ) {
+
+		return Option::findByNameCategoryName( $name, $categoryName );
 	}
 }
 

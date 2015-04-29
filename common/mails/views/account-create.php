@@ -8,8 +8,8 @@ $logoUrl		= Url::to( $logoUrl. "/assets/images/logo.png", true );
 $logo 			= "<img class='logo' style='height:35px;float:right; margin-top:6px; margin-right:53px' src='$logoUrl'>";
 $siteName		= $coreProperties->getSiteName();
 $name 			= Html::encode( $user->getName() );
-$email			= Html::encode( $user->user_email );
-$token			= Html::encode( $user->user_verify_token );
+$email			= Html::encode( $user->email );
+$token			= Html::encode( $user->verifyToken );
 $confirmLink	= Url::toRoute( "/activate-account?token=$token&email=$email", true );
 $confirmLink 	= str_replace( "/admin/", "/website/", $confirmLink );
 ?>

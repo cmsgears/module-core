@@ -2,21 +2,59 @@
 namespace cmsgears\core\common\config;
 
 /**
- * The CoreGlobal class defines the global constants and variables available for core and other modules. 
- * It also define the errors and messages available within core module. These error and message codes are 
- * used by MessageUtility class.
+ * The CoreGlobal class defines the global constants and variables available for core and dependent modules.
  */
 class CoreGlobal {
 
-	// Categories available for Core Module
+	// Category Type ---------------------------------------------------
+
 	const CATEGORY_TYPE			= "category type";
+
+	// Meta ------------------------------------------------------------
+
+	const META_TYPE_USER		= 0;
+
+	// Attachments -----------------------------------------------------
+
+	const FILE_TYPE_USER		= 0;
+
+	// Categories ------------------------------------------------------
+
 	const CATEGORY_ROLE_TYPE	= "role type";
 	const CATEGORY_CONFIG_TYPE	= "config type";
 	const CATEGORY_GENDER		= "gender";
 
-	// Type of Config available for core module
+	// Config Types ----------------------------------------------------
+ 
 	const CONFIG_CORE			= "Core";
 	const CONFIG_MAIL			= "Email";
+	const CONFIG_WEB			= "Web";
+	const CONFIG_ADMIN			= "Admin";
+
+	// Permissions -----------------------------------------------------
+	
+	// Site Module
+	const PERM_ADMIN				= "admin"; 	// Allows to view Admin Site Home
+	const PERM_USER					= "user"; 	// Allows to view User Site Home
+
+	// Settings
+	const PERM_SETTINGS				= "settings";
+
+	// User Module
+	const PERM_IDENTITY				= "identity";
+	const PERM_IDENTITY_USER		= "identity-user";
+	const PERM_RBAC					= "identity-rbac";
+
+	// Newsletter
+	const PERM_NEWSLETTER			= "newsletter";
+
+	// Slider
+	const PERM_SLIDER				= "slider";
+
+	// Category
+	const PERM_CATEGORY				= "category";
+
+	// Errors ----------------------------------------------------------
 
 	// Errors - Generic
 	const ERROR_REQUEST				= "requestError";
@@ -51,6 +89,8 @@ class CoreGlobal {
 	const ERROR_PASSWORD_OLD		= "oldPasswordError";
 	const ERROR_ACCOUNT_CONFIRM		= "confirmAccountError";
 	const ERROR_PASSWORD_RESET		= "resetPasswordError";
+
+	// Messages --------------------------------------------------------
 
 	// Generic Messages
 	const MESSAGE_REQUEST 			= "requestMessage";

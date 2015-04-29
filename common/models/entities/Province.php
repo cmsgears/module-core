@@ -1,115 +1,95 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\utilities\MessageUtil;
-
-class Province extends ActiveRecord {
+/**
+ * Province Entity
+ *
+ * @property integer $id
+ * @property integer $countryId
+ * @property string $code
+ * @property string $name
+ */
+class Province extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
-	public function getId() {
-
-		return $this->province_id;
-	}
-
-	public function getCountryId() {
-
-		return $this->province_country;
-	}
-
+	/**
+	 * @return Country to which province belongs.
+	 */
 	public function getCountry() {
 
-		return $this->hasOne( Country::className(), [ 'country_id' => 'province_country' ] );
+		return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] );
 	}
 
-	public function setCountryId( $countryId ) {
-
-		$this->province_country = $countryId;
-	}
-
-	public function getCode() {
-
-		return $this->province_code;
-	}
-
-	public function setCode( $code ) {
-
-		$this->province_code = $code;
-	}
-
-	public function getName() {
-
-		return $this->province_name;
-	}
-
-	public function setName( $name ) {
-
-		$this->province_name = $name;
-	}
-
-	// yii\base\Model
+	// yii\base\Model --------------------
 
 	public function rules() {
 
         return [
-            [ [ 'province_country', 'province_code', 'province_name' ], 'required' ],
-            [ 'province_name', 'alphanumspace' ],
-            [ 'province_name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'province_name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-			[ [ 'province_id' ], 'safe' ]
+            [ [ 'countryId', 'code', 'name' ], 'required' ],
+            [ 'id', 'safe' ],
+            [ 'name', 'alphanumspace' ],
+            [ 'name', 'string', 'min'=>1, 'max'=>10 ],
+            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'province_country' => 'Country',
-			'province_code' => 'Code',
-			'province_name' => 'Name'
+			'countryId' => 'Country',
+			'code' => 'Code',
+			'name' => 'Name'
 		];
 	}
 	
-	// Check whether a province existing with the same name for same country
+	// Province --------------------------
+
+	/**
+	 * Validates whether a province existing with the same name for same country.
+	 */
     public function validateNameCreate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
-            if( self::isExistByCountryIdName( $this->province_country, $this->province_name ) ) {
+            if( self::isExistByCountryIdName( $this->countryId, $this->name ) ) {
 
-                $this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
+                $this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
 
-	// Check whether a province existing with the same name for same country
+	/**
+	 * Validates whether a province existing with the same name for same country.
+	 */
     public function validateNameUpdate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
-			$existingProvince = self::findByCountryIdName( $this->province_country, $this->user_username );
+			$existingProvince = self::findByCountryIdName( $this->countryId, $this->user_username );
 
-			if( isset( $existingProvince ) && $this->getCountryId() == $existingProvince->getCountryId() && 
-				$this->getId() != $existingProvince->getId() && strcmp( $existingProvince->province_name, $this->province_name ) == 0 ) {
+			if( isset( $existingProvince ) && $this->countryId == $existingProvince->countryId && 
+				$this->id != $existingProvince->id && strcmp( $existingProvince->name, $this->name ) == 0 ) {
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}
         }
     }
 
 	// Static Methods ----------------------------------------------
 
+	// yii\base\Model --------------------
+
 	public static function tableName() {
 
 		return CoreTables::TABLE_PROVINCE;
 	}
+
+	// Province --------------------------
 
 	public static function findById( $id ) {
 
@@ -118,30 +98,30 @@ class Province extends ActiveRecord {
 
 	public static function findByCountryId( $countryId ) {
 
-		return self::find()->where( 'province_country=:cid', [ ':cid' => $countryId ] )->one();
+		return self::find()->where( 'countryId=:id', [ ':id' => $countryId ] )->one();
 	}
 
 	public static function findByName( $name ) {
 
-		return self::find()->where( 'province_name=:name', [ ':name' => $name ] )->one();
+		return self::find()->where( 'name=:name', [ ':name' => $name ] )->one();
 	}
 
 	public static function isExistByName( $name ) {
 
-		$province = self::find()->where( 'province_name=:name', [ ':name' => $name ] )->one();
+		$province = self::find()->where( 'name=:name', [ ':name' => $name ] )->one();
 
 		return isset( $province );
 	}
 
 	public static function findByCountryIdName( $countryId, $name ) {
 
-		return self::find()->where( 'province_country=:cid', [ ':cid' => $countryId ] )->andWhere( 'province_name=:name', [ ':name' => $name ] )->one();
+		return self::find()->where( 'countryId=:id AND name=:name', [ ':id' => $countryId, ':name' => $key ] )->one();
 	}
 	
 	public static function isExistByCountryIdName( $countryId, $name ) {
 
-		$province = self::find()->where( 'province_country=:cid', [ ':cid' => $countryId ] )->andWhere( 'province_name=:name', [ ':name' => $name ] )->one();
-		
+		$province = self::findByCountryIdName( $countryId, $name );
+
 		return isset( $province );
 	}
 }

@@ -10,15 +10,15 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Delete User";
 		<h2>Delete User</h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-user-delete', 'options' => ['class' => 'frm-split' ] ] );?>
 
-    	<?= $form->field( $model, 'user_email' )->textInput( [ 'disabled'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'user_username' )->textInput( [ 'disabled'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'user_status' )->dropDownList( $status, [ 'disabled'=>'true' ] ) ?>
-		<?= $form->field( $model, 'user_role' )->dropDownList( $roles, [ 'disabled'=>'true' ] )  ?>
-		<?= $form->field( $model, 'user_gender' )->dropDownList( $genders, [ 'disabled'=>'true' ] )  ?>
-		<?= $form->field( $model, 'user_firstname' )->textInput( [ 'disabled'=>'true' ] ) ?>
-		<?= $form->field( $model, 'user_lastname' )->textInput( [ 'disabled'=>'true' ] ) ?>
-		<?= $form->field( $model, 'user_mobile' )->textInput( [ 'disabled'=>'true' ] ) ?>
-		<?= $form->field( $model, 'user_newsletter' )->checkbox( [ 'disabled'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'email' )->textInput( [ 'readonly'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'username' )->textInput( [ 'readonly'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'status' )->dropDownList( $status, [ 'readonly'=>'true' ] ) ?>
+		<?= $form->field( $model, 'role' )->dropDownList( $roles, [ 'readonly'=>'true' ] )  ?>
+		<?= $form->field( $model, 'gender' )->dropDownList( $genders, [ 'readonly'=>'true' ] )  ?>
+		<?= $form->field( $model, 'firstName' )->textInput( [ 'readonly'=>'true' ] ) ?>
+		<?= $form->field( $model, 'lastName' )->textInput( [ 'readonly'=>'true' ] ) ?>
+		<?= $form->field( $model, 'phone' )->textInput( [ 'readonly'=>'true' ] ) ?>
+		<?= $form->field( $model, 'newsletter' )->checkbox( [ 'readonly'=>'true' ] ) ?>
 
 		<?=Html::a( "Cancel", [ '/cmgcore/user/all' ], ['class' => 'btn' ] );?>
 		<input type="submit" value="Delete" />
@@ -27,5 +27,5 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Delete User";
 	</div>
 </section>
 <script type="text/javascript">
-	initSidebar( "sidebar-identity", -1 );
+	initSidebar( "sidebar-identity", 3 );
 </script>

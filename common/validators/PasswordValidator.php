@@ -2,10 +2,11 @@
 namespace cmsgears\core\common\validators;
 
 // Yii Imports
+use \Yii;
 use yii\validators\Validator;
 
+// CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\common\utilities\MessageUtil;
 
 class PasswordValidator extends Validator {
 
@@ -28,7 +29,7 @@ class PasswordValidator extends Validator {
 
         if ( !preg_match_all( self::$regex, $model->$attribute ) ) {
 
-            $this->addError( $model, $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_PASSWORD ) );
+            $this->addError( $model, $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_PASSWORD ) );
         }
     }
 }

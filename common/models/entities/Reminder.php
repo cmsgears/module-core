@@ -1,117 +1,73 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
-
-class Reminder extends ActiveRecord {
+/**
+ * Reminder Entity
+ *
+ * @property integer $id
+ * @property integer $userId
+ * @property short $type
+ * @property string $message
+ * @property datetime $createdAt
+ * @property datetime $time
+ * @property boolean $flag
+ */
+class Reminder extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
-	public function getId() {
-
-		return $this->reminder_id;
-	}
-
-	public function getUserId() {
-
-		return $this->reminder_user;
-	}
-
+	/**
+	 * @return User
+	 */
 	public function getUser() {
 
-		return $this->hasOne( User::className(), [ 'user_id' => 'reminder_user' ] );
+		return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
 	}
 
-	public function setUserId( $userId ) {
-
-		$this->reminder_user = $userId;
-	}
-
-	public function getMessage() {
-
-		return $this->reminder_message;
-	}
-
-	public function setMessage( $message ) {
-
-		$this->reminder_message = $message;
-	}
-
-	public function getTypeId() {
-
-		return $this->reminder_type;
-	}
-
-	public function getType() {
-
-		return $this->hasOne( Option::className(), [ 'option_id' => 'reminder_type' ] );
-	}
-
-	public function setTypeId( $type ) {
-
-		$this->reminder_type = $type;
-	}
-
-	public function getTime() {
-
-		return $this->reminder_time;
-	}
-
-	public function setTime( $time ) {
-
-		$this->reminder_time = $time;
-	}
-
-	public function getFlag() {
-
-		return $this->reminder_flag;
-	}
-
+	/**
+	 * @return string representation of flag
+	 */
 	public function getFlagStr() {
 
-		return $this->reminder_flag ? 'yes' : 'no';
+		return $this->flag ? 'yes' : 'no';
 	}
 
-	public function setFlag( $flag ) {
-
-		$this->reminder_flag = $flag;
-	}
-
-	// yii\base\Model
+	// yii\base\Model --------------------
 
 	public function rules() {
 
         return [
-            [ [ 'reminder_user', 'reminder_message', 'reminder_type' ], 'required' ],
-			[ [ 'reminder_flag' ], 'safe' ]
+            [ [ 'userId', 'message', 'type', 'time' ], 'required' ],
+			[ [ 'id', 'flag' ], 'safe' ],
+			[ 'createdAt', 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'reminder_user' => 'User',
-			'reminder_message' => 'Message',
-			'reminder_type' => 'Type',
-			'reminder_flag' => 'Read'
+			'userId' => 'User',
+			'message' => 'Message',
+			'type' => 'Type',
+			'flag' => 'Read',
+			'time' => 'Time'
 		];
 	}
 
 	// Static Methods ----------------------------------------------
+
+	// yii\db\ActiveRecord ---------------
 
 	public static function tableName() {
 
 		return CoreTables::TABLE_REMINDER;
 	}
 
-	// Reminder
+	// Reminder --------------------------
 
 	public static function findById( $id ) {
 
-		return self::find()->where( 'reminder_id=:id', [ ':id' => $id ] )->one();
+		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 }
 

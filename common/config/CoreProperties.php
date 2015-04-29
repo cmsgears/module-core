@@ -84,8 +84,8 @@ class CoreProperties {
 	 */ 
 	public function init() {
 
-		$type				= OptionService::findByCategoryNameKey( CoreGlobal::CATEGORY_CONFIG_TYPE, CoreGlobal::CONFIG_CORE );
-		$this->properties	= ConfigService::getKeyValueMapByType( $type->getValue() );
+		$type				= OptionService::findByNameCategoryName( CoreGlobal::CONFIG_CORE, CoreGlobal::CATEGORY_CONFIG_TYPE );
+		$this->properties	= ConfigService::getNameValueMapByType( $type->value );
 	}
 
 	/**
@@ -143,12 +143,12 @@ class CoreProperties {
 		
 		return $this->properties[ self::PROP_SITE_TITLE ]; 
 	}
-	
+
 	/**
-	 * Returns Site Name to be used at generic places like footer etc.
+	 * Returns Site Name to be used at generic places like footer etc. It can be either same or different from Site Title.
 	 */
 	public function getSiteName() {
-		
+
 		return $this->properties[ self::PROP_SITE_NAME ]; 
 	}
 
@@ -156,7 +156,7 @@ class CoreProperties {
 	 * Returns the site URL for the app. It can be used by admin app to refer to web app.
 	 */
 	public function getSiteUrl() {
-		
+
 		return $this->properties[ self::PROP_SITE_URL ]; 
 	}
 
@@ -164,7 +164,7 @@ class CoreProperties {
 	 * Returns the root URL for the app
 	 */
 	public function getRootUrl() {
-		
+
 		return $this->properties[ self::PROP_SITE_URL ] . \Yii::getAlias( '@web' ) ; 
 	}
 }

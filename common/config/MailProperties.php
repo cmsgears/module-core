@@ -1,13 +1,13 @@
 <?php
-namespace cmsgears\modules\core\common\config;
+namespace cmsgears\core\common\config;
 
 // CMG Imports
-use cmsgears\modules\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreGlobal;
  
-use cmsgears\modules\core\common\models\entities\Config;
+use cmsgears\core\common\models\entities\Config;
 
-use cmsgears\modules\core\common\services\OptionService;
-use cmsgears\modules\core\common\services\ConfigService;
+use cmsgears\core\common\services\OptionService;
+use cmsgears\core\common\services\ConfigService;
 
 class MailProperties {
 
@@ -104,15 +104,15 @@ class MailProperties {
 	 */ 
 	public function init() {
 
-		$type				= OptionService::findByCategoryNameKey( CoreGlobal::CATEGORY_CONFIG_TYPE, CoreGlobal::CONFIG_MAIL );
-		$this->properties	= ConfigService::getKeyValueMapByType( $type->getValue() );
+		$type				= OptionService::findByNameCategoryName( CoreGlobal::CONFIG_MAIL, CoreGlobal::CATEGORY_CONFIG_TYPE );
+		$this->properties	= ConfigService::getNameValueMapByType( $type->value );
 	}
 
 	/**
 	 * Return mail property for the specified key.
 	 */
 	public function getProperty( $key ) {
-		
+
 		return $this->properties[ key ];
 	}
 

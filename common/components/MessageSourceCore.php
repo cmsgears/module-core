@@ -1,16 +1,18 @@
 <?php
-namespace cmsgears\core\common\utilities;
+namespace cmsgears\core\common\components;
+
+// Yii Imports
+use \Yii;
+use yii\base\Component;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class MessageUtil {
+class MessageSourceCore extends Component {
 
 	// Variables ---------------------------------------------------
 
-	// Static Variables --------------------
-
-	private static $errorsDb = [
+	public $errorsDb = [
 		// Errors - Generic
 		CoreGlobal::ERROR_REQUEST => 'Your request was not processed. Please correct the highlighted errors and submit again.',
 		CoreGlobal::ERROR_NOT_FOUND => 'The requested resource does not exist.',
@@ -26,7 +28,7 @@ class MessageUtil {
 		CoreGlobal::ERROR_AN_DOT_U => 'Please provide valid value having alphanumeric, dot(.) or underscore(_) characters.',
 		CoreGlobal::ERROR_PHONE => 'Please provide a valid number having numeric digits or hyphen(-), space or plus(+) at beginning.',
 		// Errors - Create/Register User
-		CoreGlobal::ERROR_USER_EXIST => 'A user already exist with the same Email.',
+		CoreGlobal::ERROR_EMAIL_EXIST => 'A user already exist with the same Email.',
 		CoreGlobal::ERROR_USERNAME_EXIST => 'A user already exist with the same username.',
 		CoreGlobal::ERROR_PASSWORD => 'Please provide a valid password having at least 5 characters.',
 		CoreGlobal::ERROR_TERMS => 'Please accept our terms and conditions to continue.',
@@ -46,9 +48,17 @@ class MessageUtil {
 		CoreGlobal::MESSAGE_RESET_PASSWORD => 'Your password reset request was processed successfully. Please login to continue with us.'
 	];
 
-	public static function getMessage( $messageKey ) {
+	/**
+	 * Initialise the Core Message DB Component.
+	 */
+    public function init() {
 
-		return self::$errorsDb[ $messageKey ];
+        parent::init();
+    }
+
+	public function getMessage( $messageKey ) {
+
+		return $this->errorsDb[ $messageKey ];
 	}
 }
 

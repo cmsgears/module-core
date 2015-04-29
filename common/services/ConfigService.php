@@ -19,9 +19,9 @@ class ConfigService extends Service {
 		return Config::findByType( $type );
     }
 
-    public static function getKeyValueMapByType( $type ) {
+    public static function getNameValueMapByType( $type ) {
 
-		return self::findKeyValueMap( "config_key", "config_value", CoreTables::TABLE_CONFIG, [ "config_type" => $type ] );
+		return self::findMap( "name", "value", CoreTables::TABLE_CONFIG, [ "type" => $type ] );
     }
 }
 

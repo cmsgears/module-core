@@ -6,10 +6,9 @@ use \Yii;
 use yii\base\Model;
 
 // CMG Imports
-use cmsgears\core\common\services\UserService;
-
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\common\utilities\MessageUtil;
+
+use cmsgears\core\common\services\UserService;
 
 class RegisterForm extends Model {
 
@@ -34,7 +33,7 @@ class RegisterForm extends Model {
 	public function rules() {
 		
 		return  [
-			[ [ 'email', 'password', 'password_repeat', 'username', 'terms' ], 'required' ],
+			[ [ 'email', 'password', 'password_repeat' ], 'required' ],
 			[ 'email', 'email' ],
 			[ 'password', 'compare' ],
 			[ 'password', 'password' ],
@@ -68,7 +67,7 @@ class RegisterForm extends Model {
 
             if( UserService::isExistByEmail( $this->email ) ) {
             	
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
             }
         }
     }
@@ -79,7 +78,7 @@ class RegisterForm extends Model {
 
             if( UserService::isExistByUsername( $this->username ) ) {
 
-                $this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
+                $this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
             }
         }
     }
@@ -88,7 +87,7 @@ class RegisterForm extends Model {
 
 		if( !isset( $this->terms ) || strlen( $this->terms ) <= 0 ) {
 
-			$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_TERMS ) );
+			$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_TERMS ) );
 		}
 	}
 }

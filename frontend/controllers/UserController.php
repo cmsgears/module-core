@@ -12,8 +12,6 @@ use cmsgears\core\frontend\config\WebGlobalCore;
 
 use cmsgears\core\frontend\services\UserService;
 
-use cmsgears\core\common\utilities\MessageUtil;
-
 class UserController extends BaseController {
 
 	// Constructor and Initialisation ------------------------------
@@ -32,13 +30,19 @@ class UserController extends BaseController {
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => [ 'index' ],
+                'only' => [ 'home' ],
                 'rules' => [
                     [
-                        'actions' => [ 'index' ],
+                        'actions' => [ 'home' ],
                         'allow' => true,
                         'roles' => ['@']
                     ]
+                ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'home' => ['get']
                 ]
             ]
         ];
@@ -46,7 +50,7 @@ class UserController extends BaseController {
 
 	// UserController
 
-    public function actionIndex() {
+    public function actionHome() {
 
         return $this->render( WebGlobalCore::PAGE_INDEX );
     }

@@ -2,162 +2,132 @@
 namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
-use yii\db\ActiveRecord;
+use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\utilities\MessageUtil;
-
-class Category extends ActiveRecord {
+/**
+ * Category Entity
+ *
+ * @property integer $id
+ * @property integer $parentId
+ * @property string $name
+ * @property string $description
+ * @property integer $type
+ */
+class Category extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
-	public function getId() {
-
-		return $this->category_id;
-	}
-
-	public function getParentId() {
-
-		return $this->category_parent;
-	}
-
+	/**
+	 * @return Category - parent category
+	 */
 	public function getParent() {
 
-		return $this->hasOne( Category::className(), [ 'category_id' => 'category_parent' ] );
+		return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] );
 	}
 
-	public function setParentId( $parentId ) {
-
-		$this->category_parent = $parentId;
-	}
-
-	public function getName() {
-
-		return $this->category_name;
-	}
-
-	public function setName( $name ) {
-
-		$this->category_name = $name;
-	}
-
-	public function getDesc() {
-
-		return $this->category_desc;
-	}
-
-	public function setDesc( $desc ) {
-
-		$this->category_desc = $desc;
-	}
-
-	public function getType() {
-
-		return $this->category_type;
-	}
-
-	public function getTypeStr() {
-
-		return self::$typeMap[ $this->category_type ];
-	}
-
-	public function setType( $type ) {
-
-		$this->category_type = $type;
-	}
-
+	/**
+	 * @return array - list of Option having all the options belonging to this category
+	 */
 	public function getOptions() {
 
-    	return $this->hasMany( Option::className(), [ 'option_category' => 'category_id' ] );
+    	return $this->hasMany( Option::className(), [ 'categoryId' => 'id' ] );
 	}
 
-	// yii\base\Model
+	// yii\base\Model --------------------
 
 	public function rules() {
 
         return [
-            [ [ 'category_name' ], 'required' ],
-            [ 'category_name', 'alphanumspace' ],
-            [ 'category_name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'category_name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-			[ [ 'category_parent', 'category_desc', 'category_type' ], 'safe' ]
+            [ [ 'name' ], 'required' ],
+            [ [ 'id', 'description', 'type' ], 'safe' ],
+            [ 'name', 'alphanumspace' ],
+            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ 'parentId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_SELECT ) ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'category_name' => 'Name',
-			'category_parent' => 'Parent',
-			'category_desc' => 'Description',
-			'category_type' => 'type'
+			'name' => 'Name',
+			'parentId' => 'Parent Category',
+			'description' => 'Description',
+			'type' => 'Type'
 		];
 	}
 
-	// Category
-
+	// Category --------------------------
+	
+	/**
+	 * Validates to ensure that name is used only for one category for a particular type
+	 */
     public function validateNameCreate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
-            if( self::isExistByTypeName( $this->category_type, $this->category_name ) ) {
+            if( self::isExistByTypeName( $this->type, $this->name ) ) {
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
 
+	/**
+	 * Validates to ensure that name is used only for one category for a particular type
+	 */
     public function validateNameUpdate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
-			$existingCategory = self::findByTypeName( $this->category_type, $this->category_name );
+			$existingCategory = self::findByTypeName( $this->type, $this->name );
 
-			if( isset( $existingCategory ) && $existingCategory->getId() != $this->getId() && 
-				strcmp( $existingCategory->getName(), $this->getName() ) == 0 && $existingCategory->getType() == $this->getType() ) {
+			if( isset( $existingCategory ) && $existingCategory->id != $this->id && 
+				strcmp( $existingCategory->name, $this->name ) == 0 && $existingCategory->type == $this->type ) {
 
-				$this->addError( $attribute, MessageUtil::getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}
         }
     }
 
 	// Static Methods ----------------------------------------------
 
+	// yii\db\ActiveRecord ---------------
+
 	public static function tableName() {
 
 		return CoreTables::TABLE_CATEGORY;
 	}
 
-	// Category
+	// Category --------------------------
 
 	public static function findById( $id ) {
 
-		return self::find()->where( 'category_id=:id', [ ':id' => $id ] )->one();
+		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 
 	public static function findByName( $name ) {
 
-		return self::find()->where( 'category_name=:name', [ ':name' => $name ] )->one();
+		return self::find()->where( 'name=:name', [ ':name' => $name ] )->one();
 	}
 
 	public static function findByType( $type ) {
 
-		return self::find()->where( 'category_type=:type', [ ':type' => $type ] )->all();
+		return self::find()->where( 'type=:type', [ ':type' => $type ] )->all();
 	}
 
 	public static function findByTypeName( $type, $name ) {
 
-		return self::find()->where( 'category_name=:name', [ ':name' => $name ] )->andWhere( 'category_type=:type', [ ':type' => $type ] )->one();
+		return self::find()->where( 'type=:type AND name=:name', [ ':type' => $type, ':name' => $name ] )->one();
 	}
-	
+
 	public static function isExistByTypeName( $type, $name ) {
 
 		$category = self::findByTypeName( $type, $name );
-		
+
 		return isset( $category );
 	}
 }

@@ -10,7 +10,7 @@ use cmsgears\core\common\models\entities\CmgFile;
 
 use cmsgears\core\common\utilities\DateUtil;
 
-class UserService extends cmsgears\core\common\services\UserService {
+class UserService extends \cmsgears\core\common\services\UserService {
 
 	// Static Methods ----------------------------------------------
 
@@ -22,19 +22,20 @@ class UserService extends cmsgears\core\common\services\UserService {
 		$user 	= new User();
 		$date	= DateUtil::getMysqlDate();
 
-		$user->setEmail( $registerForm->email );
+		$user->email 		= $registerForm->email;
+		$user->username 	= $registerForm->username;
+		$user->firstName	= $registerForm->firstName;
+		$user->lastName		= $registerForm->lastName;
+		$user->newsletter	= $registerForm->newsletter;
+		$user->registeredAt	= $date;
+		$user->status		= User::STATUS_NEW;
+
 		$user->setPassword( $registerForm->password );
-		$user->setUsername( $registerForm->nickName );
-		$user->setFirstname( $registerForm->firstName );
-		$user->setLastname( $registerForm->lastName );
-		$user->setNewsletter( $registerForm->newsletter );
-		$user->setRegOn( $date );
-		$user->setStatus( User::STATUS_NEW );
 		$user->generateVerifyToken();
 		$user->generateAuthKey();
 
 		$user->save();
-			
+
 		return $user;
 	}
 
@@ -55,7 +56,7 @@ class UserService extends cmsgears\core\common\services\UserService {
 	// Verify User registered from website
 	public static function verify( $user ) {
 
-		$user->setStatus( User::STATUS_ACTIVE );
+		$user->status = User::STATUS_ACTIVE;
 		$user->unsetVerifyToken();
 
 		$user->save();
@@ -66,9 +67,7 @@ class UserService extends cmsgears\core\common\services\UserService {
 	// User forgot password
 	public static function forgotPassword( $user ) {
 
-		$token 	= Yii::$app->getSecurity()->generateRandomString();
-
-		$user->setResetToken( $token );
+		$user->generateResetToken();
 
 		$user->save();
 
@@ -83,12 +82,27 @@ class UserService extends cmsgears\core\common\services\UserService {
 
 		if( $user->isNew() ) {
 
-			$user->setStatus( User::STATUS_ACTIVE );
+			$user->status = User::STATUS_ACTIVE;
 		}
 
 		$user->save();
 
 		return true;
+	}
+
+	public function actionUpdateAvatar( $user, $avatar ) {
+
+		// Find existing user
+		$userToUpdate	= User::findById( $user->id );
+
+		// Save Avatar
+		FileService::saveImage( $avatar, $userToUpdate, [ 'model' => $userToUpdate, 'attribute' => 'avatarId' ] );
+
+		// Update User
+		$userToUpdate->update();
+
+		// Return updated User
+		return $userToUpdate;
 	}
 }
 

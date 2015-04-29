@@ -14,11 +14,10 @@ use cmsgears\core\frontend\models\forms\RegisterForm;
 use cmsgears\core\common\models\forms\LoginForm;
 
 use cmsgears\core\frontend\services\UserService;
-use cmsgears\core\frontend\services\forms\FormService;
+use cmsgears\core\frontend\services\RoleService;
 
 use cmsgears\core\frontend\controllers\BaseController;
 
-use cmsgears\core\common\utilities\MessageUtil;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class SiteController extends BaseController {
@@ -72,11 +71,14 @@ class SiteController extends BaseController {
 
 			if( isset( $user ) ) {
 
+				// Assign default role
+				$role	= RoleService::assignRole( $user, "user" );
+
 				// Send Register Mail
 				Yii::$app->cmgCoreMailer->sendRegisterMail( $this->getCoreProperties(), $this->getMailProperties(), $user );
 
 				// Trigger Ajax Success
-				AjaxUtil::generateSuccess( MessageUtil::getMessage( CoreGlobal::MESSAGE_REGISTER ) );
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
 			}
 		}
 		else {
@@ -85,7 +87,7 @@ class SiteController extends BaseController {
 			$errors = AjaxUtil::generateErrorMessage( $model );
 
 			// Trigger Ajax Failure
-        	AjaxUtil::generateFailure( MessageUtil::getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+        	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
     }
 
@@ -98,7 +100,7 @@ class SiteController extends BaseController {
 		if( $model->load( Yii::$app->request->post( "Login" ), "" )  && $model->login() ) {
 
 			// Trigger Ajax Success
-			AjaxUtil::generateSuccess( MessageUtil::getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+			AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 		}
 		else {
 
@@ -106,7 +108,7 @@ class SiteController extends BaseController {
 			$errors = AjaxUtil::generateErrorMessage( $model );
 
 			// Trigger Ajax Failure
-        	AjaxUtil::generateFailure( MessageUtil::getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+        	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
     }
 
@@ -115,7 +117,7 @@ class SiteController extends BaseController {
         Yii::$app->user->logout();
 
 		// Trigger Ajax Success
-		AjaxUtil::generateSuccess( MessageUtil::getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+		AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
     }
 }
 

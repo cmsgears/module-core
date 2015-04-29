@@ -10,9 +10,9 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Role';
 		<h2>Delete Role</h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-role-delete', 'options' => ['class' => 'frm-split' ] ] );?>
 
-    	<?= $form->field( $model, 'role_name' )->textInput( [ 'disabled'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'role_desc' )->textarea( [ 'disabled'=>'true' ] ) ?>
-		<?= $form->field( $model, 'role_home' )->textInput( [ 'disabled'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=>'true' ] ) ?>
+		<?= $form->field( $model, 'homeUrl' )->textInput( [ 'readonly'=>'true' ] ) ?>
 
 		<h4>Mapped Permissions</h4>
 		<?php 
@@ -23,12 +23,12 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Role';
 
 				if( in_array( $permission['id'], $rolePermissions ) ) {
 		?>		
-					<span class="box-half"><input type="checkbox" name="permissions" value="<?=$permission['id']?>" checked disabled /><?=$permission['name']?></span>
+					<span class="box-half"><input type="checkbox" name="permissions" value="<?=$permission['id']?>" checked readonly /><?=$permission['name']?></span>
 		<?php 
 				}
 				else {
 		?>
-					<span class="box-half"><input type="checkbox" name="permissions" value="<?=$permission['id']?>" disabled /><?=$permission['name']?></span>
+					<span class="box-half"><input type="checkbox" name="permissions" value="<?=$permission['id']?>" readonly /><?=$permission['name']?></span>
 		<?php
 				}
 			}
@@ -41,5 +41,5 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Role';
 	</div>
 </section>
 <script type="text/javascript">
-	initSidebar( "sidebar-identity", -1 );
+	initSidebar( "sidebar-identity", 1 );
 </script>

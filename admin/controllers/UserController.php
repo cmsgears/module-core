@@ -8,21 +8,15 @@ use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\admin\config\AdminGlobalCore;
 
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
-use cmsgears\core\common\models\entities\Category;
-use cmsgears\core\common\models\entities\Option;
-use cmsgears\core\common\models\entities\Role;
-use cmsgears\core\common\models\entities\Permission;
 
 use cmsgears\core\admin\services\CategoryService;
 use cmsgears\core\admin\services\UserService;
 use cmsgears\core\admin\services\RoleService;
 
 use cmsgears\core\common\utilities\CodeGenUtil;
-use cmsgears\core\common\utilities\MessageUtil;
 
 class UserController extends BaseController {
 
@@ -35,19 +29,19 @@ class UserController extends BaseController {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Component
+	// yii\base\Component ----------------
 
     public function behaviors() {
 
         return [
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'permissions' => [
-	                'index'  => Permission::PERM_IDENTITY_USER,
-	                'all'   => Permission::PERM_IDENTITY_USER,
-	                'create' => Permission::PERM_IDENTITY_USER,
-	                'update' => Permission::PERM_IDENTITY_USER,
-	                'delete' => Permission::PERM_IDENTITY_USER
+                'actions' => [
+	                'index'  => [ 'permission' => CoreGlobal::PERM_IDENTITY_USER ],
+	                'all'   => [ 'permission' => CoreGlobal::PERM_IDENTITY_USER ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY_USER ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY_USER ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY_USER ]
                 ]
             ],
             'verbs' => [
@@ -63,7 +57,7 @@ class UserController extends BaseController {
         ];
     }
 
-	// UserController
+	// UserController --------------------
 
 	public function actionIndex() {
 
@@ -73,7 +67,7 @@ class UserController extends BaseController {
 	public function actionAll() {
 
 		$pagination = UserService::getPagination();
-		$roles 		= RoleService::getIdNameArrayList();
+		$roles 		= RoleService::getIdNameList();
 		$roles 		= CodeGenUtil::generateIdNameArray( $roles );
 
 	    return $this->render('all', [
@@ -90,20 +84,20 @@ class UserController extends BaseController {
 
 		$model->setScenario( "create" );
 
-		if( $model->load( Yii::$app->request->post() )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post( "User" ), "" )  && $model->validate() ) {
 
 			if( UserService::create( $model ) ) {
 
 				// Send Account Mail
 				Yii::$app->cmgCoreMailer->sendCreateUserMail( $this->getCoreProperties(), $this->getMailProperties(), $model );
 
-				return $this->redirect( [ self::URL_ALL ] );
+				return $this->redirect( "all" );
 			}
 		}
 
-		$roles 		= RoleService::getIdNameArrayList();
+		$roles 		= RoleService::getIdNameList();
 		$roles 		= CodeGenUtil::generateIdNameArray( $roles );
-		$genders 	= CategoryService::getOptionIdKeyMapByName( CoreGlobal::CATEGORY_GENDER );
+		$genders 	= CategoryService::getOptionIdNameMapByName( CoreGlobal::CATEGORY_GENDER );
 
     	return $this->render('create', [
     		'model' => $model,
@@ -123,9 +117,9 @@ class UserController extends BaseController {
 
 			$model->setScenario( "update" );
 
-			if( $model->load( Yii::$app->request->post() )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post( "User" ), "" )  && $model->validate() ) {
 
-				$avatar->load( Yii::$app->request->post( "File" ), "" );
+				$avatar->load( Yii::$app->request->post( "Avatar" ), "" );
 
 				if( UserService::update( $model, $avatar ) ) {
 	
@@ -133,10 +127,10 @@ class UserController extends BaseController {
 				}
 			}
 
-			$roles 		= RoleService::getIdNameArrayList();
+			$roles 		= RoleService::getIdNameList();
 			$roles 		= CodeGenUtil::generateIdNameArray( $roles );
 
-			$genders 	= CategoryService::getOptionIdKeyMapByName( CoreGlobal::CATEGORY_GENDER );
+			$genders 	= CategoryService::getOptionIdNameMapByName( CoreGlobal::CATEGORY_GENDER );
 			$avatar		= $model->avatar;
 			
 	    	return $this->render('update', [
@@ -149,7 +143,7 @@ class UserController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
@@ -160,19 +154,19 @@ class UserController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post() ) ) {
+			if( $model->load( Yii::$app->request->post( "User" ), "" ) ) {
 	
 				if( UserService::delete( $model ) ) {
 	
-					return $this->redirect( [ self::URL_ALL ] );
+					return $this->redirect( "all" );
 				}
 			}
 			else {
 
-				$roles 		= RoleService::getIdNameArrayList();
+				$roles 		= RoleService::getIdNameList();
 				$roles 		= CodeGenUtil::generateIdNameArray( $roles );
 
-				$genders 	= CategoryService::getOptionIdKeyMapByName( CoreGlobal::CATEGORY_GENDER );
+				$genders 	= CategoryService::getOptionIdNameMapByName( CoreGlobal::CATEGORY_GENDER );
 
 	        	return $this->render('delete', [
 	        		'model' => $model,
@@ -184,7 +178,7 @@ class UserController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( MessageUtil::getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

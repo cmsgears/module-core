@@ -1,66 +1,71 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
-
-class RolePermission extends ActiveRecord {
+/**
+ * RolePermission Entity
+ *
+ * @property integer $roleId
+ * @property integer $permissionId
+ */
+class RolePermission extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
-	// db columns
-
-	public function getRoleId() {
-
-		return $this->role_id;
-	}
-
+	/**
+	 * @return Role for the mapping.
+	 */
 	public function getRole() {
 
-		return $this->hasOne( Role::className(), [ 'role_id' => 'role_id' ] );
+		return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
 	}
 
-	public function setRoleId( $roleId ) {
-
-		$this->role_id = $roleId;
-	}
-
-	public function getPermissionId() {
-
-		return $this->permission_id;
-	}
-
+	/**
+	 * @return Permission for the mapping.
+	 */
 	public function getPermission() {
 
-		return $this->hasOne( Permission::className(), [ 'permission_id' => 'permission_id' ] );
+		return $this->hasOne( Permission::className(), [ 'id' => 'permissionId' ] );
 	}
 
-	public function setPermissionId( $permissionId ) {
+	// yii\base\Model --------------------
 
-		$this->permission_id = $permissionId;
+	public function rules() {
+
+        return [
+            [ [ 'roleId', 'permissionId' ], 'required' ],
+            [ [ 'roleId', 'permissionId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+        ];
+    }
+
+	public function attributeLabels() {
+
+		return [
+			'roleId' => 'Role',
+			'permissionId' => 'Permission'
+		];
 	}
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord
+	// yii\db\ActiveRecord ---------------
 
 	public static function tableName() {
 
 		return CoreTables::TABLE_ROLE_PERMISSION;
 	}
 
-	// RolePermission
+	// RolePermission --------------------
 
-	// Delete --------
+	// Delete
 
 	public static function deleteByRoleId( $roleId ) {
 
-		self::deleteAll( 'role_id=:id', [ ':id' => $roleId ] );
+		self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
 	}
 
 	public static function deleteByPermissionId( $permissionId ) {
 
-		self::deleteAll( 'permission_id=:id', [ ':id' => $permissionId ] );
+		self::deleteAll( 'permissionId=:id', [ ':id' => $permissionId ] );
 	}
 }
 

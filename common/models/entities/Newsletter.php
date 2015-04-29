@@ -1,124 +1,73 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
-// Yii Imports
-use yii\db\ActiveRecord;
-
-use cmsgears\core\common\utilities\MessageUtil;
-
-class Newsletter extends NamedActiveRecord {
+/**
+ * Newsletter Entity
+ *
+ * @property integer $id
+ * @property integer $createdBy
+ * @property integer $modifiedBy
+ * @property string $name
+ * @property string $description
+ * @property longtext $content
+ * @property datetime $createdAt
+ * @property datetime $modifiedAt
+ * @property datetime $lastSentAt
+ */
+class Newsletter extends NamedCmgEntity {
 
 	// Instance Methods --------------------------------------------
-	
-	// db columns
-	
-	public function getId() {
 
-		return $this->newsletter_id;
-	}
+	/**
+	 * @return User
+	 */
+	public function getCreator() {
 
-	public function getName() {
-		
-		return $this->newsletter_name;	
-	}
+		return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] );
+	}	
 
-	public function setName( $name ) {
-		
-		$this->newsletter_name = $name;
-	}
+	/**
+	 * @return User
+	 */
+	public function getModifier() {
 
-	public function getDesc() {
-		
-		return $this->newsletter_desc;	
+		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] );
 	}
 
-	public function setDesc( $desc ) {
-		
-		$this->newsletter_desc = $desc;
-	}
-
-	public function getContent() {
-		
-		return $this->newsletter_content;
-	}
-
-	public function setContent( $content ) {
-		
-		$this->newsletter_content = $content;	
-	}
-
-	public function getCreatedOn() {
-		
-		return $this->newsletter_created_on;
-	}
-	
-	public function setCreatedOn( $date ) {
-		
-		$this->newsletter_created_on = $date;
-	}
-
-	public function getUpdatedOn() {
-		
-		return $this->newsletter_updated_on;
-	}
-	
-	public function setUpdatedOn( $updatedOn ) {
-		
-		$this->newsletter_updated_on = $updatedOn;
-	}
-
-	public function getLastSentOn() {
-		
-		return $this->newsletter_last_sent_on;
-	}
-	
-	public function setLastSentOn( $updatedOn ) {
-		
-		$this->newsletter_last_sent_on = $updatedOn;
-	}
-
-	// yii\base\Model
+	// yii\base\Model --------------------
 
 	public function rules() {
 
         return [
-            [ [ 'newsletter_name' ], 'required' ],
-            [ 'newsletter_name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'newsletter_name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ 'newsletter_name', 'alphanumhyphenspace' ],
-            [ [ 'newsletter_id', 'newsletter_desc', 'newsletter_content' ], 'safe' ]
+            [ [ 'name' ], 'required' ],
+            [ [ 'id', 'description', 'content' ], 'safe' ],
+            [ 'name', 'alphanumhyphenspace' ],
+            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'createdAt', 'modifiedAt', 'lastSentAt' ], 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'newsletter_name' => 'Name',
-			'newsletter_desc' => 'Description',
-			'newsletter_content' => ''
+			'name' => 'Name',
+			'description' => 'Description',
+			'content' => 'Content'
 		];
 	}
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord
+	// yii\db\ActiveRecord ---------------
 
 	public static function tableName() {
 
 		return CoreTables::TABLE_NEWSLETTER;
 	}
 
-	// Newsletter
+	// Newsletter ------------------------
 
-	public static function findById( $id ) {
-
-		return Newsletter::find()->where( 'newsletter_id=:id', [ ':id' => $id ] )->one();
-	}
-
-	public static function findByName( $name ) {
-
-		return Newsletter::find()->where( 'newsletter_name=:name', [ ':name' => $name ] )->one();
-	}
 }
 
 ?>

@@ -1,10 +1,11 @@
 <?php
+// Yii Imports
 use \Yii;
 use yii\helpers\Html; 
 use yii\widgets\LinkPager;
 
 // CMG Imports
-use cmsgears\modules\core\common\utilities\CodeGenUtil;
+use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Access Matrix";
@@ -38,12 +39,12 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Access Matrix";
 
 					foreach( $page as $permission ) {
 
-						$id 		= $permission->getid();
+						$id 		= $permission->id;
 						$roles		= $permission->getRolesIdList();
 						$apixUrl	= Yii::$app->urlManager->createAbsoluteUrl( "/apix/cmgcore/permission/bind-roles" );
 				?>
 					<tr>
-						<td><?= $permission->getName() ?></td>
+						<td><?= $permission->name ?></td>
 						<td>
 							<form action="<?=$apixUrl?>" method="POST">
 								<input type="hidden" name="permissionId" value="<?=$id?>" />

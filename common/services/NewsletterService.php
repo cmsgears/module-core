@@ -5,6 +5,8 @@ namespace cmsgears\core\common\services;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\models\entities\CoreTables;
+use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Newsletter;
 
 class NewsletterService extends Service {
@@ -15,20 +17,21 @@ class NewsletterService extends Service {
 
 	public static function findById( $id ) {
 
-		return Newsletter::findOne( $id );
+		return Newsletter::findById( $id );
 	}
 
-	public static function getMembersEmailList() {
+	public static function getMailingList() {
 
-		$members 		= User::findNewsletterMembers();
+		$userTable		= CoreTables::TABLE_USER;
+		$members 		= User::findByQuery( "select email, firstName, lastName from $userTable" )->where( [ 'newsletter' => 1 ] )->all();
 		$membersList	= [];
 
 		foreach ( $members as $member ) {
 
-			$membersList[ $member->getEmail() ]	= $member->getName();
+			$membersList[ $member->email ]	= trim( $member->firstName . " " . $member->lastName );
 		}
 
-		return $membersList; 
+		return $membersList;
 	}
 }
 

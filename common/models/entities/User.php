@@ -9,6 +9,9 @@ use yii\web\IdentityInterface;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\traits\MetaTrait;
+use cmsgears\core\common\models\traits\FileTrait;
+
 /**
  * User Entity - The primary class.
  *
@@ -67,6 +70,10 @@ class User extends CmgEntity implements IdentityInterface {
 	use MetaTrait;
 
 	public $metaType	= CoreGlobal::META_TYPE_USER;
+
+	use FileTrait;
+
+	public $fileType	= CoreGlobal::FILE_TYPE_USER;
 
 	public $permissions	= [];
 

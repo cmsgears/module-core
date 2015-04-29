@@ -67,6 +67,7 @@ CREATE TABLE `cmg_category` (
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` int(11) DEFAULT 0,
+  `icon` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_category_name` (`name`),
   KEY `fk_category_1` (`parentId`),
@@ -86,6 +87,7 @@ CREATE TABLE `cmg_option` (
   `categoryId` bigint(20) NOT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `icon` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_option_1` (`categoryId`),
   CONSTRAINT `fk_option_1` FOREIGN KEY (`categoryId`) REFERENCES `cmg_category` (`id`) ON DELETE CASCADE
@@ -449,9 +451,25 @@ CREATE TABLE `cmg_model_file` (
   `parentId` bigint(20) NOT NULL,
   `parentType` int(11) NOT NULL,
   `fileId` bigint(20) NOT NULL,
+  `order` smallint(6) NOT NULL DEFAULT 0,
   PRIMARY KEY (`parentId`,`parentType`,`fileId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `cmg_model_tag`
+--
+
+DROP TABLE IF EXISTS `cmg_model_tag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmg_model_tag` (
+  `parentId` bigint(20) NOT NULL,
+  `parentType` int(11) NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`parentId`,`parentType`,`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 SET FOREIGN_KEY_CHECKS=1;

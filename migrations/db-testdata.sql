@@ -44,20 +44,20 @@ INSERT INTO `cmg_locale` VALUES (1,'en_US','English US');
 --
 
 INSERT INTO `cmg_category` VALUES 
-	(1,NULL,'category type',NULL, 0),
-	(2,NULL,'role type',NULL, 0),
-	(3,NULL,'config type',NULL, 0),
-	(4,NULL,'gender',NULL, 0);
+	(1,NULL,'category type',NULL,0,NULL),
+	(2,NULL,'role type',NULL,0,NULL),
+	(3,NULL,'config type',NULL,0,NULL),
+	(4,NULL,'gender',NULL,0,NULL);
 
 --
 -- Dumping data for table `cmg_option`
 --
 
 INSERT INTO `cmg_option` VALUES 
-	(1,1,'Combo','0'),
-	(2,2,'System','0'),
-	(3,3,'Core',0),(4,3,'Email',10),(5,3,'Website',20),(6,3,'Admin',30),
-	(7,4,'Male',NULL),(8,4,'Female',NULL),(9,4,'Other',NULL);
+	(1,1,'Combo',0,NULL),
+	(2,2,'System',0,NULL),
+	(3,3,'Core',0,NULL),(4,3,'Email',10,NULL),(5,3,'Website',20,NULL),(6,3,'Admin',30,NULL),
+	(7,4,'Male',NULL,NULL),(8,4,'Female',NULL,NULL),(9,4,'Other',NULL,NULL);
 
 --
 -- Dumping data for table `cmg_role`

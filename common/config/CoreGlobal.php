@@ -6,17 +6,24 @@ namespace cmsgears\core\common\config;
  */
 class CoreGlobal {
 
-	// Categories ------------------------------------------------------
+	// Category Type ---------------------------------------------------
 
 	const CATEGORY_TYPE			= "category type";
+
+	// Meta ------------------------------------------------------------
+
+	const META_TYPE_USER		= 0;
+
+	// Attachments -----------------------------------------------------
+
+	const FILE_TYPE_USER		= 0;
+
+	// Categories ------------------------------------------------------
+
 	const CATEGORY_ROLE_TYPE	= "role type";
 	const CATEGORY_CONFIG_TYPE	= "config type";
 	const CATEGORY_GENDER		= "gender";
 
-	// Meta ------------------------------------------------------------
-	
-	const META_TYPE_USER		= 0;
-	
 	// Config Types ----------------------------------------------------
  
 	const CONFIG_CORE			= "Core";

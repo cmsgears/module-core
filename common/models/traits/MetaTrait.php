@@ -1,5 +1,8 @@
 <?php
-namespace cmsgears\core\common\models\entities;
+namespace cmsgears\core\common\models\traits;
+
+use cmsgears\core\common\models\entities\CoreTables;
+use cmsgears\core\common\models\entities\ModelMeta;
 
 trait MetaTrait {
 

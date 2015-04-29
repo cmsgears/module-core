@@ -1,11 +1,15 @@
 <?php
-namespace cmsgears\core\common\models\entities;
+namespace cmsgears\core\common\models\traits;
+
+use cmsgears\core\common\models\entities\CoreTables;
+use cmsgears\core\common\models\entities\Category;
+use cmsgears\core\common\models\entities\ModelCategory;
 
 trait CategoryTrait {
 
 	public function getCategories() {
 		
-		$parentType	= $this->parentType;
+		$parentType	= $this->categoryType;
 
     	return $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ] )
@@ -14,7 +18,7 @@ trait CategoryTrait {
 
 	public function getCategoriesMap() {
 
-		$parentType	= $this->parentType;
+		$parentType	= $this->categoryType;
 
     	return $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )
 					->where( "parentType=$parentType" );

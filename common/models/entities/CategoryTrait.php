@@ -14,7 +14,7 @@ trait CategoryTrait {
 
 	public function getCategoriesMap() {
 
-		$parentType	= $this->metaType;
+		$parentType	= $this->parentType;
 
     	return $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )
 					->where( "parentType=$parentType" );

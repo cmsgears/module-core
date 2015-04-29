@@ -445,7 +445,7 @@ CREATE TABLE `cmg_model_meta` (
 DROP TABLE IF EXISTS `cmg_model_file`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cmg_model_meta` (
+CREATE TABLE `cmg_model_file` (
   `parentId` bigint(20) NOT NULL,
   `parentType` int(11) NOT NULL,
   `fileId` bigint(20) NOT NULL,

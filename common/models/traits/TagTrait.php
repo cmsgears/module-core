@@ -14,7 +14,7 @@ trait TagTrait {
 					->where( "parentType=$parentType" );
 	}
 
-	public function getTagsNameDescMap() {
+	public function getTagsMap() {
 
 		$tags 		= $this->tags;
 		$tagsMap	= array();
@@ -25,6 +25,19 @@ trait TagTrait {
 		}
 
 		return $tagsMap;
+	}
+
+	public function getTagsCsv() {
+
+    	$tags		= $this->tags;
+		$tagsCsv	= [];
+
+		foreach ( $tags as $tag ) {
+
+			$tagsCsv[] = $tag->name; 
+		}
+
+		return implode( ",", $tagsCsv );
 	}
 }
 

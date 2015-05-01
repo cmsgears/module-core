@@ -17,6 +17,7 @@ class CoreGlobal {
 	// Attachments -----------------------------------------------------
 
 	const FILE_TYPE_USER		= 0;
+	const FILE_TYPE_GALLERY		= 5;
 
 	// Categories ------------------------------------------------------
 

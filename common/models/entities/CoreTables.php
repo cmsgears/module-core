@@ -34,6 +34,9 @@ class CoreTables {
 	// Messages
 	const TABLE_NOTIFICATION		= "cmg_notification";
 	const TABLE_REMINDER			= "cmg_reminder";
+	
+	// Image Gallery
+	const TABLE_GALLERY				= "cmg_gallery";
 
 	// Traits
 	const TABLE_MODEL_CATEGORY		= "cmg_model_category";

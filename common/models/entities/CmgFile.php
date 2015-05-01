@@ -88,7 +88,7 @@ class CmgFile extends CmgEntity {
 
         return [
             [ [ 'authorId', 'name', 'extension', 'directory', 'url' ], 'required' ],
-            [ [ 'id', 'type', 'description', 'altText', 'thumb', 'changed' ], 'safe' ],
+            [ [ 'id', 'type', 'description', 'altText', 'thumb', 'changed', 'link' ], 'safe' ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
         ];
     }

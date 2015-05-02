@@ -9,16 +9,13 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Role;
+use cmsgears\core\common\models\entities\Gallery;
 
-use cmsgears\core\admin\models\forms\PermissionBinderForm;
-
-use cmsgears\core\admin\services\RoleService;
-use cmsgears\core\admin\services\PermissionService;
+use cmsgears\core\admin\services\GalleryService;
 
 use cmsgears\core\admin\controllers\BaseController;
 
-class RoleController extends BaseController {
+class GalleryController extends BaseController {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -37,11 +34,11 @@ class RoleController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'all'   => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY ]
+	                'index'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'all'   => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_CORE ]
                 ]
             ],
             'verbs' => [
@@ -66,7 +63,7 @@ class RoleController extends BaseController {
 
 	public function actionAll() {
 
-		$pagination = RoleService::getPagination();
+		$pagination = GalleryService::getPagination();
 
 	    return $this->render('all', [
 	         'page' => $pagination['page'],
@@ -77,63 +74,43 @@ class RoleController extends BaseController {
 
 	public function actionCreate() {
 
-		$model	= new Role();
+		$model	= new Gallery();
 
 		$model->setScenario( "create" );
 
-		if( $model->load( Yii::$app->request->post( "Role" ), "" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post( "Gallery" ), "" )  && $model->validate() ) {
 
-			if( RoleService::create( $model ) ) {
-
-				$binder = new PermissionBinderForm();
-
-				$binder->roleId	= $model->id;
-				$binder->load( Yii::$app->request->post( "Binder" ), "" );
-
-				RoleService::bindPermissions( $binder );
+			if( GalleryService::create( $model ) ) {
 
 				return $this->redirect( "all" );
 			}
 		}
 
-		$permissions	= PermissionService::getIdNameList();
-
     	return $this->render('create', [
-    		'model' => $model,
-    		'permissions' => $permissions
+    		'model' => $model
     	]);
 	}
 
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model	= RoleService::findById( $id );
+		$model	= GalleryService::findById( $id );
 		
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
 			$model->setScenario( "update" );
 	
-			if( $model->load( Yii::$app->request->post( "Role"), "" )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post( "Gallery"), "" )  && $model->validate() ) {
 	
-				if( RoleService::update( $model ) ) {
-	
-					$binder = new PermissionBinderForm();
-	
-					$binder->roleId	= $model->id;
-					$binder->load( Yii::$app->request->post( "Binder" ), "" );
-	
-					RoleService::bindPermissions( $binder );
-	
+				if( GalleryService::update( $model ) ) {
+
 					$this->refresh();
 				}
 			}
-	
-			$permissions	= PermissionService::getIdNameList();
-	
+
 	    	return $this->render('update', [
-	    		'model' => $model,
-	    		'permissions' => $permissions
+	    		'model' => $model
 	    	]);
 		}
 
@@ -144,24 +121,21 @@ class RoleController extends BaseController {
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= RoleService::findById( $id );
+		$model	= GalleryService::findById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post( "Role" ), "" ) ) {
+			if( $model->load( Yii::$app->request->post( "Gallery" ), "" ) ) {
 	
-				if( RoleService::delete( $model ) ) {
+				if( GalleryService::delete( $model ) ) {
 		
 					return $this->redirect( "all" );
 				}
 			}
 
-			$permissions	= PermissionService::getIdNameList();
-
 	    	return $this->render('delete', [
-	    		'model' => $model,
-	    		'permissions' => $permissions
+	    		'model' => $model
 	    	]);
 		}
 

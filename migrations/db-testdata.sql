@@ -76,22 +76,18 @@ INSERT INTO `cmg_role` VALUES
 INSERT INTO `cmg_permission` VALUES 
 	(1,1,1,'admin','The permission admin is to distinguish between admin and site user. It is a must have permission for admins.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
 	(2,1,1,'user','The permission user is to distinguish between admin and site user. It is a must have permission for users.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(3,1,1,'settings','The permission settings is to manage settings from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(4,1,1,'category','The permission category is to manage drop down options from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(5,1,1,'identity','The permission identity is to manage user, roles and permissions modules from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(6,1,1,'identity-user','The permission user-crud-user is to manage users from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(7,1,1,'identity-rbac','The permission rbac is to manage Role Based Access Control(RBAC) module from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(8,1,1,'newsletter','The permission newsletter is to manage newsletters from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54');
+	(3,1,1,'core','The permission core is to manage settings, drop downs, galleries and newsletters from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(4,1,1,'identity','The permission identity is to manage user, roles and permissions modules from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 --
 -- Dumping data for table `cmg_role_permission`
 --
 
 INSERT INTO `cmg_role_permission` VALUES 
-	(1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),
-	(2,1),(2,2),(2,3),(2,4),(2,8),
+	(1,1),(1,2),(1,3),(1,4),
+	(2,1),(2,2),(2,3),
 	(3,2),
-	(4,1),(4,2),(4,5),(4,6),(5,7);
+	(4,1),(4,2),(4,4);
 
 --
 -- Dumping data for table `cmg_user`

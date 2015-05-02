@@ -12,16 +12,16 @@ $user	= Yii::$app->user->getIdentity();
 	<div class="collapsible-tab has-children" id="sidebar-identity">
 		<div class="collapsible-tab-header clearfix">
 			<div class="colf colf4"><span class="icon-sidebar icon-user"></span></div>
-			<div class="colf colf4x3">Users & Roles</div>
+			<div class="colf colf4x3">Users & RBAC</div>
 		</div>
 		<div class="collapsible-tab-content clear">
 			<ul>
-				<?php if( $user->isPermitted( 'identity-rbac' ) ) { ?>
+				<?php if( $user->isPermitted( 'identity' ) ) { ?>
 					<li><?= Html::a( "Access Matrix", ['/cmgcore/permission/matrix'] ) ?></li>
 					<li><?= Html::a( "Roles", ['/cmgcore/role/all'] ) ?></li>
 					<li><?= Html::a( "Permissions", ['/cmgcore/permission/all'] ) ?></li>
 				<?php } ?>
-				<?php if( $user->isPermitted( 'identity-user' ) ) { ?>
+				<?php if( $user->isPermitted( 'identity' ) ) { ?>
 					<li><?= Html::a( "Users", ['/cmgcore/user/all'] ) ?></li>
 				<?php } ?>
 			</ul>
@@ -29,7 +29,7 @@ $user	= Yii::$app->user->getIdentity();
 	</div>
 <?php } ?>
 
-<?php if( $core->hasModule( 'cmgcore' ) && $user->isPermitted( 'newsletter' ) ) { ?>
+<?php if( $core->hasModule( 'cmgcore' ) && $user->isPermitted( 'core' ) ) { ?>
 	<div class="collapsible-tab has-children" id="sidebar-newsletter">
 		<div class="collapsible-tab-header clearfix">
 			<div class="colf colf4"><span class="icon-sidebar icon-newsletter"></span></div>
@@ -44,7 +44,18 @@ $user	= Yii::$app->user->getIdentity();
 	</div>
 <?php } ?>
 
-<?php if( $core->hasModule( 'cmgcore' ) && $user->isPermitted( 'settings' ) ) { ?>
+<?php if( $core->hasModule( 'cmgcore' ) && $user->isPermitted( 'core' ) ) { ?>
+	<div class="collapsible-tab" id="sidebar-gallery">
+		<div class="collapsible-tab-header">
+			<a href="<?php echo Url::toRoute( ['/cmgcore/gallery/all'] ); ?>">
+				<div class="colf colf4"><span class="icon-sidebar icon-settings"></span></div>
+				<div class="colf colf4x3">Galleries</div>
+			</a>
+		</div>
+	</div>
+<?php } ?>
+
+<?php if( $core->hasModule( 'cmgcore' ) && $user->isPermitted( 'core' ) ) { ?>
 	<div class="collapsible-tab" id="sidebar-setting">
 		<div class="collapsible-tab-header">
 			<a href="<?php echo Url::toRoute( ['/cmgcore/settings/index?type=core'] ); ?>">

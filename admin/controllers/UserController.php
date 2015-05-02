@@ -37,11 +37,11 @@ class UserController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => CoreGlobal::PERM_IDENTITY_USER ],
-	                'all'   => [ 'permission' => CoreGlobal::PERM_IDENTITY_USER ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY_USER ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY_USER ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY_USER ]
+	                'index'  => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'all'   => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY ]
                 ]
             ],
             'verbs' => [

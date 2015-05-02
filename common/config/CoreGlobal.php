@@ -39,21 +39,10 @@ class CoreGlobal {
 	const PERM_USER					= "user"; 	// Allows to view User Site Home
 
 	// Settings
-	const PERM_SETTINGS				= "settings";
+	const PERM_CORE					= "core";
 
 	// User Module
 	const PERM_IDENTITY				= "identity";
-	const PERM_IDENTITY_USER		= "identity-user";
-	const PERM_RBAC					= "identity-rbac";
-
-	// Newsletter
-	const PERM_NEWSLETTER			= "newsletter";
-
-	// Slider
-	const PERM_SLIDER				= "slider";
-
-	// Category
-	const PERM_CATEGORY				= "category";
 
 	// Errors ----------------------------------------------------------
 

@@ -36,12 +36,12 @@ class NewsletterController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => CoreGlobal::PERM_NEWSLETTER ],
-	                'all'   => [ 'permission' => CoreGlobal::PERM_NEWSLETTER ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_NEWSLETTER ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_NEWSLETTER ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_NEWSLETTER ],
-	                'members' => [ 'permission' => CoreGlobal::PERM_NEWSLETTER ]
+	                'index'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'all'   => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'members' => [ 'permission' => CoreGlobal::PERM_CORE ]
                 ]
             ],
             'verbs' => [

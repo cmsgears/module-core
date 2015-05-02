@@ -418,7 +418,7 @@ CREATE TABLE `cmg_gallery` (
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` datetime NOT NULL,
-  `updatedAt` datetime NOT NULL,
+  `modifiedAt` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

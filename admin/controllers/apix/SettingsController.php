@@ -32,7 +32,7 @@ class SettingsController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'update'  => [ 'permission' => CoreGlobal::PERM_SETTINGS ]
+	                'update'  => [ 'permission' => CoreGlobal::PERM_CORE ]
                 ]
             ],
             'verbs' => [

@@ -37,12 +37,12 @@ class PermissionController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => CoreGlobal::PERM_RBAC ],
-	                'all'   => [ 'permission' => CoreGlobal::PERM_RBAC ],
-	                'matrix' => [ 'permission' => CoreGlobal::PERM_RBAC ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_RBAC ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_RBAC ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_RBAC ]
+	                'index'  => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'all'   => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'matrix' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY ]
                 ]
             ],
             'verbs' => [

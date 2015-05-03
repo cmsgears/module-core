@@ -113,6 +113,18 @@ class CmgFile extends CmgEntity {
 
 	// CmgFile ----------------------------
 
+	public static function loadFile( $file, $name ) {
+
+		if( !isset( $file ) ) {
+
+			$file	= new CmgFile();
+		}
+
+		$file->load( Yii::$app->request->post( $name ), "" );
+
+		return $file;
+	}
+	
 	public static function findById( $id ) {
 
 		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();

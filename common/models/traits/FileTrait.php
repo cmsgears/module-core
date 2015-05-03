@@ -12,7 +12,7 @@ trait FileTrait {
 
     	return $this->hasMany( CmgFile::className(), [ 'id' => 'fileId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_FILE, [ 'parentId' => 'id' ] )
-					->where( "parentType=$parentType" );
+					->where( "parentType='$parentType'" );
 	}
 }
 

@@ -11,7 +11,7 @@ trait TagTrait {
 		$parentType	= $this->tagType;
 
     	return $this->hasMany( ModelTag::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType=$parentType" );
+					->where( "parentType='$parentType'" );
 	}
 
 	public function getTagsMap() {

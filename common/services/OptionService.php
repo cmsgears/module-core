@@ -21,12 +21,17 @@ class OptionService extends Service {
 
 	public static function findByNameCategoryId( $name, $categoryId ) {
 
-		return Option::findByNameCategoryId( $name, $categoryId, $key );
+		return Option::findByNameCategoryId( $name, $categoryId );
 	}
 
 	public static function findByNameCategoryName( $name, $categoryName ) {
 
 		return Option::findByNameCategoryName( $name, $categoryName );
+	}
+
+	public static function findByValueCategoryName( $value, $categoryName ) {
+
+		return Option::findByValueCategoryName( $value, $categoryName );
 	}
 }
 

@@ -11,7 +11,7 @@ trait MetaTrait {
 		$parentType	= $this->metaType;
 
     	return $this->hasMany( ModelMeta::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType=$parentType" );
+					->where( "parentType='$parentType'" );
 	}
 
 	public function getMetasNameValueMap() {

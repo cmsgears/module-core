@@ -13,7 +13,7 @@ trait CategoryTrait {
 
     	return $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ] )
-					->where( "parentType=$parentType" );
+					->where( "parentType='$parentType'" );
 	}
 
 	public function getCategoriesMap() {
@@ -21,7 +21,7 @@ trait CategoryTrait {
 		$parentType	= $this->categoryType;
 
     	return $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType=$parentType" );
+					->where( "parentType='$parentType'" );
 	}
 
 	public function getCategoriesIdList() {

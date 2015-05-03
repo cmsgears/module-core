@@ -12,7 +12,7 @@ trait AddressTrait {
 
     	return $this->hasMany( CmgAddress::className(), [ 'id' => 'addressId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ] )
-					->where( "parentType=$parentType" );
+					->where( "parentType='$parentType'" );
 	}
 	
 	public function getAddressByType( $type ) {
@@ -21,7 +21,7 @@ trait AddressTrait {
 
     	return $this->hasMany( CmgAddress::className(), [ 'id' => 'addressId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ] )
-					->where( "parentType=$parentType AND type=:type", [ ':type' => $type ] );
+					->where( "parentType='$parentType' AND type=:type", [ ':type' => $type ] );
 	}
 }
 

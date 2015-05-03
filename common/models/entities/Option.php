@@ -152,6 +152,13 @@ class Option extends CmgEntity {
 							->addParams( [ ':name' => $name, ':cname' => $categoryName ] )
 							->one();
 	}
+
+	public static function findByValueCategoryName( $value, $categoryName ) {
+
+		return self::findWithAlias()->joinWith( 'categoryWithAlias' )->where( 'opt.name=:name AND cat.name=:cname' )
+							->addParams( [ ':value' => $value, ':cname' => $categoryName ] )
+							->one();
+	}
 }
 
 ?>

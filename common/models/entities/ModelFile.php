@@ -8,7 +8,7 @@ use \Yii;
  * ModelFile Entity
  *
  * @property integer $parentId
- * @property integer $parentType
+ * @property string $parentType
  * @property integer $fileId   
  */
 class ModelFile extends CmgEntity {
@@ -21,7 +21,8 @@ class ModelFile extends CmgEntity {
 
         return [
             [ [ 'parentId', 'parentType', 'fileId' ], 'required' ],
-            [ [ 'parentId', 'parentType', 'fileId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+            [ [ 'parentId', 'fileId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ 'parentType', 'string', 'max' => 100 ]
         ];
     }
 
@@ -29,7 +30,7 @@ class ModelFile extends CmgEntity {
 
 		return [
 			'parentId' => 'Parent',
-			'parentType' => 'Type',
+			'parentType' => 'Parent Type',
 			'fileId' => 'File'
 		];
 	}

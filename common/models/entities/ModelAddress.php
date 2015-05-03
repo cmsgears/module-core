@@ -5,14 +5,14 @@ namespace cmsgears\core\common\models\entities;
 use \Yii;
 
 /**
- * ModelMeta Entity
+ * ModelFile Entity
  *
  * @property integer $parentId
  * @property string $parentType
- * @property string $name
- * @property string $value  
+ * @property integer $addressId
+ * @property integer $type   
  */
-class ModelMeta extends CmgEntity {
+class ModelAddress extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
@@ -21,21 +21,19 @@ class ModelMeta extends CmgEntity {
 	public function rules() {
 
         return [
-            [ [ 'parentId', 'parentType', 'name' ], 'required' ],
-			[ [ 'value' ], 'safe' ],
-            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ 'parentType', 'string', 'max' => 100 ],
-            [ 'name', 'alphanumhyphenspace' ],
-            [ 'name', 'string', 'min'=>1, 'max'=>100 ]
+            [ [ 'parentId', 'parentType', 'addressId' ], 'required' ],
+            [ [ 'parentId', 'addressId', 'type' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ 'parentType', 'string', 'max' => 100 ]
         ];
     }
 
 	public function attributeLabels() {
 
 		return [
-			'categoryId' => 'Category',
 			'parentId' => 'Parent',
-			'parentType' => 'Parent Type'
+			'parentType' => 'Parent Type',
+			'addressId' => 'Address',
+			'type' => 'Address Type'
 		];
 	}
 
@@ -47,7 +45,7 @@ class ModelMeta extends CmgEntity {
 
 	public static function tableName() {
 
-		return CoreTables::TABLE_MODEL_META;
+		return CoreTables::TABLE_MODEL_FILE;
 	}
 
 	// Category --------------------------
@@ -60,6 +58,11 @@ class ModelMeta extends CmgEntity {
 	public static function deleteByParentIdType( $id, $type ) {
 
 		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $id, ':type' => $type ] );
+	}
+
+	public static function deleteByFileId( $fileId ) {
+
+		self::deleteAll( 'fileId=:id', [ ':id' => $fileId ] );
 	}
 }
 

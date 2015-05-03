@@ -11,6 +11,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\traits\MetaTrait;
 use cmsgears\core\common\models\traits\FileTrait;
+use cmsgears\core\common\models\traits\AddressTrait;
 
 /**
  * User Entity - The primary class.
@@ -74,6 +75,10 @@ class User extends CmgEntity implements IdentityInterface {
 	use FileTrait;
 
 	public $fileType	= CoreGlobal::FILE_TYPE_USER;
+
+	use AddressTrait;
+
+	public $addressType	= CoreGlobal::ADDRESS_TYPE_USER;
 
 	public $permissions	= [];
 

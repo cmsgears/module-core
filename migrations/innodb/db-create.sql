@@ -291,25 +291,6 @@ CREATE TABLE `cmg_user` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `cmg_user_address`
---
-
-DROP TABLE IF EXISTS `cmg_user_address`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cmg_user_address` (
-  `userId` bigint(20) NOT NULL,
-  `addressId` bigint(20) NOT NULL,
-  `type` smallint(6) DEFAULT NULL,
-  PRIMARY KEY (`userId`,`addressId`),
-  KEY `fk_user_address_1` (`userId`),
-  KEY `fk_user_address_2` (`addressId`),
-  CONSTRAINT `fk_user_address_1` FOREIGN KEY (`userId`) REFERENCES `cmg_user` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_user_address_2` FOREIGN KEY (`addressId`) REFERENCES `cmg_address` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `cmg_file`
 --
 
@@ -435,7 +416,7 @@ DROP TABLE IF EXISTS `cmg_model_category`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_model_category` (
   `parentId` bigint(20) NOT NULL,
-  `parentType` int(11) NOT NULL,
+  `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `categoryId` bigint(20) NOT NULL,
   PRIMARY KEY (`parentId`,`parentType`,`categoryId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -450,7 +431,7 @@ DROP TABLE IF EXISTS `cmg_model_meta`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_model_meta` (
   `parentId` bigint(20) NOT NULL,
-  `parentType` int(11) NOT NULL,
+  `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(100) NOT NULL,
   `value` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`parentId`,`parentType`,`name`)
@@ -466,7 +447,7 @@ DROP TABLE IF EXISTS `cmg_model_file`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_model_file` (
   `parentId` bigint(20) NOT NULL,
-  `parentType` int(11) NOT NULL,
+  `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `fileId` bigint(20) NOT NULL,
   `order` smallint(6) NOT NULL DEFAULT 0,
   PRIMARY KEY (`parentId`,`parentType`,`fileId`)
@@ -482,10 +463,26 @@ DROP TABLE IF EXISTS `cmg_model_tag`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_model_tag` (
   `parentId` bigint(20) NOT NULL,
-  `parentType` int(11) NOT NULL,
+  `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`parentId`,`parentType`,`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cmg_model_address`
+--
+
+DROP TABLE IF EXISTS `cmg_model_address`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmg_model_address` (
+  `parentId` bigint(20) NOT NULL,
+  `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `addressId` bigint(20) NOT NULL,
+  `type` smallint(6) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`parentId`,`parentType`,`addressId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

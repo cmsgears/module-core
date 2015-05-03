@@ -43,6 +43,7 @@ class CoreTables {
 	const TABLE_MODEL_META			= "cmg_model_meta";
 	const TABLE_MODEL_FILE			= "cmg_model_file";
 	const TABLE_MODEL_TAG			= "cmg_model_tag";
+	const TABLE_MODEL_ADDRESS		= "cmg_model_address";
 }
 
 ?>

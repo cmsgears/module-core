@@ -8,7 +8,7 @@ use \Yii;
  * ModelCategory Entity
  *
  * @property integer $parentId
- * @property integer $parentType
+ * @property string $parentType
  * @property integer $categoryId   
  */
 class ModelCategory extends CmgEntity {
@@ -21,7 +21,8 @@ class ModelCategory extends CmgEntity {
 
         return [
             [ [ 'parentId', 'parentType', 'categoryId' ], 'required' ],
-            [ [ 'parentId', 'parentType', 'categoryId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+            [ [ 'parentId', 'categoryId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ 'parentType', 'string', 'max' => 100 ]
         ];
     }
 

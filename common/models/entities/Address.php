@@ -23,6 +23,18 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 class Address extends CmgEntity {
 
+	const TYPE_RESIDENTIAL	=  0;
+	const TYPE_OFFICE		=  5;
+	const TYPE_MAILING		= 10;
+	const TYPE_SHIPPING		= 15;
+
+	public static $statusMap = [
+		self::TYPE_RESIDENTIAL => "Residential",
+		self::TYPE_OFFICE => "Office",
+		self::TYPE_MAILING => "Mailing",
+		self::TYPE_SHIPPING => "Shipping"
+	];
+
 	// Instance methods --------------------------------------------------
 
 	/**

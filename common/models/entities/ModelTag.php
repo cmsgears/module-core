@@ -8,7 +8,7 @@ use \Yii;
  * ModelTag Entity
  *
  * @property integer $parentId
- * @property integer $parentType
+ * @property string $parentType
  * @property string $name
  * @property string $description
  */
@@ -23,7 +23,8 @@ class ModelTag extends CmgEntity {
         return [
             [ [ 'parentId', 'parentType', 'name' ], 'required' ],
 			[ [ 'description' ], 'safe' ],
-            [ [ 'parentId', 'parentType' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ 'parentType', 'string', 'max' => 100 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'string', 'min'=>1, 'max'=>100 ]
         ];
@@ -34,7 +35,7 @@ class ModelTag extends CmgEntity {
 		return [
 			'categoryId' => 'Category',
 			'parentId' => 'Parent',
-			'parentType' => 'Type'
+			'parentType' => 'Parent Type'
 		];
 	}
 

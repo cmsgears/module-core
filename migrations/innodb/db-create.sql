@@ -11,7 +11,7 @@ CREATE TABLE `cmg_config` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT '0',
   `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `type` int(11) DEFAULT 0,
+  `type` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `fieldType` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `fieldMeta` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -66,7 +66,7 @@ CREATE TABLE `cmg_category` (
   `parentId` bigint(20) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `type` int(11) DEFAULT 0,
+  `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `icon` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_category_name` (`name`),

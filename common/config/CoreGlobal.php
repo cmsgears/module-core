@@ -8,7 +8,7 @@ class CoreGlobal {
 
 	// Category Type
 
-	const CATEGORY_TYPE			= "category type";
+	const CATEGORY_TYPE_COMBO	= "combo";
 
 	// Metas
 

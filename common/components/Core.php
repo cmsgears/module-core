@@ -18,6 +18,21 @@ use cmsgears\core\common\validators\CoreValidator;
 class Core extends Component {
 
 	/**
+	 * @var identify the currently active site based on the url request.
+	 */
+	public $site				= "main";
+
+	/**
+	 * @var test whether the web app is multi-site.
+	 */
+	public $multiSite			= false;
+
+	/**
+	 * @var test whether the web app is sub domain or sub directory based in case $multiSite is set to true.
+	 */
+	public $subDirectory		= true;
+
+	/**
 	 * @var default redirect path to be used for post login. It will be used by login action of Site Controller to redirect users 
 	 * after successful login in case use role home url is not set.
 	 */
@@ -46,9 +61,9 @@ class Core extends Component {
 	public $rbacFilters			= [];
 
 	/**
-	 * @var It can be used to ckeck whether apis are available for the app. Most probable apis are provided using OAuth 2.0.
+	 * @var It can be used to check whether apis are available for the app. Most probable apis are provided using OAuth 2.0.
 	 */
-	public $apis				= null;
+	public $apis				= false;
 
 	/**
 	 * @var The WYSIWYG editor widget class. It will be used by Core Module to edit newsletter content. The dependent modules can also use it to edit the html content.
@@ -101,6 +116,21 @@ class Core extends Component {
 
 		//TODO - Add code to check availability of a widget from database and widgets folder
     }
+
+	public function getSite() {
+
+		return $this->site;
+	}
+
+	public function isMultiSite() {
+
+		return $this->multiSite;
+	}
+
+	public function isSubDirectory() {
+
+		return $this->subDirectory;
+	}
 
 	/**
 	 * The method getLoginRedirectPage returns the default path to be redirected after login using the non-ajax based form.

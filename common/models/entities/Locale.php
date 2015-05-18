@@ -4,33 +4,40 @@ namespace cmsgears\core\common\models\entities;
 /**
  * Locale Entity
  *
- * @property integer $id
+ * @property int $id
  * @property string $code
  * @property string $name
  */
-class Locale extends NamedActiveRecord {
+class Locale extends NamedCmgEntity {
 	
 	// Instance Methods --------------------------------------------
 
 	// yii\base\Model --------------------
 
+	/**
+	 * Validation rules
+	 */
 	public function rules() {
 
         return [
-            [ [ 'name', 'code' ], 'required' ],
+            [ [ 'code', 'name' ], 'required' ],
             [ 'id', 'safe' ],
-            [ 'code', 'string', 'min'=>1, 'max'=>50 ],
+            [ 'code', 'string', 'min'=>1, 'max'=>25 ],
+            [ 'name', 'string', 'min'=>1, 'max'=>100 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
     }
 
+	/**
+	 * Model attributes
+	 */
 	public function attributeLabels() {
 
 		return [
-			'name' => 'Name',
-			'code' => 'Code'
+			'code' => 'Code',
+			'name' => 'Name'
 		];
 	}
 
@@ -38,6 +45,9 @@ class Locale extends NamedActiveRecord {
 
 	// yii\db\ActiveRecord ---------------
 
+	/**
+	 * @return string - db table name
+	 */
 	public static function tableName() {
 
 		return CoreTables::TABLE_LOCALE;
@@ -46,7 +56,15 @@ class Locale extends NamedActiveRecord {
 	// Locale ----------------------------
 
 	/**
-	 * @return Locale by code
+	 * @return Locale - by id
+	 */
+	public static function findById( $id ) {
+
+		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
+	}
+
+	/**
+	 * @return Locale - by code
 	 */
 	public static function findByCode( $code ) {
 

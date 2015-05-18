@@ -1,16 +1,19 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
-// Yii Imports
-use \Yii;
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 
 /**
  * ModelMeta Entity
  *
- * @property integer $parentId
+ * @property int $parentId
  * @property string $parentType
  * @property string $name
- * @property string $value  
+ * @property string $value
+ * @property string $type
+ * @property string $fieldType
+ * @property string $fieldMeta
  */
 class ModelMeta extends CmgEntity {
 
@@ -18,28 +21,70 @@ class ModelMeta extends CmgEntity {
 
 	// yii\base\Model --------------------
 
+	/**
+	 * Validation rules
+	 */
 	public function rules() {
 
         return [
-            [ [ 'parentId', 'parentType', 'name' ], 'required' ],
-			[ [ 'value' ], 'safe' ],
+            [ [ 'parentId', 'parentType', 'name', 'value', 'type', 'fieldType' ], 'required' ],
+            [ [ 'fieldMeta' ], 'safe' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ 'parentType', 'string', 'max' => 100 ],
+            [ [ 'parentType', 'type' ], 'string', 'max' => 100 ],
             [ 'name', 'alphanumhyphenspace' ],
-            [ 'name', 'string', 'min'=>1, 'max'=>100 ]
+            [ 'name', 'validatenameCreate', 'on' => [ 'create' ] ],
+            [ 'name', 'validatenameUpdate', 'on' => [ 'update' ] ]
         ];
     }
 
+	/**
+	 * Model attributes
+	 */
 	public function attributeLabels() {
 
 		return [
-			'categoryId' => 'Category',
 			'parentId' => 'Parent',
-			'parentType' => 'Parent Type'
+			'parentType' => 'Parent Type',
+			'name' => 'Name',
+			'value' => 'Value',
+			'type' => 'Type',
+			'fieldType' => 'Field Type',
+			'fieldMata' => 'Field Meta Json'
 		];
 	}
 
-	// Category --------------------------
+	// ModelMeta -------------------------
+
+	/**
+	 * Validates to ensure that only one meta exist with one name.
+	 */
+    public function validateNameCreate( $attribute, $params ) {
+
+        if( !$this->hasErrors() ) {
+
+            if( self::isExistByTypeName( $this->parentId, $this->parentType, $this->type, $this->name ) ) {
+
+				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
+            }
+        }
+    }
+
+	/**
+	 * Validates to ensure that only one meta exist with one name.
+	 */
+    public function validateNameUpdate( $attribute, $params ) {
+
+        if( !$this->hasErrors() ) {
+
+			$existingConfig = self::findByTypeName( $this->parentId, $this->parentType, $this->type, $this->name );
+
+			if( isset( $existingConfig ) && $existingConfig->id != $this->id && 
+				strcmp( $existingConfig->name, $this->name ) == 0 && $existingConfig->type == $this->type ) {
+
+				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
+			}
+        }
+    }
 
 	// Static Methods ----------------------------------------------
 
@@ -47,19 +92,60 @@ class ModelMeta extends CmgEntity {
 
 	public static function tableName() {
 
-		return CoreTables::TABLE_MODEL_META;
+		return CoreTables::TABLE_CONFIG;
 	}
 
-	// Category --------------------------
+	// ModelMeta -------------------------
+	
+	/**
+	 * @param int $parentId
+	 * @param string $parentType
+	 * @param string $type
+	 * @return array - ModelMeta by type
+	 */
+	public static function findByType( $parentId, $parentType, $type ) {
 
-	public static function findByParentIdType( $id, $type ) {
-
-		return self::find()->where( 'parentId=:id AND parentType=:type', [ ':id' => $id, ':type' => $type ] )->all();
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type', 
+				[ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] )->all();
 	}
 
-	public static function deleteByParentIdType( $id, $type ) {
+	/**
+	 * @param int $parentId
+	 * @param string $parentType
+	 * @param string $name
+	 * @return ModelMeta - by name
+	 */
+	public static function findByName( $parentId, $parentType, $name ) {
 
-		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $id, ':type' => $type ] );
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name', 
+				[ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name ] )->one();
+	}
+
+	/**
+	 * @param int $parentId
+	 * @param string $parentType
+	 * @param string $type
+	 * @param string $name
+	 * @return ModelMeta - by type and name
+	 */
+	public static function findByTypeName( $parentId, $parentType, $type, $name ) {
+
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type AND name=:name', 
+				[ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type, ':name' => $name ] )->one();
+	}
+
+	/**
+	 * @param int $parentId
+	 * @param string $parentType
+	 * @param string $type
+	 * @param string $name
+	 * @return boolean - Check whether meta exist by type and name
+	 */
+	public static function isExistByTypeName( $parentId, $parentType, $type, $name ) {
+
+		$config = self::findByTypeName( $parentId, $parentType, $type, $name );
+
+		return isset( $config );
 	}
 }
 

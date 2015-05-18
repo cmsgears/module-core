@@ -39,6 +39,8 @@ class MessageSourceCore extends Component {
 		// Errors - User Account
 		CoreGlobal::ERROR_ACCOUNT_CONFIRM => 'Either your account does not exist or the confirmation link is not valid. Please try to reset your password.',
 		CoreGlobal::ERROR_PASSWORD_RESET => 'Either your account does not exist or the reset link is not valid. Please try to reset your password.',
+		// Errors - Apis
+		CoreGlobal::ERROR_APIS_DISABLED => "APIs are not supported by this application.",
 		// Messages
 		CoreGlobal::MESSAGE_REQUEST => 'Your request was processed successfully.',
 		// Messages - Create/Register User

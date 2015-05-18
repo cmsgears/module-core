@@ -7,9 +7,9 @@ use \Yii;
 /**
  * ModelCategory Entity
  *
- * @property integer $parentId
+ * @property int $parentId
  * @property string $parentType
- * @property integer $categoryId   
+ * @property int $categoryId   
  */
 class ModelCategory extends CmgEntity {
 
@@ -17,6 +17,9 @@ class ModelCategory extends CmgEntity {
 
 	// yii\base\Model --------------------
 
+	/**
+	 * Validation rules
+	 */
 	public function rules() {
 
         return [
@@ -26,38 +29,59 @@ class ModelCategory extends CmgEntity {
         ];
     }
 
+	/**
+	 * Model attributes
+	 */
 	public function attributeLabels() {
 
 		return [
 			'parentId' => 'Parent',
-			'parentType' => 'Type',
+			'parentType' => 'Parent Type',
 			'categoryId' => 'Category'
 		];
 	}
 
-	// Category --------------------------
+	// ModelCategory ---------------------
 
 	// Static Methods ----------------------------------------------
 
 	// yii\db\ActiveRecord ---------------
 
+	/**
+	 * @return string - db table name
+	 */
 	public static function tableName() {
 
 		return CoreTables::TABLE_MODEL_CATEGORY;
 	}
 
-	// Category --------------------------
+	// ModelCategory ---------------------
 
-	public static function findByParentIdType( $id, $type ) {
+	// Read ----
 
-		return self::find()->where( 'parentId=:id AND parentType=:type', [ ':id' => $id, ':type' => $type ] )->all();
+	/**
+	 * @param int $parentId
+	 * @param string $parentType
+	 * @return array - ModelCategory by parent id and type
+	 */
+	public static function findByParentIdType( $parentId, $parentType ) {
+
+		return self::find()->where( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] )->all();
 	}
 
-	public static function deleteByParentIdType( $id, $type ) {
+	// Delete ----
 
-		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $id, ':type' => $type ] );
+	/**
+	 * Delete all the entries associated with the parent.
+	 */
+	public static function deleteByParentIdType( $parentId, $parentType ) {
+
+		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] );
 	}
 
+	/**
+	 * Delete all entries related to a category
+	 */
 	public static function deleteByCategoryId( $categoryId ) {
 
 		self::deleteAll( 'categoryId=:id', [ ':id' => $categoryId ] );

@@ -5,6 +5,8 @@ namespace cmsgears\core\common\models\entities;
 use \Yii;
 use yii\db\Query;
 use yii\web\IdentityInterface;
+use yii\web\NotFoundHttpException;
+use yii\base\NotSupportedException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -16,11 +18,10 @@ use cmsgears\core\common\models\traits\AddressTrait;
 /**
  * User Entity - The primary class.
  *
- * @property integer $id
- * @property integer $roleId
- * @property integer localeId
- * @property integer genderId
- * @property integer avatarId
+ * @property int $id
+ * @property int localeId
+ * @property int genderId
+ * @property int avatarId
  * @property short $status
  * @property string $email
  * @property string $username
@@ -40,12 +41,13 @@ use cmsgears\core\common\models\traits\AddressTrait;
  * @property string authKey
  */
 class User extends CmgEntity implements IdentityInterface {
-	
+
 	/**
-	 * The status types available for a User by default. 
-	 * The status new is assigned for newly registered User.
-	 * The status active will be set when user confirm their account or admin activate the account.
-	 * The status blocked can be set by admin to block a particular user on false behaviour. 
+	 * The status types available for a User by default.
+	 *  
+	 * 1. new - assigned for newly registered User.
+	 * 2. active - It will be set when user confirm their account or admin activate the account.
+	 * 3. blocked - It can be set by admin to block a particular user on false behaviour. 
 	 */
 	const STATUS_NEW		=    0;
 	const STATUS_ACTIVE		=  500;
@@ -83,17 +85,23 @@ class User extends CmgEntity implements IdentityInterface {
 	public $permissions	= [];
 
 	// Instance Methods --------------------------------------------
-	
+
 	/**
-	 * @return Role assigned to User.
+	 * @return Role - assigned to User.
 	 */
 	public function getRole() {
 
-		return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
+		$site 		= CoreTables::TABLE_SITE;
+		$siteMember	= CoreTables::TABLE_SITE_MEMBER;
+
+    	return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] )
+					->viaTable( $siteMember, [ 'memberId' => 'id' ] )
+					->leftJoin( $site, "`$site`.`id` = `$siteMember`.`siteId`" )
+					->where( "`$site`.`name`=:name", [ ':name' => Yii::$app->cmgCore->getSiteName() ] );
 	}
 
 	/**
-	 * @return CmgFile set for User avatar.
+	 * @return CmgFile - set for User avatar.
 	 */
 	public function getAvatar() {
 
@@ -101,7 +109,7 @@ class User extends CmgEntity implements IdentityInterface {
 	}
 
 	/**
-	 * @return Locale assigned to User.
+	 * @return Locale - assigned to User.
 	 */
 	public function getLocale() {
 		
@@ -109,7 +117,7 @@ class User extends CmgEntity implements IdentityInterface {
 	}
 
 	/**
-	 * @return Option from Category 'gender' assigned to User.
+	 * @return Option - from Category 'gender' assigned to user.
 	 */
 	public function getGender() {
 
@@ -175,7 +183,7 @@ class User extends CmgEntity implements IdentityInterface {
 	/**
 	 * Generate and set user password using the yii security mechanism.
 	 */
-	public function setPassword( $password ) {
+	public function generatePassword( $password ) {
 
 		$this->passwordHash = Yii::$app->security->generatePasswordHash( $password );
 	}
@@ -264,12 +272,15 @@ class User extends CmgEntity implements IdentityInterface {
 
 	// yii\base\Model ---------------------
 
+	/**
+	 * Validation rules
+	 */
 	public function rules() {
 
         return [
             [ [ 'email' ], 'required' ],
-            [ [ 'id', 'roleId', 'localeId', 'genderId', 'avatarId', 'status', 'phone', 'newsletter' ], 'safe' ],
-            [ [ 'roleId', 'username' ], 'required', 'on' => [ 'create', 'update' ] ],
+            [ [ 'id', 'localeId', 'genderId', 'avatarId', 'status', 'phone', 'newsletter' ], 'safe' ],
+            [ [ 'username' ], 'required', 'on' => [ 'create', 'update' ] ],
             [ 'email', 'email' ],
             [ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],
             [ 'email', 'validateEmailUpdate', 'on' => [ 'update' ] ],
@@ -282,11 +293,13 @@ class User extends CmgEntity implements IdentityInterface {
         ];
     }
 
+	/**
+	 * Model attributes
+	 */
 	public function attributeLabels() {
 
 		return [
 			'email' => 'Email',
-			'roleId' => 'Role',
 			'localeId' => 'Locale',
 			'genderId' => 'Gender',
 			'avatarId' => 'Avatar',
@@ -411,7 +424,10 @@ class User extends CmgEntity implements IdentityInterface {
 	// Static Methods ----------------------------------------------
 
 	// yii\db\ActiveRecord ----------------
-	
+
+	/**
+	 * @return string - db table name
+	 */
 	public static function tableName() {
 
 		return CoreTables::TABLE_USER;
@@ -421,6 +437,7 @@ class User extends CmgEntity implements IdentityInterface {
 
 	/**
 	 * The method finds the user identity using the given id and also loads the available permissions if rbac is enabled for the application.
+	 * @param int $id
 	 * @return a valid user based on given id.
 	 */
     public static function findIdentity( $id ) {
@@ -437,6 +454,12 @@ class User extends CmgEntity implements IdentityInterface {
         return $user;
     }
 
+	/**
+	 * The method finds the user identity using the given access token and also loads the available permissions if rbac is enabled for the application.
+	 * @param int $token
+	 * @param string $type
+	 * @return a valid user based on given token and type
+	 */
     public static function findIdentityByAccessToken( $token, $type = null ) {
 		
 		if( Yii::$app->cmgCore->isApis() ) {
@@ -445,34 +468,57 @@ class User extends CmgEntity implements IdentityInterface {
 			$user 	= static::findByAccessToken( $token );
 	
 			// Load User Permissions
-			if( isset( $user ) && Yii::$app->cmgCore->isRbac() ) {
-	
-				$user->loadPermissions();
+			if( isset( $user ) ) {
+				
+				if( Yii::$app->cmgCore->isRbac() ) {
+					
+					$user->loadPermissions();
+				}
+			}
+			else {
+
+        		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 			}
 
 	        return $user;
 		}
 
-        throw new NotSupportedException( 'findIdentityByAccessToken is not implemented.' );
+        throw new NotSupportedException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_APIS_DISABLED ) );
     }
 
-	// User
-
+	// User -------------------------------
+	
+	/**
+	 * @param int $id
+	 * @return User - by id
+	 */
 	public static function findById( $id ) {
 
 		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 
+	/**
+	 * @param string $token
+	 * @return User - by accessToken
+	 */
 	public static function findByAccessToken( $token ) {
 
 		return self::find()->where( 'accessToken=:token', [ ':token' => $token ] )->one();
 	}
 
+	/**
+	 * @param string $email
+	 * @return User - by email
+	 */
 	public static function findByEmail( $email ) {
 
 		return self::find()->where( 'email=:email', [ ':email' => $email ] )->one();
 	}
 
+	/**
+	 * @param string $email
+	 * @return User - check whether user exist by email
+	 */
 	public static function isExistByEmail( $email ) {
 
 		$user = self::find()->where( 'email=:email', [ ':email' => $email ] )->one();
@@ -480,11 +526,19 @@ class User extends CmgEntity implements IdentityInterface {
 		return isset( $user );
 	}
 
+	/**
+	 * @param string $username
+	 * @return User - by username
+	 */
 	public static function findByUsername( $username ) {
 
 		return self::find()->where( 'username=:username', [ ':username' => $username ] )->one();		
 	}
 
+	/**
+	 * @param string $username
+	 * @return User - check whether user exist by username
+	 */
 	public static function isExistByUsername( $username ) {
 
 		$user = self::find()->where( 'username=:username', [ ':username' => $username ] )->one();

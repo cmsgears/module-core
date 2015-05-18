@@ -4,9 +4,9 @@ namespace cmsgears\core\common\models\entities;
 /**
  * Reminder Entity
  *
- * @property integer $id
- * @property integer $userId
- * @property short $type
+ * @property int $id
+ * @property int $userId
+ * @property string $type
  * @property string $message
  * @property datetime $createdAt
  * @property datetime $time
@@ -34,15 +34,22 @@ class Reminder extends CmgEntity {
 
 	// yii\base\Model --------------------
 
+	/**
+	 * Validation rules
+	 */
 	public function rules() {
 
         return [
             [ [ 'userId', 'message', 'type', 'time' ], 'required' ],
 			[ [ 'id', 'flag' ], 'safe' ],
-			[ 'createdAt', 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
+			[ 'type', 'string', 'min'=>1, 'max'=>100 ],
+			[ [ 'createdAt', 'time' ], 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
         ];
     }
 
+	/**
+	 * Model attributes
+	 */
 	public function attributeLabels() {
 
 		return [
@@ -58,6 +65,9 @@ class Reminder extends CmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+	/**
+	 * @return string - db table name
+	 */
 	public static function tableName() {
 
 		return CoreTables::TABLE_REMINDER;
@@ -65,6 +75,9 @@ class Reminder extends CmgEntity {
 
 	// Reminder --------------------------
 
+	/**
+	 * @return Reminder - by id
+	 */
 	public static function findById( $id ) {
 
 		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();

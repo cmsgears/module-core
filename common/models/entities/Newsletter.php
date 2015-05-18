@@ -1,6 +1,9 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// CMG Imports
+use cmsgears\core\common\models\traits\CreateModifyTrait;
+
 /**
  * Newsletter Entity
  *
@@ -16,26 +19,15 @@ namespace cmsgears\core\common\models\entities;
  */
 class Newsletter extends NamedCmgEntity {
 
+	use CreateModifyTrait;
+
 	// Instance Methods --------------------------------------------
-
-	/**
-	 * @return User
-	 */
-	public function getCreator() {
-
-		return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] );
-	}	
-
-	/**
-	 * @return User
-	 */
-	public function getModifier() {
-
-		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] );
-	}
 
 	// yii\base\Model --------------------
 
+	/**
+	 * Validation rules
+	 */
 	public function rules() {
 
         return [
@@ -48,6 +40,9 @@ class Newsletter extends NamedCmgEntity {
         ];
     }
 
+	/**
+	 * Model attributes
+	 */
 	public function attributeLabels() {
 
 		return [
@@ -61,6 +56,9 @@ class Newsletter extends NamedCmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+	/**
+	 * @return string - db table name
+	 */
 	public static function tableName() {
 
 		return CoreTables::TABLE_NEWSLETTER;

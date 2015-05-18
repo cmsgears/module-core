@@ -6,18 +6,20 @@ use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreProperties;
+use cmsgears\core\common\models\traits\CreateModifyTrait;
 
 /**
- * Config Entity
+ * CmgFile Entity
  *
- * @property integer $id
- * @property integer $authorId
+ * @property int $id
+ * @property int $createdBy
+ * @property int $modifiedBy
  * @property string $name
  * @property string $description
  * @property string $extension
  * @property string $directory
  * @property datetime $createdAt
- * @property datetime $updatedAt
+ * @property datetime $modifiedAt
  * @property integer $type
  * @property string $url
  * @property string $thumb
@@ -34,14 +36,14 @@ class CmgFile extends CmgEntity {
 		self::TYPE_PRIVATE => "private"
 	];
 
+	/**
+	 * @property boolean - used to detect whether the file is changed by user.
+	 */
 	public $changed;
 
+	use CreateModifyTrait;
+
 	// Instance Methods --------------------------------------------
-
-	public function getAuthor() {
-
-		return $this->hasOne( User::className(), [ 'id' => 'authorId' ] );
-	}
 
 	public function getTypeStr() {
 
@@ -84,21 +86,31 @@ class CmgFile extends CmgEntity {
 
 	// yii\base\Model --------------------
 
+	/**
+	 * Validation rules
+	 */
 	public function rules() {
 
         return [
-            [ [ 'authorId', 'name', 'extension', 'directory', 'url' ], 'required' ],
+            [ [ 'createdBy', 'name', 'extension', 'directory', 'url' ], 'required' ],
             [ [ 'id', 'type', 'description', 'altText', 'thumb', 'changed', 'link' ], 'safe' ],
+            [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
         ];
     }
 
+	/**
+	 * Model attributes
+	 */
 	public function attributeLabels() {
 
 		return [
+			'createdBy' => 'Author',
 			'name' => 'Name',
-			'authorId' => 'Author',
-			'description' => 'Description'
+			'description' => 'Description',
+			'extension' => 'Extension',
+			'directory' => 'Directory',
+			'url' => 'File Url'
 		];
 	}
 
@@ -106,6 +118,9 @@ class CmgFile extends CmgEntity {
 
 	// yii\db\ActiveRecord ----------------
 
+	/**
+	 * @return string - db table name
+	 */
 	public static function tableName() {
 
 		return CoreTables::TABLE_FILE;
@@ -113,6 +128,11 @@ class CmgFile extends CmgEntity {
 
 	// CmgFile ----------------------------
 
+	/**
+	 * @param CmgFile $file
+	 * @param string $name
+	 * @return CmgFile - after loading from request url
+	 */
 	public static function loadFile( $file, $name ) {
 
 		if( !isset( $file ) ) {
@@ -124,15 +144,23 @@ class CmgFile extends CmgEntity {
 
 		return $file;
 	}
-	
+
+	/**
+	 * @param int $id
+	 * @return CmgFile - by id
+	 */
 	public static function findById( $id ) {
 
 		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 
+	/**
+	 * @param int $authorId
+	 * @return array - of CmgFile
+	 */
 	public static function findByAuthorId( $authorId ) {
 
-		return self::find()->where( 'authorId=:id', [ ':id' => $authorId ] )->all();
+		return self::find()->where( 'createdBy=:id', [ ':id' => $authorId ] )->all();
 	}
 }
 

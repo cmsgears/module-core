@@ -4,8 +4,14 @@ namespace cmsgears\core\common\models\traits;
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\ModelTag;
 
+/**
+ * TagTrait can be used to add tagging feature to relevant models. The model must define the member variable $tagType which is unique for the model.
+ */
 trait TagTrait {
 
+	/**
+	 * @return array - ModelTag associated with parent
+	 */
 	public function getTags() {
 
 		$parentType	= $this->tagType;
@@ -14,6 +20,9 @@ trait TagTrait {
 					->where( "parentType='$parentType'" );
 	}
 
+	/**
+	 * @return array - map of tag name and description
+	 */
 	public function getTagsMap() {
 
 		$tags 		= $this->tags;

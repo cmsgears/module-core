@@ -7,9 +7,9 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * Address Entity
  *
- * @property integer $id
- * @property integer $countryId
- * @property integer $provinceId
+ * @property int $id
+ * @property int $countryId
+ * @property int $provinceId
  * @property string $line1
  * @property string $line2
  * @property string $line3
@@ -27,12 +27,14 @@ class Address extends CmgEntity {
 	const TYPE_OFFICE		=  5;
 	const TYPE_MAILING		= 10;
 	const TYPE_SHIPPING		= 15;
+	const TYPE_BILLING		= 20;
 
 	public static $statusMap = [
 		self::TYPE_RESIDENTIAL => "Residential",
 		self::TYPE_OFFICE => "Office",
 		self::TYPE_MAILING => "Mailing",
-		self::TYPE_SHIPPING => "Shipping"
+		self::TYPE_SHIPPING => "Shipping",
+		self::TYPE_BILLING => "Billing"
 	];
 
 	// Instance methods --------------------------------------------------
@@ -55,6 +57,9 @@ class Address extends CmgEntity {
 
 	// yii\base\Model --------------------
 
+	/**
+	 * Validation rules
+	 */
 	public function rules() {
 
 		return  [
@@ -62,11 +67,14 @@ class Address extends CmgEntity {
 			[ [ 'id', 'firstname', 'lastname', 'phone', 'email', 'fax' ], 'safe' ],
 			[ [ 'line1', 'line2', 'line3' ], 'alphanumpun' ],
 			[ 'city', 'alphanumspace' ],
-			[ 'zip','alphanumhyphen'],
+			[ 'zip','alphanumhyphen' ],
 			[ [ 'countryId', 'provinceId' ], 'number', 'integerOnly'=>true, 'min'=>1, 'tooSmall' => Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_SELECT ) ]
 		];
 	}
 
+	/**
+	 * Model attributes
+	 */
 	public function attributeLabels() {
 
 		return [
@@ -89,13 +97,19 @@ class Address extends CmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+	/**
+	 * @return string - db table name
+	 */
 	public static function tableName() {
 
 		return CoreTables::TABLE_ADDRESS;
 	}
-	
+
 	// Address --------------------------
-	
+
+	/**
+	 * @return Address - by id
+	 */
 	public static function findById( $id ) {
 
 		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();

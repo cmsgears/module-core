@@ -4,10 +4,10 @@ namespace cmsgears\core\common\models\entities;
 /**
  * Reminder Entity
  *
- * @property integer $id
- * @property integer $notifierId
- * @property integer $userId
- * @property short $type
+ * @property int $id
+ * @property int $notifierId
+ * @property int $userId
+ * @property string $type
  * @property string $message
  * @property datetime $createdAt
  * @property boolean $flag
@@ -42,15 +42,22 @@ class Notification extends CmgEntity {
 
 	// yii\base\Model --------------------
 
+	/**
+	 * Validation rules
+	 */
 	public function rules() {
 
         return [
             [ [ 'notifierId', 'userId', 'message', 'type' ], 'required' ],
 			[ [ 'flag' ], 'safe' ],
+            [ 'type', 'string', 'min'=>1, 'max'=>100 ],
 			[ 'createdAt', 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
         ];
     }
 
+	/**
+	 * Model attributes
+	 */
 	public function attributeLabels() {
 
 		return [
@@ -66,13 +73,19 @@ class Notification extends CmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+	/**
+	 * @return string - db table name
+	 */
 	public static function tableName() {
 
 		return CoreTables::TABLE_NOTIFICATION;
 	}
 
 	// Notification ----------------------
-
+	
+	/**
+	 * @return Notification - by id
+	 */
 	public static function findById( $id ) {
 
 		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();

@@ -2,9 +2,9 @@
 namespace cmsgears\core\common\models\entities;
 
 /**
- * Locale Entity
+ * Country Entity
  *
- * @property integer $id
+ * @property int $id
  * @property string $code
  * @property string $name
  */
@@ -22,23 +22,29 @@ class Country extends NamedCmgEntity {
 
 	// yii\base\Model --------------------
 
+	/**
+	 * Validation rules
+	 */
 	public function rules() {
 
         return [
             [ [ 'name', 'code' ], 'required' ],
             [ 'id', 'safe' ],
-            [ 'code', 'string', 'min'=>1, 'max'=>50 ],
+            [ 'code', 'string', 'min'=>1, 'max'=>10 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
     }
 
+	/**
+	 * Model attributes
+	 */
 	public function attributeLabels() {
 
 		return [
-			'name' => 'Name',
-			'code' => 'Code'
+			'code' => 'Code',
+			'name' => 'Name'
 		];
 	}
 
@@ -46,13 +52,24 @@ class Country extends NamedCmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+	/**
+	 * @return string - db table name
+	 */
 	public static function tableName() {
-		
+
 		return CoreTables::TABLE_COUNTRY;
 	}
-	
+
 	// Country ---------------------------
-	
+
+	/**
+	 * @return Country by id
+	 */
+	public static function findById( $id ) {
+
+		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
+	}
+
 	/**
 	 * @return Country by code
 	 */

@@ -7,17 +7,18 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * Option Entity
  *
- * @property integer $id
- * @property integer $categoryId
+ * @property int $id
+ * @property int $categoryId
  * @property string $name
  * @property string $value
+ * @property string $icon
  */
 class Option extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
 	/**
-	 * @return Category - The parent Category.
+	 * @return Category - The parent category.
 	 */
 	public function getCategory() {
 
@@ -25,7 +26,7 @@ class Option extends CmgEntity {
 	}
 
 	/**
-	 * @return Category - The parent Category with alias.
+	 * @return Category - The parent category with alias set to 'cat'.
 	 */
 	public function getCategoryWithAlias() {
 
@@ -34,31 +35,38 @@ class Option extends CmgEntity {
 
 	// yii\base\Model --------------------
 
+	/**
+	 * Validation rules
+	 */
 	public function rules() {
 
         return [
             [ [ 'name', 'value' ], 'required' ],
             [ [ 'id', 'categoryId' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
-            [ 'name', 'string', 'min'=>1, 'max'=>100 ],
+            [ [ 'name', 'icon' ], 'string', 'min'=>1, 'max'=>100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
         ];
     }
 
+	/**
+	 * Model attributes
+	 */
 	public function attributeLabels() {
 
 		return [
 			'categoryId' => 'Category',
 			'name' => 'Name',
-			'value' => 'Value'
+			'value' => 'Value',
+			'icon' => 'Icon'
 		];
 	}
 
 	// Config ----------------------------
-	
+
 	/**
-	 * Validates to ensure that only one name exist for a Category.
+	 * Validates to ensure that only one option exist for a category with the same name.
 	 */
     public function validateNameCreate( $attribute, $params ) {
 
@@ -72,7 +80,7 @@ class Option extends CmgEntity {
     }
 
 	/**
-	 * Validates to ensure that only one name exist for a Category.
+	 * Validates to ensure that only one option exist for a category with the same name.
 	 */
     public function validateNameUpdate( $attribute, $params ) {
 
@@ -92,6 +100,9 @@ class Option extends CmgEntity {
 
 	// yii\db\ActiveRecord ----------------
 
+	/**
+	 * @return string - db table name
+	 */
 	public static function tableName() {
 		
 		return CoreTables::TABLE_OPTION;
@@ -99,46 +110,73 @@ class Option extends CmgEntity {
 
 	// Option -----------------------------
 
+	/**
+	 * @return ActiveRecord - with alias name set to 'opt'  
+	 */
 	public static function findWithAlias() {
 
 		return self::find()->from( CoreTables::TABLE_OPTION . ' opt' );
 	}
-
+	
+	/**
+	 * @return Option - by id
+	 */
 	public static function findById( $id ) {
 
 		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 
+	/**
+	 * @return Option - by category
+	 */
 	public static function findByCategory( $category ) {
 
 		return self::find()->where( 'categoryId=:id', [ ':id' => $category->id ] )->one();
 	}
 
+	/**
+	 * @return Option - by category id
+	 */
 	public static function findByCategoryId( $categoryId ) {
 
 		return self::find()->where( 'categoryId=:id', [ ':id' => $categoryId ] )->one();
 	}
 
+	/**
+	 * @return Option - by category name
+	 */
 	public static function findByCategoryName( $categoryName ) {
 
 		return self::find()->joinWith( 'categoryWithAlias' )->where( 'cat.name=:cname', [ ':cname' => $categoryName ] )->all();
 	}
 
+	/**
+	 * @return Option - by name
+	 */
 	public static function findByName( $name ) {
 
 		return self::find()->where( 'name=:name', [ ':name' => $name ] )->one();
 	}
 
+	/**
+	 * @return Option - by name and category
+	 */
 	public static function findByNameCategory( $name, $category ) {
 
 		return self::find()->where( 'name=:name AND categoryId=:id', [ ':name' => $name, ':id' => $category->id ] )->one();
 	}
 
+	/**
+	 * @return Option - by name and category id
+	 */
 	public static function findByNameCategoryId( $name, $categoryId ) {
 
 		return self::find()->where( 'name=:name AND categoryId=:id', [ ':name' => $name, ':id' => $categoryId ] )->one();
 	}
 
+	/**
+	 * @return Option - check whether option exist by name and category id
+	 */
 	public static function isExistByNameCategoryId( $name, $categoryId ) {
 
 		$option = self::findByCategoryIdName( $name, $categoryId );
@@ -146,6 +184,9 @@ class Option extends CmgEntity {
 		return isset( $option );
 	}
 
+	/**
+	 * @return Option - by name and category name
+	 */
 	public static function findByNameCategoryName( $name, $categoryName ) {
 
 		return self::findWithAlias()->joinWith( 'categoryWithAlias' )->where( 'opt.name=:name AND cat.name=:cname' )
@@ -153,6 +194,9 @@ class Option extends CmgEntity {
 							->one();
 	}
 
+	/**
+	 * @return Option - by value and category id
+	 */
 	public static function findByValueCategoryName( $value, $categoryName ) {
 
 		return self::findWithAlias()->joinWith( 'categoryWithAlias' )->where( 'opt.name=:name AND cat.name=:cname' )

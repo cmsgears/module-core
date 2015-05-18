@@ -4,15 +4,15 @@ namespace cmsgears\core\common\models\entities;
 /**
  * RolePermission Entity
  *
- * @property integer $roleId
- * @property integer $permissionId
+ * @property int $roleId
+ * @property int $permissionId
  */
 class RolePermission extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
 	/**
-	 * @return Role for the mapping.
+	 * @return Role - from the mapping.
 	 */
 	public function getRole() {
 
@@ -20,7 +20,7 @@ class RolePermission extends CmgEntity {
 	}
 
 	/**
-	 * @return Permission for the mapping.
+	 * @return Permission - from the mapping.
 	 */
 	public function getPermission() {
 
@@ -29,6 +29,9 @@ class RolePermission extends CmgEntity {
 
 	// yii\base\Model --------------------
 
+	/**
+	 * Validation rules
+	 */
 	public function rules() {
 
         return [
@@ -37,6 +40,9 @@ class RolePermission extends CmgEntity {
         ];
     }
 
+	/**
+	 * Model attributes
+	 */
 	public function attributeLabels() {
 
 		return [
@@ -49,6 +55,9 @@ class RolePermission extends CmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+	/**
+	 * @return string - db table name
+	 */
 	public static function tableName() {
 
 		return CoreTables::TABLE_ROLE_PERMISSION;
@@ -58,11 +67,17 @@ class RolePermission extends CmgEntity {
 
 	// Delete
 
+	/**
+	 * Delete the mappings by given role id.
+	 */
 	public static function deleteByRoleId( $roleId ) {
 
 		self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
 	}
 
+	/**
+	 * Delete the mappings by given permission id.
+	 */
 	public static function deleteByPermissionId( $permissionId ) {
 
 		self::deleteAll( 'permissionId=:id', [ ':id' => $permissionId ] );

@@ -15,7 +15,7 @@ use cmsgears\core\common\models\traits\MetaTrait;
 /**
  * Gallery Entity - The primary class.
  *
- * @property integer $id
+ * @property int $id
  * @property string $name
  * @property string $description
  */
@@ -33,6 +33,9 @@ class Gallery extends NamedCmgEntity {
 
 	// yii\base\Model ---------------------
 
+	/**
+	 * Validation rules
+	 */
 	public function rules() {
 
         return [
@@ -44,6 +47,9 @@ class Gallery extends NamedCmgEntity {
         ];
     }
 
+	/**
+	 * Model attributes
+	 */
 	public function attributeLabels() {
 
 		return [
@@ -57,7 +63,10 @@ class Gallery extends NamedCmgEntity {
 	// Static Methods ----------------------------------------------
 
 	// yii\db\ActiveRecord ----------------
-	
+
+	/**
+	 * @return string - db table name
+	 */
 	public static function tableName() {
 
 		return CoreTables::TABLE_GALLERY;

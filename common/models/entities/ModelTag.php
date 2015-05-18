@@ -7,7 +7,7 @@ use \Yii;
 /**
  * ModelTag Entity
  *
- * @property integer $parentId
+ * @property int $parentId
  * @property string $parentType
  * @property string $name
  * @property string $description
@@ -18,6 +18,9 @@ class ModelTag extends CmgEntity {
 
 	// yii\base\Model --------------------
 
+	/**
+	 * Validation rules
+	 */
 	public function rules() {
 
         return [
@@ -30,12 +33,17 @@ class ModelTag extends CmgEntity {
         ];
     }
 
+	/**
+	 * Model attributes
+	 */
 	public function attributeLabels() {
 
 		return [
 			'categoryId' => 'Category',
 			'parentId' => 'Parent',
-			'parentType' => 'Parent Type'
+			'parentType' => 'Parent Type',
+			'name' => 'Name',
+			'description' => 'Description'
 		];
 	}
 
@@ -45,18 +53,27 @@ class ModelTag extends CmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+	/**
+	 * @return string - db table name
+	 */
 	public static function tableName() {
 
 		return CoreTables::TABLE_MODEL_TAG;
 	}
 
 	// Category --------------------------
-
+	
+	/**
+	 * @return array - categories by given parent id and type.
+	 */
 	public static function findByParentIdType( $id, $type ) {
 
 		return self::find()->where( 'parentId=:id AND parentType=:type', [ ':id' => $id, ':type' => $type ] )->all();
 	}
 
+	/**
+	 * Delete categories by given parent id and type.
+	 */
 	public static function deleteByParentIdType( $id, $type ) {
 
 		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $id, ':type' => $type ] );

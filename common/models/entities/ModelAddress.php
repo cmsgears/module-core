@@ -5,7 +5,7 @@ namespace cmsgears\core\common\models\entities;
 use \Yii;
 
 /**
- * ModelFile Entity
+ * ModelAddress Entity
  *
  * @property integer $parentId
  * @property string $parentType
@@ -18,15 +18,22 @@ class ModelAddress extends CmgEntity {
 
 	// yii\base\Model --------------------
 
+	/**
+	 * Validation rules
+	 */
 	public function rules() {
 
         return [
             [ [ 'parentId', 'parentType', 'addressId' ], 'required' ],
-            [ [ 'parentId', 'addressId', 'type' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'parentId', 'addressId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'type' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ 'parentType', 'string', 'max' => 100 ]
         ];
     }
 
+	/**
+	 * Model attributes
+	 */
 	public function attributeLabels() {
 
 		return [
@@ -37,7 +44,7 @@ class ModelAddress extends CmgEntity {
 		];
 	}
 
-	// Category --------------------------
+	// ModelAddress ----------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -48,21 +55,36 @@ class ModelAddress extends CmgEntity {
 		return CoreTables::TABLE_MODEL_FILE;
 	}
 
-	// Category --------------------------
+	// ModelAddress ----------------------
 
-	public static function findByParentIdType( $id, $type ) {
+	// Read ----
 
-		return self::find()->where( 'parentId=:id AND parentType=:type', [ ':id' => $id, ':type' => $type ] )->all();
+	/**
+	 * @param int $parentId
+	 * @param string $parentType
+	 * @return array - ModelAddress by parent id and type
+	 */
+	public static function findByParentIdType( $parentId, $parentType ) {
+
+		return self::find()->where( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] )->all();
 	}
 
-	public static function deleteByParentIdType( $id, $type ) {
+	// Delete ----
 
-		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $id, ':type' => $type ] );
+	/**
+	 * Delete all the entries associated with the parent.
+	 */
+	public static function deleteByParentIdType( $parentId, $parentType ) {
+
+		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] );
 	}
 
-	public static function deleteByFileId( $fileId ) {
+	/**
+	 * Delete all entries related to a address
+	 */
+	public static function deleteByAddressId( $addressId ) {
 
-		self::deleteAll( 'fileId=:id', [ ':id' => $fileId ] );
+		self::deleteAll( 'fileId=:id', [ ':id' => $addressId ] );
 	}
 }
 

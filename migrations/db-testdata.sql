@@ -5,10 +5,17 @@ SET FOREIGN_KEY_CHECKS=0;
 /* ============================= CMSGears Core ============================================== */
 
 --
--- Dumping data for table `cmg_config`
+-- Dumping data for table `cmg_core_site`
 --
 
-INSERT INTO `cmg_config` VALUES
+INSERT INTO `cmg_core_site` VALUES
+	(1,'main');
+
+--
+-- Dumping data for table `cmg_core_config`
+--
+
+INSERT INTO `cmg_core_config` VALUES
 	(1,'locale message','false','core','text',null),
 	(2,'language','en-US','core','text',null),
 	(3,'charset','UTF-8','core','text',null),
@@ -34,64 +41,64 @@ INSERT INTO `cmg_config` VALUES
 	(23,'theme version','1','admin','text',null);
 
 --
--- Dumping data for table `cmg_locale`
+-- Dumping data for table `cmg_core_locale`
 --
 
-INSERT INTO `cmg_locale` VALUES (1,'en_US','English US');
+INSERT INTO `cmg_core_locale` VALUES (1,'en_US','English US');
 
 --
--- Dumping data for table `cmg_category`
+-- Dumping data for table `cmg_core_category`
 --
 
-INSERT INTO `cmg_category` VALUES 
+INSERT INTO `cmg_core_category` VALUES 
 	(1,NULL,'role type',NULL,'combo',NULL),
 	(2,NULL,'config type',NULL,'combo',NULL),
 	(3,NULL,'gender',NULL,'combo',NULL);
 
 --
--- Dumping data for table `cmg_option`
+-- Dumping data for table `cmg_core_option`
 --
 
-INSERT INTO `cmg_option` VALUES 
+INSERT INTO `cmg_core_option` VALUES 
 	(1,1,'System','system',NULL),
 	(2,2,'Core','core',NULL),(3,2,'Email','email',NULL),(4,2,'Website','site',NULL),(5,2,'Admin','admin',NULL),
 	(6,3,'Male',NULL,NULL),(7,3,'Female',NULL,NULL),(8,3,'Other',NULL,NULL);
 
 --
--- Dumping data for table `cmg_role`
+-- Dumping data for table `cmg_core_role`
 --
 
-INSERT INTO `cmg_role` VALUES 
+INSERT INTO `cmg_core_role` VALUES 
 	(1,1,1,'Super Admin','The Super Admin have all the permisisons to perform operations on the admin site and website.','/dashboard',0,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
 	(2,1,1,'Admin','The Admin have all the permisisons to perform operations on the admin site and website except RBAC module.','/dashboard',0,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
 	(3,1,1,'User','The role User is limited to website users.','/home',0,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
 	(4,1,1,'Identity Manager','The role Identity Manager is limited to manage users from admin.','/dashboard',0,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 --
--- Dumping data for table `cmg_permission`
+-- Dumping data for table `cmg_core_permission`
 --
 
-INSERT INTO `cmg_permission` VALUES 
+INSERT INTO `cmg_core_permission` VALUES 
 	(1,1,1,'admin','The permission admin is to distinguish between admin and site user. It is a must have permission for admins.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
 	(2,1,1,'user','The permission user is to distinguish between admin and site user. It is a must have permission for users.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
 	(3,1,1,'core','The permission core is to manage settings, drop downs, galleries and newsletters from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
 	(4,1,1,'identity','The permission identity is to manage user, roles and permissions modules from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 --
--- Dumping data for table `cmg_role_permission`
+-- Dumping data for table `cmg_core_role_permission`
 --
 
-INSERT INTO `cmg_role_permission` VALUES 
+INSERT INTO `cmg_core_role_permission` VALUES 
 	(1,1),(1,2),(1,3),(1,4),
 	(2,1),(2,2),(2,3),
 	(3,2),
 	(4,1),(4,2),(4,4);
 
 --
--- Dumping data for table `cmg_user`
+-- Dumping data for table `cmg_core_user`
 --
 
-INSERT INTO `cmg_user` VALUES 
+INSERT INTO `cmg_core_user` VALUES 
 	(1,1,NULL,NULL,NULL,500,'demomaster@cmsgears.com','demomaster','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','master',NULL,NULL,1,NULL,NULL,'2014-10-11 14:22:54','2014-10-10 08:03:19',NULL,NULL,NULL,NULL,NULL),
 	(2,2,NULL,NULL,NULL,500,'demoadmin@cmsgears.com','demoadmin','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','admin',NULL,NULL,1,NULL,NULL,'2014-10-11 14:22:54','2014-10-10 08:03:19',NULL,NULL,NULL,NULL,NULL),
 	(3,3,NULL,NULL,NULL,500,'demouser@cmsgears.com','demouser','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','user',NULL,NULL,1,NULL,NULL,'2014-10-11 14:22:54','2014-10-10 08:03:19',NULL,NULL,NULL,NULL,NULL),

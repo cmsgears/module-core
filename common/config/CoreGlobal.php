@@ -83,6 +83,9 @@ class CoreGlobal {
 	const ERROR_PASSWORD_OLD		= "oldPasswordError";
 	const ERROR_ACCOUNT_CONFIRM		= "confirmAccountError";
 	const ERROR_PASSWORD_RESET		= "resetPasswordError";
+	
+	// Errors - Apis
+	const ERROR_APIS_DISABLED		= "apisDisabledError";
 
 	// Messages --------------------------------------------------------
 

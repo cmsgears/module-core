@@ -5,8 +5,14 @@ use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\Category;
 use cmsgears\core\common\models\entities\ModelCategory;
 
+/**
+ * CategoryTrait can be used to categories relevant models. The model must define the member variable $categoryType which is unique for the model.
+ */
 trait CategoryTrait {
 
+	/**
+	 * @return array - Category associated with parent
+	 */
 	public function getCategories() {
 		
 		$parentType	= $this->categoryType;
@@ -16,6 +22,9 @@ trait CategoryTrait {
 					->where( "parentType='$parentType'" );
 	}
 
+	/**
+	 * @return array - ModelCategory associated with parent
+	 */
 	public function getCategoriesMap() {
 
 		$parentType	= $this->categoryType;
@@ -24,6 +33,9 @@ trait CategoryTrait {
 					->where( "parentType='$parentType'" );
 	}
 
+	/**
+	 * @return array - list of category id associated with parent
+	 */
 	public function getCategoriesIdList() {
 
     	$categories 		= $this->categoriesMap;
@@ -37,6 +49,9 @@ trait CategoryTrait {
 		return $categoriesList;
 	}
 
+	/**
+	 * @return array - list of category id and name associated with parent
+	 */
 	public function getCategoriesIdNameList() {
 
 		$categories 	= $this->categories;
@@ -50,6 +65,9 @@ trait CategoryTrait {
 		return $categoriesList;
 	}
 
+	/**
+	 * @return array - map of category id and name associated with parent
+	 */
 	public function getCategoriesIdNameMap() {
 
 		$categories 	= $this->categories;

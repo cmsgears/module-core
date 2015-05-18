@@ -1,6 +1,8 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+use cmsgears\core\common\models\traits\CreateModifyTrait;
+
 /**
  * Role Entity
  *
@@ -10,32 +12,19 @@ namespace cmsgears\core\common\models\entities;
  * @property string $name
  * @property string $description
  * @property string $homeUrl
- * @property short $type
+ * @property string $type
+ * @property string $icon
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
 class Role extends NamedCmgEntity {
 
+	use CreateModifyTrait;
+
 	// Instance Methods --------------------------------------------
-	
-	/**
-	 * @return User
-	 */
-	public function getCreator() {
-
-		return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] );
-	}
 
 	/**
-	 * @return User
-	 */
-	public function getModifier() {
-
-		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] );
-	}
-
-	/**
-	 * @return Permission array
+	 * @return array - Permission
 	 */
 	public function getPermissions() {
 
@@ -44,7 +33,7 @@ class Role extends NamedCmgEntity {
 	}
 
 	/**
-	 * @return array having permission element.
+	 * @return array - having permissions list from the joining table
 	 */
 	public function getPermissionsList() {
 
@@ -85,13 +74,16 @@ class Role extends NamedCmgEntity {
 
 	// yii\base\Model --------------------
 
+	/**
+	 * Validation rules
+	 */
 	public function rules() {
 
         return [
             [ [ 'name' ], 'required' ],
             [ [ 'id', 'description', 'homeUrl' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
-            [ 'name', 'string', 'min'=>1, 'max'=>100 ],
+            [ [ 'name', 'type', 'icon' ], 'string', 'min'=>1, 'max'=>100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -99,6 +91,9 @@ class Role extends NamedCmgEntity {
         ];
     }
 
+	/**
+	 * Model attributes
+	 */
 	public function attributeLabels() {
 
 		return [
@@ -112,6 +107,9 @@ class Role extends NamedCmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+	/**
+	 * @return string - db table name
+	 */
 	public static function tableName() {
 
 		return CoreTables::TABLE_ROLE;

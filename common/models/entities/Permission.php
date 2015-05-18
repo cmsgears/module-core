@@ -1,6 +1,8 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+use cmsgears\core\common\models\traits\CreateModifyTrait;
+
 /**
  * Permission Entity
  *
@@ -11,28 +13,15 @@ namespace cmsgears\core\common\models\entities;
  * @property string $description
  * @property string $homeUrl
  * @property short $type
+ * @property string $icon 
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
 class Permission extends NamedCmgEntity {
 
+	use CreateModifyTrait;
+
 	// Instance Methods --------------------------------------------
-
-	/**
-	 * @return User
-	 */
-	public function getCreator() {
-
-		return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] );
-	}
-
-	/**
-	 * @return User
-	 */
-	public function getModifier() {
-
-		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] );
-	}
 
 	/**
 	 * @return Role array
@@ -69,13 +58,16 @@ class Permission extends NamedCmgEntity {
 
 	// yii\base\Model --------------------
 
+	/**
+	 * Validation rules
+	 */
 	public function rules() {
 
         return [
             [ [ 'name' ], 'required' ],
             [ [ 'id', 'description' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
-            [ 'name', 'string', 'min'=>1, 'max'=>100 ],
+            [ [ 'name', 'icon' ], 'string', 'min'=>1, 'max'=>100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -83,6 +75,9 @@ class Permission extends NamedCmgEntity {
         ];
     }
 
+	/**
+	 * Model attributes
+	 */
 	public function attributeLabels() {
 
 		return [
@@ -94,7 +89,10 @@ class Permission extends NamedCmgEntity {
 	// Static Methods ----------------------------------------------
 
 	// yii\db\ActiveRecord ---------------
-	
+
+	/**
+	 * @return string - db table name
+	 */
 	public static function tableName() {
 		
 		return CoreTables::TABLE_PERMISSION;

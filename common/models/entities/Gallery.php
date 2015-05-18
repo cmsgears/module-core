@@ -10,6 +10,7 @@ use yii\web\IdentityInterface;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\traits\FileTrait;
+use cmsgears\core\common\models\traits\MetaTrait;
 
 /**
  * Gallery Entity - The primary class.
@@ -23,6 +24,10 @@ class Gallery extends NamedCmgEntity {
 	use FileTrait;
 
 	public $fileType	= CoreGlobal::FILE_TYPE_GALLERY;
+
+	use MetaTrait;
+
+	public $metaType	= CoreGlobal::FILE_TYPE_GALLERY;
 
 	// Instance Methods --------------------------------------------
 

@@ -62,6 +62,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $gallery->name ?></td>
 						<td><?= $gallery->description ?></td>
 						<td>
+							<span class="wrap-icon-action" title="Gallery Items"><?= Html::a( "", ["/cmgcore/gallery/items?id=$id"], ['class'=>'icon-action icon-action-edit'] ) ?></span>
 							<span class="wrap-icon-action" title="Update Role"><?= Html::a( "", ["/cmgcore/gallery/update?id=$id"], ['class'=>'icon-action icon-action-edit'] ) ?></span>
 							<span class="wrap-icon-action" title="Delete Role"><?= Html::a( "", ["/cmgcore/gallery/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] ) ?></span>
 						</td>

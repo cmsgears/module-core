@@ -15,6 +15,11 @@ class ModelFile extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
+	public function getFile() {
+
+    	return $this->hasOne( CmgFile::className(), [ 'id' => 'fileId' ] );
+	}
+
 	// yii\base\Model --------------------
 
 	public function rules() {

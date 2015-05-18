@@ -7,14 +7,15 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * Config Entity
  *
- * @property integer $id
+ * @property integer $parentId
+ * @property string $parentType
  * @property string $name
  * @property string $value
  * @property integer $type
  * @property string $fieldType
  * @property string $fieldMeta
  */
-class Config extends CmgEntity {
+class ModelConfig extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
@@ -23,8 +24,10 @@ class Config extends CmgEntity {
 	public function rules() {
 
         return [
-            [ [ 'name', 'value', 'type', 'fieldType' ], 'required' ],
-            [ [ 'id', 'fieldMeta' ], 'safe' ],
+            [ [ 'parentId', 'parentType', 'name', 'value', 'type', 'fieldType' ], 'required' ],
+            [ [ 'fieldMeta' ], 'safe' ],
+            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ 'parentType', 'string', 'max' => 100 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validatenameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validatenameUpdate', 'on' => [ 'update' ] ]
@@ -34,6 +37,8 @@ class Config extends CmgEntity {
 	public function attributeLabels() {
 
 		return [
+			'parentId' => 'Parent',
+			'parentType' => 'Parent Type',
 			'name' => 'Name',
 			'value' => 'Value',
 			'type' => 'Type',
@@ -51,7 +56,7 @@ class Config extends CmgEntity {
 
         if( !$this->hasErrors() ) {
 
-            if( self::isExistByTypeName( $this->type, $this->name ) ) {
+            if( self::isExistByTypeName( $this->parentId, $this->parentType, $this->type, $this->name ) ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
@@ -65,7 +70,7 @@ class Config extends CmgEntity {
 
         if( !$this->hasErrors() ) {
 
-			$existingConfig = self::findByTypeName( $this->type, $this->name );
+			$existingConfig = self::findByTypeName( $this->parentId, $this->parentType, $this->type, $this->name );
 
 			if( isset( $existingConfig ) && $existingConfig->id != $this->id && 
 				strcmp( $existingConfig->name, $this->name ) == 0 && $existingConfig->type == $this->type ) {
@@ -86,29 +91,27 @@ class Config extends CmgEntity {
 
 	// Config ----------------------------
 
-	public static function findById( $id ) {
+	public static function findByType( $parentId, $parentType, $type ) {
 
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type', 
+				[ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] )->all();
 	}
 
-	public static function findByType( $type ) {
+	public static function findByName( $parentId, $parentType, $name ) {
 
-		return self::find()->where( 'type=:type', [ ':type' => $type ] )->all();
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name', 
+				[ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name ] )->all();
 	}
 
-	public static function findByName( $name ) {
+	public static function findByTypeName( $parentId, $parentType, $type, $name ) {
 
-		return self::find()->where( 'name=:name', [ ':name' => $name ] )->all();
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type AND name=:name', 
+				[ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type, ':name' => $name ] )->one();
 	}
 
-	public static function findByTypeName( $type, $name ) {
+	public static function isExistByTypeName( $parentId, $parentType, $type, $name ) {
 
-		return self::find()->where( 'type=:type AND name=:name', [ ':type' => $type, ':name' => $name ] )->one();
-	}
-
-	public static function isExistByTypeName( $type, $name ) {
-
-		$config = self::findByTypename( $type, $name );
+		$config = self::findByTypeName( $parentId, $parentType, $type, $name );
 
 		return isset( $config );
 	}

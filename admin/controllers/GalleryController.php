@@ -38,7 +38,8 @@ class GalleryController extends BaseController {
 	                'all'   => [ 'permission' => CoreGlobal::PERM_CORE ],
 	                'create' => [ 'permission' => CoreGlobal::PERM_CORE ],
 	                'update' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_CORE ]
+	                'delete' => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'items' => [ 'permission' => CoreGlobal::PERM_CORE ]
                 ]
             ],
             'verbs' => [
@@ -48,7 +49,8 @@ class GalleryController extends BaseController {
 	                'all'   => ['get'],
 	                'create' => ['get', 'post'],
 	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post']
+	                'delete' => ['get', 'post'],
+	                'items'  => ['get']
                 ]
             ]
         ];
@@ -136,6 +138,26 @@ class GalleryController extends BaseController {
 
 	    	return $this->render('delete', [
 	    		'model' => $model
+	    	]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
+	public function actionItems( $id ) {
+		
+		// Find Model		
+		$gallery			= GalleryService::findById( $id );
+		
+		// Update/Render if exist
+		if( isset( $gallery ) ) {
+				
+			$items 	= $gallery->files;
+
+	    	return $this->render('items', [
+	    		'gallery' => $gallery,
+	    		'items' => $items
 	    	]);
 		}
 

@@ -13,6 +13,7 @@ class CoreGlobal {
 	// Metas
 
 	const META_TYPE_USER		= "user";
+	const META_TYPE_GALLERY		= "gallery";
 
 	// Attachments
 
@@ -30,10 +31,10 @@ class CoreGlobal {
 
 	// Config Types ----------------------------------------------------
  
-	const CONFIG_CORE			= "Core";
-	const CONFIG_MAIL			= "Email";
-	const CONFIG_WEB			= "Web";
-	const CONFIG_ADMIN			= "Admin";
+	const CONFIG_CORE			= "core";
+	const CONFIG_MAIL			= "email";
+	const CONFIG_WEB			= "web";
+	const CONFIG_ADMIN			= "admin";
 
 	// Permissions -----------------------------------------------------
 	

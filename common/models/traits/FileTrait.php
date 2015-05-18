@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\traits;
 
 use cmsgears\core\common\models\entities\CoreTables;
-use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\core\common\models\entities\ModelFile;
 
 trait FileTrait {
 
@@ -10,8 +10,7 @@ trait FileTrait {
 		
 		$parentType	= $this->fileType;
 
-    	return $this->hasMany( CmgFile::className(), [ 'id' => 'fileId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_FILE, [ 'parentId' => 'id' ] )
+    	return $this->hasMany( ModelFile::className(), [ 'parentId' => 'id' ] )
 					->where( "parentType='$parentType'" );
 	}
 }

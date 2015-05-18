@@ -1,24 +1,6 @@
 SET FOREIGN_KEY_CHECKS=0;
 
 --
--- Table structure for table `cmg_config`
---
-
-DROP TABLE IF EXISTS `cmg_config`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cmg_config` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT '0',
-  `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `type` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `fieldType` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `fieldMeta` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `cmg_locale`
 --
 
@@ -254,7 +236,7 @@ DROP TABLE IF EXISTS `cmg_user`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `roleId` bigint(20) DEFAULT NULL,
+  `roleId` bigint(20) NOT NULL,
   `localeId` bigint(20) DEFAULT NULL,
   `genderId` bigint(20) DEFAULT NULL,
   `avatarId` bigint(20) DEFAULT NULL,
@@ -406,6 +388,24 @@ CREATE TABLE `cmg_gallery` (
 
 -- ======================== Traits =================================
 
+--
+-- Table structure for table `cmg_model_config`
+--
+
+DROP TABLE IF EXISTS `cmg_model_config`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmg_model_config` (
+  `parentId` bigint(20) NOT NULL,
+  `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT '0',
+  `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `type` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fieldType` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fieldMeta` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`parentId`,`parentType`,`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `cmg_model_category`

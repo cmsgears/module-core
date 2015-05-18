@@ -72,7 +72,7 @@ class FileService extends Service {
 			$date 						= DateUtil::getMysqlDate();
 			$fileToUpdate->modifiedAt	= $date;
 
-			$fileToUpdate->copyForUpdateFrom( $file, [ 'description', 'altText', 'directory', 'authorId', 'type', 'url', 'thumb', 'createdAt' ] );
+			$fileToUpdate->copyForUpdateFrom( $file, [ 'name', 'description', 'altText', 'directory', 'authorId', 'type', 'url', 'thumb', 'createdAt' ] );
 
 			// Update File
 			$fileToUpdate->update();

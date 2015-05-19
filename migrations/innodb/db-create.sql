@@ -390,16 +390,16 @@ DROP TABLE IF EXISTS `cmg_core_site_member`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_site_member` (
   `siteId` bigint(20) NOT NULL, 
-  `memberId` bigint(20) NOT NULL,
+  `userId` bigint(20) NOT NULL,
   `roleId` bigint(20) NOT NULL,
   `createdAt` datetime NOT NULL,
-  PRIMARY KEY (`siteId`, `memberId`),
+  PRIMARY KEY (`siteId`, `userId`),
   KEY `fk_site_member_1` (`siteId`),
-  KEY `fk_site_member_2` (`memberId`),
+  KEY `fk_site_member_2` (`userId`),
   KEY `fk_site_member_3` (`roleId`),
-  CONSTRAINT `fk_site_member_1` FOREIGN KEY (`siteId`) REFERENCES `cmg_site` (`id`),
-  CONSTRAINT `fk_site_member_2` FOREIGN KEY (`memberId`) REFERENCES `cmg_user` (`id`),
-  CONSTRAINT `fk_site_member_3` FOREIGN KEY (`roleId`) REFERENCES `cmg_role` (`id`)
+  CONSTRAINT `fk_site_member_1` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_site_member_2` FOREIGN KEY (`userId`) REFERENCES `cmg_core_user` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_site_member_3` FOREIGN KEY (`roleId`) REFERENCES `cmg_core_role` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

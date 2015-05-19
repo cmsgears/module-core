@@ -12,9 +12,9 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Delete User";
 
     	<?= $form->field( $model, 'email' )->textInput( [ 'readonly'=>'true' ] ) ?>
     	<?= $form->field( $model, 'username' )->textInput( [ 'readonly'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'status' )->dropDownList( $status, [ 'readonly'=>'true' ] ) ?>
-		<?= $form->field( $model, 'role' )->dropDownList( $roles, [ 'readonly'=>'true' ] )  ?>
-		<?= $form->field( $model, 'gender' )->dropDownList( $genders, [ 'readonly'=>'true' ] )  ?>
+    	<?= $form->field( $model, 'status' )->dropDownList( $status, [ 'disabled'=>'true' ] ) ?>
+		<?= $form->field( $siteMember, 'roleId' )->dropDownList( $roles, [ 'disabled'=>'true' ] )  ?>
+		<?= $form->field( $model, 'gender' )->dropDownList( $genders, [ 'disabled'=>'true' ] )  ?>
 		<?= $form->field( $model, 'firstName' )->textInput( [ 'readonly'=>'true' ] ) ?>
 		<?= $form->field( $model, 'lastName' )->textInput( [ 'readonly'=>'true' ] ) ?>
 		<?= $form->field( $model, 'phone' )->textInput( [ 'readonly'=>'true' ] ) ?>

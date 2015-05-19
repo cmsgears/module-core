@@ -32,5 +32,5 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 </section>
 
 <script type="text/javascript">
-	initSidebar( "sidebar-newsletter", -1 );
+	initSidebar( "sidebar-newsletter", 0 );
 </script>

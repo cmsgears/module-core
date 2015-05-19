@@ -15,17 +15,18 @@ trait CategoryTrait {
 	 */
 	public function getCategories() {
 		
-		$parentType	= $this->categoryType;
+		$parentType		= $this->categoryType;
+		$modelCategory	= CoreTables::TABLE_MODEL_CATEGORY;
 
     	return $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ] )
-					->where( "parentType='$parentType'" );
+					->viaTable( $modelCategory, [ 'parentId' => 'id' ] )
+					->andWhere( "`$modelCategory`.`parentType`='$parentType'" );
 	}
 
 	/**
 	 * @return array - ModelCategory associated with parent
 	 */
-	public function getCategoriesMap() {
+	public function getCategoryMap() {
 
 		$parentType	= $this->categoryType;
 
@@ -36,9 +37,9 @@ trait CategoryTrait {
 	/**
 	 * @return array - list of category id associated with parent
 	 */
-	public function getCategoriesIdList() {
+	public function getCategoryIdList() {
 
-    	$categories 		= $this->categoriesMap;
+    	$categories 		= $this->categoryMap;
 		$categoriesList		= array();
 
 		foreach ( $categories as $category ) {
@@ -52,7 +53,7 @@ trait CategoryTrait {
 	/**
 	 * @return array - list of category id and name associated with parent
 	 */
-	public function getCategoriesIdNameList() {
+	public function getCategoryIdNameList() {
 
 		$categories 	= $this->categories;
 		$categoriesList	= array();
@@ -68,7 +69,7 @@ trait CategoryTrait {
 	/**
 	 * @return array - map of category id and name associated with parent
 	 */
-	public function getCategoriesIdNameMap() {
+	public function getCategoryIdNameMap() {
 
 		$categories 	= $this->categories;
 		$categoriesMap	= array();

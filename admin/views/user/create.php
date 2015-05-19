@@ -12,7 +12,7 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Create User";
 
     	<?= $form->field( $model, 'email' ) ?>
     	<?= $form->field( $model, 'username' ) ?>
-		<?= $form->field( $model, 'roleId' )->dropDownList( $roles )  ?>
+		<?= $form->field( $siteMember, 'roleId' )->dropDownList( $roles )  ?>
 		<?= $form->field( $model, 'gender' )->dropDownList( $genders )  ?>
 		<?= $form->field( $model, 'firstName' ) ?>
 		<?= $form->field( $model, 'lastName' ) ?>
@@ -26,5 +26,5 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Create User";
 	</div>	
 </section>
 <script type="text/javascript">
-	initSidebar( "sidebar-identity", 3 );
+	initSidebar( "sidebar-identity", 4 );
 </script>

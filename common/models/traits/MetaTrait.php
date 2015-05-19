@@ -22,9 +22,31 @@ trait MetaTrait {
 	}
 
 	/**
+	 * @return array - ModelMeta associated with parent
+	 */
+	public function getMetasByType( $type ) {
+
+		$parentType	= $this->metaType;
+
+    	return $this->hasMany( ModelMeta::className(), [ 'parentId' => 'id' ] )
+					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $parentType, ':type' => $type ] )->all();
+	}
+
+	/**
+	 * @return ModelMeta - associated with parent
+	 */
+	public function getMetaByTypeName( $type, $name ) {
+
+		$parentType	= $this->metaType;
+
+    	return $this->hasMany( ModelMeta::className(), [ 'parentId' => 'id' ] )
+					->where( "parentType=:ptype AND type=:type AND name=:name", [ ':ptype' => $parentType, ':type' => $type, ':name' => $name ] )->one();
+	}
+
+	/**
 	 * @return array - map of meta name and value
 	 */
-	public function getMetasNameValueMap() {
+	public function getMetaNameValueMap() {
 
 		$metas 		= $this->metas;
 		$metasMap	= array();
@@ -35,7 +57,27 @@ trait MetaTrait {
 		}
 
 		return $metasMap;
-	}	
+	}
+
+	/**
+	 * @return array - map of meta name and value by type
+	 */
+	public function getMetaNameValueMapByType( $type ) {
+
+		$parentType	= $this->metaType;
+
+    	$metas 		= $this->hasMany( ModelMeta::className(), [ 'parentId' => 'id' ] )
+						->where( "parentType=:ptype AND type=:type", [ ':ptype' => $parentType, ':type' => $type ] )->all();
+
+		$metasMap	= array();
+
+		foreach ( $metas as $meta ) {
+
+			$metasMap[ $meta->name ] = $meta->value;
+		}
+
+		return $metasMap;
+	}
 }
 
 ?>

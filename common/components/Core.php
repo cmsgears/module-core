@@ -20,7 +20,7 @@ class Core extends Component {
 	/**
 	 * @var identify the currently active site based on the url request.
 	 */
-	public $site				= "main";
+	public $siteName			= "main";
 
 	/**
 	 * @var test whether the web app is multi-site.
@@ -117,9 +117,9 @@ class Core extends Component {
 		//TODO - Add code to check availability of a widget from database and widgets folder
     }
 
-	public function getSite() {
+	public function getSiteName() {
 
-		return $this->site;
+		return $this->siteName;
 	}
 
 	public function isMultiSite() {

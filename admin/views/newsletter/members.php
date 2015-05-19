@@ -82,7 +82,8 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $page as $user ) {
 
-						$id = $user->id;
+						$id 	= $user->id;
+						$role	= $user->role->name;
 				?>
 					<tr>
 						<td> <input type='checkbox' /> </td>
@@ -102,7 +103,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $user->username ?></td>
 						<td><?= $user->getName() ?></td>
 						<td><?= $user->email ?></td>
-						<td><?= $roles[ $user->roleId ] ?></td>
+						<td><?= $role ?></td>
 						<td><?= $user->statusStr ?></td>
 						<td><?= $user->phone ?></td>
 						<td><?= $user->registeredAt ?></td>

@@ -48,6 +48,7 @@ class FileService extends Service {
 			// Copy and set Attributes
 			$date 						= DateUtil::getMysqlDate();
 			$fileToUpdate->modifiedAt	= $date;
+			$fileToUpdate->modifiedBy	= Yii::$app->user->getIdentity()->id;
 
 			$fileToUpdate->copyForUpdateFrom( $file, [ 'description', 'altText' ] );
 
@@ -71,8 +72,9 @@ class FileService extends Service {
 			// Copy and set Attributes
 			$date 						= DateUtil::getMysqlDate();
 			$fileToUpdate->modifiedAt	= $date;
+			$fileToUpdate->modifiedBy	= Yii::$app->user->getIdentity()->id;
 
-			$fileToUpdate->copyForUpdateFrom( $file, [ 'name', 'description', 'altText', 'directory', 'authorId', 'type', 'url', 'thumb', 'createdAt' ] );
+			$fileToUpdate->copyForUpdateFrom( $file, [ 'name', 'description', 'altText', 'directory', 'createdBy', 'type', 'url', 'thumb', 'createdAt' ] );
 
 			// Update File
 			$fileToUpdate->update();

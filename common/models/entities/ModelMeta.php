@@ -27,8 +27,8 @@ class ModelMeta extends CmgEntity {
 	public function rules() {
 
         return [
-            [ [ 'parentId', 'parentType', 'name', 'value', 'type', 'fieldType' ], 'required' ],
-            [ [ 'fieldMeta' ], 'safe' ],
+            [ [ 'parentId', 'parentType', 'name', 'value' ], 'required' ],
+            [ [ 'type', 'fieldType', 'fieldMeta' ], 'safe' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'parentType', 'type' ], 'string', 'max' => 100 ],
             [ 'name', 'alphanumhyphenspace' ],
@@ -92,7 +92,7 @@ class ModelMeta extends CmgEntity {
 
 	public static function tableName() {
 
-		return CoreTables::TABLE_CONFIG;
+		return CoreTables::TABLE_MODEL_META;
 	}
 
 	// ModelMeta -------------------------

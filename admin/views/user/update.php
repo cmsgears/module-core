@@ -26,7 +26,7 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Update User";
 		<?= $form->field( $model, 'lastName' ) ?>
 		<?= $form->field( $model, 'gender' )->dropDownList( $genders )  ?>
 		<?= $form->field( $model, 'phone' ) ?>
-		<?= $form->field( $model, 'roleId' )->dropDownList( $roles )  ?>
+		<?= $form->field( $siteMember, 'roleId' )->dropDownList( $roles )  ?>
 		<?= $form->field( $model, 'status' )->dropDownList( $status ) ?>
 		<?= $form->field( $model, 'newsletter' )->checkbox() ?>
 

@@ -6,6 +6,9 @@ use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\User;
 
 use cmsgears\core\common\utilities\DateUtil;
@@ -16,7 +19,7 @@ class UserService extends \cmsgears\core\common\services\UserService {
 
 	// Pagination -------
 
-	public static function getPagination( $conditions = [] ) {
+	public static function getPagination( $conditions = [], $query = null ) {
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -60,12 +63,36 @@ class UserService extends \cmsgears\core\common\services\UserService {
 			$conditions['status'] = $status;
 		}
 
-		return self::getPaginationDetails( new User(), [ 'conditions' => $conditions, 'sort' => $sort, 'search-col' => 'firstName' ] );
+		$site						= CoreTables::TABLE_SITE;
+		$conditions["$site.name"] 	= Yii::$app->cmgCore->getSiteName();
+		
+		if( isset( $query ) ) {
+
+			return self::getPaginationDetails( new User(), [ 'conditions' => $conditions, 'query' => $query, 'sort' => $sort, 'search-col' => 'firstName' ] );
+		}
+		else {
+			
+			return self::getPaginationDetails( new User(), [ 'conditions' => $conditions, 'sort' => $sort, 'search-col' => 'firstName' ] );
+		}
+	}
+
+	public static function getPaginationByAdmins() {
+
+		$permission					= CoreTables::TABLE_PERMISSION;
+
+		return self::getPagination( [ "$permission.name" => CoreGlobal::PERM_ADMIN ], User::findWithSiteMemberPermission() );
+	}
+
+	public static function getPaginationByUsers() {
+
+		$permission					= CoreTables::TABLE_PERMISSION;
+
+		return self::getPagination( [ "$permission.name" => CoreGlobal::PERM_USER ], User::findWithSiteMemberPermission() );
 	}
 
 	public static function getPaginationByNewsletter() {
 
-		return self::getPagination( [ 'newsletter' => 1 ] );
+		return self::getPagination( [ 'newsletter' => 1 ], User::findWithSiteMember() );
 	}
 
 	// Create -----------
@@ -95,8 +122,8 @@ class UserService extends \cmsgears\core\common\services\UserService {
 		// Find existing user
 		$userToUpdate	= User::findById( $user->id );
 
-		// Copy Attributes		
-		$userToUpdate->copyForUpdateFrom( $user, [ 'email', 'username', 'firstName', 'lastName', 'newsletter', 'status', 'roleId', 'phone', 'avatarId' ] );
+		// Copy Attributes
+		$userToUpdate->copyForUpdateFrom( $user, [ 'email', 'username', 'firstName', 'lastName', 'newsletter', 'status', 'phone', 'avatarId' ] );
 
 		// Save Avatar
 		FileService::saveImage( $avatar, $userToUpdate, [ 'model' => $userToUpdate, 'attribute' => 'avatarId' ] );

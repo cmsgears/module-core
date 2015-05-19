@@ -97,8 +97,9 @@ class GalleryService extends \cmsgears\core\common\services\GalleryService {
 		
 		if( $item->id > 0 ) {
 
-			$modelFile->parentType	= CoreGlobal::FILE_TYPE_GALLERY;
+			$modelFile->parentType	= CoreGlobal::TYPE_GALLERY;
 			$modelFile->parentId	= $gallery->id;
+
 			// commit slide
 			$modelFile->save();
 		}

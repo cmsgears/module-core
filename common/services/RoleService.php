@@ -24,6 +24,11 @@ class RoleService extends Service {
 		return Role::findByName( $name );
 	}
 
+	public static function getIdNameMap() {
+
+		return self::findMap( 'id', 'name', CoreTables::TABLE_ROLE );
+	}
+
 	public static function getIdNameList() {
 
 		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_ROLE );

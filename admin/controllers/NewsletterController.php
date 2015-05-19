@@ -13,9 +13,6 @@ use cmsgears\core\common\models\entities\Newsletter;
 
 use cmsgears\core\admin\services\NewsletterService;
 use cmsgears\core\admin\services\UserService;
-use cmsgears\core\admin\services\RoleService;
-
-use cmsgears\core\common\utilities\CodeGenUtil;
 
 class NewsletterController extends BaseController {
 
@@ -150,14 +147,11 @@ class NewsletterController extends BaseController {
 	public function actionMembers() {
 
 		$pagination = UserService::getPaginationByNewsletter();
-		$roles 		= RoleService::getIdNameList();
-		$roles 		= CodeGenUtil::generateIdNameArray( $roles );
 
 	    return $this->render('members', [
 	         'page' => $pagination['page'],
 	         'pages' => $pagination['pages'],
-	         'total' => $pagination['total'],
-	         'roles' => $roles
+	         'total' => $pagination['total']
 	    ]);
 	}
 }

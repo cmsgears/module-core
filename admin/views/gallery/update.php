@@ -15,7 +15,7 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Update Gallery';
 
 		<div class="box-filler"></div>
 		<?=Html::a( "Back", [ '/cmgcore/gallery/all' ], ['class' => 'btn' ] );?>
-		<input type="submit" value="Create" />
+		<input type="submit" value="Update" />
 
 		<?php ActiveForm::end(); ?>
 	</div>

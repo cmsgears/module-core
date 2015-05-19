@@ -23,11 +23,11 @@ class Gallery extends NamedCmgEntity {
 
 	use FileTrait;
 
-	public $fileType	= CoreGlobal::FILE_TYPE_GALLERY;
+	public $fileType	= CoreGlobal::TYPE_GALLERY;
 
 	use MetaTrait;
 
-	public $metaType	= CoreGlobal::FILE_TYPE_GALLERY;
+	public $metaType	= CoreGlobal::TYPE_GALLERY;
 
 	// Instance Methods --------------------------------------------
 

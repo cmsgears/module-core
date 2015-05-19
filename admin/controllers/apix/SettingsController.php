@@ -8,13 +8,12 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Config;
+use cmsgears\core\common\models\entities\ModelMeta;
 
-use cmsgears\core\admin\services\ConfigService;
+use cmsgears\core\admin\services\SiteService;
 
 use cmsgears\core\admin\controllers\BaseController;
 
-use cmsgears\core\common\components\MessageDbCore;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class SettingsController extends BaseController {
@@ -43,27 +42,24 @@ class SettingsController extends BaseController {
             ]
         ];
     }
-	
+
 	// SettingsController ----------------
 
-	public function actionUpdate( $id ) {
+	public function actionUpdate() {
 
-		$config	= Config::findById( $id );
-		
-		if( isset( $config ) ) {
+		$meta	= new ModelMeta();
 
-			$config->setScenario( "update" );
+		$meta->setScenario( "update" );
 
-			if( $config->load( Yii::$app->request->post( "Config" ), "" ) ) {
+		if( $meta->load( Yii::$app->request->post( "ModelMeta" ), "" ) ) {
 
-				if( ConfigService::update( $config ) ) {
+			if( SiteService::updateMeta( $meta ) ) {
 
-					AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), $config );
-				}	
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
 			}
-
-			AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ) );
 		}
+
+		AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
 }
 

@@ -16,7 +16,7 @@ use yii\helpers\Url;
 			<div class="settings-core-view">
 				<?php if( isset( $settings ) ) { ?>
 				<ul class="view-setting-ul">
-					<?php foreach ( $settings as $key => $setting ) { ?>
+					<?php foreach ( $settings as $setting ) { ?>
 					<li>
 						<label><?= $setting->name ?></label>
 						<span><?= strcmp( $setting->fieldType, "password" ) == 0 ? '' : $setting->value ?></span>
@@ -31,7 +31,7 @@ use yii\helpers\Url;
 	</div>
 </div>
 <script type="text/javascript">
-	initSidebar( "sidebar-settings", 1 );
+	initSidebar( "sidebar-setting", -1 );
 
 	jQuery("ul.settings-tab-wrapper li").removeClass( 'active' );
 	jQuery("ul.settings-tab-wrapper li.<?=$type?>").addClass( 'active' );

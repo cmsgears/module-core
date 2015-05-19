@@ -16,25 +16,28 @@ use yii\widgets\ActiveForm;
 				<?php if( isset( $settings ) ) { ?>
 				<ul>
 					<?php
+						$counter	= 0;
 
-						foreach ( $settings as $key => $setting ) {
+						foreach ( $settings as $setting ) {
 
-							$id = $setting->id;
 					?>
 					<li>
-						<form id="frm-settings-core-<?=$id?>" group="0" key="35" class="frm-settings" action="<?= Url::toRoute('/cmgcore/apix/settings/update?id='. $id ) ?>" method="POST" keepData="true">
+						<form id="frm-settings-core-<?=$counter?>" group="0" key="35" class="frm-settings" action="<?= Url::toRoute('/cmgcore/apix/settings/update' ) ?>" method="POST" keepData="true">
 							<label> <?=  $setting->name ?> </label>
 							<?php if( strcmp( $setting->fieldType, "password" ) == 0 ) { ?>
-								<span> <input type="password" name="Config[value]" value="" > </span>
+								<span> <input type="password" name="ModelMeta[value]" value="" > </span>
 							<?php } else { ?>
-								<span> <input type="text" name="Config[value]" value="<?= $setting->value ?>" > </span>
+								<span> <input type="text" name="ModelMeta[value]" value="<?= $setting->value ?>" > </span>
 							<?php } ?>
+							<input type="hidden" name="ModelMeta[name]" value="<?= $setting->name ?>" >
+							<input type="hidden" name="ModelMeta[type]" value="<?= $setting->type ?>" >
 							<input type="submit" name="submit" value="Save" />
 							<div class="spinner"></div>
 							<div class="frm-message"></div>
 						</form>
 					</li>
 					<?php
+							$counter++;
 						}
 					?>
 				</ul>
@@ -46,7 +49,7 @@ use yii\widgets\ActiveForm;
 	</div>
 </div>
 <script type="text/javascript">
-	initSidebar( "sidebar-settings", 1 );
+	initSidebar( "sidebar-setting", -1 );
 
 	jQuery("ul.settings-tab-wrapper li").removeClass('active');
 	jQuery("ul.settings-tab-wrapper li.<?=$type?>").addClass('active');

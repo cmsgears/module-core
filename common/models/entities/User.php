@@ -72,32 +72,43 @@ class User extends CmgEntity implements IdentityInterface {
 
 	use MetaTrait;
 
-	public $metaType	= CoreGlobal::META_TYPE_USER;
+	public $metaType	= CoreGlobal::TYPE_USER;
 
 	use FileTrait;
 
-	public $fileType	= CoreGlobal::FILE_TYPE_USER;
+	public $fileType	= CoreGlobal::TYPE_USER;
 
 	use AddressTrait;
 
-	public $addressType	= CoreGlobal::ADDRESS_TYPE_USER;
+	public $addressType	= CoreGlobal::TYPE_USER;
 
 	public $permissions	= [];
 
 	// Instance Methods --------------------------------------------
 
 	/**
+	 * @return Site Member - assigned to User.
+	 */
+	public function getSiteMember() {
+		
+		$site 		= CoreTables::TABLE_SITE;
+
+    	return $this->hasOne( SiteMember::className(), [ 'userId' => 'id' ] );
+	}
+
+	/**
 	 * @return Role - assigned to User.
 	 */
 	public function getRole() {
 
+		$role		= CoreTables::TABLE_ROLE;
 		$site 		= CoreTables::TABLE_SITE;
 		$siteMember	= CoreTables::TABLE_SITE_MEMBER;
 
-    	return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] )
-					->viaTable( $siteMember, [ 'memberId' => 'id' ] )
+		return Role::find()
+					->leftJoin( $siteMember, "`$siteMember`.`roleId` = `$role`.`id`" )
 					->leftJoin( $site, "`$site`.`id` = `$siteMember`.`siteId`" )
-					->where( "`$site`.`name`=:name", [ ':name' => Yii::$app->cmgCore->getSiteName() ] );
+					->where( "`$siteMember`.`userId`=:id AND `$site`.`name`=:name", [ ':id' => $this->id, ':name' => Yii::$app->cmgCore->getSiteName() ] );
 	}
 
 	/**
@@ -487,6 +498,22 @@ class User extends CmgEntity implements IdentityInterface {
     }
 
 	// User -------------------------------
+
+	/**
+	 * @return ActiveRecord - with site member and role.
+	 */
+	public static function findWithSiteMember() {
+
+		return self::find()->joinWith( 'siteMember' )->joinWith( 'siteMember.site' )->joinWith( 'siteMember.role' );
+	}
+
+	/**
+	 * @return ActiveRecord - with site member, role and permission. It works by specifying a filter for permission name.
+	 */
+	public static function findWithSiteMemberPermission() {
+
+		return self::find()->joinWith( 'siteMember' )->joinWith( 'siteMember.site' )->joinWith( 'siteMember.role' )->joinWith( 'siteMember.role.permissions' );
+	}
 	
 	/**
 	 * @param int $id

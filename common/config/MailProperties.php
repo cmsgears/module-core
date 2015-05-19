@@ -1,13 +1,14 @@
 <?php
 namespace cmsgears\core\common\config;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
- 
-use cmsgears\core\common\models\entities\Config;
 
 use cmsgears\core\common\services\OptionService;
-use cmsgears\core\common\services\ConfigService;
+use cmsgears\core\common\services\SiteService;
 
 class MailProperties {
 
@@ -104,8 +105,7 @@ class MailProperties {
 	 */ 
 	public function init() {
 
-		$type				= OptionService::findByNameCategoryName( CoreGlobal::CONFIG_MAIL, CoreGlobal::CATEGORY_CONFIG_TYPE );
-		$this->properties	= ConfigService::getNameValueMapByType( $type->value );
+		$this->properties	= SiteService::getMetaMapByNameType( Yii::$app->cmgCore->getSiteName(), CoreGlobal::CONFIG_MAIL );
 	}
 
 	/**

@@ -23,7 +23,7 @@ trait TagTrait {
 	/**
 	 * @return array - map of tag name and description
 	 */
-	public function getTagsMap() {
+	public function getTagMap() {
 
 		$tags 		= $this->tags;
 		$tagsMap	= array();
@@ -36,7 +36,7 @@ trait TagTrait {
 		return $tagsMap;
 	}
 
-	public function getTagsCsv() {
+	public function getTagCsv() {
 
     	$tags		= $this->tags;
 		$tagsCsv	= [];

@@ -1,8 +1,13 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\traits\MetaTrait;
+
 /**
- * Locale Entity
+ * Site Entity
  *
  * @property integer $id
  * @property string $code
@@ -10,35 +15,44 @@ namespace cmsgears\core\common\models\entities;
  */
 class Site extends NamedCmgEntity {
 
+	use MetaTrait;
+
+	public $metaType	= CoreGlobal::TYPE_SITE;
+
 	// Instance Methods --------------------------------------------
 
 	/**
-	 * @return array - list of Province having all the provinces belonging to this country
+	 * @return array - list of site Users
 	 */
-	public function getProvinces() {
+	public function getUsers() {
 
-    	return $this->hasMany( Province::className(), [ 'countryId' => 'id' ] );
+    	return $this->hasMany( User::className(), [ 'id' => 'memberId' ] )
+					->viaTable( CoreTables::TABLE_SITE_MEMBER, [ 'siteId' => 'id' ] );
 	}
 
 	// yii\base\Model --------------------
 
+	/**
+	 * Validation rules
+	 */
 	public function rules() {
 
         return [
-            [ [ 'name', 'code' ], 'required' ],
+            [ [ 'name' ], 'required' ],
             [ 'id', 'safe' ],
-            [ 'code', 'string', 'min'=>1, 'max'=>50 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
     }
 
+	/**
+	 * Model attributes
+	 */
 	public function attributeLabels() {
 
 		return [
-			'name' => 'Name',
-			'code' => 'Code'
+			'name' => 'Name'
 		];
 	}
 
@@ -46,19 +60,30 @@ class Site extends NamedCmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
-	public static function tableName() {
-		
-		return CoreTables::TABLE_COUNTRY;
-	}
-	
-	// Country ---------------------------
-	
 	/**
-	 * @return Country by code
+	 * @return string - db table name
 	 */
-	public static function findByCode( $code ) {
+	public static function tableName() {
 
-		return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
+		return CoreTables::TABLE_SITE;
+	}
+
+	// Site ------------------------------
+
+	/**
+	 * @return Site - by id
+	 */
+	public static function findById( $id ) {
+
+		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
+	}
+
+	/**
+	 * @return Site - by name
+	 */
+	public static function findByName( $name ) {
+
+		return self::find()->where( 'name=:name', [ ':name' => $name ] )->one();
 	}
 }
 

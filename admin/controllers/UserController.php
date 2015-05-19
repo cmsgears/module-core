@@ -11,12 +11,12 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
+use cmsgears\core\common\models\entities\SiteMember;
 
 use cmsgears\core\admin\services\CategoryService;
+use cmsgears\core\admin\services\SiteMemberService;
 use cmsgears\core\admin\services\UserService;
 use cmsgears\core\admin\services\RoleService;
-
-use cmsgears\core\common\utilities\CodeGenUtil;
 
 class UserController extends BaseController {
 
@@ -38,7 +38,7 @@ class UserController extends BaseController {
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
 	                'index'  => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'all'   => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'all' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
 	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
 	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
 	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY ]
@@ -48,7 +48,7 @@ class UserController extends BaseController {
                 'class' => VerbFilter::className(),
                 'actions' => [
 	                'index'  => ['get'],
-	                'all'   => ['get'],
+	                'all' => ['get'],
 	                'create' => ['get', 'post'],
 	                'update' => ['get', 'post'],
 	                'delete' => ['get', 'post']
@@ -66,27 +66,31 @@ class UserController extends BaseController {
 
 	public function actionAll() {
 
-		$pagination = UserService::getPagination();
-		$roles 		= RoleService::getIdNameList();
-		$roles 		= CodeGenUtil::generateIdNameArray( $roles );
+		$pagination = UserService::getPaginationByUsers();
 
 	    return $this->render('all', [
 	         'page' => $pagination['page'],
 	         'pages' => $pagination['pages'],
-	         'total' => $pagination['total'],
-	         'roles' => $roles
+	         'total' => $pagination['total']
 	    ]);
 	}
 
 	public function actionCreate() {
 
-		$model	= new User();
+		$model		= new User();
+		$siteMember	= new SiteMember();
 
 		$model->setScenario( "create" );
 
-		if( $model->load( Yii::$app->request->post( "User" ), "" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post( "User" ), "" ) && $model->validate() && $siteMember->load( Yii::$app->request->post( "SiteMember" ), "" ) ) {
 
-			if( UserService::create( $model ) ) {
+			// Create User
+			$user 		= UserService::create( $model );
+
+			// Add User to current Site
+			$siteMember	= SiteMemberService::create( $model, $siteMember );
+
+			if( $user && $siteMember ) {
 
 				// Send Account Mail
 				Yii::$app->cmgCoreMailer->sendCreateUserMail( $this->getCoreProperties(), $this->getMailProperties(), $model );
@@ -95,46 +99,48 @@ class UserController extends BaseController {
 			}
 		}
 
-		$roles 		= RoleService::getIdNameList();
-		$roles 		= CodeGenUtil::generateIdNameArray( $roles );
+		$roles 		= RoleService::getIdNameMap();
 		$genders 	= CategoryService::getOptionIdNameMapByName( CoreGlobal::CATEGORY_GENDER );
 
-    	return $this->render('create', [
-    		'model' => $model,
-    		'roles' => $roles,
-    		'genders' => $genders
-    	]);
+		return $this->render('create', [
+			'model' => $model,
+			'siteMember' => $siteMember,
+			'roles' => $roles,
+			'genders' => $genders
+		]);
 	}
 
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model	= UserService::findById( $id );
-		$avatar = new CmgFile();
-		
+		$model		= UserService::findById( $id );
+		$avatar 	= new CmgFile();
+
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
+			$siteMember	= $model->siteMember;
+
 			$model->setScenario( "update" );
 
-			if( $model->load( Yii::$app->request->post( "User" ), "" )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post( "User" ), "" )  && $model->validate() && $siteMember->load( Yii::$app->request->post( "SiteMember" ), "" ) ) {
 
 				$avatar->load( Yii::$app->request->post( "Avatar" ), "" );
 
-				if( UserService::update( $model, $avatar ) ) {
-	
+				// Update User and Site Member
+				if( UserService::update( $model, $avatar ) && SiteMemberService::update( $siteMember ) ) {
+
 					$this->refresh();
 				}
 			}
 
-			$roles 		= RoleService::getIdNameList();
-			$roles 		= CodeGenUtil::generateIdNameArray( $roles );
-
+			$roles 		= RoleService::getIdNameMap();
 			$genders 	= CategoryService::getOptionIdNameMapByName( CoreGlobal::CATEGORY_GENDER );
 			$avatar		= $model->avatar;
 			
 	    	return $this->render('update', [
 	    		'model' => $model,
+	    		'siteMember' => $siteMember,
 	    		'avatar' => $avatar,
 	    		'roles' => $roles,
 	    		'genders' => $genders,
@@ -154,22 +160,23 @@ class UserController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
+			$siteMember	= $model->siteMember;
+
 			if( $model->load( Yii::$app->request->post( "User" ), "" ) ) {
-	
+
 				if( UserService::delete( $model ) ) {
-	
-					return $this->redirect( "all" );
+
+					return $this->redirect( "users" );
 				}
 			}
 			else {
 
-				$roles 		= RoleService::getIdNameList();
-				$roles 		= CodeGenUtil::generateIdNameArray( $roles );
-
+				$roles 		= RoleService::getIdNameMap();
 				$genders 	= CategoryService::getOptionIdNameMapByName( CoreGlobal::CATEGORY_GENDER );
 
 	        	return $this->render('delete', [
 	        		'model' => $model,
+	        		'siteMember' => $siteMember,
 	        		'roles' => $roles,
 	        		'genders' => $genders,
 	        		'status' => User::$statusMapUpdate

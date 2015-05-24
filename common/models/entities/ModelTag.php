@@ -15,6 +15,11 @@ class ModelTag extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
+	public function getTag() {
+
+		return $this->hasOne( Tag::className(), [ 'id' => 'tagId' ] );
+	}
+	
 	// yii\base\Model --------------------
 
 	/**

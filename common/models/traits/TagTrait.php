@@ -2,6 +2,7 @@
 namespace cmsgears\core\common\models\traits;
 
 use cmsgears\core\common\models\entities\CoreTables;
+use cmsgears\core\common\models\entities\Tag;
 use cmsgears\core\common\models\entities\ModelTag;
 
 /**
@@ -9,15 +10,27 @@ use cmsgears\core\common\models\entities\ModelTag;
  */
 trait TagTrait {
 
+	public function getTagModels() {
+
+		$parentType	= $this->tagType;
+
+		return $this->hasMany( ModelTag::className(), [ 'parentId' => 'id' ] )
+					->where( "parentType='$parentType'" );
+	}
+
 	/**
 	 * @return array - ModelTag associated with parent
 	 */
 	public function getTags() {
 
-		$parentType	= $this->tagType;
+		$modelTagTable	= CoreTables::TABLE_MODEL_TAG;
 
-    	return $this->hasMany( ModelTag::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$parentType'" );
+    	return $this->hasMany( Tag::className(), [ 'id' => 'tagId' ] )
+					->viaTable( $modelTagTable, [ 'parentId' => 'id' ], function( $query ) {
+
+							$modelTagTable	= CoreTables::TABLE_MODEL_TAG;
+                          	$query->onCondition( [ "$modelTagTable.parentType" => $this->tagType ] );
+                      });
 	}
 
 	/**
@@ -30,7 +43,7 @@ trait TagTrait {
 
 		foreach ( $tags as $tag ) {
 
-			$tagsMap[ $tag->name ] = $tag->description;
+			$tagsMap[ $tag->tagId ] = $tag->name;
 		}
 
 		return $tagsMap;

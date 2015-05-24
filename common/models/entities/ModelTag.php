@@ -7,10 +7,9 @@ use \Yii;
 /**
  * ModelTag Entity
  *
+ * @property int $tagId
  * @property int $parentId
  * @property string $parentType
- * @property string $name
- * @property string $description
  */
 class ModelTag extends CmgEntity {
 
@@ -24,12 +23,9 @@ class ModelTag extends CmgEntity {
 	public function rules() {
 
         return [
-            [ [ 'parentId', 'parentType', 'name' ], 'required' ],
-			[ [ 'description' ], 'safe' ],
-            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ 'parentType', 'string', 'max' => 100 ],
-            [ 'name', 'alphanumhyphenspace' ],
-            [ 'name', 'string', 'min'=>1, 'max'=>100 ]
+            [ [ 'tagId', 'parentId', 'parentType' ], 'required' ],
+            [ [ 'tagId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ 'parentType', 'string', 'max' => 100 ]
         ];
     }
 
@@ -39,11 +35,9 @@ class ModelTag extends CmgEntity {
 	public function attributeLabels() {
 
 		return [
-			'categoryId' => 'Category',
+			'tagId' => 'Tag',
 			'parentId' => 'Parent',
-			'parentType' => 'Parent Type',
-			'name' => 'Name',
-			'description' => 'Description'
+			'parentType' => 'Parent Type'
 		];
 	}
 

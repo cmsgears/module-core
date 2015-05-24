@@ -74,7 +74,7 @@ class FileService extends Service {
 			$fileToUpdate->modifiedAt	= $date;
 			$fileToUpdate->modifiedBy	= Yii::$app->user->getIdentity()->id;
 
-			$fileToUpdate->copyForUpdateFrom( $file, [ 'name', 'description', 'altText', 'directory', 'createdBy', 'type', 'url', 'thumb', 'createdAt' ] );
+			$fileToUpdate->copyForUpdateFrom( $file, [ 'name', 'description', 'altText', 'directory', 'createdBy', 'type', 'url', 'thumb', 'createdAt', 'link' ] );
 
 			// Update File
 			$fileToUpdate->update();

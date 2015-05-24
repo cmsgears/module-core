@@ -11,8 +11,21 @@ CREATE TABLE `cmg_core_locale` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `code` varchar(25) COLLATE utf8_unicode_ci NOT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_locale_code` (`code`)
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cmg_core_tag`
+--
+
+DROP TABLE IF EXISTS `cmg_core_tag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmg_core_tag` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -31,7 +44,6 @@ CREATE TABLE `cmg_core_category` (
   `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `icon` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_category_name` (`name`),
   KEY `fk_category_1` (`parentId`),
   CONSTRAINT `fk_category_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_core_category` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -67,8 +79,7 @@ CREATE TABLE `cmg_core_country` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `code` varchar(10) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_country_code` (`code`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=246 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -153,7 +164,6 @@ CREATE TABLE `cmg_core_permission` (
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_permission_name` (`name`),
   KEY `fk_permission_1` (`createdBy`),
   KEY `fk_permission_2` (`modifiedBy`),
   CONSTRAINT `fk_permission_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
@@ -239,8 +249,6 @@ CREATE TABLE `cmg_core_user` (
   `accessTokenAccessedAt` datetime DEFAULT NULL,
   `authKey` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_user_email` (`email`),
-  UNIQUE KEY `unique_user_username` (`username`),
   KEY `fk_user_1` (`localeId`),
   KEY `fk_user_2` (`genderId`),
   KEY `fk_user_3` (`avatarId`),
@@ -298,7 +306,6 @@ CREATE TABLE `cmg_core_newsletter` (
   `modifiedAt` datetime DEFAULT NULL,
   `lastSentAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `unique_newsletter_name` (`name`),
   KEY `fk_newsletter_1` (`createdBy`),
   KEY `fk_newsletter_2` (`modifiedBy`),
   CONSTRAINT `fk_newsletter_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
@@ -451,10 +458,12 @@ DROP TABLE IF EXISTS `cmg_core_model_category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_model_category` (
+  `categoryId` bigint(20) NOT NULL,
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `categoryId` bigint(20) NOT NULL,
-  PRIMARY KEY (`parentId`,`parentType`,`categoryId`)
+  PRIMARY KEY (`categoryId`,`parentId`,`parentType`),
+  KEY `fk_model_category_1` (`categoryId`),
+  CONSTRAINT `fk_model_category_1` FOREIGN KEY (`categoryId`) REFERENCES `cmg_core_category` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -466,11 +475,13 @@ DROP TABLE IF EXISTS `cmg_core_model_file`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_model_file` (
+  `fileId` bigint(20) NOT NULL,
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `fileId` bigint(20) NOT NULL,
   `order` smallint(6) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`parentId`,`parentType`,`fileId`)
+  PRIMARY KEY (`fileId`,`parentId`,`parentType`),
+  KEY `fk_model_file_1` (`fileId`),
+  CONSTRAINT `fk_model_file_1` FOREIGN KEY (`fileId`) REFERENCES `cmg_core_file` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -482,11 +493,12 @@ DROP TABLE IF EXISTS `cmg_core_model_tag`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_model_tag` (
+  `tagId` bigint(20) NOT NULL,
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`parentId`,`parentType`,`name`)
+  PRIMARY KEY (`tagId`,`parentId`,`parentType`),
+  KEY `fk_model_tag_1` (`tagId`),
+  CONSTRAINT `fk_model_tag_1` FOREIGN KEY (`tagId`) REFERENCES `cmg_core_tag` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -498,11 +510,13 @@ DROP TABLE IF EXISTS `cmg_core_model_address`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_model_address` (
+  `addressId` bigint(20) NOT NULL,
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `addressId` bigint(20) NOT NULL,
   `type` smallint(6) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`parentId`,`parentType`,`addressId`)
+  PRIMARY KEY (`addressId`,`parentId`,`parentType`),
+  KEY `fk_model_address_1` (`addressId`),
+  CONSTRAINT `fk_model_address_1` FOREIGN KEY (`addressId`) REFERENCES `cmg_core_address` (`id`) ON DELETE CASCADE  
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

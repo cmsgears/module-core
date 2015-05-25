@@ -26,12 +26,12 @@ class TagService extends Service {
 
 	public static function getIdNameList() {
 
-		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_MODEL_TAG );
+		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_TAG );
 	}
 
 	public static function getIdNameMap() {
 
-		return self::findMap( 'id', 'name', CoreTables::TABLE_MODEL_TAG );
+		return self::findMap( 'id', 'name', CoreTables::TABLE_TAG );
 	}
 }
 

@@ -8,6 +8,8 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\models\entities\Category;
 
+use cmsgears\core\common\utilities\CodeGenUtil;
+
 class CategoryService extends \cmsgears\core\common\services\CategoryService {
 
 	// Static Methods ----------------------------------------------
@@ -38,7 +40,9 @@ class CategoryService extends \cmsgears\core\common\services\CategoryService {
 	// Create -----------
 
 	public static function create( $category ) {
-		
+
+		$category->slug	= CodeGenUtil::generateSlug( $category->name );
+
 		// Create Category
 		$category->save();
 		

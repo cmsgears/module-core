@@ -4,12 +4,15 @@ namespace cmsgears\core\common\models\entities;
 // Yii Imports
 use \Yii;
 
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 /**
  * ModelAddress Entity
  *
+ * @property integer $addressId
  * @property integer $parentId
  * @property string $parentType
- * @property integer $addressId
  * @property integer $type   
  */
 class ModelAddress extends CmgEntity {
@@ -18,29 +21,29 @@ class ModelAddress extends CmgEntity {
 
 	// yii\base\Model --------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
-            [ [ 'parentId', 'parentType', 'addressId' ], 'required' ],
-            [ [ 'parentId', 'addressId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'addressId', 'parentId', 'parentType' ], 'required' ],
+            [ [ 'addressId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'type' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ 'parentType', 'string', 'max' => 100 ]
         ];
     }
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'parentId' => 'Parent',
-			'parentType' => 'Parent Type',
-			'addressId' => 'Address',
-			'type' => 'Address Type'
+			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+			'addressId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ADDRESS ),
+			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ADDRESS_TYPE ),
 		];
 	}
 
@@ -50,6 +53,9 @@ class ModelAddress extends CmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_MODEL_FILE;

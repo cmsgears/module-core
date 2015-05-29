@@ -1,7 +1,13 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// Yii Imports
+use \Yii;
+use yii\behaviors\TimestampBehavior;
+
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 
 /**
@@ -23,32 +29,51 @@ class Newsletter extends NamedCmgEntity {
 
 	// Instance Methods --------------------------------------------
 
+	// yii\base\Component ----------------
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+
+        return [
+
+            'timestampBehavior' => [
+                'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+ 				'updatedAtAttribute' => 'modifiedAt'
+            ]
+        ];
+    }
+
 	// yii\base\Model --------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
             [ [ 'name' ], 'required' ],
             [ [ 'id', 'description', 'content' ], 'safe' ],
+            [ 'name', 'string', 'min'=>1, 'max'=>100 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ [ 'createdAt', 'modifiedAt', 'lastSentAt' ], 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
+            [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'createdAt', 'modifiedAt', 'lastSentAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'name' => 'Name',
-			'description' => 'Description',
-			'content' => 'Content'
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT )
 		];
 	}
 
@@ -56,9 +81,9 @@ class Newsletter extends NamedCmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
-	/**
-	 * @return string - db table name
-	 */
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_NEWSLETTER;

@@ -1,6 +1,9 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
@@ -21,35 +24,37 @@ class Province extends CmgEntity {
 	 */
 	public function getCountry() {
 
-		return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] );
+		return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] )->from( CoreTables::TABLE_COUNTRY . ' country' );
 	}
 
 	// yii\base\Model --------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
             [ [ 'countryId', 'code', 'name' ], 'required' ],
             [ 'id', 'safe' ],
+            [ 'countryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ 'code', 'string', 'min'=>1, 'max'=>10 ],
+            [ 'name', 'string', 'min'=>1, 'max'=>150 ],
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
     }
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'countryId' => 'Country',
-			'code' => 'Code',
-			'name' => 'Name'
+			'countryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
+			'code' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
 		];
 	}
 	
@@ -64,7 +69,7 @@ class Province extends CmgEntity {
 
             if( self::isExistByNameCountryId( $this->countryId, $this->name ) ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
+                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
@@ -81,7 +86,7 @@ class Province extends CmgEntity {
 			if( isset( $existingProvince ) && $this->countryId == $existingProvince->countryId && 
 				$this->id != $existingProvince->id && strcmp( $existingProvince->name, $this->name ) == 0 ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}
         }
     }
@@ -90,9 +95,9 @@ class Province extends CmgEntity {
 
 	// yii\base\Model --------------------
 
-	/**
-	 * @return string - db table name
-	 */
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_PROVINCE;
@@ -117,37 +122,11 @@ class Province extends CmgEntity {
 	}
 
 	/**
-	 * @return Province - by name
-	 */
-	public static function findByName( $name ) {
-
-		return self::find()->where( 'name=:name', [ ':name' => $name ] )->one();
-	}
-
-	/**
-	 * @return Province - check whether a province exist by the provided name
-	 */
-	public static function isExistByName( $name ) {
-
-		$province = self::find()->where( 'name=:name', [ ':name' => $name ] )->one();
-
-		return isset( $province );
-	}
-
-	/**
-	 * @return Province - by code
-	 */
-	public static function findByCode( $code ) {
-
-		return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
-	}
-
-	/**
 	 * @return Province - by name and country id
 	 */
 	public static function findByNameCountryId( $name, $countryId ) {
 
-		return self::find()->where( 'countryId=:id AND name=:name', [ ':id' => $countryId, ':name' => $key ] )->one();
+		return self::find()->where( 'countryId=:id AND name=:name', [ ':id' => $countryId, ':name' => $name ] )->one();
 	}
 
 	/**
@@ -158,6 +137,14 @@ class Province extends CmgEntity {
 		$province = self::findByNameCountryId( $name, $countryId );
 
 		return isset( $province );
+	}
+
+	/**
+	 * @return Province - by code and country id
+	 */
+	public static function findByCodeCountryId( $code, $countryId ) {
+
+		return self::find()->where( 'countryId=:id AND code=:code', [ ':id' => $countryId, ':code' => $code ] )->one();
 	}
 }
 

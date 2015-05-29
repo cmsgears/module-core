@@ -1,6 +1,9 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
@@ -21,9 +24,9 @@ class ModelMeta extends CmgEntity {
 
 	// yii\base\Model --------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
@@ -37,19 +40,19 @@ class ModelMeta extends CmgEntity {
         ];
     }
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'parentId' => 'Parent',
-			'parentType' => 'Parent Type',
-			'name' => 'Name',
-			'value' => 'Value',
-			'type' => 'Type',
-			'fieldType' => 'Field Type',
-			'fieldMata' => 'Field Meta Json'
+			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
+			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'fieldType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FFIELD_TYPE ),
+			'fieldMata' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FFIELD_META )
 		];
 	}
 
@@ -90,6 +93,9 @@ class ModelMeta extends CmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_MODEL_META;

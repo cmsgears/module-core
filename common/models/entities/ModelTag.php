@@ -4,6 +4,9 @@ namespace cmsgears\core\common\models\entities;
 // Yii Imports
 use \Yii;
 
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 /**
  * ModelTag Entity
  *
@@ -17,14 +20,14 @@ class ModelTag extends CmgEntity {
 
 	public function getTag() {
 
-		return $this->hasOne( Tag::className(), [ 'id' => 'tagId' ] );
+		return $this->hasOne( Tag::className(), [ 'id' => 'tagId' ] )->from( CoreTables::TABLE_TAG . ' tag' );
 	}
 	
 	// yii\base\Model --------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
@@ -34,15 +37,15 @@ class ModelTag extends CmgEntity {
         ];
     }
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'tagId' => 'Tag',
-			'parentId' => 'Parent',
-			'parentType' => 'Parent Type'
+			'tagId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TAG ),
+			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE )
 		];
 	}
 
@@ -52,9 +55,9 @@ class ModelTag extends CmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
-	/**
-	 * @return string - db table name
-	 */
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_MODEL_TAG;

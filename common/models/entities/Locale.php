@@ -1,6 +1,12 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 /**
  * Locale Entity
  *
@@ -14,15 +20,15 @@ class Locale extends NamedCmgEntity {
 
 	// yii\base\Model --------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
             [ [ 'code', 'name' ], 'required' ],
             [ 'id', 'safe' ],
-            [ 'code', 'string', 'min'=>1, 'max'=>25 ],
+            [ 'code', 'string', 'min'=>1, 'max'=>50 ],
             [ 'name', 'string', 'min'=>1, 'max'=>100 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
@@ -30,14 +36,14 @@ class Locale extends NamedCmgEntity {
         ];
     }
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'code' => 'Code',
-			'name' => 'Name'
+			'code' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
 		];
 	}
 
@@ -45,15 +51,17 @@ class Locale extends NamedCmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
-	/**
-	 * @return string - db table name
-	 */
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_LOCALE;
 	}
 
 	// Locale ----------------------------
+
+	// Read ----
 
 	/**
 	 * @return Locale - by id

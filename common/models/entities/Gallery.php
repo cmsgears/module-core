@@ -3,8 +3,7 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\db\Query;
-use yii\web\IdentityInterface;
+use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -31,11 +30,28 @@ class Gallery extends NamedCmgEntity {
 
 	// Instance Methods --------------------------------------------
 
+	// yii\base\Component ----------------
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+
+        return [
+
+            'timestampBehavior' => [
+                'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+ 				'updatedAtAttribute' => 'modifiedAt'
+            ]
+        ];
+    }
+
 	// yii\base\Model ---------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
@@ -43,30 +59,32 @@ class Gallery extends NamedCmgEntity {
             [ [ 'id', 'description' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'name' => 'Name',
-			'description' => 'Description'
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION )
 		];
 	}
-	
+
 	// Gallery ----------------------------
 
 	// Static Methods ----------------------------------------------
 
 	// yii\db\ActiveRecord ----------------
 
-	/**
-	 * @return string - db table name
-	 */
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_GALLERY;

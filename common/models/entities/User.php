@@ -33,9 +33,9 @@ use cmsgears\core\common\models\traits\AddressTrait;
  * @property boolean $newsletter
  * @property string verifyToken
  * @property string resetToken
- * @property string registeredOn
- * @property datetime lastLogin
- * @property datetime lastActivity
+ * @property string registeredAt
+ * @property datetime lastLoginAt
+ * @property datetime lastActivityAt
  * @property string accessToken
  * @property datetime accessTokenDate
  * @property string authKey
@@ -90,10 +90,10 @@ class User extends CmgEntity implements IdentityInterface {
 	 * @return Site Member - assigned to User.
 	 */
 	public function getSiteMember() {
-		
+
 		$site 		= CoreTables::TABLE_SITE;
 
-    	return $this->hasOne( SiteMember::className(), [ 'userId' => 'id' ] );
+    	return $this->hasOne( SiteMember::className(), [ 'userId' => 'id' ] )->from( CoreTables::TABLE_SITE_MEMBER . ' sitemember' );
 	}
 
 	/**
@@ -101,14 +101,14 @@ class User extends CmgEntity implements IdentityInterface {
 	 */
 	public function getRole() {
 
-		$role		= CoreTables::TABLE_ROLE;
-		$site 		= CoreTables::TABLE_SITE;
-		$siteMember	= CoreTables::TABLE_SITE_MEMBER;
+		$roleTable			= CoreTables::TABLE_ROLE;
+		$siteTable 			= CoreTables::TABLE_SITE;
+		$siteMemberTable	= CoreTables::TABLE_SITE_MEMBER;
 
 		return Role::find()
-					->leftJoin( $siteMember, "`$siteMember`.`roleId` = `$role`.`id`" )
-					->leftJoin( $site, "`$site`.`id` = `$siteMember`.`siteId`" )
-					->where( "`$siteMember`.`userId`=:id AND `$site`.`name`=:name", [ ':id' => $this->id, ':name' => Yii::$app->cmgCore->getSiteName() ] );
+					->leftJoin( $siteMember, "`$siteMemberTable`.`roleId` = `$roleTable`.`id`" )
+					->leftJoin( $site, "`$siteTable`.`id` = `$siteMemberTable`.`siteId`" )
+					->where( "`$siteMemberTable`.`userId`=:id AND `$siteTable`.`name`=:name", [ ':id' => $this->id, ':name' => Yii::$app->cmgCore->getSiteName() ] );
 	}
 
 	/**
@@ -116,15 +116,15 @@ class User extends CmgEntity implements IdentityInterface {
 	 */
 	public function getAvatar() {
 
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'avatarId' ] );
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'avatarId' ] )->from( CoreTables::TABLE_FILE . ' uavatar' );
 	}
 
 	/**
 	 * @return Locale - assigned to User.
 	 */
 	public function getLocale() {
-		
-		return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] );
+
+		return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] )->from( CoreTables::TABLE_LOCALE . ' ulocale' );
 	}
 
 	/**
@@ -132,7 +132,7 @@ class User extends CmgEntity implements IdentityInterface {
 	 */
 	public function getGender() {
 
-		return $this->hasOne( Option::className(), [ 'id' => 'genderId' ] );
+		return $this->hasOne( Option::className(), [ 'id' => 'genderId' ] )->from( CoreTables::TABLE_OPTION . ' gender' );
 	}
 	
 	/**
@@ -283,9 +283,9 @@ class User extends CmgEntity implements IdentityInterface {
 
 	// yii\base\Model ---------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
@@ -299,33 +299,33 @@ class User extends CmgEntity implements IdentityInterface {
             [ 'username', 'validateUsernameCreate', 'on' => [ 'create' ] ],
             [ 'username', 'validateUsernameUpdate', 'on' => [ 'update' ] ],
             [ [ 'firstName', 'lastName' ], 'alphanumspace' ],
-            [ 'dob', 'date', 'format'=>'yyyy-MM-dd' ],
-            [ [ 'registeredAt', 'lastLogin', 'lastActivity', 'accessTokenCreatedAt', 'accessTokenAccessedAt' ], 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
+            [ 'dob', 'date', 'format' => Yii::$app->formatter->dateFormat ],
+            [ [ 'registeredAt', 'lastLoginAt', 'lastActivityAt', 'accessTokenCreatedAt', 'accessTokenAccessedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'email' => 'Email',
-			'localeId' => 'Locale',
-			'genderId' => 'Gender',
-			'avatarId' => 'Avatar',
-			'status' => 'Status',
-			'username' => 'Username',
-			'firstName' => 'First Name',
-			'lastName' => 'Last Name',
-			'dob' => 'Date of Birth',
-			'phone' => 'Phone',
-			'newsletter' => 'Newsletter'
+			'localeId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
+			'genderId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_GENDER ),
+			'avatarId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
+			'status' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
+			'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+			'username' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USERNAME ),
+			'firstName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
+			'lastName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
+			'dob' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DOB ),
+			'phone' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
+			'newsletter' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NEWSLETTER )
 		];
 	}
-	
+
 	// User -------------------------------
-	
+
 	/**
 	 * Validates user email to ensure that only one user exist with the given mail.
 	 */
@@ -335,7 +335,7 @@ class User extends CmgEntity implements IdentityInterface {
 
             if( self::isExistByEmail( $this->email ) ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
             }
         }
     }
@@ -349,9 +349,9 @@ class User extends CmgEntity implements IdentityInterface {
 
 			$existingUser = self::findByEmail( $this->email );
 
-			if( $this->id != $existingUser->id && strcmp( $existingUser->email, $this->email) == 0 ) {
+			if( $this->id != $existingUser->id && strcmp( $existingUser->email, $this->email ) == 0 ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
 			}
         }
     }
@@ -365,7 +365,7 @@ class User extends CmgEntity implements IdentityInterface {
 
             if( self::isExistByUsername( $this->username ) ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
+                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
             }
         }
     }
@@ -381,7 +381,7 @@ class User extends CmgEntity implements IdentityInterface {
 
 			if( $this->id != $existingUser->id && strcmp( $existingUser->username, $this->username ) == 0 ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
 			}
         }
     }
@@ -488,13 +488,13 @@ class User extends CmgEntity implements IdentityInterface {
 			}
 			else {
 
-        		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+        		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 			}
 
 	        return $user;
 		}
 
-        throw new NotSupportedException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_APIS_DISABLED ) );
+        throw new NotSupportedException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_APIS_DISABLED ) );
     }
 
 	// User -------------------------------

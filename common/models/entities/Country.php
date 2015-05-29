@@ -1,6 +1,12 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 /**
  * Country Entity
  *
@@ -17,34 +23,35 @@ class Country extends NamedCmgEntity {
 	 */
 	public function getProvinces() {
 
-    	return $this->hasMany( Province::className(), [ 'countryId' => 'id' ] );
+    	return $this->hasMany( Province::className(), [ 'countryId' => 'id' ] )->from( CoreTables::TABLE_PROVINCE . ' province' );
 	}
 
 	// yii\base\Model --------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
             [ [ 'name', 'code' ], 'required' ],
             [ 'id', 'safe' ],
             [ 'code', 'string', 'min'=>1, 'max'=>10 ],
+            [ 'name', 'string', 'min'=>1, 'max'=>150 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
     }
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'code' => 'Code',
-			'name' => 'Name'
+			'code' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
 		];
 	}
 
@@ -52,9 +59,9 @@ class Country extends NamedCmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
-	/**
-	 * @return string - db table name
-	 */
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_COUNTRY;

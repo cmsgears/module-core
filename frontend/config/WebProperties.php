@@ -56,7 +56,7 @@ class WebProperties {
 	 */
 	public function init() {
 
-		$this->properties	= SiteService::getMetaMapByNameType( Yii::$app->cmgCore->getSiteName(), CoreGlobal::CONFIG_WEB );
+		$this->properties	= SiteService::getMetaMapByNameType( Yii::$app->cmgCore->getSiteName(), CoreGlobal::CONFIG_FRONTEND );
 	}
 
 	/**

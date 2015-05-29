@@ -1,14 +1,22 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// Yii Imports
+use \Yii;
+use yii\behaviors\TimestampBehavior;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 /**
  * Reminder Entity
  *
  * @property int $id
  * @property int $userId
- * @property string $type
+ * @property int $typeId
  * @property string $message
  * @property datetime $createdAt
+ * @property datetime $modifiedAt 
  * @property datetime $time
  * @property boolean $flag
  */
@@ -21,7 +29,15 @@ class Reminder extends CmgEntity {
 	 */
 	public function getUser() {
 
-		return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
+		return $this->hasOne( User::className(), [ 'id' => 'userId' ] )->from( CoreTables::TABLE_USER . ' user' );
+	}
+
+	/**
+	 * @return Option
+	 */
+	public function getType() {
+
+		return $this->hasOne( Option::className(), [ 'id' => 'typeId' ] )->from( CoreTables::TABLE_OPTION . ' type' );
 	}
 
 	/**
@@ -32,6 +48,23 @@ class Reminder extends CmgEntity {
 		return $this->flag ? 'yes' : 'no';
 	}
 
+	// yii\base\Component ----------------
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+
+        return [
+
+            'timestampBehavior' => [
+                'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+ 				'updatedAtAttribute' => 'modifiedAt'
+            ]
+        ];
+    }
+
 	// yii\base\Model --------------------
 
 	/**
@@ -40,10 +73,10 @@ class Reminder extends CmgEntity {
 	public function rules() {
 
         return [
-            [ [ 'userId', 'message', 'type', 'time' ], 'required' ],
+            [ [ 'userId', 'typeId', 'message', 'time' ], 'required' ],
 			[ [ 'id', 'flag' ], 'safe' ],
-			[ 'type', 'string', 'min'=>1, 'max'=>100 ],
-			[ [ 'createdAt', 'time' ], 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
+            [ [ 'userId', 'typeId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }
 
@@ -53,11 +86,11 @@ class Reminder extends CmgEntity {
 	public function attributeLabels() {
 
 		return [
-			'userId' => 'User',
-			'message' => 'Message',
-			'type' => 'Type',
-			'flag' => 'Read',
-			'time' => 'Time'
+			'userId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USER ),
+			'typeId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'message' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
+			'time' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TIME ),
+			'flag' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MARK )
 		];
 	}
 
@@ -65,9 +98,9 @@ class Reminder extends CmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
-	/**
-	 * @return string - db table name
-	 */
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_REMINDER;

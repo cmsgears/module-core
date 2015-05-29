@@ -1,6 +1,9 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
@@ -29,7 +32,7 @@ class Address extends CmgEntity {
 	const TYPE_SHIPPING		= 15;
 	const TYPE_BILLING		= 20;
 
-	public static $statusMap = [
+	public static $typeMap = [
 		self::TYPE_RESIDENTIAL => "Residential",
 		self::TYPE_OFFICE => "Office",
 		self::TYPE_MAILING => "Mailing",
@@ -44,7 +47,7 @@ class Address extends CmgEntity {
 	 */
 	public function getCountry() {
 
-		return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] );
+		return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] )->from( CoreTables::TABLE_COUNTRY . ' country' );
 	}
 
 	/**
@@ -52,14 +55,14 @@ class Address extends CmgEntity {
 	 */
 	public function getProvince() {
 
-		return $this->hasOne( Province::className(), [ 'id' => 'provinceId' ] );
+		return $this->hasOne( Province::className(), [ 'id' => 'provinceId' ] )->from( CoreTables::TABLE_PROVINCE . ' province' );
 	}
 
 	// yii\base\Model --------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
 		return  [
@@ -67,29 +70,29 @@ class Address extends CmgEntity {
 			[ [ 'id', 'firstname', 'lastname', 'phone', 'email', 'fax' ], 'safe' ],
 			[ [ 'line1', 'line2', 'line3' ], 'alphanumpun' ],
 			[ 'city', 'alphanumspace' ],
-			[ 'zip','alphanumhyphen' ],
-			[ [ 'countryId', 'provinceId' ], 'number', 'integerOnly'=>true, 'min'=>1, 'tooSmall' => Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_SELECT ) ]
+			[ 'zip','alphanumhyphenspace' ],
+			[ [ 'countryId', 'provinceId' ], 'number', 'integerOnly'=>true, 'min'=>1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ]
 		];
 	}
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'countryId' => 'Country',
-			'provinceId' => 'Province',
-			'line1' => 'Line 1',
-			'line2' => 'Line 2',
-			'line3' => 'Line 3',
-			'city' => 'City',
-			'zip' => 'Postal Code',
-			'firstName' => 'First Name',
-			'lastName' => 'Last Name',
-			'phone' => 'Phone',
-			'email' => 'Email',
-			'fax' => 'Fax'
+			'countryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
+			'provinceId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PROVINCE ),
+			'line1' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LINE1 ),
+			'line2' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LINE2 ),
+			'line3' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LINE3 ),
+			'city' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CITY ),
+			'zip' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ZIP ),
+			'firstName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
+			'lastName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
+			'phone' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
+			'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+			'fax' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FAX )
 		];
 	}
 
@@ -97,15 +100,17 @@ class Address extends CmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
-	/**
-	 * @return string - db table name
-	 */
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_ADDRESS;
 	}
 
 	// Address --------------------------
+	
+	// Read ----
 
 	/**
 	 * @return Address - by id

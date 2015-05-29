@@ -4,12 +4,15 @@ namespace cmsgears\core\common\models\entities;
 // Yii Imports
 use \Yii;
 
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 /**
  * ModelCategory Entity
  *
+ * @property int $categoryId
  * @property int $parentId
  * @property string $parentType
- * @property int $categoryId   
  */
 class ModelCategory extends CmgEntity {
 
@@ -17,27 +20,27 @@ class ModelCategory extends CmgEntity {
 
 	// yii\base\Model --------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
-            [ [ 'parentId', 'parentType', 'categoryId' ], 'required' ],
-            [ [ 'parentId', 'categoryId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'categoryId', 'parentId', 'parentType' ], 'required' ],
+            [ [ 'categoryId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'parentType', 'string', 'max' => 100 ]
         ];
     }
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'parentId' => 'Parent',
-			'parentType' => 'Parent Type',
-			'categoryId' => 'Category'
+			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+			'categoryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_CATEGORY )
 		];
 	}
 
@@ -47,9 +50,9 @@ class ModelCategory extends CmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
-	/**
-	 * @return string - db table name
-	 */
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_MODEL_CATEGORY;

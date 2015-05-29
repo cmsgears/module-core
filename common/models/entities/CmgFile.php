@@ -3,9 +3,12 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
+use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\config\CoreProperties;
+
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 
 /**
@@ -24,6 +27,7 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property string $url
  * @property string $thumb
  * @property string $altText
+ * @property string $link
  */
 class CmgFile extends CmgEntity {
 
@@ -84,33 +88,51 @@ class CmgFile extends CmgEntity {
 		return "";
 	}
 
+	// yii\base\Component ----------------
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+
+        return [
+
+            'timestampBehavior' => [
+                'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+ 				'updatedAtAttribute' => 'modifiedAt'
+            ]
+        ];
+    }
+
 	// yii\base\Model --------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
             [ [ 'createdBy', 'name', 'extension', 'directory', 'url' ], 'required' ],
             [ [ 'id', 'type', 'description', 'altText', 'thumb', 'changed', 'link' ], 'safe' ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
+            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'createdBy' => 'Author',
-			'name' => 'Name',
-			'description' => 'Description',
-			'extension' => 'Extension',
-			'directory' => 'Directory',
-			'url' => 'File Url'
+			'createdBy' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'extension' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EXTENSION ),
+			'directory' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DIRECTORY ),
+			'url' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_URL ),
+			'link' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LINK )
 		];
 	}
 
@@ -118,9 +140,9 @@ class CmgFile extends CmgEntity {
 
 	// yii\db\ActiveRecord ----------------
 
-	/**
-	 * @return string - db table name
-	 */
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_FILE;
@@ -152,15 +174,6 @@ class CmgFile extends CmgEntity {
 	public static function findById( $id ) {
 
 		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	/**
-	 * @param int $authorId
-	 * @return array - of CmgFile
-	 */
-	public static function findByAuthorId( $authorId ) {
-
-		return self::find()->where( 'createdBy=:id', [ ':id' => $authorId ] )->all();
 	}
 }
 

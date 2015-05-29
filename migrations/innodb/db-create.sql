@@ -1,5 +1,3 @@
-SET FOREIGN_KEY_CHECKS=0;
-
 --
 -- Table structure for table `cmg_core_locale`
 --
@@ -9,7 +7,7 @@ DROP TABLE IF EXISTS `cmg_core_locale`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_locale` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `code` varchar(25) COLLATE utf8_unicode_ci NOT NULL,
+  `code` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -24,8 +22,8 @@ DROP TABLE IF EXISTS `cmg_core_tag`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_tag` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `slug` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -63,10 +61,10 @@ CREATE TABLE `cmg_core_option` (
   `categoryId` bigint(20) NOT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `icon` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_option_1` (`categoryId`),
-  CONSTRAINT `fk_option_1` FOREIGN KEY (`categoryId`) REFERENCES `cmg_core_category` (`id`) ON DELETE CASCADE
+  KEY `fk_option_1` (`categoryId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -80,7 +78,7 @@ DROP TABLE IF EXISTS `cmg_core_country`;
 CREATE TABLE `cmg_core_country` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `code` varchar(10) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
+  `name` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=246 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -106,10 +104,9 @@ CREATE TABLE `cmg_core_province` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `countryId` bigint(20) DEFAULT NULL,
   `code` varchar(10) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
+  `name` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_province_1` (`countryId`),
-  CONSTRAINT `fk_province_1` FOREIGN KEY (`countryId`) REFERENCES `cmg_core_country` (`id`) ON DELETE CASCADE
+  KEY `fk_province_1` (`countryId`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3990 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -143,9 +140,7 @@ CREATE TABLE `cmg_core_role` (
   `modifiedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_role_1` (`createdBy`),
-  KEY `fk_role_2` (`modifiedBy`),
-  CONSTRAINT `fk_role_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
-  CONSTRAINT `fk_role_2` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`)
+  KEY `fk_role_2` (`modifiedBy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -167,9 +162,7 @@ CREATE TABLE `cmg_core_permission` (
   `modifiedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_permission_1` (`createdBy`),
-  KEY `fk_permission_2` (`modifiedBy`),
-  CONSTRAINT `fk_permission_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
-  CONSTRAINT `fk_permission_2` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`)
+  KEY `fk_permission_2` (`modifiedBy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -185,9 +178,7 @@ CREATE TABLE `cmg_core_role_permission` (
   `permissionId` bigint(20) NOT NULL,
   PRIMARY KEY (`roleId`,`permissionId`),
   KEY `fk_role_permission_1` (`roleId`),
-  KEY `fk_role_permission_2` (`permissionId`),
-  CONSTRAINT `fk_role_permission_1` FOREIGN KEY (`roleId`) REFERENCES `cmg_core_role` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_role_permission_2` FOREIGN KEY (`permissionId`) REFERENCES `cmg_core_permission` (`id`) ON DELETE CASCADE
+  KEY `fk_role_permission_2` (`permissionId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -214,9 +205,7 @@ CREATE TABLE `cmg_core_address` (
   `fax` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_address_1` (`countryId`),
-  KEY `fk_address_2` (`provinceId`),
-  CONSTRAINT `fk_address_1` FOREIGN KEY (`countryId`) REFERENCES `cmg_core_country` (`id`),
-  CONSTRAINT `fk_address_2` FOREIGN KEY (`provinceId`) REFERENCES `cmg_core_province` (`id`)
+  KEY `fk_address_2` (`provinceId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -244,8 +233,8 @@ CREATE TABLE `cmg_core_user` (
   `verifyToken` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `resetToken` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `registeredAt` datetime DEFAULT NULL,  
-  `lastLogin` datetime DEFAULT NULL,
-  `lastActivity` datetime DEFAULT NULL,
+  `lastLoginAt` datetime DEFAULT NULL,
+  `lastActivityAt` datetime DEFAULT NULL,
   `accessToken` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `accessTokenCreatedAt` datetime DEFAULT NULL,
   `accessTokenAccessedAt` datetime DEFAULT NULL,
@@ -253,10 +242,7 @@ CREATE TABLE `cmg_core_user` (
   PRIMARY KEY (`id`),
   KEY `fk_user_1` (`localeId`),
   KEY `fk_user_2` (`genderId`),
-  KEY `fk_user_3` (`avatarId`),
-  CONSTRAINT `fk_user_1` FOREIGN KEY (`localeId`) REFERENCES `cmg_core_locale` (`id`),
-  CONSTRAINT `fk_user_2` FOREIGN KEY (`genderId`) REFERENCES `cmg_core_option` (`id`),
-  CONSTRAINT `fk_user_3` FOREIGN KEY (`avatarId`) REFERENCES `cmg_core_file` (`id`)
+  KEY `fk_user_3` (`avatarId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -284,9 +270,7 @@ CREATE TABLE `cmg_core_file` (
   `link` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_file_1` (`createdBy`),
-  KEY `fk_file_2` (`modifiedBy`),
-  CONSTRAINT `fk_file_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
-  CONSTRAINT `fk_file_2` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`)
+  KEY `fk_file_2` (`modifiedBy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -301,7 +285,7 @@ CREATE TABLE `cmg_core_newsletter` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `createdBy` bigint(20) NOT NULL,
   `modifiedBy` bigint(20) DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `content` LONGTEXT COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` datetime DEFAULT NULL,
@@ -309,9 +293,7 @@ CREATE TABLE `cmg_core_newsletter` (
   `lastSentAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_newsletter_1` (`createdBy`),
-  KEY `fk_newsletter_2` (`modifiedBy`),
-  CONSTRAINT `fk_newsletter_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
-  CONSTRAINT `fk_newsletter_2` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`)
+  KEY `fk_newsletter_2` (`modifiedBy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -326,15 +308,15 @@ CREATE TABLE `cmg_core_notification` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `notifierId` bigint(20) NOT NULL,
   `userId` bigint(20) NOT NULL,
-  `type` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `typeId` bigint(20) NOT NULL,
   `message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` datetime NOT NULL,
+  `modifiedAt` datetime NOT NULL,
   `flag` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `fk_notification_1` (`notifierId`),
   KEY `fk_notification_2` (`userId`),
-  CONSTRAINT `fk_notification_1` FOREIGN KEY (`notifierId`) REFERENCES `cmg_core_user` (`id`),
-  CONSTRAINT `fk_notification_2` FOREIGN KEY (`userId`) REFERENCES `cmg_core_user` (`id`) ON DELETE CASCADE
+  KEY `fk_notification_3` (`typeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -348,14 +330,15 @@ DROP TABLE IF EXISTS `cmg_core_reminder`;
 CREATE TABLE `cmg_core_reminder` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `userId` bigint(20) NOT NULL,
-  `type` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `typeId` bigint(20) NOT NULL,
   `message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` datetime NOT NULL,
+  `modifiedAt` datetime NOT NULL,
   `time` datetime DEFAULT NULL,
   `flag` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `fk_reminder_1` (`userId`),
-  CONSTRAINT `fk_reminder_1` FOREIGN KEY (`userId`) REFERENCES `cmg_core_user` (`id`) ON DELETE CASCADE
+  KEY `fk_reminder_2` (`typeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -368,11 +351,15 @@ DROP TABLE IF EXISTS `cmg_core_gallery`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_gallery` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `createdBy` bigint(20) NOT NULL,
+  `modifiedBy` bigint(20) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `fk_gallery_1` (`createdBy`),
+  KEY `fk_gallery_2` (`modifiedBy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -402,17 +389,15 @@ CREATE TABLE `cmg_core_site_member` (
   `userId` bigint(20) NOT NULL,
   `roleId` bigint(20) NOT NULL,
   `createdAt` datetime NOT NULL,
+  `modifiedAt` datetime NOT NULL,
   PRIMARY KEY (`siteId`, `userId`),
   KEY `fk_site_member_1` (`siteId`),
   KEY `fk_site_member_2` (`userId`),
-  KEY `fk_site_member_3` (`roleId`),
-  CONSTRAINT `fk_site_member_1` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_site_member_2` FOREIGN KEY (`userId`) REFERENCES `cmg_core_user` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_site_member_3` FOREIGN KEY (`roleId`) REFERENCES `cmg_core_role` (`id`)
+  KEY `fk_site_member_3` (`roleId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
--- ======================== Traits =================================
+-- ======================== Model Traits =================================
 
 --
 -- Table structure for table `cmg_core_model_message`
@@ -428,8 +413,7 @@ CREATE TABLE `cmg_core_model_message` (
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `value` LONGTEXT COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`localeId`,`parentId`,`parentType`,`name`),
-  KEY `fk_model_message_1` (`localeId`),
-  CONSTRAINT `fk_model_message_1` FOREIGN KEY (`localeId`) REFERENCES `cmg_core_locale` (`id`) ON DELETE CASCADE
+  KEY `fk_model_message_1` (`localeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -464,8 +448,7 @@ CREATE TABLE `cmg_core_model_category` (
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`categoryId`,`parentId`,`parentType`),
-  KEY `fk_model_category_1` (`categoryId`),
-  CONSTRAINT `fk_model_category_1` FOREIGN KEY (`categoryId`) REFERENCES `cmg_core_category` (`id`) ON DELETE CASCADE
+  KEY `fk_model_category_1` (`categoryId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -482,8 +465,7 @@ CREATE TABLE `cmg_core_model_file` (
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `order` smallint(6) NOT NULL DEFAULT 0,
   PRIMARY KEY (`fileId`,`parentId`,`parentType`),
-  KEY `fk_model_file_1` (`fileId`),
-  CONSTRAINT `fk_model_file_1` FOREIGN KEY (`fileId`) REFERENCES `cmg_core_file` (`id`) ON DELETE CASCADE
+  KEY `fk_model_file_1` (`fileId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -499,8 +481,7 @@ CREATE TABLE `cmg_core_model_tag` (
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`tagId`,`parentId`,`parentType`),
-  KEY `fk_model_tag_1` (`tagId`),
-  CONSTRAINT `fk_model_tag_1` FOREIGN KEY (`tagId`) REFERENCES `cmg_core_tag` (`id`) ON DELETE CASCADE
+  KEY `fk_model_tag_1` (`tagId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -517,9 +498,147 @@ CREATE TABLE `cmg_core_model_address` (
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) NOT NULL DEFAULT 0,
   PRIMARY KEY (`addressId`,`parentId`,`parentType`),
-  KEY `fk_model_address_1` (`addressId`),
-  CONSTRAINT `fk_model_address_1` FOREIGN KEY (`addressId`) REFERENCES `cmg_core_address` (`id`) ON DELETE CASCADE  
+  KEY `fk_model_address_1` (`addressId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+
+SET FOREIGN_KEY_CHECKS=0;
+
+--
+-- Constraints for table `cmg_core_option`
+--
+ALTER TABLE `cmg_core_option`
+	ADD CONSTRAINT `fk_option_1` FOREIGN KEY (`categoryId`) REFERENCES `cmg_core_category` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cmg_core_province`
+--
+ALTER TABLE `cmg_core_province`
+	ADD CONSTRAINT `fk_province_1` FOREIGN KEY (`countryId`) REFERENCES `cmg_core_country` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cmg_core_role`
+--
+ALTER TABLE `cmg_core_role`
+	ADD CONSTRAINT `fk_role_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
+  	ADD CONSTRAINT `fk_role_2` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
+
+--
+-- Constraints for table `cmg_core_permission`
+--
+ALTER TABLE `cmg_core_permission`
+  	ADD CONSTRAINT `fk_permission_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
+  	ADD CONSTRAINT `fk_permission_2` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
+
+--
+-- Constraints for table `cmg_core_role_permission`
+--
+
+ALTER TABLE `cmg_core_role_permission`
+  	ADD CONSTRAINT `fk_role_permission_1` FOREIGN KEY (`roleId`) REFERENCES `cmg_core_role` (`id`) ON DELETE CASCADE,
+  	ADD CONSTRAINT `fk_role_permission_2` FOREIGN KEY (`permissionId`) REFERENCES `cmg_core_permission` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cmg_core_address`
+--
+
+ALTER TABLE `cmg_core_address`
+  	ADD CONSTRAINT `fk_address_1` FOREIGN KEY (`countryId`) REFERENCES `cmg_core_country` (`id`),
+  	ADD CONSTRAINT `fk_address_2` FOREIGN KEY (`provinceId`) REFERENCES `cmg_core_province` (`id`);
+
+--
+-- Constraints for table `cmg_core_user`
+--
+
+ALTER TABLE `cmg_core_user`
+  	ADD CONSTRAINT `fk_user_1` FOREIGN KEY (`localeId`) REFERENCES `cmg_core_locale` (`id`),
+  	ADD CONSTRAINT `fk_user_2` FOREIGN KEY (`genderId`) REFERENCES `cmg_core_option` (`id`),
+  	ADD CONSTRAINT `fk_user_3` FOREIGN KEY (`avatarId`) REFERENCES `cmg_core_file` (`id`);
+
+--
+-- Constraints for table `cmg_core_file`
+--
+
+ALTER TABLE `cmg_core_file`
+  	ADD CONSTRAINT `fk_file_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
+  	ADD CONSTRAINT `fk_file_2` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
+
+--
+-- Constraints for table `cmg_core_newsletter`
+--
+
+ALTER TABLE `cmg_core_newsletter`
+  	ADD CONSTRAINT `fk_newsletter_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
+  	ADD CONSTRAINT `fk_newsletter_2` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
+
+--
+-- Constraints for table `cmg_core_notification`
+--
+
+ALTER TABLE `cmg_core_notification`
+  	ADD CONSTRAINT `fk_notification_1` FOREIGN KEY (`notifierId`) REFERENCES `cmg_core_user` (`id`),
+  	ADD CONSTRAINT `fk_notification_2` FOREIGN KEY (`userId`) REFERENCES `cmg_core_user` (`id`) ON DELETE CASCADE,
+  	ADD CONSTRAINT `fk_notification_3` FOREIGN KEY (`typeId`) REFERENCES `cmg_core_option` (`id`);
+
+--
+-- Constraints for table `cmg_core_reminder`
+--
+
+ALTER TABLE `cmg_core_reminder`
+  	ADD CONSTRAINT `fk_reminder_1` FOREIGN KEY (`userId`) REFERENCES `cmg_core_user` (`id`) ON DELETE CASCADE,
+  	ADD CONSTRAINT `fk_reminder_2` FOREIGN KEY (`typeId`) REFERENCES `cmg_core_option` (`id`);
+
+--
+-- Constraints for table `cmg_core_gallery`
+--
+
+ALTER TABLE `cmg_core_gallery`
+  	ADD CONSTRAINT `fk_gallery_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
+  	ADD CONSTRAINT `fk_gallery_2` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
+
+--
+-- Constraints for table `cmg_core_site_member`
+--
+
+ALTER TABLE `cmg_core_site_member`
+  	ADD CONSTRAINT `fk_site_member_1` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`) ON DELETE CASCADE,
+  	ADD CONSTRAINT `fk_site_member_2` FOREIGN KEY (`userId`) REFERENCES `cmg_core_user` (`id`) ON DELETE CASCADE,
+  	ADD CONSTRAINT `fk_site_member_3` FOREIGN KEY (`roleId`) REFERENCES `cmg_core_role` (`id`);
+
+--
+-- Constraints for table `cmg_core_model_message`
+--
+
+ALTER TABLE `cmg_core_model_message`
+  	ADD CONSTRAINT `fk_model_message_1` FOREIGN KEY (`localeId`) REFERENCES `cmg_core_locale` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cmg_core_model_category`
+--
+
+ALTER TABLE `cmg_core_model_category`
+  	ADD CONSTRAINT `fk_model_category_1` FOREIGN KEY (`categoryId`) REFERENCES `cmg_core_category` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cmg_core_model_file`
+--
+
+ALTER TABLE `cmg_core_model_file`
+  	ADD CONSTRAINT `fk_model_file_1` FOREIGN KEY (`fileId`) REFERENCES `cmg_core_file` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cmg_core_model_tag`
+--
+
+ALTER TABLE `cmg_core_model_tag`
+  	ADD CONSTRAINT `fk_model_tag_1` FOREIGN KEY (`tagId`) REFERENCES `cmg_core_tag` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cmg_core_model_address`
+--
+
+ALTER TABLE `cmg_core_model_address`
+  	ADD CONSTRAINT `fk_model_address_1` FOREIGN KEY (`addressId`) REFERENCES `cmg_core_address` (`id`) ON DELETE CASCADE;
 
 SET FOREIGN_KEY_CHECKS=1;

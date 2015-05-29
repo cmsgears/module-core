@@ -1,6 +1,7 @@
 <?php
 namespace cmsgears\core\common\models\traits;
 
+use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\User;
 
 /**
@@ -13,7 +14,7 @@ trait CreateModifyTrait {
 	 */
 	public function getCreator() {
 
-		return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] );
+		return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] )->from( CoreTables::TABLE_USER . ' user' );
 	}
 
 	/**
@@ -21,7 +22,7 @@ trait CreateModifyTrait {
 	 */
 	public function getModifier() {
 
-		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] );
+		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] )->from( CoreTables::TABLE_USER . ' user' );
 	}
 }
 

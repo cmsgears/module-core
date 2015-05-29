@@ -1,6 +1,13 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// Yii Imports
+use \Yii;
+use yii\behaviors\TimestampBehavior;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 
 /**
@@ -11,8 +18,6 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property integer $modifiedBy
  * @property string $name
  * @property string $description
- * @property string $homeUrl
- * @property short $type
  * @property string $icon 
  * @property datetime $createdAt
  * @property datetime $modifiedAt
@@ -56,11 +61,28 @@ class Permission extends NamedCmgEntity {
 		return $rolesList;
 	}
 
+	// yii\base\Component ----------------
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+
+        return [
+
+            'timestampBehavior' => [
+                'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+ 				'updatedAtAttribute' => 'modifiedAt'
+            ]
+        ];
+    }
+
 	// yii\base\Model --------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
@@ -71,18 +93,18 @@ class Permission extends NamedCmgEntity {
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
+            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'name' => 'Permission',
-			'description' => 'Description'
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION )
 		];
 	}
 
@@ -90,9 +112,9 @@ class Permission extends NamedCmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
-	/**
-	 * @return string - db table name
-	 */
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 		
 		return CoreTables::TABLE_PERMISSION;

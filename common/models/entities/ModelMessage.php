@@ -1,6 +1,9 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
@@ -22,18 +25,19 @@ class ModelMessage extends CmgEntity {
 	 */
 	public function getLocale() {
 
-		return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] );
+		return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] )->from( CoreTables::TABLE_LOCALE . ' mlocale' );
 	}
 
 	// yii\base\Model --------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
             [ [ 'localeId', 'parentId', 'parentType', 'name', 'value' ], 'required' ],
+            [ [ 'localeId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'parentType' ], 'string', 'max' => 100 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'string', 'min'=>1, 'max'=>100 ],
@@ -42,17 +46,17 @@ class ModelMessage extends CmgEntity {
         ];
     }
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'localeId' => 'Locale',
-			'parentId' => 'Parent',
-			'parentType' => 'Parent Type',
-			'name' => 'Name',
-			'value' => 'Value'
+			'localeId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
+			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE )
 		];
 	}
 
@@ -67,7 +71,7 @@ class ModelMessage extends CmgEntity {
 
             if( self::isExistByNameLocaleId( $this->parentId, $this->parentType, $this->name, $this->localeId ) ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
@@ -85,7 +89,7 @@ class ModelMessage extends CmgEntity {
 				strcmp( $existingMessage->name, $this->name ) == 0 && $existingMessage->localeId == $this->localeId 
 				&& $existingMessage->parentId == $this->parentId && $existingMessage->parentType == $this->parentType ) {
 	
-				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}
         }
     }
@@ -94,9 +98,9 @@ class ModelMessage extends CmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
-	/**
-	 * @return string - db table name
-	 */
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 		
 		return CoreTables::TABLE_LOCALE_MESSAGE;

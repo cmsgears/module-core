@@ -3,6 +3,7 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
+use yii\behaviors\SluggableBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -14,6 +15,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property int $parentId
  * @property string $name
  * @property string $description
+ * @property string $slug
  * @property string $type
  * @property string $icon
  */
@@ -26,7 +28,7 @@ class Category extends CmgEntity {
 	 */
 	public function getParent() {
 
-		return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] );
+		return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] )->from( CoreTables::TABLE_CATEGORY . ' category' );
 	}
 
 	/**
@@ -34,7 +36,7 @@ class Category extends CmgEntity {
 	 */
 	public function getCategories() {
 
-    	return $this->hasMany( Category::className(), [ 'parentId' => 'id' ] );
+    	return $this->hasMany( Category::className(), [ 'parentId' => 'id' ] )->from( CoreTables::TABLE_CATEGORY . ' category' );
 	}
 
 	/**
@@ -42,14 +44,31 @@ class Category extends CmgEntity {
 	 */
 	public function getOptions() {
 
-    	return $this->hasMany( Option::className(), [ 'categoryId' => 'id' ] );
+    	return $this->hasMany( Option::className(), [ 'categoryId' => 'id' ] )->from( CoreTables::TABLE_OPTION . ' option' );
 	}
+
+	// yii\base\Component ----------------
+	
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+
+        return [
+
+            'sluggableBehavior' => [
+                'class' => SluggableBehavior::className(),
+                'attribute' => 'name',
+                'slugAttribute' => 'slug'
+            ]
+        ];
+    }
 
 	// yii\base\Model --------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
@@ -58,22 +77,23 @@ class Category extends CmgEntity {
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ 'parentId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ 'parentId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'type', 'icon' ], 'string', 'min'=>1, 'max'=>100 ],
         ];
     }
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'name' => 'Name',
-			'parentId' => 'Parent Category',
-			'description' => 'Description',
-			'type' => 'Type',
-			'icon' => 'Icon'
+			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON )
 		];
 	}
 
@@ -88,7 +108,7 @@ class Category extends CmgEntity {
 
             if( self::isExistByTypeName( $this->type, $this->name ) ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
@@ -105,7 +125,7 @@ class Category extends CmgEntity {
 			if( isset( $existingCategory ) && $existingCategory->id != $this->id && 
 				strcmp( $existingCategory->name, $this->name ) == 0 && $existingCategory->type == $this->type ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}
         }
     }
@@ -114,15 +134,17 @@ class Category extends CmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
-	/**
-	 * @return string - db table name
-	 */
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_CATEGORY;
 	}
 
 	// Category --------------------------
+
+	// Read ----
 
 	/**
 	 * @return Category - by id

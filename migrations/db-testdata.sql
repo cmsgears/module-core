@@ -32,8 +32,8 @@ INSERT INTO `cmg_core_model_meta` VALUES
 	(1,'site','contact email','democontact@cmsgears.com','email','text',null),
 	(1,'site','info name','Info','email','text',null),
 	(1,'site','info email','demoinfo@cmsgears.com','email','text',null),
-	(1,'site','theme','basic','site','text',null),
-	(1,'site','theme version','1','site','text',null),
+	(1,'site','theme','basic','frontend','text',null),
+	(1,'site','theme version','1','frontend','text',null),
 	(1,'site','admin url','http://demo.cmsgears.com/templates/basic/admin/web/','admin','text',null),
 	(1,'site','theme','basic','admin','text',null),
 	(1,'site','theme version','1','admin','text',null);
@@ -50,7 +50,9 @@ INSERT INTO `cmg_core_locale` VALUES (1,'en_US','English US');
 
 INSERT INTO `cmg_core_category` VALUES 
 	(1,NULL,'role type',NULL,NULL,'combo',NULL),
-	(3,NULL,'gender',NULL,NULL,'combo',NULL);
+	(3,NULL,'gender',NULL,NULL,'combo',NULL),
+	(4,NULL,'notification',NULL,NULL,'combo',NULL),
+	(5,NULL,'reminder',NULL,NULL,'combo',NULL);
 
 --
 -- Dumping data for table `cmg_core_option`
@@ -68,7 +70,7 @@ INSERT INTO `cmg_core_role` VALUES
 	(1,1,1,'Super Admin','The Super Admin have all the permisisons to perform operations on the admin site and website.','/dashboard',0,'2014-10-11 14:22:54','2014-10-11 14:22:54',NULL),
 	(2,1,1,'Admin','The Admin have all the permisisons to perform operations on the admin site and website except RBAC module.','/dashboard',0,'2014-10-11 14:22:54','2014-10-11 14:22:54',NULL),
 	(3,1,1,'User','The role User is limited to website users.','/home',0,'2014-10-11 14:22:54','2014-10-11 14:22:54',NULL),
-	(4,1,1,'Identity Manager','The role Identity Manager is limited to manage users from admin.','/dashboard',0,'2014-10-11 14:22:54','2014-10-11 14:22:54',NULL);
+	(4,1,1,'User Manager','The role User Manager is limited to manage site users from admin.','/dashboard',0,'2014-10-11 14:22:54','2014-10-11 14:22:54',NULL);
 
 --
 -- Dumping data for table `cmg_core_permission`
@@ -78,14 +80,15 @@ INSERT INTO `cmg_core_permission` VALUES
 	(1,1,1,'admin','The permission admin is to distinguish between admin and site user. It is a must have permission for admins.','2014-10-11 14:22:54','2014-10-11 14:22:54',NULL),
 	(2,1,1,'user','The permission user is to distinguish between admin and site user. It is a must have permission for users.','2014-10-11 14:22:54','2014-10-11 14:22:54',NULL),
 	(3,1,1,'core','The permission core is to manage settings, drop downs, galleries and newsletters from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54',NULL),
-	(4,1,1,'identity','The permission identity is to manage user, roles and permissions modules from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54',NULL);
+	(4,1,1,'identity','The permission identity is to manage users from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54',NULL),
+	(5,1,1,'identity-rbac','The permission identity-rbac is to manage roles and permissions from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54',NULL);
 
 --
 -- Dumping data for table `cmg_core_role_permission`
 --
 
 INSERT INTO `cmg_core_role_permission` VALUES 
-	(1,1),(1,2),(1,3),(1,4),
+	(1,1),(1,2),(1,3),(1,4),(1,5),
 	(2,1),(2,2),(2,3),
 	(3,2),
 	(4,1),(4,2),(4,4);
@@ -104,8 +107,8 @@ INSERT INTO `cmg_core_user` VALUES
 --
 
 INSERT INTO `cmg_core_site_member` VALUES
-	(1,1,1,'2014-10-11 14:22:54'),
-	(1,2,2,'2014-10-11 14:22:54'),
-	(1,3,3,'2014-10-11 14:22:54');
+	(1,1,1,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(1,2,2,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(1,3,3,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 SET FOREIGN_KEY_CHECKS=1;

@@ -78,17 +78,17 @@ class LoginForm extends Model {
 
             if( !$this->user ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
             }
 
 			if( !$this->hasErrors() && !$this->user->isConfirmed() ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_USER_VERIFICATION ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_VERIFICATION ) );
 			}
 
 			if( !$this->hasErrors() && $this->user->isBlocked() ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_BLOCKED ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_BLOCKED ) );
 			}
         }
     }
@@ -101,7 +101,7 @@ class LoginForm extends Model {
 
             if( $user && !$user->validatePassword( $this->password ) ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_LOGIN_FAILED ) );
+                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_LOGIN_FAILED ) );
             }
         }
     }

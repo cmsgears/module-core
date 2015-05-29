@@ -37,11 +37,11 @@ class RoleController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'all'   => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY ]
+	                'index'  => [ 'permission' => CoreGlobal::PERM_IDENTITY_RBAC ],
+	                'all'   => [ 'permission' => CoreGlobal::PERM_IDENTITY_RBAC ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY_RBAC ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY_RBAC ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY_RBAC ]
                 ]
             ],
             'verbs' => [

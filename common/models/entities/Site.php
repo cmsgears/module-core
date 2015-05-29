@@ -1,6 +1,9 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
@@ -10,7 +13,6 @@ use cmsgears\core\common\models\traits\MetaTrait;
  * Site Entity
  *
  * @property integer $id
- * @property string $code
  * @property string $name
  */
 class Site extends NamedCmgEntity {
@@ -32,9 +34,9 @@ class Site extends NamedCmgEntity {
 
 	// yii\base\Model --------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
@@ -46,13 +48,13 @@ class Site extends NamedCmgEntity {
         ];
     }
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'name' => 'Name'
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
 		];
 	}
 
@@ -60,9 +62,9 @@ class Site extends NamedCmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
-	/**
-	 * @return string - db table name
-	 */
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_SITE;

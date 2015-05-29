@@ -4,12 +4,15 @@ namespace cmsgears\core\common\models\entities;
 // Yii Imports
 use \Yii;
 
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 /**
  * ModelFile Entity
  *
+ * @property int $fileId
  * @property int $parentId
  * @property string $parentType
- * @property int $fileId
  * @property short $order 
  */
 class ModelFile extends CmgEntity {
@@ -21,34 +24,34 @@ class ModelFile extends CmgEntity {
 	 */
 	public function getFile() {
 
-    	return $this->hasOne( CmgFile::className(), [ 'id' => 'fileId' ] );
+    	return $this->hasOne( CmgFile::className(), [ 'id' => 'fileId' ] )->from( CoreTables::TABLE_FILE . ' file' );
 	}
 
 	// yii\base\Model --------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
-            [ [ 'parentId', 'parentType', 'fileId' ], 'required' ],
+            [ [ 'fileId', 'parentId', 'parentType' ], 'required' ],
             [ 'order', 'safe' ],
-            [ [ 'parentId', 'fileId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'fileId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'parentType', 'string', 'max' => 100 ]
         ];
     }
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'parentId' => 'Parent',
-			'parentType' => 'Parent Type',
-			'fileId' => 'File',
-			'order' => 'File Order'
+			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+			'fileId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FILE ),
+			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
 		];
 	}
 
@@ -58,9 +61,9 @@ class ModelFile extends CmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
-	/**
-	 * @return string - db table name
-	 */
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_MODEL_FILE;

@@ -11,6 +11,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property int $categoryId
  * @property string $name
  * @property string $value
+ * @property string $message
  * @property string $icon
  */
 class Option extends CmgEntity {
@@ -22,27 +23,20 @@ class Option extends CmgEntity {
 	 */
 	public function getCategory() {
 
-		return $this->hasOne( Category::className(), [ 'id' => 'categoryId' ] );
-	}
-
-	/**
-	 * @return Category - The parent category with alias set to 'cat'.
-	 */
-	public function getCategoryWithAlias() {
-
-		return $this->hasOne( Category::className(), [ 'id' => 'categoryId' ] )->from( CoreTables::TABLE_CATEGORY . ' cat' );
+		return $this->hasOne( Category::className(), [ 'id' => 'categoryId' ] )->from( CoreTables::TABLE_CATEGORY . ' category' );
 	}
 
 	// yii\base\Model --------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
             [ [ 'name', 'value' ], 'required' ],
-            [ [ 'id', 'categoryId' ], 'safe' ],
+            [ [ 'id', 'categoryId', 'message' ], 'safe' ],
+            [ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ 'name', 'alphanumhyphenspace' ],
             [ [ 'name', 'icon' ], 'string', 'min'=>1, 'max'=>100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
@@ -50,16 +44,17 @@ class Option extends CmgEntity {
         ];
     }
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'categoryId' => 'Category',
-			'name' => 'Name',
-			'value' => 'Value',
-			'icon' => 'Icon'
+			'categoryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CATEGORY ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
+			'message' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
+			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON )
 		];
 	}
 
@@ -74,7 +69,7 @@ class Option extends CmgEntity {
 
             if( self::isExistByNameCategoryId( $this->name, $this->categoryId ) ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
@@ -91,7 +86,7 @@ class Option extends CmgEntity {
 			if( isset( $existingOption ) && $existingOption->id != $this->id && 
 				strcmp( $existingOption->name, $this->name ) == 0 && $existingOption->categoryId == $this->categoryId ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}
         }
     }
@@ -100,24 +95,26 @@ class Option extends CmgEntity {
 
 	// yii\db\ActiveRecord ----------------
 
-	/**
-	 * @return string - db table name
-	 */
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 		
 		return CoreTables::TABLE_OPTION;
 	}
 
 	// Option -----------------------------
+	
+	// Read ----
 
 	/**
-	 * @return ActiveRecord - with alias name set to 'opt'  
+	 * @return ActiveRecord - with alias name set to 'option'  
 	 */
 	public static function findWithAlias() {
 
-		return self::find()->from( CoreTables::TABLE_OPTION . ' opt' );
+		return self::find()->from( CoreTables::TABLE_OPTION . ' option' );
 	}
-	
+
 	/**
 	 * @return Option - by id
 	 */
@@ -147,15 +144,7 @@ class Option extends CmgEntity {
 	 */
 	public static function findByCategoryName( $categoryName ) {
 
-		return self::find()->joinWith( 'categoryWithAlias' )->where( 'cat.name=:cname', [ ':cname' => $categoryName ] )->all();
-	}
-
-	/**
-	 * @return Option - by name
-	 */
-	public static function findByName( $name ) {
-
-		return self::find()->where( 'name=:name', [ ':name' => $name ] )->one();
+		return self::find()->joinWith( 'category' )->where( 'cat.name=:cname', [ ':cname' => $categoryName ] )->all();
 	}
 
 	/**
@@ -189,7 +178,7 @@ class Option extends CmgEntity {
 	 */
 	public static function findByNameCategoryName( $name, $categoryName ) {
 
-		return self::findWithAlias()->joinWith( 'categoryWithAlias' )->where( 'opt.name=:name AND cat.name=:cname' )
+		return self::findWithAlias()->joinWith( 'category' )->where( 'opt.name=:name AND cat.name=:cname' )
 							->addParams( [ ':name' => $name, ':cname' => $categoryName ] )
 							->one();
 	}
@@ -199,9 +188,19 @@ class Option extends CmgEntity {
 	 */
 	public static function findByValueCategoryName( $value, $categoryName ) {
 
-		return self::findWithAlias()->joinWith( 'categoryWithAlias' )->where( 'opt.name=:name AND cat.name=:cname' )
+		return self::findWithAlias()->joinWith( 'category' )->where( 'opt.name=:name AND cat.name=:cname' )
 							->addParams( [ ':value' => $value, ':cname' => $categoryName ] )
 							->one();
+	}
+	
+	// Delete ----
+
+	/**
+	 * Delete Option - by category id
+	 */
+	public static function deleteByCategoryId( $categoryId ) {
+
+		return self::deleteAll( 'categoryId=:id', [ ':id' => $categoryId ] );
 	}
 }
 

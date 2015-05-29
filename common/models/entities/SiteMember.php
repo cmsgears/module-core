@@ -1,13 +1,21 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// Yii Imports
+use \Yii;
+use yii\behaviors\TimestampBehavior;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 /**
  * SiteMember Entity
  *
  * @property int $siteId
- * @property int $memberId
+ * @property int $userId
  * @property int $roleId
  * @property datetime $createdAt
+ * @property datetime $modifiedAt
  */
 class SiteMember extends CmgEntity {
 
@@ -18,7 +26,7 @@ class SiteMember extends CmgEntity {
 	 */
 	public function getSite() {
 
-    	return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+    	return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] )->from( CoreTables::TABLE_SITE . ' site' );
 	}
 
 	/**
@@ -26,7 +34,7 @@ class SiteMember extends CmgEntity {
 	 */
 	public function getUser() {
 
-    	return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
+    	return $this->hasOne( User::className(), [ 'id' => 'userId' ] )->from( CoreTables::TABLE_USER . ' user' );
 	}
 
 	/**
@@ -34,31 +42,49 @@ class SiteMember extends CmgEntity {
 	 */
 	public function getRole() {
 
-    	return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
+    	return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] )->from( CoreTables::TABLE_ROLE . ' role' );
 	}
+
+	// yii\base\Component ----------------
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+
+        return [
+
+            'timestampBehavior' => [
+                'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+ 				'updatedAtAttribute' => 'modifiedAt'
+            ]
+        ];
+    }
 
 	// yii\base\Model --------------------
 
-	/**
-	 * Validation rules
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
             [ [ 'siteId', 'userId', 'roleId' ], 'required' ],
-            [ [ 'siteId', 'userId', 'roleId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+            [ [ 'siteId', 'userId', 'roleId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }
 
-	/**
-	 * Model attributes
-	 */
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'siteId' => 'Site',
-			'userId' => 'Member',
-			'roleId' => 'Role',
+			'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'userId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USER ),
+			'roleId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ROLE )
 		];
 	}
 
@@ -66,9 +92,9 @@ class SiteMember extends CmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
-	/**
-	 * @return string - db table name
-	 */
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_SITE_MEMBER;

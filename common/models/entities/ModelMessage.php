@@ -38,7 +38,7 @@ class ModelMessage extends CmgEntity {
         return [
             [ [ 'localeId', 'parentId', 'parentType', 'name', 'value' ], 'required' ],
             [ [ 'localeId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'parentType' ], 'string', 'max' => 100 ],
+            [ 'parentType', 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'string', 'min'=>1, 'max'=>100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
@@ -132,6 +132,24 @@ class ModelMessage extends CmgEntity {
 	public static function isExistByNameLocaleId( $parentId, $parentType, $name, $localeId ) {
 
 		return isset( self::findByNameLocaleId( $parentId, $parentType, $name, $localeId ) );
+	}
+
+	// Delete ----
+
+	/**
+	 * Delete all the entries associated with the parent.
+	 */
+	public static function deleteByParentIdType( $parentId, $parentType ) {
+
+		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] );
+	}
+
+	/**
+	 * Delete all entries related to a file
+	 */
+	public static function deleteByLocaleId( $localeId ) {
+
+		self::deleteAll( 'localeId=:id', [ ':id' => $localeId ] );
 	}
 }
 

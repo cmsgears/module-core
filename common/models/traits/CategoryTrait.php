@@ -14,19 +14,20 @@ trait CategoryTrait {
 	 * @return array - Category associated with parent
 	 */
 	public function getCategories() {
-		
-		$parentType		= $this->categoryType;
-		$modelCategory	= CoreTables::TABLE_MODEL_CATEGORY;
 
     	return $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
-					->viaTable( $modelCategory, [ 'parentId' => 'id' ] )
-					->andWhere( "`$modelCategory`.`parentType`='$parentType'" );
+					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
+
+						$modelCategory	= CoreTables::TABLE_MODEL_CATEGORY;
+	
+                      	$query->onCondition( [ "$modelCategory.parentType" => $this->categoryType ] );
+					});
 	}
 
 	/**
 	 * @return array - ModelCategory associated with parent
 	 */
-	public function getCategoryMap() {
+	public function getModelCategories() {
 
 		$parentType	= $this->categoryType;
 

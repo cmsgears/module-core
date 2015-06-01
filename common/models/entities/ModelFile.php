@@ -38,7 +38,7 @@ class ModelFile extends CmgEntity {
             [ [ 'fileId', 'parentId', 'parentType' ], 'required' ],
             [ 'order', 'safe' ],
             [ [ 'fileId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ 'parentType', 'string', 'max' => 100 ]
+            [ 'parentType', 'string', 'min' => 1, 'max' => 100 ]
         ];
     }
 

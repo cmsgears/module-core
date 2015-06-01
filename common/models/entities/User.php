@@ -204,7 +204,7 @@ class User extends CmgEntity implements IdentityInterface {
 	 */
 	public function getNewsletterStr() {
 
-		return $this->newsletter ? "yes" : "no";
+		return Yii::$app->formatter->asBoolean( $this->newsletter );
 	}
 
 	/**
@@ -266,16 +266,25 @@ class User extends CmgEntity implements IdentityInterface {
 
 	// yii\web\IdentityInterface ----------
 
+    /**
+     * @inheritdoc
+     */
     public function getId() {
 
         return $this->id;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getAuthKey() {
 
         return $this->authKey;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function validateAuthKey( $authKey ) {
 
 		return $this->authKey === $authKey;

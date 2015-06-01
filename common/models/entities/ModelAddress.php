@@ -30,7 +30,7 @@ class ModelAddress extends CmgEntity {
             [ [ 'addressId', 'parentId', 'parentType' ], 'required' ],
             [ [ 'addressId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'type' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ 'parentType', 'string', 'max' => 100 ]
+            [ 'parentType', 'string', 'min' => 1, 'max' => 100 ]
         ];
     }
 
@@ -43,7 +43,7 @@ class ModelAddress extends CmgEntity {
 			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
 			'addressId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ADDRESS ),
-			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ADDRESS_TYPE ),
+			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ADDRESS_TYPE )
 		];
 	}
 

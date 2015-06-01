@@ -26,11 +26,13 @@ trait AddressTrait {
 	 */
 	public function getAddressByType( $type ) {
 
-		$parentType	= $this->addressType;
-
     	return $this->hasMany( Address::className(), [ 'id' => 'addressId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ] )
-					->where( "parentType='$parentType' AND type=:type", [ ':type' => $type ] );
+					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query ) {
+
+						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
+
+                      	$query->onCondition( [ "$modelAddress.parentType" => $this->addressType ] );
+					});
 	}
 }
 

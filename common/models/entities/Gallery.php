@@ -10,6 +10,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\traits\FileTrait;
 use cmsgears\core\common\models\traits\MetaTrait;
+use cmsgears\core\common\models\traits\CreateModifyTrait;
 
 /**
  * Gallery Entity - The primary class.
@@ -28,8 +29,18 @@ class Gallery extends NamedCmgEntity {
 
 	public $metaType	= CoreGlobal::TYPE_GALLERY;
 
+	use CreateModifyTrait;
+
 	// Instance Methods --------------------------------------------
 
+	/**
+	 * @return boolean - whether given user is owner
+	 */
+	public function checkOwner( $user ) {
+		
+		return $this->createdBy	= $user->id;		
+	}
+	
 	// yii\base\Component ----------------
 
     /**

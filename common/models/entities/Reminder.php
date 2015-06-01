@@ -45,7 +45,15 @@ class Reminder extends CmgEntity {
 	 */
 	public function getFlagStr() {
 
-		return $this->flag ? 'yes' : 'no';
+		return Yii::$app->formatter->asBoolean( $this->flag );
+	}
+
+	/**
+	 * @return boolean - whether given user is owner
+	 */
+	public function checkOwner( $user ) {
+		
+		return $this->userId	= $user->id;		
 	}
 
 	// yii\base\Component ----------------

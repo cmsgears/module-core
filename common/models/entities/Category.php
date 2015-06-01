@@ -59,7 +59,8 @@ class Category extends CmgEntity {
             'sluggableBehavior' => [
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
-                'slugAttribute' => 'slug'
+                'slugAttribute' => 'slug',
+                'ensureUnique' => true
             ]
         ];
     }

@@ -33,7 +33,8 @@ class ModelMeta extends CmgEntity {
             [ [ 'parentId', 'parentType', 'name', 'value' ], 'required' ],
             [ [ 'type', 'fieldType', 'fieldMeta' ], 'safe' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'parentType', 'type' ], 'string', 'max' => 100 ],
+            [ 'parentType', 'string', 'min' => 1, 'max' => 100 ],
+            [ 'type', 'string', 'max' => 100 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validatenameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validatenameUpdate', 'on' => [ 'update' ] ]
@@ -152,6 +153,16 @@ class ModelMeta extends CmgEntity {
 		$config = self::findByTypeName( $parentId, $parentType, $type, $name );
 
 		return isset( $config );
+	}
+
+	// Delete ----
+
+	/**
+	 * Delete all the entries associated with the parent.
+	 */
+	public static function deleteByParentIdType( $parentId, $parentType ) {
+
+		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] );
 	}
 }
 

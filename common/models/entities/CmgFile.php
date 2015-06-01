@@ -55,6 +55,14 @@ class CmgFile extends CmgEntity {
 	}
 
 	/**
+	 * @return boolean - whether given user is owner
+	 */
+	public function checkOwner( $user ) {
+		
+		return $this->createdBy	= $user->id;		
+	}
+
+	/**
 	 * The method returns the file url for the file.
 	 */
 	public function getFileUrl() {

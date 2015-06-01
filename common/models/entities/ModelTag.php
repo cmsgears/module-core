@@ -33,7 +33,7 @@ class ModelTag extends CmgEntity {
         return [
             [ [ 'tagId', 'parentId', 'parentType' ], 'required' ],
             [ [ 'tagId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ 'parentType', 'string', 'max' => 100 ]
+            [ 'parentType', 'string', 'min' => 1, 'max' => 100 ]
         ];
     }
 
@@ -49,7 +49,7 @@ class ModelTag extends CmgEntity {
 		];
 	}
 
-	// Category --------------------------
+	// ModelTag --------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -63,7 +63,9 @@ class ModelTag extends CmgEntity {
 		return CoreTables::TABLE_MODEL_TAG;
 	}
 
-	// Category --------------------------
+	// ModelTag --------------------------
+
+	// Read ----
 	
 	/**
 	 * @return array - categories by given parent id and type.
@@ -72,6 +74,8 @@ class ModelTag extends CmgEntity {
 
 		return self::find()->where( 'parentId=:id AND parentType=:type', [ ':id' => $id, ':type' => $type ] )->all();
 	}
+
+	// Delete ----
 
 	/**
 	 * Delete categories by given parent id and type.

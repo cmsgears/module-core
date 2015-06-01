@@ -69,7 +69,6 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_ORDER => "Order",
 		CoreGlobal::FIELD_TIME => "Time",
 		CoreGlobal::FIELD_ICON => "Icon",
-		CoreGlobal::FIELD_CONTENT => "Content",
 		CoreGlobal::FIELD_ROLE => "Role",
 		CoreGlobal::FIELD_PERMISSION => "Permission",
 		CoreGlobal::FIELD_GENDER => "Gender",
@@ -85,6 +84,8 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_BANNER => "Banner",
 		CoreGlobal::FIELD_USER => "User",
 		CoreGlobal::FIELD_AUTHOR => "Author",
+		CoreGlobal::FIELD_MEMBER => "Member",
+		CoreGlobal::FIELD_OWNER => "Owner",
 		// Role Fields
 		CoreGlobal::FIELD_HOME_URL => "Home Url",
 		// Address Fields
@@ -114,8 +115,15 @@ class MessageSource extends Component {
 		// Site/Site Member Fields
 		CoreGlobal::FIELD_SITE => "Site",
 		// Meta Fields
+		CoreGlobal::FIELD_META => "Meta",
 		CoreGlobal::FIELD_FFIELD_TYPE => "Field Type",
-		CoreGlobal::FIELD_FFIELD_META => "Field Meta"
+		CoreGlobal::FIELD_FFIELD_META => "Field Meta",
+		// Content Fields
+		CmsGlobal::FIELD_SUMMARY => "Summary",
+		CmsGlobal::FIELD_CONTENT => "Content",
+		// Content Fields
+		CmsGlobal::FIELD_SENDER => "Sender",
+		CmsGlobal::FIELD_RECIPIENT => "Recipient"
 	];
 
 	/**

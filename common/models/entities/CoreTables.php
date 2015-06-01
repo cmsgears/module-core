@@ -30,9 +30,10 @@ class CoreTables {
 	// Marketing
 	const TABLE_NEWSLETTER			= "cmg_core_newsletter";
 
-	// Messages
+	// User Messages
 	const TABLE_NOTIFICATION		= "cmg_core_notification";
 	const TABLE_REMINDER			= "cmg_core_reminder";
+	const TABLE_ACTIVITY			= "cmg_core_activity";
 
 	// Image Gallery
 	const TABLE_GALLERY				= "cmg_core_gallery";

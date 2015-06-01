@@ -23,14 +23,13 @@ trait TagTrait {
 	 */
 	public function getTags() {
 
-		$modelTagTable	= CoreTables::TABLE_MODEL_TAG;
-
     	return $this->hasMany( Tag::className(), [ 'id' => 'tagId' ] )
-					->viaTable( $modelTagTable, [ 'parentId' => 'id' ], function( $query ) {
+					->viaTable( CoreTables::TABLE_MODEL_TAG, [ 'parentId' => 'id' ], function( $query ) {
 
-							$modelTagTable	= CoreTables::TABLE_MODEL_TAG;
-                          	$query->onCondition( [ "$modelTagTable.parentType" => $this->tagType ] );
-                      });
+						$modelTagTable	= CoreTables::TABLE_MODEL_TAG;
+
+                      	$query->onCondition( [ "$modelTagTable.parentType" => $this->tagType ] );
+					});
 	}
 
 	/**

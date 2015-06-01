@@ -112,7 +112,6 @@ class CoreGlobal {
 	const FIELD_ORDER				= "orderField";
 	const FIELD_TIME				= "timeField";
 	const FIELD_ICON				= "iconField";
-	const FIELD_CONTENT				= "contentField";
 	const FIELD_ROLE				= "roleField";
 	const FIELD_PERMISSION			= "permissionField";
 	const FIELD_GENDER				= "genderField";
@@ -128,6 +127,8 @@ class CoreGlobal {
 	const FIELD_BANNER				= "bannerField";
 	const FIELD_USER				= "userField";
 	const FIELD_AUTHOR				= "authorField";
+	const FIELD_MEMBER				= "memberField";
+	const FIELD_OWNER				= "ownerField";
 
 	// Role Fields
 	const FIELD_HOME_URL			= "homeUrlField";
@@ -164,8 +165,17 @@ class CoreGlobal {
 	const FIELD_SITE				= "siteField";
 
 	// Meta Fields
+	const FIELD_META				= "metaField";
 	const FIELD_FFIELD_TYPE			= "ffieldTypeField";
 	const FIELD_FFIELD_META			= "ffieldMetaField";
+
+	// Content Fields
+	const FIELD_SUMMARY			= "summaryField";
+	const FIELD_CONTENT			= "contentField";
+	
+	// Message
+	const FIELD_SENDER			= "senderField";
+	const FIELD_RECIPIENT		= "recipientField";
 }
 
 ?>

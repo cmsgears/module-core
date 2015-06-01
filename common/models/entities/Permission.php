@@ -116,7 +116,7 @@ class Permission extends NamedCmgEntity {
      * @inheritdoc
      */
 	public static function tableName() {
-		
+
 		return CoreTables::TABLE_PERMISSION;
 	}
 

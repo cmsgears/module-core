@@ -28,7 +28,7 @@ class ModelCategory extends CmgEntity {
         return [
             [ [ 'categoryId', 'parentId', 'parentType' ], 'required' ],
             [ [ 'categoryId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ 'parentType', 'string', 'max' => 100 ]
+            [ 'parentType', 'string', 'min' => 1, 'max' => 100 ]
         ];
     }
 

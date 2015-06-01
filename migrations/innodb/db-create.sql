@@ -343,6 +343,23 @@ CREATE TABLE `cmg_core_reminder` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `cmg_core_activity`
+--
+
+DROP TABLE IF EXISTS `cmg_core_activity`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmg_core_activity` (
+  `userId` bigint(20) NOT NULL,
+  `typeId` bigint(20) NOT NULL,
+  `message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  KEY `fk_activity_1` (`userId`),
+  KEY `fk_activity_2` (`typeId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `cmg_core_gallery`
 --
 
@@ -580,6 +597,14 @@ ALTER TABLE `cmg_core_notification`
   	ADD CONSTRAINT `fk_notification_1` FOREIGN KEY (`notifierId`) REFERENCES `cmg_core_user` (`id`),
   	ADD CONSTRAINT `fk_notification_2` FOREIGN KEY (`userId`) REFERENCES `cmg_core_user` (`id`) ON DELETE CASCADE,
   	ADD CONSTRAINT `fk_notification_3` FOREIGN KEY (`typeId`) REFERENCES `cmg_core_option` (`id`);
+
+--
+-- Constraints for table `cmg_core_activity`
+--
+
+ALTER TABLE `cmg_core_activity`
+  	ADD CONSTRAINT `fk_activity_1` FOREIGN KEY (`userId`) REFERENCES `cmg_core_user` (`id`) ON DELETE CASCADE,
+  	ADD CONSTRAINT `fk_activity_2` FOREIGN KEY (`typeId`) REFERENCES `cmg_core_option` (`id`);
 
 --
 -- Constraints for table `cmg_core_reminder`

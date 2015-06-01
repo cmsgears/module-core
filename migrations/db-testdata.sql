@@ -19,7 +19,7 @@ INSERT INTO `cmg_core_model_meta` VALUES
 	(1,'site','charset','UTF-8','core','text',null),
 	(1,'site','site title','CMG Demo','core','text',null),
 	(1,'site','site name','CMSGears','core','text',null),
-	(1,'site','site url','http://demo.cmsgears.com/templates/basic/frontend/web/','core','text',null),
+	(1,'site','site url','http://demo.cmsgears.com/templates/basic/','core','text',null),
 	(1,'site','smtp','false','email','text',null),
 	(1,'site','smtp username','','email','text',null),
 	(1,'site','smtp password','','email','',null),
@@ -34,7 +34,7 @@ INSERT INTO `cmg_core_model_meta` VALUES
 	(1,'site','info email','demoinfo@cmsgears.com','email','text',null),
 	(1,'site','theme','basic','frontend','text',null),
 	(1,'site','theme version','1','frontend','text',null),
-	(1,'site','admin url','http://demo.cmsgears.com/templates/basic/admin/web/','admin','text',null),
+	(1,'site','admin url','http://demo.cmsgears.com/templates/basic/admin/','admin','text',null),
 	(1,'site','theme','basic','admin','text',null),
 	(1,'site','theme version','1','admin','text',null);
 
@@ -52,7 +52,8 @@ INSERT INTO `cmg_core_category` VALUES
 	(1,NULL,'role type',NULL,NULL,'combo',NULL),
 	(3,NULL,'gender',NULL,NULL,'combo',NULL),
 	(4,NULL,'notification',NULL,NULL,'combo',NULL),
-	(5,NULL,'reminder',NULL,NULL,'combo',NULL);
+	(5,NULL,'reminder',NULL,NULL,'combo',NULL),
+	(6,NULL,'activity',NULL,NULL,'combo',NULL);
 
 --
 -- Dumping data for table `cmg_core_option`

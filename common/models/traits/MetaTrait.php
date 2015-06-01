@@ -64,10 +64,7 @@ trait MetaTrait {
 	 */
 	public function getMetaNameValueMapByType( $type ) {
 
-		$parentType	= $this->metaType;
-
-    	$metas 		= $this->hasMany( ModelMeta::className(), [ 'parentId' => 'id' ] )
-						->where( "parentType=:ptype AND type=:type", [ ':ptype' => $parentType, ':type' => $type ] )->all();
+		$metas		= $this->getMetasByType( $type );
 
 		$metasMap	= array();
 

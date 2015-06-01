@@ -61,7 +61,7 @@ class CmgEntity extends ActiveRecord {
 			else {
 
 				$searchQuery .= " or $field like '%$value%' ";
-			}				
+			}
 		}
 
 		return $searchQuery;

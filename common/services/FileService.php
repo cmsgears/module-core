@@ -7,37 +7,52 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\models\entities\CmgFile;
 
-use cmsgears\core\common\utilities\DateUtil;
+// TODO: Delete existing file while replacing the file.
 
+/**
+ * The class FileService is base class to perform database activities for CmgFile Entity.
+ */
 class FileService extends Service {
 
 	// Static Methods ----------------------------------------------
 
 	// Read ----------------
-
+	
+	/**
+	 * @param integer $id
+	 * @return CmgFile
+	 */
 	public static function findById( $id ) {
 
 		return CmgFile::findById( $id );
 	}
 
-	public static function findByAuthorId( $authorId ) {
-
-		return CmgFile::findByAuthorId( $authorId );
-	}
-
 	// Create -----------
 
+	/**
+	 * @param CmgFile $file
+	 * @return CmgFile
+	 */
 	public static function create( $file ) {
-		
+
+		$user				= Yii::$app->user->getIdentity();
+		$file->createdBy	= $user->id;
+		$file->type			= CmgFile::TYPE_PUBLIC;
+
 		// Create File
 		$file->save();
-		
+
 		// Return File
 		return $file;
 	}
 
 	// Update -----------
 
+	/**
+	 * The method updates the file information in cases when actual file is not changed.
+	 * @param CmgFile $file
+	 * @return CmgFile
+	 */
 	public static function update( $file ) {
 
 		// Find existing file
@@ -46,11 +61,10 @@ class FileService extends Service {
 		if( isset( $fileToUpdate ) ) {
 
 			// Copy and set Attributes
-			$date 						= DateUtil::getMysqlDate();
-			$fileToUpdate->modifiedAt	= $date;
-			$fileToUpdate->modifiedBy	= Yii::$app->user->getIdentity()->id;
+			$user						= Yii::$app->user->getIdentity();
+			$fileToUpdate->modifiedBy	= $user->id;
 
-			$fileToUpdate->copyForUpdateFrom( $file, [ 'description', 'altText' ] );
+			$fileToUpdate->copyForUpdateFrom( $file, [ 'description', 'altText', 'link' ] );
 
 			// Update File
 			$fileToUpdate->update();
@@ -62,6 +76,11 @@ class FileService extends Service {
 		return false;
 	}
 
+	/**
+	 * The method updates the file information when actual file is also changed.
+	 * @param CmgFile $file
+	 * @return CmgFile
+	 */
 	public static function updateData( $file ) {
 
 		// Find existing file
@@ -70,11 +89,10 @@ class FileService extends Service {
 		if( isset( $fileToUpdate ) ) {
 
 			// Copy and set Attributes
-			$date 						= DateUtil::getMysqlDate();
-			$fileToUpdate->modifiedAt	= $date;
-			$fileToUpdate->modifiedBy	= Yii::$app->user->getIdentity()->id;
+			$user						= Yii::$app->user->getIdentity();
+			$fileToUpdate->modifiedBy	= $user->id;
 
-			$fileToUpdate->copyForUpdateFrom( $file, [ 'name', 'description', 'altText', 'directory', 'createdBy', 'type', 'url', 'thumb', 'createdAt', 'link' ] );
+			$fileToUpdate->copyForUpdateFrom( $file, [ 'description', 'altText', 'link', 'name', 'directory', 'extension', 'createdBy', 'type', 'url', 'thumb', 'createdAt' ] );
 
 			// Update File
 			$fileToUpdate->update();
@@ -85,19 +103,15 @@ class FileService extends Service {
 
 		return false;
 	}
-	
-	/**
-	 * Save pre-uploaded image to respective directory.
-	 * @param CmgFile file
-	 * @param User user
-	 * @param CMGEntity model
-	 * @param String attribute
-	 * @param FileManager fileManager
-	 * @param int width
-	 * @param int height
-	 */
-	public static function saveImage( $file, $author, $options = [] ) {
 
+	/**
+	 * Save pre-uploaded image to respective directory. The file manager does the file uploading task and use file service method to persist file data.
+	 * @param CmgFile $file
+	 * @param array $args
+	 */
+	public static function saveImage( $file, $args = [] ) {
+
+		// Save only when filename is provided
 		if( strlen( $file->name ) > 0 ) {
 
 			$fileManager 	= Yii::$app->fileManager;
@@ -105,31 +119,39 @@ class FileService extends Service {
 			$attribute		= null;
 			$width 			= null;
 			$height 		= null;
+			$twidth 		= null;
+			$theight 		= null;
 
-			if( isset( $options[ 'model'] ) ) 		$model 		= $options[ 'model'];
-			if( isset( $options[ 'attribute'] ) ) 	$attribute 	= $options[ 'attribute'];
-			if( isset( $options[ 'width'] ) ) 		$width 		= $options[ 'width'];
-			if( isset( $options[ 'height'] ) ) 		$height 	= $options[ 'height'];
+			// The model and it's attribute used to refer to image
+			if( isset( $args[ 'model' ] ) ) 	$model 		= $args[ 'model' ];
+			if( isset( $args[ 'attribute' ] ) ) $attribute 	= $args[ 'attribute' ];
 
-			// Update Banner
+			// Image dimensions to crop actual image uploaded by users
+			if( isset( $args[ 'width' ] ) ) 	$width 		= $args[ 'width' ];
+			if( isset( $args[ 'height' ] ) ) 	$height 	= $args[ 'height' ];
+			if( isset( $args[ 'twidth' ] ) ) 	$twidth 	= $args[ 'twidth' ];
+			if( isset( $args[ 'theight' ] ) ) 	$theight 	= $args[ 'theight' ];
+
+			// Update Image
 			$fileId 	= $file->id;
-			$date 		= DateUtil::getMysqlDate();
 
 			if( $file->changed ) {
 
-				$fileManager->processImage( $date, $author, $file, $width, $height );
+				$fileManager->processImage( $file, $width, $height, $twidth, $theight );
 			}
 
 			// New File
 			if( !isset( $fileId ) || strlen( $fileId ) <= 0 ) {
 
+				// unset id
 				$file->id = null;
 
+				// create
 				self::create( $file );
 
 				// Update model attribute
 				if( isset( $model ) && isset( $attribute ) ) {
-	
+
 					$model->setAttribute( $attribute, $file->id );
 				}
 			}
@@ -148,37 +170,37 @@ class FileService extends Service {
 
 	/**
 	 * Save pre-uploaded file to respective directory.
-	 * @param CmgFile file
-	 * @param User user
-	 * @param CMGEntity model
-	 * @param String attribute
-	 * @param FileManager fileManager
+	 * @param CmgFile $file
+	 * @param array $args
 	 */
-	public static function saveFile( $file, $author, $options = [] ) {
+	public static function saveFile( $file, $args = [] ) {
 
+		// Save only when filename is provided
 		if( strlen( $file->name ) > 0 ) {
 
 			$fileManager 	= Yii::$app->fileManager;
 			$model			= null;
 			$attribute		= null;
 
-			if( isset( $options[ 'model'] ) ) 		$model 		= $options[ 'model'];
-			if( isset( $options[ 'attribute'] ) ) 	$attribute 	= $options[ 'attribute'];
+			// The model and it's attribute used to refer to image
+			if( isset( $args[ 'model' ] ) ) 	$model 		= $args[ 'model' ];
+			if( isset( $args[ 'attribute' ] ) ) $attribute 	= $args[ 'attribute' ];
 
 			// Update File
 			$fileId 	= $file->id;
-			$date 		= DateUtil::getMysqlDate();
 
 			if( $file->changed ) {
 
-				$fileManager->processFile( $date, $author, $file );
+				$fileManager->processFile( $file );
 			}
 
 			// New File
 			if( !isset( $fileId ) || strlen( $fileId ) <= 0 ) {
 
+				// unset id
 				$file->id = null;
 
+				// create
 				self::create( $file );
 
 				// Update model attribute

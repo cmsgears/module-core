@@ -4,7 +4,7 @@ namespace cmsgears\core\common\services;
 // Yii Imports
 use \Yii;
 use yii\db\Query;
-use yii\data\Pagination;
+use yii\data\ActiveDataProvider;
 use yii\helpers\HtmlPurifier;
 
 // CMG Imports
@@ -23,14 +23,18 @@ class Service {
 	// Pagination -------------------------------------------------
 	
 	/**
-	 * The method getPaginationDetails accept the entity class and various parameters to generate the pagination.
+	 * The method getDataProvider accept the entity class and various parameters to generate the active data provider.
+	 * @param Model $entity
+	 * @param array $args
+	 * @return ActiveDataProvider
 	 */
-	public static function getPaginationDetails( $entity, $args ) {
+	public static function getDataProvider( $entity, $args ) {
 		
 		// args
 		$query			= isset( $args[ 'query' ] ) ? $args[ 'query' ] : null;
 		$limit			= isset( $args[ 'limit' ] ) ? $args[ 'limit' ] : null;
 		$conditions		= isset( $args[ 'conditions' ] ) ? $args[ 'conditions' ] : null;
+		$filter			= isset( $args[ 'filter' ] ) ? $args[ 'filter' ] : null;
 		$sort			= isset( $args[ 'sort' ] ) ? $args[ 'sort' ] : null;
 		$searchCol		= isset( $args[ 'search-col' ] ) ? $args[ 'search-col' ] : null;
 		$route			= isset( $args[ 'route' ] ) ? $args[ 'route' ] : null;
@@ -55,14 +59,23 @@ class Service {
 
 			$query 	= $query->where( $conditions );
 		}
-		
-		// Sorting ------------
 
+		if( isset( $filter ) ) {
+			
+			$query 	= $query->andFilterWhere( $filter );
+		}
+
+		// TODO: multiple column filters
+		// $query->andFilterWhere(['like', 'alias', $this->alias]);
+        // $query->andFilterWhere(['like', 'title', $this->title]);
+
+		// Sorting ------------
+		/*
 		if( isset( $sort ) ) {
 
 			$query->orderBy( $sort->orders );
 		}
-
+		*/
 		// Searching ----------
 
 		$searchTerms	= Yii::$app->request->getQueryParam( "search" );
@@ -77,7 +90,7 @@ class Service {
 		// $command = $query->createCommand(); var_dump( $command );
 
 		// Generate Results ---
-
+		/*
 	    $countQuery 			= clone $query;
 		$total					= $countQuery->count();
 	    $pages 					= new Pagination( [ 'totalCount' => $total, 'route' => $route ] );
@@ -91,16 +104,31 @@ class Service {
 		$pagination['total']	= $total;
 
 		return $pagination;
+		 */
+
+	    $dataProvider	= new ActiveDataProvider([
+            'query' => $query,
+            'sort' => $sort,
+            'pagination' => [
+            	'pageSize' => $limit
+            ]
+        ]);
+
+		return $dataProvider;
 	}
 
 	// Maps -------------------------------------------------------
 
 	/**
 	 * The method findMap returns an associative array for the defined table and columns. It also apply the provided conditions.
+	 * @param string $keyColumn
+	 * @param string $valueColumn
+	 * @param string $table
+	 * @param array $conditions
 	 */
-	public static function findMap( $keyColumn, $valueColumn, $model, $conditions = [] ) {
+	public static function findMap( $keyColumn, $valueColumn, $table, $conditions = [] ) {
 
-		$arrayList  = self::findNameValueList( $keyColumn, $valueColumn, $model, $conditions );
+		$arrayList  = self::findNameValueList( $keyColumn, $valueColumn, $table, $conditions );
 		$map		= [];
 		
 		foreach ( $arrayList as $item ) {
@@ -115,22 +143,28 @@ class Service {
 
 	/**
 	 * The method findNameList returns an array of list for given column
+	 * @param string $column
+	 * @param string $table
+	 * @param array $conditions 
 	 */
-	public static function findList( $column, $model, $conditions = [] ) {
+	public static function findList( $column, $table, $conditions = [] ) {
 		
 		$query	= new Query();
 
 		// Build Query
 		if( isset( $conditions ) ) {
 
-			$query->select( $column.' as col' )
-			 	  ->from( $model )->where( $conditions );
+			$query->select( $column )
+			 	  ->from( $table )->where( $conditions );
 		}
 		else {
 
-			$query->select( $column.' as col' )
-				  ->from( $model );
+			$query->select( $column )
+				  ->from( $table );
 		}
+		
+		// Get result as array
+		$query->asArray();
 
 		// Create command
 		$command 	= $query->createCommand();
@@ -138,21 +172,18 @@ class Service {
 		// Execute the command
 		$list 		= $command->queryAll();
 
-
-		$keyList	= array();
-
-		foreach ( $list as $item ) {
-			
-			$keyList[] = $item[ 'col' ]; 
-		}
-
-		return $keyList;
+		return $list;
 	}
 
 	/**
 	 * The method findNameValueList returns an array of associative arrays having name and value as keys for the defined columns.
+	 * @param string $nameColumn
+	 * @param string $valueColumn
+	 * @param string $table
+	 * @param array $conditions
+	 * @param boolean $asArray
 	 */
-	public static function findNameValueList( $nameColumn, $valueColumn, $model, $conditions = [] ) {
+	public static function findNameValueList( $nameColumn, $valueColumn, $table, $conditions = [], $asArray = false ) {
 
 		$query 		= new Query();
 
@@ -160,12 +191,18 @@ class Service {
 		if( isset( $conditions ) ) {
 
 			$query->select( $nameColumn.' as name,'. $valueColumn .' as value' )
-			 	  ->from( $model )->where( $conditions );
+			 	  ->from( $table )->where( $conditions );
 		}
 		else {
 
 			$query->select( $nameColumn.' as name,'. $valueColumn .' as value' )
-				  ->from( $model );			
+				  ->from( $table );			
+		}
+
+		// Get result as array instead of associative array		
+		if( $asArray ) {
+
+			$query->asArray();
 		}
 
 		// Create command
@@ -179,8 +216,13 @@ class Service {
 
 	/**
 	 * The method findIdNameList returns an array of associative arrays having id and name as keys for the defined columns.
+	 * @param string $idColumn
+	 * @param string $nameColumn
+	 * @param string $table
+	 * @param array $conditions
+	 * @param boolean $asArray 
 	 */
-	public static function findIdNameList( $idColumn, $nameColumn, $model, $conditions = [] ) {
+	public static function findIdNameList( $idColumn, $nameColumn, $table, $conditions = [], $asArray = false ) {
 
 		$query 		= new Query();
 
@@ -188,12 +230,18 @@ class Service {
 		if( isset( $conditions ) ) {
 
 			$query->select( $idColumn.' as id,'. $nameColumn .' as name' )
-			 	  ->from( $model )->where( $conditions );
+			 	  ->from( $table )->where( $conditions );
 		}
 		else {
 
 			$query->select( $idColumn.' as id,'. $nameColumn .' as name' )
-				  ->from( $model );
+				  ->from( $table );
+		}
+		
+		// Get result as array instead of associative array		
+		if( $asArray ) {
+
+			$query->asArray();
 		}
 
 		// Create command

@@ -63,12 +63,12 @@ class AdminProperties {
 
 		return $this->properties[ key ];
 	}
-	
+
 	/**
 	 * Returns current active Theme name.
 	 */
 	public function getTheme() {
-		
+
 		return $this->properties[ self::PROP_THEME ];
 	}
 
@@ -76,7 +76,7 @@ class AdminProperties {
 	 * Returns current active Theme version.
 	 */
 	public function getThemeVersion() {
-		
+
 		return $this->properties[ self::PROP_THEME_VERSION ];
 	}
 }

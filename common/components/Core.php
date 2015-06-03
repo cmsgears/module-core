@@ -34,7 +34,7 @@ class Core extends Component {
 
 	/**
 	 * @var default redirect path to be used for post login. It will be used by login action of Site Controller to redirect users 
-	 * after successful login in case use role home url is not set.
+	 * after successful login in case user role home url is not set.
 	 */
 	public $loginRedirectPage	= "site/index";
 
@@ -45,7 +45,7 @@ class Core extends Component {
 
 	/**
 	 * @var The indicator whether CMG RBAC has to be used for the project. All the admin sites must set this to true. Though it's optional for 
-	 * front end sites. The front end sites can use either CMG RBAC or Yii's RBAC system.
+	 * front end sites. The front end sites can use either CMG RBAC or Yii's RBAC system or no RBAC system based on project needs.
 	 */
 	public $useRbac				= false;
 
@@ -61,7 +61,7 @@ class Core extends Component {
 	public $rbacFilters			= [];
 
 	/**
-	 * @var It can be used to check whether apis are available for the app. Most probable apis are provided using OAuth 2.0.
+	 * @var It can be used to check whether apis are available for the app. Most probably apis are provided using OAuth 2.0 for mobile applications.
 	 */
 	public $apis				= false;
 
@@ -117,16 +117,28 @@ class Core extends Component {
 		//TODO - Add code to check availability of a widget from database and widgets folder
     }
 
+	/**
+	 * The method getSiteName returns the site name for default site. It's more useful in case multi-site feature is enabled.
+	 * @return string 
+	 */
 	public function getSiteName() {
 
 		return $this->siteName;
 	}
 
+	/**
+	 * The method isMultiSite can be used to check whether multi-site feature is required.
+	 * @return boolean 
+	 */
 	public function isMultiSite() {
 
 		return $this->multiSite;
 	}
 
+	/**
+	 * The method isSubDirectory can be used to check whether multi-site feature needs to follow sub directory approach instead of sub domain.
+	 * @return boolean 
+	 */
 	public function isSubDirectory() {
 
 		return $this->subDirectory;
@@ -134,7 +146,7 @@ class Core extends Component {
 
 	/**
 	 * The method getLoginRedirectPage returns the default path to be redirected after login using the non-ajax based form.
-	 * @return path used for post login
+	 * @return string - path used for post login
 	 */
 	public function getLoginRedirectPage() {
 
@@ -168,6 +180,9 @@ class Core extends Component {
 		return $this->rbacFilterClass;
 	}
 
+	/**
+	 * The method getRbacFilter returns the corresponding RBAC Filter class path based on given filter name. These filters are fine grained control over the permissions allowed for the user role.
+	 */
 	public function getRbacFilter( $filter ) {
 
 		return $this->rbacFilters[ $filter ];

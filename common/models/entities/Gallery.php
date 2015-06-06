@@ -3,6 +3,7 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
+use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
@@ -53,7 +54,8 @@ class Gallery extends NamedCmgEntity {
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
 				'createdAtAttribute' => 'createdAt',
- 				'updatedAtAttribute' => 'modifiedAt'
+ 				'updatedAtAttribute' => 'modifiedAt',
+ 				'value' => new Expression('NOW()')
             ]
         ];
     }
@@ -103,6 +105,13 @@ class Gallery extends NamedCmgEntity {
 
 	// Gallery ----------------------------
 
+	/**
+	 * @return ActiveRecord - with site member and role.
+	 */
+	public static function findWithOwner() {
+
+		return self::find()->joinWith( 'creator' );
+	}
 }
 
 ?>

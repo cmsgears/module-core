@@ -106,8 +106,8 @@ class User extends CmgEntity implements IdentityInterface {
 		$siteMemberTable	= CoreTables::TABLE_SITE_MEMBER;
 
 		return Role::find()
-					->leftJoin( $siteMember, "`$siteMemberTable`.`roleId` = `$roleTable`.`id`" )
-					->leftJoin( $site, "`$siteTable`.`id` = `$siteMemberTable`.`siteId`" )
+					->leftJoin( $siteMemberTable, "`$siteMemberTable`.`roleId` = `$roleTable`.`id`" )
+					->leftJoin( $siteTable, "`$siteTable`.`id` = `$siteMemberTable`.`siteId`" )
 					->where( "`$siteMemberTable`.`userId`=:id AND `$siteTable`.`name`=:name", [ ':id' => $this->id, ':name' => Yii::$app->cmgCore->getSiteName() ] );
 	}
 
@@ -523,7 +523,7 @@ class User extends CmgEntity implements IdentityInterface {
 
 		return self::find()->joinWith( 'siteMember' )->joinWith( 'siteMember.site' )->joinWith( 'siteMember.role' )->joinWith( 'siteMember.role.permissions' );
 	}
-	
+
 	/**
 	 * @param int $id
 	 * @return User - by id

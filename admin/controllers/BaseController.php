@@ -40,9 +40,9 @@ class BaseController extends Controller {
 	// Instance Methods --------------------------------------------
 
 	public function getCoreProperties() {
-		
+
 		if( !isset( $this->coreProperties ) ) {
-			
+
 			$this->coreProperties	= CoreProperties::getInstance();
 		}
 
@@ -50,9 +50,9 @@ class BaseController extends Controller {
 	}
 
 	public function getMailProperties() {
-		
+
 		if( !isset( $this->mailProperties ) ) {
-			
+
 			$this->mailProperties	= MailProperties::getInstance();
 		}
 

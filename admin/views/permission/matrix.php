@@ -9,6 +9,10 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Access Matrix";
+
+// Data
+$pagination		= $dataProvider->getPagination();
+$models			= $dataProvider->getModels();
 ?>
 <div class="content-header clearfix">
 	<div class="header-actions"> 
@@ -23,7 +27,7 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Access Matrix";
 </div>
 <div class="data-grid">
 	<div class="grid-header">
-		<?= LinkPager::widget( [ 'pagination' => $pages ] ); ?>
+		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 	<div class="wrap-grid">
 		<table>
@@ -37,7 +41,7 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Access Matrix";
 			<tbody>
 				<?php
 
-					foreach( $page as $permission ) {
+					foreach( $models as $permission ) {
 
 						$id 		= $permission->id;
 						$roles		= $permission->getRolesIdList();
@@ -47,18 +51,18 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Access Matrix";
 						<td><?= $permission->name ?></td>
 						<td>
 							<form action="<?=$apixUrl?>" method="POST">
-								<input type="hidden" name="permissionId" value="<?=$id?>" />
+								<input type="hidden" name="Binder[binderId]" value="<?=$id?>" />
 								<ul class="ul-inline">
-									<?php foreach ( $allRoles as $role ) { 
+									<?php foreach ( $rolesList as $role ) { 
 										
 										if( in_array( $role['id'], $roles ) ) {
 									?>		
-											<li><input type="checkbox" name="bindedData" value="<?=$role['id']?>" checked /><?=$role['name']?></li>
+											<li><input type="checkbox" name="Binder[bindedData]" value="<?=$role['id']?>" checked /><?=$role['name']?></li>
 									<?php		
 										}
 										else {
 									?>
-											<li><input type="checkbox" name="bindedData" value="<?=$role['id']?>" /><?=$role['name']?></li>
+											<li><input type="checkbox" name="Binder[bindedData]" value="<?=$role['id']?>" /><?=$role['name']?></li>
 									<?php
 										}
 									}
@@ -73,8 +77,8 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Access Matrix";
 		</table>
 	</div>
 	<div class="grid-footer">
-		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $pages, $page, $total ) ?> </div>
-		<?= LinkPager::widget( [ 'pagination' => $pages ] ); ?>
+		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?> </div>
+		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 </div>
 <script type="text/javascript">

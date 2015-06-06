@@ -119,11 +119,11 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_FFIELD_TYPE => "Field Type",
 		CoreGlobal::FIELD_FFIELD_META => "Field Meta",
 		// Content Fields
-		CmsGlobal::FIELD_SUMMARY => "Summary",
-		CmsGlobal::FIELD_CONTENT => "Content",
+		CoreGlobal::FIELD_SUMMARY => "Summary",
+		CoreGlobal::FIELD_CONTENT => "Content",
 		// Content Fields
-		CmsGlobal::FIELD_SENDER => "Sender",
-		CmsGlobal::FIELD_RECIPIENT => "Recipient"
+		CoreGlobal::FIELD_SENDER => "Sender",
+		CoreGlobal::FIELD_RECIPIENT => "Recipient"
 	];
 
 	/**

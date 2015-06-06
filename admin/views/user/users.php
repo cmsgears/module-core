@@ -42,7 +42,6 @@ if( !isset( $sortOrder ) ) {
 		<table>
 			<thead>
 				<tr>
-					<th> <input type='checkbox' /> </th>
 					<th>Avatar</th>
 					<th>Username
 						<span class='box-icon-sort'>
@@ -90,12 +89,11 @@ if( !isset( $sortOrder ) ) {
 						$role	= $user->role->name;
 				?>
 					<tr>
-						<td> <input type='checkbox' /> </td>
 						<td> 
 							<?php
 								$avatar = $user->avatar;
 
-								if( isset( $avatar ) ) {
+								if( isset( $avatar ) ) { 
 							?> 
 								<img class="avatar" src="<?= $avatar->getThumbUrl() ?>">
 							<?php 
@@ -128,5 +126,5 @@ if( !isset( $sortOrder ) ) {
 	</div>
 </div>
 <script type="text/javascript">
-	initSidebar( "sidebar-newsletter", 1 );
+	initSidebar( "sidebar-identity", 4 );
 </script>

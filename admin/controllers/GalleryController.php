@@ -60,17 +60,15 @@ class GalleryController extends BaseController {
 
 	public function actionIndex() {
 
-		$this->redirect( 'all' );
+		$this->redirect( [ "all" ] );
 	}
 
 	public function actionAll() {
 
-		$pagination = GalleryService::getPagination();
+		$dataProvider = GalleryService::getPagination();
 
 	    return $this->render('all', [
-	         'page' => $pagination['page'],
-	         'pages' => $pagination['pages'],
-	         'total' => $pagination['total']
+	         'dataProvider' => $dataProvider
 	    ]);
 	}
 
@@ -80,11 +78,11 @@ class GalleryController extends BaseController {
 
 		$model->setScenario( "create" );
 
-		if( $model->load( Yii::$app->request->post( "Gallery" ), "" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), "Gallery" )  && $model->validate() ) {
 
 			if( GalleryService::create( $model ) ) {
 
-				return $this->redirect( "all" );
+				$this->redirect( [ "all" ] );
 			}
 		}
 
@@ -103,11 +101,11 @@ class GalleryController extends BaseController {
 
 			$model->setScenario( "update" );
 	
-			if( $model->load( Yii::$app->request->post( "Gallery"), "" )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), "Gallery" )  && $model->validate() ) {
 	
 				if( GalleryService::update( $model ) ) {
 
-					$this->refresh();
+					$this->redirect( [ "all" ] );
 				}
 			}
 
@@ -117,7 +115,7 @@ class GalleryController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
@@ -128,11 +126,11 @@ class GalleryController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post( "Gallery" ), "" ) ) {
+			if( $model->load( Yii::$app->request->post(), "Gallery" ) ) {
 	
 				if( GalleryService::delete( $model ) ) {
 		
-					return $this->redirect( "all" );
+					$this->redirect( [ "all" ] );
 				}
 			}
 
@@ -142,7 +140,7 @@ class GalleryController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionItems( $id ) {
@@ -162,7 +160,7 @@ class GalleryController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

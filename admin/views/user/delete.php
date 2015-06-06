@@ -20,12 +20,12 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Delete User";
 		<?= $form->field( $model, 'phone' )->textInput( [ 'readonly'=>'true' ] ) ?>
 		<?= $form->field( $model, 'newsletter' )->checkbox( [ 'readonly'=>'true' ] ) ?>
 
-		<?=Html::a( "Cancel", [ '/cmgcore/user/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
 		<input type="submit" value="Delete" />
 
 		<?php ActiveForm::end(); ?>
 	</div>
 </section>
 <script type="text/javascript">
-	initSidebar( "sidebar-identity", 3 );
+	initSidebar( "sidebar-identity", 4 );
 </script>

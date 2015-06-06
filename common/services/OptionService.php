@@ -7,6 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\Option;
+use cmsgears\core\common\models\entities\Category;
 
 /**
  * The class OptionService is base class to perform database activities for Option Entity.

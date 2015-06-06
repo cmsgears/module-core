@@ -131,17 +131,13 @@ class SiteController extends BaseController {
 
 			$user	= UserService::findByEmail( $email );
 
-			if( isset( $user ) && strcmp( $user->verifyToken, $token ) == 0 ) {
+			if( isset( $user ) && UserService::verify( $user, $token ) ) {
 
-				// Verify User
-				if( UserService::verify( $user ) ) {
+				// Send Register Mail
+				Yii::$app->cmgCoreMailer->sendVerifyUserMail( $this->getCoreProperties(), $this->getMailProperties(), $user );
 
-					// Send Register Mail
-					Yii::$app->cmgCoreMailer->sendVerifyUserMail( $this->getCoreProperties(), $this->getMailProperties(), $user );
-
-					// Set Success Message
-					Yii::$app->session->setFlash( "message", Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
-				}
+				// Set Success Message
+				Yii::$app->session->setFlash( "message", Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
 			}
 			else {
 

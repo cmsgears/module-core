@@ -46,19 +46,19 @@ class FileController extends Controller {
 
 	// UserController --------------------
 
-	public function actionFileHandler( $selector ) {
+	public function actionFileHandler( $directory ) {
 
-		$data	= Yii::$app->fileManager->handleFileUpload( $selector );
+		$data	= Yii::$app->fileManager->handleFileUpload( $directory );
 
 		if( $data ) {
 
 			// Trigger Ajax Success
-			AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+			AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 		}
 		else {
 
 			// Trigger Ajax Failure
-	        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ) );
+	        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 		}
 	}
 }

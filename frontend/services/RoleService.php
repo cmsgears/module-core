@@ -12,15 +12,22 @@ class RoleService extends \cmsgears\core\common\services\UserService {
 	// Static Methods ----------------------------------------------
 
 	// Update --------------
+	
+	/**
+	 * @param User $user
+	 * @param string $roleName
+	 * @return User
+	 */
+	public static function assignRole( $user, $roleName ) {
 
-	public static function assignRole( $user, $name ) {
+		$userToUpdate			= UserService::findById( $user->id );
 
-		// Assign Role	
-		$role 			= Role::findByName( $name );
-		$user->roleId	= $role->id;
+		// Assign Role
+		$role 					= Role::findByName( $roleName );
+		$userToUpdate->roleId	= $role->id;
 
 		// Update User
-		$user->update();
+		$userToUpdate->update();
 	}
 }
 

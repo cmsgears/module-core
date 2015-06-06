@@ -7,6 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\Role;
+use cmsgears\core\common\models\entities\RolePermission;
 
 /**
  * The class RoleService is base class to perform database activities for Role Entity.
@@ -50,6 +51,98 @@ class RoleService extends Service {
 	public static function getIdNameList() {
 
 		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_ROLE );
+	}
+
+	// Create -----------
+
+	/**
+	 * @param Role $role
+	 * @return Role
+	 */
+	public static function create( $role ) {
+
+		// Set Attributes
+		$user				= Yii::$app->user->getIdentity();
+		$role->createdBy	= $user->id;
+
+		// Create Role
+		$role->save();
+
+		// Return Role
+		return $role;
+	}
+
+	// Update -----------
+
+	/**
+	 * @param Role $role
+	 * @return Role
+	 */
+	public static function update( $role ) {
+
+		// Find existing role
+		$roleToUpdate	= self::findById( $role->id );
+
+		// Copy and set Attributes
+		$user			= Yii::$app->user->getIdentity();
+
+		$roleToUpdate->modifiedBy	= $user->id;
+
+		$roleToUpdate->copyForUpdateFrom( $role, [ 'name', 'description', 'homeUrl' ] );
+
+		// Update Role
+		$roleToUpdate->update();
+		
+		// Return updated Role
+		return $roleToUpdate;
+	}
+
+	/**
+	 * @param BinderForm $binder
+	 * @return boolean
+	 */
+	public static function bindPermissions( $binder ) {
+
+		$roleId			= $binder->binderId;
+		$permissions	= $binder->bindedData;
+
+		// Clear all existing mappings
+		RolePermission::deleteByRoleId( $roleId );
+
+		// Create updated mappings
+		if( isset( $permissions ) && count( $permissions ) > 0 ) {
+
+			foreach ( $permissions as $key => $value ) {
+
+				if( isset( $value ) ) {
+
+					$toSave					= new RolePermission();
+					$toSave->roleId			= $roleId;
+					$toSave->permissionId	= $value;
+
+					$toSave->save();
+				}
+			}
+		}
+
+		return true;
+	}
+
+	// Delete -----------
+
+	/**
+	 * @param Role $role
+	 * @return boolean
+	 */
+	public static function delete( $role ) {
+
+		// Find existing Role
+		$roleToDelete	= self::findById( $role->id );
+
+		// Delete Role
+		$roleToDelete->delete();
+
+		return true;
 	}
 }
 

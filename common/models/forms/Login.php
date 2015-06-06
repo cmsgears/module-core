@@ -16,7 +16,7 @@ use cmsgears\core\common\services\UserService;
 use cmsgears\core\common\utilities\MessageUtil;
 use cmsgears\core\common\utilities\DateUtil;
 
-class LoginForm extends Model {
+class Login extends Model {
 
 	// Variables ---------------------------------------------------
 
@@ -27,14 +27,16 @@ class LoginForm extends Model {
 	public $rememberMe;
 
 	// Private Variables -------------------
-
+	
+	private $admin;
     private $_user;
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct()  {
+	public function __construct( $admin = false )  {
 		
-		$this->_user = false;
+		$this->admin	= $admin;
+		$this->_user 	= false;
 	}
 
 	// Instance Methods --------------------------------------------
@@ -110,10 +112,24 @@ class LoginForm extends Model {
 
         if ( $this->validate() ) {
 
-			$this->user->lastLogin = DateUtil::getMysqlDate();
-			$this->user->save();
+			$user	= $this->user;
 
-            return Yii::$app->user->login( $this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0 );
+			if( $this->admin ) {
+
+				$user->loadPermissions();
+
+				if( ! $user->isPermitted( Permission::PERM_SITE_ADMIN ) ) {
+
+					$this->addError( "email", MessageUtil::ERROR_NOT_ALLOWED );
+
+					return false;
+				}
+			}
+
+			$user->lastLoginAt 	= DateUtil::getMysqlDate();
+			$user->save();
+
+            return Yii::$app->user->login( $user, $this->rememberMe ? 3600 * 24 * 30 : 0 );
         }
 
 		return false;

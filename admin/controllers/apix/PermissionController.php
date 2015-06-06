@@ -9,8 +9,7 @@ use yii\filters\VerbFilter;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\Permission;
-
-use cmsgears\core\admin\models\forms\RoleBinderForm;
+use cmsgears\core\common\models\forms\Binder;
 
 use cmsgears\core\admin\services\PermissionService;
 
@@ -53,19 +52,19 @@ class PermissionController extends BaseController {
 
 	public function actionBindRoles() {
 
-		$binder = new RoleBinderForm();
+		$binder = new Binder();
 
-		if( $binder->load( Yii::$app->request->post(), "" ) ) {
+		if( $binder->load( Yii::$app->request->post(), "Binder" ) ) {
 
 			if( PermissionService::bindRoles( $binder ) ) {
 
 				// Trigger Ajax Success
-				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 			}
 		}
 
 		// Trigger Ajax Failure
-        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ) );
+        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
 }
 

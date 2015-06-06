@@ -4,6 +4,7 @@ namespace cmsgears\core\admin\controllers;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
@@ -59,17 +60,15 @@ class NewsletterController extends BaseController {
 
 	public function actionIndex() {
 
-		$this->redirect( 'all' );
+		$this->redirect( [ "all" ] );
 	}
 
 	public function actionAll() {
 
-		$pagination = NewsletterService::getPagination();
+		$dataProvider = NewsletterService::getPagination();
 
 	    return $this->render('all', [
-	         'page' => $pagination['page'],
-	         'pages' => $pagination['pages'],
-	         'total' => $pagination['total']
+	         'dataProvider' => $dataProvider
 	    ]);
 	}
 
@@ -79,11 +78,11 @@ class NewsletterController extends BaseController {
 
 		$model->setScenario( "create" );
 
-		if( $model->load( Yii::$app->request->post( "Newsletter" ), "" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), "Newsletter" )  && $model->validate() ) {
 
 			if( NewsletterService::create( $model ) ) {
 
-				return $this->redirect( "all" );
+				$this->redirect( [ "all" ] );
 			}
 		}
 
@@ -102,11 +101,11 @@ class NewsletterController extends BaseController {
 
 			$model->setScenario( "update" );
 	
-			if( $model->load( Yii::$app->request->post( "Newsletter" ), "" )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), "Newsletter" )  && $model->validate() ) {
 	
 				if( NewsletterService::update( $model ) ) {
 
-					$this->refresh();
+					$this->redirect( [ "all" ] );
 				}
 			}
 
@@ -116,7 +115,7 @@ class NewsletterController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
@@ -127,11 +126,11 @@ class NewsletterController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post( "Newsletter" ), "" ) ) {
+			if( $model->load( Yii::$app->request->post(), "Newsletter" ) ) {
 	
 				if( NewsletterService::delete( $model ) ) {
 		
-					return $this->redirect( "all" );
+					$this->redirect( [ "all" ] );
 				}
 			}
 
@@ -141,17 +140,17 @@ class NewsletterController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );	
 	}
 
 	public function actionMembers() {
 
-		$pagination = UserService::getPaginationByNewsletter();
+		$dataProvider = UserService::getPaginationByNewsletter();
+
+		Url::remember( [ "/cmgcore/newsletter/members" ], 'users' );
 
 	    return $this->render('members', [
-	         'page' => $pagination['page'],
-	         'pages' => $pagination['pages'],
-	         'total' => $pagination['total']
+	         'dataProvider' => $dataProvider
 	    ]);
 	}
 }

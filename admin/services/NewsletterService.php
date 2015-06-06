@@ -47,59 +47,7 @@ class NewsletterService extends \cmsgears\core\common\services\NewsletterService
 	        ]
 	    ]);
 
-		return self::getPaginationDetails( new Newsletter(), [ 'sort' => $sort, 'search-col' => 'name' ] );
-	}
-
-	// Create -----------
-
-	public static function create( $newsletter ) {
-
-		// Set Attributes
-		$date					= DateUtil::getMysqlDate();
-		$user					= Yii::$app->user->getIdentity();
-		$newsletter->createdBy	= $user->id;
-		$newsletter->createdAt	= $date;
-
-		// Create Newsletter
-		$newsletter->save();
-
-		// Return Newsletter
-		return $newsletter;
-	}
-
-	// Update -----------
-
-	public static function update( $newsletter ) {
-
-		// Find existing Newsletter
-		$nlToUpdate	= self::findById( $newsletter->id );
-
-		// Copy and set Attributes	
-		$date					= DateUtil::getMysqlDate();
-		$user					= Yii::$app->user->getIdentity();
-		$nlToUpdate->modifiedBy	= $user->id;
-		$nlToUpdate->modifiedAt	= $date;
-
-		$nlToUpdate->copyForUpdateFrom( $newsletter, [ 'name', 'description', 'content' ] );
-		
-		// Update Newsletter
-		$nlToUpdate->update();
-		
-		// Return updated Newsletter
-		return $nlToUpdate;
-	}
-
-	// Delete -----------
-
-	public static function delete( $newsletter ) {
-
-		// Find existing Newsletter
-		$nlToDelete	= self::findById( $newsletter->id );
-
-		// Delete Newsletter
-		$nlToDelete->delete();
-
-		return true;
+		return self::getDataProvider( new Newsletter(), [ 'sort' => $sort, 'search-col' => 'name' ] );
 	}
 }
 

@@ -10,8 +10,7 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\Permission;
-
-use cmsgears\core\admin\models\forms\RoleBinderForm;
+use cmsgears\core\common\models\forms\Binder;
 
 use cmsgears\core\admin\services\PermissionService;
 use cmsgears\core\admin\services\RoleService;
@@ -68,26 +67,21 @@ class PermissionController extends BaseController {
 
 	public function actionAll() {
 
-		$pagination = PermissionService::getPagination();
+		$dataProvider = PermissionService::getPagination();
 
 	    return $this->render('all', [
-	         'page' => $pagination['page'],
-	         'pages' => $pagination['pages'],
-	         'total' => $pagination['total']
+	         'dataProvider' => $dataProvider
 	    ]);
 	}
 
 	public function actionMatrix() {
 
-		$pagination = PermissionService::getPagination();
-
-		$allRoles	= RoleService::getIdNameList();
+		$dataProvider 	= PermissionService::getPagination();
+		$rolesList		= RoleService::getIdNameList();
 
 	    return $this->render('matrix', [
-	         'page' => $pagination['page'],
-	         'pages' => $pagination['pages'],
-	         'total' => $pagination['total'],
-	         'allRoles' => $allRoles
+	         'dataProvider' => $dataProvider,
+	         'rolesList' => $rolesList
 	    ]);
 	}
 
@@ -97,18 +91,18 @@ class PermissionController extends BaseController {
 
 		$model->setScenario( "create" );
 
-		if( $model->load( Yii::$app->request->post( "Permission" ), "" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), "Permission" )  && $model->validate() ) {
 
 			if( PermissionService::create( $model ) ) {
 
-				$binder = new RoleBinderForm();
+				$binder 			= new Binder();
+				$binder->binderId	= $model->id;
 
-				$binder->permissionId	= $model->id;
-				$binder->load( Yii::$app->request->post( "Binder" ), "" );
+				$binder->load( Yii::$app->request->post(), "Binder" );
 
 				PermissionService::bindRoles( $binder );
 
-				return $this->redirect( "all" );
+				$this->redirect( [ "all" ] );
 			}
 		}
 		
@@ -129,19 +123,19 @@ class PermissionController extends BaseController {
 		if( isset( $model ) ) {
 
 			$model->setScenario( "update" );
-	
-			if( $model->load( Yii::$app->request->post( "Permission" ), "" )  && $model->validate() ) {
+
+			if( $model->load( Yii::$app->request->post(), "Permission" )  && $model->validate() ) {
 	
 				if( PermissionService::update( $model ) ) {
 	
-					$binder = new RoleBinderForm();
+					$binder 			= new Binder();
+					$binder->binderId	= $model->id;
 	
-					$binder->permissionId	= $model->id;
-					$binder->load( Yii::$app->request->post( "Binder" ), "" );
+					$binder->load( Yii::$app->request->post(), "Binder" );
 	
 					PermissionService::bindRoles( $binder );
 	
-					$this->refresh();
+					$this->redirect( [ "all" ] );
 				}
 			}
 	
@@ -154,7 +148,7 @@ class PermissionController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
@@ -165,11 +159,11 @@ class PermissionController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post( "Permission" ), "" ) ) {
+			if( $model->load( Yii::$app->request->post(), "Permission" ) ) {
 
 				if( PermissionService::delete( $model ) ) {
 
-					return $this->redirect( "all" );
+					$this->redirect( [ "all" ] );
 				}
 			}
 
@@ -182,7 +176,7 @@ class PermissionController extends BaseController {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

@@ -15,13 +15,15 @@ class CodeGenUtil {
 	 * Return pagination info to be displayed on data grid footer or header.
 	 * @return string - pagination info
 	 */	
-	public static function getPaginationDetail( $pages, $page, $total ) {
-		
-		$current_page 	= $pages->page;
-		$page_size		= $pages->pageSize;
+	public static function getPaginationDetail( $dataProvider ) {
+
+		$total			= $dataProvider->getTotalCount();
+		$pagination		= $dataProvider->getPagination();
+		$current_page 	= $pagination->getPage();
+		$page_size		= $pagination->getPageSize();
 		$start			= $page_size * $current_page;
 		$end			= $page_size * ( $current_page + 1 ) - 1;
-		$currentSize	= count($page);
+		$currentSize	= count( $dataProvider->getModels() );
 		$currentDisplay	= $end - $start;
 
 		if( $currentSize < $currentDisplay ) {

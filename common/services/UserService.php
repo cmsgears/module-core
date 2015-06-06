@@ -7,6 +7,8 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\models\entities\User;
 
+use cmsgears\core\common\utilities\DateUtil;
+
 /**
  * The class UserService is base class to perform database activities for User Entity.
  */
@@ -72,6 +74,83 @@ class UserService extends Service {
 		$user = User::findByUsername( $username );
 
 		return isset( $user );
+	}
+
+	// Create -----------
+
+	/**
+	 * The method create user.
+	 * @param User $user
+	 * @param CmgFile $avatar
+	 * @return User
+	 */
+	public static function create( $user, $avatar = null ) {
+
+		// Set Attributes
+		$user->registeredAt = DateUtil::getMysqlDate();
+		$user->status		= User::STATUS_NEW;
+
+		// Generate Tokens
+		$user->generateVerifyToken();
+		$user->generateAuthKey();
+
+		if( isset( $avatar ) ) {
+
+			// Save Avatar
+			FileService::saveImage( $avatar, $user, [ 'model' => $user, 'attribute' => 'avatarId' ] );
+		}
+
+		// Create User
+		$user->save();
+
+		return $user;
+	}
+
+	// Update -----------
+
+	/**
+	 * The method update user including avatar.
+	 * @param User $user
+	 * @param CmgFile $avatar
+	 * @return User
+	 */
+	public static function update( $user, $avatar = null ) {
+
+		// Find existing user
+		$userToUpdate	= User::findById( $user->id );
+
+		// Copy Attributes
+		$userToUpdate->copyForUpdateFrom( $user, [ 'email', 'username', 'firstName', 'lastName', 'newsletter', 'status', 'phone', 'avatarId' ] );
+
+		if( isset( $avatar ) ) {
+
+			// Save Avatar
+			FileService::saveImage( $avatar, [ 'model' => $userToUpdate, 'attribute' => 'avatarId' ] );
+		}
+
+		// Update User
+		$userToUpdate->update();
+
+		// Return updated User
+		return $userToUpdate;
+	}
+
+	// Delete -----------
+
+	/**
+	 * The method delete existing user.
+	 * @param User $user
+	 * @return boolean
+	 */
+	public static function delete( $user ) {
+
+		// Find existing user
+		$userToDelete	= User::findById( $user->id );
+
+		// Delete User
+		$userToDelete->delete();
+
+		return true;
 	}
 }
 

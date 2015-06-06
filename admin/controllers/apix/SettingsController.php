@@ -51,15 +51,15 @@ class SettingsController extends BaseController {
 
 		$meta->setScenario( "update" );
 
-		if( $meta->load( Yii::$app->request->post( "ModelMeta" ), "" ) ) {
+		if( $meta->load( Yii::$app->request->post(), "ModelMeta" ) ) {
 
 			if( SiteService::updateMeta( $meta ) ) {
 
-				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
 			}
 		}
 
-		AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ) );
+		AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
 }
 

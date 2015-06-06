@@ -64,14 +64,14 @@ class GalleryController extends BaseController {
 			if( $item->load( Yii::$app->request->post( "File" ), "" ) && GalleryService::createItem( $gallery, $item ) ) {
 
 				// Trigger Ajax Success
-				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 			}
 
 			// Generate Errors
 			$errors = AjaxUtil::generateErrorMessage( $item );
 	
 			// Trigger Ajax Success
-	        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+	        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
 	}
 	
@@ -86,7 +86,7 @@ class GalleryController extends BaseController {
 			if( $item->load( Yii::$app->request->post( "File" ), "" ) && GalleryService::updateItem( $item ) ) {
 
 				// Trigger Ajax Success
-				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ) );	
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );	
 			}
 			else {
 
@@ -94,7 +94,7 @@ class GalleryController extends BaseController {
 				$errors = AjaxUtil::generateErrorMessage( $item );
 		
 				// Trigger Ajax Success
-		        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+		        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 			}
 		}
 	}

@@ -19,7 +19,7 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Create User";
 		<?= $form->field( $model, 'phone' ) ?>
 		<?= $form->field( $model, 'newsletter' )->checkbox() ?>
 		
-		<?=Html::a( "Cancel", [ '/cmgcore/user/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
 		<input type="submit" value="Create" />
 		
 		<?php ActiveForm::end(); ?>

@@ -11,7 +11,8 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Login";
 
     	<?= $form->field( $model, 'email' ) ?>
     	<?= $form->field( $model, 'password' )->passwordInput() ?>
-		
+		<?= $form->field( $model, 'rememberMe' )->checkbox() ?>
+
 		<div class="box-filler"></div>
 
 		<input type="submit" value="Login" />

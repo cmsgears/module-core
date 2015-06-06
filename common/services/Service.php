@@ -29,18 +29,20 @@ class Service {
 	 * @return ActiveDataProvider
 	 */
 	public static function getDataProvider( $entity, $args ) {
-		
+
 		// args
 		$query			= isset( $args[ 'query' ] ) ? $args[ 'query' ] : null;
 		$limit			= isset( $args[ 'limit' ] ) ? $args[ 'limit' ] : null;
 		$conditions		= isset( $args[ 'conditions' ] ) ? $args[ 'conditions' ] : null;
-		$filter			= isset( $args[ 'filter' ] ) ? $args[ 'filter' ] : null;
+		$filters		= isset( $args[ 'filters' ] ) ? $args[ 'filters' ] : null;
 		$sort			= isset( $args[ 'sort' ] ) ? $args[ 'sort' ] : null;
 		$searchCol		= isset( $args[ 'search-col' ] ) ? $args[ 'search-col' ] : null;
 		$route			= isset( $args[ 'route' ] ) ? $args[ 'route' ] : null;
 
 		$pagination	= array();
-		
+
+		// Default Query -------
+
 		if( !isset( $query ) ) {
 
 			$query 	= $entity::find();
@@ -60,22 +62,14 @@ class Service {
 			$query 	= $query->where( $conditions );
 		}
 
-		if( isset( $filter ) ) {
-			
-			$query 	= $query->andFilterWhere( $filter );
+		if( isset( $filters ) ) {
+
+			foreach ( $filters as $filter ) {
+
+				$query 	= $query->andFilterWhere( $filter );	
+			}
 		}
 
-		// TODO: multiple column filters
-		// $query->andFilterWhere(['like', 'alias', $this->alias]);
-        // $query->andFilterWhere(['like', 'title', $this->title]);
-
-		// Sorting ------------
-		/*
-		if( isset( $sort ) ) {
-
-			$query->orderBy( $sort->orders );
-		}
-		*/
 		// Searching ----------
 
 		$searchTerms	= Yii::$app->request->getQueryParam( "search" );
@@ -88,23 +82,6 @@ class Service {
 		}
 
 		// $command = $query->createCommand(); var_dump( $command );
-
-		// Generate Results ---
-		/*
-	    $countQuery 			= clone $query;
-		$total					= $countQuery->count();
-	    $pages 					= new Pagination( [ 'totalCount' => $total, 'route' => $route ] );
-		$pages->pageSize		= $limit;
-	    $models 				= $query->offset( $pages->offset )
-				        			    ->limit( $pages->limit )
-	        						    ->all();
-
-		$pagination['page']		= $models;
-		$pagination['pages']	= $pages;
-		$pagination['total']	= $total;
-
-		return $pagination;
-		 */
 
 	    $dataProvider	= new ActiveDataProvider([
             'query' => $query,

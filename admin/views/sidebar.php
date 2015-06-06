@@ -22,7 +22,8 @@ $user	= Yii::$app->user->getIdentity();
 					<li><?= Html::a( "Permissions", ['/cmgcore/permission/all'] ) ?></li>
 				<?php } ?>
 				<?php if( $user->isPermitted( 'identity' ) ) { ?>
-					<li><?= Html::a( "Users", ['/cmgcore/user/all'] ) ?></li>
+					<li><?= Html::a( "Admins", ['/cmgcore/user/admins'] ) ?></li>
+					<li><?= Html::a( "Users", ['/cmgcore/user/users'] ) ?></li>
 				<?php } ?>
 			</ul>
 		</div>

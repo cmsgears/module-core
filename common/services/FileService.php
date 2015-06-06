@@ -64,7 +64,7 @@ class FileService extends Service {
 			$user						= Yii::$app->user->getIdentity();
 			$fileToUpdate->modifiedBy	= $user->id;
 
-			$fileToUpdate->copyForUpdateFrom( $file, [ 'description', 'altText', 'link' ] );
+			$fileToUpdate->copyForUpdateFrom( $file, [ 'title', 'description', 'altText', 'link' ] );
 
 			// Update File
 			$fileToUpdate->update();
@@ -92,7 +92,7 @@ class FileService extends Service {
 			$user						= Yii::$app->user->getIdentity();
 			$fileToUpdate->modifiedBy	= $user->id;
 
-			$fileToUpdate->copyForUpdateFrom( $file, [ 'description', 'altText', 'link', 'name', 'directory', 'extension', 'createdBy', 'type', 'url', 'thumb', 'createdAt' ] );
+			$fileToUpdate->copyForUpdateFrom( $file, [ 'title', 'description', 'altText', 'link', 'name', 'directory', 'extension', 'createdBy', 'type', 'url', 'thumb', 'createdAt' ] );
 
 			// Update File
 			$fileToUpdate->update();
@@ -225,7 +225,7 @@ class FileService extends Service {
 	// Delete -----------
 
 	public static function delete( $file ) {
-		
+
 		// Find existing File
 		$existingFile	= self::findById( $file->id );
 

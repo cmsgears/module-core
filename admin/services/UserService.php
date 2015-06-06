@@ -11,8 +11,6 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\User;
 
-use cmsgears\core\common\utilities\DateUtil;
-
 class UserService extends \cmsgears\core\common\services\UserService {
 
 	// Static Methods ----------------------------------------------
@@ -63,16 +61,15 @@ class UserService extends \cmsgears\core\common\services\UserService {
 			$conditions['status'] = $status;
 		}
 
-		$site						= CoreTables::TABLE_SITE;
-		$conditions["$site.name"] 	= Yii::$app->cmgCore->getSiteName();
-		
+		$conditions["site.name"] 	= Yii::$app->cmgCore->getSiteName();
+
 		if( isset( $query ) ) {
 
-			return self::getPaginationDetails( new User(), [ 'conditions' => $conditions, 'query' => $query, 'sort' => $sort, 'search-col' => 'firstName' ] );
+			return self::getDataProvider( new User(), [ 'conditions' => $conditions, 'query' => $query, 'sort' => $sort, 'search-col' => 'firstName' ] );
 		}
 		else {
-			
-			return self::getPaginationDetails( new User(), [ 'conditions' => $conditions, 'sort' => $sort, 'search-col' => 'firstName' ] );
+
+			return self::getDataProvider( new User(), [ 'conditions' => $conditions, 'sort' => $sort, 'search-col' => 'firstName' ] );
 		}
 	}
 
@@ -93,59 +90,6 @@ class UserService extends \cmsgears\core\common\services\UserService {
 	public static function getPaginationByNewsletter() {
 
 		return self::getPagination( [ 'newsletter' => 1 ], User::findWithSiteMember() );
-	}
-
-	// Create -----------
-
-	public static function create( $user ) {
-
-		// Set Attributes
-		$date				= DateUtil::getMysqlDate();
-		$user->registeredAt = $date;
-		$user->status		= User::STATUS_NEW;
-		
-		// Generate Tokens
-		$user->generateVerifyToken();
-		$user->generateAuthKey();
-		
-		// Create User
-		$user->save();
-
-		// Return User
-		return $user;
-	}
-
-	// Update -----------
-
-	public static function update( $user, $avatar ) {
-
-		// Find existing user
-		$userToUpdate	= User::findById( $user->id );
-
-		// Copy Attributes
-		$userToUpdate->copyForUpdateFrom( $user, [ 'email', 'username', 'firstName', 'lastName', 'newsletter', 'status', 'phone', 'avatarId' ] );
-
-		// Save Avatar
-		FileService::saveImage( $avatar, $userToUpdate, [ 'model' => $userToUpdate, 'attribute' => 'avatarId' ] );
-
-		// Update User
-		$userToUpdate->update();
-
-		// Return updated User
-		return $userToUpdate;
-	}
-
-	// Delete -----------
-
-	public static function delete( $user ) {
-
-		// Find existing user
-		$userToDelete	= User::findById( $user->getId() );
-
-		// Delete User
-		$userToDelete->delete();
-
-		return true;
 	}
 }
 

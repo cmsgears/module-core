@@ -55,11 +55,9 @@ class FileController extends Controller {
 			// Trigger Ajax Success
 			AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 		}
-		else {
 
-			// Trigger Ajax Failure
-	        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
-		}
+		// Trigger Ajax Failure
+        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
 }
 

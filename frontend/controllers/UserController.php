@@ -3,7 +3,6 @@ namespace cmsgears\core\frontend\controllers;
 
 // Yii Imports
 use Yii;
-use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 
 // CMG Imports
@@ -28,15 +27,10 @@ class UserController extends BaseController {
     public function behaviors() {
 
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => [ 'home' ],
-                'rules' => [
-                    [
-                        'actions' => [ 'home' ],
-                        'allow' => true,
-                        'roles' => ['@']
-                    ]
+            'rbac' => [
+                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'actions' => [
+	                'home' => [ 'permission' => CoreGlobal::PERM_USER ]
                 ]
             ],
             'verbs' => [

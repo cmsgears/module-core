@@ -52,6 +52,59 @@ class CategoryService extends Service {
 
 		return self::findIdNameList( "id", "name", CoreTables::TABLE_CATEGORY, [ "type" => $type ] );
 	}
+
+	// Data Provider ----
+
+	/**
+	 * @param array - yii conditions for where query
+	 * @param array - custom query instead of model
+	 * @return ActiveDataProvider
+	 */
+	public static function getPagination( $conditions = [], $query = null ) {
+
+		return self::getDataProvider( new Category(), [ 'conditions' => $conditions, 'query' => $query ] );
+	}
+
+	// Create -----------
+
+	public static function create( $category ) {
+
+		// Create Category
+		$category->save();
+		
+		// Return Category
+		return $category;
+	}
+
+	// Update -----------
+
+	public static function update( $category ) {
+
+		// Find existing Category
+		$categoryToUpdate	= self::findById( $category->id );
+
+		// Copy Attributes
+		$categoryToUpdate->copyForUpdateFrom( $category, [ 'parentId', 'name', 'description', 'type', 'icon' ] );
+
+		// Update Category
+		$categoryToUpdate->update();
+
+		// Return updated Category
+		return $categoryToUpdate;
+	}
+
+	// Delete -----------
+
+	public static function delete( $category ) {
+
+		// Find existing Category
+		$categoryToDelete	= self::findById( $category->id );
+
+		// Delete Category
+		$categoryToDelete->delete();
+
+		return true;
+	}
 }
 
 ?>

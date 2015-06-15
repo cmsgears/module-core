@@ -1,6 +1,5 @@
 <?php
-use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use \Yii;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Confirm Account";

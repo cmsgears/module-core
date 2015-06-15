@@ -16,7 +16,7 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
 /**
  * Gallery Entity - The primary class.
  *
- * @property int $id
+ * @property integer $id
  * @property string $name
  * @property string $description
  */

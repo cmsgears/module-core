@@ -61,7 +61,7 @@ CREATE TABLE `cmg_core_option` (
   `categoryId` bigint(20) NOT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `message` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `icon` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_option_1` (`categoryId`)
@@ -310,7 +310,7 @@ CREATE TABLE `cmg_core_notification` (
   `notifierId` bigint(20) NOT NULL,
   `userId` bigint(20) NOT NULL,
   `typeId` bigint(20) NOT NULL,
-  `message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `message` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime NOT NULL,
   `flag` tinyint(1) DEFAULT 0,
@@ -332,7 +332,7 @@ CREATE TABLE `cmg_core_reminder` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `userId` bigint(20) NOT NULL,
   `typeId` bigint(20) NOT NULL,
-  `message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `message` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime NOT NULL,
   `time` datetime DEFAULT NULL,
@@ -353,7 +353,7 @@ DROP TABLE IF EXISTS `cmg_core_activity`;
 CREATE TABLE `cmg_core_activity` (
   `userId` bigint(20) NOT NULL,
   `typeId` bigint(20) NOT NULL,
-  `message` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `message` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   KEY `fk_activity_1` (`userId`),
   KEY `fk_activity_2` (`typeId`)
@@ -425,12 +425,13 @@ DROP TABLE IF EXISTS `cmg_core_model_message`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_model_message` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `localeId` bigint(20) DEFAULT NULL,
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `value` LONGTEXT COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`localeId`,`parentId`,`parentType`,`name`),
+  `value` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
   KEY `fk_model_message_1` (`localeId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -443,14 +444,15 @@ DROP TABLE IF EXISTS `cmg_core_model_meta`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_model_meta` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `value` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` varchar(100) COLLATE utf8_unicode_ci DEFAULT 'default',
   `fieldType` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `fieldMeta` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`parentId`,`parentType`,`name`,`type`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -462,10 +464,11 @@ DROP TABLE IF EXISTS `cmg_core_model_category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_model_category` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `categoryId` bigint(20) NOT NULL,
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`categoryId`,`parentId`,`parentType`),
+  PRIMARY KEY (`id`),
   KEY `fk_model_category_1` (`categoryId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -478,11 +481,12 @@ DROP TABLE IF EXISTS `cmg_core_model_file`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_model_file` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `fileId` bigint(20) NOT NULL,
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `order` smallint(6) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`fileId`,`parentId`,`parentType`),
+  PRIMARY KEY (`id`),
   KEY `fk_model_file_1` (`fileId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -495,10 +499,11 @@ DROP TABLE IF EXISTS `cmg_core_model_tag`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_model_tag` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `tagId` bigint(20) NOT NULL,
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`tagId`,`parentId`,`parentType`),
+  PRIMARY KEY (`id`),
   KEY `fk_model_tag_1` (`tagId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -511,11 +516,12 @@ DROP TABLE IF EXISTS `cmg_core_model_address`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_model_address` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `addressId` bigint(20) NOT NULL,
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`addressId`,`parentId`,`parentType`),
+  PRIMARY KEY (`id`),
   KEY `fk_model_address_1` (`addressId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

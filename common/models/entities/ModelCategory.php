@@ -10,13 +10,22 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * ModelCategory Entity
  *
- * @property int $categoryId
- * @property int $parentId
+ * @property integer $id
+ * @property integer $categoryId
+ * @property integer $parentId
  * @property string $parentType
  */
 class ModelCategory extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
+
+	/**
+	 * @return Category - associated category
+	 */
+	public function getCategory() {
+
+    	return $this->hasOne( Category::className(), [ 'id' => 'categoryId' ] );
+	}
 
 	// yii\base\Model --------------------
 
@@ -27,6 +36,7 @@ class ModelCategory extends CmgEntity {
 
         return [
             [ [ 'categoryId', 'parentId', 'parentType' ], 'required' ],
+            [ 'id', 'safe' ],
             [ [ 'categoryId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'parentType', 'string', 'min' => 1, 'max' => 100 ]
         ];
@@ -61,6 +71,14 @@ class ModelCategory extends CmgEntity {
 	// ModelCategory ---------------------
 
 	// Read ----
+
+	/**
+	 * @return ModelCategory - by id
+	 */
+	public static function findById( $id ) {
+
+		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
+	}
 
 	/**
 	 * @param int $parentId

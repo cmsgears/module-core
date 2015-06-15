@@ -55,10 +55,10 @@ class Nav extends Widget {
 
         foreach( $this->items as $i => $item ) {
 
-            $items[] = $this->renderItem($item);
+            $items[] = $this->renderItem( $item );
         }
 
-        return Html::tag( 'ul', implode("\n", $items), $this->options );
+        return Html::tag( 'ul', implode( "\n", $items ), $this->options );
     }
 
     public function renderItem( $item ) {
@@ -71,12 +71,13 @@ class Nav extends Widget {
         $label      = $item['label'];
         $url        = $item['url'];
         $options    = [];
-		
+
 		if( isset( $item['options'] ) ) {
-			
+
 			$options = $item['options'];
 		}
 
-        return Html::tag( 'li', Html::a($label, $url, null), $options );
+        return Html::tag( 'li', Html::a( $label, $url, null ), $options );
     }
 }
+?>

@@ -30,6 +30,10 @@ class CoreGlobal {
 	const CONFIG_ADMIN			= "admin";
 	const CONFIG_FRONTEND		= "frontend";
 
+	// Roles -----------------------------------------------------------
+	
+	const ROLE_USER					= "user";
+
 	// Permissions -----------------------------------------------------
 
 	// Site Module
@@ -147,9 +151,12 @@ class CoreGlobal {
 	// User Fields
 	const FIELD_EMAIL				= "emailField";
 	const FIELD_USERNAME			= "usernameField";
+	const FIELD_PASSWORD			= "passwordField";
+	const FIELD_PASSWORD_REPEAT		= "passwordRepeatField";
 	const FIELD_FIRSTNAME			= "firstNameField";
 	const FIELD_LASTNAME			= "lastNameField";
 	const FIELD_DOB					= "dobField";
+	const FIELD_TERMS				= "termsField";
 	const FIELD_NEWSLETTER			= "newsletterField";
 	
 	// File Fields

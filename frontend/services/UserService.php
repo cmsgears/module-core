@@ -34,7 +34,7 @@ class UserService extends \cmsgears\core\common\services\UserService {
 		$user->registeredAt	= $date;
 		$user->status		= User::STATUS_NEW;
 
-		$user->setPassword( $registerForm->password );
+		$user->generatePassword( $registerForm->password );
 		$user->generateVerifyToken();
 		$user->generateAuthKey();
 
@@ -74,7 +74,7 @@ class UserService extends \cmsgears\core\common\services\UserService {
 	}
 
 	/**
-	 * The method verify and confirm user.
+	 * The method verify and confirm user by accepting valid token sent via mail. It also set user status to active.
 	 * @param User $user
 	 * @param string $token
 	 * @param boolean $activate
@@ -113,7 +113,7 @@ class UserService extends \cmsgears\core\common\services\UserService {
 
 		// Find existing user
 		$userToUpdate	= User::findById( $user->id );
-		
+
 		// Generate Token
 		$userToUpdate->generateResetToken();
 
@@ -157,7 +157,7 @@ class UserService extends \cmsgears\core\common\services\UserService {
 	 * @param CmgFile $avatar
 	 * @return User - updated User
 	 */
-	public function actionUpdateAvatar( $user, $avatar ) {
+	public function updateAvatar( $user, $avatar ) {
 
 		// Find existing user
 		$userToUpdate	= User::findById( $user->id );

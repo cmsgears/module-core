@@ -30,7 +30,7 @@ class NewsletterService extends Service {
 	/**
 	 * @return array - associative array having email as key and name as value
 	 */
-	public static function getMailingList( $conditions = [] ) {
+	public static function getMembersList( $conditions = [] ) {
 
 		$conditions['newsletter'] 	= 1;
 		$userTable					= CoreTables::TABLE_USER;
@@ -43,6 +43,18 @@ class NewsletterService extends Service {
 		}
 
 		return $membersList;
+	}
+
+	// Data Provider ----
+
+	/**
+	 * @param array - yii conditions for where query
+	 * @param array - custom query instead of model
+	 * @return ActiveDataProvider
+	 */
+	public static function getPagination( $conditions = [], $query = null ) {
+
+		return self::getDataProvider( new Newsletter(), [ 'conditions' => $conditions, 'query' => $query ] );
 	}
 
 	// Create -----------

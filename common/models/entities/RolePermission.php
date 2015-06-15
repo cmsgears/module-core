@@ -10,8 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * RolePermission Entity
  *
- * @property int $roleId
- * @property int $permissionId
+ * @property integer $roleId
+ * @property integer $permissionId
  */
 class RolePermission extends CmgEntity {
 
@@ -22,7 +22,7 @@ class RolePermission extends CmgEntity {
 	 */
 	public function getRole() {
 
-		return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] )->from( CoreTables::TABLE_ROLE . ' role' );
+		return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
 	}
 
 	/**
@@ -30,7 +30,7 @@ class RolePermission extends CmgEntity {
 	 */
 	public function getPermission() {
 
-		return $this->hasOne( Permission::className(), [ 'id' => 'permissionId' ] )->from( CoreTables::TABLE_PERMISSION . ' permission' );
+		return $this->hasOne( Permission::className(), [ 'id' => 'permissionId' ] );
 	}
 
 	// yii\base\Model --------------------

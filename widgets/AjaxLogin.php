@@ -8,6 +8,8 @@ use yii\base\InvalidConfigException;
 use yii\web\View;
 use yii\helpers\Html;
 
+// TODO: Add a bootstrap view apart from cmgtools
+
 class AjaxLogin extends Widget {
 
 	// Variables ---------------------------------------------------
@@ -150,6 +152,9 @@ class AjaxLogin extends Widget {
 <?php
 	}
 
+	/**
+	 * Register the JS at bottom to show and hide the boxes for login and registration.
+	 */
 	private function registerJs() {
 
 		$js	= "jQuery( '#box-signup-show' ).click( function( e ) {
@@ -157,7 +162,6 @@ class AjaxLogin extends Widget {
 					e.preventDefault();
 			
 					jQuery( '#box-login' ).slideUp( 'fast' );
-
 					jQuery( '#box-signup' ).slideDown( 'slow' );
 				});
 	
@@ -166,7 +170,6 @@ class AjaxLogin extends Widget {
 					e.preventDefault();
 
 					jQuery( '#box-signup' ).slideUp( 'fast' );
-
 					jQuery( '#box-login' ).slideDown( 'slow' );
 				});";
 

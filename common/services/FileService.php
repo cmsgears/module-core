@@ -17,7 +17,7 @@ class FileService extends Service {
 	// Static Methods ----------------------------------------------
 
 	// Read ----------------
-	
+
 	/**
 	 * @param integer $id
 	 * @return CmgFile
@@ -25,6 +25,18 @@ class FileService extends Service {
 	public static function findById( $id ) {
 
 		return CmgFile::findById( $id );
+	}
+
+	// Data Provider ----
+
+	/**
+	 * @param array - yii conditions for where query
+	 * @param array - custom query instead of model
+	 * @return ActiveDataProvider
+	 */
+	public static function getPagination( $conditions = [], $query = null ) {
+
+		return self::getDataProvider( new CmgFile(), [ 'conditions' => $conditions, 'query' => $query ] );
 	}
 
 	// Create -----------
@@ -64,7 +76,7 @@ class FileService extends Service {
 			$user						= Yii::$app->user->getIdentity();
 			$fileToUpdate->modifiedBy	= $user->id;
 
-			$fileToUpdate->copyForUpdateFrom( $file, [ 'title', 'description', 'altText', 'link' ] );
+			$fileToUpdate->copyForUpdateFrom( $file, [ 'title', 'description', 'altText', 'link', 'type' ] );
 
 			// Update File
 			$fileToUpdate->update();
@@ -92,7 +104,7 @@ class FileService extends Service {
 			$user						= Yii::$app->user->getIdentity();
 			$fileToUpdate->modifiedBy	= $user->id;
 
-			$fileToUpdate->copyForUpdateFrom( $file, [ 'title', 'description', 'altText', 'link', 'name', 'directory', 'extension', 'createdBy', 'type', 'url', 'thumb', 'createdAt' ] );
+			$fileToUpdate->copyForUpdateFrom( $file, [ 'title', 'description', 'altText', 'link', 'type', 'name', 'directory', 'extension', 'url', 'thumb' ] );
 
 			// Update File
 			$fileToUpdate->update();

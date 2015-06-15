@@ -101,9 +101,12 @@ class MessageSource extends Component {
 		// User Fields
 		CoreGlobal::FIELD_EMAIL => "Email",
 		CoreGlobal::FIELD_USERNAME => "Username",
+		CoreGlobal::FIELD_PASSWORD => "Password",
+		CoreGlobal::FIELD_PASSWORD_REPEAT => "Confirm Password",
 		CoreGlobal::FIELD_FIRSTNAME => "First Name",
 		CoreGlobal::FIELD_LASTNAME => "Last Name",
 		CoreGlobal::FIELD_DOB => "Date of Birth",
+		CoreGlobal::FIELD_TERMS => "Terms",
 		CoreGlobal::FIELD_NEWSLETTER => "Newsletter",
 		// File Fields
 		CoreGlobal::FIELD_EXTENSION => "Extension",

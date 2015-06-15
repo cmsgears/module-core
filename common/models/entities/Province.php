@@ -10,8 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * Province Entity
  *
- * @property int $id
- * @property int $countryId
+ * @property integer $id
+ * @property integer $countryId
  * @property string $code
  * @property string $name
  */
@@ -24,7 +24,7 @@ class Province extends CmgEntity {
 	 */
 	public function getCountry() {
 
-		return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] )->from( CoreTables::TABLE_COUNTRY . ' country' );
+		return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] );
 	}
 
 	// yii\base\Model --------------------
@@ -110,7 +110,7 @@ class Province extends CmgEntity {
 	 */
 	public static function findById( $id ) {
 
-		return self::findOne( $id );
+		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 
 	/**

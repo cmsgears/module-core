@@ -3,18 +3,16 @@ namespace cmsgears\core\frontend\controllers\apix;
 
 // Yii Imports
 use Yii;
-use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\frontend\models\forms\ContactForm;
-use cmsgears\core\frontend\models\forms\RegisterForm;
-use cmsgears\core\common\models\forms\LoginForm;
+use cmsgears\core\frontend\models\forms\Register;
+use cmsgears\core\common\models\forms\Login;
 
+use cmsgears\core\common\services\SiteMemberService;
 use cmsgears\core\frontend\services\UserService;
-use cmsgears\core\frontend\services\RoleService;
 
 use cmsgears\core\frontend\controllers\BaseController;
 
@@ -36,21 +34,11 @@ class SiteController extends BaseController {
     public function behaviors() {
 
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@']
-                    ]
-                ]
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['post']
+                    'register' => ['post'],
+                    'login' => ['post']
                 ]
             ]
         ];
@@ -61,24 +49,24 @@ class SiteController extends BaseController {
     public function actionRegister() {
 
 		// Create Form Model
-		$model = new RegisterForm();
+		$model = new Register();
 
 		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post( "Register" ), "" ) && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), "Register" ) && $model->validate() ) {
 
 			// Register User
 			$user = UserService::register( $model );
 
 			if( isset( $user ) ) {
 
-				// Assign default role
-				$role	= RoleService::assignRole( $user, "user" );
+				// Add User to current Site 
+				SiteMemberService::create( $user );
 
 				// Send Register Mail
 				Yii::$app->cmgCoreMailer->sendRegisterMail( $this->getCoreProperties(), $this->getMailProperties(), $user );
 
 				// Trigger Ajax Success
-				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
 			}
 		}
 		else {
@@ -87,20 +75,20 @@ class SiteController extends BaseController {
 			$errors = AjaxUtil::generateErrorMessage( $model );
 
 			// Trigger Ajax Failure
-        	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+        	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
     }
 
 	public function actionLogin() {
 
 		// Create Form Model
-        $model 			= new LoginForm();
+        $model 			= new Login();
 
 		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post( "Login" ), "" )  && $model->login() ) {
+		if( $model->load( Yii::$app->request->post(), "Login" )  && $model->login() ) {
 
 			// Trigger Ajax Success
-			AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+			AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 		}
 		else {
 
@@ -108,16 +96,8 @@ class SiteController extends BaseController {
 			$errors = AjaxUtil::generateErrorMessage( $model );
 
 			// Trigger Ajax Failure
-        	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+        	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
-    }
-
-    public function actionLogout() {
-
-        Yii::$app->user->logout();
-
-		// Trigger Ajax Success
-		AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
     }
 }
 

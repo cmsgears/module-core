@@ -11,15 +11,15 @@ class DateUtil {
 	/**
 	 * @return datetime - having mysql format
 	 */
-    public static function getMysqlDate() {
+    public static function getDate() {
 
 		return date( 'Y-m-d H:i:s' );
-    } 
+    }
 
 	/**
 	 * @return date - from mysql date
 	 */
-    public static function getDateFromMysqlDate( $date ) {
+    public static function getDateFromTimestamp( $date ) {
 		
 		$date	= preg_split( "/ /", $date );
 

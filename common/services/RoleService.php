@@ -53,6 +53,18 @@ class RoleService extends Service {
 		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_ROLE );
 	}
 
+	// Data Provider ----
+	
+	/**
+	 * @param array - yii conditions for where query
+	 * @param array - custom query instead of model
+	 * @return ActiveDataProvider
+	 */
+	public static function getPagination( $conditions = [], $query = null ) {
+
+		return self::getDataProvider( new Role(), [ 'conditions' => $conditions, 'query' => $query ] );
+	}
+
 	// Create -----------
 
 	/**

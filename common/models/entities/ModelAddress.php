@@ -10,6 +10,7 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * ModelAddress Entity
  *
+ * @property integer $id
  * @property integer $addressId
  * @property integer $parentId
  * @property string $parentType
@@ -18,6 +19,14 @@ use cmsgears\core\common\config\CoreGlobal;
 class ModelAddress extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
+
+	/**
+	 * @return Address - associated address
+	 */
+	public function getAddress() {
+
+    	return $this->hasOne( Address::className(), [ 'id' => 'addressId' ] );
+	}
 
 	// yii\base\Model --------------------
 
@@ -28,6 +37,7 @@ class ModelAddress extends CmgEntity {
 
         return [
             [ [ 'addressId', 'parentId', 'parentType' ], 'required' ],
+            [ 'id', 'safe' ],
             [ [ 'addressId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'type' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ 'parentType', 'string', 'min' => 1, 'max' => 100 ]
@@ -66,6 +76,14 @@ class ModelAddress extends CmgEntity {
 	// Read ----
 
 	/**
+	 * @return ModelAddress - by id
+	 */
+	public static function findById( $id ) {
+
+		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
+	}
+
+	/**
 	 * @param int $parentId
 	 * @param string $parentType
 	 * @return array - ModelAddress by parent id and type
@@ -90,7 +108,7 @@ class ModelAddress extends CmgEntity {
 	 */
 	public static function deleteByAddressId( $addressId ) {
 
-		self::deleteAll( 'fileId=:id', [ ':id' => $addressId ] );
+		self::deleteAll( 'addressId=:id', [ ':id' => $addressId ] );
 	}
 }
 

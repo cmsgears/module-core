@@ -10,7 +10,7 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * Country Entity
  *
- * @property int $id
+ * @property integer $id
  * @property string $code
  * @property string $name
  */
@@ -23,7 +23,7 @@ class Country extends NamedCmgEntity {
 	 */
 	public function getProvinces() {
 
-    	return $this->hasMany( Province::className(), [ 'countryId' => 'id' ] )->from( CoreTables::TABLE_PROVINCE . ' province' );
+    	return $this->hasMany( Province::className(), [ 'countryId' => 'id' ] );
 	}
 
 	// yii\base\Model --------------------

@@ -16,7 +16,7 @@ class NewsletterService extends \cmsgears\core\common\services\NewsletterService
 
 	// Pagination -------
 
-	public static function getPagination() {
+	public static function getPagination( $conditions = [], $query = null ) {
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -47,7 +47,7 @@ class NewsletterService extends \cmsgears\core\common\services\NewsletterService
 	        ]
 	    ]);
 
-		return self::getDataProvider( new Newsletter(), [ 'sort' => $sort, 'search-col' => 'name' ] );
+		return self::getDataProvider( new Newsletter(), [ 'conditions' => $conditions, 'query' => $query, 'sort' => $sort, 'search-col' => 'name' ] );
 	}
 }
 

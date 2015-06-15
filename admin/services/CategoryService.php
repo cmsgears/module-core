@@ -8,15 +8,13 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\models\entities\Category;
 
-use cmsgears\core\common\utilities\CodeGenUtil;
-
 class CategoryService extends \cmsgears\core\common\services\CategoryService {
 
 	// Static Methods ----------------------------------------------
 
 	// Pagination -------
 
-	public static function getPagination( $conditions = [] ) {
+	public static function getPagination( $conditions = [], $query = null ) {
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -29,55 +27,12 @@ class CategoryService extends \cmsgears\core\common\services\CategoryService {
 	        ]
 	    ]);
 
-		return self::getPaginationDetails( new Category(), [ 'sort' => $sort, 'conditions' => $conditions, 'search-col' => 'name' ] );
+		return self::getPaginationDetails( new Category(), [ 'conditions' => $conditions, 'query' => $query, 'sort' => $sort, 'search-col' => 'name' ] );
 	}
 
 	public static function getPaginationByType( $type ) {
 
 		return self::getPagination( [ "type" => $type ] );
-	}
-
-	// Create -----------
-
-	public static function create( $category ) {
-
-		$category->slug	= CodeGenUtil::generateSlug( $category->name );
-
-		// Create Category
-		$category->save();
-		
-		// Return Category
-		return $category;
-	}
-
-	// Update -----------
-
-	public static function update( $category ) {
-		
-		// Find existing Category
-		$categoryToUpdate	= self::findById( $category->id );
-		
-		// Copy Attributes
-		$categoryToUpdate->copyForUpdateFrom( $category, [ 'name', 'description', 'type' ] );
-		
-		// Update Category
-		$categoryToUpdate->update();
-		
-		// Return updated Category
-		return $categoryToUpdate;
-	}
-
-	// Delete -----------
-
-	public static function delete( $category ) {
-
-		// Find existing Category
-		$categoryToDelete	= self::findById( $category->id );
-
-		// Delete Category
-		$categoryToDelete->delete();
-
-		return true;
 	}
 }
 

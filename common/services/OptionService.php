@@ -13,6 +13,10 @@ use cmsgears\core\common\models\entities\Category;
  * The class OptionService is base class to perform database activities for Option Entity.
  */
 class OptionService extends Service {
+	
+	// Static Methods ----------------------------------------------
+
+	// Read ----------------
 
 	/**
 	 * @param integer $id
@@ -135,11 +139,23 @@ class OptionService extends Service {
 		$optionsMap	= array();
 
 		foreach ( $options as $option ) {
-			
+
 			$optionsMap[ $option->value ] = $option->name;
 		}
 
 		return $optionsMap;
+	}
+
+	// Data Provider ----
+
+	/**
+	 * @param array - yii conditions for where query
+	 * @param array - custom query instead of model
+	 * @return ActiveDataProvider
+	 */
+	public static function getPagination( $conditions = [], $query = null ) {
+
+		return self::getDataProvider( new Option(), [ 'conditions' => $conditions, 'query' => $query ] );
 	}
 }
 

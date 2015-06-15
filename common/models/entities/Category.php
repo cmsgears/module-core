@@ -11,8 +11,8 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * Category Entity
  *
- * @property int $id
- * @property int $parentId
+ * @property integer $id
+ * @property integer $parentId
  * @property string $name
  * @property string $description
  * @property string $slug
@@ -28,7 +28,7 @@ class Category extends CmgEntity {
 	 */
 	public function getParent() {
 
-		return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] )->from( CoreTables::TABLE_CATEGORY . ' category' );
+		return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] );
 	}
 
 	/**
@@ -36,7 +36,7 @@ class Category extends CmgEntity {
 	 */
 	public function getCategories() {
 
-    	return $this->hasMany( Category::className(), [ 'parentId' => 'id' ] )->from( CoreTables::TABLE_CATEGORY . ' category' );
+    	return $this->hasMany( Category::className(), [ 'parentId' => 'id' ] );
 	}
 
 	/**
@@ -44,7 +44,7 @@ class Category extends CmgEntity {
 	 */
 	public function getOptions() {
 
-    	return $this->hasMany( Option::className(), [ 'categoryId' => 'id' ] )->from( CoreTables::TABLE_OPTION . ' option' );
+    	return $this->hasMany( Option::className(), [ 'categoryId' => 'id' ] );
 	}
 
 	// yii\base\Component ----------------

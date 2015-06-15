@@ -7,8 +7,8 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * Option Entity
  *
- * @property int $id
- * @property int $categoryId
+ * @property integer $id
+ * @property integer $categoryId
  * @property string $name
  * @property string $value
  * @property string $message
@@ -23,7 +23,7 @@ class Option extends CmgEntity {
 	 */
 	public function getCategory() {
 
-		return $this->hasOne( Category::className(), [ 'id' => 'categoryId' ] )->from( CoreTables::TABLE_CATEGORY . ' category' );
+		return $this->hasOne( Category::className(), [ 'id' => 'categoryId' ] );
 	}
 
 	// yii\base\Model --------------------
@@ -108,14 +108,6 @@ class Option extends CmgEntity {
 	// Read ----
 
 	/**
-	 * @return ActiveRecord - with alias name set to 'option'  
-	 */
-	public static function findWithAlias() {
-
-		return self::find()->from( CoreTables::TABLE_OPTION . ' option' );
-	}
-
-	/**
 	 * @return Option - by id
 	 */
 	public static function findById( $id ) {
@@ -143,8 +135,10 @@ class Option extends CmgEntity {
 	 * @return Option - by category name
 	 */
 	public static function findByCategoryName( $categoryName ) {
+		
+		$categoryTable = CoreTables::TABLE_CATEGORY;
 
-		return self::find()->joinWith( 'category' )->where( 'cat.name=:cname', [ ':cname' => $categoryName ] )->all();
+		return self::find()->joinWith( 'category' )->where( "$categoryTable.name=:cname", [ ':cname' => $categoryName ] )->all();
 	}
 
 	/**
@@ -152,7 +146,9 @@ class Option extends CmgEntity {
 	 */
 	public static function findByNameCategory( $name, $category ) {
 
-		return self::find()->where( 'name=:name AND categoryId=:id', [ ':name' => $name, ':id' => $category->id ] )->one();
+		$optionTable = CoreTables::TABLE_OPTION;
+
+		return self::find()->where( "$optionTable.name=:name AND categoryId=:id", [ ':name' => $name, ':id' => $category->id ] )->one();
 	}
 
 	/**
@@ -160,7 +156,9 @@ class Option extends CmgEntity {
 	 */
 	public static function findByNameCategoryId( $name, $categoryId ) {
 
-		return self::find()->where( 'name=:name AND categoryId=:id', [ ':name' => $name, ':id' => $categoryId ] )->one();
+		$optionTable = CoreTables::TABLE_OPTION;
+
+		return self::find()->where( "$optionTable.name=:name AND categoryId=:id", [ ':name' => $name, ':id' => $categoryId ] )->one();
 	}
 
 	/**
@@ -177,8 +175,11 @@ class Option extends CmgEntity {
 	 * @return Option - by name and category name
 	 */
 	public static function findByNameCategoryName( $name, $categoryName ) {
+		
+		$categoryTable 	= CoreTables::TABLE_CATEGORY;
+		$optionTable 	= CoreTables::TABLE_OPTION;
 
-		return self::findWithAlias()->joinWith( 'category' )->where( 'opt.name=:name AND cat.name=:cname' )
+		return self::findWithAlias()->joinWith( 'category' )->where( "$optionTable.name=:name AND $categoryTable.name=:cname" )
 							->addParams( [ ':name' => $name, ':cname' => $categoryName ] )
 							->one();
 	}
@@ -188,7 +189,10 @@ class Option extends CmgEntity {
 	 */
 	public static function findByValueCategoryName( $value, $categoryName ) {
 
-		return self::findWithAlias()->joinWith( 'category' )->where( 'opt.name=:name AND cat.name=:cname' )
+		$categoryTable 	= CoreTables::TABLE_CATEGORY;
+		$optionTable 	= CoreTables::TABLE_OPTION;
+
+		return self::findWithAlias()->joinWith( 'category' )->where( "$optionTable.value=:value AND $categoryTable.name=:cname" )
 							->addParams( [ ':value' => $value, ':cname' => $categoryName ] )
 							->one();
 	}

@@ -25,35 +25,21 @@ class Service {
 	/**
 	 * The method getDataProvider accept the entity class and various parameters to generate the active data provider.
 	 * @param Model $entity
-	 * @param array $args
+	 * @param array $params
 	 * @return ActiveDataProvider
 	 */
-	public static function getDataProvider( $entity, $args ) {
+	public static function getDataProvider( $entity, $params ) {
 
-		// args
-		$query			= isset( $args[ 'query' ] ) ? $args[ 'query' ] : null;
-		$limit			= isset( $args[ 'limit' ] ) ? $args[ 'limit' ] : null;
-		$conditions		= isset( $args[ 'conditions' ] ) ? $args[ 'conditions' ] : null;
-		$filters		= isset( $args[ 'filters' ] ) ? $args[ 'filters' ] : null;
-		$sort			= isset( $args[ 'sort' ] ) ? $args[ 'sort' ] : null;
-		$searchCol		= isset( $args[ 'search-col' ] ) ? $args[ 'search-col' ] : null;
-		$route			= isset( $args[ 'route' ] ) ? $args[ 'route' ] : null;
+		// params to generate query
+		$query			= isset( $params[ 'query' ] ) ? $params[ 'query' ] : $entity::find();
+		$limit			= isset( $params[ 'limit' ] ) ? $params[ 'limit' ] : self::PAGE_LIMIT;
+		$conditions		= isset( $params[ 'conditions' ] ) ? $params[ 'conditions' ] : null;
+		$filters		= isset( $params[ 'filters' ] ) ? $params[ 'filters' ] : null;
+		$searchCol		= isset( $params[ 'search-col' ] ) ? $params[ 'search-col' ] : null;
+		$sort			= isset( $params[ 'sort' ] ) ? $params[ 'sort' ] : null;
+		$route			= isset( $params[ 'route' ] ) ? $params[ 'route' ] : null;
 
 		$pagination	= array();
-
-		// Default Query -------
-
-		if( !isset( $query ) ) {
-
-			$query 	= $entity::find();
-		}
-
-		// Page Limit ----------
-
-		if( $limit == null ) {
-
-			$limit = self::PAGE_LIMIT;
-		}
 
 		// Filtering -----------
 
@@ -62,16 +48,9 @@ class Service {
 			$query 	= $query->where( $conditions );
 		}
 
-		if( isset( $filters ) ) {
-
-			foreach ( $filters as $filter ) {
-
-				$query 	= $query->andFilterWhere( $filter );	
-			}
-		}
-
 		// Searching ----------
 
+		// Single Column
 		$searchTerms	= Yii::$app->request->getQueryParam( "search" );
 
 		if( isset( $searchTerms ) && strlen( $searchTerms ) > 0 && isset( $searchCol ) ) {
@@ -81,8 +60,24 @@ class Service {
 			$query 			= $query->andWhere( $searchQuery );
 		}
 
-		// $command = $query->createCommand(); var_dump( $command );
+		// Multiple Columns
+		if( isset( $filters ) ) {
 
+			foreach ( $filters as $filter ) {
+
+				$query 	= $query->andFilterWhere( $filter );	
+			}
+		}
+
+		// Print Query
+		if( isset( $params[ 'pquery' ] ) && $params[ 'pquery' ] ) {
+
+			$command = $query->createCommand();
+
+			var_dump( $command );
+		}
+
+		// Data Provider
 	    $dataProvider	= new ActiveDataProvider([
             'query' => $query,
             'sort' => $sort,
@@ -100,12 +95,12 @@ class Service {
 	 * The method findMap returns an associative array for the defined table and columns. It also apply the provided conditions.
 	 * @param string $keyColumn
 	 * @param string $valueColumn
-	 * @param string $table
+	 * @param string $tableName
 	 * @param array $conditions
 	 */
-	public static function findMap( $keyColumn, $valueColumn, $table, $conditions = [] ) {
+	public static function findMap( $keyColumn, $valueColumn, $tableName, $conditions = [] ) {
 
-		$arrayList  = self::findNameValueList( $keyColumn, $valueColumn, $table, $conditions );
+		$arrayList  = self::findNameValueList( $keyColumn, $valueColumn, $tableName, $conditions );
 		$map		= [];
 		
 		foreach ( $arrayList as $item ) {
@@ -121,10 +116,10 @@ class Service {
 	/**
 	 * The method findNameList returns an array of list for given column
 	 * @param string $column
-	 * @param string $table
+	 * @param string $tableName
 	 * @param array $conditions 
 	 */
-	public static function findList( $column, $table, $conditions = [] ) {
+	public static function findList( $column, $tableName, $conditions = [] ) {
 		
 		$query	= new Query();
 
@@ -132,12 +127,12 @@ class Service {
 		if( isset( $conditions ) ) {
 
 			$query->select( $column )
-			 	  ->from( $table )->where( $conditions );
+			 	  ->from( $tableName )->where( $conditions );
 		}
 		else {
 
 			$query->select( $column )
-				  ->from( $table );
+				  ->from( $tableName );
 		}
 		
 		// Get result as array
@@ -156,11 +151,11 @@ class Service {
 	 * The method findNameValueList returns an array of associative arrays having name and value as keys for the defined columns.
 	 * @param string $nameColumn
 	 * @param string $valueColumn
-	 * @param string $table
+	 * @param string $tableName
 	 * @param array $conditions
 	 * @param boolean $asArray
 	 */
-	public static function findNameValueList( $nameColumn, $valueColumn, $table, $conditions = [], $asArray = false ) {
+	public static function findNameValueList( $nameColumn, $valueColumn, $tableName, $conditions = [], $asArray = false ) {
 
 		$query 		= new Query();
 
@@ -168,12 +163,12 @@ class Service {
 		if( isset( $conditions ) ) {
 
 			$query->select( $nameColumn.' as name,'. $valueColumn .' as value' )
-			 	  ->from( $table )->where( $conditions );
+			 	  ->from( $tableName )->where( $conditions );
 		}
 		else {
 
 			$query->select( $nameColumn.' as name,'. $valueColumn .' as value' )
-				  ->from( $table );			
+				  ->from( $tableName );			
 		}
 
 		// Get result as array instead of associative array		
@@ -195,11 +190,11 @@ class Service {
 	 * The method findIdNameList returns an array of associative arrays having id and name as keys for the defined columns.
 	 * @param string $idColumn
 	 * @param string $nameColumn
-	 * @param string $table
+	 * @param string $tableName
 	 * @param array $conditions
 	 * @param boolean $asArray 
 	 */
-	public static function findIdNameList( $idColumn, $nameColumn, $table, $conditions = [], $asArray = false ) {
+	public static function findIdNameList( $idColumn, $nameColumn, $tableName, $conditions = [], $asArray = false ) {
 
 		$query 		= new Query();
 
@@ -207,12 +202,12 @@ class Service {
 		if( isset( $conditions ) ) {
 
 			$query->select( $idColumn.' as id,'. $nameColumn .' as name' )
-			 	  ->from( $table )->where( $conditions );
+			 	  ->from( $tableName )->where( $conditions );
 		}
 		else {
 
 			$query->select( $idColumn.' as id,'. $nameColumn .' as name' )
-				  ->from( $table );
+				  ->from( $tableName );
 		}
 		
 		// Get result as array instead of associative array		

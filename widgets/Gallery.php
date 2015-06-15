@@ -3,9 +3,11 @@ namespace cmsgears\core\widgets;
 
 use \Yii;
 use yii\base\Widget;
-use yii\helpers\Html;
+use yii\base\InvalidConfigException;
 
 use cmsgears\core\common\services\GalleryService;
+
+// TODO: Add a bootstrap view apart from cmgtools
 
 class Gallery extends Widget {
 
@@ -32,6 +34,11 @@ class Gallery extends Widget {
 	// yii\base\Widget
 
     public function run() {
+
+        if( !isset( $this->galleryName ) ) {
+
+            throw new InvalidConfigException( "Gallery name is required." );
+        }
 
         echo $this->renderItems();
     }
@@ -73,7 +80,8 @@ class Gallery extends Widget {
 		$image			= $item->file;
 		$imageUrl		= $image->getFileUrl();
 		$imageAlt		= $image->altText;
-
+		
+		$itemTitle		= $image->title;
 		$itemDesc		= $image->description;
 		$itemLink		= $image->link;
 		
@@ -81,16 +89,29 @@ class Gallery extends Widget {
 
 			$itemHtml		= "<li>
 								<div class='wrap-item'>
-									<div class='flip1'><img src='$imageUrl' class='fluid' /></div>
-									<div class='flip2'><span class='info'>$itemDesc</span><span class='link'><a href='$itemLink' class='btn small'>View</a></span></div>
+									<div class='flip1'>
+										<img src='$imageUrl' class='fluid' />
+									</div>
+									<div class='flip2'>
+										<span class='title'>$itemTitle</span>
+										<span class='info'>$itemDesc</span>
+										<span class='link'><a href='$itemLink' class='btn small'>View</a></span>
+									</div>
+								</div>									
 							</li>";
 		}
 		else {
 
 			$itemHtml		= "<li>
 								<div class='wrap-item'>
-									<div class='flip1'><img src='$imageUrl' class='fluid' /></div>
-									<div class='flip2'><span class='info'>$itemDesc</span></div>
+									<div class='flip1'>
+										<img src='$imageUrl' class='fluid' />
+									</div>
+									<div class='flip2'>
+										<span class='title'>$itemTitle</span>
+										<span class='info'>$itemDesc</span>
+									</div>
+								</div>
 							</li>";
 		}
 

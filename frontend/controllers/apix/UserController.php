@@ -8,7 +8,6 @@ use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\frontend\config\WebGlobalCore;
 
 use cmsgears\core\common\models\entities\CmgFile;
 
@@ -34,21 +33,16 @@ class UserController extends BaseController {
     public function behaviors() {
 
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => [ 'home' ],
-                'rules' => [
-                    [
-                        'actions' => [ 'home' ],
-                        'allow' => true,
-                        'roles' => ['@']
-                    ]
+            'rbac' => [
+                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'actions' => [
+	                'avatar' => [ 'permission' => CoreGlobal::PERM_USER ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'home' => ['get']
+                    'avatar' => ['post']
                 ]
             ]
         ];
@@ -60,21 +54,21 @@ class UserController extends BaseController {
 
 		$user	= Yii::$app->user->getIdentity();
 		$avatar = new CmgFile();
-		
-		$avatar->load( Yii::$app->request->post( "Avatar" ), "" );
 
-		if( UserService::actionUpdateAvatar( $user, $avatar ) ) {
+		$avatar->load( Yii::$app->request->post(), "Avatar" );
+
+		if( UserService::updateAvatar( $user, $avatar ) ) {
 
 			$user	= UserService::findById( $user->id );
 			$avatar	= $user->avatar;
 
 			// Trigger Ajax Success
-			AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), [ 'fileUrl' => $avatar->getFileUrl() ] );
+			AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), [ 'fileUrl' => $avatar->getFileUrl() ] );
 		}
 		else {
 
 			// Trigger Ajax Failure
-        	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ) );
+        	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 		}
     }
 }

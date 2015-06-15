@@ -53,24 +53,11 @@ class UserService extends \cmsgears\core\common\services\UserService {
 	            ]
 	        ]
 	    ]);
-		
-		$status	= Yii::$app->request->getQueryParam( "status" );
 
-		if( isset( $status ) ) {
+		$siteTable							= CoreTables::TABLE_SITE;
+		$conditions[ "$siteTable.name" ] 	= Yii::$app->cmgCore->getSiteName();
 
-			$conditions['status'] = $status;
-		}
-
-		$conditions["site.name"] 	= Yii::$app->cmgCore->getSiteName();
-
-		if( isset( $query ) ) {
-
-			return self::getDataProvider( new User(), [ 'conditions' => $conditions, 'query' => $query, 'sort' => $sort, 'search-col' => 'firstName' ] );
-		}
-		else {
-
-			return self::getDataProvider( new User(), [ 'conditions' => $conditions, 'sort' => $sort, 'search-col' => 'firstName' ] );
-		}
+		return self::getDataProvider( new User(), [ 'conditions' => $conditions, 'query' => $query, 'sort' => $sort, 'search-col' => 'firstName' ] );
 	}
 
 	public static function getPaginationByAdmins() {

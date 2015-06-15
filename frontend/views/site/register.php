@@ -1,4 +1,5 @@
 <?php
+use \Yii;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -28,7 +29,7 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Register";
     			<?= $form->field( $model, 'password_repeat' )->passwordInput([ 'placeholder' => 'Confirm Password*' ] ) ?>
     		</li>
     		<li>
-    			<?= $form->field( $model, 'nickName' )->textInput( [ 'placeholder' => 'Username' ] ) ?>
+    			<?= $form->field( $model, 'username' )->textInput( [ 'placeholder' => 'Username' ] ) ?>
     		</li>
     		<li>
     			<?= $form->field( $model, 'firstName' )->textInput( [ 'placeholder' => 'First Name' ] ) ?>

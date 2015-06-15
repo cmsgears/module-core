@@ -9,9 +9,10 @@ use cmsgears\core\common\config\CoreGlobal;
 
 /**
  * ModelMessage Entity
- *
- * @property int $localeId
- * @property int $parentId
+ * 
+ * @property integer $id
+ * @property integer $localeId
+ * @property integer $parentId
  * @property string $parentType
  * @property string $name
  * @property string $value
@@ -25,7 +26,7 @@ class ModelMessage extends CmgEntity {
 	 */
 	public function getLocale() {
 
-		return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] )->from( CoreTables::TABLE_LOCALE . ' mlocale' );
+		return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] );
 	}
 
 	// yii\base\Model --------------------
@@ -37,10 +38,10 @@ class ModelMessage extends CmgEntity {
 
         return [
             [ [ 'localeId', 'parentId', 'parentType', 'name', 'value' ], 'required' ],
+            [ 'id', 'safe' ],
             [ [ 'localeId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ 'parentType', 'string', 'min' => 1, 'max' => 100 ],
+            [ [ 'parentType', 'name' ], 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'alphanumhyphenspace' ],
-            [ 'name', 'string', 'min'=>1, 'max'=>100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
@@ -86,8 +87,8 @@ class ModelMessage extends CmgEntity {
 			$existingMessage = self::findByNameLocaleId( $this->parentId, $this->parentType, $this->name, $this->localeId );
 
 			if( isset( $existingMessage ) && $existingMessage->id != $this->id && 
-				strcmp( $existingMessage->name, $this->name ) == 0 && $existingMessage->localeId == $this->localeId 
-				&& $existingMessage->parentId == $this->parentId && $existingMessage->parentType == $this->parentType ) {
+				$existingMessage->parentId == $this->parentId && $existingMessage->parentType == $this->parentType &&
+				strcmp( $existingMessage->name, $this->name ) == 0 && $existingMessage->localeId == $this->localeId ) {
 	
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}
@@ -109,7 +110,15 @@ class ModelMessage extends CmgEntity {
 	// ModelMessage ----------------------
 
 	/**
-	 * @param int $parentId
+	 * @return ModelMessage - by id
+	 */
+	public static function findById( $id ) {
+
+		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
+	}
+
+	/**
+	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param string $name
 	 * @param int $localeId
@@ -123,7 +132,7 @@ class ModelMessage extends CmgEntity {
 	}
 
 	/**
-	 * @param int $parentId
+	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param string $name
 	 * @param int $localeId

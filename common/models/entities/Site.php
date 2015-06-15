@@ -72,21 +72,6 @@ class Site extends NamedCmgEntity {
 
 	// Site ------------------------------
 
-	/**
-	 * @return Site - by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	/**
-	 * @return Site - by name
-	 */
-	public static function findByName( $name ) {
-
-		return self::find()->where( 'name=:name', [ ':name' => $name ] )->one();
-	}
 }
 
 ?>

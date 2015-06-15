@@ -36,18 +36,18 @@ class Core extends Component {
 	 * @var default redirect path to be used for post login. It will be used by login action of Site Controller to redirect users 
 	 * after successful login in case user role home url is not set.
 	 */
-	public $loginRedirectPage	= "site/index";
+	public $loginRedirectPage	= "/";
 
 	/**
 	 * @var Redirect path to be used for post logout.
 	 */
-	public $logoutRedirectPage	= "site/login";
+	public $logoutRedirectPage	= "/login";
 
 	/**
 	 * @var The indicator whether CMG RBAC has to be used for the project. All the admin sites must set this to true. Though it's optional for 
 	 * front end sites. The front end sites can use either CMG RBAC or Yii's RBAC system or no RBAC system based on project needs.
 	 */
-	public $useRbac				= false;
+	public $useRbac				= true;
 
 	/**
 	 * @var The default filter class available for CMG RBAC system. A different filter can be used based on project needs.
@@ -61,7 +61,7 @@ class Core extends Component {
 	public $rbacFilters			= [];
 
 	/**
-	 * @var It can be used to check whether apis are available for the app. Most probably apis are provided using OAuth 2.0 for mobile applications.
+	 * @var It can be used to check whether apis are available for the app. Most probably apis are provided using OAuth 2.0 for mobile applications. It's used by User class to load permissions when accessed using auth token.
 	 */
 	public $apis				= false;
 
@@ -80,7 +80,7 @@ class Core extends Component {
 		// Initialise core validators
         CoreValidator::initValidators();
 
-		// Set CMSGears alias to be used by all modules, plugins, widgets and themes
+		// Set CMSGears alias to be used by all modules, plugins, widgets and themes. It will be located within the vendor directory for composer.
 		Yii::setAlias( "cmsgears", dirname( dirname( dirname( __DIR__ ) ) ) );
     }
 

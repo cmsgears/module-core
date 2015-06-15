@@ -2,15 +2,12 @@
 namespace cmsgears\core\frontend\controllers\apix;
 
 // Yii Imports
-use Yii;
-use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
+use \Yii;
 use yii\web\Controller;
+use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\models\entities\Permission;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
@@ -29,24 +26,19 @@ class FileController extends Controller {
 
 	// yii\base\Component
 
-    public function behaviors() {
+	public function behaviors() {
 
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['fileHandler'],
-                'rules' => [
-                    [
-                        'actions' => ['fileHandler'],
-                        'allow' => true,
-                        'roles' => ['@']
-                    ]
+            'rbac' => [
+                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'actions' => [
+	                'fileHandler'  => [ 'permission' => CoreGlobal::PERM_USER ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'fileHandler' => ['post']
+	                'fileHandler'  => ['post']
                 ]
             ]
         ];
@@ -54,20 +46,18 @@ class FileController extends Controller {
 
 	// UserController
 
-	public function actionFileHandler( $selector ) {
+	public function actionFileHandler( $directory ) {
 
-		$data	= Yii::$app->fileManager->handleFileUpload( $selector );
+		$data	= Yii::$app->fileManager->handleFileUpload( $directory );
 
 		if( $data ) {
 
 			// Trigger Ajax Success
-			AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+			AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 		}
-		else {
 
-			// Trigger Ajax Failure
-	        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ) );
-		}
+		// Trigger Ajax Failure
+        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
 }
 

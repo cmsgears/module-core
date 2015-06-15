@@ -61,7 +61,7 @@ class GalleryController extends BaseController {
 
 			$item 	= new CmgFile();
 
-			if( $item->load( Yii::$app->request->post( "File" ), "" ) && GalleryService::createItem( $gallery, $item ) ) {
+			if( $item->load( Yii::$app->request->post(), "File" ) && GalleryService::createItem( $gallery, $item ) ) {
 
 				// Trigger Ajax Success
 				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
@@ -74,7 +74,7 @@ class GalleryController extends BaseController {
 	        AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
 	}
-	
+
 	public function actionUpdateItem( $id ) {
 
 		// Find Model
@@ -83,7 +83,7 @@ class GalleryController extends BaseController {
 		// Update/Render if exist
 		if( isset( $item ) ) {
 
-			if( $item->load( Yii::$app->request->post( "File" ), "" ) && GalleryService::updateItem( $item ) ) {
+			if( $item->load( Yii::$app->request->post(), "File" ) && GalleryService::updateItem( $item ) ) {
 
 				// Trigger Ajax Success
 				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );	

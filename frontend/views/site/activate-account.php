@@ -1,5 +1,5 @@
 <?php
-use yii\helpers\Html;
+use \Yii;
 use yii\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
@@ -7,7 +7,7 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Activate Account";
 ?>
 <h1>Forgot Password</h1>
 <?php 
-	if( Yii::$app->session->hasFlash( "message" ) ) { 
+	if( Yii::$app->session->hasFlash( "message" ) ) {
 ?>
 	<p> <?php echo Yii::$app->session->getFlash( "message" ); ?> </p>
 <?php

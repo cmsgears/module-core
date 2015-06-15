@@ -1,5 +1,5 @@
 <?php
-use yii\helpers\Html;
+use \Yii;
 use yii\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
@@ -7,7 +7,7 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Forgot Password";
 ?>
 <h1>Forgot Password</h1>
 <?php 
-	if( Yii::$app->session->hasFlash( "success" ) ) { 
+	if( Yii::$app->session->hasFlash( "success" ) ) {
 ?>
 	<p> <?php echo Yii::$app->session->getFlash( "success" ); ?> </p>
 <?php
@@ -16,7 +16,6 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Forgot Password";
 
 		$form = ActiveForm::begin( [ 'id' => 'frm-forgot-password' ] ); 
 ?>
-    	
     	<ul>
     		<li>
     			Please provide the email address used while signing up.

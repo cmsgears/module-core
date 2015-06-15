@@ -17,7 +17,7 @@ class PermissionService extends \cmsgears\core\common\services\PermissionService
 	/**
 	 * @return ActiveDataProvider
 	 */
-	public static function getPagination() {
+	public static function getPagination( $conditions = [], $query = null ) {
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -30,7 +30,7 @@ class PermissionService extends \cmsgears\core\common\services\PermissionService
 	        ]
 	    ]);
 
-		return self::getDataProvider( new Permission(), [ 'sort' => $sort, 'search-col' => 'name' ] );
+		return self::getDataProvider( new Permission(), [ 'conditions' => $conditions, 'query' => $query, 'sort' => $sort, 'search-col' => 'name' ] );
 	}
 }
 

@@ -49,6 +49,18 @@ class GalleryService extends Service {
 		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_GALLERY );
 	}
 
+	// Data Provider ----
+
+	/**
+	 * @param array - yii conditions for where query
+	 * @param array - custom query instead of model
+	 * @return ActiveDataProvider
+	 */
+	public static function getPagination( $conditions = [], $query = null ) {
+
+		return self::getDataProvider( new Gallery(), [ 'conditions' => $conditions, 'query' => $query ] );
+	}
+
 	// Create -----------
 	
 	/**
@@ -78,19 +90,19 @@ class GalleryService extends Service {
 		// Find User and Slider
 		$modelFile 	= new ModelFile();
 
-		// Save Slide Image to Slide Dimensions
+		// Save Gallery Image
 		FileService::saveImage( $item, [ 'model' => $modelFile, 'attribute' => 'fileId' ] );
-		
+
+		// Save Gallery Item
 		if( $item->id > 0 ) {
 
 			$modelFile->parentType	= CoreGlobal::TYPE_GALLERY;
 			$modelFile->parentId	= $gallery->id;
 
-			// commit slide
 			$modelFile->save();
 		}
 
-		return true;
+		return $item;
 	}
 
 	// Update -----------
@@ -139,6 +151,8 @@ class GalleryService extends Service {
 
 		// Find existing Gallery
 		$galleryToDelete	= self::findById( $gallery->id );
+
+		// TODO: Delete Gallery Items
 
 		// Delete Gallery
 		$galleryToDelete->delete();

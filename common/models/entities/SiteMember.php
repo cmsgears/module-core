@@ -3,6 +3,7 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
+use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
@@ -11,9 +12,9 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * SiteMember Entity
  *
- * @property int $siteId
- * @property int $userId
- * @property int $roleId
+ * @property integer $siteId
+ * @property integer $userId
+ * @property integer $roleId
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
@@ -26,7 +27,7 @@ class SiteMember extends CmgEntity {
 	 */
 	public function getSite() {
 
-    	return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] )->from( CoreTables::TABLE_SITE . ' site' );
+    	return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
 	}
 
 	/**
@@ -34,7 +35,7 @@ class SiteMember extends CmgEntity {
 	 */
 	public function getUser() {
 
-    	return $this->hasOne( User::className(), [ 'id' => 'userId' ] )->from( CoreTables::TABLE_USER . ' user' );
+    	return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
 	}
 
 	/**
@@ -42,7 +43,7 @@ class SiteMember extends CmgEntity {
 	 */
 	public function getRole() {
 
-    	return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] )->from( CoreTables::TABLE_ROLE . ' role' );
+    	return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
 	}
 
 	// yii\base\Component ----------------
@@ -57,7 +58,8 @@ class SiteMember extends CmgEntity {
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
 				'createdAtAttribute' => 'createdAt',
- 				'updatedAtAttribute' => 'modifiedAt'
+ 				'updatedAtAttribute' => 'modifiedAt',
+ 				'value' => new Expression('NOW()')
             ]
         ];
     }
@@ -103,6 +105,14 @@ class SiteMember extends CmgEntity {
 	// SiteMember ------------------------
 
 	// Read ----
+
+	/**
+	 * @return ActiveRecord - with site member and role.
+	 */
+	public static function findWithUserRole() {
+
+		return self::find()->joinWith( 'user' )->joinWith( 'role' );
+	}
 
 	/**
 	 * @return Site - by id

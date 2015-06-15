@@ -13,11 +13,11 @@ class RoleService extends \cmsgears\core\common\services\RoleService {
 	// Static Methods ----------------------------------------------
 
 	// Pagination -------
-	
+
 	/**
 	 * @return ActiveDataProvider
 	 */
-	public static function getPagination() {
+	public static function getPagination( $conditions = [], $query = null ) {
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -25,12 +25,12 @@ class RoleService extends \cmsgears\core\common\services\RoleService {
 	                'asc' => [ 'name' => SORT_ASC ],
 	                'desc' => ['name' => SORT_DESC ],
 	                'default' => SORT_DESC,
-	                'label' => 'name',
+	                'label' => 'name'
 	            ]
 	        ]
 	    ]);
 
-		return self::getDataProvider( new Role(), [ 'sort' => $sort, 'search-col' => 'name' ] );
+		return self::getDataProvider( new Role(), [ 'conditions' => $conditions, 'query' => $query, 'sort' => $sort, 'search-col' => 'name' ] );
 	}
 }
 

@@ -76,6 +76,13 @@ class UserService extends Service {
 		return isset( $user );
 	}
 
+	// Data Provider ----
+
+	public static function getPagination( $conditions = [], $query = null ) {
+
+		return self::getDataProvider( new User(), [ 'conditions' => $conditions, 'query' => $query ] );
+	}
+
 	// Create -----------
 
 	/**
@@ -120,7 +127,7 @@ class UserService extends Service {
 		$userToUpdate	= User::findById( $user->id );
 
 		// Copy Attributes
-		$userToUpdate->copyForUpdateFrom( $user, [ 'email', 'username', 'firstName', 'lastName', 'newsletter', 'status', 'phone', 'avatarId' ] );
+		$userToUpdate->copyForUpdateFrom( $user, [ 'avatarId', 'genderId', 'email', 'username', 'firstName', 'lastName', 'newsletter', 'status', 'phone' ] );
 
 		if( isset( $avatar ) ) {
 

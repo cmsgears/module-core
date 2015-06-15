@@ -18,10 +18,10 @@ use cmsgears\core\common\models\traits\AddressTrait;
 /**
  * User Entity - The primary class.
  *
- * @property int $id
- * @property int localeId
- * @property int genderId
- * @property int avatarId
+ * @property integer $id
+ * @property integer localeId
+ * @property integer genderId
+ * @property integer avatarId
  * @property short $status
  * @property string $email
  * @property string $username
@@ -36,9 +36,10 @@ use cmsgears\core\common\models\traits\AddressTrait;
  * @property string registeredAt
  * @property datetime lastLoginAt
  * @property datetime lastActivityAt
+ * @property string authKey 
  * @property string accessToken
- * @property datetime accessTokenDate
- * @property string authKey
+ * @property datetime accessTokenCreatedAt
+ * @property datetime accessTokenAccessedAt
  */
 class User extends CmgEntity implements IdentityInterface {
 
@@ -91,9 +92,7 @@ class User extends CmgEntity implements IdentityInterface {
 	 */
 	public function getSiteMember() {
 
-		$site 		= CoreTables::TABLE_SITE;
-
-    	return $this->hasOne( SiteMember::className(), [ 'userId' => 'id' ] )->from( CoreTables::TABLE_SITE_MEMBER . ' sitemember' );
+    	return $this->hasOne( SiteMember::className(), [ 'userId' => 'id' ] );
 	}
 
 	/**
@@ -106,9 +105,9 @@ class User extends CmgEntity implements IdentityInterface {
 		$siteMemberTable	= CoreTables::TABLE_SITE_MEMBER;
 
 		return Role::find()
-					->leftJoin( $siteMemberTable, "`$siteMemberTable`.`roleId` = `$roleTable`.`id`" )
-					->leftJoin( $siteTable, "`$siteTable`.`id` = `$siteMemberTable`.`siteId`" )
-					->where( "`$siteMemberTable`.`userId`=:id AND `$siteTable`.`name`=:name", [ ':id' => $this->id, ':name' => Yii::$app->cmgCore->getSiteName() ] );
+					->leftJoin( $siteMemberTable, "$siteMemberTable.roleId = $roleTable.id" )
+					->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
+					->where( "$siteMemberTable.userId=:id AND $siteTable.name=:name", [ ':id' => $this->id, ':name' => Yii::$app->cmgCore->getSiteName() ] );
 	}
 
 	/**
@@ -116,7 +115,7 @@ class User extends CmgEntity implements IdentityInterface {
 	 */
 	public function getAvatar() {
 
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'avatarId' ] )->from( CoreTables::TABLE_FILE . ' uavatar' );
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'avatarId' ] );
 	}
 
 	/**
@@ -124,7 +123,7 @@ class User extends CmgEntity implements IdentityInterface {
 	 */
 	public function getLocale() {
 
-		return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] )->from( CoreTables::TABLE_LOCALE . ' ulocale' );
+		return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] );
 	}
 
 	/**
@@ -132,23 +131,22 @@ class User extends CmgEntity implements IdentityInterface {
 	 */
 	public function getGender() {
 
-		return $this->hasOne( Option::className(), [ 'id' => 'genderId' ] )->from( CoreTables::TABLE_OPTION . ' gender' );
+		return $this->hasOne( Option::className(), [ 'id' => 'genderId' ] );
 	}
-	
+
 	/**
 	 * @return string representation of gender.
 	 */
 	public function getGenderStr() {
 
 		$option = $this->gender;
-		$gender	= '';
 
 		if( isset( $option ) ) {
 
-			$gender = $option->value;
+			return $option->value;
 		}
 
-		return $gender;
+		return '';
 	}
 
 	/**
@@ -336,7 +334,7 @@ class User extends CmgEntity implements IdentityInterface {
 	// User -------------------------------
 
 	/**
-	 * Validates user email to ensure that only one user exist with the given mail.
+	 * Validates user email to ensure that only one user exist with the given email.
 	 */
     public function validateEmailCreate( $attribute, $params ) {
 
@@ -350,7 +348,7 @@ class User extends CmgEntity implements IdentityInterface {
     }
 
 	/**
-	 * Validates user email to ensure that only one user exist with the given mail.
+	 * Validates user email to ensure that only one user exist with the given email.
 	 */
     public function validateEmailUpdate( $attribute, $params ) {
 
@@ -421,23 +419,6 @@ class User extends CmgEntity implements IdentityInterface {
 			}
 		}
 
-		if( !isset( $name ) || strlen( $name ) <= 2 ) {
-
-			$attributes	= $this->attributes();
-			$name		= $attributes[ 'firstName' ] . " " . $attributes[ 'lastName' ];
-
-			if( !isset( $name ) || strlen( $name ) <= 2 ) {
-
-				$name	= $attributes[ 'username' ];
-
-				if( !isset( $name ) || strlen( $name ) <= 2 ) {
-
-					$name	= preg_split( "/@/", $attributes[ 'email' ] );
-					$name	= $name[0];
-				}
-			}
-		}
-
 		return $name;
     }
 
@@ -457,7 +438,7 @@ class User extends CmgEntity implements IdentityInterface {
 
 	/**
 	 * The method finds the user identity using the given id and also loads the available permissions if rbac is enabled for the application.
-	 * @param int $id
+	 * @param integer $id
 	 * @return a valid user based on given id.
 	 */
     public static function findIdentity( $id ) {
@@ -466,9 +447,16 @@ class User extends CmgEntity implements IdentityInterface {
 		$user 	= static::findById( $id );
 
 		// Load User Permissions
-		if( isset( $user ) && Yii::$app->cmgCore->isRbac() ) {
+		if( isset( $user ) ) {
 
-			$user->loadPermissions();
+			if( Yii::$app->cmgCore->isRbac() ) {
+
+				$user->loadPermissions();
+			}
+		}
+		else {
+
+    		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 		}
 
         return $user;
@@ -476,7 +464,7 @@ class User extends CmgEntity implements IdentityInterface {
 
 	/**
 	 * The method finds the user identity using the given access token and also loads the available permissions if rbac is enabled for the application.
-	 * @param int $token
+	 * @param string $token
 	 * @param string $type
 	 * @return a valid user based on given token and type
 	 */
@@ -525,7 +513,7 @@ class User extends CmgEntity implements IdentityInterface {
 	}
 
 	/**
-	 * @param int $id
+	 * @param integer $id
 	 * @return User - by id
 	 */
 	public static function findById( $id ) {

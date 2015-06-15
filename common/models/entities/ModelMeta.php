@@ -10,7 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * ModelMeta Entity
  *
- * @property int $parentId
+ * @property integer $id
+ * @property integer $parentId
  * @property string $parentType
  * @property string $name
  * @property string $value
@@ -31,10 +32,9 @@ class ModelMeta extends CmgEntity {
 
         return [
             [ [ 'parentId', 'parentType', 'name', 'value' ], 'required' ],
-            [ [ 'type', 'fieldType', 'fieldMeta' ], 'safe' ],
+            [ [ 'id', 'type', 'fieldType', 'fieldMeta' ], 'safe' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ 'parentType', 'string', 'min' => 1, 'max' => 100 ],
-            [ 'type', 'string', 'max' => 100 ],
+            [ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validatenameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validatenameUpdate', 'on' => [ 'update' ] ]
@@ -83,6 +83,7 @@ class ModelMeta extends CmgEntity {
 			$existingConfig = self::findByTypeName( $this->parentId, $this->parentType, $this->type, $this->name );
 
 			if( isset( $existingConfig ) && $existingConfig->id != $this->id && 
+				$existingConfig->parentId == $this->parentType && strcmp( $existingConfig->parentType, $this->parentType ) == 0 && 
 				strcmp( $existingConfig->name, $this->name ) == 0 && $existingConfig->type == $this->type ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
@@ -103,9 +104,18 @@ class ModelMeta extends CmgEntity {
 	}
 
 	// ModelMeta -------------------------
-	
+
 	/**
-	 * @param int $parentId
+	 * @param integer $id
+	 * @return ModelMeta - by id
+	 */
+	public static function findById( $id ) {
+
+		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
+	}
+
+	/**
+	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param string $type
 	 * @return array - ModelMeta by type
@@ -117,7 +127,7 @@ class ModelMeta extends CmgEntity {
 	}
 
 	/**
-	 * @param int $parentId
+	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param string $name
 	 * @return ModelMeta - by name
@@ -129,7 +139,7 @@ class ModelMeta extends CmgEntity {
 	}
 
 	/**
-	 * @param int $parentId
+	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param string $type
 	 * @param string $name
@@ -142,7 +152,7 @@ class ModelMeta extends CmgEntity {
 	}
 
 	/**
-	 * @param int $parentId
+	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param string $type
 	 * @param string $name

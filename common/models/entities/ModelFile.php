@@ -10,8 +10,9 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * ModelFile Entity
  *
- * @property int $fileId
- * @property int $parentId
+ * @property integer $id
+ * @property integer $fileId
+ * @property integer $parentId
  * @property string $parentType
  * @property short $order 
  */
@@ -24,7 +25,7 @@ class ModelFile extends CmgEntity {
 	 */
 	public function getFile() {
 
-    	return $this->hasOne( CmgFile::className(), [ 'id' => 'fileId' ] )->from( CoreTables::TABLE_FILE . ' file' );
+    	return $this->hasOne( CmgFile::className(), [ 'id' => 'fileId' ] );
 	}
 
 	// yii\base\Model --------------------
@@ -36,7 +37,7 @@ class ModelFile extends CmgEntity {
 
         return [
             [ [ 'fileId', 'parentId', 'parentType' ], 'required' ],
-            [ 'order', 'safe' ],
+            [ [ 'id', 'order' ], 'safe' ],
             [ [ 'fileId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'parentType', 'string', 'min' => 1, 'max' => 100 ]
         ];
@@ -72,6 +73,14 @@ class ModelFile extends CmgEntity {
 	// ModelFile -------------------------
 	
 	// Read ----
+
+	/**
+	 * @return ModelFile - by id
+	 */
+	public static function findById( $id ) {
+
+		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
+	}
 
 	/**
 	 * @param int $parentId

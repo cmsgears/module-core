@@ -11,9 +11,9 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * Reminder Entity
  *
- * @property int $id
- * @property int $userId
- * @property int $typeId
+ * @property integer $id
+ * @property integer $userId
+ * @property integer $typeId
  * @property string $message
  * @property datetime $createdAt
  * @property datetime $modifiedAt 
@@ -29,7 +29,7 @@ class Reminder extends CmgEntity {
 	 */
 	public function getUser() {
 
-		return $this->hasOne( User::className(), [ 'id' => 'userId' ] )->from( CoreTables::TABLE_USER . ' user' );
+		return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
 	}
 
 	/**
@@ -37,7 +37,7 @@ class Reminder extends CmgEntity {
 	 */
 	public function getType() {
 
-		return $this->hasOne( Option::className(), [ 'id' => 'typeId' ] )->from( CoreTables::TABLE_OPTION . ' type' );
+		return $this->hasOne( Option::className(), [ 'id' => 'typeId' ] );
 	}
 
 	/**

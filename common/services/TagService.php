@@ -51,7 +51,6 @@ class TagService extends Service {
 
 		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_TAG );
 	}
-
 }
 
 ?>

@@ -35,14 +35,14 @@ class CoreTables {
 	const TABLE_REMINDER			= "cmg_core_reminder";
 	const TABLE_ACTIVITY			= "cmg_core_activity";
 
-	// Image Gallery
+	// Image Gallery, Portfolio
 	const TABLE_GALLERY				= "cmg_core_gallery";
 
-	// Site
+	// Site, Multi Site
 	const TABLE_SITE				= "cmg_core_site";
 	const TABLE_SITE_MEMBER			= "cmg_core_site_member";
 
-	// Traits
+	// Model Traits
 	const TABLE_MODEL_MESSAGE		= "cmg_core_model_message";
 	const TABLE_MODEL_CATEGORY		= "cmg_core_model_category";
 	const TABLE_MODEL_META			= "cmg_core_model_meta";

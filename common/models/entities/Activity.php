@@ -10,8 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * Activity Entity
  *
- * @property int $userId
- * @property int $typeId
+ * @property integer $userId
+ * @property integer $typeId
  * @property string $message
  * @property datetime $createdAt
  */
@@ -24,7 +24,7 @@ class Activity extends CmgEntity {
 	 */
 	public function getUser() {
 
-		return $this->hasOne( User::className(), [ 'id' => 'userId' ] )->from( CoreTables::TABLE_USER . ' user' );
+		return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
 	}
 
 	/**
@@ -32,7 +32,7 @@ class Activity extends CmgEntity {
 	 */
 	public function getType() {
 
-		return $this->hasOne( User::className(), [ 'id' => 'typeId' ] )->from( CoreTables::TABLE_OPTION . ' activity' );
+		return $this->hasOne( Option::className(), [ 'id' => 'typeId' ] );
 	}
 
 	// yii\base\Model --------------------

@@ -36,6 +36,18 @@ class PermissionService extends Service {
 		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_PERMISSION );
 	}
 
+	// Data Provider ----
+
+	/**
+	 * @param array - yii conditions for where query
+	 * @param array - custom query instead of model
+	 * @return ActiveDataProvider
+	 */
+	public static function getPagination( $conditions = [], $query = null ) {
+
+		return self::getDataProvider( new Permission(), [ 'conditions' => $conditions, 'query' => $query ] );
+	}
+
 	// Create -----------
 
 	/**
@@ -96,7 +108,7 @@ class PermissionService extends Service {
 
 			foreach ( $roles as $key => $value ) {
 
-				if( isset( $value ) ) {
+				if( isset( $value ) && $value > 0 ) {
 
 					$toSave					= new RolePermission();
 					$toSave->permissionId	= $permissionId;

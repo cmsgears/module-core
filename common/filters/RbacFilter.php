@@ -22,7 +22,7 @@ class RbacFilter extends Behavior {
 	//TODO Add code for caching the roles and permissions
 
 	/**
-	 * @var maps the action to permission and permissions filters.
+	 * @var maps the action to permission and permission filters.
 	 */
 	public $actions	= [];
 
@@ -46,6 +46,7 @@ class RbacFilter extends Behavior {
 					Yii::$app->controller->redirect( Yii::$app->urlManager->createUrl( Yii::$app->cmgCore->getLogoutRedirectPage() ) );
 				}
 
+				// find User and Action Permission
 				$user		= Yii::$app->user->getIdentity();
 				$action 	= $this->actions[ $action ];
 				$permission	= $action[ 'permission' ];
@@ -56,7 +57,7 @@ class RbacFilter extends Behavior {
 					throw new ForbiddenHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 				}
 
-				// Check permission filters
+				// Check permission filters to filter the permission for the current action
 				if( isset( $action[ 'filters' ] ) ) {
 
 					$filters	= $action[ 'filters' ];
@@ -64,6 +65,7 @@ class RbacFilter extends Behavior {
 
 					foreach ( $filterKeys as $key ) {
 
+						// Permission Filter with filter config params
 						if( is_array( $filters[ $key ] ) ) {
 
 							$filter	= Yii::createObject( Yii::$app->cmgCore->rbacFilters[ $key ] );
@@ -71,6 +73,7 @@ class RbacFilter extends Behavior {
 							// Pass filter config while performing filter
 							$filter->doFilter( $filters[ $key ] );
 						}
+						// Permission Filter without filter config params
 						else {
 
 							$filter	= Yii::createObject( Yii::$app->cmgCore->rbacFilters[ $filters[ $key ] ] );

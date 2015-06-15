@@ -14,7 +14,7 @@ trait CreateModifyTrait {
 	 */
 	public function getCreator() {
 
-		return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] )->from( CoreTables::TABLE_USER . ' user' );
+		return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] );
 	}
 
 	/**
@@ -22,7 +22,7 @@ trait CreateModifyTrait {
 	 */
 	public function getModifier() {
 
-		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] )->from( CoreTables::TABLE_USER . ' user' );
+		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] );
 	}
 }
 

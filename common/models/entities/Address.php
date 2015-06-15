@@ -10,9 +10,9 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * Address Entity
  *
- * @property int $id
- * @property int $countryId
- * @property int $provinceId
+ * @property integer $id
+ * @property integer $countryId
+ * @property integer $provinceId
  * @property string $line1
  * @property string $line2
  * @property string $line3
@@ -47,7 +47,7 @@ class Address extends CmgEntity {
 	 */
 	public function getCountry() {
 
-		return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] )->from( CoreTables::TABLE_COUNTRY . ' country' );
+		return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] );
 	}
 
 	/**
@@ -55,7 +55,7 @@ class Address extends CmgEntity {
 	 */
 	public function getProvince() {
 
-		return $this->hasOne( Province::className(), [ 'id' => 'provinceId' ] )->from( CoreTables::TABLE_PROVINCE . ' province' );
+		return $this->hasOne( Province::className(), [ 'id' => 'provinceId' ] );
 	}
 
 	// yii\base\Model --------------------

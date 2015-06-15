@@ -13,7 +13,7 @@ INSERT INTO `cmg_core_site` VALUES
 -- Dumping data for table `cmg_core_model_meta`
 --
 
-INSERT INTO `cmg_core_model_meta` VALUES
+INSERT INTO `cmg_core_model_meta` (`parentId`,`parentType`,`name`,`value`,`type`,`fieldType`,`fieldMeta`) VALUES
 	(1,'site','locale message','false','core','text',null),
 	(1,'site','language','en-US','core','text',null),
 	(1,'site','charset','UTF-8','core','text',null),

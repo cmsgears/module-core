@@ -18,8 +18,9 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property int $id
  * @property int $createdBy
  * @property int $modifiedBy
- * @property string $name
+ * @property string $title
  * @property string $description
+ * @property string $name
  * @property string $extension
  * @property string $directory
  * @property datetime $createdAt
@@ -137,9 +138,9 @@ class CmgFile extends CmgEntity {
 
 		return [
 			'createdBy' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'title' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'extension' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EXTENSION ),
 			'directory' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DIRECTORY ),
 			'url' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_URL ),

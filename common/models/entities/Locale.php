@@ -10,7 +10,7 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * Locale Entity
  *
- * @property int $id
+ * @property integer $id
  * @property string $code
  * @property string $name
  */

@@ -126,7 +126,7 @@ class Login extends Model {
 				}
 			}
 
-			$user->lastLoginAt 	= DateUtil::getMysqlDate();
+			$user->lastLoginAt 	= DateUtil::getDateTime();
 			$user->save();
 
             return Yii::$app->user->login( $user, $this->rememberMe ? 3600 * 24 * 30 : 0 );

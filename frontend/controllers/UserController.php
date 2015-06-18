@@ -9,6 +9,7 @@ use yii\filters\VerbFilter;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 
+use cmsgears\core\common\services\OptionService;
 use cmsgears\core\frontend\services\UserService;
 
 class UserController extends BaseController {
@@ -47,6 +48,39 @@ class UserController extends BaseController {
     public function actionHome() {
 
         return $this->render( WebGlobalCore::PAGE_INDEX );
+    }
+
+    public function actionProfile() {
+
+		// Find Model
+		$model		= Yii::$app->user->getIdentity();
+
+		// Update/Render if exist
+		if( isset( $model ) ) {
+
+			$model->setScenario( "update" );
+
+			UserService::checkNewsletterMember( $model );
+
+			if( $model->load( Yii::$app->request->post(), "User" )  && $model->validate() ) {
+
+				// Update User and Site Member
+				if( UserService::update( $model ) ) {
+
+					$this->refresh();
+				}
+			}
+
+			$genders 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER );
+
+	    	return $this->render( WebGlobalCore::PAGE_PROFILE, [
+	    		'model' => $model,
+	    		'genders' => $genders
+	    	]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
     }
 }
 

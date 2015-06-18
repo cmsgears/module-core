@@ -140,9 +140,11 @@ class UserController extends BaseController {
 
 			$model->setScenario( "update" );
 
-			if( $model->load( Yii::$app->request->post( "User" ), "" )  && $model->validate() && $siteMember->load( Yii::$app->request->post( "SiteMember" ), "" ) ) {
+			UserService::checkNewsletterMember( $model );
 
-				$avatar->load( Yii::$app->request->post( "File" ), "" );
+			if( $model->load( Yii::$app->request->post(), "User" )  && $model->validate() && $siteMember->load( Yii::$app->request->post(), "SiteMember" ) ) {
+
+				$avatar->load( Yii::$app->request->post(), "File" );
 
 				// Update User and Site Member
 				if( UserService::update( $model, $avatar ) && SiteMemberService::update( $siteMember ) ) {

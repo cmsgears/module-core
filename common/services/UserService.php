@@ -94,7 +94,7 @@ class UserService extends Service {
 	public static function create( $user, $avatar = null ) {
 
 		// Set Attributes
-		$user->registeredAt = DateUtil::getMysqlDate();
+		$user->registeredAt = DateUtil::getDateTime();
 		$user->status		= User::STATUS_NEW;
 
 		// Generate Tokens
@@ -109,6 +109,12 @@ class UserService extends Service {
 
 		// Create User
 		$user->save();
+
+		// Add to mailing list
+		if( $user->newsletter ) {
+
+			NewsletterMemberService::create( $user->email );
+		}
 
 		return $user;
 	}
@@ -127,7 +133,7 @@ class UserService extends Service {
 		$userToUpdate	= User::findById( $user->id );
 
 		// Copy Attributes
-		$userToUpdate->copyForUpdateFrom( $user, [ 'avatarId', 'genderId', 'email', 'username', 'firstName', 'lastName', 'newsletter', 'status', 'phone' ] );
+		$userToUpdate->copyForUpdateFrom( $user, [ 'avatarId', 'genderId', 'email', 'username', 'firstName', 'lastName', 'status', 'phone' ] );
 
 		if( isset( $avatar ) ) {
 
@@ -138,8 +144,22 @@ class UserService extends Service {
 		// Update User
 		$userToUpdate->update();
 
+		// Update mailing list
+		NewsletterMemberService::update( $user->email, $user->newsletter );
+
 		// Return updated User
 		return $userToUpdate;
+	}
+
+	public static function checkNewsletterMember( $user ) {
+
+		$member = NewsletterMemberService::findByEmail( $user->email );
+
+		// Update mailing list
+		if( isset( $member ) ) {
+
+			$user->newsletter = true;
+		}
 	}
 
 	// Delete -----------

@@ -27,24 +27,6 @@ class NewsletterService extends Service {
 		return Newsletter::findById( $id );
 	}
 
-	/**
-	 * @return array - associative array having email as key and name as value
-	 */
-	public static function getMembersList( $conditions = [] ) {
-
-		$conditions['newsletter'] 	= 1;
-		$userTable					= CoreTables::TABLE_USER;
-		$members 					= User::findByQuery( "select email, firstName, lastName from $userTable" )->where( $conditions )->all();
-		$membersList				= [];
-
-		foreach ( $members as $member ) {
-
-			$membersList[ $member->email ]	= $member->getName();
-		}
-
-		return $membersList;
-	}
-
 	// Data Provider ----
 
 	/**

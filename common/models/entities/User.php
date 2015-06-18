@@ -85,6 +85,8 @@ class User extends CmgEntity implements IdentityInterface {
 
 	public $permissions	= [];
 
+	public $newsletter;
+
 	// Instance Methods --------------------------------------------
 
 	/**
@@ -195,14 +197,6 @@ class User extends CmgEntity implements IdentityInterface {
 	public function generatePassword( $password ) {
 
 		$this->passwordHash = Yii::$app->security->generatePasswordHash( $password );
-	}
-
-	/**
-	 * @return string representation of newsletter.
-	 */
-	public function getNewsletterStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->newsletter );
 	}
 
 	/**

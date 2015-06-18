@@ -229,7 +229,6 @@ CREATE TABLE `cmg_core_user` (
   `lastName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `dob` date DEFAULT NULL,
   `phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `newsletter` tinyint(1) DEFAULT NULL,
   `verifyToken` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `resetToken` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `registeredAt` datetime DEFAULT NULL,  
@@ -295,6 +294,20 @@ CREATE TABLE `cmg_core_newsletter` (
   PRIMARY KEY (`id`),
   KEY `fk_newsletter_1` (`createdBy`),
   KEY `fk_newsletter_2` (`modifiedBy`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cmg_core_newsletter_member`
+--
+
+DROP TABLE IF EXISTS `cmg_core_newsletter_member`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmg_core_newsletter_member` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

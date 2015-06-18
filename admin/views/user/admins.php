@@ -76,7 +76,6 @@ if( !isset( $sortOrder ) ) {
 					<th>Mobile</th>
 					<th>Reg Date</th>
 					<th>Last Login</th>
-					<th>Newsletter</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -110,7 +109,6 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $user->phone ?></td>
 						<td><?= $user->registeredAt ?></td>
 						<td><?= $user->lastLoginAt ?></td>
-						<td><?= $user->getNewsletterStr() ?></td>
 						<td>
 							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcore/user/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
 							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcore/user/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>

@@ -8,6 +8,9 @@ use \Yii;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\CmgFile;
 
+use cmsgears\core\common\services\FileService;
+use cmsgears\core\common\services\NewsletterMemberService;
+
 use cmsgears\core\common\utilities\DateUtil;
 
 class UserService extends \cmsgears\core\common\services\UserService {
@@ -24,7 +27,7 @@ class UserService extends \cmsgears\core\common\services\UserService {
 	public static function register( $registerForm ) {
 
 		$user 	= new User();
-		$date	= DateUtil::getMysqlDate();
+		$date	= DateUtil::getDateTime();
 
 		$user->email 		= $registerForm->email;
 		$user->username 	= $registerForm->username;
@@ -39,6 +42,12 @@ class UserService extends \cmsgears\core\common\services\UserService {
 		$user->generateAuthKey();
 
 		$user->save();
+
+		// Add to mailing list
+		if( $user->newsletter ) {
+
+			NewsletterMemberService::create( $user->email );
+		}
 
 		return $user;
 	}
@@ -163,7 +172,7 @@ class UserService extends \cmsgears\core\common\services\UserService {
 		$userToUpdate	= User::findById( $user->id );
 
 		// Save Avatar
-		FileService::saveImage( $avatar, $userToUpdate, [ 'model' => $userToUpdate, 'attribute' => 'avatarId' ] );
+		FileService::saveImage( $avatar, [ 'model' => $userToUpdate, 'attribute' => 'avatarId' ] );
 
 		// Update User
 		$userToUpdate->update();

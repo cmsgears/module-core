@@ -49,7 +49,12 @@ class FileService extends Service {
 
 		$user				= Yii::$app->user->getIdentity();
 		$file->createdBy	= $user->id;
-		$file->type			= CmgFile::TYPE_PUBLIC;
+
+		// File Type
+		if( !isset( $file->type ) ) {
+
+			$file->type		= CmgFile::TYPE_PUBLIC;
+		}
 
 		// Create File
 		$file->save();
@@ -138,17 +143,31 @@ class FileService extends Service {
 			if( isset( $args[ 'model' ] ) ) 	$model 		= $args[ 'model' ];
 			if( isset( $args[ 'attribute' ] ) ) $attribute 	= $args[ 'attribute' ];
 
-			// Image dimensions to crop actual image uploaded by users
-			if( isset( $args[ 'width' ] ) ) 	$width 		= $args[ 'width' ];
-			if( isset( $args[ 'height' ] ) ) 	$height 	= $args[ 'height' ];
-			if( isset( $args[ 'twidth' ] ) ) 	$twidth 	= $args[ 'twidth' ];
-			if( isset( $args[ 'theight' ] ) ) 	$theight 	= $args[ 'theight' ];
-
 			// Update Image
 			$fileId 	= $file->id;
 
 			if( $file->changed ) {
 
+				// Image dimensions to crop actual image uploaded by users
+				if( isset( $args[ 'width' ] ) ) 	$width 		= $args[ 'width' ];
+				if( isset( $args[ 'height' ] ) ) 	$height 	= $args[ 'height' ];
+				if( isset( $args[ 'twidth' ] ) ) 	$twidth 	= $args[ 'twidth' ];
+				if( isset( $args[ 'theight' ] ) ) 	$theight 	= $args[ 'theight' ];
+
+				// override controller args
+				if( isset( $file->width ) && isset( $file->height ) ) {
+
+					$width		= $file->width;
+					$height		= $file->height;
+				}
+
+				if( isset( $file->twidth ) && isset( $file->theight ) ) {
+
+					$twidth		= $file->twidth;
+					$theight	= $file->theight;
+				}
+
+				// Process Image
 				$fileManager->processImage( $file, $width, $height, $twidth, $theight );
 			}
 

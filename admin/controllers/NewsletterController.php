@@ -4,7 +4,6 @@ namespace cmsgears\core\admin\controllers;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
-use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
@@ -13,7 +12,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\entities\Newsletter;
 
 use cmsgears\core\admin\services\NewsletterService;
-use cmsgears\core\admin\services\UserService;
+use cmsgears\core\admin\services\NewsletterMemberService;
 
 class NewsletterController extends BaseController {
 
@@ -145,9 +144,7 @@ class NewsletterController extends BaseController {
 
 	public function actionMembers() {
 
-		$dataProvider = UserService::getPaginationByNewsletter();
-
-		Url::remember( [ "/cmgcore/newsletter/members" ], 'users' );
+		$dataProvider = NewsletterMemberService::getPagination();
 
 	    return $this->render('members', [
 	         'dataProvider' => $dataProvider

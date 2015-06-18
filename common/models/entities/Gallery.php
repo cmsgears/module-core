@@ -11,6 +11,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\traits\FileTrait;
 use cmsgears\core\common\models\traits\MetaTrait;
+use cmsgears\core\common\models\traits\CategoryTrait;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 
 /**
@@ -24,11 +25,15 @@ class Gallery extends NamedCmgEntity {
 
 	use FileTrait;
 
-	public $fileType	= CoreGlobal::TYPE_GALLERY;
+	public $fileType		= CoreGlobal::TYPE_GALLERY;
 
 	use MetaTrait;
 
-	public $metaType	= CoreGlobal::TYPE_GALLERY;
+	public $metaType		= CoreGlobal::TYPE_GALLERY;
+
+	use CategoryTrait;
+
+	public $categoryType	= CoreGlobal::TYPE_GALLERY;
 
 	use CreateModifyTrait;
 

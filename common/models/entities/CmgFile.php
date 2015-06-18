@@ -47,6 +47,12 @@ class CmgFile extends CmgEntity {
 	 */
 	public $changed;
 
+	// optional properties for image processing
+	public $width;
+	public $height;
+	public $twidth;
+	public $theight;
+
 	use CreateModifyTrait;
 
 	// Instance Methods --------------------------------------------
@@ -126,6 +132,7 @@ class CmgFile extends CmgEntity {
         return [
             [ [ 'createdBy', 'name', 'extension', 'directory', 'url' ], 'required' ],
             [ [ 'id', 'type', 'title', 'description', 'altText', 'thumb', 'changed', 'link' ], 'safe' ],
+            [ [ 'width', 'height', 'twidth', 'theight' ], 'safe' ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];

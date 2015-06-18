@@ -55,9 +55,7 @@ class UserController extends BaseController {
 		$user	= Yii::$app->user->getIdentity();
 		$avatar = new CmgFile();
 
-		$avatar->load( Yii::$app->request->post(), "Avatar" );
-
-		if( UserService::updateAvatar( $user, $avatar ) ) {
+		if( $avatar->load( Yii::$app->request->post(), "File" ) && UserService::updateAvatar( $user, $avatar ) ) {
 
 			$user	= UserService::findById( $user->id );
 			$avatar	= $user->avatar;

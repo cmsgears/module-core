@@ -73,11 +73,6 @@ class UserService extends \cmsgears\core\common\services\UserService {
 
 		return self::getPagination( [ "$permission.name" => CoreGlobal::PERM_USER ], User::findWithSiteMemberPermission() );
 	}
-
-	public static function getPaginationByNewsletter() {
-
-		return self::getPagination( [ 'newsletter' => 1 ], User::findWithSiteMember() );
-	}
 }
 
 ?>

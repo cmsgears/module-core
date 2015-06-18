@@ -22,6 +22,7 @@ class WebGlobalCore {
 	const PAGE_FORGOT_PASSWORD	= "forgot-password";
 	const PAGE_RESET_PASSWORD	= "reset-password";
 	const PAGE_LOGIN			= "login";
+	const PAGE_PROFILE			= "profile";
 }
 
 ?>

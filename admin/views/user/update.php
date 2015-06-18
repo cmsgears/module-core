@@ -15,7 +15,7 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Update User";
     	<?= $form->field( $model, 'email' ) ?>
     	<?= $form->field( $model, 'username' ) ?>
     	<h4>User Avatar</h4>
-		<?=FileUploader::widget( [ 'options' => [ 'id' => 'avatar-user', 'class' => 'file-uploader' ], 'model' => $model->avatar ] );?>
+		<?=FileUploader::widget( [ 'options' => [ 'id' => 'avatar-user', 'class' => 'file-uploader' ], 'model' => $model->avatar,  'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>
 		<?= $form->field( $model, 'firstName' ) ?>
 		<?= $form->field( $model, 'lastName' ) ?>
 		<?= $form->field( $model, 'genderId' )->dropDownList( $genders )  ?>

@@ -41,7 +41,7 @@ class Permission extends NamedCmgEntity {
 	/**
 	 * @return array having role element.
 	 */
-	public function getRolesList() {
+	public function getRoleMappingList() {
 
     	return $this->hasMany( RolePermission::className(), [ 'permissionId' => 'id' ] );
 	}
@@ -51,11 +51,11 @@ class Permission extends NamedCmgEntity {
 	 */
 	public function getRolesIdList() {
 
-    	$roles 		= $this->rolesList;
+    	$roles 		= $this->roleMappingList;
 		$rolesList	= array();
-		
+
 		foreach ( $roles as $role ) {
-			
+
 			array_push( $rolesList, $role->roleId );
 		}
 

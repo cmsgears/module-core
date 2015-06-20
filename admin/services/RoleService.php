@@ -17,7 +17,7 @@ class RoleService extends \cmsgears\core\common\services\RoleService {
 	/**
 	 * @return ActiveDataProvider
 	 */
-	public static function getPagination( $conditions = [], $query = null ) {
+	public static function getPagination( $config = [] ) {
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -30,7 +30,17 @@ class RoleService extends \cmsgears\core\common\services\RoleService {
 	        ]
 	    ]);
 
-		return self::getDataProvider( new Role(), [ 'conditions' => $conditions, 'query' => $query, 'sort' => $sort, 'search-col' => 'name' ] );
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		if( !isset( $config[ 'search-col' ] ) ) {
+
+			$config[ 'search-col' ] = 'name';
+		}
+
+		return self::getDataProvider( new Role(), $config );
 	}
 }
 

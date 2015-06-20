@@ -5,6 +5,9 @@ namespace cmsgears\core\frontend\models\forms;
 use \Yii;
 use yii\base\Model;
 
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 class ForgotPassword extends Model {
 
 	// Variables ---------------------------------------------------

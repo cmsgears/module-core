@@ -5,14 +5,6 @@
 	"type": "package",
 	"keywords": [ "yii2", "cmsgears", "module", "core" ],
 	"license": "GPLv3",
-	"authors": [
-		{
-			"name": "Bhagwat Singh Chouhan",
-			"email": "bhagwat.chouhan@vulpinecode.com",
-			"homepage": "http://www.cmsgears.org/",
-			"role": "Founder and project lead."
-		}
-	],
 	"support": {
         "source": "http://www.cmsgears.org/downloads/modules/core",
 		"forum": "http://forum.cmsgears.org/",

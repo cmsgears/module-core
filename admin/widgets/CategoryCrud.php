@@ -133,8 +133,8 @@ class CategoryCrud extends Widget {
     
 	public function registerScripts() {
 			
-		$updateUrl	= Yii::$app->urlManager->createAbsoluteUrl('/cmgcore/apix/category/update?id=');
-		$deleteUrl	= Yii::$app->urlManager->createAbsoluteUrl('/cmgcore/apix/category/delete?id=');
+		$updateUrl	= Yii::$app->urlManager->createAbsoluteUrl('/apix/cmgcore/category/update?id=');
+		$deleteUrl	= Yii::$app->urlManager->createAbsoluteUrl('/apix/cmgcore/category/delete?id=');
 
 		$categoryJs		= "	// Create Category 
 							jQuery('.category-add-btn').click( function() {

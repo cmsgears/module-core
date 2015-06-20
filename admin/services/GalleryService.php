@@ -14,7 +14,7 @@ class GalleryService extends \cmsgears\core\common\services\GalleryService {
 
 	// Pagination -------
 
-	public static function getPagination( $conditions = [], $query = null ) {
+	public static function getPagination( $config = [] ) {
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -33,12 +33,22 @@ class GalleryService extends \cmsgears\core\common\services\GalleryService {
 	        ]
 	    ]);
 
-		if( !isset( $query ) ) {
+		if( !isset( $config[ 'query' ] ) ) {
 
-			$query = Gallery::findWithOwner();
+			$config[ 'query' ] = Gallery::findWithOwner();
 		}
 
-		return self::getDataProvider( new Gallery(), [ 'conditions' => $conditions, 'query' => $query, 'sort' => $sort, 'search-col' => 'name' ] );
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		if( !isset( $config[ 'search-col' ] ) ) {
+
+			$config[ 'search-col' ] = 'name';
+		}
+
+		return self::getDataProvider( new Gallery(), $config );
 	}
 }
 

@@ -9,7 +9,6 @@ use yii\base\Model;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\User;
-use cmsgears\core\common\models\entities\Permission;
 
 use cmsgears\core\common\services\UserService;
 
@@ -25,10 +24,10 @@ class Login extends Model {
 	public $email;
 	public $password;
 	public $rememberMe;
+	public  $admin;
 
 	// Private Variables -------------------
-	
-	private $admin;
+
     private $_user;
 
 	// Constructor and Initialisation ------------------------------
@@ -118,9 +117,9 @@ class Login extends Model {
 
 				$user->loadPermissions();
 
-				if( ! $user->isPermitted( Permission::PERM_SITE_ADMIN ) ) {
+				if( !$user->isPermitted( CoreGlobal::PERM_ADMIN ) ) {
 
-					$this->addError( "email", MessageUtil::ERROR_NOT_ALLOWED );
+					$this->addError( "email", Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 
 					return false;
 				}

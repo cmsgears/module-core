@@ -40,7 +40,7 @@ trait CategoryTrait {
 	 */
 	public function getCategoryIdList() {
 
-    	$categories 		= $this->categoryMap;
+    	$categories 		= $this->modelCategories;
 		$categoriesList		= array();
 
 		foreach ( $categories as $category ) {

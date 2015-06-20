@@ -64,11 +64,11 @@ class CategoryController extends BaseController {
 
 		$model->setScenario( "create" );
 
-		if( $model->load( Yii::$app->request->post( "Category" ), "" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), "Category" )  && $model->validate() ) {
 
 			if( CategoryService::create( $model ) ) {
 
-				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 			}
 		}
 		
@@ -76,7 +76,7 @@ class CategoryController extends BaseController {
 		$errors = AjaxUtil::generateErrorMessage( $model );
 
 		// Trigger Ajax Failure
-    	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+    	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 	}
 	
 	public function actionUpdate( $id ) {
@@ -86,11 +86,11 @@ class CategoryController extends BaseController {
 		
 		$model->setScenario( "update" );
 		
-		if( $model->load( Yii::$app->request->post( "Category" ), "" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), "Category" )  && $model->validate() ) {
 
 			if( CategoryService::update( $model ) ) {
 				
-				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 			}
 		}
 		
@@ -98,7 +98,7 @@ class CategoryController extends BaseController {
 		$errors = AjaxUtil::generateErrorMessage( $model );
 
 		// Trigger Ajax Failure
-    	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+    	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 	}
 	
 	public function actionDelete( $id ) {
@@ -110,7 +110,7 @@ class CategoryController extends BaseController {
 				
 			if( CategoryService::delete( $model ) ) {
 	
-				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
+				AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 			}
 		}
 		else {
@@ -119,7 +119,7 @@ class CategoryController extends BaseController {
 			$errors = AjaxUtil::generateErrorMessage( $model );
 
 			// Trigger Ajax Failure
-	    	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+	    	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
 	}
 }

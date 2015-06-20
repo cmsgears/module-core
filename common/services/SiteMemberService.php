@@ -29,6 +29,17 @@ class SiteMemberService extends Service {
 		return SiteMember::findBySiteIdUserId( $siteId, $userId );
     }
 
+	// Data Provider ----
+
+	/**
+	 * @param array $config to generate query
+	 * @return ActiveDataProvider
+	 */
+	public static function getPagination( $config = [] ) {
+		
+		return self::getDataProvider( new SiteMember(), $config );
+	}
+
 	// Create --------------
 
 	public static function create( $user, $siteMember = null ) {

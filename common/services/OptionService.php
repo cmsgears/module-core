@@ -149,13 +149,12 @@ class OptionService extends Service {
 	// Data Provider ----
 
 	/**
-	 * @param array - yii conditions for where query
-	 * @param array - custom query instead of model
+	 * @param array $config to generate query
 	 * @return ActiveDataProvider
 	 */
-	public static function getPagination( $conditions = [], $query = null ) {
+	public static function getPagination( $config = [] ) {
 
-		return self::getDataProvider( new Option(), [ 'conditions' => $conditions, 'query' => $query ] );
+		return self::getDataProvider( new Option(), $config );
 	}
 }
 

@@ -17,7 +17,7 @@ class UserService extends \cmsgears\core\common\services\UserService {
 
 	// Pagination -------
 
-	public static function getPagination( $conditions = [], $query = null ) {
+	public static function getPagination( $config = [] ) {
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -54,24 +54,39 @@ class UserService extends \cmsgears\core\common\services\UserService {
 	        ]
 	    ]);
 
-		$siteTable							= CoreTables::TABLE_SITE;
-		$conditions[ "$siteTable.name" ] 	= Yii::$app->cmgCore->getSiteName();
+		if( !isset( $config[ 'sort' ] ) ) {
 
-		return self::getDataProvider( new User(), [ 'conditions' => $conditions, 'query' => $query, 'sort' => $sort, 'search-col' => 'firstName' ] );
+			$config[ 'sort' ] = $sort;
+		}
+
+		if( !isset( $config[ 'search-col' ] ) ) {
+
+			$config[ 'search-col' ] = 'email';
+		}
+
+		if( !isset( $config[ 'conditions' ] ) ) {
+
+			$config[ 'conditions' ] = [];
+		}
+
+		$siteTable										= CoreTables::TABLE_SITE;
+		$config[ 'conditions' ][ "$siteTable.name" ] 	= Yii::$app->cmgCore->getSiteName();
+
+		return self::getDataProvider( new User(), $config );
 	}
 
 	public static function getPaginationByAdmins() {
 
 		$permission					= CoreTables::TABLE_PERMISSION;
 
-		return self::getPagination( [ "$permission.name" => CoreGlobal::PERM_ADMIN ], User::findWithSiteMemberPermission() );
+		return self::getPagination( [ 'conditions' => [ "$permission.name" => CoreGlobal::PERM_ADMIN ], 'query' => User::findWithSiteMemberPermission() ] );
 	}
 
 	public static function getPaginationByUsers() {
 
 		$permission					= CoreTables::TABLE_PERMISSION;
 
-		return self::getPagination( [ "$permission.name" => CoreGlobal::PERM_USER ], User::findWithSiteMemberPermission() );
+		return self::getPagination( [ 'conditions' => [ "$permission.name" => CoreGlobal::PERM_USER ], 'query' => User::findWithSiteMemberPermission() ] );
 	}
 }
 

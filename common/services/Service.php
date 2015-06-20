@@ -25,19 +25,19 @@ class Service {
 	/**
 	 * The method getDataProvider accept the entity class and various parameters to generate the active data provider.
 	 * @param Model $entity
-	 * @param array $params
+	 * @param array $config
 	 * @return ActiveDataProvider
 	 */
-	public static function getDataProvider( $entity, $params ) {
+	public static function getDataProvider( $entity, $config ) {
 
 		// params to generate query
-		$query			= isset( $params[ 'query' ] ) ? $params[ 'query' ] : $entity::find();
-		$limit			= isset( $params[ 'limit' ] ) ? $params[ 'limit' ] : self::PAGE_LIMIT;
-		$conditions		= isset( $params[ 'conditions' ] ) ? $params[ 'conditions' ] : null;
-		$filters		= isset( $params[ 'filters' ] ) ? $params[ 'filters' ] : null;
-		$searchCol		= isset( $params[ 'search-col' ] ) ? $params[ 'search-col' ] : null;
-		$sort			= isset( $params[ 'sort' ] ) ? $params[ 'sort' ] : null;
-		$route			= isset( $params[ 'route' ] ) ? $params[ 'route' ] : null;
+		$query			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $entity::find();
+		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::PAGE_LIMIT;
+		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
+		$searchCol		= isset( $config[ 'search-col' ] ) ? $config[ 'search-col' ] : null;
+		$sort			= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : null;
+		$route			= isset( $config[ 'route' ] ) ? $config[ 'route' ] : null;
 
 		$pagination	= array();
 
@@ -70,7 +70,7 @@ class Service {
 		}
 
 		// Print Query
-		if( isset( $params[ 'pquery' ] ) && $params[ 'pquery' ] ) {
+		if( isset( $config[ 'pquery' ] ) && $config[ 'pquery' ] ) {
 
 			$command = $query->createCommand();
 

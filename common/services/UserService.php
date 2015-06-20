@@ -78,9 +78,13 @@ class UserService extends Service {
 
 	// Data Provider ----
 
-	public static function getPagination( $conditions = [], $query = null ) {
+	/**
+	 * @param array $config to generate query
+	 * @return ActiveDataProvider
+	 */
+	public static function getPagination( $config = [] ) {
 
-		return self::getDataProvider( new User(), [ 'conditions' => $conditions, 'query' => $query ] );
+		return self::getDataProvider( new User(), $config );
 	}
 
 	// Create -----------

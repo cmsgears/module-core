@@ -14,7 +14,7 @@ class NewsletterMemberService extends \cmsgears\core\common\services\NewsletterM
 
 	// Pagination -------
 
-	public static function getPagination( $conditions = [], $query = null ) {
+	public static function getPagination( $config = [] ) {
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -27,7 +27,17 @@ class NewsletterMemberService extends \cmsgears\core\common\services\NewsletterM
 	        ]
 	    ]);
 
-		return self::getDataProvider( new NewsletterMember(), [ 'conditions' => $conditions, 'query' => $query, 'sort' => $sort, 'search-col' => 'email' ] );
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		if( !isset( $config[ 'search-col' ] ) ) {
+
+			$config[ 'search-col' ] = 'email';
+		}
+
+		return self::getDataProvider( new NewsletterMember(), $config );
 	}
 }
 

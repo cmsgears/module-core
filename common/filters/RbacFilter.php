@@ -54,7 +54,7 @@ class RbacFilter extends Behavior {
 				// Check whether user is permitted	
 				if( !$user->isPermitted( $permission ) ) {
 
-					throw new ForbiddenHttpException( Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+					throw new ForbiddenHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 				}
 
 				// Check permission filters to filter the permission for the current action

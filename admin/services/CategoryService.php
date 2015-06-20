@@ -14,7 +14,7 @@ class CategoryService extends \cmsgears\core\common\services\CategoryService {
 
 	// Pagination -------
 
-	public static function getPagination( $conditions = [], $query = null ) {
+	public static function getPagination( $config = [] ) {
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -27,12 +27,22 @@ class CategoryService extends \cmsgears\core\common\services\CategoryService {
 	        ]
 	    ]);
 
-		return self::getPaginationDetails( new Category(), [ 'conditions' => $conditions, 'query' => $query, 'sort' => $sort, 'search-col' => 'name' ] );
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		if( !isset( $config[ 'search-col' ] ) ) {
+
+			$config[ 'search-col' ] = 'name';
+		}
+
+		return self::getDataProvider( new Category(), $config );
 	}
 
 	public static function getPaginationByType( $type ) {
 
-		return self::getPagination( [ "type" => $type ] );
+		return self::getPagination( [ 'conditions' => [ "type" => $type ] ] );
 	}
 }
 

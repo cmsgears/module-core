@@ -99,7 +99,8 @@ class SiteController extends BaseController {
         $this->checkHome();
 
 		// Create Form Model
-        $model 	= new Login();
+        $model 			= new Login();
+		$model->admin 	= true;
 
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post(), "Login" )  && $model->login() ) {

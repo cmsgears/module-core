@@ -11,6 +11,10 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Galleries';
 
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-gallery';
+$this->params['sidebar-child'] 	= 'gallery';
+
 // Data
 $pagination		= $dataProvider->getPagination();
 $models			= $dataProvider->getModels();
@@ -86,6 +90,3 @@ if( !isset( $sortOrder ) ) {
 		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 </div>
-<script type="text/javascript">
-	initSidebar( "sidebar-gallery", -1 );
-</script>

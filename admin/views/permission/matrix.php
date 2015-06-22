@@ -10,6 +10,10 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Access Matrix";
 
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-identity';
+$this->params['sidebar-child'] 	= 'matrix';
+
 // Data
 $pagination		= $dataProvider->getPagination();
 $models			= $dataProvider->getModels();
@@ -82,6 +86,5 @@ $models			= $dataProvider->getModels();
 	</div>
 </div>
 <script type="text/javascript">
-	initSidebar( "sidebar-identity", 0 );
 	initMappingsMatrix();
 </script>

@@ -22,7 +22,7 @@ use yii\widgets\ActiveForm;
 
 					?>
 					<li>
-						<form id="frm-settings-core-<?=$counter?>" group="0" key="35" class="frm-settings" action="<?= Url::toRoute('/cmgcore/apix/settings/update' ) ?>" method="POST" keepData="true">
+						<form id="frm-settings-core-<?=$counter?>" group="0" key="35" class="frm-ajax frm-settings" action="<?= Url::toRoute('/cmgcore/apix/settings/update' ) ?>" method="POST" keepData="true">
 							<label> <?=  $setting->name ?> </label>
 							<?php if( strcmp( $setting->fieldType, "password" ) == 0 ) { ?>
 								<span> <input type="password" name="ModelMeta[value]" value="" > </span>
@@ -48,11 +48,3 @@ use yii\widgets\ActiveForm;
 		</div>
 	</div>
 </div>
-<script type="text/javascript">
-	initSidebar( "sidebar-setting", -1 );
-
-	jQuery("ul.settings-tab-wrapper li").removeClass('active');
-	jQuery("ul.settings-tab-wrapper li.<?=$type?>").addClass('active');
-	
-	jQuery( 'form' ).processAjax();
-</script>

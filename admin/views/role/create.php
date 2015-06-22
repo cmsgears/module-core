@@ -4,6 +4,10 @@ use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Role';
+
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-identity';
+$this->params['sidebar-child'] 	= 'role';
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -24,6 +28,3 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Add Role';
 		<?php ActiveForm::end(); ?>
 	</div>
 </section>
-<script type="text/javascript">
-	initSidebar( "sidebar-identity", 1 );
-</script>

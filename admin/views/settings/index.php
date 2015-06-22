@@ -30,9 +30,3 @@ use yii\helpers\Url;
 		</div>
 	</div>
 </div>
-<script type="text/javascript">
-	initSidebar( "sidebar-setting", -1 );
-
-	jQuery("ul.settings-tab-wrapper li").removeClass( 'active' );
-	jQuery("ul.settings-tab-wrapper li.<?=$type?>").addClass( 'active' );
-</script>

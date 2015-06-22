@@ -9,6 +9,10 @@ use cmsgears\core\widgets\Editor;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Update Newsletter';
 
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-newsletter';
+$this->params['sidebar-child'] 	= 'newsletter';
+
 Editor::widget( [ 'selector' => '.content-editor' ] );
 ?>
 <section class="wrap-content container clearfix">
@@ -30,7 +34,3 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 		<?php ActiveForm::end(); ?>
 	</div>
 </section>
-
-<script type="text/javascript">
-	initSidebar( "sidebar-newsletter", 0 );
-</script>

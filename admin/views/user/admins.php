@@ -10,6 +10,10 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | All Admins";
 
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-identity';
+$this->params['sidebar-child'] 	= 'admin';
+
 // Data
 $pagination		= $dataProvider->getPagination();
 $models			= $dataProvider->getModels();
@@ -123,6 +127,3 @@ if( !isset( $sortOrder ) ) {
 		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 </div>
-<script type="text/javascript">
-	initSidebar( "sidebar-identity", 3 );
-</script>

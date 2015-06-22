@@ -4,6 +4,10 @@ use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Create User";
+
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-identity';
+$this->params['sidebar-child'] 	= 'user';
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -25,6 +29,3 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Create User";
 		<?php ActiveForm::end(); ?>
 	</div>	
 </section>
-<script type="text/javascript">
-	initSidebar( "sidebar-identity", 4 );
-</script>

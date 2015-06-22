@@ -4,6 +4,7 @@ namespace cmsgears\core\admin\components;
 // Yii Imports
 use \Yii;
 use yii\base\Component;
+use yii\helpers\ArrayHelper;
 
 /**
  * The component sidebar forms the sidebar for admin by merging the sidebar html for the modules specified in application configuration. This sidebar is specific only for Admin Application. 
@@ -29,7 +30,8 @@ class Sidebar extends Component {
 
 		$sidebarHtml	= "";
 		$modules		= $this->modules;
-
+		
+		// Collect sidebar html from all the modules
 		foreach ( $modules as $module ) {
 
 			$module		= Yii::$app->getModule( $module );
@@ -43,6 +45,25 @@ class Sidebar extends Component {
 		}
 
 		return $sidebarHtml;
+	}
+
+	public function getConfig() {
+
+		$config 	= [];
+		$modules	= $this->modules;
+
+		// Collect settings from all the modules
+		foreach ( $modules as $module ) {
+
+			$module		= Yii::$app->getModule( $module );
+
+			if( isset( $module->config  ) ) {
+
+				$config   = ArrayHelper::merge( $config, $module->config );
+			}
+		}
+
+		return $config;
 	}
 }
 

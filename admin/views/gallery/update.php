@@ -4,6 +4,10 @@ use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Update Gallery';
+
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-gallery';
+$this->params['sidebar-child'] 	= 'gallery';
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -20,6 +24,3 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Update Gallery';
 		<?php ActiveForm::end(); ?>
 	</div>
 </section>
-<script type="text/javascript">
-	initSidebar( "sidebar-gallery", -1 );
-</script>

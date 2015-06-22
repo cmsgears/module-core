@@ -10,6 +10,10 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Newsletters';
 
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-newsletter';
+$this->params['sidebar-child'] 	= 'newsletter';
+
 // Data
 $pagination		= $dataProvider->getPagination();
 $models			= $dataProvider->getModels();
@@ -98,6 +102,3 @@ if( !isset( $sortOrder ) ) {
 		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 </div>
-<script type="text/javascript">
-	initSidebar( "sidebar-newsletter", 0 );
-</script>

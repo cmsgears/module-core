@@ -10,6 +10,10 @@ use cmsgears\files\widgets\FileUploader;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Gallery Items';
 
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-gallery';
+$this->params['sidebar-child'] 	= 'gallery';
+
 $id				= $gallery->id;
 ?>
 <section class="wrap-content container clearfix">
@@ -23,14 +27,13 @@ $id				= $gallery->id;
 		</form>
 
 		<h4>Create Item</h4>
-		<form class="frm-split frm-ajax" id="frm-item-create" group="1005" key="1001" action="<?php echo Yii::$app->urlManager->createAbsoluteUrl("apix/cmgcore/gallery/create-item?id=$id"); ?>" method="post">
-			<?=FileUploader::widget( [ 'options' => [ 'id' => 'gallery-item', 'class' => 'file-uploader' ], 'directory' => 'gallery', 'infoFields' => true ] );?>
-			<!-- submit -->
-            <input type="submit" class="" value="Create">
-			<!-- spinner and success -->
-			<div class="frm-spinner"></div>
-			<div class="frm-message"></div>
-		</form>
+		<?=FileUploader::widget( [ 'options' => 
+				[ 'id' => 'gallery-item', 'class' => 'file-uploader' ], 
+				'directory' => 'gallery', 'infoFields' => true, 
+				'postaction' => 'true', 'postactiongroup' => 1005, 'postactionkey' => 1001,
+				'postactionurl' => Yii::$app->urlManager->createAbsoluteUrl("apix/cmgcore/gallery/create-item?id=$id"), 
+				'btnChooserIcon' => 'icon-action icon-action-edit' ] );
+		?>
 
 		<h4>All Items</h4>
 		
@@ -42,16 +45,13 @@ $id				= $gallery->id;
 				$fileId		= $itemImage->id;
 		?>
 			<li>
-				<form class="frm-ajax" group="1005" key="1001" id="frm-item-update-<?=$fileId?>" action="<?php echo Yii::$app->urlManager->createAbsoluteUrl("apix/cmgcore/gallery/update-item?id=$fileId"); ?>" method="post" keepData="true" >
-
-					<?=FileUploader::widget( [ 'options' => [ 'id' => "file-slide-$fileId", 'class' => 'file-uploader' ], 'model' => $itemImage, 'directory' => 'gallery', 'infoFields' => true ] );?>
-
-					<!-- submit -->
-		            <input type="submit" class="" value="Update">
-					<!-- spinner and success -->
-					<div class="frm-spinner"></div>
-					<div class="frm-message"></div>
-				</form>
+				<?=FileUploader::widget( [ 'options' => 
+						[ 'id' => "item-update-$fileId", 'class' => 'file-uploader' ], 
+						'directory' => 'gallery', 'infoFields' => true, 'model' => $itemImage,
+						'postaction' => 'true', 'postactionid' => "frm-item-update-$fileId", 'postactiongroup' => 1005, 'postactionkey' => 1001, 'postactionvisible' => true,
+						'postactionurl' => Yii::$app->urlManager->createAbsoluteUrl("apix/cmgcore/gallery/update-item?id=$fileId"), 
+						'btnChooserIcon' => 'icon-action icon-action-edit' ] );
+				?>
 			</li>
 		<?php
 			}
@@ -59,7 +59,3 @@ $id				= $gallery->id;
 		</ul>
 	</div>
 </section>
-
-<script type="text/javascript">
-	initSidebar( "sidebar-gallery", -1 );
-</script>

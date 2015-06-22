@@ -17,13 +17,13 @@ $user	= Yii::$app->user->getIdentity();
 		<div class="collapsible-tab-content clear">
 			<ul>
 				<?php if( $user->isPermitted( 'identity' ) ) { ?>
-					<li><?= Html::a( "Access Matrix", ['/cmgcore/permission/matrix'] ) ?></li>
-					<li><?= Html::a( "Roles", ['/cmgcore/role/all'] ) ?></li>
-					<li><?= Html::a( "Permissions", ['/cmgcore/permission/all'] ) ?></li>
+					<li class='matrix'><?= Html::a( "Access Matrix", ['/cmgcore/permission/matrix'] ) ?></li>
+					<li class='role'><?= Html::a( "Roles", ['/cmgcore/role/all'] ) ?></li>
+					<li class='permission'><?= Html::a( "Permissions", ['/cmgcore/permission/all'] ) ?></li>
 				<?php } ?>
 				<?php if( $user->isPermitted( 'identity' ) ) { ?>
-					<li><?= Html::a( "Admins", ['/cmgcore/user/admins'] ) ?></li>
-					<li><?= Html::a( "Users", ['/cmgcore/user/users'] ) ?></li>
+					<li class='admin'><?= Html::a( "Admins", ['/cmgcore/user/admins'] ) ?></li>
+					<li class='user'><?= Html::a( "Users", ['/cmgcore/user/users'] ) ?></li>
 				<?php } ?>
 			</ul>
 		</div>
@@ -38,8 +38,8 @@ $user	= Yii::$app->user->getIdentity();
 		</div>
 		<div class="collapsible-tab-content clear">
 			<ul>
-				<li><?= Html::a( "Newsletters", ['/cmgcore/newsletter/all'] ) ?></li>
-				<li><?= Html::a( "Members", ['/cmgcore/newsletter/members'] ) ?></li>
+				<li class='newsletter'><?= Html::a( "Newsletters", ['/cmgcore/newsletter/all'] ) ?></li>
+				<li class='member'><?= Html::a( "Members", ['/cmgcore/newsletter/members'] ) ?></li>
 			</ul>
 		</div>
 	</div>
@@ -51,17 +51,6 @@ $user	= Yii::$app->user->getIdentity();
 			<a href="<?php echo Url::toRoute( ['/cmgcore/gallery/all'] ); ?>">
 				<div class="colf colf4"><span class="icon-sidebar icon-settings"></span></div>
 				<div class="colf colf4x3">Galleries</div>
-			</a>
-		</div>
-	</div>
-<?php } ?>
-
-<?php if( $core->hasModule( 'cmgcore' ) && $user->isPermitted( 'core' ) ) { ?>
-	<div class="collapsible-tab" id="sidebar-setting">
-		<div class="collapsible-tab-header">
-			<a href="<?php echo Url::toRoute( ['/cmgcore/settings/index?type=core'] ); ?>">
-				<div class="colf colf4"><span class="icon-sidebar icon-settings"></span></div>
-				<div class="colf colf4x3">Settings</div>
 			</a>
 		</div>
 	</div>

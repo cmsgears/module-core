@@ -4,9 +4,14 @@ namespace cmsgears\core\admin;
 // Yii Imports
 use \Yii;
 
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 class Module extends \yii\base\Module {
 
     public $controllerNamespace = 'cmsgears\core\admin\controllers';
+
+	public $config 				= [ CoreGlobal::CONFIG_CORE, CoreGlobal::CONFIG_MAIL, CoreGlobal::CONFIG_ADMIN, CoreGlobal::CONFIG_FRONTEND ];
 
     public function init() {
 

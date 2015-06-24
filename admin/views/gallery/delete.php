@@ -15,6 +15,7 @@ $this->params['sidebar-child'] 	= 'gallery';
 		<?php $form = ActiveForm::begin( ['id' => 'frm-gallery-delete', 'options' => ['class' => 'frm-split' ] ] );?>
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
+    	<?= $form->field( $model, 'title' )->textInput( [ 'readonly' => true ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => true ] ) ?>
 
 		<div class="box-filler"></div>

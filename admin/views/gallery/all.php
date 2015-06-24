@@ -58,7 +58,13 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
-					</th>					
+					</th>
+					<th>Title
+						<span class='box-icon-sort'>
+							<span sort-order='title' class="icon-sort <?php if( strcmp( $sortOrder, 'title') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
+							<span sort-order='-title' class="icon-sort <?php if( strcmp( $sortOrder, '-title') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
+						</span>
+					</th>
 					<th>Description</th>
 					<th>Actions</th>
 				</tr>
@@ -74,6 +80,7 @@ if( !isset( $sortOrder ) ) {
 					<tr>
 						<td><?= $owner->getName()?></td>
 						<td><?= $gallery->name ?></td>
+						<td><?= $gallery->title ?></td>
 						<td><?= $gallery->description ?></td>
 						<td>
 							<span class="wrap-icon-action" title="Gallery Items"><?= Html::a( "", ["/cmgcore/gallery/items?id=$id"], ['class'=>'icon-action icon-action-edit'] ) ?></span>

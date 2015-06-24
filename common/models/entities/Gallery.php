@@ -74,7 +74,7 @@ class Gallery extends NamedCmgEntity {
 
         return [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'description' ], 'safe' ],
+            [ [ 'id', 'description', 'title' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
@@ -90,6 +90,7 @@ class Gallery extends NamedCmgEntity {
 
 		return [
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'title' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION )
 		];
 	}

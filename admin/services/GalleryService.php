@@ -22,13 +22,19 @@ class GalleryService extends \cmsgears\core\common\services\GalleryService {
 	                'asc' => [ 'createdBy' => SORT_ASC ],
 	                'desc' => ['createdBy' => SORT_DESC ],
 	                'default' => SORT_DESC,
-	                'label' => 'owner',
+	                'label' => 'owner'
 	            ],
 	            'name' => [
 	                'asc' => [ 'name' => SORT_ASC ],
 	                'desc' => ['name' => SORT_DESC ],
 	                'default' => SORT_DESC,
-	                'label' => 'name',
+	                'label' => 'name'
+	            ],
+	            'title' => [
+	                'asc' => [ 'title' => SORT_ASC ],
+	                'desc' => ['title' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'title'
 	            ]
 	        ]
 	    ]);

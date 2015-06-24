@@ -15,6 +15,7 @@ $this->params['sidebar-child'] 	= 'gallery';
 		<?php $form = ActiveForm::begin( ['id' => 'frm-gallery-update', 'options' => ['class' => 'frm-split' ] ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>
+    	<?= $form->field( $model, 'title' ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
 
 		<div class="box-filler"></div>

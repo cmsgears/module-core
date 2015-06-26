@@ -46,17 +46,17 @@ class CategoryCrud extends Widget {
 						<div class='popup-main'>
 							<span class='close-icon'> </span>
 							<h1>Add Category</h1>
-							<form class='frm-ajax' id='frm-apix-cat-create' action='$createUrl' method='post'>
+							<form class='frm-ajax' id='frm-apix-cat-create' cmt-controller='category' cmt-action='create' action='$createUrl' method='post'>
 								<ul>
 									<li class='clearfix'>
 										<label>Category Name</label>
 										<input type='text' name='Category[name]'>
-										<span class='form-error' formError='name'></span>
+										<span class='form-error' cmt-error='name'></span>
 									</li>
 									<li class='clearfix'>
 										<label>Description</label>
 										<textarea name='Category[description]'> </textarea>
-										<span class='form-error' formError='description'></span>
+										<span class='form-error' cmt-error='description'></span>
 									</li>
 									<li>
 										<input type='hidden' name='_csrf' value='$csrfToken' />
@@ -65,7 +65,7 @@ class CategoryCrud extends Widget {
 									</li>
 								</ul>
 								<div class='spinner'></div>
-								<div class='frm-message'></div>
+								<div class='message'></div>
 							</form>
 						</div>
 					</div>
@@ -75,17 +75,17 @@ class CategoryCrud extends Widget {
 						<div class='popup-main'>
 							<span class='close-icon'> </span>
 							<h1>Update Category</h1>
-							<form class='frm-ajax' id='frm-apix-cat-update' group='0' key='25' action='#' method='post'>
+							<form class='frm-ajax' id='frm-apix-cat-update' cmt-controller='category' cmt-action='update' action='#' method='post'>
 								<ul>
 									<li class='clearfix'>
 										<label>Category Name</label>
 										<input class='cat-name' type='text' name='Category[name]'>
-										<span class='form-error' formError='name'></span>
+										<span class='form-error' cmt-error='name'></span>
 									</li>
 									<li class='clearfix'>
 										<label>Description</label>
 										<textarea class='cat-desc' name='Category[description]'> </textarea>
-										<span class='form-error' formError='description'></span>
+										<span class='form-error' cmt-error='description'></span>
 									</li>
 									<li>
 										<input type='hidden' name='_csrf' value='$csrfToken' />
@@ -104,17 +104,17 @@ class CategoryCrud extends Widget {
 						<div class='popup-main'>
 							<span class='close-icon'> </span>
 							<h1>Delete Category</h1>
-							<form class='frm-ajax' id='frm-apix-cat-delete' group='0' key='30' action='#' method='post'>
+							<form class='frm-ajax' id='frm-apix-cat-delete' cmt-controller='category' cmt-action='delete' action='#' method='post'>
 								<ul>
 									<li class='clearfix'>
 										<label>Category Name</label>
 										<input class='cat-name' disabled='true' type='text' name='Category[name]'>
-										<span class='form-error' formError='name'></span>
+										<span class='form-error' cmt-error='name'></span>
 									</li>
 									<li class='clearfix'>
 										<label>Description</label>
 										<textarea class='cat-desc'  disabled='true' name='Category[description]'> </textarea>
-										<span class='form-error' formError='description'></span>
+										<span class='form-error' cmt-error='description'></span>
 									</li>
 									<li>
 										<input type='hidden' name='_csrf' value='$csrfToken' />

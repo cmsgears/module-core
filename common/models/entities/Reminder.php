@@ -13,8 +13,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * @property integer $id
  * @property integer $userId
- * @property integer $typeId
- * @property string $message
+ * @property integer $templateId
  * @property datetime $createdAt
  * @property datetime $modifiedAt 
  * @property datetime $time
@@ -33,11 +32,11 @@ class Reminder extends CmgEntity {
 	}
 
 	/**
-	 * @return Option
+	 * @return Template
 	 */
-	public function getType() {
+	public function getTemplate() {
 
-		return $this->hasOne( Option::className(), [ 'id' => 'typeId' ] );
+		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
 	}
 
 	/**
@@ -81,9 +80,9 @@ class Reminder extends CmgEntity {
 	public function rules() {
 
         return [
-            [ [ 'userId', 'typeId', 'message', 'time' ], 'required' ],
+            [ [ 'userId', 'templateId', 'message', 'time' ], 'required' ],
 			[ [ 'id', 'flag' ], 'safe' ],
-            [ [ 'userId', 'typeId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'userId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }
@@ -95,7 +94,7 @@ class Reminder extends CmgEntity {
 
 		return [
 			'userId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USER ),
-			'typeId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'typeId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'message' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
 			'time' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TIME ),
 			'flag' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MARK )

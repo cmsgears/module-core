@@ -36,7 +36,7 @@ $this->params['sidebar-child'] 	= 'permission';
 			}
 		?>
 		<div class="box-filler"></div>
-		<?=Html::a( "Cancel", [ '/cmgcore/permission/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
 		<input type="submit" value="Delete" />
 
 		<?php ActiveForm::end(); ?>

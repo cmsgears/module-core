@@ -48,9 +48,16 @@ class RoleService extends Service {
 	 * @param string $id
 	 * @return array - An array of associative array of role id and name.
 	 */
-	public static function getIdNameList() {
+	public static function getIdNameList( $type = null ) {
 
-		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_ROLE );
+		if( isset( $type ) ) {
+
+			return self::findIdNameList( 'id', 'name', CoreTables::TABLE_ROLE, [ 'type' => $type ] );
+		}
+		else {
+
+			return self::findIdNameList( 'id', 'name', CoreTables::TABLE_ROLE );
+		}
 	}
 
 	// Data Provider ----

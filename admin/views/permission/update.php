@@ -36,7 +36,7 @@ $this->params['sidebar-child'] 	= 'permission';
 			}
 		?>	
 		<div class="box-filler"></div>
-		<?=Html::a( "Back", [ '/cmgcore/permission/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( "Back", $returnUrl, ['class' => 'btn' ] );?>
 		<input type="submit" value="Update" />
 
 		<?php ActiveForm::end(); ?>

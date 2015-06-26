@@ -21,7 +21,7 @@ $this->params['sidebar-child'] 	= 'permission';
 			<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$role['id']?>" /><?=$role['name']?></span>
 		<?php } ?>
 		<div class="box-filler"></div>
-		<?=Html::a( "Cancel", [ '/cmgcore/permission/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
 		<input type="submit" value="Create" />
 
 		<?php ActiveForm::end(); ?>

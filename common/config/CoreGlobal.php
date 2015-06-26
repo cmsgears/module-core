@@ -12,13 +12,11 @@ class CoreGlobal {
 
 	// Categories ------------------------------------------------------
 
-	const CATEGORY_ROLE_TYPE	= "role type";
 	const CATEGORY_GENDER		= "gender";
-	const CATEGORY_NOTIFICATION	= "notification";
-	const CATEGORY_REMINDER		= "reminder";
 
 	// Model Traits - Metas, Attachments, Addresses --------------------
 
+	const TYPE_SYSTEM			= "system";
 	const TYPE_SITE				= "site";
 	const TYPE_USER				= "user";
 	const TYPE_GALLERY			= "gallery";
@@ -31,7 +29,7 @@ class CoreGlobal {
 	const CONFIG_FRONTEND		= "frontend";
 
 	// Roles -----------------------------------------------------------
-	
+
 	const ROLE_USER					= "user";
 
 	// Permissions -----------------------------------------------------
@@ -133,6 +131,7 @@ class CoreGlobal {
 	const FIELD_AUTHOR				= "authorField";
 	const FIELD_MEMBER				= "memberField";
 	const FIELD_OWNER				= "ownerField";
+	const FIELD_TEMPLATE			= "templateField";
 
 	// Role Fields
 	const FIELD_HOME_URL			= "homeUrlField";
@@ -183,6 +182,10 @@ class CoreGlobal {
 	// Message
 	const FIELD_SENDER			= "senderField";
 	const FIELD_RECIPIENT		= "recipientField";
+
+	// Views
+	const FIELD_LAYOUT			= "layoutField";
+	const FIELD_VIEW			= "viewField";
 }
 
 ?>

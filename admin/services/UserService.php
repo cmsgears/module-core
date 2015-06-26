@@ -19,6 +19,9 @@ class UserService extends \cmsgears\core\common\services\UserService {
 
 	public static function getPagination( $config = [] ) {
 
+		$siteTable 			= CoreTables::TABLE_SITE;
+		$siteMemberTable 	= CoreTables::TABLE_SITE_MEMBER;
+
 	    $sort = new Sort([
 	        'attributes' => [
 	            'name' => [
@@ -34,8 +37,8 @@ class UserService extends \cmsgears\core\common\services\UserService {
 	                'label' => 'username',
 	            ],
 	            'role' => [
-	                'asc' => [ 'roleId' => SORT_ASC ],
-	                'desc' => ['roleId' => SORT_DESC ],
+	                'asc' => [ "$siteMemberTable.roleId" => SORT_ASC ],
+	                'desc' => [ "$siteMemberTable.roleId" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'role',
 	            ],
@@ -77,16 +80,16 @@ class UserService extends \cmsgears\core\common\services\UserService {
 
 	public static function getPaginationByAdmins() {
 
-		$permission					= CoreTables::TABLE_PERMISSION;
+		$permissionTable = CoreTables::TABLE_PERMISSION;
 
-		return self::getPagination( [ 'conditions' => [ "$permission.name" => CoreGlobal::PERM_ADMIN ], 'query' => User::findWithSiteMemberPermission() ] );
+		return self::getPagination( [ 'conditions' => [ "$permissionTable.name" => CoreGlobal::PERM_ADMIN ], 'query' => User::findWithSiteMemberPermission() ] );
 	}
 
 	public static function getPaginationByUsers() {
 
-		$permission					= CoreTables::TABLE_PERMISSION;
+		$permissionTable = CoreTables::TABLE_PERMISSION;
 
-		return self::getPagination( [ 'conditions' => [ "$permission.name" => CoreGlobal::PERM_USER ], 'query' => User::findWithSiteMemberPermission() ] );
+		return self::getPagination( [ 'conditions' => [ "$permissionTable.name" => CoreGlobal::PERM_USER ], 'query' => User::findWithSiteMemberPermission() ] );
 	}
 }
 

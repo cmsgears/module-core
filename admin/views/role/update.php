@@ -37,7 +37,7 @@ $this->params['sidebar-child'] 	= 'role';
 			}
 		?>
 		<div class="box-filler"></div>
-		<?=Html::a( "Back", [ '/cmgcore/role/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( "Back", $returnUrl, ['class' => 'btn' ] );?>
 		<input type="submit" value="Update" />
 
 		<?php ActiveForm::end(); ?>

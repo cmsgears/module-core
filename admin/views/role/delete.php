@@ -38,7 +38,7 @@ $this->params['sidebar-child'] 	= 'role';
 			}
 		?>
 		<div class="box-filler"></div>
-		<?=Html::a( "Cancel", [ '/cmgcore/role/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
 		<input type="submit" value="Delete" />
 
 		<?php ActiveForm::end(); ?>

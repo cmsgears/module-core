@@ -42,6 +42,14 @@ class PermissionService extends \cmsgears\core\common\services\PermissionService
 
 		return self::getDataProvider( new Permission(), $config );
 	}
+
+	/**
+	 * @return ActiveDataProvider
+	 */
+	public static function getPaginationByType( $type ) {
+
+		return self::getPagination( [ 'conditions' => [ 'type' => $type ] ] );
+	}
 }
 
 ?>

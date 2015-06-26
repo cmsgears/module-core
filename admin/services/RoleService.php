@@ -42,6 +42,14 @@ class RoleService extends \cmsgears\core\common\services\RoleService {
 
 		return self::getDataProvider( new Role(), $config );
 	}
+
+	/**
+	 * @return ActiveDataProvider
+	 */
+	public static function getPaginationByType( $type ) {
+
+		return self::getPagination( [ 'conditions' => [ 'type' => $type ] ] );
+	}
 }
 
 ?>

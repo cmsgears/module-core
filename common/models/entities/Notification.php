@@ -14,8 +14,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property integer $id
  * @property integer $notifierId
  * @property integer $userId
- * @property integer $typeId
- * @property string $message
+ * @property integer $templateId
  * @property datetime $createdAt
  * @property datetime $modifiedAt 
  * @property boolean $flag
@@ -41,11 +40,11 @@ class Notification extends CmgEntity {
 	}
 
 	/**
-	 * @return Option
+	 * @return Template
 	 */
-	public function getType() {
+	public function getTemplate() {
 
-		return $this->hasOne( Option::className(), [ 'id' => 'typeId' ] );
+		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
 	}
 
 	/**
@@ -89,9 +88,9 @@ class Notification extends CmgEntity {
 	public function rules() {
 
         return [
-            [ [ 'notifierId', 'userId', 'typeId', 'message' ], 'required' ],
+            [ [ 'notifierId', 'userId', 'templateId', 'message' ], 'required' ],
 			[ [ 'flag' ], 'safe' ],
-            [ [ 'notifierId', 'userId', 'typeId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'notifierId', 'userId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }
@@ -104,7 +103,7 @@ class Notification extends CmgEntity {
 		return [
 			'notifierId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NOTIFIER ),
 			'userId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USER ),
-			'typeId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'message' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
 			'flag' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MARK )
 		];

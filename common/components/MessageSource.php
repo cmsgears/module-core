@@ -86,6 +86,7 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_AUTHOR => "Author",
 		CoreGlobal::FIELD_MEMBER => "Member",
 		CoreGlobal::FIELD_OWNER => "Owner",
+		CoreGlobal::FIELD_TEMPLATE => "Template",
 		// Role Fields
 		CoreGlobal::FIELD_HOME_URL => "Home Url",
 		// Address Fields
@@ -126,7 +127,10 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_CONTENT => "Content",
 		// Content Fields
 		CoreGlobal::FIELD_SENDER => "Sender",
-		CoreGlobal::FIELD_RECIPIENT => "Recipient"
+		CoreGlobal::FIELD_RECIPIENT => "Recipient",
+		// Views
+		CoreGlobal::FIELD_LAYOUT => "layoutField",
+		CoreGlobal::FIELD_VIEW => "viewField"
 	];
 
 	/**

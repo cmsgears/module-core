@@ -11,8 +11,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * Activity Entity
  *
  * @property integer $userId
- * @property integer $typeId
- * @property string $message
+ * @property integer $templateId
  * @property datetime $createdAt
  */
 class Activity extends CmgEntity {
@@ -28,11 +27,11 @@ class Activity extends CmgEntity {
 	}
 
 	/**
-	 * @return Option
+	 * @return Template
 	 */
-	public function getType() {
+	public function getTemplate() {
 
-		return $this->hasOne( Option::className(), [ 'id' => 'typeId' ] );
+		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
 	}
 
 	// yii\base\Model --------------------
@@ -43,8 +42,8 @@ class Activity extends CmgEntity {
 	public function rules() {
 
         return [
-            [ [ 'userId', 'typeId', 'message' ], 'required' ],
-            [ [ 'userId', 'typeId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'userId', 'templateId', 'message' ], 'required' ],
+            [ [ 'userId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'createdAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }
@@ -56,7 +55,7 @@ class Activity extends CmgEntity {
 
 		return [
 			'userId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USER ),
-			'typeId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'message' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE )
 		];
 	}

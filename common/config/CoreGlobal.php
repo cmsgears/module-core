@@ -13,6 +13,9 @@ class CoreGlobal {
 	const TYPE_SITE				= "site";
 	const TYPE_USER				= "user";
 	const TYPE_GALLERY			= "gallery";
+	const TYPE_ACTIVITY			= "activity";
+	const TYPE_NOTIFICATION		= "notification";
+	const TYPE_REMINDER			= "reminder";
 
 	// Categories ------------------------------------------------------
 
@@ -101,6 +104,7 @@ class CoreGlobal {
 	const FIELD_VALUE				= "valueField";
 	const FIELD_MESSAGE				= "messageField";
 	const FIELD_DESCRIPTION			= "descField";
+	const FIELD_SESSION				= "sessionField";
 	const FIELD_SLUG				= "slugField";
 	const FIELD_CREATED_AT			= "createdAtField";
 	const FIELD_MODIFIED_AT			= "modifiedAtField";

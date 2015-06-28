@@ -1,3 +1,5 @@
+/* ============================= CMSGears Core ============================================== */
+
 --
 -- Table structure for table `cmg_core_locale`
 --

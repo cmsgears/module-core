@@ -7,6 +7,8 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\traits\CategoryTrait;
+
 /**
  * Activity Entity
  *
@@ -15,6 +17,10 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property datetime $createdAt
  */
 class Activity extends CmgEntity {
+	
+	use CategoryTrait;
+
+	public $categoryType	= CoreGlobal::TYPE_ACTIVITY;
 
 	// Instance Methods --------------------------------------------
 

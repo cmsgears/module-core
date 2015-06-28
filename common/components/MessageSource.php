@@ -59,6 +59,7 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_VALUE => "Value",
 		CoreGlobal::FIELD_MESSAGE => "Message",
 		CoreGlobal::FIELD_DESCRIPTION => "Description",
+		CoreGlobal::FIELD_SESSION => "Session",
 		CoreGlobal::FIELD_SLUG => "Slug",
 		CoreGlobal::FIELD_CREATED_AT => "Created At",
 		CoreGlobal::FIELD_MODIFIED_AT => "Updated At",

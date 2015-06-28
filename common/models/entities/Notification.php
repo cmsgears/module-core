@@ -8,6 +8,8 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\traits\CategoryTrait;
+
 /**
  * Reminder Entity
  *
@@ -20,6 +22,10 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property boolean $flag
  */
 class Notification extends CmgEntity {
+
+	use CategoryTrait;
+
+	public $categoryType	= CoreGlobal::TYPE_NOTIFICATION;
 
 	// Instance Methods --------------------------------------------
 

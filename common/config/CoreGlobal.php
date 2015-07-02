@@ -106,12 +106,14 @@ class CoreGlobal {
 	const FIELD_DESCRIPTION			= "descField";
 	const FIELD_SESSION				= "sessionField";
 	const FIELD_SLUG				= "slugField";
+	const FIELD_LIMIT				= "limitField";
 	const FIELD_CREATED_AT			= "createdAtField";
 	const FIELD_MODIFIED_AT			= "modifiedAtField";
 	const FIELD_VISIBILITY			= "visibilityField";
 	const FIELD_STATUS				= "statusField";
 	const FIELD_TYPE				= "typeField";
 	const FIELD_MARK				= "markField";
+	const FIELD_DEFAULT 			= "Default";
 	const FIELD_ORDER				= "orderField";
 	const FIELD_TIME				= "timeField";
 	const FIELD_ICON				= "iconField";
@@ -133,6 +135,8 @@ class CoreGlobal {
 	const FIELD_MEMBER				= "memberField";
 	const FIELD_OWNER				= "ownerField";
 	const FIELD_TEMPLATE			= "templateField";
+	const FIELD_EVENT				= "eventField";
+	const FIELD_EVENT_LOG			= "eventLogField";
 
 	// Role Fields
 	const FIELD_HOME_URL			= "homeUrlField";

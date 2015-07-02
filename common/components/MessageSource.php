@@ -61,6 +61,7 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_DESCRIPTION => "Description",
 		CoreGlobal::FIELD_SESSION => "Session",
 		CoreGlobal::FIELD_SLUG => "Slug",
+		CoreGlobal::FIELD_LIMIT => "Limit",
 		CoreGlobal::FIELD_CREATED_AT => "Created At",
 		CoreGlobal::FIELD_MODIFIED_AT => "Updated At",
 		CoreGlobal::FIELD_VISIBILITY => "Visibility",
@@ -68,6 +69,7 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_TYPE => "Type",
 		CoreGlobal::FIELD_MARK => "Mark",
 		CoreGlobal::FIELD_ORDER => "Order",
+		CoreGlobal::FIELD_DEFAULT => "Default",
 		CoreGlobal::FIELD_TIME => "Time",
 		CoreGlobal::FIELD_ICON => "Icon",
 		CoreGlobal::FIELD_ROLE => "Role",
@@ -88,6 +90,8 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_MEMBER => "Member",
 		CoreGlobal::FIELD_OWNER => "Owner",
 		CoreGlobal::FIELD_TEMPLATE => "Template",
+		CoreGlobal::FIELD_EVENT => "Event",
+		CoreGlobal::FIELD_EVENT_LOG => "Event Log",
 		// Role Fields
 		CoreGlobal::FIELD_HOME_URL => "Home Url",
 		// Address Fields

@@ -244,8 +244,16 @@ class User extends CmgEntity implements IdentityInterface {
 	 */
 	public function loadPermissions() {
 
-		$role				= $this->role;
-		$this->permissions	= $role->getPermissionsNameList();
+		$role = $this->role;
+
+		if( isset( $role ) ) {
+
+			$this->permissions	= $role->getPermissionsNameList();
+		}
+		else {
+
+			throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+		}
 	}
 
 	/**

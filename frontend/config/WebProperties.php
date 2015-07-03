@@ -7,25 +7,19 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\services\OptionService;
-use cmsgears\core\common\services\SiteService;
+use cmsgears\core\common\config\CmgProperties;
 
-class WebProperties {
+class WebProperties extends CmgProperties {
 
 	/**
 	 * The property defines the active theme for the site.
 	 */	
 	const PROP_THEME				= "theme";
-	
+
 	/**
 	 * The property defines the active theme version to reload browsers in case theme is upgraded.
 	 */	
 	const PROP_THEME_VERSION		= "theme-version";
-
-	/**
-	 * The properties map.
-	 */
-	private $properties;
 
 	// Singleton instance
 	private static $instance;
@@ -45,18 +39,10 @@ class WebProperties {
 
 			self::$instance	= new WebProperties();
 
-			self::$instance->init();
+			self::$instance->init( CoreGlobal::CONFIG_FRONTEND );
 		}
 
 		return self::$instance;
-	}
-
-	/**
-	 * Initialise the properties from database.
-	 */
-	public function init() {
-
-		$this->properties	= SiteService::getMetaMapByNameType( Yii::$app->cmgCore->getSiteName(), CoreGlobal::CONFIG_FRONTEND );
 	}
 
 	/**

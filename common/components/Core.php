@@ -18,6 +18,11 @@ use cmsgears\core\common\validators\CoreValidator;
 class Core extends Component {
 
 	/**
+	 * @var main site to load configurations in case sub sites are not configured.
+	 */
+	public $mainSiteName		= "main";
+
+	/**
 	 * @var identify the currently active site based on the url request.
 	 */
 	public $siteName			= "main";
@@ -116,6 +121,15 @@ class Core extends Component {
 
 		//TODO - Add code to check availability of a widget from database and widgets folder
     }
+
+	/**
+	 * The method getMainSiteName returns the site name for main site.
+	 * @return string 
+	 */
+	public function getMainSiteName() {
+
+		return $this->mainSiteName;
+	}
 
 	/**
 	 * The method getSiteName returns the site name for default site. It's more useful in case multi-site feature is enabled.

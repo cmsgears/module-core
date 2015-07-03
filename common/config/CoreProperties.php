@@ -7,14 +7,11 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\services\OptionService;
-use cmsgears\core\common\services\SiteService;
-
 /**
  * The CoreProperties class provides methods to access the core properties defined in database.
  * It also define the accessor methods for pre-defined properties.
  */
-class CoreProperties {
+class CoreProperties extends CmgProperties {
 
 	//TODO Add code for caching the properties
 
@@ -50,11 +47,6 @@ class CoreProperties {
 	 * The property defines site url to be used at various places like emails. The admin site can use this to make url for front end sites.
 	 */
 	const PROP_SITE_URL				= "site url";
-
-	/**
-	 * The map stores all the core properties. It can be queried for properties not listed above.
-	 */
-	private $properties;
 	
 	// Singleton instance
 	private static $instance;
@@ -74,18 +66,10 @@ class CoreProperties {
 
 			self::$instance	= new CoreProperties();
 
-			self::$instance->init();
+			self::$instance->init( CoreGlobal::CONFIG_CORE );
 		}
 
 		return self::$instance;
-	}
-
-	/*
-	 * Initialise the properties from database.
-	 */ 
-	public function init() {
-
-		$this->properties	= SiteService::getMetaMapByNameType( Yii::$app->cmgCore->getSiteName(), CoreGlobal::CONFIG_CORE );
 	}
 
 	/**

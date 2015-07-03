@@ -7,10 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\services\OptionService;
-use cmsgears\core\common\services\SiteService;
-
-class MailProperties {
+class MailProperties extends CmgProperties {
 
 	//TODO Add code for caching the properties
 
@@ -74,8 +71,6 @@ class MailProperties {
 	 */
 	const PROP_INFO_EMAIL		= "info email";
 
-	private $properties;
-
 	// Singleton instance
 	private static $instance;
 
@@ -94,18 +89,10 @@ class MailProperties {
 
 			self::$instance	= new MailProperties();
 
-			self::$instance->init();
+			self::$instance->init( CoreGlobal::CONFIG_MAIL );
 		}
 
 		return self::$instance;
-	}
-
-	/*
-	 * Initialise the properties from database.
-	 */ 
-	public function init() {
-
-		$this->properties	= SiteService::getMetaMapByNameType( Yii::$app->cmgCore->getSiteName(), CoreGlobal::CONFIG_MAIL );
 	}
 
 	/**

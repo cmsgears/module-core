@@ -14,7 +14,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property integer $addressId
  * @property integer $parentId
  * @property string $parentType
- * @property integer $type   
+ * @property integer $type
  */
 class ModelAddress extends CmgEntity {
 
@@ -90,7 +90,18 @@ class ModelAddress extends CmgEntity {
 	 */
 	public static function findByParentIdType( $parentId, $parentType ) {
 
-		return self::find()->where( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] )->all();
+		return self::find()->where( 'parentId=:id AND parentType=:ptype', [ ':id' => $parentId, ':ptype' => $parentType ] )->all();
+	}
+
+	/**
+	 * @param int $parentId
+	 * @param string $parentType
+	 * @param string $type
+	 * @return ModelAddress by parent id, parent type and type
+	 */
+	public static function findByType( $parentId, $parentType, $type ) {
+
+		return self::find()->where( 'parentId=:id AND parentType=:ptype AND type=:type', [ ':id' => $parentId, ':ptype' => $parentType, ':type' => $type ] )->one();
 	}
 
 	// Delete ----

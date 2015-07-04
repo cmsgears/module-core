@@ -48,9 +48,9 @@ class CategoryService extends Service {
 	 * @param string $id
 	 * @return array - An array of associative array of category id and name for the specified category type
 	 */
-	public static function getIdNameListByType( $type ) {
+	public static function getIdNameListByType( $type, $prepend = [], $append = [] ) {
 
-		return self::findIdNameList( "id", "name", CoreTables::TABLE_CATEGORY, [ "type" => $type ] );
+		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_CATEGORY, [ 'type' => $type ], false, $prepend, $append );
 	}
 
 	// Data Provider ----

@@ -6,6 +6,7 @@ use \Yii;
 use yii\db\Query;
 use yii\data\ActiveDataProvider;
 use yii\helpers\HtmlPurifier;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\models\entities\CMGEntity;
@@ -98,14 +99,26 @@ class Service {
 	 * @param string $tableName
 	 * @param array $conditions
 	 */
-	public static function findMap( $keyColumn, $valueColumn, $tableName, $conditions = [] ) {
+	public static function findMap( $keyColumn, $valueColumn, $tableName, $conditions = [], $prepend = [], $append = [] ) {
 
 		$arrayList  = self::findNameValueList( $keyColumn, $valueColumn, $tableName, $conditions );
 		$map		= [];
-		
+
 		foreach ( $arrayList as $item ) {
-			
+
 			$map[ $item['name'] ] = $item['value']; 
+		}
+
+		// Prepend given list
+		if( count( $prepend ) > 0 ) {
+
+			$map = ArrayHelper::merge( $prepend, $map );
+		}
+
+		// Append given list
+		if( count( $append ) > 0 ) {
+
+			$map = ArrayHelper::merge( $append, $map );
 		}
 
 		return $map;
@@ -155,7 +168,7 @@ class Service {
 	 * @param array $conditions
 	 * @param boolean $asArray
 	 */
-	public static function findNameValueList( $nameColumn, $valueColumn, $tableName, $conditions = [], $asArray = false ) {
+	public static function findNameValueList( $nameColumn, $valueColumn, $tableName, $conditions = [], $asArray = false, $prepend = [], $append = [] ) {
 
 		$query 		= new Query();
 
@@ -183,6 +196,18 @@ class Service {
 		// Execute the command
 		$arrayList = $command->queryAll();
 
+		// Prepend given list
+		if( count( $prepend ) > 0 ) {
+
+			$arrayList = ArrayHelper::merge( $arrayList, $prepend );
+		}
+
+		// Append given list
+		if( count( $append ) > 0 ) {
+
+			$arrayList = ArrayHelper::merge( $append, $arrayList );
+		}
+
 		return $arrayList;
 	}
 
@@ -194,7 +219,7 @@ class Service {
 	 * @param array $conditions
 	 * @param boolean $asArray 
 	 */
-	public static function findIdNameList( $idColumn, $nameColumn, $tableName, $conditions = [], $asArray = false ) {
+	public static function findIdNameList( $idColumn, $nameColumn, $tableName, $conditions = [], $asArray = false, $prepend = [], $append = [] ) {
 
 		$query 		= new Query();
 
@@ -221,6 +246,18 @@ class Service {
 
 		// Execute the command
 		$arrayList = $command->queryAll();
+		
+		// Prepend given list
+		if( count( $prepend ) > 0 ) {
+
+			$arrayList = ArrayHelper::merge( $prepend, $arrayList );
+		}
+
+		// Append given list
+		if( count( $append ) > 0 ) {
+
+			$arrayList = ArrayHelper::merge( $arrayList, $append );
+		}
 
 		return $arrayList;
 	}

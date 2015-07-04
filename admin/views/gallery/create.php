@@ -19,7 +19,7 @@ $this->params['sidebar-child'] 	= 'gallery';
     	<?= $form->field( $model, 'description' )->textarea() ?>
 
 		<div class="box-filler"></div>
-		<?=Html::a( "Cancel", [ '/cmgcore/gallery/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
 		<input type="submit" value="Create" />
 
 		<?php ActiveForm::end(); ?>

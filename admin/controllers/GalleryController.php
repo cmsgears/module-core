@@ -4,6 +4,7 @@ namespace cmsgears\core\admin\controllers;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
@@ -60,34 +61,38 @@ class GalleryController extends BaseController {
 
 	public function actionIndex() {
 
-		$this->redirect( [ "all" ] );
+		$this->redirect( [ 'all' ] );
 	}
 
 	public function actionAll() {
 
 		$dataProvider = GalleryService::getPagination();
 
-	    return $this->render('all', [
+		Url::remember( [ 'gallery/all' ], 'galleries' );
+
+	    return $this->render( 'all', [
 	         'dataProvider' => $dataProvider
 	    ]);
 	}
 
 	public function actionCreate() {
 
-		$model	= new Gallery();
+		$model		= new Gallery();
+		$returnUrl	= Url::previous( 'galleries' );
 
-		$model->setScenario( "create" );
+		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post(), "Gallery" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Gallery' )  && $model->validate() ) {
 
 			if( GalleryService::create( $model ) ) {
 
-				$this->redirect( [ "all" ] );
+				$this->redirect( $returnUrl );
 			}
 		}
 
     	return $this->render('create', [
-    		'model' => $model
+    		'model' => $model,
+    		'returnUrl' => $returnUrl
     	]);
 	}
 
@@ -95,21 +100,21 @@ class GalleryController extends BaseController {
 
 		// Find Model
 		$model	= GalleryService::findById( $id );
-		
+
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->setScenario( "update" );
+			$model->setScenario( 'update' );
 	
-			if( $model->load( Yii::$app->request->post(), "Gallery" )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'Gallery' )  && $model->validate() ) {
 	
 				if( GalleryService::update( $model ) ) {
 
-					$this->redirect( [ "all" ] );
+					$this->redirect( [ 'all' ] );
 				}
 			}
 
-	    	return $this->render('update', [
+	    	return $this->render( 'update', [
 	    		'model' => $model
 	    	]);
 		}
@@ -126,15 +131,15 @@ class GalleryController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), "Gallery" ) ) {
+			if( $model->load( Yii::$app->request->post(), 'Gallery' ) ) {
 	
 				if( GalleryService::delete( $model ) ) {
 		
-					$this->redirect( [ "all" ] );
+					$this->redirect( [ 'all' ] );
 				}
 			}
 
-	    	return $this->render('delete', [
+	    	return $this->render( 'delete', [
 	    		'model' => $model
 	    	]);
 		}
@@ -144,18 +149,20 @@ class GalleryController extends BaseController {
 	}
 
 	public function actionItems( $id ) {
-		
-		// Find Model		
-		$gallery			= GalleryService::findById( $id );
-		
+
+		// Find Model
+		$gallery = GalleryService::findById( $id );
+
 		// Update/Render if exist
 		if( isset( $gallery ) ) {
-				
-			$items 	= $gallery->files;
+
+			$returnUrl	= Url::previous( 'galleries' );
+			$items 		= $gallery->files;
 
 	    	return $this->render('items', [
 	    		'gallery' => $gallery,
-	    		'items' => $items
+	    		'items' => $items,
+	    		'returnUrl' => $returnUrl
 	    	]);
 		}
 

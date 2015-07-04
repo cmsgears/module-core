@@ -79,35 +79,20 @@ class OptionService extends Service {
 	 * @param integer $categoryId - category id
 	 * @return array - an array having id as key and name as value for given category id.
 	 */
-	public static function getIdNameMapByCategoryId( $categoryId ) {
+	public static function getIdNameMapByCategoryId( $categoryId, $prepend = [], $append = [] ) {
 
-		return self::findMap( "id", "name", CoreTables::TABLE_OPTION, [ "categoryId" => $categoryId ] );
+		return self::findMap( 'id', 'name', CoreTables::TABLE_OPTION, [ 'categoryId' => $categoryId ], false, $prepend, $append );
 	}
 
 	/**
 	 * @param integer $categoryName - category name
-	 * @return array - an array having id as key and name as value for given category name. It also prepend an array if specified.
+	 * @return array - an array having id as key and name as value for given category name.
 	 */
-	public static function getIdNameMapByCategoryName( $categoryName, $prepend = null ) {
+	public static function getIdNameMapByCategoryName( $categoryName, $prepend = [], $append = [] ) {
 
 		$category	= Category::findByName( $categoryName );
-		$options	= $category->options;
-		$optionsMap	= array();
 
-		if( isset( $prepend ) ) {
-			
-			foreach ( $prepend as $key => $value ) {
-
-				$optionsMap[ $key ] = $value;
-			}
-		}
-
-		foreach ( $options as $option ) {
-			
-			$optionsMap[ $option->id ] = $option->name;
-		}
-		
-		return $optionsMap;
+		return self::findMap( 'id', 'name', CoreTables::TABLE_OPTION, [ 'categoryId' => $category->id ], $prepend, $append );
 	}
 
 	/**

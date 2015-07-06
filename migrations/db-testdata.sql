@@ -56,7 +56,7 @@ INSERT INTO `cmg_core_category` VALUES
 --
 
 INSERT INTO `cmg_core_option` (`categoryId`,`name`,`value`,`icon`) VALUES 
-	(1,'Male','Male',NULL),(1,'Female','Female',NULL),(1,'Other','Other',NULL);
+	(1,'Male','Male',NULL),(1,'Female','Female',NULL),(1,'Other','Other',NULL),(1,'All','All',NULL);
 
 --
 -- Dumping data for table `cmg_core_role`

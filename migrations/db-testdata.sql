@@ -65,7 +65,7 @@ INSERT INTO `cmg_core_option` (`categoryId`,`name`,`value`,`icon`) VALUES
 INSERT INTO `cmg_core_role` VALUES 
 	(1,1,1,'Super Admin','The Super Admin have all the permisisons to perform operations on the admin site and website.','/dashboard','system',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
 	(2,1,1,'Admin','The Admin have all the permisisons to perform operations on the admin site and website except RBAC module.','/dashboard','system',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(3,1,1,'User','The role User is limited to website users.','/home','system',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(3,1,1,'User','The role User is limited to website users.',NULL,'system',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
 	(4,1,1,'User Manager','The role User Manager is limited to manage site users from admin.','/dashboard','system',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 --

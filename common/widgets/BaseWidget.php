@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\widgets;
+namespace cmsgears\core\common\widgets;
 
 use \Yii;
 use yii\base\Widget;

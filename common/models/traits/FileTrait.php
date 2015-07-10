@@ -13,12 +13,23 @@ trait FileTrait {
 	/**
 	 * @return array - ModelFile associated with parent
 	 */
-	public function getFiles() {
-		
+	public function getModelFiles() {
+
 		$parentType	= $this->fileType;
 
     	return $this->hasMany( ModelFile::className(), [ 'parentId' => 'id' ] )
 					->where( "parentType='$parentType'" );
+	}
+
+	/**
+	 * @return array - ModelFile associated with parent
+	 */
+	public function getModelFilesByType( $type ) {
+
+		$parentType	= $this->metaType;
+
+    	return $this->hasMany( ModelFile::className(), [ 'parentId' => 'id' ] )
+					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $parentType, ':type' => $type ] )->all();
 	}
 }
 

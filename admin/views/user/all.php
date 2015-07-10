@@ -11,18 +11,18 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | All Users";
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-identity';
-$this->params['sidebar-child'] 	= 'user';
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 
 // Data
 $pagination		= $dataProvider->getPagination();
 $models			= $dataProvider->getModels();
 
 // Searching
-$searchTerms	= Yii::$app->request->getQueryParam("search");
+$searchTerms	= Yii::$app->request->getQueryParam( 'search' );
 
 // Sorting
-$sortOrder		= Yii::$app->request->getQueryParam("sort");
+$sortOrder		= Yii::$app->request->getQueryParam( 'sort' );
 
 if( !isset( $sortOrder ) ) {
 
@@ -31,7 +31,7 @@ if( !isset( $sortOrder ) ) {
 ?>
 <div class="content-header clearfix">
 	<div class="header-actions"> 
-		<?= Html::a( "Add User", ["/cmgcore/user/create"], ['class'=>'btn'] )  ?>				
+		<?= Html::a( "Add User", [ $createUrl ], ['class'=>'btn'] )  ?>				
 	</div>
 	<div class="header-search">
 		<input type="text" name="search" id="search-terms" value="<?php if( isset($searchTerms) ) echo $searchTerms;?>">
@@ -114,8 +114,8 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $user->registeredAt ?></td>
 						<td><?= $user->lastLoginAt ?></td>
 						<td>
-							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcore/user/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
-							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcore/user/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
+							<span class="wrap-icon-action"><?= Html::a( "", ["update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
+							<span class="wrap-icon-action"><?= Html::a( "", ["delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

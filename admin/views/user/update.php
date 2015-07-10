@@ -8,8 +8,8 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Update User";
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-identity';
-$this->params['sidebar-child'] 	= 'user';
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -22,9 +22,15 @@ $this->params['sidebar-child'] 	= 'user';
 		<?=FileUploader::widget( [ 'options' => [ 'id' => 'avatar-user', 'class' => 'file-uploader' ], 'model' => $model->avatar,  'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>
 		<?= $form->field( $model, 'firstName' ) ?>
 		<?= $form->field( $model, 'lastName' ) ?>
-		<?= $form->field( $model, 'genderId' )->dropDownList( $genders )  ?>
+		<?= $form->field( $model, 'genderId' )->dropDownList( $genderMap )  ?>
 		<?= $form->field( $model, 'phone' ) ?>
-		<?= $form->field( $siteMember, 'roleId' )->dropDownList( $roles )  ?>
+
+    	<?php if( isset( $roleMap ) ) { ?>
+			<?= $form->field( $siteMember, 'roleId' )->dropDownList( $roleMap )  ?>
+		<?php } else { ?>
+			<?= $form->field( $siteMember, 'roleId' )->hiddenInput()->label( false )  ?>
+		<?php } ?>
+
 		<?= $form->field( $model, 'status' )->dropDownList( $status ) ?>
 		<?= $form->field( $model, 'newsletter' )->checkbox() ?>
 

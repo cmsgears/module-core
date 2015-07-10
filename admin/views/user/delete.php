@@ -6,8 +6,8 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Delete User";
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-identity';
-$this->params['sidebar-child'] 	= 'user';
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -17,8 +17,8 @@ $this->params['sidebar-child'] 	= 'user';
     	<?= $form->field( $model, 'email' )->textInput( [ 'readonly'=>'true' ] ) ?>
     	<?= $form->field( $model, 'username' )->textInput( [ 'readonly'=>'true' ] ) ?>
     	<?= $form->field( $model, 'status' )->dropDownList( $status, [ 'disabled'=>'true' ] ) ?>
-		<?= $form->field( $siteMember, 'roleId' )->dropDownList( $roles, [ 'disabled'=>'true' ] )  ?>
-		<?= $form->field( $model, 'gender' )->dropDownList( $genders, [ 'disabled'=>'true' ] )  ?>
+		<?= $form->field( $siteMember, 'roleId' )->dropDownList( $roleMap, [ 'disabled'=>'true' ] )  ?>
+		<?= $form->field( $model, 'gender' )->dropDownList( $genderMap, [ 'disabled'=>'true' ] )  ?>
 		<?= $form->field( $model, 'firstName' )->textInput( [ 'readonly'=>'true' ] ) ?>
 		<?= $form->field( $model, 'lastName' )->textInput( [ 'readonly'=>'true' ] ) ?>
 		<?= $form->field( $model, 'phone' )->textInput( [ 'readonly'=>'true' ] ) ?>

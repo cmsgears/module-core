@@ -42,16 +42,25 @@ class SiteMemberService extends Service {
 
 	// Create --------------
 
-	public static function create( $user, $siteMember = null ) {
+	public static function create( $user, $siteMember = null, $roleName = null ) {
 
 		// Find Current Site
-		$site = Site::findByName( Yii::$app->cmgCore->getSiteName() );
+		$site 		= Site::findByName( Yii::$app->cmgCore->getSiteName() );
 
 		if( !isset( $siteMember ) ) {
 
-			$siteMember			= new SiteMember();
-			$role				= RoleService::findByName( CoreGlobal::ROLE_USER );
-			$siteMember->roleId	= $role->id;
+			$siteMember	= new SiteMember();
+
+			if( isset( $roleName ) ) {
+	
+				$role				= RoleService::findByName( $roleName );
+				$siteMember->roleId	= $role->id;
+			}
+			else {
+	
+				$role				= RoleService::findByName( CoreGlobal::ROLE_USER );
+				$siteMember->roleId	= $role->id;
+			}
 		}
 
 		$siteMember->siteId = $site->id;

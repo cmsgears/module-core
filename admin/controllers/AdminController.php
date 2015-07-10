@@ -10,13 +10,16 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class RoleController extends BaseRoleController {
+class AdminController extends BaseUserController {
 
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+
+		$this->sidebar 		= [ 'parent' => 'sidebar-identity', 'child' => 'admin' ];
+		$this->createUrl	= '/cmgcore/admin/create';
 	}
 
 	// Instance Methods --------------------------------------------
@@ -29,18 +32,18 @@ class RoleController extends BaseRoleController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => CoreGlobal::PERM_IDENTITY_RBAC ],
-	                'all'   => [ 'permission' => CoreGlobal::PERM_IDENTITY_RBAC ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY_RBAC ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY_RBAC ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY_RBAC ]
+	                'index'  => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'all' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
 	                'index'  => ['get'],
-	                'all'   => ['get'],
+	                'all' => ['get'],
 	                'create' => ['get', 'post'],
 	                'update' => ['get', 'post'],
 	                'delete' => ['get', 'post']
@@ -49,34 +52,33 @@ class RoleController extends BaseRoleController {
         ];
     }
 
-	// RoleController --------------------
+	// UserController --------------------
 
 	public function actionIndex() {
 
-		$this->redirect( 'all' );
+		// TODO: Admins Dashboard
 	}
 
 	public function actionAll() {
 
-		// Remember return url for crud
-		Url::remember( [ 'role/all' ], 'roles' );
+		Url::remember( [ 'admin/all' ], 'users' );
 
-		return parent::actionAll( CoreGlobal::TYPE_SYSTEM );
+		return parent::actionAll( null, CoreGlobal::PERM_ADMIN );
 	}
 
 	public function actionCreate() {
 
-		return parent::actionCreate( Url::previous( 'roles' ), CoreGlobal::TYPE_SYSTEM );
+		return parent::actionCreate( Url::previous( 'users' ) );
 	}
 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id, Url::previous( 'roles' ), CoreGlobal::TYPE_SYSTEM );
+		return parent::actionUpdate( Url::previous( 'users' ), $id );
 	}
 
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, Url::previous( 'roles' ), CoreGlobal::TYPE_SYSTEM );
+		return parent::actionDelete( Url::previous( 'users' ), $id );
 	}
 }
 

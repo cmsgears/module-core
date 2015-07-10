@@ -11,6 +11,17 @@ use cmsgears\core\common\models\entities\ModelCategory;
 trait CategoryTrait {
 
 	/**
+	 * @return array - ModelCategory associated with parent
+	 */
+	public function getModelCategories() {
+
+		$parentType	= $this->categoryType;
+
+    	return $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )
+					->where( "parentType='$parentType'" );
+	}
+
+	/**
 	 * @return array - Category associated with parent
 	 */
 	public function getCategories() {
@@ -22,17 +33,6 @@ trait CategoryTrait {
 	
                       	$query->onCondition( [ "$modelCategory.parentType" => $this->categoryType ] );
 					});
-	}
-
-	/**
-	 * @return array - ModelCategory associated with parent
-	 */
-	public function getModelCategories() {
-
-		$parentType	= $this->categoryType;
-
-    	return $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$parentType'" );
 	}
 
 	/**

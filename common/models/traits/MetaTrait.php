@@ -13,7 +13,7 @@ trait MetaTrait {
 	/**
 	 * @return array - ModelMeta associated with parent
 	 */
-	public function getMetas() {
+	public function getModelMetas() {
 
 		$parentType	= $this->metaType;
 
@@ -24,7 +24,7 @@ trait MetaTrait {
 	/**
 	 * @return array - ModelMeta associated with parent
 	 */
-	public function getMetasByType( $type ) {
+	public function getModelMetasByType( $type ) {
 
 		$parentType	= $this->metaType;
 
@@ -35,7 +35,7 @@ trait MetaTrait {
 	/**
 	 * @return ModelMeta - associated with parent
 	 */
-	public function getMetaByTypeName( $type, $name ) {
+	public function getModelMetaByTypeName( $type, $name ) {
 
 		$parentType	= $this->metaType;
 
@@ -48,7 +48,7 @@ trait MetaTrait {
 	 */
 	public function getMetaNameValueMap() {
 
-		$metas 		= $this->metas;
+		$metas 		= $this->modelMetas;
 		$metasMap	= array();
 
 		foreach ( $metas as $meta ) {
@@ -64,7 +64,7 @@ trait MetaTrait {
 	 */
 	public function getMetaNameValueMapByType( $type ) {
 
-		$metas		= $this->getMetasByType( $type );
+		$metas		= $this->getModelMetasByType( $type );
 
 		$metasMap	= array();
 

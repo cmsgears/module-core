@@ -300,7 +300,6 @@ class User extends CmgEntity implements IdentityInterface {
         return [
             [ [ 'email' ], 'required' ],
             [ [ 'id', 'localeId', 'genderId', 'avatarId', 'status', 'phone', 'newsletter' ], 'safe' ],
-            [ [ 'username' ], 'required', 'on' => [ 'create', 'update' ] ],
             [ 'email', 'email' ],
             [ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],
             [ 'email', 'validateEmailUpdate', 'on' => [ 'update' ] ],

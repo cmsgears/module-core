@@ -10,7 +10,7 @@ use cmsgears\core\common\models\entities\ModelTag;
  */
 trait TagTrait {
 
-	public function getTagModels() {
+	public function getModelTags() {
 
 		$parentType	= $this->tagType;
 

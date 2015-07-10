@@ -78,18 +78,28 @@ class UserService extends \cmsgears\core\common\services\UserService {
 		return self::getDataProvider( new User(), $config );
 	}
 
-	public static function getPaginationByAdmins() {
+	public static function getPaginationByRoleName( $roleName ) {
+
+		$roleTable = CoreTables::TABLE_ROLE;
+
+		return self::getPagination( [ 'conditions' => [ "$roleTable.name" => $roleName ], 'query' => User::findWithSiteMember() ] );
+	}
+
+	public static function getPaginationByPermissionName( $permissionName ) {
 
 		$permissionTable = CoreTables::TABLE_PERMISSION;
 
-		return self::getPagination( [ 'conditions' => [ "$permissionTable.name" => CoreGlobal::PERM_ADMIN ], 'query' => User::findWithSiteMemberPermission() ] );
+		return self::getPagination( [ 'conditions' => [ "$permissionTable.name" => $permissionName ], 'query' => User::findWithSiteMemberPermission() ] );
+	}
+
+	public static function getPaginationByAdmins() {
+
+		return self::getPaginationByPermissionName( CoreGlobal::PERM_ADMIN );
 	}
 
 	public static function getPaginationByUsers() {
 
-		$permissionTable = CoreTables::TABLE_PERMISSION;
-
-		return self::getPagination( [ 'conditions' => [ "$permissionTable.name" => CoreGlobal::PERM_USER ], 'query' => User::findWithSiteMemberPermission() ] );
+		return self::getPaginationByPermissionName( CoreGlobal::PERM_USER );
 	}
 }
 

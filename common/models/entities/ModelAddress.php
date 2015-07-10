@@ -68,7 +68,7 @@ class ModelAddress extends CmgEntity {
      */
 	public static function tableName() {
 
-		return CoreTables::TABLE_MODEL_FILE;
+		return CoreTables::TABLE_MODEL_ADDRESS;
 	}
 
 	// ModelAddress ----------------------

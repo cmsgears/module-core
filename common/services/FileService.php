@@ -52,7 +52,7 @@ class FileService extends Service {
 		// File Type
 		if( !isset( $file->type ) ) {
 
-			$file->type		= CmgFile::TYPE_PUBLIC;
+			$file->type		= CmgFile::VISIBILITY_PUBLIC;
 		}
 
 		// Create File
@@ -80,7 +80,7 @@ class FileService extends Service {
 			$user						= Yii::$app->user->getIdentity();
 			$fileToUpdate->modifiedBy	= $user->id;
 
-			$fileToUpdate->copyForUpdateFrom( $file, [ 'title', 'description', 'altText', 'link', 'type' ] );
+			$fileToUpdate->copyForUpdateFrom( $file, [ 'title', 'description', 'altText', 'link', 'visibility', 'type' ] );
 
 			// Update File
 			$fileToUpdate->update();
@@ -108,7 +108,7 @@ class FileService extends Service {
 			$user						= Yii::$app->user->getIdentity();
 			$fileToUpdate->modifiedBy	= $user->id;
 
-			$fileToUpdate->copyForUpdateFrom( $file, [ 'title', 'description', 'altText', 'link', 'type', 'name', 'directory', 'extension', 'url', 'thumb' ] );
+			$fileToUpdate->copyForUpdateFrom( $file, [ 'title', 'description', 'altText', 'link', 'visibility', 'type', 'name', 'directory', 'extension', 'url', 'thumb' ] );
 
 			// Update File
 			$fileToUpdate->update();

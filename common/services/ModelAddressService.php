@@ -61,6 +61,13 @@ class ModelAddressService extends Service {
 		// Return Address
 		return $modelAddress;
 	}
+
+	// Delete -----------
+
+	public static function deleteByParentIdType( $parentId, $parentType ) {
+
+		ModelAddress::deleteByParentIdType( $parentId, $parentType );
+	}
 }
 
 ?>

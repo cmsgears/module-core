@@ -32,6 +32,8 @@ DROP TABLE IF EXISTS `cmg_core_newsletter`;
 
 DROP TABLE IF EXISTS `cmg_core_newsletter_member`;
 
+DROP TABLE IF EXISTS `cmg_core_newsletter_list`;
+
 DROP TABLE IF EXISTS `cmg_core_notification`;
 
 DROP TABLE IF EXISTS `cmg_core_reminder`;

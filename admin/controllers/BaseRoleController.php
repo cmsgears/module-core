@@ -51,21 +51,21 @@ abstract class BaseRoleController extends BaseController {
 
 		$model	= new Role();
 
-		$model->setScenario( "create" );
+		$model->setScenario( 'create' );
 
 		if( isset( $type ) ) {
 
 			$model->type = $type;
 		}
 
-		if( $model->load( Yii::$app->request->post(), "Role" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Role' )  && $model->validate() ) {
 
 			if( RoleService::create( $model ) ) {
 
 				$binder 			= new Binder();
 				$binder->binderId	= $model->id;
 
-				$binder->load( Yii::$app->request->post(), "Binder" );
+				$binder->load( Yii::$app->request->post(), 'Binder' );
 
 				RoleService::bindPermissions( $binder );
 
@@ -75,7 +75,7 @@ abstract class BaseRoleController extends BaseController {
 
 		$permissions	= PermissionService::getIdNameList( $type );
 
-    	return $this->render('create', [
+    	return $this->render( 'create', [
     		'returnUrl' => $returnUrl,
     		'model' => $model,
     		'permissions' => $permissions
@@ -90,16 +90,16 @@ abstract class BaseRoleController extends BaseController {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->setScenario( "update" );
+			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), "Role" )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'Role' )  && $model->validate() ) {
 
 				if( RoleService::update( $model ) ) {
 
 					$binder 			= new Binder();
 					$binder->binderId	= $model->id;
 
-					$binder->load( Yii::$app->request->post(), "Binder" );
+					$binder->load( Yii::$app->request->post(), 'Binder' );
 
 					RoleService::bindPermissions( $binder );
 	
@@ -109,7 +109,7 @@ abstract class BaseRoleController extends BaseController {
 
 			$permissions	= PermissionService::getIdNameList( $type );
 
-	    	return $this->render('update', [
+	    	return $this->render( 'update', [
 	    		'returnUrl' => $returnUrl,
 	    		'model' => $model,
 	    		'permissions' => $permissions
@@ -128,7 +128,7 @@ abstract class BaseRoleController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), "Role" ) ) {
+			if( $model->load( Yii::$app->request->post(), 'Role' ) ) {
 
 				if( RoleService::delete( $model ) ) {
 
@@ -138,7 +138,7 @@ abstract class BaseRoleController extends BaseController {
 
 			$permissions	= PermissionService::getIdNameList( $type );
 
-	    	return $this->render('delete', [
+	    	return $this->render( 'delete', [
 	    		'returnUrl' => $returnUrl,
 	    		'model' => $model,
 	    		'permissions' => $permissions

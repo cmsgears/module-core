@@ -31,6 +31,7 @@ class CoreTables {
 	// Marketing
 	const TABLE_NEWSLETTER			= "cmg_core_newsletter";
 	const TABLE_NEWSLETTER_MEMBER	= "cmg_core_newsletter_member";
+	const TABLE_NEWSLETTER_LIST		= "cmg_core_newsletter_list";
 
 	// User Messages
 	const TABLE_NOTIFICATION		= "cmg_core_notification";

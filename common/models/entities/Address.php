@@ -27,10 +27,10 @@ use cmsgears\core\common\config\CoreGlobal;
 class Address extends CmgEntity {
 
 	const TYPE_RESIDENTIAL	=  0;
-	const TYPE_OFFICE		=  5;
-	const TYPE_MAILING		= 10;
-	const TYPE_SHIPPING		= 15;
-	const TYPE_BILLING		= 20;
+	const TYPE_OFFICE		= 10;
+	const TYPE_MAILING		= 20;
+	const TYPE_SHIPPING		= 30;
+	const TYPE_BILLING		= 40;
 
 	public static $typeMap = [
 		self::TYPE_RESIDENTIAL => "Residential",
@@ -67,7 +67,7 @@ class Address extends CmgEntity {
 
 		return  [
 			[ [ 'provinceId', 'countryId', 'line1', 'city', 'zip' ], 'required' ],
-			[ [ 'id', 'firstname', 'lastname', 'phone', 'email', 'fax' ], 'safe' ],
+			[ [ 'id', 'firstName', 'lastName', 'phone', 'email', 'fax' ], 'safe' ],
 			[ [ 'line1', 'line2', 'line3' ], 'alphanumpun' ],
 			[ 'city', 'alphanumspace' ],
 			[ 'zip','alphanumhyphenspace' ],

@@ -162,7 +162,7 @@ class Option extends CmgEntity {
 	}
 
 	/**
-	 * @return Option - check whether option exist by name and category id
+	 * @return boolean - check whether option exist by name and category id
 	 */
 	public static function isExistByNameCategoryId( $name, $categoryId ) {
 

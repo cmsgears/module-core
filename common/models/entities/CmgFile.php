@@ -25,7 +25,8 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property string $directory
  * @property datetime $createdAt
  * @property datetime $modifiedAt
- * @property integer $type
+ * @property integer $visibility
+ * @property string $type
  * @property string $url
  * @property string $thumb
  * @property string $altText
@@ -33,13 +34,12 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  */
 class CmgFile extends CmgEntity {
 
-	// Pre-Defined File Types
-	const TYPE_PUBLIC		= 0;
-	const TYPE_PRIVATE		= 1;
+	const VISIBILITY_PUBLIC		=  0;
+	const VISIBILITY_PRIVATE	= 10;
 
 	public static $typeMap = [
-		self::TYPE_PUBLIC => "public",
-		self::TYPE_PRIVATE => "private"
+		self::VISIBILITY_PUBLIC => "public",
+		self::VISIBILITY_PRIVATE => "private"
 	];
 
 	/**
@@ -131,7 +131,7 @@ class CmgFile extends CmgEntity {
 
         return [
             [ [ 'createdBy', 'name', 'extension', 'directory', 'url' ], 'required' ],
-            [ [ 'id', 'type', 'title', 'description', 'altText', 'thumb', 'changed', 'link' ], 'safe' ],
+            [ [ 'id', 'title', 'description', 'altText', 'visibility', 'type', 'thumb', 'link', 'changed' ], 'safe' ],
             [ [ 'width', 'height', 'twidth', 'theight' ], 'safe' ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -151,6 +151,8 @@ class CmgFile extends CmgEntity {
 			'extension' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EXTENSION ),
 			'directory' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DIRECTORY ),
 			'url' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_URL ),
+			'visibility' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
+			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'link' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LINK )
 		];
 	}

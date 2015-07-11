@@ -30,7 +30,7 @@ $id				= $gallery->id;
 		<?=FileUploader::widget( [ 'options' => 
 				[ 'id' => 'gallery-item', 'class' => 'file-uploader' ],
 				'directory' => 'gallery', 'infoFields' => true, 
-				'postaction' => 'true', 'postactiongroup' => 'gallery', 'postactionkey' => 'updateItem',
+				'postaction' => 'true', 'cmtcontroller' => 'gallery', 'cmtaction' => 'updateItem',
 				'postactionurl' => Yii::$app->urlManager->createAbsoluteUrl("apix/cmgcore/gallery/create-item?id=$id"), 
 				'btnChooserIcon' => 'icon-action icon-action-edit' ] );
 		?>
@@ -47,7 +47,7 @@ $id				= $gallery->id;
 				<?=FileUploader::widget( [ 'options' => 
 						[ 'id' => "item-update-$id", 'class' => 'file-uploader' ], 
 						'directory' => 'gallery', 'infoFields' => true, 'model' => $item,
-						'postaction' => 'true', 'postactionid' => "frm-item-update-$id", 'postactiongroup' => 'gallery', 'postactionkey' => 'updateItem', 'postactionvisible' => true,
+						'postaction' => 'true', 'postactionid' => "frm-item-update-$id", 'cmtcontroller' => 'gallery', 'cmtaction' => 'updateItem', 'postactionvisible' => true,
 						'postactionurl' => Yii::$app->urlManager->createAbsoluteUrl("apix/cmgcore/gallery/update-item?id=$id"), 
 						'btnChooserIcon' => 'icon-action icon-action-edit' ] );
 				?>

@@ -44,10 +44,15 @@ class CoreProperties extends CmgProperties {
 	const PROP_SITE_NAME			= "site name";
 
 	/**
-	 * The property defines site url to be used at various places like emails. The admin site can use this to make url for front end sites.
+	 * The property defines site url to be used at various places like emails.
 	 */
 	const PROP_SITE_URL				= "site url";
-	
+
+	/**
+	 * The property defines admin url to be used at various places like emails.
+	 */
+	const PROP_ADMIN_URL			= "admin url";
+
 	// Singleton instance
 	private static $instance;
 
@@ -145,9 +150,22 @@ class CoreProperties extends CmgProperties {
 	}
 
 	/** 
+	 * Returns the site URL for the app. It can be used by admin app to refer to web app.
+	 */
+	public function getAdminUrl() {
+
+		return $this->properties[ self::PROP_ADMIN_URL ]; 
+	}
+
+	/** 
 	 * Returns the root URL for the app
 	 */
-	public function getRootUrl() {
+	public function getRootUrl( $admin = false ) {
+
+		if( $admin ) {
+
+			return $this->properties[ self::PROP_ADMIN_URL ] . \Yii::getAlias( '@web' ) ;
+		}
 
 		return $this->properties[ self::PROP_SITE_URL ] . \Yii::getAlias( '@web' ) ; 
 	}

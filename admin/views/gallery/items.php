@@ -41,15 +41,14 @@ $id				= $gallery->id;
 		<?php
 			foreach ( $items as $item ) {
 
-				$itemImage	= $item->file;
-				$fileId		= $itemImage->id;
+				$id		= $item->id;
 		?>
 			<li>
 				<?=FileUploader::widget( [ 'options' => 
-						[ 'id' => "item-update-$fileId", 'class' => 'file-uploader' ], 
-						'directory' => 'gallery', 'infoFields' => true, 'model' => $itemImage,
-						'postaction' => 'true', 'postactionid' => "frm-item-update-$fileId", 'postactiongroup' => 'gallery', 'postactionkey' => 'updateItem', 'postactionvisible' => true,
-						'postactionurl' => Yii::$app->urlManager->createAbsoluteUrl("apix/cmgcore/gallery/update-item?id=$fileId"), 
+						[ 'id' => "item-update-$id", 'class' => 'file-uploader' ], 
+						'directory' => 'gallery', 'infoFields' => true, 'model' => $item,
+						'postaction' => 'true', 'postactionid' => "frm-item-update-$id", 'postactiongroup' => 'gallery', 'postactionkey' => 'updateItem', 'postactionvisible' => true,
+						'postactionurl' => Yii::$app->urlManager->createAbsoluteUrl("apix/cmgcore/gallery/update-item?id=$id"), 
 						'btnChooserIcon' => 'icon-action icon-action-edit' ] );
 				?>
 			</li>

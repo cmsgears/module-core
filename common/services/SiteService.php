@@ -44,7 +44,7 @@ class SiteService extends Service {
 
 		$site = Site::findByName( $name );
 
-		return $site->getMetasByType( $type );
+		return $site->getModelMetasByType( $type );
     }
 
 	/**
@@ -95,7 +95,7 @@ class SiteService extends Service {
 	public static function updateMeta( $meta ) {
 
 		$site 			= Site::findByName( Yii::$app->cmgCore->getSiteName() );		
-		$metaToUpdate	= $site->getMetaByTypeName( $meta->type, $meta->name );
+		$metaToUpdate	= $site->getModelMetaByTypeName( $meta->type, $meta->name );
 
 		$metaToUpdate->copyForUpdateFrom( $meta, [ 'value' ] );
 

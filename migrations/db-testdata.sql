@@ -20,9 +20,10 @@ INSERT INTO `cmg_core_model_meta` (`parentId`,`parentType`,`name`,`value`,`type`
 	(1,'site','site title','CMG Demo','core','text',null),
 	(1,'site','site name','CMSGears','core','text',null),
 	(1,'site','site url','http://demo.cmsgears.com/templates/basic/','core','text',null),
+	(1,'site','admin url','http://demo.cmsgears.com/templates/basic/admin/','core','text',null),
 	(1,'site','smtp','false','email','text',null),
 	(1,'site','smtp username','','email','text',null),
-	(1,'site','smtp password','','email','',null),
+	(1,'site','smtp password','','email','password',null),
 	(1,'site','smtp host','','email','text',null),
 	(1,'site','smtp port','587','email','text',null),
 	(1,'site','debug','true','email','text',null),
@@ -34,7 +35,6 @@ INSERT INTO `cmg_core_model_meta` (`parentId`,`parentType`,`name`,`value`,`type`
 	(1,'site','info email','demoinfo@cmsgears.com','email','text',null),
 	(1,'site','theme','basic','frontend','text',null),
 	(1,'site','theme version','1','frontend','text',null),
-	(1,'site','admin url','http://demo.cmsgears.com/templates/basic/admin/','admin','text',null),
 	(1,'site','theme','basic','admin','text',null),
 	(1,'site','theme version','1','admin','text',null);
 

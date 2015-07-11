@@ -4,7 +4,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
-use cmsgears\core\widgets\Editor;
+use cmsgears\core\common\widgets\Editor;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Newsletter';

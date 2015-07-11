@@ -284,7 +284,7 @@ CREATE TABLE `cmg_core_file` (
   `extension` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `directory` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `visibility` smallint(6) NOT NULL DEFAULT '0',
-  `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `type` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `url` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `thumb` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `altText` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,

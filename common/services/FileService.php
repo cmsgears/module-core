@@ -49,10 +49,10 @@ class FileService extends Service {
 		$user				= Yii::$app->user->getIdentity();
 		$file->createdBy	= $user->id;
 
-		// File Type
-		if( !isset( $file->type ) ) {
+		// File Visibility
+		if( !isset( $file->visibility ) ) {
 
-			$file->type		= CmgFile::VISIBILITY_PUBLIC;
+			$file->visibility = CmgFile::VISIBILITY_PUBLIC;
 		}
 
 		// Create File

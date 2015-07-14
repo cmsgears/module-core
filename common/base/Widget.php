@@ -1,10 +1,10 @@
 <?php
-namespace cmsgears\core\common\widgets;
+namespace cmsgears\core\common\base;
 
+// Yii Imports
 use \Yii;
-use yii\base\Widget;
 
-class BaseWidget extends Widget {
+class Widget extends \yii\base\Widget {
 
 	// Variables ---------------------------------------------------
 

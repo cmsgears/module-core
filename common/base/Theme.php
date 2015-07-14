@@ -14,4 +14,17 @@ class Theme extends \yii\base\Theme {
 		// The path for images directly accessed using the img tag 
 		Yii::setAlias( "@images", "@web/images" );
     }
+
+	public function registerChildAssets( $view ) {
+
+		// register child theme assets from config
+		$themeChilds	= $this->childs;
+
+		foreach ( $themeChilds as $child ) {
+
+			$child = Yii::createObject( $child );
+
+			$child->registerAssets( $view );
+		}
+	}
 }

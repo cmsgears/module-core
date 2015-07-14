@@ -4,6 +4,7 @@ namespace cmsgears\core\frontend\controllers\apix;
 // Yii Imports
 use Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -52,7 +53,7 @@ class SiteController extends BaseController {
 		$model = new Register();
 
 		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post(), "Register" ) && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Register' ) && $model->validate() ) {
 
 			// Register User
 			$user = UserService::register( $model );
@@ -85,10 +86,24 @@ class SiteController extends BaseController {
         $model 			= new Login();
 
 		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post(), "Login" )  && $model->login() ) {
+		if( $model->load( Yii::$app->request->post(), 'Login' )  && $model->login() ) {
+
+			$user		= Yii::$app->user->getIdentity();
+			$role		= $user->role;
+
+			// Redirect user to home set by admin
+			if( isset( $role ) && isset( $role->homeUrl ) ) {
+
+				$homeUrl	= Url::to( [ $role->homeUrl ], true );
+			}
+			// Redirect user to home set by app config
+			else {
+
+				$homeUrl	= Url::to( [ Yii::$app->cmgCore->getLoginRedirectPage() ], true );
+			}
 
 			// Trigger Ajax Success
-			AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+			AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $homeUrl );
 		}
 		else {
 

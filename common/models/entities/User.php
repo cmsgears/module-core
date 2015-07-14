@@ -214,6 +214,11 @@ class User extends CmgEntity implements IdentityInterface {
 
         $this->verifyToken = null;
     }
+	
+	public function isVerifyTokenValid( $token ) {
+		
+		return strcmp( $this->verifyToken, $token ) == 0;
+	}
 
 	/**
 	 * Generate and set user password reset token using the yii security mechanism.
@@ -230,6 +235,11 @@ class User extends CmgEntity implements IdentityInterface {
 
         $this->resetToken = null;
     }
+
+	public function isResetTokenValid( $token ) {
+		
+		return strcmp( $this->resetToken, $token ) == 0;
+	}
 
 	/**
 	 * Generate and set user auth key using the yii security mechanism.

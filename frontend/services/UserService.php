@@ -92,7 +92,7 @@ class UserService extends \cmsgears\core\common\services\UserService {
 	public static function verify( $user, $token, $activate = true ) {
 
 		// Check Token
-		if( strcmp( $user->verifyToken, $token ) == 0 ) {
+		if( $user->isVerifyTokenValid( $token ) ) {
 
 			// Find existing user
 			$userToUpdate	= User::findById( $user->id );

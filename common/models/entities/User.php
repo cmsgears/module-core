@@ -308,7 +308,7 @@ class User extends CmgEntity implements IdentityInterface {
 	public function rules() {
 
         return [
-            [ [ 'email' ], 'required' ],
+            [ [ 'email', 'username' ], 'required' ],
             [ [ 'id', 'localeId', 'genderId', 'avatarId', 'status', 'phone', 'newsletter' ], 'safe' ],
             [ 'email', 'email' ],
             [ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],

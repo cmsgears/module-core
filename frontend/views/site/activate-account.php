@@ -3,18 +3,18 @@ use \Yii;
 use yii\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . " | Activate Account";
+$this->title 	= $coreProperties->getSiteTitle() . ' | Activate Account';
 ?>
-<h1>Forgot Password</h1>
+<h1>Activate Account</h1>
 <?php 
-	if( Yii::$app->session->hasFlash( "message" ) ) {
+	if( Yii::$app->session->hasFlash( 'message' ) ) {
 ?>
-	<p> <?php echo Yii::$app->session->getFlash( "message" ); ?> </p>
+	<p><?= Yii::$app->session->getFlash( 'message' ) ?></p>
 <?php
 	}
 	else {
 
-		$form = ActiveForm::begin( ['id' => 'frm-activate-account'] );
+		$form = ActiveForm::begin( [ 'id' => 'frm-activate-account' ] );
 ?>
 		<ul>
 			<li>

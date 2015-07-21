@@ -28,6 +28,15 @@ class PermissionService extends Service {
 	}
 
 	/**
+	 * @param string $slug
+	 * @return Permission
+	 */
+	public static function findBySlug( $slug ) {
+
+		return Permission::findBySlug( $slug );
+	}
+
+	/**
 	 * @param string $id
 	 * @return array - An array of associative array of permission id and name
 	 */

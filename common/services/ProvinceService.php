@@ -11,12 +11,12 @@ class ProvinceService extends Service {
 
 	public static function getListByCountryId( $countryId ) {
 
-		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_PROVINCE, [ 'countryId' => $countryId ] );
+		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_PROVINCE, [ 'conditions' => [ 'countryId' => $countryId ] ] );
 	}
 
 	public static function getMapByCountryId( $countryId ) {
 
-		return self::findMap( 'id', 'name', CoreTables::TABLE_PROVINCE, [ 'countryId' => $countryId ] );
+		return self::findMap( 'id', 'name', CoreTables::TABLE_PROVINCE, [ 'conditions' => [ 'countryId' => $countryId ] ] );
 	}
 }
 

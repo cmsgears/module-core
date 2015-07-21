@@ -51,7 +51,13 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
-					</th>					
+					</th>
+					<th>Slug
+						<span class='box-icon-sort'>
+							<span sort-order='slug' class="icon-sort <?php if( strcmp( $sortOrder, 'slug') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
+							<span sort-order='-slug' class="icon-sort <?php if( strcmp( $sortOrder, '-slug') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
+						</span>
+					</th>
 					<th>Description</th>
 					<th>Actions</th>
 				</tr>
@@ -65,6 +71,7 @@ if( !isset( $sortOrder ) ) {
 				?>
 					<tr>
 						<td><?= $permission->name ?></td>
+						<td><?= $permission->slug ?></td>
 						<td><?= $permission->description ?></td>
 						<td>
 							<span class="wrap-icon-action" title="Update Permission"><?= Html::a( "", ["/cmgcore/permission/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>

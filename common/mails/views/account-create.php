@@ -11,7 +11,7 @@ $siteUrl		= $coreProperties->getSiteUrl();
 $name 			= Html::encode( $user->getName() );
 $email			= Html::encode( $user->email );
 $token			= Html::encode( $user->verifyToken );
-$confirmLink	= "$siteUrlactivate-account?token=$token&email=$email";
+$confirmLink	= $siteUrl . "activate-account?token=$token&email=$email";
 ?>
 <table cellspacing='0' cellpadding='2' border='0' align='center' width='805px' style='font-family: Calibri; color: #4f4f4f; font-size: 14px; font-weight: 400;'>
 	<tbody>

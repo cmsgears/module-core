@@ -8,9 +8,9 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Register";
 ?>
 <h1>Register</h1>
 <?php 
-	if( Yii::$app->session->hasFlash( "success" ) ) { 
+	if( Yii::$app->session->hasFlash( 'message' ) ) { 
 ?>
-	<p> <?php echo Yii::$app->session->getFlash( "success" ); ?> </p>
+	<p><?= Yii::$app->session->getFlash( 'message' ) ?></p>
 <?php
 	}
 	else {

@@ -4,6 +4,7 @@ namespace cmsgears\core\common\models\entities;
 // Yii Imports
 use \Yii;
 use yii\db\Expression;
+use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
@@ -18,6 +19,7 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
+ * @property string $slug
  * @property string $description
  * @property string $homeUrl
  * @property string $type
@@ -67,14 +69,14 @@ class Role extends NamedCmgEntity {
 	/**
 	 * @return array having permission name element.
 	 */
-	public function getPermissionsNameList() {
+	public function getPermissionsSlugList() {
 
     	$permissions 		= $this->permissions;
 		$permissionsList	= array();
 
 		foreach ( $permissions as $permission ) {
 
-			array_push( $permissionsList, $permission->name );
+			array_push( $permissionsList, $permission->slug );
 		}
 
 		return $permissionsList;
@@ -89,6 +91,12 @@ class Role extends NamedCmgEntity {
 
         return [
 
+            'sluggableBehavior' => [
+                'class' => SluggableBehavior::className(),
+                'attribute' => 'name',
+                'slugAttribute' => 'slug',
+                'ensureUnique' => true
+            ],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
 				'createdAtAttribute' => 'createdAt',
@@ -107,7 +115,7 @@ class Role extends NamedCmgEntity {
 
         return [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'description', 'homeUrl' ], 'safe' ],
+            [ [ 'id', 'slug', 'description', 'homeUrl' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ [ 'name', 'type', 'icon' ], 'string', 'min'=>1, 'max'=>100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
@@ -143,6 +151,13 @@ class Role extends NamedCmgEntity {
 
 	// Role ------------------------------
 
+	/**
+	 * @return Role - by slug
+	 */
+	public static function findBySlug( $slug ) {
+
+		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+	}
 }
 
 ?>

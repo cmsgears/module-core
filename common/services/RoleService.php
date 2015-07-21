@@ -37,11 +37,28 @@ class RoleService extends Service {
 	}
 
 	/**
+	 * @param string $slug
+	 * @return Role
+	 */
+	public static function findBySlug( $slug ) {
+
+		return Role::findBySlug( $slug );
+	}
+
+	/**
 	 * @return array - an array having id as key and name as value.
 	 */
 	public static function getIdNameMap() {
 
 		return self::findMap( 'id', 'name', CoreTables::TABLE_ROLE );
+	}
+
+	/**
+	 * @return array - an array having id as key and name as value.
+	 */
+	public static function getIdNameMapByRoles( $roles ) {
+
+		return self::findMap( 'id', 'name', CoreTables::TABLE_ROLE, [ 'filters' => [ [ 'in', 'slug', $roles ] ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Role' ] ] ] );
 	}
 
 	/**

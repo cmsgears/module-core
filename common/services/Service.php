@@ -99,26 +99,14 @@ class Service {
 	 * @param string $tableName
 	 * @param array $conditions
 	 */
-	public static function findMap( $keyColumn, $valueColumn, $tableName, $conditions = [], $prepend = [], $append = [] ) {
+	public static function findMap( $keyColumn, $valueColumn, $tableName, $config = [] ) {
 
-		$arrayList  = self::findNameValueList( $keyColumn, $valueColumn, $tableName, $conditions );
+		$arrayList  = self::findNameValueList( $keyColumn, $valueColumn, $tableName, $config );
 		$map		= [];
 
 		foreach ( $arrayList as $item ) {
 
-			$map[ $item['name'] ] = $item['value']; 
-		}
-
-		// Prepend given list
-		if( count( $prepend ) > 0 ) {
-
-			$map = ArrayHelper::merge( $prepend, $map );
-		}
-
-		// Append given list
-		if( count( $append ) > 0 ) {
-
-			$map = ArrayHelper::merge( $append, $map );
+			$map[ $item['name'] ] = $item['value'];
 		}
 
 		return $map;
@@ -132,9 +120,13 @@ class Service {
 	 * @param string $tableName
 	 * @param array $conditions 
 	 */
-	public static function findList( $column, $tableName, $conditions = [] ) {
+	public static function findList( $column, $tableName, $config = [] ) {
 		
-		$query	= new Query();
+		$asArray		= isset( $config[ 'asArray' ] ) ? $config[ 'asArray' ] : false;
+		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
+
+		$query			= new Query();
 
 		// Build Query
 		if( isset( $conditions ) ) {
@@ -147,7 +139,16 @@ class Service {
 			$query->select( $column )
 				  ->from( $tableName );
 		}
-		
+
+		// Multiple Columns
+		if( isset( $filters ) ) {
+
+			foreach ( $filters as $filter ) {
+
+				$query 	= $query->andFilterWhere( $filter );	
+			}
+		}
+
 		// Get result as array
 		$query->asArray();
 
@@ -168,9 +169,15 @@ class Service {
 	 * @param array $conditions
 	 * @param boolean $asArray
 	 */
-	public static function findNameValueList( $nameColumn, $valueColumn, $tableName, $conditions = [], $asArray = false, $prepend = [], $append = [] ) {
+	public static function findNameValueList( $nameColumn, $valueColumn, $tableName, $config = [] ) {
+		
+		$asArray		= isset( $config[ 'asArray' ] ) ? $config[ 'asArray' ] : false;
+		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
+		$prepend		= isset( $config[ 'prepend' ] ) ? $config[ 'prepend' ] : [];
+		$append			= isset( $config[ 'append' ] ) ? $config[ 'append' ] : [];
 
-		$query 		= new Query();
+		$query 			= new Query();
 
 		// Build Query
 		if( isset( $conditions ) ) {
@@ -182,6 +189,15 @@ class Service {
 
 			$query->select( $nameColumn.' as name,'. $valueColumn .' as value' )
 				  ->from( $tableName );			
+		}
+
+		// Multiple Columns
+		if( isset( $filters ) ) {
+
+			foreach ( $filters as $filter ) {
+
+				$query 	= $query->andFilterWhere( $filter );	
+			}
 		}
 
 		// Get result as array instead of associative array		
@@ -199,13 +215,13 @@ class Service {
 		// Prepend given list
 		if( count( $prepend ) > 0 ) {
 
-			$arrayList = ArrayHelper::merge( $arrayList, $prepend );
+			$arrayList = ArrayHelper::merge( $prepend, $arrayList );
 		}
 
 		// Append given list
 		if( count( $append ) > 0 ) {
 
-			$arrayList = ArrayHelper::merge( $append, $arrayList );
+			$arrayList = ArrayHelper::merge( $arrayList, $append );
 		}
 
 		return $arrayList;
@@ -219,7 +235,13 @@ class Service {
 	 * @param array $conditions
 	 * @param boolean $asArray 
 	 */
-	public static function findIdNameList( $idColumn, $nameColumn, $tableName, $conditions = [], $asArray = false, $prepend = [], $append = [] ) {
+	public static function findIdNameList( $idColumn, $nameColumn, $tableName, $config = [] ) {
+
+		$asArray		= isset( $config[ 'asArray' ] ) ? $config[ 'asArray' ] : false;
+		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
+		$prepend		= isset( $config[ 'prepend' ] ) ? $config[ 'prepend' ] : [];
+		$append			= isset( $config[ 'append' ] ) ? $config[ 'append' ] : [];
 
 		$query 		= new Query();
 
@@ -234,7 +256,16 @@ class Service {
 			$query->select( $idColumn.' as id,'. $nameColumn .' as name' )
 				  ->from( $tableName );
 		}
-		
+
+		// Multiple Columns
+		if( isset( $filters ) ) {
+
+			foreach ( $filters as $filter ) {
+
+				$query 	= $query->andFilterWhere( $filter );	
+			}
+		}
+
 		// Get result as array instead of associative array		
 		if( $asArray ) {
 

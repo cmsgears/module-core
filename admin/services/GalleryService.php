@@ -30,6 +30,12 @@ class GalleryService extends \cmsgears\core\common\services\GalleryService {
 	                'default' => SORT_DESC,
 	                'label' => 'name'
 	            ],
+	            'slug' => [
+	                'asc' => [ 'slug' => SORT_ASC ],
+	                'desc' => ['slug' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'slug'
+	            ],
 	            'title' => [
 	                'asc' => [ 'title' => SORT_ASC ],
 	                'desc' => ['title' => SORT_DESC ],

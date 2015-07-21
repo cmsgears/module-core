@@ -108,7 +108,7 @@ class UserService extends Service {
 		if( isset( $avatar ) ) {
 
 			// Save Avatar
-			FileService::saveImage( $avatar, $user, [ 'model' => $user, 'attribute' => 'avatarId' ] );
+			FileService::saveImage( $avatar, [ 'model' => $user, 'attribute' => 'avatarId' ] );
 		}
 
 		// Create User

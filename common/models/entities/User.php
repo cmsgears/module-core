@@ -258,7 +258,7 @@ class User extends CmgEntity implements IdentityInterface {
 
 		if( isset( $role ) ) {
 
-			$this->permissions	= $role->getPermissionsNameList();
+			$this->permissions	= $role->getPermissionsSlugList();
 		}
 		else {
 

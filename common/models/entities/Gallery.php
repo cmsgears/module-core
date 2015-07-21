@@ -4,6 +4,7 @@ namespace cmsgears\core\common\models\entities;
 // Yii Imports
 use \Yii;
 use yii\db\Expression;
+use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
@@ -19,6 +20,7 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  *
  * @property integer $id
  * @property string $name
+ * @property string $slug
  * @property string $description
  */
 class Gallery extends NamedCmgEntity {
@@ -56,6 +58,12 @@ class Gallery extends NamedCmgEntity {
 
         return [
 
+            'sluggableBehavior' => [
+                'class' => SluggableBehavior::className(),
+                'attribute' => 'name',
+                'slugAttribute' => 'slug',
+                'ensureUnique' => true
+            ],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
 				'createdAtAttribute' => 'createdAt',
@@ -74,7 +82,7 @@ class Gallery extends NamedCmgEntity {
 
         return [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'description', 'title' ], 'safe' ],
+            [ [ 'id', 'slug', 'description', 'title' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
@@ -117,6 +125,14 @@ class Gallery extends NamedCmgEntity {
 	public static function findWithOwner() {
 
 		return self::find()->joinWith( 'creator' );
+	}
+
+	/**
+	 * @return Gallery - by slug
+	 */
+	public static function findBySlug( $slug ) {
+
+		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
 	}
 }
 

@@ -41,6 +41,15 @@ class GalleryService extends Service {
 	}
 
 	/**
+	 * @param string $slug
+	 * @return Gallery
+	 */
+	public static function findBySlug( $slug ) {
+
+		return Gallery::findByName( $slug );
+	}
+
+	/**
 	 * @param string $id
 	 * @return array - An array of associative array of gallery id and name
 	 */

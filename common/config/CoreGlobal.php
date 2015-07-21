@@ -101,6 +101,7 @@ class CoreGlobal {
 	const FIELD_CODE				= "codeField";
 	const FIELD_NAME				= "nameField";
 	const FIELD_TITLE				= "titleField";
+	const FIELD_ACTIVE				= "activeField";
 	const FIELD_VALUE				= "valueField";
 	const FIELD_MESSAGE				= "messageField";
 	const FIELD_DESCRIPTION			= "descField";

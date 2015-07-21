@@ -33,17 +33,17 @@ abstract class BaseUserController extends BaseController {
 
 	// UserController --------------------
 
-	public function actionAll( $roleName = null, $permissionName = null ) {
+	public function actionAll( $roleSlug = null, $permissionSlug = null ) {
 
 		$dataProvider = null;
 
-		if( isset( $roleName ) ) {
+		if( isset( $roleSlug ) ) {
 
-			$dataProvider = UserService::getPaginationByRoleName( $roleName );
+			$dataProvider = UserService::getPaginationByRoleSlug( $roleSlug );
 		}
-		else if( isset( $permissionName ) ) {
+		else if( isset( $permissionSlug ) ) {
 
-			$dataProvider = UserService::getPaginationByPermissionName( $permissionName );
+			$dataProvider = UserService::getPaginationByPermissionSlug( $permissionSlug );
 		}
 		else {
 
@@ -57,16 +57,16 @@ abstract class BaseUserController extends BaseController {
 	    ]);
 	}
 
-	public function actionCreate( $returnUrl, $roleName = null ) {
+	public function actionCreate( $returnUrl, $roleSlug = null ) {
 
 		$model		= new User();
 		$siteMember	= new SiteMember();
 
 		$model->setScenario( 'create' );
 
-		if( isset( $roleName ) ) {
+		if( isset( $roleSlug ) ) {
 
-			$role 				= RoleService::findByName( $roleName );
+			$role 				= RoleService::findBySlug( $roleSlug );
 			$siteMember->roleId = $role->id;
 		}
 
@@ -89,7 +89,7 @@ abstract class BaseUserController extends BaseController {
 
 		$genderMap 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER );
 		
-		if( isset( $roleName ) ) {
+		if( isset( $roleSlug ) ) {
 
 			return $this->render( '@cmsgears/module-core/admin/views/user/create', [
 				'sidebar' => $this->sidebar,
@@ -116,7 +116,7 @@ abstract class BaseUserController extends BaseController {
 		}
 	}
 
-	public function actionUpdate( $returnUrl, $id, $roleName = null ) {
+	public function actionUpdate( $returnUrl, $id, $roleSlug = null ) {
 
 		// Find Model
 		$model		= UserService::findById( $id );
@@ -144,9 +144,9 @@ abstract class BaseUserController extends BaseController {
 
 			$genderMap 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER );
 			$avatar		= $model->avatar;
-			
-			if( isset( $roleName ) ) {
-				
+
+			if( isset( $roleSlug ) ) {
+
 		    	return $this->render( '@cmsgears/module-core/admin/views/user/update', [
 		    		'sidebar' => $this->sidebar,
 		    		'returnUrl' => $returnUrl,

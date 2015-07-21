@@ -52,7 +52,13 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
-					</th>					
+					</th>
+					<th>Slug
+						<span class='box-icon-sort'>
+							<span sort-order='slug' class="icon-sort <?php if( strcmp( $sortOrder, 'slug') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
+							<span sort-order='-slug' class="icon-sort <?php if( strcmp( $sortOrder, '-slug') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
+						</span>
+					</th>
 					<th>Description</th>
 					<th>Home URL</th>
 					<th>Actions</th>
@@ -67,6 +73,7 @@ if( !isset( $sortOrder ) ) {
 				?>
 					<tr>
 						<td><?= $role->name ?></td>
+						<td><?= $role->slug ?></td>
 						<td><?= $role->description ?></td>
 						<td><?= $role->homeUrl ?></td>
 						<td>

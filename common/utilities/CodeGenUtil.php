@@ -195,6 +195,51 @@ class CodeGenUtil {
 
 		return $options;
 	}
+
+	// Return Image Tag
+	public static function getImageThumbTag( $image, $options = [] ) {
+
+		if( isset( $image ) ) {
+
+			$thumbUrl = $image->getThumbUrl();
+
+			if( isset( $options[ 'class' ] ) ) {
+
+				$class = $options[ 'class' ];
+
+				return "<img class='$class' src='$thumbUrl'>";
+			}
+			else {
+
+				return "<img src='$thumbUrl'>";
+			}
+		}
+		else {
+
+			if( isset( $options[ 'image' ] ) ) {
+
+				$images = Yii::getAlias( '@images' );
+
+				if( isset( $options[ 'class' ] ) ) {
+
+					$class 	= $options[ 'class' ];
+					$img	= $options[ 'image' ];
+
+					return "<img class='$class' src='$images/$img.png'>";
+				}
+				else {
+
+					return "<img src='$images/$image.png'>";
+				}
+			}
+			else if( isset( $options[ 'icon' ] ) ) {
+
+				$icon = $options[ 'icon' ];
+
+				return "<span class='$icon'></span>";
+			}
+		}
+	}
 }
 
 ?>

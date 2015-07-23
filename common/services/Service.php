@@ -46,7 +46,7 @@ class Service {
 
 		if( isset( $conditions ) ) {
 
-			$query 	= $query->where( $conditions );
+			$query 	= $query->andWhere( $conditions );
 		}
 
 		// Searching ----------

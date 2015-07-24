@@ -31,13 +31,15 @@ class UserController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'home' => [ 'permission' => CoreGlobal::PERM_USER ]
+	                'home' => [ 'permission' => CoreGlobal::PERM_USER ],
+	                'profile' => [ 'permission' => CoreGlobal::PERM_USER ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'home' => ['get']
+                    'home' => [ 'get' ],
+                    'profile' => [ 'get', 'post' ]
                 ]
             ]
         ];

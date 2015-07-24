@@ -94,7 +94,7 @@ class SiteController extends BaseController {
 			// Redirect user to home set by admin
 			if( isset( $role ) && isset( $role->homeUrl ) ) {
 
-				$homeUrl	= Url::to( [ $role->homeUrl ], true );
+				$homeUrl	= Url::to( [ "/$role->homeUrl" ], true );
 			}
 			// Redirect user to home set by app config
 			else {

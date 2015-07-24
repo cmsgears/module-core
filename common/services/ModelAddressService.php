@@ -62,6 +62,26 @@ class ModelAddressService extends Service {
 		return $modelAddress;
 	}
 
+	// Create -----------
+
+	public static function update( $modelAddress, $address, $type ) {
+
+		// Update Address
+		AddressService::update( $address );
+
+		// Find existing Model Address
+		$addressToUpdate	= self::findById( $modelAddress->id );
+
+		// Copy Attributes
+		$addressToUpdate->copyForUpdateFrom( $modelAddress, [ 'type' ] );
+
+		// Update Model Address
+		$addressToUpdate->update();
+
+		// Return updated Model Address
+		return $addressToUpdate;
+	}
+
 	// Delete -----------
 
 	public static function deleteByParentIdType( $parentId, $parentType ) {

@@ -139,7 +139,7 @@ class SiteController extends BaseController {
 			// Redirect user to home
 			if( isset( $role ) && isset( $role->homeUrl ) ) {
 
-				$this->redirect( [ $role->homeUrl ] );
+				$this->redirect( [ "/$role->homeUrl" ] );
 			}
 			// Redirect user to home set by app config
 			else {

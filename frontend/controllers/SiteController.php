@@ -294,16 +294,8 @@ class SiteController extends BaseController {
 			$user	= Yii::$app->user->getIdentity();
 			$role	= $user->role;
 			
-			// Redirect user to home set by admin
-			if( isset( $role ) && isset( $role->homeUrl ) ) {
-
-				$this->redirect( [ $role->homeUrl ] );
-			}
-			// Redirect user to home set by app config
-			else {
-
-				$this->redirect( [ Yii::$app->cmgCore->getLoginRedirectPage() ] );
-			}
+			// Redirect user to home
+			$this->checkHome();
 		}
 
     	return $this->render( WebGlobalCore::PAGE_LOGIN, [
@@ -334,7 +326,7 @@ class SiteController extends BaseController {
 			// Redirect user to home
 			if( isset( $role ) && isset( $role->homeUrl ) ) {
 
-				$this->redirect( [ $role->homeUrl ] );
+				$this->redirect( [ "/$role->homeUrl" ] );
 			}
 			// Redirect user to home set by app config
 			else {

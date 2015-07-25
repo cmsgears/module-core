@@ -93,6 +93,10 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_TEMPLATE => "Template",
 		CoreGlobal::FIELD_EVENT => "Event",
 		CoreGlobal::FIELD_EVENT_LOG => "Event Log",
+		CoreGlobal::FIELD_START_DATE => "Start Date",
+		CoreGlobal::FIELD_END_DATE => "End Date",
+		CoreGlobal::FIELD_DAY_WEEK => 'Week Day',
+		CoreGlobal::FIELD_DAY_MONTH => 'Month Day',
 		// Role Fields
 		CoreGlobal::FIELD_HOME_URL => "Home Url",
 		// Address Fields

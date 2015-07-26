@@ -524,15 +524,6 @@ class User extends CmgEntity implements IdentityInterface {
 	}
 
 	/**
-	 * @param integer $id
-	 * @return User - by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	/**
 	 * @param string $token
 	 * @return User - by accessToken
 	 */

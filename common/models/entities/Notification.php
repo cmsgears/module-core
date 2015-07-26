@@ -128,14 +128,7 @@ class Notification extends CmgEntity {
 	}
 
 	// Notification ----------------------
-	
-	/**
-	 * @return Notification - by id
-	 */
-	public static function findById( $id ) {
 
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
 }
 
 ?>

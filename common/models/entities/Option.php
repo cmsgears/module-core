@@ -108,14 +108,6 @@ class Option extends CmgEntity {
 	// Read ----
 
 	/**
-	 * @return Option - by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	/**
 	 * @return Option - by category
 	 */
 	public static function findByCategory( $category ) {

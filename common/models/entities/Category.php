@@ -148,14 +148,6 @@ class Category extends CmgEntity {
 	// Read ----
 
 	/**
-	 * @return Category - by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	/**
 	 * @return Category - by name
 	 */
 	public static function findByName( $name ) {

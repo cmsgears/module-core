@@ -70,14 +70,6 @@ class Country extends NamedCmgEntity {
 	// Country ---------------------------
 
 	/**
-	 * @return Country by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	/**
 	 * @return Country by code
 	 */
 	public static function findByCode( $code ) {

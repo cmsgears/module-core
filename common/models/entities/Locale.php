@@ -64,14 +64,6 @@ class Locale extends NamedCmgEntity {
 	// Read ----
 
 	/**
-	 * @return Locale - by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	/**
 	 * @return Locale - by code
 	 */
 	public static function findByCode( $code ) {

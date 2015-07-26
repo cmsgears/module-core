@@ -187,15 +187,6 @@ class CmgFile extends CmgEntity {
 
 		return $file;
 	}
-
-	/**
-	 * @param int $id
-	 * @return CmgFile - by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
 }
 
 ?>

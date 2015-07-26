@@ -121,13 +121,6 @@ class Reminder extends CmgEntity {
 
 	// Reminder --------------------------
 
-	/**
-	 * @return Reminder - by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
 }
 
 ?>

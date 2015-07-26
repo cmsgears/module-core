@@ -66,6 +66,13 @@ class CmgEntity extends ActiveRecord {
 
 		return $searchQuery;
 	}
+
+	// Default Searching
+
+	public static function findById( $id ) {
+
+		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
+	}
 }
 
 ?>

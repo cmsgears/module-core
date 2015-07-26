@@ -106,14 +106,6 @@ class Province extends CmgEntity {
 	// Province --------------------------
 
 	/**
-	 * @return Province - by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	/**
 	 * @return array - by country id
 	 */
 	public static function findByCountryId( $countryId ) {

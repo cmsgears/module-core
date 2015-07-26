@@ -57,15 +57,6 @@ class NewsletterMember extends CmgEntity {
 	// Read ----
 
 	/**
-	 * @param string $id
-	 * @return NewsletterMember - by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	/**
 	 * @param string $email
 	 * @return NewsletterMember - by email
 	 */

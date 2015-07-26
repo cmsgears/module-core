@@ -50,7 +50,7 @@ class CategoryService extends Service {
 	 */
 	public static function getIdNameListByType( $type, $prepend = [], $append = [] ) {
 
-		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_CATEGORY, [ 'type' => $type ], false, $prepend, $append );
+		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_CATEGORY, [ 'conditions' => [ 'type' => $type ], 'asArray' => false, 'prepend' => $prepend, 'append' => $append ] );
 	}
 
 	// Data Provider ----

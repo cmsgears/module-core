@@ -112,13 +112,6 @@ class Address extends CmgEntity {
 	
 	// Read ----
 
-	/**
-	 * @return Address - by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
 }
 
 ?>

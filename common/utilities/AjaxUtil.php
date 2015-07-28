@@ -23,15 +23,13 @@ class AjaxUtil {
 
 		$response				= array();
 
-		$response["result"]		= 1;
-		$response["message"]	= $message;
-		$response["data"]		= $data;
+		$response[ 'result' ]	= 1;
+		$response[ 'message' ]	= $message;
+		$response[ 'data' ]		= $data;
 
 		Yii::$app->response->format = 'json';
 
-		echo json_encode( $response );
-
-		die();
+		return $response;
 	}
 
 	/**
@@ -46,13 +44,13 @@ class AjaxUtil {
 
 		$response				= array();
 
-		$response["result"]		= 0;
-		$response["message"]	= $message;
-		$response["errors"]		= $errors;
+		$response[ 'result' ]	= 0;
+		$response[ 'message' ]	= $message;
+		$response[ 'errors' ]	= $errors;
 
-		echo json_encode( $response );
+		Yii::$app->response->format = 'json';
 
-		die();
+		return $response;
 	}
 
 	/**

@@ -1,6 +1,8 @@
 <?php
 namespace cmsgears\core\common\utilities;
 
+use \DateTime;
+
 /**
  * DateUtil provide several utility methods related to date and time.
  */
@@ -55,6 +57,36 @@ class DateUtil {
 		$date	= preg_split( "/ /", $date );
 
 		return $date[0];
+    }
+
+	/**
+	 * @return date - from datetime
+	 */
+    public static function getDayFromDate( $date, $format = null ) {
+
+		if( !isset( $format ) ) {
+			
+			$format	= 'H:i:s';
+		}
+
+		$date	= preg_split( "/-/", $date );
+
+		return $date[ 2 ];
+    }
+
+	/**
+	 * @return date - from datetime
+	 */
+    public static function getWeekDayFromDate( $date, $format = null ) {
+
+		if( !isset( $format ) ) {
+
+			$format	= 'H:i:s';
+		}
+
+		$date = strtotime( $date );
+
+		return date( "N", $date ) - 1;
     }
 
 	/**

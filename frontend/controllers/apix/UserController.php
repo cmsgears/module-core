@@ -55,18 +55,19 @@ class UserController extends BaseController {
 		$user	= Yii::$app->user->getIdentity();
 		$avatar = new CmgFile();
 
-		if( $avatar->load( Yii::$app->request->post(), "File" ) && UserService::updateAvatar( $user, $avatar ) ) {
+		if( $avatar->load( Yii::$app->request->post(), 'File' ) && UserService::updateAvatar( $user, $avatar ) ) {
 
-			$user	= UserService::findById( $user->id );
-			$avatar	= $user->avatar;
+			$user		= UserService::findById( $user->id );
+			$avatar		= $user->avatar;
+			$response	= [ 'fileUrl' => $avatar->getFileUrl() ];
 
 			// Trigger Ajax Success
-			AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), [ 'fileUrl' => $avatar->getFileUrl() ] );
+			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
 		}
 		else {
 
 			// Trigger Ajax Failure
-        	AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 		}
     }
 }

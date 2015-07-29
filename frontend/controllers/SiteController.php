@@ -213,6 +213,8 @@ class SiteController extends BaseController {
 			// Trigger Reset Password
 			if( isset( $user ) && UserService::forgotPassword( $user ) ) {
 
+				$user	= UserService::findByEmail( $model->email );
+
 				// Send Forgot Password Mail
 				Yii::$app->cmgCoreMailer->sendPasswordResetMail( $this->getCoreProperties(), $this->getMailProperties(), $user );
 

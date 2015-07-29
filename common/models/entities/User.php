@@ -397,7 +397,7 @@ class User extends CmgEntity implements IdentityInterface {
 
 			$existingUser = self::findByUsername( $this->username );
 
-			if( $this->id != $existingUser->id && strcmp( $existingUser->username, $this->username ) == 0 ) {
+			if( isset( $existingUser ) && $this->id != $existingUser->id && strcmp( $existingUser->username, $this->username ) == 0 ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
 			}

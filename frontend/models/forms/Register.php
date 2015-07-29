@@ -33,7 +33,7 @@ class Register extends Model {
 	public function rules() {
 		
 		return  [
-			[ [ 'email', 'password', 'password_repeat' ], 'required' ],
+			[ [ 'email', 'password', 'password_repeat', 'terms' ], 'required' ],
 			[ 'email', 'email' ],
 			[ 'password', 'compare' ],
 			[ 'password', 'password' ],
@@ -56,7 +56,7 @@ class Register extends Model {
 			'username' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USERNAME ),
 			'firstName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
 			'lastName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
-			'terms' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+			'terms' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TERMS ),
 			'newsletter' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NEWSLETTER )
 		];
 	}

@@ -5,6 +5,8 @@ namespace cmsgears\core\common\services;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\models\entities\CoreTables;
+
 use cmsgears\core\common\models\entities\User;
 
 use cmsgears\core\common\utilities\DateUtil;
@@ -74,6 +76,28 @@ class UserService extends Service {
 		$user = User::findByUsername( $username );
 
 		return isset( $user );
+	}
+
+	public static function getIdNameMapByRoleSlug( $roleSlug ) {
+
+		$roleTable			= CoreTables::TABLE_ROLE;
+		$userTable			= CoreTables::TABLE_USER;
+		$siteTable			= CoreTables::TABLE_SITE;
+		$siteMemberTable	= CoreTables::TABLE_SITE_MEMBER;
+
+		$users 				= User::find()
+								->leftJoin( $siteMemberTable, "$siteMemberTable.userId = $userTable.id" )
+								->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
+								->leftJoin( $roleTable, "$roleTable.id = $siteMemberTable.roleId" )
+								->where( "$roleTable.slug=:slug AND $siteTable.name=:name", [ ':slug' => $roleSlug, ':name' => Yii::$app->cmgCore->getSiteName() ] )->all();
+		$usersMap			= [];
+
+		foreach ( $users as $user ) {
+
+			$usersMap[ $user->id ] = $user->getName();
+		}
+
+		return $usersMap;
 	}
 
 	// Data Provider ----

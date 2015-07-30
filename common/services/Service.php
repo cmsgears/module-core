@@ -112,6 +112,46 @@ class Service {
 		return $map;
 	}
 
+	/**
+	 * The method findObjectMap returns an associative array for the defined table and columns. It also apply the provided conditions.
+	 * @param string $keyColumn
+	 * @param object $entity
+	 * @param string $tableName
+	 * @param array $conditions
+	 */
+	public static function findObjectMap( $keyColumn, $entity, $config = [] ) {
+
+		$query			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $entity::find();
+		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::PAGE_LIMIT;
+		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
+		$map			= [];
+
+		// Filtering -----------
+
+		if( isset( $conditions ) ) {
+
+			$query 	= $query->andWhere( $conditions );
+		}
+
+		if( isset( $filters ) ) {
+
+			foreach ( $filters as $filter ) {
+
+				$query 	= $query->andFilterWhere( $filter );	
+			}
+		}
+
+		$objects	= $query->all();
+
+		foreach ( $objects as $object ) {
+
+			$map[ $object->$keyColumn ] = $object;
+		}
+
+		return $map;
+	}
+
 	// Lists ------------------------------------------------------
 
 	/**

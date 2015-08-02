@@ -161,10 +161,10 @@ class Service {
 	 * @param array $conditions 
 	 */
 	public static function findList( $column, $tableName, $config = [] ) {
-		
-		$asArray		= isset( $config[ 'asArray' ] ) ? $config[ 'asArray' ] : false;
+
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
+		$order			= isset( $config[ 'order' ] ) ? $config[ 'order' ] : null;
 
 		$query			= new Query();
 
@@ -189,16 +189,27 @@ class Service {
 			}
 		}
 
-		// Get result as array
-		$query->asArray();
+		if( isset( $order ) ) {
+
+			$query->orderBy( $order );
+		}
+
+		// Get column
+		$query->column();
 
 		// Create command
 		$command 	= $query->createCommand();
 
 		// Execute the command
 		$list 		= $command->queryAll();
+		$resultList	= [];
 
-		return $list;
+		foreach ( $list as $item ) {
+
+			$resultList[] = $item[ $column ];
+		}
+
+		return $resultList;
 	}
 
 	/**
@@ -210,8 +221,7 @@ class Service {
 	 * @param boolean $asArray
 	 */
 	public static function findNameValueList( $nameColumn, $valueColumn, $tableName, $config = [] ) {
-		
-		$asArray		= isset( $config[ 'asArray' ] ) ? $config[ 'asArray' ] : false;
+
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
 		$prepend		= isset( $config[ 'prepend' ] ) ? $config[ 'prepend' ] : [];
@@ -238,12 +248,6 @@ class Service {
 
 				$query 	= $query->andFilterWhere( $filter );	
 			}
-		}
-
-		// Get result as array instead of associative array		
-		if( $asArray ) {
-
-			$query->asArray();
 		}
 
 		// Create command
@@ -277,7 +281,6 @@ class Service {
 	 */
 	public static function findIdNameList( $idColumn, $nameColumn, $tableName, $config = [] ) {
 
-		$asArray		= isset( $config[ 'asArray' ] ) ? $config[ 'asArray' ] : false;
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
 		$prepend		= isset( $config[ 'prepend' ] ) ? $config[ 'prepend' ] : [];
@@ -304,12 +307,6 @@ class Service {
 
 				$query 	= $query->andFilterWhere( $filter );	
 			}
-		}
-
-		// Get result as array instead of associative array		
-		if( $asArray ) {
-
-			$query->asArray();
 		}
 
 		// Create command

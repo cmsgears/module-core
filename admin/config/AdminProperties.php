@@ -46,14 +46,6 @@ class AdminProperties extends CmgProperties {
 	}
 
 	/**
-	 * Return web property for the specified key.
-	 */
-	public function getProperty( $key ) {
-
-		return $this->properties[ key ];
-	}
-
-	/**
 	 * Returns current active Theme name.
 	 */
 	public function getTheme() {

@@ -14,19 +14,20 @@ INSERT INTO `cmg_core_site` VALUES
 --
 
 INSERT INTO `cmg_core_model_meta` (`parentId`,`parentType`,`name`,`value`,`type`,`fieldType`,`fieldMeta`) VALUES
-	(1,'site','locale message','false','core','text',null),
+	(1,'site','locale message','0','core','text',null),
 	(1,'site','language','en-US','core','text',null),
 	(1,'site','charset','UTF-8','core','text',null),
 	(1,'site','site title','CMG Demo','core','text',null),
 	(1,'site','site name','CMSGears','core','text',null),
 	(1,'site','site url','http://demo.cmsgears.com/templates/basic/','core','text',null),
 	(1,'site','admin url','http://demo.cmsgears.com/templates/basic/admin/','core','text',null),
-	(1,'site','smtp','false','email','text',null),
+	(1,'site','smtp','0','email','text',null),
 	(1,'site','smtp username','','email','text',null),
 	(1,'site','smtp password','','email','password',null),
 	(1,'site','smtp host','','email','text',null),
 	(1,'site','smtp port','587','email','text',null),
-	(1,'site','debug','true','email','text',null),
+	(1,'site','smtp encryption','tls','email','text',null),
+	(1,'site','debug','1','email','text',null),
 	(1,'site','sender name','Admin','email','text',null),
 	(1,'site','sender email','demoadmin@cmsgears.com','email','text',null),
 	(1,'site','contact name','Contact Us','email','text',null),

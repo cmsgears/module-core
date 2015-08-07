@@ -81,7 +81,7 @@ abstract class BaseUserController extends BaseController {
 			if( $user && $siteMember ) {
 
 				// Send Account Mail
-				Yii::$app->cmgCoreMailer->sendCreateUserMail( $this->getCoreProperties(), $this->getMailProperties(), $model );
+				Yii::$app->cmgCoreMailer->sendCreateUserMail( $model );
 
 				$this->redirect( $returnUrl );
 			}

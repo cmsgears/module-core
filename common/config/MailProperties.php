@@ -37,6 +37,11 @@ class MailProperties extends CmgProperties {
 	const PROP_SMTP_PORT		= "smtp port";
 
 	/**
+	 * The property defines SMTP port.
+	 */
+	const PROP_SMTP_ENCRYPTION	= "smtp encryption";
+
+	/**
 	 * The property defines whether mailer need to debug.
 	 */
 	const PROP_DEBUG			= "debug";
@@ -96,14 +101,6 @@ class MailProperties extends CmgProperties {
 	}
 
 	/**
-	 * Return mail property for the specified key.
-	 */
-	public function getProperty( $key ) {
-
-		return $this->properties[ key ];
-	}
-
-	/**
 	 * Returns whether smtp is required for sending mails.
 	 */
 	public function isSmtp() {
@@ -141,6 +138,14 @@ class MailProperties extends CmgProperties {
 	public function getSmtpPort() {
 
 		return $this->properties[ self::PROP_SMTP_PORT ];
+	}
+
+	/**
+	 * Returns smtp encryption for mails sent via smtp.
+	 */
+	public function getSmtpEncryption() {
+
+		return $this->properties[ self::PROP_SMTP_ENCRYPTION ];
 	}
 
 	/**

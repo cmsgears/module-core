@@ -92,14 +92,6 @@ class CoreProperties extends CmgProperties {
 
 		return Yii::$app->fileManager->uploadDir . self::DIR_AVATAR;
 	}
-	
-	/**
-	 * Return core property for the specified key.
-	 */
-	public function getProperty( $key ) {
-
-		return $this->properties[ key ];
-	}
 
 	/**
 	 * It can be used to identify whether database based Locale message is required.

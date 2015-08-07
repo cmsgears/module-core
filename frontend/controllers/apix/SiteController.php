@@ -64,7 +64,7 @@ class SiteController extends BaseController {
 				SiteMemberService::create( $user );
 
 				// Send Register Mail
-				Yii::$app->cmgCoreMailer->sendRegisterMail( $this->getCoreProperties(), $this->getMailProperties(), $user );
+				Yii::$app->cmgCoreMailer->sendRegisterMail( $user );
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );

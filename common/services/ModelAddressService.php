@@ -5,6 +5,7 @@ namespace cmsgears\core\common\services;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\models\entities\Address;
 use cmsgears\core\common\models\entities\ModelAddress;
 
 /**
@@ -60,6 +61,20 @@ class ModelAddressService extends Service {
 
 		// Return Address
 		return $modelAddress;
+	}
+	
+	public static function createShipping( $address, $parentId, $parentType ) {
+		
+		return self::create( $address, $parentId, $parentType, Address::TYPE_SHIPPING );
+	}
+
+	public static function copyToShipping( $address, $parentId, $parentType ) {
+
+		$shippingAddress	= new Address();
+
+		$shippingAddress->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'city', 'zip', 'firstName', 'lastName', 'phone', 'email', 'fax' ] );
+
+		return self::create( $shippingAddress, $parentId, $parentType, Address::TYPE_SHIPPING );
 	}
 
 	// Create -----------

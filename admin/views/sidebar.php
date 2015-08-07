@@ -49,7 +49,7 @@ $user	= Yii::$app->user->getIdentity();
 	<div class="collapsible-tab" id="sidebar-gallery">
 		<div class="collapsible-tab-header">
 			<a href="<?php echo Url::toRoute( ['/cmgcore/gallery/all'] ); ?>">
-				<div class="colf colf4"><span class="icon-sidebar icon-settings"></span></div>
+				<div class="colf colf4"><span class="icon-sidebar icon-slider"></span></div>
 				<div class="colf colf4x3">Galleries</div>
 			</a>
 		</div>

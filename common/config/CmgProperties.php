@@ -27,6 +27,16 @@ abstract class CmgProperties {
 			$this->properties	= SiteService::getMetaMapByNameType( Yii::$app->cmgCore->getMainSiteName(), $configType );
 		}
 	}
+
+	/**
+	 * Return core property for the specified key.
+	 */
+	public function getProperty( $key ) {
+
+		$findKey	= "$key";
+
+		return $this->properties[ $findKey ];
+	}
 }
 
 ?>

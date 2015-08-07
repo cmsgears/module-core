@@ -99,7 +99,7 @@ class SiteController extends BaseController {
 				SiteMemberService::create( $user );
 
 				// Send Register Mail
-				Yii::$app->cmgCoreMailer->sendRegisterMail( $this->getCoreProperties(), $this->getMailProperties(), $user );
+				Yii::$app->cmgCoreMailer->sendRegisterMail( $user );
 
 				// Set Flash Message
 				Yii::$app->session->setFlash( 'message', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
@@ -129,7 +129,7 @@ class SiteController extends BaseController {
 			if( isset( $user ) && UserService::verify( $user, $token ) ) {
 
 				// Send Register Mail
-				Yii::$app->cmgCoreMailer->sendVerifyUserMail( $this->getCoreProperties(), $this->getMailProperties(), $user );
+				Yii::$app->cmgCoreMailer->sendVerifyUserMail( $user );
 
 				// Set Success Message
 				Yii::$app->session->setFlash( 'message', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
@@ -175,7 +175,7 @@ class SiteController extends BaseController {
 					if( UserService::activate( $user, $model ) ) {
 	
 						// Send Register Mail
-						Yii::$app->cmgCoreMailer->sendActivateUserMail( $this->getCoreProperties(), $this->getMailProperties(), $user );
+						Yii::$app->cmgCoreMailer->sendActivateUserMail( $user );
 
 						// Set Success Message
 						Yii::$app->session->setFlash( 'message', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
@@ -216,7 +216,7 @@ class SiteController extends BaseController {
 				$user	= UserService::findByEmail( $model->email );
 
 				// Send Forgot Password Mail
-				Yii::$app->cmgCoreMailer->sendPasswordResetMail( $this->getCoreProperties(), $this->getMailProperties(), $user );
+				Yii::$app->cmgCoreMailer->sendPasswordResetMail( $user );
 
 				// Set Flash Message
 				Yii::$app->session->setFlash( 'message', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_FORGOT_PASSWORD ) );

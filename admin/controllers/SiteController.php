@@ -85,7 +85,7 @@ class SiteController extends BaseController {
 	 */
     public function actionDashboard() {
 
-		// TODO: Show dashboard based on user role
+		$this->layout	= AdminGlobalCore::LAYOUT_DASHBOARD;
 
         return $this->render( 'index' );
     }

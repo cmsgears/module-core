@@ -36,12 +36,17 @@ class Sidebar extends Component {
 
 			$module		= Yii::$app->getModule( $module );
 			$html   	= $module->getSidebarHtml();
-
+			
 			ob_start();
+			
+			if( file_exists( $html ) ) {
 
-			include( $html );
-
-			$sidebarHtml	.= ob_get_clean();
+				include( $html );
+			}
+			
+			$sidebarHtml = ob_get_contents();
+			
+			ob_get_clean();
 		}
 
 		return $sidebarHtml;

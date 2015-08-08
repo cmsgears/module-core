@@ -38,10 +38,15 @@ class Dashboard extends Component {
 			$html   	= $module->getDashboardHtml();
 
 			ob_start();
+			
+			if( file_exists( $html ) ) {
 
-			include( $html );
-
-			$sidebarHtml	.= ob_get_clean();
+				include( $html );
+			}
+			
+			$sidebarHtml = ob_get_contents();
+			
+			ob_get_clean();
 		}
 
 		return $sidebarHtml;

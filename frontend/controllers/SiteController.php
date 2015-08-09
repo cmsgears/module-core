@@ -317,7 +317,7 @@ class SiteController extends BaseController {
 	/**
 	 * The method check whether user is logged in and send to respective home page.
 	 */
-	protected function checkHome() {
+	private function checkHome() {
 
 		// Send user to home if already logged in
 	    if ( !Yii::$app->user->isGuest ) {
@@ -327,7 +327,7 @@ class SiteController extends BaseController {
 
 			// Redirect user to home
 			if( isset( $role ) && isset( $role->homeUrl ) ) {
-
+				
 				$this->redirect( [ "/$role->homeUrl" ] );
 			}
 			// Redirect user to home set by app config

@@ -44,7 +44,7 @@ class Sidebar extends Component {
 				include( $html );
 			}
 			
-			$sidebarHtml = ob_get_contents();
+			$sidebarHtml .= ob_get_contents();
 			
 			ob_get_clean();
 		}

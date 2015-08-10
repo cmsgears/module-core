@@ -310,6 +310,9 @@ class SiteController extends BaseController {
 		// Logout User
         Yii::$app->user->logout();
 		
+		// Destroy Session
+		Yii::$app->session->destroy();
+
 		// Redirect to home page
 		$this->redirect( [ Yii::$app->cmgCore->getLogoutRedirectPage() ] );
     }

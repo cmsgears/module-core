@@ -1,16 +1,12 @@
 {
 	"name": "cmsgears/module-core",
-	"description": "The core module for all the projects based on CMSGears.",
-	"homepage": "http://www.cmsgears.org", 
+	"description": "The core module for CMSGears based projects. It's required for all the projects using CMSGears.",
+	"homepage": "http://www.cmsgears.org",
 	"type": "package",
 	"keywords": [ "yii2", "cmsgears", "module", "core" ],
 	"license": "GPLv3",
 	"support": {
-        "source": "http://www.cmsgears.org/downloads/modules/core",
-		"forum": "http://forum.cmsgears.org/",
-		"resources": "http://resources.cmsgears.org/",
-		"issues": "https://www.amazingdesk.com/cmsgears/issues/",
-		"blog": "http://cmsgears.tutorials24x7.com/"
+		"resources": "http://www.cmsgears.org"
 	},
 	"autoload": {
 		"psr-4": {

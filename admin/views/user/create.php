@@ -4,6 +4,10 @@ use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Create User";
+
+// Sidebar
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -12,19 +16,22 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Create User";
 
     	<?= $form->field( $model, 'email' ) ?>
     	<?= $form->field( $model, 'username' ) ?>
-		<?= $form->field( $model, 'roleId' )->dropDownList( $roles )  ?>
-		<?= $form->field( $model, 'gender' )->dropDownList( $genders )  ?>
 		<?= $form->field( $model, 'firstName' ) ?>
 		<?= $form->field( $model, 'lastName' ) ?>
+		<?= $form->field( $model, 'gender' )->dropDownList( $genderMap )  ?>
 		<?= $form->field( $model, 'phone' ) ?>
+
+    	<?php if( isset( $roleMap ) ) { ?>
+			<?= $form->field( $siteMember, 'roleId' )->dropDownList( $roleMap )  ?>
+		<?php } else { ?>
+			<?= $form->field( $siteMember, 'roleId' )->hiddenInput()->label( false )  ?>
+		<?php } ?>
+
 		<?= $form->field( $model, 'newsletter' )->checkbox() ?>
 		
-		<?=Html::a( "Cancel", [ '/cmgcore/user/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
 		<input type="submit" value="Create" />
 		
 		<?php ActiveForm::end(); ?>
 	</div>	
 </section>
-<script type="text/javascript">
-	initSidebar( "sidebar-identity", 3 );
-</script>

@@ -26,7 +26,7 @@ abstract class NamedCmgEntity extends CmgEntity {
 
             if( $entity ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
@@ -42,7 +42,7 @@ abstract class NamedCmgEntity extends CmgEntity {
 
 			if( isset( $existingEntity ) && $existingEntity->id != $this->id && strcmp( $existingEntity->name, $this->name ) == 0 ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}
         }
     }
@@ -51,11 +51,17 @@ abstract class NamedCmgEntity extends CmgEntity {
 
 	// Read
 
+	/**
+	 * @return ActiveRecord - by id
+	 */
 	public static function findById( $id ) {
 
 		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 
+	/**
+	 * @return ActiveRecord - by name
+	 */
 	public static function findByName( $name ) {
 
 		return self::find()->where( 'name=:name', [ ':name' => $name ] )->one();

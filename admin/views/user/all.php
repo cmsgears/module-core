@@ -10,11 +10,19 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | All Users";
 
+// Sidebar
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
+
+// Data
+$pagination		= $dataProvider->getPagination();
+$models			= $dataProvider->getModels();
+
 // Searching
-$searchTerms	= Yii::$app->request->getQueryParam("search");
+$searchTerms	= Yii::$app->request->getQueryParam( 'search' );
 
 // Sorting
-$sortOrder		= Yii::$app->request->getQueryParam("sort");
+$sortOrder		= Yii::$app->request->getQueryParam( 'sort' );
 
 if( !isset( $sortOrder ) ) {
 
@@ -23,7 +31,7 @@ if( !isset( $sortOrder ) ) {
 ?>
 <div class="content-header clearfix">
 	<div class="header-actions"> 
-		<?= Html::a( "Add User", ["/cmgcore/user/create"], ['class'=>'btn'] )  ?>				
+		<?= Html::a( "Add User", [ $createUrl ], ['class'=>'btn'] )  ?>				
 	</div>
 	<div class="header-search">
 		<input type="text" name="search" id="search-terms" value="<?php if( isset($searchTerms) ) echo $searchTerms;?>">
@@ -32,13 +40,12 @@ if( !isset( $sortOrder ) ) {
 </div>
 <div class="data-grid">
 	<div class="grid-header">
-		<?= LinkPager::widget( [ 'pagination' => $pages ] ); ?>
+		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 	<div class="wrap-grid">
 		<table>
 			<thead>
 				<tr>
-					<th> <input type='checkbox' /> </th>
 					<th>Avatar</th>
 					<th>Username
 						<span class='box-icon-sort'>
@@ -73,19 +80,18 @@ if( !isset( $sortOrder ) ) {
 					<th>Mobile</th>
 					<th>Reg Date</th>
 					<th>Last Login</th>
-					<th>Newsletter</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php
 
-					foreach( $page as $user ) {
+					foreach( $models as $user ) {
 
-						$id = $user->id;
+						$id 	= $user->id;
+						$role	= $user->role->name;
 				?>
 					<tr>
-						<td> <input type='checkbox' /> </td>
 						<td> 
 							<?php
 								$avatar = $user->avatar;
@@ -102,15 +108,14 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $user->username ?></td>
 						<td><?= $user->getName() ?></td>
 						<td><?= $user->email ?></td>
-						<td><?= $roles[ $user->roleId ] ?></td>
+						<td><?= $role ?></td>
 						<td><?= $user->statusStr ?></td>
 						<td><?= $user->phone ?></td>
 						<td><?= $user->registeredAt ?></td>
-						<td><?= $user->lastLogin ?></td>
-						<td><?= $user->getNewsletterStr() ?></td>
+						<td><?= $user->lastLoginAt ?></td>
 						<td>
-							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcore/user/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
-							<span class="wrap-icon-action"><?= Html::a( "", ["/cmgcore/user/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
+							<span class="wrap-icon-action"><?= Html::a( "", ["update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
+							<span class="wrap-icon-action"><?= Html::a( "", ["delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>
@@ -118,10 +123,7 @@ if( !isset( $sortOrder ) ) {
 		</table>
 	</div>
 	<div class="grid-footer">
-		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $pages, $page, $total ) ?> </div>
-		<?= LinkPager::widget( [ 'pagination' => $pages ] ); ?>
+		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?> </div>
+		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 </div>
-<script type="text/javascript">
-	initSidebar( "sidebar-identity", 3 );
-</script>

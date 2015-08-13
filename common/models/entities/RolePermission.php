@@ -1,6 +1,12 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 /**
  * RolePermission Entity
  *
@@ -12,7 +18,7 @@ class RolePermission extends CmgEntity {
 	// Instance Methods --------------------------------------------
 
 	/**
-	 * @return Role for the mapping.
+	 * @return Role - from the mapping.
 	 */
 	public function getRole() {
 
@@ -20,7 +26,7 @@ class RolePermission extends CmgEntity {
 	}
 
 	/**
-	 * @return Permission for the mapping.
+	 * @return Permission - from the mapping.
 	 */
 	public function getPermission() {
 
@@ -29,6 +35,9 @@ class RolePermission extends CmgEntity {
 
 	// yii\base\Model --------------------
 
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
@@ -37,11 +46,14 @@ class RolePermission extends CmgEntity {
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'roleId' => 'Role',
-			'permissionId' => 'Permission'
+			'roleId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ROLE ),
+			'permissionId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PERMISSION )
 		];
 	}
 
@@ -49,6 +61,9 @@ class RolePermission extends CmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_ROLE_PERMISSION;
@@ -56,13 +71,19 @@ class RolePermission extends CmgEntity {
 
 	// RolePermission --------------------
 
-	// Delete
+	// Delete ----
 
+	/**
+	 * Delete the mappings by given role id.
+	 */
 	public static function deleteByRoleId( $roleId ) {
 
 		self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
 	}
 
+	/**
+	 * Delete the mappings by given permission id.
+	 */
 	public static function deleteByPermissionId( $permissionId ) {
 
 		self::deleteAll( 'permissionId=:id', [ ':id' => $permissionId ] );

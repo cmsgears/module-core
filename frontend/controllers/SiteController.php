@@ -10,13 +10,13 @@ use yii\filters\VerbFilter;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 
-use cmsgears\core\common\models\forms\LoginForm;
-use cmsgears\core\frontend\models\forms\RegisterForm;
-use cmsgears\core\frontend\models\forms\ResetPasswordForm;
-use cmsgears\core\frontend\models\forms\ForgotPasswordForm;
+use cmsgears\core\common\models\forms\Login;
+use cmsgears\core\frontend\models\forms\Register;
+use cmsgears\core\frontend\models\forms\ResetPassword;
+use cmsgears\core\frontend\models\forms\ForgotPassword;
 
+use cmsgears\core\common\services\SiteMemberService;
 use cmsgears\core\frontend\services\UserService;
-use cmsgears\core\frontend\services\RoleService;
 
 class SiteController extends BaseController {
 
@@ -36,21 +36,16 @@ class SiteController extends BaseController {
     public function behaviors() {
 
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => [ 'logout' ],
-                'rules' => [
-                    [
-                        'actions' => [ 'logout' ],
-                        'allow' => true,
-                        'roles' => ['@']
-                    ]
+            'rbac' => [
+                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'actions' => [
+	                'logout' => [ 'permission' => CoreGlobal::PERM_USER ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['post']
+                    'logout' => ['get','post']
                 ]
             ]
         ];
@@ -90,7 +85,7 @@ class SiteController extends BaseController {
 		$this->checkHome();
 
 		// Create Form Model
-		$model = new RegisterForm();
+		$model = new Register();
 
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post() ) && $model->validate() ) {
@@ -100,14 +95,14 @@ class SiteController extends BaseController {
 
 			if( isset( $user ) ) {
 
-				// Assign default role
-				$role	= RoleService::assignRole( $user, "user" );
+				// Add User to current Site 
+				SiteMemberService::create( $user );
 
 				// Send Register Mail
-				Yii::$app->cmgCoreMailer->sendRegisterMail( $this->getCoreProperties(), $this->getMailProperties(), $user );
+				Yii::$app->cmgCoreMailer->sendRegisterMail( $user );
 
 				// Set Flash Message
-				Yii::$app->session->setFlash( "success", Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
+				Yii::$app->session->setFlash( 'message', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
 	
 				// Refresh the Page
 				return $this->refresh();
@@ -122,7 +117,7 @@ class SiteController extends BaseController {
     public function actionConfirmAccount( $token, $email ) {
 
 		// Unset Flash Message
-		Yii::$app->session->setFlash( "message", null );
+		Yii::$app->session->setFlash( 'message', null );
 
 		// Send user to home if already logged in
 		$this->checkHome();
@@ -131,28 +126,24 @@ class SiteController extends BaseController {
 
 			$user	= UserService::findByEmail( $email );
 
-			if( isset( $user ) && strcmp( $user->verifyToken, $token ) == 0 ) {
+			if( isset( $user ) && UserService::verify( $user, $token ) ) {
 
-				// Verify User
-				if( UserService::verify( $user ) ) {
+				// Send Register Mail
+				Yii::$app->cmgCoreMailer->sendVerifyUserMail( $user );
 
-					// Send Register Mail
-					Yii::$app->cmgCoreMailer->sendVerifyUserMail( $this->getCoreProperties(), $this->getMailProperties(), $user );
-
-					// Set Success Message
-					Yii::$app->session->setFlash( "message", Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
-				}
+				// Set Success Message
+				Yii::$app->session->setFlash( 'message', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
 			}
 			else {
 
 				// Set Failure Message
-				Yii::$app->session->setFlash( "message", Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
+				Yii::$app->session->setFlash( 'message', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
 			}
 		}
 		else {
 
 			// Set Failure Message
-			Yii::$app->session->setFlash( "message", MYii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
+			Yii::$app->session->setFlash( 'message', MYii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
 		}
 
         return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM );
@@ -161,12 +152,13 @@ class SiteController extends BaseController {
     public function actionActivateAccount( $token, $email ) {
 
 		// Unset Flash Message
-		Yii::$app->session->setFlash( "message", null );
+		Yii::$app->session->setFlash( 'message', null );
 
 		// Send user to home if already logged in
 		$this->checkHome();
 
-		$model = new ResetPasswordForm();
+		$model 			= new ResetPassword();		
+		$model->email	= $email;
 
 		// If valid token found
 		if( isset( $token ) && isset( $email ) ) {
@@ -174,35 +166,35 @@ class SiteController extends BaseController {
 			$user	= UserService::findByEmail( $email );
 
 			// If valid user found
-			if( isset( $user ) && strcmp( $user->getVerifyToken(), $token ) == 0 ) {
+			if( isset( $user ) && $user->isVerifyTokenValid( $token ) ) {
 
 				// Load and Validate Form Model
 				if( $model->load( Yii::$app->request->post() ) && $model->validate() ) {
 
 					// Activate User
-					if( UserService::activate( $user ) ) {
+					if( UserService::activate( $user, $model ) ) {
 	
 						// Send Register Mail
-						Yii::$app->cmgCoreMailer->sendActivateUserMail( $this->getCoreProperties(), $this->getMailProperties(), $model );
+						Yii::$app->cmgCoreMailer->sendActivateUserMail( $user );
 
 						// Set Success Message
-						Yii::$app->session->setFlash( "message", Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
+						Yii::$app->session->setFlash( 'message', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
 					}
 				}
 			}
 			else {
 
 				// Set Failure Message
-				Yii::$app->session->setFlash( "message", Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
+				Yii::$app->session->setFlash( 'message', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
 			}
 		}
 		else {
 
 			// Set Failure Message
-			Yii::$app->session->setFlash( "message", Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
+			Yii::$app->session->setFlash( 'message', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
 		}
 
-        return $this->render( WebGlobalCore::PAGE_ACCOUNT_ACTIVATE, [ "model" => $model ] );
+        return $this->render( WebGlobalCore::PAGE_ACCOUNT_ACTIVATE, [ 'model' => $model ] );
     }
 
     public function actionForgotPassword() {
@@ -211,7 +203,7 @@ class SiteController extends BaseController {
 		$this->checkHome();
 
 		// Create Form Model
-		$model = new ForgotPasswordForm();
+		$model = new ForgotPassword();
 
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post() ) && $model->validate() ) {
@@ -221,18 +213,20 @@ class SiteController extends BaseController {
 			// Trigger Reset Password
 			if( isset( $user ) && UserService::forgotPassword( $user ) ) {
 
+				$user	= UserService::findByEmail( $model->email );
+
 				// Send Forgot Password Mail
-				Yii::$app->cmgCoreMailer->sendPasswordResetMail( $this->getCoreProperties(), $this->getMailProperties(), $user );
+				Yii::$app->cmgCoreMailer->sendPasswordResetMail( $user );
 
 				// Set Flash Message
-				Yii::$app->session->setFlash( "success", Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_FORGOT_PASSWORD ) );
+				Yii::$app->session->setFlash( 'message', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_FORGOT_PASSWORD ) );
 
 				// Refresh the Page
 				return $this->refresh();
 			}
 			else {
 
-				$model->addError( 'email', Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
+				$model->addError( 'email', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
 			}
 		}
 
@@ -244,12 +238,12 @@ class SiteController extends BaseController {
     public function actionResetPassword( $token, $email ) {
 
 		// Unset Flash Message
-		Yii::$app->session->setFlash( "message", null );
+		Yii::$app->session->setFlash( 'message', null );
 
 		// Send user to home if already logged in
 		$this->checkHome();
 
-		$model = new ResetPasswordForm();
+		$model = new ResetPassword();
 		
 		// If valid token found
 		if( isset( $token ) && isset( $email ) ) {
@@ -257,7 +251,7 @@ class SiteController extends BaseController {
 			$user	= UserService::findByEmail( $email );
 
 			// If valid user found
-			if( isset( $user ) && strcmp( $user->resetToken, $token ) == 0 ) {
+			if( isset( $user ) && $user->isResetTokenValid( $token ) ) {
 
 				// Load and Validate Form Model
 				if( $model->load( Yii::$app->request->post() ) && $model->validate() ) {
@@ -265,7 +259,7 @@ class SiteController extends BaseController {
 					if( UserService::resetPassword( $user, $model ) ) {
 
 						// Set Success Message
-						Yii::$app->session->setFlash( "message", Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::MESSAGE_RESET_PASSWORD ) );
+						Yii::$app->session->setFlash( 'message', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_RESET_PASSWORD ) );
 					}
 				}
 				else {
@@ -276,16 +270,16 @@ class SiteController extends BaseController {
 			else {
 
 				// Set Failure Message
-				Yii::$app->session->setFlash( "message", Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_PASSWORD_RESET ) );
+				Yii::$app->session->setFlash( 'message', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_PASSWORD_RESET ) );
 			}
 		}
 		else {
 
 			// Set Failure Message
-			Yii::$app->session->setFlash( "message", Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_PASSWORD_RESET ) );
+			Yii::$app->session->setFlash( 'message', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_PASSWORD_RESET ) );
 		}
 
-        return $this->render( WebGlobalCore::PAGE_RESET_PASSWORD, [ "model" => $model ] );
+        return $this->render( WebGlobalCore::PAGE_RESET_PASSWORD, [ 'model' => $model ] );
     }
 
 	public function actionLogin() {
@@ -294,7 +288,7 @@ class SiteController extends BaseController {
 		$this->checkHome();
 
 		// Create Form Model
-        $model 			= new LoginForm();
+        $model 			= new Login();
 
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post() )  && $model->login() ) {
@@ -302,16 +296,8 @@ class SiteController extends BaseController {
 			$user	= Yii::$app->user->getIdentity();
 			$role	= $user->role;
 			
-			// Redirect user to home set by admin
-			if( isset( $role ) && isset( $role->homeUrl ) ) {
-
-				$this->redirect( [ $role->homeUrl ] );
-			}
-			// Redirect user to home set by app config
-			else {
-
-				$this->redirect( [ Yii::$app->cmgCore->getLoginRedirectPage() ] );
-			}
+			// Redirect user to home
+			$this->checkHome();
 		}
 
     	return $this->render( WebGlobalCore::PAGE_LOGIN, [
@@ -320,21 +306,39 @@ class SiteController extends BaseController {
     }
 
     public function actionLogout() {
-		
+
 		// Logout User
         Yii::$app->user->logout();
 		
-		// Go Home
-		return $this->goHome();
+		// Destroy Session
+		Yii::$app->session->destroy();
+
+		// Redirect to home page
+		$this->redirect( [ Yii::$app->cmgCore->getLogoutRedirectPage() ] );
     }
 
+	/**
+	 * The method check whether user is logged in and send to respective home page.
+	 */
 	private function checkHome() {
 
 		// Send user to home if already logged in
-        if ( !\Yii::$app->user->isGuest ) {
+	    if ( !Yii::$app->user->isGuest ) {
 
-        	$this->redirect( [ 'user/index' ] );
-        }
+			$user	= Yii::$app->user->getIdentity();
+			$role	= $user->role;
+
+			// Redirect user to home
+			if( isset( $role ) && isset( $role->homeUrl ) ) {
+				
+				$this->redirect( [ "/$role->homeUrl" ] );
+			}
+			// Redirect user to home set by app config
+			else {
+
+				$this->redirect( [ Yii::$app->cmgCore->getLoginRedirectPage() ] );
+			}
+	    }
 	}
 }
 

@@ -8,6 +8,9 @@ use \Yii;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\CmgFile;
 
+use cmsgears\core\common\services\FileService;
+use cmsgears\core\common\services\NewsletterMemberService;
+
 use cmsgears\core\common\utilities\DateUtil;
 
 class UserService extends \cmsgears\core\common\services\UserService {
@@ -16,11 +19,15 @@ class UserService extends \cmsgears\core\common\services\UserService {
 
 	// Create -----------
 
-	// User registered from website
+	/**
+	 * The method registers website users and set their status to new at start. It also generate verification token.
+	 * @param RegisterForm $registerForm
+	 * @return User
+	 */
 	public static function register( $registerForm ) {
 
 		$user 	= new User();
-		$date	= DateUtil::getMysqlDate();
+		$date	= DateUtil::getDateTime();
 
 		$user->email 		= $registerForm->email;
 		$user->username 	= $registerForm->username;
@@ -30,73 +37,142 @@ class UserService extends \cmsgears\core\common\services\UserService {
 		$user->registeredAt	= $date;
 		$user->status		= User::STATUS_NEW;
 
-		$user->setPassword( $registerForm->password );
+		$user->generatePassword( $registerForm->password );
 		$user->generateVerifyToken();
 		$user->generateAuthKey();
 
 		$user->save();
+
+		// Add to mailing list
+		if( $user->newsletter ) {
+
+			NewsletterMemberService::create( $user->email );
+		}
 
 		return $user;
 	}
 
 	// Update -----------
 
-	// Activate User created from Admin Panel
-	public static function activate( $user, $activateForm ) {
+	/**
+	 * Activate User created from Admin Panel.
+	 * @param User $user
+	 * @param ResetPasswordForm $resetForm
+	 * @param boolean $activate
+	 * @return boolean
+	 */
+	public static function activate( $user, $resetForm, $activate = true ) {
 
-		$user->setPassword( $activateForm->password );
-		$user->setStatus( User::STATUS_ACTIVE );
-		$user->unsetResetToken();
+		// Find existing user
+		$userToUpdate	= User::findById( $user->id );
 
-		$user->save();
+		// Generate Password
+		$userToUpdate->generatePassword( $resetForm->password );
 
-		return true;
-	}
+		// Activate User
+		if( $activate ) {
 
-	// Verify User registered from website
-	public static function verify( $user ) {
-
-		$user->status = User::STATUS_ACTIVE;
-		$user->unsetVerifyToken();
-
-		$user->save();
-
-		return true;
-	}
-
-	// User forgot password
-	public static function forgotPassword( $user ) {
-
-		$user->generateResetToken();
-
-		$user->save();
-
-		return true;
-	}
-
-	// User reset password
-	public static function resetPassword( $user, $resetForm ) {
-
-		$user->setPassword( $resetForm->password );
-		$user->generateResetToken();
-
-		if( $user->isNew() ) {
-
-			$user->status = User::STATUS_ACTIVE;
+			$userToUpdate->status = User::STATUS_ACTIVE;
 		}
 
-		$user->save();
+		$userToUpdate->unsetResetToken();
+
+		$userToUpdate->update();
 
 		return true;
 	}
 
-	public function actionUpdateAvatar( $user, $avatar ) {
+	/**
+	 * The method verify and confirm user by accepting valid token sent via mail. It also set user status to active.
+	 * @param User $user
+	 * @param string $token
+	 * @param boolean $activate
+	 * @return boolean
+	 */
+	public static function verify( $user, $token, $activate = true ) {
+
+		// Check Token
+		if( $user->isVerifyTokenValid( $token ) ) {
+
+			// Find existing user
+			$userToUpdate	= User::findById( $user->id );
+
+			// Activate User
+			if( $activate ) {
+
+				$userToUpdate->status = User::STATUS_ACTIVE;
+			}
+
+			$userToUpdate->unsetVerifyToken();
+
+			$userToUpdate->update();
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * The method generate a new reset token which can be used later to update user password.
+	 * @param User $user
+	 * @return User
+	 */
+	public static function forgotPassword( $user ) {
+
+		// Find existing user
+		$userToUpdate	= User::findById( $user->id );
+
+		// Generate Token
+		$userToUpdate->generateResetToken();
+
+		// Update User
+		$userToUpdate->update();
+
+		return $userToUpdate;
+	}
+
+	/**
+	 * The method generate a new secure password for the given password and unset the reset token. It also activate user.
+	 * @param User $user
+	 * @param ResetPasswordForm $resetForm
+	 * @param boolean $activate
+	 * @return User
+	 */
+	public static function resetPassword( $user, $resetForm, $activate = true ) {
+
+		// Find existing user
+		$userToUpdate	= User::findById( $user->id );
+
+		// Generate Password
+		$userToUpdate->generatePassword( $resetForm->password );
+		$userToUpdate->unsetResetToken();
+
+		// Activate User
+		if( $userToUpdate->isNew() && $activate ) {
+
+			$userToUpdate->status = User::STATUS_ACTIVE;
+		}
+
+		// Update User
+		$userToUpdate->update();
+
+		return $userToUpdate;
+	}
+	
+	/**
+	 * The method create user avatar if it does not exist or save existing avatar.
+	 * @param User $user
+	 * @param CmgFile $avatar
+	 * @return User - updated User
+	 */
+	public function updateAvatar( $user, $avatar ) {
 
 		// Find existing user
 		$userToUpdate	= User::findById( $user->id );
 
 		// Save Avatar
-		FileService::saveImage( $avatar, $userToUpdate, [ 'model' => $userToUpdate, 'attribute' => 'avatarId' ] );
+		FileService::saveImage( $avatar, [ 'model' => $userToUpdate, 'attribute' => 'avatarId' ] );
 
 		// Update User
 		$userToUpdate->update();

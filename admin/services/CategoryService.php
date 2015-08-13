@@ -14,7 +14,7 @@ class CategoryService extends \cmsgears\core\common\services\CategoryService {
 
 	// Pagination -------
 
-	public static function getPagination( $conditions = [] ) {
+	public static function getPagination( $config = [] ) {
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -27,53 +27,22 @@ class CategoryService extends \cmsgears\core\common\services\CategoryService {
 	        ]
 	    ]);
 
-		return self::getPaginationDetails( new Category(), [ 'sort' => $sort, 'conditions' => $conditions, 'search-col' => 'name' ] );
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		if( !isset( $config[ 'search-col' ] ) ) {
+
+			$config[ 'search-col' ] = 'name';
+		}
+
+		return self::getDataProvider( new Category(), $config );
 	}
 
 	public static function getPaginationByType( $type ) {
 
-		return self::getPagination( [ "type" => $type ] );
-	}
-
-	// Create -----------
-
-	public static function create( $category ) {
-		
-		// Create Category
-		$category->save();
-		
-		// Return Category
-		return $category;
-	}
-
-	// Update -----------
-
-	public static function update( $category ) {
-		
-		// Find existing Category
-		$categoryToUpdate	= self::findById( $category->id );
-		
-		// Copy Attributes
-		$categoryToUpdate->copyForUpdateFrom( $category, [ 'name', 'description', 'type' ] );
-		
-		// Update Category
-		$categoryToUpdate->update();
-		
-		// Return updated Category
-		return $categoryToUpdate;
-	}
-
-	// Delete -----------
-
-	public static function delete( $category ) {
-
-		// Find existing Category
-		$categoryToDelete	= self::findById( $category->id );
-
-		// Delete Category
-		$categoryToDelete->delete();
-
-		return true;
+		return self::getPagination( [ 'conditions' => [ "type" => $type ] ] );
 	}
 }
 

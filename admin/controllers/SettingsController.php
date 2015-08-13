@@ -9,8 +9,7 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\services\OptionService;
-use cmsgears\core\admin\services\ConfigService;
+use cmsgears\core\admin\services\SiteService;
 
 class SettingsController extends BaseController {
 
@@ -27,8 +26,8 @@ class SettingsController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => CoreGlobal::PERM_SETTINGS ],
-					'update' => [ 'permission' => CoreGlobal::PERM_SETTINGS ]
+	                'index'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+					'update' => [ 'permission' => CoreGlobal::PERM_CORE ]
                 ]
             ],
             'verbs' => [
@@ -45,14 +44,8 @@ class SettingsController extends BaseController {
 
     public function actionIndex( $type ) {
 
-		$settingType	= OptionService::findByNameCategoryName( ucfirst( $type ), CoreGlobal::CATEGORY_CONFIG_TYPE );
-		$settings		= null;
-		
-		if( isset( $settingType ) ) {
+		$settings 	= SiteService::getMetaByNameType( Yii::$app->cmgCore->getSiteName(), $type );
 
-    		$settings 	= ConfigService::findByType( $settingType->value );
-		}
-		
 	    return $this->render('index', [
 	        'settings' => $settings,
 	        'type' => $type
@@ -60,15 +53,9 @@ class SettingsController extends BaseController {
     }
 
 	public function actionUpdate( $type ) {
-		
-		$settingType	= OptionService::findByNameCategoryName( ucfirst( $type ), CoreGlobal::CATEGORY_CONFIG_TYPE );
-    	$settings		= null;
 
-		if( isset( $settingType ) ) {
+		$settings 	= SiteService::getMetaByNameType( Yii::$app->cmgCore->getSiteName(), $type );
 
-    		$settings 	= ConfigService::findByType( $settingType->value );
-		}
-		
 	    return $this->render('update', [
 	        'settings' => $settings,
 	        'type' => $type

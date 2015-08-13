@@ -14,9 +14,9 @@ use cmsgears\core\admin\config\AdminProperties;
 
 class BaseController extends Controller {
 
-	private $coreProperties;
-	private $mailProperties;
-	private $adminProperties;
+	private $_coreProperties;
+	private $_mailProperties;
+	private $_adminProperties;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -40,33 +40,33 @@ class BaseController extends Controller {
 	// Instance Methods --------------------------------------------
 
 	public function getCoreProperties() {
-		
-		if( !isset( $this->coreProperties ) ) {
-			
-			$this->coreProperties	= CoreProperties::getInstance();
+
+		if( !isset( $this->_coreProperties ) ) {
+
+			$this->_coreProperties	= CoreProperties::getInstance();
 		}
 
-		return $this->coreProperties;
+		return $this->_coreProperties;
 	}
 
 	public function getMailProperties() {
-		
-		if( !isset( $this->mailProperties ) ) {
-			
-			$this->mailProperties	= MailProperties::getInstance();
+
+		if( !isset( $this->_mailProperties ) ) {
+
+			$this->_mailProperties	= MailProperties::getInstance();
 		}
 
-		return $this->mailProperties;
+		return $this->_mailProperties;
 	}
 
 	public function getAdminProperties() {
 
-		if( !isset( $this->adminProperties ) ) {
+		if( !isset( $this->_adminProperties ) ) {
 
-			$this->adminProperties	= AdminProperties::getInstance();
+			$this->_adminProperties	= AdminProperties::getInstance();
 		}
 
-		return $this->adminProperties;
+		return $this->_adminProperties;
 	}
 }
 

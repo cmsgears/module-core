@@ -3,49 +3,71 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
+use yii\db\Expression;
+use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\config\CoreProperties;
 
+use cmsgears\core\common\models\traits\CreateModifyTrait;
+
 /**
- * Config Entity
+ * CmgFile Entity
  *
- * @property integer $id
- * @property integer $authorId
- * @property string $name
+ * @property int $id
+ * @property int $createdBy
+ * @property int $modifiedBy
+ * @property string $title
  * @property string $description
+ * @property string $name
  * @property string $extension
  * @property string $directory
  * @property datetime $createdAt
- * @property datetime $updatedAt
- * @property integer $type
+ * @property datetime $modifiedAt
+ * @property integer $visibility
+ * @property string $type
  * @property string $url
  * @property string $thumb
  * @property string $altText
+ * @property string $link
  */
 class CmgFile extends CmgEntity {
 
-	// Pre-Defined File Types
-	const TYPE_PUBLIC		= 0;
-	const TYPE_PRIVATE		= 1;
+	const VISIBILITY_PUBLIC		=  0;
+	const VISIBILITY_PRIVATE	= 10;
 
 	public static $typeMap = [
-		self::TYPE_PUBLIC => "public",
-		self::TYPE_PRIVATE => "private"
+		self::VISIBILITY_PUBLIC => "public",
+		self::VISIBILITY_PRIVATE => "private"
 	];
 
+	/**
+	 * @property boolean - used to detect whether the file is changed by user.
+	 */
 	public $changed;
 
+	// optional properties for image processing
+	public $width;
+	public $height;
+	public $twidth;
+	public $theight;
+
+	use CreateModifyTrait;
+
 	// Instance Methods --------------------------------------------
-
-	public function getAuthor() {
-
-		return $this->hasOne( User::className(), [ 'id' => 'authorId' ] );
-	}
 
 	public function getTypeStr() {
 
 		return self::$typeMap[ $this->type ];	
+	}
+
+	/**
+	 * @return boolean - whether given user is owner
+	 */
+	public function checkOwner( $user ) {
+		
+		return $this->createdBy	= $user->id;		
 	}
 
 	/**
@@ -82,23 +104,56 @@ class CmgFile extends CmgEntity {
 		return "";
 	}
 
-	// yii\base\Model --------------------
+	// yii\base\Component ----------------
 
-	public function rules() {
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
 
         return [
-            [ [ 'authorId', 'name', 'extension', 'directory', 'url' ], 'required' ],
-            [ [ 'id', 'type', 'description', 'altText', 'thumb', 'changed' ], 'safe' ],
-            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
+
+            'timestampBehavior' => [
+                'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+ 				'updatedAtAttribute' => 'modifiedAt',
+ 				'value' => new Expression('NOW()')
+            ]
         ];
     }
 
+	// yii\base\Model --------------------
+
+    /**
+     * @inheritdoc
+     */
+	public function rules() {
+
+        return [
+            [ [ 'createdBy', 'name', 'extension', 'directory', 'url' ], 'required' ],
+            [ [ 'id', 'title', 'description', 'altText', 'visibility', 'type', 'thumb', 'link', 'changed' ], 'safe' ],
+            [ [ 'width', 'height', 'twidth', 'theight' ], 'safe' ],
+            [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'name' => 'Name',
-			'authorId' => 'Author',
-			'description' => 'Description'
+			'createdBy' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
+			'title' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'extension' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EXTENSION ),
+			'directory' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DIRECTORY ),
+			'url' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_URL ),
+			'visibility' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
+			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'link' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LINK )
 		];
 	}
 
@@ -106,6 +161,9 @@ class CmgFile extends CmgEntity {
 
 	// yii\db\ActiveRecord ----------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_FILE;
@@ -113,14 +171,21 @@ class CmgFile extends CmgEntity {
 
 	// CmgFile ----------------------------
 
-	public static function findById( $id ) {
+	/**
+	 * @param CmgFile $file
+	 * @param string $name
+	 * @return CmgFile - after loading from request url
+	 */
+	public static function loadFile( $file, $name ) {
 
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
+		if( !isset( $file ) ) {
 
-	public static function findByAuthorId( $authorId ) {
+			$file	= new CmgFile();
+		}
 
-		return self::find()->where( 'authorId=:id', [ ':id' => $authorId ] )->all();
+		$file->load( Yii::$app->request->post( $name ), "" );
+
+		return $file;
 	}
 }
 

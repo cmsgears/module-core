@@ -1,4 +1,5 @@
 <?php
+use \Yii;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -7,9 +8,9 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Register";
 ?>
 <h1>Register</h1>
 <?php 
-	if( Yii::$app->session->hasFlash( "success" ) ) { 
+	if( Yii::$app->session->hasFlash( 'message' ) ) { 
 ?>
-	<p> <?php echo Yii::$app->session->getFlash( "success" ); ?> </p>
+	<p><?= Yii::$app->session->getFlash( 'message' ) ?></p>
 <?php
 	}
 	else {
@@ -28,7 +29,7 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Register";
     			<?= $form->field( $model, 'password_repeat' )->passwordInput([ 'placeholder' => 'Confirm Password*' ] ) ?>
     		</li>
     		<li>
-    			<?= $form->field( $model, 'nickName' )->textInput( [ 'placeholder' => 'Username' ] ) ?>
+    			<?= $form->field( $model, 'username' )->textInput( [ 'placeholder' => 'Username' ] ) ?>
     		</li>
     		<li>
     			<?= $form->field( $model, 'firstName' )->textInput( [ 'placeholder' => 'First Name' ] ) ?>

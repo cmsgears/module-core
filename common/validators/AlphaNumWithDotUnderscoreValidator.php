@@ -16,7 +16,7 @@ class AlphaNumWithDotUnderscoreValidator extends Validator {
 
         if ( !preg_match( self::$regex, $model->$attribute ) ) {
 
-            $this->addError( $model, $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_AN_DOT_U ) );
+            $this->addError( $model, $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_AN_DOT_U ) );
         }
     }
 }

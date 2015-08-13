@@ -1,15 +1,15 @@
 <?php
 namespace cmsgears\core\admin\config;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Config;
+use cmsgears\core\common\config\CmgProperties;
 
-use cmsgears\core\common\services\OptionService;
-use cmsgears\core\common\services\ConfigService;
-
-class AdminProperties {
+class AdminProperties extends CmgProperties {
 
 	/**
 	 * The property defines the active theme for the site.
@@ -20,8 +20,6 @@ class AdminProperties {
 	 * The property defines the active theme version to reload browsers in case theme is upgraded.
 	 */	
 	const PROP_THEME_VERSION		= "theme-version";
-
-	private $properties;
 
 	// Singleton instance
 	private static $instance;
@@ -41,34 +39,17 @@ class AdminProperties {
 
 			self::$instance	= new AdminProperties();
 
-			self::$instance->init();
+			self::$instance->init( CoreGlobal::CONFIG_ADMIN );
 		}
 
 		return self::$instance;
 	}
 
 	/**
-	 * Initialise the properties from database.
-	 */
-	public function init() {
-
-		$type				= OptionService::findByNameCategoryName( CoreGlobal::CONFIG_ADMIN, CoreGlobal::CATEGORY_CONFIG_TYPE );
-		$this->properties	= ConfigService::getNameValueMapByType( $type->getValue() );
-	}
-
-	/**
-	 * Return web property for the specified key.
-	 */
-	public function getProperty( $key ) {
-
-		return $this->properties[ key ];
-	}
-	
-	/**
 	 * Returns current active Theme name.
 	 */
 	public function getTheme() {
-		
+
 		return $this->properties[ self::PROP_THEME ];
 	}
 
@@ -76,7 +57,7 @@ class AdminProperties {
 	 * Returns current active Theme version.
 	 */
 	public function getThemeVersion() {
-		
+
 		return $this->properties[ self::PROP_THEME_VERSION ];
 	}
 }

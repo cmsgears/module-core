@@ -18,21 +18,41 @@ use cmsgears\core\common\validators\CoreValidator;
 class Core extends Component {
 
 	/**
-	 * @var default redirect path to be used for post login. It will be used by login action of Site Controller to redirect users 
-	 * after successful login in case use role home url is not set.
+	 * @var main site to load configurations in case sub sites are not configured.
 	 */
-	public $loginRedirectPage	= "site/index";
+	public $mainSiteName		= "main";
+
+	/**
+	 * @var identify the currently active site based on the url request.
+	 */
+	public $siteName			= "main";
+
+	/**
+	 * @var test whether the web app is multi-site.
+	 */
+	public $multiSite			= false;
+
+	/**
+	 * @var test whether the web app is sub domain or sub directory based in case $multiSite is set to true.
+	 */
+	public $subDirectory		= true;
+
+	/**
+	 * @var default redirect path to be used for post login. It will be used by login action of Site Controller to redirect users 
+	 * after successful login in case user role home url is not set.
+	 */
+	public $loginRedirectPage	= "/";
 
 	/**
 	 * @var Redirect path to be used for post logout.
 	 */
-	public $logoutRedirectPage	= "site/login";
+	public $logoutRedirectPage	= "/login";
 
 	/**
 	 * @var The indicator whether CMG RBAC has to be used for the project. All the admin sites must set this to true. Though it's optional for 
-	 * front end sites. The front end sites can use either CMG RBAC or Yii's RBAC system.
+	 * front end sites. The front end sites can use either CMG RBAC or Yii's RBAC system or no RBAC system based on project needs.
 	 */
-	public $useRbac				= false;
+	public $useRbac				= true;
 
 	/**
 	 * @var The default filter class available for CMG RBAC system. A different filter can be used based on project needs.
@@ -46,9 +66,9 @@ class Core extends Component {
 	public $rbacFilters			= [];
 
 	/**
-	 * @var It can be used to ckeck whether apis are available for the app. Most probable apis are provided using OAuth 2.0.
+	 * @var It can be used to check whether apis are available for the app. Most probably apis are provided using OAuth 2.0 for mobile applications. It's used by User class to load permissions when accessed using auth token.
 	 */
-	public $apis				= null;
+	public $apis				= false;
 
 	/**
 	 * @var The WYSIWYG editor widget class. It will be used by Core Module to edit newsletter content. The dependent modules can also use it to edit the html content.
@@ -65,7 +85,7 @@ class Core extends Component {
 		// Initialise core validators
         CoreValidator::initValidators();
 
-		// Set CMSGears alias to be used by all modules, plugins, widgets and themes
+		// Set CMSGears alias to be used by all modules, plugins, widgets and themes. It will be located within the vendor directory for composer.
 		Yii::setAlias( "cmsgears", dirname( dirname( dirname( __DIR__ ) ) ) );
     }
 
@@ -103,8 +123,44 @@ class Core extends Component {
     }
 
 	/**
+	 * The method getMainSiteName returns the site name for main site.
+	 * @return string 
+	 */
+	public function getMainSiteName() {
+
+		return $this->mainSiteName;
+	}
+
+	/**
+	 * The method getSiteName returns the site name for default site. It's more useful in case multi-site feature is enabled.
+	 * @return string 
+	 */
+	public function getSiteName() {
+
+		return $this->siteName;
+	}
+
+	/**
+	 * The method isMultiSite can be used to check whether multi-site feature is required.
+	 * @return boolean 
+	 */
+	public function isMultiSite() {
+
+		return $this->multiSite;
+	}
+
+	/**
+	 * The method isSubDirectory can be used to check whether multi-site feature needs to follow sub directory approach instead of sub domain.
+	 * @return boolean 
+	 */
+	public function isSubDirectory() {
+
+		return $this->subDirectory;
+	}
+
+	/**
 	 * The method getLoginRedirectPage returns the default path to be redirected after login using the non-ajax based form.
-	 * @return path used for post login
+	 * @return string - path used for post login
 	 */
 	public function getLoginRedirectPage() {
 
@@ -138,6 +194,9 @@ class Core extends Component {
 		return $this->rbacFilterClass;
 	}
 
+	/**
+	 * The method getRbacFilter returns the corresponding RBAC Filter class path based on given filter name. These filters are fine grained control over the permissions allowed for the user role.
+	 */
 	public function getRbacFilter( $filter ) {
 
 		return $this->rbacFilters[ $filter ];

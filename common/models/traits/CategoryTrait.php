@@ -5,28 +5,42 @@ use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\Category;
 use cmsgears\core\common\models\entities\ModelCategory;
 
+/**
+ * CategoryTrait can be used to categories relevant models. The model must define the member variable $categoryType which is unique for the model.
+ */
 trait CategoryTrait {
 
-	public function getCategories() {
-		
-		$parentType	= $this->categoryType;
-
-    	return $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ] )
-					->where( "parentType=$parentType" );
-	}
-
-	public function getCategoriesMap() {
+	/**
+	 * @return array - ModelCategory associated with parent
+	 */
+	public function getModelCategories() {
 
 		$parentType	= $this->categoryType;
 
     	return $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType=$parentType" );
+					->where( "parentType='$parentType'" );
 	}
 
-	public function getCategoriesIdList() {
+	/**
+	 * @return array - Category associated with parent
+	 */
+	public function getCategories() {
 
-    	$categories 		= $this->categoriesMap;
+    	return $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
+					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
+
+						$modelCategory	= CoreTables::TABLE_MODEL_CATEGORY;
+	
+                      	$query->onCondition( [ "$modelCategory.parentType" => $this->categoryType ] );
+					});
+	}
+
+	/**
+	 * @return array - list of category id associated with parent
+	 */
+	public function getCategoryIdList() {
+
+    	$categories 		= $this->modelCategories;
 		$categoriesList		= array();
 
 		foreach ( $categories as $category ) {
@@ -37,7 +51,10 @@ trait CategoryTrait {
 		return $categoriesList;
 	}
 
-	public function getCategoriesIdNameList() {
+	/**
+	 * @return array - list of category id and name associated with parent
+	 */
+	public function getCategoryIdNameList() {
 
 		$categories 	= $this->categories;
 		$categoriesList	= array();
@@ -50,7 +67,10 @@ trait CategoryTrait {
 		return $categoriesList;
 	}
 
-	public function getCategoriesIdNameMap() {
+	/**
+	 * @return array - map of category id and name associated with parent
+	 */
+	public function getCategoryIdNameMap() {
 
 		$categories 	= $this->categories;
 		$categoriesMap	= array();

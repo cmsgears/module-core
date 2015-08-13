@@ -4,6 +4,10 @@ use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Permission';
+
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-identity';
+$this->params['sidebar-child'] 	= 'permission';
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -32,12 +36,9 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Permission';
 			}
 		?>
 		<div class="box-filler"></div>
-		<?=Html::a( "Cancel", [ '/cmgcore/permission/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
 		<input type="submit" value="Delete" />
 
 		<?php ActiveForm::end(); ?>
 	</div>
 </section>
-<script type="text/javascript">
-	initSidebar( "sidebar-identity", 2 );
-</script>

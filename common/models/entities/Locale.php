@@ -1,6 +1,12 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// Yii Imports
+use \Yii;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 /**
  * Locale Entity
  *
@@ -8,29 +14,36 @@ namespace cmsgears\core\common\models\entities;
  * @property string $code
  * @property string $name
  */
-class Locale extends NamedActiveRecord {
+class Locale extends NamedCmgEntity {
 	
 	// Instance Methods --------------------------------------------
 
 	// yii\base\Model --------------------
 
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
-            [ [ 'name', 'code' ], 'required' ],
+            [ [ 'code', 'name' ], 'required' ],
             [ 'id', 'safe' ],
             [ 'code', 'string', 'min'=>1, 'max'=>50 ],
+            [ 'name', 'string', 'min'=>1, 'max'=>100 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'name' => 'Name',
-			'code' => 'Code'
+			'code' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
 		];
 	}
 
@@ -38,6 +51,9 @@ class Locale extends NamedActiveRecord {
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_LOCALE;
@@ -45,8 +61,10 @@ class Locale extends NamedActiveRecord {
 
 	// Locale ----------------------------
 
+	// Read ----
+
 	/**
-	 * @return Locale by code
+	 * @return Locale - by code
 	 */
 	public static function findByCode( $code ) {
 

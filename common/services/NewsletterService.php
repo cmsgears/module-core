@@ -9,29 +9,93 @@ use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Newsletter;
 
+/**
+ * The class NewsletterService is base class to perform database activities for Newsletter Entity.
+ */
 class NewsletterService extends Service {
 
 	// Static Methods ----------------------------------------------
 
 	// Read ----------------
 
+	/**
+	 * @param integer $id
+	 * @return Newsletter
+	 */
 	public static function findById( $id ) {
 
 		return Newsletter::findById( $id );
 	}
 
-	public static function getMailingList() {
+	// Data Provider ----
 
-		$userTable		= CoreTables::TABLE_USER;
-		$members 		= User::findByQuery( "select email, firstName, lastName from $userTable" )->where( [ 'newsletter' => 1 ] )->all();
-		$membersList	= [];
+	/**
+	 * @param array $config to generate query
+	 * @return ActiveDataProvider
+	 */
+	public static function getPagination( $config = [] ) {
 
-		foreach ( $members as $member ) {
+		return self::getDataProvider( new Newsletter(), $config );
+	}
 
-			$membersList[ $member->email ]	= trim( $member->firstName . " " . $member->lastName );
-		}
+	// Create -----------
 
-		return $membersList;
+	/**
+	 * @param Newsletter $newsletter
+	 * @return Newsletter
+	 */
+	public static function create( $newsletter ) {
+
+		// Set Attributes
+		$user					= Yii::$app->user->getIdentity();
+		$newsletter->createdBy	= $user->id;
+
+		// Create Newsletter
+		$newsletter->save();
+
+		// Return Newsletter
+		return $newsletter;
+	}
+
+	// Update -----------
+
+	/**
+	 * @param Newsletter $newsletter
+	 * @return Newsletter
+	 */
+	public static function update( $newsletter ) {
+
+		// Find existing Newsletter
+		$nlToUpdate	= self::findById( $newsletter->id );
+
+		// Copy and set Attributes	
+		$user					= Yii::$app->user->getIdentity();
+		$nlToUpdate->modifiedBy	= $user->id;
+
+		$nlToUpdate->copyForUpdateFrom( $newsletter, [ 'name', 'description', 'content' ] );
+		
+		// Update Newsletter
+		$nlToUpdate->update();
+		
+		// Return updated Newsletter
+		return $nlToUpdate;
+	}
+
+	// Delete -----------
+	
+	/**
+	 * @param Newsletter $newsletter
+	 * @return boolean
+	 */
+	public static function delete( $newsletter ) {
+
+		// Find existing Newsletter
+		$nlToDelete	= self::findById( $newsletter->id );
+
+		// Delete Newsletter
+		$nlToDelete->delete();
+
+		return true;
 	}
 }
 

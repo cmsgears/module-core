@@ -8,85 +8,101 @@ use \Yii;
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\Category;
 
+/**
+ * The class CategoryService is base class to perform database activities for Category Entity.
+ */
 class CategoryService extends Service {
 
 	// Static Methods ----------------------------------------------
 
 	// Read ----------------
 
+	/**
+	 * @param integer $id
+	 * @return Category
+	 */
 	public static function findById( $id ) {
 
 		return Category::findById( $id );
 	}
 
+	/**
+	 * @param string $name
+	 * @return Category
+	 */
 	public static function findByName( $name ) {
 
 		return Category::findByName( $name );
 	}
 
+	/**
+	 * @param string $type
+	 * @return Category
+	 */
 	public static function findByType( $type ) {
 
 		return Category::findByType( $type );
     }
 
-	public static function getIdNameMapByType( $type ) {
+	/**
+	 * @param string $id
+	 * @return array - An array of associative array of category id and name for the specified category type
+	 */
+	public static function getIdNameListByType( $type, $prepend = [], $append = [] ) {
 
-		return self::findIdNameList( "id", "name", CoreTables::TABLE_CATEGORY, [ "type" => $type ] );
+		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_CATEGORY, [ 'conditions' => [ 'type' => $type ], 'asArray' => false, 'prepend' => $prepend, 'append' => $append ] );
 	}
 
-	public static function getOptionIdNameMapById( $id ) {
+	// Data Provider ----
 
-		return self::findMap( "id", "name", CoreTables::TABLE_OPTION, [ "categoryId" => $id ] );
+	/**
+	 * @param array $config to generate query
+	 * @return ActiveDataProvider
+	 */
+	public static function getPagination( $config = [] ) {
+
+		return self::getDataProvider( new Category(), $config );
 	}
 
-	public static function getOptionIdNameMapByName( $name, $prepend = null ) {
+	// Create -----------
 
-		$category	= self::findByName( $name );
-		$options	= $category->options;
-		$optionsMap	= array();
+	public static function create( $category ) {
 
-		if( isset( $prepend ) ) {
-			
-			foreach ( $prepend as $key => $value ) {
-
-				$optionsMap[ $key ] = $value;
-			}
-		}
-
-		foreach ( $options as $option ) {
-			
-			$optionsMap[ $option->id ] = $option->name;
-		}
+		// Create Category
+		$category->save();
 		
-		return $optionsMap;
+		// Return Category
+		return $category;
 	}
 
-	public static function getOptionValueNameMapById( $id ) {
+	// Update -----------
 
-		$category	= self::findById( $id );
-		$options	= $category->options;
-		$optionsMap	= array();
+	public static function update( $category ) {
 
-		foreach ( $options as $option ) {
-			
-			$optionsMap[ $option->value ] = $option->name;
-		}
-		
-		return $optionsMap;
+		// Find existing Category
+		$categoryToUpdate	= self::findById( $category->id );
+
+		// Copy Attributes
+		$categoryToUpdate->copyForUpdateFrom( $category, [ 'parentId', 'name', 'description', 'type', 'icon' ] );
+
+		// Update Category
+		$categoryToUpdate->update();
+
+		// Return updated Category
+		return $categoryToUpdate;
 	}
 
-	public static function getOptionValueNameMapByName( $name ) {
+	// Delete -----------
 
-		$category	= self::findByName( $name );
-		$options	= $category->options;
-		$optionsMap	= array();
+	public static function delete( $category ) {
 
-		foreach ( $options as $option ) {
+		// Find existing Category
+		$categoryToDelete	= self::findById( $category->id );
 
-			$optionsMap[ $option->value ] = $option->name;
-		}
+		// Delete Category
+		$categoryToDelete->delete();
 
-		return $optionsMap;
+		return true;
 	}
 }
 

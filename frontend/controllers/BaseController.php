@@ -17,9 +17,9 @@ use cmsgears\core\frontend\config\WebProperties;
 
 class BaseController extends Controller {
 
-	private $coreProperties;
-	private $mailProperties;
-	private $webProperties;
+	private $_coreProperties;
+	private $_mailProperties;
+	private $_webProperties;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -45,32 +45,32 @@ class BaseController extends Controller {
 
 	public function getCoreProperties() {
 		
-		if( !isset( $this->coreProperties ) ) {
+		if( !isset( $this->_coreProperties ) ) {
 			
-			$this->coreProperties	= CoreProperties::getInstance();
+			$this->_coreProperties	= CoreProperties::getInstance();
 		}
 
-		return $this->coreProperties;
+		return $this->_coreProperties;
 	}
 
 	public function getMailProperties() {
 		
-		if( !isset( $this->mailProperties ) ) {
+		if( !isset( $this->_mailProperties ) ) {
 			
-			$this->mailProperties	= MailProperties::getInstance();
+			$this->_mailProperties	= MailProperties::getInstance();
 		}
 
-		return $this->mailProperties;
+		return $this->_mailProperties;
 	}
 
 	public function getWebProperties() {
 
-		if( !isset( $this->webProperties ) ) {
+		if( !isset( $this->_webProperties ) ) {
 			
-			$this->webProperties	= WebProperties::getInstance();
+			$this->_webProperties	= WebProperties::getInstance();
 		}
 
-		return $this->webProperties;
+		return $this->_webProperties;
 	}
 }
 

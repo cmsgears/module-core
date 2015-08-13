@@ -6,9 +6,10 @@ use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\core\common\models\entities\User;
+use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\utilities\DateUtil;
+use cmsgears\core\common\models\entities\CoreTables;
+use cmsgears\core\common\models\entities\User;
 
 class UserService extends \cmsgears\core\common\services\UserService {
 
@@ -16,7 +17,10 @@ class UserService extends \cmsgears\core\common\services\UserService {
 
 	// Pagination -------
 
-	public static function getPagination( $conditions = [] ) {
+	public static function getPagination( $config = [] ) {
+
+		$siteTable 			= CoreTables::TABLE_SITE;
+		$siteMemberTable 	= CoreTables::TABLE_SITE_MEMBER;
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -33,8 +37,8 @@ class UserService extends \cmsgears\core\common\services\UserService {
 	                'label' => 'username',
 	            ],
 	            'role' => [
-	                'asc' => [ 'roleId' => SORT_ASC ],
-	                'desc' => ['roleId' => SORT_DESC ],
+	                'asc' => [ "$siteMemberTable.roleId" => SORT_ASC ],
+	                'desc' => [ "$siteMemberTable.roleId" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'role',
 	            ],
@@ -52,73 +56,50 @@ class UserService extends \cmsgears\core\common\services\UserService {
 	            ]
 	        ]
 	    ]);
-		
-		$status	= Yii::$app->request->getQueryParam( "status" );
 
-		if( isset( $status ) ) {
+		if( !isset( $config[ 'sort' ] ) ) {
 
-			$conditions['status'] = $status;
+			$config[ 'sort' ] = $sort;
 		}
 
-		return self::getPaginationDetails( new User(), [ 'conditions' => $conditions, 'sort' => $sort, 'search-col' => 'firstName' ] );
+		if( !isset( $config[ 'search-col' ] ) ) {
+
+			$config[ 'search-col' ] = 'email';
+		}
+
+		if( !isset( $config[ 'conditions' ] ) ) {
+
+			$config[ 'conditions' ] = [];
+		}
+
+		$siteTable										= CoreTables::TABLE_SITE;
+		$config[ 'conditions' ][ "$siteTable.name" ] 	= Yii::$app->cmgCore->getSiteName();
+
+		return self::getDataProvider( new User(), $config );
 	}
 
-	public static function getPaginationByNewsletter() {
+	public static function getPaginationByRoleSlug( $roleSlug ) {
 
-		return self::getPagination( [ 'newsletter' => 1 ] );
+		$roleTable = CoreTables::TABLE_ROLE;
+
+		return self::getPagination( [ 'conditions' => [ "$roleTable.slug" => $roleSlug ], 'query' => User::findWithSiteMember() ] );
 	}
 
-	// Create -----------
+	public static function getPaginationByPermissionSlug( $permissionSlug ) {
 
-	public static function create( $user ) {
+		$permissionTable = CoreTables::TABLE_PERMISSION;
 
-		// Set Attributes
-		$date				= DateUtil::getMysqlDate();
-		$user->registeredAt = $date;
-		$user->status		= User::STATUS_NEW;
-		
-		// Generate Tokens
-		$user->generateVerifyToken();
-		$user->generateAuthKey();
-		
-		// Create User
-		$user->save();
-
-		// Return User
-		return $user;
+		return self::getPagination( [ 'conditions' => [ "$permissionTable.slug" => $permissionSlug ], 'query' => User::findWithSiteMemberPermission() ] );
 	}
 
-	// Update -----------
+	public static function getPaginationByAdmins() {
 
-	public static function update( $user, $avatar ) {
-
-		// Find existing user
-		$userToUpdate	= User::findById( $user->id );
-
-		// Copy Attributes		
-		$userToUpdate->copyForUpdateFrom( $user, [ 'email', 'username', 'firstName', 'lastName', 'newsletter', 'status', 'roleId', 'phone', 'avatarId' ] );
-
-		// Save Avatar
-		FileService::saveImage( $avatar, $userToUpdate, [ 'model' => $userToUpdate, 'attribute' => 'avatarId' ] );
-
-		// Update User
-		$userToUpdate->update();
-
-		// Return updated User
-		return $userToUpdate;
+		return self::getPaginationByPermissionName( CoreGlobal::PERM_ADMIN );
 	}
 
-	// Delete -----------
+	public static function getPaginationByUsers() {
 
-	public static function delete( $user ) {
-
-		// Find existing user
-		$userToDelete	= User::findById( $user->getId() );
-
-		// Delete User
-		$userToDelete->delete();
-
-		return true;
+		return self::getPaginationByPermissionName( CoreGlobal::PERM_USER );
 	}
 }
 

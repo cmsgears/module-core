@@ -1,6 +1,17 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// Yii Imports
+use \Yii;
+use yii\db\Expression;
+use yii\behaviors\SluggableBehavior;
+use yii\behaviors\TimestampBehavior;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\traits\CreateModifyTrait;
+
 /**
  * Role Entity
  *
@@ -8,34 +19,22 @@ namespace cmsgears\core\common\models\entities;
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
+ * @property string $slug
  * @property string $description
  * @property string $homeUrl
- * @property short $type
+ * @property string $type
+ * @property string $icon
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
 class Role extends NamedCmgEntity {
 
+	use CreateModifyTrait;
+
 	// Instance Methods --------------------------------------------
-	
-	/**
-	 * @return User
-	 */
-	public function getCreator() {
-
-		return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] );
-	}
 
 	/**
-	 * @return User
-	 */
-	public function getModifier() {
-
-		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] );
-	}
-
-	/**
-	 * @return Permission array
+	 * @return array - Permission
 	 */
 	public function getPermissions() {
 
@@ -44,9 +43,9 @@ class Role extends NamedCmgEntity {
 	}
 
 	/**
-	 * @return array having permission element.
+	 * @return array - having permissions list from the joining table
 	 */
-	public function getPermissionsList() {
+	public function getPermissionMappingList() {
 
     	return $this->hasMany( RolePermission::className(), [ 'roleId' => 'id' ] );
 	}
@@ -56,7 +55,7 @@ class Role extends NamedCmgEntity {
 	 */
 	public function getPermissionsIdList() {
 
-    	$permissions 		= $this->permissionsList;
+    	$permissions 		= $this->permissionMappingList;
 		$permissionsList	= array();
 
 		foreach ( $permissions as $permission ) {
@@ -70,41 +69,71 @@ class Role extends NamedCmgEntity {
 	/**
 	 * @return array having permission name element.
 	 */
-	public function getPermissionsNameList() {
+	public function getPermissionsSlugList() {
 
     	$permissions 		= $this->permissions;
 		$permissionsList	= array();
 
 		foreach ( $permissions as $permission ) {
 
-			array_push( $permissionsList, $permission->name );
+			array_push( $permissionsList, $permission->slug );
 		}
 
 		return $permissionsList;
 	}
 
+	// yii\base\Component ----------------
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+
+        return [
+
+            'sluggableBehavior' => [
+                'class' => SluggableBehavior::className(),
+                'attribute' => 'name',
+                'slugAttribute' => 'slug',
+                'ensureUnique' => true
+            ],
+            'timestampBehavior' => [
+                'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+ 				'updatedAtAttribute' => 'modifiedAt',
+ 				'value' => new Expression('NOW()')
+            ]
+        ];
+    }
+
 	// yii\base\Model --------------------
 
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'description', 'homeUrl' ], 'safe' ],
+            [ [ 'id', 'slug', 'description', 'homeUrl' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
-            [ 'name', 'string', 'min'=>1, 'max'=>100 ],
+            [ [ 'name', 'type', 'icon' ], 'string', 'min'=>1, 'max'=>100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
+            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'name' => 'Role',
-			'description' => 'Description',
-			'homeUrl' => 'Home Url'
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'homeUrl' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HOME_URL )
 		];
 	}
 
@@ -112,6 +141,9 @@ class Role extends NamedCmgEntity {
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_ROLE;
@@ -119,6 +151,13 @@ class Role extends NamedCmgEntity {
 
 	// Role ------------------------------
 
+	/**
+	 * @return Role - by slug
+	 */
+	public static function findBySlug( $slug ) {
+
+		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+	}
 }
 
 ?>

@@ -9,6 +9,14 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Access Matrix";
+
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-identity';
+$this->params['sidebar-child'] 	= 'matrix';
+
+// Data
+$pagination		= $dataProvider->getPagination();
+$models			= $dataProvider->getModels();
 ?>
 <div class="content-header clearfix">
 	<div class="header-actions"> 
@@ -23,7 +31,7 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Access Matrix";
 </div>
 <div class="data-grid">
 	<div class="grid-header">
-		<?= LinkPager::widget( [ 'pagination' => $pages ] ); ?>
+		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 	<div class="wrap-grid">
 		<table>
@@ -37,47 +45,45 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Access Matrix";
 			<tbody>
 				<?php
 
-					foreach( $page as $permission ) {
+					foreach( $models as $permission ) {
 
 						$id 		= $permission->id;
 						$roles		= $permission->getRolesIdList();
 						$apixUrl	= Yii::$app->urlManager->createAbsoluteUrl( "/apix/cmgcore/permission/bind-roles" );
 				?>
-					<tr>
+					<tr id="perm-matrix-<?=$id?>" class="request-ajax" cmt-controller="permission" cmt-action="matrix" action="<?=$apixUrl?>" method="POST" cmt-clear-data="false">
 						<td><?= $permission->name ?></td>
 						<td>
-							<form action="<?=$apixUrl?>" method="POST">
-								<input type="hidden" name="permissionId" value="<?=$id?>" />
-								<ul class="ul-inline">
-									<?php foreach ( $allRoles as $role ) { 
-										
-										if( in_array( $role['id'], $roles ) ) {
-									?>		
-											<li><input type="checkbox" name="bindedData" value="<?=$role['id']?>" checked /><?=$role['name']?></li>
-									<?php		
-										}
-										else {
-									?>
-											<li><input type="checkbox" name="bindedData" value="<?=$role['id']?>" /><?=$role['name']?></li>
-									<?php
-										}
+							<input type="hidden" name="Binder[binderId]" value="<?=$id?>" />
+							<ul class="ul-inline">
+								<?php foreach ( $rolesList as $role ) {
+
+									if( in_array( $role['id'], $roles ) ) {
+								?>		
+										<li><input type="checkbox" name="Binder[bindedData][]" value="<?=$role['id']?>" checked /><?=$role['name']?></li>
+								<?php
 									}
-									?>
-								</ul>
-							</form>
+									else {
+								?>
+										<li><input type="checkbox" name="Binder[bindedData][]" value="<?=$role['id']?>" /><?=$role['name']?></li>
+								<?php
+									}
+								}
+								?>
+							</ul>
 						</td>
-						<td><span class="wrap-icon-action" title="Assign Roles"><span class="icon-action icon-action-save matrix-row"</span></span></td>
+						<td>
+							<span class="wrap-icon-action cmt-submit" title="Assign Roles" cmt-request="perm-matrix-<?=$id?>">
+								<span class="icon-action icon-action-save"</span>
+							</span>
+						</td>
 					</tr>
 				<?php } ?>
 			</tbody>
 		</table>
 	</div>
 	<div class="grid-footer">
-		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $pages, $page, $total ) ?> </div>
-		<?= LinkPager::widget( [ 'pagination' => $pages ] ); ?>
+		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?> </div>
+		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 </div>
-<script type="text/javascript">
-	initSidebar( "sidebar-identity", 0 );
-	initMappingsMatrix();
-</script>

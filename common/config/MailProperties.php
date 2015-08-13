@@ -1,15 +1,13 @@
 <?php
 namespace cmsgears\core\common\config;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
- 
-use cmsgears\core\common\models\entities\Config;
 
-use cmsgears\core\common\services\OptionService;
-use cmsgears\core\common\services\ConfigService;
-
-class MailProperties {
+class MailProperties extends CmgProperties {
 
 	//TODO Add code for caching the properties
 
@@ -37,6 +35,11 @@ class MailProperties {
 	 * The property defines SMTP port.
 	 */
 	const PROP_SMTP_PORT		= "smtp port";
+
+	/**
+	 * The property defines SMTP port.
+	 */
+	const PROP_SMTP_ENCRYPTION	= "smtp encryption";
 
 	/**
 	 * The property defines whether mailer need to debug.
@@ -73,8 +76,6 @@ class MailProperties {
 	 */
 	const PROP_INFO_EMAIL		= "info email";
 
-	private $properties;
-
 	// Singleton instance
 	private static $instance;
 
@@ -93,27 +94,10 @@ class MailProperties {
 
 			self::$instance	= new MailProperties();
 
-			self::$instance->init();
+			self::$instance->init( CoreGlobal::CONFIG_MAIL );
 		}
 
 		return self::$instance;
-	}
-
-	/*
-	 * Initialise the properties from database.
-	 */ 
-	public function init() {
-
-		$type				= OptionService::findByNameCategoryName( CoreGlobal::CONFIG_MAIL, CoreGlobal::CATEGORY_CONFIG_TYPE );
-		$this->properties	= ConfigService::getNameValueMapByType( $type->value );
-	}
-
-	/**
-	 * Return mail property for the specified key.
-	 */
-	public function getProperty( $key ) {
-
-		return $this->properties[ key ];
 	}
 
 	/**
@@ -154,6 +138,14 @@ class MailProperties {
 	public function getSmtpPort() {
 
 		return $this->properties[ self::PROP_SMTP_PORT ];
+	}
+
+	/**
+	 * Returns smtp encryption for mails sent via smtp.
+	 */
+	public function getSmtpEncryption() {
+
+		return $this->properties[ self::PROP_SMTP_ENCRYPTION ];
 	}
 
 	/**

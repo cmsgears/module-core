@@ -1,22 +1,21 @@
 <?php
-use yii\helpers\Html;
+use \Yii;
 use yii\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . " | Reset Password";
+$this->title 	= $coreProperties->getSiteTitle() . ' | Reset Password';
 ?>
 <h1>Reset Password</h1>
-<?php 
-	if( Yii::$app->session->hasFlash( "success" ) ) { 
+<?php
+	if( Yii::$app->session->hasFlash( 'message' ) ) {
 ?>
-	<p> <?php echo Yii::$app->session->getFlash( "success" ); ?> </p>
+	<p><?= Yii::$app->session->getFlash( 'message' ) ?></p>
 <?php
 	}
 	else {
 
 		$form = ActiveForm::begin( [ 'id' => 'frm-reset-password' ] ); 
 ?>
-    	
     	<ul>
     		<li>
     			<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email*' ] ) ?>

@@ -4,61 +4,95 @@ namespace cmsgears\core\common\models\entities;
 // Yii Imports
 use \Yii;
 
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 /**
  * ModelTag Entity
  *
+ * @property integer $id
+ * @property integer $tagId
  * @property integer $parentId
- * @property integer $parentType
- * @property string $name
- * @property string $description
+ * @property string $parentType
  */
 class ModelTag extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
+	public function getTag() {
+
+		return $this->hasOne( Tag::className(), [ 'id' => 'tagId' ] );
+	}
+	
 	// yii\base\Model --------------------
 
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
-            [ [ 'parentId', 'parentType', 'name' ], 'required' ],
-			[ [ 'description' ], 'safe' ],
-            [ [ 'parentId', 'parentType' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ 'name', 'alphanumhyphenspace' ],
-            [ 'name', 'string', 'min'=>1, 'max'=>100 ]
+            [ [ 'tagId', 'parentId', 'parentType' ], 'required' ],
+            [ 'id', 'safe' ],
+            [ [ 'tagId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ 'parentType', 'string', 'min' => 1, 'max' => 100 ]
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'categoryId' => 'Category',
-			'parentId' => 'Parent',
-			'parentType' => 'Type'
+			'tagId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TAG ),
+			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE )
 		];
 	}
 
-	// Category --------------------------
+	// ModelTag --------------------------
 
 	// Static Methods ----------------------------------------------
 
 	// yii\db\ActiveRecord ---------------
 
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
 		return CoreTables::TABLE_MODEL_TAG;
 	}
 
-	// Category --------------------------
+	// ModelTag --------------------------
 
-	public static function findByParentIdType( $id, $type ) {
+	// Read ----
 
-		return self::find()->where( 'parentId=:id AND parentType=:type', [ ':id' => $id, ':type' => $type ] )->all();
+	/**
+	 * @return ModelTag - by id
+	 */
+	public static function findById( $id ) {
+
+		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 
-	public static function deleteByParentIdType( $id, $type ) {
+	/**
+	 * @return array - categories by given parent id and type.
+	 */
+	public static function findByParentIdType( $parentId, $parentType ) {
 
-		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $id, ':type' => $type ] );
+		return self::find()->where( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] )->all();
+	}
+
+	// Delete ----
+
+	/**
+	 * Delete categories by given parent id and type.
+	 */
+	public static function deleteByParentIdType( $parentId, $parentType ) {
+
+		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] );
 	}
 }
 

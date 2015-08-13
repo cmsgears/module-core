@@ -1,6 +1,17 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
+// Yii Imports
+use \Yii;
+use yii\db\Expression;
+use yii\behaviors\SluggableBehavior;
+use yii\behaviors\TimestampBehavior;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\traits\CreateModifyTrait;
+
 /**
  * Permission Entity
  *
@@ -8,31 +19,17 @@ namespace cmsgears\core\common\models\entities;
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
+ * @property string $slug
  * @property string $description
- * @property string $homeUrl
- * @property short $type
+ * @property string $icon 
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
 class Permission extends NamedCmgEntity {
 
+	use CreateModifyTrait;
+
 	// Instance Methods --------------------------------------------
-
-	/**
-	 * @return User
-	 */
-	public function getCreator() {
-
-		return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] );
-	}
-
-	/**
-	 * @return User
-	 */
-	public function getModifier() {
-
-		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] );
-	}
 
 	/**
 	 * @return Role array
@@ -46,7 +43,7 @@ class Permission extends NamedCmgEntity {
 	/**
 	 * @return array having role element.
 	 */
-	public function getRolesList() {
+	public function getRoleMappingList() {
 
     	return $this->hasMany( RolePermission::className(), [ 'permissionId' => 'id' ] );
 	}
@@ -56,52 +53,92 @@ class Permission extends NamedCmgEntity {
 	 */
 	public function getRolesIdList() {
 
-    	$roles 		= $this->rolesList;
+    	$roles 		= $this->roleMappingList;
 		$rolesList	= array();
-		
+
 		foreach ( $roles as $role ) {
-			
+
 			array_push( $rolesList, $role->roleId );
 		}
 
 		return $rolesList;
 	}
 
+	// yii\base\Component ----------------
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+
+        return [
+
+            'sluggableBehavior' => [
+                'class' => SluggableBehavior::className(),
+                'attribute' => 'name',
+                'slugAttribute' => 'slug',
+                'ensureUnique' => true
+            ],
+            'timestampBehavior' => [
+                'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+ 				'updatedAtAttribute' => 'modifiedAt',
+ 				'value' => new Expression('NOW()')
+            ]
+        ];
+    }
+
 	// yii\base\Model --------------------
 
+    /**
+     * @inheritdoc
+     */
 	public function rules() {
 
         return [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'description' ], 'safe' ],
+            [ [ 'id', 'slug', 'description' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
-            [ 'name', 'string', 'min'=>1, 'max'=>100 ],
+            [ [ 'name', 'icon' ], 'string', 'min'=>1, 'max'=>100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => 'yyyy-MM-dd HH:mm:ss' ]
+            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
 	public function attributeLabels() {
 
 		return [
-			'name' => 'Permission',
-			'description' => 'Description'
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION )
 		];
 	}
 
 	// Static Methods ----------------------------------------------
 
 	// yii\db\ActiveRecord ---------------
-	
+
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
-		
+
 		return CoreTables::TABLE_PERMISSION;
 	}
 
 	// Permission ------------------------
 
+	/**
+	 * @return Permission - by slug
+	 */
+	public static function findBySlug( $slug ) {
+
+		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+	}
 }
 
 ?>

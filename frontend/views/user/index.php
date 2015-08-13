@@ -1,6 +1,6 @@
 <?php
-    $this->title = 'Yii Boilerplate | Home';
+use \Yii;
+
+$coreProperties = $this->context->getCoreProperties();
+$this->title 	= $coreProperties->getSiteTitle() . " | Home";
 ?>
-<section class="row container clearfix">
-	Welcome to Yii !!
-</section>

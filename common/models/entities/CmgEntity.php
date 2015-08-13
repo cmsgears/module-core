@@ -37,6 +37,14 @@ class CmgEntity extends ActiveRecord {
 	// Static Methods --------------------------------------------
 
 	/**
+	 * Returns row count for the model
+	 */
+	public static function getCount( $conditions = [] ) {
+
+		return self::find()->where( $conditions )->count();
+	}
+
+	/**
 	 * It generate search query for a column by parsing the comma seperated string. 
 	 */
 	public static function generateSearchQuery( $culumn, $searchTerms ) {
@@ -53,10 +61,17 @@ class CmgEntity extends ActiveRecord {
 			else {
 
 				$searchQuery .= " or $field like '%$value%' ";
-			}				
+			}
 		}
 
 		return $searchQuery;
+	}
+
+	// Default Searching
+
+	public static function findById( $id ) {
+
+		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
 	}
 }
 

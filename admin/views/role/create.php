@@ -4,6 +4,10 @@ use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Role';
+
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-identity';
+$this->params['sidebar-child'] 	= 'role';
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -18,12 +22,9 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Add Role';
 			<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$permission['id']?>" /><?=$permission['name']?></span>
 		<?php } ?>
 		<div class="box-filler"></div>
-		<?=Html::a( "Cancel", [ '/cmgcore/role/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
 		<input type="submit" value="Create" />
 
 		<?php ActiveForm::end(); ?>
 	</div>
 </section>
-<script type="text/javascript">
-	initSidebar( "sidebar-identity", 1 );
-</script>

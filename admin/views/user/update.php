@@ -2,8 +2,14 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
+use cmsgears\files\widgets\FileUploader;
+
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Update User";
+
+// Sidebar
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -13,34 +19,24 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Update User";
     	<?= $form->field( $model, 'email' ) ?>
     	<?= $form->field( $model, 'username' ) ?>
     	<h4>User Avatar</h4>
-		<div id="file-avatar" class="file-container" legend="User Avatar" selector="avatar" utype="image" btn-class="btn file-input-wrap" btn-text="Choose Avatar">
-			<div class="file-fields">
-				<input type="hidden" name="Avatar[id]" value="<?php if( isset( $avatar ) ) echo $avatar->id; ?>" />
-				<input type="hidden" name="Avatar[name]" class="file-name" value="<?php if( isset( $avatar ) ) echo $avatar->name; ?>" />
-				<input type="hidden" name="Avatar[extension]" class="file-extension" value="<?php if( isset( $avatar ) ) echo $avatar->extension; ?>" />
-				<input type="hidden" name="Avatar[directory]" value="avatar" value="<?php if( isset( $avatar ) ) echo $avatar->directory; ?>" />
-				<input type="hidden" name="Avatar[changed]" class="file-change" value="<?php if( isset( $avatar ) ) echo $avatar->changed; ?>" />
-			</div>
-		</div>
+		<?=FileUploader::widget( [ 'options' => [ 'id' => 'avatar-user', 'class' => 'file-uploader' ], 'model' => $model->avatar,  'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>
 		<?= $form->field( $model, 'firstName' ) ?>
 		<?= $form->field( $model, 'lastName' ) ?>
-		<?= $form->field( $model, 'gender' )->dropDownList( $genders )  ?>
+		<?= $form->field( $model, 'genderId' )->dropDownList( $genderMap )  ?>
 		<?= $form->field( $model, 'phone' ) ?>
-		<?= $form->field( $model, 'roleId' )->dropDownList( $roles )  ?>
+
+    	<?php if( isset( $roleMap ) ) { ?>
+			<?= $form->field( $siteMember, 'roleId' )->dropDownList( $roleMap )  ?>
+		<?php } else { ?>
+			<?= $form->field( $siteMember, 'roleId' )->hiddenInput()->label( false )  ?>
+		<?php } ?>
+
 		<?= $form->field( $model, 'status' )->dropDownList( $status ) ?>
 		<?= $form->field( $model, 'newsletter' )->checkbox() ?>
 
-		<?=Html::a( "Back", [ '/cmgcore/user/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( "Back", $returnUrl, ['class' => 'btn' ] );?>
 		<input type="submit" value="Update" />
 
 		<?php ActiveForm::end(); ?>
 	</div>	
 </section>
-<script type="text/javascript">
-	initSidebar( "sidebar-identity", 3 );
-	initFileUploader();
-
-	<?php if( isset( $avatar ) ) { ?>
-		jQuery("#file-avatar .file-image").html( "<img src='<?php echo $avatar->getFileUrl(); ?>' />'" );
-	<?php } ?>
-</script>

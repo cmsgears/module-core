@@ -4,10 +4,14 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
-use cmsgears\core\widgets\Editor;
+use cmsgears\core\common\widgets\Editor;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Newsletter';
+
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-newsletter';
+$this->params['sidebar-child'] 	= 'newsletter';
 
 Editor::widget( [ 'selector' => '.content-editor' ] );
 ?>
@@ -30,7 +34,3 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 		<?php ActiveForm::end(); ?>
 	</div>
 </section>
-
-<script type="text/javascript">
-	initSidebar( "sidebar-newsletter", -1 );
-</script>

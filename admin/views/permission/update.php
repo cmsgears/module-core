@@ -4,6 +4,10 @@ use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Update Permission';
+
+// Sidebar
+$this->params['sidebar-parent'] = 'sidebar-identity';
+$this->params['sidebar-child'] 	= 'permission';
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -32,12 +36,9 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Update Permission';
 			}
 		?>	
 		<div class="box-filler"></div>
-		<?=Html::a( "Back", [ '/cmgcore/permission/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( "Back", $returnUrl, ['class' => 'btn' ] );?>
 		<input type="submit" value="Update" />
 
 		<?php ActiveForm::end(); ?>
 	</div>
 </section>
-<script type="text/javascript">
-	initSidebar( "sidebar-identity", 2 );
-</script>

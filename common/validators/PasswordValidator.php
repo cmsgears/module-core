@@ -29,7 +29,7 @@ class PasswordValidator extends Validator {
 
         if ( !preg_match_all( self::$regex, $model->$attribute ) ) {
 
-            $this->addError( $model, $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_PASSWORD ) );
+            $this->addError( $model, $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_PASSWORD ) );
         }
     }
 }

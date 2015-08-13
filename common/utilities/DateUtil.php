@@ -1,6 +1,8 @@
 <?php
 namespace cmsgears\core\common\utilities;
 
+use \DateTime;
+
 /**
  * DateUtil provide several utility methods related to date and time.
  */
@@ -9,47 +11,82 @@ class DateUtil {
 	// Static Methods ----------------------------------------------
 
 	/**
-	 * @return datetime - having mysql format
+	 * @return datetime - current datetime having specified format
 	 */
-    public static function getMysqlDate() {
+    public static function getDateTime( $format = null ) {
 
-		return date( 'Y-m-d H:i:s' );
-    } 
-
-	/**
-	 * @return date - from mysql date
-	 */
-    public static function getDateFromMysqlDate( $date ) {
-		
-		$date	= preg_split( "/ /", $date );
-
-		return $date[0];
-    } 
-
-	/**
-	 * @return time - current date having specified format
-	 */
-	public static function getCurrentDate( $format = null ) {
-		
 		if( !isset( $format ) ) {
-			
-			$format	= 'l, F j, Y';
+
+			$format	= 'Y-m-d H:i:s';
 		}
 
 		return  date ( $format );
-	}
+    }
+
+	/**
+	 * @return datetime - current date having specified format
+	 */
+    public static function getDate( $format = null ) {
+
+		if( !isset( $format ) ) {
+
+			$format	= 'Y-m-d';
+		}
+
+		return  date ( $format );
+    }
 
 	/**
 	 * @return time - current time having specified format
 	 */
-	public static function getCurrentTime( $format = null ) {
+	public static function getTime( $format = null ) {
 
 		if( !isset( $format ) ) {
 			
-			$format	= 'h:i A';
+			$format	= 'H:i:s';
 		}
 
 		return date( $format );
+    }
+
+	/**
+	 * @return date - from datetime
+	 */
+    public static function getDateFromDateTime( $date ) {
+
+		$date	= preg_split( "/ /", $date );
+
+		return $date[0];
+    }
+
+	/**
+	 * @return date - from datetime
+	 */
+    public static function getDayFromDate( $date, $format = null ) {
+
+		if( !isset( $format ) ) {
+			
+			$format	= 'H:i:s';
+		}
+
+		$date	= preg_split( "/-/", $date );
+
+		return $date[ 2 ];
+    }
+
+	/**
+	 * @return date - from datetime
+	 */
+    public static function getWeekDayFromDate( $date, $format = null ) {
+
+		if( !isset( $format ) ) {
+
+			$format	= 'H:i:s';
+		}
+
+		$date = strtotime( $date );
+
+		return date( "N", $date ) - 1;
     }
 
 	/**

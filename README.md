@@ -1,6 +1,9 @@
 Project 	- CMSGears (http://www.cmsgears.org)
+
 Module  	- Core
+
 License 	- GPLv3 (http://www.gnu.org/licenses/gpl-3.0.html)
+
 Description - The core module for CMSGears based projects. It's required for all the projects using CMSGears.
 
 =========================================

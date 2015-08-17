@@ -71,7 +71,6 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-title' class="icon-sort <?php if( strcmp( $sortOrder, '-title') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
-					<th>Description</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -88,7 +87,6 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $gallery->name ?></td>
 						<td><?= $gallery->slug ?></td>
 						<td><?= $gallery->title ?></td>
-						<td><?= $gallery->description ?></td>
 						<td>
 							<span class="wrap-icon-action" title="Gallery Items"><?= Html::a( "", ["/cmgcore/gallery/items?id=$id"], ['class'=>'icon-action icon-action-edit'] ) ?></span>
 							<span class="wrap-icon-action" title="Update Role"><?= Html::a( "", ["/cmgcore/gallery/update?id=$id"], ['class'=>'icon-action icon-action-edit'] ) ?></span>

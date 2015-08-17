@@ -22,8 +22,8 @@ $id				= $gallery->id;
 		<form action="#" class="frm-split">
 			<label>Name</label>
 			<label><?=$gallery->name?></label>
-			<label>Description</label>
-			<label><?=$gallery->description?></label>
+			<label>Title</label>
+			<label><?=$gallery->title?></label>
 		</form>
 
 		<h4>Create Item</h4>

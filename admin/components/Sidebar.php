@@ -24,7 +24,7 @@ class Sidebar extends Component {
 	/**
 	 * @return string - the html merged from each module sidebar view.
 	 */
-	public function getSidebarHtml() {
+	public function getSidebarHtml( $parent, $child ) {
 
 		// TODO: Use caching
 

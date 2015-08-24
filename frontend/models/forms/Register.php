@@ -3,6 +3,8 @@ namespace cmsgears\core\frontend\models\forms;
 
 // Yii Imports
 use \Yii;
+use yii\validators\FilterValidator;
+use yii\helpers\ArrayHelper;
 use yii\base\Model;
 
 // CMG Imports
@@ -32,7 +34,14 @@ class Register extends Model {
 
 	public function rules() {
 		
-		return  [
+		$trim		= [];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'email', 'password', 'password_repeat', 'username', 'mobile', 'firstName', 'lastName' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+		}
+
+        $rules = [
 			[ [ 'email', 'password', 'password_repeat', 'terms' ], 'required' ],
 			[ 'email', 'email' ],
 			[ 'password', 'compare' ],
@@ -45,6 +54,13 @@ class Register extends Model {
 			[ 'terms', 'termsValidator' ],
 			[ 'newsletter', 'safe' ]
 		];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			return ArrayHelper::merge( $trim, $rules );
+		}
+
+		return $rules;
 	}
 
 	public function attributeLabels() {

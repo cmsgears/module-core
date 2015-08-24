@@ -58,6 +58,7 @@ DROP TABLE IF EXISTS `cmg_core_category`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_category` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `avatarId` bigint(20) DEFAULT NULL,
   `parentId` bigint(20) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -65,8 +66,8 @@ CREATE TABLE `cmg_core_category` (
   `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `icon` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_category_1` (`parentId`),
-  CONSTRAINT `fk_category_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_core_category` (`id`)
+  KEY `fk_category_1` (`avatarId`),
+  KEY `fk_category_2` (`parentId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -608,6 +609,13 @@ CREATE TABLE `cmg_core_model_comment` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 SET FOREIGN_KEY_CHECKS=0;
+
+--
+-- Constraints for table `cmg_core_category`
+--
+ALTER TABLE `cmg_core_category`
+	ADD CONSTRAINT `fk_category_1` FOREIGN KEY (`avatarId`) REFERENCES `cmg_core_file` (`id`),
+	ADD CONSTRAINT `fk_category_2` FOREIGN KEY (`parentId`) REFERENCES `cmg_core_category` (`id`);
 
 --
 -- Constraints for table `cmg_core_option`

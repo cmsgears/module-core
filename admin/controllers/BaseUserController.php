@@ -70,7 +70,7 @@ abstract class BaseUserController extends BaseController {
 			$siteMember->roleId = $role->id;
 		}
 
-		if( $model->load( Yii::$app->request->post(), 'User' ) && $model->validate() && $siteMember->load( Yii::$app->request->post(), 'SiteMember' ) ) {
+		if( $model->load( Yii::$app->request->post(), 'User' ) && $siteMember->load( Yii::$app->request->post(), 'SiteMember' ) && $model->validate() ) {
 
 			// Create User
 			$user 		= UserService::create( $model );
@@ -131,7 +131,7 @@ abstract class BaseUserController extends BaseController {
 
 			UserService::checkNewsletterMember( $model );
 
-			if( $model->load( Yii::$app->request->post(), 'User' )  && $model->validate() && $siteMember->load( Yii::$app->request->post(), 'SiteMember' ) ) {
+			if( $model->load( Yii::$app->request->post(), 'User' ) && $siteMember->load( Yii::$app->request->post(), 'SiteMember' ) && $model->validate() ) {
 
 				$avatar->load( Yii::$app->request->post(), 'File' );
 

@@ -141,7 +141,7 @@ class UserService extends Service {
 		// Add to mailing list
 		if( $user->newsletter ) {
 
-			NewsletterMemberService::create( $user->email );
+			NewsletterMemberService::create( $user->email, $user->getName() );
 		}
 
 		return $user;
@@ -173,7 +173,7 @@ class UserService extends Service {
 		$userToUpdate->update();
 
 		// Update mailing list
-		NewsletterMemberService::update( $user->email, $user->newsletter );
+		NewsletterMemberService::update( $user->email, $user->getName(), $user->newsletter );
 
 		// Return updated User
 		return $userToUpdate;
@@ -184,7 +184,7 @@ class UserService extends Service {
 		$member = NewsletterMemberService::findByEmail( $user->email );
 
 		// Update mailing list
-		if( isset( $member ) ) {
+		if( isset( $member ) && $member->active ) {
 
 			$user->newsletter = true;
 		}

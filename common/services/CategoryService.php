@@ -66,24 +66,34 @@ class CategoryService extends Service {
 
 	// Create -----------
 
-	public static function create( $category ) {
+	public static function create( $category, $avatar = null ) {
+
+		if( isset( $avatar ) ) {
+
+			FileService::saveImage( $avatar, [ 'model' => $category, 'attribute' => 'avatarId' ] );
+		}
 
 		// Create Category
 		$category->save();
-		
+
 		// Return Category
 		return $category;
 	}
 
 	// Update -----------
 
-	public static function update( $category ) {
+	public static function update( $category, $avatar = null ) {
 
 		// Find existing Category
 		$categoryToUpdate	= self::findById( $category->id );
 
 		// Copy Attributes
-		$categoryToUpdate->copyForUpdateFrom( $category, [ 'parentId', 'name', 'description', 'type', 'icon' ] );
+		$categoryToUpdate->copyForUpdateFrom( $category, [ 'avatarId', 'parentId', 'name', 'description', 'type', 'icon' ] );
+
+		if( isset( $avatar ) ) {
+
+			FileService::saveImage( $avatar, [ 'model' => $categoryToUpdate, 'attribute' => 'avatarId' ] );
+		}
 
 		// Update Category
 		$categoryToUpdate->update();

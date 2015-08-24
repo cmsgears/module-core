@@ -3,6 +3,8 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
+use yii\validators\FilterValidator;
+use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
 
 // CMG Imports
@@ -44,7 +46,14 @@ class Tag extends NamedCmgEntity {
      */
 	public function rules() {
 
-        return [
+		$trim		= [];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+		}
+
+        $rules = [
             [ [ 'name' ], 'required' ],
             [ 'id', 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
@@ -53,6 +62,13 @@ class Tag extends NamedCmgEntity {
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ 'slug', 'string', 'min'=>1, 'max'=>150 ],
         ];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			return ArrayHelper::merge( $trim, $rules );
+		}
+
+		return $rules;
     }
 
     /**

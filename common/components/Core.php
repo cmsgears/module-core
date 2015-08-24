@@ -76,6 +76,11 @@ class Core extends Component {
 	public $editorClass			= null;
 
 	/**
+	 * @var It can be used by model classes to determine the fields for trim filter.
+	 */
+	public $trimFieldValue		= false;
+
+	/**
 	 * Initialise the CMG Core Component.
 	 */
     public function init() {

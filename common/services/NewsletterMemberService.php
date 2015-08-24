@@ -53,7 +53,7 @@ class NewsletterMemberService extends Service {
 	 * @param Newsletter $newsletter
 	 * @return Newsletter
 	 */
-	public static function create( $email ) {
+	public static function create( $email, $name ) {
 
 		$member	= NewsletterMember::findByEmail( $email );
 
@@ -62,7 +62,9 @@ class NewsletterMemberService extends Service {
 
 			$member	= new NewsletterMember();
 
-			$member->email = $email;
+			$member->email 	= $email;
+			$member->name 	= $name;
+			$member->active = true;
 
 			$member->save();
 		}
@@ -70,22 +72,27 @@ class NewsletterMemberService extends Service {
 		// Return NewsletterMember
 		return $member;
 	}
-	
+
 	// update -----------
 
 	/**
 	 * @param string $email
 	 * @param boolean $newsletter
 	 */
-	public static function update( $email, $newsletter ) {
+	public static function update( $email, $name, $active ) {
+		
+		$member	= NewsletterMember::findByEmail( $email );
+		
+		if( isset( $member ) ) {
 
-		if( $newsletter ) {
+			$member->name	= $name;
+			$member->active	= $active;
 
-			self::create( $email );
+			$member->update();
 		}
-		else {
+		else if( $active ) {
 			
-			self::delete( $email );
+			self::create( $email, $name );
 		}
 	}
 

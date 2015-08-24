@@ -15,7 +15,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property integer $parentId
  * @property string $parentType
  */
-class ModelCategory extends CmgEntity {
+class ModelCategory extends CmgModel {
 
 	// Instance Methods --------------------------------------------
 
@@ -70,35 +70,9 @@ class ModelCategory extends CmgEntity {
 
 	// ModelCategory ---------------------
 
-	// Read ----
-
-	/**
-	 * @return ModelCategory - by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	/**
-	 * @param int $parentId
-	 * @param string $parentType
-	 * @return array - ModelCategory by parent id and type
-	 */
-	public static function findByParentIdType( $parentId, $parentType ) {
-
-		return self::find()->where( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] )->all();
-	}
+	// Read ------
 
 	// Delete ----
-
-	/**
-	 * Delete all the entries associated with the parent.
-	 */
-	public static function deleteByParentIdType( $parentId, $parentType ) {
-
-		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] );
-	}
 
 	/**
 	 * Delete all entries related to a category

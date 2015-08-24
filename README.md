@@ -12,7 +12,7 @@ Highlighted Features
 2. RBAC to manage roles and permissions. Assign roles to users and restrict users to perform actions based on permissions assigned to their respective role.
 3. User registration, login, forgot password, reset password, confirm account, activate account.
 4. User profile allows users to update avatar and account information.
-5. Model traits to associate additional features to models. The model traits provided by core module include address, category, file, meta and tag. A model can have one more entry based on trait nature.
+5. Model traits to associate additional features to models. The model traits provided by core module include address, category, file, meta, tag and comment. A model can have one more entry based on trait nature.
 6. Reminders can be used to set various type of reminders based on project needs.
 7. Notifications can be used to notify users personally about required updates. We can also mention the notifier who triggers notifications.
 8. The categories can be maintained in either flat or hierarchichal fashion.

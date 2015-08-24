@@ -19,7 +19,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $fieldType
  * @property string $fieldMeta
  */
-class ModelMeta extends CmgEntity {
+class ModelMeta extends CmgModel {
 
 	// Instance Methods --------------------------------------------
 
@@ -106,15 +106,6 @@ class ModelMeta extends CmgEntity {
 	// ModelMeta -------------------------
 
 	/**
-	 * @param integer $id
-	 * @return ModelMeta - by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	/**
 	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param string $type
@@ -163,16 +154,6 @@ class ModelMeta extends CmgEntity {
 		$config = self::findByTypeName( $parentId, $parentType, $type, $name );
 
 		return isset( $config );
-	}
-
-	// Delete ----
-
-	/**
-	 * Delete all the entries associated with the parent.
-	 */
-	public static function deleteByParentIdType( $parentId, $parentType ) {
-
-		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] );
 	}
 }
 

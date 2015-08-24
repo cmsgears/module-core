@@ -461,7 +461,7 @@ CREATE TABLE `cmg_core_site_member` (
   `userId` bigint(20) NOT NULL,
   `roleId` bigint(20) NOT NULL,
   `createdAt` datetime NOT NULL,
-  `modifiedAt` datetime NOT NULL,
+  `modifiedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`siteId`, `userId`),
   KEY `fk_site_member_1` (`siteId`),
   KEY `fk_site_member_2` (`userId`),
@@ -580,6 +580,32 @@ CREATE TABLE `cmg_core_model_address` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `cmg_core_model_comment`
+--
+
+DROP TABLE IF EXISTS `cmg_core_model_comment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmg_core_model_comment` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `createdBy` bigint(20) DEFAULT NULL,
+  `modifiedBy` bigint(20) DEFAULT NULL,
+  `replyParentId` bigint(20) DEFAULT NULL,
+  `parentId` bigint(20) NOT NULL,
+  `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `ip` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `email` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `message` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `modifiedAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_model_comment_1` (`createdBy`),
+  KEY `fk_model_comment_2` (`modifiedBy`),
+  KEY `fk_model_comment_3` (`replyParentId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 SET FOREIGN_KEY_CHECKS=0;
 
@@ -734,5 +760,13 @@ ALTER TABLE `cmg_core_model_tag`
 
 ALTER TABLE `cmg_core_model_address`
   	ADD CONSTRAINT `fk_model_address_1` FOREIGN KEY (`addressId`) REFERENCES `cmg_core_address` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cmg_core_model_comment`
+--
+ALTER TABLE `cmg_core_model_comment`
+  	ADD CONSTRAINT `fk_model_comment_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
+  	ADD CONSTRAINT `fk_model_comment_2` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`),
+  	ADD CONSTRAINT `fk_model_comment_3` FOREIGN KEY (`replyParentId`) REFERENCES `cmg_core_model_comment` (`id`);
 
 SET FOREIGN_KEY_CHECKS=1;

@@ -142,7 +142,8 @@ class CoreGlobal {
 	const FIELD_END_DATE			= 'endDateField';
 	const FIELD_DAY_WEEK 			= 'Week Day';
 	const FIELD_DAY_MONTH			= 'Month Day';
-		
+	const FIELD_IP					= 'ipField';
+
 	// Role Fields
 	const FIELD_HOME_URL			= 'homeUrlField';
 

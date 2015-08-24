@@ -17,7 +17,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $name
  * @property string $value
  */
-class ModelMessage extends CmgEntity {
+class ModelMessage extends CmgModel {
 
 	// Instance Methods --------------------------------------------
 
@@ -110,14 +110,6 @@ class ModelMessage extends CmgEntity {
 	// ModelMessage ----------------------
 
 	/**
-	 * @return ModelMessage - by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	/**
 	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param string $name
@@ -144,14 +136,6 @@ class ModelMessage extends CmgEntity {
 	}
 
 	// Delete ----
-
-	/**
-	 * Delete all the entries associated with the parent.
-	 */
-	public static function deleteByParentIdType( $parentId, $parentType ) {
-
-		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] );
-	}
 
 	/**
 	 * Delete all entries related to a file

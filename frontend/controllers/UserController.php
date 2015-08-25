@@ -64,7 +64,7 @@ class UserController extends BaseController {
 
 			UserService::checkNewsletterMember( $model );
 
-			if( $model->load( Yii::$app->request->post(), "User" )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), "User" ) && $model->validate() ) {
 
 				// Update User and Site Member
 				if( UserService::update( $model ) ) {

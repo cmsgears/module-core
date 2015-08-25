@@ -3,6 +3,8 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
+use yii\validators\FilterValidator;
+use yii\helpers\ArrayHelper;
 use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
 
@@ -129,13 +131,28 @@ class CmgFile extends CmgEntity {
      */
 	public function rules() {
 
-        return [
+		$trim		= [];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name', 'extension', 'directory', 'title', 'description', 'altText' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+		}
+
+        $rules = [
             [ [ 'createdBy', 'name', 'extension', 'directory', 'url' ], 'required' ],
             [ [ 'id', 'title', 'description', 'altText', 'visibility', 'type', 'thumb', 'link', 'changed' ], 'safe' ],
             [ [ 'width', 'height', 'twidth', 'theight' ], 'safe' ],
+            [ [ 'width', 'height', 'twidth', 'theight' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			return ArrayHelper::merge( $trim, $rules );
+		}
+
+		return $rules;
     }
 
     /**

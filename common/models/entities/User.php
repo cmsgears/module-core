@@ -3,6 +3,8 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
+use yii\validators\FilterValidator;
+use yii\helpers\ArrayHelper;
 use yii\db\Query;
 use yii\web\IdentityInterface;
 use yii\web\NotFoundHttpException;
@@ -307,7 +309,14 @@ class User extends CmgEntity implements IdentityInterface {
      */
 	public function rules() {
 
-        return [
+		$trim		= [];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'email', 'username', 'phone', 'firstName', 'lastName' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+		}
+
+        $rules = [
             [ [ 'email', 'username' ], 'required' ],
             [ [ 'id', 'localeId', 'genderId', 'avatarId', 'status', 'phone', 'newsletter' ], 'safe' ],
             [ 'email', 'email' ],
@@ -317,9 +326,17 @@ class User extends CmgEntity implements IdentityInterface {
             [ 'username', 'validateUsernameCreate', 'on' => [ 'create' ] ],
             [ 'username', 'validateUsernameUpdate', 'on' => [ 'update' ] ],
             [ [ 'firstName', 'lastName' ], 'alphanumspace' ],
+            [ [ 'id', 'localeId', 'genderId', 'avatarId', 'status', 'newsletter' ], 'number', 'integerOnly' => true ],
             [ 'dob', 'date', 'format' => Yii::$app->formatter->dateFormat ],
             [ [ 'registeredAt', 'lastLoginAt', 'lastActivityAt', 'accessTokenCreatedAt', 'accessTokenAccessedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			return ArrayHelper::merge( $trim, $rules );
+		}
+
+		return $rules;
     }
 
     /**

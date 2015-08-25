@@ -30,7 +30,12 @@ class CodeGenUtil {
 
 			$end	= $start + $currentSize;
 		}
+		
+		if( $end > 0 ) {
 
+			$start += 1;
+		}
+		
 		return "Showing $start to $end out of $total entries";
 	}
 

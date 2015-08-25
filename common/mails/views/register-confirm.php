@@ -3,7 +3,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $logoUrl		= Yii::getAlias( "@web" );
-$logoUrl		= Url::to( $logoUrl. "/assets/images/logo.png", true );
+$logoUrl		= Url::to( $logoUrl. "/images/logo-mail.png", true );
 
 $logo 			= "<img class='logo' style='height:35px;float:right; margin-top:6px; margin-right:53px' src='$logoUrl'>";
 $siteName		= $coreProperties->getSiteName();
@@ -14,7 +14,7 @@ $loginLink		= Url::toRoute( "/login", true );
 	<tbody>
 		<tr>
  			<td>
- 				<div style='width:100%; margin:0 auto; height:65px; background-color:#4c4c4c;'>
+ 				<div style='width:100%; margin:0 auto; min-height:45px; background-color:#f6f9f4; text-align: center;'>
  					<?=$logo?>
  				</div>
  			</td>

@@ -3,6 +3,8 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
+use yii\validators\FilterValidator;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -19,7 +21,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $fieldType
  * @property string $fieldMeta
  */
-class ModelMeta extends CmgEntity {
+class ModelMeta extends CmgModel {
 
 	// Instance Methods --------------------------------------------
 
@@ -30,7 +32,14 @@ class ModelMeta extends CmgEntity {
      */
 	public function rules() {
 
-        return [
+		$trim		= [];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name', 'value', 'type', 'fieldType', 'fieldMeta' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+		}
+
+        $rules = [
             [ [ 'parentId', 'parentType', 'name', 'value' ], 'required' ],
             [ [ 'id', 'type', 'fieldType', 'fieldMeta' ], 'safe' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -39,6 +48,13 @@ class ModelMeta extends CmgEntity {
             [ 'name', 'validatenameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validatenameUpdate', 'on' => [ 'update' ] ]
         ];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			return ArrayHelper::merge( $trim, $rules );
+		}
+
+		return $rules;
     }
 
     /**
@@ -106,15 +122,6 @@ class ModelMeta extends CmgEntity {
 	// ModelMeta -------------------------
 
 	/**
-	 * @param integer $id
-	 * @return ModelMeta - by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	/**
 	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param string $type
@@ -163,16 +170,6 @@ class ModelMeta extends CmgEntity {
 		$config = self::findByTypeName( $parentId, $parentType, $type, $name );
 
 		return isset( $config );
-	}
-
-	// Delete ----
-
-	/**
-	 * Delete all the entries associated with the parent.
-	 */
-	public static function deleteByParentIdType( $parentId, $parentType ) {
-
-		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] );
 	}
 }
 

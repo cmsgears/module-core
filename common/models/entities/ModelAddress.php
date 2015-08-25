@@ -16,7 +16,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $parentType
  * @property integer $type
  */
-class ModelAddress extends CmgEntity {
+class ModelAddress extends CmgModel {
 
 	// Instance Methods --------------------------------------------
 
@@ -73,25 +73,7 @@ class ModelAddress extends CmgEntity {
 
 	// ModelAddress ----------------------
 
-	// Read ----
-
-	/**
-	 * @return ModelAddress - by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	/**
-	 * @param int $parentId
-	 * @param string $parentType
-	 * @return array - ModelAddress by parent id and type
-	 */
-	public static function findByParentIdType( $parentId, $parentType ) {
-
-		return self::find()->where( 'parentId=:id AND parentType=:ptype', [ ':id' => $parentId, ':ptype' => $parentType ] )->all();
-	}
+	// Read ------
 
 	/**
 	 * @param int $parentId
@@ -105,14 +87,6 @@ class ModelAddress extends CmgEntity {
 	}
 
 	// Delete ----
-
-	/**
-	 * Delete all the entries associated with the parent.
-	 */
-	public static function deleteByParentIdType( $parentId, $parentType ) {
-
-		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] );
-	}
 
 	/**
 	 * Delete all entries related to a address

@@ -50,6 +50,8 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-email' class="icon-sort <?php if( strcmp( $sortOrder, '-email') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
+					<th>Name</th>
+					<th>Active</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -61,6 +63,8 @@ if( !isset( $sortOrder ) ) {
 				?>
 					<tr>
 						<td><?= $member->email ?></td>
+						<td><?= $member->name ?></td>
+						<td><?= $member->getActiveStr() ?></td>
 					</tr>
 				<?php } ?>
 			</tbody>

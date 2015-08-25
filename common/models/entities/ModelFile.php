@@ -16,7 +16,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $parentType
  * @property short $order 
  */
-class ModelFile extends CmgEntity {
+class ModelFile extends CmgModel {
 
 	// Instance Methods --------------------------------------------
 
@@ -72,35 +72,9 @@ class ModelFile extends CmgEntity {
 
 	// ModelFile -------------------------
 	
-	// Read ----
-
-	/**
-	 * @return ModelFile - by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	/**
-	 * @param int $parentId
-	 * @param string $parentType
-	 * @return array - ModelFile by parent id and type
-	 */
-	public static function findByParentIdType( $parentId, $parentType ) {
-
-		return self::find()->where( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] )->all();
-	}
+	// Read ------
 	
 	// Delete ----
-
-	/**
-	 * Delete all the entries associated with the parent.
-	 */
-	public static function deleteByParentIdType( $parentId, $parentType ) {
-
-		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] );
-	}
 
 	/**
 	 * Delete all entries related to a file

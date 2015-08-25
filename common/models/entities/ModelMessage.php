@@ -3,6 +3,8 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
+use yii\validators\FilterValidator;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -17,7 +19,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $name
  * @property string $value
  */
-class ModelMessage extends CmgEntity {
+class ModelMessage extends CmgModel {
 
 	// Instance Methods --------------------------------------------
 
@@ -36,7 +38,14 @@ class ModelMessage extends CmgEntity {
      */
 	public function rules() {
 
-        return [
+		$trim		= [];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+		}
+
+        $rules = [
             [ [ 'localeId', 'parentId', 'parentType', 'name', 'value' ], 'required' ],
             [ 'id', 'safe' ],
             [ [ 'localeId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
@@ -45,6 +54,13 @@ class ModelMessage extends CmgEntity {
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
+
+		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			return ArrayHelper::merge( $trim, $rules );
+		}
+
+		return $rules;
     }
 
     /**
@@ -110,14 +126,6 @@ class ModelMessage extends CmgEntity {
 	// ModelMessage ----------------------
 
 	/**
-	 * @return ModelMessage - by id
-	 */
-	public static function findById( $id ) {
-
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
-
-	/**
 	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param string $name
@@ -144,14 +152,6 @@ class ModelMessage extends CmgEntity {
 	}
 
 	// Delete ----
-
-	/**
-	 * Delete all the entries associated with the parent.
-	 */
-	public static function deleteByParentIdType( $parentId, $parentType ) {
-
-		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] );
-	}
 
 	/**
 	 * Delete all entries related to a file

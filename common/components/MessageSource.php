@@ -97,6 +97,7 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_END_DATE => "End Date",
 		CoreGlobal::FIELD_DAY_WEEK => 'Week Day',
 		CoreGlobal::FIELD_DAY_MONTH => 'Month Day',
+		CoreGlobal::FIELD_IP => 'IP Address',
 		// Role Fields
 		CoreGlobal::FIELD_HOME_URL => "Home Url",
 		// Address Fields

@@ -33,6 +33,14 @@ class Category extends CmgEntity {
 
 		return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] );
 	}
+	
+	/**
+	 * @return File - file url
+	 */
+	public function getAvatar() {
+
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'avatarId' ] );
+	}
 
 	/**
 	 * @return array - list of immediate child categories

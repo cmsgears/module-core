@@ -141,6 +141,14 @@ class OptionService extends Service {
 
 		return self::getDataProvider( new Option(), $config );
 	}
+	
+	// Delete ----
+	
+	public static function delete( $model ) {
+		
+		$model->delete();
+			
+	}
 }
 
 ?>

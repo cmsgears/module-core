@@ -131,7 +131,7 @@ class Option extends CmgEntity {
 	 */
 	public static function findByCategory( $category ) {
 
-		return self::find()->where( 'categoryId=:id', [ ':id' => $category->id ] )->one();
+		return self::find()->where( 'categoryId=:id', [ ':id' => $category->id ] )->all();
 	}
 
 	/**
@@ -139,7 +139,7 @@ class Option extends CmgEntity {
 	 */
 	public static function findByCategoryId( $categoryId ) {
 
-		return self::find()->where( 'categoryId=:id', [ ':id' => $categoryId ] )->one();
+		return self::find()->where( 'categoryId=:id', [ ':id' => $categoryId ] )->all();
 	}
 
 	/**

@@ -3,6 +3,7 @@ namespace cmsgears\core\common\services;
 
 // Yii Imports
 use \Yii;
+use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\models\entities\CoreTables;
@@ -15,6 +16,16 @@ use cmsgears\core\common\models\entities\Category;
 class OptionService extends Service {
 	
 	// Static Methods ----------------------------------------------
+	
+	// Create --------------
+	
+	public static function create( $model ) {
+		
+		$model->value	= $model->name;
+		$model->save();
+		
+		return $model;
+	}
 
 	// Read ----------------
 
@@ -138,8 +149,51 @@ class OptionService extends Service {
 	 * @return ActiveDataProvider
 	 */
 	public static function getPagination( $config = [] ) {
+		
+		$sort = new Sort([
+	        'attributes' => [
+	            'name' => [
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'name'
+	            ],
+	            'slug' => [
+	                'asc' => [ 'slug' => SORT_ASC ],
+	                'desc' => ['slug' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'slug'
+	            ]
+	        ]
+	    ]);
+	
+		if( !isset( $config[ 'sort' ] ) ) {
+	
+			$config[ 'sort' ] = $sort;
+		}
+	
+		if( !isset( $config[ 'search-col' ] ) ) {
+	
+			$config[ 'search-col' ] = 'name';
+		}
 
 		return self::getDataProvider( new Option(), $config );
+	}
+	
+	// Update ----
+	
+	public static function update( $model ) {
+		 
+		$modelToUpdate	= self::findById( $model->id );
+
+		// Copy Attributes
+		$modelToUpdate->copyForUpdateFrom( $model, [ 'categoryId', 'name', 'value', 'message', 'icon' ] );
+
+		// Update Option
+		$modelToUpdate->update();
+
+		// Return updated option
+		return $modelToUpdate;
 	}
 	
 	// Delete ----

@@ -8,11 +8,11 @@ use yii\widgets\LinkPager;
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | All Dropdowns';
+$this->title 	= $coreProperties->getSiteTitle() . ' | All Countries';
 
 // Sidebars
-$this->params['sidebar-parent'] = 'sidebar-dropdown';
-$this->params['sidebar-child'] 	= 'sidebar-dropdown';
+$this->params['sidebar-parent'] = 'sidebar-country';
+$this->params['sidebar-child'] 	= 'sidebar-country';
 
 // Searching
 $searchTerms	= Yii::$app->request->getQueryParam("search");
@@ -31,7 +31,7 @@ if( !isset( $sortOrder ) ) {
 ?>
 <div class="content-header clearfix">
 	<div class="header-actions"> 
-		<?= Html::a( "Add Dropdown", ["dropdown/create"], ['class'=>'btn'] )  ?>				
+		<?= Html::a( "Add Country", ["country/create"], ['class'=>'btn'] )  ?>				
 	</div>
 	<div class="header-search">
 		<input type="text" name="search" id="search-terms" value="<?php if( isset($searchTerms) ) echo $searchTerms;?>">
@@ -39,7 +39,7 @@ if( !isset( $sortOrder ) ) {
 	</div>
 </div>
 <div class="data-grid">
-	<div class="grid-header">
+	<div class="grid-header">		
 		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
 	</div>
 	<div class="wrap-grid">
@@ -47,36 +47,32 @@ if( !isset( $sortOrder ) ) {
 			<thead>
 				<tr>
 					<th> <input type='checkbox' /> </th>
-					<th>Avatar</th>
-					<th>Name
+					<th>Country Code</th>
+					<th>Country Name
 						<span class='box-icon-sort'>
 							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
-					</th>					
-					<th>Description</th> 
-					<th>Icon</th>
+					</th>		 
 					<th>Actions</th>  
 				</tr>
 			</thead>
 			<tbody>
 				<?php
 
-					foreach( $models as $dropdown ) {
+					foreach( $models as $country ) {
 
-						$id 		= $dropdown->id;	 
+						$id 		= $country->id;	 
 						
 				?>
 					<tr>
-						<td> <input type='checkbox' /> </td>
-						<td><?= CodeGenUtil::getImageThumbTag( $dropdown->avatar, [ 'class' => 'avatar', 'image' => 'avatar' ] ) ?></td>
-						<td><?= $dropdown->name ?></td> 
-						<td><?= $dropdown->description ?></td> 
-						<td> <span class="<?= $dropdown->icon ?>" title="<?= $dropdown->name ?>"></span></td> 
-						<td>
-							<span class="wrap-icon-action" title="Edit Dropdown"><?= Html::a( "", ["dropdown/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
-							<span class="wrap-icon-action" title="View Options"><?= Html::a( "", ["dropdown/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>	 
-							<span class="wrap-icon-action" title="Delete Dropdown"><?= Html::a( "", ["dropdown/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
+						<td> <input type='checkbox' /> </td>						
+						<td><?= $country->code ?></td> 
+						<td><?= $country->name ?></td>  
+						<td>							
+							<span class="wrap-icon-action" title="View Province"><?= Html::a( "", ["country/province/all?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
+							<span class="wrap-icon-action" title="Edit Country"><?= Html::a( "", ["country/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>								 
+							<span class="wrap-icon-action" title="Delete Country"><?= Html::a( "", ["country/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

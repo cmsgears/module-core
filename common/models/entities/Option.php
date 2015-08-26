@@ -46,8 +46,8 @@ class Option extends CmgEntity {
 		}
 
         $rules = [
-            [ [ 'name', 'value' ], 'required' ],
-            [ [ 'id', 'categoryId', 'message' ], 'safe' ],
+            [ [ 'name' ], 'required' ],
+            [ [ 'id', 'categoryId', 'message', 'value' ], 'safe' ],
             [ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ 'name', 'alphanumhyphenspace' ],
             [ [ 'name', 'icon' ], 'string', 'min'=>1, 'max'=>100 ],
@@ -177,7 +177,7 @@ class Option extends CmgEntity {
 	 */
 	public static function isExistByNameCategoryId( $name, $categoryId ) {
 
-		$option = self::findByCategoryIdName( $name, $categoryId );
+		$option = self::findByNameCategoryId( $name, $categoryId );
 
 		return isset( $option );
 	}

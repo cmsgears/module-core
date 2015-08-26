@@ -30,7 +30,7 @@ abstract class BaseCategoryController extends BaseController {
 
 	// BaseRoleController -----------------
 
-	public function actionAll( $type = null ) {
+	public function actionAll( $type = null, $dropDown = false, $createUrl  ) {
 
 		$dataProvider = null;
 
@@ -43,13 +43,15 @@ abstract class BaseCategoryController extends BaseController {
 			$dataProvider = CategoryService::getPagination();
 		}
 
-	    return $this->render( 'all', [
+	    return $this->render( '@cmsgears/module-core/admin/views/category/all', [
 	    
-			'dataProvider' => $dataProvider
+			'dataProvider' => $dataProvider,
+    		'dropDown' => $dropDown,
+    		'createUrl' => $createUrl
 	    ]);
 	}
 
-	public function actionCreate( $returnUrl, $type = null ) {
+	public function actionCreate( $returnUrl, $type = null, $dropDown = false ) {
 
 		$model		= new Category();
 		$avatar 	= new CmgFile(); 
@@ -67,18 +69,19 @@ abstract class BaseCategoryController extends BaseController {
 
 			if( CategoryService::create( $model, $avatar ) ) { 
 
-				return $this->redirect( [ 'all' ] );
+				return $this->redirect( $returnUrl );
 			} 
 		} 
 
-    	return $this->render( 'create', [
+    	return $this->render( '@cmsgears/module-core/admin/views/category/create', [
     		'model' => $model, 
     		'avatar' => $avatar,
-    		'returnUrl' => $returnUrl
+    		'returnUrl' => $returnUrl,
+    		'dropDown' => $dropDown
     	]);
 	}	
  	
-	public function actionUpdate( $id, $returnUrl, $type = null ) {
+	public function actionUpdate( $id, $returnUrl, $type = null, $dropDown = false  ) {
 		
 
 		// Find Model
@@ -98,16 +101,17 @@ abstract class BaseCategoryController extends BaseController {
 				if( CategoryService::update( $model, $avatar ) ) {
  
 
-				return $this->redirect( [ 'all' ] );
-			} 
+					return $this->redirect( $returnUrl );
+				} 
 			}
 
 			$avatar			= $model->avatar;
 
-	    	return $this->render( 'update', [
+	    	return $this->render( '@cmsgears/module-core/admin/views/category/update', [
 	    		'model' => $model, 
 	    		'avatar' => $avatar,
-	    		'returnUrl' => $returnUrl
+	    		'returnUrl' => $returnUrl,
+    			'dropDown' => $dropDown
 	    	]);
 		}
 		
@@ -115,12 +119,13 @@ abstract class BaseCategoryController extends BaseController {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	} 
 	
-	public function actionDelete( $id, $returnUrl, $type = null ) {
+	public function actionDelete( $id, $returnUrl, $type = null, $dropDown = false  ) {
 
 		// Find Model
 		$model		= CategoryService::findById( $id );
 
-		// Update/Render if exist
+		// Delete/Render if exist
+		
 		if( isset( $model ) ) {
  
 			$avatar 	= new CmgFile();  
@@ -148,16 +153,17 @@ abstract class BaseCategoryController extends BaseController {
 
 				if( CategoryService::delete( $model, $avatar ) ) { 
 
-					return $this->redirect( [ 'all' ] );
+					return $this->redirect( $returnUrl );
 				}
 			}
 
 			$avatar	= $model->avatar;
 
-	    	return $this->render( 'delete', [
+	    	return $this->render( '@cmsgears/module-core/admin/views/category/delete', [
 	    		'model' => $model, 
 	    		'avatar' => $avatar,
-	    		'returnUrl' => $returnUrl
+	    		'returnUrl' => $returnUrl,
+    			'dropDown' => $dropDown
 	    	]);
 		}
 		

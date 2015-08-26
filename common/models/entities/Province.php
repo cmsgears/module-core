@@ -44,8 +44,8 @@ class Province extends CmgEntity {
 		}
 
         $rules = [
-            [ [ 'countryId', 'code', 'name' ], 'required' ],
-            [ 'id', 'safe' ],
+            [ [ 'code', 'name' ], 'required' ],
+            [ [ 'id', 'countryId'], 'safe' ],
             [ 'countryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ 'code', 'string', 'min'=>1, 'max'=>10 ],
             [ 'name', 'string', 'min'=>1, 'max'=>150 ],
@@ -83,7 +83,7 @@ class Province extends CmgEntity {
 
         if( !$this->hasErrors() ) {
 
-            if( self::isExistByNameCountryId( $this->countryId, $this->name ) ) {
+            if( self::isExistByNameCountryId( $this->name, $this->countryId ) ) {
 
                 $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
@@ -97,7 +97,7 @@ class Province extends CmgEntity {
 
         if( !$this->hasErrors() ) {
 
-			$existingProvince = self::findByNameCountryId( $this->countryId, $this->user_username );
+			$existingProvince = self::findByNameCountryId( $this->name, $this->countryId );
 
 			if( isset( $existingProvince ) && $this->countryId == $existingProvince->countryId && 
 				$this->id != $existingProvince->id && strcmp( $existingProvince->name, $this->name ) == 0 ) {

@@ -59,26 +59,15 @@ class DropdownController extends BaseCategoryController {
 	public function actionAll( $type = null ) {
 		
 		Url::remember( [ "dropdown/all" ], 'dropdowns' );
+		
+		$createUrl	= ["/cmgcore/dropdown/create"];
 
-		$dataProvider = null;
-
-		if( isset( $type ) ) {
-
-			$dataProvider = CategoryService::getPaginationByType( $type );
-		}
-		else {
-
-			$dataProvider = CategoryService::getPagination();
-		}
-
-	    return $this->render( 'all', [
-	         'dataProvider' => $dataProvider
-	    ]);
+		return parent::actionAll( CoreGlobal::TYPE_COMBO, true, $createUrl ); 
 	}
 	
 	public function actionCreate() {
 
-		return parent::actionCreate( Url::previous( "dropdowns" ), CoreGlobal::TYPE_COMBO );
+		return parent::actionCreate( Url::previous( "dropdowns" ), CoreGlobal::TYPE_COMBO, true );
 	}
 	 
 	public function actionUpdate( $id ) {

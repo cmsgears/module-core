@@ -6,6 +6,15 @@ use yii\helpers\ArrayHelper;
 use cmsgears\widgets\cleditor\ClEditor;
 use cmsgears\files\widgets\AvatarUploader;
 
+if( $dropDown ) {
+	
+	$dropDown = 'Dropdown';
+}
+else {
+	
+	$dropDown = 'Category';
+}
+
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Dropdown';
 
@@ -17,7 +26,7 @@ ClEditor::widget( [ 'selector' => '.content-editor' ] );
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
-		<h2>Add Dropdown</h2>
+		<h2>Update Dropdown</h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-dropdown-create', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>  

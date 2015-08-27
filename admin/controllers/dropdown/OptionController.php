@@ -15,10 +15,7 @@ use cmsgears\core\common\models\entities\Option;
 use cmsgears\core\admin\services\OptionService;
 use cmsgears\core\admin\services\CategoryService;
 
-use cmsgears\core\admin\controllers\BaseController;
-
-// BM Imports
-use billmaid\core\common\config\BmCoreGlobal;  
+use cmsgears\core\admin\controllers\BaseController; 
 
 class OptionController extends BaseController {
 
@@ -39,7 +36,10 @@ class OptionController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => BmCoreGlobal::PERM_ACCOUNT ]
+	                'all'  => [ 'permission' => CoreGlobal::PERM_CORE ], 
+	                'create'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'update'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'delete'  => [ 'permission' => CoreGlobal::PERM_CORE ]
                 ]
             ],
             'verbs' => [

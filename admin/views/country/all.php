@@ -46,9 +46,8 @@ if( !isset( $sortOrder ) ) {
 		<table>
 			<thead>
 				<tr>
-					<th> <input type='checkbox' /> </th>
-					<th>Country Code</th>
-					<th>Country Name
+					<th>Code</th>
+					<th>Name
 						<span class='box-icon-sort'>
 							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
@@ -65,12 +64,11 @@ if( !isset( $sortOrder ) ) {
 						$id 		= $country->id;	 
 						
 				?>
-					<tr>
-						<td> <input type='checkbox' /> </td>						
+					<tr>						
 						<td><?= $country->code ?></td> 
 						<td><?= $country->name ?></td>  
 						<td>							
-							<span class="wrap-icon-action" title="View Province"><?= Html::a( "", ["country/province/all?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
+							<span class="wrap-icon-action" title="View Provinces"><?= Html::a( "", ["country/province/all?id=$id"], ['class'=>'icon-sidebar icon-post'] )  ?></span>
 							<span class="wrap-icon-action" title="Edit Country"><?= Html::a( "", ["country/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>								 
 							<span class="wrap-icon-action" title="Delete Country"><?= Html::a( "", ["country/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
 						</td>

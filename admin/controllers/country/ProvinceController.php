@@ -15,10 +15,7 @@ use cmsgears\core\common\models\entities\Province;
 use cmsgears\core\common\services\ProvinceService;
 use cmsgears\core\common\services\CountryService;
 
-use cmsgears\core\admin\controllers\BaseController;
-
-// BM Imports
-use billmaid\core\common\config\BmCoreGlobal;  
+use cmsgears\core\admin\controllers\BaseController; 
 
 class ProvinceController extends BaseController {
 
@@ -39,13 +36,16 @@ class ProvinceController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => BmCoreGlobal::PERM_ACCOUNT ]
+	                'all'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'create'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'update'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'delete'  => [ 'permission' => CoreGlobal::PERM_CORE ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'all'  => ['get'], 
+	                'all'  => ['get'],
 	                'create'  => ['get', 'post'],
 	                'update'  => ['get', 'post'],
 	                'delete'  => ['get', 'post']

@@ -46,9 +46,8 @@ if( !isset( $sortOrder ) ) {
 		<table>
 			<thead>
 				<tr>
-					<th> <input type='checkbox' /> </th>
-					<th>Province Code</th>
-					<th>Province Name
+					<th>Code</th>
+					<th>Name
 						<span class='box-icon-sort'>
 							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
@@ -65,8 +64,7 @@ if( !isset( $sortOrder ) ) {
 						$id 		= $province->id;	 
 						
 				?>
-					<tr>
-						<td> <input type='checkbox' /> </td>						
+					<tr>					
 						<td><?= $province->code ?></td> 
 						<td><?= $province->name ?></td>  
 						<td>

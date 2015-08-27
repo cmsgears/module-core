@@ -55,3 +55,25 @@ $user	= Yii::$app->user->getIdentity();
 		</div>
 	</div>
 <?php } ?>
+
+<?php if( Yii::$app->cmgCore->hasModule( 'cmgcore' ) && $user->isPermitted( 'core' ) ) { ?>
+	<div id="sidebar-country" class="collapsible-tab <?php if( strcmp( $parent, 'sidebar-country' ) == 0 ) echo 'active';?>">
+		<div class="collapsible-tab-header">
+			<a href="<?php echo Url::toRoute( ['/cmgcore/country/all/'] ); ?>">
+				<div class="colf colf4"><span class="icon-sidebar icon-settings"></span></div>
+				<div class="colf colf4x3">World Countries</div>
+			</a>
+		</div>
+	</div>
+<?php } ?>
+
+<?php if( Yii::$app->cmgCore->hasModule( 'cmgcore' ) && $user->isPermitted( 'core' ) ) { ?>
+	<div id="sidebar-dropdown" class="collapsible-tab <?php if( strcmp( $parent, 'sidebar-dropdown' ) == 0 ) echo 'active';?>">
+		<div class="collapsible-tab-header">
+			<a href="<?php echo Url::toRoute( ['/cmgcore/dropdown/all/'] ); ?>">
+				<div class="colf colf4"><span class="icon-sidebar icon-settings"></span></div>
+				<div class="colf colf4x3">Drop Downs</div>
+			</a>
+		</div>
+	</div>
+<?php } ?>

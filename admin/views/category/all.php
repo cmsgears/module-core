@@ -89,7 +89,7 @@ if( !isset( $sortOrder ) ) {
 						<td> <span class="<?= $dropdown->icon ?>" title="<?= $dropdown->name ?>"></span></td> 
 						<td>	
 							<?php if( $dropDown == 'Dropdown' ) { ?>						
-							<span class="wrap-icon-action" title="View Options"><?= Html::a( "", ["/cmgcore/dropdown/option/all?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
+							<span class="wrap-icon-action" title="View Options"><?= Html::a( "", ["/cmgcore/dropdown/option/all?id=$id"], ['class'=>'icon-sidebar icon-post'] )  ?></span>
 							<?php } ?>
 							<span class="wrap-icon-action" title="Edit <?=$dropDown?>"><?= Html::a( "", ["/cmgcore/dropdown/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>	 
 							<span class="wrap-icon-action" title="Delete <?=$dropDown?>"><?= Html::a( "", ["/cmgcore/dropdown/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>

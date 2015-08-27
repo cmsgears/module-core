@@ -16,12 +16,19 @@ use yii\helpers\Url;
 			<div class="settings-core-view">
 				<?php if( isset( $settings ) ) { ?>
 				<ul class="view-setting-ul">
-					<?php foreach ( $settings as $setting ) { ?>
+					<?php 
+						foreach ( $settings as $setting ) {
+							
+							if( !( strcmp( $setting->fieldType, "password" ) == 0 ) ) { 
+					?>
 					<li>
 						<label><?= $setting->name ?></label>
-						<span><?= strcmp( $setting->fieldType, "password" ) == 0 ? '' : $setting->value ?></span>
+						<span><?= $setting->value ?></span>
 					</li>
-					<?php } ?>
+					<?php
+						 	}
+						}
+					?>
 				</ul>
 				<?php } else { ?>
 				<p>No settings found.</p>

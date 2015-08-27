@@ -2,6 +2,7 @@
 namespace cmsgears\core\common\models\traits;
 
 use cmsgears\core\common\models\entities\CoreTables;
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\entities\ModelMeta;
 
 /**
@@ -75,6 +76,23 @@ trait MetaTrait {
 
 		return $metasMap;
 	}
+	
+	public function updateMetas( $metaArray ) {
+	
+		foreach( $metaArray as $metaElement ) {
+				
+			$meta = self::getModelMetaByTypeName( CoreGlobal::TYPE_CORE, $metaElement->name );
+			
+			if( isset( $meta ) ) {
+				
+				$meta->value = $metaElement->value;
+				$meta->update();
+			}
+			else {
+					
+				$metaElement->save(); 
+			}
+		}
+	}
 }
-
 ?>

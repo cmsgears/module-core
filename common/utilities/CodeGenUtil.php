@@ -36,6 +36,11 @@ class CodeGenUtil {
 			$start += 1;
 		}
 		
+		if( $currentSize == $page_size ) {
+
+			$end	+= 1;
+		}
+		
 		return "Showing $start to $end out of $total entries";
 	}
 

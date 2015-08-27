@@ -4,10 +4,13 @@ namespace cmsgears\core\frontend\controllers;
 // Yii Imports
 use Yii;
 use yii\filters\VerbFilter;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
+
+use cmsgears\core\common\models\entities\ModelMeta;
 
 use cmsgears\core\common\services\OptionService;
 use cmsgears\core\frontend\services\UserService;
@@ -78,6 +81,34 @@ class UserController extends BaseController {
 	    	return $this->render( WebGlobalCore::PAGE_PROFILE, [
 	    		'model' => $model,
 	    		'genders' => $genders
+	    	]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+    }
+	
+	public function actionSetting() {
+
+		// Find Model
+		
+		$user	= Yii::$app->user->getIdentity();
+		$model	= UserService::findMetaByType(  $user->id, CoreGlobal::TYPE_USER, 'show graph'  );		 
+
+		// Update/Render if exist
+		
+		if( isset( $model ) ) {			
+			 
+	    	return $this->render( WebGlobalCore::PAGE_SETTING, [
+	    		'model' => $model
+	    	]);
+		}
+		else {
+			
+			$model	= new ModelMeta();
+			
+			return $this->render( WebGlobalCore::PAGE_SETTING, [
+	    		'model' => $model
 	    	]);
 		}
 

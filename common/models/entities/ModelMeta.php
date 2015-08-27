@@ -22,7 +22,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $fieldMeta
  */
 class ModelMeta extends CmgModel {
-
+ 		
 	// Instance Methods --------------------------------------------
 
 	// yii\base\Model --------------------

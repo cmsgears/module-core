@@ -45,8 +45,7 @@ if( !isset( $sortOrder ) ) {
 	<div class="wrap-grid">
 		<table>
 			<thead>
-				<tr>
-					<th> <input type='checkbox' /> </th>				 
+				<tr>				 
 					<th>Name</th>					
 					<th>Message</th> 
 					<th>Icon</th>
@@ -61,8 +60,7 @@ if( !isset( $sortOrder ) ) {
 						$id 		= $option->id;	 
 						
 				?>
-					<tr>
-						<td> <input type='checkbox' /> </td> 
+					<tr> 
 						<td><?= $option->name ?></td> 
 						<td><?= $option->message ?></td> 
 						<td> <span class="<?= $option->icon ?>" title="<?= $option->name ?>"></span></td> 

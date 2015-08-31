@@ -60,7 +60,6 @@ if( !isset( $sortOrder ) ) {
 		<table>
 			<thead>
 				<tr>
-					<th> <input type='checkbox' /> </th>
 					<th>Avatar</th>
 					<th>Name
 						<span class='box-icon-sort'>
@@ -82,7 +81,6 @@ if( !isset( $sortOrder ) ) {
 						
 				?>
 					<tr>
-						<td> <input type='checkbox' /> </td>
 						<td><?= CodeGenUtil::getImageThumbTag( $dropdown->avatar, [ 'class' => 'avatar', 'image' => 'avatar' ] ) ?></td>
 						<td><?= $dropdown->name ?></td> 
 						<td><?= $dropdown->description ?></td> 

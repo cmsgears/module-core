@@ -40,7 +40,7 @@ class CodeGenUtil {
 
 			$end	+= 1;
 		}
-		
+
 		return "Showing $start to $end out of $total entries";
 	}
 

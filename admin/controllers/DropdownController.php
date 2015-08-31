@@ -58,26 +58,25 @@ class DropdownController extends BaseCategoryController {
 
 	public function actionAll( $type = null ) {
 		
-		Url::remember( [ "dropdown/all" ], 'dropdowns' );
-		
-		$createUrl	= ["/cmgcore/dropdown/create"];
+		Url::remember( [ 'dropdown/all' ], 'dropdowns' );
 
-		return parent::actionAll( CoreGlobal::TYPE_COMBO, true, $createUrl ); 
+		return parent::actionAll( [ 'parent' => 'sidebar-dropdown', 'child' => 'post-category' ], CoreGlobal::TYPE_COMBO, true );
 	}
 	
 	public function actionCreate() {
 
-		return parent::actionCreate( Url::previous( "dropdowns" ), CoreGlobal::TYPE_COMBO, true );
+		return parent::actionCreate( Url::previous( 'dropdowns' ), [ 'parent' => 'sidebar-dropdown', 'child' => 'post-category' ], CoreGlobal::TYPE_COMBO, true );
 	}
 	 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id, Url::previous( "dropdowns" ), CoreGlobal::TYPE_COMBO );
+		return parent::actionUpdate( $id, Url::previous( 'dropdowns' ), [ 'parent' => 'sidebar-dropdown', 'child' => 'post-category' ], CoreGlobal::TYPE_COMBO, true );
 	}
 	
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, Url::previous( "dropdowns" ), CoreGlobal::TYPE_COMBO );
-	}  
+		return parent::actionDelete( $id, Url::previous( 'dropdowns' ), [ 'parent' => 'sidebar-dropdown', 'child' => 'post-category' ], CoreGlobal::TYPE_COMBO, true );
+	} 
 }
+
 ?>

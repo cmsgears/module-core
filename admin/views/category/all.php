@@ -25,14 +25,14 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All '.$title;
 
 // Sidebars
-$this->params['sidebar-parent'] = 'sidebar-cause';
-$this->params['sidebar-child'] 	= 'cause';
+$this->params['sidebar-parent'] = $sidebarParent;
+$this->params['sidebar-child'] 	= $sidebarChild;
 
 // Searching
-$searchTerms	= Yii::$app->request->getQueryParam("search");
+$searchTerms	= Yii::$app->request->getQueryParam( "search" );
 
 // Sorting
-$sortOrder		= Yii::$app->request->getQueryParam("sort");
+$sortOrder		= Yii::$app->request->getQueryParam( "sort" );
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -45,7 +45,7 @@ if( !isset( $sortOrder ) ) {
 ?>
 <div class="content-header clearfix">
 	<div class="header-actions"> 
-		<?= Html::a( "Add ".$dropDown, $createUrl, ['class'=>'btn'] )  ?>				
+		<?= Html::a( "Add " . $dropDown, [ 'create' ], [ 'class' => 'btn' ] )  ?>				
 	</div>
 	<div class="header-search">
 		<input type="text" name="search" id="search-terms" value="<?php if( isset($searchTerms) ) echo $searchTerms;?>">
@@ -89,8 +89,8 @@ if( !isset( $sortOrder ) ) {
 							<?php if( $dropDown == 'Dropdown' ) { ?>						
 							<span class="wrap-icon-action" title="View Options"><?= Html::a( "", ["/cmgcore/dropdown/option/all?id=$id"], ['class'=>'icon-sidebar icon-post'] )  ?></span>
 							<?php } ?>
-							<span class="wrap-icon-action" title="Edit <?=$dropDown?>"><?= Html::a( "", ["/cmgcore/dropdown/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>	 
-							<span class="wrap-icon-action" title="Delete <?=$dropDown?>"><?= Html::a( "", ["/cmgcore/dropdown/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
+							<span class="wrap-icon-action" title="Edit <?=$dropDown?>"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'icon-action icon-action-edit'] )  ?></span>	 
+							<span class="wrap-icon-action" title="Delete <?=$dropDown?>"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'icon-action icon-action-delete'] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

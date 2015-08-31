@@ -14,12 +14,13 @@ else {
 	
 	$dropDown = 'Category';
 }
+
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Add '.$dropDown;
+$this->title 	= $coreProperties->getSiteTitle() . ' | Add ' . $dropDown;
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-dropdown';
-$this->params['sidebar-child'] 	= 'dropdown';
+$this->params['sidebar-parent'] = $sidebarParent;
+$this->params['sidebar-child'] 	= $sidebarChild;
 
 ClEditor::widget( [ 'selector' => '.content-editor' ] );
 ?>

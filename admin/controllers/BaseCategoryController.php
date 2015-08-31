@@ -30,7 +30,7 @@ abstract class BaseCategoryController extends BaseController {
 
 	// BaseRoleController -----------------
 
-	public function actionAll( $type = null, $dropDown = false, $createUrl  ) {
+	public function actionAll( $sidebar = [], $type = null, $dropDown = false  ) {
 
 		$dataProvider = null;
 
@@ -47,11 +47,12 @@ abstract class BaseCategoryController extends BaseController {
 	    
 			'dataProvider' => $dataProvider,
     		'dropDown' => $dropDown,
-    		'createUrl' => $createUrl
+    		'sidebarParent' => $sidebar[ 'parent' ],
+    		'sidebarChild' => $sidebar[ 'child' ]
 	    ]);
 	}
 
-	public function actionCreate( $returnUrl, $type = null, $dropDown = false ) {
+	public function actionCreate( $returnUrl, $sidebar = [], $type = null, $dropDown = false ) {
 
 		$model		= new Category();
 		$avatar 	= new CmgFile(); 
@@ -77,11 +78,13 @@ abstract class BaseCategoryController extends BaseController {
     		'model' => $model, 
     		'avatar' => $avatar,
     		'returnUrl' => $returnUrl,
-    		'dropDown' => $dropDown
+    		'dropDown' => $dropDown,
+    		'sidebarParent' => $sidebar[ 'parent' ],
+    		'sidebarChild' => $sidebar[ 'child' ]
     	]);
 	}	
  	
-	public function actionUpdate( $id, $returnUrl, $type = null, $dropDown = false  ) {
+	public function actionUpdate( $id, $returnUrl, $sidebar = [], $type = null, $dropDown = false  ) {
 		
 
 		// Find Model
@@ -111,7 +114,9 @@ abstract class BaseCategoryController extends BaseController {
 	    		'model' => $model, 
 	    		'avatar' => $avatar,
 	    		'returnUrl' => $returnUrl,
-    			'dropDown' => $dropDown
+    			'dropDown' => $dropDown,
+    			'sidebarParent' => $sidebar[ 'parent' ],
+    			'sidebarChild' => $sidebar[ 'child' ]
 	    	]);
 		}
 		
@@ -119,7 +124,7 @@ abstract class BaseCategoryController extends BaseController {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	} 
 	
-	public function actionDelete( $id, $returnUrl, $type = null, $dropDown = false  ) {
+	public function actionDelete( $id, $returnUrl, $sidebar = [], $type = null, $dropDown = false  ) {
 
 		// Find Model
 		$model		= CategoryService::findById( $id );
@@ -163,7 +168,9 @@ abstract class BaseCategoryController extends BaseController {
 	    		'model' => $model, 
 	    		'avatar' => $avatar,
 	    		'returnUrl' => $returnUrl,
-    			'dropDown' => $dropDown
+    			'dropDown' => $dropDown,
+    			'sidebarParent' => $sidebar[ 'parent' ],
+    			'sidebarChild' => $sidebar[ 'child' ]
 	    	]);
 		}
 		

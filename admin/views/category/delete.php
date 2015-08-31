@@ -6,18 +6,27 @@ use yii\helpers\ArrayHelper;
 use cmsgears\widgets\cleditor\ClEditor;
 use cmsgears\files\widgets\AvatarUploader;
 
+if( $dropDown ) {
+	
+	$dropDown = 'Dropdown';
+}
+else {
+	
+	$dropDown = 'Category';
+}
+
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Delete Dropdown';
+$this->title 	= $coreProperties->getSiteTitle() . ' | Delete '  . $dropDown;
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-dropdown';
-$this->params['sidebar-child'] 	= 'dropdown';
+$this->params['sidebar-parent'] = $sidebarParent;
+$this->params['sidebar-child'] 	= $sidebarChild;
 
 ClEditor::widget( [ 'selector' => '.content-editor' ] );
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
-		<h2>Delete Dropdown</h2>
+		<h2>Delete <?=$dropDown?></h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-dropdown-create', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>  

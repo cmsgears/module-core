@@ -60,7 +60,7 @@ if( !isset( $sortOrder ) ) {
 						$id 		= $option->id;	 
 						
 				?>
-					<tr> 
+					<tr>
 						<td><?= $option->name ?></td> 
 						<td><?= $option->message ?></td> 
 						<td> <span class="<?= $option->icon ?>" title="<?= $option->name ?>"></span></td> 

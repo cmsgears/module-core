@@ -129,6 +129,12 @@ class CodeGenUtil {
 
 		return self::generateSelectOptions( $data, $selected, "id", "name" );
 	}
+	
+	public static function generateListItemsIdName( $data ) {
+
+		return self::generateListItems( $data, "id", "name" );
+	}
+	 
 
 	// Select for Option Table - By Name and Value 
 	public static function generateSelectOptionsNameValue( $data, $selected = null ) {
@@ -204,6 +210,24 @@ class CodeGenUtil {
 		}
 
 		return $options;
+	}
+	
+	public static function generateListItems( $data, $key1, $key2 ) {
+		
+		$listItems	= "";
+		
+		if( isset( $data ) ) { 
+
+			foreach ( $data as $key => $value ) {
+					
+				$val 	= $value[ $key1 ];
+				$item = $value[ $key2 ];				
+
+				$listItems .= "<li data-value='$val'>$item</li>";			 
+			}
+		}
+
+		return $listItems;
 	}
 
 	// Return Image Tag

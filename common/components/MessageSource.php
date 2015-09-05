@@ -30,6 +30,7 @@ class MessageSource extends Component {
 		CoreGlobal::ERROR_EXIST => 'An entry with the same name already exist. Please provide a different name.',
 		CoreGlobal::ERROR_SELECT => 'Please choose a valid value.',
 		CoreGlobal::ERROR_URL_ENTITY => 'An entry with the same url already exist.',
+		CoreGlobal::ERROR_DEPENDENCY => 'This entry can not be deleted since other rows in other tables are dependent on it.',
 		// Errors - Validators
 		CoreGlobal::ERROR_AN_SPACE => 'Please provide a valid value without any special character.',
 		CoreGlobal::ERROR_AN_PUN => "Please provide valid value having alphanumeric and (? ! . , \" ').",

@@ -1,41 +1,44 @@
 <?php
 namespace cmsgears\core\common\services;
 
-use yii;
+// Yii Imports
+use \Yii;
 use yii\data\Sort;
 
+// CMG Imports
 use cmsgears\core\common\models\entities\CoreTables; 
-use cmsgears\core\common\models\entities\Province;
+use cmsgears\core\common\models\entities\Country;
+use cmsgears\core\common\services\Service;
 
-class ProvinceService extends Service {
 
-	// Static Methods ----------------------------------------------
+/**
+ * The class OptionService is base class to perform database activities for Option Entity.
+ */
+class CountryService extends Service {
 	
-	// Create -------------- 
-	
-	public static function create( $model ) {
-		
-		$model->save();
-		
-		return $model; 
-	}
-
+	// Static Methods ---------------------------------------------- 
+ 
 	// Read ----------------
-	
+
+	/**
+	 * @param integer $id
+	 * @return Country
+	 */
 	public static function findById( $id ) {
-		
-		return Province::findById( $id );
+
+		return Country::findById( $id );
 	}
-	
+	 
 	// Data Provider ----
 
 	/**
 	 * @param array $config to generate query
 	 * @return ActiveDataProvider
-	 */
+	 */ 
+	 
 	public static function getPagination( $config = [] ) {
-		
-		$sort = new Sort([
+	
+	    $sort = new Sort([
 	        'attributes' => [
 	            'name' => [
 	                'asc' => [ 'name' => SORT_ASC ],
@@ -61,41 +64,40 @@ class ProvinceService extends Service {
 	
 			$config[ 'search-col' ] = 'name';
 		}
-
-		return self::getDataProvider( new Province(), $config );
+	
+		return self::getDataProvider( new Country(), $config );
 	}
-
-	public static function getListByCountryId( $countryId ) {
-
-		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_PROVINCE, [ 'conditions' => [ 'countryId' => $countryId ] ] );
+	
+	// Create ----
+	
+	public static function create( $model ) {
+		
+		$model->save();
+		
+		return $model;
 	}
-
-	public static function getMapByCountryId( $countryId ) {
-
-		return self::findMap( 'id', 'name', CoreTables::TABLE_PROVINCE, [ 'conditions' => [ 'countryId' => $countryId ] ] );
-	}
-
-	// Update ---------
+	
+	// Update ----
 	
 	public static function update( $model ) {
 		
 		$modelToUpdate	= self::findById( $model->id );
 
 		// Copy Attributes
-		$modelToUpdate->copyForUpdateFrom( $model, [ 'countryId', 'code', 'name' ] );
+		$modelToUpdate->copyForUpdateFrom( $model, [ 'code', 'name' ] );
 
-		// Update Province
+		// Update Country
 		$modelToUpdate->update();
 
-		// Return updated province
+		// Return updated country
 		return $modelToUpdate;
 	}
 	
-	// Delete ---------
+	// Delete ----
 	
 	public static function delete( $model ) {
 		
-		$model->delete();
+		$model->delete(); 
 	}
 }
 

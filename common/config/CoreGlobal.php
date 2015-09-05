@@ -15,7 +15,8 @@ class CoreGlobal {
 	const TYPE_GALLERY			= 'gallery';
 	const TYPE_ACTIVITY			= 'activity';
 	const TYPE_NOTIFICATION		= 'notification';
-	const TYPE_REMINDER			= 'reminder';
+	const TYPE_REMINDER			= 'reminder';  
+	const TYPE_CORE				= 'core';
 
 	// Categories ------------------------------------------------------
 
@@ -65,6 +66,7 @@ class CoreGlobal {
 	const ERROR_EXIST				= 'entryExistError';
 	const ERROR_SELECT				= 'selectError';
 	const ERROR_URL_ENTITY 			= 'urlEntityError';
+	const ERROR_DEPENDENCY			= 'dependencyError';
 
 	// Errors - Core Validators
 	const ERROR_AN_SPACE			= 'alphaNumSpaceError';

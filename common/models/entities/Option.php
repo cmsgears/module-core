@@ -46,8 +46,8 @@ class Option extends CmgEntity {
 		}
 
         $rules = [
-            [ [ 'name', 'value' ], 'required' ],
-            [ [ 'id', 'categoryId', 'message' ], 'safe' ],
+            [ [ 'name' ], 'required' ],
+            [ [ 'id', 'categoryId', 'message', 'value' ], 'safe' ],
             [ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ 'name', 'alphanumhyphenspace' ],
             [ [ 'name', 'icon' ], 'string', 'min'=>1, 'max'=>100 ],
@@ -131,7 +131,7 @@ class Option extends CmgEntity {
 	 */
 	public static function findByCategory( $category ) {
 
-		return self::find()->where( 'categoryId=:id', [ ':id' => $category->id ] )->one();
+		return self::find()->where( 'categoryId=:id', [ ':id' => $category->id ] )->all();
 	}
 
 	/**
@@ -139,7 +139,7 @@ class Option extends CmgEntity {
 	 */
 	public static function findByCategoryId( $categoryId ) {
 
-		return self::find()->where( 'categoryId=:id', [ ':id' => $categoryId ] )->one();
+		return self::find()->where( 'categoryId=:id', [ ':id' => $categoryId ] )->all();
 	}
 
 	/**
@@ -177,7 +177,7 @@ class Option extends CmgEntity {
 	 */
 	public static function isExistByNameCategoryId( $name, $categoryId ) {
 
-		$option = self::findByCategoryIdName( $name, $categoryId );
+		$option = self::findByNameCategoryId( $name, $categoryId );
 
 		return isset( $option );
 	}

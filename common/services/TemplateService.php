@@ -16,16 +16,9 @@ class TemplateService extends \cmsgears\core\common\services\Service {
 		return Template::findById( $id );
 	}
 
-	public static function getIdNameMap( $type = null ) {
+	public static function getIdNameMap( $options = [] ) {
 
-		if( isset( $type ) ) {
-
-			return self::findMap( "id", "name", CoreTables::TABLE_TEMPLATE, [ 'type' => $type ] );
-		}
-		else {
-
-			return self::findMap( "id", "name", CoreTables::TABLE_TEMPLATE );
-		}
+		return self::findMap( "id", "name", CoreTables::TABLE_TEMPLATE, $options );
 	}
 
 	// Data Provider ----
@@ -54,7 +47,7 @@ class TemplateService extends \cmsgears\core\common\services\Service {
 
 		$templateToUpdate	= self::findById( $template->id );
 
-		$templateToUpdate->copyForUpdateFrom( $menu, [ 'name', 'description' ] );
+		$templateToUpdate->copyForUpdateFrom( $template, [ 'name', 'description', 'layout', 'viewPath', 'adminView', 'frontendView', 'content' ] );
 
 		$templateToUpdate->update();
 

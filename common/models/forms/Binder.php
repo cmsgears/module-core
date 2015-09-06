@@ -3,9 +3,8 @@ namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
 use \Yii;
-use yii\base\Model;
 
-class Binder extends Model {
+class Binder extends \yii\base\Model {
 
 	public $binderId;
 	public $bindedData;

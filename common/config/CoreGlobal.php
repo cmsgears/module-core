@@ -145,6 +145,7 @@ class CoreGlobal {
 	const FIELD_DAY_WEEK 			= 'Week Day';
 	const FIELD_DAY_MONTH			= 'Month Day';
 	const FIELD_IP					= 'ipField';
+	const FIELD_DATA				= 'dataField';
 
 	// Role Fields
 	const FIELD_HOME_URL			= 'homeUrlField';
@@ -198,7 +199,9 @@ class CoreGlobal {
 
 	// Views
 	const FIELD_LAYOUT			= 'layoutField';
-	const FIELD_VIEW			= 'viewField';
+	const FIELD_VIEW_PATH		= 'viewPathField';
+	const FIELD_VIEW_ADMIN		= 'viewAdminField';
+	const FIELD_VIEW_FRONTEND	= 'viewFrontendField';
 }
 
 ?>

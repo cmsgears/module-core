@@ -36,7 +36,12 @@ class TemplateService extends \cmsgears\core\common\services\TemplateService {
 			$config[ 'search-col' ] = 'name';
 		}
 
-		return self::getPaginationDetails( new Template(), $config );
+		return self::getDataProvider( new Template(), $config );
+	}
+	
+	public static function getPaginationByType( $type ) {
+		
+		return self::getPagination( [ 'conditions' => [ 'type' => $type ] ] );
 	}
 }
 

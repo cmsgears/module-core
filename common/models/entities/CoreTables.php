@@ -9,6 +9,7 @@ class CoreTables {
 
 	// Basic
 	const TABLE_LOCALE				= "cmg_core_locale";
+	const TABLE_OBJECT_DATA			= "cmg_core_object";
 	const TABLE_TEMPLATE			= "cmg_core_template";
 	const TABLE_TAG					= "cmg_core_tag";
 	const TABLE_CATEGORY			= "cmg_core_category";

@@ -17,9 +17,12 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $description
  * @property string $type
  * @property string $layout
- * @property string $view
+ * @property string $viewPath
+ * @property string $adminView
+ * @property string $frontendView
+ * @property string $content
  */
-class Template extends NamedCmgEntity {
+class Template extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
@@ -34,12 +37,12 @@ class Template extends NamedCmgEntity {
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'description', 'layout', 'view' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'description', 'layout', 'viewPath', 'adminView', 'frontendView' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 		}
 
         $rules = [
             [ [ 'name', 'type' ], 'required' ],
-            [ [ 'id', 'description', 'layout', 'view' ], 'safe' ],
+            [ [ 'id', 'description', 'layout', 'viewPath', 'adminView', 'frontendView', 'content' ], 'safe' ],
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
@@ -63,9 +66,44 @@ class Template extends NamedCmgEntity {
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'layout' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LAYOUT ),
-			'view' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW )
+			'viewPath' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_PATH ),
+			'adminView' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_ADMIN ),
+			'frontendView' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_FRONTEND )
 		];
 	}
+
+	// Template --------------------------
+
+	/**
+	 * Validates whether a province existing with the same name for same country.
+	 */
+    public function validateNameCreate( $attribute, $params ) {
+
+        if( !$this->hasErrors() ) {
+
+            if( self::isExistByNameType( $this->name, $this->type ) ) {
+
+                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+            }
+        }
+    }
+
+	/**
+	 * Validates whether a province existing with the same name for same country.
+	 */
+    public function validateNameUpdate( $attribute, $params ) {
+
+        if( !$this->hasErrors() ) {
+
+			$existingTemplate = self::findByNameType( $this->name, $this->type );
+
+			if( isset( $existingTemplate ) && $this->id != $existingTemplate->id && 
+				strcmp( $existingTemplate->name, $this->name ) == 0 && strcmp( $existingTemplate->type, $this->type ) == 0 ) {
+
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+			}
+        }
+    }
 
 	// Static Methods ----------------------------------------------
 
@@ -90,19 +128,21 @@ class Template extends NamedCmgEntity {
 	}
 
 	/**
-	 * @return array - Template available for pages
+	 * @return Template - by name and type
 	 */
-	public static function findForPages() {
+	public static function findByNameType( $name, $type ) {
 
-		return self::find()->where( 'type=:type', [ ':type' => self::TYPE_PAGE ] )->all();
+		return self::find()->where( 'name=:name AND type=:type', [ ':name' => $name, ':type' => $type ] )->one();
 	}
 
 	/**
-	 * @return array - Template available for widgets
+	 * @return boolean - check whether a template exist by the provided name and type
 	 */
-	public static function findForWidgets() {
+	public static function isExistByNameType( $name, $type ) {
 
-		return self::find()->where( 'type=:type', [ ':type' => self::TYPE_WIDGET ] )->all();
+		$template = self::findByNameType( $name, $type );
+
+		return isset( $template );
 	}
 }
 

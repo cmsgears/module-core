@@ -99,6 +99,7 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_DAY_WEEK => 'Week Day',
 		CoreGlobal::FIELD_DAY_MONTH => 'Month Day',
 		CoreGlobal::FIELD_IP => 'IP Address',
+		CoreGlobal::FIELD_DATA => 'Data',
 		// Role Fields
 		CoreGlobal::FIELD_HOME_URL => "Home Url",
 		// Address Fields
@@ -141,8 +142,10 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_SENDER => "Sender",
 		CoreGlobal::FIELD_RECIPIENT => "Recipient",
 		// Views
-		CoreGlobal::FIELD_LAYOUT => "layoutField",
-		CoreGlobal::FIELD_VIEW => "viewField"
+		CoreGlobal::FIELD_LAYOUT => "Layout",
+		CoreGlobal::FIELD_VIEW_PATH => "View Path",
+		CoreGlobal::FIELD_VIEW_ADMIN => "Admin View",
+		CoreGlobal::FIELD_VIEW_FRONTEND => "Frontend View"
 	];
 
 	/**

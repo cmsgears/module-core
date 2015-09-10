@@ -200,7 +200,7 @@ class CmgFile extends CmgEntity {
 			$file	= new CmgFile();
 		}
 
-		$file->load( Yii::$app->request->post( $name ), "" );
+		$file->load( Yii::$app->request->post(), $name );
 
 		return $file;
 	}

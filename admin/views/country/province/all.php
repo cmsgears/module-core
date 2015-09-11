@@ -68,8 +68,8 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $province->code ?></td> 
 						<td><?= $province->name ?></td>  
 						<td>
-							<span class="wrap-icon-action" title="Edit Country"><?= Html::a( "", ["country/province/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>								 
-							<span class="wrap-icon-action" title="Delete Country"><?= Html::a( "", ["country/province/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
+							<span class="wrap-icon-action" title="Edit Province"><?= Html::a( "", ["country/province/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>								 
+							<span class="wrap-icon-action" title="Delete Province"><?= Html::a( "", ["country/province/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

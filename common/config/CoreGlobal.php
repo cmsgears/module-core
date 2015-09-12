@@ -133,6 +133,7 @@ class CoreGlobal {
 	const FIELD_TAG					= 'tagField';
 	const FIELD_AVATAR				= 'avatarField';
 	const FIELD_BANNER				= 'bannerField';
+	const FIELD_VIDEO				= 'videoField';
 	const FIELD_USER				= 'userField';
 	const FIELD_AUTHOR				= 'authorField';
 	const FIELD_MEMBER				= 'memberField';

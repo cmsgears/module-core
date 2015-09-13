@@ -46,9 +46,9 @@ class FileController extends Controller {
 
 	// UserController
 
-	public function actionFileHandler( $directory ) {
+	public function actionFileHandler( $directory, $type ) {
 
-		$data	= Yii::$app->fileManager->handleFileUpload( $directory );
+		$data	= Yii::$app->fileManager->handleFileUpload( $directory, $type );
 
 		if( $data ) {
 

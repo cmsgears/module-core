@@ -18,7 +18,12 @@ class TemplateService extends \cmsgears\core\common\services\Service {
 
 	public static function getIdNameMap( $options = [] ) {
 
-		return self::findMap( "id", "name", CoreTables::TABLE_TEMPLATE, $options );
+		return self::findMap( 'id', 'name', CoreTables::TABLE_TEMPLATE, $options );
+	}
+
+	public static function getIdNameMapByType( $type ) {
+
+		return self::findMap( 'id', 'name', CoreTables::TABLE_TEMPLATE, [ 'conditions' => [ 'type' => $type ] ] );
 	}
 
 	// Data Provider ----

@@ -15,8 +15,8 @@ use cmsgears\core\common\config\CoreGlobal;
  * NewsletterMember Entity
  *
  * @property integer $id
- * @property string $email
  * @property string $name
+ * @property string $email
  * @property integer $active
  * @property datetime $createdAt
  * @property datetime $modifiedAt
@@ -62,7 +62,7 @@ class NewsletterMember extends CmgEntity {
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'email', 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'email' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 		}
 
         $rules = [

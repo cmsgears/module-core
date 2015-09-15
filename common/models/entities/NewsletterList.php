@@ -3,6 +3,8 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
+use yii\db\Expression;
+use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -13,10 +15,31 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property integer $id
  * @property integer $newsletterId
  * @property integer $memberId
+ * @property integer $active
+ * @property datetime $createdAt
+ * @property datetime $modifiedAt 
  */
 class NewsletterList extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
+
+	// yii\base\Component ----------------
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+
+        return [
+
+            'timestampBehavior' => [
+                'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+ 				'updatedAtAttribute' => 'modifiedAt',
+ 				'value' => new Expression('NOW()')
+            ]
+        ];
+    }
 
 	// yii\base\Model --------------------
 
@@ -27,8 +50,9 @@ class NewsletterList extends CmgEntity {
 
         return [
             [ [ 'newsletterId', 'memberId' ], 'required' ],
-            [ [ 'id' ], 'safe' ],
-            [ [ 'newsletterId', 'memberId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+            [ [ 'id', 'active' ], 'safe' ],
+            [ [ 'newsletterId', 'memberId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }
 
@@ -39,7 +63,8 @@ class NewsletterList extends CmgEntity {
 
 		return [
 			'newsletterId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NEWSLETTER ),
-			'memberId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MEMBER )
+			'memberId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MEMBER ),
+			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 		];
 	}
 

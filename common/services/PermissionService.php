@@ -70,11 +70,7 @@ class PermissionService extends Service {
 	 * @return Permission
 	 */
 	public static function create( $permission ) {
-		
-		// Set Attributes
-		$user					= Yii::$app->user->getIdentity();
-		$permission->createdBy	= $user->id;
-		
+
 		// Create Permission
 		$permission->save();
 		
@@ -94,9 +90,6 @@ class PermissionService extends Service {
 		$permissionToUpdate	= self::findById( $permission->id );
 		
 		// Copy and set Attributes
-		$user							= Yii::$app->user->getIdentity();
-		$permissionToUpdate->modifiedBy	= $user->id;
-
 		$permissionToUpdate->copyForUpdateFrom( $permission, [ 'name', 'description' ] );
 
 		// Update Permission

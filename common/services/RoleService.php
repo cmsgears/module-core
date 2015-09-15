@@ -96,10 +96,6 @@ class RoleService extends Service {
 	 */
 	public static function create( $role ) {
 
-		// Set Attributes
-		$user				= Yii::$app->user->getIdentity();
-		$role->createdBy	= $user->id;
-
 		// Create Role
 		$role->save();
 
@@ -119,10 +115,6 @@ class RoleService extends Service {
 		$roleToUpdate	= self::findById( $role->id );
 
 		// Copy and set Attributes
-		$user			= Yii::$app->user->getIdentity();
-
-		$roleToUpdate->modifiedBy	= $user->id;
-
 		$roleToUpdate->copyForUpdateFrom( $role, [ 'name', 'description', 'homeUrl' ] );
 
 		// Update Role

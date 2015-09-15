@@ -115,7 +115,7 @@ class CoreGlobal {
 	const FIELD_VISIBILITY			= 'visibilityField';
 	const FIELD_STATUS				= 'statusField';
 	const FIELD_TYPE				= 'typeField';
-	const FIELD_MARK				= 'markField';
+	const FIELD_CONSUMED			= 'consumedField';
 	const FIELD_DEFAULT 			= 'Default';
 	const FIELD_ORDER				= 'orderField';
 	const FIELD_TIME				= 'timeField';

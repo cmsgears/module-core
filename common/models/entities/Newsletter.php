@@ -11,6 +11,8 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\behaviors\AuthorBehavior;
+
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 
 /**
@@ -49,6 +51,9 @@ class Newsletter extends NamedCmgEntity {
 
         return [
 
+            'authorBehavior' => [
+                'class' => AuthorBehavior::className()
+			],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
 				'createdAtAttribute' => 'createdAt',

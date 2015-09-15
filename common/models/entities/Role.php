@@ -12,6 +12,8 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\behaviors\AuthorBehavior;
+
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 
 /**
@@ -93,6 +95,9 @@ class Role extends NamedCmgEntity {
 
         return [
 
+            'authorBehavior' => [
+                'class' => AuthorBehavior::className()
+			],
             'sluggableBehavior' => [
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',

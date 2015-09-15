@@ -34,9 +34,7 @@ class CoreTables {
 	const TABLE_NEWSLETTER_MEMBER	= "cmg_core_newsletter_member";
 	const TABLE_NEWSLETTER_LIST		= "cmg_core_newsletter_list";
 
-	// User Messages
-	const TABLE_NOTIFICATION		= "cmg_core_notification";
-	const TABLE_REMINDER			= "cmg_core_reminder";
+	// User - Notification, Reminder and Actions
 	const TABLE_ACTIVITY			= "cmg_core_activity";
 
 	// Image Gallery, Portfolio

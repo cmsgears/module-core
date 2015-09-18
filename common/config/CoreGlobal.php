@@ -106,6 +106,8 @@ class CoreGlobal {
 	const FIELD_ACTIVE				= 'activeField';
 	const FIELD_VALUE				= 'valueField';
 	const FIELD_MESSAGE				= 'messageField';
+	const FIELD_MESSAGE_SUCCESS		= 'messageSuccessField';
+	const FIELD_MESSAGE_FAILURE		= 'messageFailureField';
 	const FIELD_DESCRIPTION			= 'descField';
 	const FIELD_SESSION				= 'sessionField';
 	const FIELD_SLUG				= 'slugField';
@@ -147,6 +149,8 @@ class CoreGlobal {
 	const FIELD_DAY_MONTH			= 'Month Day';
 	const FIELD_IP					= 'ipField';
 	const FIELD_DATA				= 'dataField';
+	const FIELD_OPTIONS				= 'optionsField';
+	const FIELD_STORE_JSON			= 'storeJsonField';
 
 	// Role Fields
 	const FIELD_HOME_URL			= 'homeUrlField';

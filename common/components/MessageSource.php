@@ -60,6 +60,8 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_ACTIVE => 'Active',
 		CoreGlobal::FIELD_VALUE => 'Value',
 		CoreGlobal::FIELD_MESSAGE => 'Message',
+		CoreGlobal::FIELD_MESSAGE_SUCCESS => 'Success Message',
+		CoreGlobal::FIELD_MESSAGE_FAILURE => 'Failure Message',
 		CoreGlobal::FIELD_DESCRIPTION => 'Description',
 		CoreGlobal::FIELD_SESSION => 'Session',
 		CoreGlobal::FIELD_SLUG => 'Slug',
@@ -101,6 +103,8 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_DAY_MONTH => 'Month Day',
 		CoreGlobal::FIELD_IP => 'IP Address',
 		CoreGlobal::FIELD_DATA => 'Data',
+		CoreGlobal::FIELD_OPTIONS => 'Options',
+		CoreGlobal::FIELD_STORE_JSON => 'Store as Json',
 		// Role Fields
 		CoreGlobal::FIELD_HOME_URL => 'Home Url',
 		// Address Fields

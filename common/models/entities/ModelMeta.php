@@ -17,6 +17,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $parentType
  * @property string $name
  * @property string $value
+ * @property string $data
  * @property string $type
  * @property string $fieldType
  * @property string $fieldMeta
@@ -41,7 +42,7 @@ class ModelMeta extends CmgModel {
 
         $rules = [
             [ [ 'parentId', 'parentType', 'name', 'value' ], 'required' ],
-            [ [ 'id', 'type', 'fieldType', 'fieldMeta' ], 'safe' ],
+            [ [ 'id', 'data', 'type', 'fieldType', 'fieldMeta' ], 'safe' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'alphanumhyphenspace' ],
@@ -67,6 +68,7 @@ class ModelMeta extends CmgModel {
 			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
+			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'fieldType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FFIELD_TYPE ),
 			'fieldMata' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FFIELD_META )

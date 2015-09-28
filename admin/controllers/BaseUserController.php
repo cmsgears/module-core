@@ -26,7 +26,7 @@ abstract class BaseUserController extends BaseController {
 
  	public function __construct( $id, $module, $config = [] ) {
 
-        parent::__construct( $id, $module, $config );
+        parent::__construct( $id, $module, $config );		
 	}
 
 	// Instance Methods --------------------------------------------

@@ -15,7 +15,7 @@ use cmsgears\core\frontend\models\forms\Register;
 use cmsgears\core\common\services\SiteMemberService;
 use cmsgears\core\frontend\services\UserService;
 
-class SiteController extends \cmsgears\core\common\controllers\BaseController {
+class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 	// Constructor and Initialisation ------------------------------
 

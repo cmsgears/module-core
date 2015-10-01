@@ -31,16 +31,7 @@ abstract class BaseRoleController extends BaseController {
 
 	public function actionAll( $type = null ) {
 
-		$dataProvider = null;
-
-		if( isset( $type ) ) {
-
-			$dataProvider = RoleService::getPaginationByType( $type );
-		}
-		else {
-
-			$dataProvider = RoleService::getPagination();
-		}
+		$dataProvider = RoleService::getPaginationByType( $type );
 
 	    return $this->render( 'all', [
 			'dataProvider' => $dataProvider
@@ -73,7 +64,7 @@ abstract class BaseRoleController extends BaseController {
 			}
 		}
 
-		$permissions	= PermissionService::getIdNameList( $type );
+		$permissions	= PermissionService::getIdNameListByType( $type );
 
     	return $this->render( 'create', [
     		'returnUrl' => $returnUrl,
@@ -107,7 +98,7 @@ abstract class BaseRoleController extends BaseController {
 				}
 			}
 
-			$permissions	= PermissionService::getIdNameList( $type );
+			$permissions	= PermissionService::getIdNameListByType( $type );
 
 	    	return $this->render( 'update', [
 	    		'returnUrl' => $returnUrl,
@@ -136,7 +127,7 @@ abstract class BaseRoleController extends BaseController {
 				}
 			}
 
-			$permissions	= PermissionService::getIdNameList( $type );
+			$permissions	= PermissionService::getIdNameListByType( $type );
 
 	    	return $this->render( 'delete', [
 	    		'returnUrl' => $returnUrl,

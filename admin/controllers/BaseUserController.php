@@ -57,7 +57,7 @@ abstract class BaseUserController extends BaseController {
 	    ]);
 	}
 
-	public function actionCreate( $returnUrl, $roleSlug = null ) {
+	public function actionCreate( $returnUrl, $roleType = null, $roleSlug = null ) {
 
 		$model		= new User();
 		$siteMember	= new SiteMember();
@@ -79,6 +79,9 @@ abstract class BaseUserController extends BaseController {
 			$siteMember	= SiteMemberService::create( $model, $siteMember );
 
 			if( $user && $siteMember ) {
+				
+				// Load User Permissions
+				$model->loadPermissions();
 
 				// Send Account Mail
 				Yii::$app->cmgCoreMailer->sendCreateUserMail( $model );
@@ -87,7 +90,7 @@ abstract class BaseUserController extends BaseController {
 			}
 		}
 
-		$genderMap 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER );
+		$genderMap 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER, [ [ 'name' => null, 'value' => 'Select Gender' ] ] );
 		
 		if( isset( $roleSlug ) ) {
 
@@ -102,7 +105,7 @@ abstract class BaseUserController extends BaseController {
 		}
 		else {
 			
-			$roleMap 	= RoleService::getIdNameMap();
+			$roleMap 	= RoleService::getIdNameMapByType( $roleType );
 
 			return $this->render( '@cmsgears/module-core/admin/views/user/create', [
 				'sidebar' => $this->sidebar,
@@ -116,7 +119,7 @@ abstract class BaseUserController extends BaseController {
 		}
 	}
 
-	public function actionUpdate( $returnUrl, $id, $roleSlug = null ) {
+	public function actionUpdate( $returnUrl, $id, $roleType = null, $roleSlug = null ) {
 
 		// Find Model
 		$model		= UserService::findById( $id );
@@ -159,7 +162,7 @@ abstract class BaseUserController extends BaseController {
 			}
 			else {
 
-				$roleMap 	= RoleService::getIdNameMap();
+				$roleMap 	= RoleService::getIdNameMapByType( $roleType );
 
 		    	return $this->render( '@cmsgears/module-core/admin/views/user/update', [
 		    		'sidebar' => $this->sidebar,
@@ -178,7 +181,7 @@ abstract class BaseUserController extends BaseController {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $returnUrl, $id, $roleName = null ) {
+	public function actionDelete( $returnUrl, $id, $roleType = null, $roleSlug = null ) {
 
 		// Find Model
 		$model		= UserService::findById( $id );
@@ -197,7 +200,7 @@ abstract class BaseUserController extends BaseController {
 			}
 			else {
 
-				$roleMap 	= RoleService::getIdNameMap();
+				$roleMap 	= RoleService::getIdNameMapByType( $roleType );
 				$genderMap 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER );
 
 	        	return $this->render( '@cmsgears/module-core/admin/views/user/delete', [

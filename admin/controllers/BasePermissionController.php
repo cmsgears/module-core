@@ -31,16 +31,7 @@ abstract class BasePermissionController extends BaseController {
 
 	public function actionAll( $type = null ) {
 
-		$dataProvider = null;
-
-		if( isset( $type ) ) {
-
-			$dataProvider = PermissionService::getPaginationByType( $type );
-		}
-		else {
-
-			$dataProvider = PermissionService::getPagination();
-		}
+		$dataProvider = PermissionService::getPaginationByType( $type );
 
 	    return $this->render( 'all', [
 	         'dataProvider' => $dataProvider
@@ -49,19 +40,10 @@ abstract class BasePermissionController extends BaseController {
 
 	public function actionMatrix( $returnUrl, $type = null ) {
 
-		$dataProvider 	= null;
-		$rolesList		= RoleService::getIdNameList( $type );
+		$dataProvider 	= PermissionService::getPaginationByType( $type );
+		$rolesList		= RoleService::getIdNameListByType( $type );
 
-		if( isset( $type ) ) {
-
-			$dataProvider = PermissionService::getPaginationByType( $type );
-		}
-		else {
-
-			$dataProvider = PermissionService::getPagination();
-		}
-
-	    return $this->render('matrix', [
+	    return $this->render( 'matrix', [
 			'returnUrl' => $returnUrl,
 			'dataProvider' => $dataProvider,
 			'rolesList' => $rolesList
@@ -79,24 +61,24 @@ abstract class BasePermissionController extends BaseController {
 			$model->type = $type;
 		}
 
-		if( $model->load( Yii::$app->request->post(), "Permission" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Permission' )  && $model->validate() ) {
 
 			if( PermissionService::create( $model ) ) {
 
 				$binder 			= new Binder();
 				$binder->binderId	= $model->id;
 
-				$binder->load( Yii::$app->request->post(), "Binder" );
+				$binder->load( Yii::$app->request->post(), 'Binder' );
 
 				PermissionService::bindRoles( $binder );
 
-				$this->redirect( [ "all" ] );
+				$this->redirect( [ 'all' ] );
 			}
 		}
 
-		$roles	= RoleService::getIdNameList( $type );
+		$roles	= RoleService::getIdNameListByType( $type );
 
-    	return $this->render('create', [
+    	return $this->render( 'create', [
     		'returnUrl' => $returnUrl,
     		'model' => $model,
     		'roles' => $roles
@@ -111,26 +93,26 @@ abstract class BasePermissionController extends BaseController {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->setScenario( "update" );
+			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), "Permission" )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'Permission' )  && $model->validate() ) {
 	
 				if( PermissionService::update( $model ) ) {
 	
 					$binder 			= new Binder();
 					$binder->binderId	= $model->id;
 	
-					$binder->load( Yii::$app->request->post(), "Binder" );
+					$binder->load( Yii::$app->request->post(), 'Binder' );
 	
 					PermissionService::bindRoles( $binder );
 	
-					$this->redirect( [ "all" ] );
+					$this->redirect( [ 'all' ] );
 				}
 			}
 	
-			$roles	= RoleService::getIdNameList( $type );
+			$roles	= RoleService::getIdNameListByType( $type );
 	
-	    	return $this->render('update', [
+	    	return $this->render( 'update', [
 	    		'returnUrl' => $returnUrl,
 	    		'model' => $model,
 	    		'roles' => $roles
@@ -149,17 +131,17 @@ abstract class BasePermissionController extends BaseController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), "Permission" ) ) {
+			if( $model->load( Yii::$app->request->post(), 'Permission' ) ) {
 
 				if( PermissionService::delete( $model ) ) {
 
-					$this->redirect( [ "all" ] );
+					$this->redirect( [ 'all' ] );
 				}
 			}
 
-			$roles	= RoleService::getIdNameList( $type );
+			$roles	= RoleService::getIdNameListByType( $type );
 	
-	    	return $this->render('delete', [
+	    	return $this->render( 'delete', [
 	    		'returnUrl' => $returnUrl,
 	    		'model' => $model,
 	    		'roles' => $roles

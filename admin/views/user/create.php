@@ -18,8 +18,6 @@ $this->params['sidebar-child'] 	= $sidebar[ 'child' ];
     	<?= $form->field( $model, 'username' ) ?>
 		<?= $form->field( $model, 'firstName' ) ?>
 		<?= $form->field( $model, 'lastName' ) ?>
-		<?= $form->field( $model, 'gender' )->dropDownList( $genderMap )  ?>
-		<?= $form->field( $model, 'phone' ) ?>
 
     	<?php if( isset( $roleMap ) ) { ?>
 			<?= $form->field( $siteMember, 'roleId' )->dropDownList( $roleMap )  ?>
@@ -27,8 +25,6 @@ $this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 			<?= $form->field( $siteMember, 'roleId' )->hiddenInput()->label( false )  ?>
 		<?php } ?>
 
-		<?= $form->field( $model, 'newsletter' )->checkbox() ?>
-		
 		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
 		<input type="submit" value="Create" />
 		

@@ -40,12 +40,12 @@ class PermissionController extends BasePermissionController {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index'  => ['get'],
-	                'all'    => ['get'],
-	                'matrix' => ['get'],
-	                'create' => ['get', 'post'],
-	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post']
+	                'index'  => [ 'get' ],
+	                'all'    => [ 'get' ],
+	                'matrix' => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ]
                 ]
             ]
         ];
@@ -61,7 +61,7 @@ class PermissionController extends BasePermissionController {
 	public function actionAll() {
 
 		// Remember return url for crud
-		Url::remember( [ "permission/all" ], 'permissions' );
+		Url::remember( [ 'permission/all' ], 'permissions' );
 
 		return parent::actionAll( CoreGlobal::TYPE_SYSTEM );
 	}
@@ -69,24 +69,24 @@ class PermissionController extends BasePermissionController {
 	public function actionMatrix() {
 
 		// Remember return url for crud
-		Url::remember( [ "permission/matrix" ], 'roles' );
+		Url::remember( [ 'permission/matrix' ], 'roles' );
 
-		return parent::actionMatrix( CoreGlobal::TYPE_SYSTEM );
+		return parent::actionMatrix( null, CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionCreate() {
 
-		return parent::actionCreate( Url::previous( "permissions" ), CoreGlobal::TYPE_SYSTEM );
+		return parent::actionCreate( Url::previous( 'permissions' ), CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id, Url::previous( "permissions" ), CoreGlobal::TYPE_SYSTEM );
+		return parent::actionUpdate( $id, Url::previous( 'permissions' ), CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, Url::previous( "permissions" ), CoreGlobal::TYPE_SYSTEM );
+		return parent::actionDelete( $id, Url::previous( 'permissions' ), CoreGlobal::TYPE_SYSTEM );
 	}
 }
 

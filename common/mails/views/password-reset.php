@@ -1,6 +1,10 @@
 <?php
+// Yii Imports
 use yii\helpers\Html;
 use yii\helpers\Url;
+
+// CMg Imports
+use cmsgears\core\common\config\CoreGlobal;
 
 $logoUrl		= Yii::getAlias( "@web" );
 $logoUrl		= Url::to( $logoUrl. "/images/logo-mail.png", true );
@@ -10,7 +14,14 @@ $siteName		= $coreProperties->getSiteName();
 $name 			= Html::encode( $user->getName() );
 $email 			= Html::encode( $user->email );
 $token			= Html::encode($user->resetToken );
-$resetLink		= Url::toRoute( "/reset-password?token=$token&email=$email", true );
+$siteUrl		= $coreProperties->getSiteUrl();
+
+if( $user->isPermitted( CoreGlobal::PERM_ADMIN ) ) {
+
+	$siteUrl	= $coreProperties->getAdminUrl();
+}
+
+$resetLink		= $siteUrl . "reset-password?token=$token&email=$email";
 ?>
 <table cellspacing='0' cellpadding='2' border='0' align='center' width='805px' style='font-family: Calibri; color: #4f4f4f; font-size: 14px; font-weight: 400;'>
 	<tbody>

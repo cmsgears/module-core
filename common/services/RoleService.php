@@ -46,11 +46,26 @@ class RoleService extends Service {
 	}
 
 	/**
+	 * @param array $config
 	 * @return array - an array having id as key and name as value.
 	 */
-	public static function getIdNameMap() {
+	public static function getIdNameMap( $config = [] ) {
 
-		return self::findMap( 'id', 'name', CoreTables::TABLE_ROLE );
+		return self::findMap( 'id', 'name', CoreTables::TABLE_ROLE, $config );
+	}
+
+	/**
+	 * @param array $config
+	 * @return array - an array having id as key and name as value.
+	 */
+	public static function getIdNameMapByType( $type ) {
+
+		if( isset( $type ) ) {
+
+			return self::getIdNameMap( [ 'conditions' => [ 'type' => $type ] ] );
+		}
+		
+		return self::getIdNameMap();
 	}
 
 	/**
@@ -62,19 +77,26 @@ class RoleService extends Service {
 	}
 
 	/**
+	 * @param array $config
+	 * @return array - An array of associative array of role id and name.
+	 */
+	public static function getIdNameList( $config = [] ) {
+
+		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_ROLE, $config );
+	}
+
+	/**
 	 * @param string $id
 	 * @return array - An array of associative array of role id and name.
 	 */
-	public static function getIdNameList( $type = null ) {
+	public static function getIdNameListByType( $type ) {
 
 		if( isset( $type ) ) {
 
-			return self::findIdNameList( 'id', 'name', CoreTables::TABLE_ROLE, [ 'type' => $type ] );
+			return self::getIdNameList( [ 'conditions' => [ 'type' => $type ] ] );
 		}
-		else {
-
-			return self::findIdNameList( 'id', 'name', CoreTables::TABLE_ROLE );
-		}
+		
+		return self::getIdNameList();
 	}
 
 	// Data Provider ----

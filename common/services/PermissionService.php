@@ -37,19 +37,26 @@ class PermissionService extends Service {
 	}
 
 	/**
-	 * @param string $id
-	 * @return array - An array of associative array of permission id and name
+	 * @param array $config
+	 * @return array - An array of associative array of permission id and name.
 	 */
-	public static function getIdNameList( $type = null ) {
+	public static function getIdNameList( $config = [] ) {
+
+		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_PERMISSION, $config );
+	}
+
+	/**
+	 * @param string $id
+	 * @return array - An array of associative array of permission id and name.
+	 */
+	public static function getIdNameListByType( $type ) {
 
 		if( isset( $type ) ) {
 
-			return self::findIdNameList( 'id', 'name', CoreTables::TABLE_PERMISSION, [ 'type' => $type ] );
+			return self::getIdNameList( [ 'conditions' => [ 'type' => $type ] ] );
 		}
-		else {
 
-			return self::findIdNameList( 'id', 'name', CoreTables::TABLE_PERMISSION );
-		}
+		return self::getIdNameList();
 	}
 
 	// Data Provider ----

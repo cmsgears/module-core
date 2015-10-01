@@ -68,17 +68,17 @@ class AdminController extends BaseUserController {
 
 	public function actionCreate() {
 
-		return parent::actionCreate( Url::previous( 'users' ) );
+		return parent::actionCreate( Url::previous( 'users' ), CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( Url::previous( 'users' ), $id );
+		return parent::actionUpdate( Url::previous( 'users' ), $id, CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( Url::previous( 'users' ), $id );
+		return parent::actionDelete( Url::previous( 'users' ), $id, CoreGlobal::TYPE_SYSTEM );
 	}
 }
 

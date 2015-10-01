@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\frontend\models\forms;
+namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
 use \Yii;
@@ -10,13 +10,15 @@ use yii\base\Model;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class ForgotPassword extends Model {
+class ResetPassword extends Model {
 
 	// Variables ---------------------------------------------------
 
 	// Public Variables --------------------
-
+	
 	public $email;
+	public $password;
+	public $password_repeat;
 
 	// Instance Methods --------------------------------------------
 	
@@ -28,12 +30,13 @@ class ForgotPassword extends Model {
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'email' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'email', 'password', 'password_repeat' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 		}
 
         $rules = [
-			[ [ 'email' ], 'required' ],
+			[ [ 'email', 'password', 'password_repeat' ], 'required' ],
 			[ 'email', 'email' ],
+			[ 'password', 'compare' ]
 		];
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
@@ -45,9 +48,11 @@ class ForgotPassword extends Model {
 	}
 
 	public function attributeLabels() {
-
+		
 		return [
-			'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL )
+			'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+			'password' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PASSWORD ),
+			'password_repeat' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PASSWORD_REPEAT )
 		];
 	}
 }

@@ -5,12 +5,11 @@ namespace cmsgears\core\admin\controllers;
 use \Yii;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
-use yii\web\NotFoundHttpException;
 
 // CMG Imports
-use cmsgears\core\admin\config\AdminGlobalCore;
-use cmsgears\core\frontend\config\WebGlobalCore;
 use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\admin\config\AdminGlobalCore;
+
 use cmsgears\core\common\services\OptionService;
 use cmsgears\core\common\services\UserService;
 
@@ -22,10 +21,10 @@ class UserController extends BaseUserController {
 
         parent::__construct( $id, $module, $config );
 
+		$this->layout		= AdminGlobalCore::LAYOUT_PRIVATE;
+
 		$this->sidebar 		= [ 'parent' => 'sidebar-identity', 'child' => 'user' ];
-		$this->createUrl	= '/cmgcore/user/create';		
-		
-		$this->layout	= AdminGlobalCore::LAYOUT_PRIVATE;
+		$this->createUrl	= '/cmgcore/user/create';
 	}
 
 	// Instance Methods --------------------------------------------
@@ -42,17 +41,19 @@ class UserController extends BaseUserController {
 	                'all' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
 	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
 	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY ]
+	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'profile' => [ 'permission' => CoreGlobal::PERM_USER ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index'  => ['get'],
-	                'all' => ['get'],
-	                'create' => ['get', 'post'],
-	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post']
+	                'index'  => [ 'get' ],
+	                'all' => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ],
+	                'profile' => [ 'get', 'post' ]
                 ]
             ]
         ];
@@ -64,39 +65,6 @@ class UserController extends BaseUserController {
 
 		// TODO: Users Dashboard
 	}
-	
-	 public function actionProfile() {
-
-		// Find Model
-		$model		= Yii::$app->user->getIdentity();
-
-		// Update/Render if exist
-		if( isset( $model ) ) {
-
-			$model->setScenario( "update" );
-
-			UserService::checkNewsletterMember( $model );
-
-			if( $model->load( Yii::$app->request->post(), "User" ) && $model->validate() ) {
-
-				// Update User and Site Member
-				if( UserService::update( $model ) ) {
-
-					$this->refresh();
-				}
-			}
-
-			$genders 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER );
-
-	    	return $this->render( WebGlobalCore::PAGE_PROFILE, [
-	    		'model' => $model,
-	    		'genders' => $genders
-	    	]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
 
 	public function actionAll() {
 
@@ -107,18 +75,42 @@ class UserController extends BaseUserController {
 
 	public function actionCreate() {
 
-		return parent::actionCreate( Url::previous( 'users' ) );
+		return parent::actionCreate( Url::previous( 'users' ), CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( Url::previous( 'users' ), $id );
+		return parent::actionUpdate( Url::previous( 'users' ), $id, CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( Url::previous( 'users' ), $id );
+		return parent::actionDelete( Url::previous( 'users' ), $id, CoreGlobal::TYPE_SYSTEM );
 	}
+
+	public function actionProfile() {
+
+		$model		= Yii::$app->user->getIdentity();
+
+		$model->setScenario( 'update' );
+
+		UserService::checkNewsletterMember( $model );
+
+		if( $model->load( Yii::$app->request->post(), 'User' ) && $model->validate() ) {
+
+			if( UserService::update( $model ) ) {
+
+				$this->refresh();
+			}
+		}
+
+		$genders 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER, [ [ 'name' => null, 'value' => 'Select Gender' ] ] );
+
+    	return $this->render( 'profile', [
+    		'model' => $model,
+    		'genders' => $genders
+    	]);
+    }
 }
 
 ?>

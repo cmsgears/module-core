@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\frontend\controllers\apix;
+namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
 use Yii;

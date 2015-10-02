@@ -24,7 +24,6 @@ class UserController extends BaseUserController {
 		$this->layout		= AdminGlobalCore::LAYOUT_PRIVATE;
 
 		$this->sidebar 		= [ 'parent' => 'sidebar-identity', 'child' => 'user' ];
-		$this->createUrl	= '/cmgcore/user/create';
 	}
 
 	// Instance Methods --------------------------------------------

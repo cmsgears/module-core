@@ -30,8 +30,13 @@ if( !isset( $sortOrder ) ) {
 }
 ?>
 <div class="content-header clearfix">
-	<div class="header-actions"> 
-		<?= Html::a( "Add User", [ $createUrl ], ['class'=>'btn'] )  ?>				
+	<div class="header-actions">
+		<?php 
+			if( $showCreate ) {
+
+				echo Html::a( 'Add User', [ 'create' ], [ 'class' => 'btn' ] );
+			} 
+		?>
 	</div>
 	<div class="header-search">
 		<input type="text" name="search" id="search-terms" value="<?php if( isset($searchTerms) ) echo $searchTerms;?>">

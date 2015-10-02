@@ -193,6 +193,16 @@ class User extends CmgEntity implements IdentityInterface {
 		return $this->status == self::STATUS_BLOCKED;	
 	}
 
+	public function getNewsletterStr() {
+
+		if( $this->newsletter ) {
+			
+			return "Subscribed";
+		}
+		
+		return "Not Subscribed";
+	}
+
 	/**
 	 * Generate and set user password using the yii security mechanism.
 	 */

@@ -20,7 +20,6 @@ use cmsgears\core\admin\services\RoleService;
 abstract class BaseUserController extends BaseController {
 
 	protected $sidebar;
-	protected $createUrl;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -33,7 +32,7 @@ abstract class BaseUserController extends BaseController {
 
 	// UserController --------------------
 
-	public function actionAll( $roleSlug = null, $permissionSlug = null ) {
+	public function actionAll( $roleSlug = null, $permissionSlug = null, $showCreate = true ) {
 
 		$dataProvider = null;
 
@@ -52,8 +51,8 @@ abstract class BaseUserController extends BaseController {
 
 	    return $this->render( '@cmsgears/module-core/admin/views/user/all', [
 	    	'sidebar' => $this->sidebar,
-	    	'createUrl' => $this->createUrl,
-			'dataProvider' => $dataProvider
+			'dataProvider' => $dataProvider,
+			'showCreate' => $showCreate
 	    ]);
 	}
 
@@ -90,8 +89,6 @@ abstract class BaseUserController extends BaseController {
 			}
 		}
 
-		$genderMap 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER, [ [ 'name' => null, 'value' => 'Select Gender' ] ] );
-		
 		if( isset( $roleSlug ) ) {
 
 			return $this->render( '@cmsgears/module-core/admin/views/user/create', [
@@ -99,7 +96,6 @@ abstract class BaseUserController extends BaseController {
 				'returnUrl' => $returnUrl,
 				'model' => $model,
 				'siteMember' => $siteMember,
-				'genderMap' => $genderMap,
 				'returnUrl' => $returnUrl
 			]);
 		}
@@ -113,7 +109,6 @@ abstract class BaseUserController extends BaseController {
 				'model' => $model,
 				'siteMember' => $siteMember,
 				'roleMap' => $roleMap,
-				'genderMap' => $genderMap,
 				'returnUrl' => $returnUrl
 			]);			
 		}
@@ -145,7 +140,6 @@ abstract class BaseUserController extends BaseController {
 				}
 			}
 
-			$genderMap 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER );
 			$avatar		= $model->avatar;
 
 			if( isset( $roleSlug ) ) {
@@ -156,7 +150,6 @@ abstract class BaseUserController extends BaseController {
 		    		'model' => $model,
 		    		'siteMember' => $siteMember,
 		    		'avatar' => $avatar,
-		    		'genderMap' => $genderMap,
 		    		'status' => User::$statusMapUpdate
 		    	]);
 			}
@@ -171,7 +164,6 @@ abstract class BaseUserController extends BaseController {
 		    		'siteMember' => $siteMember,
 		    		'avatar' => $avatar,
 		    		'roleMap' => $roleMap,
-		    		'genderMap' => $genderMap,
 		    		'status' => User::$statusMapUpdate
 		    	]);
 			}
@@ -201,7 +193,6 @@ abstract class BaseUserController extends BaseController {
 			else {
 
 				$roleMap 	= RoleService::getIdNameMapByType( $roleType );
-				$genderMap 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER );
 
 	        	return $this->render( '@cmsgears/module-core/admin/views/user/delete', [
 	        		'sidebar' => $this->sidebar,
@@ -209,7 +200,6 @@ abstract class BaseUserController extends BaseController {
 	        		'model' => $model,
 	        		'siteMember' => $siteMember,
 	        		'roleMap' => $roleMap,
-	        		'genderMap' => $genderMap,
 	        		'status' => User::$statusMapUpdate
 	        	]);
 			}

@@ -3,6 +3,9 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 $logoUrl		= Yii::getAlias( "@web" );
 $logoUrl		= Url::to( $logoUrl. "/images/logo-mail.png", true );
 

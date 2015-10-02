@@ -19,7 +19,6 @@ class AdminController extends BaseUserController {
         parent::__construct( $id, $module, $config );
 
 		$this->sidebar 		= [ 'parent' => 'sidebar-identity', 'child' => 'admin' ];
-		$this->createUrl	= '/cmgcore/admin/create';
 	}
 
 	// Instance Methods --------------------------------------------
@@ -63,7 +62,7 @@ class AdminController extends BaseUserController {
 
 		Url::remember( [ 'admin/all' ], 'users' );
 
-		return parent::actionAll( null, CoreGlobal::PERM_ADMIN );
+		return parent::actionAll( null, CoreGlobal::PERM_ADMIN, false );
 	}
 
 	public function actionCreate() {

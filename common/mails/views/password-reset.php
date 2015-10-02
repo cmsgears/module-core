@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-// CMg Imports
+// CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 $logoUrl		= Yii::getAlias( "@web" );

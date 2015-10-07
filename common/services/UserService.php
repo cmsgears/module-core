@@ -17,6 +17,13 @@ use cmsgears\core\common\utilities\DateUtil;
 class UserService extends Service {
 	
 	// Static Methods ----------------------------------------------
+	
+	public static function splitEmail( $email ) {
+		
+		$parts = explode('@', $email);
+					
+		return $parts[0];					 
+	}
 
 	// Read ----------------
 

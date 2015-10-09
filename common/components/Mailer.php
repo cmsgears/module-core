@@ -10,11 +10,11 @@ use \Yii;
  */
 class Mailer extends \cmsgears\core\common\base\Mailer {
 
-	const MAIL_ACCOUNT_CREATE				= "account-create";	
-	const MAIL_ACCOUNT_ACTIVATE				= "account-activate";
-	const MAIL_REG							= "register";
-	const MAIL_REG_CONFIRM					= "register-confirm";
-	const MAIL_PASSWORD_RESET				= "password-reset";
+	const MAIL_ACCOUNT_CREATE		= "account-create";	
+	const MAIL_ACCOUNT_ACTIVATE		= "account-activate";
+	const MAIL_REG					= "register";
+	const MAIL_REG_CONFIRM			= "register-confirm";
+	const MAIL_PASSWORD_RESET		= "password-reset";
 
     public $htmlLayout 			= '@cmsgears/module-core/common/mails/layouts/html';
     public $textLayout 			= '@cmsgears/module-core/common/mails/layouts/text';

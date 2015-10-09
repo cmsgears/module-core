@@ -274,6 +274,14 @@ class CodeGenUtil {
 			}
 		}
 	}
+
+	// Return the username by splitting given email.
+	public static function splitEmail( $email ) {
+
+		$parts = explode( '@', $email );
+
+		return $parts[0];	 
+	}
 }
 
 ?>

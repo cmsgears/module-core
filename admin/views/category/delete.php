@@ -18,9 +18,11 @@ else {
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Delete '  . $dropDown;
 
-// Sidebar
-$this->params['sidebar-parent'] = $sidebarParent;
-$this->params['sidebar-child'] 	= $sidebarChild;
+// Sidebar and Return URL
+$sidebar						= $this->context->sidebar;
+$returnUrl						= $this->context->returnUrl;
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 
 ClEditor::widget( [ 'selector' => '.content-editor' ] );
 ?>
@@ -38,7 +40,7 @@ ClEditor::widget( [ 'selector' => '.content-editor' ] );
   
 		<div class="box-filler"></div>
 
-		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
+		<?=Html::a( "Cancel", $returnUrl, [ 'class' => 'btn' ] );?>
 		<input type="submit" value="Delete" />
 
 		<?php ActiveForm::end(); ?>

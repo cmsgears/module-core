@@ -24,6 +24,8 @@ class DropdownController extends BaseCategoryController {
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+		
+		$this->sidebar 	= [ 'parent' => 'sidebar-dropdown', 'child' => 'dropdown' ];
 	}
 
 	// Instance Methods ------------------
@@ -57,25 +59,25 @@ class DropdownController extends BaseCategoryController {
 	// DropdownController --------------------
 
 	public function actionAll( $type = null ) {
-		
-		Url::remember( [ 'dropdown/all' ], 'dropdowns' );
 
-		return parent::actionAll( [ 'parent' => 'sidebar-dropdown', 'child' => 'post-category' ], CoreGlobal::TYPE_COMBO, true );
+		Url::remember( [ 'dropdown/all' ], 'categories' );
+
+		return parent::actionAll( CoreGlobal::TYPE_COMBO, true );
 	}
-	
+
 	public function actionCreate() {
 
-		return parent::actionCreate( Url::previous( 'dropdowns' ), [ 'parent' => 'sidebar-dropdown', 'child' => 'post-category' ], CoreGlobal::TYPE_COMBO, true );
+		return parent::actionCreate( CoreGlobal::TYPE_COMBO, true );
 	}
-	 
+
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id, Url::previous( 'dropdowns' ), [ 'parent' => 'sidebar-dropdown', 'child' => 'post-category' ], CoreGlobal::TYPE_COMBO, true );
+		return parent::actionUpdate( $id, CoreGlobal::TYPE_COMBO, true );
 	}
 	
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, Url::previous( 'dropdowns' ), [ 'parent' => 'sidebar-dropdown', 'child' => 'post-category' ], CoreGlobal::TYPE_COMBO, true );
+		return parent::actionDelete( $id, CoreGlobal::TYPE_COMBO, true );
 	} 
 }
 

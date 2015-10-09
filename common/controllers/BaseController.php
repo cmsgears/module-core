@@ -15,6 +15,12 @@ class BaseController extends Controller {
 
 	private $_coreProperties;
 	private $_mailProperties;
+	
+	// It provide information to display active tab on sidebar.
+	public $sidebar;
+
+	// We need return url in cases where view need to provide links to move back to previous page.
+	public $returnUrl;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -47,9 +53,9 @@ class BaseController extends Controller {
 	}
 
 	public function getMailProperties() {
-		
+
 		if( !isset( $this->_mailProperties ) ) {
-			
+
 			$this->_mailProperties	= MailProperties::getInstance();
 		}
 

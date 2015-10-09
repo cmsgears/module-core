@@ -7,7 +7,9 @@ use cmsgears\files\widgets\FileUploader;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Update User";
 
-// Sidebar
+// Sidebar and Return URL
+$sidebar						= $this->context->sidebar;
+$returnUrl						= $this->context->returnUrl;
 $this->params['sidebar-parent'] = $sidebar[ 'parent' ];
 $this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 ?>
@@ -31,7 +33,7 @@ $this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 
 		<?= $form->field( $model, 'status' )->dropDownList( $status ) ?>
 
-		<?=Html::a( "Back", $returnUrl, ['class' => 'btn' ] );?>
+		<?=Html::a( 'Back', $returnUrl, [ 'class' => 'btn' ] );?>
 		<input type="submit" value="Update" />
 
 		<?php ActiveForm::end(); ?>

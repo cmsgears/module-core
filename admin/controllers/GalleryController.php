@@ -14,15 +14,15 @@ use cmsgears\core\common\models\entities\Gallery;
 
 use cmsgears\core\admin\services\GalleryService;
 
-use cmsgears\core\admin\controllers\BaseController;
-
-class GalleryController extends BaseController {
+class GalleryController extends \cmsgears\core\admin\controllers\BaseController {
 
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+		
+		$this->sidebar 		= [ 'parent' => 'sidebar-gallery', 'child' => 'gallery' ];
 	}
 
 	// Instance Methods --------------------------------------------
@@ -46,12 +46,12 @@ class GalleryController extends BaseController {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index'  => ['get'],
-	                'all'   => ['get'],
-	                'create' => ['get', 'post'],
-	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post'],
-	                'items'  => ['get']
+	                'index'  => [ 'get' ],
+	                'all'   => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ],
+	                'items'  => [ 'get' ]
                 ]
             ]
         ];
@@ -77,8 +77,8 @@ class GalleryController extends BaseController {
 
 	public function actionCreate() {
 
-		$model		= new Gallery();
-		$returnUrl	= Url::previous( 'galleries' );
+		$model				= new Gallery();
+		$this->returnUrl	= Url::previous( 'galleries' );
 
 		$model->setScenario( 'create' );
 
@@ -90,16 +90,16 @@ class GalleryController extends BaseController {
 			}
 		}
 
-    	return $this->render('create', [
-    		'model' => $model,
-    		'returnUrl' => $returnUrl
+    	return $this->render( '@cmsgears/module-core/admin/views/gallery/create', [
+    		'model' => $model
     	]);
 	}
 
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model	= GalleryService::findById( $id );
+		$model				= GalleryService::findById( $id );
+		$this->returnUrl	= Url::previous( 'galleries' );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
@@ -110,11 +110,11 @@ class GalleryController extends BaseController {
 	
 				if( GalleryService::update( $model ) ) {
 
-					$this->redirect( [ 'all' ] );
+					$this->redirect( $this->returnUrl );
 				}
 			}
 
-	    	return $this->render( 'update', [
+	    	return $this->render( '@cmsgears/module-core/admin/views/gallery/update', [
 	    		'model' => $model
 	    	]);
 		}
@@ -126,7 +126,8 @@ class GalleryController extends BaseController {
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= GalleryService::findById( $id );
+		$model				= GalleryService::findById( $id );
+		$this->returnUrl	= Url::previous( 'galleries' );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
@@ -135,11 +136,11 @@ class GalleryController extends BaseController {
 	
 				if( GalleryService::delete( $model ) ) {
 		
-					$this->redirect( [ 'all' ] );
+					$this->redirect( $this->returnUrl );
 				}
 			}
 
-	    	return $this->render( 'delete', [
+	    	return $this->render( '@cmsgears/module-core/admin/views/gallery/delete', [
 	    		'model' => $model
 	    	]);
 		}
@@ -151,18 +152,15 @@ class GalleryController extends BaseController {
 	public function actionItems( $id ) {
 
 		// Find Model
-		$gallery = GalleryService::findById( $id );
+		$gallery 			= GalleryService::findById( $id );
+		$this->returnUrl	= Url::previous( 'galleries' );
 
 		// Update/Render if exist
 		if( isset( $gallery ) ) {
 
-			$returnUrl	= Url::previous( 'galleries' );
-			$items 		= $gallery->files;
-
-	    	return $this->render('items', [
+	    	return $this->render( '@cmsgears/module-core/admin/views/gallery/items', [
 	    		'gallery' => $gallery,
-	    		'items' => $items,
-	    		'returnUrl' => $returnUrl
+	    		'items' => $gallery->files
 	    	]);
 		}
 

@@ -24,15 +24,16 @@ else {
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All '.$title;
 
-// Sidebars
-$this->params['sidebar-parent'] = $sidebarParent;
-$this->params['sidebar-child'] 	= $sidebarChild;
+// Sidebar
+$sidebar						= $this->context->sidebar;
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 
 // Searching
-$searchTerms	= Yii::$app->request->getQueryParam( "search" );
+$searchTerms	= Yii::$app->request->getQueryParam( 'search' );
 
 // Sorting
-$sortOrder		= Yii::$app->request->getQueryParam( "sort" );
+$sortOrder		= Yii::$app->request->getQueryParam( 'sort' );
 
 // Data
 $pagination		= $dataProvider->getPagination();

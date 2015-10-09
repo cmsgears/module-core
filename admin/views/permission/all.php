@@ -11,18 +11,19 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Permissions';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-identity';
-$this->params['sidebar-child'] 	= 'permission';
+$sidebar						= $this->context->sidebar;
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 
 // Data
 $pagination		= $dataProvider->getPagination();
 $models			= $dataProvider->getModels();
 
 // Searching
-$searchTerms	= Yii::$app->request->getQueryParam("search");
+$searchTerms	= Yii::$app->request->getQueryParam( 'search' );
 
 // Sorting
-$sortOrder		= Yii::$app->request->getQueryParam("sort");
+$sortOrder		= Yii::$app->request->getQueryParam( 'sort' );
 
 if( !isset( $sortOrder ) ) {
 
@@ -31,7 +32,7 @@ if( !isset( $sortOrder ) ) {
 ?>
 <div class="content-header clearfix">
 	<div class="header-actions"> 
-		<?= Html::a( "Add Permission", ["/cmgcore/permission/create"], ['class'=>'btn'] )  ?>				
+		<?= Html::a( 'Add Permission', [ 'create' ], [ 'class' => 'btn' ] )  ?>				
 	</div>
 	<div class="header-search">
 		<input type="text" name="search" id="search-terms" value="<?php if( isset($searchTerms) ) echo $searchTerms;?>">

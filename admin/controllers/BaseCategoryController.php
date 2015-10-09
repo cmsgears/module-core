@@ -3,6 +3,7 @@ namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
 use \Yii;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\base\Exception;
 use yii\web\HttpException;
@@ -30,7 +31,7 @@ abstract class BaseCategoryController extends BaseController {
 
 	// BaseRoleController -----------------
 
-	public function actionAll( $sidebar = [], $type = null, $dropDown = false  ) {
+	public function actionAll( $type = null, $dropDown = false  ) {
 
 		$dataProvider = null;
 
@@ -46,16 +47,15 @@ abstract class BaseCategoryController extends BaseController {
 	    return $this->render( '@cmsgears/module-core/admin/views/category/all', [
 	    
 			'dataProvider' => $dataProvider,
-    		'dropDown' => $dropDown,
-    		'sidebarParent' => $sidebar[ 'parent' ],
-    		'sidebarChild' => $sidebar[ 'child' ]
+    		'dropDown' => $dropDown
 	    ]);
 	}
 
-	public function actionCreate( $returnUrl, $sidebar = [], $type = null, $dropDown = false ) {
+	public function actionCreate( $type = null, $dropDown = false ) {
 
-		$model		= new Category();
-		$avatar 	= new CmgFile(); 
+		$model				= new Category();
+		$avatar 			= new CmgFile(); 
+		$this->returnUrl	= Url::previous( 'categories' );
 
 		$model->setScenario( 'create' );
 
@@ -70,25 +70,22 @@ abstract class BaseCategoryController extends BaseController {
 
 			if( CategoryService::create( $model, $avatar ) ) { 
 
-				return $this->redirect( $returnUrl );
+				return $this->redirect( $this->returnUrl );
 			} 
 		} 
 
     	return $this->render( '@cmsgears/module-core/admin/views/category/create', [
     		'model' => $model, 
     		'avatar' => $avatar,
-    		'returnUrl' => $returnUrl,
-    		'dropDown' => $dropDown,
-    		'sidebarParent' => $sidebar[ 'parent' ],
-    		'sidebarChild' => $sidebar[ 'child' ]
+    		'dropDown' => $dropDown
     	]);
 	}	
  	
-	public function actionUpdate( $id, $returnUrl, $sidebar = [], $type = null, $dropDown = false  ) {
+	public function actionUpdate( $id, $type = null, $dropDown = false  ) {
 		
-
 		// Find Model
-		$model		= CategoryService::findById( $id );
+		$model				= CategoryService::findById( $id );
+		$this->returnUrl	= Url::previous( 'categories' );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
@@ -104,7 +101,7 @@ abstract class BaseCategoryController extends BaseController {
 				if( CategoryService::update( $model, $avatar ) ) {
  
 
-					return $this->redirect( $returnUrl );
+					return $this->redirect( $this->returnUrl );
 				} 
 			}
 
@@ -113,10 +110,7 @@ abstract class BaseCategoryController extends BaseController {
 	    	return $this->render( '@cmsgears/module-core/admin/views/category/update', [
 	    		'model' => $model, 
 	    		'avatar' => $avatar,
-	    		'returnUrl' => $returnUrl,
-    			'dropDown' => $dropDown,
-    			'sidebarParent' => $sidebar[ 'parent' ],
-    			'sidebarChild' => $sidebar[ 'child' ]
+    			'dropDown' => $dropDown
 	    	]);
 		}
 		
@@ -124,10 +118,11 @@ abstract class BaseCategoryController extends BaseController {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	} 
 	
-	public function actionDelete( $id, $returnUrl, $sidebar = [], $type = null, $dropDown = false  ) {
+	public function actionDelete( $id, $type = null, $dropDown = false  ) {
 
 		// Find Model
-		$model		= CategoryService::findById( $id );
+		$model				= CategoryService::findById( $id );
+		$this->returnUrl	= Url::previous( 'categories' );
 
 		// Delete/Render if exist
 		
@@ -151,14 +146,14 @@ abstract class BaseCategoryController extends BaseController {
 					    } 
 					    catch( Exception $e) {
 					    	 
-						    throw new HttpException(409,  Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  ); 
+						    throw new HttpException( 409,  Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  ); 
 						}
 					}
 				}
 
 				if( CategoryService::delete( $model, $avatar ) ) { 
 
-					return $this->redirect( $returnUrl );
+					return $this->redirect( $this->returnUrl );
 				}
 			}
 
@@ -167,10 +162,7 @@ abstract class BaseCategoryController extends BaseController {
 	    	return $this->render( '@cmsgears/module-core/admin/views/category/delete', [
 	    		'model' => $model, 
 	    		'avatar' => $avatar,
-	    		'returnUrl' => $returnUrl,
-    			'dropDown' => $dropDown,
-    			'sidebarParent' => $sidebar[ 'parent' ],
-    			'sidebarChild' => $sidebar[ 'child' ]
+    			'dropDown' => $dropDown
 	    	]);
 		}
 		

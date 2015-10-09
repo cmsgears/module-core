@@ -11,6 +11,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | All Users";
 
 // Sidebar
+$sidebar						= $this->context->sidebar;
 $this->params['sidebar-parent'] = $sidebar[ 'parent' ];
 $this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 

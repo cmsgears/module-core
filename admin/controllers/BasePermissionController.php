@@ -3,6 +3,7 @@ namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
 use \Yii;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
@@ -38,23 +39,23 @@ abstract class BasePermissionController extends BaseController {
 	    ]);
 	}
 
-	public function actionMatrix( $returnUrl, $type = null ) {
+	public function actionMatrix( $type = null ) {
 
 		$dataProvider 	= PermissionService::getPaginationByType( $type );
 		$rolesList		= RoleService::getIdNameListByType( $type );
 
 	    return $this->render( 'matrix', [
-			'returnUrl' => $returnUrl,
 			'dataProvider' => $dataProvider,
 			'rolesList' => $rolesList
 	    ]);
 	}
 
-	public function actionCreate( $returnUrl, $type = null ) {
+	public function actionCreate( $type = null ) {
 
-		$model	= new Permission();
+		$model				= new Permission();
+		$this->returnUrl	= Url::previous( 'permissions' );
 
-		$model->setScenario( "create" );
+		$model->setScenario( 'create' );
 
 		if( isset( $type ) ) {
 
@@ -72,24 +73,24 @@ abstract class BasePermissionController extends BaseController {
 
 				PermissionService::bindRoles( $binder );
 
-				$this->redirect( [ 'all' ] );
+				$this->redirect( $this->returnUrl );
 			}
 		}
 
 		$roles	= RoleService::getIdNameListByType( $type );
 
     	return $this->render( 'create', [
-    		'returnUrl' => $returnUrl,
     		'model' => $model,
     		'roles' => $roles
     	]);
 	}
 
-	public function actionUpdate( $id, $returnUrl, $type = null ) {
+	public function actionUpdate( $id, $type = null ) {
 
 		// Find Model		
-		$model	= PermissionService::findById( $id );
-		
+		$model				= PermissionService::findById( $id );
+		$this->returnUrl	= Url::previous( 'permissions' );
+
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
@@ -106,14 +107,13 @@ abstract class BasePermissionController extends BaseController {
 	
 					PermissionService::bindRoles( $binder );
 	
-					$this->redirect( [ 'all' ] );
+					$this->redirect( $this->returnUrl );
 				}
 			}
 	
 			$roles	= RoleService::getIdNameListByType( $type );
 	
 	    	return $this->render( 'update', [
-	    		'returnUrl' => $returnUrl,
 	    		'model' => $model,
 	    		'roles' => $roles
 	    	]);
@@ -123,10 +123,11 @@ abstract class BasePermissionController extends BaseController {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $id, $returnUrl, $type = null ) {
+	public function actionDelete( $id, $type = null ) {
 
 		// Find Model
-		$model	= PermissionService::findById( $id );
+		$model				= PermissionService::findById( $id );
+		$this->returnUrl	= Url::previous( 'permissions' );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
@@ -135,14 +136,13 @@ abstract class BasePermissionController extends BaseController {
 
 				if( PermissionService::delete( $model ) ) {
 
-					$this->redirect( [ 'all' ] );
+					$this->redirect( $this->returnUrl );
 				}
 			}
 
 			$roles	= RoleService::getIdNameListByType( $type );
 	
 	    	return $this->render( 'delete', [
-	    		'returnUrl' => $returnUrl,
 	    		'model' => $model,
 	    		'roles' => $roles
 	    	]);

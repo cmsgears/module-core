@@ -41,11 +41,11 @@ class AdminController extends BaseUserController {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index'  => ['get'],
-	                'all' => ['get'],
-	                'create' => ['get', 'post'],
-	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post']
+	                'index'  => [ 'get' ],
+	                'all' => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ]
                 ]
             ]
         ];
@@ -66,18 +66,24 @@ class AdminController extends BaseUserController {
 	}
 
 	public function actionCreate() {
+		
+		$this->returnUrl	= Url::previous( 'users' );
 
-		return parent::actionCreate( Url::previous( 'users' ), CoreGlobal::TYPE_SYSTEM );
+		return parent::actionCreate( CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionUpdate( $id ) {
+		
+		$this->returnUrl	= Url::previous( 'users' );
 
-		return parent::actionUpdate( Url::previous( 'users' ), $id, CoreGlobal::TYPE_SYSTEM );
+		return parent::actionUpdate( $id, CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionDelete( $id ) {
+		
+		$this->returnUrl	= Url::previous( 'users' );
 
-		return parent::actionDelete( Url::previous( 'users' ), $id, CoreGlobal::TYPE_SYSTEM );
+		return parent::actionDelete( $id, CoreGlobal::TYPE_SYSTEM );
 	}
 }
 

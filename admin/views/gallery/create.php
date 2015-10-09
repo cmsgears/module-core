@@ -5,9 +5,11 @@ use yii\helpers\Html;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Gallery';
 
-// Sidebar
-$this->params['sidebar-parent'] = 'sidebar-gallery';
-$this->params['sidebar-child'] 	= 'gallery';
+// Sidebar and Return URL
+$sidebar						= $this->context->sidebar;
+$returnUrl						= $this->context->returnUrl;
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -19,7 +21,7 @@ $this->params['sidebar-child'] 	= 'gallery';
     	<?= $form->field( $model, 'description' )->textarea() ?>
 
 		<div class="box-filler"></div>
-		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
+		<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn' ] );?>
 		<input type="submit" value="Create" />
 
 		<?php ActiveForm::end(); ?>

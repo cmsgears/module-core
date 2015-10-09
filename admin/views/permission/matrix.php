@@ -11,8 +11,9 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Access Matrix";
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-identity';
-$this->params['sidebar-child'] 	= 'matrix';
+$sidebar						= $this->context->sidebar;
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -20,7 +21,7 @@ $models			= $dataProvider->getModels();
 ?>
 <div class="content-header clearfix">
 	<div class="header-actions"> 
-		<?= Html::a( "Add Role", ["/cmgcore/role/create"], ['class'=>'btn'] )  ?>				
+		<?= Html::a( 'Add Role', [ '/cmgcore/role/create' ], [ 'class' => 'btn' ] ) ?>				
 	</div>
 	<div class="header-search"> 
 		<form action="#">

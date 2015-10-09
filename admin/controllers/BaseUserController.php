@@ -19,8 +19,6 @@ use cmsgears\core\admin\services\RoleService;
 
 abstract class BaseUserController extends BaseController {
 
-	protected $sidebar;
-
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
@@ -50,13 +48,12 @@ abstract class BaseUserController extends BaseController {
 		}
 
 	    return $this->render( '@cmsgears/module-core/admin/views/user/all', [
-	    	'sidebar' => $this->sidebar,
 			'dataProvider' => $dataProvider,
 			'showCreate' => $showCreate
 	    ]);
 	}
 
-	public function actionCreate( $returnUrl, $roleType = null, $roleSlug = null ) {
+	public function actionCreate( $roleType = null, $roleSlug = null ) {
 
 		$model		= new User();
 		$siteMember	= new SiteMember();
@@ -85,18 +82,15 @@ abstract class BaseUserController extends BaseController {
 				// Send Account Mail
 				Yii::$app->cmgCoreMailer->sendCreateUserMail( $model );
 
-				$this->redirect( $returnUrl );
+				$this->redirect( $this->returnUrl );
 			}
 		}
 
 		if( isset( $roleSlug ) ) {
 
 			return $this->render( '@cmsgears/module-core/admin/views/user/create', [
-				'sidebar' => $this->sidebar,
-				'returnUrl' => $returnUrl,
 				'model' => $model,
-				'siteMember' => $siteMember,
-				'returnUrl' => $returnUrl
+				'siteMember' => $siteMember
 			]);
 		}
 		else {
@@ -105,16 +99,14 @@ abstract class BaseUserController extends BaseController {
 
 			return $this->render( '@cmsgears/module-core/admin/views/user/create', [
 				'sidebar' => $this->sidebar,
-				'returnUrl' => $returnUrl,
 				'model' => $model,
 				'siteMember' => $siteMember,
-				'roleMap' => $roleMap,
-				'returnUrl' => $returnUrl
+				'roleMap' => $roleMap
 			]);			
 		}
 	}
 
-	public function actionUpdate( $returnUrl, $id, $roleType = null, $roleSlug = null ) {
+	public function actionUpdate( $id, $roleType = null, $roleSlug = null ) {
 
 		// Find Model
 		$model		= UserService::findById( $id );
@@ -136,7 +128,7 @@ abstract class BaseUserController extends BaseController {
 				// Update User and Site Member
 				if( UserService::update( $model, $avatar ) && SiteMemberService::update( $siteMember ) ) {
 
-					$this->redirect( $returnUrl );
+					$this->redirect( $this->returnUrl );
 				}
 			}
 
@@ -145,8 +137,6 @@ abstract class BaseUserController extends BaseController {
 			if( isset( $roleSlug ) ) {
 
 		    	return $this->render( '@cmsgears/module-core/admin/views/user/update', [
-		    		'sidebar' => $this->sidebar,
-		    		'returnUrl' => $returnUrl,
 		    		'model' => $model,
 		    		'siteMember' => $siteMember,
 		    		'avatar' => $avatar,
@@ -158,8 +148,6 @@ abstract class BaseUserController extends BaseController {
 				$roleMap 	= RoleService::getIdNameMapByType( $roleType );
 
 		    	return $this->render( '@cmsgears/module-core/admin/views/user/update', [
-		    		'sidebar' => $this->sidebar,
-		    		'returnUrl' => $returnUrl,
 		    		'model' => $model,
 		    		'siteMember' => $siteMember,
 		    		'avatar' => $avatar,
@@ -173,7 +161,7 @@ abstract class BaseUserController extends BaseController {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $returnUrl, $id, $roleType = null, $roleSlug = null ) {
+	public function actionDelete( $id, $roleType = null, $roleSlug = null ) {
 
 		// Find Model
 		$model		= UserService::findById( $id );
@@ -187,7 +175,7 @@ abstract class BaseUserController extends BaseController {
 
 				if( UserService::delete( $model ) ) {
 
-					$this->redirect( $returnUrl );
+					$this->redirect( $this->returnUrl );
 				}
 			}
 			else {
@@ -195,8 +183,6 @@ abstract class BaseUserController extends BaseController {
 				$roleMap 	= RoleService::getIdNameMapByType( $roleType );
 
 	        	return $this->render( '@cmsgears/module-core/admin/views/user/delete', [
-	        		'sidebar' => $this->sidebar,
-	        		'returnUrl' => $returnUrl,
 	        		'model' => $model,
 	        		'siteMember' => $siteMember,
 	        		'roleMap' => $roleMap,

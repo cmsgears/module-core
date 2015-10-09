@@ -11,9 +11,11 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Galleries';
 
-// Sidebar
-$this->params['sidebar-parent'] = 'sidebar-gallery';
-$this->params['sidebar-child'] 	= 'gallery';
+// Sidebar and Return URL
+$sidebar						= $this->context->sidebar;
+$returnUrl						= $this->context->returnUrl;
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -32,7 +34,7 @@ if( !isset( $sortOrder ) ) {
 ?>
 <div class="content-header clearfix">
 	<div class="header-actions"> 
-		<?= Html::a( "Add Gallery", ['/cmgcore/gallery/create'], ['class'=>'btn'] )  ?>				
+		<?= Html::a( 'Add Gallery', [ 'create' ], [ 'class' => 'btn' ] )  ?>				
 	</div>
 	<div class="header-search">
 		<input type="text" name="search" id="search-terms" value="<?php if( isset($searchTerms) ) echo $searchTerms;?>">
@@ -88,9 +90,9 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $gallery->slug ?></td>
 						<td><?= $gallery->title ?></td>
 						<td>
-							<span class="wrap-icon-action" title="Gallery Items"><?= Html::a( "", ["/cmgcore/gallery/items?id=$id"], ['class'=>'icon-action icon-action-edit'] ) ?></span>
-							<span class="wrap-icon-action" title="Update Role"><?= Html::a( "", ["/cmgcore/gallery/update?id=$id"], ['class'=>'icon-action icon-action-edit'] ) ?></span>
-							<span class="wrap-icon-action" title="Delete Role"><?= Html::a( "", ["/cmgcore/gallery/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] ) ?></span>
+							<span class="wrap-icon-action" title="Gallery Items"><?= Html::a( "", ["items?id=$id"], ['class'=>'icon-action icon-action-edit'] ) ?></span>
+							<span class="wrap-icon-action" title="Update Role"><?= Html::a( "", ["update?id=$id"], ['class'=>'icon-action icon-action-edit'] ) ?></span>
+							<span class="wrap-icon-action" title="Delete Role"><?= Html::a( "", ["delete?id=$id"], ['class'=>'icon-action icon-action-delete'] ) ?></span>
 						</td>
 					</tr>
 				<?php } ?>

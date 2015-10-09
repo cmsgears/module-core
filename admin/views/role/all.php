@@ -12,8 +12,9 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Roles';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-identity';
-$this->params['sidebar-child'] 	= 'role';
+$sidebar						= $this->context->sidebar;
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -32,7 +33,7 @@ if( !isset( $sortOrder ) ) {
 ?>
 <div class="content-header clearfix">
 	<div class="header-actions"> 
-		<?= Html::a( 'Add Role', [ '/cmgcore/role/create' ], [ 'class' => 'btn' ] )  ?>				
+		<?= Html::a( 'Add Role', [ 'create' ], [ 'class' => 'btn' ] )  ?>				
 	</div>
 	<div class="header-search">
 		<input type="text" name="search" id="search-terms" value="<?php if( isset($searchTerms) ) echo $searchTerms;?>">

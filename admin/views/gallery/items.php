@@ -10,9 +10,11 @@ use cmsgears\files\widgets\FileUploader;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Gallery Items';
 
-// Sidebar
-$this->params['sidebar-parent'] = 'sidebar-gallery';
-$this->params['sidebar-child'] 	= 'gallery';
+// Sidebar and Return URL
+$sidebar						= $this->context->sidebar;
+$returnUrl						= $this->context->returnUrl;
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 
 $id				= $gallery->id;
 ?>

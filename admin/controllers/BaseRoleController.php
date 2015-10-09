@@ -3,6 +3,7 @@ namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
 use \Yii;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
@@ -38,9 +39,10 @@ abstract class BaseRoleController extends BaseController {
 	    ]);
 	}
 
-	public function actionCreate( $returnUrl, $type = null ) {
+	public function actionCreate( $type = null ) {
 
-		$model	= new Role();
+		$model				= new Role();
+		$this->returnUrl	= Url::previous( 'roles' );
 
 		$model->setScenario( 'create' );
 
@@ -60,14 +62,13 @@ abstract class BaseRoleController extends BaseController {
 
 				RoleService::bindPermissions( $binder );
 
-				return $this->redirect( $returnUrl );
+				return $this->redirect( $this->returnUrl );
 			}
 		}
 
 		$permissions	= PermissionService::getIdNameListByType( $type );
 
     	return $this->render( 'create', [
-    		'returnUrl' => $returnUrl,
     		'model' => $model,
     		'permissions' => $permissions
     	]);
@@ -76,7 +77,8 @@ abstract class BaseRoleController extends BaseController {
 	public function actionUpdate( $id, $returnUrl, $type = null ) {
 
 		// Find Model
-		$model	= RoleService::findById( $id );
+		$model				= RoleService::findById( $id );
+		$this->returnUrl	= Url::previous( 'roles' );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
@@ -94,14 +96,13 @@ abstract class BaseRoleController extends BaseController {
 
 					RoleService::bindPermissions( $binder );
 	
-					$this->redirect( $returnUrl );
+					$this->redirect( $this->returnUrl );
 				}
 			}
 
 			$permissions	= PermissionService::getIdNameListByType( $type );
 
 	    	return $this->render( 'update', [
-	    		'returnUrl' => $returnUrl,
 	    		'model' => $model,
 	    		'permissions' => $permissions
 	    	]);
@@ -114,7 +115,8 @@ abstract class BaseRoleController extends BaseController {
 	public function actionDelete( $id, $returnUrl, $type = null ) {
 
 		// Find Model
-		$model	= RoleService::findById( $id );
+		$model				= RoleService::findById( $id );
+		$this->returnUrl	= Url::previous( 'roles' );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
@@ -123,14 +125,13 @@ abstract class BaseRoleController extends BaseController {
 
 				if( RoleService::delete( $model ) ) {
 
-					return $this->redirect( $returnUrl );
+					return $this->redirect( $this->returnUrl );
 				}
 			}
 
 			$permissions	= PermissionService::getIdNameListByType( $type );
 
 	    	return $this->render( 'delete', [
-	    		'returnUrl' => $returnUrl,
 	    		'model' => $model,
 	    		'permissions' => $permissions
 	    	]);

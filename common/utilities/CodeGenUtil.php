@@ -282,6 +282,16 @@ class CodeGenUtil {
 
 		return $parts[0];	 
 	}
+	
+	public static function isEmptyString( $string ) {
+		
+		return !( isset( $string ) && ( strlen( trim( $string ) ) > 0 ) );
+	}
+
+	public static function notEmptyString( $string ) {
+		
+		return ( isset( $string ) && ( strlen( trim( $string ) ) > 0 ) );
+	}
 }
 
 ?>

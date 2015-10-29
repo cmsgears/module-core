@@ -7,7 +7,7 @@ use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-
+use cmsgears\core\common\models\entities\ModelMeta;
 use cmsgears\core\common\models\entities\CmgFile;
 
 use cmsgears\core\frontend\services\UserService;
@@ -33,13 +33,15 @@ class UserController extends \cmsgears\core\common\controllers\BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'avatar' => [ 'permission' => CoreGlobal::PERM_USER ]
+	                'avatar' => [ 'permission' => CoreGlobal::PERM_USER ],
+	                'update-meta' => [ 'permission' => CoreGlobal::PERM_USER ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'avatar' => ['post']
+                    'avatar' => ['post'],
+                    'update-meta' => ['post']
                 ]
             ]
         ];
@@ -67,6 +69,34 @@ class UserController extends \cmsgears\core\common\controllers\BaseController {
         	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 		}
     }
+	
+	public function actionUpdateMeta() {
+		
+		$user			= Yii::$app->user->getIdentity();		 
+		$modelMetas		= Yii::$app->request->post( 'ModelMeta' );
+		$count 			= count( $modelMetas );
+		$metas			= [];
+	
+		for ( $i = 0; $i < $count; $i++ ) {
+			
+			$meta				= new ModelMeta();		
+			$meta->parentId		= $user->id;
+			$meta->parentType	= CoreGlobal::TYPE_USER ;		
+			$metas[] 			= $meta; 
+		}
+	
+		// Load SchoolItem models
+		if( ModelMeta::loadMultiple( $metas, Yii::$app->request->post(), 'ModelMeta' ) && ModelMeta::validateMultiple( $metas ) ) {
+			
+			UserService::updateMetaArray( $user, $metas );
+			 
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+		} 
+			  
+		// Trigger Ajax Not Found
+	    return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) ); 
+	}
 }
 
 ?>

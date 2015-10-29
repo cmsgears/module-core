@@ -67,7 +67,7 @@ class CmgEntity extends ActiveRecord {
 		return $searchQuery;
 	}
 
-	// Default Searching - Useful for id based models
+	// Default Searching
 
 	public static function findById( $id ) {
 

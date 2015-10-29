@@ -30,10 +30,10 @@ $this->params['sidebar-child'] 	= 'profile';
 		</div>
 
     	<div class="clear row right">
-    		<a class="right icon-action icon-action-edit btn-edit"></a>
+    		<a class="right icon-action icon-action-edit btn-edit btn-edit-profile"></a>
     	</div>
 
-    	<div class="frm-split frm-view">
+    	<div class="frm-split frm-view-profile">
 		 	<div>
 	    		<label> Email </label>
 	    		<label><?= $model->email ?></label>
@@ -64,7 +64,7 @@ $this->params['sidebar-child'] 	= 'profile';
 		 	</div>
     	</div>
 
-    	<div class="frm-edit">
+    	<div class="frm-edit hidden">
 			<?php $form = ActiveForm::begin( ['id' => 'frm-user-profile', 'options' => ['class' => 'frm-split' ] ] );?>
 	
 			<?= $form->field( $model, 'email' )->textInput( [ 'readonly' => true ] ) ?>

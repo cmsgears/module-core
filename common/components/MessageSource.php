@@ -71,7 +71,6 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_VISIBILITY => 'Visibility',
 		CoreGlobal::FIELD_STATUS => 'Status',
 		CoreGlobal::FIELD_TYPE => 'Type',
-		CoreGlobal::FIELD_VALIDATORS => 'Validators',
 		CoreGlobal::FIELD_CONSUMED => 'Consumed',
 		CoreGlobal::FIELD_ORDER => 'Order',
 		CoreGlobal::FIELD_DEFAULT => 'Default',

@@ -92,15 +92,17 @@ class UserController extends BaseController {
 
 		// Find Model
 		
-		$user	= Yii::$app->user->getIdentity();
-		$model	= UserService::findMetaByType(  $user->id, CoreGlobal::TYPE_USER, 'show graph'  );		 
+		$user				= Yii::$app->user->getIdentity();
+		$metaInfo			= UserService::findMetaByType(  $user->id, CoreGlobal::TYPE_USER, 'show info'  );
+		$metaNotification	= UserService::findMetaByType(  $user->id, CoreGlobal::TYPE_USER, 'show notification'  );		 
 
 		// Update/Render if exist
 		
 		if( isset( $model ) ) {			
 			 
 	    	return $this->render( WebGlobalCore::PAGE_SETTING, [
-	    		'model' => $model
+	    		'metaInfo' => $metaInfo,
+	    		'metaNotification' => $metaNotification
 	    	]);
 		}
 		else {
@@ -108,7 +110,8 @@ class UserController extends BaseController {
 			$model	= new ModelMeta();
 			
 			return $this->render( WebGlobalCore::PAGE_SETTING, [
-	    		'model' => $model
+	    		'metaInfo' => $metaInfo,
+	    		'metaNotification' => $metaNotification
 	    	]);
 		}
 

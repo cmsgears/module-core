@@ -11,6 +11,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\frontend\models\forms\Register;
 use cmsgears\core\common\models\forms\Login;
+use cmsgears\core\common\models\forms\ForgotPassword;
 
 use cmsgears\core\common\services\SiteMemberService;
 use cmsgears\core\frontend\services\UserService;
@@ -39,7 +40,8 @@ class SiteController extends BaseController {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'register' => ['post'],
-                    'login' => ['post']
+                    'login' => ['post'],
+                    'forgotPassword' => ['post']
                 ]
             ]
         ];
@@ -112,6 +114,60 @@ class SiteController extends BaseController {
 
 			// Trigger Ajax Failure
         	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+		}
+    }
+	
+	public function actionForgotPassword() { 
+
+		// Create Form Model
+		$model = new ForgotPassword();
+
+		// Load and Validate Form Model
+		if( $model->load( Yii::$app->request->post(), 'ForgotPassword' ) && $model->validate() ) {
+			
+			$user	= UserService::findByEmail( $model->email );
+			
+			// Trigger Reset Password
+			if( isset( $user ) && UserService::forgotPassword( $user ) ) {
+
+				$user	= UserService::findByEmail( $model->email );
+
+				// Load User Permissions
+				$user->loadPermissions();
+
+				// Send Forgot Password Mail
+				Yii::$app->cmgCoreMailer->sendPasswordResetMail( $user ); 
+				
+				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_FORGOT_PASSWORD ) );
+				
+				// Refresh the Page
+				return $this->refresh();
+			}
+			else {
+
+				//$model->addError( 'email', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
+				
+				// Generate Errors
+				
+				$model->addError( 'email', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
+				
+				$errors = AjaxUtil::generateErrorMessage( $model );
+	
+				// Trigger Ajax Failure
+	        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+				
+			}
+		} 
+		else {
+
+			//$model->addError( 'email', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
+			
+			// Generate Errors
+			$errors = AjaxUtil::generateErrorMessage( $model );
+
+			// Trigger Ajax Failure
+        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+			
 		}
     }
 }

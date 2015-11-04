@@ -34,14 +34,14 @@ class UserController extends \cmsgears\core\common\controllers\BaseController {
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
 	                'avatar' => [ 'permission' => CoreGlobal::PERM_USER ],
-	                'update-meta' => [ 'permission' => CoreGlobal::PERM_USER ]
+	                'updateMeta' => [ 'permission' => CoreGlobal::PERM_USER ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'avatar' => ['post'],
-                    'update-meta' => ['post']
+                    'avatar' => [ 'post' ],
+                    'updateMeta' => [ 'post' ]
                 ]
             ]
         ];
@@ -98,5 +98,4 @@ class UserController extends \cmsgears\core\common\controllers\BaseController {
 	    return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) ); 
 	}
 }
-
 ?>

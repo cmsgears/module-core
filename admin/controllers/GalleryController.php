@@ -86,7 +86,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\BaseController 
 
 			if( GalleryService::create( $model ) ) {
 
-				$this->redirect( $returnUrl );
+				$this->redirect( $this->returnUrl );
 			}
 		}
 

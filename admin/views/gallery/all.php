@@ -91,8 +91,8 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $gallery->title ?></td>
 						<td>
 							<span class="wrap-icon-action" title="Gallery Items"><?= Html::a( "", ["items?id=$id"], ['class'=>'icon-action icon-action-edit'] ) ?></span>
-							<span class="wrap-icon-action" title="Update Role"><?= Html::a( "", ["update?id=$id"], ['class'=>'icon-action icon-action-edit'] ) ?></span>
-							<span class="wrap-icon-action" title="Delete Role"><?= Html::a( "", ["delete?id=$id"], ['class'=>'icon-action icon-action-delete'] ) ?></span>
+							<span class="wrap-icon-action" title="Update Gallery"><?= Html::a( "", ["update?id=$id"], ['class'=>'icon-action icon-action-edit'] ) ?></span>
+							<span class="wrap-icon-action" title="Delete Gallery"><?= Html::a( "", ["delete?id=$id"], ['class'=>'icon-action icon-action-delete'] ) ?></span>
 						</td>
 					</tr>
 				<?php } ?>

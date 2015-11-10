@@ -15,43 +15,45 @@ class CoreProperties extends CmgProperties {
 
 	//TODO Add code for caching the properties
 
-	const DIR_TEMP					= "temp/";
-	const DIR_AVATAR				= "avatar/";
+	const DIR_TEMP					= 'temp/';
+	const DIR_AVATAR				= 'avatar/';
 
 	/**
 	 * The property will be used to decide whether database need to be searched for locale messages.
 	 */
-	const PROP_LOCALE_MESSAGE		= "locale message";
-	
+	const PROP_LOCALE_MESSAGE		= 'locale message';
+
 	/**
 	 * The property defines the default language for the site.
 	 */	
-	const PROP_LANGUAGE				= "language";
-	
+	const PROP_LANGUAGE				= 'language';
+
 	/**
 	 * The property defines the default character set for the site.
 	 */	
-	const PROP_CHARSET				= "charset";
-	
+	const PROP_CHARSET				= 'charset';
+
 	/**
 	 * The property defines site title to be used on browser title.
 	 */
-	const PROP_SITE_TITLE			= "site title";
+	const PROP_SITE_TITLE			= 'site title';
 	
 	/**
 	 * The property defines site name to be used at various places like emails, site footer.
 	 */
-	const PROP_SITE_NAME			= "site name";
+	const PROP_SITE_NAME			= 'site name';
 
 	/**
 	 * The property defines site url to be used at various places like emails.
 	 */
-	const PROP_SITE_URL				= "site url";
+	const PROP_SITE_URL				= 'site url';
 
 	/**
 	 * The property defines admin url to be used at various places like emails.
 	 */
-	const PROP_ADMIN_URL			= "admin url";
+	const PROP_ADMIN_URL			= 'admin url';
+	
+	const PROP_PUBLIC_REGISTER		= 'public register';
 
 	// Singleton instance
 	private static $instance;
@@ -147,6 +149,14 @@ class CoreProperties extends CmgProperties {
 	public function getAdminUrl() {
 
 		return $this->properties[ self::PROP_ADMIN_URL ]; 
+	}
+
+	/** 
+	 * Returns whether registration is allowed from site.
+	 */
+	public function isPublicRegister() {
+
+		return $this->properties[ self::PROP_PUBLIC_REGISTER ]; 
 	}
 
 	/** 

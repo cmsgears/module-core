@@ -327,8 +327,8 @@ class User extends CmgEntity implements IdentityInterface {
 		}
 
         $rules = [
-            [ [ 'email', 'username' ], 'required' ],
-            [ [ 'id', 'localeId', 'genderId', 'avatarId', 'status', 'phone', 'newsletter' ], 'safe' ],
+            [ [ 'email' ], 'required' ],
+            [ [ 'id', 'username', 'localeId', 'genderId', 'avatarId', 'status', 'phone', 'newsletter' ], 'safe' ],
             [ 'email', 'email' ],
             [ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],
             [ 'email', 'validateEmailUpdate', 'on' => [ 'update' ] ],

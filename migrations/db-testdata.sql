@@ -21,6 +21,7 @@ INSERT INTO `cmg_core_model_meta` (`parentId`,`parentType`,`name`,`value`,`type`
 	(1,'site','site name','CMSGears','core','text',null),
 	(1,'site','site url','http://demo.cmsgears.com/templates/basic/','core','text',null),
 	(1,'site','admin url','http://demo.cmsgears.com/templates/basic/admin/','core','text',null),
+	(1,'site','public register','1','core','text',null),
 	(1,'site','smtp','0','email','text',null),
 	(1,'site','smtp username','','email','text',null),
 	(1,'site','smtp password','','email','password',null),

@@ -61,6 +61,30 @@ class BaseController extends Controller {
 
 		return $this->_mailProperties;
 	}
+
+	/**
+	 * The method check whether user is logged in and send to respective home page.
+	 */
+	protected function checkHome() {
+
+		// Send user to home if already logged in
+	    if ( !Yii::$app->user->isGuest ) {
+
+			$user	= Yii::$app->user->getIdentity();
+			$role	= $user->role;
+
+			// Redirect user to home
+			if( isset( $role ) && isset( $role->homeUrl ) ) {
+
+				$this->redirect( [ "/$role->homeUrl" ] );
+			}
+			// Redirect user to home set by app config
+			else {
+
+				$this->redirect( [ Yii::$app->cmgCore->getLoginRedirectPage() ] );
+			}
+	    }
+	}
 }
 
 ?>

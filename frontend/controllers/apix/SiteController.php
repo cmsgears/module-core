@@ -50,12 +50,14 @@ class SiteController extends BaseController {
 	// SiteController
 
     public function actionRegister() {
+		
+		$coreProperties = $this->getCoreProperties();
 
 		// Create Form Model
 		$model = new Register();
 
 		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post(), 'Register' ) && $model->validate() ) {
+		if( $coreProperties->isPublicRegister() && $model->load( Yii::$app->request->post(), 'Register' ) && $model->validate() ) {
 
 			// Register User
 			$user = UserService::register( $model );
@@ -83,12 +85,14 @@ class SiteController extends BaseController {
     }
 
 	public function actionLogin() {
+		
+		$coreProperties = $this->getCoreProperties();
 
 		// Create Form Model
         $model 			= new Login();
 
 		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post(), 'Login' )  && $model->login() ) {
+		if( $coreProperties->isPublicRegister() && $model->load( Yii::$app->request->post(), 'Login' )  && $model->login() ) {
 
 			$user		= Yii::$app->user->getIdentity();
 			$role		= $user->role;

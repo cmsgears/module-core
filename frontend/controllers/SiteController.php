@@ -78,8 +78,15 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 		// Render Page
         return $this->render( WebGlobalCore::PAGE_INDEX );
     }
-
+	
+	public function actionLogin() {
+		
+		return parent::actionLogin( false, true );
+	}
+	
     public function actionRegister() {
+
+		$coreProperties = $this->getCoreProperties();
 
 		// Send user to home if already logged in
 		$this->checkHome();
@@ -88,7 +95,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 		$model = new Register();
 
 		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post() ) && $model->validate() ) {
+		if( $coreProperties->isPublicRegister() && $model->load( Yii::$app->request->post() ) && $model->validate() ) {
 
 			// Register User
 			$user 	= UserService::register( $model );

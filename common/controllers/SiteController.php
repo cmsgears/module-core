@@ -164,7 +164,7 @@ class SiteController extends BaseController {
 	/**
 	 * The method checks whether user is logged in and send to home.
 	 */
-	public function actionLogin( $admin = false ) {
+	public function actionLogin( $admin = false, $checkLogin = false ) {
 
 		// Send user to home if already logged in
         $this->checkHome();
@@ -173,11 +173,24 @@ class SiteController extends BaseController {
         $model 			= new Login();
 		$model->admin 	= $admin;
 
-		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post(), 'Login' )  && $model->login() ) {
+		if( $checkLogin ) {
 
-			// Redirect user to home
-			$this->checkHome();
+			$coreProperties = $this->getCoreProperties();
+
+			if( $coreProperties->isPublicRegister() && $model->load( Yii::$app->request->post(), 'Login' )  && $model->login() ) {
+
+				// Redirect user to home
+				$this->checkHome();
+			}
+		}
+		else {
+
+			// Load and Validate Form Model
+			if( $model->load( Yii::$app->request->post(), 'Login' )  && $model->login() ) {
+	
+				// Redirect user to home
+				$this->checkHome();
+			}
 		}
 
     	return $this->render( 'login', [

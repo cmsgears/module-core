@@ -7,16 +7,18 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Register";
 ?>
 <h1>Register</h1>
-<?php 
-	if( Yii::$app->session->hasFlash( 'message' ) ) { 
-?>
-	<p><?= Yii::$app->session->getFlash( 'message' ) ?></p>
 <?php
-	}
-	else {
+	if( $coreProperties->isPublicRegister() ) {
 
-		$form 	= ActiveForm::begin( [ 'id' => 'frm-registration' ] ); 
-		$terms	= "I agree to the " . Html::a( "Terms", [ '/terms' ], null ) . " and " . Html::a( "Privacy Policy", [ '/privacy' ], null ) . ".";
+		if( Yii::$app->session->hasFlash( 'message' ) ) {
+?>
+			<p><?= Yii::$app->session->getFlash( 'message' ) ?></p>
+<?php
+		}
+		else {
+
+			$form 	= ActiveForm::begin( [ 'id' => 'frm-registration' ] ); 
+			$terms	= "I agree to the " . Html::a( "Terms", [ '/terms' ], null ) . " and " . Html::a( "Privacy Policy", [ '/privacy' ], null ) . ".";
 ?>
     	<ul>
     		<li>
@@ -48,6 +50,10 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Register";
     		</li>
     	</ul>
 <?php
-		ActiveForm::end();
+			ActiveForm::end();
+		}
 	}
+	else {
 ?>
+		<p class="warning">Site registration is disabled by Admin.</p>
+<?php } ?>

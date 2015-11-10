@@ -8,7 +8,9 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Login';
 ?>
 <h1>Login</h1>
 <?php
-	$form = ActiveForm::begin( [ 'id' => 'frm-login' ] );
+	if( $coreProperties->isPublicRegister() ) {
+
+		$form = ActiveForm::begin( [ 'id' => 'frm-login' ] );
 ?>
 	<ul>
 		<li>
@@ -28,5 +30,9 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Login';
 		</li>
 	</ul>
 <?php
-	ActiveForm::end();
+		ActiveForm::end();
+	}
+	else {
 ?>
+	<p class="warning">Site login is disabled by Admin.</p>
+<?php } ?>

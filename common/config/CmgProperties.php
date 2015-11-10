@@ -7,7 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\services\SiteService;
 
-abstract class CmgProperties {
+class CmgProperties {
 
 	/**
 	 * The map stores all the core properties. It can be queried for all the available properties.
@@ -26,6 +26,14 @@ abstract class CmgProperties {
 
 			$this->properties	= SiteService::getMetaMapByNameType( Yii::$app->cmgCore->getMainSiteName(), $configType );
 		}
+	}
+
+	/**
+	 * Return all the properties.
+	 */
+	public function getProperties() {
+
+		return $this->properties;
 	}
 
 	/**

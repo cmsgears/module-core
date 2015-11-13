@@ -57,6 +57,8 @@ class CoreGlobal {
 	const MESSAGE_FORGOT_PASSWORD 	= 'forgotPwdMessage';
 	const MESSAGE_RESET_PASSWORD 	= 'resetPwdMessage';
 
+	const MESSAGE_NEWSLETTER_SIGNUP = 'newsletterlSignupMessage';
+
 	// Errors ----------------------------------------------------------
 
 	// Errors - Generic

@@ -14,14 +14,14 @@ class Widget extends \yii\base\Widget {
 	public $options 		= [];
 
 	/**
-	 * The path at which view file is located. It can have alias - ex: '@widget/my-view'. By default it's the views folder within widget directory.
+	 * The path at which view template file is located. It can have alias - ex: '@widget/my-view'. By default it's the views folder within widget directory.
 	 */
-	public $viewsDirectory	= null;
+	public $templateDirectory	= null;
 
 	/**
-	 * The view directory/file used to render widget. If it's a directory, the view can be formed using multiple file.
+	 * The template directory/file used to render widget. If it's a directory, the view can be formed using multiple files.
 	 */
-	public $viewFile		= 'simple';
+	public $template		= 'simple';
 
 	// Instance Methods --------------------------------------------
 
@@ -32,9 +32,9 @@ class Widget extends \yii\base\Widget {
 	 */
 	public function getViewPath() {
 
-		if( isset( $this->viewsDirectory ) ) {
+		if( isset( $this->templateDirectory ) ) {
 
-			return $this->viewsDirectory;
+			return $this->templateDirectory;
 		}
 
 		return parent::getViewPath();

@@ -37,6 +37,15 @@ class SiteService extends Service {
 
 	/**
 	 * @param string $name
+	 * @return Site
+	 */
+	public static function findBySlug( $slug ) {
+
+		return Site::findBySlug( $slug );
+    }
+
+	/**
+	 * @param string $name
 	 * @param string $type
 	 * @return array - An array of site meta for the given site name and meta type.
 	 */
@@ -72,20 +81,40 @@ class SiteService extends Service {
 
 	// Create --------------
 
-	public static function create( $site ) {
+	public static function create( $site, $avatar = null, $banner = null ) {
 
-		$site->create();
+		if( isset( $avatar ) ) {
+
+			FileService::saveImage( $avatar, [ 'model' => $site, 'attribute' => 'avatarId' ] );
+		}
+
+		if( isset( $banner ) ) {
+
+			FileService::saveImage( $banner, [ 'model' => $site, 'attribute' => 'bannerId' ] );
+		}
+
+		$site->save();
 
 		return $site;
 	}
 
 	// Update --------------
 
-	public static function update( $site ) {
+	public static function update( $site, $avatar = null, $banner = null ) {
 
 		$siteToUpdate	= self::findById( $site->id );
 
-		$siteToUpdate->copyForUpdateFrom( $site, [ 'name' ] );
+		$siteToUpdate->copyForUpdateFrom( $site, [ 'avatarId', 'name', 'order' ] );
+
+		if( isset( $avatar ) ) {
+
+			FileService::saveImage( $avatar, [ 'model' => $siteToUpdate, 'attribute' => 'avatarId' ] );
+		}
+
+		if( isset( $banner ) ) {
+
+			FileService::saveImage( $banner, [ 'model' => $siteToUpdate, 'attribute' => 'bannerId' ] );
+		}
 
 		$siteToUpdate->update();
 
@@ -102,6 +131,23 @@ class SiteService extends Service {
 		$metaToUpdate->update();
 
 		return $metaToUpdate;
+	}
+
+	// Delete -----------
+
+	/**
+	 * @param Site $site
+	 * @return boolean
+	 */
+	public static function delete( $site ) {
+
+		// Find existing Site
+		$siteToDelete	= self::findById( $site->id );
+
+		// Delete Site
+		$siteToDelete->delete();
+
+		return true;
 	}
 }
 

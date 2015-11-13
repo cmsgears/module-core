@@ -24,6 +24,7 @@ DROP TABLE IF EXISTS `cmg_core_object`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_object` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `siteId` bigint(20) NOT NULL,
   `createdBy` bigint(20) NOT NULL,
   `modifiedBy` bigint(20) DEFAULT NULL,
   `templateId` bigint(20) DEFAULT NULL,
@@ -34,9 +35,10 @@ CREATE TABLE `cmg_core_object` (
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_object_1` (`createdBy`),
-  KEY `fk_object_2` (`modifiedBy`),
-  KEY `fk_object_3` (`templateId`)
+  KEY `fk_object_1` (`siteId`),
+  KEY `fk_object_2` (`createdBy`),
+  KEY `fk_object_3` (`modifiedBy`),
+  KEY `fk_object_4` (`templateId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -360,8 +362,9 @@ DROP TABLE IF EXISTS `cmg_core_newsletter_member`;
 CREATE TABLE `cmg_core_newsletter_member` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `active` tinyint DEFAULT NULL,
+  `global` tinyint DEFAULT NULL,
   `createdAt` datetime DEFAULT NULL,
   `modifiedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -445,8 +448,14 @@ DROP TABLE IF EXISTS `cmg_core_site`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_site` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `avatarId` bigint(20) DEFAULT NULL,
+  `bannerId` bigint(20) DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
+  `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `order` smallint(6) default 0,
+  PRIMARY KEY (`id`),
+  KEY `fk_site_1` (`avatarId`),
+  KEY `fk_site_2` (`bannerId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -615,9 +624,10 @@ SET FOREIGN_KEY_CHECKS=0;
 -- Constraints for table `cmg_core_object`
 --
 ALTER TABLE `cmg_core_object`
-	ADD CONSTRAINT `fk_object_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
-  	ADD CONSTRAINT `fk_object_2` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`),
-  	ADD CONSTRAINT `fk_object_3` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_template` (`id`);
+	ADD CONSTRAINT `fk_object_1` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`),
+	ADD CONSTRAINT `fk_object_2` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
+  	ADD CONSTRAINT `fk_object_3` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`),
+  	ADD CONSTRAINT `fk_object_4` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_template` (`id`);
 
 --
 -- Constraints for table `cmg_core_category`
@@ -717,6 +727,14 @@ ALTER TABLE `cmg_core_activity`
 ALTER TABLE `cmg_core_gallery`
   	ADD CONSTRAINT `fk_gallery_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
   	ADD CONSTRAINT `fk_gallery_2` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
+
+--
+-- Constraints for table `cmg_core_site`
+--
+
+ALTER TABLE `cmg_core_site`
+  	ADD CONSTRAINT `fk_site_1` FOREIGN KEY (`avatarId`) REFERENCES `cmg_core_file` (`id`),
+  	ADD CONSTRAINT `fk_site_2` FOREIGN KEY (`bannerId`) REFERENCES `cmg_core_file` (`id`);
 
 --
 -- Constraints for table `cmg_core_site_member`

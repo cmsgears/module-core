@@ -46,7 +46,7 @@ class UserService extends \cmsgears\core\common\services\UserService {
 		// Add to mailing list
 		if( $user->newsletter ) {
 
-			NewsletterMemberService::create( $user->email );
+			NewsletterMemberService::create( $user->email, $user->getName() );
 		}
 
 		return $user;

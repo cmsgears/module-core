@@ -5,6 +5,7 @@ namespace cmsgears\core\common\models\entities;
 use \Yii;
 use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
+use yii\behaviors\SluggableBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -26,6 +27,22 @@ class Site extends NamedCmgEntity {
 	// Instance Methods --------------------------------------------
 
 	/**
+	 * @return File - file url
+	 */
+	public function getAvatar() {
+
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'avatarId' ] );
+	}
+
+	/**
+	 * @return File - file url
+	 */
+	public function getBanner() {
+
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
+	}
+
+	/**
 	 * @return array - list of site Users
 	 */
 	public function getUsers() {
@@ -33,6 +50,24 @@ class Site extends NamedCmgEntity {
     	return $this->hasMany( User::className(), [ 'id' => 'memberId' ] )
 					->viaTable( CoreTables::TABLE_SITE_MEMBER, [ 'siteId' => 'id' ] );
 	}
+
+	// yii\base\Component ----------------
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+
+        return [
+
+            'sluggableBehavior' => [
+                'class' => SluggableBehavior::className(),
+                'attribute' => 'name',
+                'slugAttribute' => 'slug',
+                'ensureUnique' => true
+            ]
+        ];
+    }
 
 	// yii\base\Model --------------------
 
@@ -50,10 +85,11 @@ class Site extends NamedCmgEntity {
 
         $rules = [
             [ [ 'name' ], 'required' ],
-            [ 'id', 'safe' ],
+            [ [ 'id', 'avatarId', 'bannerId', 'slug', 'order' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ 'order', 'number', 'integerOnly' => true ]
         ];
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
@@ -88,6 +124,13 @@ class Site extends NamedCmgEntity {
 
 	// Site ------------------------------
 
+	/**
+	 * @return Site - by slug
+	 */
+	public static function findBySlug( $slug ) {
+
+		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+	}
 }
 
 ?>

@@ -3,6 +3,7 @@ namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
 use \Yii;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\base\Exception;
 use yii\web\HttpException;
@@ -21,6 +22,8 @@ abstract class BaseTemplateController extends BaseController {
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+		
+		$this->returnUrl	= Url::previous( 'templates' );
 	}
 
 	// Instance Methods --------------------------------------------
@@ -39,7 +42,7 @@ abstract class BaseTemplateController extends BaseController {
 	    ]);
 	}
 
-	public function actionCreate( $returnUrl, $sidebar = [], $type = null ) {
+	public function actionCreate( $sidebar = [], $type = null ) {
 
 		$model		= new Template();
 
@@ -54,19 +57,19 @@ abstract class BaseTemplateController extends BaseController {
 
 			if( TemplateService::create( $model ) ) { 
 
-				return $this->redirect( $returnUrl );
+				return $this->redirect( $this->returnUrl );
 			}
 		}
 
     	return $this->render( '@cmsgears/module-core/admin/views/template/create', [
     		'model' => $model, 
-    		'returnUrl' => $returnUrl,
+    		'returnUrl' => $this->returnUrl,
     		'sidebarParent' => $sidebar[ 'parent' ],
     		'sidebarChild' => $sidebar[ 'child' ]
     	]);
 	}	
  	
-	public function actionUpdate( $id, $returnUrl, $sidebar = [], $type = null ) {
+	public function actionUpdate( $id, $sidebar = [], $type = null ) {
 
 		// Find Model
 		$model		= TemplateService::findById( $id );
@@ -80,13 +83,13 @@ abstract class BaseTemplateController extends BaseController {
 
 				if( TemplateService::update( $model ) ) {
 
-					return $this->redirect( $returnUrl );
+					return $this->redirect( $this->returnUrl );
 				} 
 			}
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/template/update', [
 	    		'model' => $model, 
-	    		'returnUrl' => $returnUrl,
+	    		'returnUrl' => $this->returnUrl,
     			'sidebarParent' => $sidebar[ 'parent' ],
     			'sidebarChild' => $sidebar[ 'child' ]
 	    	]);
@@ -96,7 +99,7 @@ abstract class BaseTemplateController extends BaseController {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $id, $returnUrl, $sidebar = [], $type = null ) {
+	public function actionDelete( $id, $sidebar = [], $type = null ) {
 
 		// Find Model
 		$model	= TemplateService::findById( $id );
@@ -108,13 +111,13 @@ abstract class BaseTemplateController extends BaseController {
 
 				if( TemplateService::delete( $model ) ) { 
 
-					return $this->redirect( $returnUrl );
+					return $this->redirect( $this->returnUrl );
 				}
 			}
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/template/delete', [
 	    		'model' => $model, 
-	    		'returnUrl' => $returnUrl,
+	    		'returnUrl' => $this->returnUrl,
     			'sidebarParent' => $sidebar[ 'parent' ],
     			'sidebarChild' => $sidebar[ 'child' ]
 	    	]);

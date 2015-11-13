@@ -10,11 +10,13 @@ use yii\helpers\Url;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\frontend\models\forms\Register;
+use cmsgears\core\frontend\models\forms\Newsletter;
 use cmsgears\core\common\models\forms\Login;
 use cmsgears\core\common\models\forms\ForgotPassword;
 
 use cmsgears\core\common\services\SiteMemberService;
 use cmsgears\core\frontend\services\UserService;
+use cmsgears\core\frontend\services\NewsletterMemberService;
 
 use cmsgears\core\frontend\controllers\BaseController;
 
@@ -41,7 +43,8 @@ class SiteController extends BaseController {
                 'actions' => [
                     'register' => ['post'],
                     'login' => ['post'],
-                    'forgotPassword' => ['post']
+                    'forgotPassword' => ['post'],
+                    'newsletter' => ['post']
                 ]
             ]
         ];
@@ -172,6 +175,30 @@ class SiteController extends BaseController {
 			// Trigger Ajax Failure
         	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 			
+		}
+    }
+
+    public function actionNewsletter() {
+
+		// Create Form Model
+		$model = new Newsletter();
+
+		// Load and Validate Form Model
+		if( $model->load( Yii::$app->request->post(), 'Newsletter' ) && $model->validate() ) {
+
+			if( NewsletterMemberService::signUp( $model ) ) {
+
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_NEWSLETTER_SIGNUP ) );
+			}
+		}
+		else {
+
+			// Generate Errors
+			$errors = AjaxUtil::generateErrorMessage( $model );
+
+			// Trigger Ajax Failure
+        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
     }
 }

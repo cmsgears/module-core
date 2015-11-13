@@ -25,6 +25,16 @@ class Core extends Component {
 	/**
 	 * @var identify the currently active site based on the url request.
 	 */
+	public $siteId				= 1;
+
+	/**
+	 * @var identify the currently active site based on the url request.
+	 */
+	public $siteSlug			= "main";
+
+	/**
+	 * @var identify the currently active site based on the url request.
+	 */
 	public $siteName			= "main";
 
 	/**
@@ -134,6 +144,24 @@ class Core extends Component {
 	public function getMainSiteName() {
 
 		return $this->mainSiteName;
+	}
+
+	/**
+	 * The method getSiteId returns the site id for default site. It's more useful in case multi-site feature is enabled.
+	 * @return string 
+	 */
+	public function getSiteId() {
+
+		return $this->siteId;
+	}
+
+	/**
+	 * The method getSiteSlug returns the site slug for default site. It's more useful in case multi-site feature is enabled.
+	 * @return string 
+	 */
+	public function getSiteSlug() {
+
+		return $this->siteSlug;
 	}
 
 	/**

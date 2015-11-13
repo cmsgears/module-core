@@ -56,6 +56,17 @@ $user	= Yii::$app->user->getIdentity();
 	</div>
 <?php } ?>
 
+<?php if( Yii::$app->cmgCore->multiSite && $core->hasModule( 'cmgcore' ) && $user->isPermitted( 'core' ) ) { ?>
+	<div id="sidebar-site" class="collapsible-tab <?php if( strcmp( $parent, 'sidebar-site' ) == 0 ) echo 'active';?>">
+		<div class="collapsible-tab-header">
+			<a href="<?php echo Url::toRoute( ['/cmgcore/sites/all'] ); ?>">
+				<div class="colf colf4"><span class="icon-sidebar icon-slider"></span></div>
+				<div class="colf colf4x3">Sites</div>
+			</a>
+		</div>
+	</div>
+<?php } ?>
+
 <?php if( Yii::$app->cmgCore->hasModule( 'cmgcore' ) && $user->isPermitted( 'core' ) ) { ?>
 	<div id="sidebar-country" class="collapsible-tab <?php if( strcmp( $parent, 'sidebar-country' ) == 0 ) echo 'active';?>">
 		<div class="collapsible-tab-header">

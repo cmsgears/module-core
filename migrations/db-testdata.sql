@@ -7,7 +7,7 @@ SET FOREIGN_KEY_CHECKS=0;
 --
 
 INSERT INTO `cmg_core_site` VALUES
-	(1,'main');
+	(1,NULL,NULL,'main','main',0);
 
 --
 -- Dumping data for table `cmg_core_model_meta`

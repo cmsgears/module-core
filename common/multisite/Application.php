@@ -35,15 +35,15 @@ class Application extends \yii\web\Application {
 					list ( $site, $siteRoute ) = explode( '/', $route, 2 );
 	
 					// Find Site
-					$site = SiteService::findByName( $site );
+					$site = SiteService::findBySlug( $site );
 	
 					// Site Found
 					if( isset( $site ) ) {
 						
-						// Set Current Site in Session
-						Yii::$app->session->set('siteName', $site->name );
-	
+						// Configure Current Site
+						Yii::$app->cmgCore->siteId		= $site->id;
 						Yii::$app->cmgCore->siteName 	= $site->name;
+						Yii::$app->cmgCore->siteSlug 	= $site->slug;
 	
 						Yii::$app->urlManager->baseUrl	= Yii::$app->urlManager->baseUrl . "/" . $site->name; 
 	
@@ -55,22 +55,22 @@ class Application extends \yii\web\Application {
 			else {
 
 				// Find Site
-				$siteName 		= array_shift((explode(".",$_SERVER['HTTP_HOST'])));
+				$siteName 		= array_shift( ( explode( ".", $_SERVER[ 'HTTP_HOST' ] ) ) );
 
 				if( !isset( $siteName ) || strcmp( $siteName, 'www' ) == 0 ) {
-				
-					$siteName	= 'main';
+
+					$siteSlug	= 'main';
 				}
 
-				$site 			= SiteService::findByName( $siteName );
+				$site 			= SiteService::findBySlug( $siteSlug );
 
 				// Site Found
 				if( isset( $site ) ) {
 
-					// Set Current Site in Session
-					Yii::$app->session->set('siteName', $site->name );
-
+					// Configure Current Site
+					Yii::$app->cmgCore->siteId		= $site->id;
 					Yii::$app->cmgCore->siteName 	= $site->name;
+					Yii::$app->cmgCore->siteSlug 	= $site->slug;
 
 					return parent::createController( $route );	
 				}

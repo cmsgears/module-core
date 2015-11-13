@@ -23,6 +23,7 @@ class MessageSource extends Component {
 		CoreGlobal::MESSAGE_ACCOUNT_CONFIRM => 'Thanks for confirming your account. Please login to continue with us.',
 		CoreGlobal::MESSAGE_FORGOT_PASSWORD => 'A confirmation email having password reset link was sent to the given email address.',
 		CoreGlobal::MESSAGE_RESET_PASSWORD => 'Your password reset request was processed successfully. Please login to continue with us.',
+		CoreGlobal::MESSAGE_NEWSLETTER_SIGNUP => 'Thanks for joining our newsletter. We will keep you updated with latest news and happenings.',
 		// Errors - Generic
 		CoreGlobal::ERROR_REQUEST => 'Your request was not processed. Please correct the highlighted errors and submit again.',
 		CoreGlobal::ERROR_NOT_FOUND => 'The requested resource does not exist.',

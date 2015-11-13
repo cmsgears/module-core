@@ -98,19 +98,7 @@ if( !isset( $sortOrder ) ) {
 						$role	= $user->role->name;
 				?>
 					<tr>
-						<td> 
-							<?php
-								$avatar = $user->avatar;
-
-								if( isset( $avatar ) ) { 
-							?> 
-								<img class="avatar" src="<?= $avatar->getThumbUrl() ?>">
-							<?php 
-								} else { 
-							?>
-								<img class="avatar" src="<?=Yii::getAlias('@images')?>/avatar.png">
-							<?php } ?>
-						</td>
+						<td><?= CodeGenUtil::getImageThumbTag( $user->avatar, [ 'class' => 'avatar', 'image' => 'avatar' ] ) ?></td>
 						<td><?= $user->username ?></td>
 						<td><?= $user->getName() ?></td>
 						<td><?= $user->email ?></td>

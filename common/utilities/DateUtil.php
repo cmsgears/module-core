@@ -56,7 +56,17 @@ class DateUtil {
 
 		$date	= preg_split( "/ /", $date );
 
-		return $date[0];
+		return $date[ 0 ];
+    }
+
+	/**
+	 * @return date - from datetime
+	 */
+    public static function getTimeFromDateTime( $date ) {
+
+		$date	= preg_split( "/ /", $date );
+
+		return $date[ 1 ];
     }
 
 	/**

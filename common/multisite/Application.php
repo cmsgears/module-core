@@ -59,10 +59,10 @@ class Application extends \yii\web\Application {
 
 				if( !isset( $siteName ) || strcmp( $siteName, 'www' ) == 0 ) {
 
-					$siteSlug	= 'main';
+					$siteName	= 'main';
 				}
 
-				$site 			= SiteService::findBySlug( $siteSlug );
+				$site 			= SiteService::findBySlug( $siteName );
 
 				// Site Found
 				if( isset( $site ) ) {

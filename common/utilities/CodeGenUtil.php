@@ -274,6 +274,31 @@ class CodeGenUtil {
 			}
 		}
 	}
+	
+	public static function generateMetaTags( $params ) {
+		
+		$metaContent	= '';
+		$description	= $params[ 'desc' ];
+		$meta			= $params[ 'meta' ];
+		$robot			= $params[ 'robot' ];
+
+		if( isset( $description ) ) {
+				
+			$metaContent .= "<meta name='description' content='$description' />";
+		}
+
+		if( isset( $meta ) ) {
+				
+			$metaContent .= "<meta name='keywords' content='$meta' />";
+		}
+
+		if( isset( $robot ) ) {
+				
+			$metaContent .= "<meta name='robots' content='$robot' />";
+		}
+		
+		return $metaContent;
+	}
 
 	// Return the username by splitting given email.
 	public static function splitEmail( $email ) {

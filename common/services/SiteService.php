@@ -45,13 +45,13 @@ class SiteService extends Service {
     }
 
 	/**
-	 * @param string $name
+	 * @param string $slug
 	 * @param string $type
 	 * @return array - An array of site meta for the given site name and meta type.
 	 */
-    public static function getMetaByNameType( $name, $type ) {
+    public static function getMetaBySlugType( $slug, $type ) {
 
-		$site = Site::findByName( $name );
+		$site = Site::findBySlug( $slug );
 
 		return $site->getModelMetasByType( $type );
     }
@@ -61,9 +61,9 @@ class SiteService extends Service {
 	 * @param string $type
 	 * @return array - An associative array of site meta for the given site name and meta type having name as key and value as value.
 	 */
-    public static function getMetaMapByNameType( $name, $type ) {
+    public static function getMetaMapBySlugType( $slug, $type ) {
 
-		$site = Site::findByName( $name );
+		$site = Site::findBySlug( $slug );
 
 		return $site->getMetaNameValueMapByType( $type );
     }

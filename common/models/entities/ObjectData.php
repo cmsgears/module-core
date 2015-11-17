@@ -6,6 +6,7 @@ use \Yii;
 use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
 use yii\db\Expression;
+use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
@@ -23,6 +24,7 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
+ * @property string $slug
  * @property string $description
  * @property string $type
  * @property string $data
@@ -79,6 +81,12 @@ class ObjectData extends CmgEntity {
 
         return [
 			AuthorBehavior::className(),
+            'sluggableBehavior' => [
+                'class' => SluggableBehavior::className(),
+                'attribute' => 'name',
+                'slugAttribute' => 'slug',
+                'ensureUnique' => true
+            ],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
 				'createdAtAttribute' => 'createdAt',
@@ -104,7 +112,7 @@ class ObjectData extends CmgEntity {
 
         $rules = [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'templateId', 'description', 'data' ], 'safe' ],
+            [ [ 'id', 'slug', 'templateId', 'description', 'data' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ [ 'name', 'type' ], 'string', 'min'=>1, 'max'=>100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
@@ -181,6 +189,14 @@ class ObjectData extends CmgEntity {
 	}
 
 	// ObjectData ------------------------
+
+	/**
+	 * @return ObjectData - by slug and type
+	 */
+	public static function findBySlugType( $slug, $type ) {
+
+		return self::find()->where( 'slug=:slug AND type=:type', [ ':slug' => $slug, ':type' => $type ] )->one();
+	}
 
 	/**
 	 * @return ObjectData - by name and type

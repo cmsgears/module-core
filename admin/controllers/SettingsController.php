@@ -44,7 +44,7 @@ class SettingsController extends BaseController {
 
     public function actionIndex( $type ) {
 
-		$settings 	= SiteService::getMetaByNameType( Yii::$app->cmgCore->getSiteName(), $type );
+		$settings 	= SiteService::getMetaBySlugType( Yii::$app->cmgCore->getSiteSlug(), $type );
 
 	    return $this->render('index', [
 	        'settings' => $settings,
@@ -54,7 +54,7 @@ class SettingsController extends BaseController {
 
 	public function actionUpdate( $type ) {
 
-		$settings 	= SiteService::getMetaByNameType( Yii::$app->cmgCore->getSiteName(), $type );
+		$settings 	= SiteService::getMetaBySlugType( Yii::$app->cmgCore->getSiteSlug(), $type );
 
 	    return $this->render('update', [
 	        'settings' => $settings,

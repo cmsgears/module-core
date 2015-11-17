@@ -19,12 +19,12 @@ class CmgProperties {
 	 */
 	public function init( $configType ) {
 
-		$this->properties	= SiteService::getMetaMapByNameType( Yii::$app->cmgCore->getSiteName(), $configType );
+		$this->properties	= SiteService::getMetaMapBySlugType( Yii::$app->cmgCore->getSiteSlug(), $configType );
 
 		// Load main site properties
 		if( Yii::$app->cmgCore->multiSite && count( $this->properties ) == 0 ) {
 
-			$this->properties	= SiteService::getMetaMapByNameType( Yii::$app->cmgCore->getMainSiteName(), $configType );
+			$this->properties	= SiteService::getMetaMapBySlugType( Yii::$app->cmgCore->getMainSiteSlug(), $configType );
 		}
 	}
 

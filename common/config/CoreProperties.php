@@ -29,6 +29,11 @@ class CoreProperties extends CmgProperties {
 	const PROP_LANGUAGE				= 'language';
 
 	/**
+	 * The property defines the default locale for the site.
+	 */	
+	const PROP_LOCALE				= 'locale';
+
+	/**
 	 * The property defines the default character set for the site.
 	 */	
 	const PROP_CHARSET				= 'charset';
@@ -109,6 +114,14 @@ class CoreProperties extends CmgProperties {
 	public function getLanguage() {
 		
 		return $this->properties[ self::PROP_LANGUAGE ];
+	}
+
+	/**
+	 * Returns Charset to be used by Browser.
+	 */
+	public function getLocale() {
+		
+		return $this->properties[ self::PROP_LOCALE ];
 	}
 
 	/**

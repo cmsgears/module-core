@@ -29,6 +29,7 @@ CREATE TABLE `cmg_core_object` (
   `modifiedBy` bigint(20) DEFAULT NULL,
   `templateId` bigint(20) DEFAULT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `slug` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `data` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,

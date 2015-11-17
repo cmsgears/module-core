@@ -20,6 +20,11 @@ class Core extends Component {
 	/**
 	 * @var main site to load configurations in case sub sites are not configured.
 	 */
+	public $mainSiteSlug		= "main";
+
+	/**
+	 * @var main site to load configurations in case sub sites are not configured.
+	 */
 	public $mainSiteName		= "main";
 
 	/**
@@ -136,6 +141,15 @@ class Core extends Component {
 
 		//TODO - Add code to check availability of a widget from database and widgets folder
     }
+
+	/**
+	 * The method getMainSiteSlug returns the site slug for main site.
+	 * @return string 
+	 */
+	public function getMainSiteSlug() {
+
+		return $this->mainSiteSlug;
+	}
 
 	/**
 	 * The method getMainSiteName returns the site name for main site.

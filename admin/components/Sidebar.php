@@ -11,9 +11,9 @@ use yii\helpers\ArrayHelper;
  */
 class Sidebar extends Component {
 
-	public $modules;
+	public $modules	= [];
 	
-	public $plugins;
+	public $plugins	= [];
 
 	/**
 	 * Initialise the Sidebar.

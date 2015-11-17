@@ -278,23 +278,23 @@ class CodeGenUtil {
 	public static function generateMetaTags( $params ) {
 		
 		$metaContent	= '';
-		$description	= $params[ 'desc' ];
-		$meta			= $params[ 'meta' ];
-		$robot			= $params[ 'robot' ];
 
-		if( isset( $description ) ) {
-				
-			$metaContent .= "<meta name='description' content='$description' />";
+		if( isset( $params[ 'desc' ] ) ) {
+
+			$description	= $params[ 'desc' ];
+			$metaContent 	.= "<meta name='description' content='$description' />";
 		}
 
-		if( isset( $meta ) ) {
-				
-			$metaContent .= "<meta name='keywords' content='$meta' />";
+		if( isset( $params[ 'meta' ] ) ) {
+			
+			$meta			= $params[ 'meta' ];
+			$metaContent 	.= "<meta name='keywords' content='$meta' />";
 		}
 
-		if( isset( $robot ) ) {
-				
-			$metaContent .= "<meta name='robots' content='$robot' />";
+		if( isset( $params[ 'robot' ] ) ) {
+			
+			$robot			= $params[ 'robot' ];
+			$metaContent 	.= "<meta name='robots' content='$robot' />";
 		}
 		
 		return $metaContent;

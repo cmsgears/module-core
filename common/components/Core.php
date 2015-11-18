@@ -96,6 +96,16 @@ class Core extends Component {
 	public $trimFieldValue		= false;
 
 	/**
+	 * @var It can be used by system to allow users to change email apart from site admin.
+	 */
+	public $allowEmailChange	= true;
+
+	/**
+	 * @var It can be used by system to allow users to change username apart from site admin.
+	 */
+	public $allowUsernameChange	= true;
+
+	/**
 	 * Initialise the CMG Core Component.
 	 */
     public function init() {
@@ -265,6 +275,21 @@ class Core extends Component {
 	public function getEditorClass() {
 
 		return $this->editorClass;
+	}
+
+	public function isTrimFieldValue() {
+
+		return $this->trimFieldValue;
+	}
+
+	public function isEmailChangeAllowed() {
+
+		return $this->allowEmailChange;
+	}
+
+	public function isUsernameChangeAllowed() {
+
+		return $this->allowUsernameChange;
 	}
 }
 

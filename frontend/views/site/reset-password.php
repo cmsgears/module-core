@@ -18,7 +18,7 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Reset Password';
 ?>
     	<ul>
     		<li>
-    			<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email*' ] ) ?>
+    			<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email*', 'readOnly' => true ] ) ?>
     		</li>
     		<li>
     			<?= $form->field( $model, 'password' )->passwordInput( [ 'placeholder' => 'Password*' ] ) ?>

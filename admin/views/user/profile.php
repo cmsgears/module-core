@@ -66,9 +66,27 @@ $this->params['sidebar-child'] 	= 'profile';
 
     	<div class="frm-edit hidden">
 			<?php $form = ActiveForm::begin( ['id' => 'frm-user-profile', 'options' => ['class' => 'frm-split' ] ] );?>
-	
-			<?= $form->field( $model, 'email' )->textInput( [ 'readonly' => true ] ) ?>
-			<?= $form->field( $model, 'username' ) ?>
+
+			<?php if( !Yii::$app->cmgCore->isEmailChangeAllowed() ) { ?>
+
+				<?= $form->field( $model, 'email' )->textInput( [ 'readonly' => true ] ) ?>
+
+			<?php } else { ?>
+
+				<?= $form->field( $model, 'email' ) ?>
+
+			<?php } ?>
+
+			<?php if( !Yii::$app->cmgCore->isUsernameChangeAllowed() ) { ?>
+
+				<?= $form->field( $model, 'username' )->textInput( [ 'readonly' => true ] ) ?>
+
+			<?php } else { ?>
+
+				<?= $form->field( $model, 'username' ) ?>
+
+			<?php } ?>
+
 			<?= $form->field( $model, 'firstName' ) ?>
 			<?= $form->field( $model, 'lastName' ) ?>
 			<?= $form->field( $model, 'genderId' )->dropDownList( $genders )  ?>

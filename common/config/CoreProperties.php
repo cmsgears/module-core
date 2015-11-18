@@ -58,7 +58,7 @@ class CoreProperties extends CmgProperties {
 	 */
 	const PROP_ADMIN_URL			= 'admin url';
 	
-	const PROP_PUBLIC_REGISTER		= 'public register';
+	const PROP_REGISTRATION			= 'registration';
 
 	// Singleton instance
 	private static $instance;
@@ -167,9 +167,9 @@ class CoreProperties extends CmgProperties {
 	/** 
 	 * Returns whether registration is allowed from site.
 	 */
-	public function isPublicRegister() {
+	public function isRegistration() {
 
-		return $this->properties[ self::PROP_PUBLIC_REGISTER ]; 
+		return $this->properties[ self::PROP_REGISTRATION ]; 
 	}
 
 	/** 

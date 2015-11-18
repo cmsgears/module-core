@@ -16,7 +16,7 @@ class Widget extends \yii\base\Widget {
 	/**
 	 * The path at which view template file is located. It can have alias - ex: '@widget/my-view'. By default it's the views folder within widget directory.
 	 */
-	public $templateDirectory	= null;
+	public $templateDir		= null;
 
 	/**
 	 * The template directory/file used to render widget. If it's a directory, the view can be formed using multiple files.
@@ -32,9 +32,9 @@ class Widget extends \yii\base\Widget {
 	 */
 	public function getViewPath() {
 
-		if( isset( $this->templateDirectory ) ) {
+		if( isset( $this->templateDir ) ) {
 
-			return $this->templateDirectory;
+			return $this->templateDir;
 		}
 
 		return parent::getViewPath();

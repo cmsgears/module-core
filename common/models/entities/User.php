@@ -394,7 +394,7 @@ class User extends CmgEntity implements IdentityInterface {
 
 			$existingUser = self::findByEmail( $this->email );
 
-			if( $this->id != $existingUser->id && strcmp( $existingUser->email, $this->email ) == 0 ) {
+			if( isset( $existingUser ) && $this->id != $existingUser->id && strcmp( $existingUser->email, $this->email ) == 0 ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
 			}

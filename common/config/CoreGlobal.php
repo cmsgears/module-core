@@ -6,6 +6,17 @@ namespace cmsgears\core\common\config;
  */
 class CoreGlobal {
 
+	// System Pages ---------------------------------------------------
+
+	const PAGE_ACCOUNT_ACTIVATE	= 'activate-account';
+	const PAGE_PASSWORD_FORGOT	= 'forgot-password';
+	const PAGE_PASSWORD_RESET	= 'reset-password';
+	const PAGE_LOGIN			= 'login';
+
+	const FLASH_GENERIC 		= 'message';
+	const MODEL_GENERIC 		= 'model';
+	const MODEL_EMAIL	 		= 'email';
+
 	// Model Traits - Metas, Attachments, Addresses --------------------
 
 	const TYPE_SYSTEM			= 'system';
@@ -45,6 +56,8 @@ class CoreGlobal {
 	// User Module
 	const PERM_IDENTITY				= 'identity';
 	const PERM_IDENTITY_RBAC		= 'identity-rbac';
+
+	// TODO: Implement internationalisation for Messages, Errors and Field Labels
 
 	// Messages --------------------------------------------------------
 

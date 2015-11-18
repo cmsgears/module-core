@@ -45,7 +45,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'logout' => ['get','post']
+                    'logout' => [ 'get', 'post' ]
                 ]
             ]
         ];
@@ -81,7 +81,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 	
 	public function actionLogin() {
 		
-		return parent::actionLogin( false, true );
+		return parent::actionLogin( false );
 	}
 	
     public function actionRegister() {
@@ -95,7 +95,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 		$model = new Register();
 
 		// Load and Validate Form Model
-		if( $coreProperties->isPublicRegister() && $model->load( Yii::$app->request->post() ) && $model->validate() ) {
+		if( $coreProperties->isRegistration() && $model->load( Yii::$app->request->post() ) && $model->validate() ) {
 
 			// Register User
 			$user 	= UserService::register( $model );
@@ -109,22 +109,20 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 				Yii::$app->cmgCoreMailer->sendRegisterMail( $user );
 
 				// Set Flash Message
-				Yii::$app->session->setFlash( 'message', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
-	
+				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
+
 				// Refresh the Page
 				return $this->refresh();
 			}
 		}
 
-        return $this->render( WebGlobalCore::PAGE_REGISTER, [
-        	'model' => $model
-        ]);
+        return $this->render( WebGlobalCore::PAGE_REGISTER, [ CoreGlobal::MODEL_GENERIC => $model ] );
     }
 
     public function actionConfirmAccount( $token, $email ) {
 
 		// Unset Flash Message
-		Yii::$app->session->setFlash( 'message', null );
+		Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, null );
 
 		// Send user to home if already logged in
 		$this->checkHome();
@@ -139,18 +137,18 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 				Yii::$app->cmgCoreMailer->sendVerifyUserMail( $user );
 
 				// Set Success Message
-				Yii::$app->session->setFlash( 'message', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
+				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
 			}
 			else {
 
 				// Set Failure Message
-				Yii::$app->session->setFlash( 'message', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
+				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
 			}
 		}
 		else {
 
 			// Set Failure Message
-			Yii::$app->session->setFlash( 'message', MYii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
+			Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, MYii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
 		}
 
         return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM );

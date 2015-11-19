@@ -5,6 +5,7 @@ namespace cmsgears\core\common\models\entities;
 use \Yii;
 use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
+use yii\behaviors\SluggableBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -14,6 +15,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * @property int $id
  * @property string $name
+ * @property string $slug
  * @property string $description
  * @property string $type
  * @property string $layout
@@ -25,6 +27,24 @@ use cmsgears\core\common\config\CoreGlobal;
 class Template extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
+
+	// yii\base\Component ----------------
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+
+        return [
+
+            'sluggableBehavior' => [
+                'class' => SluggableBehavior::className(),
+                'attribute' => 'name',
+                'slugAttribute' => 'slug',
+                'ensureUnique' => true
+            ]
+        ];
+    }
 
 	// yii\base\Model --------------------
 
@@ -42,7 +62,7 @@ class Template extends CmgEntity {
 
         $rules = [
             [ [ 'name', 'type' ], 'required' ],
-            [ [ 'id', 'description', 'layout', 'viewPath', 'adminView', 'frontendView', 'content' ], 'safe' ],
+            [ [ 'id', 'slug', 'description', 'layout', 'viewPath', 'adminView', 'frontendView', 'content' ], 'safe' ],
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
@@ -143,6 +163,11 @@ class Template extends CmgEntity {
 		$template = self::findByNameType( $name, $type );
 
 		return isset( $template );
+	}
+
+	public static function findBySlugType( $slug, $type ) {
+
+		return self::find()->where( 'slug=:slug AND type=:type', [ ':slug' => $slug, ':type' => $type ] )->one();
 	}
 }
 

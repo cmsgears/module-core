@@ -57,6 +57,7 @@ class MessageSource extends Component {
 		// Generic Fields
 		CoreGlobal::FIELD_CODE => 'Code',
 		CoreGlobal::FIELD_NAME => 'Name',
+		CoreGlobal::FIELD_LABEL => 'Label',
 		CoreGlobal::FIELD_TITLE => 'Title',
 		CoreGlobal::FIELD_ACTIVE => 'Active',
 		CoreGlobal::FIELD_VALUE => 'Value',

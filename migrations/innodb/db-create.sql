@@ -53,6 +53,7 @@ DROP TABLE IF EXISTS `cmg_core_template`;
 CREATE TABLE `cmg_core_template` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `layout` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -276,6 +277,7 @@ CREATE TABLE `cmg_core_user` (
   `localeId` bigint(20) DEFAULT NULL,
   `genderId` bigint(20) DEFAULT NULL,
   `avatarId` bigint(20) DEFAULT NULL,
+  `bannerId` bigint(20) DEFAULT NULL,
   `status` smallint(6) DEFAULT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `username` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -296,7 +298,8 @@ CREATE TABLE `cmg_core_user` (
   PRIMARY KEY (`id`),
   KEY `fk_user_1` (`localeId`),
   KEY `fk_user_2` (`genderId`),
-  KEY `fk_user_3` (`avatarId`)
+  KEY `fk_user_3` (`avatarId`),
+  KEY `fk_user_4` (`bannerId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -686,7 +689,8 @@ ALTER TABLE `cmg_core_address`
 ALTER TABLE `cmg_core_user`
   	ADD CONSTRAINT `fk_user_1` FOREIGN KEY (`localeId`) REFERENCES `cmg_core_locale` (`id`),
   	ADD CONSTRAINT `fk_user_2` FOREIGN KEY (`genderId`) REFERENCES `cmg_core_option` (`id`),
-  	ADD CONSTRAINT `fk_user_3` FOREIGN KEY (`avatarId`) REFERENCES `cmg_core_file` (`id`);
+  	ADD CONSTRAINT `fk_user_3` FOREIGN KEY (`avatarId`) REFERENCES `cmg_core_file` (`id`),
+  	ADD CONSTRAINT `fk_user_4` FOREIGN KEY (`bannerId`) REFERENCES `cmg_core_file` (`id`);
 
 --
 -- Constraints for table `cmg_core_file`

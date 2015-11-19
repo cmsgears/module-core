@@ -24,6 +24,7 @@ use cmsgears\core\common\models\traits\AddressTrait;
  * @property integer localeId
  * @property integer genderId
  * @property integer avatarId
+ * @property integer bannerId
  * @property short $status
  * @property string $email
  * @property string $username
@@ -120,6 +121,14 @@ class User extends CmgEntity implements IdentityInterface {
 	public function getAvatar() {
 
 		return $this->hasOne( CmgFile::className(), [ 'id' => 'avatarId' ] );
+	}
+
+	/**
+	 * @return CmgFile - set for User banner.
+	 */
+	public function getBanner() {
+
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
 	}
 
 	/**
@@ -328,7 +337,7 @@ class User extends CmgEntity implements IdentityInterface {
 
         $rules = [
             [ [ 'email' ], 'required' ],
-            [ [ 'id', 'username', 'localeId', 'genderId', 'avatarId', 'status', 'phone', 'newsletter' ], 'safe' ],
+            [ [ 'id', 'username', 'localeId', 'genderId', 'avatarId', 'bannerId', 'status', 'phone', 'newsletter' ], 'safe' ],
             [ 'email', 'email' ],
             [ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],
             [ 'email', 'validateEmailUpdate', 'on' => [ 'update' ] ],

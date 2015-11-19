@@ -117,6 +117,7 @@ class CoreGlobal {
 	// Generic Fields
 	const FIELD_CODE				= 'codeField';
 	const FIELD_NAME				= 'nameField';
+	const FIELD_LABEL				= 'labelField';
 	const FIELD_TITLE				= 'titleField';
 	const FIELD_ACTIVE				= 'activeField';
 	const FIELD_VALUE				= 'valueField';

@@ -137,6 +137,7 @@ class CoreGlobal {
 	const FIELD_CONSUMED			= 'consumedField';
 	const FIELD_DEFAULT 			= 'Default';
 	const FIELD_ORDER				= 'orderField';
+	const FIELD_FEATURED			= 'featuredField';
 	const FIELD_TIME				= 'timeField';
 	const FIELD_ICON				= 'iconField';
 	const FIELD_ROLE				= 'roleField';

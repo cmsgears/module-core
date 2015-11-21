@@ -14,6 +14,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property integer $categoryId
  * @property integer $parentId
  * @property string $parentType
+ * @property short $order
  */
 class ModelCategory extends CmgModel {
 
@@ -36,7 +37,7 @@ class ModelCategory extends CmgModel {
 
         return [
             [ [ 'categoryId', 'parentId', 'parentType' ], 'required' ],
-            [ 'id', 'safe' ],
+            [ [ 'id', 'order' ], 'safe' ],
             [ [ 'categoryId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'parentType', 'string', 'min' => 1, 'max' => 100 ]
         ];
@@ -50,7 +51,8 @@ class ModelCategory extends CmgModel {
 		return [
 			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'categoryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_CATEGORY )
+			'categoryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_CATEGORY ),
+			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
 		];
 	}
 

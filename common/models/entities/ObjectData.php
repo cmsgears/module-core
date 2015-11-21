@@ -21,12 +21,14 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * Role Entity
  *
  * @property integer $id
+ * @property integer $siteId
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
  * @property string $slug
  * @property string $description
  * @property string $type
+ * @property string $active
  * @property string $data
  * @property datetime $createdAt
  * @property datetime $modifiedAt
@@ -66,7 +68,15 @@ class ObjectData extends CmgEntity {
 
 		return '';
 	}
-	
+
+	/**
+	 * @return string representation of flag
+	 */
+	public function getActiveStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->active ); 
+	}
+
 	public function getWidgetForm() {
 		
 		$form = new WidgetForm();		
@@ -111,14 +121,14 @@ class ObjectData extends CmgEntity {
 		}
 
         $rules = [
-            [ [ 'name' ], 'required' ],
-            [ [ 'id', 'slug', 'templateId', 'description', 'data' ], 'safe' ],
+            [ [ 'name', 'siteId' ], 'required' ],
+            [ [ 'id', 'slug', 'templateId', 'description', 'data', 'active' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ [ 'name', 'type' ], 'string', 'min'=>1, 'max'=>100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
@@ -139,14 +149,15 @@ class ObjectData extends CmgEntity {
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
-			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
+			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA ),
+			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
 		];
 	}
 
 	// ObjectData ------------------------
 
 	/**
-	 * Validates whether a province existing with the same name for same country.
+	 * Validates whether a objext existing with the same name and type for same site.
 	 */
     public function validateNameCreate( $attribute, $params ) {
 
@@ -160,7 +171,7 @@ class ObjectData extends CmgEntity {
     }
 
 	/**
-	 * Validates whether a province existing with the same name for same country.
+	 * Validates whether a objext existing with the same name and type for same site.
 	 */
     public function validateNameUpdate( $attribute, $params ) {
 
@@ -168,7 +179,7 @@ class ObjectData extends CmgEntity {
 
 			$existingObj = self::findByNameType( $this->name, $this->type );
 
-			if( isset( $existingObj ) && $this->id != $existingObj->id && 
+			if( isset( $existingObj ) && $this->id != $existingObj->id && $this->siteId == $existingObj->siteId && 
 				strcmp( $existingObj->name, $this->name ) == 0 && strcmp( $existingObj->type, $this->type ) == 0 ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
@@ -199,15 +210,17 @@ class ObjectData extends CmgEntity {
 	}
 
 	/**
-	 * @return ObjectData - by name and type
+	 * @return ObjectData - by name and type for current site
 	 */
 	public static function findByNameType( $name, $type ) {
 
-		return self::find()->where( 'name=:name AND type=:type', [ ':name' => $name, ':type' => $type ] )->one();
+		$siteId	= Yii::$app->cmgCore->siteId;
+
+		return self::find()->where( 'name=:name AND type=:type AND siteId=:siteId', [ ':name' => $name, ':type' => $type, ':siteId' => $siteId ] )->one();
 	}
 
 	/**
-	 * @return boolean - check whether a object exist by the provided name and type
+	 * @return boolean - check whether a object exist by the provided name and type for current site
 	 */
 	public static function isExistByNameType( $name, $type ) {
 

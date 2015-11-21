@@ -19,6 +19,7 @@ $this->params['sidebar-child'] 	= $sidebar[ 'child' ];
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'title' ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
+		<?= $form->field( $model, 'active' )->checkbox() ?>
 
 		<div class="box-filler"></div>
 		<?=Html::a( 'Back', $returnUrl, [ 'class' => 'btn' ] );?>

@@ -14,6 +14,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property integer $tagId
  * @property integer $parentId
  * @property string $parentType
+ * @property short $order
  */
 class ModelTag extends CmgModel {
 
@@ -33,7 +34,7 @@ class ModelTag extends CmgModel {
 
         return [
             [ [ 'tagId', 'parentId', 'parentType' ], 'required' ],
-            [ 'id', 'safe' ],
+            [ [ 'id', 'order' ], 'safe' ],
             [ [ 'tagId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'parentType', 'string', 'min' => 1, 'max' => 100 ]
         ];
@@ -47,7 +48,8 @@ class ModelTag extends CmgModel {
 		return [
 			'tagId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TAG ),
 			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE )
+			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
 		];
 	}
 

@@ -16,34 +16,6 @@ CREATE TABLE `cmg_core_locale` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `cmg_core_object`
---
-
-DROP TABLE IF EXISTS `cmg_core_object`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cmg_core_object` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `siteId` bigint(20) NOT NULL,
-  `createdBy` bigint(20) NOT NULL,
-  `modifiedBy` bigint(20) DEFAULT NULL,
-  `templateId` bigint(20) DEFAULT NULL,
-  `name` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `slug` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `type` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `data` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  `createdAt` datetime NOT NULL,
-  `modifiedAt` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_object_1` (`siteId`),
-  KEY `fk_object_2` (`createdBy`),
-  KEY `fk_object_3` (`modifiedBy`),
-  KEY `fk_object_4` (`templateId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `cmg_core_template`
 --
 
@@ -62,6 +34,35 @@ CREATE TABLE `cmg_core_template` (
   `frontendView` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `content` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cmg_core_object`
+--
+
+DROP TABLE IF EXISTS `cmg_core_object`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmg_core_object` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `siteId` bigint(20) NOT NULL,
+  `createdBy` bigint(20) NOT NULL,
+  `modifiedBy` bigint(20) DEFAULT NULL,
+  `templateId` bigint(20) DEFAULT NULL,
+  `name` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `slug` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `type` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 0,
+  `data` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `modifiedAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_object_1` (`siteId`),
+  KEY `fk_object_2` (`createdBy`),
+  KEY `fk_object_3` (`modifiedBy`),
+  KEY `fk_object_4` (`templateId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -114,7 +115,7 @@ CREATE TABLE `cmg_core_option` (
   `categoryId` bigint(20) NOT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `message` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `data` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `icon` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_option_1` (`categoryId`)
@@ -407,7 +408,7 @@ CREATE TABLE `cmg_core_activity` (
   `userId` bigint(20) NOT NULL,
   `notifierId` bigint(20) DEFAULT NULL,
   `templateId` bigint(20) DEFAULT NULL,
-  `message` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `data` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `consumed` tinyint(1) DEFAULT 0,
   `createdAt` datetime NOT NULL,
@@ -435,6 +436,7 @@ CREATE TABLE `cmg_core_gallery` (
   `slug` varchar(150) DEFAULT NULL,
   `title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 0,
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -457,6 +459,7 @@ CREATE TABLE `cmg_core_site` (
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `order` smallint(6) default 0,
+  `active` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `fk_site_1` (`avatarId`),
   KEY `fk_site_2` (`bannerId`)
@@ -494,7 +497,7 @@ DROP TABLE IF EXISTS `cmg_core_model_message`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_model_message` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `localeId` bigint(20) DEFAULT NULL,
+  `localeId` bigint(20) NOT NULL,
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -537,6 +540,7 @@ CREATE TABLE `cmg_core_model_category` (
   `categoryId` bigint(20) NOT NULL,
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `order` smallint(6) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `fk_model_category_1` (`categoryId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -572,6 +576,7 @@ CREATE TABLE `cmg_core_model_tag` (
   `tagId` bigint(20) NOT NULL,
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `order` smallint(6) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `fk_model_tag_1` (`tagId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -590,6 +595,7 @@ CREATE TABLE `cmg_core_model_address` (
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` smallint(6) NOT NULL DEFAULT 0,
+  `order` smallint(6) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `fk_model_address_1` (`addressId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

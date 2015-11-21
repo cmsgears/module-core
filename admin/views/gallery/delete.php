@@ -19,6 +19,7 @@ $this->params['sidebar-child'] 	= $sidebar[ 'child' ];
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
     	<?= $form->field( $model, 'title' )->textInput( [ 'readonly' => true ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => true ] ) ?>
+		<?= $form->field( $model, 'active' )->checkbox( [ 'disabled' => true ] ) ?>
 
 		<div class="box-filler"></div>
 		<?=Html::a( 'Cancel', $returnUrl, ['class' => 'btn' ] );?>

@@ -17,6 +17,9 @@ use cmsgears\core\common\models\traits\MetaTrait;
  *
  * @property integer $id
  * @property string $name
+ * @property string $slug
+ * @property short $order
+ * @property short $active
  */
 class Site extends NamedCmgEntity {
 
@@ -49,6 +52,14 @@ class Site extends NamedCmgEntity {
 
     	return $this->hasMany( User::className(), [ 'id' => 'memberId' ] )
 					->viaTable( CoreTables::TABLE_SITE_MEMBER, [ 'siteId' => 'id' ] );
+	}
+
+	/**
+	 * @return string representation of flag
+	 */
+	public function getActiveStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->active ); 
 	}
 
 	// yii\base\Component ----------------
@@ -85,7 +96,7 @@ class Site extends NamedCmgEntity {
 
         $rules = [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'avatarId', 'bannerId', 'slug', 'order' ], 'safe' ],
+            [ [ 'id', 'avatarId', 'bannerId', 'slug', 'order', 'active' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
@@ -106,7 +117,10 @@ class Site extends NamedCmgEntity {
 	public function attributeLabels() {
 
 		return [
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
 		];
 	}
 

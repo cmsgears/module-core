@@ -104,7 +104,7 @@ class SiteService extends Service {
 
 		$siteToUpdate	= self::findById( $site->id );
 
-		$siteToUpdate->copyForUpdateFrom( $site, [ 'avatarId', 'name', 'order' ] );
+		$siteToUpdate->copyForUpdateFrom( $site, [ 'avatarId', 'name', 'order', 'active' ] );
 
 		if( isset( $avatar ) ) {
 

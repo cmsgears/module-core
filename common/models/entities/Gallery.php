@@ -24,6 +24,7 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property string $name
  * @property string $slug
  * @property string $description
+ * @property short  $active
  */
 class Gallery extends NamedCmgEntity {
 
@@ -44,13 +45,21 @@ class Gallery extends NamedCmgEntity {
 	// Instance Methods --------------------------------------------
 
 	/**
+	 * @return string representation of flag
+	 */
+	public function getActiveStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->active ); 
+	}
+
+	/**
 	 * @return boolean - whether given user is owner
 	 */
 	public function checkOwner( $user ) {
 		
 		return $this->createdBy	= $user->id;		
 	}
-	
+
 	// yii\base\Component ----------------
 
     /**
@@ -91,7 +100,7 @@ class Gallery extends NamedCmgEntity {
 
         $rules = [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'slug', 'description', 'title' ], 'safe' ],
+            [ [ 'id', 'slug', 'description', 'title', 'active' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
@@ -115,7 +124,8 @@ class Gallery extends NamedCmgEntity {
 		return [
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'title' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
-			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION )
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
 		];
 	}
 

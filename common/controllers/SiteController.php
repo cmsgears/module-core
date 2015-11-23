@@ -42,7 +42,7 @@ class SiteController extends BaseController {
 		if( isset( $token ) && isset( $email ) ) {
 
 			// Load and Validate Form Model
-			if( $model->load( Yii::$app->request->post() ) && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post( 'ResetPassword' ) ) && $model->validate() ) {
 
 				$user	= UserService::findByEmail( $model->email );
 

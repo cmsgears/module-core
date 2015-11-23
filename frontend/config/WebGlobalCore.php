@@ -18,7 +18,12 @@ class WebGlobalCore {
 
 	// Private
 	const PAGE_PROFILE			= 'profile';
-	const PAGE_SETTING			= 'setting';
+	const PAGE_SETTINGS			= 'settings';
+	
+	// Default Settings
+	const SETTINGS_PRIVACY		= 'privacy';
+	const SETTINGS_NOTIFICATION	= 'notification';
+	const SETTINGS_REMINDER		= 'reminder';
 }
 
 ?>

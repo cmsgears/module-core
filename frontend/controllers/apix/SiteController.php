@@ -18,11 +18,7 @@ use cmsgears\core\common\services\SiteMemberService;
 use cmsgears\core\frontend\services\UserService;
 use cmsgears\core\frontend\services\NewsletterMemberService;
 
-use cmsgears\core\frontend\controllers\BaseController;
-
-use cmsgears\core\common\utilities\AjaxUtil;
-
-class SiteController extends BaseController {
+class SiteController extends \cmsgears\core\frontend\controllers\BaseController {
 
 	// Constructor and Initialisation ------------------------------
 

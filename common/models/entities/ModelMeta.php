@@ -26,6 +26,26 @@ class ModelMeta extends CmgModel {
  		
 	// Instance Methods --------------------------------------------
 
+	/**
+	 * @return string representation of boolean value
+	 */
+	public function getStrValue() {
+
+		if( strcmp( $this->fieldType, 'checkbox' ) == 0 ) {
+
+			if( isset( $this->value ) ) {
+	
+				return Yii::$app->formatter->asBoolean( $this->value );
+			}
+			else {
+	
+				return 'No';
+			}
+		}
+
+		return $this->value;
+	}
+
 	// yii\base\Model --------------------
 
     /**
@@ -41,8 +61,8 @@ class ModelMeta extends CmgModel {
 		}
 
         $rules = [
-            [ [ 'parentId', 'parentType', 'name', 'value' ], 'required' ],
-            [ [ 'id', 'data', 'type', 'fieldType', 'fieldMeta' ], 'safe' ],
+            [ [ 'parentId', 'parentType', 'name' ], 'required' ],
+            [ [ 'id', 'value', 'data', 'type', 'fieldType', 'fieldMeta' ], 'safe' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'alphanumhyphenspace' ],

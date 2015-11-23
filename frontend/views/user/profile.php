@@ -12,7 +12,7 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Profile";
 <?= $form->field( $model, 'username' ) ?>
 <?= $form->field( $model, 'firstName' ) ?>
 <?= $form->field( $model, 'lastName' ) ?>
-<?= $form->field( $model, 'genderId' )->dropDownList( $genders )  ?>
+<?= $form->field( $model, 'genderId' )->dropDownList( $genderMap )  ?>
 <?= $form->field( $model, 'phone' ) ?>
 <?= $form->field( $model, 'newsletter' )->checkbox() ?>
 

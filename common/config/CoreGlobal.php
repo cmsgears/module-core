@@ -82,6 +82,7 @@ class CoreGlobal {
 	const ERROR_SELECT				= 'selectError';
 	const ERROR_URL_ENTITY 			= 'urlEntityError';
 	const ERROR_DEPENDENCY			= 'dependencyError';
+	const ERROR_SESSION_OVER		= 'sessionOverError';
 
 	// Errors - Core Validators
 	const ERROR_AN_SPACE			= 'alphaNumSpaceError';

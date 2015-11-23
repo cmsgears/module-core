@@ -12,6 +12,11 @@ class Widget extends \yii\base\Widget {
 
 	// html options for Yii Widget
 	public $options 		= [];
+	
+	/**
+	 * Flag to check whether assets can be loaded.
+	 */
+	public $loadAssets		= true;
 
 	/**
 	 * The path at which view template file is located. It can have alias - ex: '@widget/my-view'. By default it's the views folder within widget directory.

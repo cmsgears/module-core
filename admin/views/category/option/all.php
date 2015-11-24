@@ -45,9 +45,8 @@ if( !isset( $sortOrder ) ) {
 	<div class="wrap-grid">
 		<table>
 			<thead>
-				<tr>				 
-					<th>Name</th>					
-					<th>Message</th> 
+				<tr>	 
+					<th>Name</th>
 					<th>Icon</th>
 					<th>Actions</th>  
 				</tr>
@@ -62,7 +61,6 @@ if( !isset( $sortOrder ) ) {
 				?>
 					<tr>
 						<td><?= $option->name ?></td> 
-						<td><?= $option->message ?></td> 
 						<td> <span class="<?= $option->icon ?>" title="<?= $option->name ?>"></span></td> 
 						<td>
 							<span class="wrap-icon-action" title="Edit Option"><?= Html::a( "", ["dropdown/option/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>								 

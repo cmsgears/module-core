@@ -12,6 +12,7 @@ use yii\base\NotSupportedException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreProperties;
 
 use cmsgears\core\common\models\traits\MetaTrait;
 use cmsgears\core\common\models\traits\FileTrait;
@@ -340,10 +341,12 @@ class User extends CmgEntity implements IdentityInterface {
             [ [ 'id', 'username', 'localeId', 'genderId', 'avatarId', 'bannerId', 'status', 'phone', 'newsletter' ], 'safe' ],
             [ 'email', 'email' ],
             [ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],
-            [ 'email', 'validateEmailUpdate', 'on' => [ 'update' ] ],
+            [ 'email', 'validateEmailUpdate', 'on' => [ 'update', 'profile' ] ],
+            [ 'email', 'validateEmailChange', 'on' => [ 'profile' ] ],
             [ 'username', 'alphanumdotu' ],
             [ 'username', 'validateUsernameCreate', 'on' => [ 'create' ] ],
-            [ 'username', 'validateUsernameUpdate', 'on' => [ 'update' ] ],
+            [ 'username', 'validateUsernameUpdate', 'on' => [ 'update', 'profile' ] ],
+            [ 'username', 'validateUsernameChange', 'on' => [ 'profile' ] ],
             [ [ 'firstName', 'lastName' ], 'alphanumspace' ],
             [ [ 'id', 'localeId', 'genderId', 'avatarId', 'status', 'newsletter' ], 'number', 'integerOnly' => true ],
             [ 'dob', 'date', 'format' => Yii::$app->formatter->dateFormat ],
@@ -411,6 +414,23 @@ class User extends CmgEntity implements IdentityInterface {
     }
 
 	/**
+	 * Validates user email to ensure that it does not allow to change while changing user profile.
+	 */
+    public function validateEmailChange( $attribute, $params ) {
+
+        if( !$this->hasErrors() ) {
+
+			$properties		= CoreProperties::getInstance();
+			$existingUser 	= self::findById( $this->id );
+
+			if( isset( $existingUser ) && strcmp( $existingUser->email, $this->email ) != 0  && !$properties->isChangeEmail() ) {
+
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_CHANGE_EMAIL ) );
+			}
+        }
+    }
+
+	/**
 	 * Validates user email to ensure that only one user exist with the given username.
 	 */
     public function validateUsernameCreate( $attribute, $params ) {
@@ -436,6 +456,23 @@ class User extends CmgEntity implements IdentityInterface {
 			if( isset( $existingUser ) && $this->id != $existingUser->id && strcmp( $existingUser->username, $this->username ) == 0 ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
+			}
+        }
+    }
+
+	/**
+	 * Validates user email to ensure that it does not allow to change while changing user profile.
+	 */
+    public function validateUsernameChange( $attribute, $params ) {
+
+        if( !$this->hasErrors() ) {
+
+			$properties		= CoreProperties::getInstance();
+			$existingUser 	= self::findById( $this->id );
+
+			if( isset( $existingUser ) && strcmp( $existingUser->username, $this->username ) != 0  && !$properties->isChangeUsername() ) {
+
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_CHANGE_USERNAME ) );
 			}
         }
     }

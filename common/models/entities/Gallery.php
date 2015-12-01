@@ -21,10 +21,16 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * Gallery Entity - The primary class.
  *
  * @property integer $id
+ * @property integer $createdBy
+ * @property integer $modifiedBy
  * @property string $name
  * @property string $slug
+ * @property string $type
+ * @property string $title
  * @property string $description
  * @property short  $active
+ * @property datetime $createdAt
+ * @property datetime $modifiedAt
  */
 class Gallery extends NamedCmgEntity {
 
@@ -100,7 +106,7 @@ class Gallery extends NamedCmgEntity {
 
         $rules = [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'slug', 'description', 'title', 'active' ], 'safe' ],
+            [ [ 'id', 'slug', 'type', 'description', 'title', 'active' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
@@ -123,6 +129,7 @@ class Gallery extends NamedCmgEntity {
 
 		return [
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'title' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )

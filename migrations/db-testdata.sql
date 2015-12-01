@@ -23,6 +23,8 @@ INSERT INTO `cmg_core_model_meta` (`parentId`,`parentType`,`name`,`value`,`type`
 	(1,'site','site url','http://demo.cmsgears.com/templates/basic/','core','text',null),
 	(1,'site','admin url','http://demo.cmsgears.com/templates/basic/admin/','core','text',null),
 	(1,'site','registration','1','core','text',null),
+	(1,'site','change email','1','core','text',null),
+	(1,'site','change username','1','core','text',null),
 	(1,'site','smtp','0','email','text',null),
 	(1,'site','smtp username','','email','text',null),
 	(1,'site','smtp password','','email','password',null),
@@ -78,9 +80,9 @@ INSERT INTO `cmg_core_role` VALUES
 INSERT INTO `cmg_core_permission` VALUES 
 	(1,1,1,'Admin','admin','The permission admin is to distinguish between admin and site user. It is a must have permission for admins.','system',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
 	(2,1,1,'User','user','The permission user is to distinguish between admin and site user. It is a must have permission for users.','system',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(3,1,1,'Core','core','The permission core is to manage settings, drop downs, galleries and newsletters from admin.','system',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(3,1,1,'Core','core','The permission core is to manage settings, drop downs, world countries, galleries and newsletters from admin.','system',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
 	(4,1,1,'Identity','identity','The permission identity is to manage users from admin.','system',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(5,1,1,'Identity RBAC','identity-rbac','The permission identity-rbac is to manage roles and permissions from admin.','system',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
+	(5,1,1,'RBAC','rbac','The permission rbac is to manage roles and permissions from admin.','system',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 --
 -- Dumping data for table `cmg_core_role_permission`

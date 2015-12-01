@@ -49,9 +49,13 @@ class MessageSource extends Component {
 		CoreGlobal::ERROR_USER_VERIFICATION	=> 'The account with this email is not confirmed yet. Please follow the mail sent while registration or try to reset password.',
 		CoreGlobal::ERROR_BLOCKED => 'The account is blocked by Admin. Please contact Admin to re-activate it.',
 		CoreGlobal::ERROR_LOGIN_FAILED => 'The provided username and password does not match.',
+		CoreGlobal::ERROR_PERMISSION => 'Not permitted',
 		// Errors - User Account
+		CoreGlobal::ERROR_PASSWORD_OLD => 'Please provide valid value for old password.',
 		CoreGlobal::ERROR_ACCOUNT_CONFIRM => 'Either your account does not exist or the confirmation link is not valid. Please try to reset your password.',
 		CoreGlobal::ERROR_PASSWORD_RESET => 'Either your account does not exist or the reset link is not valid. Please try to reset your password.',
+		CoreGlobal::ERROR_CHANGE_EMAIL => 'Email change is not allowed.',
+		CoreGlobal::ERROR_CHANGE_USERNAME => 'Username change is not allowed.',
 		// Errors - Apis
 		CoreGlobal::ERROR_APIS_DISABLED => 'APIs are not supported by this application.',
 		// Model Fields ----------------------------------------------------

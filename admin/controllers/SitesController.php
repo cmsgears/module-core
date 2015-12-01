@@ -23,7 +23,7 @@ class SitesController extends BaseController {
 
         parent::__construct( $id, $module, $config );
 
-		$this->sidebar 	= [ 'parent' => 'sidebar-site', 'child' => 'site' ];
+		$this->sidebar 	= [ 'parent' => 'sidebar-core', 'child' => 'site' ];
 	}
 
 	// Instance Methods --------------------------------------------

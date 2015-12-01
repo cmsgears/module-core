@@ -14,7 +14,7 @@ use cmsgears\core\common\models\entities\Gallery;
 
 use cmsgears\core\admin\services\GalleryService;
 
-class GalleryController extends \cmsgears\core\admin\controllers\BaseController {
+class GalleryController extends \cmsgears\core\admin\controllers\BaseGalleryController {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -22,7 +22,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\BaseController 
 
         parent::__construct( $id, $module, $config );
 		
-		$this->sidebar 		= [ 'parent' => 'sidebar-gallery', 'child' => 'gallery' ];
+		$this->sidebar 		= [ 'parent' => 'sidebar-core', 'child' => 'gallery' ];
 	}
 
 	// Instance Methods --------------------------------------------
@@ -61,111 +61,30 @@ class GalleryController extends \cmsgears\core\admin\controllers\BaseController 
 
 	public function actionIndex() {
 
-		$this->redirect( [ 'all' ] );
+		$this->redirect( 'all' );
 	}
 
 	public function actionAll() {
 
-		$dataProvider = GalleryService::getPagination();
-
+		// Remember return url for crud
 		Url::remember( [ 'gallery/all' ], 'galleries' );
 
-	    return $this->render( 'all', [
-	         'dataProvider' => $dataProvider
-	    ]);
+		return parent::actionAll( CoreGlobal::TYPE_SITE );
 	}
 
 	public function actionCreate() {
 
-		$model				= new Gallery();
-		$this->returnUrl	= Url::previous( 'galleries' );
-
-		$model->setScenario( 'create' );
-
-		if( $model->load( Yii::$app->request->post(), 'Gallery' )  && $model->validate() ) {
-
-			if( GalleryService::create( $model ) ) {
-
-				$this->redirect( $this->returnUrl );
-			}
-		}
-
-    	return $this->render( '@cmsgears/module-core/admin/views/gallery/create', [
-    		'model' => $model
-    	]);
+		return parent::actionCreate( CoreGlobal::TYPE_SITE );
 	}
 
 	public function actionUpdate( $id ) {
 
-		// Find Model
-		$model				= GalleryService::findById( $id );
-		$this->returnUrl	= Url::previous( 'galleries' );
-
-		// Update/Render if exist
-		if( isset( $model ) ) {
-
-			$model->setScenario( 'update' );
-	
-			if( $model->load( Yii::$app->request->post(), 'Gallery' )  && $model->validate() ) {
-	
-				if( GalleryService::update( $model ) ) {
-
-					$this->redirect( $this->returnUrl );
-				}
-			}
-
-	    	return $this->render( '@cmsgears/module-core/admin/views/gallery/update', [
-	    		'model' => $model
-	    	]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		return parent::actionUpdate( $id, CoreGlobal::TYPE_SITE );
 	}
 
 	public function actionDelete( $id ) {
 
-		// Find Model
-		$model				= GalleryService::findById( $id );
-		$this->returnUrl	= Url::previous( 'galleries' );
-
-		// Delete/Render if exist
-		if( isset( $model ) ) {
-
-			if( $model->load( Yii::$app->request->post(), 'Gallery' ) ) {
-	
-				if( GalleryService::delete( $model ) ) {
-		
-					$this->redirect( $this->returnUrl );
-				}
-			}
-
-	    	return $this->render( '@cmsgears/module-core/admin/views/gallery/delete', [
-	    		'model' => $model
-	    	]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
-
-	public function actionItems( $id ) {
-
-		// Find Model
-		$gallery 			= GalleryService::findById( $id );
-		$this->returnUrl	= Url::previous( 'galleries' );
-
-		// Update/Render if exist
-		if( isset( $gallery ) ) {
-
-	    	return $this->render( '@cmsgears/module-core/admin/views/gallery/items', [
-	    		'gallery' => $gallery,
-	    		'items' => $gallery->files
-	    	]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		return parent::actionDelete( $id, CoreGlobal::TYPE_SITE );
 	}
 }
 

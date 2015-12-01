@@ -99,21 +99,11 @@ class UserController extends BaseUserController {
 		$email		= $model->email;
 		$username	= $model->username;
 
-		$model->setScenario( 'update' );
+		$model->setScenario( 'profile' );
 
 		UserService::checkNewsletterMember( $model );
 
 		if( $model->load( Yii::$app->request->post(), 'User' ) && $model->validate() ) {
-
-			if( !Yii::$app->cmgCore->isEmailChangeAllowed() ) {
-
-				$model->email	= $email;
-			}
-
-			if( !Yii::$app->cmgCore->isUsernameChangeAllowed() ) {
-
-				$model->username	= $username;
-			}
 
 			if( UserService::update( $model ) ) {
 

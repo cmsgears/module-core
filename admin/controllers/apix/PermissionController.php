@@ -36,7 +36,7 @@ class PermissionController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'bindRoles'  => [ 'permission' => CoreGlobal::PERM_IDENTITY_RBAC ]
+	                'bindRoles'  => [ 'permission' => CoreGlobal::PERM_RBAC ]
                 ]
             ],
             'verbs' => [

@@ -25,7 +25,7 @@ class DropdownController extends BaseCategoryController {
 
         parent::__construct( $id, $module, $config );
 		
-		$this->sidebar 	= [ 'parent' => 'sidebar-dropdown', 'child' => 'dropdown' ];
+		$this->sidebar 	= [ 'parent' => 'sidebar-core', 'child' => 'dropdown' ];
 	}
 
 	// Instance Methods ------------------

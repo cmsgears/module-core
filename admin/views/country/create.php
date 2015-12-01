@@ -6,7 +6,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Country';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-country';
+$this->params['sidebar-parent'] = 'sidebar-core';
 $this->params['sidebar-child'] 	= 'country';
  
 ?>

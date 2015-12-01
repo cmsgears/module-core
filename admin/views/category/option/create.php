@@ -6,7 +6,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Option';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-dropdown';
+$this->params['sidebar-parent'] = 'sidebar-core';
 $this->params['sidebar-child'] 	= 'dropdown';
  
 ?>

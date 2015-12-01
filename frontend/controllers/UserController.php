@@ -63,7 +63,7 @@ class UserController extends BaseController {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->setScenario( 'update' );
+			$model->setScenario( 'profile' );
 
 			UserService::checkNewsletterMember( $model );
 

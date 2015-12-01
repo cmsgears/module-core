@@ -55,7 +55,7 @@ class CoreGlobal {
 
 	// User Module
 	const PERM_IDENTITY				= 'identity';
-	const PERM_IDENTITY_RBAC		= 'identity-rbac';
+	const PERM_RBAC					= 'rbac';
 
 	// TODO: Implement internationalisation for Messages, Errors and Field Labels
 
@@ -109,7 +109,9 @@ class CoreGlobal {
 	const ERROR_PASSWORD_OLD		= 'oldPasswordError';
 	const ERROR_ACCOUNT_CONFIRM		= 'confirmAccountError';
 	const ERROR_PASSWORD_RESET		= 'resetPasswordError';
-	
+	const ERROR_CHANGE_EMAIL		= 'changeEmailError';
+	const ERROR_CHANGE_USERNAME		= 'changeUsernameError';
+
 	// Errors - Apis
 	const ERROR_APIS_DISABLED		= 'apisDisabledError';
 

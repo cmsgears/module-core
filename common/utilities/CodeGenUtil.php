@@ -287,8 +287,8 @@ class CodeGenUtil {
 
 		if( isset( $params[ 'meta' ] ) ) {
 			
-			$meta			= $params[ 'meta' ];
-			$metaContent 	.= "<meta name='keywords' content='$meta' />";
+			$keywords		= $params[ 'keywords' ];
+			$metaContent 	.= "<meta name='keywords' content='$keywords' />";
 		}
 
 		if( isset( $params[ 'robot' ] ) ) {
@@ -298,6 +298,19 @@ class CodeGenUtil {
 		}
 		
 		return $metaContent;
+	}
+
+	public static function generateSeoH1( $params ) {
+
+		if( isset( $params[ 'summary' ] ) ) {
+
+			$summary	= $params[ 'summary' ];
+			$seoH1		= "<h1 class='hidden'>$summary</h1>";
+			
+			return $seoH1;
+		}
+		
+		return null;
 	}
 
 	// Return the username by splitting given email.

@@ -28,6 +28,34 @@ abstract class BaseRoleController extends BaseController {
 
 	// Instance Methods --------------------------------------------
 
+	// yii\base\Component ----------------
+
+    public function behaviors() {
+
+        return [
+            'rbac' => [
+                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'actions' => [
+	                'index'  => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'all'   => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_RBAC ]
+                ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+	                'index'  => [ 'get' ],
+	                'all'   => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ]
+                ]
+            ]
+        ];
+    }
+	
 	// BaseRoleController -----------------
 
 	public function actionAll( $type = null ) {

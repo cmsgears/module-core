@@ -8,15 +8,15 @@ $core	= Yii::$app->cmgCore;
 $user	= Yii::$app->user->getIdentity();
 ?>
 
-<?php if( $core->hasModule( 'cmgcore' ) && $user->isPermitted( 'identity' ) ) { ?>
+<?php if( $core->hasModule( 'cmgcore' ) && $user->isPermitted( 'core' ) ) { ?>
 	<div id="sidebar-identity" class="collapsible-tab has-children <?php if( strcmp( $parent, 'sidebar-identity' ) == 0 ) echo 'active';?>">
 		<div class="collapsible-tab-header clearfix">
 			<div class="colf colf4"><span class="icon-sidebar icon-user"></span></div>
-			<div class="colf colf4x3">Users & RBAC</div>
+			<div class="colf colf4x3">Identity</div>
 		</div>
 		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-identity' ) == 0 ) echo 'expanded visible';?>">
 			<ul>
-				<?php if( $user->isPermitted( 'identity' ) ) { ?>
+				<?php if( $user->isPermitted( 'rbac' ) ) { ?>
 					<li class='matrix <?php if( strcmp( $child, 'matrix' ) == 0 ) echo 'active';?>'><?= Html::a( "Access Matrix", ['/cmgcore/permission/matrix'] ) ?></li>
 					<li class='role <?php if( strcmp( $child, 'role' ) == 0 ) echo 'active';?>'><?= Html::a( "Roles", ['/cmgcore/role/all'] ) ?></li>
 					<li class='permission <?php if( strcmp( $child, 'permission' ) == 0 ) echo 'active';?>'><?= Html::a( "Permissions", ['/cmgcore/permission/all'] ) ?></li>
@@ -46,45 +46,20 @@ $user	= Yii::$app->user->getIdentity();
 <?php } ?>
 
 <?php if( $core->hasModule( 'cmgcore' ) && $user->isPermitted( 'core' ) ) { ?>
-	<div id="sidebar-gallery" class="collapsible-tab <?php if( strcmp( $parent, 'sidebar-gallery' ) == 0 ) echo 'active';?>">
-		<div class="collapsible-tab-header">
-			<a href="<?php echo Url::toRoute( ['/cmgcore/gallery/all'] ); ?>">
-				<div class="colf colf4"><span class="icon-sidebar icon-slider"></span></div>
-				<div class="colf colf4x3">Galleries</div>
-			</a>
+	<div id="sidebar-newsletter" class="collapsible-tab has-children <?php if( strcmp( $parent, 'sidebar-core' ) == 0 ) echo 'active';?>">
+		<div class="collapsible-tab-header clearfix">
+			<div class="colf colf4"><span class="icon-sidebar icon-settings"></span></div>
+			<div class="colf colf4x3">Core</div>
 		</div>
-	</div>
-<?php } ?>
-
-<?php if( Yii::$app->cmgCore->multiSite && $core->hasModule( 'cmgcore' ) && $user->isPermitted( 'core' ) ) { ?>
-	<div id="sidebar-site" class="collapsible-tab <?php if( strcmp( $parent, 'sidebar-site' ) == 0 ) echo 'active';?>">
-		<div class="collapsible-tab-header">
-			<a href="<?php echo Url::toRoute( ['/cmgcore/sites/all'] ); ?>">
-				<div class="colf colf4"><span class="icon-sidebar icon-slider"></span></div>
-				<div class="colf colf4x3">Sites</div>
-			</a>
-		</div>
-	</div>
-<?php } ?>
-
-<?php if( Yii::$app->cmgCore->hasModule( 'cmgcore' ) && $user->isPermitted( 'core' ) ) { ?>
-	<div id="sidebar-country" class="collapsible-tab <?php if( strcmp( $parent, 'sidebar-country' ) == 0 ) echo 'active';?>">
-		<div class="collapsible-tab-header">
-			<a href="<?php echo Url::toRoute( ['/cmgcore/country/all/'] ); ?>">
-				<div class="colf colf4"><span class="icon-sidebar icon-settings"></span></div>
-				<div class="colf colf4x3">World Countries</div>
-			</a>
-		</div>
-	</div>
-<?php } ?>
-
-<?php if( Yii::$app->cmgCore->hasModule( 'cmgcore' ) && $user->isPermitted( 'core' ) ) { ?>
-	<div id="sidebar-dropdown" class="collapsible-tab <?php if( strcmp( $parent, 'sidebar-dropdown' ) == 0 ) echo 'active';?>">
-		<div class="collapsible-tab-header">
-			<a href="<?php echo Url::toRoute( ['/cmgcore/dropdown/all/'] ); ?>">
-				<div class="colf colf4"><span class="icon-sidebar icon-settings"></span></div>
-				<div class="colf colf4x3">Drop Downs</div>
-			</a>
+		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-core' ) == 0 ) echo 'expanded visible';?>">
+			<ul>
+				<li class='gallery <?php if( strcmp( $child, 'gallery' ) == 0 ) echo 'active';?>'><?= Html::a( "Galleries", [ '/cmgcore/gallery/all' ] ) ?></li>
+				<?php if( Yii::$app->cmgCore->multiSite ) { ?>
+					<li class='site <?php if( strcmp( $child, 'site' ) == 0 ) echo 'active';?>'><?= Html::a( "Sites", [ '/cmgcore/sites/all' ] ) ?></li>
+				<?php } ?>
+				<li class='country <?php if( strcmp( $child, 'country' ) == 0 ) echo 'active';?>'><?= Html::a( "Countries", [ '/cmgcore/country/all' ] ) ?></li>
+				<li class='dropdown <?php if( strcmp( $child, 'dropdown' ) == 0 ) echo 'active';?>'><?= Html::a( "Dropdowns", [ '/cmgcore/dropdown/all' ] ) ?></li>
+			</ul>
 		</div>
 	</div>
 <?php } ?>

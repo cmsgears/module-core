@@ -60,6 +60,10 @@ class CoreProperties extends CmgProperties {
 	
 	const PROP_REGISTRATION			= 'registration';
 
+	const PROP_CHANGE_EMAIL			= 'change email';
+
+	const PROP_CHANGE_USERNAME		= 'change username';
+
 	// Singleton instance
 	private static $instance;
 
@@ -170,6 +174,22 @@ class CoreProperties extends CmgProperties {
 	public function isRegistration() {
 
 		return $this->properties[ self::PROP_REGISTRATION ]; 
+	}
+
+	/** 
+	 * Returns whether email change is allowed fur user profile.
+	 */
+	public function isChangeEmail() {
+
+		return $this->properties[ self::PROP_CHANGE_EMAIL ];
+	}
+
+	/** 
+	 * Returns whether username change is allowed for user profile.
+	 */
+	public function isChangeUsername() {
+
+		return $this->properties[ self::PROP_CHANGE_USERNAME ]; 
 	}
 
 	/** 

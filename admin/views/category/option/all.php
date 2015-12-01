@@ -11,8 +11,8 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Options';
 
 // Sidebars
-$this->params['sidebar-parent'] = 'sidebar-dropdown';
-$this->params['sidebar-child'] 	= 'sidebar-dropdown';
+$this->params['sidebar-parent'] = 'sidebar-core';
+$this->params['sidebar-child'] 	= 'dropdown';
 
 // Searching
 $searchTerms	= Yii::$app->request->getQueryParam("search");

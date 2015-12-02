@@ -135,6 +135,7 @@ class CoreGlobal {
 	const FIELD_MODIFIED_AT			= 'modifiedAtField';
 	const FIELD_VISIBILITY			= 'visibilityField';
 	const FIELD_STATUS				= 'statusField';
+	const FIELD_RATING				= 'ratingField';
 	const FIELD_TYPE				= 'typeField';
 	const FIELD_VALIDATORS 			= 'validatorsField';
 	const FIELD_CONSUMED			= 'consumedField';
@@ -184,6 +185,8 @@ class CoreGlobal {
 	const FIELD_ZIP					= 'zipField';
 	const FIELD_PHONE				= 'phoneField';
 	const FIELD_FAX					= 'faxField';
+	const FIELD_LONGITUDE			= 'longitudeField';
+	const FIELD_LATITUDE			= 'latitudeField';
 	const FIELD_ADDRESS				= 'addressField';
 	const FIELD_ADDRESS_TYPE		= 'addressTypeField';
 

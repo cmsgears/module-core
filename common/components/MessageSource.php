@@ -77,6 +77,7 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_MODIFIED_AT => 'Updated At',
 		CoreGlobal::FIELD_VISIBILITY => 'Visibility',
 		CoreGlobal::FIELD_STATUS => 'Status',
+		CoreGlobal::FIELD_RATING => 'Rating',
 		CoreGlobal::FIELD_TYPE => 'Type',
 		CoreGlobal::FIELD_VALIDATORS => 'Validators',
 		CoreGlobal::FIELD_CONSUMED => 'Consumed',
@@ -124,6 +125,8 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_ZIP => 'Postal Code',
 		CoreGlobal::FIELD_PHONE => 'Phone',
 		CoreGlobal::FIELD_FAX => 'Fax',
+		CoreGlobal::FIELD_LONGITUDE => 'Longitude',
+		CoreGlobal::FIELD_LATITUDE => 'Latitude',
 		CoreGlobal::FIELD_ADDRESS => 'Address',
 		CoreGlobal::FIELD_ADDRESS_TYPE => 'Address Type',
 		// User Fields

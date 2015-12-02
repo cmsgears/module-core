@@ -23,6 +23,14 @@ class NewsletterList extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
+	/**
+	 * @return string representation of flag
+	 */
+	public function getActiveStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->active ); 
+	}
+
 	// yii\base\Component ----------------
 
     /**

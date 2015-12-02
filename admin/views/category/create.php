@@ -33,7 +33,8 @@ ClEditor::widget( [ 'selector' => '.content-editor' ] );
 
     	<?= $form->field( $model, 'name' ) ?>  
     	<?= $form->field( $model, 'description' ) ?> 
-    	<?= $form->field( $model, 'icon' ) ?>  
+    	<?= $form->field( $model, 'icon' ) ?>
+		<?= $form->field( $model, 'featured' )->checkbox() ?>
 
     	<h4><?=$dropDown?> Avatar</h4>
 		<?=AvatarUploader::widget( [ 'options' => [ 'id' => 'avatar-dropdown', 'class' => 'file-uploader' ], 'model' => $avatar, 'modelClass' => 'Avatar',  'directory' => 'avatar', 'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>

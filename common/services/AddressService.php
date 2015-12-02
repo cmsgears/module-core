@@ -55,7 +55,8 @@ class AddressService extends Service {
 		$addressToUpdate	= self::findById( $address->id );
 
 		// Copy Attributes
-		$addressToUpdate->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'city', 'zip', 'firstName', 'lastName', 'phone', 'email', 'fax' ] );
+		$addressToUpdate->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'city', 'zip', 
+											'firstName', 'lastName', 'phone', 'email', 'fax', 'longitude', 'latitude' ] );
 
 		// Update Category
 		$addressToUpdate->update();

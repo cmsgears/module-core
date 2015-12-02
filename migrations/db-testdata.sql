@@ -54,7 +54,7 @@ INSERT INTO `cmg_core_locale` VALUES (1,'en_US','English US');
 --
 
 INSERT INTO `cmg_core_category` VALUES 
-	(1,NULL,NULL,'gender',NULL,'gender','combo',NULL);
+	(1,NULL,NULL,'gender',NULL,'gender','combo',NULL,0);
 
 --
 -- Dumping data for table `cmg_core_option`

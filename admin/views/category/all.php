@@ -69,6 +69,7 @@ if( !isset( $sortOrder ) ) {
 						</span>
 					</th>					
 					<th>Description</th> 
+					<th>Featured</th>
 					<th>Icon</th>
 					<th>Actions</th>  
 				</tr>
@@ -83,8 +84,9 @@ if( !isset( $sortOrder ) ) {
 				?>
 					<tr>
 						<td><?= CodeGenUtil::getImageThumbTag( $dropdown->avatar, [ 'class' => 'avatar', 'image' => 'avatar' ] ) ?></td>
-						<td><?= $dropdown->name ?></td> 
-						<td><?= $dropdown->description ?></td> 
+						<td><?= $dropdown->name ?></td>
+						<td><?= $dropdown->description ?></td>
+						<td><?= $dropdown->getFeaturedStr() ?></td> 
 						<td> <span class="<?= $dropdown->icon ?>" title="<?= $dropdown->name ?>"></span></td> 
 						<td>	
 							<?php if( $dropDown == 'Dropdown' ) { ?>						

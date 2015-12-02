@@ -21,6 +21,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $slug
  * @property string $type
  * @property string $icon
+ * @property string $featured
  */
 class Category extends CmgEntity {
 
@@ -58,6 +59,14 @@ class Category extends CmgEntity {
     	return $this->hasMany( Option::className(), [ 'categoryId' => 'id' ] );
 	}
 
+	/**
+	 * @return string representation of flag
+	 */
+	public function getFeaturedStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->featured ); 
+	}
+
 	// yii\base\Component ----------------
 	
     /**
@@ -91,7 +100,7 @@ class Category extends CmgEntity {
 		}
 
         $rules = [
-            [ [ 'name' ], 'required' ],
+            [ [ 'name', 'featured' ], 'required' ],
             [ [ 'id', 'avatarId', 'description' ], 'safe' ],
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
@@ -120,7 +129,8 @@ class Category extends CmgEntity {
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON )
+			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'featured' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FEATURED )
 		];
 	}
 

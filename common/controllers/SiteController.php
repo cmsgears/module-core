@@ -13,7 +13,7 @@ use cmsgears\core\common\models\forms\ResetPassword;
 
 use cmsgears\core\frontend\services\UserService;
 
-class SiteController extends BaseController {
+class SiteController extends Controller {
 
 	// Constructor and Initialisation ------------------------------
 

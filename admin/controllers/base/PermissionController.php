@@ -1,10 +1,11 @@
 <?php
-namespace cmsgears\core\admin\controllers;
+namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
 use \Yii;
-use yii\helpers\Url;
+use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -15,18 +16,46 @@ use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\admin\services\PermissionService;
 use cmsgears\core\admin\services\RoleService;
 
-use cmsgears\core\admin\controllers\BaseController;
-
-abstract class BasePermissionController extends BaseController {
+abstract class PermissionController extends Controller {
 
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+		
+		$this->returnUrl	= Url::previous( 'permissions' );
 	}
 
 	// Instance Methods --------------------------------------------
+
+	// yii\base\Component ----------------
+
+    public function behaviors() {
+
+        return [
+            'rbac' => [
+                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'actions' => [
+	                'all' => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'matrix' => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_RBAC ]
+                ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+	                'all' => [ 'get' ],
+	                'matrix' => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ]
+                ]
+            ]
+        ];
+    }
 
 	// BasePermissionController ----------
 
@@ -52,15 +81,10 @@ abstract class BasePermissionController extends BaseController {
 
 	public function actionCreate( $type = null ) {
 
-		$model				= new Permission();
-		$this->returnUrl	= Url::previous( 'permissions' );
+		$model			= new Permission();
+		$model->type 	= $type;
 
 		$model->setScenario( 'create' );
-
-		if( isset( $type ) ) {
-
-			$model->type = $type;
-		}
 
 		if( $model->load( Yii::$app->request->post(), 'Permission' )  && $model->validate() ) {
 
@@ -88,11 +112,12 @@ abstract class BasePermissionController extends BaseController {
 	public function actionUpdate( $id, $type = null ) {
 
 		// Find Model		
-		$model				= PermissionService::findById( $id );
-		$this->returnUrl	= Url::previous( 'permissions' );
+		$model		= PermissionService::findById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
+			
+			$model->type 	= $type;
 
 			$model->setScenario( 'update' );
 
@@ -126,11 +151,12 @@ abstract class BasePermissionController extends BaseController {
 	public function actionDelete( $id, $type = null ) {
 
 		// Find Model
-		$model				= PermissionService::findById( $id );
-		$this->returnUrl	= Url::previous( 'permissions' );
+		$model		= PermissionService::findById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
+
+			$model->type 	= $type;
 
 			if( $model->load( Yii::$app->request->post(), 'Permission' ) ) {
 

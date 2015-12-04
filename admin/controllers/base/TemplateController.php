@@ -1,12 +1,10 @@
 <?php
-namespace cmsgears\core\admin\controllers;
+namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
 use \Yii;
-use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
-use yii\base\Exception;
-use yii\web\HttpException;
+use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -15,7 +13,7 @@ use cmsgears\core\common\models\entities\Template;
 
 use cmsgears\core\admin\services\TemplateService;
 
-abstract class BaseTemplateController extends BaseController {
+abstract class TemplateController extends Controller {
 
 	// Constructor and Initialisation ------------------------------
 

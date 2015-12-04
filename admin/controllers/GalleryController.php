@@ -3,9 +3,7 @@ namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
 use \Yii;
-use yii\filters\VerbFilter;
 use yii\helpers\Url;
-use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -14,7 +12,7 @@ use cmsgears\core\common\models\entities\Gallery;
 
 use cmsgears\core\admin\services\GalleryService;
 
-class GalleryController extends \cmsgears\core\admin\controllers\BaseGalleryController {
+class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryController {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -31,30 +29,13 @@ class GalleryController extends \cmsgears\core\admin\controllers\BaseGalleryCont
 
     public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'index'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'all'   => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'items' => [ 'permission' => CoreGlobal::PERM_CORE ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index'  => [ 'get' ],
-	                'all'   => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ],
-	                'items'  => [ 'get' ]
-                ]
-            ]
-        ];
+		$behaviours	= parent::behaviors();
+
+		$behaviours[ 'rbac' ][ 'actions' ][ 'index' ] 	= [ 'permission' => CoreGlobal::PERM_CORE ];
+
+		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ] 	= [ 'get' ];
+
+		return $behaviours;
     }
 
 	// RoleController --------------------

@@ -1,10 +1,11 @@
 <?php
-namespace cmsgears\core\admin\controllers;
+namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
 use \Yii;
-use yii\helpers\Url;
+use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -15,15 +16,15 @@ use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\admin\services\RoleService;
 use cmsgears\core\admin\services\PermissionService;
 
-use cmsgears\core\admin\controllers\BaseController;
-
-abstract class BaseRoleController extends BaseController {
+abstract class RoleController extends Controller {
 
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+		
+		$this->returnUrl	= Url::previous( 'roles' );
 	}
 
 	// Instance Methods --------------------------------------------
@@ -36,7 +37,6 @@ abstract class BaseRoleController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => CoreGlobal::PERM_RBAC ],
 	                'all'   => [ 'permission' => CoreGlobal::PERM_RBAC ],
 	                'create' => [ 'permission' => CoreGlobal::PERM_RBAC ],
 	                'update' => [ 'permission' => CoreGlobal::PERM_RBAC ],
@@ -46,7 +46,6 @@ abstract class BaseRoleController extends BaseController {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index'  => [ 'get' ],
 	                'all'   => [ 'get' ],
 	                'create' => [ 'get', 'post' ],
 	                'update' => [ 'get', 'post' ],
@@ -69,15 +68,10 @@ abstract class BaseRoleController extends BaseController {
 
 	public function actionCreate( $type = null ) {
 
-		$model				= new Role();
-		$this->returnUrl	= Url::previous( 'roles' );
+		$model			= new Role();
+		$model->type 	= $type;
 
 		$model->setScenario( 'create' );
-
-		if( isset( $type ) ) {
-
-			$model->type = $type;
-		}
 
 		if( $model->load( Yii::$app->request->post(), 'Role' )  && $model->validate() ) {
 
@@ -105,11 +99,12 @@ abstract class BaseRoleController extends BaseController {
 	public function actionUpdate( $id, $returnUrl, $type = null ) {
 
 		// Find Model
-		$model				= RoleService::findById( $id );
-		$this->returnUrl	= Url::previous( 'roles' );
+		$model		= RoleService::findById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
+			
+			$model->type 	= $type;
 
 			$model->setScenario( 'update' );
 
@@ -143,11 +138,12 @@ abstract class BaseRoleController extends BaseController {
 	public function actionDelete( $id, $returnUrl, $type = null ) {
 
 		// Find Model
-		$model				= RoleService::findById( $id );
-		$this->returnUrl	= Url::previous( 'roles' );
+		$model		= RoleService::findById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
+
+			$model->type 	= $type;
 
 			if( $model->load( Yii::$app->request->post(), 'Role' ) ) {
 

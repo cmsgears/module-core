@@ -490,6 +490,62 @@ CREATE TABLE `cmg_core_site_member` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `cmg_core_form`
+--
+
+DROP TABLE IF EXISTS `cmg_core_form`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmg_core_form` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `siteId` bigint(20) DEFAULT NULL,
+  `templateId` bigint(20) DEFAULT NULL,
+  `createdBy` bigint(20) NOT NULL,
+  `modifiedBy` bigint(20) DEFAULT NULL,
+  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `successMessage` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `captcha` tinyint(1) DEFAULT '0',
+  `visibility` tinyint(1) DEFAULT '0',
+  `active` tinyint(1) DEFAULT '0',
+  `userMail` tinyint(1) DEFAULT '0',
+  `adminMail` tinyint(1) DEFAULT '0',
+  `options` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdAt` datetime NOT NULL,
+  `modifiedAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_form_1` (`siteId`),
+  KEY `fk_form_2` (`templateId`),
+  KEY `fk_form_3` (`createdBy`),
+  KEY `fk_form_4` (`modifiedBy`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cmg_core_form_field`
+--
+
+DROP TABLE IF EXISTS `cmg_core_form_field`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmg_core_form_field` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `formId` bigint(20) DEFAULT NULL,
+  `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `label` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `type` smallint(6) DEFAULT 0,
+  `compress` tinyint(1) DEFAULT 0,
+  `validators` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `options` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `data` mediumtext COLLATE utf8_unicode_ci,
+  `order` smallint(6) DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `fk_form_field_1` (`formId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 -- ======================== Model Traits =================================
 
 --
@@ -512,22 +568,19 @@ CREATE TABLE `cmg_core_model_message` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `cmg_core_model_meta`
+-- Table structure for table `cmg_core_model_attribute`
 --
 
-DROP TABLE IF EXISTS `cmg_core_model_meta`;
+DROP TABLE IF EXISTS `cmg_core_model_attribute`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `cmg_core_model_meta` (
+CREATE TABLE `cmg_core_model_attribute` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `value` text COLLATE utf8_unicode_ci DEFAULT NULL,
-  `data` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `value` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` varchar(100) COLLATE utf8_unicode_ci DEFAULT 'default',
-  `fieldType` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `fieldMeta` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -632,7 +685,25 @@ CREATE TABLE `cmg_core_model_comment` (
   PRIMARY KEY (`id`),
   KEY `fk_model_comment_1` (`createdBy`),
   KEY `fk_model_comment_2` (`modifiedBy`),
-  KEY `fk_model_comment_3` (`replyParentId`)
+  KEY `fk_model_comment_3` (`baseId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cmg_core_model_form`
+--
+
+DROP TABLE IF EXISTS `cmg_core_model_form`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmg_core_model_form` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `formId` bigint(20) NOT NULL,
+  `parentId` bigint(20) NOT NULL,
+  `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `order` smallint(6) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `fk_model_form_1` (`formId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -765,6 +836,21 @@ ALTER TABLE `cmg_core_site_member`
   	ADD CONSTRAINT `fk_site_member_3` FOREIGN KEY (`roleId`) REFERENCES `cmg_core_role` (`id`);
 
 --
+-- Constraints for table `cmg_core_form`
+--
+ALTER TABLE `cmg_core_form`
+	ADD CONSTRAINT `fk_form_1` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`),
+	ADD CONSTRAINT `fk_form_2` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_template` (`id`),
+	ADD CONSTRAINT `fk_form_3` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
+  	ADD CONSTRAINT `fk_form_4` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
+
+--
+-- Constraints for table `cmg_core_form_field`
+--
+ALTER TABLE `cmg_core_form_field`
+	ADD CONSTRAINT `fk_form_field_1` FOREIGN KEY (`formId`) REFERENCES `cmg_core_form` (`id`);
+
+--
 -- Constraints for table `cmg_core_model_message`
 --
 
@@ -805,6 +891,13 @@ ALTER TABLE `cmg_core_model_address`
 ALTER TABLE `cmg_core_model_comment`
   	ADD CONSTRAINT `fk_model_comment_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
   	ADD CONSTRAINT `fk_model_comment_2` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`),
-  	ADD CONSTRAINT `fk_model_comment_3` FOREIGN KEY (`replyParentId`) REFERENCES `cmg_core_model_comment` (`id`);
+  	ADD CONSTRAINT `fk_model_comment_3` FOREIGN KEY (`baseId`) REFERENCES `cmg_core_model_comment` (`id`);
+
+--
+-- Constraints for table `cmg_core_model_form`
+--
+
+ALTER TABLE `cmg_core_model_form`
+  	ADD CONSTRAINT `fk_model_form_1` FOREIGN KEY (`formId`) REFERENCES `cmg_core_form` (`id`) ON DELETE CASCADE;
 
 SET FOREIGN_KEY_CHECKS=1;

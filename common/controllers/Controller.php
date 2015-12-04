@@ -3,7 +3,6 @@ namespace cmsgears\core\common\controllers;
 
 // Yii Imports
 use Yii;
-use yii\web\Controller;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -11,7 +10,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\config\CoreProperties;
 use cmsgears\core\common\config\MailProperties;
 
-class BaseController extends Controller {
+abstract class Controller extends \yii\web\Controller {
 
 	private $_coreProperties;
 	private $_mailProperties;

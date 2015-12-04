@@ -10,7 +10,7 @@ use yii\behaviors\SluggableBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\traits\MetaTrait;
+use cmsgears\core\common\models\traits\AttributeTrait;
 
 /**
  * Site Entity
@@ -23,9 +23,9 @@ use cmsgears\core\common\models\traits\MetaTrait;
  */
 class Site extends NamedCmgEntity {
 
-	use MetaTrait;
+	use AttributeTrait;
 
-	public $metaType	= CoreGlobal::TYPE_SITE;
+	public $attributeType	= CoreGlobal::TYPE_SITE;
 
 	// Instance Methods --------------------------------------------
 

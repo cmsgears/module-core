@@ -1,9 +1,11 @@
 <?php
-namespace cmsgears\core\admin\controllers;
+namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
 use \Yii;
+use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -17,16 +19,44 @@ use cmsgears\core\admin\services\SiteMemberService;
 use cmsgears\core\admin\services\UserService;
 use cmsgears\core\admin\services\RoleService;
 
-abstract class BaseUserController extends BaseController {
+abstract class UserController extends Controller {
 
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
-        parent::__construct( $id, $module, $config );		
+        parent::__construct( $id, $module, $config );
+		
+		$this->returnUrl	= Url::previous( 'users' );
 	}
 
 	// Instance Methods --------------------------------------------
+
+	// yii\base\Component ----------------
+
+    public function behaviors() {
+
+        return [
+            'rbac' => [
+                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'actions' => [
+	                'all' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY ]
+                ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+	                'all' => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ]
+                ]
+            ]
+        ];
+    }
 
 	// UserController --------------------
 
@@ -110,12 +140,12 @@ abstract class BaseUserController extends BaseController {
 
 		// Find Model
 		$model		= UserService::findById( $id );
-		$avatar 	= new CmgFile();
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
 			$siteMember	= $model->siteMember;
+			$avatar 	= CmgFile::loadFile( $model->avatar, 'File' );
 
 			$model->setScenario( 'update' );
 
@@ -123,16 +153,12 @@ abstract class BaseUserController extends BaseController {
 
 			if( $model->load( Yii::$app->request->post(), 'User' ) && $siteMember->load( Yii::$app->request->post(), 'SiteMember' ) && $model->validate() ) {
 
-				$avatar->load( Yii::$app->request->post(), 'File' );
-
 				// Update User and Site Member
 				if( UserService::update( $model, $avatar ) && SiteMemberService::update( $siteMember ) ) {
 
 					$this->redirect( $this->returnUrl );
 				}
 			}
-
-			$avatar		= $model->avatar;
 
 			if( isset( $roleSlug ) ) {
 

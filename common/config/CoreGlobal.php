@@ -28,6 +28,7 @@ class CoreGlobal {
 	const TYPE_NOTIFICATION		= 'notification';
 	const TYPE_REMINDER			= 'reminder';  
 	const TYPE_CORE				= 'core';
+	const TYPE_FORM				= 'form';
 
 	// Categories ------------------------------------------------------
 
@@ -37,7 +38,7 @@ class CoreGlobal {
 
 	const CONFIG_CORE			= 'core';
 	const CONFIG_MAIL			= 'email';
-	const CONFIG_ADMIN			= 'admin';
+	const CONFIG_ADMIN			= 'backend';
 	const CONFIG_FRONTEND		= 'frontend';
 
 	// Roles -----------------------------------------------------------
@@ -50,7 +51,7 @@ class CoreGlobal {
 	const PERM_ADMIN				= 'admin'; 	// Allows to view Admin Site Home
 	const PERM_USER					= 'user'; 	// Allows to view User Site Home
 
-	// Settings
+	// System Forms, Galleries, Settings
 	const PERM_CORE					= 'core';
 
 	// User Module
@@ -135,7 +136,6 @@ class CoreGlobal {
 	const FIELD_MODIFIED_AT			= 'modifiedAtField';
 	const FIELD_VISIBILITY			= 'visibilityField';
 	const FIELD_STATUS				= 'statusField';
-	const FIELD_RATING				= 'ratingField';
 	const FIELD_TYPE				= 'typeField';
 	const FIELD_VALIDATORS 			= 'validatorsField';
 	const FIELD_CONSUMED			= 'consumedField';
@@ -172,7 +172,7 @@ class CoreGlobal {
 	const FIELD_IP					= 'ipField';
 	const FIELD_DATA				= 'dataField';
 	const FIELD_OPTIONS				= 'optionsField';
-	const FIELD_STORE_JSON			= 'storeJsonField';
+	const FIELD_COMPRESS			= 'compressField';
 
 	// Role Fields
 	const FIELD_HOME_URL			= 'homeUrlField';
@@ -207,30 +207,31 @@ class CoreGlobal {
 	const FIELD_URL					= 'urlField';
 	const FIELD_LINK				= 'linkField';
 
-	// Notification/Reminder Fields
-	const FIELD_NOTIFIER			= 'notifierField';
-	
-	// Site/Site Member Fields
-	const FIELD_SITE				= 'siteField';
+	// Notification/Reminder/Message Fields
+	const FIELD_NOTIFIER		= 'notifierField';
+	const FIELD_SENDER			= 'senderField';
+	const FIELD_RECIPIENT		= 'recipientField';
 
-	// Meta Fields
-	const FIELD_META				= 'metaField';
-	const FIELD_FFIELD_TYPE			= 'ffieldTypeField';
-	const FIELD_FFIELD_META			= 'ffieldMetaField';
+	// Site/Site Member Fields
+	const FIELD_SITE			= 'siteField';
 
 	// Content Fields
 	const FIELD_SUMMARY			= 'summaryField';
 	const FIELD_CONTENT			= 'contentField';
-	
-	// Message
-	const FIELD_SENDER			= 'senderField';
-	const FIELD_RECIPIENT		= 'recipientField';
 
 	// Views
 	const FIELD_LAYOUT			= 'layoutField';
 	const FIELD_VIEW_PATH		= 'viewPathField';
 	const FIELD_VIEW_ADMIN		= 'viewAdminField';
 	const FIELD_VIEW_FRONTEND	= 'viewFrontendField';
+	
+	// Forms
+	const FIELD_FORM			= 'formField';
+	const FIELD_CAPTCHA			= 'captchaField';
+	const FIELD_MAIL_USER		= 'userMailField';
+	const FIELD_MAIL_ADMIN		= 'adminMailField';
+	const FIELD_META			= 'metaField';
+	const FIELD_RATING			= 'ratingField';
 }
 
 ?>

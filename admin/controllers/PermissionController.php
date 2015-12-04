@@ -3,14 +3,12 @@ namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
 use \Yii;
-use yii\filters\VerbFilter;
 use yii\helpers\Url;
-use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class PermissionController extends BasePermissionController {
+class PermissionController extends \cmsgears\core\admin\controllers\base\PermissionController {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -27,30 +25,13 @@ class PermissionController extends BasePermissionController {
 
     public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'index'  => [ 'permission' => CoreGlobal::PERM_RBAC ],
-	                'all'   => [ 'permission' => CoreGlobal::PERM_RBAC ],
-	                'matrix' => [ 'permission' => CoreGlobal::PERM_RBAC ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_RBAC ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_RBAC ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_RBAC ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index'  => [ 'get' ],
-	                'all'    => [ 'get' ],
-	                'matrix' => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
+		$behaviours	= parent::behaviors();
+
+		$behaviours[ 'rbac' ][ 'actions' ][ 'index' ] 	= [ 'permission' => CoreGlobal::PERM_RBAC ];
+
+		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ] 	= [ 'get' ];
+
+		return $behaviours;
     }
 
 	// RoleController --------------------

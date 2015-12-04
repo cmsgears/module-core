@@ -44,6 +44,10 @@ DROP TABLE IF EXISTS `cmg_core_site`;
 
 DROP TABLE IF EXISTS `cmg_core_site_member`;
 
+DROP TABLE IF EXISTS `cmg_core_form`;
+
+DROP TABLE IF EXISTS `cmg_core_form_field`;
+
 DROP TABLE IF EXISTS `cmg_core_model_message`;
 
 DROP TABLE IF EXISTS `cmg_core_model_meta`;
@@ -57,5 +61,7 @@ DROP TABLE IF EXISTS `cmg_core_model_tag`;
 DROP TABLE IF EXISTS `cmg_core_model_address`;
 
 DROP TABLE IF EXISTS `cmg_core_model_comment`;
+
+DROP TABLE IF EXISTS `cmg_core_model_form`;
 
 SET FOREIGN_KEY_CHECKS=1;

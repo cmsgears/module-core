@@ -10,41 +10,18 @@ use yii\helpers\ArrayHelper;
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
- * ModelMeta Entity
+ * ModelAttribute Entity
  *
  * @property integer $id
  * @property integer $parentId
  * @property string $parentType
  * @property string $name
  * @property string $value
- * @property string $data
  * @property string $type
- * @property string $fieldType
- * @property string $fieldMeta
  */
-class ModelMeta extends CmgModel {
- 		
+class ModelAttribute extends CmgModel {
+
 	// Instance Methods --------------------------------------------
-
-	/**
-	 * @return string representation of boolean value
-	 */
-	public function getStrValue() {
-
-		if( strcmp( $this->fieldType, 'checkbox' ) == 0 ) {
-
-			if( isset( $this->value ) ) {
-	
-				return Yii::$app->formatter->asBoolean( $this->value );
-			}
-			else {
-	
-				return 'No';
-			}
-		}
-
-		return $this->value;
-	}
 
 	// yii\base\Model --------------------
 
@@ -52,25 +29,22 @@ class ModelMeta extends CmgModel {
      * @inheritdoc
      */
 	public function rules() {
-
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'name', 'value', 'type', 'fieldType', 'fieldMeta' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
+		
+		// model rules
         $rules = [
             [ [ 'parentId', 'parentType', 'name' ], 'required' ],
-            [ [ 'id', 'value', 'data', 'type', 'fieldType', 'fieldMeta' ], 'safe' ],
+            [ [ 'id', 'value', 'type' ], 'safe' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
-            [ 'name', 'alphanumhyphenspace' ],
+            [ 'name', 'alphanumdotu' ],
             [ 'name', 'validatenameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validatenameUpdate', 'on' => [ 'update' ] ]
         ];
 
+		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name', 'value', 'type' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -88,17 +62,14 @@ class ModelMeta extends CmgModel {
 			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
-			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA ),
-			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'fieldType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FFIELD_TYPE ),
-			'fieldMata' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FFIELD_META )
+			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE )
 		];
 	}
 
-	// ModelMeta -------------------------
+	// ModelAttribute --------------------
 
 	/**
-	 * Validates to ensure that only one meta exist with one name.
+	 * Validates to ensure that only one attribute exist with one name.
 	 */
     public function validateNameCreate( $attribute, $params ) {
 
@@ -112,7 +83,7 @@ class ModelMeta extends CmgModel {
     }
 
 	/**
-	 * Validates to ensure that only one meta exist with one name.
+	 * Validates to ensure that only one attribute exist with one name.
 	 */
     public function validateNameUpdate( $attribute, $params ) {
 
@@ -138,16 +109,16 @@ class ModelMeta extends CmgModel {
      */
 	public static function tableName() {
 
-		return CoreTables::TABLE_MODEL_META;
+		return CoreTables::TABLE_MODEL_ATTRIBUTE;
 	}
 
-	// ModelMeta -------------------------
+	// ModelAttribute --------------------
 
 	/**
 	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param string $type
-	 * @return array - ModelMeta by type
+	 * @return array - ModelAttribute by type
 	 */
 	public static function findByType( $parentId, $parentType, $type ) {
 
@@ -159,7 +130,7 @@ class ModelMeta extends CmgModel {
 	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param string $name
-	 * @return ModelMeta - by name
+	 * @return ModelAttribute - by name
 	 */
 	public static function findByName( $parentId, $parentType, $name ) {
 
@@ -172,7 +143,7 @@ class ModelMeta extends CmgModel {
 	 * @param string $parentType
 	 * @param string $type
 	 * @param string $name
-	 * @return ModelMeta - by type and name
+	 * @return ModelAttribute - by type and name
 	 */
 	public static function findByTypeName( $parentId, $parentType, $type, $name ) {
 
@@ -185,7 +156,7 @@ class ModelMeta extends CmgModel {
 	 * @param string $parentType
 	 * @param string $type
 	 * @param string $name
-	 * @return boolean - Check whether meta exist by type and name
+	 * @return boolean - Check whether attribute exist by type and name
 	 */
 	public static function isExistByTypeName( $parentId, $parentType, $type, $name ) {
 

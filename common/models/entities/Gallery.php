@@ -13,7 +13,7 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\traits\FileTrait;
-use cmsgears\core\common\models\traits\MetaTrait;
+use cmsgears\core\common\models\traits\AttributeTrait;
 use cmsgears\core\common\models\traits\CategoryTrait;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 
@@ -38,9 +38,9 @@ class Gallery extends NamedCmgEntity {
 
 	public $fileType		= CoreGlobal::TYPE_GALLERY;
 
-	use MetaTrait;
+	use AttributeTrait;
 
-	public $metaType		= CoreGlobal::TYPE_GALLERY;
+	public $attributeType	= CoreGlobal::TYPE_GALLERY;
 
 	use CategoryTrait;
 

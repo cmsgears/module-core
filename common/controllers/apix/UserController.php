@@ -16,7 +16,7 @@ use cmsgears\core\frontend\services\UserService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class UserController extends \cmsgears\core\common\controllers\BaseController {
+class UserController extends \cmsgears\core\common\controllers\Controller {
 
 	// Constructor and Initialisation ------------------------------
 

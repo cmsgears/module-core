@@ -19,7 +19,7 @@ class AdminProperties extends CmgProperties {
 	/**
 	 * The property defines the active theme version to reload browsers in case theme is upgraded.
 	 */	
-	const PROP_THEME_VERSION		= "theme-version";
+	const PROP_THEME_VERSION		= "theme_version";
 
 	// Singleton instance
 	private static $instance;

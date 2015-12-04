@@ -3,17 +3,16 @@ namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
 use \Yii;
-use yii\filters\VerbFilter;
 use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\admin\config\AdminGlobalCore;
 
-use cmsgears\core\common\services\OptionService;
-use cmsgears\core\common\services\UserService;
+use cmsgears\core\admin\services\OptionService;
+use cmsgears\core\admin\services\UserService;
 
-class UserController extends BaseUserController {
+class UserController extends \cmsgears\core\admin\controllers\base\UserController {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -31,38 +30,23 @@ class UserController extends BaseUserController {
 	// yii\base\Component ----------------
 
     public function behaviors() {
+		
+		$behaviours	= parent::behaviors();
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'index'  => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'all' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'profile' => [ 'permission' => CoreGlobal::PERM_USER ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index'  => [ 'get' ],
-	                'all' => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ],
-	                'profile' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
+		$behaviours[ 'rbac' ][ 'actions' ][ 'index' ] 	= [ 'permission' => CoreGlobal::PERM_IDENTITY ];
+		$behaviours[ 'rbac' ][ 'actions' ][ 'profile'] 	= [ 'permission' => CoreGlobal::PERM_USER ];
+
+		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ] 		= [ 'get' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'profile' ] 	= [ 'get', 'post' ];
+		
+		return $behaviours;
     }
 
 	// UserController --------------------
 
 	public function actionIndex() {
 
-		// TODO: Users Dashboard
+		$this->redirect( 'all' );
 	}
 
 	public function actionAll() {
@@ -73,22 +57,16 @@ class UserController extends BaseUserController {
 	}
 
 	public function actionCreate() {
-		
-		$this->returnUrl	= Url::previous( 'users' );
 
 		return parent::actionCreate( CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionUpdate( $id ) {
-		
-		$this->returnUrl	= Url::previous( 'users' );
 
 		return parent::actionUpdate( $id, CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionDelete( $id ) {
-		
-		$this->returnUrl	= Url::previous( 'users' );
 
 		return parent::actionDelete( $id, CoreGlobal::TYPE_SYSTEM );
 	}

@@ -21,7 +21,7 @@ class CoreProperties extends CmgProperties {
 	/**
 	 * The property will be used to decide whether database need to be searched for locale messages.
 	 */
-	const PROP_LOCALE_MESSAGE		= 'locale message';
+	const PROP_LOCALE_MESSAGE		= 'locale_message';
 
 	/**
 	 * The property defines the default language for the site.
@@ -41,28 +41,28 @@ class CoreProperties extends CmgProperties {
 	/**
 	 * The property defines site title to be used on browser title.
 	 */
-	const PROP_SITE_TITLE			= 'site title';
+	const PROP_SITE_TITLE			= 'site_title';
 	
 	/**
 	 * The property defines site name to be used at various places like emails, site footer.
 	 */
-	const PROP_SITE_NAME			= 'site name';
+	const PROP_SITE_NAME			= 'site_name';
 
 	/**
 	 * The property defines site url to be used at various places like emails.
 	 */
-	const PROP_SITE_URL				= 'site url';
+	const PROP_SITE_URL				= 'site_url';
 
 	/**
 	 * The property defines admin url to be used at various places like emails.
 	 */
-	const PROP_ADMIN_URL			= 'admin url';
+	const PROP_ADMIN_URL			= 'admin_url';
 	
 	const PROP_REGISTRATION			= 'registration';
 
-	const PROP_CHANGE_EMAIL			= 'change email';
+	const PROP_CHANGE_EMAIL			= 'change_email';
 
-	const PROP_CHANGE_USERNAME		= 'change username';
+	const PROP_CHANGE_USERNAME		= 'change_username';
 
 	// Singleton instance
 	private static $instance;

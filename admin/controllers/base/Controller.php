@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\admin\controllers;
+namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
 use \Yii;
@@ -9,7 +9,7 @@ use cmsgears\core\admin\config\AdminGlobalCore;
 
 use cmsgears\core\admin\config\AdminProperties;
 
-class BaseController extends \cmsgears\core\common\controllers\BaseController {
+abstract class Controller extends \cmsgears\core\common\controllers\Controller {
 
 	private $_adminProperties;
 

@@ -14,7 +14,7 @@ use yii\base\NotSupportedException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\config\CoreProperties;
 
-use cmsgears\core\common\models\traits\MetaTrait;
+use cmsgears\core\common\models\traits\AttributeTrait;
 use cmsgears\core\common\models\traits\FileTrait;
 use cmsgears\core\common\models\traits\AddressTrait;
 
@@ -75,17 +75,17 @@ class User extends CmgEntity implements IdentityInterface {
 		self::STATUS_BLOCKED => "Blocked"
 	];
 
-	use MetaTrait;
+	use AttributeTrait;
 
-	public $metaType	= CoreGlobal::TYPE_USER;
+	public $attributeType	= CoreGlobal::TYPE_USER;
 
 	use FileTrait;
 
-	public $fileType	= CoreGlobal::TYPE_USER;
+	public $fileType		= CoreGlobal::TYPE_USER;
 
 	use AddressTrait;
 
-	public $addressType	= CoreGlobal::TYPE_USER;
+	public $addressType		= CoreGlobal::TYPE_USER;
 
 	public $permissions	= [];
 

@@ -47,25 +47,37 @@ class SiteService extends Service {
 	/**
 	 * @param string $slug
 	 * @param string $type
-	 * @return array - An array of site meta for the given site name and meta type.
+	 * @return array - An array of site attribute for the given site name and meta type.
 	 */
-    public static function getMetaBySlugType( $slug, $type ) {
+    public static function getAttributeBySlugType( $slug, $type ) {
 
 		$site = Site::findBySlug( $slug );
 
-		return $site->getModelMetasByType( $type );
+		return $site->getModelAttributesByType( $type );
     }
 
 	/**
 	 * @param string $name
 	 * @param string $type
-	 * @return array - An associative array of site meta for the given site name and meta type having name as key and value as value.
+	 * @return array - An associative array of site attribute for the given site name and meta type having name as key and value as attribute.
 	 */
-    public static function getMetaMapBySlugType( $slug, $type ) {
+    public static function getAttributeMapBySlugType( $slug, $type ) {
 
 		$site = Site::findBySlug( $slug );
 
-		return $site->getMetaNameValueMapByType( $type );
+		return $site->getAttributeMapByType( $type );
+    }
+
+	/**
+	 * @param string $name
+	 * @param string $type
+	 * @return array - An associative array of site attribute for the given site name and meta type having name as key and value as value.
+	 */
+    public static function getAttributeNameValueMapBySlugType( $slug, $type ) {
+
+		$site = Site::findBySlug( $slug );
+
+		return $site->getAttributeNameValueMapByType( $type );
     }
 
 	// Data Provider ----
@@ -121,9 +133,9 @@ class SiteService extends Service {
 		return $siteToUpdate;
 	}
 
-	public static function updateMeta( $meta ) {
+	public static function updateAttributes( $modelAttributes ) {
 
-		$site 			= Site::findByName( Yii::$app->cmgCore->getSiteName() );		
+		$site 			= Site::findBySlug( Yii::$app->cmgCore->getSiteSlug() );	
 		$metaToUpdate	= $site->getModelMetaByTypeName( $meta->type, $meta->name );
 
 		$metaToUpdate->copyForUpdateFrom( $meta, [ 'value' ] );

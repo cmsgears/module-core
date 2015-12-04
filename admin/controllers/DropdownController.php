@@ -15,9 +15,7 @@ use cmsgears\core\common\models\entities\Category;
 
 use cmsgears\core\admin\services\CategoryService; 
 
-use cmsgears\core\admin\controllers\BaseController;  
-
-class DropdownController extends BaseCategoryController {
+class DropdownController extends \cmsgears\core\admin\controllers\base\CategoryController {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -28,35 +26,27 @@ class DropdownController extends BaseCategoryController {
 		$this->sidebar 	= [ 'parent' => 'sidebar-core', 'child' => 'dropdown' ];
 	}
 
-	// Instance Methods ------------------
+	// Instance Methods --------------------------------------------
 
 	// yii\base\Component ----------------
 
     public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'all'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'create'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'update'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'delete'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'all'  => ['get'],
-	                'create'  => ['get', 'post'],
-	                'update'  => ['get', 'post'],
-	                'delete'  => ['get', 'post']
-                ]
-            ]
-        ];
+		$behaviours	= parent::behaviors();
+
+		$behaviours[ 'rbac' ][ 'actions' ][ 'index' ] 	= [ 'permission' => CoreGlobal::PERM_CORE ];
+
+		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ] 	= [ 'get' ];
+
+		return $behaviours;
     }
 
 	// DropdownController --------------------
+
+	public function actionIndex() {
+
+		$this->redirect( 'all' );
+	}
 
 	public function actionAll( $type = null ) {
 

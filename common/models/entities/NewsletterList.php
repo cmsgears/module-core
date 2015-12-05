@@ -58,7 +58,8 @@ class NewsletterList extends CmgEntity {
 
         return [
             [ [ 'newsletterId', 'memberId' ], 'required' ],
-            [ [ 'id', 'active' ], 'safe' ],
+            [ [ 'id' ], 'safe' ],
+            [ [ 'active' ], 'boolean' ],
             [ [ 'newsletterId', 'memberId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
@@ -72,7 +73,7 @@ class NewsletterList extends CmgEntity {
 		return [
 			'newsletterId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NEWSLETTER ),
 			'memberId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MEMBER ),
-			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
 		];
 	}
 

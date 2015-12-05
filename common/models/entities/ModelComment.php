@@ -5,18 +5,23 @@ namespace cmsgears\core\common\models\entities;
 use \Yii;
 use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
+use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+
+use \cmsgears\core\common\behaviors\AuthorBehavior;
+
+use cmsgears\core\common\models\traits\CreateModifyTrait;
 
 /**
  * ModelComment Entity
  *
  * @property integer $id
+ * @property integer $baseId
+ * @property integer $parentId 
  * @property integer $createdBy
  * @property integer $modifiedBy
- * @property integer $baseId
- * @property integer $parentId
  * @property string $parentType
  * @property string $name
  * @property string $email
@@ -40,6 +45,8 @@ class ModelComment extends CmgModel {
 		self::STATUS_BLOCKED => 'Blocked',
 		self::STATUS_APPROVED => 'Approved'
 	];
+	
+	use CreateModifyTrait;
 
 	// Instance Methods --------------------------------------------
 
@@ -58,6 +65,27 @@ class ModelComment extends CmgModel {
 		return self::$statusMap[ $this->status ];
 	}
 
+	// yii\base\Component ----------------
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+
+        return [
+
+            'authorBehavior' => [
+                'class' => AuthorBehavior::className()
+			],
+            'timestampBehavior' => [
+                'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+ 				'updatedAtAttribute' => 'modifiedAt',
+ 				'value' => new Expression('NOW()')
+            ]
+        ];
+    }
+
 	// yii\base\Model --------------------
 
     /**
@@ -65,22 +93,19 @@ class ModelComment extends CmgModel {
      */
 	public function rules() {
 
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'ip', 'name', 'email', 'rating' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
+		// model rules
         $rules = [
             [ [ 'parentId', 'parentType', 'content' ], 'required' ],
-            [ [ 'id', 'name', 'email', 'ip', 'data', 'status', 'rating' ], 'safe' ],
-            [ 'parentType', 'string', 'min' => 1, 'max' => 100 ],
+            [ [ 'id', 'email', 'status', 'rating', 'data' ], 'safe' ],
+            [ [ 'parentType', 'name', 'ip' ], 'string', 'min' => 1, 'max' => 100 ],
 			[ [ 'parentId', 'baseId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt', 'approvedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
+		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'ip', 'name', 'email', 'rating' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -100,9 +125,10 @@ class ModelComment extends CmgModel {
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
 			'ip' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_IP ),
-			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
 			'status' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
-			'rating' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE )
+			'rating' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
+			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
+			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 

@@ -34,9 +34,11 @@ class ModelForm extends CmgModel {
 
         return [
             [ [ 'formId', 'parentId', 'parentType' ], 'required' ],
-            [ [ 'id', 'order' ], 'safe' ],
-            [ [ 'formId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ 'parentType', 'string', 'min' => 1, 'max' => 100 ]
+            [ [ 'id' ], 'safe' ],
+            [ [ 'formId' ], 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ 'parentType', 'string', 'min' => 1, 'max' => 100 ],
+            [ 'order', 'number', 'integerOnly', 'min' => 0 ]
         ];
     }
 
@@ -70,7 +72,6 @@ class ModelForm extends CmgModel {
 	// ModelForm -------------------------
 
 	// Read ----
-
 }
 
 ?>

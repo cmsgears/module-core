@@ -18,12 +18,12 @@ use cmsgears\core\common\models\traits\CategoryTrait;
  * @property integer $userId
  * @property integer $notifierId
  * @property integer $templateId
- * @property string $message
  * @property string $type
  * @property integer $consumed
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property datetime $scheduledAt
+ * @property string $data 
  */
 class Activity extends CmgEntity {
 
@@ -96,8 +96,11 @@ class Activity extends CmgEntity {
 
         return [
             [ [ 'userId', 'type' ], 'required' ],
-			[ [ 'notifierId', 'templateId', 'message', 'consumed' ], 'safe' ],
-            [ [ 'notifierId', 'userId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'data' ], 'safe' ],
+			[ [ 'type' ], 'string', 'min' => 1, 'max' => 100 ],
+			[ 'consumed', 'boolean' ],
+            [ [ 'userId', 'notifierId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'createdAt', 'modifiedAt', 'scheduledAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }
@@ -111,8 +114,9 @@ class Activity extends CmgEntity {
 			'notifierId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NOTIFIER ),
 			'userId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USER ),
 			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
-			'message' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
-			'consumed' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONSUMED )
+			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'consumed' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONSUMED ),
+			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 

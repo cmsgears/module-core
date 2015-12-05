@@ -69,23 +69,21 @@ class Address extends CmgEntity {
      */
 	public function rules() {
 
-		$trim		= [];
+		// model rules
+        $rules = [
+			[ [ 'provinceId', 'countryId', 'line1', 'city', 'zip' ], 'required' ],
+			[ [ 'id', 'firstName', 'lastName', 'email' ], 'safe' ],
+			[ [ 'line1', 'line2', 'line3' ], 'alphanumpun' ],
+			[ 'city', 'alphanumspace' ],
+			[ 'zip', 'alphanumhyphenspace' ],
+			[ [ 'countryId', 'provinceId' ], 'number', 'integerOnly'=>true, 'min'=>1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'phone', 'fax', 'longitude', 'latitude' ], 'string', 'min' => 1, 'max' => 100 ]
+		];
 
+		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
 			$trim[] = [ [ 'line1', 'line2', 'line3', 'city', 'zip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'longitude', 'latitude' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
-        $rules = [
-			[ [ 'provinceId', 'countryId', 'line1', 'city', 'zip' ], 'required' ],
-			[ [ 'id', 'firstName', 'lastName', 'phone', 'email', 'fax', 'longitude', 'latitude' ], 'safe' ],
-			[ [ 'line1', 'line2', 'line3' ], 'alphanumpun' ],
-			[ 'city', 'alphanumspace' ],
-			[ 'zip','alphanumhyphenspace' ],
-			[ [ 'countryId', 'provinceId' ], 'number', 'integerOnly'=>true, 'min'=>1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ]
-		];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
 
 			return ArrayHelper::merge( $trim, $rules );
 		}

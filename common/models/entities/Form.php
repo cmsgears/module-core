@@ -35,10 +35,10 @@ use cmsgears\core\common\models\traits\AttributeTrait;
  * @property boolean $active
  * @property boolean $userMail
  * @property boolean $adminMail
- * @property string $options
- * @property string $data
  * @property datetime $createdAt
  * @property datetime $modifiedAt
+ * @property string $options
+ * @property string $data 
  */
 class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 
@@ -171,10 +171,13 @@ class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 		// model rules
         $rules = [
             [ [ 'name', 'siteId', 'captcha', 'visibility', 'active' ], 'required' ],
-			[ [ 'id', 'templateId', 'slug', 'description', 'type', 'successMessage', 'userMail', 'adminMail', 'options', 'data' ], 'safe' ],
-			[ 'name', 'string', 'min' => 1, 'max' => 100 ],
+			[ [ 'id', 'description', 'successMessage', 'options', 'data' ], 'safe' ],
+			[ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ 'slug', 'string', 'min' => 1, 'max' => 150 ],
+            [ [ 'active', 'userMail', 'adminMail' ], 'boolean' ],
+            [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];

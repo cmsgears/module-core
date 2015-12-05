@@ -6,14 +6,19 @@ use \Yii;
 use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\behaviors\AuthorBehavior;
+
 /**
  * Template Entity
  *
- * @property int $id
+ * @property integer $id
+ * @property integer $createdBy
+ * @property integer $modifiedBy
  * @property string $name
  * @property string $slug
  * @property string $description
@@ -22,9 +27,13 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $viewPath
  * @property string $adminView
  * @property string $frontendView
+ * @property datetime $createdAt
+ * @property datetime $modifiedAt
  * @property string $content
  */
 class Template extends CmgEntity {
+
+	use CreateModifyTrait;
 
 	// Instance Methods --------------------------------------------
 
@@ -37,11 +46,20 @@ class Template extends CmgEntity {
 
         return [
 
+            'authorBehavior' => [
+                'class' => AuthorBehavior::className()
+			],
             'sluggableBehavior' => [
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
                 'ensureUnique' => true
+            ],
+            'timestampBehavior' => [
+                'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+ 				'updatedAtAttribute' => 'modifiedAt',
+ 				'value' => new Expression('NOW()')
             ]
         ];
     }
@@ -53,22 +71,22 @@ class Template extends CmgEntity {
      */
 	public function rules() {
 
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'name', 'description', 'layout', 'viewPath', 'adminView', 'frontendView' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
+		// model rules		
         $rules = [
             [ [ 'name', 'type' ], 'required' ],
             [ [ 'id', 'slug', 'description', 'layout', 'viewPath', 'adminView', 'frontendView', 'content' ], 'safe' ],
+            [ [ 'name', 'type' ], 'string', 'min'=>1, 'max'=>100 ],
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
+		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name', 'description', 'layout', 'viewPath', 'adminView', 'frontendView' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -88,7 +106,8 @@ class Template extends CmgEntity {
 			'layout' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LAYOUT ),
 			'viewPath' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_PATH ),
 			'adminView' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_ADMIN ),
-			'frontendView' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_FRONTEND )
+			'frontendView' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_FRONTEND ),
+			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 		];
 	}
 

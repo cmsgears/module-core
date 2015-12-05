@@ -38,10 +38,10 @@ class ModelAddress extends CmgModel {
 
         return [
             [ [ 'addressId', 'parentId', 'parentType' ], 'required' ],
-            [ [ 'id', 'order' ], 'safe' ],
+            [ [ 'id' ], 'safe' ],
             [ [ 'addressId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'type' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ 'parentType', 'string', 'min' => 1, 'max' => 100 ]
+            [ 'parentType', 'string', 'min' => 1, 'max' => 100 ],
+            [ [ 'type', 'order' ], 'number', 'integerOnly', 'min' => 0 ]
         ];
     }
 

@@ -23,10 +23,10 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property integer $modifiedBy
  * @property string $name
  * @property string $description
- * @property longtext $content
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property datetime $lastSentAt
+ * @property longtext $content 
  */
 class Newsletter extends NamedCmgEntity {
 
@@ -69,18 +69,12 @@ class Newsletter extends NamedCmgEntity {
      * @inheritdoc
      */
 	public function rules() {
-
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'name', 'description' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
+		
+		// model rules
         $rules = [
             [ [ 'name' ], 'required' ],
             [ [ 'id', 'description', 'content' ], 'safe' ],
-            [ 'name', 'string', 'min'=>1, 'max'=>100 ],
+            [ 'name', 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
@@ -88,7 +82,10 @@ class Newsletter extends NamedCmgEntity {
             [ [ 'createdAt', 'modifiedAt', 'lastSentAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
+		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name', 'description' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}

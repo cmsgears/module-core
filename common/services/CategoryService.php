@@ -88,7 +88,7 @@ class CategoryService extends Service {
 		$categoryToUpdate	= self::findById( $category->id );
 
 		// Copy Attributes
-		$categoryToUpdate->copyForUpdateFrom( $category, [ 'avatarId', 'parentId', 'name', 'description', 'type', 'icon', 'featured' ] );
+		$categoryToUpdate->copyForUpdateFrom( $category, [ 'avatarId', 'parentId', 'name', 'description', 'type', 'icon', 'featured', 'options' ] );
 
 		if( isset( $avatar ) ) {
 

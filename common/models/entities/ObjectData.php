@@ -18,10 +18,11 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 
 /**
- * Role Entity
+ * ObjectData Entity
  *
  * @property integer $id
  * @property integer $siteId
+ * @property integer $templateId
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
@@ -29,9 +30,10 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property string $description
  * @property string $type
  * @property string $active
- * @property string $data
  * @property datetime $createdAt
  * @property datetime $modifiedAt
+ * @property string $options
+ * @property string $data
  */
 class ObjectData extends CmgEntity {
 
@@ -113,26 +115,24 @@ class ObjectData extends CmgEntity {
      */
 	public function rules() {
 
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
+		// model rules
         $rules = [
             [ [ 'name', 'siteId' ], 'required' ],
-            [ [ 'id', 'slug', 'templateId', 'description', 'data', 'active' ], 'safe' ],
+            [ [ 'id', 'slug', 'templateId', 'description', 'active', 'options', 'data' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
-            [ [ 'name', 'type' ], 'string', 'min'=>1, 'max'=>100 ],
+            [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+            [ 'slug', 'string', 'min' => 1, 'max' => 150 ],
+            [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
+		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -146,11 +146,13 @@ class ObjectData extends CmgEntity {
 	public function attributeLabels() {
 
 		return [
+			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
-			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA ),
-			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
+			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS ),
+			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 

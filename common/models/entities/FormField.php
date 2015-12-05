@@ -19,9 +19,9 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property short $type
  * @property boolean $compress
  * @property short $validators
- * @property short $options
- * @property string $data
  * @property short $order
+ * @property short $options
+ * @property string $data 
  */
 class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 
@@ -34,6 +34,7 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 	const TYPE_RADIO_GROUP		= 35;
 	const TYPE_SELECT			= 40;
 	const TYPE_RATING			= 50;
+	const TYPE_ICON				= 60;
 
 	public static $typeMap = [
 		self::TYPE_TEXT => 'Text',
@@ -44,7 +45,8 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 		self::TYPE_RADIO => 'Radio',
 		self::TYPE_RADIO_GROUP => 'Radio',
 		self::TYPE_SELECT => 'Select',
-		self::TYPE_RATING => 'Rating'
+		self::TYPE_RATING => 'Rating',
+		self::TYPE_ICON => 'Icon'
 	];
 
 	public $value;
@@ -73,20 +75,27 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 		
 		return $this->type == self::TYPE_PASSWORD;
 	}
-	
+
 	public function getFieldValue() {
-		
+
 		switch( $this->type ) {
-			
-			case self::TYPE_TEXT: {
-				
+
+			case self::TYPE_TEXT:
+			case self::TYPE_TEXTAREA:
+			case self::TYPE_RADIO:
+			case self::TYPE_RADIO_GROUP:
+			case self::TYPE_SELECT:
+			case self::TYPE_RATING:
+			case self::TYPE_ICON: {
+
 				return $this->value;
 			}
 			case self::TYPE_PASSWORD: {
-				
+
 				return null;
 			}
-			case self::TYPE_CHECKBOX: {
+			case self::TYPE_CHECKBOX:
+			case self::TYPE_CHECKBOX_GROUP: {
 
 				return Yii::$app->formatter->asBoolean( $this->value );
 			}
@@ -103,11 +112,12 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 		// model rules
         $rules = [
             [ [ 'formId', 'name' ], 'required' ],
-			[ [ 'id', 'label', 'type', 'compress', 'validators', 'options', 'data', 'order' ], 'safe' ],
-			[ [ 'type', 'compress' ], 'number', 'integerOnly' => true ],
+			[ [ 'id', 'label', 'type', 'validators', 'order', 'options', 'data' ], 'safe' ],
 			[ 'name', 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+			[ [ 'type', 'order' ], 'number', 'integerOnly' => true ],
+            [ 'compress', 'boolean' ]
         ];
 
 		// trim if configured
@@ -133,9 +143,9 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'compress' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_COMPRESS ),
 			'validators' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALIDATORS ),
+			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS ),
-			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_META ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
+			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_META )
 		];
 	}
 

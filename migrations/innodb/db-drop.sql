@@ -50,7 +50,7 @@ DROP TABLE IF EXISTS `cmg_core_form_field`;
 
 DROP TABLE IF EXISTS `cmg_core_model_message`;
 
-DROP TABLE IF EXISTS `cmg_core_model_meta`;
+DROP TABLE IF EXISTS `cmg_core_model_attribute`;
 
 DROP TABLE IF EXISTS `cmg_core_model_category`;
 

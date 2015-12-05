@@ -329,13 +329,7 @@ class User extends CmgEntity implements IdentityInterface {
      */
 	public function rules() {
 
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'email', 'username', 'phone', 'firstName', 'lastName' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
+		// model rules
         $rules = [
             [ [ 'email' ], 'required' ],
             [ [ 'id', 'username', 'localeId', 'genderId', 'avatarId', 'bannerId', 'status', 'phone', 'newsletter' ], 'safe' ],
@@ -352,8 +346,11 @@ class User extends CmgEntity implements IdentityInterface {
             [ 'dob', 'date', 'format' => Yii::$app->formatter->dateFormat ],
             [ [ 'registeredAt', 'lastLoginAt', 'lastActivityAt', 'accessTokenCreatedAt', 'accessTokenAccessedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
-
+		
+		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'email', 'username', 'phone', 'firstName', 'lastName' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}

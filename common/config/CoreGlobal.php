@@ -37,7 +37,7 @@ class CoreGlobal {
 	// Config ----------------------------------------------------------
 
 	const CONFIG_CORE			= 'core';
-	const CONFIG_MAIL			= 'email';
+	const CONFIG_MAIL			= 'mail';
 	const CONFIG_ADMIN			= 'backend';
 	const CONFIG_FRONTEND		= 'frontend';
 

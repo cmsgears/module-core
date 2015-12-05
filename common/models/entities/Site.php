@@ -16,6 +16,8 @@ use cmsgears\core\common\models\traits\AttributeTrait;
  * Site Entity
  *
  * @property integer $id
+ * @property integer $avatarId
+ * @property integer $bannerId
  * @property string $name
  * @property string $slug
  * @property short $order
@@ -87,23 +89,24 @@ class Site extends NamedCmgEntity {
      */
 	public function rules() {
 
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
+		// model rules
         $rules = [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'avatarId', 'bannerId', 'slug', 'order', 'active' ], 'safe' ],
+            [ [ 'id' ], 'safe' ],
+            [ [ 'name' ], 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ 'order', 'number', 'integerOnly' => true ]
+            [ 'slug', 'string', 'min' => 1, 'max' => 150 ],
+            [ 'order', 'number', 'integerOnly' => true ],
+            [ 'active', 'boolean' ],
+            [ [ 'avatarId', 'bannerId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
         ];
 
+		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -117,6 +120,8 @@ class Site extends NamedCmgEntity {
 	public function attributeLabels() {
 
 		return [
+			'avatarId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
+			'bannerId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),

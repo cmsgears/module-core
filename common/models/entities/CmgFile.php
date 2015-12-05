@@ -12,6 +12,8 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\config\CoreProperties;
 
+use cmsgears\core\common\behaviors\AuthorBehavior;
+
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 
 /**
@@ -115,6 +117,9 @@ class CmgFile extends CmgEntity {
 
         return [
 
+            'authorBehavior' => [
+                'class' => AuthorBehavior::className()
+			],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
 				'createdAtAttribute' => 'createdAt',
@@ -131,23 +136,22 @@ class CmgFile extends CmgEntity {
      */
 	public function rules() {
 
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'name', 'extension', 'directory', 'title', 'description', 'altText' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
+		// model rules
         $rules = [
             [ [ 'createdBy', 'name', 'extension', 'directory', 'url' ], 'required' ],
-            [ [ 'id', 'title', 'description', 'altText', 'visibility', 'type', 'thumb', 'link', 'changed' ], 'safe' ],
+            [ [ 'id', 'title', 'description', 'altText', 'visibility', 'thumb', 'link', 'changed' ], 'safe' ],
+            [ [ 'name', 'directory' ], 'string', 'min' => 1, 'max' => 150 ],
+            [ [ 'extension', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
             [ [ 'width', 'height', 'twidth', 'theight' ], 'safe' ],
             [ [ 'width', 'height', 'twidth', 'theight' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
+		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name', 'extension', 'directory', 'title', 'description', 'altText' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}

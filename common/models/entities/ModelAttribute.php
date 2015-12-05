@@ -33,9 +33,9 @@ class ModelAttribute extends CmgModel {
 		// model rules
         $rules = [
             [ [ 'parentId', 'parentType', 'name' ], 'required' ],
-            [ [ 'id', 'value', 'type' ], 'safe' ],
+            [ [ 'id', 'value' ], 'safe' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
+            [ [ 'parentType', 'name', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'alphanumdotu' ],
             [ 'name', 'validatenameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validatenameUpdate', 'on' => [ 'update' ] ]
@@ -92,7 +92,7 @@ class ModelAttribute extends CmgModel {
 			$existingConfig = self::findByTypeName( $this->parentId, $this->parentType, $this->type, $this->name );
 
 			if( isset( $existingConfig ) && $existingConfig->id != $this->id && 
-				$existingConfig->parentId == $this->parentType && strcmp( $existingConfig->parentType, $this->parentType ) == 0 && 
+				$existingConfig->parentId == $this->parentId && strcmp( $existingConfig->parentType, $this->parentType ) == 0 && 
 				strcmp( $existingConfig->name, $this->name ) == 0 && $existingConfig->type == $this->type ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );

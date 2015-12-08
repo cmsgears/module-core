@@ -117,9 +117,14 @@ class GenericForm extends \yii\base\Model {
 	 * The method collect the list of class members and their values using reflection.
 	 * return array - list of class members and their value
 	 */
-	public function getFormAttributes() {
+	public function getFormAttributes( $classPath = null ) {
+		
+		if( !isset( $classPath ) ) {
+			
+			$classPath	= 'cmsgears\core\common\models\forms\GenericForm';
+		}
 
-	  	$refclass	= new \ReflectionClass( $this );
+	  	$refclass	= new \ReflectionClass( $classPath );
 		$attribArr	= array();
 
 	  	foreach ( $refclass->getProperties() as $property ) {

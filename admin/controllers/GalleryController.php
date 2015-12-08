@@ -50,22 +50,22 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryCon
 		// Remember return url for crud
 		Url::remember( [ 'gallery/all' ], 'galleries' );
 
-		return parent::actionAll( CoreGlobal::TYPE_SITE );
+		return parent::actionAll( CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionCreate() {
 
-		return parent::actionCreate( CoreGlobal::TYPE_SITE );
+		return parent::actionCreate( CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id, CoreGlobal::TYPE_SITE );
+		return parent::actionUpdate( $id, CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, CoreGlobal::TYPE_SITE );
+		return parent::actionDelete( $id, CoreGlobal::TYPE_SYSTEM );
 	}
 }
 

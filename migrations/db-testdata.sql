@@ -15,8 +15,8 @@ SELECT @site := `id` FROM cmg_core_site WHERE slug = 'main';
 -- Core Config Form
 --
 
-INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`options`,`createdAt`,`modifiedAt`) VALUES
-	(@site,NULL,1,1,'Config Core','config-core','Core configuration form.','All configurations saved successfully.',0,10,1,0,0,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
+INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`options`,`createdAt`,`modifiedAt`) VALUES
+	(@site,NULL,1,1,'Config Core','config-core','system','Core configuration form.','All configurations saved successfully.',0,10,1,0,0,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 SELECT @form := `id` FROM cmg_core_form WHERE slug = 'config-core';
 
@@ -37,18 +37,18 @@ INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`va
 -- Mail Config Form
 --
 
-INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`options`,`createdAt`,`modifiedAt`) VALUES
-	(@site,NULL,1,1,'Config Mail','config-mail','Mail configuration form.','All configurations saved successfully.',0,10,1,0,0,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
+INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`options`,`createdAt`,`modifiedAt`) VALUES
+	(@site,NULL,1,1,'Config Mail','config-mail','system','Mail configuration form.','All configurations saved successfully.',0,10,1,0,0,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 SELECT @form := `id` FROM cmg_core_form WHERE slug = 'config-mail';
 
 INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`options`,`data`,`order`) VALUES 
 	(@form,'smtp','SMTP',20,0,'required','{\"title\":\"Check whether SMTP is required.\"}',NULL,0),
-	(@form,'smtp_username','SMTP Username',0,0,'required','{\"title\":\"SMTP username.\",\"placeholder\":\"SMTP Username\"}',NULL,0),
-	(@form,'smtp_password','SMTP Password',5,0,'required','{\"title\":\"SMTP password.\",\"placeholder\":\"SMTP Password\"}',NULL,0),
-	(@form,'smtp_host','SMTP Host',0,0,'required','{\"title\":\"SMTP host.\",\"placeholder\":\"SMTP Host\"}',NULL,0),
-	(@form,'smtp_port','SMTP Port',0,0,'required','{\"title\":\"SMTP port.\",\"placeholder\":\"SMTP Port\"}',NULL,0),
-	(@form,'smtp_encryption','SMTP Encryption',0,0,'required','{\"title\":\"SMTP encryption.\",\"placeholder\":\"SMTP Encryption\"}',NULL,0),
+	(@form,'smtp_username','SMTP Username',0,0,NULL,'{\"title\":\"SMTP username.\",\"placeholder\":\"SMTP Username\"}',NULL,0),
+	(@form,'smtp_password','SMTP Password',5,0,NULL,'{\"title\":\"SMTP password.\",\"placeholder\":\"SMTP Password\"}',NULL,0),
+	(@form,'smtp_host','SMTP Host',0,0,NULL,'{\"title\":\"SMTP host.\",\"placeholder\":\"SMTP Host\"}',NULL,0),
+	(@form,'smtp_port','SMTP Port',0,0,NULL,'{\"title\":\"SMTP port.\",\"placeholder\":\"SMTP Port\"}',NULL,0),
+	(@form,'smtp_encryption','SMTP Encryption',0,0,NULL,'{\"title\":\"SMTP encryption.\",\"placeholder\":\"SMTP Encryption\"}',NULL,0),
 	(@form,'debug','SMTP Debug',20,0,'required','{\"title\":\"Check whether SMTP debug is required.\"}',NULL,0),
 	(@form,'sender_name','Sender Name',0,0,'required','{\"title\":\"Sender name.\",\"placeholder\":\"Sender Name\"}',NULL,0),
 	(@form,'sender_email','Sender Email',0,0,'required','{\"title\":\"Sender email.\",\"placeholder\":\"Sender Email\"}',NULL,0),
@@ -61,8 +61,8 @@ INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`va
 -- Backend Config Form
 --
 
-INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`options`,`createdAt`,`modifiedAt`) VALUES
-	(@site,NULL,1,1,'Config Backend','config-backend','Backend site configuration form.','All configurations saved successfully.',0,10,1,0,0,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
+INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`options`,`createdAt`,`modifiedAt`) VALUES
+	(@site,NULL,1,1,'Config Backend','config-backend','system','Backend site configuration form.','All configurations saved successfully.',0,10,1,0,0,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 SELECT @form := `id` FROM cmg_core_form WHERE slug = 'config-backend';
 
@@ -74,8 +74,8 @@ INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`va
 -- Frontend Config Form
 --
 
-INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`options`,`createdAt`,`modifiedAt`) VALUES
-	(@site,NULL,1,1,'Config Site','config-frontend','Frontend site configuration form.','All configurations saved successfully.',0,10,1,0,0,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
+INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`options`,`createdAt`,`modifiedAt`) VALUES
+	(@site,NULL,1,1,'Config Site','config-frontend','system','Frontend site configuration form.','All configurations saved successfully.',0,10,1,0,0,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 SELECT @form := `id` FROM cmg_core_form WHERE slug = 'config-frontend';
 
@@ -139,7 +139,7 @@ INSERT INTO `cmg_core_option` (`categoryId`,`name`,`value`,`icon`,`data`) VALUES
 	(@category,'Other','Other',NULL,NULL);
 
 --
--- Default roles and permissions
+-- Core module roles and permissions
 --
 
 INSERT INTO `cmg_core_role` (`createdBy`,`modifiedBy`,`name`,`slug`,`homeUrl`,`type`,`description`,`icon`,`createdAt`,`modifiedAt`) VALUES

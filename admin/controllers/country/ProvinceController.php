@@ -15,9 +15,7 @@ use cmsgears\core\common\models\entities\Province;
 use cmsgears\core\common\services\ProvinceService;
 use cmsgears\core\common\services\CountryService;
 
-use cmsgears\core\admin\controllers\BaseController; 
-
-class ProvinceController extends BaseController {
+class ProvinceController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 

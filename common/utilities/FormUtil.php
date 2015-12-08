@@ -51,10 +51,11 @@ class FormUtil {
 		return $settings;
 	}
 
-	public static function getFieldsHtml( $form, $model ) {
+	public static function getFieldsHtml( $form, $model, $config = [] ) {
 
-		$fields 	= $model->fields;
-		$fieldsHtml	= '';
+		$fields 			= $model->fields;
+		$fieldsHtml			= '';
+		$config[ 'label' ]	= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
 
 		foreach ( $fields as $key => $field ) {
 
@@ -73,25 +74,75 @@ class FormUtil {
 
 				case FormField::TYPE_TEXT: {
 
-					$fieldHtml = $form->field( $model, $key )->textInput( $field->options )->label( $field->label );
+					$fieldHtml = $form->field( $model, $key )->textInput( $field->options );
+					
+					if( $config[ 'label' ] ) {
+						
+						$fieldHtml = $fieldHtml->label( $field->label );
+					}
+					else {
 
+						$fieldHtml = $fieldHtml->label( false );
+					}
+					
 					break;
 				}
 				case FormField::TYPE_PASSWORD: {
 
-					$fieldHtml = $form->field( $model, $key )->passwordInput( $field->options )->label( $field->label );
+					$fieldHtml = $form->field( $model, $key )->passwordInput( $field->options );
+
+					if( $config[ 'label' ] ) {
+						
+						$fieldHtml = $fieldHtml->label( $field->label );
+					}
+					else {
+
+						$fieldHtml = $fieldHtml->label( false );
+					}
 
 					break;
 				}
 				case FormField::TYPE_TEXTAREA: {
 
-					$fieldHtml = $form->field( $model, $key )->textArea( $field->options )->label( $field->label );
-	
+					$fieldHtml = $form->field( $model, $key )->textArea( $field->options );
+
+					if( $config[ 'label' ] ) {
+						
+						$fieldHtml = $fieldHtml->label( $field->label );
+					}
+					else {
+
+						$fieldHtml = $fieldHtml->label( false );
+					}
+
 					break;
 				}
 				case FormField::TYPE_CHECKBOX: {
 
 					$fieldHtml = $form->field( $model, $key )->checkbox( $field->options );
+
+					break;
+				}
+				case FormField::TYPE_SELECT: {
+
+					if( isset( $field->options[ 'options' ] ) ) {
+
+						$fieldOptions	= $field->options;
+						$options		= $fieldOptions[ 'options' ];
+
+						unset( $fieldOptions[ 'options' ] );
+	
+						$fieldHtml 	= $form->field( $model, $key )->dropDownList( $options, $fieldOptions );
+
+						if( $config[ 'label' ] ) {
+							
+							$fieldHtml = $fieldHtml->label( $field->label );
+						}
+						else {
+	
+							$fieldHtml = $fieldHtml->label( false );
+						}
+					}
 
 					break;
 				}

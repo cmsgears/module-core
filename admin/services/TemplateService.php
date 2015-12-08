@@ -19,7 +19,7 @@ class TemplateService extends \cmsgears\core\common\services\TemplateService {
 	        'attributes' => [
 	            'name' => [
 	                'asc' => [ 'name' => SORT_ASC ],
-	                'desc' => ['name' => SORT_DESC ],
+	                'desc' => [ 'name' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'name',
 	            ]

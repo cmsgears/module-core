@@ -12,6 +12,7 @@ class CoreValidator {
         'alphanumhyphen' => 'cmsgears\core\common\validators\AlphaNumWithHyphenValidator',
         'alphanumhyphenspace' => 'cmsgears\core\common\validators\AlphaNumWithHyphenSpaceValidator',
         'alphanumdotu' => 'cmsgears\core\common\validators\AlphaNumWithDotUnderscoreValidator',
+        'alphanumu' => 'cmsgears\core\common\validators\AlphaNumWithUnderscoreValidator',
         'phone' => 'cmsgears\core\common\validators\PhoneValidator',
         'password' => 'cmsgears\core\common\validators\PasswordValidator'
         

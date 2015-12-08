@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\frontend\controllers;
+namespace cmsgears\core\frontend\controllers\base;
 
 // Yii Imports
 use Yii;
@@ -10,7 +10,7 @@ use cmsgears\core\frontend\config\WebGlobalCore;
 
 use cmsgears\core\frontend\config\WebProperties;
 
-class BaseController extends \cmsgears\core\common\controllers\BaseController {
+class Controller extends \cmsgears\core\common\controllers\Controller {
 
 	private $_webProperties;
 

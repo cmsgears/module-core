@@ -9,9 +9,11 @@ use cmsgears\core\common\widgets\Editor;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Template';
 
-// Sidebar
-$this->params['sidebar-parent'] = $sidebarParent;
-$this->params['sidebar-child'] 	= $sidebarChild;
+// Sidebar and Return URL
+$sidebar						= $this->context->sidebar;
+$returnUrl						= $this->context->returnUrl;
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 
 Editor::widget( [ 'selector' => '.content-editor' ] );
 ?>

@@ -91,6 +91,7 @@ class CoreGlobal {
 	const ERROR_AN_HYPHEN			= 'alphaNumHyphenError';
 	const ERROR_AN_HYPHEN_SPACE		= 'alphaNumHyphenSpaceError';
 	const ERROR_AN_DOT_U			= 'alphaNumDotUError';
+	const ERROR_AN_U				= 'alphaNumUError';
 	const ERROR_PHONE				= 'phoneError';
 
 	// Errors - Create/Register User

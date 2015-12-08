@@ -13,7 +13,7 @@ use cmsgears\core\frontend\config\WebGlobalCore;
 use cmsgears\core\common\services\OptionService;
 use cmsgears\core\frontend\services\UserService;
 
-class UserController extends BaseController {
+class UserController extends base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 

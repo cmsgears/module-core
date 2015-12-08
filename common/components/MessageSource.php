@@ -48,6 +48,7 @@ class MessageSource extends Component {
 		CoreGlobal::ERROR_AN_HYPHEN => 'Please provide valid value having alphanumeric and hyphen.',
 		CoreGlobal::ERROR_AN_HYPHEN_SPACE => 'Please provide valid value having alphanumeric, space and hyphen.',
 		CoreGlobal::ERROR_AN_DOT_U => 'Please provide valid value having alphanumeric, dot(.) or underscore(_) characters.',
+		CoreGlobal::ERROR_AN_U => 'Please provide valid value having alphanumeric or underscore(_) characters.',
 		CoreGlobal::ERROR_PHONE => 'Please provide a valid number having numeric digits or hyphen(-), space or plus(+) at beginning.',
 
 		// Errors - Create/Register User

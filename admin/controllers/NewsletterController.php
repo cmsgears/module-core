@@ -14,7 +14,7 @@ use cmsgears\core\common\models\entities\Newsletter;
 use cmsgears\core\admin\services\NewsletterService;
 use cmsgears\core\admin\services\NewsletterMemberService;
 
-class NewsletterController extends BaseController {
+class NewsletterController extends base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 

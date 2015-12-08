@@ -13,11 +13,9 @@ use cmsgears\core\common\models\forms\Binder;
 
 use cmsgears\core\admin\services\PermissionService;
 
-use cmsgears\core\admin\controllers\BaseController;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class PermissionController extends BaseController {
+class PermissionController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -42,7 +40,7 @@ class PermissionController extends BaseController {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'bindRoles'  => ['post']
+	                'bindRoles'  => [ 'post' ]
                 ]
             ]
         ];

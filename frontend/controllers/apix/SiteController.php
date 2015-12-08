@@ -18,7 +18,7 @@ use cmsgears\core\common\services\SiteMemberService;
 use cmsgears\core\frontend\services\UserService;
 use cmsgears\core\frontend\services\NewsletterMemberService;
 
-class SiteController extends \cmsgears\core\frontend\controllers\BaseController {
+class SiteController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 

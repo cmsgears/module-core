@@ -6,6 +6,7 @@ use \Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -45,10 +46,10 @@ abstract class FormController extends Controller {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'all'   => ['get'],
-	                'create' => ['get', 'post'],
-	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post']
+	                'all'   => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ]
                 ]
             ]
         ];
@@ -84,6 +85,7 @@ abstract class FormController extends Controller {
 		}
 
 		$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_FORM );
+		$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
 
     	return $this->render( '@cmsgears/module-core/admin/views/form/create', [
     		'model' => $model,
@@ -113,6 +115,7 @@ abstract class FormController extends Controller {
 			}
 
 			$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_FORM );
+			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/form/update', [
 	    		'model' => $model,
@@ -144,6 +147,7 @@ abstract class FormController extends Controller {
 			}
 
 			$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_FORM );
+			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/form/delete', [
 	    		'model' => $model,

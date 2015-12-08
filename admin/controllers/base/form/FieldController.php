@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\forms\admin\controllers\form;
+namespace cmsgears\core\admin\controllers\base\form;
 
 // Yii Imports
 use \Yii;
@@ -8,14 +8,13 @@ use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\forms\common\config\FormsGlobal;
 
-use cmsgears\forms\common\models\entities\FormField;
+use cmsgears\core\common\models\entities\FormField;
 
-use cmsgears\forms\admin\services\FormService;
-use cmsgears\forms\admin\services\FormFieldService;
+use cmsgears\core\admin\services\FormService;
+use cmsgears\core\admin\services\FormFieldService;
 
-class FieldController extends \cmsgears\core\admin\controllers\BaseController {
+class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -34,17 +33,15 @@ class FieldController extends \cmsgears\core\admin\controllers\BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'all'    => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'create' => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'update' => [ 'permission' => FormsGlobal::PERM_FORM ],
-	                'delete' => [ 'permission' => FormsGlobal::PERM_FORM ]
+	                'all'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'create'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'update'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'delete'  => [ 'permission' => CoreGlobal::PERM_CORE ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index'  => [ 'get' ],
 	                'all'   => [ 'get' ],
 	                'create' => [ 'get', 'post' ],
 	                'update' => [ 'get', 'post' ],
@@ -56,16 +53,11 @@ class FieldController extends \cmsgears\core\admin\controllers\BaseController {
 
 	// PageController --------------------
 
-	public function actionIndex() {
-
-		$this->redirect( [ 'all' ] );
-	}
-
 	public function actionAll( $formid ) {
 
 		$dataProvider = FormFieldService::getPaginationByFormId( $formid );
 
-	    return $this->render( 'all', [
+	    return $this->render( '@cmsgears/module-core/admin/views/form/field/all', [
 	         'dataProvider' => $dataProvider,
 	         'formId' => $formid
 	    ]);
@@ -86,7 +78,7 @@ class FieldController extends \cmsgears\core\admin\controllers\BaseController {
 			}
 		}
 
-		return $this->render( 'create', [
+		return $this->render( '@cmsgears/module-core/admin/views/form/field/create', [
 			'model' => $model,
 			'formId' => $formid,
 			'typeMap' => FormField::$typeMap
@@ -111,7 +103,7 @@ class FieldController extends \cmsgears\core\admin\controllers\BaseController {
 				}
 			}
 
-	    	return $this->render( 'update', [
+	    	return $this->render( '@cmsgears/module-core/admin/views/form/field/update', [
 				'model' => $model,
 				'formId' => $model->formId,
 				'typeMap' => FormField::$typeMap
@@ -138,7 +130,7 @@ class FieldController extends \cmsgears\core\admin\controllers\BaseController {
 				}
 			}
 
-	    	return $this->render( 'delete', [
+	    	return $this->render( '@cmsgears/module-core/admin/views/form/field/delete', [
 				'model' => $model,
 				'formId' => $model->formId,
 				'typeMap' => FormField::$typeMap

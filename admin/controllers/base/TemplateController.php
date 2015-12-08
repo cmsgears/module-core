@@ -28,19 +28,17 @@ abstract class TemplateController extends Controller {
 
 	// BaseRoleController -----------------
 
-	public function actionAll( $sidebar = [], $type = null ) {
+	public function actionAll( $type = null ) {
 
 		$dataProvider = TemplateService::getPaginationByType( $type );
 
 	    return $this->render( '@cmsgears/module-core/admin/views/template/all', [
 
-			'dataProvider' => $dataProvider,
-    		'sidebarParent' => $sidebar[ 'parent' ],
-    		'sidebarChild' => $sidebar[ 'child' ]
+			'dataProvider' => $dataProvider
 	    ]);
 	}
 
-	public function actionCreate( $sidebar = [], $type = null ) {
+	public function actionCreate( $type = null ) {
 
 		$model		= new Template();
 
@@ -60,14 +58,11 @@ abstract class TemplateController extends Controller {
 		}
 
     	return $this->render( '@cmsgears/module-core/admin/views/template/create', [
-    		'model' => $model, 
-    		'returnUrl' => $this->returnUrl,
-    		'sidebarParent' => $sidebar[ 'parent' ],
-    		'sidebarChild' => $sidebar[ 'child' ]
+    		'model' => $model
     	]);
 	}	
  	
-	public function actionUpdate( $id, $sidebar = [], $type = null ) {
+	public function actionUpdate( $id, $type = null ) {
 
 		// Find Model
 		$model		= TemplateService::findById( $id );
@@ -86,10 +81,7 @@ abstract class TemplateController extends Controller {
 			}
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/template/update', [
-	    		'model' => $model, 
-	    		'returnUrl' => $this->returnUrl,
-    			'sidebarParent' => $sidebar[ 'parent' ],
-    			'sidebarChild' => $sidebar[ 'child' ]
+	    		'model' => $model
 	    	]);
 		}
 		
@@ -97,7 +89,7 @@ abstract class TemplateController extends Controller {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $id, $sidebar = [], $type = null ) {
+	public function actionDelete( $id, $type = null ) {
 
 		// Find Model
 		$model	= TemplateService::findById( $id );
@@ -114,10 +106,7 @@ abstract class TemplateController extends Controller {
 			}
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/template/delete', [
-	    		'model' => $model, 
-	    		'returnUrl' => $this->returnUrl,
-    			'sidebarParent' => $sidebar[ 'parent' ],
-    			'sidebarChild' => $sidebar[ 'child' ]
+	    		'model' => $model
 	    	]);
 		}
 		

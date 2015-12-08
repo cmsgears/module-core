@@ -5,6 +5,7 @@ namespace cmsgears\core\common\models\entities;
 use \Yii;
 use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
+use yii\db\Expression;
 use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
 
@@ -12,6 +13,8 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
+
+use cmsgears\core\common\models\traits\CreateModifyTrait;
 
 /**
  * Template Entity

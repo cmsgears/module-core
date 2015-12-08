@@ -8,7 +8,7 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\ModelMeta;
+use cmsgears\core\common\models\entities\ModelAttribute;
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\forms\ResetPassword;
 
@@ -116,26 +116,26 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
 		// Update/Render if exist
 		if( isset( $user ) ) {
 
-			$modelMetas		= Yii::$app->request->post( 'ModelMeta' );
-			$count 			= count( $modelMetas );
-			$metas			= [];
+			$modelAttributes	= Yii::$app->request->post( 'ModelAttribute' );
+			$count 				= count( $modelAttributes );
+			$attributes			= [];
 
 			for ( $i = 0; $i < $count; $i++ ) {
 
-				$meta		= new ModelMeta( [ 'parentId' => $user->id, 'parentType' => CoreGlobal::TYPE_USER ] );
-				$metas[] 	= $meta; 
+				$attribute		= new ModelAttribute( [ 'parentId' => $user->id, 'parentType' => CoreGlobal::TYPE_USER ] );
+				$attributes[] 	= $attribute; 
 			}
 
 			// Load SchoolItem models
-			if( ModelMeta::loadMultiple( $metas, Yii::$app->request->post(), 'ModelMeta' ) && ModelMeta::validateMultiple( $metas ) ) {
+			if( ModelAttribute::loadMultiple( $attributes, Yii::$app->request->post(), 'ModelAttribute' ) && ModelAttribute::validateMultiple( $attributes ) ) {
 
-				UserService::updateMetas( $user, $metas );
+				UserService::updateAttributes( $user, $attributes );
 
 				$data	= [];
 
-				foreach ( $metas as $meta ) {
+				foreach ( $attributes as $attribute ) {
 
-					$data[]	= [ 'name' => $meta->name, 'value' => $meta->getStrValue() ];
+					$data[]	= [ 'name' => $attribute->name, 'value' => $attribute->getStrValue() ];
 				}
 
 				// Trigger Ajax Success

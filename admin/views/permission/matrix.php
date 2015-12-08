@@ -52,7 +52,7 @@ $models			= $dataProvider->getModels();
 						$roles		= $permission->getRolesIdList();
 						$apixUrl	= Yii::$app->urlManager->createAbsoluteUrl( "/apix/cmgcore/permission/bind-roles" );
 				?>
-					<tr id="perm-matrix-<?=$id?>" class="request-ajax" cmt-controller="permission" cmt-action="matrix" action="<?=$apixUrl?>" method="POST" cmt-clear-data="false">
+					<tr id="perm-matrix-<?=$id?>" class="cmt-request" cmt-controller="permission" cmt-action="matrix" action="<?=$apixUrl?>" method="POST" cmt-clear="false">
 						<td><?= $permission->name ?></td>
 						<td>
 							<input type="hidden" name="Binder[binderId]" value="<?=$id?>" />
@@ -74,7 +74,7 @@ $models			= $dataProvider->getModels();
 							</ul>
 						</td>
 						<td>
-							<span class="wrap-icon-action cmt-submit" title="Assign Roles" cmt-request="perm-matrix-<?=$id?>">
+							<span class="wrap-icon-action cmt-submit" title="Assign Roles"">
 								<span class="icon-action icon-action-save"</span>
 							</span>
 						</td>

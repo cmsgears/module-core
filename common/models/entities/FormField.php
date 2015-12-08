@@ -43,7 +43,7 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 		self::TYPE_CHECKBOX => 'Checkbox',
 		self::TYPE_CHECKBOX_GROUP => 'Checkbox Group',
 		self::TYPE_RADIO => 'Radio',
-		self::TYPE_RADIO_GROUP => 'Radio',
+		self::TYPE_RADIO_GROUP => 'Radio Group',
 		self::TYPE_SELECT => 'Select',
 		self::TYPE_RATING => 'Rating',
 		self::TYPE_ICON => 'Icon'
@@ -114,6 +114,7 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
             [ [ 'formId', 'name' ], 'required' ],
 			[ [ 'id', 'label', 'type', 'validators', 'order', 'options', 'data' ], 'safe' ],
 			[ 'name', 'string', 'min' => 1, 'max' => 100 ],
+			[ 'name', 'alphanumu' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
 			[ [ 'type', 'order' ], 'number', 'integerOnly' => true ],
@@ -137,7 +138,7 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 	public function attributeLabels() {
 
 		return [
-			'formId' => Yii::$app->cmgFormsMessage->getMessage( CoreGlobal::FIELD_FORM ),
+			'formId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FORM ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'label' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),

@@ -40,7 +40,7 @@ class ModelFile extends CmgModel {
             [ [ 'id', 'order' ], 'safe' ],
             [ [ 'fileId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'parentType', 'string', 'min' => 1, 'max' => 100 ],
-            [ 'order', 'number', 'integerOnly', 'min' => 0 ]
+            [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ]
         ];
     }
 

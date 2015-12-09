@@ -6,10 +6,10 @@ use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\common\models\entities\CoreTables;
-use cmsgears\core\common\models\entities\ModelMeta;
 
+use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\User;
+
 use cmsgears\core\common\utilities\DateUtil;
 
 /**
@@ -105,9 +105,9 @@ class UserService extends Service {
 		return $usersMap;
 	}
 	
-	public static function findMetaMapByType( $user, $type ) {
+	public static function findAttributeMapByType( $user, $type ) {
 		
-		return ModelMetaService::findMetaMapByType( $user->id, CoreGlobal::TYPE_USER, $type );
+		return ModelAttributeService::findAttributeMapByType( $user->id, CoreGlobal::TYPE_USER, $type );
 	}
 
 	// Data Provider ----
@@ -200,11 +200,11 @@ class UserService extends Service {
 		}
 	}
 
-	public static function updateMetas( $user, $metas ) {
+	public static function updateAttributes( $user, $attributes ) {
 
-		foreach ( $metas as $meta ) {
+		foreach ( $attributes as $attribute ) {
 
-			ModelMetaService::update( $meta );
+			ModelAttributeService::update( $attribute );
 		}
 
 		return true;

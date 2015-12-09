@@ -96,9 +96,9 @@ class UserController extends base\Controller {
 		// Update/Render if exist
 		if( isset( $user ) ) {
 
-			$privacy		= UserService::findMetaMapByType( $user, WebGlobalCore::SETTINGS_PRIVACY );
-			$notification	= UserService::findMetaMapByType( $user, WebGlobalCore::SETTINGS_NOTIFICATION );
-			$reminder		= UserService::findMetaMapByType( $user, WebGlobalCore::SETTINGS_REMINDER );
+			$privacy		= UserService::findAttributeMapByType( $user, WebGlobalCore::SETTINGS_PRIVACY );
+			$notification	= UserService::findAttributeMapByType( $user, WebGlobalCore::SETTINGS_NOTIFICATION );
+			$reminder		= UserService::findAttributeMapByType( $user, WebGlobalCore::SETTINGS_REMINDER );
 
 	    	return $this->render( WebGlobalCore::PAGE_SETTINGS, [
 	    		'user' => $user,

@@ -135,7 +135,7 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
 
 				foreach ( $attributes as $attribute ) {
 
-					$data[]	= [ 'name' => $attribute->name, 'value' => $attribute->getStrValue() ];
+					$data[]	= $attribute->getFieldInfo();
 				}
 
 				// Trigger Ajax Success

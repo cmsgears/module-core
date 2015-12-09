@@ -23,6 +23,20 @@ class ModelAttribute extends CmgModel {
 
 	// Instance Methods --------------------------------------------
 
+	public function getLabel() {
+
+		$label  = preg_split( "/_/", $this->name );
+		$label	= join( " ", $label );
+		$label	= ucwords( $label );
+
+		return $label;
+	}
+
+	public function getFieldInfo() {
+
+		return [ 'label' => $this->getLabel(), 'name' => $this->name, 'value' => $this->value ];
+	}
+
 	// yii\base\Model --------------------
 
     /**
@@ -36,7 +50,7 @@ class ModelAttribute extends CmgModel {
             [ [ 'id', 'value' ], 'safe' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'parentType', 'name', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
-            [ 'name', 'alphanumdotu' ],
+            [ 'name', 'alphanumu' ],
             [ 'name', 'validatenameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validatenameUpdate', 'on' => [ 'update' ] ]
         ];

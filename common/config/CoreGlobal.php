@@ -19,6 +19,7 @@ class CoreGlobal {
 
 	// Model Traits - Metas, Attachments, Addresses --------------------
 
+	const TYPE_DEFAULT			= 'default';
 	const TYPE_SYSTEM			= 'system';
 	const TYPE_COMBO			= 'combo';
 	const TYPE_SITE				= 'site';

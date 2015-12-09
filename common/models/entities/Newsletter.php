@@ -34,14 +34,6 @@ class Newsletter extends NamedCmgEntity {
 
 	// Instance Methods --------------------------------------------
 
-	/**
-	 * @return boolean - whether given user is owner
-	 */
-	public function checkOwner( $user ) {
-
-		return $this->createdBy	= $user->id;		
-	}
-
 	// yii\base\Component ----------------
 
     /**

@@ -24,6 +24,14 @@ trait CreateModifyTrait {
 
 		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] );
 	}
+
+	/**
+	 * @return boolean - whether given user is creator. It's useful to apply filter to check model ownership.
+	 */
+	public function checkOwner( $user ) {
+
+		return $this->createdBy	= $user->id;
+	}
 }
 
 ?>

@@ -52,6 +52,7 @@ if( !isset( $sortOrder ) ) {
 						</span>
 					</th>
 					<th>Type</th>
+					<th>Validators</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -68,6 +69,7 @@ if( !isset( $sortOrder ) ) {
 					<tr>
 						<td><?= $editUrl ?></td>
 						<td><?= $formField->getTypeStr() ?></td>
+						<td><?= $formField->validators ?></td>
 						<td>
 							<span class="wrap-icon-action" title="Update Form"><?= Html::a( "", ["/cmgforms/form/field/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
 							<span class="wrap-icon-action" title="Delete Form"><?= Html::a( "", ["/cmgforms/form/field/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>

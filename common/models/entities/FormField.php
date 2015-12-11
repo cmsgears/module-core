@@ -35,6 +35,7 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 	const TYPE_SELECT			= 40;
 	const TYPE_RATING			= 50;
 	const TYPE_ICON				= 60;
+	const TYPE_DATE				= 70;
 
 	public static $typeMap = [
 		self::TYPE_TEXT => 'Text',
@@ -46,7 +47,8 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 		self::TYPE_RADIO_GROUP => 'Radio Group',
 		self::TYPE_SELECT => 'Select',
 		self::TYPE_RATING => 'Rating',
-		self::TYPE_ICON => 'Icon'
+		self::TYPE_ICON => 'Icon',
+		self::TYPE_DATE => 'Date'
 	];
 
 	public $value;
@@ -76,6 +78,11 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 		return $this->type == self::TYPE_PASSWORD;
 	}
 
+	public function isCheckboxGroup() {
+		
+		return $this->type == self::TYPE_CHECKBOX_GROUP;
+	}
+
 	public function getFieldValue() {
 
 		switch( $this->type ) {
@@ -86,7 +93,8 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 			case self::TYPE_RADIO_GROUP:
 			case self::TYPE_SELECT:
 			case self::TYPE_RATING:
-			case self::TYPE_ICON: {
+			case self::TYPE_ICON:
+			case self::TYPE_CHECKBOX_GROUP: {
 
 				return $this->value;
 			}
@@ -94,8 +102,7 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 
 				return null;
 			}
-			case self::TYPE_CHECKBOX:
-			case self::TYPE_CHECKBOX_GROUP: {
+			case self::TYPE_CHECKBOX: {
 
 				return Yii::$app->formatter->asBoolean( $this->value );
 			}

@@ -25,6 +25,13 @@ class FormUtil {
 
 			foreach ( $formFields as $key => $formField ) {
 
+				// Convert CheckBox csv to array
+				if( $formField->isCheckboxGroup() ) {
+
+					$this->$fieldName	= split("/,/", $formField->value );
+				}
+
+				// Ignore passwords
 				if( !$formField->isPasswordField() ) {
 
 					$formField->value	= $modelAttributes[ $key ]->value;
@@ -59,96 +66,42 @@ class FormUtil {
 
 		foreach ( $fields as $key => $field ) {
 
-			$fieldHtml	= null;
-	
-			if( isset( $field->options ) ) {
-	
+			// Convert Json to Array
+			if( isset( $field->options ) && strlen( $field->options ) > 0 ) {
+
 				$field->options	= json_decode( $field->options, true );
 			}
 			else {
-	
+
 				$field->options	= [];
 			}
 
-			switch( $field->type ) {
+			$fieldsHtml .= Yii::$app->formDesigner->getFieldHtml( $form, $model, $config, $key, $field );
+		}
 
-				case FormField::TYPE_TEXT: {
+		return $fieldsHtml;
+	}
 
-					$fieldHtml = $form->field( $model, $key )->textInput( $field->options );
-					
-					if( $config[ 'label' ] ) {
-						
-						$fieldHtml = $fieldHtml->label( $field->label );
-					}
-					else {
+	public static function getApixFieldsHtml( $form, $config = [] ) {
 
-						$fieldHtml = $fieldHtml->label( false );
-					}
-					
-					break;
-				}
-				case FormField::TYPE_PASSWORD: {
+		$fields 			= $form->fields;
+		$fieldsHtml			= '';
+		$config[ 'label' ]	= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
+		$config[ 'model' ]	= isset( $config[ 'model' ] ) ? $config[ 'model' ] : 'GenericForm';
 
-					$fieldHtml = $form->field( $model, $key )->passwordInput( $field->options );
+		foreach ( $fields as $key => $field ) {
 
-					if( $config[ 'label' ] ) {
-						
-						$fieldHtml = $fieldHtml->label( $field->label );
-					}
-					else {
+			// Convert Json to Array
+			if( isset( $field->options ) && strlen( $field->options ) > 0 ) {
 
-						$fieldHtml = $fieldHtml->label( false );
-					}
+				$field->options	= json_decode( $field->options, true );
+			}
+			else {
 
-					break;
-				}
-				case FormField::TYPE_TEXTAREA: {
-
-					$fieldHtml = $form->field( $model, $key )->textArea( $field->options );
-
-					if( $config[ 'label' ] ) {
-						
-						$fieldHtml = $fieldHtml->label( $field->label );
-					}
-					else {
-
-						$fieldHtml = $fieldHtml->label( false );
-					}
-
-					break;
-				}
-				case FormField::TYPE_CHECKBOX: {
-
-					$fieldHtml = $form->field( $model, $key )->checkbox( $field->options );
-
-					break;
-				}
-				case FormField::TYPE_SELECT: {
-
-					if( isset( $field->options[ 'options' ] ) ) {
-
-						$fieldOptions	= $field->options;
-						$options		= $fieldOptions[ 'options' ];
-
-						unset( $fieldOptions[ 'options' ] );
-	
-						$fieldHtml 	= $form->field( $model, $key )->dropDownList( $options, $fieldOptions );
-
-						if( $config[ 'label' ] ) {
-							
-							$fieldHtml = $fieldHtml->label( $field->label );
-						}
-						else {
-	
-							$fieldHtml = $fieldHtml->label( false );
-						}
-					}
-
-					break;
-				}
+				$field->options	= [];
 			}
 
-			$fieldsHtml .= $fieldHtml;
+			$fieldsHtml .= Yii::$app->formDesigner->getApixFieldHtml( $form, $config, $field );
 		}
 
 		return $fieldsHtml;

@@ -73,21 +73,27 @@ class GenericForm extends \yii\base\Model {
 						$validators[ $validator ]	= [];
 					}
 
-					$validators[ $validator ][]	= $field->name;
+					if( strlen( $validator ) > 0 ) {
+
+						$validators[ $validator ][]	= $field->name;
+					}
 				}
 			}
 		}
-		
+
         $rules = [
             [ 'captcha', 'captcha', 'captchaAction' => '/cmgforms/site/captcha', 'on' => 'captcha' ],
             [ $this->attribs, 'safe' ]
         ];
-		
+
 		foreach ( $validators as $key => $value ) {
-			
-			$rules[]	= [ $value, $key ];
+
+			if( count( $value ) > 0 ) {
+
+				$rules[]	= [ $value, $key ];
+			}
 		}
-		
+
 		return $rules;
     }
  
@@ -134,7 +140,7 @@ class GenericForm extends \yii\base\Model {
 	    	if ( $property->class == $refclass->name ) {
 
 				$attribArr[ $name ] = $this->$name;
-			}	
+			}
 	  	}
 
 		return $attribArr;

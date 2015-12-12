@@ -330,6 +330,28 @@ class CodeGenUtil {
 		
 		return ( isset( $string ) && ( strlen( trim( $string ) ) > 0 ) );
 	}
+
+	public static function registerJsFromFile( $view, $position, $filePath ) {
+
+		ob_start();
+
+		include( $filePath );
+
+		$script	= ob_get_clean();
+
+		$view->registerJs( $script, $position ); 
+	}
+
+	public static function getFileContent( $filePath ) {
+
+		ob_start();
+
+		include( $filePath );
+
+		$content	= ob_get_clean();
+
+		return $content; 
+	}
 }
 
 ?>

@@ -234,6 +234,10 @@ class CoreGlobal {
 	const FIELD_MAIL_ADMIN		= 'adminMailField';
 	const FIELD_META			= 'metaField';
 	const FIELD_RATING			= 'ratingField';
+	
+	// Visibility
+	const FIELD_PRIVATE			= 'privateField';
+	const FIELD_PUBLIC			= 'publicField';
 }
 
 ?>

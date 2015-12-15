@@ -190,6 +190,10 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_MAIL_ADMIN => 'Send Admin Mail',
 		CoreGlobal::FIELD_META => 'Meta',
 		CoreGlobal::FIELD_RATING => 'Rating',
+
+		// Visibility
+		CoreGlobal::FIELD_PRIVATE => 'Private',
+		CoreGlobal::FIELD_PUBLIC => 'Public'
 	];
 
 	/**

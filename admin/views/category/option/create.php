@@ -16,6 +16,7 @@ $this->params['sidebar-child'] 	= 'dropdown';
 		<?php $form = ActiveForm::begin( ['id' => 'frm-option-create', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>
+    	<?= $form->field( $model, 'value' ) ?>
     	<?= $form->field( $model, 'icon' ) ?>  
  		<?php $model->categoryId = $id; ?>
 		<?= $form->field($model, 'categoryId')->hiddenInput()->label(false)?>

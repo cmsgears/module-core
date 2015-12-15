@@ -47,9 +47,9 @@ class ObjectData extends CmgEntity {
 		$this->data	= $data;
 	}
 
-	public function generateObjectFromJson() {
+	public function generateObjectFromJson( $assoc = false ) {
 
-		$obj 	= json_decode( $this->data, 'true' );
+		$obj 	= json_decode( $this->data, $assoc );
 
 		return (object)$obj;
 	}

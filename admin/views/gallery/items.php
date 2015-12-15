@@ -29,7 +29,7 @@ $id				= $gallery->id;
 		</form>
 
 		<h4>Create Item</h4>
-		<?= FileUploader::widget( [ 'options' => [ 'id' => 'gallery-item', 'class' => 'file-uploader' ],
+		<?= FileUploader::widget( [ 'options' => [ 'id' => 'gallery-item', 'class' => 'file-uploader frm-split' ],
 				'directory' => 'gallery', 'infoFields' => true, 
 				'postAction' => 'true', 'cmtController' => 'gallery', 'cmtAction' => 'updateItem',
 				'postActionUrl' => "/apix/cmgcore/gallery/create-item?id=$id", 
@@ -45,7 +45,7 @@ $id				= $gallery->id;
 				$id		= $item->id;
 		?>
 			<li>
-				<?= FileUploader::widget( [ 'options' => [ 'id' => "item-update-$id", 'class' => 'file-uploader' ],
+				<?= FileUploader::widget( [ 'options' => [ 'id' => "item-update-$id", 'class' => 'file-uploader frm-split' ],
 						'directory' => 'gallery', 'infoFields' => true, 'model' => $item,
 						'postAction' => 'true', 'postActionId' => "frm-item-update-$id", 'cmtController' => 'gallery', 'cmtAction' => 'updateItem',
 						'postActionVisible' => true, 'postActionUrl' => "/apix/cmgcore/gallery/update-item?id=$id",

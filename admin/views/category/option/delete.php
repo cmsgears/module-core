@@ -15,7 +15,8 @@ $this->params['sidebar-child'] 	= 'dropdown';
 		<h2>Delete Option</h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-option-create', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
 
-    	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?> 
+    	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
+    	<?= $form->field( $model, 'value' )->textInput( [ 'readonly' => true ] ) ?> 
     	<?= $form->field( $model, 'icon' )->textInput( [ 'readonly' => true ] ) ?>   
 		<div class="box-filler"></div>
 		

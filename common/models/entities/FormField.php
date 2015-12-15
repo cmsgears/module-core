@@ -20,6 +20,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property boolean $compress
  * @property short $validators
  * @property short $order
+ * @property short $icon
  * @property short $options
  * @property string $data 
  */
@@ -119,7 +120,7 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 		// model rules
         $rules = [
             [ [ 'formId', 'name' ], 'required' ],
-			[ [ 'id', 'label', 'type', 'validators', 'order', 'options', 'data' ], 'safe' ],
+			[ [ 'id', 'label', 'type', 'validators', 'order', 'icon', 'options', 'data' ], 'safe' ],
 			[ 'name', 'string', 'min' => 1, 'max' => 100 ],
 			[ 'name', 'alphanumu' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
@@ -152,6 +153,7 @@ class FormField extends \cmsgears\core\common\models\entities\CmgEntity {
 			'compress' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_COMPRESS ),
 			'validators' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALIDATORS ),
 			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS ),
 			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_META )
 		];

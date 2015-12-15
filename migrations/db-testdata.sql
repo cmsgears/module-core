@@ -114,7 +114,7 @@ INSERT INTO `cmg_core_model_attribute` (`parentId`,`parentType`,`name`,`value`,`
 	(@site,'site','info_email','demoinfo@cmsgears.com','mail'),
 	(@site,'site','theme','basic','frontend'),
 	(@site,'site','theme_version','1','frontend'),
-	(@site,'site','theme','basic','backend'),
+	(@site,'site','theme','admin','backend'),
 	(@site,'site','theme_version','1','backend');
 
 --

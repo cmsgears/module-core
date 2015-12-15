@@ -12,6 +12,9 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Profile";
 
 $this->params['sidebar-parent'] = 'sidebar-profile';
 $this->params['sidebar-child'] 	= 'profile';
+
+$coreProperties = $this->context->getCoreProperties();
+$user			= Yii::$app->user->getIdentity();
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -19,14 +22,13 @@ $this->params['sidebar-child'] 	= 'profile';
     	<h4>My Profile</h4>
 
 		<div>
-			<?=AvatarUploader::widget([
-				'options' => [ 'id' => 'avatar-user', 'class' => 'file-uploader' ], 
-				'model' => $model->avatar, 
-				'postaction' => true, 'cmtcontroller' => 'default',
-				'postactionurl' => Url::toRoute( [ 'apix/user/avatar'], true ),
-				'btnChooserIcon' => 'icon-action icon-action-edit',
-				'postviewIcon' => 'icon-sidebar icon-user'
-			]);?> 
+			<?= AvatarUploader::widget([
+					'options' => [ 'id' => 'avatar-user', 'class' => 'file-uploader' ], 
+					'model' => $user->avatar, 
+					'postAction' => true,
+					'btnChooserIcon' => 'icon-action icon-action-edit',
+					'postViewIcon' => 'icon-sidebar icon-user'
+			]);?>
 		</div>
 
     	<div class="clear row right">
@@ -67,7 +69,7 @@ $this->params['sidebar-child'] 	= 'profile';
     	<div class="frm-edit hidden">
 			<?php $form = ActiveForm::begin( ['id' => 'frm-user-profile', 'options' => ['class' => 'frm-split' ] ] );?>
 
-			<?php if( !Yii::$app->cmgCore->isEmailChangeAllowed() ) { ?>
+			<?php if( !$coreProperties->isChangeEmail() ) { ?>
 
 				<?= $form->field( $model, 'email' )->textInput( [ 'readonly' => true ] ) ?>
 
@@ -77,7 +79,7 @@ $this->params['sidebar-child'] 	= 'profile';
 
 			<?php } ?>
 
-			<?php if( !Yii::$app->cmgCore->isUsernameChangeAllowed() ) { ?>
+			<?php if( !$coreProperties->isChangeUsername() ) { ?>
 
 				<?= $form->field( $model, 'username' )->textInput( [ 'readonly' => true ] ) ?>
 

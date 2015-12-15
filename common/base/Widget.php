@@ -14,9 +14,9 @@ class Widget extends \yii\base\Widget {
 	public $options 		= [];
 	
 	/**
-	 * Flag to check whether assets can be loaded.
+	 * Flag to check whether assets can be loaded. We can load widget assets seperately in case the bundle is not added as dependency to layout asset bundle.
 	 */
-	public $loadAssets		= true;
+	public $loadAssets		= false;
 
 	/**
 	 * The path at which view template file is located. It can have alias - ex: '@widget/my-view'. By default it's the views folder within widget directory.

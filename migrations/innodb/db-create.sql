@@ -549,6 +549,7 @@ CREATE TABLE `cmg_core_form_field` (
   `compress` tinyint(1) DEFAULT 0,
   `validators` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `order` smallint(6) DEFAULT 0,
+  `icon` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `options` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `data` mediumtext COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),

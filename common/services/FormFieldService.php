@@ -50,7 +50,7 @@ class FormFieldService extends \cmsgears\core\common\services\Service {
 
 		$formFieldToUpdate	= self::findById( $formField->id );
 
-		$formFieldToUpdate->copyForUpdateFrom( $formField, [ 'name', 'label', 'type', 'compress', 'validators', 'options', 'data' ] );
+		$formFieldToUpdate->copyForUpdateFrom( $formField, [ 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'options', 'data' ] );
 
 		$formFieldToUpdate->update();
 

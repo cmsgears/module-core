@@ -39,10 +39,10 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'register' => ['post'],
-                    'login' => ['post'],
-                    'forgotPassword' => ['post'],
-                    'newsletter' => ['post']
+                    'register' => [ 'post' ],
+                    'login' => [ 'post' ],
+                    'forgotPassword' => [ 'post' ],
+                    'newsletter' => [ 'post' ]
                 ]
             ]
         ];
@@ -75,14 +75,12 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
 			}
 		}
-		else {
 
-			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $model );
+		// Generate Errors
+		$errors = AjaxUtil::generateErrorMessage( $model );
 
-			// Trigger Ajax Failure
-        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-		}
+		// Trigger Ajax Failure
+    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
     }
 
 	public function actionLogin() {
@@ -110,17 +108,15 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $homeUrl );
 		}
-		else {
 
-			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $model );
+		// Generate Errors
+		$errors = AjaxUtil::generateErrorMessage( $model );
 
-			// Trigger Ajax Failure
-        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-		}
+		// Trigger Ajax Failure
+    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
     }
 	
-	public function actionForgotPassword() { 
+	public function actionForgotPassword() {
 
 		// Create Form Model
 		$model = new ForgotPassword();
@@ -142,36 +138,25 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 				Yii::$app->cmgCoreMailer->sendPasswordResetMail( $user ); 
 				
 				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_FORGOT_PASSWORD ) );
-				
-				// Refresh the Page
-				return $this->refresh();
 			}
 			else {
 
-				//$model->addError( 'email', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
-				
 				// Generate Errors
-				
+
 				$model->addError( 'email', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
-				
+
 				$errors = AjaxUtil::generateErrorMessage( $model );
-	
+
 				// Trigger Ajax Failure
 	        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-				
 			}
-		} 
-		else {
-
-			//$model->addError( 'email', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
-			
-			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $model );
-
-			// Trigger Ajax Failure
-        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-			
 		}
+
+		// Generate Errors
+		$errors = AjaxUtil::generateErrorMessage( $model );
+
+		// Trigger Ajax Failure
+    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
     }
 
     public function actionNewsletter() {
@@ -188,14 +173,12 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_NEWSLETTER_SIGNUP ) );
 			}
 		}
-		else {
 
-			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $model );
+		// Generate Errors
+		$errors = AjaxUtil::generateErrorMessage( $model );
 
-			// Trigger Ajax Failure
-        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-		}
+		// Trigger Ajax Failure
+    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
     }
 }
 

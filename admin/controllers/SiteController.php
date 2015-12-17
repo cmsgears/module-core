@@ -3,7 +3,6 @@ namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
 use \Yii;
-use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -31,29 +30,17 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 	// yii\base\Component ----------------
 
-    /**
-     * @inheritdoc
-     */
     public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'index'  => [ 'permission' => CoreGlobal::PERM_ADMIN ],
-	                'dashboard' => [ 'permission' => CoreGlobal::PERM_ADMIN ],
-	                'logout' => [ 'permission' => CoreGlobal::PERM_ADMIN ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index'  => [ 'get' ],
-	                'dashboard'   => [ 'get' ],
-	                'logout' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
+        $behaviours	= parent::behaviors();
+
+		$behaviours[ 'rbac' ][ 'actions' ][ 'index' ]		= [ 'permission' => CoreGlobal::PERM_ADMIN ];
+		$behaviours[ 'rbac' ][ 'actions' ][ 'dashboard' ]	= [ 'permission' => CoreGlobal::PERM_ADMIN ];
+
+		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ]		= [ 'get' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'dashboard' ]	= [ 'get' ];
+
+		return $behaviours;
     }
 
 	// yii\base\Controller ---------------

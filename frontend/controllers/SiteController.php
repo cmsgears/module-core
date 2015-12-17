@@ -3,7 +3,6 @@ namespace cmsgears\core\frontend\controllers;
 
 // Yii Imports
 use Yii;
-use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -35,20 +34,13 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
     public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'logout' => [ 'permission' => CoreGlobal::PERM_USER ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
+        $behaviours	= parent::behaviors();
+
+		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ]			= [ 'get' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'register' ]		= [ 'get', 'post' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'confirmAccount' ]	= [ 'get', 'post' ];
+
+		return $behaviours;
     }
 
 	// yii\base\Controller ---------------
@@ -71,14 +63,12 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
     public function actionIndex() {
 
-		$this->checkHome();
-
 		$this->layout	= WebGlobalCore::LAYOUT_LANDING;
 
 		// Render Page
         return $this->render( WebGlobalCore::PAGE_INDEX );
     }
-	
+
 	public function actionLogin() {
 		
 		return parent::actionLogin( false );
@@ -86,10 +76,10 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 	
     public function actionRegister() {
 
-		$coreProperties = $this->getCoreProperties();
-
 		// Send user to home if already logged in
 		$this->checkHome();
+
+		$coreProperties = $this->getCoreProperties();
 
 		// Create Form Model
 		$model = new Register();
@@ -121,11 +111,11 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
     public function actionConfirmAccount( $token, $email ) {
 
-		// Unset Flash Message
-		Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, null );
-
 		// Send user to home if already logged in
 		$this->checkHome();
+
+		// Unset Flash Message
+		Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, null );
 
 		if( isset( $token ) && isset( $email ) ) {
 

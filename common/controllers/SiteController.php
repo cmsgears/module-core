@@ -3,6 +3,7 @@ namespace cmsgears\core\common\controllers;
 
 // Yii Imports
 use Yii;
+use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -24,16 +25,42 @@ class SiteController extends Controller {
 
 	// Instance Methods --------------------------------------------
 
+	// yii\base\Component ----------------
+
+    public function behaviors() {
+
+        return [
+            'rbac' => [
+                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'actions' => [
+	                'logout' => [ 'permission' => CoreGlobal::PERM_USER ]
+                ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'activateAccount' => [ 'get', 'post' ],
+                    'forgotPassword' => [ 'get', 'post' ],
+                    'resetPassword' => [ 'get', 'post' ],
+                    'login' => [ 'get', 'post' ],
+                    'logout' => [ 'get' ]
+                ]
+            ]
+        ];
+    }
+
+	// SiteController --------------------
+
 	/**
 	 * The users added by site admin can be activated by providing valid token and email. If activation link is still valid, user will be activated.
 	 */
     public function actionActivateAccount( $token, $email ) {
 
-		// Unset Flash Message
-		Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, null );
-
 		// Send user to home if already logged in
 		$this->checkHome();
+
+		// Unset Flash Message
+		Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, null );
 
 		$model 			= new ResetPassword();
 		$model->email	= $email;
@@ -115,11 +142,11 @@ class SiteController extends Controller {
 
     public function actionResetPassword( $token, $email ) {
 
-		// Unset Flash Message
-		Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, null );
-
 		// Send user to home if already logged in
 		$this->checkHome();
+
+		// Unset Flash Message
+		Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, null );
 
 		$model 			= new ResetPassword();
 		$model->email	= $email;
@@ -162,7 +189,7 @@ class SiteController extends Controller {
 	public function actionLogin( $admin = false ) {
 
 		// Send user to home if already logged in
-        $this->checkHome();
+		$this->checkHome();
 
 		// Create Form Model
         $model 			= new Login();

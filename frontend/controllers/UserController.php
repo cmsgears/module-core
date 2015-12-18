@@ -41,8 +41,8 @@ class UserController extends base\Controller {
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'home' => [ 'get' ],
-                    'profile' => [ 'get', 'post' ],
-                    'settings' => [ 'get', 'post' ]
+                    'profile' => [ 'get' ],
+                    'settings' => [ 'get' ]
                 ]
             ]
         ];
@@ -58,28 +58,15 @@ class UserController extends base\Controller {
     public function actionProfile() {
 
 		// Find Model
-		$model		= Yii::$app->user->getIdentity();
+		$user		= Yii::$app->user->getIdentity();
 
 		// Update/Render if exist
-		if( isset( $model ) ) {
-
-			$model->setScenario( 'profile' );
-
-			UserService::checkNewsletterMember( $model );
-
-			if( $model->load( Yii::$app->request->post( 'User' ) ) && $model->validate() ) {
-
-				// Update User and Site Member
-				if( UserService::update( $model ) ) {
-
-					$this->refresh();
-				}
-			}
-
-			$genderMap 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER );
+		if( isset( $user ) ) {
+			
+			$genderMap = OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER );
 
 	    	return $this->render( WebGlobalCore::PAGE_PROFILE, [
-	    		'model' => $model,
+	    		'user' => $user,
 	    		'genderMap' => $genderMap
 	    	]);
 		}

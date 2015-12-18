@@ -69,25 +69,27 @@ $user			= Yii::$app->user->getIdentity();
     	<div class="frm-edit hidden">
 			<?php $form = ActiveForm::begin( ['id' => 'frm-user-profile', 'options' => ['class' => 'frm-split' ] ] );?>
 
-			<?php if( !$coreProperties->isChangeEmail() ) { ?>
+			<?php 
+				if( !$coreProperties->isChangeEmail() ) {
 
-				<?= $form->field( $model, 'email' )->textInput( [ 'readonly' => true ] ) ?>
+					echo $form->field( $model, 'email' )->textInput( [ 'readonly' => true ] );
+				}
+				else {
 
-			<?php } else { ?>
+					echo $form->field( $model, 'email' );
+				}
+			?>
 
-				<?= $form->field( $model, 'email' ) ?>
+			<?php 
+				if( !$coreProperties->isChangeUsername() ) {
 
-			<?php } ?>
+					echo $form->field( $model, 'username' )->textInput( [ 'readonly' => true ] );
+				}
+				else {
 
-			<?php if( !$coreProperties->isChangeUsername() ) { ?>
-
-				<?= $form->field( $model, 'username' )->textInput( [ 'readonly' => true ] ) ?>
-
-			<?php } else { ?>
-
-				<?= $form->field( $model, 'username' ) ?>
-
-			<?php } ?>
+					echo $form->field( $model, 'username' );
+				}
+			?>
 
 			<?= $form->field( $model, 'firstName' ) ?>
 			<?= $form->field( $model, 'lastName' ) ?>

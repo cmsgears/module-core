@@ -342,7 +342,7 @@ class User extends CmgEntity implements IdentityInterface {
             [ 'username', 'validateUsernameUpdate', 'on' => [ 'update', 'profile' ] ],
             [ 'username', 'validateUsernameChange', 'on' => [ 'profile' ] ],
             [ [ 'firstName', 'lastName' ], 'alphanumspace' ],
-            [ [ 'id', 'localeId', 'genderId', 'avatarId', 'status' ], 'number', 'integerOnly' => true ],
+            [ [ 'id', 'localeId', 'genderId', 'avatarId', 'status', 'newsletter' ], 'number', 'integerOnly' => true ],
             [ 'dob', 'date', 'format' => Yii::$app->formatter->dateFormat ],
             [ [ 'registeredAt', 'lastLoginAt', 'lastActivityAt', 'accessTokenCreatedAt', 'accessTokenAccessedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];

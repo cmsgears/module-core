@@ -16,7 +16,7 @@ else {
 }
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Add Dropdown';
+$this->title 	= $coreProperties->getSiteTitle() . ' | Update ' . $dropDown;
 
 // Sidebar and Return URL
 $sidebar						= $this->context->sidebar;
@@ -28,7 +28,7 @@ ClEditor::widget( [ 'selector' => '.content-editor' ] );
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
-		<h2>Update Dropdown</h2>
+		<h2>Update <?= $dropDown ?></h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-dropdown-create', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>  
@@ -36,7 +36,7 @@ ClEditor::widget( [ 'selector' => '.content-editor' ] );
     	<?= $form->field( $model, 'icon' ) ?>  
 		<?= $form->field( $model, 'featured' )->checkbox() ?>
 
-    	<h4>Dropdown Avatar</h4>
+    	<h4><?= $dropDown ?> Avatar</h4>
   		<?=AvatarUploader::widget( 
 				[ 'options' => [ 'id' => 'avatar-dropdown', 'class' => 'file-uploader' ], 
 				'model' => $avatar, 'modelClass' => 'Avatar',  

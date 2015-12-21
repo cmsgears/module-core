@@ -46,10 +46,6 @@ class NewsletterService extends Service {
 	 */
 	public static function create( $newsletter ) {
 
-		// Set Attributes
-		$user					= Yii::$app->user->getIdentity();
-		$newsletter->createdBy	= $user->id;
-
 		// Create Newsletter
 		$newsletter->save();
 
@@ -68,10 +64,7 @@ class NewsletterService extends Service {
 		// Find existing Newsletter
 		$nlToUpdate	= self::findById( $newsletter->id );
 
-		// Copy and set Attributes	
-		$user					= Yii::$app->user->getIdentity();
-		$nlToUpdate->modifiedBy	= $user->id;
-
+		// Copy and set Attributes
 		$nlToUpdate->copyForUpdateFrom( $newsletter, [ 'name', 'description', 'content' ] );
 		
 		// Update Newsletter

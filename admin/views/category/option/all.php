@@ -11,8 +11,8 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Options';
 
 // Sidebars
-$this->params['sidebar-parent'] = 'sidebar-dropdown';
-$this->params['sidebar-child'] 	= 'sidebar-dropdown';
+$this->params['sidebar-parent'] = 'sidebar-core';
+$this->params['sidebar-child'] 	= 'dropdown';
 
 // Searching
 $searchTerms	= Yii::$app->request->getQueryParam("search");
@@ -45,9 +45,9 @@ if( !isset( $sortOrder ) ) {
 	<div class="wrap-grid">
 		<table>
 			<thead>
-				<tr>				 
-					<th>Name</th>					
-					<th>Message</th> 
+				<tr>	 
+					<th>Name</th>
+					<th>Value</th>
 					<th>Icon</th>
 					<th>Actions</th>  
 				</tr>
@@ -61,8 +61,8 @@ if( !isset( $sortOrder ) ) {
 						
 				?>
 					<tr>
-						<td><?= $option->name ?></td> 
-						<td><?= $option->message ?></td> 
+						<td><?= $option->name ?></td>
+						<td><?= $option->value ?></td> 
 						<td> <span class="<?= $option->icon ?>" title="<?= $option->name ?>"></span></td> 
 						<td>
 							<span class="wrap-icon-action" title="Edit Option"><?= Html::a( "", ["dropdown/option/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>								 

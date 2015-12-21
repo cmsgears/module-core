@@ -25,6 +25,8 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $phone
  * @property string $email
  * @property string $fax
+ * @property string $longitude
+ * @property string $latitude
  */
 class Address extends CmgEntity {
 
@@ -67,23 +69,21 @@ class Address extends CmgEntity {
      */
 	public function rules() {
 
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'line1', 'line2', 'line3', 'city', 'zip', 'firstName', 'lastName', 'phone', 'email', 'fax' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
+		// model rules
         $rules = [
 			[ [ 'provinceId', 'countryId', 'line1', 'city', 'zip' ], 'required' ],
-			[ [ 'id', 'firstName', 'lastName', 'phone', 'email', 'fax' ], 'safe' ],
+			[ [ 'id', 'firstName', 'lastName', 'email' ], 'safe' ],
 			[ [ 'line1', 'line2', 'line3' ], 'alphanumpun' ],
 			[ 'city', 'alphanumspace' ],
-			[ 'zip','alphanumhyphenspace' ],
-			[ [ 'countryId', 'provinceId' ], 'number', 'integerOnly'=>true, 'min'=>1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ]
+			[ 'zip', 'alphanumhyphenspace' ],
+			[ [ 'countryId', 'provinceId' ], 'number', 'integerOnly'=>true, 'min'=>1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'phone', 'fax', 'longitude', 'latitude' ], 'string', 'min' => 1, 'max' => 100 ]
 		];
 
+		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'line1', 'line2', 'line3', 'city', 'zip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'longitude', 'latitude' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -108,7 +108,9 @@ class Address extends CmgEntity {
 			'lastName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
 			'phone' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
 			'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
-			'fax' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FAX )
+			'fax' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FAX ),
+			'longitude' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LONGITUDE ),
+			'latitude' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LATITUDE )
 		];
 	}
 

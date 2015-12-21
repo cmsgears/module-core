@@ -18,9 +18,11 @@ else {
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add ' . $dropDown;
 
-// Sidebar
-$this->params['sidebar-parent'] = $sidebarParent;
-$this->params['sidebar-child'] 	= $sidebarChild;
+// Sidebar and Return URL
+$sidebar						= $this->context->sidebar;
+$returnUrl						= $this->context->returnUrl;
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 
 ClEditor::widget( [ 'selector' => '.content-editor' ] );
 ?>
@@ -31,14 +33,15 @@ ClEditor::widget( [ 'selector' => '.content-editor' ] );
 
     	<?= $form->field( $model, 'name' ) ?>  
     	<?= $form->field( $model, 'description' ) ?> 
-    	<?= $form->field( $model, 'icon' ) ?>  
+    	<?= $form->field( $model, 'icon' ) ?>
+		<?= $form->field( $model, 'featured' )->checkbox() ?>
 
     	<h4><?=$dropDown?> Avatar</h4>
 		<?=AvatarUploader::widget( [ 'options' => [ 'id' => 'avatar-dropdown', 'class' => 'file-uploader' ], 'model' => $avatar, 'modelClass' => 'Avatar',  'directory' => 'avatar', 'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>
   
 		<div class="box-filler"></div>
 
-		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
+		<?=Html::a( "Cancel", $returnUrl, [ 'class' => 'btn' ] );?>
 		<input type="submit" value="Create" />
 
 		<?php ActiveForm::end(); ?>

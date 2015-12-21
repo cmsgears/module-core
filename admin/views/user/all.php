@@ -11,6 +11,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | All Users";
 
 // Sidebar
+$sidebar						= $this->context->sidebar;
 $this->params['sidebar-parent'] = $sidebar[ 'parent' ];
 $this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 
@@ -30,8 +31,13 @@ if( !isset( $sortOrder ) ) {
 }
 ?>
 <div class="content-header clearfix">
-	<div class="header-actions"> 
-		<?= Html::a( "Add User", [ $createUrl ], ['class'=>'btn'] )  ?>				
+	<div class="header-actions">
+		<?php 
+			if( $showCreate ) {
+
+				echo Html::a( 'Add User', [ 'create' ], [ 'class' => 'btn' ] );
+			} 
+		?>
 	</div>
 	<div class="header-search">
 		<input type="text" name="search" id="search-terms" value="<?php if( isset($searchTerms) ) echo $searchTerms;?>">
@@ -92,19 +98,7 @@ if( !isset( $sortOrder ) ) {
 						$role	= $user->role->name;
 				?>
 					<tr>
-						<td> 
-							<?php
-								$avatar = $user->avatar;
-
-								if( isset( $avatar ) ) { 
-							?> 
-								<img class="avatar" src="<?= $avatar->getThumbUrl() ?>">
-							<?php 
-								} else { 
-							?>
-								<img class="avatar" src="<?=Yii::getAlias('@images')?>/avatar.png">
-							<?php } ?>
-						</td>
+						<td><?= CodeGenUtil::getImageThumbTag( $user->avatar, [ 'class' => 'avatar', 'image' => 'avatar' ] ) ?></td>
 						<td><?= $user->username ?></td>
 						<td><?= $user->getName() ?></td>
 						<td><?= $user->email ?></td>

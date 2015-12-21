@@ -2,13 +2,23 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 $logoUrl		= Yii::getAlias( "@web" );
 $logoUrl		= Url::to( $logoUrl. "/images/logo-mail.png", true );
 
-$logo 			= "<img class='logo' style='height:35px;float:right; margin-top:6px; margin-right:53px' src='$logoUrl'>";
+$logo 			= "<img class='logo' style='margin:10px;' src='$logoUrl'>";
 $siteName		= $coreProperties->getSiteName();
 $name 			= Html::encode( $user->getName() );
-$loginLink		= Url::toRoute( "/login", true );
+$siteUrl		= $coreProperties->getSiteUrl();
+
+if( $user->isPermitted( CoreGlobal::PERM_ADMIN ) ) {
+
+	$siteUrl	= $coreProperties->getAdminUrl();
+}
+
+$loginLink		= $siteUrl . "login";
 ?>
 <table cellspacing='0' cellpadding='2' border='0' align='center' width='805px' style='font-family: Calibri; color: #4f4f4f; font-size: 14px; font-weight: 400;'>
 	<tbody>

@@ -24,15 +24,16 @@ else {
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All '.$title;
 
-// Sidebars
-$this->params['sidebar-parent'] = $sidebarParent;
-$this->params['sidebar-child'] 	= $sidebarChild;
+// Sidebar
+$sidebar						= $this->context->sidebar;
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 
 // Searching
-$searchTerms	= Yii::$app->request->getQueryParam( "search" );
+$searchTerms	= Yii::$app->request->getQueryParam( 'search' );
 
 // Sorting
-$sortOrder		= Yii::$app->request->getQueryParam( "sort" );
+$sortOrder		= Yii::$app->request->getQueryParam( 'sort' );
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -68,6 +69,7 @@ if( !isset( $sortOrder ) ) {
 						</span>
 					</th>					
 					<th>Description</th> 
+					<th>Featured</th>
 					<th>Icon</th>
 					<th>Actions</th>  
 				</tr>
@@ -82,8 +84,9 @@ if( !isset( $sortOrder ) ) {
 				?>
 					<tr>
 						<td><?= CodeGenUtil::getImageThumbTag( $dropdown->avatar, [ 'class' => 'avatar', 'image' => 'avatar' ] ) ?></td>
-						<td><?= $dropdown->name ?></td> 
-						<td><?= $dropdown->description ?></td> 
+						<td><?= $dropdown->name ?></td>
+						<td><?= $dropdown->description ?></td>
+						<td><?= $dropdown->getFeaturedStr() ?></td> 
 						<td> <span class="<?= $dropdown->icon ?>" title="<?= $dropdown->name ?>"></span></td> 
 						<td>	
 							<?php if( $dropDown == 'Dropdown' ) { ?>						

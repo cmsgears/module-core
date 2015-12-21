@@ -37,19 +37,26 @@ class PermissionService extends Service {
 	}
 
 	/**
-	 * @param string $id
-	 * @return array - An array of associative array of permission id and name
+	 * @param array $config
+	 * @return array - An array of associative array of permission id and name.
 	 */
-	public static function getIdNameList( $type = null ) {
+	public static function getIdNameList( $config = [] ) {
+
+		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_PERMISSION, $config );
+	}
+
+	/**
+	 * @param string $id
+	 * @return array - An array of associative array of permission id and name.
+	 */
+	public static function getIdNameListByType( $type ) {
 
 		if( isset( $type ) ) {
 
-			return self::findIdNameList( 'id', 'name', CoreTables::TABLE_PERMISSION, [ 'type' => $type ] );
+			return self::getIdNameList( [ 'conditions' => [ 'type' => $type ] ] );
 		}
-		else {
 
-			return self::findIdNameList( 'id', 'name', CoreTables::TABLE_PERMISSION );
-		}
+		return self::getIdNameList();
 	}
 
 	// Data Provider ----
@@ -70,11 +77,7 @@ class PermissionService extends Service {
 	 * @return Permission
 	 */
 	public static function create( $permission ) {
-		
-		// Set Attributes
-		$user					= Yii::$app->user->getIdentity();
-		$permission->createdBy	= $user->id;
-		
+
 		// Create Permission
 		$permission->save();
 		
@@ -94,9 +97,6 @@ class PermissionService extends Service {
 		$permissionToUpdate	= self::findById( $permission->id );
 		
 		// Copy and set Attributes
-		$user							= Yii::$app->user->getIdentity();
-		$permissionToUpdate->modifiedBy	= $user->id;
-
 		$permissionToUpdate->copyForUpdateFrom( $permission, [ 'name', 'description' ] );
 
 		// Update Permission

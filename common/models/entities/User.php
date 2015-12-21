@@ -12,8 +12,9 @@ use yii\base\NotSupportedException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreProperties;
 
-use cmsgears\core\common\models\traits\MetaTrait;
+use cmsgears\core\common\models\traits\AttributeTrait;
 use cmsgears\core\common\models\traits\FileTrait;
 use cmsgears\core\common\models\traits\AddressTrait;
 
@@ -24,6 +25,7 @@ use cmsgears\core\common\models\traits\AddressTrait;
  * @property integer localeId
  * @property integer genderId
  * @property integer avatarId
+ * @property integer bannerId
  * @property short $status
  * @property string $email
  * @property string $username
@@ -73,17 +75,17 @@ class User extends CmgEntity implements IdentityInterface {
 		self::STATUS_BLOCKED => "Blocked"
 	];
 
-	use MetaTrait;
+	use AttributeTrait;
 
-	public $metaType	= CoreGlobal::TYPE_USER;
+	public $attributeType	= CoreGlobal::TYPE_USER;
 
 	use FileTrait;
 
-	public $fileType	= CoreGlobal::TYPE_USER;
+	public $fileType		= CoreGlobal::TYPE_USER;
 
 	use AddressTrait;
 
-	public $addressType	= CoreGlobal::TYPE_USER;
+	public $addressType		= CoreGlobal::TYPE_USER;
 
 	public $permissions	= [];
 
@@ -120,6 +122,14 @@ class User extends CmgEntity implements IdentityInterface {
 	public function getAvatar() {
 
 		return $this->hasOne( CmgFile::className(), [ 'id' => 'avatarId' ] );
+	}
+
+	/**
+	 * @return CmgFile - set for User banner.
+	 */
+	public function getBanner() {
+
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
 	}
 
 	/**
@@ -191,6 +201,16 @@ class User extends CmgEntity implements IdentityInterface {
 	public function isBlocked() {
 
 		return $this->status == self::STATUS_BLOCKED;	
+	}
+
+	public function getNewsletterStr() {
+
+		if( $this->newsletter ) {
+			
+			return "Subscribed";
+		}
+		
+		return "Not Subscribed";
 	}
 
 	/**
@@ -309,29 +329,28 @@ class User extends CmgEntity implements IdentityInterface {
      */
 	public function rules() {
 
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'email', 'username', 'phone', 'firstName', 'lastName' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
+		// model rules
         $rules = [
-            [ [ 'email', 'username' ], 'required' ],
-            [ [ 'id', 'localeId', 'genderId', 'avatarId', 'status', 'phone', 'newsletter' ], 'safe' ],
+            [ [ 'email' ], 'required' ],
+            [ [ 'id', 'username', 'localeId', 'genderId', 'avatarId', 'bannerId', 'status', 'phone', 'newsletter' ], 'safe' ],
             [ 'email', 'email' ],
             [ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],
-            [ 'email', 'validateEmailUpdate', 'on' => [ 'update' ] ],
+            [ 'email', 'validateEmailUpdate', 'on' => [ 'update', 'profile' ] ],
+            [ 'email', 'validateEmailChange', 'on' => [ 'profile' ] ],
             [ 'username', 'alphanumdotu' ],
             [ 'username', 'validateUsernameCreate', 'on' => [ 'create' ] ],
-            [ 'username', 'validateUsernameUpdate', 'on' => [ 'update' ] ],
+            [ 'username', 'validateUsernameUpdate', 'on' => [ 'update', 'profile' ] ],
+            [ 'username', 'validateUsernameChange', 'on' => [ 'profile' ] ],
             [ [ 'firstName', 'lastName' ], 'alphanumspace' ],
             [ [ 'id', 'localeId', 'genderId', 'avatarId', 'status', 'newsletter' ], 'number', 'integerOnly' => true ],
             [ 'dob', 'date', 'format' => Yii::$app->formatter->dateFormat ],
             [ [ 'registeredAt', 'lastLoginAt', 'lastActivityAt', 'accessTokenCreatedAt', 'accessTokenAccessedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
-
+		
+		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'email', 'username', 'phone', 'firstName', 'lastName' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -384,9 +403,26 @@ class User extends CmgEntity implements IdentityInterface {
 
 			$existingUser = self::findByEmail( $this->email );
 
-			if( $this->id != $existingUser->id && strcmp( $existingUser->email, $this->email ) == 0 ) {
+			if( isset( $existingUser ) && $this->id != $existingUser->id && strcmp( $existingUser->email, $this->email ) == 0 ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
+			}
+        }
+    }
+
+	/**
+	 * Validates user email to ensure that it does not allow to change while changing user profile.
+	 */
+    public function validateEmailChange( $attribute, $params ) {
+
+        if( !$this->hasErrors() ) {
+
+			$properties		= CoreProperties::getInstance();
+			$existingUser 	= self::findById( $this->id );
+
+			if( isset( $existingUser ) && strcmp( $existingUser->email, $this->email ) != 0  && !$properties->isChangeEmail() ) {
+
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_CHANGE_EMAIL ) );
 			}
         }
     }
@@ -417,6 +453,23 @@ class User extends CmgEntity implements IdentityInterface {
 			if( isset( $existingUser ) && $this->id != $existingUser->id && strcmp( $existingUser->username, $this->username ) == 0 ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
+			}
+        }
+    }
+
+	/**
+	 * Validates user email to ensure that it does not allow to change while changing user profile.
+	 */
+    public function validateUsernameChange( $attribute, $params ) {
+
+        if( !$this->hasErrors() ) {
+
+			$properties		= CoreProperties::getInstance();
+			$existingUser 	= self::findById( $this->id );
+
+			if( isset( $existingUser ) && strcmp( $existingUser->username, $this->username ) != 0  && !$properties->isChangeUsername() ) {
+
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_CHANGE_USERNAME ) );
 			}
         }
     }

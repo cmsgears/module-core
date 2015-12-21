@@ -11,8 +11,8 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Countries';
 
 // Sidebars
-$this->params['sidebar-parent'] = 'sidebar-country';
-$this->params['sidebar-child'] 	= 'sidebar-country';
+$this->params['sidebar-parent'] = 'sidebar-core';
+$this->params['sidebar-child'] 	= 'country';
 
 // Searching
 $searchTerms	= Yii::$app->request->getQueryParam("search");

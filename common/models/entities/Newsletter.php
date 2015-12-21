@@ -11,6 +11,8 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\behaviors\AuthorBehavior;
+
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 
 /**
@@ -21,24 +23,16 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property integer $modifiedBy
  * @property string $name
  * @property string $description
- * @property longtext $content
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property datetime $lastSentAt
+ * @property longtext $content 
  */
 class Newsletter extends NamedCmgEntity {
 
 	use CreateModifyTrait;
 
 	// Instance Methods --------------------------------------------
-
-	/**
-	 * @return boolean - whether given user is owner
-	 */
-	public function checkOwner( $user ) {
-
-		return $this->createdBy	= $user->id;		
-	}
 
 	// yii\base\Component ----------------
 
@@ -49,6 +43,9 @@ class Newsletter extends NamedCmgEntity {
 
         return [
 
+            'authorBehavior' => [
+                'class' => AuthorBehavior::className()
+			],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
 				'createdAtAttribute' => 'createdAt',
@@ -64,18 +61,12 @@ class Newsletter extends NamedCmgEntity {
      * @inheritdoc
      */
 	public function rules() {
-
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'name', 'description' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
+		
+		// model rules
         $rules = [
             [ [ 'name' ], 'required' ],
             [ [ 'id', 'description', 'content' ], 'safe' ],
-            [ 'name', 'string', 'min'=>1, 'max'=>100 ],
+            [ 'name', 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
@@ -83,7 +74,10 @@ class Newsletter extends NamedCmgEntity {
             [ [ 'createdAt', 'modifiedAt', 'lastSentAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
+		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name', 'description' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}

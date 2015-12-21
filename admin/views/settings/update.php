@@ -1,50 +1,24 @@
 <?php
-use yii\helpers\Html; 
+// Yii Imports
+use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
+
+// CMG Imports
+use cmsgears\core\common\utilities\FormUtil;
 ?>
-<div class="settings-wrapper clearfix">
-	<div class="data-grid">
-		<?php
-			include 'header.php';
-		?>
-		<div class="wrap-grid-table">
-			<div class="settings-title-wrapper">
-				<h1>Update <?= ucfirst( $type ) ?> Settings</h1>
-			</div>
-			<div class="settings-core-view">
-				<?php if( isset( $settings ) ) { ?>
-				<ul>
-					<?php
-						$counter	= 0;
+<?php include 'header.php'; ?>
+<section class="wrap-content container clearfix">
+	<div class="cud-box">
+		<h2>Update <?= ucfirst( $type ) ?> Settings</h2>
+		<?php $form = ActiveForm::begin( ['id' => 'frm-update-settings', 'options' => ['class' => 'frm-split' ] ] ); ?>
 
-						foreach ( $settings as $setting ) {
+		<?= FormUtil::getFieldsHtml( $form, $model ); ?>
 
-					?>
-					<li>
-						<form id="frm-settings-core-<?=$counter?>" cmt-controller="default" cmt-action="settings" class="frm-ajax frm-settings" action="<?= Url::toRoute('/cmgcore/apix/settings/update' ) ?>" method="POST" cmt-clear-data="false">
-							<label> <?=  $setting->name ?> </label>
-							<?php if( strcmp( $setting->fieldType, "password" ) == 0 ) { ?>
-								<span> <input type="password" name="ModelMeta[value]" value="" > </span>
-							<?php } else { ?>
-								<span> <input type="text" name="ModelMeta[value]" value="<?= $setting->value ?>" > </span>
-							<?php } ?>
-							<input type="hidden" name="ModelMeta[name]" value="<?= $setting->name ?>" >
-							<input type="hidden" name="ModelMeta[type]" value="<?= $setting->type ?>" >
-							<input type="submit" name="submit" value="Save" />
-							<div class="spinner"></div>
-							<div class="message frm-message"></div>
-						</form>
-					</li>
-					<?php
-							$counter++;
-						}
-					?>
-				</ul>
-				<?php } else { ?>
-				<p>No settings found.</p>
-				<?php } ?>
-			</div>
-		</div>
+		<div class="box-filler"></div>
+		<?=Html::a( "Back", [ "index?type=$type" ], ['class' => 'btn' ] );?>
+		<input type="submit" value="Update" />
+
+		<?php ActiveForm::end(); ?>
 	</div>
-</div>
+</section>

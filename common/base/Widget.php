@@ -12,16 +12,21 @@ class Widget extends \yii\base\Widget {
 
 	// html options for Yii Widget
 	public $options 		= [];
+	
+	/**
+	 * Flag to check whether assets can be loaded. We can load widget assets seperately in case the bundle is not added as dependency to layout asset bundle.
+	 */
+	public $loadAssets		= false;
 
 	/**
-	 * The path at which view file is located. It can have alias - ex: '@widget/my-view'. By default it's the views folder within widget directory.
+	 * The path at which view template file is located. It can have alias - ex: '@widget/my-view'. By default it's the views folder within widget directory.
 	 */
-	public $viewsDirectory	= null;
+	public $templateDir		= null;
 
 	/**
-	 * The view directory/file used to render widget. If it's a directory, the view can be formed using multiple file.
+	 * The template directory/file used to render widget. If it's a directory, the view can be formed using multiple files.
 	 */
-	public $viewFile		= 'simple';
+	public $template		= 'simple';
 
 	// Instance Methods --------------------------------------------
 
@@ -32,9 +37,9 @@ class Widget extends \yii\base\Widget {
 	 */
 	public function getViewPath() {
 
-		if( isset( $this->viewsDirectory ) ) {
+		if( isset( $this->templateDir ) ) {
 
-			return $this->viewsDirectory;
+			return $this->templateDir;
 		}
 
 		return parent::getViewPath();

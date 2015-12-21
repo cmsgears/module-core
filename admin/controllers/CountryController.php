@@ -18,7 +18,7 @@ use cmsgears\core\common\models\entities\Country;
 // BM Imports
 use billmaid\core\common\config\BmCoreGlobal;  
 
-class CountryController extends BaseController {
+class CountryController extends base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -134,4 +134,5 @@ class CountryController extends BaseController {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	} 
 }
+
 ?>

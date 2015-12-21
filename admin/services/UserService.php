@@ -78,6 +78,13 @@ class UserService extends \cmsgears\core\common\services\UserService {
 		return self::getDataProvider( new User(), $config );
 	}
 
+	public static function getPaginationByRoleType( $roleType ) {
+
+		$roleTable = CoreTables::TABLE_ROLE;
+
+		return self::getPagination( [ 'conditions' => [ "$roleTable.type" => $roleType ], 'query' => User::findWithSiteMember() ] );
+	}
+
 	public static function getPaginationByRoleSlug( $roleSlug ) {
 
 		$roleTable = CoreTables::TABLE_ROLE;

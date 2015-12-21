@@ -54,7 +54,12 @@ class PermissionService extends \cmsgears\core\common\services\PermissionService
 	 */
 	public static function getPaginationByType( $type ) {
 
-		return self::getPagination( [ 'conditions' => [ 'type' => $type ] ] );
+		if( isset( $type ) ) {
+
+			return self::getPagination( [ 'conditions' => [ 'type' => $type ] ] );
+		}
+
+		return self::getPagination();
 	}
 }
 

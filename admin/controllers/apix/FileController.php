@@ -3,7 +3,6 @@ namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
 use \Yii;
-use yii\web\Controller;
 use yii\filters\VerbFilter;
 
 // CMG Imports
@@ -11,7 +10,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class FileController extends Controller {
+class FileController extends \yii\web\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -46,9 +45,9 @@ class FileController extends Controller {
 
 	// UserController --------------------
 
-	public function actionFileHandler( $directory ) {
+	public function actionFileHandler( $directory, $type ) {
 
-		$data	= Yii::$app->fileManager->handleFileUpload( $directory );
+		$data	= Yii::$app->fileManager->handleFileUpload( $directory, $type );
 
 		if( $data ) {
 

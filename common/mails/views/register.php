@@ -5,7 +5,7 @@ use yii\helpers\Url;
 $logoUrl		= Yii::getAlias( "@web" );
 $logoUrl		= Url::to( $logoUrl. "/images/logo-mail.png", true );
 
-$logo 			= "<img class='logo' style='height:35px;float:right; margin-top:6px; margin-right:53px' src='$logoUrl'>";
+$logo 			= "<img class='logo' style='margin:10px;' src='$logoUrl'>";
 $siteName		= $coreProperties->getSiteName();
 $name 			= Html::encode( $user->getName() );
 $email 			= Html::encode( $user->email );

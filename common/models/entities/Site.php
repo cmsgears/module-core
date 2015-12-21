@@ -5,25 +5,47 @@ namespace cmsgears\core\common\models\entities;
 use \Yii;
 use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
+use yii\behaviors\SluggableBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\traits\MetaTrait;
+use cmsgears\core\common\models\traits\AttributeTrait;
 
 /**
  * Site Entity
  *
  * @property integer $id
+ * @property integer $avatarId
+ * @property integer $bannerId
  * @property string $name
+ * @property string $slug
+ * @property short $order
+ * @property short $active
  */
 class Site extends NamedCmgEntity {
 
-	use MetaTrait;
+	use AttributeTrait;
 
-	public $metaType	= CoreGlobal::TYPE_SITE;
+	public $attributeType	= CoreGlobal::TYPE_SITE;
 
 	// Instance Methods --------------------------------------------
+
+	/**
+	 * @return File - file url
+	 */
+	public function getAvatar() {
+
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'avatarId' ] );
+	}
+
+	/**
+	 * @return File - file url
+	 */
+	public function getBanner() {
+
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
+	}
 
 	/**
 	 * @return array - list of site Users
@@ -34,6 +56,32 @@ class Site extends NamedCmgEntity {
 					->viaTable( CoreTables::TABLE_SITE_MEMBER, [ 'siteId' => 'id' ] );
 	}
 
+	/**
+	 * @return string representation of flag
+	 */
+	public function getActiveStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->active ); 
+	}
+
+	// yii\base\Component ----------------
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors() {
+
+        return [
+
+            'sluggableBehavior' => [
+                'class' => SluggableBehavior::className(),
+                'attribute' => 'name',
+                'slugAttribute' => 'slug',
+                'ensureUnique' => true
+            ]
+        ];
+    }
+
 	// yii\base\Model --------------------
 
     /**
@@ -41,22 +89,24 @@ class Site extends NamedCmgEntity {
      */
 	public function rules() {
 
-		$trim		= [];
+		// model rules
+        $rules = [
+            [ [ 'name' ], 'required' ],
+            [ [ 'id' ], 'safe' ],
+            [ [ 'name' ], 'string', 'min' => 1, 'max' => 100 ],
+            [ 'name', 'alphanumhyphenspace' ],
+            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ 'slug', 'string', 'min' => 1, 'max' => 150 ],
+            [ 'order', 'number', 'integerOnly' => true ],
+            [ 'active', 'boolean' ],
+            [ [ 'avatarId', 'bannerId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+        ];
 
+		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
 			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
-        $rules = [
-            [ [ 'name' ], 'required' ],
-            [ 'id', 'safe' ],
-            [ 'name', 'alphanumhyphenspace' ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
-        ];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -70,7 +120,12 @@ class Site extends NamedCmgEntity {
 	public function attributeLabels() {
 
 		return [
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
+			'avatarId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
+			'bannerId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
 		];
 	}
 
@@ -88,6 +143,13 @@ class Site extends NamedCmgEntity {
 
 	// Site ------------------------------
 
+	/**
+	 * @return Site - by slug
+	 */
+	public static function findBySlug( $slug ) {
+
+		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+	}
 }
 
 ?>

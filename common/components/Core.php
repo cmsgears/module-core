@@ -20,7 +20,22 @@ class Core extends Component {
 	/**
 	 * @var main site to load configurations in case sub sites are not configured.
 	 */
+	public $mainSiteSlug		= "main";
+
+	/**
+	 * @var main site to load configurations in case sub sites are not configured.
+	 */
 	public $mainSiteName		= "main";
+
+	/**
+	 * @var identify the currently active site based on the url request.
+	 */
+	public $siteId				= 1;
+
+	/**
+	 * @var identify the currently active site based on the url request.
+	 */
+	public $siteSlug			= "main";
 
 	/**
 	 * @var identify the currently active site based on the url request.
@@ -128,12 +143,39 @@ class Core extends Component {
     }
 
 	/**
+	 * The method getMainSiteSlug returns the site slug for main site.
+	 * @return string 
+	 */
+	public function getMainSiteSlug() {
+
+		return $this->mainSiteSlug;
+	}
+
+	/**
 	 * The method getMainSiteName returns the site name for main site.
 	 * @return string 
 	 */
 	public function getMainSiteName() {
 
 		return $this->mainSiteName;
+	}
+
+	/**
+	 * The method getSiteId returns the site id for default site. It's more useful in case multi-site feature is enabled.
+	 * @return string 
+	 */
+	public function getSiteId() {
+
+		return $this->siteId;
+	}
+
+	/**
+	 * The method getSiteSlug returns the site slug for default site. It's more useful in case multi-site feature is enabled.
+	 * @return string 
+	 */
+	public function getSiteSlug() {
+
+		return $this->siteSlug;
 	}
 
 	/**
@@ -223,6 +265,11 @@ class Core extends Component {
 	public function getEditorClass() {
 
 		return $this->editorClass;
+	}
+
+	public function isTrimFieldValue() {
+
+		return $this->trimFieldValue;
 	}
 }
 

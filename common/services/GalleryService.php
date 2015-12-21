@@ -128,7 +128,7 @@ class GalleryService extends Service {
 		$user					= Yii::$app->user->getIdentity();
 		$gallery->modifiedBy	= $user->id;
 
-		$galleryToUpdate->copyForUpdateFrom( $gallery, [ 'name', 'description' ] );
+		$galleryToUpdate->copyForUpdateFrom( $gallery, [ 'name', 'description', 'active' ] );
 		
 		// Update Gallery
 		$galleryToUpdate->update();

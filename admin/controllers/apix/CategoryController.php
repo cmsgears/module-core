@@ -13,11 +13,9 @@ use cmsgears\core\common\models\entities\Category;
 
 use cmsgears\core\admin\services\CategoryService;
 
-use cmsgears\core\admin\controllers\BaseController;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class CategoryController extends BaseController {
+class CategoryController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 

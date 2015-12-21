@@ -17,10 +17,12 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property integer $avatarId
  * @property integer $parentId
  * @property string $name
- * @property string $description
  * @property string $slug
+ * @property string $description
  * @property string $type
  * @property string $icon
+ * @property string $featured
+ * @property string $options
  */
 class Category extends CmgEntity {
 
@@ -58,6 +60,14 @@ class Category extends CmgEntity {
     	return $this->hasMany( Option::className(), [ 'categoryId' => 'id' ] );
 	}
 
+	/**
+	 * @return string representation of flag
+	 */
+	public function getFeaturedStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->featured ); 
+	}
+
 	// yii\base\Component ----------------
 	
     /**
@@ -82,25 +92,24 @@ class Category extends CmgEntity {
      * @inheritdoc
      */
 	public function rules() {
-
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'name', 'description', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
+		
+		// model rules
         $rules = [
-            [ [ 'name' ], 'required' ],
-            [ [ 'id', 'avatarId', 'description' ], 'safe' ],
+            [ [ 'name', 'featured' ], 'required' ],
+            [ [ 'id', 'avatarId', 'description', 'options' ], 'safe' ],
+            [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ 'slug', 'string', 'min' => 1, 'max' => 150 ],
             [ [ 'avatarId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'type', 'icon' ], 'string', 'min'=>1, 'max'=>100 ],
+            [ 'featured', 'boolean' ]
         ];
 
+		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name', 'description', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -117,10 +126,12 @@ class Category extends CmgEntity {
 			'avatarId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
 			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON )
+			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'featured' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS )
 		];
 	}
 

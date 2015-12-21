@@ -19,27 +19,27 @@ class MailProperties extends CmgProperties {
 	/**
 	 * The property defines SMTP username.
 	 */
-	const PROP_SMTP_USERNAME	= "smtp username";
+	const PROP_SMTP_USERNAME	= "smtp_username";
 	
 	/**
 	 * The property defines SMTP password.
 	 */
-	const PROP_SMTP_PASSWORD	= "smtp password";
+	const PROP_SMTP_PASSWORD	= "smtp_password";
 	
 	/**
 	 * The property defines SMTP host.
 	 */	
-	const PROP_SMTP_HOST		= "smtp host";
+	const PROP_SMTP_HOST		= "smtp_host";
 	
 	/**
 	 * The property defines SMTP port.
 	 */
-	const PROP_SMTP_PORT		= "smtp port";
+	const PROP_SMTP_PORT		= "smtp_port";
 
 	/**
 	 * The property defines SMTP port.
 	 */
-	const PROP_SMTP_ENCRYPTION	= "smtp encryption";
+	const PROP_SMTP_ENCRYPTION	= "smtp_encryption";
 
 	/**
 	 * The property defines whether mailer need to debug.
@@ -49,32 +49,32 @@ class MailProperties extends CmgProperties {
 	/**
 	 * The property defines the default sender name.
 	 */
-	const PROP_SENDER_NAME		= "sender name";
+	const PROP_SENDER_NAME		= "sender_name";
 
 	/**
 	 * The property defines the default sender email.
 	 */
-	const PROP_SENDER_EMAIL		= "sender email";
+	const PROP_SENDER_EMAIL		= "sender_email";
 	
 	/**
 	 * The property defines the default contact name. It will be used by contact form.
 	 */
-	const PROP_CONTACT_NAME		= "contact name";
+	const PROP_CONTACT_NAME		= "contact_name";
 	
 	/**
 	 * The property defines the default contact email. It will be used by contact form.
 	 */
-	const PROP_CONTACT_EMAIL	= "contact email";
+	const PROP_CONTACT_EMAIL	= "contact_email";
 	
 	/**
 	 * The property defines the default info name.
 	 */
-	const PROP_INFO_NAME		= "info name";
+	const PROP_INFO_NAME		= "info_name";
 
 	/**
 	 * The property defines the default info email. It can be used on contact page.
 	 */
-	const PROP_INFO_EMAIL		= "info email";
+	const PROP_INFO_EMAIL		= "info_email";
 
 	// Singleton instance
 	private static $instance;

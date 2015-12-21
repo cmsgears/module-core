@@ -1,9 +1,11 @@
 <?php
-namespace cmsgears\core\admin\controllers;
+namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
 use \Yii;
+use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -14,49 +16,62 @@ use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\admin\services\RoleService;
 use cmsgears\core\admin\services\PermissionService;
 
-use cmsgears\core\admin\controllers\BaseController;
-
-abstract class BaseRoleController extends BaseController {
+abstract class RoleController extends Controller {
 
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+		
+		$this->returnUrl	= Url::previous( 'roles' );
 	}
 
 	// Instance Methods --------------------------------------------
 
+	// yii\base\Component ----------------
+
+    public function behaviors() {
+
+        return [
+            'rbac' => [
+                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'actions' => [
+	                'all'   => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_RBAC ]
+                ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+	                'all'   => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ]
+                ]
+            ]
+        ];
+    }
+	
 	// BaseRoleController -----------------
 
 	public function actionAll( $type = null ) {
 
-		$dataProvider = null;
-
-		if( isset( $type ) ) {
-
-			$dataProvider = RoleService::getPaginationByType( $type );
-		}
-		else {
-
-			$dataProvider = RoleService::getPagination();
-		}
+		$dataProvider = RoleService::getPaginationByType( $type );
 
 	    return $this->render( 'all', [
 			'dataProvider' => $dataProvider
 	    ]);
 	}
 
-	public function actionCreate( $returnUrl, $type = null ) {
+	public function actionCreate( $type = null ) {
 
-		$model	= new Role();
+		$model			= new Role();
+		$model->type 	= $type;
 
 		$model->setScenario( 'create' );
-
-		if( isset( $type ) ) {
-
-			$model->type = $type;
-		}
 
 		if( $model->load( Yii::$app->request->post(), 'Role' )  && $model->validate() ) {
 
@@ -69,14 +84,13 @@ abstract class BaseRoleController extends BaseController {
 
 				RoleService::bindPermissions( $binder );
 
-				return $this->redirect( $returnUrl );
+				return $this->redirect( $this->returnUrl );
 			}
 		}
 
-		$permissions	= PermissionService::getIdNameList( $type );
+		$permissions	= PermissionService::getIdNameListByType( $type );
 
     	return $this->render( 'create', [
-    		'returnUrl' => $returnUrl,
     		'model' => $model,
     		'permissions' => $permissions
     	]);
@@ -85,10 +99,12 @@ abstract class BaseRoleController extends BaseController {
 	public function actionUpdate( $id, $returnUrl, $type = null ) {
 
 		// Find Model
-		$model	= RoleService::findById( $id );
+		$model		= RoleService::findById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
+			
+			$model->type 	= $type;
 
 			$model->setScenario( 'update' );
 
@@ -103,14 +119,13 @@ abstract class BaseRoleController extends BaseController {
 
 					RoleService::bindPermissions( $binder );
 	
-					$this->redirect( $returnUrl );
+					$this->redirect( $this->returnUrl );
 				}
 			}
 
-			$permissions	= PermissionService::getIdNameList( $type );
+			$permissions	= PermissionService::getIdNameListByType( $type );
 
 	    	return $this->render( 'update', [
-	    		'returnUrl' => $returnUrl,
 	    		'model' => $model,
 	    		'permissions' => $permissions
 	    	]);
@@ -123,23 +138,24 @@ abstract class BaseRoleController extends BaseController {
 	public function actionDelete( $id, $returnUrl, $type = null ) {
 
 		// Find Model
-		$model	= RoleService::findById( $id );
+		$model		= RoleService::findById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
+
+			$model->type 	= $type;
 
 			if( $model->load( Yii::$app->request->post(), 'Role' ) ) {
 
 				if( RoleService::delete( $model ) ) {
 
-					return $this->redirect( $returnUrl );
+					return $this->redirect( $this->returnUrl );
 				}
 			}
 
-			$permissions	= PermissionService::getIdNameList( $type );
+			$permissions	= PermissionService::getIdNameListByType( $type );
 
 	    	return $this->render( 'delete', [
-	    		'returnUrl' => $returnUrl,
 	    		'model' => $model,
 	    		'permissions' => $permissions
 	    	]);

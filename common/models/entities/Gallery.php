@@ -13,7 +13,7 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\traits\FileTrait;
-use cmsgears\core\common\models\traits\MetaTrait;
+use cmsgears\core\common\models\traits\AttributeTrait;
 use cmsgears\core\common\models\traits\CategoryTrait;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 
@@ -21,9 +21,16 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * Gallery Entity - The primary class.
  *
  * @property integer $id
+ * @property integer $createdBy
+ * @property integer $modifiedBy
  * @property string $name
  * @property string $slug
+ * @property string $type
+ * @property string $title
  * @property string $description
+ * @property short  $active
+ * @property datetime $createdAt
+ * @property datetime $modifiedAt
  */
 class Gallery extends NamedCmgEntity {
 
@@ -31,9 +38,9 @@ class Gallery extends NamedCmgEntity {
 
 	public $fileType		= CoreGlobal::TYPE_GALLERY;
 
-	use MetaTrait;
+	use AttributeTrait;
 
-	public $metaType		= CoreGlobal::TYPE_GALLERY;
+	public $attributeType	= CoreGlobal::TYPE_GALLERY;
 
 	use CategoryTrait;
 
@@ -44,13 +51,13 @@ class Gallery extends NamedCmgEntity {
 	// Instance Methods --------------------------------------------
 
 	/**
-	 * @return boolean - whether given user is owner
+	 * @return string representation of flag
 	 */
-	public function checkOwner( $user ) {
-		
-		return $this->createdBy	= $user->id;		
+	public function getActiveStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->active ); 
 	}
-	
+
 	// yii\base\Component ----------------
 
     /**
@@ -82,24 +89,24 @@ class Gallery extends NamedCmgEntity {
      */
 	public function rules() {
 
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'name', 'description', 'title' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
+		// model rules
         $rules = [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'slug', 'description', 'title' ], 'safe' ],
+            [ [ 'id', 'description', 'title' ], 'safe' ],
+            [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ 'slug', 'string', 'min' => 1, 'max' => 150 ],
+            [ 'active', 'boolean' ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
+		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name', 'description', 'title' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -114,8 +121,10 @@ class Gallery extends NamedCmgEntity {
 
 		return [
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'title' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
-			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION )
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
 		];
 	}
 

@@ -3,14 +3,16 @@ namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
 use \Yii;
-use yii\filters\VerbFilter;
 use yii\helpers\Url;
-use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\admin\config\AdminGlobalCore;
 
-class UserController extends BaseUserController {
+use cmsgears\core\admin\services\OptionService;
+use cmsgears\core\admin\services\UserService;
+
+class UserController extends \cmsgears\core\admin\controllers\base\UserController {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -18,8 +20,9 @@ class UserController extends BaseUserController {
 
         parent::__construct( $id, $module, $config );
 
+		$this->layout		= AdminGlobalCore::LAYOUT_PRIVATE;
+
 		$this->sidebar 		= [ 'parent' => 'sidebar-identity', 'child' => 'user' ];
-		$this->createUrl	= '/cmgcore/user/create';
 	}
 
 	// Instance Methods --------------------------------------------
@@ -27,36 +30,23 @@ class UserController extends BaseUserController {
 	// yii\base\Component ----------------
 
     public function behaviors() {
+		
+		$behaviours	= parent::behaviors();
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'index'  => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'all' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index'  => ['get'],
-	                'all' => ['get'],
-	                'create' => ['get', 'post'],
-	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post']
-                ]
-            ]
-        ];
+		$behaviours[ 'rbac' ][ 'actions' ][ 'index' ] 	= [ 'permission' => CoreGlobal::PERM_IDENTITY ];
+		$behaviours[ 'rbac' ][ 'actions' ][ 'profile'] 	= [ 'permission' => CoreGlobal::PERM_USER ];
+
+		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ] 		= [ 'get' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'profile' ] 	= [ 'get', 'post' ];
+		
+		return $behaviours;
     }
 
 	// UserController --------------------
 
 	public function actionIndex() {
 
-		// TODO: Users Dashboard
+		$this->redirect( 'all' );
 	}
 
 	public function actionAll() {
@@ -68,18 +58,44 @@ class UserController extends BaseUserController {
 
 	public function actionCreate() {
 
-		return parent::actionCreate( Url::previous( 'users' ) );
+		return parent::actionCreate( CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( Url::previous( 'users' ), $id );
+		return parent::actionUpdate( $id, CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( Url::previous( 'users' ), $id );
+		return parent::actionDelete( $id, CoreGlobal::TYPE_SYSTEM );
 	}
+
+	public function actionProfile() {
+
+		$model		= Yii::$app->user->getIdentity();
+		$email		= $model->email;
+		$username	= $model->username;
+
+		$model->setScenario( 'profile' );
+
+		UserService::checkNewsletterMember( $model );
+
+		if( $model->load( Yii::$app->request->post(), 'User' ) && $model->validate() ) {
+
+			if( UserService::update( $model ) ) {
+
+				$this->refresh();
+			}
+		}
+
+		$genders 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER, [ [ 'name' => null, 'value' => 'Select Gender' ] ] );
+
+    	return $this->render( 'profile', [
+    		'model' => $model,
+    		'genders' => $genders
+    	]);
+    }
 }
 
 ?>

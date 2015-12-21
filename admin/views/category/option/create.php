@@ -6,7 +6,7 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Option';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-dropdown';
+$this->params['sidebar-parent'] = 'sidebar-core';
 $this->params['sidebar-child'] 	= 'dropdown';
  
 ?>
@@ -15,8 +15,8 @@ $this->params['sidebar-child'] 	= 'dropdown';
 		<h2>Add Option</h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-option-create', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
 
-    	<?= $form->field( $model, 'name' ) ?>  
-    	<?= $form->field( $model, 'message' ) ?> 
+    	<?= $form->field( $model, 'name' ) ?>
+    	<?= $form->field( $model, 'value' ) ?>
     	<?= $form->field( $model, 'icon' ) ?>  
  		<?php $model->categoryId = $id; ?>
 		<?= $form->field($model, 'categoryId')->hiddenInput()->label(false)?>

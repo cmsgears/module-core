@@ -3,21 +3,18 @@ namespace cmsgears\core\frontend\controllers\apix;
 
 // Yii Imports
 use Yii;
-use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\core\common\models\forms\ResetPassword;
 
 use cmsgears\core\frontend\services\UserService;
 
-use cmsgears\core\frontend\controllers\BaseController;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class UserController extends BaseController {
+class UserController extends \cmsgears\core\common\controllers\apix\UserController {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -31,44 +28,54 @@ class UserController extends BaseController {
 	// yii\base\Component
 
     public function behaviors() {
-
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'avatar' => [ 'permission' => CoreGlobal::PERM_USER ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'avatar' => ['post']
-                ]
-            ]
-        ];
+		
+		$behaviours	= parent::behaviors();
+		
+		$behaviours[ 'rbac' ][ 'actions' ][ 'profile' ]		= [ 'permission' => CoreGlobal::PERM_USER ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'profile' ]	= [ 'post' ];
+		
+		return $behaviours;
     }
 
 	// UserController
 
-    public function actionAvatar() {
+    public function actionProfile() {
 
+		// Find Model
 		$user	= Yii::$app->user->getIdentity();
-		$avatar = new CmgFile();
 
-		if( $avatar->load( Yii::$app->request->post(), 'File' ) && UserService::updateAvatar( $user, $avatar ) ) {
+		// Update/Render if exist
+		if( isset( $user ) ) {
 
-			$user		= UserService::findById( $user->id );
-			$avatar		= $user->avatar;
-			$response	= [ 'fileUrl' => $avatar->getFileUrl() ];
+			$user->setScenario( 'profile' );
 
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
+			UserService::checkNewsletterMember( $user );
+
+			if( $user->load( Yii::$app->request->post(), 'User' ) && $user->validate() ) {
+
+				// Update User and Site Member
+				if( UserService::update( $user ) ) {
+
+					$data	= [ 
+								'email' => $user->email, 'username' => $user->username, 'firstName' => $user->firstName, 
+								'lastName' => $user->lastName, 'gender' => $user->getGenderStr(), 'phone' => $user->phone ];
+
+					// Trigger Ajax Success
+					return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+				}
+			}
+			else {
+
+				// Generate Errors
+				$errors = AjaxUtil::generateErrorMessage( $user );
+	
+				// Trigger Ajax Failure
+	        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+			}
 		}
-		else {
 
-			// Trigger Ajax Failure
-        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
-		}
+		// Model not found
+		return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
     }
 }
 

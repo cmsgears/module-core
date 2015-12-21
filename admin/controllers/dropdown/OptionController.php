@@ -15,9 +15,7 @@ use cmsgears\core\common\models\entities\Option;
 use cmsgears\core\admin\services\OptionService;
 use cmsgears\core\admin\services\CategoryService;
 
-use cmsgears\core\admin\controllers\BaseController; 
-
-class OptionController extends BaseController {
+class OptionController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 

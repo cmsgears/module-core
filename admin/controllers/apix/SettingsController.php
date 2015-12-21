@@ -12,11 +12,9 @@ use cmsgears\core\common\models\entities\ModelMeta;
 
 use cmsgears\core\admin\services\SiteService;
 
-use cmsgears\core\admin\controllers\BaseController;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class SettingsController extends BaseController {
+class SettingsController extends \cmsgears\core\admin\controllers\base\Controller {
 
  	public function __construct( $id, $module, $config = [] ) {
 

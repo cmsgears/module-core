@@ -274,6 +274,84 @@ class CodeGenUtil {
 			}
 		}
 	}
+	
+	public static function generateMetaTags( $params ) {
+		
+		$metaContent	= '';
+
+		if( isset( $params[ 'desc' ] ) ) {
+
+			$description	= $params[ 'desc' ];
+			$metaContent 	.= "<meta name='description' content='$description' />";
+		}
+
+		if( isset( $params[ 'meta' ] ) ) {
+			
+			$keywords		= $params[ 'keywords' ];
+			$metaContent 	.= "<meta name='keywords' content='$keywords' />";
+		}
+
+		if( isset( $params[ 'robot' ] ) ) {
+			
+			$robot			= $params[ 'robot' ];
+			$metaContent 	.= "<meta name='robots' content='$robot' />";
+		}
+		
+		return $metaContent;
+	}
+
+	public static function generateSeoH1( $params ) {
+
+		if( isset( $params[ 'summary' ] ) ) {
+
+			$summary	= $params[ 'summary' ];
+			$seoH1		= "<h1 class='hidden'>$summary</h1>";
+			
+			return $seoH1;
+		}
+		
+		return null;
+	}
+
+	// Return the username by splitting given email.
+	public static function splitEmail( $email ) {
+
+		$parts = explode( '@', $email );
+
+		return $parts[ 0 ];	 
+	}
+
+	public static function isEmptyString( $string ) {
+		
+		return !( isset( $string ) && ( strlen( trim( $string ) ) > 0 ) );
+	}
+
+	public static function notEmptyString( $string ) {
+		
+		return ( isset( $string ) && ( strlen( trim( $string ) ) > 0 ) );
+	}
+
+	public static function registerJsFromFile( $view, $position, $filePath ) {
+
+		ob_start();
+
+		include( $filePath );
+
+		$script	= ob_get_clean();
+
+		$view->registerJs( $script, $position ); 
+	}
+
+	public static function getFileContent( $filePath ) {
+
+		ob_start();
+
+		include( $filePath );
+
+		$content	= ob_get_clean();
+
+		return $content; 
+	}
 }
 
 ?>

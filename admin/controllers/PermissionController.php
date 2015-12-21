@@ -3,20 +3,20 @@ namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
 use \Yii;
-use yii\filters\VerbFilter;
 use yii\helpers\Url;
-use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class PermissionController extends BasePermissionController {
+class PermissionController extends \cmsgears\core\admin\controllers\base\PermissionController {
 
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+
+		$this->sidebar 	= [ 'parent' => 'sidebar-identity', 'child' => 'permission' ];
 	}
 
 	// Instance Methods --------------------------------------------
@@ -25,30 +25,13 @@ class PermissionController extends BasePermissionController {
 
     public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'index'  => [ 'permission' => CoreGlobal::PERM_IDENTITY_RBAC ],
-	                'all'   => [ 'permission' => CoreGlobal::PERM_IDENTITY_RBAC ],
-	                'matrix' => [ 'permission' => CoreGlobal::PERM_IDENTITY_RBAC ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY_RBAC ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY_RBAC ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY_RBAC ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index'  => ['get'],
-	                'all'    => ['get'],
-	                'matrix' => ['get'],
-	                'create' => ['get', 'post'],
-	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post']
-                ]
-            ]
-        ];
+		$behaviours	= parent::behaviors();
+
+		$behaviours[ 'rbac' ][ 'actions' ][ 'index' ] 	= [ 'permission' => CoreGlobal::PERM_RBAC ];
+
+		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ] 	= [ 'get' ];
+
+		return $behaviours;
     }
 
 	// RoleController --------------------
@@ -61,32 +44,34 @@ class PermissionController extends BasePermissionController {
 	public function actionAll() {
 
 		// Remember return url for crud
-		Url::remember( [ "permission/all" ], 'permissions' );
+		Url::remember( [ 'permission/all' ], 'permissions' );
 
 		return parent::actionAll( CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionMatrix() {
 
+		$this->sidebar 	= [ 'parent' => 'sidebar-identity', 'child' => 'matrix' ];
+
 		// Remember return url for crud
-		Url::remember( [ "permission/matrix" ], 'roles' );
+		Url::remember( [ 'permission/matrix' ], 'roles' );
 
 		return parent::actionMatrix( CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionCreate() {
 
-		return parent::actionCreate( Url::previous( "permissions" ), CoreGlobal::TYPE_SYSTEM );
+		return parent::actionCreate( CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id, Url::previous( "permissions" ), CoreGlobal::TYPE_SYSTEM );
+		return parent::actionUpdate( $id, CoreGlobal::TYPE_SYSTEM );
 	}
 
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, Url::previous( "permissions" ), CoreGlobal::TYPE_SYSTEM );
+		return parent::actionDelete( $id, CoreGlobal::TYPE_SYSTEM );
 	}
 }
 

@@ -54,7 +54,12 @@ class RoleService extends \cmsgears\core\common\services\RoleService {
 	 */
 	public static function getPaginationByType( $type ) {
 
-		return self::getPagination( [ 'conditions' => [ 'type' => $type ] ] );
+		if( isset( $type ) ) {
+
+			return self::getPagination( [ 'conditions' => [ 'type' => $type ] ] );
+		}
+
+		return self::getPagination();
 	}
 }
 

@@ -13,11 +13,9 @@ use cmsgears\core\common\models\forms\Binder;
 
 use cmsgears\core\admin\services\PermissionService;
 
-use cmsgears\core\admin\controllers\BaseController;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class PermissionController extends BaseController {
+class PermissionController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -36,13 +34,13 @@ class PermissionController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'bindRoles'  => [ 'permission' => CoreGlobal::PERM_IDENTITY_RBAC ]
+	                'bindRoles'  => [ 'permission' => CoreGlobal::PERM_RBAC ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'bindRoles'  => ['post']
+	                'bindRoles'  => [ 'post' ]
                 ]
             ]
         ];

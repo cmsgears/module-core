@@ -11,7 +11,9 @@ use yii\helpers\ArrayHelper;
  */
 class Sidebar extends Component {
 
-	public $modules;
+	public $modules	= [];
+	
+	public $plugins	= [];
 
 	/**
 	 * Initialise the Sidebar.
@@ -65,6 +67,17 @@ class Sidebar extends Component {
 			if( isset( $module->config  ) ) {
 
 				$config   = ArrayHelper::merge( $config, $module->config );
+			}
+		}
+		
+		$plugins	= $this->plugins;
+
+		// Collect settings from all the plugins
+		foreach ( $plugins as $plugin ) {
+
+			if( isset( $plugin  ) ) {
+
+				$config   = ArrayHelper::merge( $config, $plugin );
 			}
 		}
 

@@ -16,6 +16,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property integer $id
  * @property string $name
  * @property string $slug
+ * @property string $icon
  */
 class Tag extends NamedCmgEntity {
 
@@ -45,25 +46,22 @@ class Tag extends NamedCmgEntity {
      * @inheritdoc
      */
 	public function rules() {
-
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
+		
+		// model rules
         $rules = [
             [ [ 'name' ], 'required' ],
             [ 'id', 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
-            [ 'name', 'string', 'min'=>1, 'max'=>100 ],
+            [ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ 'slug', 'string', 'min'=>1, 'max'=>150 ],
+            [ 'slug', 'string', 'min' => 1, 'max' => 150 ]
         ];
 
+		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -95,7 +93,6 @@ class Tag extends NamedCmgEntity {
 	}
 
 	// Tag -------------------------------
-
 }
 
 ?>

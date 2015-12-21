@@ -7,7 +7,9 @@ use cmsgears\files\widgets\FileUploader;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Update User";
 
-// Sidebar
+// Sidebar and Return URL
+$sidebar						= $this->context->sidebar;
+$returnUrl						= $this->context->returnUrl;
 $this->params['sidebar-parent'] = $sidebar[ 'parent' ];
 $this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 ?>
@@ -22,8 +24,6 @@ $this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 		<?=FileUploader::widget( [ 'options' => [ 'id' => 'avatar-user', 'class' => 'file-uploader' ], 'model' => $model->avatar,  'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>
 		<?= $form->field( $model, 'firstName' ) ?>
 		<?= $form->field( $model, 'lastName' ) ?>
-		<?= $form->field( $model, 'genderId' )->dropDownList( $genderMap )  ?>
-		<?= $form->field( $model, 'phone' ) ?>
 
     	<?php if( isset( $roleMap ) ) { ?>
 			<?= $form->field( $siteMember, 'roleId' )->dropDownList( $roleMap )  ?>
@@ -32,9 +32,8 @@ $this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 		<?php } ?>
 
 		<?= $form->field( $model, 'status' )->dropDownList( $status ) ?>
-		<?= $form->field( $model, 'newsletter' )->checkbox() ?>
 
-		<?=Html::a( "Back", $returnUrl, ['class' => 'btn' ] );?>
+		<?=Html::a( 'Back', $returnUrl, [ 'class' => 'btn' ] );?>
 		<input type="submit" value="Update" />
 
 		<?php ActiveForm::end(); ?>

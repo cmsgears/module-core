@@ -5,10 +5,11 @@ namespace cmsgears\core\common\services;
 use \Yii;
 
 // CMG Imports
-use cmsgears\core\common\models\entities\CoreTables;
-use cmsgears\core\common\models\entities\ModelMeta;
+use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\User;
+
 use cmsgears\core\common\utilities\DateUtil;
 
 /**
@@ -78,6 +79,10 @@ class UserService extends Service {
 		return isset( $user );
 	}
 
+	/**
+	 * @param string $roleSlug
+	 * @return array
+	 */
 	public static function getIdNameMapByRoleSlug( $roleSlug ) {
 
 		$roleTable			= CoreTables::TABLE_ROLE;
@@ -98,6 +103,11 @@ class UserService extends Service {
 		}
 
 		return $usersMap;
+	}
+	
+	public static function findAttributeMapByType( $user, $type ) {
+		
+		return ModelAttributeService::findAttributeMapByType( $user->id, CoreGlobal::TYPE_USER, $type );
 	}
 
 	// Data Provider ----
@@ -190,6 +200,16 @@ class UserService extends Service {
 		}
 	}
 
+	public static function updateAttributes( $user, $attributes ) {
+
+		foreach ( $attributes as $attribute ) {
+
+			ModelAttributeService::update( $attribute );
+		}
+
+		return true;
+	}
+
 	// Delete -----------
 
 	/**
@@ -206,16 +226,6 @@ class UserService extends Service {
 		$userToDelete->delete();
 
 		return true;
-	}
-	
-	public static function updateMetaArray( $user, $metasArray ) {
-		
-		$user->updateMetas( $metasArray );		 
-	}
-	
-	public static function findMetaByType(  $parentId, $parentType, $name  ) {
-		
-		return ModelMeta::findByName( $parentId, $parentType, $name );	
 	}
 }
 

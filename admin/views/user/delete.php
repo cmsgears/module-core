@@ -5,7 +5,9 @@ use yii\helpers\Html;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Delete User";
 
-// Sidebar
+// Sidebar and Return URL
+$sidebar						= $this->context->sidebar;
+$returnUrl						= $this->context->returnUrl;
 $this->params['sidebar-parent'] = $sidebar[ 'parent' ];
 $this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 ?>
@@ -16,15 +18,12 @@ $this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 
     	<?= $form->field( $model, 'email' )->textInput( [ 'readonly'=>'true' ] ) ?>
     	<?= $form->field( $model, 'username' )->textInput( [ 'readonly'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'status' )->dropDownList( $status, [ 'disabled'=>'true' ] ) ?>
-		<?= $form->field( $siteMember, 'roleId' )->dropDownList( $roleMap, [ 'disabled'=>'true' ] )  ?>
-		<?= $form->field( $model, 'gender' )->dropDownList( $genderMap, [ 'disabled'=>'true' ] )  ?>
 		<?= $form->field( $model, 'firstName' )->textInput( [ 'readonly'=>'true' ] ) ?>
 		<?= $form->field( $model, 'lastName' )->textInput( [ 'readonly'=>'true' ] ) ?>
-		<?= $form->field( $model, 'phone' )->textInput( [ 'readonly'=>'true' ] ) ?>
-		<?= $form->field( $model, 'newsletter' )->checkbox( [ 'readonly'=>'true' ] ) ?>
+		<?= $form->field( $siteMember, 'roleId' )->dropDownList( $roleMap, [ 'disabled'=>'true' ] )  ?>
+    	<?= $form->field( $model, 'status' )->dropDownList( $status, [ 'disabled'=>'true' ] ) ?>
 
-		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
+		<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn' ] );?>
 		<input type="submit" value="Delete" />
 
 		<?php ActiveForm::end(); ?>

@@ -5,9 +5,11 @@ use yii\helpers\Html;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Update Gallery';
 
-// Sidebar
-$this->params['sidebar-parent'] = 'sidebar-gallery';
-$this->params['sidebar-child'] 	= 'gallery';
+// Sidebar and Return URL
+$sidebar						= $this->context->sidebar;
+$returnUrl						= $this->context->returnUrl;
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -17,9 +19,10 @@ $this->params['sidebar-child'] 	= 'gallery';
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'title' ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
+		<?= $form->field( $model, 'active' )->checkbox() ?>
 
 		<div class="box-filler"></div>
-		<?=Html::a( "Back", [ '/cmgcore/gallery/all' ], ['class' => 'btn' ] );?>
+		<?=Html::a( 'Back', $returnUrl, [ 'class' => 'btn' ] );?>
 		<input type="submit" value="Update" />
 
 		<?php ActiveForm::end(); ?>

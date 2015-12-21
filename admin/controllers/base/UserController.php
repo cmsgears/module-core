@@ -1,9 +1,11 @@
 <?php
-namespace cmsgears\core\admin\controllers;
+namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
 use \Yii;
+use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -17,23 +19,48 @@ use cmsgears\core\admin\services\SiteMemberService;
 use cmsgears\core\admin\services\UserService;
 use cmsgears\core\admin\services\RoleService;
 
-abstract class BaseUserController extends BaseController {
-
-	protected $sidebar;
-	protected $createUrl;
+abstract class UserController extends Controller {
 
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+		
+		$this->returnUrl	= Url::previous( 'users' );
 	}
 
 	// Instance Methods --------------------------------------------
 
+	// yii\base\Component ----------------
+
+    public function behaviors() {
+
+        return [
+            'rbac' => [
+                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'actions' => [
+	                'all' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY ]
+                ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+	                'all' => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ]
+                ]
+            ]
+        ];
+    }
+
 	// UserController --------------------
 
-	public function actionAll( $roleSlug = null, $permissionSlug = null ) {
+	public function actionAll( $roleSlug = null, $permissionSlug = null, $showCreate = true ) {
 
 		$dataProvider = null;
 
@@ -51,13 +78,12 @@ abstract class BaseUserController extends BaseController {
 		}
 
 	    return $this->render( '@cmsgears/module-core/admin/views/user/all', [
-	    	'sidebar' => $this->sidebar,
-	    	'createUrl' => $this->createUrl,
-			'dataProvider' => $dataProvider
+			'dataProvider' => $dataProvider,
+			'showCreate' => $showCreate
 	    ]);
 	}
 
-	public function actionCreate( $returnUrl, $roleSlug = null ) {
+	public function actionCreate( $roleType = null, $roleSlug = null ) {
 
 		$model		= new User();
 		$siteMember	= new SiteMember();
@@ -79,53 +105,47 @@ abstract class BaseUserController extends BaseController {
 			$siteMember	= SiteMemberService::create( $model, $siteMember );
 
 			if( $user && $siteMember ) {
+				
+				// Load User Permissions
+				$model->loadPermissions();
 
 				// Send Account Mail
 				Yii::$app->cmgCoreMailer->sendCreateUserMail( $model );
 
-				$this->redirect( $returnUrl );
+				$this->redirect( $this->returnUrl );
 			}
 		}
 
-		$genderMap 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER );
-		
 		if( isset( $roleSlug ) ) {
 
 			return $this->render( '@cmsgears/module-core/admin/views/user/create', [
-				'sidebar' => $this->sidebar,
-				'returnUrl' => $returnUrl,
 				'model' => $model,
-				'siteMember' => $siteMember,
-				'genderMap' => $genderMap,
-				'returnUrl' => $returnUrl
+				'siteMember' => $siteMember
 			]);
 		}
 		else {
 			
-			$roleMap 	= RoleService::getIdNameMap();
+			$roleMap 	= RoleService::getIdNameMapByType( $roleType );
 
 			return $this->render( '@cmsgears/module-core/admin/views/user/create', [
 				'sidebar' => $this->sidebar,
-				'returnUrl' => $returnUrl,
 				'model' => $model,
 				'siteMember' => $siteMember,
-				'roleMap' => $roleMap,
-				'genderMap' => $genderMap,
-				'returnUrl' => $returnUrl
+				'roleMap' => $roleMap
 			]);			
 		}
 	}
 
-	public function actionUpdate( $returnUrl, $id, $roleSlug = null ) {
+	public function actionUpdate( $id, $roleType = null, $roleSlug = null ) {
 
 		// Find Model
 		$model		= UserService::findById( $id );
-		$avatar 	= new CmgFile();
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
 			$siteMember	= $model->siteMember;
+			$avatar 	= CmgFile::loadFile( $model->avatar, 'File' );
 
 			$model->setScenario( 'update' );
 
@@ -133,42 +153,31 @@ abstract class BaseUserController extends BaseController {
 
 			if( $model->load( Yii::$app->request->post(), 'User' ) && $siteMember->load( Yii::$app->request->post(), 'SiteMember' ) && $model->validate() ) {
 
-				$avatar->load( Yii::$app->request->post(), 'File' );
-
 				// Update User and Site Member
 				if( UserService::update( $model, $avatar ) && SiteMemberService::update( $siteMember ) ) {
 
-					$this->redirect( $returnUrl );
+					$this->redirect( $this->returnUrl );
 				}
 			}
-
-			$genderMap 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER );
-			$avatar		= $model->avatar;
 
 			if( isset( $roleSlug ) ) {
 
 		    	return $this->render( '@cmsgears/module-core/admin/views/user/update', [
-		    		'sidebar' => $this->sidebar,
-		    		'returnUrl' => $returnUrl,
 		    		'model' => $model,
 		    		'siteMember' => $siteMember,
 		    		'avatar' => $avatar,
-		    		'genderMap' => $genderMap,
 		    		'status' => User::$statusMapUpdate
 		    	]);
 			}
 			else {
 
-				$roleMap 	= RoleService::getIdNameMap();
+				$roleMap 	= RoleService::getIdNameMapByType( $roleType );
 
 		    	return $this->render( '@cmsgears/module-core/admin/views/user/update', [
-		    		'sidebar' => $this->sidebar,
-		    		'returnUrl' => $returnUrl,
 		    		'model' => $model,
 		    		'siteMember' => $siteMember,
 		    		'avatar' => $avatar,
 		    		'roleMap' => $roleMap,
-		    		'genderMap' => $genderMap,
 		    		'status' => User::$statusMapUpdate
 		    	]);
 			}
@@ -178,7 +187,7 @@ abstract class BaseUserController extends BaseController {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $returnUrl, $id, $roleName = null ) {
+	public function actionDelete( $id, $roleType = null, $roleSlug = null ) {
 
 		// Find Model
 		$model		= UserService::findById( $id );
@@ -192,21 +201,17 @@ abstract class BaseUserController extends BaseController {
 
 				if( UserService::delete( $model ) ) {
 
-					$this->redirect( $returnUrl );
+					$this->redirect( $this->returnUrl );
 				}
 			}
 			else {
 
-				$roleMap 	= RoleService::getIdNameMap();
-				$genderMap 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER );
+				$roleMap 	= RoleService::getIdNameMapByType( $roleType );
 
 	        	return $this->render( '@cmsgears/module-core/admin/views/user/delete', [
-	        		'sidebar' => $this->sidebar,
-	        		'returnUrl' => $returnUrl,
 	        		'model' => $model,
 	        		'siteMember' => $siteMember,
 	        		'roleMap' => $roleMap,
-	        		'genderMap' => $genderMap,
 	        		'status' => User::$statusMapUpdate
 	        	]);
 			}

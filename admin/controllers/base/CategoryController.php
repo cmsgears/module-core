@@ -1,11 +1,11 @@
 <?php
-namespace cmsgears\core\admin\controllers;
+namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
 use \Yii;
+use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
-use yii\base\Exception;
-use yii\web\HttpException;
+use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -17,20 +17,48 @@ use cmsgears\core\common\models\entities\Category;
 use cmsgears\core\admin\services\CategoryService;  
 use cmsgears\core\admin\services\OptionService; 
 
-abstract class BaseCategoryController extends BaseController {
+abstract class CategoryController extends Controller {
 
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+		
+		$this->returnUrl	= Url::previous( 'categories' );
 	}
 
 	// Instance Methods --------------------------------------------
 
-	// BaseRoleController -----------------
+	// yii\base\Component ----------------
 
-	public function actionAll( $sidebar = [], $type = null, $dropDown = false  ) {
+    public function behaviors() {
+
+        return [
+            'rbac' => [
+                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'actions' => [
+	                'all'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'create'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'update'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'delete'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+                ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+	                'all'  => [ 'get' ],
+	                'create'  => [ 'get', 'post' ],
+	                'update'  => [ 'get', 'post' ],
+	                'delete'  => [ 'get', 'post' ]
+                ]
+            ]
+        ];
+    }
+
+	// CategoryController -----------------
+
+	public function actionAll( $type = null, $dropDown = false  ) {
 
 		$dataProvider = null;
 
@@ -46,65 +74,52 @@ abstract class BaseCategoryController extends BaseController {
 	    return $this->render( '@cmsgears/module-core/admin/views/category/all', [
 	    
 			'dataProvider' => $dataProvider,
-    		'dropDown' => $dropDown,
-    		'sidebarParent' => $sidebar[ 'parent' ],
-    		'sidebarChild' => $sidebar[ 'child' ]
+    		'dropDown' => $dropDown
 	    ]);
 	}
 
-	public function actionCreate( $returnUrl, $sidebar = [], $type = null, $dropDown = false ) {
+	public function actionCreate( $type = null, $dropDown = false ) {
 
-		$model		= new Category();
-		$avatar 	= new CmgFile(); 
+		$model			= new Category();
+		$model->type 	= $type;
+		$avatar 		= CmgFile::loadFile( $model->avatar, 'Avatar' ); 
 
 		$model->setScenario( 'create' );
 
-		if( isset( $type ) ) {
-
-			$model->type = $type;
-		}
-
 		if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
-
-			$avatar->load( Yii::$app->request->post(), 'Avatar' ); 
 
 			if( CategoryService::create( $model, $avatar ) ) { 
 
-				return $this->redirect( $returnUrl );
+				return $this->redirect( $this->returnUrl );
 			} 
 		} 
 
     	return $this->render( '@cmsgears/module-core/admin/views/category/create', [
     		'model' => $model, 
     		'avatar' => $avatar,
-    		'returnUrl' => $returnUrl,
-    		'dropDown' => $dropDown,
-    		'sidebarParent' => $sidebar[ 'parent' ],
-    		'sidebarChild' => $sidebar[ 'child' ]
+    		'dropDown' => $dropDown
     	]);
 	}	
  	
-	public function actionUpdate( $id, $returnUrl, $sidebar = [], $type = null, $dropDown = false  ) {
+	public function actionUpdate( $id, $type = null, $dropDown = false  ) {
 		
-
 		// Find Model
-		$model		= CategoryService::findById( $id );
+		$model	= CategoryService::findById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
- 
-			$avatar 	= new CmgFile(); 
+
+			$model->type 	= $type;
+			$avatar 		= CmgFile::loadFile( $model->avatar, 'Avatar' ); 
 
 			$model->setScenario( 'update' );
 
 			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
-	
-				$avatar->load( Yii::$app->request->post(), 'Avatar' ); 
 
 				if( CategoryService::update( $model, $avatar ) ) {
  
 
-					return $this->redirect( $returnUrl );
+					return $this->redirect( $this->returnUrl );
 				} 
 			}
 
@@ -113,10 +128,7 @@ abstract class BaseCategoryController extends BaseController {
 	    	return $this->render( '@cmsgears/module-core/admin/views/category/update', [
 	    		'model' => $model, 
 	    		'avatar' => $avatar,
-	    		'returnUrl' => $returnUrl,
-    			'dropDown' => $dropDown,
-    			'sidebarParent' => $sidebar[ 'parent' ],
-    			'sidebarChild' => $sidebar[ 'child' ]
+    			'dropDown' => $dropDown
 	    	]);
 		}
 		
@@ -124,21 +136,18 @@ abstract class BaseCategoryController extends BaseController {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	} 
 	
-	public function actionDelete( $id, $returnUrl, $sidebar = [], $type = null, $dropDown = false  ) {
+	public function actionDelete( $id, $type = null, $dropDown = false  ) {
 
 		// Find Model
-		$model		= CategoryService::findById( $id );
+		$model	= CategoryService::findById( $id );
 
-		// Delete/Render if exist
-		
+		// Delete/Render if exist		
 		if( isset( $model ) ) {
- 
-			$avatar 	= new CmgFile();  
+			
+			$model->type 	= $type;
 
 			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
-	
-				$avatar->load( Yii::$app->request->post(), 'Avatar' ); 
-				
+
 				$categoryOptions	= OptionService::findByCategoryId( $id );
 				
 				if( isset( $categoryOptions ) ) {
@@ -151,14 +160,14 @@ abstract class BaseCategoryController extends BaseController {
 					    } 
 					    catch( Exception $e) {
 					    	 
-						    throw new HttpException(409,  Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  ); 
+						    throw new HttpException( 409,  Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  ); 
 						}
 					}
 				}
 
 				if( CategoryService::delete( $model, $avatar ) ) { 
 
-					return $this->redirect( $returnUrl );
+					return $this->redirect( $this->returnUrl );
 				}
 			}
 
@@ -166,11 +175,8 @@ abstract class BaseCategoryController extends BaseController {
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/category/delete', [
 	    		'model' => $model, 
-	    		'avatar' => $avatar,
-	    		'returnUrl' => $returnUrl,
-    			'dropDown' => $dropDown,
-    			'sidebarParent' => $sidebar[ 'parent' ],
-    			'sidebarChild' => $sidebar[ 'child' ]
+	    		'avatar' => $model->avatar,
+    			'dropDown' => $dropDown
 	    	]);
 		}
 		

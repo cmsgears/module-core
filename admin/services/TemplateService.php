@@ -19,7 +19,7 @@ class TemplateService extends \cmsgears\core\common\services\TemplateService {
 	        'attributes' => [
 	            'name' => [
 	                'asc' => [ 'name' => SORT_ASC ],
-	                'desc' => ['name' => SORT_DESC ],
+	                'desc' => [ 'name' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'name',
 	            ]
@@ -36,7 +36,12 @@ class TemplateService extends \cmsgears\core\common\services\TemplateService {
 			$config[ 'search-col' ] = 'name';
 		}
 
-		return self::getPaginationDetails( new Template(), $config );
+		return self::getDataProvider( new Template(), $config );
+	}
+	
+	public static function getPaginationByType( $type ) {
+		
+		return self::getPagination( [ 'conditions' => [ 'type' => $type ] ] );
 	}
 }
 

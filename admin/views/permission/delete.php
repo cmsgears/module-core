@@ -5,9 +5,11 @@ use yii\helpers\Html;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Permission';
 
-// Sidebar
-$this->params['sidebar-parent'] = 'sidebar-identity';
-$this->params['sidebar-child'] 	= 'permission';
+// Sidebar and Return URL
+$sidebar						= $this->context->sidebar;
+$returnUrl						= $this->context->returnUrl;
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">

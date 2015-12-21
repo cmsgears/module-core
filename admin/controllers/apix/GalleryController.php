@@ -14,11 +14,9 @@ use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\admin\services\FileService;
 use cmsgears\core\admin\services\GalleryService;
 
-use cmsgears\core\admin\controllers\BaseController;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class GalleryController extends BaseController {
+class GalleryController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 

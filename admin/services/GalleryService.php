@@ -62,6 +62,19 @@ class GalleryService extends \cmsgears\core\common\services\GalleryService {
 
 		return self::getDataProvider( new Gallery(), $config );
 	}
+
+	/**
+	 * @return ActiveDataProvider
+	 */
+	public static function getPaginationByType( $type ) {
+
+		if( isset( $type ) ) {
+
+			return self::getPagination( [ 'conditions' => [ 'type' => $type ] ] );
+		}
+
+		return self::getPagination();
+	}
 }
 
 ?>

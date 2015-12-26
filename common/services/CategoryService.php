@@ -25,6 +25,11 @@ class CategoryService extends Service {
 
 		return Category::findById( $id );
 	}
+	
+	public static function findByParentId( $id ) {
+		
+		return Category::findByParentId( $id );
+	}
 
 	/**
 	 * @param string $name

@@ -51,6 +51,14 @@ class TagService extends Service {
 
 		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_TAG );
 	}
+	
+	// Create ---------------- 
+	 public static function create( $model ) {
+	 	
+		$model->save(); 
+		
+		return $model;
+	 }
 }
 
 ?>

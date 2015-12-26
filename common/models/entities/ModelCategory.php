@@ -53,7 +53,7 @@ class ModelCategory extends CmgModel {
 		return [
 			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'categoryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_CATEGORY ),
+			'categoryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CATEGORY ),
 			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
 		];
 	}
@@ -75,7 +75,16 @@ class ModelCategory extends CmgModel {
 	// ModelCategory ---------------------
 
 	// Read ------
-
+	public static function findByParentType( $parentType ) {
+		
+		return self::find()->where( 'parentType=:id', [ ':id' => $parentType ] )->all();
+	}	
+	
+	public static function findByParentId( $parentId ) {
+		
+		return self::find()->where( 'parentId=:id', [ ':id' => $parentId ] )->all();
+	}
+		
 	// Delete ----
 
 	/**
@@ -84,6 +93,11 @@ class ModelCategory extends CmgModel {
 	public static function deleteByCategoryId( $categoryId ) {
 
 		self::deleteAll( 'categoryId=:id', [ ':id' => $categoryId ] );
+	}
+	
+	public static function deleteByParentId( $parentId ) {
+
+		self::deleteAll( 'parentId=:id', [ ':id' => $parentId ] );
 	}
 }
 

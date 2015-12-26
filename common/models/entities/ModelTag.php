@@ -37,7 +37,7 @@ class ModelTag extends CmgModel {
             [ [ 'id' ], 'safe' ],
             [ [ 'tagId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'parentType', 'string', 'min' => 1, 'max' => 100 ],
-            [ 'order', 'number', 'integerOnly', 'min' => 0 ]
+            [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ]
         ];
     }
 
@@ -71,6 +71,16 @@ class ModelTag extends CmgModel {
 	// ModelTag --------------------------
 
 	// Read ----
+	
+	public static function findExisting( $tagId, $parentId, $parentType ) {
+		
+		return self::find()->where( 'tagId=:id AND parentId=:parent AND parentType=:type', [ ':id' => $tagId, ':parent' => $parentId, ':type' => $parentType ] )->one(); 
+	}
+	
+	public static function findByParentIdType( $parentId, $parentType ) {
+		
+		return self::find()->where( 'parentId=:parent AND parentType=:type', [ ':parent' => $parentId, ':type' => $parentType ] )->all();
+	}
 }
 
 ?>

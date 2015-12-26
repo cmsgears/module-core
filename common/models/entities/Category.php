@@ -199,6 +199,11 @@ class Category extends CmgEntity {
 
 		return self::find()->where( 'type=:type', [ ':type' => $type ] )->all();
 	}
+	
+	public static function findByParentId( $id ) {
+
+		return self::find()->where( 'parentId=:id', [ ':id' => $id ] )->all();
+	}
 
 	/**
 	 * @return Category - by type and name

@@ -83,7 +83,7 @@ if( !isset( $sortOrder ) ) {
 						
 				?>
 					<tr>
-						<td><?= CodeGenUtil::getImageThumbTag( $dropdown->avatar, [ 'class' => 'avatar', 'image' => 'avatar' ] ) ?></td>
+						<td><?= CodeGenUtil::getImageThumbTag( $dropdown->avatar, [ 'class' => 'avatar', 'image' => 'avatar.png' ] ) ?></td>
 						<td><?= $dropdown->name ?></td>
 						<td><?= $dropdown->description ?></td>
 						<td><?= $dropdown->getFeaturedStr() ?></td> 

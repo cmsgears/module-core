@@ -98,7 +98,7 @@ if( !isset( $sortOrder ) ) {
 						$role	= $user->role->name;
 				?>
 					<tr>
-						<td><?= CodeGenUtil::getImageThumbTag( $user->avatar, [ 'class' => 'avatar', 'image' => 'avatar' ] ) ?></td>
+						<td><?= CodeGenUtil::getImageThumbTag( $user->avatar, [ 'class' => 'avatar', 'image' => 'avatar.png' ] ) ?></td>
 						<td><?= $user->username ?></td>
 						<td><?= $user->getName() ?></td>
 						<td><?= $user->email ?></td>

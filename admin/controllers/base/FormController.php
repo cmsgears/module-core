@@ -61,8 +61,6 @@ abstract class FormController extends Controller {
 
 		$dataProvider = FormService::getPaginationByType( $type );
 
-		Url::remember( [ 'form/all' ], 'forms' );
-
 	    return $this->render( '@cmsgears/module-core/admin/views/form/all', [
 	         'dataProvider' => $dataProvider
 	    ]);

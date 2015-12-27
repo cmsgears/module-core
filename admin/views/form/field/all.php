@@ -8,10 +8,12 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Form Fields';
 $siteUrl		= $coreProperties->getSiteUrl();
+$controllerName	= Yii::$app->controller->id;
 
 // Sidebar
-$this->params[ 'sidebar-parent' ] 	= 'sidebar-form';
-$this->params[ 'sidebar-child' ] 	= 'form';
+$sidebar						= $this->context->sidebar;
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -30,7 +32,7 @@ if( !isset( $sortOrder ) ) {
 ?>
 <div class="content-header clearfix">
 	<div class="header-actions"> 
-		<?= Html::a( 'Add Field', [ "/cmgforms/form/field/create?formid=$formId" ], [ 'class' => 'btn' ] ) ?>				
+		<?= Html::a( 'Add Field', [ "$controllerName/create?formid=$formId" ], [ 'class' => 'btn' ] ) ?>				
 	</div>
 	<div class="header-search">
 		<input type="text" name="search" id="search-terms" value="<?php if( isset( $searchTerms ) ) echo $searchTerms;?>">
@@ -64,15 +66,15 @@ if( !isset( $sortOrder ) ) {
 					foreach( $models as $formField ) {
 
 						$id 		= $formField->id;
-						$editUrl	= Html::a( $formField->name, [ "/cmgforms/form/field/update?id=$id" ] );
+						$editUrl	= Html::a( $formField->name, [ "$controllerName/update?id=$id" ] );
 				?>
 					<tr>
 						<td><?= $editUrl ?></td>
 						<td><?= $formField->getTypeStr() ?></td>
 						<td><?= $formField->validators ?></td>
 						<td>
-							<span class="wrap-icon-action" title="Update Form"><?= Html::a( "", ["/cmgforms/form/field/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
-							<span class="wrap-icon-action" title="Delete Form"><?= Html::a( "", ["/cmgforms/form/field/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
+							<span class="wrap-icon-action" title="Update Form"><?= Html::a( "", ["$controllerName/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
+							<span class="wrap-icon-action" title="Delete Form"><?= Html::a( "", ["$controllerName/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

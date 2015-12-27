@@ -75,7 +75,8 @@ if( !isset( $sortOrder ) ) {
 			<tbody>
 				<?php
 
-					$slugBase	= $siteUrl;
+					$slugBase		= $siteUrl;
+					$controllerName	= Yii::$app->controller->id;
 
 					foreach( $models as $form ) {
 
@@ -92,8 +93,8 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $form->createdAt ?></td>
 						<td><?= $form->modifiedAt ?></td>
 						<td>
-							<span class="wrap-icon-action" title="View Submits"><?= Html::a( "", ["form/submit/all?formid=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
-							<span class="wrap-icon-action" title="View Fields"><?= Html::a( "", ["form/field/all?formid=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
+							<span class="wrap-icon-action" title="View Submits"><?= Html::a( "", ["$controllerName/submit/all?formid=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
+							<span class="wrap-icon-action" title="View Fields"><?= Html::a( "", ["$controllerName/field/all?formid=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
 							<span class="wrap-icon-action" title="Update Form"><?= Html::a( "", ["update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
 							<span class="wrap-icon-action" title="Delete Form"><?= Html::a( "", ["delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
 						</td>

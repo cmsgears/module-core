@@ -5,6 +5,7 @@ namespace cmsgears\core\admin\controllers\base\form;
 use \Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -21,6 +22,8 @@ class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+		
+		$this->returnUrl	= Url::previous( 'fields' );
 	}
 
 	// Instance Methods --------------------------------------------

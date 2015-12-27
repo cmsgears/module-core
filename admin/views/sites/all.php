@@ -72,7 +72,7 @@ if( !isset( $sortOrder ) ) {
 						$id = $site->id;
 				?>
 					<tr>
-						<td><?= CodeGenUtil::getImageThumbTag( $site->avatar, [ 'class' => 'avatar', 'image' => 'avatar' ] ) ?></td>
+						<td><?= CodeGenUtil::getImageThumbTag( $site->avatar, [ 'class' => 'avatar', 'image' => 'avatar.png' ] ) ?></td>
 						<td><?= $site->name ?></td>
 						<td><?= $site->order ?></td>
 						<td>

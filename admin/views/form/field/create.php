@@ -7,8 +7,10 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Form Field';
 
 // Sidebar
-$this->params['sidebar-parent'] = 'sidebar-form';
-$this->params['sidebar-child'] 	= 'form';
+$sidebar						= $this->context->sidebar;
+$returnUrl						= $this->context->returnUrl;
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -24,7 +26,7 @@ $this->params['sidebar-child'] 	= 'form';
 
 		<div class="box-filler"></div>
 
-		<?=Html::a( 'Cancel', [ "/cmgforms/form/field/all?formid=$formId" ], ['class' => 'btn' ] );?>
+		<?=Html::a( 'Cancel', $returnUrl, ['class' => 'btn' ] );?>
 		<input type="submit" value="Create" />
 
 		<?php ActiveForm::end(); ?>

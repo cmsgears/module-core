@@ -129,12 +129,6 @@ class CodeGenUtil {
 
 		return self::generateSelectOptions( $data, $selected, "id", "name" );
 	}
-	
-	public static function generateListItemsIdName( $data ) {
-
-		return self::generateListItems( $data, "id", "name" );
-	}
-	 
 
 	// Select for Option Table - By Name and Value 
 	public static function generateSelectOptionsNameValue( $data, $selected = null ) {
@@ -211,17 +205,22 @@ class CodeGenUtil {
 
 		return $options;
 	}
-	
+
+	public static function generateListItemsIdName( $data ) {
+
+		return self::generateListItems( $data, "id", "name" );
+	}
+
 	public static function generateListItems( $data, $key1, $key2 ) {
-		
+
 		$listItems	= "";
-		
-		if( isset( $data ) ) { 
+
+		if( isset( $data ) ) {
 
 			foreach ( $data as $key => $value ) {
-					
+
 				$val 	= $value[ $key1 ];
-				$item = $value[ $key2 ];				
+				$item 	= $value[ $key2 ];				
 
 				$listItems .= "<li data-value='$val'>$item</li>";			 
 			}
@@ -233,6 +232,7 @@ class CodeGenUtil {
 	// Return Image Tag
 	public static function getImageThumbTag( $image, $options = [] ) {
 
+		// Use Image from DB
 		if( isset( $image ) ) {
 
 			$thumbUrl = $image->getThumbUrl();
@@ -250,22 +250,24 @@ class CodeGenUtil {
 		}
 		else {
 
+			// Use Image from web root directory
 			if( isset( $options[ 'image' ] ) ) {
 
 				$images = Yii::getAlias( '@images' );
+				$img	= $options[ 'image' ];
 
 				if( isset( $options[ 'class' ] ) ) {
 
 					$class 	= $options[ 'class' ];
-					$img	= $options[ 'image' ];
 
-					return "<img class='$class' src='$images/$img.png'>";
+					return "<img class='$class' src='$images/$img'>";
 				}
 				else {
 
-					return "<img src='$images/$image.png'>";
+					return "<img src='$images/$img'>";
 				}
 			}
+			// Use icon
 			else if( isset( $options[ 'icon' ] ) ) {
 
 				$icon = $options[ 'icon' ];
@@ -306,10 +308,10 @@ class CodeGenUtil {
 
 			$summary	= $params[ 'summary' ];
 			$seoH1		= "<h1 class='hidden'>$summary</h1>";
-			
+
 			return $seoH1;
 		}
-		
+
 		return null;
 	}
 
@@ -350,7 +352,7 @@ class CodeGenUtil {
 
 		$content	= ob_get_clean();
 
-		return $content; 
+		return $content;
 	}
 }
 

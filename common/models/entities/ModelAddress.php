@@ -16,6 +16,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $parentType
  * @property integer $type
  * @property short $order
+ * @property short $active
  */
 class ModelAddress extends CmgModel {
 
@@ -38,7 +39,7 @@ class ModelAddress extends CmgModel {
 
         return [
             [ [ 'addressId', 'parentId', 'parentType' ], 'required' ],
-            [ [ 'id' ], 'safe' ],
+            [ [ 'id', 'active' ], 'safe' ],
             [ [ 'addressId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'parentType', 'string', 'min' => 1, 'max' => 100 ],
             [ [ 'type', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ]
@@ -55,7 +56,8 @@ class ModelAddress extends CmgModel {
 			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
 			'addressId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ADDRESS ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ADDRESS_TYPE ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
+			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
 		];
 	}
 
@@ -85,7 +87,12 @@ class ModelAddress extends CmgModel {
 	 */
 	public static function findByType( $parentId, $parentType, $type ) {
 
-		return self::find()->where( 'parentId=:id AND parentType=:ptype AND type=:type', [ ':id' => $parentId, ':ptype' => $parentType, ':type' => $type ] )->one();
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] )->one();
+	}
+
+	public static function findByAddressId( $parentId, $parentType, $addressId ) {
+
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND addressId=:aid', [ ':pid' => $parentId, ':ptype' => $parentType, ':aid' => $addressId ] )->one(); 
 	}
 
 	// Delete ----

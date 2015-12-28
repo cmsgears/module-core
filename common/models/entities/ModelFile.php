@@ -14,7 +14,8 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property integer $fileId
  * @property integer $parentId
  * @property string $parentType
- * @property short $order 
+ * @property short $order
+ * @property short $active
  */
 class ModelFile extends CmgModel {
 
@@ -37,7 +38,7 @@ class ModelFile extends CmgModel {
 
         return [
             [ [ 'fileId', 'parentId', 'parentType' ], 'required' ],
-            [ [ 'id', 'order' ], 'safe' ],
+            [ [ 'id', 'active' ], 'safe' ],
             [ [ 'fileId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'parentType', 'string', 'min' => 1, 'max' => 100 ],
             [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ]
@@ -53,7 +54,8 @@ class ModelFile extends CmgModel {
 			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
 			'fileId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FILE ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
+			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
 		];
 	}
 
@@ -74,7 +76,12 @@ class ModelFile extends CmgModel {
 	// ModelFile -------------------------
 	
 	// Read ------
-	
+
+	public static function findByFileId( $parentId, $parentType, $fileId ) {
+
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND fileId=:fid', [ ':pid' => $parentId, ':ptype' => $parentType, ':fid' => $fileId ] )->one(); 
+	}
+
 	// Delete ----
 
 	/**

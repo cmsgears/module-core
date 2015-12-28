@@ -185,21 +185,21 @@ class Category extends CmgEntity {
 	// Read ----
 
 	/**
-	 * @return Category - by name
-	 */
-	public static function findByName( $name ) {
-
-		return self::find()->where( 'name=:name', [ ':name' => $name ] )->one();
-	}
-
-	/**
 	 * @return Category - by type
 	 */
 	public static function findByType( $type ) {
 
 		return self::find()->where( 'type=:type', [ ':type' => $type ] )->all();
 	}
-	
+
+	/**
+	 * @return Category - by name
+	 */
+	public static function findByName( $name ) {
+
+		return self::find()->where( 'name=:name', [ ':name' => $name ] )->all();
+	}
+
 	public static function findByParentId( $id ) {
 
 		return self::find()->where( 'parentId=:id', [ ':id' => $id ] )->all();

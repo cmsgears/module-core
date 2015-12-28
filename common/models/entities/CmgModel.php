@@ -3,21 +3,47 @@ namespace cmsgears\core\common\models\entities;
 
 class CmgModel extends CmgEntity {
 
+	// Read ----
+
 	/**
-	 * @return array - categories by given parent id and type.
+	 * @return array - model by given parent type.
+	 */
+	public static function findByParentType( $parentType ) {
+
+		return self::find()->where( 'parentType=:id', [ ':id' => $parentType ] )->all();
+	}
+
+	/**
+	 * @return array - model by given parent id.
+	 */
+	public static function findByParentId( $parentId ) {
+
+		return self::find()->where( 'parentId=:id', [ ':id' => $parentId ] )->all();
+	}
+
+	/**
+	 * @return array - model by given parent id and type.
 	 */
 	public static function findByParentIdType( $parentId, $parentType ) {
 
-		return self::find()->where( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] )->all();
+		return self::find()->where( 'parentId=:pid AND parentType=:type', [ ':pid' => $parentId, ':type' => $parentType ] )->all();
 	}
 
 	// Delete ----
 
 	/**
-	 * Delete categories by given parent id and type.
+	 * Delete all entries related to a parent
+	 */
+	public static function deleteByParentId( $parentId ) {
+
+		self::deleteAll( 'parentId=:id', [ ':id' => $parentId ] );
+	}
+
+	/**
+	 * Delete all entries by given parent id and type.
 	 */
 	public static function deleteByParentIdType( $parentId, $parentType ) {
 
-		self::deleteAll( 'parentId=:id AND parentType=:type', [ ':id' => $parentId, ':type' => $parentType ] );
+		self::deleteAll( 'parentId=:pid AND parentType=:type', [ ':pid' => $parentId, ':type' => $parentType ] );
 	}
 }

@@ -6,6 +6,8 @@ use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\Option;
 use cmsgears\core\common\models\entities\Category;
@@ -16,14 +18,15 @@ use cmsgears\core\common\models\entities\Category;
 class OptionService extends Service {
 	
 	// Static Methods ----------------------------------------------
-	
+
 	// Create --------------
-	
+
 	public static function create( $model ) {
-		
+
 		$model->value	= $model->name;
+
 		$model->save();
-		
+
 		return $model;
 	}
 
@@ -51,9 +54,9 @@ class OptionService extends Service {
 	 * @param integer $categoryName - category name
 	 * @return Option
 	 */
-	public static function findByCategoryName( $categoryName ) {
+	public static function findByCategoryName( $categoryName, $categoryType = CoreGlobal::TYPE_COMBO ) {
 
-		return Option::findByCategoryName( $categoryName );
+		return Option::findByCategoryName( $categoryName, $categoryType );
 	}
 
 	/**
@@ -71,9 +74,9 @@ class OptionService extends Service {
 	 * @param integer $categoryName - category name
 	 * @return Option
 	 */
-	public static function findByNameCategoryName( $name, $categoryName ) {
+	public static function findByNameCategoryName( $name, $categoryName, $categoryType = CoreGlobal::TYPE_COMBO ) {
 
-		return Option::findByNameCategoryName( $name, $categoryName );
+		return Option::findByNameCategoryName( $name, $categoryName, $categoryType );
 	}
 
 	/**
@@ -81,9 +84,9 @@ class OptionService extends Service {
 	 * @param integer $categoryName - category name
 	 * @return Option
 	 */
-	public static function findByValueCategoryName( $value, $categoryName ) {
+	public static function findByValueCategoryName( $value, $categoryName, $categoryType = CoreGlobal::TYPE_COMBO ) {
 
-		return Option::findByValueCategoryName( $value, $categoryName );
+		return Option::findByValueCategoryName( $value, $categoryName, $categoryType );
 	}
 
 	/**
@@ -99,9 +102,9 @@ class OptionService extends Service {
 	 * @param integer $categoryName - category name
 	 * @return array - an array having id as key and name as value for given category name.
 	 */
-	public static function getIdNameMapByCategoryName( $categoryName, $prepend = [], $append = [] ) {
+	public static function getIdNameMapByCategoryName( $categoryName, $prepend = [], $append = [], $type = CoreGlobal::TYPE_COMBO ) {
 
-		$category	= Category::findByName( $categoryName );
+		$category	= Category::findByTypeName( $type, $categoryName );
 
 		return self::findMap( 'id', 'name', CoreTables::TABLE_OPTION, [ 'conditions' => [ 'categoryId' => $category->id ], 'asArray' => false, 'prepend' => $prepend, 'append' => $append ] );
 	}
@@ -128,9 +131,9 @@ class OptionService extends Service {
 	 * @param integer $categoryName - category name
 	 * @return array - an array having value as key and name as value for given category name.
 	 */
-	public static function getValueNameMapByCategoryName( $categoryName ) {
+	public static function getValueNameMapByCategoryName( $categoryName, $type = CoreGlobal::TYPE_COMBO ) {
 
-		$category	= Category::findByName( $categoryName );
+		$category	= Category::findByTypeName( $type, $categoryName );
 		$options	= $category->options;
 		$optionsMap	= array();
 

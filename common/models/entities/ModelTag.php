@@ -15,6 +15,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property integer $parentId
  * @property string $parentType
  * @property short $order
+ * @property short $active
  */
 class ModelTag extends CmgModel {
 
@@ -34,7 +35,7 @@ class ModelTag extends CmgModel {
 
         return [
             [ [ 'tagId', 'parentId', 'parentType' ], 'required' ],
-            [ [ 'id' ], 'safe' ],
+            [ [ 'id', 'active' ], 'safe' ],
             [ [ 'tagId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'parentType', 'string', 'min' => 1, 'max' => 100 ],
             [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ]
@@ -50,7 +51,8 @@ class ModelTag extends CmgModel {
 			'tagId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TAG ),
 			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
+			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
 		];
 	}
 
@@ -71,15 +73,20 @@ class ModelTag extends CmgModel {
 	// ModelTag --------------------------
 
 	// Read ----
-	
-	public static function findExisting( $tagId, $parentId, $parentType ) {
-		
-		return self::find()->where( 'tagId=:id AND parentId=:parent AND parentType=:type', [ ':id' => $tagId, ':parent' => $parentId, ':type' => $parentType ] )->one(); 
+
+	public static function findByTagId( $parentId, $parentType, $tagId ) {
+
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND tagId=:tid', [ ':pid' => $parentId, ':ptype' => $parentType, ':tid' => $tagId ] )->one(); 
 	}
-	
-	public static function findByParentIdType( $parentId, $parentType ) {
-		
-		return self::find()->where( 'parentId=:parent AND parentType=:type', [ ':parent' => $parentId, ':type' => $parentType ] )->all();
+
+	// Delete ----
+
+	/**
+	 * Delete all entries related to a tag
+	 */
+	public static function deleteByTagId( $tagId ) {
+
+		self::deleteAll( 'tagId=:tid', [ ':tid' => $tagId ] );
 	}
 }
 

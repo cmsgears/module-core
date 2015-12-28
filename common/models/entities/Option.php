@@ -144,11 +144,13 @@ class Option extends CmgEntity {
 	/**
 	 * @return Option - by category name
 	 */
-	public static function findByCategoryName( $categoryName ) {
-		
+	public static function findByCategoryName( $categoryName, $categoryType ) {
+
 		$categoryTable = CoreTables::TABLE_CATEGORY;
 
-		return self::find()->joinWith( 'category' )->where( "$categoryTable.name=:cname", [ ':cname' => $categoryName ] )->all();
+		return self::find()->joinWith( 'category' )->where( "$categoryTable.name=:cname AND $categoryTable.type=:ctype" ) 
+							->addParams( [ ':cname' => $categoryName, ':ctype' => $categoryType ] )
+							->all();
 	}
 
 	/**
@@ -184,26 +186,26 @@ class Option extends CmgEntity {
 	/**
 	 * @return Option - by name and category name
 	 */
-	public static function findByNameCategoryName( $name, $categoryName ) {
+	public static function findByNameCategoryName( $name, $categoryName, $categoryType ) {
 		
 		$categoryTable 	= CoreTables::TABLE_CATEGORY;
 		$optionTable 	= CoreTables::TABLE_OPTION;
 
-		return self::findWithAlias()->joinWith( 'category' )->where( "$optionTable.name=:name AND $categoryTable.name=:cname" )
-							->addParams( [ ':name' => $name, ':cname' => $categoryName ] )
+		return self::findWithAlias()->joinWith( 'category' )->where( "$optionTable.name=:name AND $categoryTable.name=:cname AND $categoryTable.type=:ctype" )
+							->addParams( [ ':name' => $name, ':cname' => $categoryName, ':ctype' => $categoryType ] )
 							->one();
 	}
 
 	/**
 	 * @return Option - by value and category id
 	 */
-	public static function findByValueCategoryName( $value, $categoryName ) {
+	public static function findByValueCategoryName( $value, $categoryName, $categoryType ) {
 
 		$categoryTable 	= CoreTables::TABLE_CATEGORY;
 		$optionTable 	= CoreTables::TABLE_OPTION;
 
-		return self::findWithAlias()->joinWith( 'category' )->where( "$optionTable.value=:value AND $categoryTable.name=:cname" )
-							->addParams( [ ':value' => $value, ':cname' => $categoryName ] )
+		return self::findWithAlias()->joinWith( 'category' )->where( "$optionTable.value=:value AND $categoryTable.name=:cname AND $categoryTable.type=:ctype" )
+							->addParams( [ ':value' => $value, ':cname' => $categoryName, ':ctype' => $categoryType ] )
 							->one();
 	}
 	

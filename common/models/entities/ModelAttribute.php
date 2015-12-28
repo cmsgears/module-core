@@ -136,8 +136,7 @@ class ModelAttribute extends CmgModel {
 	 */
 	public static function findByType( $parentId, $parentType, $type ) {
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type', 
-				[ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] )->all();
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] )->all();
 	}
 
 	/**
@@ -148,8 +147,7 @@ class ModelAttribute extends CmgModel {
 	 */
 	public static function findByName( $parentId, $parentType, $name ) {
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name', 
-				[ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name ] )->one();
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name', [ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name ] )->one();
 	}
 
 	/**

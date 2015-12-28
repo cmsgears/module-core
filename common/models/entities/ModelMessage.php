@@ -132,8 +132,8 @@ class ModelMessage extends CmgModel {
 	 */
 	public static function findByNameLocaleId( $parentId, $parentType, $name, $localeId ) {
 
-		return self::find()->where( 'localeId=:id AND name=:name AND parentId=:pid AND parentType=:type' )
-							->addParams( [ ':id' => $localeId, ':name' => $name, ':pid' => $parentId, ':type' => $type ] )
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name AND localeId=:lid' )
+							->addParams( [ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name, ':lid' => $localeId ] )
 							->one();
 	}
 
@@ -152,11 +152,11 @@ class ModelMessage extends CmgModel {
 	// Delete ----
 
 	/**
-	 * Delete all entries related to a file
+	 * Delete all entries related to a locale for a parent
 	 */
-	public static function deleteByLocaleId( $localeId ) {
+	public static function deleteByLocaleId( $parentId, $parentType, $localeId ) {
 
-		self::deleteAll( 'localeId=:id', [ ':id' => $localeId ] );
+		self::deleteAll( 'parentId=:pid AND parentType=:type AND localeId=:id', [ ':id' => $localeId ] );
 	}
 }
 

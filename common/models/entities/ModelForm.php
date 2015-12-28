@@ -15,6 +15,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property integer $parentId
  * @property string $parentType
  * @property short $order
+ * @property short $active
  */
 class ModelForm extends CmgModel {
 
@@ -34,7 +35,7 @@ class ModelForm extends CmgModel {
 
         return [
             [ [ 'formId', 'parentId', 'parentType' ], 'required' ],
-            [ [ 'id' ], 'safe' ],
+            [ [ 'id', 'active' ], 'safe' ],
             [ [ 'formId' ], 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'parentType', 'string', 'min' => 1, 'max' => 100 ],
@@ -51,7 +52,8 @@ class ModelForm extends CmgModel {
 			'formId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FORM ),
 			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
+			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
 		];
 	}
 
@@ -72,6 +74,21 @@ class ModelForm extends CmgModel {
 	// ModelForm -------------------------
 
 	// Read ----
+
+	public static function findByFormId( $parentId, $parentType, $formId ) {
+
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND formId=:fid', [ ':pid' => $parentId, ':ptype' => $parentType, ':fid' => $formId ] )->one(); 
+	}
+
+	// Delete ----
+
+	/**
+	 * Delete all entries related to a form
+	 */
+	public static function deleteByFormId( $formId ) {
+
+		self::deleteAll( 'formId=:fid', [ ':fid' => $formId ] );
+	}
 }
 
 ?>

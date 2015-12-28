@@ -8,14 +8,14 @@ use \Yii;
 use cmsgears\core\common\models\entities\ModelCategory;
 
 /**
- * The class ModelAttributeService is base class to perform database activities for ModelAttribute Entity.
+ * The class ModelCategoryService is base class to perform database activities for ModelCategory Entity.
  */
 class ModelCategoryService extends Service {
 
 	// Static Methods ----------------------------------------------
 
 	// Read ----------------
-	
+
 	public static function findByParentType( $parentType ) {
 		
 		return ModelCategory::findByParentType( $parentType );

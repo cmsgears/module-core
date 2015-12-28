@@ -15,6 +15,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property integer $parentId
  * @property string $parentType
  * @property short $order
+ * @property short $active
  */
 class ModelCategory extends CmgModel {
 
@@ -37,7 +38,7 @@ class ModelCategory extends CmgModel {
 
         return [
             [ [ 'categoryId', 'parentId', 'parentType' ], 'required' ],
-            [ [ 'id' ], 'safe' ],
+            [ [ 'id', 'active' ], 'safe' ],
             [ [ 'categoryId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'parentType' ], 'string', 'min' => 1, 'max' => 100 ],
@@ -54,7 +55,8 @@ class ModelCategory extends CmgModel {
 			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
 			'categoryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CATEGORY ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER )
+			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
 		];
 	}
 
@@ -75,16 +77,12 @@ class ModelCategory extends CmgModel {
 	// ModelCategory ---------------------
 
 	// Read ------
-	public static function findByParentType( $parentType ) {
-		
-		return self::find()->where( 'parentType=:id', [ ':id' => $parentType ] )->all();
-	}	
-	
-	public static function findByParentId( $parentId ) {
-		
-		return self::find()->where( 'parentId=:id', [ ':id' => $parentId ] )->all();
+
+	public static function findByCategoryId( $parentId, $parentType, $categoryId ) {
+
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND categoryId=:cid', [ ':pid' => $parentId, ':ptype' => $parentType, ':cid' => $categoryId ] )->one(); 
 	}
-		
+
 	// Delete ----
 
 	/**
@@ -93,11 +91,6 @@ class ModelCategory extends CmgModel {
 	public static function deleteByCategoryId( $categoryId ) {
 
 		self::deleteAll( 'categoryId=:id', [ ':id' => $categoryId ] );
-	}
-	
-	public static function deleteByParentId( $parentId ) {
-
-		self::deleteAll( 'parentId=:id', [ ':id' => $parentId ] );
 	}
 }
 

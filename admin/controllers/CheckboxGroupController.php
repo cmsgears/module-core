@@ -15,7 +15,7 @@ use cmsgears\core\common\models\entities\Category;
 
 use cmsgears\core\admin\services\CategoryService; 
 
-class DropdownController extends \cmsgears\core\admin\controllers\base\CategoryController {
+class CheckboxGroupController extends \cmsgears\core\admin\controllers\base\CategoryController {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -23,7 +23,7 @@ class DropdownController extends \cmsgears\core\admin\controllers\base\CategoryC
 
         parent::__construct( $id, $module, $config );
 		
-		$this->sidebar 	= [ 'parent' => 'sidebar-core', 'child' => 'dropdown' ];
+		$this->sidebar 	= [ 'parent' => 'sidebar-core', 'child' => 'checkbox-group' ];
 	}
 
 	// Instance Methods --------------------------------------------
@@ -50,24 +50,24 @@ class DropdownController extends \cmsgears\core\admin\controllers\base\CategoryC
 
 	public function actionAll( $type = null ) {
 
-		Url::remember( [ 'dropdown/all' ], 'categories' );
+		Url::remember( [ 'checkbox-group/all' ], 'categories' );
 
-		return parent::actionAll( CoreGlobal::TYPE_COMBO );
+		return parent::actionAll( CoreGlobal::TYPE_CHECKBOX_GROUP, 'Checkbox Group' );
 	}
 
 	public function actionCreate() {
 
-		return parent::actionCreate( CoreGlobal::TYPE_COMBO );
+		return parent::actionCreate( CoreGlobal::TYPE_CHECKBOX_GROUP, 'Checkbox Group' );
 	}
 
 	public function actionUpdate( $id ) {
 
-		return parent::actionUpdate( $id, CoreGlobal::TYPE_COMBO );
+		return parent::actionUpdate( $id, CoreGlobal::TYPE_CHECKBOX_GROUP, 'Checkbox Group' );
 	}
 	
 	public function actionDelete( $id ) {
 
-		return parent::actionDelete( $id, CoreGlobal::TYPE_COMBO );
+		return parent::actionDelete( $id, CoreGlobal::TYPE_CHECKBOX_GROUP, 'Checkbox Group' );
 	}
 }
 

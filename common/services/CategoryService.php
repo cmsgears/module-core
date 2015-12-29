@@ -40,6 +40,11 @@ class CategoryService extends Service {
 		return Category::findByName( $name );
 	}
 
+	public static function findBySlug( $slug ) {
+
+		return Category::findBySlug( $slug );
+	}
+
 	/**
 	 * @param string $type
 	 * @return Category
@@ -93,7 +98,7 @@ class CategoryService extends Service {
 		$categoryToUpdate	= self::findById( $category->id );
 
 		// Copy Attributes
-		$categoryToUpdate->copyForUpdateFrom( $category, [ 'avatarId', 'parentId', 'name', 'description', 'type', 'icon', 'featured', 'options' ] );
+		$categoryToUpdate->copyForUpdateFrom( $category, [ 'avatarId', 'parentId', 'name', 'description', 'type', 'icon', 'featured', 'htmlOptions' ] );
 
 		if( isset( $avatar ) ) {
 

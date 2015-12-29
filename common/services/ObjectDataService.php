@@ -139,7 +139,7 @@ class ObjectDataService extends Service {
 
 		$objectToUpdate	= self::findById( $object->id );
 
-		$objectToUpdate->copyForUpdateFrom( $object, [ 'templateId', 'name', 'description', 'type', 'active', 'options', 'data' ] );
+		$objectToUpdate->copyForUpdateFrom( $object, [ 'templateId', 'name', 'description', 'type', 'active', 'htmlOptions', 'data' ] );
 
 		if( isset( $data ) ) {
 

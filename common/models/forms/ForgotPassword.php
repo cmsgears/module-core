@@ -23,13 +23,6 @@ class ForgotPassword extends Model {
 	// yii\base\Model
 
 	public function rules() {
-		
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'email' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
 
         $rules = [
 			[ [ 'email' ], 'required' ],
@@ -37,6 +30,8 @@ class ForgotPassword extends Model {
 		];
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'email' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}

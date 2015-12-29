@@ -5,10 +5,11 @@ use yii\helpers\Html;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Update Option';
 
-// Sidebar
-$this->params['sidebar-parent'] = 'sidebar-core';
-$this->params['sidebar-child'] 	= 'dropdown';
- 
+// Sidebar and Return URL
+$sidebar						= $this->context->sidebar;
+$returnUrl						= $this->context->returnUrl;
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ]; 
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -17,7 +18,8 @@ $this->params['sidebar-child'] 	= 'dropdown';
 
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'value' ) ?>
-    	<?= $form->field( $model, 'icon' ) ?>    
+    	<?= $form->field( $model, 'icon' ) ?>
+    	<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 		<div class="box-filler"></div>
 		
 		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>

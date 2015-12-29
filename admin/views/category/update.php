@@ -6,17 +6,8 @@ use yii\helpers\ArrayHelper;
 use cmsgears\widgets\cleditor\ClEditor;
 use cmsgears\files\widgets\AvatarUploader;
 
-if( $dropDown ) {
-	
-	$dropDown = 'Dropdown';
-}
-else {
-	
-	$dropDown = 'Category';
-}
-
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Update ' . $dropDown;
+$this->title 	= $coreProperties->getSiteTitle() . ' | Update ' . $title;
 
 // Sidebar and Return URL
 $sidebar						= $this->context->sidebar;
@@ -28,15 +19,16 @@ ClEditor::widget( [ 'selector' => '.content-editor' ] );
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
-		<h2>Update <?= $dropDown ?></h2>
+		<h2>Update <?= $title ?></h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-dropdown-create', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>  
     	<?= $form->field( $model, 'description' ) ?>  
-    	<?= $form->field( $model, 'icon' ) ?>  
+    	<?= $form->field( $model, 'icon' ) ?>
+    	<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 		<?= $form->field( $model, 'featured' )->checkbox() ?>
 
-    	<h4><?= $dropDown ?> Avatar</h4>
+    	<h4><?= $title ?> Avatar</h4>
   		<?=AvatarUploader::widget( 
 				[ 'options' => [ 'id' => 'avatar-dropdown', 'class' => 'file-uploader' ], 
 				'model' => $avatar, 'modelClass' => 'Avatar',  

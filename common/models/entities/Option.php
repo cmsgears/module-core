@@ -17,7 +17,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $name
  * @property string $value
  * @property string $icon
- * @property string $options
+ * @property string $htmlOptions
  * @property string $data
  */
 class Option extends CmgEntity {
@@ -42,7 +42,7 @@ class Option extends CmgEntity {
 		// model rules
         $rules = [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'categoryId', 'value', 'options', 'data' ], 'safe' ],
+            [ [ 'id', 'categoryId', 'value', 'htmlOptions', 'data' ], 'safe' ],
             [ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'alphanumhyphenspace' ],
@@ -71,7 +71,7 @@ class Option extends CmgEntity {
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
 			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
+			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}

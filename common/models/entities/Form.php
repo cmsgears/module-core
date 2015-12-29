@@ -14,7 +14,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
-use cmsgears\core\common\models\entities\Template;
 use cmsgears\core\common\models\traits\AttributeTrait;
 
 /**
@@ -37,10 +36,10 @@ use cmsgears\core\common\models\traits\AttributeTrait;
  * @property boolean $adminMail
  * @property datetime $createdAt
  * @property datetime $modifiedAt
- * @property string $options
+ * @property string $htmlOptions
  * @property string $data 
  */
-class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
+class Form extends NamedCmgEntity {
 
 	const VISIBILITY_PUBLIC		=  0;
 	const VISIBILITY_PRIVATE	= 10;
@@ -171,7 +170,7 @@ class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 		// model rules
         $rules = [
             [ [ 'name', 'siteId', 'captcha', 'visibility', 'active' ], 'required' ],
-			[ [ 'id', 'description', 'successMessage', 'options', 'data' ], 'safe' ],
+			[ [ 'id', 'description', 'successMessage', 'htmlOptions', 'data' ], 'safe' ],
 			[ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
@@ -185,7 +184,7 @@ class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 		// trim if configured
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'description', 'successMessage', 'options' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'description', 'successMessage', 'htmlOptions' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -209,7 +208,7 @@ class Form extends \cmsgears\core\common\models\entities\NamedCmgEntity {
 			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'userMail' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MAIL_USER ),
 			'adminMail' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MAIL_ADMIN ),
-			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS ),
+			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_META )
 		];
 	}

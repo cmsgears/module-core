@@ -22,7 +22,7 @@ $this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 		<?= $form->field( $model, 'type' )->dropDownList( $typeMap, [ 'disabled' => true ] ) ?>
 		<?= $form->field( $model, 'compress' )->checkbox( [ 'disabled' => true ] ) ?>
 		<?= $form->field( $model, 'validators' )->textInput( [ 'readonly' => true ] ) ?>
-		<?= $form->field( $model, 'options' )->textarea( [ 'readonly' => true ] ) ?>
+		<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => true ] ) ?>
 
 		<div class="box-filler"></div>
 

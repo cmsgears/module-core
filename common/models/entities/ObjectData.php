@@ -32,7 +32,7 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property string $active
  * @property datetime $createdAt
  * @property datetime $modifiedAt
- * @property string $options
+ * @property string $htmlOptions
  * @property string $data
  */
 class ObjectData extends CmgEntity {
@@ -118,7 +118,7 @@ class ObjectData extends CmgEntity {
 		// model rules
         $rules = [
             [ [ 'name', 'siteId' ], 'required' ],
-            [ [ 'id', 'slug', 'templateId', 'description', 'active', 'options', 'data' ], 'safe' ],
+            [ [ 'id', 'slug', 'templateId', 'description', 'active', 'htmlOptions', 'data' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
@@ -151,7 +151,7 @@ class ObjectData extends CmgEntity {
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
-			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS ),
+			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}

@@ -9,16 +9,19 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | All Options';
+$controllerName	= Yii::$app->controller->id;
 
-// Sidebars
-$this->params['sidebar-parent'] = 'sidebar-core';
-$this->params['sidebar-child'] 	= 'dropdown';
+// Sidebar and Return URL
+$sidebar						= $this->context->sidebar;
+$returnUrl						= $this->context->returnUrl;
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 
 // Searching
-$searchTerms	= Yii::$app->request->getQueryParam("search");
+$searchTerms	= Yii::$app->request->getQueryParam( 'search' );
 
 // Sorting
-$sortOrder		= Yii::$app->request->getQueryParam("sort");
+$sortOrder		= Yii::$app->request->getQueryParam( 'sort' );
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -31,7 +34,7 @@ if( !isset( $sortOrder ) ) {
 ?>
 <div class="content-header clearfix">
 	<div class="header-actions"> 
-		<?= Html::a( "Add Option", ["dropdown/option/create?id=$category->id"], ['class'=>'btn'] )  ?>				
+		<?= Html::a( "Add Option", [ "$controllerName/create?id=$category->id" ], [ 'class' => 'btn' ] )  ?>				
 	</div>
 	<div class="header-search">
 		<input type="text" name="search" id="search-terms" value="<?php if( isset($searchTerms) ) echo $searchTerms;?>">
@@ -65,8 +68,8 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $option->value ?></td> 
 						<td> <span class="<?= $option->icon ?>" title="<?= $option->name ?>"></span></td> 
 						<td>
-							<span class="wrap-icon-action" title="Edit Option"><?= Html::a( "", ["dropdown/option/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>								 
-							<span class="wrap-icon-action" title="Delete Option"><?= Html::a( "", ["dropdown/option/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
+							<span class="wrap-icon-action" title="Edit Option"><?= Html::a( "", [ "$controllerName/update?id=$id" ], [ 'class' => 'icon-action icon-action-edit'] )  ?></span>								 
+							<span class="wrap-icon-action" title="Delete Option"><?= Html::a( "", [ "$controllerName/delete?id=$id" ], [ 'class' => 'icon-action icon-action-delete'] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

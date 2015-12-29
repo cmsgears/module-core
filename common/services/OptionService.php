@@ -190,7 +190,7 @@ class OptionService extends Service {
 		$modelToUpdate	= self::findById( $model->id );
 
 		// Copy Attributes
-		$modelToUpdate->copyForUpdateFrom( $model, [ 'categoryId', 'name', 'value', 'icon' ] );
+		$modelToUpdate->copyForUpdateFrom( $model, [ 'categoryId', 'name', 'value', 'icon', 'htmlOptions' ] );
 
 		// Update Option
 		$modelToUpdate->update();

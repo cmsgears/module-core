@@ -25,13 +25,6 @@ class ResetPassword extends Model {
 	// yii\base\Model
 
 	public function rules() {
-		
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'email', 'password', 'password_repeat' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
 
         $rules = [
 			[ [ 'email', 'password', 'password_repeat' ], 'required' ],
@@ -40,6 +33,8 @@ class ResetPassword extends Model {
 		];
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
+
+			$trim[] = [ [ 'email', 'password', 'password_repeat' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}

@@ -22,6 +22,7 @@ class CoreGlobal {
 	const TYPE_DEFAULT			= 'default';
 	const TYPE_SYSTEM			= 'system';
 	const TYPE_COMBO			= 'combo';
+	const TYPE_CHECKBOX_GROUP	= 'checkbox-group';
 	const TYPE_SITE				= 'site';
 	const TYPE_USER				= 'user';
 	const TYPE_GALLERY			= 'gallery';
@@ -173,7 +174,7 @@ class CoreGlobal {
 	const FIELD_DAY_MONTH			= 'Month Day';
 	const FIELD_IP					= 'ipField';
 	const FIELD_DATA				= 'dataField';
-	const FIELD_OPTIONS				= 'optionsField';
+	const FIELD_HTML_OPTIONS		= 'htmlOptionsField';
 	const FIELD_COMPRESS			= 'compressField';
 
 	// Role Fields

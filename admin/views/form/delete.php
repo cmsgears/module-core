@@ -26,7 +26,7 @@ $this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 		<?= $form->field( $model, 'active' )->checkbox( [ 'disabled'=>'true' ] ) ?>
 		<?= $form->field( $model, 'userMail' )->checkbox( [ 'readonly' => true ] ) ?>
 		<?= $form->field( $model, 'adminMail' )->checkbox( [ 'readonly' => true ] ) ?>
-		<?= $form->field( $model, 'options' )->textarea( [ 'readonly' => true ] ) ?>
+		<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => true ] ) ?>
 
 		<div class="box-filler"></div>
 

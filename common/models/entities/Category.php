@@ -22,7 +22,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $type
  * @property string $icon
  * @property string $featured
- * @property string $options
+ * @property string $htmlOptions
  */
 class Category extends CmgEntity {
 
@@ -96,7 +96,7 @@ class Category extends CmgEntity {
 		// model rules
         $rules = [
             [ [ 'name', 'featured' ], 'required' ],
-            [ [ 'id', 'avatarId', 'description', 'options' ], 'safe' ],
+            [ [ 'id', 'avatarId', 'description', 'htmlOptions' ], 'safe' ],
             [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
@@ -131,7 +131,7 @@ class Category extends CmgEntity {
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'featured' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
-			'options' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OPTIONS )
+			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS )
 		];
 	}
 
@@ -198,6 +198,11 @@ class Category extends CmgEntity {
 	public static function findByName( $name ) {
 
 		return self::find()->where( 'name=:name', [ ':name' => $name ] )->all();
+	}
+
+	public static function findBySlug( $slug ) {
+
+		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
 	}
 
 	public static function findByParentId( $id ) {

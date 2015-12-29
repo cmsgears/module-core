@@ -58,7 +58,7 @@ abstract class CategoryController extends Controller {
 
 	// CategoryController -----------------
 
-	public function actionAll( $type = null, $dropDown = false  ) {
+	public function actionAll( $type = null, $title = 'Dropdown' ) {
 
 		$dataProvider = null;
 
@@ -74,11 +74,11 @@ abstract class CategoryController extends Controller {
 	    return $this->render( '@cmsgears/module-core/admin/views/category/all', [
 	    
 			'dataProvider' => $dataProvider,
-    		'dropDown' => $dropDown
+    		'title' => $title
 	    ]);
 	}
 
-	public function actionCreate( $type = null, $dropDown = false ) {
+	public function actionCreate( $type = null, $title = 'Dropdown' ) {
 
 		$model			= new Category();
 		$model->type 	= $type;
@@ -97,11 +97,11 @@ abstract class CategoryController extends Controller {
     	return $this->render( '@cmsgears/module-core/admin/views/category/create', [
     		'model' => $model, 
     		'avatar' => $avatar,
-    		'dropDown' => $dropDown
+    		'title' => $title
     	]);
 	}	
  	
-	public function actionUpdate( $id, $type = null, $dropDown = false  ) {
+	public function actionUpdate( $id, $type = null, $title = 'Dropdown' ) {
 		
 		// Find Model
 		$model	= CategoryService::findById( $id );
@@ -128,7 +128,7 @@ abstract class CategoryController extends Controller {
 	    	return $this->render( '@cmsgears/module-core/admin/views/category/update', [
 	    		'model' => $model, 
 	    		'avatar' => $avatar,
-    			'dropDown' => $dropDown
+    			'title' => $title
 	    	]);
 		}
 		
@@ -136,7 +136,7 @@ abstract class CategoryController extends Controller {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	} 
 	
-	public function actionDelete( $id, $type = null, $dropDown = false  ) {
+	public function actionDelete( $id, $type = null, $title = 'Dropdown' ) {
 
 		// Find Model
 		$model	= CategoryService::findById( $id );
@@ -176,7 +176,7 @@ abstract class CategoryController extends Controller {
 	    	return $this->render( '@cmsgears/module-core/admin/views/category/delete', [
 	    		'model' => $model, 
 	    		'avatar' => $model->avatar,
-    			'dropDown' => $dropDown
+    			'title' => $title
 	    	]);
 		}
 		

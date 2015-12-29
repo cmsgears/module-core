@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\admin\controllers\dropdown;
+namespace cmsgears\core\admin\controllers\checkboxgroup;
 
 // Yii Imports
 use \Yii;  
@@ -15,7 +15,7 @@ class OptionController extends \cmsgears\core\admin\controllers\base\category\Op
 
         parent::__construct( $id, $module, $config );
 		
-		$this->sidebar 	= [ 'parent' => 'sidebar-core', 'child' => 'dropdown' ];
+		$this->sidebar 	= [ 'parent' => 'sidebar-core', 'child' => 'checkbox-group' ];
 	}
 
 	// Instance Methods ------------------
@@ -24,7 +24,7 @@ class OptionController extends \cmsgears\core\admin\controllers\base\category\Op
 
 	public function actionAll( $id ) {
 		 
-		Url::remember( [ "dropdown/option/all?id=$id" ], 'options' );
+		Url::remember( [ "checkboxgroup/option/all?id=$id" ], 'options' );
 		
 		return parent::actionAll( $id );
 	}

@@ -5,10 +5,11 @@ use yii\helpers\Html;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Option';
 
-// Sidebar
-$this->params['sidebar-parent'] = 'sidebar-core';
-$this->params['sidebar-child'] 	= 'dropdown';
- 
+// Sidebar and Return URL
+$sidebar						= $this->context->sidebar;
+$returnUrl						= $this->context->returnUrl;
+$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
+$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
@@ -17,11 +18,11 @@ $this->params['sidebar-child'] 	= 'dropdown';
 
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'value' ) ?>
-    	<?= $form->field( $model, 'icon' ) ?>  
- 		<?php $model->categoryId = $id; ?>
-		<?= $form->field($model, 'categoryId')->hiddenInput()->label(false)?>
+    	<?= $form->field( $model, 'icon' ) ?>
+    	<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
+		<?= $form->field( $model, 'categoryId' )->hiddenInput( [ 'value' => $id ] )->label( false )?>
 		<div class="box-filler"></div>
-		
+
 		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
 		<input type="submit" value="Create" />
 

@@ -129,7 +129,7 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_DAY_MONTH => 'Month Day',
 		CoreGlobal::FIELD_IP => 'IP Address',
 		CoreGlobal::FIELD_DATA => 'Data',
-		CoreGlobal::FIELD_OPTIONS => 'Options',
+		CoreGlobal::FIELD_HTML_OPTIONS => 'HTML Options',
 		CoreGlobal::FIELD_COMPRESS => 'Store Compressed',
 
 		// Role Fields

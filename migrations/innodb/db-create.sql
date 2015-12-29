@@ -61,7 +61,7 @@ CREATE TABLE `cmg_core_object` (
   `active` tinyint(1) NOT NULL DEFAULT 0,
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime DEFAULT NULL,
-  `options` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `htmlOptions` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `data` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_object_1` (`siteId`),
@@ -105,7 +105,7 @@ CREATE TABLE `cmg_core_category` (
   `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `icon` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `featured` tinyint(1) NOT NULL DEFAULT 0,
-  `options` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `htmlOptions` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_category_1` (`avatarId`),
   KEY `fk_category_2` (`parentId`)
@@ -125,7 +125,7 @@ CREATE TABLE `cmg_core_option` (
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `value` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `icon` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `options` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `htmlOptions` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `data` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_option_1` (`categoryId`)
@@ -524,7 +524,7 @@ CREATE TABLE `cmg_core_form` (
   `adminMail` tinyint(1) DEFAULT '0',
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime DEFAULT NULL,
-  `options` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `htmlOptions` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   `data` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_form_1` (`siteId`),
@@ -551,8 +551,8 @@ CREATE TABLE `cmg_core_form_field` (
   `validators` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `order` smallint(6) DEFAULT 0,
   `icon` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `options` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  `data` mediumtext COLLATE utf8_unicode_ci,
+  `htmlOptions` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `data` longtext COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `fk_form_field_1` (`formId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

@@ -34,6 +34,11 @@ class TagService extends Service {
 
 		return Tag::findByName( $name );
 	}
+	
+	public static function findByTypeName( $type, $name ) {
+
+		return Tag::findByTypeName( $type, $name );
+	}
 
 	/**
 	 * @return array - an array having id as key and name as value.
@@ -53,12 +58,17 @@ class TagService extends Service {
 	}
 	
 	// Create ---------------- 
-	 public static function create( $model ) {
-	 	
-		$model->save(); 
+
+	public static function create( $name, $type ) {
+		
+		$model			= new Tag();		
+		$model->name	= $name;
+		$model->type	= $type;
+		
+		$model->save();
 		
 		return $model;
-	 }
+	}
 }
 
 ?>

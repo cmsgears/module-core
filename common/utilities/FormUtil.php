@@ -67,13 +67,13 @@ class FormUtil {
 		foreach ( $fields as $key => $field ) {
 
 			// Convert Json to Array
-			if( isset( $field->htmlOptions ) && strlen( $field->htmlOptions ) > 0 ) {
+			if( isset( $field->options ) && strlen( $field->options ) > 0 ) {
 
-				$field->htmlOptions	= json_decode( $field->htmlOptions, true );
+				$field->options	= json_decode( $field->options, true );
 			}
 			else {
 
-				$field->htmlOptions	= [];
+				$field->options	= [];
 			}
 
 			$fieldsHtml .= Yii::$app->formDesigner->getFieldHtml( $form, $model, $config, $key, $field );
@@ -92,13 +92,13 @@ class FormUtil {
 		foreach ( $fields as $key => $field ) {
 
 			// Convert Json to Array
-			if( isset( $field->htmlOptions ) && strlen( $field->htmlOptions ) > 0 ) {
+			if( isset( $field->options ) && strlen( $field->options ) > 0 ) {
 
-				$field->htmlOptions	= json_decode( $field->htmlOptions, true );
+				$field->options	= json_decode( $field->options, true );
 			}
 			else {
 
-				$field->htmlOptions	= [];
+				$field->options	= [];
 			}
 
 			$fieldsHtml .= Yii::$app->formDesigner->getApixFieldHtml( $form, $config, $field );

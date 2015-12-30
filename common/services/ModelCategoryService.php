@@ -21,9 +21,14 @@ class ModelCategoryService extends Service {
 		return ModelCategory::findByParentType( $parentType );
 	}
 	
-	public static function findByParentId( $parentId ) {
+	public static function findByParentId( $parentId, $flag = 1 ) {
 		
-		return ModelCategory::findByParentId( $parentId );
+		return ModelCategory::findByParentId( $parentId, $flag );
+	}
+	
+	public static function findByCategoryId( $parentId, $parentType, $categoryId ) {
+		
+		return ModelCategory::findByCategoryId( $parentId, $parentType, $categoryId );
 	}
 	 
 	// Create -----------
@@ -39,12 +44,31 @@ class ModelCategoryService extends Service {
 	}
 
 	// Update -----------
+	
+	public static function updateActiveByParentId( $parentId, $flag ) {
+		
+		$model	= self::findByParentId( $parentId );
+		
+		if( isset( $model ) ) {
+			
+			foreach( $model as $modelToUpdate ) {			
+			 
+				self::updateActive( $modelToUpdate, $flag );
+			}	
+		}
+	}
+	
+	public static function updateActive( $model, $flag ) {
+		
+		$model->active	= $flag;
+		$model->update();
+	}
   
 	// Delete -----------
 	
-	public static function deleteByParentId( $parentId ) {
+	public static function deleteByCategoryId( $categoryId ) {
 		
-		return ModelCategory::deleteByParentId( $parentId );
+		return ModelCategory::deleteByCategoryId( $categoryId );
 	}
 }
 

@@ -15,14 +15,14 @@ class ModelTagService extends Service {
 	// Static Methods ----------------------------------------------
 	
 	// Read ----------------	
-	public static function findExisting( $tagId, $parentId, $parentType ) {
+	public static function findByTagId( $parentId, $parentType, $tagId ) {
 		
-		return ModelTag::findExisting( $tagId, $parentId, $parentType );
+		return ModelTag::findByTagId( $parentId, $parentType, $tagId );
 	}
 	
-	public static function findByParentIdType( $parentId, $parentType ) {
+	public static function findByParentIdType( $parentId, $parentType, $flag = 1 ) {
 		
-		return ModelTag::findByParentIdType( $parentId, $parentType );
+		return ModelTag::findByParentIdType( $parentId, $parentType, $flag );
 	}
  
 	// Create ---------------- 
@@ -31,14 +31,41 @@ class ModelTagService extends Service {
 		$model->save(); 	
 	 }
 	 
-	 // Delete ----------------
-	 
+	 // Delete ----------------	 
 	 public static function delete( $model ) {
 	 	
 		$model->delete();
 		
 		return true;
 	 }
+	 
+	 public static function updateActive( $model, $flag ) {
+		
+		$model->active	= $flag;
+		$model->update();
+		
+		return $model;
+	}
+	 
+	public static function update( $parentId, $type, $tagId ) {
+		
+		$existingModelTag	= self::findByTagId( $parentId, $type, $tagId );
+				
+		if( isset( $existingModelTag) && $existingModelTag->active == 0 ) {
+			
+			self::updateActive( $existingModelTag, 1 );
+		}
+		
+		if( !$existingModelTag ) {
+		
+			$modelTag				= new ModelTag();	 
+			$modelTag->tagId		= $tagId;
+			$modelTag->parentId		= $parentId;
+			$modelTag->parentType	= $type;
+						
+			self::create( $modelTag ); 
+		}
+	} 
 }
 
 ?>

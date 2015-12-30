@@ -30,6 +30,11 @@ class ModelAddressService extends Service {
 
 		return ModelAddress::findByType( $parentId, $parentType, $type );
 	}
+	
+	public static function findByParent( $parentId ) {
+		
+		return ModelAddress::findByParent( $parentId );
+	}
 
 	// Data Provider ----
 
@@ -103,6 +108,11 @@ class ModelAddressService extends Service {
 	public static function deleteByParentIdType( $parentId, $parentType ) {
 
 		ModelAddress::deleteByParentIdType( $parentId, $parentType );
+	}
+	
+	public static function delete( $model ) {
+		
+		return $model->delete(); 
 	}
 }
 

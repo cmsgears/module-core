@@ -78,16 +78,21 @@ class ModelTag extends CmgModel {
 
 		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND tagId=:tid', [ ':pid' => $parentId, ':ptype' => $parentType, ':tid' => $tagId ] )->one(); 
 	}
-	
-	public static function findByParentIdType( $parentId, $parentType, $flag ) {
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND active=:flag', [ ':pid' => $parentId, ':ptype' => $parentType, ':flag' => $flag ] )->all(); 
+	public static function findActiveByParentId( $parentId ) {
+
+		return self::find()->where( 'parentId=:pid AND active=1', [ ':pid' => $parentId ] )->all();
+	}
+
+	public static function findActiveByParentIdParentType( $parentId, $parentType ) {
+
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND active=1', [ ':pid' => $parentId, ':ptype' => $parentType ] )->all();
 	}
 
 	// Delete ----
 
 	/**
-	 * Delete all entries related to a tag
+	 * Delete all entries related to a tag. It's required while deleting a tag.
 	 */
 	public static function deleteByTagId( $tagId ) {
 

@@ -6,6 +6,7 @@ use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\models\entities\Form;
+use cmsgears\core\common\models\entities\ModelForm;
 
 class FormService extends \cmsgears\core\common\services\Service {
 
@@ -89,7 +90,11 @@ class FormService extends \cmsgears\core\common\services\Service {
 
 	public static function delete( $form ) {
 
+		// Find existing form
 		$existingForm	= self::findById( $form->id );
+
+		// Delete dependency
+		ModelForm::deleteByFormId( $form->id );
 
 		// Delete Form
 		$existingForm->delete();

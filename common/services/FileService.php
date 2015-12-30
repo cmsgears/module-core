@@ -6,6 +6,7 @@ use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\core\common\models\entities\ModelFile;
 
 // TODO: Delete existing file while replacing the file.
 
@@ -258,6 +259,9 @@ class FileService extends Service {
 
 		// Find existing File
 		$existingFile	= self::findById( $file->id );
+
+		// Delete dependency
+		ModelFile::deleteByFileId( $file->id );
 
 		// Delete File
 		$existingFile->delete();

@@ -20,47 +20,83 @@ class ModelCategoryService extends Service {
 		
 		return ModelCategory::findByParentType( $parentType );
 	}
-	
-	public static function findByParentId( $parentId, $flag = 1 ) {
-		
-		return ModelCategory::findByParentId( $parentId, $flag );
+
+	public static function findByParentId( $parentId ) {
+
+		return ModelCategory::findByParentId( $parentId );
 	}
-	
+
+	public static function findActiveByParentId( $parentId ) {
+
+		return ModelCategory::findActiveByParentId( $parentId );
+	}
+
 	public static function findByCategoryId( $parentId, $parentType, $categoryId ) {
-		
+
 		return ModelCategory::findByCategoryId( $parentId, $parentType, $categoryId );
 	}
-	 
+
+	public static function findByParentIdParentType( $parentId, $parentType ) {
+
+		return ModelCategory::findByParentIdParentType( $parentId, $parentType );
+	}
+
+	public static function findActiveByParentIdParentType( $parentId, $parentType ) {
+
+		return ModelCategory::findActiveByParentIdParentType( $parentId, $parentType );
+	}
+
 	// Create -----------
-	
+
 	public static function create( $categoryId, $parentId, $parentType ) {
-		
-		$modelCategory	= new ModelCategory();
-			
+
+		$modelCategory				= new ModelCategory();
+
 		$modelCategory->categoryId	= $categoryId;
 		$modelCategory->parentId	= $parentId;
 		$modelCategory->parentType	= $parentType;
+
 		$modelCategory->save(); 
 	}
 
 	// Update -----------
-	
-	public static function updateActiveByParentId( $parentId, $flag ) {
-		
-		$model	= self::findByParentId( $parentId );
-		
-		if( isset( $model ) ) {
-			
-			foreach( $model as $modelToUpdate ) {			
-			 
-				self::updateActive( $modelToUpdate, $flag );
-			}	
+
+	public static function update( $parentId, $parentType, $categoryId ) {
+
+		$existingModelCategory	= self::findByCategoryId( $parentId, $parentType, $categoryId );
+
+		if( isset( $existingModelCategory ) ) {
+
+			self::updateActive( $existingModelCategory, 1 );
+		}
+		else {
+
+			$modelCategory				= new ModelCategory();
+			$modelCategory->categoryId	= $categoryId;
+			$modelCategory->parentId	= $parentId;
+			$modelCategory->parentType	= $parentType;
+
+			self::create( $modelCategory );
 		}
 	}
 	
-	public static function updateActive( $model, $flag ) {
-		
-		$model->active	= $flag;
+	public static function updateActiveByParentId( $parentId, $active ) {
+
+		$model	= self::findByParentId( $parentId );
+
+		if( isset( $model ) ) {
+
+			foreach( $model as $modelToUpdate ) {
+
+				self::updateActive( $modelToUpdate, $active );
+			}
+		}
+	}
+
+	public static function updateActive( $model, $active ) {
+
+		$model->active	= $active;
+
 		$model->update();
 	}
   

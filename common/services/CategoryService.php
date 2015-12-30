@@ -7,6 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\Category;
+use cmsgears\core\common\models\entities\ModelCategory;
 
 /**
  * The class CategoryService is base class to perform database activities for Category Entity.
@@ -118,6 +119,9 @@ class CategoryService extends Service {
 
 		// Find existing Category
 		$categoryToDelete	= self::findById( $category->id );
+
+		// Delete dependency
+		ModelCategory::deleteByCategoryId( $category->id );
 
 		// Delete Category
 		$categoryToDelete->delete();

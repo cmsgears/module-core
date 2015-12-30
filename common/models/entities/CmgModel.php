@@ -24,7 +24,7 @@ class CmgModel extends CmgEntity {
 	/**
 	 * @return array - model by given parent id and type.
 	 */
-	public static function findByParentIdType( $parentId, $parentType ) {
+	public static function findByParentIdParentType( $parentId, $parentType ) {
 
 		return self::find()->where( 'parentId=:pid AND parentType=:type', [ ':pid' => $parentId, ':type' => $parentType ] )->all();
 	}
@@ -42,7 +42,7 @@ class CmgModel extends CmgEntity {
 	/**
 	 * Delete all entries by given parent id and type.
 	 */
-	public static function deleteByParentIdType( $parentId, $parentType ) {
+	public static function deleteByParentIdParentType( $parentId, $parentType ) {
 
 		self::deleteAll( 'parentId=:pid AND parentType=:type', [ ':pid' => $parentId, ':type' => $parentType ] );
 	}

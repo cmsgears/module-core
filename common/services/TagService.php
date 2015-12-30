@@ -7,6 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\Tag;
+use cmsgears\core\common\models\entities\ModelTag;
 
 /**
  * The class TagService is base class to perform database activities for Tag Entity.
@@ -68,6 +69,22 @@ class TagService extends Service {
 		$model->save();
 		
 		return $model;
+	}
+
+	// Delete -----------
+
+	public static function delete( $tag ) {
+
+		// Find existing Tag
+		$tagToDelete	= self::findById( $tag->id );
+
+		// Delete dependency
+		ModelTag::deleteByTagId( $tag->id );
+
+		// Delete Tag
+		$tagToDelete->delete();
+
+		return true;
 	}
 }
 

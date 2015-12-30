@@ -37,7 +37,7 @@ class FormDesigner extends Component {
 			}
 			case FormField::TYPE_CHECKBOX: {
 
-				return $form->field( $model, $key )->checkbox( $field->options );
+				return $form->field( $model, $key )->checkbox( $field->htmlOptions );
 			}
 			case FormField::TYPE_CHECKBOX_GROUP: {
 				
@@ -45,7 +45,7 @@ class FormDesigner extends Component {
 			}
 			case FormField::TYPE_RADIO: {
 
-				return $form->field( $model, $key )->radio( $field->options );
+				return $form->field( $model, $key )->radio( $field->htmlOptions );
 			}
 			case FormField::TYPE_RADIO_GROUP: {
 				
@@ -60,7 +60,7 @@ class FormDesigner extends Component {
 
 	protected function getTextHtml( $form, $model, $config, $key, $field ) {
 
-		$fieldHtml = $form->field( $model, $key )->textInput( $field->options );
+		$fieldHtml = $form->field( $model, $key )->textInput( $field->htmlOptions );
 		
 		if( $config[ 'label' ] ) {
 			
@@ -76,7 +76,7 @@ class FormDesigner extends Component {
 
 	protected function getPasswordHtml( $form, $model, $config, $key, $field ) {
 
-		$fieldHtml = $form->field( $model, $key )->passwordInput( $field->options );
+		$fieldHtml = $form->field( $model, $key )->passwordInput( $field->htmlOptions );
 
 		if( $config[ 'label' ] ) {
 			
@@ -92,7 +92,7 @@ class FormDesigner extends Component {
 
 	protected function getTextareaHtml( $form, $model, $config, $key, $field ) {
 
-		$fieldHtml = $form->field( $model, $key )->textArea( $field->options );
+		$fieldHtml = $form->field( $model, $key )->textArea( $field->htmlOptions );
 
 		if( $config[ 'label' ] ) {
 			
@@ -108,19 +108,19 @@ class FormDesigner extends Component {
 
 	protected function getCheckboxGroupHtml( $form, $model, $config, $key, $field ) {
 
-		$fieldOptions	= $field->options;
+		$fieldhtmlOptions	= $field->htmlOptions;
 
-		if( isset( $fieldOptions[ 'items' ] ) ) {
+		if( isset( $fieldhtmlOptions[ 'items' ] ) ) {
 
-			$items	= $fieldOptions[ 'items' ];
+			$items	= $fieldhtmlOptions[ 'items' ];
 
-			unset( $fieldOptions[ 'items' ] );
+			unset( $fieldhtmlOptions[ 'items' ] );
 
-			$fieldHtml 	= $form->field( $model, $key )->checkboxlist( $items, $fieldOptions );
+			$fieldHtml 	= $form->field( $model, $key )->checkboxlist( $items, $fieldhtmlOptions );
 		}
 		else {
 
-			$fieldHtml 	= $form->field( $model, $key )->checkboxlist( [ ], $fieldOptions );
+			$fieldHtml 	= $form->field( $model, $key )->checkboxlist( [ ], $fieldhtmlOptions );
 		}
 
 		if( $config[ 'label' ] ) {
@@ -137,19 +137,19 @@ class FormDesigner extends Component {
 
 	protected function getRadioGroupHtml( $form, $model, $config, $key, $field ) {
 
-		$fieldOptions	= $field->options;
+		$fieldhtmlOptions	= $field->htmlOptions;
 
-		if( isset( $fieldOptions[ 'items' ] ) ) {
+		if( isset( $fieldhtmlOptions[ 'items' ] ) ) {
 
-			$items	= $fieldOptions[ 'items' ];
+			$items	= $fieldhtmlOptions[ 'items' ];
 
-			unset( $fieldOptions[ 'items' ] );
+			unset( $fieldhtmlOptions[ 'items' ] );
 
-			$fieldHtml 	= $form->field( $model, $key )->radioList( $items, $fieldOptions );
+			$fieldHtml 	= $form->field( $model, $key )->radioList( $items, $fieldhtmlOptions );
 		}
 		else {
 
-			$fieldHtml 	= $form->field( $model, $key )->radioList( [ ], $fieldOptions );
+			$fieldHtml 	= $form->field( $model, $key )->radioList( [ ], $fieldhtmlOptions );
 		}
 
 		if( $config[ 'label' ] ) {
@@ -166,19 +166,19 @@ class FormDesigner extends Component {
 
 	protected function getSelectHtml( $form, $model, $config, $key, $field ) {
 
-		$fieldOptions	= $field->options;
+		$fieldhtmlOptions	= $field->htmlOptions;
 
-		if( isset( $fieldOptions[ 'items' ] ) ) {
+		if( isset( $fieldhtmlOptions[ 'items' ] ) ) {
 
-			$items	= $fieldOptions[ 'items' ];
+			$items	= $fieldhtmlOptions[ 'items' ];
 
-			unset( $fieldOptions[ 'items' ] );
+			unset( $fieldhtmlOptions[ 'items' ] );
 
-			$fieldHtml 	= $form->field( $model, $key )->dropDownList( $items, $fieldOptions );
+			$fieldHtml 	= $form->field( $model, $key )->dropDownList( $items, $fieldhtmlOptions );
 		}
 		else {
 
-			$fieldHtml 	= $form->field( $model, $key )->dropDownList( [ 'Choose Option' ], $fieldOptions );
+			$fieldHtml 	= $form->field( $model, $key )->dropDownList( [ 'Choose Option' ], $fieldhtmlOptions );
 		}
 
 		if( $config[ 'label' ] ) {
@@ -243,7 +243,7 @@ class FormDesigner extends Component {
 	protected function getApixTextHtml( $form, $config, $field ) {
 
 		$model		= $config[ 'model' ];
-		$fieldHtml 	= Html::input( 'text', $model . "[$field->name]", null, $field->options );
+		$fieldHtml 	= Html::input( 'text', $model . "[$field->name]", null, $field->htmlOptions );
 
 		if( $config[ 'label' ] ) {
 
@@ -260,7 +260,7 @@ class FormDesigner extends Component {
 	protected function getApixPasswordHtml( $form, $config, $field ) {
 
 		$model		= $config[ 'model' ];
-		$fieldHtml 	= Html::passwordInput( $model . "[$field->name]", null, $field->options );
+		$fieldHtml 	= Html::passwordInput( $model . "[$field->name]", null, $field->htmlOptions );
 
 		if( $config[ 'label' ] ) {
 
@@ -277,7 +277,7 @@ class FormDesigner extends Component {
 	protected function getApixTextareaHtml( $form, $config, $field ) {
 
 		$model		= $config[ 'model' ];
-		$fieldHtml 	= Html::textarea( $model . "[$field->name]", null, $field->options );
+		$fieldHtml 	= Html::textarea( $model . "[$field->name]", null, $field->htmlOptions );
 
 		if( $config[ 'label' ] ) {
 
@@ -294,7 +294,7 @@ class FormDesigner extends Component {
 	protected function getApixCheckboxHtml( $form, $config, $field ) {
 
 		$model		= $config[ 'model' ];
-		$fieldHtml 	= Html::checkbox( $model . "[$field->name]", false, $field->options );
+		$fieldHtml 	= Html::checkbox( $model . "[$field->name]", false, $field->htmlOptions );
 
 		if( $config[ 'label' ] ) {
 
@@ -313,19 +313,19 @@ class FormDesigner extends Component {
 		$model		= $config[ 'model' ];
 		$fieldHtml 	= null;
 
-		$fieldOptions	= $field->options;
+		$fieldhtmlOptions	= $field->htmlOptions;
 
-		if( isset( $fieldOptions[ 'items' ] ) ) {
+		if( isset( $fieldhtmlOptions[ 'items' ] ) ) {
 
-			$items	= $fieldOptions[ 'items' ];
+			$items	= $fieldhtmlOptions[ 'items' ];
 
-			unset( $fieldOptions[ 'items' ] );
+			unset( $fieldhtmlOptions[ 'items' ] );
 
-			$fieldHtml 	= Html::checkboxList( $model . "[$field->name]", null, $items, $field->options );
+			$fieldHtml 	= Html::checkboxList( $model . "[$field->name]", null, $items, $field->htmlOptions );
 		}
 		else {
 
-			$fieldHtml 	= Html::checkboxList( $model . "[$field->name]", null, [ ], $field->options );
+			$fieldHtml 	= Html::checkboxList( $model . "[$field->name]", null, [ ], $field->htmlOptions );
 		}
 
 		if( $config[ 'label' ] ) {
@@ -343,7 +343,7 @@ class FormDesigner extends Component {
 	protected function getApixRadioHtml( $form, $config, $field ) {
 
 		$model		= $config[ 'model' ];
-		$fieldHtml 	= Html::radio( $model . "[$field->name]", false, $field->options );
+		$fieldHtml 	= Html::radio( $model . "[$field->name]", false, $field->htmlOptions );
 
 		if( $config[ 'label' ] ) {
 
@@ -359,22 +359,21 @@ class FormDesigner extends Component {
 
 	protected function getApixRadioGroupHtml( $form, $config, $field ) {
 
-		$model		= $config[ 'model' ];
-		$fieldHtml 	= null;
+		$model				= $config[ 'model' ];
+		$fieldHtml 			= null;
+		$fieldhtmlOptions	= $field->htmlOptions;
 
-		$fieldOptions	= $field->options;
+		if( isset( $fieldhtmlOptions[ 'items' ] ) ) {
 
-		if( isset( $fieldOptions[ 'items' ] ) ) {
+			$items	= $fieldhtmlOptions[ 'items' ];
 
-			$items	= $fieldOptions[ 'items' ];
+			unset( $fieldhtmlOptions[ 'items' ] );
 
-			unset( $fieldOptions[ 'items' ] );
-
-			$fieldHtml 	= Html::radioList( $model . "[$field->name]", null, $items, $field->options );
+			$fieldHtml 	= Html::radioList( $model . "[$field->name]", null, $items, $field->htmlOptions );
 		}
 		else {
 
-			$fieldHtml 	= Html::radioList( $model . "[$field->name]", null, [ ], $field->options );
+			$fieldHtml 	= Html::radioList( $model . "[$field->name]", null, [ ], $field->htmlOptions );
 		}
 
 		if( $config[ 'label' ] ) {
@@ -391,22 +390,21 @@ class FormDesigner extends Component {
 
 	protected function getApixSelectHtml( $form, $config, $field ) {
 
-		$model		= $config[ 'model' ];
-		$fieldHtml 	= null;
+		$model				= $config[ 'model' ];
+		$fieldHtml 			= null;
+		$fieldhtmlOptions	= $field->htmlOptions;
 
-		$fieldOptions	= $field->options;
+		if( isset( $fieldhtmlOptions[ 'items' ] ) ) {
 
-		if( isset( $fieldOptions[ 'items' ] ) ) {
+			$items	= $fieldhtmlOptions[ 'items' ];
 
-			$items	= $fieldOptions[ 'items' ];
+			unset( $fieldhtmlOptions[ 'items' ] );
 
-			unset( $fieldOptions[ 'items' ] );
-
-			$fieldHtml 	= Html::dropDownList( $model . "[$field->name]", null, $items, $field->options );
+			$fieldHtml 	= Html::dropDownList( $model . "[$field->name]", null, $items, $field->htmlOptions );
 		}
 		else {
 
-			$fieldHtml 	= Html::dropDownList( $model . "[$field->name]", null, [ "Choose Option" ], $field->options );
+			$fieldHtml 	= Html::dropDownList( $model . "[$field->name]", null, [ "Choose Option" ], $field->htmlOptions );
 		}
 
 		if( $config[ 'label' ] ) {
@@ -424,7 +422,7 @@ class FormDesigner extends Component {
 	protected function getApixDateHtml( $form, $config, $field ) {
 
 		$model		= $config[ 'model' ];
-		$fieldHtml 	= Html::input( 'text', $model . "[$field->name]", null, $field->options );
+		$fieldHtml 	= Html::input( 'text', $model . "[$field->name]", null, $field->htmlOptions );
 
 		if( $config[ 'label' ] ) {
 

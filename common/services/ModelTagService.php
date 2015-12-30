@@ -13,58 +13,83 @@ use cmsgears\core\common\models\entities\ModelTag;
 class ModelTagService extends Service {
 
 	// Static Methods ----------------------------------------------
+
+	// Read ----------------
+
+	public static function findByParentType( $parentType ) {
+		
+		return ModelTag::findByParentType( $parentType );
+	}
 	
-	// Read ----------------	
+	public static function findByParentId( $parentId ) {
+		
+		return ModelTag::findByParentId( $parentId );
+	}
+
+	public static function findActiveByParentId( $parentId ) {
+
+		return ModelTag::findActiveByParentId( $parentId );
+	}
+
 	public static function findByTagId( $parentId, $parentType, $tagId ) {
 		
 		return ModelTag::findByTagId( $parentId, $parentType, $tagId );
 	}
 	
-	public static function findByParentIdType( $parentId, $parentType, $flag = 1 ) {
+	public static function findByParentIdParentType( $parentId, $parentType ) {
 		
-		return ModelTag::findByParentIdType( $parentId, $parentType, $flag );
+		return ModelTag::findByParentIdParentType( $parentId, $parentType );
 	}
- 
-	// Create ---------------- 
-	 public static function create( $model ) {
-	 	
-		$model->save(); 	
-	 }
-	 
-	 // Delete ----------------	 
-	 public static function delete( $model ) {
-	 	
-		$model->delete();
+
+	public static function findActiveByParentIdParentType( $parentId, $parentType ) {
 		
-		return true;
-	 }
-	 
-	 public static function updateActive( $model, $flag ) {
-		
-		$model->active	= $flag;
-		$model->update();
-		
-		return $model;
+		return ModelTag::findActiveByParentIdParentType( $parentId, $parentType );
 	}
-	 
-	public static function update( $parentId, $type, $tagId ) {
-		
-		$existingModelTag	= self::findByTagId( $parentId, $type, $tagId );
-				
-		if( isset( $existingModelTag) && $existingModelTag->active == 0 ) {
-			
+
+	// Create ----------------
+
+	public static function create( $model ) {
+
+		$model->save();
+	}
+
+	// Update ---------------
+
+	public static function update( $parentId, $parentType, $tagId ) {
+
+		$existingModelTag	= self::findByTagId( $parentId, $parentType, $tagId );
+
+		if( isset( $existingModelTag ) ) {
+
 			self::updateActive( $existingModelTag, 1 );
 		}
-		
-		if( !$existingModelTag ) {
-		
-			$modelTag				= new ModelTag();	 
+		else {
+
+			$modelTag				= new ModelTag();
 			$modelTag->tagId		= $tagId;
 			$modelTag->parentId		= $parentId;
-			$modelTag->parentType	= $type;
-						
-			self::create( $modelTag ); 
+			$modelTag->parentType	= $parentType;
+
+			self::create( $modelTag );
 		}
+	}
+
+	public static function updateActive( $model, $flag ) {
+
+		$model->active	= $flag;
+
+		$model->update();
+
+		return $model;
+	}
+
+	// Delete ----------------
+
+	public static function delete( $model ) {
+
+		$model->delete();
+
+		return true;
 	} 
 }
 

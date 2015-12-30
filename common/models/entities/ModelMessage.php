@@ -152,11 +152,11 @@ class ModelMessage extends CmgModel {
 	// Delete ----
 
 	/**
-	 * Delete all entries related to a locale for a parent
+	 * Delete all entries related to a locale
 	 */
-	public static function deleteByLocaleId( $parentId, $parentType, $localeId ) {
+	public static function deleteByLocaleId( $localeId ) {
 
-		self::deleteAll( 'parentId=:pid AND parentType=:type AND localeId=:id', [ ':id' => $localeId ] );
+		self::deleteAll( 'localeId=:id', [ ':id' => $localeId ] );
 	}
 }
 

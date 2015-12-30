@@ -6,6 +6,7 @@ use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\models\entities\Address;
+use cmsgears\core\common\models\entities\ModelAddress;
 
 /**
  * The class AddressService is base class to perform database activities for Address Entity.
@@ -71,6 +72,9 @@ class AddressService extends Service {
 
 		// Find existing Address
 		$addressToDelete	= self::findById( $address->id );
+
+		// Delete dependency
+		ModelAddress::deleteByAddressId( $address->id );
 
 		// Delete Address
 		$addressToDelete->delete();

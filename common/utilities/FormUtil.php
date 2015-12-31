@@ -67,13 +67,13 @@ class FormUtil {
 		foreach ( $fields as $key => $field ) {
 
 			// Convert Json to Array
-			if( isset( $field->options ) && strlen( $field->options ) > 0 ) {
+			if( isset( $field->htmlOptions ) && strlen( $field->htmlOptions ) > 0 ) {
 
-				$field->options	= json_decode( $field->options, true );
+				$field->htmlOptions	= json_decode( $field->htmlOptions, true );
 			}
 			else {
 
-				$field->options	= [];
+				$field->htmlOptions	= [];
 			}
 
 			$fieldsHtml .= Yii::$app->formDesigner->getFieldHtml( $form, $model, $config, $key, $field );
@@ -82,26 +82,34 @@ class FormUtil {
 		return $fieldsHtml;
 	}
 
-	public static function getApixFieldsHtml( $form, $config = [] ) {
+	public static function getApixFieldsHtml( $form, $model, $config = [] ) {
 
-		$fields 			= $form->fields;
-		$fieldsHtml			= '';
-		$config[ 'label' ]	= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
-		$config[ 'model' ]	= isset( $config[ 'model' ] ) ? $config[ 'model' ] : 'GenericForm';
+		$fields 				= $form->fields;
+		$fieldsHtml				= '';
+		$config[ 'label' ]		= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
+		$config[ 'modelName' ]	= isset( $config[ 'modelName' ] ) ? $config[ 'modelName' ] : 'GenericForm';
 
 		foreach ( $fields as $key => $field ) {
 
 			// Convert Json to Array
-			if( isset( $field->options ) && strlen( $field->options ) > 0 ) {
+			if( isset( $field->htmlOptions ) && strlen( $field->htmlOptions ) > 0 ) {
 
-				$field->options	= json_decode( $field->options, true );
+				$field->htmlOptions	= json_decode( $field->htmlOptions, true );
 			}
 			else {
 
-				$field->options	= [];
+				$field->htmlOptions	= [];
 			}
 
-			$fieldsHtml .= Yii::$app->formDesigner->getApixFieldHtml( $form, $config, $field );
+			if( isset( $model ) ) {
+
+				$value		 = $model->fields[ $field->name ]->value; 
+				$fieldsHtml .= Yii::$app->formDesigner->getApixFieldHtml( $config, $field, $value );
+			}
+			else {
+
+				$fieldsHtml .= Yii::$app->formDesigner->getApixFieldHtml( $config, $field );
+			}
 		}
 
 		return $fieldsHtml;

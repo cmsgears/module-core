@@ -2,6 +2,8 @@
 namespace cmsgears\core\common\models\forms;
 
 class GenericForm extends \yii\base\Model {
+		
+	public $active;
 
 	public $fields;
 	

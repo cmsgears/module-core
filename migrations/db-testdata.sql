@@ -15,12 +15,12 @@ SELECT @site := `id` FROM cmg_core_site WHERE slug = 'main';
 -- Core Config Form
 --
 
-INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`options`,`createdAt`,`modifiedAt`) VALUES
+INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`htmlOptions`,`createdAt`,`modifiedAt`) VALUES
 	(@site,NULL,1,1,'Config Core','config-core','system','Core configuration form.','All configurations saved successfully.',0,10,1,0,0,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 SELECT @form := `id` FROM cmg_core_form WHERE slug = 'config-core';
 
-INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`options`,`data`,`order`) VALUES 
+INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`htmlOptions`,`data`,`order`) VALUES 
 	(@form,'locale_message','Locale Message',20,0,'required','{\"title\":\"Check for i18n support.\"}',NULL,0),
 	(@form,'language','Language',0,0,'required','{\"title\":\"Language used on html tag.\",\"placeholder\":\"Language\"}',NULL,0),
 	(@form,'locale','Locale',0,0,'required','{\"title\":\"Site default locale.\",\"placeholder\":\"Locale\"}',NULL,0),
@@ -37,12 +37,12 @@ INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`va
 -- Mail Config Form
 --
 
-INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`options`,`createdAt`,`modifiedAt`) VALUES
+INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`htmlOptions`,`createdAt`,`modifiedAt`) VALUES
 	(@site,NULL,1,1,'Config Mail','config-mail','system','Mail configuration form.','All configurations saved successfully.',0,10,1,0,0,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 SELECT @form := `id` FROM cmg_core_form WHERE slug = 'config-mail';
 
-INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`options`,`data`,`order`) VALUES 
+INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`htmlOptions`,`data`,`order`) VALUES 
 	(@form,'smtp','SMTP',20,0,'required','{\"title\":\"Check whether SMTP is required.\"}',NULL,0),
 	(@form,'smtp_username','SMTP Username',0,0,NULL,'{\"title\":\"SMTP username.\",\"placeholder\":\"SMTP Username\"}',NULL,0),
 	(@form,'smtp_password','SMTP Password',5,0,NULL,'{\"title\":\"SMTP password.\",\"placeholder\":\"SMTP Password\"}',NULL,0),
@@ -61,12 +61,12 @@ INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`va
 -- Backend Config Form
 --
 
-INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`options`,`createdAt`,`modifiedAt`) VALUES
+INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`htmlOptions`,`createdAt`,`modifiedAt`) VALUES
 	(@site,NULL,1,1,'Config Backend','config-backend','system','Backend site configuration form.','All configurations saved successfully.',0,10,1,0,0,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 SELECT @form := `id` FROM cmg_core_form WHERE slug = 'config-backend';
 
-INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`options`,`data`,`order`) VALUES 
+INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`htmlOptions`,`data`,`order`) VALUES 
 	(@form,'theme','Theme',0,0,'required','{\"title\":\"Current theme.\",\"placeholder\":\"Theme\"}',NULL,0),
 	(@form,'theme_version','Theme Version',0,0,'required','{\"title\":\"Theme version.\",\"placeholder\":\"Theme Version\"}',NULL,0);
 
@@ -74,12 +74,12 @@ INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`va
 -- Frontend Config Form
 --
 
-INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`options`,`createdAt`,`modifiedAt`) VALUES
+INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`htmlOptions`,`createdAt`,`modifiedAt`) VALUES
 	(@site,NULL,1,1,'Config Site','config-frontend','system','Frontend site configuration form.','All configurations saved successfully.',0,10,1,0,0,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 SELECT @form := `id` FROM cmg_core_form WHERE slug = 'config-frontend';
 
-INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`options`,`data`,`order`) VALUES 
+INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`htmlOptions`,`data`,`order`) VALUES 
 	(@form,'theme','Theme',0,0,'required','{\"title\":\"Current theme.\",\"placeholder\":\"Theme\"}',NULL,0),
 	(@form,'theme_version','Theme Version',0,0,'required','{\"title\":\"Theme version.\",\"placeholder\":\"Theme Version\"}',NULL,0);
 
@@ -87,35 +87,35 @@ INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`va
 -- Dumping data for table `cmg_core_model_attribute`
 --
 
-INSERT INTO `cmg_core_model_attribute` (`parentId`,`parentType`,`name`,`value`,`type`) VALUES
-	(@site,'site','locale_message','0','core'),
-	(@site,'site','language','en-US','core'),
-	(@site,'site','locale','en_US','core'),
-	(@site,'site','charset','UTF-8','core'),
-	(@site,'site','site_title','CMG Demo','core'),
-	(@site,'site','site_name','CMSGears','core'),
-	(@site,'site','site_url','http://demo.cmsgears.com/templates/basic/','core'),
-	(@site,'site','admin_url','http://demo.cmsgears.com/templates/basic/admin/','core'),
-	(@site,'site','registration','1','core'),
-	(@site,'site','change_email','1','core'),
-	(@site,'site','change_username','1','core'),
-	(@site,'site','smtp','0','mail'),
-	(@site,'site','smtp_username','','mail'),
-	(@site,'site','smtp_password','','mail'),
-	(@site,'site','smtp_host','','mail'),
-	(@site,'site','smtp_port','587','mail'),
-	(@site,'site','smtp_encryption','tls','mail'),
-	(@site,'site','debug','1','mail'),
-	(@site,'site','sender_name','Admin','mail'),
-	(@site,'site','sender_email','demoadmin@cmsgears.com','mail'),
-	(@site,'site','contact_name','Contact Us','mail'),
-	(@site,'site','contact_email','democontact@cmsgears.com','mail'),
-	(@site,'site','info_name','Info','mail'),
-	(@site,'site','info_email','demoinfo@cmsgears.com','mail'),
-	(@site,'site','theme','basic','frontend'),
-	(@site,'site','theme_version','1','frontend'),
-	(@site,'site','theme','admin','backend'),
-	(@site,'site','theme_version','1','backend');
+INSERT INTO `cmg_core_model_attribute` (`parentId`,`parentType`,`name`,`type`,`valueType`,`value`) VALUES
+	(@site,'site','locale_message','core','flag','0'),
+	(@site,'site','language','core','text','en-US'),
+	(@site,'site','locale','core','text','en_US'),
+	(@site,'site','charset','core','text','UTF-8'),
+	(@site,'site','site_title','core','text','CMG Demo'),
+	(@site,'site','site_name','core','text','CMSGears'),
+	(@site,'site','site_url','core','text','http://demo.cmsgears.com/templates/basic/'),
+	(@site,'site','admin_url','core','text','http://demo.cmsgears.com/templates/basic/admin/'),
+	(@site,'site','registration','core','flag','1'),
+	(@site,'site','change_email','core','flag','1'),
+	(@site,'site','change_username','core','flag','1'),
+	(@site,'site','smtp','mail','flag','0'),
+	(@site,'site','smtp_username','mail','text',''),
+	(@site,'site','smtp_password','mail','text',''),
+	(@site,'site','smtp_host','mail','text',''),
+	(@site,'site','smtp_port','mail','text','587'),
+	(@site,'site','smtp_encryption','mail','text','tls'),
+	(@site,'site','debug','mail','flag','1'),
+	(@site,'site','sender_name','mail','text','Admin'),
+	(@site,'site','sender_email','mail','text','demoadmin@cmsgears.com'),
+	(@site,'site','contact_name','mail','text','Contact Us'),
+	(@site,'site','contact_email','mail','text','democontact@cmsgears.com'),
+	(@site,'site','info_name','mail','text','Info'),
+	(@site,'site','info_email','mail','text','demoinfo@cmsgears.com'),
+	(@site,'site','theme','frontend','text','basic'),
+	(@site,'site','theme_version','text','frontend','1'),
+	(@site,'site','theme','backend','text','admin'),
+	(@site,'site','theme_version','text','backend','1');
 
 --
 -- Default Locale

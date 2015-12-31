@@ -140,6 +140,7 @@ class CoreGlobal {
 	const FIELD_VISIBILITY			= 'visibilityField';
 	const FIELD_STATUS				= 'statusField';
 	const FIELD_TYPE				= 'typeField';
+	const FIELD_VALUE_TYPE			= 'valueTypeField';
 	const FIELD_VALIDATORS 			= 'validatorsField';
 	const FIELD_CONSUMED			= 'consumedField';
 	const FIELD_DEFAULT 			= 'Default';

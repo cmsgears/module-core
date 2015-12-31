@@ -9,9 +9,12 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\ModelMeta;
+use cmsgears\core\common\models\forms\GenericForm;
 
+use cmsgears\core\common\services\ModelAttributeService;
 use cmsgears\core\admin\services\SiteService;
 
+use cmsgears\core\common\utilities\FormUtil;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class SettingsController extends \cmsgears\core\admin\controllers\base\Controller {
@@ -29,13 +32,15 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
+	                'index'  => [ 'permission' => CoreGlobal::PERM_CORE ],
 	                'update'  => [ 'permission' => CoreGlobal::PERM_CORE ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'update'  => ['post']
+	                'index'  => [ 'post' ],
+	                'update'  => [ 'post' ]
                 ]
             ]
         ];
@@ -43,22 +48,45 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 
 	// SettingsController ----------------
 
-	public function actionUpdate() {
+    public function actionIndex( $type ) {
 
-		$meta	= new ModelMeta();
+		$settings 		= SiteService::getAttributeMapBySlugType( Yii::$app->cmgCore->getSiteSlug(), $type );
+		$fieldsMap		= FormUtil::fillFromModelAttribute( "config-$type", $settings );
+		$model			= new GenericForm( [ 'fields' => $fieldsMap ] );
 
-		$meta->setScenario( "update" );
+	    $htmlContent	= $this->renderPartial( '@cmsgears/module-core/admin/views/settings/info', [
+						        'fieldsMap' => $fieldsMap,
+						        'type' => $type,
+						        'model' => $model
+						    ]);
 
-		if( $meta->load( Yii::$app->request->post(), "ModelMeta" ) ) {
+		return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $htmlContent );
+    }
 
-			if( SiteService::updateMeta( $meta ) ) {
+	public function actionUpdate( $type ) {
 
-				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
+		$settings 		= SiteService::getAttributeMapBySlugType( Yii::$app->cmgCore->getSiteSlug(), $type );
+		$fieldsMap		= FormUtil::fillFromModelAttribute( "config-$type", $settings );
+		$model			= new GenericForm( [ 'fields' => $fieldsMap ] );
+
+		if( $model->load( Yii::$app->request->post(), 'GenericForm' ) && $model->validate() ) {
+
+			$settings	= FormUtil::getModelAttributes( $model, $settings );
+
+			ModelAttributeService::updateAll( $settings );
+
+			$data		= [];
+
+			foreach ( $settings as $key => $value ) {
+				
+				$data[]	= $value->getFieldInfo();
 			}
+			
+			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 		}
 
-		return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
-	}
+	    return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+    }
 }
 
 ?>

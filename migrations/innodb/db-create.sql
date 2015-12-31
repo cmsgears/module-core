@@ -591,8 +591,9 @@ CREATE TABLE `cmg_core_model_attribute` (
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'default',
+  `valueType` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'text',
   `value` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  `type` varchar(100) COLLATE utf8_unicode_ci DEFAULT 'default',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

@@ -1,30 +1,30 @@
 <?php
-// Yii Import
-use yii\helpers\Html; 
-use yii\widgets\LinkPager;
+// Yii Imports
+use \Yii;
+use yii\helpers\Html;
 use yii\helpers\Url;
+
+$coreProperties = $this->context->getCoreProperties();
+$this->title 	= 'Settings | ' . $coreProperties->getSiteTitle();
+
+$settings		= Yii::$app->sidebar->getConfig();
 ?>
-<?php include 'header.php'; ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box frm-split">
-		<h2><?= ucfirst( $type ) ?> Settings</h2>
-		<?php 
-			if( isset( $fieldsMap ) && count( $fieldsMap ) > 0 ) {
 
-				foreach ( $fieldsMap as $field ) { 
-		?>
-				<label><?= $field->label ?></label>
-				<label><?= $field->getFieldValue() ?></label>
-		<?php 
-				}
+<div class="wrap-settings clearfix">
+<?php foreach ( $settings as $setting ) { ?>
 
-				echo "<div class='box-filler'></div>";
-				echo Html::a( "<input type='button' value='Update' class='btn'>", ["/cmgcore/settings/update?type=$type"], null );
-				echo "<div class='box-filler'></div>";
-			}
-			else {
-		?>
-		<p>No settings found.</p>
-		<?php } ?>
+	<div class="box box-collapsible box-settings col12x6">
+		<div class="box-wrap-header">
+			<span id="settings-<?= $setting ?>" class="cmt-request" content="settings-<?= $setting ?>-content" cmt-controller="settings" cmt-action="getContent" action="<?= Url::toRoute( "/apix/cmgcore/settings/index?type=$setting" ) ?>" method="post">
+				<span class="cmt-click btn-collapse cmti cmti-2x cmti-chevron-down"></span>
+			</span>
+			<span class="h5"><?= ucfirst( $setting ) ?></span>
+		</div>
+		<div id="settings-<?= $setting ?>-content" class="box-wrap-content clearfix"></div>
 	</div>
-</section>
+
+<?php } ?>
+</div>
+
+<!-- Templates -->
+<?php include_once( dirname( __FILE__ ) . "/templates/update.php" ); ?>

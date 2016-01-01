@@ -19,8 +19,12 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 abstract class Attribute extends CmgModel {
 	
-	const VALUE_TYPE_TEXT	= 'text';
-	const VALUE_TYPE_FLAG	= 'flag';
+	const VALUE_TYPE_TEXT		= 'text';
+	const VALUE_TYPE_FLAG		= 'flag';
+	const VALUE_TYPE_CSV		= 'csv';
+	const VALUE_TYPE_HTML		= 'html';
+	const VALUE_TYPE_JSON		= 'json';
+	const VALUE_TYPE_MARKDOWN	= 'markdown';
 
 	// Instance Methods --------------------------------------------
 

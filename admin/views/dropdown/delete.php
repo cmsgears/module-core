@@ -7,7 +7,7 @@ use cmsgears\widgets\cleditor\ClEditor;
 use cmsgears\files\widgets\AvatarUploader;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Delete Category';
+$this->title 	= $coreProperties->getSiteTitle() . ' | Delete '  . $title;
 
 // Sidebar and Return URL
 $sidebar						= $this->context->sidebar;
@@ -19,17 +19,16 @@ ClEditor::widget( [ 'selector' => '.content-editor' ] );
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
-		<h2>Delete Category</h2>
+		<h2>Delete <?=$title?></h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-dropdown-create', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>  
-    	<?= $form->field( $model, 'description' )->textInput( [ 'readonly' => true ] ) ?>
-    	<?= $form->field( $model, 'parentId' )->dropDownList( $categoryMap, [ 'disabled' => true ] ) ?>
+    	<?= $form->field( $model, 'description' )->textInput( [ 'readonly' => true ] ) ?>  
     	<?= $form->field( $model, 'icon' )->textInput( [ 'readonly' => true ] ) ?>
     	<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => true ] ) ?>
 		<?= $form->field( $model, 'featured' )->checkbox( [ 'disabled' => true ] ) ?>
 
-    	<h4>Category Avatar</h4>
+    	<h4><?= $title ?> Avatar</h4>
 		<?=AvatarUploader::widget( [ 'options' => [ 'id' => 'avatar-dropdown', 'class' => 'file-uploader' ], 'model' => $avatar, 'modelClass' => 'Avatar',  'directory' => 'avatar'] );?>
   
 		<div class="box-filler"></div>

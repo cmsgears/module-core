@@ -15,7 +15,7 @@ use cmsgears\core\common\models\entities\Category;
 
 use cmsgears\core\admin\services\CategoryService; 
 
-class DropdownController extends \cmsgears\core\admin\controllers\base\CategoryController {
+class DropdownController extends \cmsgears\core\admin\controllers\base\DropdownController {
 
 	// Constructor and Initialisation ------------------------------
 

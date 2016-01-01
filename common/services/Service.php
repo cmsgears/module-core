@@ -218,7 +218,6 @@ class Service {
 	 * @param string $valueColumn
 	 * @param string $tableName
 	 * @param array $conditions
-	 * @param boolean $asArray
 	 */
 	public static function findNameValueList( $nameColumn, $valueColumn, $tableName, $config = [] ) {
 
@@ -277,7 +276,6 @@ class Service {
 	 * @param string $nameColumn
 	 * @param string $tableName
 	 * @param array $conditions
-	 * @param boolean $asArray 
 	 */
 	public static function findIdNameList( $idColumn, $nameColumn, $tableName, $config = [] ) {
 

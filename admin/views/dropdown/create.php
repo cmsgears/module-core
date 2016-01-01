@@ -7,7 +7,7 @@ use cmsgears\widgets\cleditor\ClEditor;
 use cmsgears\files\widgets\AvatarUploader;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Add Category';
+$this->title 	= $coreProperties->getSiteTitle() . ' | Add ' . $title;
 
 // Sidebar and Return URL
 $sidebar						= $this->context->sidebar;
@@ -19,17 +19,16 @@ ClEditor::widget( [ 'selector' => '.content-editor' ] );
 ?>
 <section class="wrap-content container clearfix">
 	<div class="cud-box">
-		<h2>Add Category</h2>
+		<h2>Add <?= $title ?></h2>
 		<?php $form = ActiveForm::begin( ['id' => 'frm-dropdown-create', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>  
-    	<?= $form->field( $model, 'description' ) ?>
-    	<?= $form->field( $model, 'parentId' )->dropDownList( $categoryMap ) ?>
+    	<?= $form->field( $model, 'description' ) ?> 
     	<?= $form->field( $model, 'icon' ) ?>
     	<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 		<?= $form->field( $model, 'featured' )->checkbox() ?>
 
-    	<h4>Category Avatar</h4>
+    	<h4><?= $title ?> Avatar</h4>
 		<?=AvatarUploader::widget( [ 'options' => [ 'id' => 'avatar-dropdown', 'class' => 'file-uploader' ], 'model' => $avatar, 'modelClass' => 'Avatar',  'directory' => 'avatar', 'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>
   
 		<div class="box-filler"></div>

@@ -22,7 +22,7 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 		<?php $form = ActiveForm::begin( ['id' => 'frm-template-delete', 'options' => ['class' => 'frm-split' ] ] );?>
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>  
-    	<?= $form->field( $model, 'description' )->textInput( [ 'readonly' => 'true' ] ) ?> 
+    	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?> 
     	<?= $form->field( $model, 'layout' )->textInput( [ 'readonly' => 'true' ] ) ?>  
 		<?= $form->field( $model, 'viewPath' )->textInput( [ 'readonly' => 'true' ] ) ?>
 		<?= $form->field( $model, 'adminView' )->textInput( [ 'readonly' => 'true' ] ) ?>

@@ -35,7 +35,14 @@ class Category extends CmgEntity {
 
 		return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] );
 	}
-	
+
+	public function getParentName() {
+
+		$parent	= $this->parent;
+		
+		return isset( $parent ) ? $parent->name : null;
+	}
+
 	/**
 	 * @return File - file url
 	 */
@@ -102,7 +109,8 @@ class Category extends CmgEntity {
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ 'slug', 'string', 'min' => 1, 'max' => 150 ],
-            [ [ 'avatarId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'avatarId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'featured', 'boolean' ]
         ];
 

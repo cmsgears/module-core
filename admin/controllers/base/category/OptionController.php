@@ -61,7 +61,7 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 		$dataProvider	= OptionService::getPagination( [ 'conditions' => [ 'categoryId' => $id ]] );
 		$category		= CategoryService::findById( $id );
 		
-		return $this->render( '@cmsgears/module-core/admin/views/category/option/all', [
+		return $this->render( '@cmsgears/module-core/admin/views/dropdown/option/all', [
 			'dataProvider' => $dataProvider,
 			'category' => $category
 		] );
@@ -81,7 +81,7 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 			}
 		} 
 		
-    	return $this->render('@cmsgears/module-core/admin/views/category/option/create', [ 
+    	return $this->render('@cmsgears/module-core/admin/views/dropdown/option/create', [ 
     		'model' => $model,
     		'id' => $id
     	]);
@@ -99,7 +99,7 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 			}
 		} 
 		
-    	return $this->render('@cmsgears/module-core/admin/views/category/option/update', [ 
+    	return $this->render('@cmsgears/module-core/admin/views/dropdown/option/update', [ 
     		'model' => $model,
     		'id' => $id
     	]);
@@ -128,7 +128,7 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 				}					 
 			}
  
-	    	return $this->render( '@cmsgears/module-core/admin/views/category/option/delete', [
+	    	return $this->render( '@cmsgears/module-core/admin/views/dropdown/option/delete', [
 	    		'model' => $model
 	    	]);
 		}

@@ -23,7 +23,7 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 		<?php $form = ActiveForm::begin( ['id' => 'frm-template-create', 'options' => ['class' => 'frm-split' ] ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>  
-    	<?= $form->field( $model, 'description' ) ?> 
+    	<?= $form->field( $model, 'description' )->textarea() ?> 
     	<?= $form->field( $model, 'layout' ) ?>  
 		<?= $form->field( $model, 'viewPath' ) ?>
 		<?= $form->field( $model, 'adminView' ) ?>

@@ -64,6 +64,14 @@ class CategoryService extends Service {
 		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_CATEGORY, [ 'conditions' => [ 'type' => $type ], 'asArray' => false, 'prepend' => $prepend, 'append' => $append ] );
 	}
 
+	public static function getIdNameMapByType( $type, $config ) {
+
+		$config[ 'conditions' ][ 'type' ] 	= $type;
+		$config[ 'asArray' ] 				= false;
+
+		return self::findMap( 'id', 'name', CoreTables::TABLE_CATEGORY, $config );
+	}
+
 	// Data Provider ----
 
 	/**
@@ -78,6 +86,11 @@ class CategoryService extends Service {
 	// Create -----------
 
 	public static function create( $category, $avatar = null ) {
+
+		if( $category->parentId <= 0 ) {
+
+			unset( $category->parentId );
+		}
 
 		if( isset( $avatar ) ) {
 
@@ -100,6 +113,11 @@ class CategoryService extends Service {
 
 		// Copy Attributes
 		$categoryToUpdate->copyForUpdateFrom( $category, [ 'avatarId', 'parentId', 'name', 'description', 'type', 'icon', 'featured', 'htmlOptions' ] );
+
+		if( $categoryToUpdate->parentId <= 0 ) {
+
+			unset( $categoryToUpdate->parentId );
+		}
 
 		if( isset( $avatar ) ) {
 

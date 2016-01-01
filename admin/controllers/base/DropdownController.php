@@ -10,13 +10,14 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\core\common\models\entities\CmgFile; 
 
-use cmsgears\core\common\models\entities\Category;
+use cmsgears\core\common\models\entities\Category; 
 
-use cmsgears\core\admin\services\CategoryService;
+use cmsgears\core\admin\services\CategoryService;  
+use cmsgears\core\admin\services\OptionService; 
 
-abstract class CategoryController extends Controller {
+abstract class DropdownController extends Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -57,20 +58,31 @@ abstract class CategoryController extends Controller {
 
 	// CategoryController -----------------
 
-	public function actionAll( $type ) {
+	public function actionAll( $type = null, $title = 'Dropdown' ) {
 
-		$dataProvider = CategoryService::getPaginationByType( $type );
+		$dataProvider = null;
 
-	    return $this->render( '@cmsgears/module-core/admin/views/category/all', [
-			'dataProvider' => $dataProvider
+		if( isset( $type ) ) {
+
+			$dataProvider = CategoryService::getPaginationByType( $type );
+		}
+		else {
+
+			$dataProvider = CategoryService::getPagination();
+		}
+
+	    return $this->render( '@cmsgears/module-core/admin/views/dropdown/all', [
+	    
+			'dataProvider' => $dataProvider,
+    		'title' => $title
 	    ]);
 	}
 
-	public function actionCreate( $type ) {
+	public function actionCreate( $type = null, $title = 'Dropdown' ) {
 
 		$model			= new Category();
 		$model->type 	= $type;
-		$avatar 		= CmgFile::loadFile( null, 'Avatar' );
+		$avatar 		= CmgFile::loadFile( $model->avatar, 'Avatar' ); 
 
 		$model->setScenario( 'create' );
 
@@ -81,17 +93,15 @@ abstract class CategoryController extends Controller {
 				return $this->redirect( $this->returnUrl );
 			} 
 		} 
-		
-		$categoryMap	= CategoryService::getIdNameMapByType( $type, [ 'prepend' => [ [ 'value' => 'Choose Category', 'name' => 0 ] ] ] );
 
-    	return $this->render( '@cmsgears/module-core/admin/views/category/create', [
+    	return $this->render( '@cmsgears/module-core/admin/views/dropdown/create', [
     		'model' => $model, 
     		'avatar' => $avatar,
-    		'categoryMap' => $categoryMap
+    		'title' => $title
     	]);
 	}	
  	
-	public function actionUpdate( $id, $type ) {
+	public function actionUpdate( $id, $type = null, $title = 'Dropdown' ) {
 		
 		// Find Model
 		$model	= CategoryService::findById( $id );
@@ -113,15 +123,12 @@ abstract class CategoryController extends Controller {
 				} 
 			}
 
-			$categoryMap	= CategoryService::getIdNameMapByType( $type, [
-									'prepend' => [ [ 'value' => 'Choose Category', 'name' => 0 ] ],
-									'filters' => [ [ 'not in', 'id', [ $id ] ] ]
-								]);
+			$avatar			= $model->avatar;
 
-	    	return $this->render( '@cmsgears/module-core/admin/views/category/update', [
+	    	return $this->render( '@cmsgears/module-core/admin/views/dropdown/update', [
 	    		'model' => $model, 
 	    		'avatar' => $avatar,
-	    		'categoryMap' => $categoryMap
+    			'title' => $title
 	    	]);
 		}
 		
@@ -129,13 +136,15 @@ abstract class CategoryController extends Controller {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	} 
 	
-	public function actionDelete( $id, $type ) {
+	public function actionDelete( $id, $type = null, $title = 'Dropdown' ) {
 
 		// Find Model
 		$model	= CategoryService::findById( $id );
 
 		// Delete/Render if exist		
 		if( isset( $model ) ) {
+			
+			$model->type 	= $type;
 
 			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
@@ -161,16 +170,16 @@ abstract class CategoryController extends Controller {
 					return $this->redirect( $this->returnUrl );
 				}
 			}
-			
-			$categoryMap	= CategoryService::getIdNameMapByType( $type, [ 'prepend' => [ [ 'value' => 'Choose Category', 'name' => 0 ] ] ] );
 
-	    	return $this->render( '@cmsgears/module-core/admin/views/category/delete', [
+			$avatar	= $model->avatar;
+
+	    	return $this->render( '@cmsgears/module-core/admin/views/dropdown/delete', [
 	    		'model' => $model, 
 	    		'avatar' => $model->avatar,
-	    		'categoryMap' => $categoryMap
+    			'title' => $title
 	    	]);
 		}
-
+		
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}

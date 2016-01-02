@@ -36,6 +36,7 @@ CREATE TABLE `cmg_core_template` (
   `frontendView` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime DEFAULT NULL,
+  `icon` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `content` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

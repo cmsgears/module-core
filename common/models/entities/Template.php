@@ -32,6 +32,7 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property string $frontendView
  * @property datetime $createdAt
  * @property datetime $modifiedAt
+ * @property string $icon
  * @property string $content
  */
 class Template extends CmgEntity {
@@ -77,8 +78,8 @@ class Template extends CmgEntity {
 		// model rules		
         $rules = [
             [ [ 'name', 'type' ], 'required' ],
-            [ [ 'id', 'slug', 'description', 'layout', 'viewPath', 'adminView', 'frontendView', 'content' ], 'safe' ],
-            [ [ 'name', 'type' ], 'string', 'min'=>1, 'max'=>100 ],
+            [ [ 'id', 'slug', 'description', 'layout', 'viewPath', 'adminView', 'frontendView', 'content', 'icon' ], 'safe' ],
+            [ [ 'name', 'type', 'icon' ], 'string', 'min'=>1, 'max'=>100 ],
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],

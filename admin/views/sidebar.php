@@ -46,7 +46,7 @@ $user	= Yii::$app->user->getIdentity();
 <?php } ?>
 
 <?php if( $core->hasModule( 'cmgcore' ) && $user->isPermitted( 'core' ) ) { ?>
-	<div id="sidebar-newsletter" class="collapsible-tab has-children <?php if( strcmp( $parent, 'sidebar-core' ) == 0 ) echo 'active';?>">
+	<div id="sidebar-core" class="collapsible-tab has-children <?php if( strcmp( $parent, 'sidebar-core' ) == 0 ) echo 'active';?>">
 		<div class="collapsible-tab-header clearfix">
 			<div class="colf colf4"><span class="icon-sidebar icon-settings"></span></div>
 			<div class="colf colf4x3">Core</div>

@@ -21,7 +21,7 @@ INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`nam
 SELECT @form := `id` FROM cmg_core_form WHERE slug = 'config-core';
 
 INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`htmlOptions`,`data`,`order`) VALUES 
-	(@form,'locale_message','Locale Message',20,0,'required','{\"title\":\"Check for i18n support.\"}',NULL,0),
+	(@form,'locale_message','Locale Message',40,0,'required','{\"title\":\"Check for i18n support.\"}',NULL,0),
 	(@form,'language','Language',0,0,'required','{\"title\":\"Language used on html tag.\",\"placeholder\":\"Language\"}',NULL,0),
 	(@form,'locale','Locale',0,0,'required','{\"title\":\"Site default locale.\",\"placeholder\":\"Locale\"}',NULL,0),
 	(@form,'charset','Charset',0,0,'required','{\"title\":\"Charset used on html head meta.\",\"placeholder\":\"Charset\"}',NULL,0),
@@ -29,9 +29,9 @@ INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`va
 	(@form,'site_name','Site Name',0,0,'required','{\"title\":\"Site name used on footers etc.\",\"placeholder\":\"Site Name\"}',NULL,0),
 	(@form,'site_url','Frontend URL',0,0,'required','{\"title\":\"Frontend URL\",\"placeholder\":\"Frontend URL\"}',NULL,0),
 	(@form,'admin_url','Backend URL',0,0,'required','{\"title\":\"Backend URL\",\"placeholder\":\"Backend URL\"}',NULL,0),
-	(@form,'registration','Registration',20,0,'required','{\"title\":\"Check whether site registration is allowed.\"}',NULL,0),
-	(@form,'change_email','Change Email',20,0,'required','{\"title\":\"Check whether email change is allowed for user profile.\"}',NULL,0),
-	(@form,'change_username','Change Username',20,0,'required','{\"title\":\"Check whether username change is allowed for user profile.\"}',NULL,0);
+	(@form,'registration','Registration',40,0,'required','{\"title\":\"Check whether site registration is allowed.\"}',NULL,0),
+	(@form,'change_email','Change Email',40,0,'required','{\"title\":\"Check whether email change is allowed for user profile.\"}',NULL,0),
+	(@form,'change_username','Change Username',40,0,'required','{\"title\":\"Check whether username change is allowed for user profile.\"}',NULL,0);
 
 --
 -- Mail Config Form
@@ -43,13 +43,13 @@ INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`nam
 SELECT @form := `id` FROM cmg_core_form WHERE slug = 'config-mail';
 
 INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`htmlOptions`,`data`,`order`) VALUES 
-	(@form,'smtp','SMTP',20,0,'required','{\"title\":\"Check whether SMTP is required.\"}',NULL,0),
+	(@form,'smtp','SMTP',40,0,'required','{\"title\":\"Check whether SMTP is required.\"}',NULL,0),
 	(@form,'smtp_username','SMTP Username',0,0,NULL,'{\"title\":\"SMTP username.\",\"placeholder\":\"SMTP Username\"}',NULL,0),
-	(@form,'smtp_password','SMTP Password',5,0,NULL,'{\"title\":\"SMTP password.\",\"placeholder\":\"SMTP Password\"}',NULL,0),
+	(@form,'smtp_password','SMTP Password',10,0,NULL,'{\"title\":\"SMTP password.\",\"placeholder\":\"SMTP Password\"}',NULL,0),
 	(@form,'smtp_host','SMTP Host',0,0,NULL,'{\"title\":\"SMTP host.\",\"placeholder\":\"SMTP Host\"}',NULL,0),
 	(@form,'smtp_port','SMTP Port',0,0,NULL,'{\"title\":\"SMTP port.\",\"placeholder\":\"SMTP Port\"}',NULL,0),
 	(@form,'smtp_encryption','SMTP Encryption',0,0,NULL,'{\"title\":\"SMTP encryption.\",\"placeholder\":\"SMTP Encryption\"}',NULL,0),
-	(@form,'debug','SMTP Debug',20,0,'required','{\"title\":\"Check whether SMTP debug is required.\"}',NULL,0),
+	(@form,'debug','SMTP Debug',40,0,'required','{\"title\":\"Check whether SMTP debug is required.\"}',NULL,0),
 	(@form,'sender_name','Sender Name',0,0,'required','{\"title\":\"Sender name.\",\"placeholder\":\"Sender Name\"}',NULL,0),
 	(@form,'sender_email','Sender Email',0,0,'required','{\"title\":\"Sender email.\",\"placeholder\":\"Sender Email\"}',NULL,0),
 	(@form,'contact_name','Contact Name',0,0,'required','{\"title\":\"Contact name.\",\"placeholder\":\"Contact Name\"}',NULL,0),

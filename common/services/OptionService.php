@@ -95,7 +95,7 @@ class OptionService extends Service {
 	 */
 	public static function getIdNameMapByCategoryId( $categoryId, $prepend = [], $append = [] ) {
 		
-		return self::findMap( 'id', 'name', CoreTables::TABLE_OPTION, [ 'conditions' => [ 'categoryId' => $categoryId ], 'asArray' => false, 'prepend' => $prepend, 'append' => $append ] );
+		return self::findMap( 'id', 'name', CoreTables::TABLE_OPTION, [ 'conditions' => [ 'categoryId' => $categoryId ], 'prepend' => $prepend, 'append' => $append ] );
 	}
 
 	/**
@@ -106,7 +106,7 @@ class OptionService extends Service {
 
 		$category	= Category::findByTypeName( $type, $categoryName );
 
-		return self::findMap( 'id', 'name', CoreTables::TABLE_OPTION, [ 'conditions' => [ 'categoryId' => $category->id ], 'asArray' => false, 'prepend' => $prepend, 'append' => $append ] );
+		return self::findMap( 'id', 'name', CoreTables::TABLE_OPTION, [ 'conditions' => [ 'categoryId' => $category->id ], 'prepend' => $prepend, 'append' => $append ] );
 	}
 
 	/**

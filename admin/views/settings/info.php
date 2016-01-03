@@ -32,7 +32,8 @@ use cmsgears\widgets\aform\AjaxForm;
 			'options' => [ 'class' => 'cmt-form', 'id' => "frm-setting-$type", 'cmt-clear' => 0 ],
 			'slug' => "config-$type", 'showLabel' => true, 'model' => $model,
 			'ajaxUrl' => Url::toRoute( [ "/apix/cmgcore/settings/update?type=$type" ], true ),
-			'cmtController' => 'settings', 'cmtAction' => 'update'
+			'cmtController' => 'settings', 'cmtAction' => 'update',
+			'modelName' => "setting$type"
 		])?>
 
 		<?php } ?>

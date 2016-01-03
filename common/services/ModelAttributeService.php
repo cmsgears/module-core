@@ -44,7 +44,14 @@ class ModelAttributeService extends Service {
 
 		if( isset( $existingAttribute ) ) {
 
-			$existingAttribute->copyForUpdateFrom( $attribute, [ 'value' ] );
+			if( isset( $attribute->valueType ) ) {
+
+				$existingAttribute->copyForUpdateFrom( $attribute, [ 'valueType', 'value' ] );
+			}
+			else {
+
+				$existingAttribute->copyForUpdateFrom( $attribute, [ 'value' ] );
+			}
 
 			$existingAttribute->update();
 

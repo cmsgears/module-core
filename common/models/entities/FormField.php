@@ -27,22 +27,24 @@ use cmsgears\core\common\config\CoreGlobal;
 class FormField extends CmgEntity {
 
 	const TYPE_TEXT				=  0;
-	const TYPE_PASSWORD			=  5;
-	const TYPE_TEXTAREA			= 10;
-	const TYPE_CHECKBOX			= 20;
-	const TYPE_CHECKBOX_GROUP	= 25;
-	const TYPE_RADIO			= 30;
-	const TYPE_RADIO_GROUP		= 35;
-	const TYPE_SELECT			= 40;
-	const TYPE_RATING			= 50;
-	const TYPE_ICON				= 60;
-	const TYPE_DATE				= 70;
+	const TYPE_PASSWORD			= 10;
+	const TYPE_TEXTAREA			= 20;
+	const TYPE_CHECKBOX			= 30;
+	const TYPE_TOGGLE			= 40;
+	const TYPE_CHECKBOX_GROUP	= 50;
+	const TYPE_RADIO			= 60;
+	const TYPE_RADIO_GROUP		= 70;
+	const TYPE_SELECT			= 80;
+	const TYPE_RATING			= 90;
+	const TYPE_ICON				=100;
+	const TYPE_DATE				=110;
 
 	public static $typeMap = [
 		self::TYPE_TEXT => 'Text',
 		self::TYPE_PASSWORD => 'Password',
 		self::TYPE_TEXTAREA => 'Textarea',
 		self::TYPE_CHECKBOX => 'Checkbox',
+		self::TYPE_TOGGLE => 'Toggle Button',
 		self::TYPE_CHECKBOX_GROUP => 'Checkbox Group',
 		self::TYPE_RADIO => 'Radio',
 		self::TYPE_RADIO_GROUP => 'Radio Group',
@@ -103,7 +105,8 @@ class FormField extends CmgEntity {
 
 				return null;
 			}
-			case self::TYPE_CHECKBOX: {
+			case self::TYPE_CHECKBOX:
+			case self::TYPE_TOGGLE: {
 
 				return Yii::$app->formatter->asBoolean( $this->value );
 			}

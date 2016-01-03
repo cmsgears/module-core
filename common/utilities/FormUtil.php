@@ -103,7 +103,7 @@ class FormUtil {
 
 			if( isset( $model ) ) {
 
-				$value		 = $model->fields[ $field->name ]->value; 
+				$value		 = $model->fields[ $field->name ]->value;
 				$fieldsHtml .= Yii::$app->formDesigner->getApixFieldHtml( $config, $field, $value );
 			}
 			else {

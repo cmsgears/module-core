@@ -131,6 +131,11 @@ class UserService extends Service {
 	 */
 	public static function create( $user, $avatar = null ) {
 
+		if( $user->genderId <= 0 ) {
+
+			unset( $user->genderId );
+		}
+
 		// Set Attributes
 		$user->registeredAt = DateUtil::getDateTime();
 		$user->status		= User::STATUS_NEW;
@@ -139,9 +144,9 @@ class UserService extends Service {
 		$user->generateVerifyToken();
 		$user->generateAuthKey();
 
+		// Save Avatar
 		if( isset( $avatar ) ) {
 
-			// Save Avatar
 			FileService::saveImage( $avatar, [ 'model' => $user, 'attribute' => 'avatarId' ] );
 		}
 
@@ -167,15 +172,20 @@ class UserService extends Service {
 	 */
 	public static function update( $user, $avatar = null ) {
 
+		if( $user->genderId <= 0 ) {
+
+			unset( $user->genderId );
+		}
+
 		// Find existing user
 		$userToUpdate	= User::findById( $user->id );
 
 		// Copy Attributes
 		$userToUpdate->copyForUpdateFrom( $user, [ 'avatarId', 'genderId', 'email', 'username', 'firstName', 'lastName', 'status', 'phone' ] );
 
+		// Save Avatar
 		if( isset( $avatar ) ) {
 
-			// Save Avatar
 			FileService::saveImage( $avatar, [ 'model' => $userToUpdate, 'attribute' => 'avatarId' ] );
 		}
 

@@ -63,7 +63,7 @@ class UserController extends base\Controller {
 		// Update/Render if exist
 		if( isset( $user ) ) {
 			
-			$genderMap = OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER );
+			$genderMap = OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER, [ [ 'value' => 'Choose Gender', 'name' => '0' ] ] );
 
 	    	return $this->render( WebGlobalCore::PAGE_PROFILE, [
 	    		'user' => $user,

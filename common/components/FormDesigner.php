@@ -39,6 +39,10 @@ class FormDesigner extends Component {
 
 				return $form->field( $model, $key )->checkbox( $field->htmlOptions );
 			}
+			case FormField::TYPE_TOGGLE: {
+
+				return $form->field( $model, $key, [ 'class' => 'switch' ] )->checkbox( $field->htmlOptions );
+			}
 			case FormField::TYPE_CHECKBOX_GROUP: {
 				
 				return $this->getCheckboxGroupHtml( $form, $model, $config, $key, $field );
@@ -217,6 +221,10 @@ class FormDesigner extends Component {
 
 				return $this->getApixCheckboxHtml( $config, $field, $value );
 			}
+			case FormField::TYPE_TOGGLE: {
+
+				return $this->getApixToggleHtml( $config, $field, $value );
+			}
 			case FormField::TYPE_CHECKBOX_GROUP: {
 				
 				return $this->getApixCheckboxGroupHtml( $config, $field, $value );
@@ -293,33 +301,67 @@ class FormDesigner extends Component {
 
 	protected function getApixCheckboxHtml( $config, $field, $value ) {
 
-		$htmlOptions	= $field->htmlOptions;
-
-		if( isset( $value ) && ( $value || strcmp( $value, 'Yes' ) == 0 ) ) {
-			
-			if( !isset( $htmlOptions ) ) {
-				
-				$htmlOptions	= [];
-			}
-			
-			$htmlOptions[ 'value' ]	= $value;
-			$value					= true;
-		}
-		else {
-			
-			$value	= false;
-		}
-
-		$modelName	= $config[ 'modelName' ];
-		$fieldHtml 	= Html::checkbox( $modelName . "[$field->name]", $value, $htmlOptions );
+		$modelName		= $config[ 'modelName' ];
+		$fieldHtml	 	= Html::hiddenInput( $modelName . "[$field->name]", $value );
+		$checkboxHtml 	= Html::checkbox( "$field->name", $value, $field->htmlOptions );
 
 		if( $config[ 'label' ] ) {
 
-			$fieldHtml = "<div class='frm-field'><label>$field->label</label>$fieldHtml<span class='error' cmt-error='$field->name'></span></div>";
+			$fieldHtml = "<div class='frm-field'>
+							<label>$field->label</label>
+							<span class='cmt-checkbox'>$checkboxHtml $fieldHtml</span>
+							<span class='error' cmt-error='$field->name'></span>
+						</div>";
 		}
 		else {
 
-			$fieldHtml = "<div class='frm-field'>$fieldHtml<span class='error' cmt-error='$field->name'></span></div>";
+			$fieldHtml = "<div class='frm-field'>
+							<span class='cmt-checkbox'>$checkboxHtml $fieldHtml</span>
+							<span class='error' cmt-error='$field->name'></span>
+						</div>";
+		}
+
+		return $fieldHtml;
+	}
+
+	protected function getApixToggleHtml( $config, $field, $value ) {
+
+		$htmlOptions	= $field->htmlOptions;
+
+		if( !isset( $htmlOptions ) ) {
+
+			$htmlOptions	= [];
+		}
+
+		if( isset( $htmlOptions[ 'class' ] ) ) {
+
+			$htmlOptions[ 'class' ] .= ' cmt-toggle cmt-toggle-round';
+		}
+		else {
+
+			$htmlOptions[ 'class' ] = 'cmt-toggle cmt-toggle-round';
+		}
+
+		$modelName				= $config[ 'modelName' ];
+		$id						= $modelName . "_$field->name";
+		$htmlOptions[ 'id' ]	= $id;
+		$fieldHtml	 			= Html::hiddenInput( $modelName . "[$field->name]", $value );
+		$checkboxHtml 			= Html::checkbox( "$field->name", $value, $htmlOptions );
+
+		if( $config[ 'label' ] ) {
+
+			$fieldHtml = "<div class='frm-field'>
+							<label>$field->label</label>
+							<span class='cmt-switch cmt-checkbox'>$checkboxHtml <label for='$id'></label> $fieldHtml</span>
+							<span class='error' cmt-error='$field->name'></span>
+						</div>";
+		}
+		else {
+
+			$fieldHtml = "<div class='frm-field'>
+							<span class='cmt-switch cmt-checkbox'>$checkboxHtml <label for='$id'></label> $fieldHtml</span>
+							<span class='error' cmt-error='$field->name'></span>
+						</div>";
 		}
 
 		return $fieldHtml;

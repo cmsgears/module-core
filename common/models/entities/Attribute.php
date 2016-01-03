@@ -37,6 +37,21 @@ abstract class Attribute extends CmgModel {
 		return $label;
 	}
 
+	public function getFieldValue() {
+
+		switch( $this->valueType ) {
+
+			case self::VALUE_TYPE_TEXT: {
+
+				return $this->value;
+			}
+			case self::VALUE_TYPE_FLAG: {
+
+				return Yii::$app->formatter->asBoolean( $this->value );
+			}
+		}
+	}
+
 	public function getFieldInfo() {
 
 		switch( $this->valueType ) {
@@ -50,6 +65,10 @@ abstract class Attribute extends CmgModel {
 				$value = Yii::$app->formatter->asBoolean( $this->value );
 
 				return [ 'label' => $this->getLabel(), 'name' => $this->name, 'value' => $value ];
+			}
+			default: {
+
+				return [ 'label' => $this->getLabel(), 'name' => $this->name, 'value' => $this->value ];
 			}
 		}
 	}

@@ -69,7 +69,7 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 		$fieldsMap		= FormUtil::fillFromModelAttribute( "config-$type", $settings );
 		$model			= new GenericForm( [ 'fields' => $fieldsMap ] );
 
-		if( $model->load( Yii::$app->request->post(), 'GenericForm' ) && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), "setting$type" ) && $model->validate() ) {
 
 			$settings	= FormUtil::getModelAttributes( $model, $settings );
 

@@ -56,11 +56,11 @@ class CmgEntity extends ActiveRecord {
 
 			if( $key  == 0 ) {
 
-				$searchQuery .= " $field like '%$value%' ";
+				$searchQuery .= " $culumn like '%$value%' ";
 			}
 			else {
 
-				$searchQuery .= " or $field like '%$value%' ";
+				$searchQuery .= " or $culumn like '%$value%' ";
 			}
 		}
 

@@ -73,9 +73,10 @@ class UserController extends \cmsgears\core\admin\controllers\base\UserControlle
 
 	public function actionProfile() {
 
-		$model		= Yii::$app->user->getIdentity();
-		$email		= $model->email;
-		$username	= $model->username;
+		$this->sidebar 	= [ ];
+		$model			= Yii::$app->user->getIdentity();
+		$email			= $model->email;
+		$username		= $model->username;
 
 		$model->setScenario( 'profile' );
 

@@ -1,40 +1,53 @@
 <?php
 // Yii Imports
 use \Yii;
-use yii\helpers\Html; 
+use yii\helpers\Html;
 use yii\widgets\LinkPager;
 
 // CMG Imports
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . " | Access Matrix";
-
-// Sidebar
-$sidebar						= $this->context->sidebar;
-$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
-$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
+$this->title 	= $coreProperties->getSiteTitle() . ' | Access Matrix';
 
 // Data
 $pagination		= $dataProvider->getPagination();
 $models			= $dataProvider->getModels();
+
+// Searching
+$searchTerms	= Yii::$app->request->getQueryParam( 'search' );
+
+// Sorting
+$sortOrder		= Yii::$app->request->getQueryParam( 'sort' );
+
+if( !isset( $sortOrder ) ) {
+
+	$sortOrder	= '';
+}
 ?>
-<div class="content-header clearfix">
-	<div class="header-actions"> 
-		<?= Html::a( 'Add Role', [ '/cmgcore/role/create' ], [ 'class' => 'btn' ] ) ?>				
+<div class="header-content clearfix">
+	<div class="header-actions col15x10">
+		<?= Html::a( 'Add Role', [ '/cmgcore/role/create' ], [ 'class' => 'btn btn-large' ] ) ?>				
 	</div>
-	<div class="header-search"> 
-		<form action="#">
-			<input type="text" name="search" />
-			<input type="submit" value="Search" />
-		</form>
+	<div class="header-search col15x5">
+		<input id="search-terms" class="field-large" type="text" name="search" value="<?= $searchTerms ?>">
+		<span class="frm-icon-element field-small">
+			<i class="cmti cmti-search"></i>
+			<button id="btn-search" class="btn btn-small">Search</button>
+		</span>
 	</div>
 </div>
+
 <div class="data-grid">
-	<div class="grid-header">
-		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
+	<div class="grid-header clearfix">
+		<div class="col12x6 info">
+			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
+		</div>
+		<div class="col12x6 pagination">
+			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
+		</div>
 	</div>
-	<div class="wrap-grid">
+	<div class="grid-content">
 		<table>
 			<thead>
 				<tr>
@@ -56,7 +69,7 @@ $models			= $dataProvider->getModels();
 						<td><?= $permission->name ?></td>
 						<td>
 							<input type="hidden" name="Binder[binderId]" value="<?=$id?>" />
-							<ul class="ul-inline">
+							<ul class="nav">
 								<?php foreach ( $rolesList as $role ) {
 
 									if( in_array( $role['id'], $roles ) ) {
@@ -74,8 +87,8 @@ $models			= $dataProvider->getModels();
 							</ul>
 						</td>
 						<td>
-							<span class="wrap-icon-action cmt-submit" title="Assign Roles"">
-								<span class="icon-action icon-action-save"</span>
+							<span class="cmt-click" title="Assign Roles">
+								<span class="cmti cmti-save"</span>
 							</span>
 						</td>
 					</tr>
@@ -83,8 +96,12 @@ $models			= $dataProvider->getModels();
 			</tbody>
 		</table>
 	</div>
-	<div class="grid-footer">
-		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?> </div>
-		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
+	<div class="grid-header clearfix">
+		<div class="col12x6 info">
+			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
+		</div>
+		<div class="col12x6 pagination">
+			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
+		</div>
 	</div>
 </div>

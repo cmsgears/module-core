@@ -1,30 +1,31 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Gallery';
-
-// Sidebar and Return URL
-$sidebar						= $this->context->sidebar;
-$returnUrl						= $this->context->returnUrl;
-$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
-$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
+$returnUrl		= $this->context->returnUrl;
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Delete Gallery</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-gallery-delete', 'options' => ['class' => 'frm-split' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Delete Gallery</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-gallery' ] );?>
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
     	<?= $form->field( $model, 'title' )->textInput( [ 'readonly' => true ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => true ] ) ?>
 		<?= $form->field( $model, 'active' )->checkbox( [ 'disabled' => true ] ) ?>
 
-		<div class="box-filler"></div>
-		<?=Html::a( 'Cancel', $returnUrl, ['class' => 'btn' ] );?>
-		<input type="submit" value="Delete" />
+		<div class="clear filler-height"></div>
+
+		<div class="align align-middle">
+			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+			<input class="btn btn-medium" type="submit" value="Delete" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>

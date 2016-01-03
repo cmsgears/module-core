@@ -57,7 +57,7 @@ class Service {
 		if( isset( $searchTerms ) && strlen( $searchTerms ) > 0 && isset( $searchCol ) ) {
 
 			$searchTerms	= HtmlPurifier::process( $searchTerms );
-			$searchQuery 	= CMGEntity::generatSearchQuery( $searchCol, $searchTerms );
+			$searchQuery 	= CMGEntity::generateSearchQuery( $searchCol, $searchTerms );
 			$query 			= $query->andWhere( $searchQuery );
 		}
 

@@ -1,30 +1,31 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
-use yii\helpers\Html;  
+use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Option';
-
-// Sidebar and Return URL
-$sidebar						= $this->context->sidebar;
-$returnUrl						= $this->context->returnUrl;
-$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
-$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
+$returnUrl		= $this->context->returnUrl;
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Delete Option</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-option-create', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Delete Option</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-option' ] );?>
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
     	<?= $form->field( $model, 'value' )->textInput( [ 'readonly' => true ] ) ?> 
     	<?= $form->field( $model, 'icon' )->textInput( [ 'readonly' => true ] ) ?>
     	<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => true ] ) ?>
-		<div class="box-filler"></div>
-		
-		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
-		<input type="submit" value="Delete" />
+
+		<div class="clear filler-height"></div>
+
+		<div class="align align-middle">
+			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+			<input class="btn btn-medium" type="submit" value="Delete" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>

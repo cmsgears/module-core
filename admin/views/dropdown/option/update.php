@@ -1,30 +1,31 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
-use yii\helpers\Html; 
+use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Update Option';
-
-// Sidebar and Return URL
-$sidebar						= $this->context->sidebar;
-$returnUrl						= $this->context->returnUrl;
-$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
-$this->params['sidebar-child'] 	= $sidebar[ 'child' ]; 
+$returnUrl		= $this->context->returnUrl;
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Update Option</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-option-update', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Update Option</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-option' ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'value' ) ?>
     	<?= $form->field( $model, 'icon' ) ?>
     	<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
-		<div class="box-filler"></div>
-		
-		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
-		<input type="submit" value="Update" />
+
+		<div class="clear filler-height"></div>
+
+		<div class="align align-middle">
+			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+			<input class="btn btn-medium" type="submit" value="Update" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>

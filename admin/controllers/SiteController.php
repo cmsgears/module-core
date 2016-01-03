@@ -19,7 +19,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
         parent::__construct( $id, $module, $config );
 
-		// Send user to home if already logged in
+		// Check Layout for Public and Private pages
         if ( Yii::$app->user->isGuest ) {
 
 			$this->layout	= AdminGlobalCore::LAYOUT_PUBLIC;
@@ -75,6 +75,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
     public function actionDashboard() {
 
 		$this->layout	= AdminGlobalCore::LAYOUT_DASHBOARD;
+		$this->sidebar 	= [ 'parent' => 'sidebar-dashboard', 'child' => 'dasboard' ];
 
         return $this->render( 'index' );
     }

@@ -7,15 +7,12 @@ use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\admin\config\AdminGlobalCore;
 
 class SettingsController extends \cmsgears\core\admin\controllers\base\Controller {
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-
-		$this->layout	= AdminGlobalCore::LAYOUT_PRIVATEN;
 
 		$this->sidebar 	= [ 'parent' => 'sidebar-settings', 'child' => 'settings' ];
 	}

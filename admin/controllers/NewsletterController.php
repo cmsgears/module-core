@@ -21,6 +21,8 @@ class NewsletterController extends base\Controller {
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+		
+		$this->sidebar 	= [ 'parent' => 'sidebar-newsletter', 'child' => 'newsletter' ];
 	}
 
 	// Instance Methods --------------------------------------------
@@ -108,7 +110,7 @@ class NewsletterController extends base\Controller {
 				}
 			}
 
-	    	return $this->render('update', [
+	    	return $this->render( 'update', [
 	    		'model' => $model
 	    	]);			
 		}
@@ -133,7 +135,7 @@ class NewsletterController extends base\Controller {
 				}
 			}
 
-	    	return $this->render('delete', [
+	    	return $this->render( 'delete', [
 	    		'model' => $model
 	    	]);
 		}
@@ -144,9 +146,10 @@ class NewsletterController extends base\Controller {
 
 	public function actionMembers() {
 
-		$dataProvider = NewsletterMemberService::getPagination();
+		$this->sidebar 	= [ 'parent' => 'sidebar-newsletter', 'child' => 'member' ];
+		$dataProvider 	= NewsletterMemberService::getPagination();
 
-	    return $this->render('members', [
+	    return $this->render( 'members', [
 	         'dataProvider' => $dataProvider
 	    ]);
 	}

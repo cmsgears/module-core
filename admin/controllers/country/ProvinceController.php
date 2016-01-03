@@ -22,6 +22,8 @@ class ProvinceController extends \cmsgears\core\admin\controllers\base\Controlle
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+		
+		$this->sidebar 		= [ 'parent' => 'sidebar-core', 'child' => 'country' ];
 	}
 
 	// Instance Methods ------------------

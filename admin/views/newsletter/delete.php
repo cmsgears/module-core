@@ -9,28 +9,30 @@ use cmsgears\core\common\widgets\Editor;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Newsletter';
 
-// Sidebar
-$this->params['sidebar-parent'] = 'sidebar-newsletter';
-$this->params['sidebar-child'] 	= 'newsletter';
-
 Editor::widget( [ 'selector' => '.content-editor' ] );
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Delete Newsletter</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-newsletter-delete', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Delete Newsletter</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-newsletter' ] );?>
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=>'true' ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=>'true' ] ) ?>
 
-    	<h4>Newsletter Content</h4>
-    	<?= $form->field( $model, 'content' )->textarea( [ 'readonly'=>'true', 'class' => 'content-editor' ] ) ?>
+		<div class="box-content clearfix">
+			<div class="header">Newsletter Content</div>
+			<?= $form->field( $model, 'content' )->textarea( [ 'readonly' => 'true', 'class' => 'content-editor' ] )->label( false ) ?>
+		</div>
 
-		<div class="box-filler"></div>
+		<div class="clear filler-height"></div>
 
-		<?=Html::a( "Cancel", [ '/cmgcore/newsletter/all' ], ['class' => 'btn' ] );?>
-		<input type="submit" value="Delete" />
+		<div class="align align-middle">
+			<?=Html::a( 'Cancel', [ 'all' ], [ 'class' => 'btn btn-medium' ] );?>
+			<input class="btn btn-medium" type="submit" value="Delete" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>

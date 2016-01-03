@@ -23,7 +23,7 @@ abstract class CategoryController extends Controller {
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
+
 		$this->returnUrl	= Url::previous( 'categories' );
 	}
 
@@ -107,10 +107,9 @@ abstract class CategoryController extends Controller {
 			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
 				if( CategoryService::update( $model, $avatar ) ) {
- 
 
 					return $this->redirect( $this->returnUrl );
-				} 
+				}
 			}
 
 			$categoryMap	= CategoryService::getIdNameMapByType( $type, [
@@ -127,8 +126,8 @@ abstract class CategoryController extends Controller {
 		
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	} 
-	
+	}
+
 	public function actionDelete( $id, $type ) {
 
 		// Find Model
@@ -137,36 +136,21 @@ abstract class CategoryController extends Controller {
 		// Delete/Render if exist		
 		if( isset( $model ) ) {
 
+			$avatar = $model->avatar;
+
 			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
-				$categoryOptions	= OptionService::findByCategoryId( $id );
-				
-				if( isset( $categoryOptions ) ) {
-				
-					foreach( $categoryOptions as $option ) { 
-						
-						try {
-							
-					    	OptionService::delete( $option );
-					    } 
-					    catch( Exception $e) {
-					    	 
-						    throw new HttpException( 409,  Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  ); 
-						}
-					}
-				}
-
-				if( CategoryService::delete( $model, $avatar ) ) { 
+				if( CategoryService::delete( $model, $avatar ) ) {
 
 					return $this->redirect( $this->returnUrl );
 				}
 			}
-			
+
 			$categoryMap	= CategoryService::getIdNameMapByType( $type, [ 'prepend' => [ [ 'value' => 'Choose Category', 'name' => 0 ] ] ] );
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/category/delete', [
 	    		'model' => $model, 
-	    		'avatar' => $model->avatar,
+	    		'avatar' => $avatar,
 	    		'categoryMap' => $categoryMap
 	    	]);
 		}

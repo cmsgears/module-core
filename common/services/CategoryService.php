@@ -133,7 +133,7 @@ class CategoryService extends Service {
 
 	// Delete -----------
 
-	public static function delete( $category ) {
+	public static function delete( $category, $avatar = null ) {
 
 		// Find existing Category
 		$categoryToDelete	= self::findById( $category->id );
@@ -143,6 +143,12 @@ class CategoryService extends Service {
 
 		// Delete Category
 		$categoryToDelete->delete();
+
+		// Delete Avatar
+		if( isset( $avatar ) ) {
+
+			FileService::delete( $avatar, true );
+		}
 
 		return true;
 	}

@@ -1,26 +1,21 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
 
-use cmsgears\widgets\cleditor\ClEditor;
+// CMG Imports
 use cmsgears\files\widgets\AvatarUploader;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Category';
-
-// Sidebar and Return URL
-$sidebar						= $this->context->sidebar;
-$returnUrl						= $this->context->returnUrl;
-$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
-$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
-
-ClEditor::widget( [ 'selector' => '.content-editor' ] );
+$returnUrl		= $this->context->returnUrl;
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Add Category</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-dropdown-create', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Add Category</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-category' ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>  
     	<?= $form->field( $model, 'description' ) ?>
@@ -29,14 +24,18 @@ ClEditor::widget( [ 'selector' => '.content-editor' ] );
     	<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 		<?= $form->field( $model, 'featured' )->checkbox() ?>
 
-    	<h4>Category Avatar</h4>
-		<?=AvatarUploader::widget( [ 'options' => [ 'id' => 'avatar-dropdown', 'class' => 'file-uploader' ], 'model' => $avatar, 'modelClass' => 'Avatar',  'directory' => 'avatar', 'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>
-  
-		<div class="box-filler"></div>
+		<div class="box-content clearfix">
+			<div class="header">Category Avatar</div>
+			<?=AvatarUploader::widget( [ 'options' => [ 'id' => 'avatar-listing', 'class' => 'file-uploader' ], 'model' => $avatar, 'modelClass' => 'Avatar', 'directory' => 'avatar' ] );?>
+		</div>
 
-		<?=Html::a( "Cancel", $returnUrl, [ 'class' => 'btn' ] );?>
-		<input type="submit" value="Create" />
+		<div class="filler-height"></div>
+
+		<div class="align align-middle">
+			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+			<input class="btn btn-medium" type="submit" value="Create" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>

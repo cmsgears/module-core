@@ -11,8 +11,8 @@ $user	= Yii::$app->user->getIdentity();
 <?php if( $core->hasModule( 'cmgcore' ) && $user->isPermitted( 'core' ) ) { ?>
 	<div id="sidebar-identity" class="collapsible-tab has-children <?php if( strcmp( $parent, 'sidebar-identity' ) == 0 ) echo 'active';?>">
 		<div class="collapsible-tab-header clearfix">
-			<div class="colf colf4"><span class="icon-sidebar icon-user"></span></div>
-			<div class="colf colf4x3">Identity</div>
+			<div class="colf colf5 wrap-icon"><span class="cmti cmti-user"></span></div>
+			<div class="colf colf5x4">Identity</div>
 		</div>
 		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-identity' ) == 0 ) echo 'expanded visible';?>">
 			<ul>
@@ -33,8 +33,8 @@ $user	= Yii::$app->user->getIdentity();
 <?php if( $core->hasModule( 'cmgcore' ) && $user->isPermitted( 'core' ) ) { ?>
 	<div id="sidebar-newsletter" class="collapsible-tab has-children <?php if( strcmp( $parent, 'sidebar-newsletter' ) == 0 ) echo 'active';?>">
 		<div class="collapsible-tab-header clearfix">
-			<div class="colf colf4"><span class="icon-sidebar icon-newsletter"></span></div>
-			<div class="colf colf4x3">Newsletters</div>
+			<div class="colf colf5 wrap-icon"><span class="cmti cmti-page"></span></div>
+			<div class="colf colf5x4">Newsletters</div>
 		</div>
 		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-newsletter' ) == 0 ) echo 'expanded visible';?>">
 			<ul>
@@ -48,8 +48,8 @@ $user	= Yii::$app->user->getIdentity();
 <?php if( $core->hasModule( 'cmgcore' ) && $user->isPermitted( 'core' ) ) { ?>
 	<div id="sidebar-core" class="collapsible-tab has-children <?php if( strcmp( $parent, 'sidebar-core' ) == 0 ) echo 'active';?>">
 		<div class="collapsible-tab-header clearfix">
-			<div class="colf colf4"><span class="icon-sidebar icon-settings"></span></div>
-			<div class="colf colf4x3">Core</div>
+			<div class="colf colf5 wrap-icon"><span class="cmti cmti-check-report"></span></div>
+			<div class="colf colf5x4">Core</div>
 		</div>
 		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-core' ) == 0 ) echo 'expanded visible';?>">
 			<ul>

@@ -143,8 +143,8 @@ abstract class DropdownController extends Controller {
 
 		// Delete/Render if exist		
 		if( isset( $model ) ) {
-			
-			$model->type 	= $type;
+
+			$avatar		= $model->avatar;
 
 			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
@@ -171,15 +171,13 @@ abstract class DropdownController extends Controller {
 				}
 			}
 
-			$avatar	= $model->avatar;
-
 	    	return $this->render( '@cmsgears/module-core/admin/views/dropdown/delete', [
 	    		'model' => $model, 
 	    		'avatar' => $model->avatar,
     			'title' => $title
 	    	]);
 		}
-		
+
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}

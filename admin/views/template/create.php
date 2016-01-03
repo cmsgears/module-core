@@ -8,19 +8,16 @@ use cmsgears\core\common\widgets\Editor;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Template';
-
-// Sidebar and Return URL
-$sidebar						= $this->context->sidebar;
-$returnUrl						= $this->context->returnUrl;
-$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
-$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
+$returnUrl		= $this->context->returnUrl;
 
 Editor::widget( [ 'selector' => '.content-editor' ] );
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Add Template</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-template-create', 'options' => ['class' => 'frm-split' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Add Template</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-template' ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>  
     	<?= $form->field( $model, 'description' )->textarea() ?> 
@@ -29,12 +26,18 @@ Editor::widget( [ 'selector' => '.content-editor' ] );
 		<?= $form->field( $model, 'adminView' ) ?>
 		<?= $form->field( $model, 'frontendView' ) ?>
 
-    	<h4>Template Content</h4>
-    	<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+		<div class="box-content clearfix">
+			<div class="header">Template Content</div>
+			<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+		</div>
 
-		<?=Html::a( "Back", $returnUrl, ['class' => 'btn' ] );?>
-		<input type="submit" value="Create" />
+		<div class="filler-height"></div>
+
+		<div class="align align-middle">
+			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+			<input class="btn btn-medium" type="submit" value="Create" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>

@@ -88,6 +88,11 @@ class ModelTag extends CmgModel {
 
 		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND active=1', [ ':pid' => $parentId, ':ptype' => $parentType ] )->all();
 	}
+	
+	public static function findActiveByTagIdParentType( $tagId, $parentType ) {
+		
+		return self::find()->where( 'tagId=:tid AND parentType=:ptype AND active=1',  [ ':tid' => $tagId, ':ptype' => $parentType] )->all();
+	}
 
 	// Delete ----
 

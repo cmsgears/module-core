@@ -31,17 +31,19 @@ use cmsgears\core\common\config\CoreGlobal;
 class Address extends CmgEntity {
 
 	const TYPE_RESIDENTIAL	=  0;
+	const TYPE_PRIMARY		=  5;
 	const TYPE_OFFICE		= 10;
 	const TYPE_MAILING		= 20;
 	const TYPE_SHIPPING		= 30;
 	const TYPE_BILLING		= 40;
 
 	public static $typeMap = [
-		self::TYPE_RESIDENTIAL => "Residential",
-		self::TYPE_OFFICE => "Office",
-		self::TYPE_MAILING => "Mailing",
-		self::TYPE_SHIPPING => "Shipping",
-		self::TYPE_BILLING => "Billing"
+		self::TYPE_RESIDENTIAL => 'Residential',
+		self::TYPE_PRIMARY => 'Primary',
+		self::TYPE_OFFICE => 'Office',
+		self::TYPE_MAILING => 'Mailing',
+		self::TYPE_SHIPPING => 'Shipping',
+		self::TYPE_BILLING => 'Billing'
 	];
 
 	// Instance methods --------------------------------------------------

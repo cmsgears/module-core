@@ -13,9 +13,9 @@ class OwnerFilter {
 	public function doFilter( $args = [] ) {
 
 		$user	= Yii::$app->user->identity;
-		
+
 		if( isset( $args[ 'slug' ] ) && $args[ 'slug' ] ) {
-			
+
 			$modelService	= Yii::createObject( $args[ 'service' ] );
 			$slug			= Yii::$app->request->get( 'slug' );
 			$model			= $modelService::findBySlug( $slug );

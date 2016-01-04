@@ -4,13 +4,10 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
-use cmsgears\core\common\models\entities\CmgFile;
-
 use cmsgears\files\widgets\FileUploader;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Add Gallery';
-$returnUrl		= $this->context->returnUrl;
+$this->title 	= 'Gallery Items | ' . $coreProperties->getSiteTitle();
 $id				= $gallery->id;
 ?>
 <div class="box box-cud">
@@ -19,7 +16,7 @@ $id				= $gallery->id;
 	</div>
 	<div class="box-wrap-content clearfix">
 
-		<div class="box-content frm-split-40-60 clearfix">
+		<div class="box-content">
 			<div class="header">Gallery Details</div>
 			<div class="info">
 				<table>

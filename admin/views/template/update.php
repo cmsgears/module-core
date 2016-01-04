@@ -7,7 +7,7 @@ use yii\helpers\Html;
 use cmsgears\core\common\widgets\Editor;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Update Template';
+$this->title 	= 'Update Template | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 
 Editor::widget( [ 'selector' => '.content-editor' ] );

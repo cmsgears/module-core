@@ -2,19 +2,13 @@
 // Yii Imports
 use \Yii;
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\widgets\LinkPager;
 
 // CMG Imports
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | All Sites';
-
-// Sidebar
-$sidebar						= $this->context->sidebar;
-$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
-$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
+$this->title 	= 'All Sites | ' . $coreProperties->getSiteTitle();
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -31,20 +25,29 @@ if( !isset( $sortOrder ) ) {
 	$sortOrder	= '';
 }
 ?>
-<div class="content-header clearfix">
-	<div class="header-actions"> 
-		<?= Html::a( 'Add Site', [ 'create' ], [ 'class' => 'btn' ] )  ?>				
+<div class="header-content clearfix">
+	<div class="header-actions col15x10">
+		<?= Html::a( 'Add Site', [ 'create' ], [ 'class' => 'btn btn-medium' ] ) ?>				
 	</div>
-	<div class="header-search">
-		<input type="text" name="search" id="search-terms" value="<?php if( isset($searchTerms) ) echo $searchTerms;?>">
-		<input type="submit" name="submit-search" value="Search" onclick="return searchTable();" />
+	<div class="header-search col15x5">
+		<input id="search-terms" class="field-large" type="text" name="search" value="<?= $searchTerms ?>">
+		<span class="frm-icon-element field-small">
+			<i class="cmti cmti-search"></i>
+			<button id="btn-search" class="btn btn-small">Search</button>
+		</span>
 	</div>
 </div>
+
 <div class="data-grid">
-	<div class="grid-header">
-		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
+	<div class="grid-header clearfix">
+		<div class="col12x6 info">
+			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
+		</div>
+		<div class="col12x6 pagination">
+			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
+		</div>
 	</div>
-	<div class="wrap-grid">
+	<div class="grid-content">
 		<table>
 			<thead>
 				<tr>
@@ -76,16 +79,20 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $site->name ?></td>
 						<td><?= $site->order ?></td>
 						<td>
-							<span class="wrap-icon-action" title="Update Site"><?= Html::a( "", [ "update?id=$id" ], ['class'=>'icon-action icon-action-edit'] ) ?></span>
-							<span class="wrap-icon-action" title="Delete Site"><?= Html::a( "", [ "delete?id=$id" ], ['class'=>'icon-action icon-action-delete'] ) ?></span>
+							<span title="Update Site"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
+							<span title="Delete Site"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-o-b' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>
 			</tbody>
 		</table>
 	</div>
-	<div class="grid-footer">
-		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?> </div>
-		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
+	<div class="grid-header clearfix">
+		<div class="col12x6 info">
+			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
+		</div>
+		<div class="col12x6 pagination">
+			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
+		</div>
 	</div>
 </div>

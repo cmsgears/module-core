@@ -1,21 +1,18 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Delete Form Field';
-
-// Sidebar
-$sidebar						= $this->context->sidebar;
-$returnUrl						= $this->context->returnUrl;
-$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
-$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
+$this->title 	= 'Delete Form Field | ' . $coreProperties->getSiteTitle();
+$returnUrl		= $this->context->returnUrl;
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Delete Form Field</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-field-delete', 'options' => ['class' => 'frm-split' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Delete Form Field</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-form-field' ] );?>
 
 		<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
 		<?= $form->field( $model, 'label' )->textInput( [ 'readonly' => true ] ) ?>
@@ -24,11 +21,13 @@ $this->params['sidebar-child'] 	= $sidebar[ 'child' ];
 		<?= $form->field( $model, 'validators' )->textInput( [ 'readonly' => true ] ) ?>
 		<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => true ] ) ?>
 
-		<div class="box-filler"></div>
+		<div class="clear filler-height"></div>
 
-		<?=Html::a( 'Cancel', $returnUrl, ['class' => 'btn' ] );?>
-		<input type="submit" value="Delete" />
+		<div class="align align-middle">
+			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+			<input class="btn btn-medium" type="submit" value="Delete" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>

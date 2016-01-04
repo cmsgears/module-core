@@ -57,12 +57,13 @@ abstract class FormController extends Controller {
 
 	// FormController --------------------
 
-	public function actionAll( $type = null ) {
+	public function actionAll( $type = null, $submits = true ) {
 
 		$dataProvider = FormService::getPaginationByType( $type );
 
 	    return $this->render( '@cmsgears/module-core/admin/views/form/all', [
-	         'dataProvider' => $dataProvider
+	         'dataProvider' => $dataProvider,
+	         'submits' => $submits
 	    ]);
 	}
 

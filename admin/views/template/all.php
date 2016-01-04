@@ -2,14 +2,13 @@
 // Yii Imports
 use \Yii;
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\widgets\LinkPager;
 
 // CMG Imports
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | All Templates';
+$this->title 	= 'All Templates | ' . $coreProperties->getSiteTitle();
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -71,7 +70,7 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $template ) {
 
-						$id 		= $template->id;	 
+						$id = $template->id;	 
 						
 				?>
 					<tr>

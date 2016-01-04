@@ -2,14 +2,13 @@
 // Yii Imports
 use \Yii;
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\widgets\LinkPager;
 
 // CMG Imports
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | All Galleries';
+$this->title 	= 'All Galleries | ' . $coreProperties->getSiteTitle();
 
 // Data
 $pagination		= $dataProvider->getPagination();

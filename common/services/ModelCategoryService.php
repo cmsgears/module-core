@@ -40,6 +40,11 @@ class ModelCategoryService extends Service {
 
 		return ModelCategory::findByParentIdParentType( $parentId, $parentType );
 	}
+	
+	public static function findActiveByCategoryIdParentType( $categoryId, $parentType ) {
+		
+		return ModelCategory::findActiveByCategoryIdParentType( $categoryId, $parentType );
+	}
 
 	public static function findActiveByParentIdParentType( $parentId, $parentType ) {
 

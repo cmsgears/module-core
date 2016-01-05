@@ -87,6 +87,11 @@ class ModelCategory extends CmgModel {
 
 		return self::find()->where( 'parentId=:pid AND active=1', [ ':pid' => $parentId ] )->all();
 	}
+	
+	public static function findActiveByCategoryIdParentType( $categoryId, $parentType ) {
+		
+		return self::find()->where( 'categoryId=:cid AND parentType=:ptype AND active=1', [ ':cid' => $categoryId, ':ptype' => $parentType ] )->all(); 
+	}
 
 	public static function findActiveByParentIdParentType( $parentId, $parentType ) {
 

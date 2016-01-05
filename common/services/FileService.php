@@ -255,7 +255,7 @@ class FileService extends Service {
 
 	// Delete -----------
 
-	public static function delete( $file, $deleteFile = false ) {
+	public static function delete( $file ) {
 
 		// Find existing File
 		$existingFile	= self::findById( $file->id );

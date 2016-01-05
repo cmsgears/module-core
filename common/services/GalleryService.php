@@ -46,7 +46,7 @@ class GalleryService extends Service {
 	 */
 	public static function findBySlug( $slug ) {
 
-		return Gallery::findByName( $slug );
+		return Gallery::findBySlug( $slug );
 	}
 
 	/**
@@ -77,10 +77,6 @@ class GalleryService extends Service {
 	 */
 	public static function create( $gallery ) {
 
-		// Set Attributes
-		$user				= Yii::$app->user->getIdentity();
-		$gallery->createdBy	= $user->id;
-
 		// Create Gallery
 		$gallery->save();
 
@@ -95,7 +91,6 @@ class GalleryService extends Service {
 	 */
 	public static function createItem( $gallery, $item ) {
 
-		// Find User and Slider
 		$modelFile 	= new ModelFile();
 
 		// Save Gallery Image
@@ -114,28 +109,6 @@ class GalleryService extends Service {
 	}
 
 	// Update -----------
-
-	/**
-	 * @param Gallery $gallery
-	 * @return Gallery
-	 */
-	public static function update( $gallery ) {
-
-		// Find existing Gallery
-		$galleryToUpdate	= self::findById( $gallery->id );
-
-		// Copy and set Attributes
-		$user					= Yii::$app->user->getIdentity();
-		$gallery->modifiedBy	= $user->id;
-
-		$galleryToUpdate->copyForUpdateFrom( $gallery, [ 'name', 'description', 'active' ] );
-		
-		// Update Gallery
-		$galleryToUpdate->update();
-		
-		// Return updated Gallery
-		return $galleryToUpdate;
-	}
 
 	/**
 	 * @param CmgFile $item

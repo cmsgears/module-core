@@ -130,8 +130,8 @@ class CmgFile extends CmgEntity {
 
 		// model rules
         $rules = [
-            [ [ 'createdBy', 'name', 'extension', 'directory', 'url' ], 'required' ],
-            [ [ 'id', 'title', 'description', 'altText', 'visibility', 'thumb', 'link', 'changed' ], 'safe' ],
+            [ [ 'name', 'extension', 'directory' ], 'required' ],
+            [ [ 'id', 'title', 'description', 'altText', 'visibility', 'url', 'thumb', 'link', 'changed' ], 'safe' ],
             [ [ 'name', 'directory' ], 'string', 'min' => 1, 'max' => 150 ],
             [ [ 'extension', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
             [ [ 'width', 'height', 'twidth', 'theight' ], 'safe' ],

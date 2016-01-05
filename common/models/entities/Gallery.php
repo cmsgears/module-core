@@ -12,6 +12,8 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\behaviors\AuthorBehavior;
+
 use cmsgears\core\common\models\traits\FileTrait;
 use cmsgears\core\common\models\traits\AttributeTrait;
 use cmsgears\core\common\models\traits\CategoryTrait;
@@ -67,6 +69,9 @@ class Gallery extends NamedCmgEntity {
 
         return [
 
+            'authorBehavior' => [
+                'class' => AuthorBehavior::className()
+			],
             'sluggableBehavior' => [
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
@@ -92,7 +97,7 @@ class Gallery extends NamedCmgEntity {
 		// model rules
         $rules = [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'description', 'title' ], 'safe' ],
+            [ [ 'id', 'title', 'description' ], 'safe' ],
             [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],

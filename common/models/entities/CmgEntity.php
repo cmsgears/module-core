@@ -12,6 +12,12 @@ class CmgEntity extends ActiveRecord {
 
 	// Instance Methods --------------------------------------------
 
+	// Check whether model already exist	
+	public function isExisting() {
+
+		return isset( $this->id ) && $this->id > 0;
+	}
+
 	/**
 	 * The method allows to update a model for selected columns to target model.
 	 */

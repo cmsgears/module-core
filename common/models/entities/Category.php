@@ -16,15 +16,18 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property integer $id
  * @property integer $avatarId
  * @property integer $parentId
+ * @property integer $rootId
  * @property string $name
  * @property string $slug
  * @property string $description
  * @property string $type
  * @property string $icon
  * @property string $featured
+ * @property integer lValue
+ * @property integer rValue
  * @property string $htmlOptions
  */
-class Category extends CmgEntity {
+class Category extends HierarchicalModel {
 
 	// Instance Methods --------------------------------------------
 
@@ -34,13 +37,6 @@ class Category extends CmgEntity {
 	public function getParent() {
 
 		return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] );
-	}
-
-	public function getParentName() {
-
-		$parent	= $this->parent;
-		
-		return isset( $parent ) ? $parent->name : null;
 	}
 
 	/**
@@ -54,7 +50,7 @@ class Category extends CmgEntity {
 	/**
 	 * @return array - list of immediate child categories
 	 */
-	public function getCategories() {
+	public function getChildren() {
 
     	return $this->hasMany( Category::className(), [ 'parentId' => 'id' ] );
 	}

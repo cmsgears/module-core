@@ -36,6 +36,11 @@ class CoreGlobal {
 
 	const CATEGORY_GENDER		= 'gender';
 
+	// Hierarchy -- Nested Set -----------------------------------------
+
+	const HIERARCHY_VALUE_L		= 1;
+	const HIERARCHY_VALUE_R		= 2;
+
 	// Config ----------------------------------------------------------
 
 	const CONFIG_CORE			= 'core';

@@ -86,8 +86,10 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $category->getFeaturedStr() ?></td> 
 						<td> <span class="<?= $category->icon ?>" title="<?= $category->name ?>"></span></td>
 						<td>
+							<!--
 							<span title="Update Category"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete Category"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-o-b' ] )  ?></span>
+							-->
 						</td>
 					</tr>
 				<?php } ?>

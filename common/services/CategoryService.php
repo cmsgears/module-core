@@ -5,6 +5,8 @@ namespace cmsgears\core\common\services;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\Category;
 use cmsgears\core\common\models\entities\ModelCategory;
@@ -12,7 +14,7 @@ use cmsgears\core\common\models\entities\ModelCategory;
 /**
  * The class CategoryService is base class to perform database activities for Category Entity.
  */
-class CategoryService extends Service {
+class CategoryService extends HierarchyService {
 
 	// Static Methods ----------------------------------------------
 
@@ -26,9 +28,9 @@ class CategoryService extends Service {
 
 		return Category::findById( $id );
 	}
-	
+
 	public static function findByParentId( $id ) {
-		
+
 		return Category::findByParentId( $id );
 	}
 
@@ -55,21 +57,30 @@ class CategoryService extends Service {
 		return Category::findByType( $type );
     }
 
-	/**
-	 * @param string $id
-	 * @return array - An array of associative array of category id and name for the specified category type
-	 */
-	public static function getIdNameListByType( $type, $prepend = [], $append = [] ) {
+	public static function getIdNameListByType( $type, $config = [] ) {
 
-		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_CATEGORY, [ 'conditions' => [ 'type' => $type ], 'asArray' => false, 'prepend' => $prepend, 'append' => $append ] );
+		$config[ 'conditions' ][ 'type' ] = $type;
+
+		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_CATEGORY, $config );
 	}
 
-	public static function getIdNameMapByType( $type, $config ) {
+	public static function getTopLevelIdNameListByType( $type, $config = [] ) {
+
+		$config[ 'conditions' ][ 'parentId' ] = null;
+
+		return self::getIdNameListByType( $type, $config );
+	}
+
+	public static function getIdNameMapByType( $type, $config = [] ) {
 
 		$config[ 'conditions' ][ 'type' ] 	= $type;
-		$config[ 'asArray' ] 				= false;
 
 		return self::findMap( 'id', 'name', CoreTables::TABLE_CATEGORY, $config );
+	}
+
+	public static function getLevelListByType( $type ) {
+
+		return self::getLevelList( [ 'type' => $type ] );
 	}
 
 	// Data Provider ----
@@ -87,18 +98,13 @@ class CategoryService extends Service {
 
 	public static function create( $category, $avatar = null ) {
 
-		if( $category->parentId <= 0 ) {
-
-			unset( $category->parentId );
-		}
-
+		// Save Avatar
 		if( isset( $avatar ) ) {
 
 			FileService::saveImage( $avatar, [ 'model' => $category, 'attribute' => 'avatarId' ] );
 		}
 
-		// Create Category
-		$category->save();
+		$category	= self::createInHierarchy( CoreTables::TABLE_CATEGORY, $category );
 
 		// Return Category
 		return $category;
@@ -111,18 +117,17 @@ class CategoryService extends Service {
 		// Find existing Category
 		$categoryToUpdate	= self::findById( $category->id );
 
-		// Copy Attributes
-		$categoryToUpdate->copyForUpdateFrom( $category, [ 'avatarId', 'parentId', 'name', 'description', 'type', 'icon', 'featured', 'htmlOptions' ] );
-
-		if( $categoryToUpdate->parentId <= 0 ) {
-
-			unset( $categoryToUpdate->parentId );
-		}
-
+		// Save Avatar
 		if( isset( $avatar ) ) {
 
 			FileService::saveImage( $avatar, [ 'model' => $categoryToUpdate, 'attribute' => 'avatarId' ] );
 		}
+
+		// Update Hierarchy
+		$categoryToUpdate = self::updateInHierarchy( CoreTables::TABLE_CATEGORY, $category, $categoryToUpdate );
+
+		// Copy Attributes
+		$categoryToUpdate->copyForUpdateFrom( $category, [ 'name', 'description', 'type', 'icon', 'featured', 'htmlOptions' ] );
 
 		// Update Category
 		$categoryToUpdate->update();
@@ -141,13 +146,16 @@ class CategoryService extends Service {
 		// Delete dependency
 		ModelCategory::deleteByCategoryId( $category->id );
 
+		// Update Hierarchy
+		$categoryToUpdate = self::deleteInHierarchy( CoreTables::TABLE_CATEGORY, $categoryToDelete );
+
 		// Delete Category
 		$categoryToDelete->delete();
 
 		// Delete Avatar
 		if( isset( $avatar ) ) {
 
-			FileService::delete( $avatar, true );
+			FileService::delete( $avatar );
 		}
 
 		return true;

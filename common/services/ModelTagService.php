@@ -5,7 +5,10 @@ namespace cmsgears\core\common\services;
 use \Yii; 
 
 // CMG Imports
+use cmsgears\core\common\models\entities\Tag;
 use cmsgears\core\common\models\entities\ModelTag;
+
+use cmsgears\core\common\services\TagService;
 
 /**
  * The class ModelTagService is base class to perform database activities for ModelTag Entity.
@@ -58,34 +61,76 @@ class ModelTagService extends Service {
 		$model->save();
 	}
 
-	// Update ---------------
+	public static function createFromCsv( $parentId, $parentType, $tags ) {
 
-	public static function update( $parentId, $parentType, $tagId ) {
+		$tags	= preg_split( "/,/", $tags );
 
-		$existingModelTag	= self::findByTagId( $parentId, $parentType, $tagId );
+		foreach ( $tags as $tagName ) {
 
-		if( isset( $existingModelTag ) ) {
+			$tagName	= trim( $tagName );
+			$tag		= Tag::findByTypeName( $parentType, $tagName );
 
-			self::updateActive( $existingModelTag, 1 );
-		}
-		else {
+			if( !isset( $tag ) ) {
 
-			$modelTag				= new ModelTag();
-			$modelTag->tagId		= $tagId;
-			$modelTag->parentId		= $parentId;
-			$modelTag->parentType	= $parentType;
+				$tag	= TagService::create( $tagName, $parentType );
+			}
 
-			self::create( $modelTag );
+			$modelTag	= self::findByTagId( $parentId, $parentType, $tag->id );
+
+			// Create if does not exist
+			if( !isset( $modelTag ) ) {
+
+				$modelTag	= new ModelTag();
+
+				$modelTag->tagId		= $tag->id;
+				$modelTag->parentId		= $parentId;
+				$modelTag->parentType	= $parentType;
+				$modelTag->order		= 0;
+				$modelTag->active		= true;
+
+				$modelTag->save();
+			}
+			// Activate if already exist
+			else {
+
+				self::activate( $modelTag, 1 );
+			}
 		}
 	}
 
-	public static function updateActive( $model, $flag ) {
+	// Update ---------------
 
-		$model->active	= $flag;
+	public static function update( $modelTag ) {
 
-		$model->update();
+		// Find existing Model Tag
+		$modelTagToUpdate	= self::findById( $modelTag->id );
 
-		return $model;
+		// Copy and set Attributes
+		$modelTagToUpdate->copyForUpdateFrom( $modelTag, [ 'order', 'active' ] );
+
+		// Update Model Tag
+		$modelTagToUpdate->update();
+		
+		// Return updated Model Tag
+		return $modelTagToUpdate;
+	}
+
+	public static function activate( $modelTag ) {
+
+		$modelTag->active	= true;
+
+		$modelTag->update();
+
+		return $modelTag;
+	}
+
+	public static function deActivate( $modelTag ) {
+
+		$modelTag->active	= false;
+
+		$modelTag->update();
+
+		return $modelTag;
 	}
 
 	// Delete ----------------
@@ -95,7 +140,27 @@ class ModelTagService extends Service {
 		$model->delete();
 
 		return true;
-	} 
+	}
+
+	public static function deleteByTagSlug( $parentId, $parentType, $tagSlug, $delete = false ) {
+
+		$tag				= TagService::findBySlug( $tagSlug );
+		$modelTagToDelete	= self::findByTagId( $parentId, $parentType, $tag->id );
+
+		if( isset( $modelTagToDelete ) ) {
+
+			if( $delete ) {
+
+				$modelTagToDelete->delete();
+			}
+			else {
+				
+				self::deActivate( $modelTagToDelete );
+			}
+		}
+
+		return true;
+	}
 }
 
 ?>

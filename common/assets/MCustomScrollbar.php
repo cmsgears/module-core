@@ -3,21 +3,20 @@ namespace cmsgears\core\common\assets;
 
 // Yii Imports
 use \Yii;
-use yii\web\AssetBundle;
 use yii\web\View;
 
-class JqueryUiAssetBundle extends AssetBundle {
+class MCustomScrollbar extends \yii\web\AssetBundle {
 
 	// Variables ---------------------------------------------------
 
 	// Public ----
 
 	// Path Configuration
-    public $sourcePath = '@bower/jquery-ui/ui';
+    public $sourcePath = '@bower/malihu-custom-scrollbar-plugin';
 
 	// Load Javascript
     public $js = [
-        'jquery-ui.js'
+        'jquery.mCustomScrollbar.concat.min.js'
     ];
 
 	// Position to load Javascript

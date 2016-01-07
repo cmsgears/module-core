@@ -25,7 +25,7 @@ class ModelTag extends CmgModel {
 
 		return $this->hasOne( Tag::className(), [ 'id' => 'tagId' ] );
 	}
-	
+ 
 	// yii\base\Model --------------------
 
     /**

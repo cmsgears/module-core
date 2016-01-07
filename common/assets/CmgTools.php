@@ -3,21 +3,20 @@ namespace cmsgears\core\common\assets;
 
 // Yii Imports
 use \Yii;
-use yii\web\AssetBundle;
 use yii\web\View;
 
-class HandlebarAssetBundle extends AssetBundle {
+class CmgTools extends \yii\web\AssetBundle {
 
 	// Variables ---------------------------------------------------
 
 	// Public ----
 
 	// Path Configuration
-    public $sourcePath = '@bower/handlebars';
+    public $sourcePath = '@bower/cmt-js/dist';
 
 	// Load Javascript
     public $js = [
-        'handlebars.js'
+        'cmgtools.js'
     ];
 
 	// Position to load Javascript

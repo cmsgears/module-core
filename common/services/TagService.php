@@ -27,15 +27,11 @@ class TagService extends Service {
 		return Tag::findById( $id );
 	}
 
-	/**
-	 * @param string $name
-	 * @return Tag
-	 */
-	public static function findByName( $name ) {
+	public static function findBySlug( $slug ) {
 
-		return Tag::findByName( $name );
+		return Tag::findBySlug( $slug );
 	}
-	
+
 	public static function findByTypeName( $type, $name ) {
 
 		return Tag::findByTypeName( $type, $name );

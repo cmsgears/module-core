@@ -3,21 +3,20 @@ namespace cmsgears\core\common\assets;
 
 // Yii Imports
 use \Yii;
-use yii\web\AssetBundle;
 use yii\web\View;
 
-class CMTAssetBundle extends AssetBundle {
+class JqueryUi extends \yii\web\AssetBundle {
 
 	// Variables ---------------------------------------------------
 
 	// Public ----
 
 	// Path Configuration
-    public $sourcePath = '@bower/cmt-js/dist';
+    public $sourcePath = '@bower/jquery-ui/ui';
 
 	// Load Javascript
     public $js = [
-        'cmgtools.js'
+        'jquery-ui.js'
     ];
 
 	// Position to load Javascript

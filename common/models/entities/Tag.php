@@ -132,6 +132,14 @@ class Tag extends CmgEntity {
 	/**
 	 * @return Tag - by type
 	 */
+	public static function findBySlug( $slug ) {
+
+		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+	}
+
+	/**
+	 * @return Tag - by type
+	 */
 	public static function findByType( $type ) {
 
 		return self::find()->where( 'type=:type', [ ':type' => $type ] )->all();

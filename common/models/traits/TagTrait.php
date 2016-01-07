@@ -42,7 +42,20 @@ trait TagTrait {
 
 		foreach ( $tags as $tag ) {
 
-			$tagsMap[ $tag->tagId ] = $tag->name;
+			$tagsMap[ $tag->id ] = $tag->name;
+		}
+
+		return $tagsMap;
+	}
+
+	public function getTagSlugNameMap() {
+
+		$tags 		= $this->tags;
+		$tagsMap	= array();
+
+		foreach ( $tags as $tag ) {
+
+			$tagsMap[ $tag->slug ] = $tag->name;
 		}
 
 		return $tagsMap;

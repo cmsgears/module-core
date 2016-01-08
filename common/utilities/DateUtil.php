@@ -8,6 +8,49 @@ use \DateTime;
  */
 class DateUtil {
 
+	// Week Days ---------------------------------------------------
+
+	const WEEK_DAY_SUN		=  0;
+	const WEEK_DAY_MON		=  1;
+	const WEEK_DAY_TUE		=  2;
+	const WEEK_DAY_WED		=  3;
+	const WEEK_DAY_THU		=  4;
+	const WEEK_DAY_FRI		=  5;
+	const WEEK_DAY_SAT		=  6;
+	const WEEK_DAY_ALL		= 10;
+
+	public static $weekDaysMap = [
+		self::WEEK_DAY_MON => 'Monday',
+		self::WEEK_DAY_TUE => 'Tuesday',
+		self::WEEK_DAY_WED => 'Wednesday',
+		self::WEEK_DAY_THU => 'Thursday',
+		self::WEEK_DAY_FRI => 'Friday',
+		self::WEEK_DAY_SAT => 'Saturday',
+		self::WEEK_DAY_SUN => 'Sunday'
+	];
+
+	public static $weekDaysWithAllMap = [
+		self::WEEK_DAY_ALL => 'All Days',
+		self::WEEK_DAY_MON => 'Monday',
+		self::WEEK_DAY_TUE => 'Tuesday',
+		self::WEEK_DAY_WED => 'Wednesday',
+		self::WEEK_DAY_THU => 'Thursday',
+		self::WEEK_DAY_FRI => 'Friday',
+		self::WEEK_DAY_SAT => 'Saturday',
+		self::WEEK_DAY_SUN => 'Sunday'
+	];
+
+	// Hrs/Mins ----------------------------------------------------
+
+	// hours in 12 and 24 hours format
+	public static $hrs12 	= [ '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12' ];
+	public static $hrs24 	= [ '00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24' ];
+
+	// minutes with different interval
+	public static $mins15 	= [ '00', '15', '30', '45' ];
+	public static $mins10 	= [ '00', '10', '20', '30', '40', '50' ];
+	public static $mins5 	= [ '00', '05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55' ];
+
 	// Static Methods ----------------------------------------------
 
 	/**
@@ -199,6 +242,101 @@ class DateUtil {
 		
 		return $dates;
 	}
+
+    public static function getHrMinSlots( $startHr = 9, $minInterval = 15 ) {
+
+		$interval	= [];
+		$hour	 	= $startHr;
+		$minute	 	= 0;
+
+		for( $slot = 1; $slot <= 97; $slot++ ) {
+
+			$houri	= $hour;
+
+			if( $hour < 10 ) {
+				
+				$houri	= "0$hour";
+			}
+
+			$minutei = $minute;
+
+			if( $minute < 10 ) {
+				
+				$minutei	= "0$minute";
+			}
+
+			$interval[]	= $houri . ':' . $minutei . ':00';
+
+			$minute += $minInterval;
+
+			if( $slot % 4 == 0 ) {
+
+				 $hour++;
+				 $minute	= 0;
+
+				 if( $hour == 24 ) {
+
+					$hour	= 0;
+				 }
+			}
+
+			if( $slot == 97 ) {
+
+				 $hour		= 0; 
+				 $minute	= 0;
+			}
+		}
+
+		return  $interval;
+    }
+
+    public static function getHrMinSlotsForSelect( $startHr = 9, $minInterval = 15 ) {
+
+		$interval	= [];
+		$hour	 	= $startHr;
+		$minute	 	= 0;
+
+		for( $slot = 1; $slot <= 97; $slot++ ) {
+
+			$houri	= $hour;
+
+			if( $hour < 10 ) {
+				
+				$houri	= "0$hour";
+			}
+
+			$minutei = $minute;
+
+			if( $minute < 10 ) {
+				
+				$minutei	= "0$minute";
+			}
+
+			$time				= $houri . ':' . $minutei . ':00';
+			$interval[ $time ]	= $time;
+
+			$minute += $minInterval;
+
+			if( $slot % 4 == 0 ) {
+
+				 $hour++;
+				 $minute	= 0;
+
+				 if( $hour == 24 ) {
+
+					$hour	= 0;
+				 }
+			}
+
+			if( $slot == 97 ) {
+
+				 $hour		= 0; 
+				 $minute	= 0;
+			}
+		}
+
+		return  $interval;
+    }
 }
 
 ?>

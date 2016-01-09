@@ -40,12 +40,25 @@ trait CategoryTrait {
 	 */
 	public function getCategoryIdList() {
 
-    	$categories 		= $this->modelCategories;
-		$categoriesList		= array();
+    	$categories 		= $this->categories;
+		$categoriesList		= [];
 
 		foreach ( $categories as $category ) {
 
-			array_push( $categoriesList, $category->categoryId );
+			array_push( $categoriesList, $category->id );
+		}
+
+		return $categoriesList;
+	}
+
+	public function getCategoryNameList() {
+
+    	$categories 		= $this->categories;
+		$categoriesList		= [];
+
+		foreach ( $categories as $category ) {
+
+			array_push( $categoriesList, $category->name );
 		}
 
 		return $categoriesList;
@@ -57,7 +70,7 @@ trait CategoryTrait {
 	public function getCategoryIdNameList() {
 
 		$categories 	= $this->categories;
-		$categoriesList	= array();
+		$categoriesList	= [];
 
 		foreach ( $categories as $category ) {
 
@@ -73,7 +86,7 @@ trait CategoryTrait {
 	public function getCategoryIdNameMap() {
 
 		$categories 	= $this->categories;
-		$categoriesMap	= array();
+		$categoriesMap	= [];
 
 		foreach ( $categories as $category ) {
 
@@ -81,7 +94,28 @@ trait CategoryTrait {
 		}
 
 		return $categoriesMap;
-	}	
+	}
+
+	public function getCategoryCsv( $limit = 0 ) {
+
+    	$categories 	= $this->categories;
+		$categoriesCsv	= [];
+		$count			= 1;
+
+		foreach ( $categories as $category ) {
+
+			$categoriesCsv[] = $category->name;
+
+			if( $limit > 0 && $count >= $limit ) {
+
+				break;
+			}
+
+			$count++;
+		}
+
+		return implode( ", ", $categoriesCsv );
+	}
 }
 
 ?>

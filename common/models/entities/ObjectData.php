@@ -16,6 +16,7 @@ use cmsgears\cms\admin\models\forms\WidgetForm;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+use cmsgears\core\common\models\traits\DataTrait;
 
 /**
  * ObjectData Entity
@@ -39,20 +40,9 @@ class ObjectData extends CmgEntity {
 
 	use CreateModifyTrait;
 
+	use DataTrait;
+
 	// Instance Methods --------------------------------------------
-
-	public function generateJsonFromObject( $dataObject ) {
-
-		$data		= json_encode( $dataObject );
-		$this->data	= $data;
-	}
-
-	public function generateObjectFromJson( $assoc = false ) {
-
-		$obj 	= json_decode( $this->data, $assoc );
-
-		return (object)$obj;
-	}
 
 	public function getTemplate() {
 

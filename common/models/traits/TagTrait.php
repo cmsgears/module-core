@@ -32,13 +32,52 @@ trait TagTrait {
 					});
 	}
 
+	public function getTagIdList() {
+
+    	$tags 		= $this->tags;
+		$tagsList	= [];
+
+		foreach ( $tags as $tag ) {
+
+			array_push( $tagsList, $tag->categoryId );
+		}
+
+		return $tagsList;
+	}
+
+	public function getTagNameList() {
+
+    	$tags 		= $this->tags;
+		$tagsList	= [];
+
+		foreach ( $tags as $tag ) {
+
+			array_push( $tagsList, $tag->name );
+		}
+
+		return $tagsList;
+	}
+
+	public function getTagIdNameList() {
+
+    	$tags 		= $this->tags;
+		$tagsList	= [];
+
+		foreach ( $tags as $tag ) {
+
+			$tagsList[] = [ 'id' => $tag->id, 'name' => $tag->name ];
+		}
+
+		return $tagsList;
+	}
+
 	/**
 	 * @return array - map of tag name and description
 	 */
 	public function getTagMap() {
 
 		$tags 		= $this->tags;
-		$tagsMap	= array();
+		$tagsMap	= [];
 
 		foreach ( $tags as $tag ) {
 
@@ -51,7 +90,7 @@ trait TagTrait {
 	public function getTagSlugNameMap() {
 
 		$tags 		= $this->tags;
-		$tagsMap	= array();
+		$tagsMap	= [];
 
 		foreach ( $tags as $tag ) {
 
@@ -61,17 +100,25 @@ trait TagTrait {
 		return $tagsMap;
 	}
 
-	public function getTagCsv() {
+	public function getTagCsv( $limit = 0 ) {
 
-    	$tags		= $this->tags;
+    	$tags 		= $this->tags;
 		$tagsCsv	= [];
+		$count		= 1;
 
 		foreach ( $tags as $tag ) {
 
-			$tagsCsv[] = $tag->name; 
+			$tagsCsv[] = $tag->name;
+
+			if( $limit > 0 && $count >= $limit ) {
+
+				break;
+			}
+
+			$count++;
 		}
 
-		return implode( ",", $tagsCsv );
+		return implode( ", ", $tagsCsv );
 	}
 }
 

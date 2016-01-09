@@ -64,6 +64,27 @@ class Address extends CmgEntity {
 		return $this->hasOne( Province::className(), [ 'id' => 'provinceId' ] );
 	}
 
+	public function toString() {
+
+		$country 	= $this->country->name;
+		$province 	= $this->province->name;
+		$address	= $this->line1;
+
+		if( isset( $this->line2 ) && strlen( $this->line2 ) > 0 ) {
+
+			$address .= ", $this->line2";
+		}
+
+		if( isset( $this->line3 ) && strlen( $this->line2 ) > 0 ) {
+
+			$address .= ", $this->line3";
+		}
+
+		$address .= ", $country, $province, $this->zip";
+
+		return $address;
+	}
+
 	// yii\base\Model --------------------
 
     /**

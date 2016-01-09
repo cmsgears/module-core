@@ -47,6 +47,20 @@ trait AddressTrait {
 	}
 
 	/**
+	 * @return Address - associated with parent having type set to residential
+	 */
+	public function getPrimaryAddress() {
+
+    	return $this->hasOne( Address::className(), [ 'id' => 'addressId' ] )
+					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query, $type = Address::TYPE_PRIMARY ) {
+
+						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
+
+                      	$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->addressType, ':type' => $type ] );
+					});
+	}
+
+	/**
 	 * @return Address - associated with parent having type set to office
 	 */
 	public function getOfficeAddress() {

@@ -44,6 +44,11 @@ class Widget extends \yii\base\Widget {
 
 		return parent::getViewPath();
 	}
+
+	public function renderWidget() {
+
+		// To be overriden by childs.
+	}
 }
 
 ?>

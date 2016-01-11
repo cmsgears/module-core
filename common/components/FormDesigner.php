@@ -15,6 +15,10 @@ use cmsgears\core\common\models\entities\FormField;
  */
 class FormDesigner extends Component {
 
+	public static $yesNoMap	= [ '0' => 'Yes', '1' => 'No' ];
+
+	// Yii Flavored Forms --------------------------------------------
+
 	/**
 	 * Generate field html using Yii Form Widget.
 	 * @param FormField $field
@@ -196,6 +200,70 @@ class FormDesigner extends Component {
 
 		return $fieldHtml;
 	}
+
+	// TODO: Check more to make compatible with both dynamic and regular forms
+
+	public function getRadioList( $form, $model, $field, $itemlist, $inline = true, $yesNo = false ) {
+
+		$setInline	= null;
+		
+		if( $inline ) {
+			
+			$setInline	= 'clear-none';
+		}
+
+		if( $yesNo ) {
+
+			$itemlist = self::$yesNoMap;
+		}
+
+		$template	= "<div class='cmt-choice $setInline clearfix'>{label}<div class='element-60'>{input}</div></div>";
+
+		return $form->field( $model, "$field", [ 'template' => $template ]  )
+			        ->radioList(
+			            $itemlist,
+			            [
+			                'item' => function( $index, $label, $name, $checked, $value ) {
+
+			                    $html = "<label id='$label'><input checked";
+			                    $html .= !$checked;
+			                    $html .= " type='radio' name='$name' value='$value'><span class='label pad-label'>$label</span></label>"; 
+			
+			                    return $html;
+			                }
+			            ]
+			        );
+	}
+
+	public function getCheckboxList( $form, $model, $field, $itemlist, $inline = true ) {
+
+		$setInline	= null;
+
+		if( $inline ) {
+
+			$setInline	= 'clear-none';
+		}
+
+		$template	= "<div class='cmt-choice $setInline clearfix'>{label}<div class='element-60'>{input}</div></div>";
+
+		return $form->field( $model, "$field", [ 'template' => $template ] )
+					->checkboxList(
+					    $itemlist,
+					    [
+					        'item' => function( $index, $label, $name, $checked, $value ) {
+
+			                    $html = "<label id='$label'><input checked";
+			                    $html .= !$checked;
+			                    $html .= " type='checkbox' name='$name' value='$value'><span class='label pad-label'>$label</span></label>"; 
+			
+			                    return $html;
+					        },                
+					    ]
+					); 
+	}
+
+	
+	// Apix Flavored Forms -------------------------------------------
 
 	/**
 	 * Generate field html for CMGTools JS Library.

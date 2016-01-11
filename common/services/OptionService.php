@@ -145,6 +145,20 @@ class OptionService extends Service {
 		return $optionsMap;
 	}
 
+	public static function getValueNameMapByCategorySlug( $categorySlug, $type = CoreGlobal::TYPE_COMBO ) {
+
+		$category	= Category::findBySlug( $categorySlug );
+		$options	= $category->options;
+		$optionsMap	= array();
+
+		foreach ( $options as $option ) {
+
+			$optionsMap[ $option->value ] = $option->name;
+		}
+
+		return $optionsMap;
+	}
+
 	// Data Provider ----
 
 	/**

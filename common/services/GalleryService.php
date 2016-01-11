@@ -84,6 +84,15 @@ class GalleryService extends Service {
 		return $gallery;
 	}
 
+	public static function createByNameType( $name, $type ) {
+
+		$gallery			= new Gallery();
+		$gallery->name		= $name;
+		$gallery->type		= $type;
+
+		return self::create( $gallery );
+	}
+
 	/**
 	 * @param Gallery $gallery
 	 * @param CmgFile $item

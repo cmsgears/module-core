@@ -206,7 +206,7 @@ class FormDesigner extends Component {
 	public function getRadioList( $form, $model, $field, $itemlist, $inline = true, $yesNo = false ) {
 
 		$setInline	= null;
-		
+
 		if( $inline ) {
 			
 			$setInline	= 'clear-none';
@@ -217,7 +217,7 @@ class FormDesigner extends Component {
 			$itemlist = self::$yesNoMap;
 		}
 
-		$template	= "<div class='cmt-choice $setInline clearfix'>{label}<div class='element-60'>{input}</div></div>";
+		$template	= "<div class='cmt-choice $setInline clearfix'>{label}<div class='element-60'>{input}</div><div class='help-block'>\n{hint}\n{error}</div></div>";
 
 		return $form->field( $model, "$field", [ 'template' => $template ]  )
 			        ->radioList(
@@ -225,7 +225,8 @@ class FormDesigner extends Component {
 			            [
 			                'item' => function( $index, $label, $name, $checked, $value ) {
 
-			                    $html = "<label id='$label'><input checked";
+								$slabel = strtolower( $label );
+			                    $html = "<label class='$slabel'><input checked";
 			                    $html .= !$checked;
 			                    $html .= " type='radio' name='$name' value='$value'><span class='label pad-label'>$label</span></label>"; 
 			
@@ -244,7 +245,7 @@ class FormDesigner extends Component {
 			$setInline	= 'clear-none';
 		}
 
-		$template	= "<div class='cmt-choice $setInline clearfix'>{label}<div class='element-60'>{input}</div></div>";
+		$template	= "<div class='cmt-choice $setInline clearfix'>{label}<div class='element-60'>{input}</div><div class='help-block'>\n{hint}\n{error}</div></div>";
 
 		return $form->field( $model, "$field", [ 'template' => $template ] )
 					->checkboxList(

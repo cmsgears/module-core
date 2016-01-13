@@ -82,6 +82,11 @@ class ModelFile extends CmgModel {
 		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND fileId=:fid', [ ':pid' => $parentId, ':ptype' => $parentType, ':fid' => $fileId ] )->one(); 
 	}
 
+	public static function findByFileTitle( $parentId, $parentType, $fileTitle ) {
+
+		return self::find()->joinWith( 'file' )->where( 'parentId=:pid AND parentType=:ptype AND title=:title', [ ':pid' => $parentId, ':ptype' => $parentType, ':title' => $fileTitle ] )->one(); 
+	}
+
 	// Delete ----
 
 	/**

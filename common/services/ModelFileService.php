@@ -42,6 +42,32 @@ class ModelFileService extends Service {
 
 	// Update ----------------
 
+	public static function createOrUpdateByTitle( $parent, $parentType, $file ) {
+
+		if( isset( $file ) && isset( $file->title ) ) {
+
+			$fileModel	= ModelFile::findByFileTitle( $parent->id, $parentType, $file->title );
+
+			if( isset( $fileModel ) ) {
+
+				FileService::saveFile( $file, [ 'model' => $fileModel, 'attribute' => 'fileId' ] );
+
+				$fileModel->update();
+			}
+			else {
+
+				$fileModel				= new ModelFile();
+
+				$fileModel->parentId	= $parent->id;
+				$fileModel->parentType	= $parentType;
+
+				FileService::saveFile( $file, [ 'model' => $fileModel, 'attribute' => 'fileId' ] );
+
+				$fileModel->save();
+			}
+		}
+ 	}
+
 	// Delete ----------------
 
 	public static function delete( $model, $deleteFile = true ) {

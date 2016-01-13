@@ -15,7 +15,7 @@ use cmsgears\core\common\models\entities\FormField;
  */
 class FormDesigner extends Component {
 
-	public static $yesNoMap	= [ '0' => 'Yes', '1' => 'No' ];
+	public static $yesNoMap	= [ '1' => 'Yes', '0' => 'No' ];
 
 	// Yii Flavored Forms --------------------------------------------
 
@@ -208,7 +208,7 @@ class FormDesigner extends Component {
 		$setInline	= null;
 
 		if( $inline ) {
-			
+
 			$setInline	= 'clear-none';
 		}
 
@@ -217,7 +217,7 @@ class FormDesigner extends Component {
 			$itemlist = self::$yesNoMap;
 		}
 
-		$template	= "<div class='cmt-choice $setInline clearfix'>{label}<div class='element-60'>{input}</div><div class='help-block'>\n{hint}\n{error}</div></div>";
+		$template	= "<div class='cmt-choice $setInline clearfix'>{label}<div class='radio-group'>{input}</div><div class='help-block'>\n{hint}\n{error}</div></div>";
 
 		return $form->field( $model, "$field", [ 'template' => $template ]  )
 			        ->radioList(
@@ -245,7 +245,7 @@ class FormDesigner extends Component {
 			$setInline	= 'clear-none';
 		}
 
-		$template	= "<div class='cmt-choice $setInline clearfix'>{label}<div class='element-60'>{input}</div><div class='help-block'>\n{hint}\n{error}</div></div>";
+		$template	= "<div class='cmt-choice $setInline clearfix'>{label}<div class='checkbox-group'>{input}</div><div class='help-block'>\n{hint}\n{error}</div></div>";
 
 		return $form->field( $model, "$field", [ 'template' => $template ] )
 					->checkboxList(
@@ -594,6 +594,66 @@ class FormDesigner extends Component {
 							<span class='error' cmt-error='$field->name'></span>
 						</div>";
 		}
+
+		return $fieldHtml;
+	}
+
+	// HTML Generator
+
+	public function generateMultipleInputHtml( $model, $fieldName, $config = [] ) {
+
+		$label 			= isset( $config[ 'label' ] ) ? $config[ 'label' ] : 'Name';
+		$placeholder 	= isset( $config[ 'placeholder' ] ) ? $config[ 'placeholder' ] : 'Name';
+		$modelName 		= isset( $config[ 'modelName' ] ) ? $config[ 'modelName' ] : 'Model';
+		$addBtnTitle 	= isset( $config[ 'addBtnTitle' ] ) ? $config[ 'addBtnTitle' ] : 'Add Field';
+
+		$fields			= $model->$fieldName;
+
+     	$fieldHtml		= "<div class='multi-input'><div class='frm-field clear-none clearfix inputs'>";
+
+		if( count( $fields ) == 0 ) {
+
+			$fieldHtml		.= "<div class='clearfix'>
+									<label>$label</label>
+									<input type='text' placeholder='$placeholder' name='" . $modelName . "[$fieldName][]'>
+								</div>";
+ 		}
+		else {
+
+			$first = true;
+
+			foreach( $fields as $field ) {
+
+				if( $first ) {
+
+					$fieldHtml	.= "<div class='clearfix'>
+										<label>$label</label>
+				    		 			<input type='text' placeholder='Name of Other NGO' name='" . $modelName . "[$fieldName][]' value='$field'>						 
+									</div>";
+				}
+				else {
+
+					$fieldHtml	.= "<div class='frm-field relative clearfix'>
+		    							<i class='cmti cmti-close-o icon-delete'></i>
+										<label>$label</label>
+										<input type='text' placeholder='Name of Other NGO' name='" . $modelName . "[$fieldName][]' value='$field'>
+									</div>";
+				}
+
+				$first = false;
+			}
+		}
+
+		$errors = $model->getErrors( $fieldName );
+		$errors = join( ",", $errors );
+
+		$fieldHtml	.= "</div><div class='help-block'>$errors</div>
+							<div class='frm-field clear-none clearfix'>
+								<div class='element-60 right'>
+									<a class='link btn-add-input' label='$label' placeholder='$placeholder' model='$modelName' field='$fieldName'>$addBtnTitle</a>
+								</div>
+							</div>
+					    </div>";
 
 		return $fieldHtml;
 	}

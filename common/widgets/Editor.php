@@ -6,7 +6,7 @@ use \Yii;
 use yii\base\Widget;
 use yii\base\InvalidConfigException;
 
-class Editor extends Widget {
+class Editor extends \cmsgears\core\common\base\Widget {
 
 	// Variables ---------------------------------------------------
 
@@ -29,11 +29,16 @@ class Editor extends Widget {
 
     public function run() {
 
+		$this->renderWidget();
+    }
+
+	public function renderWidget( $config = [] ) {
+
 		$editorClass	= Yii::$app->cmgCore->getEditorClass();
 		$editor			= Yii::createObject( $editorClass );
-		
-		$editor->widget( [ 'selector' => $this->selector ] );
-    }
+
+		$editor->widget( [ 'selector' => $this->selector, 'loadAssets' => $this->loadAssets ] );
+	}
 }
 
 ?>

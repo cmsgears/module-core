@@ -4,7 +4,7 @@ namespace cmsgears\core\common\base;
 // Yii Imports
 use \Yii;
 
-class Widget extends \yii\base\Widget {
+abstract class Widget extends \yii\base\Widget {
 
 	// Variables ---------------------------------------------------
 
@@ -45,10 +45,7 @@ class Widget extends \yii\base\Widget {
 		return parent::getViewPath();
 	}
 
-	public function renderWidget() {
-
-		// To be overriden by childs.
-	}
+	abstract public function renderWidget( $config = [] );
 }
 
 ?>

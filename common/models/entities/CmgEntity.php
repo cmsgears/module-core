@@ -10,6 +10,8 @@ use yii\db\ActiveRecord;
  */
 class CmgEntity extends ActiveRecord {
 
+	public $traitParams	= [];
+
 	// Instance Methods --------------------------------------------
 
 	// Check whether model already exist	

@@ -421,9 +421,9 @@ DROP TABLE IF EXISTS `cmg_core_activity`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_activity` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `userId` bigint(20) NOT NULL,
   `notifierId` bigint(20) DEFAULT NULL,
   `templateId` bigint(20) DEFAULT NULL,
+  `userId` bigint(20) NOT NULL,
   `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `consumed` tinyint(1) DEFAULT 0,
   `createdAt` datetime NOT NULL,
@@ -431,9 +431,9 @@ CREATE TABLE `cmg_core_activity` (
   `scheduledAt` datetime DEFAULT NULL,
   `data` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_activity_1` (`userId`),
-  KEY `fk_activity_2` (`notifierId`),
-  KEY `fk_activity_3` (`templateId`)
+  KEY `fk_activity_1` (`notifierId`),
+  KEY `fk_activity_2` (`templateId`),
+  KEY `fk_activity_3` (`userId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -828,9 +828,9 @@ ALTER TABLE `cmg_core_newsletter_list`
 --
 
 ALTER TABLE `cmg_core_activity`
-  	ADD CONSTRAINT `fk_activity_1` FOREIGN KEY (`userId`) REFERENCES `cmg_core_user` (`id`) ON DELETE CASCADE,
-  	ADD CONSTRAINT `fk_activity_2` FOREIGN KEY (`notifierId`) REFERENCES `cmg_core_user` (`id`),
-  	ADD CONSTRAINT `fk_activity_3` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_template` (`id`);
+  	ADD CONSTRAINT `fk_activity_1` FOREIGN KEY (`notifierId`) REFERENCES `cmg_core_user` (`id`),
+  	ADD CONSTRAINT `fk_activity_2` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_template` (`id`),
+  	ADD CONSTRAINT `fk_activity_3` FOREIGN KEY (`userId`) REFERENCES `cmg_core_user` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `cmg_core_gallery`

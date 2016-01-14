@@ -15,9 +15,9 @@ use cmsgears\core\common\models\traits\CategoryTrait;
  * Activity Entity
  *
  * @property integer $id
- * @property integer $userId
  * @property integer $notifierId
  * @property integer $templateId
+ * @property integer $userId 
  * @property string $type
  * @property integer $consumed
  * @property datetime $createdAt
@@ -28,14 +28,6 @@ use cmsgears\core\common\models\traits\CategoryTrait;
 class Activity extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
-
-	/**
-	 * @return User
-	 */
-	public function getUser() {
-
-		return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
-	}
 
 	/**
 	 * @return User
@@ -51,6 +43,14 @@ class Activity extends CmgEntity {
 	public function getTemplate() {
 
 		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
+	}
+
+	/**
+	 * @return User
+	 */
+	public function getUser() {
+
+		return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
 	}
 
 	/**

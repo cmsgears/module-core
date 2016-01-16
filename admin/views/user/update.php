@@ -31,7 +31,10 @@ $returnUrl		= $this->context->returnUrl;
 
 		<div class="box-content clearfix">
 			<div class="header">User Avatar</div>
-			<?=AvatarUploader::widget( [ 'options' => [ 'id' => 'avatar-user', 'class' => 'file-uploader' ], 'model' => $avatar, 'modelClass' => 'Avatar', 'directory' => 'avatar' ] );?>
+			<?= AvatarUploader::widget([
+				'options' => [ 'id' => 'avatar-user', 'class' => 'file-uploader' ], 
+				'model' => $avatar 
+			]); ?>
 		</div>
 
 		<div class="clear filler-height"></div>

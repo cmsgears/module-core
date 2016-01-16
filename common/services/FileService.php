@@ -175,7 +175,7 @@ class FileService extends Service {
 			if( !isset( $fileId ) || strlen( $fileId ) <= 0 ) {
 
 				// unset id
-				$file->id = null;
+				$file->id 		= null;
 
 				// create
 				self::create( $file );
@@ -196,6 +196,8 @@ class FileService extends Service {
 
 				self::update( $file );
 			}
+			
+			$file->changed	= false;
 		}
 	}
 

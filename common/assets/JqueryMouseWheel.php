@@ -5,18 +5,18 @@ namespace cmsgears\core\common\assets;
 use \Yii;
 use yii\web\View;
 
-class JqueryUi extends \yii\web\AssetBundle {
+class JqueryMouseWheel extends \yii\web\AssetBundle {
 
 	// Variables ---------------------------------------------------
 
 	// Public ----
 
 	// Path Configuration
-    public $sourcePath = '@bower/jquery-ui/ui/minified';
+    public $sourcePath = '@bower/jquery-mousewheel';
 
 	// Load Javascript
     public $js = [
-        'jquery-ui.min.js'
+        'jquery.mousewheel.min.js'
     ];
 
 	// Position to load Javascript

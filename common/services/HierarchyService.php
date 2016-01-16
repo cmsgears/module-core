@@ -129,16 +129,20 @@ class HierarchyService extends Service {
 				
 			}
 		}
+		
+		return $modelToUpdate;
 	}
 
 	// Delete -----------
-	
+
 	public static function deleteInHierarchy( $table, $modelToDelete ) {
 
 		// Model in hierarchy
 		if( isset( $modelToDelete->parentId ) && $modelToDelete->parentId > 0  ) {
-			
+
 		}
+
+		return $modelToDelete;
 	}
 }
 

@@ -9,7 +9,7 @@ use cmsgears\core\common\widgets\Editor;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Newsletter';
 
-Editor::widget( [ 'selector' => '.content-editor' ] );
+Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 ?>
 <div class="box box-cud">
 	<div class="box-wrap-header">

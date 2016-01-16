@@ -31,11 +31,11 @@ use cmsgears\core\common\config\CoreGlobal;
 class Address extends CmgEntity {
 
 	const TYPE_RESIDENTIAL	=  0;
-	const TYPE_PRIMARY		=  5;
-	const TYPE_OFFICE		= 10;
-	const TYPE_MAILING		= 20;
-	const TYPE_SHIPPING		= 30;
-	const TYPE_BILLING		= 40;
+	const TYPE_PRIMARY		= 10;
+	const TYPE_OFFICE		= 20;
+	const TYPE_MAILING		= 30;
+	const TYPE_SHIPPING		= 40;
+	const TYPE_BILLING		= 50;
 
 	public static $typeMap = [
 		self::TYPE_RESIDENTIAL => 'Residential',

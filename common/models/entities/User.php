@@ -54,8 +54,8 @@ class User extends CmgEntity implements IdentityInterface {
 	 * 2. active - It will be set when user confirm their account or admin activate the account.
 	 * 3. blocked - It can be set by admin to block a particular user on false behaviour. 
 	 */
-	const STATUS_NEW		=    0;
-	const STATUS_ACTIVE		=  500;
+	const STATUS_NEW		=  500;
+	const STATUS_ACTIVE		=  750;
 	const STATUS_BLOCKED	= 1000;
 
 	/**

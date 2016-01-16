@@ -4,7 +4,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
-use cmsgears\files\widgets\FileUploader;
+use cmsgears\files\widgets\ImageUploader;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Gallery Items | ' . $coreProperties->getSiteTitle();
@@ -28,8 +28,9 @@ $id				= $gallery->id;
 
 		<div class="box-content frm-split-40-60 clearfix">
 			<div class="header">Create Item</div>
-			<?= FileUploader::widget( [ 'options' => [ 'id' => 'gallery-item', 'class' => 'file-uploader frm-split' ],
-					'directory' => 'gallery', 'infoFields' => true, 
+			<?= ImageUploader::widget([ 
+					'options' => [ 'id' => 'gallery-item', 'class' => 'file-uploader' ],
+					'directory' => 'gallery', 'info' => true,
 					'postAction' => 'true', 'cmtController' => 'gallery', 'cmtAction' => 'updateItem',
 					'postActionUrl' => "/apix/cmgcore/gallery/create-item?id=$id" 
 			]); ?>
@@ -40,12 +41,13 @@ $id				= $gallery->id;
 			<ul class="slider-slides clearfix">
 			<?php
 				foreach ( $items as $item ) {
-	
-					$id		= $item->id;
+
+					$id	= $item->id;
 			?>
 				<li>
-					<?= FileUploader::widget( [ 'options' => [ 'id' => "item-update-$id", 'class' => 'file-uploader frm-split' ],
-							'directory' => 'gallery', 'infoFields' => true, 'model' => $item,
+					<?= ImageUploader::widget([ 
+							'options' => [ 'id' => "item-update-$id", 'class' => 'file-uploader' ],
+							'directory' => 'gallery', 'info' => true, 'model' => $item,
 							'postAction' => 'true', 'postActionId' => "frm-item-update-$id", 'cmtController' => 'gallery', 'cmtAction' => 'updateItem',
 							'postActionVisible' => true, 'postActionUrl' => "/apix/cmgcore/gallery/update-item?id=$id"
 					]); ?>

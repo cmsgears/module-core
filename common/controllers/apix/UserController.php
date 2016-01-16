@@ -58,11 +58,9 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
 		$user	= Yii::$app->user->getIdentity();
 		$avatar = new CmgFile();
 
-		if( $avatar->load( Yii::$app->request->post(), 'File' ) && UserService::updateAvatar( $user, $avatar ) ) {
+		if( $avatar->load( Yii::$app->request->post(), 'Avatar' ) && UserService::updateAvatar( $user, $avatar ) ) {
 
-			$user		= UserService::findById( $user->id );
-			$avatar		= $user->avatar;
-			$response	= [ 'fileUrl' => $avatar->getFileUrl() ];
+			$response	= [ 'fileUrl' => $avatar->getThumbUrl() ];
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );

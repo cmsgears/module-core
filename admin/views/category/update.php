@@ -26,7 +26,7 @@ $returnUrl		= $this->context->returnUrl;
 
 		<div class="box-content clearfix">
 			<div class="header">Category Avatar</div>
-			<?=AvatarUploader::widget( [ 'options' => [ 'id' => 'avatar-listing', 'class' => 'file-uploader' ], 'model' => $avatar, 'modelClass' => 'Avatar', 'directory' => 'avatar' ] );?>
+			<?= AvatarUploader::widget([ 'options' => [ 'id' => 'model-avatar', 'class' => 'file-uploader' ], 'model' => $avatar ]); ?>
 		</div>
 
 		<div class="filler-height"></div>

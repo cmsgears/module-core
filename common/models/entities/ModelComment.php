@@ -36,9 +36,9 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  */
 class ModelComment extends CmgModel {
 
-	const STATUS_NEW		=  0;
-	const STATUS_BLOCKED	= 10;
-	const STATUS_APPROVED	= 20;
+	const STATUS_NEW		=  500;
+	const STATUS_BLOCKED	=  750;
+	const STATUS_APPROVED	= 1000;
 
 	public static $statusMap = [
 		self::STATUS_NEW => 'New',

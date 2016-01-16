@@ -145,7 +145,7 @@ abstract class UserController extends Controller {
 		if( isset( $model ) ) {
 
 			$siteMember	= $model->siteMember;
-			$avatar 	= CmgFile::loadFile( $model->avatar, 'File' );
+			$avatar 	= CmgFile::loadFile( $model->avatar, 'Avatar' );
 
 			$model->setScenario( 'update' );
 

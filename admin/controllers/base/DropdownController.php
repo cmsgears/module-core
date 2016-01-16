@@ -173,7 +173,7 @@ abstract class DropdownController extends Controller {
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/dropdown/delete', [
 	    		'model' => $model, 
-	    		'avatar' => $model->avatar,
+	    		'avatar' => $avatar,
     			'title' => $title
 	    	]);
 		}

@@ -20,7 +20,7 @@ class OwnerFilter {
 			$slug			= Yii::$app->request->get( 'slug' );
 			$model			= $modelService::findBySlug( $slug );
 
-			if( !$model->isOwner( $user ) ) {
+			if( !isset( $model ) || !$model->isOwner( $user ) ) {
 
 				// Not Allowed
 				throw new ForbiddenHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );

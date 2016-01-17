@@ -32,6 +32,16 @@ class ModelFileService extends Service {
 
 		return ModelFile::findByFileId( $parentId, $parentType, $fileId );
 	}
+	
+	public static function findByFileTitle( $parentId, $parentType, $fileTitle ) {
+		
+		return ModelFile::findByFileTitle( $parentId, $parentType, $fileTitle );
+	}
+
+	public static function findByFileTitleLike( $parentId, $parentType, $likeTitle ) {
+
+		return ModelFile::findByFileTitleLike( $parentId, $parentType, $likeTitle );
+	}
 
 	// Create ----------------
 

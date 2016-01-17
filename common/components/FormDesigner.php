@@ -628,7 +628,7 @@ class FormDesigner extends Component {
 
 					$fieldHtml	.= "<div class='clearfix'>
 										<label>$label</label>
-				    		 			<input type='text' placeholder='Name of Other NGO' name='" . $modelName . "[$fieldName][]' value='$field'>						 
+				    		 			<input type='text' placeholder='$placeholder' name='" . $modelName . "[$fieldName][]' value='$field'>						 
 									</div>";
 				}
 				else {
@@ -636,7 +636,7 @@ class FormDesigner extends Component {
 					$fieldHtml	.= "<div class='frm-field relative clearfix'>
 		    							<i class='cmti cmti-close-o icon-delete'></i>
 										<label>$label</label>
-										<input type='text' placeholder='Name of Other NGO' name='" . $modelName . "[$fieldName][]' value='$field'>
+										<input type='text' placeholder='$placeholder' name='" . $modelName . "[$fieldName][]' value='$field'>
 									</div>";
 				}
 

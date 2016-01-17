@@ -67,6 +67,13 @@ class CoreGlobal {
 
 	// TODO: Implement internationalisation for Messages, Errors and Field Labels
 
+	// Text/Notifications/Reminders/Messages ---------------------------
+
+	const DISPLAY_LIMIT_TEXT			= 250;
+	const DISPLAY_LIMIT_MESSAGE			= 200;
+	const DISPLAY_LIMIT_NOTIFICATION	= 100;
+	const DISPLAY_LIMIT_REMINDER		= 100;
+
 	// Messages --------------------------------------------------------
 
 	// Generic Messages

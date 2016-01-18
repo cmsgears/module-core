@@ -28,6 +28,11 @@ class CountryService extends Service {
 
 		return Country::findById( $id );
 	}
+	
+	public static function getIdNameList() {
+		
+		return self::findMap( 'id', 'name', CoreTables::TABLE_COUNTRY );
+	}
 	 
 	// Data Provider ----
 

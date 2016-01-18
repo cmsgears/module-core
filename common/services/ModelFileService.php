@@ -76,6 +76,8 @@ class ModelFileService extends Service {
 				$fileModel->save();
 			}
 		}
+		
+		return $fileModel;
  	}
 
 	// Delete ----------------

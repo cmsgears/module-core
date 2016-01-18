@@ -252,6 +252,8 @@ class FileService extends Service {
 
 				self::update( $file );
 			}
+			
+			$file->changed	= false;
 		}
 	}
 

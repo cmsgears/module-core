@@ -373,6 +373,23 @@ class CodeGenUtil {
 
 		return $content;
 	}
+	
+	public static function getYearOptionsList( $start, $end = null ) {
+
+		if( !isset( $end ) ) {
+			
+			$end	= date( "Y" );
+		}
+
+		$options	= null;
+
+		for( $i = $end; $i >= $start; $i-- ) {
+
+			$options	.= "<option value='$i'>$i</option>";
+		}
+
+		return $options;
+	}
 }
 
 ?>

@@ -18,7 +18,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $value
  */
 abstract class Attribute extends CmgModel {
-	
+
 	const VALUE_TYPE_TEXT		= 'text';
 	const VALUE_TYPE_FLAG		= 'flag';
 	const VALUE_TYPE_CSV		= 'csv';
@@ -28,14 +28,13 @@ abstract class Attribute extends CmgModel {
 
 	// Instance Methods --------------------------------------------
 
-	public function getLabel() {
-
-		$label  = preg_split( "/_/", $this->name );
-		$label	= join( " ", $label );
-		$label	= ucwords( $label );
+    public function getLabel() {
+		
+		$label  	= preg_replace( '/_/', ' ', $this->name );
+		$label		= ucwords( $label );
 
 		return $label;
-	}
+    }
 
 	public function getFieldValue() {
 

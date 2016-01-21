@@ -634,7 +634,7 @@ class FormDesigner extends Component {
 				else {
 
 					$fieldHtml	.= "<div class='frm-field relative clearfix'>
-		    							<i class='cmti cmti-close-o icon-delete'></i>
+		    							<i class='cmti cmti-close-c icon-delete'></i>
 										<label>$label</label>
 										<input type='text' placeholder='$placeholder' name='" . $modelName . "[$fieldName][]' value='$field'>
 									</div>";

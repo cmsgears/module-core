@@ -53,6 +53,11 @@ class ModelTagService extends Service {
 		
 		return ModelTag::findActiveByParentIdParentType( $parentId, $parentType );
 	}
+	
+	public static function findAllByTagId( $tagId ) {
+		
+		return ModelTag::findAllByTagId( $tagId );
+	}
 
 	// Create ----------------
 

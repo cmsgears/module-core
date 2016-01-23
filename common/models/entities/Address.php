@@ -27,6 +27,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $fax
  * @property string $longitude
  * @property string $latitude
+ * @property string $zoomLevel
  */
 class Address extends CmgEntity {
 
@@ -95,12 +96,14 @@ class Address extends CmgEntity {
 		// model rules
         $rules = [
 			[ [ 'provinceId', 'countryId', 'line1', 'city', 'zip' ], 'required' ],
+			[ [ 'longitude', 'latitude' ], 'required', 'on' => 'location' ],
 			[ [ 'id', 'firstName', 'lastName', 'email' ], 'safe' ],
 			[ [ 'line1', 'line2', 'line3' ], 'alphanumpun' ],
 			[ 'city', 'alphanumspace' ],
 			[ 'zip', 'alphanumhyphenspace' ],
-			[ [ 'countryId', 'provinceId' ], 'number', 'integerOnly'=>true, 'min'=>1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'phone', 'fax', 'longitude', 'latitude' ], 'string', 'min' => 1, 'max' => 100 ]
+			[ [ 'countryId', 'provinceId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'phone', 'fax' ], 'string', 'min' => 1, 'max' => 100 ],
+			[ [ 'longitude', 'latitude', 'zoomLevel' ], 'number' ]
 		];
 
 		// trim if required
@@ -133,7 +136,8 @@ class Address extends CmgEntity {
 			'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
 			'fax' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FAX ),
 			'longitude' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LONGITUDE ),
-			'latitude' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LATITUDE )
+			'latitude' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LATITUDE ),
+			'zoomLevel' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ZOOM )
 		];
 	}
 

@@ -597,6 +597,33 @@ class FormDesigner extends Component {
 
 		return $fieldHtml;
 	}
+	
+	public function getApixRatingList( $modelName, $fielName, $selected, $startVal, $endVal ) {
+			
+		$ratingHtml	= "<div class='cmt-rating clearfix'>";
+		$model		= $modelName.'['.$fielName.']';	
+		
+		for( $i = $startVal; $i <= $endVal; $i++ ) {
+			 
+			$ratingHtml	.= "<label class='$i'>";
+			
+			if( $selected == $i ) {
+				
+				$ratingHtml	.=	"<input type='radio' value='$i' name='$model' checked >";
+			}
+			else {
+					
+				$ratingHtml	.=	"<input type='radio' value='$i' name='$model'>";
+			}
+				
+			$ratingHtml	.= "<span class='label label-rating'></span>";
+			$ratingHtml	.=	"</label>"; 	
+		}
+		
+		$ratingHtml	.= "</div>";	
+		
+		return $ratingHtml;
+	}
 
 	// HTML Generator
 

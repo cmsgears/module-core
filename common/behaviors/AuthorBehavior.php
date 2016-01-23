@@ -26,8 +26,11 @@ class AuthorBehavior extends \yii\behaviors\AttributeBehavior {
     }
 
     protected function getValue( $event ) {
-
-		return Yii::$app->user->identity->id;	
+		
+		if( Yii::$app->user->getIdentity() != null ) {
+				
+			return Yii::$app->user->identity->id;
+		}		
     }
 
     public function touch( $attribute ) {

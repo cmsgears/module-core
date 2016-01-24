@@ -204,6 +204,7 @@ class CoreGlobal {
 	const FIELD_FAX					= 'faxField';
 	const FIELD_LONGITUDE			= 'longitudeField';
 	const FIELD_LATITUDE			= 'latitudeField';
+	const FIELD_ZOOM				= 'zoomField';
 	const FIELD_ADDRESS				= 'addressField';
 	const FIELD_ADDRESS_TYPE		= 'addressTypeField';
 

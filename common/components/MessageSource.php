@@ -147,6 +147,7 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_FAX => 'Fax',
 		CoreGlobal::FIELD_LONGITUDE => 'Longitude',
 		CoreGlobal::FIELD_LATITUDE => 'Latitude',
+		CoreGlobal::FIELD_ZOOM => 'Zoom Level',
 		CoreGlobal::FIELD_ADDRESS => 'Address',
 		CoreGlobal::FIELD_ADDRESS_TYPE => 'Address Type',
 

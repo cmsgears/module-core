@@ -71,12 +71,13 @@ abstract class CategoryController extends Controller {
 		$model			= new Category();
 		$model->type 	= $type;
 		$avatar 		= CmgFile::loadFile( null, 'Avatar' );
+		$banner 		= CmgFile::loadFile( null, 'Banner' );
 
 		$model->setScenario( 'create' );
 
 		if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
-			if( CategoryService::create( $model, $avatar ) ) { 
+			if( CategoryService::create( $model, $avatar, $banner ) ) { 
 
 				return $this->redirect( $this->returnUrl );
 			} 
@@ -87,6 +88,7 @@ abstract class CategoryController extends Controller {
     	return $this->render( '@cmsgears/module-core/admin/views/category/create', [
     		'model' => $model, 
     		'avatar' => $avatar,
+    		'banner' => $banner,
     		'categoryMap' => $categoryMap
     	]);
 	}	
@@ -101,12 +103,13 @@ abstract class CategoryController extends Controller {
 
 			$model->type 	= $type;
 			$avatar 		= CmgFile::loadFile( $model->avatar, 'Avatar' ); 
+			$banner 		= CmgFile::loadFile( $model->banner, 'Banner' );
 
 			$model->setScenario( 'update' );
 
 			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
-				if( CategoryService::update( $model, $avatar ) ) {
+				if( CategoryService::update( $model, $avatar, $banner ) ) {
 
 					return $this->redirect( $this->returnUrl );
 				}
@@ -120,6 +123,7 @@ abstract class CategoryController extends Controller {
 	    	return $this->render( '@cmsgears/module-core/admin/views/category/update', [
 	    		'model' => $model, 
 	    		'avatar' => $avatar,
+	    		'banner' => $banner,
 	    		'categoryMap' => $categoryMap
 	    	]);
 		}
@@ -137,10 +141,11 @@ abstract class CategoryController extends Controller {
 		if( isset( $model ) ) {
 
 			$avatar = $model->avatar;
+			$banner = $model->banner;
 
 			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
-				if( CategoryService::delete( $model, $avatar ) ) {
+				if( CategoryService::delete( $model, $avatar, $banner ) ) {
 
 					return $this->redirect( $this->returnUrl );
 				}
@@ -151,6 +156,7 @@ abstract class CategoryController extends Controller {
 	    	return $this->render( '@cmsgears/module-core/admin/views/category/delete', [
 	    		'model' => $model, 
 	    		'avatar' => $avatar,
+	    		'banner' => $banner,
 	    		'categoryMap' => $categoryMap
 	    	]);
 		}

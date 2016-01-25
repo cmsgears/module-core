@@ -3,20 +3,15 @@ namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
 use \Yii;
-use yii\helpers\Url;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
-use yii\db\IntegrityException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;  
 
-use cmsgears\core\common\services\CountryService;
-
 use cmsgears\core\common\models\entities\Country;
 
-// BM Imports
-use billmaid\core\common\config\BmCoreGlobal;  
+use cmsgears\core\admin\services\CountryService;
 
 class CountryController extends base\Controller {
 
@@ -26,7 +21,7 @@ class CountryController extends base\Controller {
 
         parent::__construct( $id, $module, $config );
 		
-		$this->sidebar 		= [ 'parent' => 'sidebar-core', 'child' => 'country' ];
+		$this->sidebar	= [ 'parent' => 'sidebar-core', 'child' => 'country' ];
 	}
 
 	// Instance Methods ------------------
@@ -48,16 +43,16 @@ class CountryController extends base\Controller {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'all'  => ['get'],
-	                'create'  => ['get', 'post'],
-	                'update'  => ['get', 'post'],
-	                'delete'  => ['get', 'post']
+	                'all'  => [ 'get' ],
+	                'create'  => [ 'get', 'post' ],
+	                'update'  => [ 'get', 'post' ],
+	                'delete'  => [ 'get', 'post' ]
                 ]
             ]
         ];
     }
 
-	// DropdownController --------------------
+	// CountryController ---------------------
 
 	public function actionAll() { 
 		

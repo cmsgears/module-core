@@ -120,6 +120,25 @@ class GalleryService extends Service {
 	// Update -----------
 
 	/**
+	 * @param Gallery $gallery
+	 * @return Gallery
+	 */
+	public static function update( $gallery ) {
+
+		// Find existing Gallery
+		$galleryToUpdate	= self::findById( $gallery->id );
+
+		// Copy and set Attributes
+		$galleryToUpdate->copyForUpdateFrom( $gallery, [ 'name', 'title', 'description' ] );
+
+		// Update Gallery
+		$galleryToUpdate->update();
+
+		// Return updated Gallery
+		return $galleryToUpdate;
+	}
+
+	/**
 	 * @param CmgFile $item
 	 * @return boolean
 	 */

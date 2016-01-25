@@ -23,7 +23,7 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Reset Password";
 
 				<div class="box-filler"></div>
 				
-				<input type="submit" value="Submit" />
+				<input class="element" type="submit" value="Submit" />
 		<?php
 				ActiveForm::end();
 			}

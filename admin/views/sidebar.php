@@ -53,13 +53,13 @@ $user	= Yii::$app->user->getIdentity();
 		</div>
 		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-core' ) == 0 ) echo 'expanded visible';?>">
 			<ul>
-				<li class='gallery <?php if( strcmp( $child, 'gallery' ) == 0 ) echo 'active';?>'><?= Html::a( "Galleries", [ '/cmgcore/gallery/all' ] ) ?></li>
+				<li class='gallery <?php if( strcmp( $child, 'gallery' ) == 0 ) echo 'active';?>'><?= Html::a( 'Galleries', [ '/cmgcore/gallery/all' ] ) ?></li>
 				<?php if( Yii::$app->cmgCore->multiSite ) { ?>
-					<li class='site <?php if( strcmp( $child, 'site' ) == 0 ) echo 'active';?>'><?= Html::a( "Sites", [ '/cmgcore/sites/all' ] ) ?></li>
+					<li class='site <?php if( strcmp( $child, 'site' ) == 0 ) echo 'active';?>'><?= Html::a( 'Sites', [ '/cmgcore/sites/all' ] ) ?></li>
 				<?php } ?>
-				<li class='country <?php if( strcmp( $child, 'country' ) == 0 ) echo 'active';?>'><?= Html::a( "Countries", [ '/cmgcore/country/all' ] ) ?></li>
-				<li class='dropdown <?php if( strcmp( $child, 'dropdown' ) == 0 ) echo 'active';?>'><?= Html::a( "Dropdowns", [ '/cmgcore/dropdown/all' ] ) ?></li>
-				<li class='checkbox-group <?php if( strcmp( $child, 'checkbox-group' ) == 0 ) echo 'active';?>'><?= Html::a( "Checkbox Groups", [ '/cmgcore/checkbox-group/all' ] ) ?></li>
+				<li class='country <?php if( strcmp( $child, 'country' ) == 0 ) echo 'active';?>'><?= Html::a( 'Countries', [ '/cmgcore/country/all' ] ) ?></li>
+				<li class='dropdown <?php if( strcmp( $child, 'dropdown' ) == 0 ) echo 'active';?>'><?= Html::a( 'Dropdowns', [ '/cmgcore/dropdown/all' ] ) ?></li>
+				<li class='checkbox-group <?php if( strcmp( $child, 'checkbox-group' ) == 0 ) echo 'active';?>'><?= Html::a( 'Checkbox Groups', [ '/cmgcore/checkbox-group/all' ] ) ?></li>
 			</ul>
 		</div>
 	</div>

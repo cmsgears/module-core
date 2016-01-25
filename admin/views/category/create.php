@@ -5,6 +5,7 @@ use yii\helpers\Html;
 
 // CMG Imports
 use cmsgears\files\widgets\AvatarUploader;
+use cmsgears\files\widgets\ImageUploader;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Category';
@@ -27,6 +28,11 @@ $returnUrl		= $this->context->returnUrl;
 		<div class="box-content clearfix">
 			<div class="header">Category Avatar</div>
 			<?= AvatarUploader::widget([ 'options' => [ 'id' => 'model-avatar', 'class' => 'file-uploader' ], 'model' => $avatar ]); ?>
+		</div>
+
+		<div class="box-content clearfix">
+			<div class="header">Category Banner</div>
+			<?= ImageUploader::widget( [ 'options' => [ 'id' => 'model-banner', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' ] );?>
 		</div>
 
 		<div class="filler-height"></div>

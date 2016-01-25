@@ -96,13 +96,9 @@ class CategoryService extends HierarchyService {
 
 	// Create -----------
 
-	public static function create( $category, $avatar = null ) {
+	public static function create( $category, $avatar = null, $banner = null ) {
 
-		// Save Avatar
-		if( isset( $avatar ) ) {
-
-			FileService::saveImage( $avatar, [ 'model' => $category, 'attribute' => 'avatarId' ] );
-		}
+		FileService::saveFiles( $category, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
 
 		$category	= self::createInHierarchy( CoreTables::TABLE_CATEGORY, $category );
 
@@ -112,16 +108,12 @@ class CategoryService extends HierarchyService {
 
 	// Update -----------
 
-	public static function update( $category, $avatar = null ) {
+	public static function update( $category, $avatar = null, $banner = null ) {
 
 		// Find existing Category
 		$categoryToUpdate	= self::findById( $category->id );
-
-		// Save Avatar
-		if( isset( $avatar ) ) {
-
-			FileService::saveImage( $avatar, [ 'model' => $categoryToUpdate, 'attribute' => 'avatarId' ] );
-		}
+		
+		FileService::saveFiles( $categoryToUpdate, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
 
 		// Update Hierarchy
 		$categoryToUpdate = self::updateInHierarchy( CoreTables::TABLE_CATEGORY, $category, $categoryToUpdate );
@@ -138,7 +130,7 @@ class CategoryService extends HierarchyService {
 
 	// Delete -----------
 
-	public static function delete( $category, $avatar = null ) {
+	public static function delete( $category, $avatar = null, $banner = null ) {
 
 		// Find existing Category
 		$categoryToDelete	= self::findById( $category->id );
@@ -151,12 +143,9 @@ class CategoryService extends HierarchyService {
 
 		// Delete Category
 		$categoryToDelete->delete();
-
-		// Delete Avatar
-		if( isset( $avatar ) ) {
-
-			FileService::delete( $avatar );
-		}
+		
+		// Delete Files
+		FileService::deleteFiles( [ $avatar, $banner ] );
 
 		return true;
 	}

@@ -10,9 +10,9 @@ use cmsgears\widgets\aform\AjaxForm;
 <div class="box-form box-form-regular">
 	<span class="cmti cmti-edit btn-edit"></span>
 	<div class="wrap-info">
-		<?php 
+		<?php
 			if( isset( $fieldsMap ) && count( $fieldsMap ) > 0 ) {
-		
+
 				foreach ( $fieldsMap as $field ) {
 		?>
 				<label><?= $field->label ?></label>

@@ -4,7 +4,6 @@ namespace cmsgears\core\admin\controllers;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
-use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
@@ -15,7 +14,7 @@ use cmsgears\core\common\models\entities\Site;
 
 use cmsgears\core\admin\services\SiteService;
 
-class SitesController extends BaseController {
+class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -36,8 +35,8 @@ class SitesController extends BaseController {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'all'   => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'index' => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'all' => [ 'permission' => CoreGlobal::PERM_CORE ],
 	                'create' => [ 'permission' => CoreGlobal::PERM_CORE ],
 	                'update' => [ 'permission' => CoreGlobal::PERM_CORE ],
 	                'delete' => [ 'permission' => CoreGlobal::PERM_CORE ]
@@ -46,8 +45,8 @@ class SitesController extends BaseController {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index'  => [ 'get' ],
-	                'all'   => [ 'get' ],
+	                'index' => [ 'get' ],
+	                'all' => [ 'get' ],
 	                'create' => [ 'get', 'post' ],
 	                'update' => [ 'get', 'post' ],
 	                'delete' => [ 'get', 'post' ]
@@ -82,14 +81,14 @@ class SitesController extends BaseController {
 
 		if( $model->load( Yii::$app->request->post(), 'Site' )  && $model->validate() ) {
 
-			if( SiteService::create( $model, $avatar ) ) {
+			if( SiteService::create( $model, $avatar, $banner ) ) {
 
 				return $this->redirect( 'all' );
 			}
 		}
 
     	return $this->render( 'create', [
-    		'model' => $model, 
+    		'model' => $model,
     		'avatar' => $avatar,
     		'banner' => $banner
     	]);
@@ -110,7 +109,7 @@ class SitesController extends BaseController {
 
 			if( $model->load( Yii::$app->request->post(), 'Site' )  && $model->validate() ) {
 
-				if( SiteService::update( $model, $avatar ) ) {
+				if( SiteService::update( $model, $avatar, $banner ) ) {
 
 					return $this->redirect( 'all' );
 				} 
@@ -140,7 +139,7 @@ class SitesController extends BaseController {
 
 				try {
 
-					SiteService::delete( $model );
+					SiteService::delete( $model, $avatar, $banner );
 
 					return $this->redirect( 'all' );
 				}

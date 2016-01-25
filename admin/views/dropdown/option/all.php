@@ -32,8 +32,8 @@ if( !isset( $sortOrder ) ) {
 		<?= Html::a( 'Add Option', [ "$controllerName/create?id=$category->id" ], [ 'class' => 'btn btn-medium' ] ) ?>				
 	</div>
 	<div class="header-search col15x5">
-		<input id="search-terms" class="field-large" type="text" name="search" value="<?= $searchTerms ?>">
-		<span class="frm-icon-element field-small">
+		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
+		<span class="frm-icon-element element-small">
 			<i class="cmti cmti-search"></i>
 			<button id="btn-search" class="btn btn-small">Search</button>
 		</span>
@@ -72,7 +72,7 @@ if( !isset( $sortOrder ) ) {
 						<td> <span class="<?= $option->icon ?>" title="<?= $option->name ?>"></span></td> 
 						<td>
 							<span title="Update Option"><?= Html::a( "", [ "$controllerName/update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete Option"><?= Html::a( "", [ "$controllerName/delete?id=$id" ], [ 'class' => 'cmti cmti-close-o-b' ] )  ?></span>
+							<span title="Delete Option"><?= Html::a( "", [ "$controllerName/delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

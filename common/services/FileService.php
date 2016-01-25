@@ -259,6 +259,24 @@ class FileService extends Service {
 		return $file;
 	}
 
+	public static function saveFiles( $model, $files = [] ) {
+
+		foreach ( $files as $key => $value ) {
+
+			if( isset( $value ) ) {
+
+				if( $value->type == 'image' ) {
+
+					FileService::saveImage( $value, [ 'model' => $model, 'attribute' => $key ] );
+				}
+				else {
+
+					FileService::saveFile( $value, [ 'model' => $model, 'attribute' => $key ] );
+				}
+			}
+		}
+	}
+
 	// Delete -----------
 
 	public static function delete( $file ) {
@@ -273,6 +291,14 @@ class FileService extends Service {
 		$existingFile->delete();
 
 		return true;
+	}
+
+	public static function deleteFiles( $files = [] ) {
+
+		foreach ( $files as $file ) {
+			
+			self::delete( $file );
+		}
 	}
 }
 

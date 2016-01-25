@@ -5,7 +5,7 @@ use yii\helpers\Html;
 
 // CMG Imports
 use cmsgears\files\widgets\AvatarUploader;
-use cmsgears\files\widgets\FileUploader;
+use cmsgears\files\widgets\ImageUploader;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Site | ' . $coreProperties->getSiteTitle();
@@ -22,18 +22,18 @@ $this->title 	= 'Update Site | ' . $coreProperties->getSiteTitle();
 
 		<div class="box-content clearfix">
 			<div class="header">Site Avatar</div>
-			<?= AvatarUploader::widget( [ 'options' => [ 'id' => 'avatar-listing', 'class' => 'file-uploader' ], 'model' => $avatar, 'modelClass' => 'Avatar', 'directory' => 'avatar' ] );?>
+			<?= AvatarUploader::widget( [ 'options' => [ 'id' => 'model-avatar', 'class' => 'file-uploader' ], 'model' => $avatar ] );?>
 		</div>
-		
+
 		<div class="box-content clearfix">
 			<div class="header">Site Banner</div>
-			<?= FileUploader::widget( [ 'options' => [ 'id' => 'banner-listing', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' ] );?>
+			<?= ImageUploader::widget( [ 'options' => [ 'id' => 'model-banner', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' ] );?>
 		</div>
 
 		<div class="filler-height"></div>
 
 		<div class="align align-middle">
-			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+			<?=Html::a( 'Cancel', 'all', [ 'class' => 'btn btn-medium' ] );?>
 			<input class="btn btn-medium" type="submit" value="Update" />
 		</div>
 

@@ -95,15 +95,7 @@ class SiteService extends Service {
 
 	public static function create( $site, $avatar = null, $banner = null ) {
 
-		if( isset( $avatar ) ) {
-
-			FileService::saveImage( $avatar, [ 'model' => $site, 'attribute' => 'avatarId' ] );
-		}
-
-		if( isset( $banner ) ) {
-
-			FileService::saveImage( $banner, [ 'model' => $site, 'attribute' => 'bannerId' ] );
-		}
+		FileService::saveFiles( $site, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
 
 		$site->save();
 
@@ -116,33 +108,13 @@ class SiteService extends Service {
 
 		$siteToUpdate	= self::findById( $site->id );
 
-		$siteToUpdate->copyForUpdateFrom( $site, [ 'avatarId', 'name', 'order', 'active' ] );
-
-		if( isset( $avatar ) ) {
-
-			FileService::saveImage( $avatar, [ 'model' => $siteToUpdate, 'attribute' => 'avatarId' ] );
-		}
-
-		if( isset( $banner ) ) {
-
-			FileService::saveImage( $banner, [ 'model' => $siteToUpdate, 'attribute' => 'bannerId' ] );
-		}
+		$siteToUpdate->copyForUpdateFrom( $site, [ 'name', 'order', 'active' ] );
+		
+		FileService::saveFiles( $siteToUpdate, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
 
 		$siteToUpdate->update();
 
 		return $siteToUpdate;
-	}
-
-	public static function updateAttributes( $modelAttributes ) {
-
-		$site 			= Site::findBySlug( Yii::$app->cmgCore->getSiteSlug() );	
-		$metaToUpdate	= $site->getModelMetaByTypeName( $meta->type, $meta->name );
-
-		$metaToUpdate->copyForUpdateFrom( $meta, [ 'value' ] );
-
-		$metaToUpdate->update();
-
-		return $metaToUpdate;
 	}
 
 	// Delete -----------
@@ -151,13 +123,15 @@ class SiteService extends Service {
 	 * @param Site $site
 	 * @return boolean
 	 */
-	public static function delete( $site ) {
+	public static function delete( $site, $avatar = null, $banner = null ) {
 
 		// Find existing Site
 		$siteToDelete	= self::findById( $site->id );
 
 		// Delete Site
 		$siteToDelete->delete();
+
+		FileService::deleteFiles( [ $avatar, $banner ] );
 
 		return true;
 	}

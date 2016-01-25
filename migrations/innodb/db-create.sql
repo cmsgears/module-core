@@ -99,6 +99,7 @@ DROP TABLE IF EXISTS `cmg_core_category`;
 CREATE TABLE `cmg_core_category` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `avatarId` bigint(20) DEFAULT NULL,
+  `bannerId` bigint(20) DEFAULT NULL,
   `parentId` bigint(20) DEFAULT NULL,
   `rootId` bigint(20) DEFAULT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -112,7 +113,8 @@ CREATE TABLE `cmg_core_category` (
   `htmlOptions` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_category_1` (`avatarId`),
-  KEY `fk_category_2` (`parentId`)
+  KEY `fk_category_2` (`bannerId`),
+  KEY `fk_category_3` (`parentId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -746,7 +748,8 @@ ALTER TABLE `cmg_core_object`
 --
 ALTER TABLE `cmg_core_category`
 	ADD CONSTRAINT `fk_category_1` FOREIGN KEY (`avatarId`) REFERENCES `cmg_core_file` (`id`),
-	ADD CONSTRAINT `fk_category_2` FOREIGN KEY (`parentId`) REFERENCES `cmg_core_category` (`id`);
+	ADD CONSTRAINT `fk_category_2` FOREIGN KEY (`bannerId`) REFERENCES `cmg_core_file` (`id`),
+	ADD CONSTRAINT `fk_category_3` FOREIGN KEY (`parentId`) REFERENCES `cmg_core_category` (`id`);
 
 --
 -- Constraints for table `cmg_core_option`

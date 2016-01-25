@@ -29,8 +29,8 @@ if( !isset( $sortOrder ) ) {
 <div class="header-content clearfix">
 	<div class="header-actions col15x10"></div>
 	<div class="header-search col15x5">
-		<input id="search-terms" class="field-large" type="text" name="search" value="<?= $searchTerms ?>">
-		<span class="frm-icon-element field-small">
+		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
+		<span class="frm-icon-element element-small">
 			<i class="cmti cmti-search"></i>
 			<button id="btn-search" class="btn btn-small">Search</button>
 		</span>

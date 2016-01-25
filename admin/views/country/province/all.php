@@ -30,8 +30,8 @@ if( !isset( $sortOrder ) ) {
 		<?= Html::a( 'Add Province', [ "create?id=$countryId" ], [ 'class' => 'btn btn-medium' ] ) ?>				
 	</div>
 	<div class="header-search col15x5">
-		<input id="search-terms" class="field-large" type="text" name="search" value="<?= $searchTerms ?>">
-		<span class="frm-icon-element field-small">
+		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
+		<span class="frm-icon-element element-small">
 			<i class="cmti cmti-search"></i>
 			<button id="btn-search" class="btn btn-small">Search</button>
 		</span>
@@ -73,7 +73,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $province->name ?></td>
 						<td>
 							<span title="Update Province"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete Province"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-o-b' ] )  ?></span>
+							<span title="Delete Province"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

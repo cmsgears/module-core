@@ -129,7 +129,7 @@ class UserService extends Service {
 	 * @param CmgFile $avatar
 	 * @return User
 	 */
-	public static function create( $user, $avatar = null ) {
+	public static function create( $user, $avatar = null, $banner = null ) {
 
 		if( $user->genderId <= 0 ) {
 
@@ -143,12 +143,9 @@ class UserService extends Service {
 		// Generate Tokens
 		$user->generateVerifyToken();
 		$user->generateAuthKey();
-
-		// Save Avatar
-		if( isset( $avatar ) ) {
-
-			FileService::saveImage( $avatar, [ 'model' => $user, 'attribute' => 'avatarId' ] );
-		}
+		
+		// Save Files
+		FileService::saveFiles( $user, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
 
 		// Create User
 		$user->save();
@@ -170,7 +167,7 @@ class UserService extends Service {
 	 * @param CmgFile $avatar
 	 * @return User
 	 */
-	public static function update( $user, $avatar = null ) {
+	public static function update( $user, $avatar = null, $banner = null ) {
 
 		if( $user->genderId <= 0 ) {
 
@@ -183,11 +180,8 @@ class UserService extends Service {
 		// Copy Attributes
 		$userToUpdate->copyForUpdateFrom( $user, [ 'avatarId', 'genderId', 'email', 'username', 'firstName', 'lastName', 'status', 'phone' ] );
 
-		// Save Avatar
-		if( isset( $avatar ) ) {
-
-			FileService::saveImage( $avatar, [ 'model' => $userToUpdate, 'attribute' => 'avatarId' ] );
-		}
+		// Save Files
+		FileService::saveFiles( $userToUpdate, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
 
 		// Update User
 		$userToUpdate->update();
@@ -227,13 +221,16 @@ class UserService extends Service {
 	 * @param User $user
 	 * @return boolean
 	 */
-	public static function delete( $user ) {
+	public static function delete( $user, $avatar = null, $banner = null ) {
 
 		// Find existing user
 		$userToDelete	= User::findById( $user->id );
 
 		// Delete User
 		$userToDelete->delete();
+
+		// Delete Files
+		FileService::deleteFiles( [ $avatar, $banner ] );
 
 		return true;
 	}

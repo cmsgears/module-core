@@ -4,6 +4,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 use cmsgears\files\widgets\AvatarUploader;
+use cmsgears\files\widgets\ImageUploader;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Update User';
@@ -31,10 +32,12 @@ $returnUrl		= $this->context->returnUrl;
 
 		<div class="box-content clearfix">
 			<div class="header">User Avatar</div>
-			<?= AvatarUploader::widget([
-				'options' => [ 'id' => 'avatar-user', 'class' => 'file-uploader' ], 
-				'model' => $avatar 
-			]); ?>
+			<?= AvatarUploader::widget( [ 'options' => [ 'id' => 'model-avatar', 'class' => 'file-uploader' ], 'model' => $avatar ] ); ?>
+		</div>
+
+		<div class="box-content clearfix">
+			<div class="header">User Banner</div>
+			<?= ImageUploader::widget( [ 'options' => [ 'id' => 'model-banner', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' ] ); ?>
 		</div>
 
 		<div class="clear filler-height"></div>

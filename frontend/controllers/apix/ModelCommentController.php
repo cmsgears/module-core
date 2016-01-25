@@ -66,9 +66,10 @@ class ModelCommentController extends \cmsgears\core\admin\controllers\base\Contr
 			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 		}
 		else {
-
+			
 			// Trigger Ajax Failure
-        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+			$errors = AjaxUtil::generateErrorMessage( $model );
+        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
  	}
 	

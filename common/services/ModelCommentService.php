@@ -15,6 +15,11 @@ class ModelCommentService extends Service {
 	// Static Methods ----------------------------------------------
 
 	// Read ---------------- 
+	
+	public static function findByBaseIdParentId( $baseId, $parentId ) {
+		
+		return ModelComment::findByBaseIdParentId( $baseId, $parentId );
+	}
  
 	// Create -----------
  	

@@ -5,6 +5,7 @@ namespace cmsgears\core\common\models\entities;
 use \Yii;
 use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
+use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
@@ -95,10 +96,11 @@ class ModelComment extends CmgModel {
 
 		// model rules
         $rules = [
-            [ [ 'parentId', 'parentType', 'content' ], 'required' ],
+            [ [ 'parentId', 'parentType', 'content', 'name', 'rating', 'email' ], 'required' ],
             [ [ 'id', 'email', 'status', 'rating', 'data' ], 'safe' ],
+            [ 'email', 'email' ],
             [ [ 'parentType', 'name', 'ip' ], 'string', 'min' => 1, 'max' => 100 ],
-			[ [ 'parentId', 'baseId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'parentId', 'baseId', 'createdBy', 'modifiedBy', 'rating' ], 'number', 'integerOnly' => true, 'min' => 1 ], 
             [ [ 'createdAt', 'modifiedAt', 'approvedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
@@ -126,7 +128,7 @@ class ModelComment extends CmgModel {
 			'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
 			'ip' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_IP ),
 			'status' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
-			'rating' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
+			'rating' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_RATING ),
 			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
 			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
@@ -149,6 +151,11 @@ class ModelComment extends CmgModel {
 	// ModelComment ----------------------
 
 	// Read ------
+	
+	public static function findByBaseIdParentId( $baseId = null, $parentId ) {
+		
+		return self::find()->where( [ 'baseId' => $baseId, 'parentId' => $parentId, 'status' => self::STATUS_APPROVED ] )->all();
+	}
 }
 
 ?>

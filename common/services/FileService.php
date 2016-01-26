@@ -199,6 +199,8 @@ class FileService extends Service {
 			
 			$file->changed	= false;
 		}
+
+		return $file;
 	}
 
 	/**

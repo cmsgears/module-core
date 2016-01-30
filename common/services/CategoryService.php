@@ -33,6 +33,11 @@ class CategoryService extends HierarchyService {
 
 		return Category::findByParentId( $id );
 	}
+	
+	public static function getFeatured() {
+		
+		return Category::findAll( [ 'featured' => 1 ] );
+	}
 
 	/**
 	 * @param string $name

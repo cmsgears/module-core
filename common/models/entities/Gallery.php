@@ -23,6 +23,8 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * Gallery Entity - The primary class.
  *
  * @property integer $id
+ * @property integer $siteId
+ * @property integer $templateId
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
@@ -53,6 +55,22 @@ class Gallery extends NamedCmgEntity {
 	// Instance Methods --------------------------------------------
 
 	/**
+	 * @return Site
+	 */
+	public function getSite() {
+
+		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+	}
+
+	/**
+	 * @return Template
+	 */
+	public function getTemplate() {
+
+		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
+	}
+
+	/**
 	 * @return string representation of flag
 	 */
 	public function getActiveStr() {
@@ -68,7 +86,6 @@ class Gallery extends NamedCmgEntity {
     public function behaviors() {
 
         return [
-
             'authorBehavior' => [
                 'class' => AuthorBehavior::className()
 			],
@@ -97,14 +114,14 @@ class Gallery extends NamedCmgEntity {
 		// model rules
         $rules = [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'title', 'description' ], 'safe' ],
-            [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
+            [ [ 'id', 'siteId', 'templateId', 'title', 'description', 'content', 'data' ], 'safe' ],
+            [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
+            [ 'slug', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ 'slug', 'string', 'min' => 1, 'max' => 150 ],
             [ 'active', 'boolean' ],
-            [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'siteId', 'templateId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
@@ -125,6 +142,8 @@ class Gallery extends NamedCmgEntity {
 	public function attributeLabels() {
 
 		return [
+			'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'title' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),

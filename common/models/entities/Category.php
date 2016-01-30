@@ -10,26 +10,38 @@ use yii\behaviors\SluggableBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\traits\DataTrait;
+
 /**
  * Category Entity
  *
  * @property integer $id
+ * @property integer $siteId
  * @property integer $avatarId
+ * @property integer $bannerId
  * @property integer $parentId
  * @property integer $rootId
  * @property string $name
  * @property string $slug
- * @property string $description
- * @property string $type
  * @property string $icon
+ * @property string $type 
+ * @property string $description
  * @property string $featured
  * @property integer lValue
  * @property integer rValue
  * @property string $htmlOptions
+ * @property string $data
  */
 class Category extends HierarchicalModel {
-
+	
+	use DataTrait;
+	
 	// Instance Methods --------------------------------------------
+
+	public function getSite() {
+
+		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+	}
 
 	/**
 	 * @return Category - parent category
@@ -98,13 +110,13 @@ class Category extends HierarchicalModel {
 		
 		// model rules
         $rules = [
-            [ [ 'name', 'featured' ], 'required' ],
-            [ [ 'id', 'avatarId', 'description', 'htmlOptions' ], 'safe' ],
-            [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => 100 ],
+            [ [ 'siteId', 'name', 'featured' ], 'required' ],
+            [ [ 'id', 'avatarId', 'description', 'htmlOptions', 'data' ], 'safe' ],
+            [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
+            [ 'slug', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ 'slug', 'string', 'min' => 1, 'max' => 150 ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'avatarId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'featured', 'boolean' ]
@@ -127,6 +139,7 @@ class Category extends HierarchicalModel {
 	public function attributeLabels() {
 
 		return [
+			'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'avatarId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
 			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
@@ -135,7 +148,8 @@ class Category extends HierarchicalModel {
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'featured' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
-			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS )
+			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 
@@ -148,7 +162,7 @@ class Category extends HierarchicalModel {
 
         if( !$this->hasErrors() ) {
 
-            if( self::isExistByTypeName( $this->type, $this->name ) ) {
+            if( self::isExistByNameType( $this->name, $this->type ) ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
@@ -162,7 +176,7 @@ class Category extends HierarchicalModel {
 
         if( !$this->hasErrors() ) {
 
-			$existingCategory = self::findByTypeName( $this->type, $this->name );
+			$existingCategory = self::findByNameType( $this->name, $this->type );
 
 			if( isset( $existingCategory ) && $existingCategory->id != $this->id && 
 				strcmp( $existingCategory->name, $this->name ) == 0 && $existingCategory->type == $this->type ) {
@@ -217,17 +231,19 @@ class Category extends HierarchicalModel {
 	/**
 	 * @return Category - by type and name
 	 */
-	public static function findByTypeName( $type, $name ) {
+	public static function findByNameType( $name, $type ) {
 
-		return self::find()->where( 'type=:type AND name=:name', [ ':type' => $type, ':name' => $name ] )->one();
+		$siteId	= Yii::$app->cmgCore->siteId;
+
+		return self::find()->where( 'name=:name AND type=:type AND siteId=:siteId', [ ':name' => $name, ':type' => $type, ':siteId' => $siteId ] )->one();
 	}
 
 	/**
 	 * @return Category - checks whether category exist by type and name
 	 */
-	public static function isExistByTypeName( $type, $name ) {
+	public static function isExistByNameType( $name, $type ) {
 
-		$category = self::findByTypeName( $type, $name );
+		$category = self::findByNameType( $name, $type );
 
 		return isset( $category );
 	}

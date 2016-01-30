@@ -15,27 +15,18 @@ use cmsgears\core\common\models\traits\CategoryTrait;
  * Activity Entity
  *
  * @property integer $id
- * @property integer $notifierId
  * @property integer $templateId
- * @property integer $userId 
+ * @property integer $userId
  * @property string $type
  * @property integer $consumed
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property datetime $scheduledAt
- * @property string $data 
+ * @property string $data
  */
 class Activity extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
-
-	/**
-	 * @return User
-	 */
-	public function getNotifier() {
-
-		return $this->hasOne( User::className(), [ 'id' => 'notifierId' ] );
-	}
 
 	/**
 	 * @return Template
@@ -77,7 +68,6 @@ class Activity extends CmgEntity {
     public function behaviors() {
 
         return [
-
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
 				'createdAtAttribute' => 'createdAt',
@@ -97,9 +87,9 @@ class Activity extends CmgEntity {
         return [
             [ [ 'userId', 'type' ], 'required' ],
 			[ [ 'data' ], 'safe' ],
-			[ [ 'type' ], 'string', 'min' => 1, 'max' => 100 ],
+			[ [ 'type' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
 			[ 'consumed', 'boolean' ],
-            [ [ 'userId', 'notifierId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'userId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'createdAt', 'modifiedAt', 'scheduledAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
@@ -111,9 +101,8 @@ class Activity extends CmgEntity {
 	public function attributeLabels() {
 
 		return [
-			'notifierId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NOTIFIER ),
-			'userId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USER ),
 			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
+			'userId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USER ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'consumed' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONSUMED ),
 			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )

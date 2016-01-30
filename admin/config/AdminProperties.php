@@ -11,16 +11,6 @@ use cmsgears\core\common\config\CmgProperties;
 
 class AdminProperties extends CmgProperties {
 
-	/**
-	 * The property defines the active theme for the site.
-	 */	
-	const PROP_THEME				= "theme";
-	
-	/**
-	 * The property defines the active theme version to reload browsers in case theme is upgraded.
-	 */	
-	const PROP_THEME_VERSION		= "theme_version";
-
 	// Singleton instance
 	private static $instance;
 
@@ -43,22 +33,6 @@ class AdminProperties extends CmgProperties {
 		}
 
 		return self::$instance;
-	}
-
-	/**
-	 * Returns current active Theme name.
-	 */
-	public function getTheme() {
-
-		return $this->properties[ self::PROP_THEME ];
-	}
-
-	/**
-	 * Returns current active Theme version.
-	 */
-	public function getThemeVersion() {
-
-		return $this->properties[ self::PROP_THEME_VERSION ];
 	}
 }
 

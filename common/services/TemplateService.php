@@ -62,7 +62,7 @@ class TemplateService extends \cmsgears\core\common\services\Service {
 
 		$templateToUpdate	= self::findById( $template->id );
 
-		$templateToUpdate->copyForUpdateFrom( $template, [ 'name', 'description', 'layout', 'viewPath', 'adminView', 'frontendView', 'content' ] );
+		$templateToUpdate->copyForUpdateFrom( $template, [ 'name', 'icon', 'description', 'layout', 'viewPath', 'adminView', 'privateView', 'publicView', 'content' ] );
 
 		$templateToUpdate->update();
 

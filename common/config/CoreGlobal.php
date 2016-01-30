@@ -36,6 +36,13 @@ class CoreGlobal {
 
 	const CATEGORY_GENDER		= 'gender';
 
+	// Text Limits -----------------------------------------------------
+
+	const TEXT_SMALL			=  50;
+	const TEXT_MEDIUM			= 100;
+	const TEXT_LARGE			= 150;
+	const TEXT_XLARGE			= 255;
+
 	// Hierarchy -- Nested Set -----------------------------------------
 
 	const HIERARCHY_VALUE_L		= 1;
@@ -239,10 +246,13 @@ class CoreGlobal {
 
 	// Views
 	const FIELD_LAYOUT			= 'layoutField';
+	const FIELD_STYLE			= 'styleField';
+	const FIELD_BASE_PATH		= 'basePathField';
 	const FIELD_VIEW_PATH		= 'viewPathField';
 	const FIELD_VIEW_ADMIN		= 'viewAdminField';
-	const FIELD_VIEW_FRONTEND	= 'viewFrontendField';
-	
+	const FIELD_VIEW_PRIVATE	= 'viewPrivateField';
+	const FIELD_VIEW_PUBLIC		= 'viewPublicField';
+
 	// Forms
 	const FIELD_FORM			= 'formField';
 	const FIELD_CAPTCHA			= 'captchaField';

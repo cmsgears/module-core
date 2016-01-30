@@ -4,9 +4,11 @@ SET FOREIGN_KEY_CHECKS=0;
 
 DROP TABLE IF EXISTS `cmg_core_locale`;
 
+DROP TABLE IF EXISTS `cmg_core_template`;
+
 DROP TABLE IF EXISTS `cmg_core_object`;
 
-DROP TABLE IF EXISTS `cmg_core_template`;
+DROP TABLE IF EXISTS `cmg_core_theme`;
 
 DROP TABLE IF EXISTS `cmg_core_tag`;
 

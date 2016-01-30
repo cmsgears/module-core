@@ -6,8 +6,8 @@ SET FOREIGN_KEY_CHECKS=0;
 -- Main Site
 --
 
-INSERT INTO `cmg_core_site` (`avatarId`,`bannerId`,`name`,`slug`,`order`,`active`) VALUES
-	(NULL,NULL,'main','main',0,1);
+INSERT INTO `cmg_core_site` (`avatarId`,`bannerId`,`themeId`,`name`,`slug`,`order`,`active`) VALUES
+	(NULL,NULL,NULL,'main','main',0,1);
 
 SELECT @site := `id` FROM cmg_core_site WHERE slug = 'main';
 
@@ -15,73 +15,71 @@ SELECT @site := `id` FROM cmg_core_site WHERE slug = 'main';
 -- Core Config Form
 --
 
-INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`htmlOptions`,`createdAt`,`modifiedAt`) VALUES
-	(@site,NULL,1,1,'Config Core','config-core','system','Core configuration form.','All configurations saved successfully.',0,10,1,0,0,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
+INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`createdAt`,`modifiedAt`,`htmlOptions`,`data`) VALUES
+	(@site,NULL,1,1,'Config Core','config-core','system','Core configuration form.','All configurations saved successfully.',0,10,1,0,0,'2014-10-11 14:22:54','2014-10-11 14:22:54',NULL,NULL);
 
 SELECT @form := `id` FROM cmg_core_form WHERE slug = 'config-core';
 
-INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`htmlOptions`,`data`,`order`) VALUES 
-	(@form,'locale_message','Locale Message',40,0,'required','{\"title\":\"Check for i18n support.\"}',NULL,0),
-	(@form,'language','Language',0,0,'required','{\"title\":\"Language used on html tag.\",\"placeholder\":\"Language\"}',NULL,0),
-	(@form,'locale','Locale',0,0,'required','{\"title\":\"Site default locale.\",\"placeholder\":\"Locale\"}',NULL,0),
-	(@form,'charset','Charset',0,0,'required','{\"title\":\"Charset used on html head meta.\",\"placeholder\":\"Charset\"}',NULL,0),
-	(@form,'site_title','Site Title',0,0,'required','{\"title\":\"Site title used in forming page title.\",\"placeholder\":\"Site Title\"}',NULL,0),
-	(@form,'site_name','Site Name',0,0,'required','{\"title\":\"Site name used on footers etc.\",\"placeholder\":\"Site Name\"}',NULL,0),
-	(@form,'site_url','Frontend URL',0,0,'required','{\"title\":\"Frontend URL\",\"placeholder\":\"Frontend URL\"}',NULL,0),
-	(@form,'admin_url','Backend URL',0,0,'required','{\"title\":\"Backend URL\",\"placeholder\":\"Backend URL\"}',NULL,0),
-	(@form,'registration','Registration',40,0,'required','{\"title\":\"Check whether site registration is allowed.\"}',NULL,0),
-	(@form,'change_email','Change Email',40,0,'required','{\"title\":\"Check whether email change is allowed for user profile.\"}',NULL,0),
-	(@form,'change_username','Change Username',40,0,'required','{\"title\":\"Check whether username change is allowed for user profile.\"}',NULL,0);
+INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`order`,`icon`,`htmlOptions`,`data`) VALUES 
+	(@form,'locale_message','Locale Message',40,0,'required',0,NULL,'{\"title\":\"Check for i18n support.\"}',NULL),
+	(@form,'language','Language',0,0,'required',0,NULL,'{\"title\":\"Language used on html tag.\",\"placeholder\":\"Language\"}',NULL),
+	(@form,'locale','Locale',0,0,'required',0,NULL,'{\"title\":\"Site default locale.\",\"placeholder\":\"Locale\"}',NULL),
+	(@form,'charset','Charset',0,0,'required',0,NULL,'{\"title\":\"Charset used on html head meta.\",\"placeholder\":\"Charset\"}',NULL),
+	(@form,'site_title','Site Title',0,0,'required',0,NULL,'{\"title\":\"Site title used in forming page title.\",\"placeholder\":\"Site Title\"}',NULL),
+	(@form,'site_name','Site Name',0,0,'required',0,NULL,'{\"title\":\"Site name used on footers etc.\",\"placeholder\":\"Site Name\"}',NULL),
+	(@form,'site_url','Frontend URL',0,0,'required',0,NULL,'{\"title\":\"Frontend URL\",\"placeholder\":\"Frontend URL\"}',NULL),
+	(@form,'admin_url','Backend URL',0,0,'required',0,NULL,'{\"title\":\"Backend URL\",\"placeholder\":\"Backend URL\"}',NULL),
+	(@form,'registration','Registration',40,0,'required',0,NULL,'{\"title\":\"Check whether site registration is allowed.\"}',NULL),
+	(@form,'change_email','Change Email',40,0,'required',0,NULL,'{\"title\":\"Check whether email change is allowed for user profile.\"}',NULL),
+	(@form,'change_username','Change Username',40,0,'required',0,NULL,'{\"title\":\"Check whether username change is allowed for user profile.\"}',NULL);
 
 --
 -- Mail Config Form
 --
 
-INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`htmlOptions`,`createdAt`,`modifiedAt`) VALUES
-	(@site,NULL,1,1,'Config Mail','config-mail','system','Mail configuration form.','All configurations saved successfully.',0,10,1,0,0,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
+INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`createdAt`,`modifiedAt`,`htmlOptions`,`data`) VALUES
+	(@site,NULL,1,1,'Config Mail','config-mail','system','Mail configuration form.','All configurations saved successfully.',0,10,1,0,0,'2014-10-11 14:22:54','2014-10-11 14:22:54',NULL,NULL);
 
 SELECT @form := `id` FROM cmg_core_form WHERE slug = 'config-mail';
 
-INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`htmlOptions`,`data`,`order`) VALUES 
-	(@form,'smtp','SMTP',40,0,'required','{\"title\":\"Check whether SMTP is required.\"}',NULL,0),
-	(@form,'smtp_username','SMTP Username',0,0,NULL,'{\"title\":\"SMTP username.\",\"placeholder\":\"SMTP Username\"}',NULL,0),
-	(@form,'smtp_password','SMTP Password',10,0,NULL,'{\"title\":\"SMTP password.\",\"placeholder\":\"SMTP Password\"}',NULL,0),
-	(@form,'smtp_host','SMTP Host',0,0,NULL,'{\"title\":\"SMTP host.\",\"placeholder\":\"SMTP Host\"}',NULL,0),
-	(@form,'smtp_port','SMTP Port',0,0,NULL,'{\"title\":\"SMTP port.\",\"placeholder\":\"SMTP Port\"}',NULL,0),
-	(@form,'smtp_encryption','SMTP Encryption',0,0,NULL,'{\"title\":\"SMTP encryption.\",\"placeholder\":\"SMTP Encryption\"}',NULL,0),
-	(@form,'debug','SMTP Debug',40,0,'required','{\"title\":\"Check whether SMTP debug is required.\"}',NULL,0),
-	(@form,'sender_name','Sender Name',0,0,'required','{\"title\":\"Sender name.\",\"placeholder\":\"Sender Name\"}',NULL,0),
-	(@form,'sender_email','Sender Email',0,0,'required','{\"title\":\"Sender email.\",\"placeholder\":\"Sender Email\"}',NULL,0),
-	(@form,'contact_name','Contact Name',0,0,'required','{\"title\":\"Contact name.\",\"placeholder\":\"Contact Name\"}',NULL,0),
-	(@form,'contact_email','Contact Email',0,0,'required','{\"title\":\"Contact email.\",\"placeholder\":\"Contact Email\"}',NULL,0),
-	(@form,'info_name','Info Name',0,0,'required','{\"title\":\"Info name.\",\"placeholder\":\"Info Name\"}',NULL,0),
-	(@form,'info_email','Info Email',0,0,'required','{\"title\":\"Info email.\",\"placeholder\":\"Info Email\"}',NULL,0);
+INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`order`,`icon`,`htmlOptions`,`data`) VALUES 
+	(@form,'smtp','SMTP',40,0,'required',0,NULL,'{\"title\":\"Check whether SMTP is required.\"}',NULL),
+	(@form,'smtp_username','SMTP Username',0,0,NULL,0,NULL,'{\"title\":\"SMTP username.\",\"placeholder\":\"SMTP Username\"}',NULL),
+	(@form,'smtp_password','SMTP Password',10,0,NULL,0,NULL,'{\"title\":\"SMTP password.\",\"placeholder\":\"SMTP Password\"}',NULL),
+	(@form,'smtp_host','SMTP Host',0,0,NULL,0,NULL,'{\"title\":\"SMTP host.\",\"placeholder\":\"SMTP Host\"}',NULL),
+	(@form,'smtp_port','SMTP Port',0,0,NULL,0,NULL,'{\"title\":\"SMTP port.\",\"placeholder\":\"SMTP Port\"}',NULL),
+	(@form,'smtp_encryption','SMTP Encryption',0,0,NULL,0,NULL,'{\"title\":\"SMTP encryption.\",\"placeholder\":\"SMTP Encryption\"}',NULL),
+	(@form,'debug','SMTP Debug',40,0,'required',0,NULL,'{\"title\":\"Check whether SMTP debug is required.\"}',NULL),
+	(@form,'sender_name','Sender Name',0,0,'required',0,NULL,'{\"title\":\"Sender name.\",\"placeholder\":\"Sender Name\"}',NULL),
+	(@form,'sender_email','Sender Email',0,0,'required',0,NULL,'{\"title\":\"Sender email.\",\"placeholder\":\"Sender Email\"}',NULL),
+	(@form,'contact_name','Contact Name',0,0,'required',0,NULL,'{\"title\":\"Contact name.\",\"placeholder\":\"Contact Name\"}',NULL),
+	(@form,'contact_email','Contact Email',0,0,'required',0,NULL,'{\"title\":\"Contact email.\",\"placeholder\":\"Contact Email\"}',NULL),
+	(@form,'info_name','Info Name',0,0,'required',0,NULL,'{\"title\":\"Info name.\",\"placeholder\":\"Info Name\"}',NULL),
+	(@form,'info_email','Info Email',0,0,'required',0,NULL,'{\"title\":\"Info email.\",\"placeholder\":\"Info Email\"}',NULL);
 
 --
 -- Backend Config Form
 --
 
-INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`htmlOptions`,`createdAt`,`modifiedAt`) VALUES
-	(@site,NULL,1,1,'Config Backend','config-backend','system','Backend site configuration form.','All configurations saved successfully.',0,10,1,0,0,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
+INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`createdAt`,`modifiedAt`,`htmlOptions`,`data`) VALUES
+	(@site,NULL,1,1,'Config Backend','config-backend','system','Backend site configuration form.','All configurations saved successfully.',0,10,1,0,0,'2014-10-11 14:22:54','2014-10-11 14:22:54',NULL,NULL);
 
 SELECT @form := `id` FROM cmg_core_form WHERE slug = 'config-backend';
 
-INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`htmlOptions`,`data`,`order`) VALUES 
-	(@form,'theme','Theme',0,0,'required','{\"title\":\"Current theme.\",\"placeholder\":\"Theme\"}',NULL,0),
-	(@form,'theme_version','Theme Version',0,0,'required','{\"title\":\"Theme version.\",\"placeholder\":\"Theme Version\"}',NULL,0);
+-- INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`order`,`icon`,`htmlOptions`,`data`) VALUES 
+--	(@form,NULL,NULL,0,0,'required',0,NULL,'{\"title\":\"Current theme.\",\"placeholder\":\"Theme\"}',NULL);
 
 --
 -- Frontend Config Form
 --
 
-INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`htmlOptions`,`createdAt`,`modifiedAt`) VALUES
-	(@site,NULL,1,1,'Config Site','config-frontend','system','Frontend site configuration form.','All configurations saved successfully.',0,10,1,0,0,NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
+INSERT INTO `cmg_core_form` (`siteId`,`templateId`,`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`successMessage`,`captcha`,`visibility`,`active`,`userMail`,`adminMail`,`createdAt`,`modifiedAt`,`htmlOptions`,`data`) VALUES
+	(@site,NULL,1,1,'Config Site','config-frontend','system','Frontend site configuration form.','All configurations saved successfully.',0,10,1,0,0,'2014-10-11 14:22:54','2014-10-11 14:22:54',NULL,NULL);
 
 SELECT @form := `id` FROM cmg_core_form WHERE slug = 'config-frontend';
 
-INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`htmlOptions`,`data`,`order`) VALUES 
-	(@form,'theme','Theme',0,0,'required','{\"title\":\"Current theme.\",\"placeholder\":\"Theme\"}',NULL,0),
-	(@form,'theme_version','Theme Version',0,0,'required','{\"title\":\"Theme version.\",\"placeholder\":\"Theme Version\"}',NULL,0);
+-- INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`validators`,`order`,`icon`,`htmlOptions`,`data`) VALUES 
+--	(@form,NULL,NULL,0,0,'required',0,NULL,'{\"title\":\"Current theme.\",\"placeholder\":\"Theme\"}',NULL);
 
 --
 -- Dumping data for table `cmg_core_model_attribute`
@@ -111,11 +109,7 @@ INSERT INTO `cmg_core_model_attribute` (`parentId`,`parentType`,`name`,`type`,`v
 	(@site,'site','contact_name','mail','text','Contact Us'),
 	(@site,'site','contact_email','mail','text','democontact@cmsgears.com'),
 	(@site,'site','info_name','mail','text','Info'),
-	(@site,'site','info_email','mail','text','demoinfo@cmsgears.com'),
-	(@site,'site','theme','frontend','text','basic'),
-	(@site,'site','theme_version','frontend','text','1'),
-	(@site,'site','theme','backend','text','admin'),
-	(@site,'site','theme_version','backend','text','1');
+	(@site,'site','info_email','mail','text','demoinfo@cmsgears.com');
 
 --
 -- Default Locale
@@ -128,37 +122,37 @@ INSERT INTO `cmg_core_locale` (`code`,`name`) VALUES
 -- Default Categories and their options
 --
 
-INSERT INTO `cmg_core_category` (`avatarId`,`bannerId`,`parentId`,`rootId`,`name`,`slug`,`description`,`type`,`icon`,`featured`,`lValue`,`rValue`,`htmlOptions`) VALUES  
-	(NULL,NULL,NULL,NULL,'Gender','gender',NULL,'combo',NULL,0,1,2,NULL);
+INSERT INTO `cmg_core_category` (`avatarId`,`bannerId`,`parentId`,`rootId`,`name`,`slug`,`description`,`type`,`icon`,`featured`,`lValue`,`rValue`,`htmlOptions`,`data`) VALUES  
+	(NULL,NULL,NULL,NULL,'Gender','gender',NULL,'combo',NULL,0,1,2,NULL,NULL);
 
 SELECT @category := `id` FROM cmg_core_category WHERE slug = 'gender';
 
-INSERT INTO `cmg_core_option` (`categoryId`,`name`,`value`,`icon`,`data`) VALUES 
-	(@category,'Male','Male',NULL,NULL),
-	(@category,'Female','Female',NULL,NULL),
-	(@category,'Other','Other',NULL,NULL);
+INSERT INTO `cmg_core_option` (`categoryId`,`name`,`value`,`icon`,`htmlOptions`,`data`) VALUES 
+	(@category,'Male','Male',NULL,NULL,NULL),
+	(@category,'Female','Female',NULL,NULL,NULL),
+	(@category,'Other','Other',NULL,NULL,NULL);
 
 --
 -- Core module roles and permissions
 --
 
-INSERT INTO `cmg_core_role` (`createdBy`,`modifiedBy`,`name`,`slug`,`homeUrl`,`type`,`description`,`icon`,`createdAt`,`modifiedAt`) VALUES
-	(1,1,'Super Admin','super-admin','dashboard','system','The Super Admin have all the permisisons to perform operations on the admin site and website.',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(1,1,'Admin','admin','dashboard','system','The Admin have all the permisisons to perform operations on the admin site and website except RBAC module.',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(1,1,'User','user',NULL,'system','The role User is limited to website users.',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(1,1,'User Manager','user-manager','dashboard','system','The role User Manager is limited to manage site users from admin.',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
+INSERT INTO `cmg_core_role` (`createdBy`,`modifiedBy`,`name`,`slug`,`homeUrl`,`type`,`icon`,`description`,`createdAt`,`modifiedAt`) VALUES
+	(1,1,'Super Admin','super-admin','dashboard','system',NULL,'The Super Admin have all the permisisons to perform operations on the admin site and website.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(1,1,'Admin','admin','dashboard','system',NULL,'The Admin have all the permisisons to perform operations on the admin site and website except RBAC module.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(1,1,'User','user',NULL,'system',NULL,'The role User is limited to website users.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(1,1,'User Manager','user-manager','dashboard','system',NULL,'The role User Manager is limited to manage site users from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 SELECT @rolesadmin := `id` FROM cmg_core_role WHERE slug = 'super-admin';
 SELECT @roleadmin := `id` FROM cmg_core_role WHERE slug = 'admin';
 SELECT @roleuser := `id` FROM cmg_core_role WHERE slug = 'user';
 SELECT @roleuserm := `id` FROM cmg_core_role WHERE slug = 'user-manager';
 
-INSERT INTO `cmg_core_permission` (`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`description`,`icon`,`createdAt`,`modifiedAt`) VALUES 
-	(1,1,'Admin','admin','system','The permission admin is to distinguish between admin and site user. It is a must have permission for admins.',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(1,1,'User','user','system','The permission user is to distinguish between admin and site user. It is a must have permission for users.',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(1,1,'Core','core','system','The permission core is to manage settings, drop downs, world countries, galleries and newsletters from admin.',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(1,1,'Identity','identity','system','The permission identity is to manage users from admin.',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(1,1,'RBAC','rbac','system','The permission rbac is to manage roles and permissions from admin.',NULL,'2014-10-11 14:22:54','2014-10-11 14:22:54');
+INSERT INTO `cmg_core_permission` (`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`icon`,`description`,`createdAt`,`modifiedAt`) VALUES 
+	(1,1,'Admin','admin','system',NULL,'The permission admin is to distinguish between admin and site user. It is a must have permission for admins.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(1,1,'User','user','system',NULL,'The permission user is to distinguish between admin and site user. It is a must have permission for users.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(1,1,'Core','core','system',NULL,'The permission core is to manage settings, drop downs, world countries, galleries and newsletters from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(1,1,'Identity','identity','system',NULL,'The permission identity is to manage users from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(1,1,'RBAC','rbac','system',NULL,'The permission rbac is to manage roles and permissions from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 SELECT @permadmin := `id` FROM cmg_core_permission WHERE slug = 'admin';
 SELECT @permuser := `id` FROM cmg_core_permission WHERE slug = 'user';

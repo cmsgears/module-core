@@ -69,6 +69,7 @@ abstract class CategoryController extends Controller {
 	public function actionCreate( $type ) {
 
 		$model			= new Category();
+		$model->siteId	= Yii::$app->cmgCore->siteId;
 		$model->type 	= $type;
 		$avatar 		= CmgFile::loadFile( null, 'Avatar' );
 		$banner 		= CmgFile::loadFile( null, 'Banner' );

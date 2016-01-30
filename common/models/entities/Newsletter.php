@@ -3,7 +3,6 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
 use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
@@ -26,7 +25,8 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property datetime $lastSentAt
- * @property longtext $content 
+ * @property longtext $content
+ * @property longtext $data
  */
 class Newsletter extends NamedCmgEntity {
 
@@ -42,7 +42,6 @@ class Newsletter extends NamedCmgEntity {
     public function behaviors() {
 
         return [
-
             'authorBehavior' => [
                 'class' => AuthorBehavior::className()
 			],
@@ -65,8 +64,8 @@ class Newsletter extends NamedCmgEntity {
 		// model rules
         $rules = [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'description', 'content' ], 'safe' ],
-            [ 'name', 'string', 'min' => 1, 'max' => 100 ],
+            [ [ 'id', 'description', 'content', 'data' ], 'safe' ],
+            [ 'name', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
@@ -93,7 +92,8 @@ class Newsletter extends NamedCmgEntity {
 		return [
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT )
+			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 

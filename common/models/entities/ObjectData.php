@@ -3,7 +3,6 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
 use yii\db\Expression;
 use yii\behaviors\SluggableBehavior;
@@ -28,6 +27,7 @@ use cmsgears\core\common\models\traits\DataTrait;
  * @property integer $modifiedBy
  * @property string $name
  * @property string $slug
+ * @property string $icon
  * @property string $description
  * @property string $type
  * @property string $active
@@ -43,6 +43,11 @@ class ObjectData extends CmgEntity {
 	use DataTrait;
 
 	// Instance Methods --------------------------------------------
+
+	public function getSite() {
+
+		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+	}
 
 	public function getTemplate() {
 
@@ -107,15 +112,15 @@ class ObjectData extends CmgEntity {
 
 		// model rules
         $rules = [
-            [ [ 'name', 'siteId' ], 'required' ],
-            [ [ 'id', 'slug', 'templateId', 'description', 'active', 'htmlOptions', 'data' ], 'safe' ],
+            [ [ 'siteId', 'name' ], 'required' ],
+            [ [ 'id', 'templateId', 'slug', 'icon', 'description', 'active', 'htmlOptions', 'data' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
-            [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
+            [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
+            [ 'slug', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ 'slug', 'string', 'min' => 1, 'max' => 150 ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'createdBy', 'modifiedBy', 'siteId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
@@ -136,10 +141,12 @@ class ObjectData extends CmgEntity {
 	public function attributeLabels() {
 
 		return [
+			'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )

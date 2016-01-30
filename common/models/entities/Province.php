@@ -41,8 +41,8 @@ class Province extends CmgEntity {
             [ [ 'code', 'name' ], 'required' ],
             [ [ 'id' ], 'safe' ],
             [ 'countryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ 'code', 'string', 'min' => 1, 'max' => 10 ],
-            [ 'name', 'string', 'min' => 1, 'max' => 150 ],
+            [ 'code', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_SMALL ],
+            [ 'name', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]

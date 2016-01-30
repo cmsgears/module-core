@@ -31,8 +31,8 @@ class Locale extends NamedCmgEntity {
         $rules = [
             [ [ 'code', 'name' ], 'required' ],
             [ 'id', 'safe' ],
-            [ 'code', 'string', 'min' => 1, 'max' => 50 ],
-            [ 'name', 'string', 'min' => 1, 'max' => 100 ],
+            [ 'code', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_SMALL ],
+            [ 'name', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]

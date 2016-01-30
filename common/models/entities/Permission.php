@@ -24,8 +24,9 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property integer $modifiedBy
  * @property string $name
  * @property string $slug
- * @property string $description
+ * @property string $type
  * @property string $icon 
+ * @property string $description 
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
@@ -76,7 +77,6 @@ class Permission extends NamedCmgEntity {
     public function behaviors() {
 
         return [
-
             'authorBehavior' => [
                 'class' => AuthorBehavior::className()
 			],
@@ -106,7 +106,8 @@ class Permission extends NamedCmgEntity {
         $rules = [
             [ [ 'name' ], 'required' ],
             [ [ 'id', 'slug', 'description' ], 'safe' ],
-            [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => 100 ],
+            [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
+            [ 'slug', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
@@ -132,9 +133,9 @@ class Permission extends NamedCmgEntity {
 
 		return [
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON )
+			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION )
 		];
 	}
 

@@ -3,7 +3,6 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
 use yii\db\Expression;
 use yii\behaviors\SluggableBehavior;
@@ -24,15 +23,16 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property integer $modifiedBy
  * @property string $name
  * @property string $slug
- * @property string $description
+ * @property string $icon
  * @property string $type
+ * @property string $description
  * @property string $layout
  * @property string $viewPath
  * @property string $adminView
- * @property string $frontendView
+ * @property string $privateView
+ * @property string $publicView
  * @property datetime $createdAt
  * @property datetime $modifiedAt
- * @property string $icon
  * @property string $content
  */
 class Template extends CmgEntity {
@@ -49,10 +49,7 @@ class Template extends CmgEntity {
     public function behaviors() {
 
         return [
-
-            'authorBehavior' => [
-                'class' => AuthorBehavior::className()
-			],
+            AuthorBehavior::className(),
             'sluggableBehavior' => [
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
@@ -75,11 +72,13 @@ class Template extends CmgEntity {
      */
 	public function rules() {
 
-		// model rules		
+		// model rules
         $rules = [
             [ [ 'name', 'type' ], 'required' ],
-            [ [ 'id', 'slug', 'description', 'layout', 'viewPath', 'adminView', 'frontendView', 'content', 'icon' ], 'safe' ],
-            [ [ 'name', 'type', 'icon' ], 'string', 'min'=>1, 'max'=>100 ],
+            [ [ 'id', 'slug', 'icon', 'description', 'layout', 'viewPath', 'adminView', 'privateView', 'publicView', 'content' ], 'safe' ],
+            [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
+            [ [ 'slug' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
+            [ [ 'description' ], 'string', 'min' => 0, 'max' => CoreGlobal::TEXT_XLARGE ],
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
@@ -105,12 +104,14 @@ class Template extends CmgEntity {
 
 		return [
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'layout' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LAYOUT ),
 			'viewPath' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_PATH ),
 			'adminView' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_ADMIN ),
-			'frontendView' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_FRONTEND ),
+			'privateView' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_PRIVATE ),
+			'publicView' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_PUBLIC ),
 			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 		];
 	}

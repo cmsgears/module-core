@@ -39,8 +39,8 @@ class Country extends NamedCmgEntity {
         $rules = [
             [ [ 'name', 'code' ], 'required' ],
             [ 'id', 'safe' ],
-            [ 'code', 'string', 'min' => 1, 'max' => 10 ],
-            [ 'name', 'string', 'min' => 1, 'max' => 150 ],
+            [ 'code', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_SMALL ],
+            [ 'name', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]

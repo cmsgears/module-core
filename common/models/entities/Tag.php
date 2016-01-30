@@ -14,15 +14,21 @@ use cmsgears\core\common\config\CoreGlobal;
  * Tag Entity
  *
  * @property integer $id
+ * @property integer $siteId
  * @property string $name
  * @property string $slug
- * @property string $type 
  * @property string $icon
+ * @property string $type
  */
 class Tag extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
+	public function getSite() {
+
+		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+	}
+	
 	// yii\base\Component ----------------
 	
     /**
@@ -50,13 +56,13 @@ class Tag extends CmgEntity {
 		
 		// model rules
         $rules = [
-            [ [ 'name' ], 'required' ],
+            [ [ 'siteId', 'name' ], 'required' ],
             [ 'id', 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
-            [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => 100 ],
+            [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
+            [ 'slug', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ 'slug', 'string', 'min' => 1, 'max' => 150 ]
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
 
 		// trim if required
@@ -76,6 +82,7 @@ class Tag extends CmgEntity {
 	public function attributeLabels() {
 
 		return [
+			'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE )
@@ -91,7 +98,7 @@ class Tag extends CmgEntity {
 
         if( !$this->hasErrors() ) {
 
-            if( self::isExistByTypeName( $this->type, $this->name ) ) {
+            if( self::isExistByNameType( $this->name, $this->type ) ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
@@ -105,7 +112,7 @@ class Tag extends CmgEntity {
 
         if( !$this->hasErrors() ) {
 
-			$existingTag = self::findByTypeName( $this->type, $this->name );
+			$existingTag = self::findByNameType( $this->name, $this->type );
 
 			if( isset( $existingTag ) && $existingTag->id != $this->id && 
 				strcmp( $existingTag->name, $this->name ) == 0 && $existingTag->type == $this->type ) {
@@ -148,17 +155,19 @@ class Tag extends CmgEntity {
 	/**
 	 * @return Tag - by type and name
 	 */
-	public static function findByTypeName( $type, $name ) {
+	public static function findByNameType( $name, $type ) {
 
-		return self::find()->where( 'type=:type AND name=:name', [ ':type' => $type, ':name' => $name ] )->one();
+		$siteId	= Yii::$app->cmgCore->siteId;
+
+		return self::find()->where( 'name=:name AND type=:type AND siteId=:siteId', [ ':name' => $name, ':type' => $type, ':siteId' => $siteId ] )->one();
 	}
 
 	/**
 	 * @return Tag - checks whether tag exist by type and name
 	 */
-	public static function isExistByTypeName( $type, $name ) {
+	public static function isExistByNameType( $name, $type ) {
 
-		$tag = self::findByTypeName( $type, $name );
+		$tag = self::findByNameType( $name, $type );
 
 		return isset( $tag );
 	}

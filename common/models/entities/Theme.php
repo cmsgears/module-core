@@ -3,7 +3,6 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
 use yii\db\Expression;
 use yii\behaviors\SluggableBehavior;
@@ -13,77 +12,40 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
-
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+use cmsgears\core\common\models\traits\DataTrait;
 
 /**
- * Role Entity
+ * Theme Entity
  *
  * @property integer $id
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
  * @property string $slug
- * @property string $type
- * @property string $icon 
  * @property string $description
- * @property string $homeUrl
+ * @property integer $default
+ * @property integer $active
  * @property datetime $createdAt
  * @property datetime $modifiedAt
+ * @property string $data
  */
-class Role extends NamedCmgEntity {
+class Theme extends NamedCmgEntity {
 
 	use CreateModifyTrait;
 
+	use DataTrait;
+
 	// Instance Methods --------------------------------------------
 
-	/**
-	 * @return array - Permission
-	 */
-	public function getPermissions() {
+	public function getDefaultStr() {
 
-    	return $this->hasMany( Permission::className(), [ 'id' => 'permissionId' ] )
-					->viaTable( CoreTables::TABLE_ROLE_PERMISSION, [ 'roleId' => 'id' ] );
+		return Yii::$app->formatter->asBoolean( $this->default ); 
 	}
+	
+	public function getActiveStr() {
 
-	/**
-	 * @return array - having permissions list from the joining table
-	 */
-	public function getPermissionMappingList() {
-
-    	return $this->hasMany( RolePermission::className(), [ 'roleId' => 'id' ] );
-	}
-
-	/**
-	 * @return array having permission id element.
-	 */
-	public function getPermissionsIdList() {
-
-    	$permissions 		= $this->permissionMappingList;
-		$permissionsList	= array();
-
-		foreach ( $permissions as $permission ) {
-
-			array_push( $permissionsList, $permission->permissionId );
-		}
-
-		return $permissionsList;
-	}
-
-	/**
-	 * @return array having permission name element.
-	 */
-	public function getPermissionsSlugList() {
-
-    	$permissions 		= $this->permissions;
-		$permissionsList	= array();
-
-		foreach ( $permissions as $permission ) {
-
-			array_push( $permissionsList, $permission->slug );
-		}
-
-		return $permissionsList;
+		return Yii::$app->formatter->asBoolean( $this->active ); 
 	}
 
 	// yii\base\Component ----------------
@@ -94,9 +56,7 @@ class Role extends NamedCmgEntity {
     public function behaviors() {
 
         return [
-            'authorBehavior' => [
-                'class' => AuthorBehavior::className()
-			],
+			AuthorBehavior::className(),
             'sluggableBehavior' => [
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
@@ -118,24 +78,26 @@ class Role extends NamedCmgEntity {
      * @inheritdoc
      */
 	public function rules() {
-		
+
 		// model rules
         $rules = [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'slug', 'description', 'homeUrl' ], 'safe' ],
-            [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
-            [ 'slug', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
+            [ [ 'id', 'slug', 'description', 'default', 'active', 'data' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
+            [ 'name', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
+            [ 'slug', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
+            [ 'description', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_XLARGE ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ],
+            [ [ 'default', 'active' ], 'boolean' ]
         ];
 
 		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'description' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -150,12 +112,14 @@ class Role extends NamedCmgEntity {
 
 		return [
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'homeUrl' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HOME_URL )
+			'default' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DEFAULT ),
+			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
+
+	// Theme------------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -166,15 +130,15 @@ class Role extends NamedCmgEntity {
      */
 	public static function tableName() {
 
-		return CoreTables::TABLE_ROLE;
+		return CoreTables::TABLE_THEME;
 	}
 
-	// Role ------------------------------
+	// ObjectData ------------------------
 
 	/**
-	 * @return Role - by slug
+	 * @return ObjectData - by slug and type
 	 */
-	public static function findBySlug( $slug ) {
+	public static function findBySlugType( $slug ) {
 
 		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
 	}

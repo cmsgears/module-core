@@ -9,6 +9,8 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\traits\DataTrait;
+
 /**
  * Option Entity
  *
@@ -21,6 +23,8 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $data
  */
 class Option extends CmgEntity {
+
+	use DataTrait;
 
 	// Instance Methods --------------------------------------------
 
@@ -44,7 +48,7 @@ class Option extends CmgEntity {
             [ [ 'name' ], 'required' ],
             [ [ 'id', 'categoryId', 'value', 'htmlOptions', 'data' ], 'safe' ],
             [ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => 100 ],
+            [ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],

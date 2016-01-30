@@ -3,7 +3,6 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
@@ -124,7 +123,7 @@ class FormField extends CmgEntity {
         $rules = [
             [ [ 'formId', 'name' ], 'required' ],
 			[ [ 'id', 'label', 'type', 'validators', 'order', 'icon', 'htmlOptions', 'data' ], 'safe' ],
-			[ 'name', 'string', 'min' => 1, 'max' => 100 ],
+			[ 'name', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
 			[ 'name', 'alphanumu' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],

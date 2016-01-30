@@ -182,9 +182,12 @@ class MessageSource extends Component {
 
 		// Views
 		CoreGlobal::FIELD_LAYOUT => 'Layout',
+		CoreGlobal::FIELD_STYLE => 'Style',
+		CoreGlobal::FIELD_BASE_PATH => 'Base Path',
 		CoreGlobal::FIELD_VIEW_PATH => 'View Path',
 		CoreGlobal::FIELD_VIEW_ADMIN => 'Admin View',
-		CoreGlobal::FIELD_VIEW_FRONTEND => 'Frontend View',
+		CoreGlobal::FIELD_VIEW_PRIVATE => 'Private View',
+		CoreGlobal::FIELD_VIEW_PUBLIC => 'Public View',
 
 		// Forms
 		CoreGlobal::FIELD_FORM => 'Form',

@@ -58,7 +58,8 @@ abstract class TemplateController extends Controller {
 		}
 
     	return $this->render( '@cmsgears/module-core/admin/views/template/create', [
-    		'model' => $model
+    		'model' => $model,
+    		'renderers' => Yii::$app->cmgCore->renderers
     	]);
 	}	
  	
@@ -81,7 +82,8 @@ abstract class TemplateController extends Controller {
 			}
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/template/update', [
-	    		'model' => $model
+	    		'model' => $model,
+	    		'renderers' => Yii::$app->cmgCore->renderers
 	    	]);
 		}
 		
@@ -106,7 +108,8 @@ abstract class TemplateController extends Controller {
 			}
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/template/delete', [
-	    		'model' => $model
+	    		'model' => $model,
+	    		'renderers' => Yii::$app->cmgCore->renderers
 	    	]);
 		}
 		

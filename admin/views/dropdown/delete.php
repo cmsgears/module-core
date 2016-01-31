@@ -3,9 +3,6 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
-// CMG Imports
-use cmsgears\files\widgets\AvatarUploader;
-
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Delete $title";
 $returnUrl		= $this->context->returnUrl;
@@ -22,11 +19,6 @@ $returnUrl		= $this->context->returnUrl;
     	<?= $form->field( $model, 'icon' )->textInput( [ 'readonly' => true ] ) ?>
     	<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => true ] ) ?>
 		<?= $form->field( $model, 'featured' )->checkbox( [ 'disabled' => true ] ) ?>
-
-		<div class="box-content clearfix">
-			<div class="header">Category Avatar</div>
-			<?= AvatarUploader::widget([ 'options' => [ 'id' => 'model-avatar', 'class' => 'file-uploader' ], 'model' => $avatar ]); ?>
-		</div>
 
 		<div class="clear filler-height"></div>
 

@@ -4,8 +4,8 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
-use cmsgears\files\widgets\AvatarUploader;
 use cmsgears\files\widgets\ImageUploader;
+use cmsgears\files\widgets\VideoUploader;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Category';
@@ -26,13 +26,13 @@ $returnUrl		= $this->context->returnUrl;
 		<?= $form->field( $model, 'featured' )->checkbox() ?>
 
 		<div class="box-content clearfix">
-			<div class="header">Category Avatar</div>
-			<?= AvatarUploader::widget([ 'options' => [ 'id' => 'model-avatar', 'class' => 'file-uploader' ], 'model' => $avatar ]); ?>
+			<div class="header">Category Banner</div>
+			<?= ImageUploader::widget( [ 'options' => [ 'id' => 'model-banner', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' ] );?>
 		</div>
 
 		<div class="box-content clearfix">
-			<div class="header">Category Banner</div>
-			<?= ImageUploader::widget( [ 'options' => [ 'id' => 'model-banner', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' ] );?>
+			<div class="header">Category Video</div>
+			<?= VideoUploader::widget( [ 'options' => [ 'id' => 'model-video', 'class' => 'file-uploader' ], 'model' => $video ] ); ?>
 		</div>
 
 		<div class="filler-height"></div>

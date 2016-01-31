@@ -18,6 +18,7 @@ $returnUrl		= $this->context->returnUrl;
     	<?= $form->field( $model, 'title' ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
 		<?= $form->field( $model, 'active' )->checkbox() ?>
+		<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
 
 		<div class="clear filler-height"></div>
 

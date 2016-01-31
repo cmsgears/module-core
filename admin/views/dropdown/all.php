@@ -52,7 +52,6 @@ if( !isset( $sortOrder ) ) {
 		<table>
 			<thead>
 				<tr>
-					<th>Avatar</th>
 					<th>Name
 						<span class='box-icon-sort'>
 							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
@@ -74,7 +73,6 @@ if( !isset( $sortOrder ) ) {
 						
 				?>
 					<tr>
-						<td><?= CodeGenUtil::getImageThumbTag( $model->avatar, [ 'class' => 'avatar', 'image' => 'avatar.png' ] ) ?></td>
 						<td><?= $model->name ?></td>
 						<td><?= $model->description ?></td>
 						<td><?= $model->getFeaturedStr() ?></td> 

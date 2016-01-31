@@ -6,6 +6,7 @@ use \Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -13,6 +14,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\entities\Gallery;
 
 use cmsgears\core\admin\services\GalleryService;
+use cmsgears\core\admin\services\TemplateService;
 
 abstract class GalleryController extends Controller {
 
@@ -58,9 +60,9 @@ abstract class GalleryController extends Controller {
 
 	// RoleController --------------------
 
-	public function actionAll( $type = null ) {
+	public function actionAll( $type = null, $site = false ) {
 
-		$dataProvider = GalleryService::getPaginationByType( $type );
+		$dataProvider = GalleryService::getPaginationByType( $type, $site );
 
 		Url::remember( [ 'gallery/all' ], 'galleries' );
 
@@ -69,11 +71,16 @@ abstract class GalleryController extends Controller {
 	    ]);
 	}
 
-	public function actionCreate( $type = null ) {
+	public function actionCreate( $type = null, $site = false ) {
 
 		$model			= new Gallery();
 		$model->type 	= $type;
-
+		
+		if( $site ) {
+			
+			$model->siteId	= Yii::$app->cmgCore->siteId;
+		}
+		
 		$model->setScenario( 'create' );
 
 		if( $model->load( Yii::$app->request->post(), 'Gallery' )  && $model->validate() ) {
@@ -84,8 +91,12 @@ abstract class GalleryController extends Controller {
 			}
 		}
 
+		$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_GALLERY );
+		$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+
     	return $this->render( '@cmsgears/module-core/admin/views/gallery/create', [
-    		'model' => $model
+    		'model' => $model,
+    		'templatesMap' => $templatesMap
     	]);
 	}
 
@@ -109,8 +120,12 @@ abstract class GalleryController extends Controller {
 				}
 			}
 
+			$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_GALLERY );
+			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+
 	    	return $this->render( '@cmsgears/module-core/admin/views/gallery/update', [
-	    		'model' => $model
+	    		'model' => $model,
+	    		'templatesMap' => $templatesMap
 	    	]);
 		}
 
@@ -136,8 +151,12 @@ abstract class GalleryController extends Controller {
 				}
 			}
 
+			$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_GALLERY );
+			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+
 	    	return $this->render( '@cmsgears/module-core/admin/views/gallery/delete', [
-	    		'model' => $model
+	    		'model' => $model,
+	    		'templatesMap' => $templatesMap
 	    	]);
 		}
 

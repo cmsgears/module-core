@@ -66,14 +66,21 @@ class GalleryService extends \cmsgears\core\common\services\GalleryService {
 	/**
 	 * @return ActiveDataProvider
 	 */
-	public static function getPaginationByType( $type ) {
+	public static function getPaginationByType( $type = null, $site = false ) {
+
+		$config = [];
 
 		if( isset( $type ) ) {
 
-			return self::getPagination( [ 'conditions' => [ 'type' => $type ] ] );
+			$config[ 'conditions' ][ 'type' ] = $type;
 		}
 
-		return self::getPagination();
+		if( $site ) {
+
+			$config[ 'conditions' ][ 'siteId' ] = Yii::$app->cmgCore->siteId;
+		}
+
+		return self::getPagination( $config );
 	}
 
 	// Update -----------
@@ -88,11 +95,17 @@ class GalleryService extends \cmsgears\core\common\services\GalleryService {
 		$galleryToUpdate	= self::findById( $gallery->id );
 
 		// Copy and set Attributes
-		$galleryToUpdate->copyForUpdateFrom( $gallery, [ 'name', 'description', 'active' ] );
-		
+		$galleryToUpdate->copyForUpdateFrom( $gallery, [ 'templateId', 'name', 'title', 'description', 'active' ] );
+
+		// template
+		if( isset( $galleryToUpdate->templateId ) && $galleryToUpdate->templateId <= 0 ) {
+
+			unset( $galleryToUpdate->templateId );
+		}
+
 		// Update Gallery
 		$galleryToUpdate->update();
-		
+
 		// Return updated Gallery
 		return $galleryToUpdate;
 	}

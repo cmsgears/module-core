@@ -7,6 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\Site;
+use cmsgears\core\common\models\entities\Theme;
 
 /**
  * The class SiteService is base class to perform database activities for Site Entity.
@@ -16,6 +17,19 @@ class SiteService extends Service {
 	// Static Methods ----------------------------------------------
 
 	// Read ----------------
+
+	public static function getTheme() {
+
+		// Find Site Theme
+		$site	= self::findById( Yii::$app->cmgCore->siteId );
+		$theme	= $site->theme;
+
+		// Use Default Theme in case site theme not found or it's disabled
+		if( !isset( $theme ) || !$theme->active ) {
+
+			$theme = Theme::findDefault();
+		}
+	}
 
 	/**
 	 * @param integer $id

@@ -18,6 +18,7 @@ use cmsgears\core\common\models\traits\AttributeTrait;
  * @property integer $id
  * @property integer $avatarId
  * @property integer $bannerId
+ * @property integer $themeId
  * @property string $name
  * @property string $slug
  * @property short $order
@@ -45,6 +46,11 @@ class Site extends NamedCmgEntity {
 	public function getBanner() {
 
 		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
+	}
+
+	public function getTheme() {
+
+		return $this->hasOne( Theme::className(), [ 'id' => 'themeId' ] );
 	}
 
 	/**

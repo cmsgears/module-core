@@ -5,6 +5,7 @@ namespace cmsgears\core\admin\controllers;
 use \Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -13,6 +14,7 @@ use cmsgears\core\common\models\entities\Newsletter;
 
 use cmsgears\core\admin\services\NewsletterService;
 use cmsgears\core\admin\services\NewsletterMemberService;
+use cmsgears\core\admin\services\TemplateService;
 
 class NewsletterController extends base\Controller {
 
@@ -87,8 +89,12 @@ class NewsletterController extends base\Controller {
 			}
 		}
 
+		$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_NEWSLETTER );
+		$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+
     	return $this->render('create', [
-    		'model' => $model
+    		'model' => $model,
+    		'templatesMap' => $templatesMap
     	]);
 	}
 
@@ -110,8 +116,12 @@ class NewsletterController extends base\Controller {
 				}
 			}
 
+			$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_NEWSLETTER );
+			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+
 	    	return $this->render( 'update', [
-	    		'model' => $model
+	    		'model' => $model,
+	    		'templatesMap' => $templatesMap
 	    	]);			
 		}
 
@@ -135,8 +145,12 @@ class NewsletterController extends base\Controller {
 				}
 			}
 
+			$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_NEWSLETTER );
+			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+
 	    	return $this->render( 'delete', [
-	    		'model' => $model
+	    		'model' => $model,
+	    		'templatesMap' => $templatesMap
 	    	]);
 		}
 

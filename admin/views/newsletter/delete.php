@@ -18,8 +18,9 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 	<div class="box-wrap-content frm-split-40-60">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-newsletter' ] );?>
 
-    	<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=>'true' ] ) ?>
+    	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
+    	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
+		<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap ) ?>
 
 		<div class="box-content clearfix">
 			<div class="header">Newsletter Content</div>

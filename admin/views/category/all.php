@@ -52,7 +52,6 @@ if( !isset( $sortOrder ) ) {
 		<table>
 			<thead>
 				<tr>
-					<th>Avatar</th>
 					<th>Name
 						<span class='box-icon-sort'>
 							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
@@ -76,10 +75,9 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $category ) {
 
-						$id 		= $category->id;
+						$id 	= $category->id;
 				?>
 					<tr>
-						<td><?= CodeGenUtil::getImageThumbTag( $category->avatar, [ 'class' => 'avatar', 'image' => 'avatar.png' ] ) ?></td>
 						<td><?= $category->name ?></td>
 						<td><?= $category->getParentName() ?></td>
 						<td><?= $category->description ?></td>

@@ -156,11 +156,6 @@ class ModelComment extends CmgModel {
 		
 		return self::find()->where( [ 'baseId' => $baseId, 'parentId' => $parentId, 'status' => self::STATUS_APPROVED ] )->all();
 	}
-	
-	public static function findByParentIdType( $parentId, $parentType ) {
-		
-		return self::find()->where( [ 'parentId' => $parentId, 'parentType' => $parentType, 'status' => self::STATUS_APPROVED ] )->all();
-	}
 }
 
 ?>

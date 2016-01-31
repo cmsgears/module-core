@@ -77,6 +77,12 @@ class GalleryService extends Service {
 	 */
 	public static function create( $gallery ) {
 
+		// template
+		if( isset( $gallery->templateId ) && $gallery->templateId <= 0 ) {
+
+			unset( $gallery->templateId );
+		}
+
 		// Create Gallery
 		$gallery->save();
 
@@ -129,7 +135,13 @@ class GalleryService extends Service {
 		$galleryToUpdate	= self::findById( $gallery->id );
 
 		// Copy and set Attributes
-		$galleryToUpdate->copyForUpdateFrom( $gallery, [ 'name', 'title', 'description' ] );
+		$galleryToUpdate->copyForUpdateFrom( $gallery, [ 'templateId', 'name', 'title', 'description' ] );
+
+		// template
+		if( isset( $galleryToUpdate->templateId ) && $galleryToUpdate->templateId <= 0 ) {
+
+			unset( $galleryToUpdate->templateId );
+		}
 
 		// Update Gallery
 		$galleryToUpdate->update();

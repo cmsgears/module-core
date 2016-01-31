@@ -30,11 +30,13 @@ CREATE TABLE `cmg_core_template` (
   `slug` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `icon` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `renderer` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `renderFile` tinyint(1) NOT NULL DEFAULT 0,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `layout` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `viewPath` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `adminView` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `privateView` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `userView` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `publicView` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime DEFAULT NULL,
@@ -90,6 +92,8 @@ CREATE TABLE `cmg_core_theme` (
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `default` tinyint(1) NOT NULL DEFAULT 0,
   `active` tinyint(1) NOT NULL DEFAULT 0,
+  `renderer` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `basePath` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime DEFAULT NULL,
   `data` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -128,8 +132,8 @@ DROP TABLE IF EXISTS `cmg_core_category`;
 CREATE TABLE `cmg_core_category` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `siteId` bigint(20) NOT NULL,
-  `avatarId` bigint(20) DEFAULT NULL,
   `bannerId` bigint(20) DEFAULT NULL,
+  `videoId` bigint(20) DEFAULT NULL,
   `parentId` bigint(20) DEFAULT NULL,
   `rootId` bigint(20) DEFAULT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -137,15 +141,15 @@ CREATE TABLE `cmg_core_category` (
   `icon` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `featured` tinyint(1) NOT NULL DEFAULT 0,
-  `lValue` smallint(6) NOT NULL DEFAULT 1,
-  `rValue` smallint(6) NOT NULL DEFAULT 2,
-  `htmlOptions` mediumtext COLLATE utf8_unicode_ci DEFAULT NULL,
-  `data` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
+  `featured` tinyint(1) NOT NULL DEFAULT '0',
+  `lValue` smallint(6) NOT NULL DEFAULT '1',
+  `rValue` smallint(6) NOT NULL DEFAULT '2',
+  `htmlOptions` mediumtext COLLATE utf8_unicode_ci,
+  `data` longtext COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `fk_category_1` (`siteId`),
-  KEY `fk_category_2` (`avatarId`),
-  KEY `fk_category_3` (`bannerId`),
+  KEY `fk_category_2` (`bannerId`),
+  KEY `fk_category_3` (`videoId`),
   KEY `fk_category_4` (`parentId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -460,7 +464,6 @@ DROP TABLE IF EXISTS `cmg_core_activity`;
 CREATE TABLE `cmg_core_activity` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `templateId` bigint(20) DEFAULT NULL,
-  `userId` bigint(20) NOT NULL,
   `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `consumed` tinyint(1) DEFAULT 0,
   `createdAt` datetime NOT NULL,
@@ -468,8 +471,7 @@ CREATE TABLE `cmg_core_activity` (
   `scheduledAt` datetime DEFAULT NULL,
   `data` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_activity_1` (`templateId`),
-  KEY `fk_activity_2` (`userId`)
+  KEY `fk_activity_1` (`templateId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -647,6 +649,24 @@ CREATE TABLE `cmg_core_model_attribute` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `cmg_core_model_activity`
+--
+
+DROP TABLE IF EXISTS `cmg_core_model_activity`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmg_core_model_activity` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `activityId` bigint(20) NOT NULL,
+  `parentId` bigint(20) NOT NULL,
+  `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `admin` tinyint(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `fk_model_activity_1` (`activityId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `cmg_core_model_category`
 --
 
@@ -802,8 +822,8 @@ ALTER TABLE `cmg_core_tag`
 --
 ALTER TABLE `cmg_core_category`
 	ADD CONSTRAINT `fk_category_1` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`),
-	ADD CONSTRAINT `fk_category_2` FOREIGN KEY (`avatarId`) REFERENCES `cmg_core_file` (`id`),
-	ADD CONSTRAINT `fk_category_3` FOREIGN KEY (`bannerId`) REFERENCES `cmg_core_file` (`id`),
+	ADD CONSTRAINT `fk_category_2` FOREIGN KEY (`bannerId`) REFERENCES `cmg_core_file` (`id`),
+	ADD CONSTRAINT `fk_category_3` FOREIGN KEY (`videoId`) REFERENCES `cmg_core_file` (`id`),
 	ADD CONSTRAINT `fk_category_4` FOREIGN KEY (`parentId`) REFERENCES `cmg_core_category` (`id`);
 
 --
@@ -888,8 +908,7 @@ ALTER TABLE `cmg_core_newsletter_list`
 --
 
 ALTER TABLE `cmg_core_activity`
-	ADD CONSTRAINT `fk_activity_1` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_template` (`id`),
-  	ADD CONSTRAINT `fk_activity_2` FOREIGN KEY (`userId`) REFERENCES `cmg_core_user` (`id`) ON DELETE CASCADE;
+	ADD CONSTRAINT `fk_activity_1` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_template` (`id`);
 
 --
 -- Constraints for table `cmg_core_gallery`
@@ -940,6 +959,13 @@ ALTER TABLE `cmg_core_form_field`
 
 ALTER TABLE `cmg_core_model_message`
   	ADD CONSTRAINT `fk_model_message_1` FOREIGN KEY (`localeId`) REFERENCES `cmg_core_locale` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cmg_core_model_activity`
+--
+
+ALTER TABLE `cmg_core_model_activity`
+  	ADD CONSTRAINT `fk_model_activity_1` FOREIGN KEY (`activityId`) REFERENCES `cmg_core_activity` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `cmg_core_model_category`

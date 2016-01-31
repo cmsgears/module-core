@@ -299,7 +299,10 @@ class FileService extends Service {
 
 		foreach ( $files as $file ) {
 			
-			self::delete( $file );
+			if( isset( $file ) ) {
+
+				self::delete( $file );
+			}
 		}
 	}
 }

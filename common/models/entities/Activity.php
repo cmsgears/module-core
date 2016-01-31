@@ -16,7 +16,6 @@ use cmsgears\core\common\models\traits\CategoryTrait;
  *
  * @property integer $id
  * @property integer $templateId
- * @property integer $userId
  * @property string $type
  * @property integer $consumed
  * @property datetime $createdAt
@@ -37,27 +36,11 @@ class Activity extends CmgEntity {
 	}
 
 	/**
-	 * @return User
-	 */
-	public function getUser() {
-
-		return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
-	}
-
-	/**
 	 * @return string representation of flag
 	 */
 	public function getConsumedStr() {
 
 		return Yii::$app->formatter->asBoolean( $this->consumed ); 
-	}
-
-	/**
-	 * @return boolean - whether given user is owner
-	 */
-	public function checkOwner( $user ) {
-
-		return $this->userId	= $user->id;		
 	}
 
 	// yii\base\Component ----------------
@@ -85,11 +68,10 @@ class Activity extends CmgEntity {
 	public function rules() {
 
         return [
-            [ [ 'userId', 'type' ], 'required' ],
+            [ [ 'type' ], 'required' ],
 			[ [ 'data' ], 'safe' ],
 			[ [ 'type' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
 			[ 'consumed', 'boolean' ],
-            [ [ 'userId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'createdAt', 'modifiedAt', 'scheduledAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
@@ -102,7 +84,6 @@ class Activity extends CmgEntity {
 
 		return [
 			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
-			'userId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USER ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'consumed' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONSUMED ),
 			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )

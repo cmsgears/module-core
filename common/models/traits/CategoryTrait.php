@@ -24,15 +24,22 @@ trait CategoryTrait {
 	/**
 	 * @return array - Category associated with parent
 	 */
-	public function getCategories() {
+	public function getCategories( $options = [] ) {
 
-    	return $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
+    	$query = $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
 
 						$modelCategory	= CoreTables::TABLE_MODEL_CATEGORY;
-	
+
                       	$query->onCondition( [ "$modelCategory.parentType" => $this->categoryType ] );
 					});
+
+		if( isset( $options[ 'limit' ] ) ) {
+
+			$query = $query->limit( $options[ 'limit' ] );
+		}
+
+		return $query;
 	}
 
 	/**
@@ -98,41 +105,25 @@ trait CategoryTrait {
 
 	public function getCategoryCsv( $limit = 0 ) {
 
-    	$categories 	= $this->categories;
-		$categoriesCsv	= [];
-		$count			= 1;
+    	$categories 			= $this->categories( [ 'limit' => $limit ] )->all();
+		$categoriesCsv			= [];
 
 		foreach ( $categories as $category ) {
 
 			$categoriesCsv[] = $category->name;
-
-			if( $limit > 0 && $count >= $limit ) {
-
-				break;
-			}
-
-			$count++;
 		}
 
 		return implode( ", ", $categoriesCsv );
 	}
-	
+
 	public function getCategoryLinks( $baseUrl, $limit = 0 ) {
-		
-		$categories 	= $this->categories;
-		$categoryLinks	= null;
-		$count			= 1;
+
+		$categories 			= $this->categories( [ 'limit' => $limit ] )->all();
+		$categoryLinks			= null;
 
 		foreach ( $categories as $category ) {
-			 
+
 			$categoryLinks	.= "<li><a href='$baseUrl?slug=$category->slug'>$category->name</a></li>";
-
-			if( $limit > 0 && $count >= $limit ) {
-
-				break;
-			}
-
-			$count++;
 		}
 
 		return $categoryLinks;

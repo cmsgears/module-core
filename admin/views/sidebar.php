@@ -39,6 +39,7 @@ $user	= Yii::$app->user->getIdentity();
 		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-newsletter' ) == 0 ) echo 'expanded visible';?>">
 			<ul>
 				<li class='newsletter <?php if( strcmp( $child, 'newsletter' ) == 0 ) echo 'active';?>'><?= Html::a( "Newsletters", ['/cmgcore/newsletter/all'] ) ?></li>
+				<li class='newsletter-template <?php if( strcmp( $child, 'newsletter-template' ) == 0 ) echo 'active';?>'><?= Html::a( 'Templates', [ '/cmgcore/newsletter/template/all' ] ) ?></li>
 				<li class='member <?php if( strcmp( $child, 'member' ) == 0 ) echo 'active';?>'><?= Html::a( "Members", ['/cmgcore/newsletter/members'] ) ?></li>
 			</ul>
 		</div>
@@ -54,6 +55,7 @@ $user	= Yii::$app->user->getIdentity();
 		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-core' ) == 0 ) echo 'expanded visible';?>">
 			<ul>
 				<li class='gallery <?php if( strcmp( $child, 'gallery' ) == 0 ) echo 'active';?>'><?= Html::a( 'Galleries', [ '/cmgcore/gallery/all' ] ) ?></li>
+				<li class='gallery-template <?php if( strcmp( $child, 'gallery-template' ) == 0 ) echo 'active';?>'><?= Html::a( 'Gallery Templates', [ '/cmgcore/gallery/template/all' ] ) ?></li>
 				<?php if( Yii::$app->cmgCore->multiSite ) { ?>
 					<li class='site <?php if( strcmp( $child, 'site' ) == 0 ) echo 'active';?>'><?= Html::a( 'Sites', [ '/cmgcore/sites/all' ] ) ?></li>
 				<?php } ?>

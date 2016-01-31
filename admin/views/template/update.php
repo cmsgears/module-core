@@ -19,12 +19,16 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 	<div class="box-wrap-content frm-split-40-60">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-template' ] );?>
 
-    	<?= $form->field( $model, 'name' ) ?>  
-    	<?= $form->field( $model, 'description' )->textarea() ?> 
+    	<?= $form->field( $model, 'name' ) ?>
+    	<?= $form->field( $model, 'description' )->textarea() ?>
+    	<?= $form->field( $model, 'icon' ) ?>
+    	<?= $form->field( $model, 'renderer' )->dropDownList( $renderers ) ?>
+    	<?= $form->field( $model, 'renderFile' )->checkbox() ?>
     	<?= $form->field( $model, 'layout' ) ?>  
 		<?= $form->field( $model, 'viewPath' ) ?>
 		<?= $form->field( $model, 'adminView' ) ?>
-		<?= $form->field( $model, 'frontendView' ) ?>
+		<?= $form->field( $model, 'userView' ) ?>
+		<?= $form->field( $model, 'publicView' ) ?>
 
 		<div class="box-content clearfix">
 			<div class="header">Template Content</div>

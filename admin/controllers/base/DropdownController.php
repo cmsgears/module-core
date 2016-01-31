@@ -81,22 +81,21 @@ abstract class DropdownController extends Controller {
 	public function actionCreate( $type = null, $title = 'Dropdown' ) {
 
 		$model			= new Category();
+		$model->siteId	= Yii::$app->cmgCore->siteId;
 		$model->type 	= $type;
-		$avatar 		= CmgFile::loadFile( $model->avatar, 'Avatar' ); 
 
 		$model->setScenario( 'create' );
 
 		if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
-			if( CategoryService::create( $model, $avatar ) ) { 
+			if( CategoryService::create( $model ) ) { 
 
 				return $this->redirect( $this->returnUrl );
 			} 
 		} 
 
     	return $this->render( '@cmsgears/module-core/admin/views/dropdown/create', [
-    		'model' => $model, 
-    		'avatar' => $avatar,
+    		'model' => $model,
     		'title' => $title
     	]);
 	}	
@@ -110,24 +109,20 @@ abstract class DropdownController extends Controller {
 		if( isset( $model ) ) {
 
 			$model->type 	= $type;
-			$avatar 		= CmgFile::loadFile( $model->avatar, 'Avatar' ); 
 
 			$model->setScenario( 'update' );
 
 			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
-				if( CategoryService::update( $model, $avatar ) ) {
+				if( CategoryService::update( $model ) ) {
  
 
 					return $this->redirect( $this->returnUrl );
 				} 
 			}
 
-			$avatar			= $model->avatar;
-
 	    	return $this->render( '@cmsgears/module-core/admin/views/dropdown/update', [
 	    		'model' => $model, 
-	    		'avatar' => $avatar,
     			'title' => $title
 	    	]);
 		}
@@ -143,8 +138,6 @@ abstract class DropdownController extends Controller {
 
 		// Delete/Render if exist		
 		if( isset( $model ) ) {
-
-			$avatar		= $model->avatar;
 
 			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
@@ -165,15 +158,14 @@ abstract class DropdownController extends Controller {
 					}
 				}
 
-				if( CategoryService::delete( $model, $avatar ) ) { 
+				if( CategoryService::delete( $model ) ) { 
 
 					return $this->redirect( $this->returnUrl );
 				}
 			}
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/dropdown/delete', [
-	    		'model' => $model, 
-	    		'avatar' => $avatar,
+	    		'model' => $model,
     			'title' => $title
 	    	]);
 		}

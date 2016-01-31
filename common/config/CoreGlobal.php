@@ -31,6 +31,7 @@ class CoreGlobal {
 	const TYPE_REMINDER			= 'reminder';  
 	const TYPE_CORE				= 'core';
 	const TYPE_FORM				= 'form';
+	const TYPE_NEWSLETTER		= 'newsletter';
 
 	// Categories ------------------------------------------------------
 
@@ -250,8 +251,9 @@ class CoreGlobal {
 	const FIELD_BASE_PATH		= 'basePathField';
 	const FIELD_VIEW_PATH		= 'viewPathField';
 	const FIELD_VIEW_ADMIN		= 'viewAdminField';
-	const FIELD_VIEW_PRIVATE	= 'viewPrivateField';
+	const FIELD_VIEW_USER		= 'viewUserField';
 	const FIELD_VIEW_PUBLIC		= 'viewPublicField';
+	const FIELD_VIEW_COUNT		= 'viewCountField';
 
 	// Forms
 	const FIELD_FORM			= 'formField';

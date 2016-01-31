@@ -17,8 +17,8 @@ use cmsgears\core\common\models\traits\DataTrait;
  *
  * @property integer $id
  * @property integer $siteId
- * @property integer $avatarId
  * @property integer $bannerId
+ * @property integer $videoId
  * @property integer $parentId
  * @property integer $rootId
  * @property string $name
@@ -54,9 +54,14 @@ class Category extends HierarchicalModel {
 	/**
 	 * @return File - file url
 	 */
-	public function getAvatar() {
+	public function getBanner() {
 
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'avatarId' ] );
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
+	}
+
+	public function getVideo() {
+
+		return $this->hasOne( CmgFile::className(), [ 'id' => 'videoId' ] );
 	}
 
 	/**
@@ -111,14 +116,14 @@ class Category extends HierarchicalModel {
 		// model rules
         $rules = [
             [ [ 'siteId', 'name', 'featured' ], 'required' ],
-            [ [ 'id', 'avatarId', 'description', 'htmlOptions', 'data' ], 'safe' ],
+            [ [ 'id', 'bannerId', 'videoId', 'description', 'htmlOptions', 'data' ], 'safe' ],
             [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
             [ 'slug', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'avatarId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'bannerId', 'videoId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'featured', 'boolean' ]
         ];
 
@@ -140,7 +145,8 @@ class Category extends HierarchicalModel {
 
 		return [
 			'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
-			'avatarId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
+			'bannerId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
+			'videoId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
 			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),

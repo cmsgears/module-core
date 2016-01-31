@@ -18,6 +18,7 @@ $returnUrl		= $this->context->returnUrl;
     	<?= $form->field( $model, 'title' )->textInput( [ 'readonly' => true ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => true ] ) ?>
 		<?= $form->field( $model, 'active' )->checkbox( [ 'disabled' => true ] ) ?>
+		<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'disabled' => true ] ) ?>
 
 		<div class="clear filler-height"></div>
 

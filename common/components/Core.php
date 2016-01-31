@@ -95,6 +95,8 @@ class Core extends Component {
 	 */
 	public $trimFieldValue		= false;
 
+	public $renderers			= [ 'default' => 'Default' ];
+
 	/**
 	 * Initialise the CMG Core Component.
 	 */
@@ -270,6 +272,11 @@ class Core extends Component {
 	public function isTrimFieldValue() {
 
 		return $this->trimFieldValue;
+	}
+
+	public function gtRenderers() {
+
+		return $this->renderers;
 	}
 }
 

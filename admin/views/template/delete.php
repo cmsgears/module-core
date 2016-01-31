@@ -21,10 +21,14 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>  
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?> 
+    	<?= $form->field( $model, 'icon' )->textInput( [ 'readonly' => 'true' ] ) ?>
+    	<?= $form->field( $model, 'renderer' )->dropDownList( $renderers, [ 'disabled' => true ] ) ?>
+    	<?= $form->field( $model, 'renderFile' )->checkbox( [ 'disabled' => true ] ) ?>
     	<?= $form->field( $model, 'layout' )->textInput( [ 'readonly' => 'true' ] ) ?>  
 		<?= $form->field( $model, 'viewPath' )->textInput( [ 'readonly' => 'true' ] ) ?>
 		<?= $form->field( $model, 'adminView' )->textInput( [ 'readonly' => 'true' ] ) ?>
-		<?= $form->field( $model, 'frontendView' )->textInput( [ 'readonly' => 'true' ] ) ?>
+		<?= $form->field( $model, 'userView' )->textInput( [ 'readonly' => 'true' ] ) ?>
+		<?= $form->field( $model, 'publicView' )->textInput( [ 'readonly' => 'true' ] ) ?>
 
 		<div class="box-content clearfix">
 			<div class="header">Template Content</div>

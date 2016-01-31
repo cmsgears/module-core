@@ -18,6 +18,7 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * Newsletter Entity
  *
  * @property integer $id
+ * @property integer $templateId
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
@@ -34,6 +35,14 @@ class Newsletter extends NamedCmgEntity {
 
 	// Instance Methods --------------------------------------------
 
+	/**
+	 * @return Template
+	 */
+	public function getTemplate() {
+
+		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
+	}
+	
 	// yii\base\Component ----------------
 
     /**
@@ -64,11 +73,12 @@ class Newsletter extends NamedCmgEntity {
 		// model rules
         $rules = [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'description', 'content', 'data' ], 'safe' ],
+            [ [ 'id', 'templateId', 'description', 'content', 'data' ], 'safe' ],
             [ 'name', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt', 'lastSentAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
@@ -90,6 +100,7 @@ class Newsletter extends NamedCmgEntity {
 	public function attributeLabels() {
 
 		return [
+			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),

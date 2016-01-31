@@ -46,6 +46,12 @@ class NewsletterService extends Service {
 	 */
 	public static function create( $newsletter ) {
 
+		// template
+		if( isset( $newsletter->templateId ) && $newsletter->templateId <= 0 ) {
+
+			unset( $newsletter->templateId );
+		}
+
 		// Create Newsletter
 		$newsletter->save();
 
@@ -65,8 +71,14 @@ class NewsletterService extends Service {
 		$nlToUpdate	= self::findById( $newsletter->id );
 
 		// Copy and set Attributes
-		$nlToUpdate->copyForUpdateFrom( $newsletter, [ 'name', 'description', 'content' ] );
-		
+		$nlToUpdate->copyForUpdateFrom( $newsletter, [ 'templateId', 'name', 'description', 'content' ] );
+
+		// template
+		if( isset( $nlToUpdate->templateId ) && $nlToUpdate->templateId <= 0 ) {
+
+			unset( $nlToUpdate->templateId );
+		}
+
 		// Update Newsletter
 		$nlToUpdate->update();
 		

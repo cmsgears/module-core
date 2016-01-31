@@ -71,14 +71,14 @@ abstract class CategoryController extends Controller {
 		$model			= new Category();
 		$model->siteId	= Yii::$app->cmgCore->siteId;
 		$model->type 	= $type;
-		$avatar 		= CmgFile::loadFile( null, 'Avatar' );
 		$banner 		= CmgFile::loadFile( null, 'Banner' );
+		$video	 		= CmgFile::loadFile( null, 'Video' );
 
 		$model->setScenario( 'create' );
 
 		if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
-			if( CategoryService::create( $model, $avatar, $banner ) ) { 
+			if( CategoryService::create( $model, $banner, $video ) ) { 
 
 				return $this->redirect( $this->returnUrl );
 			} 
@@ -88,8 +88,8 @@ abstract class CategoryController extends Controller {
 
     	return $this->render( '@cmsgears/module-core/admin/views/category/create', [
     		'model' => $model, 
-    		'avatar' => $avatar,
     		'banner' => $banner,
+			'video' => $video,
     		'categoryMap' => $categoryMap
     	]);
 	}	
@@ -102,15 +102,15 @@ abstract class CategoryController extends Controller {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->type 	= $type;
-			$avatar 		= CmgFile::loadFile( $model->avatar, 'Avatar' ); 
+			$model->type 	= $type; 
 			$banner 		= CmgFile::loadFile( $model->banner, 'Banner' );
+			$video	 		= CmgFile::loadFile( $model->video, 'Video' );
 
 			$model->setScenario( 'update' );
 
 			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
-				if( CategoryService::update( $model, $avatar, $banner ) ) {
+				if( CategoryService::update( $model, $banner, $video ) ) {
 
 					return $this->redirect( $this->returnUrl );
 				}
@@ -123,8 +123,8 @@ abstract class CategoryController extends Controller {
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/category/update', [
 	    		'model' => $model, 
-	    		'avatar' => $avatar,
 	    		'banner' => $banner,
+				'video' => $video,
 	    		'categoryMap' => $categoryMap
 	    	]);
 		}
@@ -141,12 +141,12 @@ abstract class CategoryController extends Controller {
 		// Delete/Render if exist		
 		if( isset( $model ) ) {
 
-			$avatar = $model->avatar;
 			$banner = $model->banner;
+			$video 	= $model->video;
 
 			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
-				if( CategoryService::delete( $model, $avatar, $banner ) ) {
+				if( CategoryService::delete( $model, $banner, $video ) ) {
 
 					return $this->redirect( $this->returnUrl );
 				}
@@ -156,8 +156,8 @@ abstract class CategoryController extends Controller {
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/category/delete', [
 	    		'model' => $model, 
-	    		'avatar' => $avatar,
 	    		'banner' => $banner,
+				'video' => $video,
 	    		'categoryMap' => $categoryMap
 	    	]);
 		}

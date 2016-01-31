@@ -26,6 +26,8 @@ use cmsgears\core\common\models\traits\DataTrait;
  * @property string $description
  * @property integer $default
  * @property integer $active
+ * @property string $basePath
+ * @property string $renderer
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $data
@@ -82,9 +84,9 @@ class Theme extends NamedCmgEntity {
 		// model rules
         $rules = [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'slug', 'description', 'default', 'active', 'data' ], 'safe' ],
+            [ [ 'id', 'slug', 'description', 'default', 'active', 'basePath', 'renderer', 'data' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
-            [ 'name', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
+            [ [ 'name', 'renderer' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
             [ 'slug', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
             [ 'description', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_XLARGE ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
@@ -97,7 +99,7 @@ class Theme extends NamedCmgEntity {
 		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'description' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'description', 'basePath', 'renderer' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -115,11 +117,13 @@ class Theme extends NamedCmgEntity {
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'default' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DEFAULT ),
 			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'basePath' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BASE_PATH ),
+			'renderer' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 
-	// Theme------------------------------
+	// Theme -----------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -133,14 +137,19 @@ class Theme extends NamedCmgEntity {
 		return CoreTables::TABLE_THEME;
 	}
 
-	// ObjectData ------------------------
+	// Theme -----------------------------
 
 	/**
 	 * @return ObjectData - by slug and type
 	 */
-	public static function findBySlugType( $slug ) {
+	public static function findBySlug( $slug ) {
 
 		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+	}
+
+	public static function findDefault() {
+
+		return self::find()->where( '`default`=1' )->one();
 	}
 }
 

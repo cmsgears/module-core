@@ -14,6 +14,7 @@ use yii\base\NotSupportedException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\config\CoreProperties;
 
+use cmsgears\core\common\models\traits\VisualTrait;
 use cmsgears\core\common\models\traits\AttributeTrait;
 use cmsgears\core\common\models\traits\FileTrait;
 use cmsgears\core\common\models\traits\AddressTrait;
@@ -62,18 +63,20 @@ class User extends CmgEntity implements IdentityInterface {
 	 * The status map having string form of status.
 	 */
 	public static $statusMap = [
-		self::STATUS_NEW => "New",
-		self::STATUS_ACTIVE => "Active",
-		self::STATUS_BLOCKED => "Blocked"
+		self::STATUS_NEW => 'New',
+		self::STATUS_ACTIVE => 'Active',
+		self::STATUS_BLOCKED => 'Blocked'
 	];
 
 	/**
 	 * The status map having string form of status available for admin to make status change.
 	 */
 	public static $statusMapUpdate = [
-		self::STATUS_ACTIVE => "Active",
-		self::STATUS_BLOCKED => "Blocked"
+		self::STATUS_ACTIVE => 'Active',
+		self::STATUS_BLOCKED => 'Blocked'
 	];
+
+	use VisualTrait;
 
 	use AttributeTrait;
 
@@ -113,23 +116,7 @@ class User extends CmgEntity implements IdentityInterface {
 		return Role::find()
 					->leftJoin( $siteMemberTable, "$siteMemberTable.roleId = $roleTable.id" )
 					->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
-					->where( "$siteMemberTable.userId=:id AND $siteTable.name=:name", [ ':id' => $this->id, ':name' => Yii::$app->cmgCore->getSiteName() ] );
-	}
-
-	/**
-	 * @return CmgFile - set for User avatar.
-	 */
-	public function getAvatar() {
-
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'avatarId' ] );
-	}
-
-	/**
-	 * @return CmgFile - set for User banner.
-	 */
-	public function getBanner() {
-
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
+					->where( "$siteMemberTable.userId=:id AND $siteTable.slug=:slug", [ ':id' => $this->id, ':slug' => Yii::$app->cmgCore->getSiteSlug() ] );
 	}
 
 	/**
@@ -207,10 +194,10 @@ class User extends CmgEntity implements IdentityInterface {
 
 		if( $this->newsletter ) {
 			
-			return "Subscribed";
+			return 'Subscribed';
 		}
 		
-		return "Not Subscribed";
+		return 'Not Subscribed';
 	}
 
 	/**
@@ -487,7 +474,7 @@ class User extends CmgEntity implements IdentityInterface {
 	 */
     public function getName() {
 
-		$name	= $this->firstName . " " . $this->lastName;
+		$name	= $this->firstName . ' ' . $this->lastName;
 
 		if( !isset( $name ) || strlen( $name ) <= 2 ) {
 
@@ -495,7 +482,7 @@ class User extends CmgEntity implements IdentityInterface {
 
 			if( !isset( $name ) || strlen( $name ) <= 2 ) {
 
-				$name	= preg_split( "/@/", $this->email );
+				$name	= preg_split( '/@/', $this->email );
 				$name	= $name[0];
 			}
 		}

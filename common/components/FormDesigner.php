@@ -3,7 +3,6 @@ namespace cmsgears\core\common\components;
 
 // Yii Imports
 use \Yii;
-use yii\base\Component;
 use yii\helpers\Html;
 
 // CMG Imports
@@ -13,7 +12,7 @@ use cmsgears\core\common\models\entities\FormField;
  * Default form designer component to generate html for form elements using form and form fields.
  * It supports CMGTools UI, JS and IconLib by default, but can be overriden to support other ui libraries. 
  */
-class FormDesigner extends Component {
+class FormDesigner extends \yii\base\Component {
 
 	public static $yesNoMap	= [ '1' => 'Yes', '0' => 'No' ];
 

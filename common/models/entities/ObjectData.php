@@ -14,6 +14,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\cms\admin\models\forms\WidgetForm;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
+
+use cmsgears\core\common\models\traits\TemplateTrait;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 use cmsgears\core\common\models\traits\DataTrait;
 
@@ -38,6 +40,8 @@ use cmsgears\core\common\models\traits\DataTrait;
  */
 class ObjectData extends CmgEntity {
 
+	use TemplateTrait;
+
 	use CreateModifyTrait;
 
 	use DataTrait;
@@ -47,23 +51,6 @@ class ObjectData extends CmgEntity {
 	public function getSite() {
 
 		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
-	}
-
-	public function getTemplate() {
-
-		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
-	}
-
-	public function getTemplateName() {
-
-		$template = $this->template;
-
-		if( isset( $template ) ) {
-
-			return $template->name;
-		}
-
-		return '';
 	}
 
 	/**

@@ -3,7 +3,6 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports

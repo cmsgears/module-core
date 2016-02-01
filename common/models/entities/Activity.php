@@ -9,7 +9,8 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\traits\CategoryTrait;
+use cmsgears\core\common\models\traits\TemplateTrait;
+use cmsgears\core\common\models\traits\DataTrait;
 
 /**
  * Activity Entity
@@ -25,15 +26,11 @@ use cmsgears\core\common\models\traits\CategoryTrait;
  */
 class Activity extends CmgEntity {
 
+	use TemplateTrait;
+
+	use DataTrait;
+
 	// Instance Methods --------------------------------------------
-
-	/**
-	 * @return Template
-	 */
-	public function getTemplate() {
-
-		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
-	}
 
 	/**
 	 * @return string representation of flag

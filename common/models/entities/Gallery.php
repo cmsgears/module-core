@@ -3,7 +3,6 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
 use yii\db\Expression;
 use yii\behaviors\SluggableBehavior;
@@ -14,10 +13,12 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
+use cmsgears\core\common\models\traits\TemplateTrait;
 use cmsgears\core\common\models\traits\FileTrait;
 use cmsgears\core\common\models\traits\AttributeTrait;
 use cmsgears\core\common\models\traits\CategoryTrait;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+use cmsgears\core\common\models\traits\DataTrait;
 
 /**
  * Gallery Entity - The primary class.
@@ -38,6 +39,8 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  */
 class Gallery extends NamedCmgEntity {
 
+	use TemplateTrait;
+
 	use FileTrait;
 
 	public $fileType		= CoreGlobal::TYPE_GALLERY;
@@ -52,6 +55,8 @@ class Gallery extends NamedCmgEntity {
 
 	use CreateModifyTrait;
 
+	use DataTrait;
+
 	// Instance Methods --------------------------------------------
 
 	/**
@@ -60,14 +65,6 @@ class Gallery extends NamedCmgEntity {
 	public function getSite() {
 
 		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
-	}
-
-	/**
-	 * @return Template
-	 */
-	public function getTemplate() {
-
-		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
 	}
 
 	/**

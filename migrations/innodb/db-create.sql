@@ -90,8 +90,6 @@ CREATE TABLE `cmg_core_theme` (
   `name` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `slug` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `default` tinyint(1) NOT NULL DEFAULT 0,
-  `active` tinyint(1) NOT NULL DEFAULT 0,
   `renderer` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `basePath` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdAt` datetime NOT NULL,

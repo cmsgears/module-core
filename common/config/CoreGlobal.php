@@ -31,6 +31,7 @@ class CoreGlobal {
 	const TYPE_REMINDER			= 'reminder';  
 	const TYPE_CORE				= 'core';
 	const TYPE_FORM				= 'form';
+	const TYPE_CATEGORY			= 'category';
 	const TYPE_NEWSLETTER		= 'newsletter';
 
 	// Categories ------------------------------------------------------
@@ -138,6 +139,10 @@ class CoreGlobal {
 
 	// Errors - Apis
 	const ERROR_APIS_DISABLED		= 'apisDisabledError';
+
+	// Errors - View
+	const ERROR_NO_TEMPLATE		= 'noTemplateError';
+	const ERROR_NO_VIEW			= 'noViewError';
 
 	// Model Fields ----------------------------------------------------
 

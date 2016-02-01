@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\common\multisite;
+namespace cmsgears\core\common\base;
 
 // Yii Imports
 use \Yii;
@@ -41,8 +41,8 @@ class Application extends \yii\web\Application {
 					if( isset( $site ) ) {
 						
 						// Configure Current Site
+						Yii::$app->cmgCore->site 		= $site;
 						Yii::$app->cmgCore->siteId		= $site->id;
-						Yii::$app->cmgCore->siteName 	= $site->name;
 						Yii::$app->cmgCore->siteSlug 	= $site->slug;
 	
 						Yii::$app->urlManager->baseUrl	= Yii::$app->urlManager->baseUrl . "/" . $site->name; 
@@ -68,12 +68,24 @@ class Application extends \yii\web\Application {
 				if( isset( $site ) ) {
 
 					// Configure Current Site
+					Yii::$app->cmgCore->site 		= $site;
 					Yii::$app->cmgCore->siteId		= $site->id;
-					Yii::$app->cmgCore->siteName 	= $site->name;
 					Yii::$app->cmgCore->siteSlug 	= $site->slug;
 
 					return parent::createController( $route );	
 				}
+			}
+		}
+		else {
+
+			$site 	= SiteService::findBySlug( 'main' );
+
+			// Site Found
+			if( isset( $site ) ) {
+
+				// Configure Current Site
+				Yii::$app->cmgCore->site 		= $site;
+				Yii::$app->cmgCore->siteId		= $site->id;
 			}
 		}
 

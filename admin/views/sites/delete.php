@@ -19,6 +19,7 @@ $this->title 	= 'Delete Site | ' . $coreProperties->getSiteTitle();
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>  
     	<?= $form->field( $model, 'order' )->textInput( [ 'readonly' => true ] ) ?>
+		<?= $form->field( $model, 'themeId' )->dropDownList( $themesMap, [ 'disabled' => true ] ) ?>
 
 		<div class="box-content clearfix">
 			<div class="header">Site Avatar</div>

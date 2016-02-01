@@ -104,7 +104,7 @@ class OptionService extends Service {
 	 */
 	public static function getIdNameMapByCategoryName( $categoryName, $prepend = [], $append = [], $type = CoreGlobal::TYPE_COMBO ) {
 
-		$category	= Category::findByTypeName( $type, $categoryName );
+		$category	= Category::findByNameType( $categoryName, $type );
 
 		return self::findMap( 'id', 'name', CoreTables::TABLE_OPTION, [ 'conditions' => [ 'categoryId' => $category->id ], 'prepend' => $prepend, 'append' => $append ] );
 	}
@@ -133,7 +133,7 @@ class OptionService extends Service {
 	 */
 	public static function getValueNameMapByCategoryName( $categoryName, $type = CoreGlobal::TYPE_COMBO ) {
 
-		$category	= Category::findByTypeName( $type, $categoryName );
+		$category	= Category::findByNameType( $categoryName, $type );
 		$options	= $category->options;
 		$optionsMap	= array();
 

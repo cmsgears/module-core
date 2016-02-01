@@ -18,19 +18,6 @@ class SiteService extends Service {
 
 	// Read ----------------
 
-	public static function getTheme() {
-
-		// Find Site Theme
-		$site	= self::findById( Yii::$app->cmgCore->siteId );
-		$theme	= $site->theme;
-
-		// Use Default Theme in case site theme not found or it's disabled
-		if( !isset( $theme ) || !$theme->active ) {
-
-			$theme = Theme::findDefault();
-		}
-	}
-
 	/**
 	 * @param integer $id
 	 * @return Site
@@ -122,7 +109,7 @@ class SiteService extends Service {
 
 		$siteToUpdate	= self::findById( $site->id );
 
-		$siteToUpdate->copyForUpdateFrom( $site, [ 'name', 'order', 'active' ] );
+		$siteToUpdate->copyForUpdateFrom( $site, [ 'themeId', 'name', 'order', 'active' ] );
 		
 		FileService::saveFiles( $siteToUpdate, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
 

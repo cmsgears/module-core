@@ -3,13 +3,13 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\traits\VisualTrait;
 use cmsgears\core\common\models\traits\DataTrait;
 
 /**
@@ -33,7 +33,9 @@ use cmsgears\core\common\models\traits\DataTrait;
  * @property string $data
  */
 class Category extends HierarchicalModel {
-	
+
+	use VisualTrait;
+
 	use DataTrait;
 	
 	// Instance Methods --------------------------------------------
@@ -49,19 +51,6 @@ class Category extends HierarchicalModel {
 	public function getParent() {
 
 		return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] );
-	}
-
-	/**
-	 * @return File - file url
-	 */
-	public function getBanner() {
-
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
-	}
-
-	public function getVideo() {
-
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'videoId' ] );
 	}
 
 	/**

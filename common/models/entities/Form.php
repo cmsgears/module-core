@@ -13,7 +13,9 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
+use cmsgears\core\common\models\traits\TemplateTrait;
 use cmsgears\core\common\models\traits\AttributeTrait;
+use cmsgears\core\common\models\traits\DataTrait;
 
 /**
  * Form Entity
@@ -47,29 +49,16 @@ class Form extends NamedCmgEntity {
 		self::VISIBILITY_PUBLIC => 'Public',
 		self::VISIBILITY_PRIVATE => 'Private'
 	];
+	
+	use TemplateTrait;
 
 	use AttributeTrait;
 
 	public $attributeType	= CoreGlobal::TYPE_FORM;
 
+	use DataTrait;
+
 	// Instance Methods --------------------------------------------
-
-	public function getTemplate() {
-
-		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
-	}
-
-	public function getTemplateName() {
-
-		$template = $this->template;
-
-		if( isset( $template ) ) {
-
-			return $template->name;
-		}
-
-		return '';
-	}
 
 	public function getCaptchaStr() {
 

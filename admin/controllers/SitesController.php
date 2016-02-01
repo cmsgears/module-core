@@ -12,6 +12,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\Site;
 
+use cmsgears\core\common\services\ThemeService;
 use cmsgears\core\admin\services\SiteService;
 
 class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
@@ -86,11 +87,14 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 				return $this->redirect( 'all' );
 			}
 		}
-
+		
+		$themesMap = ThemeService::getIdNameMap();
+		
     	return $this->render( 'create', [
     		'model' => $model,
     		'avatar' => $avatar,
-    		'banner' => $banner
+    		'banner' => $banner,
+    		'themesMap' => $themesMap
     	]);
 	}
 
@@ -114,11 +118,14 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 					return $this->redirect( 'all' );
 				} 
 			}
-
+			
+			$themesMap = ThemeService::getIdNameMap();
+			
 	    	return $this->render( 'update', [
 	    		'model' => $model, 
 	    		'avatar' => $avatar,
-	    		'banner' => $banner
+	    		'banner' => $banner,
+	    		'themesMap' => $themesMap
 	    	]);
 		}
 
@@ -132,8 +139,10 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 		$model		= SiteService::findById( $id );
 
 		// Delete/Render if exist
-
 		if( isset( $model ) ) {
+
+			$avatar	= $model->avatar;
+			$banner	= $model->banner;
 
 			if( $model->load( Yii::$app->request->post(), 'Site' ) ) {
 
@@ -149,13 +158,13 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 				}
 			}
 
-			$avatar	= $model->avatar;
-			$banner	= $model->banner;
+			$themesMap = ThemeService::getIdNameMap();
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model, 
 	    		'avatar' => $avatar,
-	    		'banner' => $banner
+	    		'banner' => $banner,
+	    		'themesMap' => $themesMap
 	    	]);
 		}
 

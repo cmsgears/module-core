@@ -8,6 +8,8 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\traits\DataTrait;
+
 /**
  * FormField Entity
  *
@@ -52,6 +54,8 @@ class FormField extends CmgEntity {
 		self::TYPE_ICON => 'Icon',
 		self::TYPE_DATE => 'Date'
 	];
+
+	use DataTrait;
 
 	public $value;
 

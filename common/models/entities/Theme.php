@@ -12,6 +12,7 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
+
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 use cmsgears\core\common\models\traits\DataTrait;
 
@@ -24,8 +25,6 @@ use cmsgears\core\common\models\traits\DataTrait;
  * @property string $name
  * @property string $slug
  * @property string $description
- * @property integer $default
- * @property integer $active
  * @property string $basePath
  * @property string $renderer
  * @property datetime $createdAt
@@ -39,16 +38,6 @@ class Theme extends NamedCmgEntity {
 	use DataTrait;
 
 	// Instance Methods --------------------------------------------
-
-	public function getDefaultStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->default ); 
-	}
-	
-	public function getActiveStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->active ); 
-	}
 
 	// yii\base\Component ----------------
 
@@ -84,7 +73,7 @@ class Theme extends NamedCmgEntity {
 		// model rules
         $rules = [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'slug', 'description', 'default', 'active', 'basePath', 'renderer', 'data' ], 'safe' ],
+            [ [ 'id', 'slug', 'description', 'basePath', 'renderer', 'data' ], 'safe' ],
             [ 'name', 'alphanumhyphenspace' ],
             [ [ 'name', 'renderer' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
             [ 'slug', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
@@ -92,8 +81,7 @@ class Theme extends NamedCmgEntity {
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ],
-            [ [ 'default', 'active' ], 'boolean' ]
+            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
 		// trim if required
@@ -115,8 +103,6 @@ class Theme extends NamedCmgEntity {
 		return [
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'default' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DEFAULT ),
-			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'basePath' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BASE_PATH ),
 			'renderer' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
@@ -149,7 +135,7 @@ class Theme extends NamedCmgEntity {
 
 	public static function findDefault() {
 
-		return self::find()->where( '`default`=1' )->one();
+		return self::find()->one();
 	}
 }
 

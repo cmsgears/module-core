@@ -10,6 +10,7 @@ use yii\behaviors\SluggableBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\traits\VisualTrait;
 use cmsgears\core\common\models\traits\AttributeTrait;
 
 /**
@@ -26,27 +27,13 @@ use cmsgears\core\common\models\traits\AttributeTrait;
  */
 class Site extends NamedCmgEntity {
 
+	use VisualTrait;
+
 	use AttributeTrait;
 
 	public $attributeType	= CoreGlobal::TYPE_SITE;
 
 	// Instance Methods --------------------------------------------
-
-	/**
-	 * @return File - file url
-	 */
-	public function getAvatar() {
-
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'avatarId' ] );
-	}
-
-	/**
-	 * @return File - file url
-	 */
-	public function getBanner() {
-
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
-	}
 
 	public function getTheme() {
 
@@ -106,7 +93,7 @@ class Site extends NamedCmgEntity {
             [ 'slug', 'string', 'min' => 1, 'max' => 150 ],
             [ 'order', 'number', 'integerOnly' => true ],
             [ 'active', 'boolean' ],
-            [ [ 'avatarId', 'bannerId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+            [ [ 'avatarId', 'bannerId', 'themeId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
         ];
 
 		// trim if required

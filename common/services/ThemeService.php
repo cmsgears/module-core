@@ -23,6 +23,11 @@ class ThemeService extends \cmsgears\core\common\services\Service {
 		return Theme::findById( $id );
 	}
 
+	public static function getIdNameMap( $config = [] ) {
+
+		return self::findMap( 'id', 'name', CoreTables::TABLE_THEME, $config );
+	}
+
 	// Data Provider ----
 
 	/**
@@ -68,7 +73,7 @@ class ThemeService extends \cmsgears\core\common\services\Service {
 
 		$themeToUpdate	= self::findById( $theme->id );
 
-		$themeToUpdate->copyForUpdateFrom( $theme, [ 'name', 'description', 'default', 'active', 'basePath', 'renderer' ] );
+		$themeToUpdate->copyForUpdateFrom( $theme, [ 'name', 'description', 'basePath', 'renderer' ] );
 
 		$themeToUpdate->update();
 

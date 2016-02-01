@@ -18,7 +18,8 @@ $this->title 	= 'Add Site | ' . $coreProperties->getSiteTitle();
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-site' ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>  
-    	<?= $form->field( $model, 'order' ) ?> 
+    	<?= $form->field( $model, 'order' ) ?>
+    	<?= $form->field( $model, 'themeId' )->dropDownList( $themesMap ) ?>
 
 		<div class="box-content clearfix">
 			<div class="header">Site Avatar</div>

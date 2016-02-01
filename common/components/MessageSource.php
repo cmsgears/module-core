@@ -74,6 +74,10 @@ class MessageSource extends Component {
 		// Errors - Apis
 		CoreGlobal::ERROR_APIS_DISABLED => 'APIs are not supported by this application.',
 
+		// Errors - View
+		CoreGlobal::ERROR_NO_TEMPLATE => 'No teplate defined.',
+		CoreGlobal::ERROR_NO_VIEW => 'Layout or view is missing.',
+
 		// Model Fields ----------------------------------------------------
 
 		// Generic Fields

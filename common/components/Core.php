@@ -3,7 +3,6 @@ namespace cmsgears\core\common\components;
 
 // Yii Imports
 use \Yii;
-use yii\base\Component;
 
 // CMG Imports
 use cmsgears\core\common\validators\CoreValidator;
@@ -15,17 +14,12 @@ use cmsgears\core\common\validators\CoreValidator;
  * 
  * All the admin sites must set useRbac to true to get the admin functional since the admin controllers use it for almost every action. 
  */
-class Core extends Component {
+class Core extends \yii\base\Component {
 
 	/**
 	 * @var main site to load configurations in case sub sites are not configured.
 	 */
-	public $mainSiteSlug		= "main";
-
-	/**
-	 * @var main site to load configurations in case sub sites are not configured.
-	 */
-	public $mainSiteName		= "main";
+	public $mainSiteSlug		= 'main';
 
 	/**
 	 * @var identify the currently active site based on the url request.
@@ -35,12 +29,12 @@ class Core extends Component {
 	/**
 	 * @var identify the currently active site based on the url request.
 	 */
-	public $siteSlug			= "main";
+	public $siteSlug			= 'main';
 
 	/**
-	 * @var identify the currently active site based on the url request.
+	 * @var currently active site based on the url request.
 	 */
-	public $siteName			= "main";
+	public $site				= null;
 
 	/**
 	 * @var test whether the web app is multi-site.
@@ -56,12 +50,12 @@ class Core extends Component {
 	 * @var default redirect path to be used for post login. It will be used by login action of Site Controller to redirect users 
 	 * after successful login in case user role home url is not set.
 	 */
-	public $loginRedirectPage	= "/";
+	public $loginRedirectPage	= '/';
 
 	/**
 	 * @var Redirect path to be used for post logout.
 	 */
-	public $logoutRedirectPage	= "/login";
+	public $logoutRedirectPage	= '/login';
 
 	/**
 	 * @var The indicator whether CMG RBAC has to be used for the project. All the admin sites must set this to true. Though it's optional for 
@@ -72,7 +66,7 @@ class Core extends Component {
 	/**
 	 * @var The default filter class available for CMG RBAC system. A different filter can be used based on project needs.
 	 */
-	public $rbacFilterClass		= "cmsgears\core\common\\filters\RbacFilter"; 
+	public $rbacFilterClass		= 'cmsgears\core\common\\filters\RbacFilter'; 
 
 	/**
 	 * @var It store the list of filters available for the Rbac Filter and works only when rbac is enabled.
@@ -108,7 +102,7 @@ class Core extends Component {
         CoreValidator::initValidators();
 
 		// Set CMSGears alias to be used by all modules, plugins, widgets and themes. It will be located within the vendor directory for composer.
-		Yii::setAlias( "cmsgears", dirname( dirname( dirname( __DIR__ ) ) ) );
+		Yii::setAlias( 'cmsgears', dirname( dirname( dirname( __DIR__ ) ) ) );
     }
 
 	/**
@@ -154,15 +148,6 @@ class Core extends Component {
 	}
 
 	/**
-	 * The method getMainSiteName returns the site name for main site.
-	 * @return string 
-	 */
-	public function getMainSiteName() {
-
-		return $this->mainSiteName;
-	}
-
-	/**
 	 * The method getSiteId returns the site id for default site. It's more useful in case multi-site feature is enabled.
 	 * @return string 
 	 */
@@ -180,13 +165,9 @@ class Core extends Component {
 		return $this->siteSlug;
 	}
 
-	/**
-	 * The method getSiteName returns the site name for default site. It's more useful in case multi-site feature is enabled.
-	 * @return string 
-	 */
-	public function getSiteName() {
+	public function getSite() {
 
-		return $this->siteName;
+		return $this->site;
 	}
 
 	/**

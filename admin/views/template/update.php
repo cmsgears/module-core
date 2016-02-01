@@ -23,14 +23,18 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
     	<?= $form->field( $model, 'description' )->textarea() ?>
     	<?= $form->field( $model, 'icon' ) ?>
     	<?= $form->field( $model, 'renderer' )->dropDownList( $renderers ) ?>
-    	<?= $form->field( $model, 'renderFile' )->checkbox() ?>
-    	<?= $form->field( $model, 'layout' ) ?>  
-		<?= $form->field( $model, 'viewPath' ) ?>
-		<?= $form->field( $model, 'adminView' ) ?>
-		<?= $form->field( $model, 'userView' ) ?>
-		<?= $form->field( $model, 'publicView' ) ?>
 
-		<div class="box-content clearfix">
+		<?= $form->field( $model, 'renderFile' )->checkbox( [ 'class' => 'template-file' ] ) ?>
+
+    	<div class="render-file">
+	    	<?= $form->field( $model, 'layout' ) ?>
+			<?= $form->field( $model, 'viewPath' ) ?>
+			<?= $form->field( $model, 'adminView' ) ?>
+			<?= $form->field( $model, 'userView' ) ?>
+			<?= $form->field( $model, 'publicView' ) ?>
+		</div>
+
+		<div class="render-content box-content clearfix">
 			<div class="header">Template Content</div>
 			<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
 		</div>

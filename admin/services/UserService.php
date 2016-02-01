@@ -73,7 +73,7 @@ class UserService extends \cmsgears\core\common\services\UserService {
 		}
 
 		$siteTable										= CoreTables::TABLE_SITE;
-		$config[ 'conditions' ][ "$siteTable.name" ] 	= Yii::$app->cmgCore->getSiteName();
+		$config[ 'conditions' ][ "$siteTable.slug" ] 	= Yii::$app->cmgCore->getSiteSlug();
 
 		return self::getDataProvider( new User(), $config );
 	}

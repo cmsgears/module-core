@@ -12,7 +12,9 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
+use cmsgears\core\common\models\traits\TemplateTrait;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+use cmsgears\core\common\models\traits\DataTrait;
 
 /**
  * Newsletter Entity
@@ -31,17 +33,13 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  */
 class Newsletter extends NamedCmgEntity {
 
+	use TemplateTrait;
+
 	use CreateModifyTrait;
 
+	use DataTrait;
+
 	// Instance Methods --------------------------------------------
-
-	/**
-	 * @return Template
-	 */
-	public function getTemplate() {
-
-		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
-	}
 	
 	// yii\base\Component ----------------
 

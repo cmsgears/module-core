@@ -10,6 +10,8 @@ use cmsgears\core\common\models\entities\ModelCategory;
  */
 trait CategoryTrait {
 
+	private $categoryLimit = 0;
+
 	/**
 	 * @return array - ModelCategory associated with parent
 	 */
@@ -24,7 +26,7 @@ trait CategoryTrait {
 	/**
 	 * @return array - Category associated with parent
 	 */
-	public function getCategories( $options = [] ) {
+	public function getCategories() {
 
     	$query = $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
@@ -34,9 +36,9 @@ trait CategoryTrait {
                       	$query->onCondition( [ "$modelCategory.parentType" => $this->categoryType ] );
 					});
 
-		if( isset( $options[ 'limit' ] ) ) {
+		if( $this->categoryLimit > 0 ) {
 
-			$query = $query->limit( $options[ 'limit' ] );
+			$query = $query->limit( $this->categoryLimit );
 		}
 
 		return $query;
@@ -104,8 +106,9 @@ trait CategoryTrait {
 	}
 
 	public function getCategoryCsv( $limit = 0 ) {
-
-    	$categories 			= $this->categories( [ 'limit' => $limit ] )->all();
+		
+		$this->categoryLimit	= $limit;
+    	$categories 			= $this->categories;
 		$categoriesCsv			= [];
 
 		foreach ( $categories as $category ) {
@@ -118,7 +121,8 @@ trait CategoryTrait {
 
 	public function getCategoryLinks( $baseUrl, $limit = 0 ) {
 
-		$categories 			= $this->categories( [ 'limit' => $limit ] )->all();
+		$this->categoryLimit	= $limit;
+    	$categories 			= $this->categories;
 		$categoryLinks			= null;
 
 		foreach ( $categories as $category ) {

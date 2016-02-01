@@ -58,6 +58,7 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
+					<th>Theme</th>
 					<th>Order
 						<span class='box-icon-sort'>
 							<span sort-order='order' class="icon-sort <?php if( strcmp( $sortOrder, 'order') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
@@ -72,11 +73,13 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $site ) {
 
-						$id = $site->id;
+						$id 		= $site->id;
+						$themeName	= isset( $site->theme ) ? $site->theme->name : null;
 				?>
 					<tr>
 						<td><?= CodeGenUtil::getImageThumbTag( $site->avatar, [ 'class' => 'avatar', 'image' => 'avatar.png' ] ) ?></td>
 						<td><?= $site->name ?></td>
+						<td><?= $themeName ?></td>
 						<td><?= $site->order ?></td>
 						<td>
 							<span title="Update Site"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>

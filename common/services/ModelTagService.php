@@ -73,11 +73,15 @@ class ModelTagService extends Service {
 		foreach ( $tags as $tagName ) {
 
 			$tagName	= trim( $tagName );
-			$tag		= Tag::findByTypeName( $parentType, $tagName );
+			$tag		= Tag::findByNameType( $tagName, $parentType );
 
 			if( !isset( $tag ) ) {
 
-				$tag	= TagService::create( $tagName, $parentType );
+				$tag			= new Tag();
+				$tag->siteId	= Yii::$app->cmgCore->siteId;
+				$tag->name		= $tagName;
+				$tag->type		= $parentType;
+				$tag			= TagService::create( $tag );
 			}
 
 			$modelTag	= self::findByTagId( $parentId, $parentType, $tag->id );

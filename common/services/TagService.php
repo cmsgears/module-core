@@ -56,15 +56,11 @@ class TagService extends Service {
 	
 	// Create ---------------- 
 
-	public static function create( $name, $type ) {
-		
-		$model			= new Tag();		
-		$model->name	= $name;
-		$model->type	= $type;
-		
-		$model->save();
-		
-		return $model;
+	public static function create( $tag ) {
+
+		$tag->save();
+
+		return $tag;
 	}
 
 	// Delete -----------

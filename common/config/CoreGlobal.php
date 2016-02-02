@@ -195,8 +195,10 @@ class CoreGlobal {
 	const FIELD_TEMPLATE			= 'templateField';
 	const FIELD_EVENT				= 'eventField';
 	const FIELD_EVENT_LOG			= 'eventLogField';
-	const FIELD_START_DATE			= 'startDateField';
-	const FIELD_END_DATE			= 'endDateField';
+	const FIELD_DATE_START			= 'startDateField';
+	const FIELD_DATE_END			= 'endDateField';
+	const FIELD_TIME_START			= 'startTimeField';
+	const FIELD_TIME_END			= 'endTimeField';
 	const FIELD_DAY_WEEK 			= 'Week Day';
 	const FIELD_DAY_MONTH			= 'Month Day';
 	const FIELD_IP					= 'ipField';

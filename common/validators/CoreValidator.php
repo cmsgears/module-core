@@ -14,7 +14,8 @@ class CoreValidator {
         'alphanumdotu' => 'cmsgears\core\common\validators\AlphaNumWithDotUnderscoreValidator',
         'alphanumu' => 'cmsgears\core\common\validators\AlphaNumWithUnderscoreValidator',
         'phone' => 'cmsgears\core\common\validators\PhoneValidator',
-        'password' => 'cmsgears\core\common\validators\PasswordValidator'
+        'password' => 'cmsgears\core\common\validators\PasswordValidator',
+        'compareDate' => 'cmsgears\core\common\validators\CompareDateValidator'
         
     ];
 

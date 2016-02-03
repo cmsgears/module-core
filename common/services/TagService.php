@@ -32,9 +32,9 @@ class TagService extends Service {
 		return Tag::findBySlug( $slug );
 	}
 
-	public static function findByTypeName( $type, $name ) {
+	public static function findByNameType( $name, $type ) {
 
-		return Tag::findByTypeName( $type, $name );
+		return Tag::findByNameType( $name, $type );
 	}
 
 	/**

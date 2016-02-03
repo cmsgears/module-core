@@ -87,7 +87,7 @@ class ModelAddress extends CmgModel {
 	 */
 	public static function findByType( $parentId, $parentType, $type ) {
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] )->one();
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] )->all();
 	}
 	
 	public static function findByParent( $parentId ) {

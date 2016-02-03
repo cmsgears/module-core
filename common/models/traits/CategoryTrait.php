@@ -117,17 +117,24 @@ trait CategoryTrait {
 		}
 
 		return implode( ", ", $categoriesCsv );
-	}
-
+	} 
+	
 	public function getCategoryLinks( $baseUrl, $limit = 0 ) {
-
-		$this->categoryLimit	= $limit;
-    	$categories 			= $this->categories;
-		$categoryLinks			= null;
+		
+		$categories 	= $this->categories;
+		$categoryLinks	= null;
+		$count			= 1;
 
 		foreach ( $categories as $category ) {
-
+			 
 			$categoryLinks	.= "<li><a href='$baseUrl?slug=$category->slug'>$category->name</a></li>";
+
+			if( $limit > 0 && $count >= $limit ) {
+
+				break;
+			}
+
+			$count++;
 		}
 
 		return $categoryLinks;

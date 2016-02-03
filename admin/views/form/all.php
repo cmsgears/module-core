@@ -32,9 +32,9 @@ if( !isset( $sortOrder ) ) {
 	</div>
 	<div class="header-search col15x5">
 		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
-		<span class="frm-icon-element element-small">
+		<span class="frm-icon-element element-medium">
 			<i class="cmti cmti-search"></i>
-			<button id="btn-search" class="btn btn-small">Search</button>
+			<button id="btn-search">Search</button>
 		</span>
 	</div>
 </div>
@@ -100,7 +100,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $form->modifiedAt ?></td>
 						<td>
 							<?php if( $submits ) { ?>
-								<span title="Form Submits"><?= Html::a( "", [ "$controllerName/submit/all?formid=$id" ], [ 'class' => 'cmti cmti-checkbox-c-active' ] )  ?></span>
+								<span title="Form Submits"><?= Html::a( "", [ "$controllerName/submit/all?formid=$id" ], [ 'class' => 'cmti cmti-checkbox-b-active' ] )  ?></span>
 							<?php } ?>
 							<span title="Form Fields"><?= Html::a( "", [ "$controllerName/field/all?formid=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
 							<span title="Update Form"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>

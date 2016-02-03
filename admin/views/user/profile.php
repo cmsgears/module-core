@@ -73,8 +73,8 @@ $user			= Yii::$app->user->getIdentity();
 			
 					<div class="clear"></div>
 
-					<div class="align align-middle">
-						<input class="btn element-medium" type="submit" value="Update" />
+					<div class="align align-center">
+						<input class="element-medium" type="submit" value="Update" />
 					</div>
 
 					<?php ActiveForm::end(); ?>

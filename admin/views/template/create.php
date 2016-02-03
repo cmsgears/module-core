@@ -41,9 +41,9 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 
 		<div class="filler-height"></div>
 
-		<div class="align align-middle">
+		<div class="align align-center">
 			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
-			<input class="btn btn-medium" type="submit" value="Create" />
+			<input class="element-medium" type="submit" value="Create" />
 		</div>
 
 		<?php ActiveForm::end(); ?>

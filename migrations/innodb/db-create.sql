@@ -927,7 +927,7 @@ ALTER TABLE `cmg_core_gallery`
 ALTER TABLE `cmg_core_site`
   	ADD CONSTRAINT `fk_site_1` FOREIGN KEY (`avatarId`) REFERENCES `cmg_core_file` (`id`),
   	ADD CONSTRAINT `fk_site_2` FOREIGN KEY (`bannerId`) REFERENCES `cmg_core_file` (`id`),
-  	ADD CONSTRAINT `fk_site_3` FOREIGN KEY (`themeId`) REFERENCES `cmg_core_object` (`id`);
+  	ADD CONSTRAINT `fk_site_3` FOREIGN KEY (`themeId`) REFERENCES `cmg_core_theme` (`id`);
 
 --
 -- Constraints for table `cmg_core_site_member`

@@ -28,7 +28,10 @@ if( !isset( $sortOrder ) ) {
 ?>
 <div class="header-content clearfix">
 	<div class="header-actions col15x10">
-		<?= Html::a( 'Add Category', [ 'create' ], [ 'class' => 'btn btn-medium' ] ) ?>				
+		<span class="frm-icon-element element-small">
+			<i class="cmti cmti-plus"></i>
+			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
+		</span>				
 	</div>
 	<div class="header-search col15x5">
 		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
@@ -84,10 +87,8 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $category->getFeaturedStr() ?></td> 
 						<td> <span class="<?= $category->icon ?>" title="<?= $category->name ?>"></span></td>
 						<td>
-							<!--
 							<span title="Update Category"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete Category"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-o-b' ] )  ?></span>
-							-->
+							<span title="Delete Category"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

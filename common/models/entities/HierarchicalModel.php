@@ -20,10 +20,7 @@ abstract class HierarchicalModel extends CmgEntity {
 
 	// Instance Methods --------------------------------------------
 
-	public function getParent() {
-
-		// To be overriden by child
-	}
+	abstract public function getParent();
 
 	public function hasParent() {
 
@@ -33,14 +30,11 @@ abstract class HierarchicalModel extends CmgEntity {
 	public function getParentName() {
 
 		$parent	= $this->parent;
-		
+
 		return isset( $parent ) ? $parent->name : null;
 	}
-	
-	public function getChildren() {
-		
-		// To be overriden by child
-	}
+
+	abstract public function getChildren();
 }
 
 ?>

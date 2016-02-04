@@ -27,12 +27,12 @@ if( !isset( $sortOrder ) ) {
 ?>
 <div class="header-content clearfix">
 	<div class="header-actions col15x10">
-		<?php 
-			if( $showCreate ) {
-
-				echo Html::a( 'Add User', [ 'create' ], [ 'class' => 'btn btn-medium' ] );
-			} 
-		?>
+		<?php if( $showCreate ) { ?>
+			<span class="frm-icon-element element-small">
+				<i class="cmti cmti-plus"></i>
+				<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
+			</span>
+		<?php } ?>
 	</div>
 	<div class="header-search col15x5">
 		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">

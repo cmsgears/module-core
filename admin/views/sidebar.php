@@ -17,7 +17,7 @@ $user	= Yii::$app->user->getIdentity();
 		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-identity' ) == 0 ) echo 'expanded visible';?>">
 			<ul>
 				<?php if( $user->isPermitted( 'rbac' ) ) { ?>
-					<li class='matrix <?php if( strcmp( $child, 'matrix' ) == 0 ) echo 'active';?>'><?= Html::a( "Access Matrix", ['/cmgcore/permission/matrix'] ) ?></li>
+					<li class='matrix <?php if( strcmp( $child, 'matrix' ) == 0 ) echo 'active';?>'><?= Html::a( "Roles Matrix", ['/cmgcore/permission/matrix'] ) ?></li>
 					<li class='role <?php if( strcmp( $child, 'role' ) == 0 ) echo 'active';?>'><?= Html::a( "Roles", ['/cmgcore/role/all'] ) ?></li>
 					<li class='permission <?php if( strcmp( $child, 'permission' ) == 0 ) echo 'active';?>'><?= Html::a( "Permissions", ['/cmgcore/permission/all'] ) ?></li>
 				<?php } ?>

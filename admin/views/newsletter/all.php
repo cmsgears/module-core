@@ -28,7 +28,10 @@ if( !isset( $sortOrder ) ) {
 ?>
 <div class="header-content clearfix">
 	<div class="header-actions col15x10">
-		<?= Html::a( 'Add Newsletter', [ 'create' ], [ 'class' => 'btn btn-large' ] ) ?>				
+		<span class="frm-icon-element element-small">
+			<i class="cmti cmti-plus"></i>
+			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
+		</span>				
 	</div>
 	<div class="header-search col15x5">
 		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">

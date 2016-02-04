@@ -85,7 +85,7 @@ class CategoryService extends HierarchyService {
 
 	public static function getLevelListByType( $type ) {
 
-		return self::getLevelList( [ 'type' => $type ] );
+		return self::getLevelList( [ 'node.type' => $type ] );
 	}
 
 	// Data Provider ----
@@ -117,7 +117,7 @@ class CategoryService extends HierarchyService {
 
 		// Find existing Category
 		$categoryToUpdate	= self::findById( $category->id );
-		
+
 		FileService::saveFiles( $categoryToUpdate, [ 'bannerId' => $banner, 'videoId' => $video ] );
 
 		// Update Hierarchy
@@ -144,13 +144,13 @@ class CategoryService extends HierarchyService {
 		ModelCategory::deleteByCategoryId( $category->id );
 
 		// Update Hierarchy
-		$categoryToUpdate = self::deleteInHierarchy( CoreTables::TABLE_CATEGORY, $categoryToDelete );
+		$categoryToDelete = self::deleteInHierarchy( CoreTables::TABLE_CATEGORY, $categoryToDelete );
 
 		// Delete Category
 		$categoryToDelete->delete();
-		
+
 		// Delete Files
-		FileService::deleteFiles( [ $banner, $banner ] );
+		FileService::deleteFiles( [ $banner, $video ] );
 
 		return true;
 	}

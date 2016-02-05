@@ -31,9 +31,20 @@ class ModelAddressService extends Service {
 		return ModelAddress::findByParentId( $parentId );
 	}
 
+	/**
+	 * Models Supporting Multiple address for same type.
+	 */
 	public static function findByType( $parentId, $parentType, $type ) {
 
 		return ModelAddress::findByType( $parentId, $parentType, $type );
+	}
+	
+	/**
+	 * Model Supporting one address for same type.
+	 */
+	public static function findFirstByType( $parentId, $parentType, $type ) {
+
+		return ModelAddress::findFirstByType( $parentId, $parentType, $type );
 	}
 	
 	public static function findByParent( $parentId ) {

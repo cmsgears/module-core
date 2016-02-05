@@ -3,6 +3,9 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
+// CMG Imports
+use cmsgears\icons\widgets\IconChooser;
+
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Role';
 $returnUrl		= $this->context->returnUrl;
@@ -15,6 +18,7 @@ $returnUrl		= $this->context->returnUrl;
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-role' ] );?>
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
+    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ], 'disabled' => true ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
 		<?= $form->field( $model, 'homeUrl' )->textInput( [ 'readonly '=> 'true' ] ) ?>
 

@@ -94,7 +94,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $gallery->name ?></td>
 						<td><?= $gallery->slug ?></td>
 						<td><?= $gallery->title ?></td>
-						<td>
+						<td class="actions">
 							<span title="Gallery Items"><?= Html::a( "", [ "items?id=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
 							<span title="Update Gallery"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete Gallery"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>

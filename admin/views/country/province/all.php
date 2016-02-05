@@ -74,7 +74,7 @@ if( !isset( $sortOrder ) ) {
 					<tr>
 						<td><?= $province->code ?></td> 
 						<td><?= $province->name ?></td>
-						<td>
+						<td class="actions">
 							<span title="Update Province"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete Province"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>

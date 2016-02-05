@@ -60,6 +60,7 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
+					<th>Icon</th>
 					<th>Slug
 						<span class='box-icon-sort'>
 							<span sort-order='slug' class="icon-sort <?php if( strcmp( $sortOrder, 'slug') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
@@ -79,9 +80,10 @@ if( !isset( $sortOrder ) ) {
 				?>
 					<tr>
 						<td><?= $permission->name ?></td>
+						<td> <span class="<?= $permission->icon ?>" title="<?= $permission->name ?>"></span></td>
 						<td><?= $permission->slug ?></td>
 						<td><?= $permission->description ?></td>
-						<td>
+						<td class="actions">
 							<span title="Update Permissions"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete Permissions"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>

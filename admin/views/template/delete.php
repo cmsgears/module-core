@@ -5,6 +5,7 @@ use yii\helpers\Html;
 
 // CMG Imports
 use cmsgears\core\common\widgets\Editor;
+use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Delete Template | ' . $coreProperties->getSiteTitle();
@@ -21,7 +22,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>  
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?> 
-    	<?= $form->field( $model, 'icon' )->textInput( [ 'readonly' => 'true' ] ) ?>
+    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ], 'disabled' => true ] ) ?>
     	<?= $form->field( $model, 'renderer' )->dropDownList( $renderers, [ 'disabled' => true ] ) ?>
 
 		<?= $form->field( $model, 'renderFile' )->checkbox( [ 'class' => 'template-file', 'disabled' => true ] ) ?>

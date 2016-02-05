@@ -5,6 +5,7 @@ use yii\helpers\Html;
 
 // CMG Imports
 use cmsgears\core\common\widgets\Editor;
+use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Template | ' . $coreProperties->getSiteTitle();
@@ -21,7 +22,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
-    	<?= $form->field( $model, 'icon' ) ?>
+    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
     	<?= $form->field( $model, 'renderer' )->dropDownList( $renderers ) ?>
 
 		<?= $form->field( $model, 'renderFile' )->checkbox( [ 'class' => 'template-file' ] ) ?>

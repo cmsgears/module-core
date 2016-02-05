@@ -3,6 +3,9 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
+// CMG Imports
+use cmsgears\icons\widgets\IconChooser;
+
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Option';
 $returnUrl		= $this->context->returnUrl;
@@ -16,7 +19,7 @@ $returnUrl		= $this->context->returnUrl;
 
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'value' ) ?>
-    	<?= $form->field( $model, 'icon' ) ?>
+    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
     	<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 		<?= $form->field( $model, 'categoryId' )->hiddenInput( [ 'value' => $id ] )->label( false )?>
 

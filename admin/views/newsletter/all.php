@@ -97,7 +97,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $newsletter->createdAt ?></td>
 						<td><?= $newsletter->modifiedAt ?></td>
 						<td><?= $newsletter->lastSentAt ?></td>
-						<td>
+						<td class="actions">
 							<span title="Update Newsletter"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete Newsletter"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>

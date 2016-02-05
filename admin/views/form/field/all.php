@@ -61,6 +61,7 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
+					<th>Icon</th>
 					<th>Type</th>
 					<th>Validators</th>
 					<th>Actions</th>
@@ -76,9 +77,10 @@ if( !isset( $sortOrder ) ) {
 				?>
 					<tr>
 						<td><?= $editUrl ?></td>
+						<td> <span class="<?= $formField->icon ?>" title="<?= $formField->name ?>"></span></td>
 						<td><?= $formField->getTypeStr() ?></td>
 						<td><?= $formField->validators ?></td>
-						<td>
+						<td class="actions">
 							<span title="Update Field"><?= Html::a( "", [ "$controllerName/update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete Field"><?= Html::a( "", [ "$controllerName/delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>

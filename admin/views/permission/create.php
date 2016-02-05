@@ -3,6 +3,9 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
+// CMG Imports
+use cmsgears\icons\widgets\IconChooser;
+
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Add Permission';
 $returnUrl		= $this->context->returnUrl;
@@ -15,6 +18,7 @@ $returnUrl		= $this->context->returnUrl;
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-permission' ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>
+    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
 
 		<?php if( count( $roles ) > 0 ) { ?>

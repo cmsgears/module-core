@@ -84,7 +84,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $site->name ?></td>
 						<td><?= $themeName ?></td>
 						<td><?= $site->order ?></td>
-						<td>
+						<td class="actions">
 							<span title="Update Site"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete Site"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>

@@ -6,6 +6,7 @@ use yii\helpers\Html;
 // CMG Imports
 use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\VideoUploader;
+use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Update Category';
@@ -21,7 +22,7 @@ $returnUrl		= $this->context->returnUrl;
     	<?= $form->field( $model, 'name' ) ?>  
     	<?= $form->field( $model, 'description' ) ?>
     	<?= $form->field( $model, 'parentId' )->dropDownList( $categoryMap ) ?>
-    	<?= $form->field( $model, 'icon' ) ?>
+    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
     	<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 		<?= $form->field( $model, 'featured' )->checkbox() ?>
 

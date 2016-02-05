@@ -6,6 +6,7 @@ use yii\helpers\Html;
 // CMG Imports
 use cmsgears\files\widgets\ImageUploader;
 use cmsgears\files\widgets\VideoUploader;
+use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . ' | Delete Category';
@@ -21,7 +22,7 @@ $returnUrl		= $this->context->returnUrl;
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>  
     	<?= $form->field( $model, 'description' )->textInput( [ 'readonly' => true ] ) ?>
     	<?= $form->field( $model, 'parentId' )->dropDownList( $categoryMap, [ 'disabled' => true ] ) ?>
-    	<?= $form->field( $model, 'icon' )->textInput( [ 'readonly' => true ] ) ?>
+    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ], 'disabled' => true ] ) ?>
     	<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => true ] ) ?>
 		<?= $form->field( $model, 'featured' )->checkbox( [ 'disabled' => true ] ) ?>
 

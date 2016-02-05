@@ -3,6 +3,9 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
+// CMG Imports
+use cmsgears\icons\widgets\IconChooser;
+
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= $coreProperties->getSiteTitle() . " | Delete $title";
 $returnUrl		= $this->context->returnUrl;
@@ -16,7 +19,7 @@ $returnUrl		= $this->context->returnUrl;
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>  
     	<?= $form->field( $model, 'description' )->textInput( [ 'readonly' => true ] ) ?>  
-    	<?= $form->field( $model, 'icon' )->textInput( [ 'readonly' => true ] ) ?>
+    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ], 'disabled' => true ] ) ?>
     	<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => true ] ) ?>
 		<?= $form->field( $model, 'featured' )->checkbox( [ 'disabled' => true ] ) ?>
 

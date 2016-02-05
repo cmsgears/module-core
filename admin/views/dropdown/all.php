@@ -60,10 +60,10 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
-					</th>					
+					</th>
+					<th>Icon</th>
 					<th>Description</th> 
 					<th>Featured</th>
-					<th>Icon</th>
 					<th>Actions</th> 
 				</tr>
 			</thead>
@@ -77,10 +77,10 @@ if( !isset( $sortOrder ) ) {
 				?>
 					<tr>
 						<td><?= $model->name ?></td>
+						<td> <span class="<?= $model->icon ?>" title="<?= $model->name ?>"></span></td>
 						<td><?= $model->description ?></td>
-						<td><?= $model->getFeaturedStr() ?></td> 
-						<td> <span class="<?= $model->icon ?>" title="<?= $model->name ?>"></span></td> 
-						<td>
+						<td><?= $model->getFeaturedStr() ?></td>  
+						<td class="actions">
 							<?php if( $title == 'Dropdown' ) { ?>						
 								<span title="View Options"><?= Html::a( "", [ "/cmgcore/dropdown/option/all?id=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
 							<?php } ?>

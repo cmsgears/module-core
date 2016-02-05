@@ -59,7 +59,8 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
-					</th>					
+					</th>
+					<th>Icon</th>
 					<th>Description</th> 
 					<th>Renderer</th>
 					<th>Layout</th>
@@ -80,6 +81,7 @@ if( !isset( $sortOrder ) ) {
 				?>
 					<tr>
 						<td><?= $template->name ?></td>
+						<td> <span class="<?= $template->icon ?>" title="<?= $template->name ?>"></span></td>
 						<td><?= $template->description ?></td>
 						<td><?= $template->renderer ?></td>
 						<td><?= $template->layout ?></td>
@@ -87,7 +89,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $template->adminView ?></td>
 						<td><?= $template->userView ?></td>
 						<td><?= $template->publicView ?></td>
-						<td>
+						<td class="actions">
 							<span title="Update Template"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete Template"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>

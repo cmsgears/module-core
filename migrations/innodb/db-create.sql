@@ -111,12 +111,14 @@ DROP TABLE IF EXISTS `cmg_core_tag`;
 CREATE TABLE `cmg_core_tag` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `siteId` bigint(20) NOT NULL,
+  `templateId` bigint(20) NOT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `slug` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `icon` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_tag_1` (`siteId`)
+  KEY `fk_tag_1` (`siteId`),
+  KEY `fk_tag_2` (`templateId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -134,10 +136,11 @@ CREATE TABLE `cmg_core_category` (
   `videoId` bigint(20) DEFAULT NULL,
   `parentId` bigint(20) DEFAULT NULL,
   `rootId` bigint(20) DEFAULT NULL,
+  `templateId` bigint(20) NOT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `slug` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `icon` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,   
   `description` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `featured` tinyint(1) NOT NULL DEFAULT '0',
   `lValue` smallint(6) NOT NULL DEFAULT '1',
@@ -148,7 +151,8 @@ CREATE TABLE `cmg_core_category` (
   KEY `fk_category_1` (`siteId`),
   KEY `fk_category_2` (`bannerId`),
   KEY `fk_category_3` (`videoId`),
-  KEY `fk_category_4` (`parentId`)
+  KEY `fk_category_4` (`parentId`),
+  KEY `fk_category_5` (`templateId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -815,7 +819,8 @@ ALTER TABLE `cmg_core_theme`
 -- Constraints for table `cmg_core_tag`
 --
 ALTER TABLE `cmg_core_tag`
-	ADD CONSTRAINT `fk_tag_1` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`);
+	ADD CONSTRAINT `fk_tag_1` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`),
+	ADD CONSTRAINT `fk_tag_2` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_template` (`id`);
 
 --
 -- Constraints for table `cmg_core_category`
@@ -824,7 +829,8 @@ ALTER TABLE `cmg_core_category`
 	ADD CONSTRAINT `fk_category_1` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`),
 	ADD CONSTRAINT `fk_category_2` FOREIGN KEY (`bannerId`) REFERENCES `cmg_core_file` (`id`),
 	ADD CONSTRAINT `fk_category_3` FOREIGN KEY (`videoId`) REFERENCES `cmg_core_file` (`id`),
-	ADD CONSTRAINT `fk_category_4` FOREIGN KEY (`parentId`) REFERENCES `cmg_core_category` (`id`);
+	ADD CONSTRAINT `fk_category_4` FOREIGN KEY (`parentId`) REFERENCES `cmg_core_category` (`id`),
+	ADD CONSTRAINT `fk_category_5` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_template` (`id`);
 
 --
 -- Constraints for table `cmg_core_option`

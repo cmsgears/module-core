@@ -5,7 +5,7 @@ namespace cmsgears\core\common\assets;
 use \Yii;
 use yii\web\View;
 
-class CmgTools extends \yii\web\AssetBundle {
+class CmgToolsJs extends \yii\web\AssetBundle {
 
 	// Variables ---------------------------------------------------
 

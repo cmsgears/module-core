@@ -89,8 +89,6 @@ class Core extends \yii\base\Component {
 	 */
 	public $trimFieldValue		= false;
 
-	public $renderers			= [ 'default' => 'Default' ];
-
 	/**
 	 * Initialise the CMG Core Component.
 	 */
@@ -253,11 +251,6 @@ class Core extends \yii\base\Component {
 	public function isTrimFieldValue() {
 
 		return $this->trimFieldValue;
-	}
-
-	public function gtRenderers() {
-
-		return $this->renderers;
 	}
 }
 

@@ -87,7 +87,7 @@ class Core extends \yii\base\Component {
 	/**
 	 * @var It can be used by model classes to determine the fields for trim filter.
 	 */
-	public $trimFieldValue		= false;
+	public $trimFieldValue		= true;
 
 	/**
 	 * Initialise the CMG Core Component.

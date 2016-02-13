@@ -90,6 +90,23 @@ class ModelAddressService extends Service {
 		return $modelAddress;
 	}
 
+	public static function createOrUpdate( $address, $parentId, $parentType, $type ) {
+
+		if( isset( $address->id ) && !empty( $address->id ) ) {
+
+			$existingAddress	= self::findByAddressId( $parentId, $parentType, $address->id );
+
+			if( isset( $existingAddress ) ) {
+
+				self::update( $existingAddress, $address );
+			}
+		}
+		else {
+
+			self::create( $address, $parentId, $parentType, $type );
+		}
+	}
+
 	public static function createShipping( $address, $parentId, $parentType, $order = 0 ) {
 		
 		return self::create( $address, $parentId, $parentType, Address::TYPE_SHIPPING, $order );

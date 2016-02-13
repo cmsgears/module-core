@@ -15,7 +15,7 @@ $settings		= Yii::$app->sidebar->getConfig();
 
 	<div class="box box-collapsible box-settings col12x6">
 		<div class="box-wrap-header">
-			<span id="settings-<?= $setting ?>" class="cmt-request" content="settings-<?= $setting ?>-content" cmt-controller="settings" cmt-action="getContent" action="<?= Url::toRoute( "/apix/cmgcore/settings/index?type=$setting" ) ?>" method="post">
+			<span id="settings-<?= $setting ?>" class="cmt-request" content="settings-<?= $setting ?>-content" cmt-controller="settings" cmt-action="getContent" action="settings/index?type=<?= $setting ?>">
 				<span class="cmt-click btn-collapse cmti cmti-chevron-down"></span>
 			</span>
 			<span><?= ucfirst( $setting ) ?></span>

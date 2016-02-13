@@ -130,11 +130,12 @@ class CmgFile extends CmgEntity {
 		// model rules
         $rules = [
             [ [ 'name', 'extension', 'directory' ], 'required' ],
-            [ [ 'id', 'title', 'description', 'altText', 'visibility', 'url', 'thumb', 'link', 'changed' ], 'safe' ],
+            [ [ 'id', 'title', 'description', 'altText', 'visibility', 'url', 'thumb', 'link' ], 'safe' ],
             [ [ 'name', 'directory' ], 'string', 'min' => 1, 'max' => 150 ],
             [ [ 'extension', 'type' ], 'string', 'min' => 1, 'max' => 100 ],
             [ [ 'width', 'height', 'twidth', 'theight' ], 'safe' ],
             [ [ 'width', 'height', 'twidth', 'theight' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+            [ 'changed', 'boolean' ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];

@@ -1,7 +1,6 @@
 <?php
 // Yii Imports
 use \Yii;
-use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\widgets\aform\AjaxForm;
@@ -31,7 +30,7 @@ use cmsgears\widgets\aform\AjaxForm;
 		<?= AjaxForm::widget([ 
 			'options' => [ 'class' => 'cmt-form', 'id' => "frm-setting-$type", 'cmt-clear' => 0 ],
 			'slug' => "config-$type", 'showLabel' => true, 'model' => $model,
-			'ajaxUrl' => Url::toRoute( [ "/apix/cmgcore/settings/update?type=$type" ], true ),
+			'ajaxUrl' => "cmgcore/settings/update?type=$type",
 			'cmtController' => 'settings', 'cmtAction' => 'update',
 			'modelName' => "setting$type"
 		])?>

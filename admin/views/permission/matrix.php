@@ -66,9 +66,9 @@ if( !isset( $sortOrder ) ) {
 
 						$id 		= $permission->id;
 						$roles		= $permission->getRolesIdList();
-						$apixUrl	= Yii::$app->urlManager->createAbsoluteUrl( "/apix/cmgcore/permission/bind-roles" );
+						$apixUrl	= 'cmgcore/permission/bind-roles';
 				?>
-					<tr id="perm-matrix-<?=$id?>" class="cmt-request" cmt-controller="permission" cmt-action="matrix" action="<?=$apixUrl?>" method="POST" cmt-clear="false">
+					<tr id="perm-matrix-<?=$id?>" class="cmt-request" cmt-controller="permission" cmt-action="matrix" action="<?=$apixUrl?>" cmt-keep>
 						<td><?= $permission->name ?></td>
 						<td>
 							<input type="hidden" name="Binder[binderId]" value="<?=$id?>" />

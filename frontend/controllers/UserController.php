@@ -10,8 +10,12 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 
+use cmsgears\core\common\models\entities\Address;
+
 use cmsgears\core\common\services\OptionService;
-use cmsgears\core\frontend\services\UserService;
+use cmsgears\core\frontend\services\UserService; 
+use cmsgears\core\common\services\ProvinceService;
+use cmsgears\core\common\services\CountryService;
 
 class UserController extends base\Controller {
 
@@ -59,15 +63,31 @@ class UserController extends base\Controller {
 
 		// Find Model
 		$user		= Yii::$app->user->getIdentity();
+		$address	= new Address();
 
 		// Update/Render if exist
 		if( isset( $user ) ) {
 			
-			$genderMap = OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER, [ [ 'value' => 'Choose Gender', 'name' => '0' ] ] );
+			$addresss	= $user->modelAddresss;
+
+			if( isset( $addresss ) && count( $addresss ) > 0 ) {
+				
+				foreach( $addresss as $address ) {
+					
+					$address	= $address->address;
+				}
+			}
+			
+			$countryList	= CountryService::getIdNameList(); 
+			$provinceList	= ProvinceService::getMapByCountryId( 1 );
+			$genderMap 		= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER, [ [ 'value' => 'Choose Gender', 'name' => '0' ] ] );
 
 	    	return $this->render( WebGlobalCore::PAGE_PROFILE, [
 	    		'user' => $user,
-	    		'genderMap' => $genderMap
+	    		'genderMap' => $genderMap,
+	    		'address' => $address,
+	    		'countryList' => $countryList,
+	    		'provinceList' => $provinceList
 	    	]);
 		}
 
@@ -86,7 +106,7 @@ class UserController extends base\Controller {
 			$privacy		= UserService::findAttributeMapByType( $user, WebGlobalCore::SETTINGS_PRIVACY );
 			$notification	= UserService::findAttributeMapByType( $user, WebGlobalCore::SETTINGS_NOTIFICATION );
 			$reminder		= UserService::findAttributeMapByType( $user, WebGlobalCore::SETTINGS_REMINDER );
-
+			
 	    	return $this->render( WebGlobalCore::PAGE_SETTINGS, [
 	    		'user' => $user,
 	    		'privacy' => $privacy,

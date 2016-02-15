@@ -47,19 +47,37 @@ class AddressController extends \cmsgears\core\admin\controllers\base\Controller
 
 	// AddressController
 
-	public function actionProvinceMap( $countryid ) {
+	public function actionProvinceMap() {
 
-		$provinceMap	= ProvinceService::getListByCountryId( $countryid );
+		$countryId	= Yii::$app->request->post( 'countryId' );
 
-		return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $provinceMap );
+		if( isset( $countryId ) && $countryId > 0 ) {
+
+			$provinceMap	= ProvinceService::getListByCountryId( $countryId );
+
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $provinceMap );
+		}
+
+		// Trigger Ajax Failure
+        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionProvinceOptions( $countryid ) {
+	public function actionProvinceOptions() {
 
-		$provinceOptions	= ProvinceService::getListByCountryId( $countryid );
-		$provinceOptions	= CodeGenUtil::generateSelectOptionsIdName( $provinceList );		
+		$countryId	= Yii::$app->request->post( 'countryId' );
 
-		return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $provinceOptions );
+		if( isset( $countryId ) && $countryId > 0 ) {
+
+			$provinceOptions	= ProvinceService::getListByCountryId( $countryId );
+			$provinceOptions	= CodeGenUtil::generateSelectOptionsIdName( $provinceOptions );
+
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $provinceOptions );
+		}
+
+		// Trigger Ajax Failure
+        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

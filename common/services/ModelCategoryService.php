@@ -15,7 +15,9 @@ class ModelCategoryService extends Service {
 	// Static Methods ----------------------------------------------
 
 	// Read ----------------
-
+	
+	// Read - Models ---
+	
 	public static function findByParentType( $parentType ) {
 		
 		return ModelCategory::findByParentType( $parentType );
@@ -51,6 +53,23 @@ class ModelCategoryService extends Service {
 		return ModelCategory::findActiveByParentIdParentType( $parentId, $parentType );
 	}
 
+	// Read - Lists ----
+
+	public static function findActiveCategoryIdList( $parentId, $parentType ) {
+
+		$models = ModelCategory::findActiveByParentIdParentType( $parentId, $parentType );
+		$ids	= [];
+
+		foreach ( $models as $model ) {
+
+			$category 	= $model->category;
+
+			$ids[]		= $category->id;
+		}
+
+		return $ids;
+	}
+
 	// Create -----------
 
 	public static function create( $categoryId, $parentId, $parentType ) {
@@ -84,19 +103,6 @@ class ModelCategoryService extends Service {
 			self::create( $modelCategory );
 		}
 	}
-	
-	public static function updateActiveByParentId( $parentId, $active ) {
-
-		$model	= self::findByParentId( $parentId );
-
-		if( isset( $model ) ) {
-
-			foreach( $model as $modelToUpdate ) {
-
-				self::updateActive( $modelToUpdate, $active );
-			}
-		}
-	}
 
 	public static function updateActive( $model, $active ) {
 
@@ -104,11 +110,11 @@ class ModelCategoryService extends Service {
 
 		$model->update();
 	}
-  
+
 	// Delete -----------
-	
+
 	public static function deleteByCategoryId( $categoryId ) {
-		
+
 		return ModelCategory::deleteByCategoryId( $categoryId );
 	}
 }

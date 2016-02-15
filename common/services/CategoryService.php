@@ -20,10 +20,8 @@ class CategoryService extends HierarchyService {
 
 	// Read ----------------
 
-	/**
-	 * @param integer $id
-	 * @return Category
-	 */
+	// Read - Models ---
+
 	public static function findById( $id ) {
 
 		return Category::findById( $id );
@@ -33,16 +31,12 @@ class CategoryService extends HierarchyService {
 
 		return Category::findByParentId( $id );
 	}
-	
+
 	public static function getFeatured() {
-		
+
 		return Category::findAll( [ 'featured' => 1 ] );
 	}
 
-	/**
-	 * @param string $name
-	 * @return Category
-	 */
 	public static function findByName( $name ) {
 
 		return Category::findByName( $name );
@@ -53,14 +47,12 @@ class CategoryService extends HierarchyService {
 		return Category::findBySlug( $slug );
 	}
 
-	/**
-	 * @param string $type
-	 * @return Category
-	 */
 	public static function findByType( $type ) {
 
 		return Category::findByType( $type );
     }
+
+	// Read - Lists ----
 
 	public static function getIdNameListByType( $type, $config = [] ) {
 
@@ -76,16 +68,25 @@ class CategoryService extends HierarchyService {
 		return self::getIdNameListByType( $type, $config );
 	}
 
-	public static function getIdNameMapByType( $type, $config = [] ) {
+	public static function getTopLevelIdNameListById( $id, $config = [] ) {
 
-		$config[ 'conditions' ][ 'type' ] 	= $type;
+		$category	= self::findById( $id );
 
-		return self::findMap( 'id', 'name', CoreTables::TABLE_CATEGORY, $config );
+		return self::getSubLevelList( $category->id, $category->rootId, [], 'depth = 1' );
 	}
 
 	public static function getLevelListByType( $type ) {
 
 		return self::getLevelList( [ 'node.type' => $type ] );
+	}
+
+	// Read - Maps -----
+
+	public static function getIdNameMapByType( $type, $config = [] ) {
+
+		$config[ 'conditions' ][ 'type' ] 	= $type;
+
+		return self::findMap( 'id', 'name', CoreTables::TABLE_CATEGORY, $config );
 	}
 
 	// Data Provider ----

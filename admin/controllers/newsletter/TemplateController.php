@@ -17,8 +17,10 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
-		$this->sidebar 		= [ 'parent' => 'sidebar-newsletter', 'child' => 'newsletter-template' ];
+
+		$this->sidebar 	= [ 'parent' => 'sidebar-newsletter', 'child' => 'newsletter-template' ];
+
+		$this->type		= CoreGlobal::TYPE_NEWSLETTER;
 	}
 
 	// Instance Methods ------------------
@@ -55,22 +57,7 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 		
 		Url::remember( [ 'newsletter/template/all' ], 'templates' );
 
-		return parent::actionAll( CoreGlobal::TYPE_NEWSLETTER );
-	}
-	
-	public function actionCreate() {
-
-		return parent::actionCreate( CoreGlobal::TYPE_NEWSLETTER );
-	}
-	 
-	public function actionUpdate( $id ) {
-
-		return parent::actionUpdate( $id, CoreGlobal::TYPE_NEWSLETTER );
-	}
-	
-	public function actionDelete( $id ) {
-
-		return parent::actionDelete( $id, CoreGlobal::TYPE_NEWSLETTER );
+		return parent::actionAll();
 	}
 }
 

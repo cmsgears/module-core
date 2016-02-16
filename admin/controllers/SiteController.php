@@ -66,10 +66,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 	 */
     public function actionIndex() {
 
-		if ( !Yii::$app->user->isGuest ) {
-
-			return $this->redirect( [ '/dashboard' ] );
-		}
+		return $this->redirect( [ '/dashboard' ] );
     }
 
 	/**

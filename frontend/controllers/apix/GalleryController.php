@@ -91,7 +91,8 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
 			if( isset( $modelFile ) ) {
 
 				if ( ModelFileService::delete( $modelFile ) ) {
-
+					
+					// Trigger Ajax Success
 					return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $id );
 				}
 			}

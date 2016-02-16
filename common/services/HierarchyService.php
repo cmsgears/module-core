@@ -338,7 +338,7 @@ class HierarchyService extends Service {
 				Yii::$app->db->createCommand( "UPDATE $table set lValue = lValue + $cdiff, rValue = rValue + $cdiff, rootId = $rootId WHERE rootId = $modelToUpdate->id" )->execute();
 
 				// Update Parent Id
-				Yii::$app->db->createCommand( "UPDATE $table set parentId = $rootId WHERE id = $modelToUpdate->id" )->execute();
+				Yii::$app->db->createCommand( "UPDATE $table set parentId = $model->parentId WHERE id = $modelToUpdate->id" )->execute();
 			}
 
 			// Update Parent

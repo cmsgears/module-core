@@ -19,6 +19,9 @@ use cmsgears\core\admin\services\OptionService;
 
 abstract class DropdownController extends Controller {
 
+	protected $type;
+	protected $title;
+
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
@@ -26,6 +29,9 @@ abstract class DropdownController extends Controller {
         parent::__construct( $id, $module, $config );
 		
 		$this->returnUrl	= Url::previous( 'categories' );
+		
+		$this->type 		= CoreGlobal::TYPE_COMBO;
+		$this->title 		= 'Dropdown';
 	}
 
 	// Instance Methods --------------------------------------------
@@ -38,7 +44,8 @@ abstract class DropdownController extends Controller {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'all'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'index' => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'all' => [ 'permission' => CoreGlobal::PERM_CORE ],
 	                'create'  => [ 'permission' => CoreGlobal::PERM_CORE ],
 	                'update'  => [ 'permission' => CoreGlobal::PERM_CORE ],
 	                'delete'  => [ 'permission' => CoreGlobal::PERM_CORE ],
@@ -47,7 +54,8 @@ abstract class DropdownController extends Controller {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'all'  => [ 'get' ],
+	                'index' => [ 'get' ],
+	                'all' => [ 'get' ],
 	                'create'  => [ 'get', 'post' ],
 	                'update'  => [ 'get', 'post' ],
 	                'delete'  => [ 'get', 'post' ]
@@ -58,31 +66,27 @@ abstract class DropdownController extends Controller {
 
 	// CategoryController -----------------
 
-	public function actionAll( $type = null, $title = 'Dropdown' ) {
+	public function actionIndex() {
 
-		$dataProvider = null;
+		return $this->redirect( 'all' );
+	}
+	
+	public function actionAll() {
 
-		if( isset( $type ) ) {
-
-			$dataProvider = CategoryService::getPaginationByType( $type );
-		}
-		else {
-
-			$dataProvider = CategoryService::getPagination();
-		}
+		$dataProvider = CategoryService::getPaginationByType( $this->type );
 
 	    return $this->render( '@cmsgears/module-core/admin/views/dropdown/all', [
-	    
+
 			'dataProvider' => $dataProvider,
-    		'title' => $title
+    		'title' => $this->title
 	    ]);
 	}
 
-	public function actionCreate( $type = null, $title = 'Dropdown' ) {
+	public function actionCreate() {
 
 		$model			= new Category();
 		$model->siteId	= Yii::$app->cmgCore->siteId;
-		$model->type 	= $type;
+		$model->type 	= $this->type;
 
 		$model->setScenario( 'create' );
 
@@ -96,11 +100,11 @@ abstract class DropdownController extends Controller {
 
     	return $this->render( '@cmsgears/module-core/admin/views/dropdown/create', [
     		'model' => $model,
-    		'title' => $title
+    		'title' => $this->title
     	]);
 	}	
  	
-	public function actionUpdate( $id, $type = null, $title = 'Dropdown' ) {
+	public function actionUpdate( $id ) {
 		
 		// Find Model
 		$model	= CategoryService::findById( $id );
@@ -108,7 +112,7 @@ abstract class DropdownController extends Controller {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->type 	= $type;
+			$model->type 	= $this->type;
 
 			$model->setScenario( 'update' );
 
@@ -123,7 +127,7 @@ abstract class DropdownController extends Controller {
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/dropdown/update', [
 	    		'model' => $model, 
-    			'title' => $title
+    			'title' => $this->title
 	    	]);
 		}
 		
@@ -131,7 +135,7 @@ abstract class DropdownController extends Controller {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	} 
 	
-	public function actionDelete( $id, $type = null, $title = 'Dropdown' ) {
+	public function actionDelete( $id ) {
 
 		// Find Model
 		$model	= CategoryService::findById( $id );
@@ -166,7 +170,7 @@ abstract class DropdownController extends Controller {
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/dropdown/delete', [
 	    		'model' => $model,
-    			'title' => $title
+    			'title' => $this->title
 	    	]);
 		}
 

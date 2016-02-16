@@ -4,8 +4,6 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
-use cmsgears\files\widgets\ImageUploader;
-use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
@@ -25,16 +23,6 @@ $returnUrl		= $this->context->returnUrl;
     	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
     	<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 		<?= $form->field( $model, 'featured' )->checkbox() ?>
-
-		<div class="box-content clearfix">
-			<div class="header">Category Banner</div>
-			<?= ImageUploader::widget( [ 'options' => [ 'id' => 'model-banner', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' ] );?>
-		</div>
-
-		<div class="box-content clearfix">
-			<div class="header">Category Video</div>
-			<?= VideoUploader::widget( [ 'options' => [ 'id' => 'model-video', 'class' => 'file-uploader' ], 'model' => $video ] ); ?>
-		</div>
 
 		<div class="filler-height"></div>
 

@@ -25,47 +25,14 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryCon
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Component ----------------
-
-    public function behaviors() {
-
-		$behaviours	= parent::behaviors();
-
-		$behaviours[ 'rbac' ][ 'actions' ][ 'index' ] 	= [ 'permission' => CoreGlobal::PERM_CORE ];
-
-		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ] 	= [ 'get' ];
-
-		return $behaviours;
-    }
-
-	// RoleController --------------------
-
-	public function actionIndex() {
-
-		$this->redirect( 'all' );
-	}
+	// GalleryController -----------------
 
 	public function actionAll() {
 
 		// Remember return url for crud
 		Url::remember( [ 'gallery/all' ], 'galleries' );
 
-		return parent::actionAll( CoreGlobal::TYPE_SYSTEM, true );
-	}
-
-	public function actionCreate() {
-
-		return parent::actionCreate( CoreGlobal::TYPE_SYSTEM, true );
-	}
-
-	public function actionUpdate( $id ) {
-
-		return parent::actionUpdate( $id, CoreGlobal::TYPE_SYSTEM );
-	}
-
-	public function actionDelete( $id ) {
-
-		return parent::actionDelete( $id, CoreGlobal::TYPE_SYSTEM );
+		return parent::actionAll();
 	}
 }
 

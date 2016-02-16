@@ -9,7 +9,6 @@ use yii\behaviors\SluggableBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\traits\VisualTrait;
 use cmsgears\core\common\models\traits\DataTrait;
 
 /**
@@ -17,8 +16,6 @@ use cmsgears\core\common\models\traits\DataTrait;
  *
  * @property integer $id
  * @property integer $siteId
- * @property integer $bannerId
- * @property integer $videoId
  * @property integer $parentId
  * @property integer $rootId
  * @property string $name
@@ -33,8 +30,6 @@ use cmsgears\core\common\models\traits\DataTrait;
  * @property string $data
  */
 class Category extends HierarchicalModel {
-
-	use VisualTrait;
 
 	use DataTrait;
 	
@@ -104,15 +99,14 @@ class Category extends HierarchicalModel {
 		
 		// model rules
         $rules = [
-            [ [ 'siteId', 'name', 'featured' ], 'required' ],
-            [ [ 'id', 'bannerId', 'videoId', 'description', 'htmlOptions', 'data' ], 'safe' ],
+            [ [ 'siteId', 'name' ], 'required' ],
+            [ [ 'id', 'featured', 'description', 'htmlOptions', 'data' ], 'safe' ],
             [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
             [ 'slug', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'bannerId', 'videoId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'featured', 'boolean' ]
         ];
 
@@ -134,8 +128,6 @@ class Category extends HierarchicalModel {
 
 		return [
 			'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
-			'bannerId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
-			'videoId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
 			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),

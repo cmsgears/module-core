@@ -10,14 +10,14 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile;
-
 use cmsgears\core\common\models\entities\Category;
 
 use cmsgears\core\admin\services\CategoryService;
 
 abstract class CategoryController extends Controller {
 
+	protected $type;
+	
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
@@ -57,44 +57,40 @@ abstract class CategoryController extends Controller {
 
 	// CategoryController -----------------
 
-	public function actionAll( $type ) {
+	public function actionAll() {
 
-		$dataProvider = CategoryService::getPaginationByType( $type );
+		$dataProvider = CategoryService::getPaginationByType( $this->type );
 
 	    return $this->render( '@cmsgears/module-core/admin/views/category/all', [
 			'dataProvider' => $dataProvider
 	    ]);
 	}
 
-	public function actionCreate( $type ) {
+	public function actionCreate() {
 
 		$model			= new Category();
 		$model->siteId	= Yii::$app->cmgCore->siteId;
-		$model->type 	= $type;
-		$banner 		= CmgFile::loadFile( null, 'Banner' );
-		$video	 		= CmgFile::loadFile( null, 'Video' );
+		$model->type 	= $this->type;
 
 		$model->setScenario( 'create' );
 
 		if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
-			if( CategoryService::create( $model, $banner, $video ) ) { 
+			if( CategoryService::create( $model ) ) { 
 
 				return $this->redirect( $this->returnUrl );
 			} 
 		} 
 		
-		$categoryMap	= CategoryService::getIdNameMapByType( $type, [ 'prepend' => [ [ 'value' => 'Choose Category', 'name' => 0 ] ] ] );
+		$categoryMap	= CategoryService::getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'value' => 'Choose Category', 'name' => 0 ] ] ] );
 
     	return $this->render( '@cmsgears/module-core/admin/views/category/create', [
-    		'model' => $model, 
-    		'banner' => $banner,
-			'video' => $video,
+    		'model' => $model,
     		'categoryMap' => $categoryMap
     	]);
 	}	
  	
-	public function actionUpdate( $id, $type ) {
+	public function actionUpdate( $id ) {
 		
 		// Find Model
 		$model	= CategoryService::findById( $id );
@@ -102,29 +98,25 @@ abstract class CategoryController extends Controller {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->type 	= $type; 
-			$banner 		= CmgFile::loadFile( $model->banner, 'Banner' );
-			$video	 		= CmgFile::loadFile( $model->video, 'Video' );
+			$model->type 	= $this->type; 
 
 			$model->setScenario( 'update' );
 
 			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
-				if( CategoryService::update( $model, $banner, $video ) ) {
+				if( CategoryService::update( $model ) ) {
 
 					return $this->redirect( $this->returnUrl );
 				}
 			}
 
-			$categoryMap	= CategoryService::getIdNameMapByType( $type, [
+			$categoryMap	= CategoryService::getIdNameMapByType( $this->type, [
 									'prepend' => [ [ 'value' => 'Choose Category', 'name' => 0 ] ],
 									'filters' => [ [ 'not in', 'id', [ $id ] ] ]
 								]);
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/category/update', [
-	    		'model' => $model, 
-	    		'banner' => $banner,
-				'video' => $video,
+	    		'model' => $model,
 	    		'categoryMap' => $categoryMap
 	    	]);
 		}
@@ -133,7 +125,7 @@ abstract class CategoryController extends Controller {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $id, $type ) {
+	public function actionDelete( $id ) {
 
 		// Find Model
 		$model	= CategoryService::findById( $id );
@@ -141,23 +133,18 @@ abstract class CategoryController extends Controller {
 		// Delete/Render if exist		
 		if( isset( $model ) ) {
 
-			$banner = $model->banner;
-			$video 	= $model->video;
-
 			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
-				if( CategoryService::delete( $model, $banner, $video ) ) {
+				if( CategoryService::delete( $model ) ) {
 
 					return $this->redirect( $this->returnUrl );
 				}
 			}
 
-			$categoryMap	= CategoryService::getIdNameMapByType( $type, [ 'prepend' => [ [ 'value' => 'Choose Category', 'name' => 0 ] ] ] );
+			$categoryMap	= CategoryService::getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'value' => 'Choose Category', 'name' => 0 ] ] ] );
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/category/delete', [
-	    		'model' => $model, 
-	    		'banner' => $banner,
-				'video' => $video,
+	    		'model' => $model,
 	    		'categoryMap' => $categoryMap
 	    	]);
 		}

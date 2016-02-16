@@ -1,7 +1,7 @@
 <?php
 namespace cmsgears\core\common\models\entities;
 
-class CmgModel extends CmgEntity {
+abstract class CmgModel extends CmgEntity {
 
 	// Read ----
 

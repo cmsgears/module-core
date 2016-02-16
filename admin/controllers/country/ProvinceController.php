@@ -60,7 +60,7 @@ class ProvinceController extends \cmsgears\core\admin\controllers\base\Controlle
 		  
 		$dataProvider	= ProvinceService::getPagination( [ 'conditions' => [ 'countryId' => $id ] ] ); 
 		
-		Url::remember( [ 'country/province/all?id='.$id ], 'provinces' );
+		Url::remember( [ 'country/province/all?id=' . $id ], 'provinces' );
 		
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
@@ -73,13 +73,13 @@ class ProvinceController extends \cmsgears\core\admin\controllers\base\Controlle
 		$model		= new Province();		  
 		
 		$model->countryId	= $id;
-		$model->setScenario( "create" );
+		$model->setScenario( 'create' );
 		 
-		if( $model->load( Yii::$app->request->post(), "Province" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Province' )  && $model->validate() ) {
 
 			if( ProvinceService::create( $model ) ) { 
 
-				$this->redirect( Url::previous( 'provinces' ) );
+				return $this->redirect( Url::previous( 'provinces' ) );
 			}
 		} 
 		
@@ -88,26 +88,25 @@ class ProvinceController extends \cmsgears\core\admin\controllers\base\Controlle
     		'returnUrl' => Url::previous( 'provinces' )
     	]);
 	}
-	
+
 	public function actionUpdate( $id ) { 
 
 		$model		= ProvinceService::findById( $id );		
 		
-		$model->setScenario( "update" ); 
+		$model->setScenario( 'update' ); 
 		 
-		if( $model->load( Yii::$app->request->post(), "Province" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Province' )  && $model->validate() ) {
 
 			if( ProvinceService::update( $model ) ) { 
 
-				$this->redirect( Url::previous( 'provinces' ) );
-				 			 
-			} 
-		} 
-	 
+				return $this->redirect( Url::previous( 'provinces' ) );
+			}
+		}
+
     	return $this->render('update', [ 
     		'model' => $model,
     		'id' => $id,
-    		'returnUrl'	=> Url::previous( "provinces" )
+    		'returnUrl'	=> Url::previous( 'provinces' )
     	]);
 	} 
 	
@@ -136,12 +135,13 @@ class ProvinceController extends \cmsgears\core\admin\controllers\base\Controlle
  
 	    	return $this->render( 'delete', [
 	    		'model' => $model, 
-	    		'returnUrl' => Url::previous( "provinces" )
+	    		'returnUrl' => Url::previous( 'provinces' )
 	    	]);
 		}
-		
+
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
+
 ?>

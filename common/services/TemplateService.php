@@ -1,6 +1,9 @@
 <?php
 namespace cmsgears\core\common\services;
 
+// Yii Imports
+use yii\helpers\ArrayHelper;
+
 // CMG Imports
 use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\Template;
@@ -28,12 +31,23 @@ class TemplateService extends \cmsgears\core\common\services\Service {
 
 	public static function getIdNameMap( $options = [] ) {
 
-		return self::findMap( 'id', 'name', CoreTables::TABLE_TEMPLATE, $options );
+		$map = self::findMap( 'id', 'name', CoreTables::TABLE_TEMPLATE, $options );
+
+		if( isset( $options[ 'default' ] ) && $options[ 'default' ] ) {
+
+			unset( $options[ 'default' ] );
+
+			$map = ArrayHelper::merge( [ '0' => 'Choose Template' ], $map );
+		}
+
+		return $map;
 	}
 
-	public static function getIdNameMapByType( $type ) {
+	public static function getIdNameMapByType( $type, $options = [] ) {
 
-		return self::findMap( 'id', 'name', CoreTables::TABLE_TEMPLATE, [ 'conditions' => [ 'type' => $type ] ] );
+		$options[ 'conditions' ][ 'type' ] = $type;
+
+		return self::getIdNameMap( $options );
 	}
 
 	// Data Provider ----
@@ -62,7 +76,7 @@ class TemplateService extends \cmsgears\core\common\services\Service {
 
 		$templateToUpdate	= self::findById( $template->id );
 
-		$templateToUpdate->copyForUpdateFrom( $template, [ 'name', 'icon', 'description', 'renderer', 'renderFile', 'layout', 'viewPath', 'adminView', 'userView', 'publicView', 'content' ] );
+		$templateToUpdate->copyForUpdateFrom( $template, [ 'name', 'icon', 'description', 'renderer', 'renderFile', 'layout', 'viewPath', 'content' ] );
 
 		$templateToUpdate->update();
 

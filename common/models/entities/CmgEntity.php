@@ -8,7 +8,7 @@ use yii\db\ActiveRecord;
  * CmgEntity Entity
  * It's the parent entity for all the CMSGears based entities and provide the common methods to be utilised by all the entities.
  */
-class CmgEntity extends ActiveRecord {
+abstract class CmgEntity extends ActiveRecord {
 
 	public $traitParams	= [];
 

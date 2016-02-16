@@ -21,7 +21,6 @@ $returnUrl		= $this->context->returnUrl;
     	<?= $form->field( $model, 'description' )->textInput( [ 'readonly' => true ] ) ?>  
     	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ], 'disabled' => true ] ) ?>
     	<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => true ] ) ?>
-		<?= $form->field( $model, 'featured' )->checkbox( [ 'disabled' => true ] ) ?>
 
 		<div class="clear filler-height"></div>
 

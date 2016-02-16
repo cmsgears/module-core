@@ -46,10 +46,10 @@ class NewsletterService extends Service {
 	 */
 	public static function create( $newsletter ) {
 
-		// template
+		// Template
 		if( isset( $newsletter->templateId ) && $newsletter->templateId <= 0 ) {
 
-			unset( $newsletter->templateId );
+			$newsletter->templateId = null;
 		}
 
 		// Create Newsletter
@@ -67,17 +67,17 @@ class NewsletterService extends Service {
 	 */
 	public static function update( $newsletter ) {
 
+		// Template
+		if( isset( $newsletter->templateId ) && $newsletter->templateId <= 0 ) {
+
+			$newsletter->templateId = null;
+		}
+
 		// Find existing Newsletter
 		$nlToUpdate	= self::findById( $newsletter->id );
 
 		// Copy and set Attributes
 		$nlToUpdate->copyForUpdateFrom( $newsletter, [ 'templateId', 'name', 'description', 'content' ] );
-
-		// template
-		if( isset( $nlToUpdate->templateId ) && $nlToUpdate->templateId <= 0 ) {
-
-			unset( $nlToUpdate->templateId );
-		}
 
 		// Update Newsletter
 		$nlToUpdate->update();

@@ -45,6 +45,19 @@ class GalleryService extends \cmsgears\core\common\services\GalleryService {
 	        ]
 	    ]);
 
+		if( !isset( $config[ 'conditions' ] ) ) {
+
+			$config[ 'conditions' ] = [];
+		}
+
+		// Restrict to site
+		if( !isset( $config[ 'site' ] ) || !$config[ 'site' ] ) {
+
+			$config[ 'conditions' ] = [ 'siteId' => Yii::$app->cmgCore->siteId ];
+
+			unset( $config[ 'site' ] );
+		}
+
 		if( !isset( $config[ 'query' ] ) ) {
 
 			$config[ 'query' ] = Gallery::findWithOwner();
@@ -66,18 +79,11 @@ class GalleryService extends \cmsgears\core\common\services\GalleryService {
 	/**
 	 * @return ActiveDataProvider
 	 */
-	public static function getPaginationByType( $type = null, $site = false ) {
-
-		$config = [];
+	public static function getPaginationByType( $type = null, $config = [] ) {
 
 		if( isset( $type ) ) {
 
 			$config[ 'conditions' ][ 'type' ] = $type;
-		}
-
-		if( $site ) {
-
-			$config[ 'conditions' ][ 'siteId' ] = Yii::$app->cmgCore->siteId;
 		}
 
 		return self::getPagination( $config );
@@ -91,17 +97,17 @@ class GalleryService extends \cmsgears\core\common\services\GalleryService {
 	 */
 	public static function update( $gallery ) {
 
+		// Template
+		if( isset( $gallery->templateId ) && $gallery->templateId <= 0 ) {
+
+			$gallery->templateId = null;
+		}
+
 		// Find existing Gallery
 		$galleryToUpdate	= self::findById( $gallery->id );
 
 		// Copy and set Attributes
 		$galleryToUpdate->copyForUpdateFrom( $gallery, [ 'templateId', 'name', 'title', 'description', 'active' ] );
-
-		// template
-		if( isset( $galleryToUpdate->templateId ) && $galleryToUpdate->templateId <= 0 ) {
-
-			unset( $galleryToUpdate->templateId );
-		}
 
 		// Update Gallery
 		$galleryToUpdate->update();

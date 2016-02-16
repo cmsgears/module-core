@@ -9,13 +9,11 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile;
-use cmsgears\core\common\models\entities\Site;
+use cmsgears\core\common\models\entities\Theme;
 
-use cmsgears\core\common\services\ThemeService;
-use cmsgears\core\admin\services\SiteService;
+use cmsgears\core\admin\services\ThemeService;
 
-class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
+class ThemeController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -23,7 +21,7 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 
         parent::__construct( $id, $module, $config );
 
-		$this->sidebar 	= [ 'parent' => 'sidebar-core', 'child' => 'site' ];
+		$this->sidebar 	= [ 'parent' => 'sidebar-core', 'child' => 'theme' ];
 	}
 
 	// Instance Methods --------------------------------------------
@@ -65,7 +63,7 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	public function actionAll() {
 
-		$dataProvider = SiteService::getPagination();
+		$dataProvider = ThemeService::getPagination();
 
 	    return $this->render( 'all', [
 			'dataProvider' => $dataProvider
@@ -74,58 +72,45 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	public function actionCreate() {
 
-		$model		= new Site();
-		$avatar 	= CmgFile::loadFile( $model->avatar, 'Avatar' ); 
-		$banner 	= CmgFile::loadFile( $model->banner, 'Banner' );
+		$model		= new Theme();
 
 		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post(), 'Site' )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Theme' )  && $model->validate() ) {
 
-			if( SiteService::create( $model, $avatar, $banner ) ) {
+			if( ThemeService::create( $model ) ) {
 
 				return $this->redirect( 'all' );
 			}
 		}
 		
-		$themesMap = ThemeService::getIdNameMap();
-		
     	return $this->render( 'create', [
     		'model' => $model,
-    		'avatar' => $avatar,
-    		'banner' => $banner,
-    		'themesMap' => $themesMap
+    		'renderers' => Yii::$app->templateSource->renderers
     	]);
 	}
 
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model		= SiteService::findById( $id );
+		$model		= ThemeService::findById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
- 
-			$avatar 	= CmgFile::loadFile( $model->avatar, 'Avatar' ); 
-			$banner 	= CmgFile::loadFile( $model->banner, 'Banner' );
 
 			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), 'Site' )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'Theme' )  && $model->validate() ) {
 
-				if( SiteService::update( $model, $avatar, $banner ) ) {
+				if( ThemeService::update( $model ) ) {
 
 					return $this->redirect( 'all' );
 				} 
 			}
-			
-			$themesMap = ThemeService::getIdNameMap();
-			
+
 	    	return $this->render( 'update', [
 	    		'model' => $model, 
-	    		'avatar' => $avatar,
-	    		'banner' => $banner,
-	    		'themesMap' => $themesMap
+	    		'renderers' => Yii::$app->templateSource->renderers
 	    	]);
 		}
 
@@ -136,19 +121,16 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model		= SiteService::findById( $id );
+		$model		= ThemeService::findById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			$avatar	= $model->avatar;
-			$banner	= $model->banner;
-
-			if( $model->load( Yii::$app->request->post(), 'Site' ) ) {
+			if( $model->load( Yii::$app->request->post(), 'Theme' ) ) {
 
 				try {
 
-					SiteService::delete( $model, $avatar, $banner );
+					ThemeService::delete( $model );
 
 					return $this->redirect( 'all' );
 				}
@@ -158,13 +140,9 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 				}
 			}
 
-			$themesMap = ThemeService::getIdNameMap();
-
 	    	return $this->render( 'delete', [
 	    		'model' => $model, 
-	    		'avatar' => $avatar,
-	    		'banner' => $banner,
-	    		'themesMap' => $themesMap
+	    		'renderers' => Yii::$app->templateSource->renderers
 	    	]);
 		}
 

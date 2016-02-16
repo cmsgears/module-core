@@ -217,7 +217,7 @@ class SiteController extends Controller {
 		Yii::$app->session->destroy();
 
 		// Redirect User to appropriate page
-    	$this->redirect( [ Yii::$app->cmgCore->getLogoutRedirectPage() ] );
+    	return $this->redirect( [ Yii::$app->cmgCore->getLogoutRedirectPage() ] );
     }
 }
 

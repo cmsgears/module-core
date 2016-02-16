@@ -30,9 +30,6 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
     	<div class="render-file">
 	    	<?= $form->field( $model, 'layout' )->textInput( [ 'readonly' => 'true' ] ) ?>  
 			<?= $form->field( $model, 'viewPath' )->textInput( [ 'readonly' => 'true' ] ) ?>
-			<?= $form->field( $model, 'adminView' )->textInput( [ 'readonly' => 'true' ] ) ?>
-			<?= $form->field( $model, 'userView' )->textInput( [ 'readonly' => 'true' ] ) ?>
-			<?= $form->field( $model, 'publicView' )->textInput( [ 'readonly' => 'true' ] ) ?>
 		</div>
 
 		<div class="render-content box-content clearfix">

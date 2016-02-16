@@ -67,13 +67,13 @@ class CountryController extends base\Controller {
 
 		$model		= new Country();		  
 		
-		$model->setScenario( "create" );
+		$model->setScenario( 'create' );
 		 
-		if( $model->load( Yii::$app->request->post(), "Country" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Country' )  && $model->validate() ) {
 
 			if( CountryService::create( $model ) ) { 
 
-				$this->redirect( [ 'all' ] );
+				return $this->redirect( [ 'all' ] );
 			}
 		} 
 		
@@ -86,11 +86,11 @@ class CountryController extends base\Controller {
 
 		$model		= CountryService::findById( $id );		  
 		 		 
-		if( $model->load( Yii::$app->request->post(), "Country" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Country' )  && $model->validate() ) {
 
 			if( CountryService::update( $model ) ) { 
 
-				$this->redirect( [ 'all' ] );
+				return $this->redirect( [ 'all' ] );
 			}
 		} 
 		
@@ -121,15 +121,15 @@ class CountryController extends base\Controller {
 				    throw new HttpException(409,  Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  ); 
 				}					 
 			}
- 
+
 	    	return $this->render( 'delete', [
 	    		'model' => $model
 	    	]);
 		}
-		
+
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	} 
+	}
 }
 
 ?>

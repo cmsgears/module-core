@@ -6,9 +6,9 @@ use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\core\common\models\entities\Role;
+use cmsgears\core\common\models\entities\Theme;
 
-class RoleService extends \cmsgears\core\common\services\RoleService {
+class ThemeService extends \cmsgears\core\common\services\ThemeService {
 
 	// Static Methods ----------------------------------------------
 
@@ -26,12 +26,6 @@ class RoleService extends \cmsgears\core\common\services\RoleService {
 	                'desc' => ['name' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'name'
-	            ],
-	            'slug' => [
-	                'asc' => [ 'slug' => SORT_ASC ],
-	                'desc' => ['slug' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'slug'
 	            ]
 	        ]
 	    ]);
@@ -46,15 +40,7 @@ class RoleService extends \cmsgears\core\common\services\RoleService {
 			$config[ 'search-col' ] = 'name';
 		}
 
-		return self::getDataProvider( new Role(), $config );
-	}
-
-	/**
-	 * @return ActiveDataProvider
-	 */
-	public static function getPaginationByType( $type ) {
-
-		return self::getPagination( [ 'conditions' => [ 'type' => $type ] ] );
+		return self::getDataProvider( new Theme(), $config );
 	}
 }
 

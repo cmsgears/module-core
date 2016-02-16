@@ -44,9 +44,6 @@ class SiteMemberService extends Service {
 
 	public static function create( $user, $siteMember = null, $roleSlug = null ) {
 
-		// Find Current Site
-		$site 		= Site::findByName( Yii::$app->cmgCore->getSiteName() );
-
 		if( !isset( $siteMember ) ) {
 
 			$siteMember	= new SiteMember();
@@ -63,7 +60,7 @@ class SiteMemberService extends Service {
 			}
 		}
 
-		$siteMember->siteId = $site->id;
+		$siteMember->siteId = Yii::$app->cmgCore->siteId;
 		$siteMember->userId	= $user->id;
 
 		$siteMember->save();

@@ -6,7 +6,6 @@ use \Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 use yii\helpers\Url;
-use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -18,13 +17,19 @@ use cmsgears\core\admin\services\TemplateService;
 
 abstract class GalleryController extends Controller {
 
+	protected $type;
+	protected $templateType;
+
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
+
 		$this->returnUrl	= Url::previous( 'galleries' );
+
+		$this->type			= CoreGlobal::TYPE_SITE;
+		$this->templateType	= CoreGlobal::TYPE_GALLERY;
 	}
 
 	// Instance Methods --------------------------------------------
@@ -38,7 +43,8 @@ abstract class GalleryController extends Controller {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'all'   => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'index' => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'all' => [ 'permission' => CoreGlobal::PERM_CORE ],
 	                'create' => [ 'permission' => CoreGlobal::PERM_CORE ],
 	                'update' => [ 'permission' => CoreGlobal::PERM_CORE ],
 	                'delete' => [ 'permission' => CoreGlobal::PERM_CORE ],
@@ -48,7 +54,8 @@ abstract class GalleryController extends Controller {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'all'   => [ 'get' ],
+	                'index' => [ 'get' ],
+	                'all' => [ 'get' ],
 	                'create' => [ 'get', 'post' ],
 	                'update' => [ 'get', 'post' ],
 	                'delete' => [ 'get', 'post' ],
@@ -58,11 +65,16 @@ abstract class GalleryController extends Controller {
         ];
     }
 
-	// RoleController --------------------
+	// GalleryController -----------------
 
-	public function actionAll( $type = null, $site = false ) {
+	public function actionIndex() {
 
-		$dataProvider = GalleryService::getPaginationByType( $type, $site );
+		return $this->redirect( 'all' );
+	}
+	
+	public function actionAll() {
+
+		$dataProvider = GalleryService::getPaginationByType( $this->type );
 
 		Url::remember( [ 'gallery/all' ], 'galleries' );
 
@@ -71,15 +83,11 @@ abstract class GalleryController extends Controller {
 	    ]);
 	}
 
-	public function actionCreate( $type = null, $site = false ) {
+	public function actionCreate() {
 
 		$model			= new Gallery();
-		$model->type 	= $type;
-		
-		if( $site ) {
-			
-			$model->siteId	= Yii::$app->cmgCore->siteId;
-		}
+		$model->type 	= $this->type;
+		$model->siteId	= Yii::$app->cmgCore->siteId;
 		
 		$model->setScenario( 'create' );
 
@@ -87,12 +95,11 @@ abstract class GalleryController extends Controller {
 
 			if( GalleryService::create( $model ) ) {
 
-				$this->redirect( $this->returnUrl );
+				return $this->redirect( $this->returnUrl );
 			}
 		}
 
-		$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_GALLERY );
-		$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+		$templatesMap	= TemplateService::getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
     	return $this->render( '@cmsgears/module-core/admin/views/gallery/create', [
     		'model' => $model,
@@ -100,7 +107,7 @@ abstract class GalleryController extends Controller {
     	]);
 	}
 
-	public function actionUpdate( $id, $type = null ) {
+	public function actionUpdate( $id ) {
 
 		// Find Model
 		$model	= GalleryService::findById( $id );
@@ -108,7 +115,7 @@ abstract class GalleryController extends Controller {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->type 	= $type;
+			$model->type 	= $this->type;
 
 			$model->setScenario( 'update' );
 	
@@ -116,12 +123,11 @@ abstract class GalleryController extends Controller {
 	
 				if( GalleryService::update( $model ) ) {
 
-					$this->redirect( $this->returnUrl );
+					return $this->redirect( $this->returnUrl );
 				}
 			}
 
-			$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_GALLERY );
-			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+			$templatesMap	= TemplateService::getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/gallery/update', [
 	    		'model' => $model,
@@ -133,7 +139,7 @@ abstract class GalleryController extends Controller {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $id, $type = null ) {
+	public function actionDelete( $id ) {
 
 		// Find Model
 		$model	= GalleryService::findById( $id );
@@ -141,18 +147,17 @@ abstract class GalleryController extends Controller {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			$model->type 	= $type;
+			$model->type 	= $this->type;
 
 			if( $model->load( Yii::$app->request->post(), 'Gallery' ) ) {
 
 				if( GalleryService::delete( $model ) ) {
 
-					$this->redirect( $this->returnUrl );
+					return $this->redirect( $this->returnUrl );
 				}
 			}
 
-			$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_GALLERY );
-			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+			$templatesMap	= TemplateService::getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/gallery/delete', [
 	    		'model' => $model,
@@ -164,7 +169,7 @@ abstract class GalleryController extends Controller {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionItems( $id, $type = null ) {
+	public function actionItems( $id ) {
 
 		// Find Model
 		$gallery 		= GalleryService::findById( $id );
@@ -172,7 +177,7 @@ abstract class GalleryController extends Controller {
 		// Update/Render if exist
 		if( isset( $gallery ) ) {
 
-			$gallery->type 	= $type;
+			$gallery->type 	= $this->type;
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/gallery/items', [
 	    		'gallery' => $gallery,

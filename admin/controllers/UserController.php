@@ -23,6 +23,10 @@ class UserController extends \cmsgears\core\admin\controllers\base\UserControlle
 		$this->layout		= AdminGlobalCore::LAYOUT_PRIVATE;
 
 		$this->sidebar 		= [ 'parent' => 'sidebar-identity', 'child' => 'user' ];
+
+		$this->roleType			= CoreGlobal::TYPE_SYSTEM;
+		$this->permissionSlug	= CoreGlobal::PERM_USER;
+		$this->showCreate 		= true;
 	}
 
 	// Instance Methods --------------------------------------------
@@ -33,10 +37,8 @@ class UserController extends \cmsgears\core\admin\controllers\base\UserControlle
 		
 		$behaviours	= parent::behaviors();
 
-		$behaviours[ 'rbac' ][ 'actions' ][ 'index' ] 	= [ 'permission' => CoreGlobal::PERM_IDENTITY ];
 		$behaviours[ 'rbac' ][ 'actions' ][ 'profile'] 	= [ 'permission' => CoreGlobal::PERM_USER ];
 
-		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ] 		= [ 'get' ];
 		$behaviours[ 'verbs' ][ 'actions' ][ 'profile' ] 	= [ 'get', 'post' ];
 		
 		return $behaviours;
@@ -44,31 +46,11 @@ class UserController extends \cmsgears\core\admin\controllers\base\UserControlle
 
 	// UserController --------------------
 
-	public function actionIndex() {
-
-		$this->redirect( 'all' );
-	}
-
 	public function actionAll() {
 
 		Url::remember( [ 'user/all' ], 'users' );
 
-		return parent::actionAll( null, CoreGlobal::PERM_USER );
-	}
-
-	public function actionCreate() {
-
-		return parent::actionCreate( CoreGlobal::TYPE_SYSTEM );
-	}
-
-	public function actionUpdate( $id ) {
-
-		return parent::actionUpdate( $id, CoreGlobal::TYPE_SYSTEM );
-	}
-
-	public function actionDelete( $id ) {
-
-		return parent::actionDelete( $id, CoreGlobal::TYPE_SYSTEM );
+		return parent::actionAll();
 	}
 
 	public function actionProfile() {
@@ -86,7 +68,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\UserControlle
 
 			if( UserService::update( $model ) ) {
 
-				$this->refresh();
+				return $this->refresh();
 			}
 		}
 

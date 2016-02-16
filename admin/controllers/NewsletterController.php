@@ -5,7 +5,6 @@ namespace cmsgears\core\admin\controllers;
 use \Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
-use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -48,12 +47,12 @@ class NewsletterController extends base\Controller {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index'  => ['get'],
-	                'all'   => ['get'],
-	                'create' => ['get', 'post'],
-	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post'],
-	                'members' => ['get']
+	                'index'  => [ 'get' ],
+	                'all'   => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ],
+	                'members' => [ 'get' ]
                 ]
             ]
         ];
@@ -63,7 +62,7 @@ class NewsletterController extends base\Controller {
 
 	public function actionIndex() {
 
-		$this->redirect( [ "all" ] );
+		$this->redirect( [ 'all' ] );
 	}
 
 	public function actionAll() {
@@ -79,18 +78,17 @@ class NewsletterController extends base\Controller {
 
 		$model	= new Newsletter();
 
-		$model->setScenario( "create" );
+		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post(), "Newsletter" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Newsletter' )  && $model->validate() ) {
 
 			if( NewsletterService::create( $model ) ) {
 
-				$this->redirect( [ "all" ] );
+				$this->redirect( [ 'all' ] );
 			}
 		}
 
-		$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_NEWSLETTER );
-		$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+		$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_NEWSLETTER, [ 'default' => true ] );
 
     	return $this->render('create', [
     		'model' => $model,
@@ -106,18 +104,17 @@ class NewsletterController extends base\Controller {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->setScenario( "update" );
+			$model->setScenario( 'update' );
 	
-			if( $model->load( Yii::$app->request->post(), "Newsletter" )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), 'Newsletter' )  && $model->validate() ) {
 	
 				if( NewsletterService::update( $model ) ) {
 
-					$this->redirect( [ "all" ] );
+					$this->redirect( [ 'all' ] );
 				}
 			}
 
-			$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_NEWSLETTER );
-			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+			$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_NEWSLETTER, [ 'default' => true ] );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
@@ -137,16 +134,15 @@ class NewsletterController extends base\Controller {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), "Newsletter" ) ) {
+			if( $model->load( Yii::$app->request->post(), 'Newsletter' ) ) {
 	
 				if( NewsletterService::delete( $model ) ) {
 		
-					$this->redirect( [ "all" ] );
+					$this->redirect( [ 'all' ] );
 				}
 			}
 
-			$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_NEWSLETTER );
-			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+			$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_NEWSLETTER, [ 'default' => true ] );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,

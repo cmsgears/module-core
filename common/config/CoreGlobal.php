@@ -193,6 +193,7 @@ class CoreGlobal {
 	const FIELD_MEMBER				= 'memberField';
 	const FIELD_OWNER				= 'ownerField';
 	const FIELD_TEMPLATE			= 'templateField';
+	const FIELD_RENDERER			= 'rendererField';
 	const FIELD_EVENT				= 'eventField';
 	const FIELD_EVENT_LOG			= 'eventLogField';
 	const FIELD_DATE_START			= 'startDateField';
@@ -257,9 +258,6 @@ class CoreGlobal {
 	const FIELD_STYLE			= 'styleField';
 	const FIELD_BASE_PATH		= 'basePathField';
 	const FIELD_VIEW_PATH		= 'viewPathField';
-	const FIELD_VIEW_ADMIN		= 'viewAdminField';
-	const FIELD_VIEW_USER		= 'viewUserField';
-	const FIELD_VIEW_PUBLIC		= 'viewPublicField';
 	const FIELD_VIEW_COUNT		= 'viewCountField';
 
 	// Forms

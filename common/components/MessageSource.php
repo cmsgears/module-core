@@ -127,6 +127,7 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_MEMBER => 'Member',
 		CoreGlobal::FIELD_OWNER => 'Owner',
 		CoreGlobal::FIELD_TEMPLATE => 'Template',
+		CoreGlobal::FIELD_RENDERER => 'Render Engine',
 		CoreGlobal::FIELD_EVENT => 'Event',
 		CoreGlobal::FIELD_EVENT_LOG => 'Event Log',
 		CoreGlobal::FIELD_DATE_START => 'Start Date',
@@ -191,9 +192,6 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_STYLE => 'Style',
 		CoreGlobal::FIELD_BASE_PATH => 'Base Path',
 		CoreGlobal::FIELD_VIEW_PATH => 'View Path',
-		CoreGlobal::FIELD_VIEW_ADMIN => 'Admin View',
-		CoreGlobal::FIELD_VIEW_USER => 'User View',
-		CoreGlobal::FIELD_VIEW_PUBLIC => 'Public View',
 		CoreGlobal::FIELD_VIEW_COUNT => 'View Count',
 
 		// Forms

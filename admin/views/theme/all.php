@@ -2,14 +2,13 @@
 // Yii Imports
 use \Yii;
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\widgets\LinkPager;
 
 // CMG Imports
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . " | All $title";
+$this->title 	= 'All Themes | ' . $coreProperties->getSiteTitle();
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -61,32 +60,27 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
-					<th>Icon</th>
-					<th>Description</th>
-					<th>Actions</th> 
+					<th>Slug</th>
+					<th>Renderer</th>
+					<th>Base Path</th>
+					<th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php
 
-					foreach( $models as $model ) {
+					foreach( $models as $theme ) {
 
-						$id = $model->id;	 
-						
+						$id = $theme->id;
 				?>
 					<tr>
-						<td><?= $model->name ?></td>
-						<td> <span class="<?= $model->icon ?>" title="<?= $model->name ?>"></span></td>
-						<td><?= $model->description ?></td>
+						<td><?= $theme->name ?></td>
+						<td><?= $theme->slug ?></td>
+						<td><?= $theme->renderer ?></td>
+						<td><?= $theme->basePath ?></td>
 						<td class="actions">
-							<?php if( $title == 'Dropdown' ) { ?>						
-								<span title="View Options"><?= Html::a( "", [ "/cmgcore/dropdown/option/all?id=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
-							<?php } ?>
-							<?php if( $title == 'Checkbox Group' ) { ?>						
-								<span title="View Options"><?= Html::a( "", [ "/cmgcore/checkboxgroup/option/all?id=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
-							<?php } ?>
-							<span title="Update <?= $title ?>"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete <?= $title ?>"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
+							<span title="Update Site"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
+							<span title="Delete Site"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

@@ -77,10 +77,10 @@ class GalleryService extends Service {
 	 */
 	public static function create( $gallery ) {
 
-		// template
+		// Template
 		if( isset( $gallery->templateId ) && $gallery->templateId <= 0 ) {
 
-			unset( $gallery->templateId );
+			$gallery->templateId = null;
 		}
 
 		// Create Gallery
@@ -131,17 +131,17 @@ class GalleryService extends Service {
 	 */
 	public static function update( $gallery ) {
 
+		// Template
+		if( isset( $gallery->templateId ) && $gallery->templateId <= 0 ) {
+
+			$gallery->templateId = null;
+		}
+
 		// Find existing Gallery
 		$galleryToUpdate	= self::findById( $gallery->id );
 
 		// Copy and set Attributes
 		$galleryToUpdate->copyForUpdateFrom( $gallery, [ 'templateId', 'name', 'title', 'description' ] );
-
-		// template
-		if( isset( $galleryToUpdate->templateId ) && $galleryToUpdate->templateId <= 0 ) {
-
-			unset( $galleryToUpdate->templateId );
-		}
 
 		// Update Gallery
 		$galleryToUpdate->update();

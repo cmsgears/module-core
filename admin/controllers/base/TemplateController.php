@@ -3,6 +3,7 @@ namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
 use \Yii;
+use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 use yii\helpers\Url;
 
@@ -15,22 +16,50 @@ use cmsgears\core\admin\services\TemplateService;
 
 abstract class TemplateController extends Controller {
 
+	protected $type;
+
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
+
 		$this->returnUrl	= Url::previous( 'templates' );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance Methods ---------------------------------------------
+
+	// yii\base\Component -----------------
+
+    public function behaviors() {
+
+        return [
+            'rbac' => [
+                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'actions' => [
+	                'all'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_CORE ]
+                ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+	                'all'  => [ 'get' ],
+	                'create'  => [ 'get', 'post' ],
+	                'update'  => [ 'get', 'post' ],
+	                'delete'  => [ 'get', 'post' ]
+                ]
+            ]
+        ];
+    }
 
 	// BaseRoleController -----------------
 
-	public function actionAll( $type = null ) {
+	public function actionAll() {
 
-		$dataProvider = TemplateService::getPaginationByType( $type );
+		$dataProvider = TemplateService::getPaginationByType( $this->type );
 
 	    return $this->render( '@cmsgears/module-core/admin/views/template/all', [
 
@@ -38,20 +67,16 @@ abstract class TemplateController extends Controller {
 	    ]);
 	}
 
-	public function actionCreate( $type = null ) {
+	public function actionCreate() {
 
-		$model		= new Template();
+		$model			= new Template();
+		$model->type 	= $this->type;
 
 		$model->setScenario( 'create' );
 
-		if( isset( $type ) ) {
-
-			$model->type = $type;
-		}
-
 		if( $model->load( Yii::$app->request->post(), 'Template' )  && $model->validate() ) {
 
-			if( TemplateService::create( $model ) ) { 
+			if( TemplateService::create( $model ) ) {
 
 				return $this->redirect( $this->returnUrl );
 			}
@@ -59,11 +84,11 @@ abstract class TemplateController extends Controller {
 
     	return $this->render( '@cmsgears/module-core/admin/views/template/create', [
     		'model' => $model,
-    		'renderers' => Yii::$app->cmgCore->renderers
+    		'renderers' => Yii::$app->templateSource->renderers
     	]);
 	}	
  	
-	public function actionUpdate( $id, $type = null ) {
+	public function actionUpdate( $id ) {
 
 		// Find Model
 		$model		= TemplateService::findById( $id );
@@ -83,7 +108,7 @@ abstract class TemplateController extends Controller {
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/template/update', [
 	    		'model' => $model,
-	    		'renderers' => Yii::$app->cmgCore->renderers
+	    		'renderers' => Yii::$app->templateSource->renderers
 	    	]);
 		}
 		
@@ -91,7 +116,7 @@ abstract class TemplateController extends Controller {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $id, $type = null ) {
+	public function actionDelete( $id ) {
 
 		// Find Model
 		$model	= TemplateService::findById( $id );
@@ -109,7 +134,7 @@ abstract class TemplateController extends Controller {
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/template/delete', [
 	    		'model' => $model,
-	    		'renderers' => Yii::$app->cmgCore->renderers
+	    		'renderers' => Yii::$app->templateSource->renderers
 	    	]);
 		}
 		

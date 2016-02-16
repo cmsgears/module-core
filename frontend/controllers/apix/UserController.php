@@ -122,25 +122,13 @@ class UserController extends \cmsgears\core\common\controllers\apix\UserControll
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data ); 
 		}
-		else {
 
-			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $user );
+		// Generate Errors
+		$errors = AjaxUtil::generateErrorMessage( $user );
 
-			// Trigger Ajax Failure
-        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-		} 
+		// Trigger Ajax Failure
+    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
     }
-
-	public function actionProvinceList() {
-		
-		$address		= yii::$app->request->post('Address');
-		$provinceList	= ProvinceService::getListByCountryId( $address['countryId'] );
-		$provinceList	= CodeGenUtil::generateSelectOptionsIdName( $provinceList );		
-		$data			= [ 'provinceList' => $provinceList ];
-		
-		return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-	}
 }
 
 ?>

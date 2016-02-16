@@ -18,6 +18,8 @@ use cmsgears\core\admin\services\PermissionService;
 
 abstract class RoleController extends Controller {
 
+	protected $type;
+
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
@@ -25,6 +27,8 @@ abstract class RoleController extends Controller {
         parent::__construct( $id, $module, $config );
 		
 		$this->returnUrl	= Url::previous( 'roles' );
+		
+		$this->type			= CoreGlobal::TYPE_SYSTEM;
 	}
 
 	// Instance Methods --------------------------------------------
@@ -37,7 +41,8 @@ abstract class RoleController extends Controller {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'all'   => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'index' => [ 'permission' => CoreGlobal::PERM_RBAC ],
+	                'all' => [ 'permission' => CoreGlobal::PERM_RBAC ],
 	                'create' => [ 'permission' => CoreGlobal::PERM_RBAC ],
 	                'update' => [ 'permission' => CoreGlobal::PERM_RBAC ],
 	                'delete' => [ 'permission' => CoreGlobal::PERM_RBAC ]
@@ -46,7 +51,7 @@ abstract class RoleController extends Controller {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'all'   => [ 'get' ],
+	                'index'   => [ 'get' ],
 	                'create' => [ 'get', 'post' ],
 	                'update' => [ 'get', 'post' ],
 	                'delete' => [ 'get', 'post' ]
@@ -57,19 +62,24 @@ abstract class RoleController extends Controller {
 	
 	// BaseRoleController -----------------
 
-	public function actionAll( $type = null ) {
+	public function actionIndex() {
 
-		$dataProvider = RoleService::getPaginationByType( $type );
+		return $this->redirect( 'all' );
+	}
+
+	public function actionAll() {
+
+		$dataProvider = RoleService::getPaginationByType( $this->type );
 
 	    return $this->render( 'all', [
 			'dataProvider' => $dataProvider
 	    ]);
 	}
 
-	public function actionCreate( $type = null ) {
+	public function actionCreate() {
 
 		$model			= new Role();
-		$model->type 	= $type;
+		$model->type 	= $this->type;
 
 		$model->setScenario( 'create' );
 
@@ -88,7 +98,7 @@ abstract class RoleController extends Controller {
 			}
 		}
 
-		$permissions	= PermissionService::getIdNameListByType( $type );
+		$permissions	= PermissionService::getIdNameListByType( $this->type );
 
     	return $this->render( 'create', [
     		'model' => $model,
@@ -96,7 +106,7 @@ abstract class RoleController extends Controller {
     	]);
 	}
 
-	public function actionUpdate( $id, $returnUrl, $type = null ) {
+	public function actionUpdate( $id ) {
 
 		// Find Model
 		$model		= RoleService::findById( $id );
@@ -104,7 +114,7 @@ abstract class RoleController extends Controller {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 			
-			$model->type 	= $type;
+			$model->type 	= $this->type;
 
 			$model->setScenario( 'update' );
 
@@ -119,11 +129,11 @@ abstract class RoleController extends Controller {
 
 					RoleService::bindPermissions( $binder );
 	
-					$this->redirect( $this->returnUrl );
+					return $this->redirect( $this->returnUrl );
 				}
 			}
 
-			$permissions	= PermissionService::getIdNameListByType( $type );
+			$permissions	= PermissionService::getIdNameListByType( $this->type );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
@@ -135,15 +145,13 @@ abstract class RoleController extends Controller {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $id, $returnUrl, $type = null ) {
+	public function actionDelete( $id ) {
 
 		// Find Model
 		$model		= RoleService::findById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
-
-			$model->type 	= $type;
 
 			if( $model->load( Yii::$app->request->post(), 'Role' ) ) {
 
@@ -153,7 +161,7 @@ abstract class RoleController extends Controller {
 				}
 			}
 
-			$permissions	= PermissionService::getIdNameListByType( $type );
+			$permissions	= PermissionService::getIdNameListByType( $this->type );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,

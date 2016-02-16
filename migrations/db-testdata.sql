@@ -122,8 +122,8 @@ INSERT INTO `cmg_core_locale` (`code`,`name`) VALUES
 -- Default Categories and their options
 --
 
-INSERT INTO `cmg_core_category` (`siteId`,`bannerId`,`videoId`,`parentId`,`rootId`,`name`,`slug`,`description`,`type`,`icon`,`featured`,`lValue`,`rValue`,`htmlOptions`,`data`) VALUES  
-	(@site,NULL,NULL,NULL,NULL,'Gender','gender',NULL,'combo',NULL,0,1,2,NULL,NULL);
+INSERT INTO `cmg_core_category` (`siteId`,`parentId`,`rootId`,`name`,`slug`,`description`,`type`,`icon`,`featured`,`lValue`,`rValue`,`htmlOptions`,`data`) VALUES  
+	(@site,NULL,NULL,'Gender','gender',NULL,'combo',NULL,0,1,2,NULL,NULL);
 
 SELECT @category := `id` FROM cmg_core_category WHERE slug = 'gender';
 

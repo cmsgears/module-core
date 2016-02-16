@@ -21,13 +21,23 @@ use cmsgears\core\admin\services\RoleService;
 
 abstract class UserController extends Controller {
 
+	protected $roleType;
+
+	protected $roleSlug;
+
+	protected $permissionSlug;
+
+	protected $showCreate;
+
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
+
 		$this->returnUrl	= Url::previous( 'users' );
+
+		$this->showCreate 	= true;
 	}
 
 	// Instance Methods --------------------------------------------
@@ -40,6 +50,7 @@ abstract class UserController extends Controller {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
+	                'index' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
 	                'all' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
 	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
 	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
@@ -49,6 +60,7 @@ abstract class UserController extends Controller {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
+	                'index' => [ 'get' ],
 	                'all' => [ 'get' ],
 	                'create' => [ 'get', 'post' ],
 	                'update' => [ 'get', 'post' ],
@@ -60,17 +72,22 @@ abstract class UserController extends Controller {
 
 	// UserController --------------------
 
-	public function actionAll( $roleSlug = null, $permissionSlug = null, $showCreate = true ) {
+	public function actionIndex() {
+
+		return $this->redirect( 'all' );
+	}
+	
+	public function actionAll() {
 
 		$dataProvider = null;
 
-		if( isset( $roleSlug ) ) {
+		if( isset( $this->roleSlug ) ) {
 
-			$dataProvider = UserService::getPaginationByRoleSlug( $roleSlug );
+			$dataProvider = UserService::getPaginationByRoleSlug( $this->roleSlug );
 		}
-		else if( isset( $permissionSlug ) ) {
+		else if( isset( $this->permissionSlug ) ) {
 
-			$dataProvider = UserService::getPaginationByPermissionSlug( $permissionSlug );
+			$dataProvider = UserService::getPaginationByPermissionSlug( $this->permissionSlug );
 		}
 		else {
 
@@ -79,11 +96,11 @@ abstract class UserController extends Controller {
 
 	    return $this->render( '@cmsgears/module-core/admin/views/user/all', [
 			'dataProvider' => $dataProvider,
-			'showCreate' => $showCreate
+			'showCreate' => $this->showCreate
 	    ]);
 	}
 
-	public function actionCreate( $roleType = null, $roleSlug = null ) {
+	public function actionCreate() {
 
 		$model		= new User();
 		$siteMember	= new SiteMember();
@@ -92,9 +109,9 @@ abstract class UserController extends Controller {
 
 		$model->setScenario( 'create' );
 
-		if( isset( $roleSlug ) ) {
+		if( isset( $this->roleSlug ) ) {
 
-			$role 				= RoleService::findBySlug( $roleSlug );
+			$role 				= RoleService::findBySlug( $this->roleSlug );
 			$siteMember->roleId = $role->id;
 		}
 
@@ -114,11 +131,11 @@ abstract class UserController extends Controller {
 				// Send Account Mail
 				Yii::$app->cmgCoreMailer->sendCreateUserMail( $model );
 
-				$this->redirect( $this->returnUrl );
+				return $this->redirect( $this->returnUrl );
 			}
 		}
 
-		if( isset( $roleSlug ) ) {
+		if( isset( $this->roleSlug ) ) {
 
 			return $this->render( '@cmsgears/module-core/admin/views/user/create', [
 				'model' => $model,
@@ -126,8 +143,8 @@ abstract class UserController extends Controller {
 			]);
 		}
 		else {
-			
-			$roleMap 	= RoleService::getIdNameMapByType( $roleType );
+
+			$roleMap 	= RoleService::getIdNameMapByType( $this->roleType );
 
 			return $this->render( '@cmsgears/module-core/admin/views/user/create', [
 				'sidebar' => $this->sidebar,
@@ -140,7 +157,7 @@ abstract class UserController extends Controller {
 		}
 	}
 
-	public function actionUpdate( $id, $roleType = null, $roleSlug = null ) {
+	public function actionUpdate( $id ) {
 
 		// Find Model
 		$model		= UserService::findById( $id );
@@ -161,11 +178,11 @@ abstract class UserController extends Controller {
 				// Update User and Site Member
 				if( UserService::update( $model, $avatar, $banner ) && SiteMemberService::update( $siteMember ) ) {
 
-					$this->redirect( $this->returnUrl );
+					return $this->redirect( $this->returnUrl );
 				}
 			}
 
-			if( isset( $roleSlug ) ) {
+			if( isset( $this->roleSlug ) ) {
 
 		    	return $this->render( '@cmsgears/module-core/admin/views/user/update', [
 		    		'model' => $model,
@@ -176,7 +193,7 @@ abstract class UserController extends Controller {
 			}
 			else {
 
-				$roleMap 	= RoleService::getIdNameMapByType( $roleType );
+				$roleMap 	= RoleService::getIdNameMapByType( $this->roleType );
 
 		    	return $this->render( '@cmsgears/module-core/admin/views/user/update', [
 		    		'model' => $model,
@@ -193,7 +210,7 @@ abstract class UserController extends Controller {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $id, $roleType = null, $roleSlug = null ) {
+	public function actionDelete( $id ) {
 
 		// Find Model
 		$model		= UserService::findById( $id );
@@ -209,12 +226,12 @@ abstract class UserController extends Controller {
 
 				if( UserService::delete( $model, $avatar, $banner ) ) {
 
-					$this->redirect( $this->returnUrl );
+					return $this->redirect( $this->returnUrl );
 				}
 			}
 			else {
 
-				$roleMap 	= RoleService::getIdNameMapByType( $roleType );
+				$roleMap 	= RoleService::getIdNameMapByType( $this->roleType );
 
 	        	return $this->render( '@cmsgears/module-core/admin/views/user/delete', [
 	        		'model' => $model,

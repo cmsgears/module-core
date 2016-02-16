@@ -4,7 +4,10 @@ namespace cmsgears\core\common\models\forms;
 // Yii Imports
 use \Yii;
 
-class CmgFormModel extends \yii\base\Model {
+/**
+ * Useful for models which need submitted data for special processing.
+ */
+abstract class CmgFormModel extends \yii\base\Model {
 
 	public $submittedData;
 

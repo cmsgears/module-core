@@ -60,12 +60,13 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 
 		$model	= new Category();
 
-		$model->setScenario( "create" );
+		$model->setScenario( 'create' );
 
-		if( $model->load( Yii::$app->request->post(), "Category" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
 			if( CategoryService::create( $model ) ) {
 
+				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 			}
 		}
@@ -82,12 +83,13 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 		// Find Model		
 		$model	= CategoryService::findById( $id );
 		
-		$model->setScenario( "update" );
+		$model->setScenario( 'update' );
 		
-		if( $model->load( Yii::$app->request->post(), "Category" )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
 			if( CategoryService::update( $model ) ) {
 				
+				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 			}
 		}
@@ -107,7 +109,8 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 		if( isset( $_POST ) && count( $_POST ) > 0 ) {
 				
 			if( CategoryService::delete( $model ) ) {
-	
+				
+				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 			}
 		}

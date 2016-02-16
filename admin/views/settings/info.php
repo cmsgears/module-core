@@ -28,7 +28,7 @@ use cmsgears\widgets\aform\AjaxForm;
 		<?php if( isset( $fieldsMap ) && count( $fieldsMap ) > 0 ) { ?>
 
 		<?= AjaxForm::widget([ 
-			'options' => [ 'class' => 'cmt-form', 'id' => "frm-setting-$type", 'cmt-clear' => 0 ],
+			'options' => [ 'class' => 'cmt-form', 'id' => "frm-setting-$type", 'cmt-keep' => 1 ],
 			'slug' => "config-$type", 'showLabel' => true, 'model' => $model,
 			'ajaxUrl' => "cmgcore/settings/update?type=$type",
 			'cmtController' => 'settings', 'cmtAction' => 'update',

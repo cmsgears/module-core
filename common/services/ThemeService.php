@@ -43,15 +43,6 @@ class ThemeService extends \cmsgears\core\common\services\Service {
 
 	public static function create( $theme ) {
 
-		// Check Default Theme
-		if( $theme->default ) {
-
-			// Update all themes and remove default and make current theme default
-			$command = Yii::$app->db->createCommand( 'UPDATE ' . CoreTables::TABLE_THEME . ' SET default=0 WHERE default=1' );
-
-			$command->execute();
-		}
-
 		// Create Theme
 		$theme->save();
 
@@ -61,15 +52,6 @@ class ThemeService extends \cmsgears\core\common\services\Service {
 	// Update -----------
 
 	public static function update( $theme ) {
-
-		// Check Default Theme
-		if( $theme->default ) {
-
-			// Update all themes and remove default and make current theme default
-			$command = Yii::$app->db->createCommand( 'UPDATE ' . CoreTables::TABLE_THEME . ' SET default=0 WHERE default=1' );
-
-			$command->execute();
-		}
 
 		$themeToUpdate	= self::findById( $theme->id );
 

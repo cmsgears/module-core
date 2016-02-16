@@ -18,13 +18,21 @@ use cmsgears\core\admin\services\TemplateService;
 
 abstract class FormController extends Controller {
 
+	protected $type;
+	protected $submits;
+	protected $templateType;
+
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
+
 		$this->returnUrl	= Url::previous( 'forms' );
+
+		$this->type			= CoreGlobal::TYPE_SYSTEM;
+		$this->submits		= true;
+		$this->templateType	= CoreGlobal::TYPE_FORM;
 	}
 
 	// Instance Methods --------------------------------------------
@@ -37,7 +45,8 @@ abstract class FormController extends Controller {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'all'    => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'index' => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'all' => [ 'permission' => CoreGlobal::PERM_CORE ],
 	                'create' => [ 'permission' => CoreGlobal::PERM_CORE ],
 	                'update' => [ 'permission' => CoreGlobal::PERM_CORE ],
 	                'delete' => [ 'permission' => CoreGlobal::PERM_CORE ]
@@ -46,7 +55,8 @@ abstract class FormController extends Controller {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'all'   => [ 'get' ],
+	                'index' => [ 'get' ],
+	                'all' => [ 'get' ],
 	                'create' => [ 'get', 'post' ],
 	                'update' => [ 'get', 'post' ],
 	                'delete' => [ 'get', 'post' ]
@@ -57,20 +67,25 @@ abstract class FormController extends Controller {
 
 	// FormController --------------------
 
-	public function actionAll( $type = null, $submits = true ) {
+	public function actionIndex() {
 
-		$dataProvider = FormService::getPaginationByType( $type );
+		$this->redirect( 'all' );
+	}
+
+	public function actionAll() {
+
+		$dataProvider = FormService::getPaginationByType( $this->type );
 
 	    return $this->render( '@cmsgears/module-core/admin/views/form/all', [
 	         'dataProvider' => $dataProvider,
-	         'submits' => $submits
+	         'submits' => $this->submits
 	    ]);
 	}
 
-	public function actionCreate( $type = null ) {
+	public function actionCreate() {
 
 		$model			= new Form();
-		$model->type 	= $type;
+		$model->type 	= $this->type;
 		$model->siteId	= Yii::$app->cmgCore->siteId;
 
 		$model->setScenario( 'create' );
@@ -79,12 +94,11 @@ abstract class FormController extends Controller {
 
 			if( FormService::create( $model ) ) {
 
-				$this->redirect( $this->returnUrl );
+				return $this->redirect( $this->returnUrl );
 			}
 		}
 
-		$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_FORM );
-		$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+		$templatesMap	= TemplateService::getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
     	return $this->render( '@cmsgears/module-core/admin/views/form/create', [
     		'model' => $model,
@@ -93,7 +107,7 @@ abstract class FormController extends Controller {
     	]);
 	}
 
-	public function actionUpdate( $id, $type = null ) {
+	public function actionUpdate( $id ) {
 
 		// Find Model
 		$model	= FormService::findById( $id );
@@ -101,7 +115,7 @@ abstract class FormController extends Controller {
 		// Update/Render if exist
 		if( isset( $model ) ) {
 			
-			$model->type = $type;
+			$model->type = $this->type;
 
 			$model->setScenario( 'update' );
 
@@ -109,12 +123,11 @@ abstract class FormController extends Controller {
 
 				if( FormService::update( $model ) ) {
 
-					$this->redirect( $this->returnUrl );
+					return $this->redirect( $this->returnUrl );
 				}
 			}
 
-			$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_FORM );
-			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+			$templatesMap	= TemplateService::getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/form/update', [
 	    		'model' => $model,
@@ -127,26 +140,23 @@ abstract class FormController extends Controller {
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $id, $type = null ) {
+	public function actionDelete( $id ) {
 
 		// Find Model
 		$model	= FormService::findById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
-			
-			$model->type = $type;
 
 			if( $model->load( Yii::$app->request->post(), 'Form' ) ) {
 
 				if( FormService::delete( $model ) ) {
 
-					$this->redirect( $this->returnUrl );
+					return $this->redirect( $this->returnUrl );
 				}
 			}
 
-			$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_FORM );
-			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+			$templatesMap	= TemplateService::getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/form/delete', [
 	    		'model' => $model,

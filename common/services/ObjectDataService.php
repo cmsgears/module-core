@@ -115,7 +115,7 @@ class ObjectDataService extends Service {
 
 		if( isset( $object->templateId ) && $object->templateId <= 0 ) {
 
-			unset( $object->templateId );
+			$object->templateId = null;
 		}
 
 		if( isset( $data ) ) {
@@ -134,12 +134,12 @@ class ObjectDataService extends Service {
 
 		if( isset( $object->templateId ) && $object->templateId <= 0 ) {
 
-			unset( $object->templateId );
+			$object->templateId = null;
 		}
 
 		$objectToUpdate	= self::findById( $object->id );
 
-		$objectToUpdate->copyForUpdateFrom( $object, [ 'templateId', 'name', 'description', 'type', 'active', 'htmlOptions', 'data' ] );
+		$objectToUpdate->copyForUpdateFrom( $object, [ 'templateId', 'name', 'icon', 'description', 'type', 'active', 'htmlOptions', 'data' ] );
 
 		if( isset( $data ) ) {
 

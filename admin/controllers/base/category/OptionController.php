@@ -69,7 +69,7 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 	
 	public function actionCreate( $id ) {
 
-		$model		= new Option();		  
+		$model	= new Option();		  
 		
 		$model->setScenario( "create" );
 		 
@@ -77,7 +77,7 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 
 			if( OptionService::create( $model ) ) { 
 
-				$this->redirect( $this->returnUrl );
+				return $this->redirect( $this->returnUrl );
 			}
 		} 
 		
@@ -89,13 +89,13 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 	
 	public function actionUpdate( $id ) {
 
-		$model		= OptionService::findById( $id );		 
+		$model	= OptionService::findById( $id );		 
 		 
 		if( $model->load( Yii::$app->request->post(), "Option" )  && $model->validate() ) {
 
 			if( OptionService::update( $model ) ) { 
 
-				$this->redirect( $this->returnUrl );
+				return $this->redirect( $this->returnUrl );
 			}
 		} 
 		
@@ -108,7 +108,7 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model		= OptionService::findById( $id );
+		$model	= OptionService::findById( $id );
 
 		// Delete/Render if exist
 		
@@ -120,21 +120,22 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 					
 			    	OptionService::delete( $model );
 					
-					$this->redirect( $this->returnUrl );
+					return $this->redirect( $this->returnUrl );
 			    } 
-			    catch( Exception $e) {
-			    	 
-				    throw new HttpException(409,  Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  ); 
-				}					 
+			    catch( Exception $e ) {
+
+				    throw new HttpException( 409,  Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  ); 
+				}
 			}
  
 	    	return $this->render( '@cmsgears/module-core/admin/views/dropdown/option/delete', [
 	    		'model' => $model
 	    	]);
 		}
-		
+
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
+
 ?>

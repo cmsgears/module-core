@@ -30,9 +30,6 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
     	<div class="render-file">
 	    	<?= $form->field( $model, 'layout' ) ?>
 			<?= $form->field( $model, 'viewPath' ) ?>
-			<?= $form->field( $model, 'adminView' ) ?>
-			<?= $form->field( $model, 'userView' ) ?>
-			<?= $form->field( $model, 'publicView' ) ?>
 		</div>
 
 		<div class="render-content box-content clearfix">

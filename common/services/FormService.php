@@ -55,10 +55,11 @@ class FormService extends \cmsgears\core\common\services\Service {
 	// Create -----------
 
 	public static function create( $form ) {
-
+		
+		// Template
 		if( isset( $form->templateId ) && $form->templateId <= 0 ) {
 
-			unset( $form->templateId );
+			$form->templateId = null;
 		}
 
 		// Create Form
@@ -71,9 +72,10 @@ class FormService extends \cmsgears\core\common\services\Service {
 
 	public static function update( $form ) {
 
+		// Template
 		if( isset( $form->templateId ) && $form->templateId <= 0 ) {
 
-			unset( $form->templateId );
+			$form->templateId = null;
 		}
 
 		$formToUpdate	= self::findById( $form->id );

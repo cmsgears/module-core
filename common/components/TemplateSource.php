@@ -61,7 +61,7 @@ class TemplateSource extends \yii\base\Component {
 
 			if( isset( $theme ) && isset( $viewRenderer ) ) {
 
-				$path	= "$theme->basePath/$template->viewPath/$template->adminView";
+				$path	= "$theme->basePath/$template->viewPath/admin";
 
 				return $viewRenderer->render( $path, $models );
 			}
@@ -83,7 +83,7 @@ class TemplateSource extends \yii\base\Component {
 
 			if( isset( $theme ) && isset( $viewRenderer ) ) {
 
-				$path	= "$theme->basePath/$template->viewPath/$template->userView";
+				$path	= "$theme->basePath/$template->viewPath/user";
 
 				return $viewRenderer->render( $path, $models );
 			}
@@ -110,7 +110,7 @@ class TemplateSource extends \yii\base\Component {
 					$viewRenderer->layout	= "//$template->layout";
 				}
 
-				$path	= "$theme->basePath/$template->viewPath/$template->publicView";
+				$path	= "$theme->basePath/$template->viewPath/public";
 
 				return $viewRenderer->render( $path, $models );
 			}

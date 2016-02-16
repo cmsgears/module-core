@@ -30,9 +30,6 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property string $description
  * @property string $layout
  * @property string $viewPath
- * @property string $adminView
- * @property string $userView
- * @property string $publicView
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $content
@@ -77,7 +74,7 @@ class Template extends CmgEntity {
 		// model rules
         $rules = [
             [ [ 'name', 'type' ], 'required' ],
-            [ [ 'id', 'slug', 'icon', 'renderer', 'description', 'layout', 'viewPath', 'adminView', 'userView', 'publicView', 'content' ], 'safe' ],
+            [ [ 'id', 'slug', 'icon', 'renderer', 'description', 'layout', 'viewPath', 'content' ], 'safe' ],
             [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
             [ [ 'slug' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
             [ [ 'description' ], 'string', 'min' => 0, 'max' => CoreGlobal::TEXT_XLARGE ],
@@ -92,7 +89,7 @@ class Template extends CmgEntity {
 		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'renderer', 'description', 'layout', 'viewPath', 'adminView', 'frontendView' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'renderer', 'description', 'layout', 'viewPath' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -109,13 +106,10 @@ class Template extends CmgEntity {
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'renderer' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
+			'renderer' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_RENDERER ),
 			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'layout' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LAYOUT ),
 			'viewPath' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_PATH ),
-			'adminView' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_ADMIN ),
-			'userView' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_USER ),
-			'publicView' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_PUBLIC ),
 			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 		];
 	}

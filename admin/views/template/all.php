@@ -65,9 +65,6 @@ if( !isset( $sortOrder ) ) {
 					<th>Renderer</th>
 					<th>Layout</th>
 					<th>View Path</th>
-					<th>Admin View</th>
-					<th>User View</th>
-					<th>Public View</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -86,9 +83,6 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $template->renderer ?></td>
 						<td><?= $template->layout ?></td>
 						<td><?= $template->viewPath ?></td>
-						<td><?= $template->adminView ?></td>
-						<td><?= $template->userView ?></td>
-						<td><?= $template->publicView ?></td>
 						<td class="actions">
 							<span title="Update Template"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete Template"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>

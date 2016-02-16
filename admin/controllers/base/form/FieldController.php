@@ -77,7 +77,7 @@ class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
 
 			if( FormFieldService::create( $model ) ) {
 
-				$this->redirect( [ "all?formid=$formid" ] );
+				return $this->redirect( [ "all?formid=$formid" ] );
 			}
 		}
 
@@ -102,7 +102,7 @@ class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
 
 				if( FormFieldService::update( $model ) ) {
 
-					$this->redirect( [ "all?formid=$model->formId" ] );
+					return $this->redirect( [ "all?formid=$model->formId" ] );
 				}
 			}
 
@@ -129,7 +129,7 @@ class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
 
 				if( FormFieldService::delete( $model ) ) {
 
-					$this->redirect( [ "all?formid=$model->formId" ] );
+					return $this->redirect( [ "all?formid=$model->formId" ] );
 				}
 			}
 

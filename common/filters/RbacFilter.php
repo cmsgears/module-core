@@ -43,9 +43,11 @@ class RbacFilter extends \yii\base\Behavior {
 				// Redirect to post logout page if guest
 				if( Yii::$app->user->isGuest ) {
 
-					Yii::$app->controller->redirect( Url::toRoute( [ Yii::$app->cmgCore->getLogoutRedirectPage() ], true ) );
-					
-					return false;
+					Yii::$app->response->redirect( Url::toRoute( [ Yii::$app->cmgCore->getLogoutRedirectPage() ], true ) );
+
+					$event->isValid = false;
+
+					return $event->isValid;
 				}
 
 				// find User and Action Permission

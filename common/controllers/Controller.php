@@ -75,12 +75,12 @@ abstract class Controller extends \yii\web\Controller {
 			// Redirect user to home
 			if( isset( $role ) && isset( $role->homeUrl ) ) {
 
-				$this->redirect( [ "/$role->homeUrl" ] );
+				Yii::$app->response->redirect( [ "/$role->homeUrl" ] )->send();
 			}
 			// Redirect user to home set by app config
 			else {
 
-				$this->redirect( [ Yii::$app->cmgCore->getLoginRedirectPage() ] );
+				Yii::$app->response->redirect( [ Yii::$app->cmgCore->getLoginRedirectPage() ] )->send();
 			}
 	    }
 	}

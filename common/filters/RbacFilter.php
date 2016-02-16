@@ -4,8 +4,8 @@ namespace cmsgears\core\common\filters;
 // Yii Imports
 use \Yii;
 use yii\web\Controller;
-use yii\base\Behavior;
 use yii\web\ForbiddenHttpException;
+use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -17,7 +17,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * useRbac is set for the cmgCore Component within the application config file and action is configured within the 
  * controller behaviours.
  */
-class RbacFilter extends Behavior {
+class RbacFilter extends \yii\base\Behavior {
 
 	//TODO Add code for caching the roles and permissions
 
@@ -43,7 +43,9 @@ class RbacFilter extends Behavior {
 				// Redirect to post logout page if guest
 				if( Yii::$app->user->isGuest ) {
 
-					Yii::$app->controller->redirect( Yii::$app->urlManager->createUrl( Yii::$app->cmgCore->getLogoutRedirectPage() ) );
+					Yii::$app->controller->redirect( Url::toRoute( [ Yii::$app->cmgCore->getLogoutRedirectPage() ], true ) );
+					
+					return false;
 				}
 
 				// find User and Action Permission
@@ -51,7 +53,8 @@ class RbacFilter extends Behavior {
 				$action 	= $this->actions[ $action ];
 				$permission	= $action[ 'permission' ];
 
-				// Check whether user is permitted	
+				// Check whether user is permitted
+
 				if( !isset( $user ) || !$user->isPermitted( $permission ) ) {
 
 					throw new ForbiddenHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );

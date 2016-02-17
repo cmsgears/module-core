@@ -27,6 +27,19 @@ class CategoryService extends \cmsgears\core\common\services\CategoryService {
 	        ]
 	    ]);
 
+		if( !isset( $config[ 'conditions' ] ) ) {
+
+			$config[ 'conditions' ] = [];
+		}
+
+		// Restrict to site
+		if( !isset( $config[ 'site' ] ) || !$config[ 'site' ] ) {
+
+			$config[ 'conditions' ][ 'siteId' ] = Yii::$app->cmgCore->siteId;
+
+			unset( $config[ 'site' ] );
+		}
+
 		if( !isset( $config[ 'sort' ] ) ) {
 
 			$config[ 'sort' ] = $sort;
@@ -42,7 +55,7 @@ class CategoryService extends \cmsgears\core\common\services\CategoryService {
 
 	public static function getPaginationByType( $type ) {
 
-		return self::getPagination( [ 'conditions' => [ "type" => $type ] ] );
+		return self::getPagination( [ 'conditions' => [ 'type' => $type ] ] );
 	}
 }
 

@@ -25,6 +25,8 @@ abstract class CategoryController extends Controller {
         parent::__construct( $id, $module, $config );
 
 		$this->returnUrl	= Url::previous( 'categories' );
+
+		$this->type			= CoreGlobal::TYPE_SITE;
 	}
 
 	// Instance Methods --------------------------------------------
@@ -37,19 +39,21 @@ abstract class CategoryController extends Controller {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'all'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'create'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'update'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'delete'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'index' => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'all' => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'create' => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'update' => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_CORE ],
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'all'  => [ 'get' ],
-	                'create'  => [ 'get', 'post' ],
-	                'update'  => [ 'get', 'post' ],
-	                'delete'  => [ 'get', 'post' ]
+	                'index' => [ 'get' ],
+	                'all' => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ]
                 ]
             ]
         ];
@@ -57,6 +61,11 @@ abstract class CategoryController extends Controller {
 
 	// CategoryController -----------------
 
+	public function actionIndex() {
+
+		return $this->redirect( 'all' );
+	}
+	
 	public function actionAll() {
 
 		$dataProvider = CategoryService::getPaginationByType( $this->type );
@@ -76,12 +85,11 @@ abstract class CategoryController extends Controller {
 
 		if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
-			if( CategoryService::create( $model ) ) { 
+			CategoryService::create( $model );
 
-				return $this->redirect( $this->returnUrl );
-			} 
-		} 
-		
+			return $this->redirect( $this->returnUrl ); 
+		}
+
 		$categoryMap	= CategoryService::getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'value' => 'Choose Category', 'name' => 0 ] ] ] );
 
     	return $this->render( '@cmsgears/module-core/admin/views/category/create', [
@@ -104,10 +112,9 @@ abstract class CategoryController extends Controller {
 
 			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
-				if( CategoryService::update( $model ) ) {
+				CategoryService::update( $model );
 
-					return $this->redirect( $this->returnUrl );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 
 			$categoryMap	= CategoryService::getIdNameMapByType( $this->type, [
@@ -130,15 +137,14 @@ abstract class CategoryController extends Controller {
 		// Find Model
 		$model	= CategoryService::findById( $id );
 
-		// Delete/Render if exist		
+		// Delete/Render if exist
 		if( isset( $model ) ) {
 
 			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
-				if( CategoryService::delete( $model ) ) {
+				CategoryService::delete( $model );
 
-					return $this->redirect( $this->returnUrl );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 
 			$categoryMap	= CategoryService::getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'value' => 'Choose Category', 'name' => 0 ] ] ] );

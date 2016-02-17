@@ -83,6 +83,12 @@ class CoreGlobal {
 	const DISPLAY_LIMIT_NOTIFICATION	= 100;
 	const DISPLAY_LIMIT_REMINDER		= 100;
 
+	// Template Views --------------------------------------------------
+
+	const TEMPLATE_VIEW_ADMIN			= 'admin';
+	const TEMPLATE_VIEW_PRIVATE			= 'private';
+	const TEMPLATE_VIEW_PUBLIC			= 'public';
+
 	// Messages --------------------------------------------------------
 
 	// Generic Messages

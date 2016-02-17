@@ -108,14 +108,12 @@ DROP TABLE IF EXISTS `cmg_core_tag`;
 CREATE TABLE `cmg_core_tag` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `siteId` bigint(20) NOT NULL,
-  `templateId` bigint(20) NOT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `slug` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `icon` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_tag_1` (`siteId`),
-  KEY `fk_tag_2` (`templateId`)
+  KEY `fk_tag_1` (`siteId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -810,8 +808,7 @@ ALTER TABLE `cmg_core_theme`
 -- Constraints for table `cmg_core_tag`
 --
 ALTER TABLE `cmg_core_tag`
-	ADD CONSTRAINT `fk_tag_1` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`),
-	ADD CONSTRAINT `fk_tag_2` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_template` (`id`);
+	ADD CONSTRAINT `fk_tag_1` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`);
 
 --
 -- Constraints for table `cmg_core_category`

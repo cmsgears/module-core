@@ -50,75 +50,57 @@ class TemplateSource extends \yii\base\Component {
 		}
 	}
 
-	public function renderViewAdmin( $template, $models, $viewRenderer = null ) {
+	protected function renderView( $template, $models, $page, $templateView ) {
 
-		$fileRender	= $template->renderFile;
-
-		// Render from file
-		if( $fileRender ) {
-
-			$theme	= Yii::$app->cmgCore->site->theme;
-
-			if( isset( $theme ) && isset( $viewRenderer ) ) {
-
-				$path	= "$theme->basePath/$template->viewPath/admin";
-
-				return $viewRenderer->render( $path, $models );
-			}
-			else {
-
-				return "<p>Theme not found for this site. Please configure appropriate theme.</p>";	
-			}
-		}
-	}
-
-	public function renderViewUser( $template, $models, $viewRenderer = null ) {
-
-		$fileRender	= $template->renderFile;
+		$fileRender		= $template->renderFile;
+		$renderEngine 	= $template->renderer;
 
 		// Render from file
 		if( $fileRender ) {
 
 			$theme	= Yii::$app->cmgCore->site->theme;
 
-			if( isset( $theme ) && isset( $viewRenderer ) ) {
+			// Default Rendering using php view file
+			if( isset( $theme ) && isset( $renderEngine ) && strcmp( $renderEngine, 'default' ) == 0 ) {
 
-				$path	= "$theme->basePath/$template->viewPath/user";
+				$path	= "$theme->basePath/$template->viewPath/$templateView";
 
-				return $viewRenderer->render( $path, $models );
-			}
-			else {
+				// Render using controller
+				if( $page ) {
 
-				return "<p>Theme not found for this site. Please configure appropriate theme.</p>";	
-			}
-		}
-	}
+					if( isset( $template->layout ) ) {
+	
+						Yii::$app->controller->layout = "//$template->layout";
+					}
 
-	public function renderViewPublic( $template, $models, $viewRenderer = null ) {
-
-		$fileRender	= $template->renderFile;
-
-		// Render from file
-		if( $fileRender ) {
-
-			$theme	= Yii::$app->cmgCore->site->theme;
-
-			if( isset( $theme ) && isset( $viewRenderer ) ) {
-
-				if( isset( $template->layout ) ) {
-
-					$viewRenderer->layout	= "//$template->layout";
+					return Yii::$app->controller->render( $path, $models );
 				}
+				// Render using view
+				else {
 
-				$path	= "$theme->basePath/$template->viewPath/public";
-
-				return $viewRenderer->render( $path, $models );
+					return Yii::$app->controller->view->render( $path, $models );	
+				}
 			}
 			else {
 
-				return "<p>Theme not found for this site. Please configure appropriate theme.</p>";	
+				return "<p>Theme or appropriate renderer is not found for this resource. Please configure appropriate theme.</p>";	
 			}
 		}
+	}
+
+	public function renderViewAdmin( $template, $models, $page = false ) {
+
+		return $this->renderView( $template, $models, $page, CoreGlobal::TEMPLATE_VIEW_ADMIN );
+	}
+
+	public function renderViewPrivate( $template, $models, $page = false ) {
+
+		return $this->renderView( $template, $models, $page, CoreGlobal::TEMPLATE_VIEW_PRIVATE );
+	}
+
+	public function renderViewPublic( $template, $models, $page = false ) {
+
+		return $this->renderView( $template, $models, $page, CoreGlobal::TEMPLATE_VIEW_PUBLIC );
 	}
 }
 

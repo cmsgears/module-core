@@ -225,10 +225,15 @@ class FormDesigner extends \yii\base\Component {
 			                'item' => function( $index, $label, $name, $checked, $value ) {
 
 								$slabel = strtolower( $label );
-			                    $html = "<label class='$slabel'><input checked";
-			                    $html .= !$checked;
+			                    $html = "<label class='$slabel'><input ";
+
+								if( $checked ) {
+
+									$html .= 'checked';
+								}
+
 			                    $html .= " type='radio' name='$name' value='$value'><span class='label pad-label'>$label</span></label>"; 
-			
+
 			                    return $html;
 			                }
 			            ]
@@ -252,14 +257,20 @@ class FormDesigner extends \yii\base\Component {
 					    [
 					        'item' => function( $index, $label, $name, $checked, $value ) {
 
-			                    $html = "<label id='$label'><input checked";
-			                    $html .= !$checked;
-			                    $html .= " type='checkbox' name='$name' value='$value'><span class='label pad-label'>$label</span></label>"; 
-			
+			                    $html = "<label id='$label'><input ";
+			                    $html = "<label class='$label'><input ";
+
+								if( $checked ) {
+
+									$html .= 'checked';
+								}
+
+			                    $html .= " type='checkbox' name='$name' value='$value'><span class='label pad-label'>$label</span></label>";
+
 			                    return $html;
-					        },                
+					        },
 					    ]
-					); 
+					);
 	}
 
 	

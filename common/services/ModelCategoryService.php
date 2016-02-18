@@ -111,6 +111,47 @@ class ModelCategoryService extends Service {
 		$model->update();
 	}
 
+	public static function bindCategories( $binder, $type ) {
+
+		$parentId	= $binder->binderId;
+		$allData	= $binder->allData;
+		$activeData	= $binder->bindedData;
+
+		foreach ( $allData as $id ) {
+
+			$toSave		= ModelCategory::findByCategoryId( $parentId, $type, $id );
+
+			// Existing mapping
+			if( isset( $toSave ) ) {
+
+				if( in_array( $id, $activeData ) ) {
+
+					$toSave->active	= true;
+				}
+				else {
+
+					$toSave->active	= false;
+				}
+
+				$toSave->update();
+			}
+			// Save only required data
+			else if( in_array( $id, $activeData ) ) {
+
+				$toSave		= new ModelCategory();
+
+				$toSave->parentId	= $parentId;
+				$toSave->parentType	= $type;
+				$toSave->categoryId	= $id;
+				$toSave->active		= true;
+
+				$toSave->save();
+			}
+		}
+
+		return true;
+	}
+
 	// Delete -----------
 
 	public static function deleteByCategoryId( $categoryId ) {

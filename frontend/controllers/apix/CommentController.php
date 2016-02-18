@@ -6,7 +6,7 @@ use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal; 
+use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\ModelComment;
 
@@ -15,7 +15,7 @@ use cmsgears\core\frontend\services\ModelCommentService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class ModelCommentController extends \cmsgears\core\admin\controllers\base\Controller {
+class CommentController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 

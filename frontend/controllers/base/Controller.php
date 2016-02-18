@@ -28,7 +28,7 @@ class Controller extends \cmsgears\core\common\controllers\Controller {
 	public function getWebProperties() {
 
 		if( !isset( $this->_webProperties ) ) {
-			
+
 			$this->_webProperties	= WebProperties::getInstance();
 		}
 

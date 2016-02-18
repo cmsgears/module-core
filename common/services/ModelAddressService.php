@@ -46,10 +46,10 @@ class ModelAddressService extends Service {
 
 		return ModelAddress::findFirstByType( $parentId, $parentType, $type );
 	}
-	
-	public static function findByParent( $parentId ) {
-		
-		return ModelAddress::findByParent( $parentId );
+
+	public static function findByParentIdParentType( $parentId, $parentType ) {
+
+		return ModelAddress::findByParentIdParentType( $parentId, $parentType );
 	}
 
 	public static function findByAddressId( $parentId, $parentType, $addressId ) {
@@ -104,6 +104,27 @@ class ModelAddressService extends Service {
 		else {
 
 			self::create( $address, $parentId, $parentType, $type );
+		}
+	}
+
+	public static function createOrUpdateByType( $address, $parentId, $parentType, $type ) {
+
+		$existingAddress	= self::findFirstByType( $parentId, $parentType, $type );
+
+		if( isset( $existingAddress ) ) {
+
+			$addressToUpdate	= $existingAddress->address;
+
+			$addressToUpdate->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'city', 'zip', 
+											'firstName', 'lastName', 'phone', 'email', 'fax', 'longitude', 'latitude', 'zoomLevel' ] );
+
+			$addressToUpdate->update();
+			
+			return $existingAddress;
+		}
+		else {
+
+			return self::create( $address, $parentId, $parentType, $type );
 		}
 	}
 

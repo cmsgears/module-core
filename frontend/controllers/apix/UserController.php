@@ -35,9 +35,12 @@ class UserController extends \cmsgears\core\common\controllers\apix\UserControll
 		
 		$behaviours	= parent::behaviors();
 		
-		$behaviours[ 'rbac' ][ 'actions' ][ 'profile' ]		= [ 'permission' => CoreGlobal::PERM_USER ];
-		$behaviours[ 'verbs' ][ 'actions' ][ 'profile' ]	= [ 'post' ];
-		
+		$behaviours[ 'rbac' ][ 'actions' ][ 'profile' ]			= [ 'permission' => CoreGlobal::PERM_USER ];
+		$behaviours[ 'rbac' ][ 'actions' ][ 'updateAddress' ]	= [ 'permission' => CoreGlobal::PERM_USER ];
+
+		$behaviours[ 'verbs' ][ 'actions' ][ 'profile' ]		= [ 'post' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'updateAddress' ]	= [ 'post' ];
+
 		return $behaviours;
     }
 
@@ -58,15 +61,15 @@ class UserController extends \cmsgears\core\common\controllers\apix\UserControll
 			if( $user->load( Yii::$app->request->post(), 'User' ) && $user->validate() ) {
 
 				// Update User and Site Member
-				if( UserService::update( $user ) ) {
+				UserService::update( $user );
 
-					$data	= [ 
-								'email' => $user->email, 'username' => $user->username, 'firstName' => $user->firstName, 
-								'lastName' => $user->lastName, 'gender' => $user->getGenderStr(), 'phone' => $user->phone ];
+				$data	= [
+							'email' => $user->email, 'username' => $user->username, 'firstName' => $user->firstName, 
+							'lastName' => $user->lastName, 'gender' => $user->getGenderStr(), 'phone' => $user->phone 
+						];
 
-					// Trigger Ajax Success
-					return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-				}
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 			}
 			else {
 
@@ -82,52 +85,37 @@ class UserController extends \cmsgears\core\common\controllers\apix\UserControll
 		return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
     }
 
-	public function actionAddress() {
+	public function actionUpdateAddress( $type ) {
 
-		$address		= new Address();
-		$newAddress		= true;
-		$user			= Yii::$app->user->getIdentity();
-		$modelAddress	= null;
- 		
+		$user	= Yii::$app->user->getIdentity();
+
 		if( isset( $user ) ) {
-			
-			$addresss	= $user->modelAddresss;
-			
-			if( isset( $addresss ) && count( $addresss ) > 0 ) {
-				
-				foreach( $addresss as $address ) {
-					
-					$address		= $address->address;
-					$modelAddress	= $address;
-					$newAddress	= false;
-				}
-			}
-		}
-		
-		if( $address->load( Yii::$app->request->post(), 'Address' ) && $address->validate() ) {
 
-			if( $newAddress ) {
-				
-				$address	= ModelAddressService::create( $address, $user->id, CoreGlobal::TYPE_USER, Address::TYPE_PRIMARY );	 
-			}
-			else {
-				
-				$address	= ModelAddressService::update( $modelAddress, $address );
-				$address	= $address->address; 
-			}
-			
-			$data	= [ 'line1' => $address->line1, 'line2' => $address->line2, 'city' => $address->city, 
-					'country' => $address->country->name, 'province' => $address->province->name, 'phone' => $address->phone, 'zip' => $address->zip ];
-			 
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data ); 
-		}
+			$address	= new Address();
 
-		// Generate Errors
-		$errors = AjaxUtil::generateErrorMessage( $user );
+			if( $address->load( Yii::$app->request->post(), 'Address' ) && $address->validate() ) {
+
+			$modelAddress 	= ModelAddressService::createOrUpdateByType( $address, $user->id, CoreGlobal::TYPE_USER, $type );
+			$address		= $modelAddress->address;
+
+			$data	= [
+						'line1' => $address->line1, 'line2' => $address->line2, 'city' => $address->city, 
+						'country' => $address->country->name, 'province' => $address->province->name, 'phone' => $address->phone, 'zip' => $address->zip 
+					];
+
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data ); 
+			}
+
+			// Generate Errors
+			$errors = AjaxUtil::generateErrorMessage( $address );
+
+			// Trigger Ajax Failure
+	    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+		}
 
 		// Trigger Ajax Failure
-    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
     }
 }
 

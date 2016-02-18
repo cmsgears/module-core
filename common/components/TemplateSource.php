@@ -50,7 +50,7 @@ class TemplateSource extends \yii\base\Component {
 		}
 	}
 
-	protected function renderView( $template, $models, $page, $templateView ) {
+	protected function renderView( $template, $models, $page, $layout, $templateView ) {
 
 		$fileRender		= $template->renderFile;
 		$renderEngine 	= $template->renderer;
@@ -68,7 +68,7 @@ class TemplateSource extends \yii\base\Component {
 				// Render using controller
 				if( $page ) {
 
-					if( isset( $template->layout ) ) {
+					if( $layout && isset( $template->layout ) ) {
 	
 						Yii::$app->controller->layout = "//$template->layout";
 					}
@@ -88,19 +88,19 @@ class TemplateSource extends \yii\base\Component {
 		}
 	}
 
-	public function renderViewAdmin( $template, $models, $page = false ) {
+	public function renderViewAdmin( $template, $models, $page = false, $layout = false ) {
 
-		return $this->renderView( $template, $models, $page, CoreGlobal::TEMPLATE_VIEW_ADMIN );
+		return $this->renderView( $template, $models, $page, $layout, CoreGlobal::TEMPLATE_VIEW_ADMIN );
 	}
 
-	public function renderViewPrivate( $template, $models, $page = false ) {
+	public function renderViewPrivate( $template, $models, $page = false, $layout = true ) {
 
-		return $this->renderView( $template, $models, $page, CoreGlobal::TEMPLATE_VIEW_PRIVATE );
+		return $this->renderView( $template, $models, $page, $layout, CoreGlobal::TEMPLATE_VIEW_PRIVATE );
 	}
 
-	public function renderViewPublic( $template, $models, $page = false ) {
+	public function renderViewPublic( $template, $models, $page = false, $layout = true ) {
 
-		return $this->renderView( $template, $models, $page, CoreGlobal::TEMPLATE_VIEW_PUBLIC );
+		return $this->renderView( $template, $models, $page, $layout, CoreGlobal::TEMPLATE_VIEW_PUBLIC );
 	}
 }
 

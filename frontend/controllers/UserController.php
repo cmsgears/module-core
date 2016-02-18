@@ -10,12 +10,8 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 
-use cmsgears\core\common\models\entities\Address;
-
 use cmsgears\core\common\services\OptionService;
-use cmsgears\core\frontend\services\UserService; 
-use cmsgears\core\common\services\ProvinceService;
-use cmsgears\core\common\services\CountryService;
+use cmsgears\core\frontend\services\UserService;
 
 class UserController extends base\Controller {
 
@@ -36,6 +32,7 @@ class UserController extends base\Controller {
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
+	                'index' => [ 'permission' => CoreGlobal::PERM_USER ],
 	                'home' => [ 'permission' => CoreGlobal::PERM_USER ],
 	                'profile' => [ 'permission' => CoreGlobal::PERM_USER ],
 	                'settings' => [ 'permission' => CoreGlobal::PERM_USER ]
@@ -44,6 +41,7 @@ class UserController extends base\Controller {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
+                    'index' => [ 'get' ],
                     'home' => [ 'get' ],
                     'profile' => [ 'get' ],
                     'settings' => [ 'get' ]
@@ -54,6 +52,11 @@ class UserController extends base\Controller {
 
 	// UserController
 
+    public function actionIndex() {
+
+        return $this->render( WebGlobalCore::PAGE_INDEX );
+    }
+
     public function actionHome() {
 
         return $this->render( WebGlobalCore::PAGE_INDEX );
@@ -62,32 +65,16 @@ class UserController extends base\Controller {
     public function actionProfile() {
 
 		// Find Model
-		$user		= Yii::$app->user->getIdentity();
-		$address	= new Address();
+		$user	= Yii::$app->user->getIdentity();
 
 		// Update/Render if exist
 		if( isset( $user ) ) {
-			
-			$addresss	= $user->modelAddresss;
 
-			if( isset( $addresss ) && count( $addresss ) > 0 ) {
-				
-				foreach( $addresss as $address ) {
-					
-					$address	= $address->address;
-				}
-			}
-			
-			$countryList	= CountryService::getIdNameList(); 
-			$provinceList	= ProvinceService::getMapByCountryId( 1 );
-			$genderMap 		= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER, [ [ 'value' => 'Choose Gender', 'name' => '0' ] ] );
+			$genderMap 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER, [ [ 'value' => 'Choose Gender', 'name' => '0' ] ] );
 
 	    	return $this->render( WebGlobalCore::PAGE_PROFILE, [
 	    		'user' => $user,
-	    		'genderMap' => $genderMap,
-	    		'address' => $address,
-	    		'countryList' => $countryList,
-	    		'provinceList' => $provinceList
+	    		'genderMap' => $genderMap
 	    	]);
 		}
 
@@ -106,7 +93,7 @@ class UserController extends base\Controller {
 			$privacy		= UserService::findAttributeMapByType( $user, WebGlobalCore::SETTINGS_PRIVACY );
 			$notification	= UserService::findAttributeMapByType( $user, WebGlobalCore::SETTINGS_NOTIFICATION );
 			$reminder		= UserService::findAttributeMapByType( $user, WebGlobalCore::SETTINGS_REMINDER );
-			
+
 	    	return $this->render( WebGlobalCore::PAGE_SETTINGS, [
 	    		'user' => $user,
 	    		'privacy' => $privacy,

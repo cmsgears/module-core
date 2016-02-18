@@ -75,6 +75,11 @@ class Gallery extends NamedCmgEntity {
 		return Yii::$app->formatter->asBoolean( $this->active ); 
 	}
 
+	public function isOwner( $user ) {
+
+		return $this->createdBy == $user->id;
+	}
+
 	// yii\base\Component ----------------
 
     /**

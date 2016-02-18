@@ -89,18 +89,13 @@ class ModelAddress extends CmgModel {
 
 		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] )->all();
 	}
-	
+
 	/**
 	 * Models Supporting one address for same type.
 	 */
 	public static function findFirstByType( $parentId, $parentType, $type ) {
 
 		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] )->one();
-	}
-	
-	public static function findByParent( $parentId ) {
-		
-		return self::find()->where( 'parentId=:pid', [ ':pid' => $parentId ] )->all();
 	}
 
 	public static function findByAddressId( $parentId, $parentType, $addressId ) {

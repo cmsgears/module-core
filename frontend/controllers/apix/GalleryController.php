@@ -18,11 +18,15 @@ use cmsgears\core\common\utilities\AjaxUtil;
 
 class GalleryController extends \cmsgears\core\admin\controllers\base\Controller {
 
+	protected $ownerService;
+
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+		
+		$this->ownerService	= new GalleryService();
 	}
 
 	// Instance Methods --------------------------------------------
@@ -35,8 +39,8 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'createItem' => [ 'permission' => CoreGlobal::PERM_USER ],
-	                'deleteItem' => [ 'permission' => CoreGlobal::PERM_USER ]
+	                'createItem' => [ 'permission' => CoreGlobal::PERM_USER, 'filters' => [ 'owner' => [ 'slug' => true, 'service' => $this->ownerService ] ] ],
+	                'deleteItem' => [ 'permission' => CoreGlobal::PERM_USER, 'filters' => [ 'owner' => [ 'slug' => true, 'service' => $this->ownerService ] ] ],
                 ]
             ],
             'verbs' => [

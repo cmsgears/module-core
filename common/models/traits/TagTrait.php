@@ -32,6 +32,17 @@ trait TagTrait {
 					});
 	}
 
+	public function getActiveTags() {
+
+    	return $this->hasMany( Tag::className(), [ 'id' => 'tagId' ] )
+					->viaTable( CoreTables::TABLE_MODEL_TAG, [ 'parentId' => 'id' ], function( $query ) {
+
+						$modelTagTable	= CoreTables::TABLE_MODEL_TAG;
+
+                      	$query->onCondition( [ "$modelTagTable.parentType" => $this->tagType, "$modelTagTable.active" => true ] );
+					});
+	}
+
 	public function getTagIdList() {
 
     	$tags 		= $this->tags;

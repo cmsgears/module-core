@@ -16,6 +16,11 @@ class ModelCommentService extends Service {
 
 	// Read ---------------- 
 	
+	public static function getAllByParentType( $type ) {
+		
+		return ModelComment::getAllByParentType( $type );
+	}
+	
 	public static function findByBaseIdParentId( $baseId, $parentId ) {
 		
 		return ModelComment::findByBaseIdParentId( $baseId, $parentId );

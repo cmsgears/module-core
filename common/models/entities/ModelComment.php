@@ -152,6 +152,11 @@ class ModelComment extends CmgModel {
 
 	// Read ------
 	
+	public static function getAllByParentType( $type ) {
+		
+		return self::find()->where( [ 'status' => self::STATUS_APPROVED, 'parentType' => $type ] )->all();
+	}
+	
 	public static function findByBaseIdParentId( $baseId = null, $parentId ) {
 		
 		return self::find()->where( [ 'baseId' => $baseId, 'parentId' => $parentId, 'status' => self::STATUS_APPROVED ] )->all();

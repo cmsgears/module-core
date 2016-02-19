@@ -9,8 +9,6 @@ use yii\behaviors\SluggableBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\traits\TemplateTrait;
-
 use cmsgears\core\common\models\traits\DataTrait;
 
 /**
@@ -18,7 +16,6 @@ use cmsgears\core\common\models\traits\DataTrait;
  *
  * @property integer $id
  * @property integer $siteId
- * @property integer $templateId
  * @property integer $parentId
  * @property integer $rootId
  * @property string $name
@@ -35,8 +32,6 @@ use cmsgears\core\common\models\traits\DataTrait;
 class Category extends HierarchicalModel {
 
 	use DataTrait;
-	
-	use TemplateTrait;
 	
 	// Instance Methods --------------------------------------------
 
@@ -105,13 +100,13 @@ class Category extends HierarchicalModel {
 		// model rules
         $rules = [
             [ [ 'siteId', 'name' ], 'required' ],
-            [ [ 'id', 'featured', 'description', 'htmlOptions', 'data', 'templateId' ], 'safe' ],
+            [ [ 'id', 'featured', 'description', 'htmlOptions', 'data' ], 'safe' ],
             [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
             [ 'slug', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],            
-            [ [ 'parentId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ 'featured', 'boolean' ]
         ];
 

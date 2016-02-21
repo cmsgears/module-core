@@ -224,6 +224,14 @@ class Category extends HierarchicalModel {
 
 		return self::find()->where( 'name=:name AND type=:type AND siteId=:siteId', [ ':name' => $name, ':type' => $type, ':siteId' => $siteId ] )->one();
 	}
+	
+	/**
+	 * @return Category - by type and featured
+	 */
+	public static function getFeaturedByType( $type ) {
+		
+		return self::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->all();
+	}
 
 	/**
 	 * @return Category - checks whether category exist by type and name

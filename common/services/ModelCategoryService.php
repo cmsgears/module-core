@@ -4,8 +4,8 @@ namespace cmsgears\core\common\services;
 // Yii Imports
 use \Yii;
 
-// CMG Imports
-use cmsgears\core\common\models\entities\ModelCategory;
+// CMG Imports 
+use cmsgears\core\common\models\entities\ModelCategory; 
 
 /**
  * The class ModelCategoryService is base class to perform database activities for ModelCategory Entity.
@@ -68,7 +68,7 @@ class ModelCategoryService extends Service {
 		}
 
 		return $ids;
-	}
+	} 
 
 	// Create -----------
 

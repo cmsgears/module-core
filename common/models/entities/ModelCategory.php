@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
-use \Yii;
+use \Yii; 
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -96,7 +96,7 @@ class ModelCategory extends CmgModel {
 	public static function findActiveByParentIdParentType( $parentId, $parentType ) {
 
 		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND active=1', [ ':pid' => $parentId, ':ptype' => $parentType ] )->all();
-	}
+	} 
 
 	// Delete ----
 
@@ -105,7 +105,7 @@ class ModelCategory extends CmgModel {
 	 */
 	public static function deleteByCategoryId( $categoryId ) {
 
-		self::deleteAll( 'categoryId=:id', [ ':id' => $categoryId ] );
+		
 	}
 }
 

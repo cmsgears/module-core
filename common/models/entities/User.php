@@ -26,7 +26,6 @@ use cmsgears\core\common\models\traits\AddressTrait;
  * @property integer localeId
  * @property integer genderId
  * @property integer avatarId
- * @property integer bannerId
  * @property short $status
  * @property string $email
  * @property string $username
@@ -35,6 +34,8 @@ use cmsgears\core\common\models\traits\AddressTrait;
  * @property string $lastName
  * @property string $dob
  * @property string $phone
+ * @property string $avatarUrl
+ * @property string $websiteUrl
  * @property boolean $newsletter
  * @property string verifyToken
  * @property string resetToken
@@ -45,6 +46,7 @@ use cmsgears\core\common\models\traits\AddressTrait;
  * @property string accessToken
  * @property datetime accessTokenCreatedAt
  * @property datetime accessTokenAccessedAt
+ * @property string data
  */
 class User extends CmgEntity implements IdentityInterface {
 
@@ -319,7 +321,7 @@ class User extends CmgEntity implements IdentityInterface {
 		// model rules
         $rules = [
             [ [ 'email' ], 'required' ],
-            [ [ 'id', 'username', 'localeId', 'genderId', 'avatarId', 'bannerId', 'status', 'phone', 'newsletter' ], 'safe' ],
+            [ [ 'id', 'username', 'localeId', 'genderId', 'avatarId', 'status', 'phone', 'newsletter' ], 'safe' ],
             [ 'email', 'email' ],
             [ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],
             [ 'email', 'validateEmailUpdate', 'on' => [ 'update', 'profile' ] ],
@@ -331,13 +333,14 @@ class User extends CmgEntity implements IdentityInterface {
             [ [ 'firstName', 'lastName' ], 'alphanumspace' ],
             [ [ 'id', 'localeId', 'genderId', 'avatarId', 'status', 'newsletter' ], 'number', 'integerOnly' => true ],
             [ 'dob', 'date', 'format' => Yii::$app->formatter->dateFormat ],
+            [ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
             [ [ 'registeredAt', 'lastLoginAt', 'lastActivityAt', 'accessTokenCreatedAt', 'accessTokenAccessedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 		
 		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'email', 'username', 'phone', 'firstName', 'lastName' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'email', 'username', 'phone', 'firstName', 'lastName', 'avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -361,6 +364,8 @@ class User extends CmgEntity implements IdentityInterface {
 			'lastName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
 			'dob' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DOB ),
 			'phone' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
+			'avatarUrl' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
+			'websiteUrl' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
 			'newsletter' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NEWSLETTER )
 		];
 	}
@@ -537,17 +542,17 @@ class User extends CmgEntity implements IdentityInterface {
 	 * @return a valid user based on given token and type
 	 */
     public static function findIdentityByAccessToken( $token, $type = null ) {
-		
+
 		if( Yii::$app->cmgCore->isApis() ) {
 
 			// Find valid User
 			$user 	= static::findByAccessToken( $token );
-	
+
 			// Load User Permissions
 			if( isset( $user ) ) {
-				
+
 				if( Yii::$app->cmgCore->isRbac() ) {
-					
+
 					$user->loadPermissions();
 				}
 			}

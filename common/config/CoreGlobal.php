@@ -116,6 +116,7 @@ class CoreGlobal {
 
 	// Errors - Core Validators
 	const ERROR_AN_SPACE			= 'alphaNumSpaceError';
+	const ERROR_AN_SPACE_U			= 'alphaNumSpaceUError';
 	const ERROR_AN_PUN				= 'alphaNumPunError';
 	const ERROR_AN_HYPHEN			= 'alphaNumHyphenError';
 	const ERROR_AN_HYPHEN_SPACE		= 'alphaNumHyphenSpaceError';
@@ -191,6 +192,8 @@ class CoreGlobal {
 	const FIELD_FILE				= 'fileField';
 	const FIELD_TAG					= 'tagField';
 	const FIELD_AVATAR				= 'avatarField';
+	const FIELD_AVATAR_URL			= 'avatarUrlField';
+	const FIELD_WEBSITE				= 'websiteField';
 	const FIELD_BANNER				= 'bannerField';
 	const FIELD_VIDEO				= 'videoField';
 	const FIELD_GALLERY				= 'galleryField';

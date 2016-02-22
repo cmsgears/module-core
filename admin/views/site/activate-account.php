@@ -2,7 +2,7 @@
 use yii\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . " | Activate Account";
+$this->title 	= 'Activate Account | ' . $coreProperties->getSiteTitle();
 ?>
 <section class="wrap-content wrap-content-full container clearfix">
 	<div class="cud-box wrap-login-box frm-split">

@@ -8,6 +8,7 @@ class CoreValidator {
 
     public static $builtInValidators = [
         'alphanumspace' => 'cmsgears\core\common\validators\AlphaNumWithSpaceValidator',
+        'alphanumspaceu' => 'cmsgears\core\common\validators\AlphaNumWithSpaceUndescoreValidator',
         'alphanumpun' => 'cmsgears\core\common\validators\AlphaNumWithPunctuationValidator',
         'alphanumhyphen' => 'cmsgears\core\common\validators\AlphaNumWithHyphenValidator',
         'alphanumhyphenspace' => 'cmsgears\core\common\validators\AlphaNumWithHyphenSpaceValidator',

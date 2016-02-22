@@ -324,7 +324,6 @@ CREATE TABLE `cmg_core_user` (
   `localeId` bigint(20) DEFAULT NULL,
   `genderId` bigint(20) DEFAULT NULL,
   `avatarId` bigint(20) DEFAULT NULL,
-  `bannerId` bigint(20) DEFAULT NULL,
   `status` smallint(6) DEFAULT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `username` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -333,6 +332,8 @@ CREATE TABLE `cmg_core_user` (
   `lastName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `dob` date DEFAULT NULL,
   `phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `avatarUrl` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `websiteUrl` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `verifyToken` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `resetToken` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `registeredAt` datetime DEFAULT NULL,  
@@ -342,11 +343,11 @@ CREATE TABLE `cmg_core_user` (
   `accessToken` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `accessTokenCreatedAt` datetime DEFAULT NULL,
   `accessTokenAccessedAt` datetime DEFAULT NULL,
+  `data` longtext COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `fk_user_1` (`localeId`),
   KEY `fk_user_2` (`genderId`),
-  KEY `fk_user_3` (`avatarId`),
-  KEY `fk_user_4` (`bannerId`)
+  KEY `fk_user_3` (`avatarId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -632,6 +633,7 @@ CREATE TABLE `cmg_core_model_attribute` (
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `label` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'default',
   `valueType` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'text',
   `value` longtext COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -750,6 +752,8 @@ CREATE TABLE `cmg_core_model_comment` (
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `avatarUrl` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `websiteUrl` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `ip` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `agent` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `status` smallint(6) NOT NULL DEFAULT 0,
@@ -866,8 +870,7 @@ ALTER TABLE `cmg_core_address`
 ALTER TABLE `cmg_core_user`
   	ADD CONSTRAINT `fk_user_1` FOREIGN KEY (`localeId`) REFERENCES `cmg_core_locale` (`id`),
   	ADD CONSTRAINT `fk_user_2` FOREIGN KEY (`genderId`) REFERENCES `cmg_core_option` (`id`),
-  	ADD CONSTRAINT `fk_user_3` FOREIGN KEY (`avatarId`) REFERENCES `cmg_core_file` (`id`),
-  	ADD CONSTRAINT `fk_user_4` FOREIGN KEY (`bannerId`) REFERENCES `cmg_core_file` (`id`);
+  	ADD CONSTRAINT `fk_user_3` FOREIGN KEY (`avatarId`) REFERENCES `cmg_core_file` (`id`);
 
 --
 -- Constraints for table `cmg_core_file`

@@ -16,7 +16,7 @@ use cmsgears\core\common\utilities\DateUtil;
  * The class UserService is base class to perform database activities for User Entity.
  */
 class UserService extends Service {
-	
+
 	// Static Methods ----------------------------------------------
 
 	// Read ----------------
@@ -129,7 +129,7 @@ class UserService extends Service {
 	 * @param CmgFile $avatar
 	 * @return User
 	 */
-	public static function create( $user, $avatar = null, $banner = null ) {
+	public static function create( $user, $avatar = null ) {
 
 		if( $user->genderId <= 0 ) {
 
@@ -145,7 +145,7 @@ class UserService extends Service {
 		$user->generateAuthKey();
 		
 		// Save Files
-		FileService::saveFiles( $user, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
+		FileService::saveFiles( $user, [ 'avatarId' => $avatar ] );
 
 		// Create User
 		$user->save();
@@ -167,7 +167,7 @@ class UserService extends Service {
 	 * @param CmgFile $avatar
 	 * @return User
 	 */
-	public static function update( $user, $avatar = null, $banner = null ) {
+	public static function update( $user, $avatar = null ) {
 
 		if( $user->genderId <= 0 ) {
 
@@ -178,10 +178,10 @@ class UserService extends Service {
 		$userToUpdate	= User::findById( $user->id );
 
 		// Copy Attributes
-		$userToUpdate->copyForUpdateFrom( $user, [ 'avatarId', 'genderId', 'email', 'username', 'firstName', 'lastName', 'status', 'phone' ] );
+		$userToUpdate->copyForUpdateFrom( $user, [ 'avatarId', 'genderId', 'email', 'username', 'firstName', 'lastName', 'status', 'phone', 'avatarUrl', 'websiteUrl' ] );
 
 		// Save Files
-		FileService::saveFiles( $userToUpdate, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
+		FileService::saveFiles( $userToUpdate, [ 'avatarId' => $avatar ] );
 
 		// Update User
 		$userToUpdate->update();
@@ -221,7 +221,7 @@ class UserService extends Service {
 	 * @param User $user
 	 * @return boolean
 	 */
-	public static function delete( $user, $avatar = null, $banner = null ) {
+	public static function delete( $user, $avatar = null ) {
 
 		// Find existing user
 		$userToDelete	= User::findById( $user->id );
@@ -230,7 +230,7 @@ class UserService extends Service {
 		$userToDelete->delete();
 
 		// Delete Files
-		FileService::deleteFiles( [ $avatar, $banner ] );
+		FileService::deleteFiles( [ $avatar ] );
 
 		return true;
 	}

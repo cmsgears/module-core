@@ -31,7 +31,10 @@ INSERT INTO `cmg_core_form_field` (`formId`,`name`,`label`,`type`,`compress`,`va
 	(@form,'admin_url','Backend URL',0,0,'required',0,NULL,'{\"title\":\"Backend URL\",\"placeholder\":\"Backend URL\"}',NULL),
 	(@form,'registration','Registration',40,0,'required',0,NULL,'{\"title\":\"Check whether site registration is allowed.\"}',NULL),
 	(@form,'change_email','Change Email',40,0,'required',0,NULL,'{\"title\":\"Check whether email change is allowed for user profile.\"}',NULL),
-	(@form,'change_username','Change Username',40,0,'required',0,NULL,'{\"title\":\"Check whether username change is allowed for user profile.\"}',NULL);
+	(@form,'change_username','Change Username',40,0,'required',0,NULL,'{\"title\":\"Check whether username change is allowed for user profile.\"}',NULL),
+	(@form,'date_format','Date Format',0,0,'required',0,NULL,'{\"title\":\"Date format used by the formatter.\",\"placeholder\":\"Date Format\"}',NULL),
+	(@form,'time_format','Time Format',0,0,'required',0,NULL,'{\"title\":\"Time format used by the formatter.\",\"placeholder\":\"Time Format\"}',NULL),
+	(@form,'timezone','Timezone',0,0,'required',0,NULL,'{\"title\":\"Time format used by the formatter.\",\"placeholder\":\"Time Format\"}',NULL);
 
 --
 -- Mail Config Form
@@ -85,31 +88,34 @@ SELECT @form := `id` FROM cmg_core_form WHERE slug = 'config-frontend';
 -- Dumping data for table `cmg_core_model_attribute`
 --
 
-INSERT INTO `cmg_core_model_attribute` (`parentId`,`parentType`,`name`,`type`,`valueType`,`value`) VALUES
-	(@site,'site','locale_message','core','flag','0'),
-	(@site,'site','language','core','text','en-US'),
-	(@site,'site','locale','core','text','en_US'),
-	(@site,'site','charset','core','text','UTF-8'),
-	(@site,'site','site_title','core','text','CMG Demo'),
-	(@site,'site','site_name','core','text','CMSGears'),
-	(@site,'site','site_url','core','text','http://demo.cmsgears.com/templates/basic/'),
-	(@site,'site','admin_url','core','text','http://demo.cmsgears.com/templates/basic/admin/'),
-	(@site,'site','registration','core','flag','1'),
-	(@site,'site','change_email','core','flag','1'),
-	(@site,'site','change_username','core','flag','1'),
-	(@site,'site','smtp','mail','flag','0'),
-	(@site,'site','smtp_username','mail','text',''),
-	(@site,'site','smtp_password','mail','text',''),
-	(@site,'site','smtp_host','mail','text',''),
-	(@site,'site','smtp_port','mail','text','587'),
-	(@site,'site','smtp_encryption','mail','text','tls'),
-	(@site,'site','debug','mail','flag','1'),
-	(@site,'site','sender_name','mail','text','Admin'),
-	(@site,'site','sender_email','mail','text','demoadmin@cmsgears.com'),
-	(@site,'site','contact_name','mail','text','Contact Us'),
-	(@site,'site','contact_email','mail','text','democontact@cmsgears.com'),
-	(@site,'site','info_name','mail','text','Info'),
-	(@site,'site','info_email','mail','text','demoinfo@cmsgears.com');
+INSERT INTO `cmg_core_model_attribute` (`parentId`,`parentType`,`name`,`label`,`type`,`valueType`,`value`) VALUES
+	(@site,'site','locale_message','Locale Message','core','flag','0'),
+	(@site,'site','language','Language','core','text','en-US'),
+	(@site,'site','locale','Locale','core','text','en_US'),
+	(@site,'site','charset','Charset','core','text','UTF-8'),
+	(@site,'site','site_title','Site Title','core','text','CMG Demo'),
+	(@site,'site','site_name','Site Name','core','text','CMSGears'),
+	(@site,'site','site_url','Site Url','core','text','http://demo.cmsgears.com/templates/basic/'),
+	(@site,'site','admin_url','Admin Url','core','text','http://demo.cmsgears.com/templates/basic/admin/'),
+	(@site,'site','registration','Registration','core','flag','1'),
+	(@site,'site','change_email','Change Email','core','flag','1'),
+	(@site,'site','change_username','Change Username','core','flag','1'),
+	(@site,'site','date_format','Date Format','core','text','yyyy-MM-dd'),
+	(@site,'site','time_format','Time Format','core','text','HH:mm:ss'),
+	(@site,'site','timezone','Timezone','core','text','UTC+0'),
+	(@site,'site','smtp','SMTP','mail','flag','0'),
+	(@site,'site','smtp_username','SMTP Username','mail','text',''),
+	(@site,'site','smtp_password','SMTP Password','mail','text',''),
+	(@site,'site','smtp_host','SMTP Host','mail','text',''),
+	(@site,'site','smtp_port','SMTP Port','mail','text','587'),
+	(@site,'site','smtp_encryption','SMTP Encryption','mail','text','tls'),
+	(@site,'site','debug','Debug','mail','flag','1'),
+	(@site,'site','sender_name','Sender Name','mail','text','Admin'),
+	(@site,'site','sender_email','Sender Email','mail','text','demoadmin@cmsgears.com'),
+	(@site,'site','contact_name','Contact Name','mail','text','Contact Us'),
+	(@site,'site','contact_email','Contact Email','mail','text','democontact@cmsgears.com'),
+	(@site,'site','info_name','Info Name','mail','text','Info'),
+	(@site,'site','info_email','Info Email','mail','text','demoinfo@cmsgears.com');
 
 --
 -- Default Locale
@@ -170,10 +176,10 @@ INSERT INTO `cmg_core_role_permission` VALUES
 -- Default site users
 --
 
-INSERT INTO `cmg_core_user` VALUES 
-	(1,NULL,NULL,NULL,NULL,750,'demomaster@cmsgears.com','demomaster','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','master',NULL,NULL,NULL,NULL,'2014-10-11 14:22:54','2014-10-10 08:03:19',NULL,'JuL37UBqGpjnA7kaPiRnlsiWRwbRvXx7',NULL,NULL,NULL),
-	(2,NULL,NULL,NULL,NULL,750,'demoadmin@cmsgears.com','demoadmin','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','admin',NULL,NULL,NULL,NULL,'2014-10-11 14:22:54','2014-10-10 08:03:19',NULL,'SQ1LLCWEPva4IKuQklILLGDpmUTGzq8E',NULL,NULL,NULL),
-	(3,NULL,NULL,NULL,NULL,750,'demouser@cmsgears.com','demouser','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','user',NULL,NULL,NULL,NULL,'2014-10-11 14:22:54','2014-10-10 08:03:19',NULL,'-jG5ExHS0Y39ucSxHhl3PZ4xmPsfvQFC',NULL,NULL,NULL);
+INSERT INTO `cmg_core_user` (`localeId`,`genderId`,`avatarId`,`status`,`email`,`username`,`passwordHash`,`firstName`,`lastName`,`dob`,`phone`,`verifyToken`,`resetToken`,`registeredAt`,`lastLoginAt`,`lastActivityAt`,`authKey`) VALUES 
+	(NULL,NULL,NULL,750,'demomaster@cmsgears.com','demomaster','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','master',NULL,NULL,NULL,NULL,'2014-10-11 14:22:54','2014-10-10 08:03:19',NULL,'JuL37UBqGpjnA7kaPiRnlsiWRwbRvXx7'),
+	(NULL,NULL,NULL,750,'demoadmin@cmsgears.com','demoadmin','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','admin',NULL,NULL,NULL,NULL,'2014-10-11 14:22:54','2014-10-10 08:03:19',NULL,'SQ1LLCWEPva4IKuQklILLGDpmUTGzq8E'),
+	(NULL,NULL,NULL,750,'demouser@cmsgears.com','demouser','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','user',NULL,NULL,NULL,NULL,'2014-10-11 14:22:54','2014-10-10 08:03:19',NULL,'-jG5ExHS0Y39ucSxHhl3PZ4xmPsfvQFC');
 
 --
 -- Default site members

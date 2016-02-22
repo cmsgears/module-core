@@ -35,11 +35,6 @@ $returnUrl		= $this->context->returnUrl;
 			<?= AvatarUploader::widget( [ 'options' => [ 'id' => 'model-avatar', 'class' => 'file-uploader' ], 'model' => $avatar ] ); ?>
 		</div>
 
-		<div class="box-content clearfix">
-			<div class="header">User Banner</div>
-			<?= ImageUploader::widget( [ 'options' => [ 'id' => 'model-banner', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' ] ); ?>
-		</div>
-
 		<div class="clear filler-height"></div>
 
 		<div class="align align-center">

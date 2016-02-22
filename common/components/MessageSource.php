@@ -44,6 +44,7 @@ class MessageSource extends Component {
 
 		// Errors - Validators
 		CoreGlobal::ERROR_AN_SPACE => 'Please provide a valid value without any special character.',
+		CoreGlobal::ERROR_AN_SPACE_U => 'Please provide a valid value without any special character except underscore(_).',
 		CoreGlobal::ERROR_AN_PUN => "Please provide valid value having alphanumeric and (? ! . , \" ').",
 		CoreGlobal::ERROR_AN_HYPHEN => 'Please provide valid value having alphanumeric and hyphen.',
 		CoreGlobal::ERROR_AN_HYPHEN_SPACE => 'Please provide valid value having alphanumeric, space and hyphen.',
@@ -119,6 +120,8 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_FILE => 'File',
 		CoreGlobal::FIELD_TAG => 'Tag',
 		CoreGlobal::FIELD_AVATAR => 'Avatar',
+		CoreGlobal::FIELD_AVATAR_URL => 'Avatar URL',
+		CoreGlobal::FIELD_WEBSITE => 'Website',
 		CoreGlobal::FIELD_BANNER => 'Banner',
 		CoreGlobal::FIELD_VIDEO => 'Video',
 		CoreGlobal::FIELD_GALLERY => 'Gallery',

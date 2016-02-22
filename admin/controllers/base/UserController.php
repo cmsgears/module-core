@@ -105,7 +105,6 @@ abstract class UserController extends Controller {
 		$model		= new User();
 		$siteMember	= new SiteMember();
 		$avatar 	= CmgFile::loadFile( null, 'Avatar' );
-		$banner 	= CmgFile::loadFile( null, 'Banner' );
 
 		$model->setScenario( 'create' );
 
@@ -118,7 +117,7 @@ abstract class UserController extends Controller {
 		if( $model->load( Yii::$app->request->post(), 'User' ) && $siteMember->load( Yii::$app->request->post(), 'SiteMember' ) && $model->validate() ) {
 
 			// Create User
-			$user 		= UserService::create( $model, $avatar, $banner );
+			$user 		= UserService::create( $model, $avatar );
 
 			// Add User to current Site
 			$siteMember	= SiteMemberService::create( $model, $siteMember );
@@ -151,7 +150,6 @@ abstract class UserController extends Controller {
 				'model' => $model,
 				'siteMember' => $siteMember,
 	    		'avatar' => $avatar,
-	    		'banner' => $banner,
 				'roleMap' => $roleMap
 			]);			
 		}
@@ -167,7 +165,6 @@ abstract class UserController extends Controller {
 
 			$siteMember	= $model->siteMember;
 			$avatar 	= CmgFile::loadFile( $model->avatar, 'Avatar' );
-			$banner 	= CmgFile::loadFile( $model->banner, 'Banner' );
 
 			$model->setScenario( 'update' );
 
@@ -176,7 +173,7 @@ abstract class UserController extends Controller {
 			if( $model->load( Yii::$app->request->post(), 'User' ) && $siteMember->load( Yii::$app->request->post(), 'SiteMember' ) && $model->validate() ) {
 
 				// Update User and Site Member
-				if( UserService::update( $model, $avatar, $banner ) && SiteMemberService::update( $siteMember ) ) {
+				if( UserService::update( $model, $avatar ) && SiteMemberService::update( $siteMember ) ) {
 
 					return $this->redirect( $this->returnUrl );
 				}
@@ -199,7 +196,6 @@ abstract class UserController extends Controller {
 		    		'model' => $model,
 		    		'siteMember' => $siteMember,
 		    		'avatar' => $avatar,
-		    		'banner' => $banner,
 		    		'roleMap' => $roleMap,
 		    		'status' => User::$statusMapUpdate
 		    	]);
@@ -220,11 +216,10 @@ abstract class UserController extends Controller {
 
 			$siteMember	= $model->siteMember;
 			$avatar 	= $model->avatar;
-			$banner 	= $model->banner;
 
 			if( $model->load( Yii::$app->request->post(), 'User' ) ) {
 
-				if( UserService::delete( $model, $avatar, $banner ) ) {
+				if( UserService::delete( $model, $avatar ) ) {
 
 					return $this->redirect( $this->returnUrl );
 				}
@@ -237,7 +232,6 @@ abstract class UserController extends Controller {
 	        		'model' => $model,
 	        		'siteMember' => $siteMember,
 		    		'avatar' => $avatar,
-		    		'banner' => $banner,
 	        		'roleMap' => $roleMap,
 	        		'status' => User::$statusMapUpdate
 	        	]);

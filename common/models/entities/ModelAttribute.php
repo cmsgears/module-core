@@ -16,6 +16,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property integer $parentId
  * @property string $parentType
  * @property string $name
+ * @property string $label
  * @property string $type
  * @property string $valueType
  * @property string $value
@@ -34,9 +35,10 @@ class ModelAttribute extends Attribute {
 		// model rules
         $rules = [
             [ [ 'parentId', 'parentType', 'name' ], 'required' ],
-            [ [ 'id', 'value' ], 'safe' ],
+            [ [ 'id', 'label', 'value' ], 'safe' ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'parentType', 'name', 'type', 'valueType' ], 'string', 'min' => 1, 'max' => 100 ],
+            [ 'label', 'string', 'min' => 1, 'max' => 150 ],
             [ 'name', 'alphanumu' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
@@ -62,6 +64,7 @@ class ModelAttribute extends Attribute {
 			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'label' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
 			'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
 			'valueType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE_TYPE ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE )

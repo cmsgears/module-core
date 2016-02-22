@@ -1,6 +1,6 @@
 <?php
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . " | Dashboard";
+$this->title 	= 'Dashboard | ' . $coreProperties->getSiteTitle();
 
 // Sidebar
 $this->params['sidebar-parent'] = 'sidebar-dashboard';

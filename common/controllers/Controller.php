@@ -27,7 +27,7 @@ abstract class Controller extends \yii\web\Controller {
 
         parent::__construct( $id, $module, $config );
 	}
-
+	
 	// For development purpose only - Publish assets for each request
 	public function beforeAction( $action ) {
 

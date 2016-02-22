@@ -13,16 +13,20 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * @property integer $id
  * @property string $name
+ * @property string $label
  * @property string $type
  * @property string $value
+ * @property string $valueType
  */
 abstract class Attribute extends CmgModel {
 
 	const VALUE_TYPE_TEXT		= 'text';
 	const VALUE_TYPE_FLAG		= 'flag';
+	const VALUE_TYPE_LIST		= 'list';
+	const VALUE_TYPE_MAP		= 'map';
 	const VALUE_TYPE_CSV		= 'csv';
+	const VALUE_TYPE_OBJECT		= 'json';
 	const VALUE_TYPE_HTML		= 'html';
-	const VALUE_TYPE_JSON		= 'json';
 	const VALUE_TYPE_MARKDOWN	= 'markdown';
 
 	// Instance Methods --------------------------------------------
@@ -35,6 +39,46 @@ abstract class Attribute extends CmgModel {
 		return $label;
     }
 
+	public function isText() {
+		
+		return $this->valueType == self::VALUE_TYPE_TEXT;
+	}
+
+	public function isFlag() {
+		
+		return $this->valueType == self::VALUE_TYPE_FLAG;
+	}
+
+	public function isList() {
+		
+		return $this->valueType == self::VALUE_TYPE_LIST;
+	}
+
+	public function isMap() {
+		
+		return $this->valueType == self::VALUE_TYPE_MAP;
+	}
+
+	public function isCsv() {
+		
+		return $this->valueType == self::VALUE_TYPE_CSV;
+	}
+
+	public function isObject() {
+		
+		return $this->valueType == self::VALUE_TYPE_OBJECT;
+	}
+
+	public function isHtml() {
+		
+		return $this->valueType == self::VALUE_TYPE_HTML;
+	}
+
+	public function isMarkdown() {
+		
+		return $this->valueType == self::VALUE_TYPE_MARKDOWN;
+	}
+
 	public function getFieldValue() {
 
 		switch( $this->valueType ) {
@@ -46,6 +90,22 @@ abstract class Attribute extends CmgModel {
 			case self::VALUE_TYPE_FLAG: {
 
 				return Yii::$app->formatter->asBoolean( $this->value );
+			}
+			case self::VALUE_TYPE_LIST: {
+
+				return json_decode( $this->value );
+			}
+			case self::VALUE_TYPE_MAP: {
+
+				return json_decode( $this->value, true );
+			}
+			case self::VALUE_TYPE_OBJECT: {
+
+				return json_decode( $this->value );
+			}
+			default: {
+
+				return $this->value;
 			}
 		}
 	}

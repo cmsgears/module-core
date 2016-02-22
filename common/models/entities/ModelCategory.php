@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
-use \Yii; 
+use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -104,8 +104,8 @@ class ModelCategory extends CmgModel {
 	 * Delete all entries related to a category
 	 */
 	public static function deleteByCategoryId( $categoryId ) {
-
 		
+		self::deleteAll( 'categoryId=:id', [ ':id' => $categoryId ] );
 	}
 }
 

@@ -10,13 +10,15 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\ModelComment;
 
-use cmsgears\listing\common\services\ListingService;
 use cmsgears\core\frontend\services\ModelCommentService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class CommentController extends \cmsgears\core\admin\controllers\base\Controller {
-
+    
+    protected $parentId;
+    protected $parentType;
+     
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
@@ -51,13 +53,13 @@ class CommentController extends \cmsgears\core\admin\controllers\base\Controller
 
 	// ModelCommentController
  	public function actionCreate() {
- 		
-		$model				= new ModelComment();
-		$parent				= Yii::$app->request->post('parent');
-		$parent				= ListingService::findBySlug( $parent );		
-		$model->parentId	= $parent->id;
-		$model->ip			= Yii::$app->request->getUserIP();	
-		$model->status		= ModelComment::STATUS_NEW;
+
+		$model                = new ModelComment();
+		$parentType           = $this->parentType;		
+		$model->parentId      = $this->parentId;
+		$model->parentType    = $this->parentType;
+		$model->ip            = Yii::$app->request->getUserIP();	
+		$model->status        = ModelComment::STATUS_NEW;
 		
 		if( $model->load( Yii::$app->request->post(), 'ModelComment' ) && $model->validate()  ) {
 			

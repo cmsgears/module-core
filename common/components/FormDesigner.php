@@ -608,26 +608,27 @@ class FormDesigner extends \yii\base\Component {
 		return $fieldHtml;
 	}
 	
-	public function getApixRatingList( $modelName, $fielName, $selected, $startVal, $endVal ) {
-			
-		$ratingHtml	= "<div class='cmt-rating clearfix'>";
-		$model		= $modelName.'['.$fielName.']';	
+	public function getApixRatingList( $selected, $endVal, $hover = false ) {
+		        
+		$hoverClass   = null; 
 		
-		for( $i = $startVal; $i <= $endVal; $i++ ) {
-			 
-			$ratingHtml	.= "<label class='$i'>";
-			
-			if( $selected == $i ) {
-				
-				$ratingHtml	.=	"<input type='radio' value='$i' name='$model' checked >";
-			}
-			else {
-					
-				$ratingHtml	.=	"<input type='radio' value='$i' name='$model'>";
-			}
-				
-			$ratingHtml	.= "<span class='label label-rating'></span>";
-			$ratingHtml	.=	"</label>"; 	
+        if( $hover ) {
+            
+            $hoverClass = 'hover';
+        }
+        
+		$ratingHtml	= "<div class='cmt-rating $hoverClass'>";
+        
+		for( $i = 1; $i <= $endVal; $i++ ) {
+		        
+            $icon   = "<span data='$i'>&#9734;</span>";
+		    
+		    if( $selected == $i ) {
+		            
+		        $icon   = "<span data='$i' class='filled'>&#9733;</span>";
+		    }
+		       
+		    $ratingHtml   .= $icon;
 		}
 		
 		$ratingHtml	.= "</div>";	

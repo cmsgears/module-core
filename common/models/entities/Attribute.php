@@ -32,7 +32,7 @@ abstract class Attribute extends CmgModel {
 	// Instance Methods --------------------------------------------
 
     public function getLabel() {
-		
+
 		$label  	= preg_replace( '/_/', ' ', $this->name );
 		$label		= ucwords( $label );
 

@@ -89,6 +89,12 @@ class CoreGlobal {
 	const TEMPLATE_VIEW_PRIVATE			= 'private';
 	const TEMPLATE_VIEW_PUBLIC			= 'public';
 
+	// Common Status ---------------------------------------------------
+
+	// Active/Inactive
+	const STATUS_INACTIVE	= 0;
+	const STATUS_ACTIVE		= 1;
+
 	// Messages --------------------------------------------------------
 
 	// Generic Messages

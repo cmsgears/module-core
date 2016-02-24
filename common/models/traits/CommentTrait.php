@@ -1,49 +1,78 @@
 <?php
 namespace cmsgears\core\common\models\traits;
 
+// Yii Imports
+use \Yii;
+use \yii\db\Query;
+
 // CMG Imports
+use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\ModelComment;
 
 /**
- * CommentTrait can be used to add comment feature to relevant models. The model must define the member variable $parentType which is unique for the model.
+ * CommentTrait can be used to add comment feature to relevant models. The model must define the member variable $commentType which is unique for the model.
  */
-trait CommentTrait { 
-	
+trait CommentTrait {
+
 	public function getModelComments() {
 
-		$parentId	= $this->id;
-		$parentType	= $this->parentType;
-
-		return ModelComment::findByParentIdType( $parentId, $parentType );
+		return ModelComment::findApprovedByParent( $this->id, $this->commentType );
 	}
-	
-	public function getRatingAvg() {
-		
-		$parentId	= $this->id;
-		$parentType	= $this->parentType;
-		
-		$ratings	= ModelComment::findByParentIdType( $parentId, $parentType );
-		$average	= 0;
-		
-		if( isset( $ratings ) && count( $ratings ) > 0 ) {
-			
-			$ratingsCount	= count( $ratings );
-			$sum			= 0;
-			
-			foreach( $ratings as $rating ) {
-				
-				$sum	+= $rating->rating;
-			}
-			
-			$average	= $sum/$ratingsCount;
-			
-			if( is_float( $average ) ) {
-				
-				$average	= round( $average );
-			}
+
+	public function getAverageRating() {
+
+		$commentTable	= CoreTables::TABLE_MODEL_COMMENT;
+		$query			= new Query();
+
+    	$query->select( [ 'avg(rating) as average' ] )
+				->from( $commentTable )
+				->where( [ 'parentId' => $this->id, 'parentType' => $this->commentType, 'status' => ModelComment::STATUS_APPROVED ] );
+
+		$command 		= $query->createCommand();
+		$average 		= $command->queryOne();
+
+		return $average[ 'average' ];
+	}
+
+	public function getReviewCounts() {
+
+		$commentTable	= CoreTables::TABLE_MODEL_COMMENT;
+		$query			= new Query();
+
+    	$query->select( [ 'status', 'count(id) as total' ] )
+				->from( $commentTable )
+				->where( [ 'parentId' => $this->id, 'parentType' => $this->commentType ] )
+				->groupBy( 'status' );
+
+		$counts 	= $query->all();
+		$returnArr	= [];
+		$counter	= 0;
+
+		foreach ( $counts as $count ) {
+
+			$returnArr[ $count[ 'status' ] ] = $count[ 'total' ];
+
+			$counter	= $counter + $count[ 'total' ];
 		}
-		
-		return $average;
+
+		$returnArr[ 'all' ] = $counter;
+
+		if( !isset( $returnArr[ ModelComment::STATUS_NEW ] ) ) {
+
+			$returnArr[ ModelComment::STATUS_NEW ]	= 0;
+		}
+
+		if( !isset( $returnArr[ ModelComment::STATUS_BLOCKED ] ) ) {
+
+			$returnArr[ ModelComment::STATUS_BLOCKED ]	= 0;
+		}
+
+		if( !isset( $returnArr[ ModelComment::STATUS_APPROVED ] ) ) {
+
+			$returnArr[ ModelComment::STATUS_APPROVED ]	= 0;
+		}
+
+		return $returnArr;
 	}
 }
 

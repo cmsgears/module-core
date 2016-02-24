@@ -25,15 +25,6 @@ trait DataTrait {
 		$this->generateJsonFromObject( $object );
 	}
 
-	public function removeDataAttribute( $name ) {
-
-		$object	= $this->generateObjectFromJson( $assoc = false );
-
-		unset( $object->$name );
-
-		$this->generateJsonFromObject( $object );
-	}
-
 	public function getDataAttribute( $name ) {
 
 		$object	= $this->generateObjectFromJson( $assoc = false );
@@ -45,4 +36,21 @@ trait DataTrait {
 		
 		return null;
 	}
+
+	public function updateDataAttribute( $name, $value ) {
+
+		$this->setDataAttribute( $name, $value );
+
+		$this->update();
+	}
+
+	public function removeDataAttribute( $name ) {
+
+		$object	= $this->generateObjectFromJson( $assoc = false );
+
+		unset( $object->$name );
+
+		$this->generateJsonFromObject( $object );
+	}
 }
+?>

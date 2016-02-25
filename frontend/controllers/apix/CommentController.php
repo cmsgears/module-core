@@ -44,8 +44,8 @@ class CommentController extends \cmsgears\core\admin\controllers\base\Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'create' => [ 'post' ],
-                    'approve' => [ 'get' ],
-                    'delete' => [ 'get' ], 
+                    'approve' => [ 'post' ],
+                    'delete' => [ 'post' ], 
                 ]
             ]
         ];

@@ -16,19 +16,24 @@ class ModelCommentService extends Service {
 
 	// Read ---------------- 
 	
-	public static function getAllByParentType( $type ) {
-		
-		return ModelComment::getAllByParentType( $type );
+	public static function findById( $id ) {
+	    
+        return ModelComment::findOne( $id );
 	}
 	
-	public static function findByBaseIdParentId( $baseId, $parentId ) {
+	public static function getAllByParentType( $type, $commentType = ModelComment::TYPE_COMMENT ) {
 		
-		return ModelComment::findByBaseIdParentId( $baseId, $parentId );
+		return ModelComment::getAllByParentType( $type, $commentType );
 	}
 	
-	public static function findByParentIdType( $parentId, $parentType ) {
+	public static function findByBaseIdParentId( $baseId, $parentId, $commentType = ModelComment::TYPE_COMMENT ) {
 		
-		return ModelComment::findByParentIdType( $parentId, $parentType );
+		return ModelComment::findByBaseIdParentId( $baseId, $parentId, $commentType );
+	}
+	
+	public static function findByParentIdType( $parentId, $parentType, $commentType = ModelComment::TYPE_COMMENT ) {
+		
+		return ModelComment::findByParentIdType( $parentId, $parentType, $commentType );
 	}
 
 	// Create -----------
@@ -39,8 +44,18 @@ class ModelCommentService extends Service {
  	}
  	
 	// Update -----------
+	
+	public static function update( $model ) {
+	    
+        $model->update();
+	}
  
 	// Delete -----------
+	
+	public static function delete( $model ) {
+        
+        $model->delete();
+    }
 	 
 }
 

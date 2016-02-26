@@ -18,6 +18,7 @@ class CommentController extends \cmsgears\core\admin\controllers\base\Controller
     
     protected $parentId;
     protected $parentType;
+    protected $commentType;
      
 	// Constructor and Initialisation ------------------------------
 
@@ -58,6 +59,7 @@ class CommentController extends \cmsgears\core\admin\controllers\base\Controller
 		$parentType           = $this->parentType;		
 		$model->parentId      = $this->parentId;
 		$model->parentType    = $this->parentType;
+        $model->type          = $this->commentType;
 		$model->ip            = Yii::$app->request->getUserIP();	
 		$model->status        = ModelComment::STATUS_NEW;
 		

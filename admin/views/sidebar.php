@@ -61,6 +61,7 @@ $user	= Yii::$app->user->getIdentity();
 				<li class='country <?php if( strcmp( $child, 'country' ) == 0 ) echo 'active';?>'><?= Html::a( 'Countries', [ '/cmgcore/country/all' ] ) ?></li>
 				<li class='dropdown <?php if( strcmp( $child, 'dropdown' ) == 0 ) echo 'active';?>'><?= Html::a( 'Dropdowns', [ '/cmgcore/dropdown/all' ] ) ?></li>
 				<li class='checkbox-group <?php if( strcmp( $child, 'checkbox-group' ) == 0 ) echo 'active';?>'><?= Html::a( 'Checkbox Groups', [ '/cmgcore/checkbox-group/all' ] ) ?></li>
+				<li class='testimonials <?php if( strcmp( $child, 'testimonials' ) == 0 ) echo 'active';?>'><?= Html::a( 'Testimonials', [ '/cmgcore/testimonial/all' ] ) ?></li>    
 			</ul>
 		</div>
 	</div>

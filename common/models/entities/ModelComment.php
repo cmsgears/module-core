@@ -36,7 +36,11 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property datetime $approvedAt
  */
 class ModelComment extends CmgModel {
-
+    
+    const TYPE_COMMENT      = 5;
+    const TYPE_REVIEW       = 10;
+    const TYPE_TESTIMONIAL  = 15;
+    
 	const STATUS_NEW		=  500;
 	const STATUS_BLOCKED	=  750;
 	const STATUS_APPROVED	= 1000;
@@ -46,7 +50,7 @@ class ModelComment extends CmgModel {
 		self::STATUS_BLOCKED => 'Blocked',
 		self::STATUS_APPROVED => 'Approved'
 	];
-	
+
 	use CreateModifyTrait;
 
 	// Instance Methods --------------------------------------------
@@ -152,19 +156,19 @@ class ModelComment extends CmgModel {
 
 	// Read ------
 
-	public static function getAllByParentType( $type ) {
+	public static function getAllByParentType( $type, $commentType ) {
 
-		return self::find()->where( [ 'status' => self::STATUS_APPROVED, 'parentType' => $type ] )->all();
+		return self::find()->where( [ 'status' => self::STATUS_APPROVED, 'parentType' => $type, 'type' => $commentType ] )->all();
 	}
 
-	public static function findByBaseIdParentId( $baseId = null, $parentId ) {
+	public static function findByBaseIdParentId( $baseId = null, $parentId, $commentType ) {
 
-		return self::find()->where( [ 'baseId' => $baseId, 'parentId' => $parentId, 'status' => self::STATUS_APPROVED ] )->all();
+		return self::find()->where( [ 'baseId' => $baseId, 'parentId' => $parentId, 'status' => self::STATUS_APPROVED, 'type' => $commentType ] )->all();
 	}
 
-	public static function findApprovedByParent( $parentId, $parentType ) {
+	public static function findApprovedByParent( $parentId, $parentType, $type ) {
 
-		return self::find()->where( [ 'parentId' => $parentId, 'parentType' => $parentType, 'status' => self::STATUS_APPROVED ] )->all();
+		return self::find()->where( [ 'parentId' => $parentId, 'parentType' => $parentType, 'status' => self::STATUS_APPROVED, 'type' => $commentType ] )->all();
 	}
 }
 

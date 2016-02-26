@@ -44,13 +44,40 @@ trait CategoryTrait {
 		return $query;
 	}
 
+	public function getActiveCategories() {
+
+    	$query = $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
+					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
+
+						$modelCategory	= CoreTables::TABLE_MODEL_CATEGORY;
+
+                      	$query->onCondition( [ "$modelCategory.parentType" => $this->categoryType, "$modelCategory.active" => true ] );
+					});
+
+		if( $this->categoryLimit > 0 ) {
+
+			$query = $query->limit( $this->categoryLimit );
+		}
+
+		return $query;
+	}
+
 	/**
 	 * @return array - list of category id associated with parent
 	 */
-	public function getCategoryIdList() {
+	public function getCategoryIdList( $active = false ) {
 
-    	$categories 		= $this->categories;
+    	$categories 		= null;
 		$categoriesList		= [];
+    	
+		if( $active ) {
+			
+			$categories = $this->activeCategories;			
+		}
+		else {
+			
+			$categories = $this->categories;
+		}
 
 		foreach ( $categories as $category ) {
 

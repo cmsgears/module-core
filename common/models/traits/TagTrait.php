@@ -43,14 +43,23 @@ trait TagTrait {
 					});
 	}
 
-	public function getTagIdList() {
+	public function getTagIdList( $active = false ) {
 
-    	$tags 		= $this->tags;
+    	$tags 		= null;
 		$tagsList	= [];
+
+		if( $active ) {
+
+			$tags = $this->activeTags;			
+		}
+		else {
+
+			$tags = $this->tags;
+		}
 
 		foreach ( $tags as $tag ) {
 
-			array_push( $tagsList, $tag->categoryId );
+			array_push( $tagsList, $tag->id );
 		}
 
 		return $tagsList;

@@ -35,6 +35,11 @@ class ModelCommentService extends Service {
 		
 		return ModelComment::findByParentIdType( $parentId, $parentType, $commentType );
 	}
+    
+    public static function findByType( $type ) {
+
+        return ModelComment::findAll( [ 'type' => $type ] );                     
+    }
 
 	// Create -----------
  	

@@ -52,7 +52,7 @@ class CommentController extends \cmsgears\core\admin\controllers\base\Controller
         ];
     }
 
-	// ModelCommentController
+	// CommentController
  	public function actionCreate() {
 
 		$model                = new ModelComment();

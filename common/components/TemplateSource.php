@@ -50,7 +50,12 @@ class TemplateSource extends \yii\base\Component {
 		}
 	}
 
-	protected function renderView( $template, $models, $page, $layout, $templateView ) {
+	protected function renderView( $template, $models, $config ) {
+
+		$page			= isset( $config[ 'page' ] ) ? $config[ 'page' ] : false;
+		$layout			= isset( $config[ 'layout' ] ) ? $config[ 'layout' ] : true;
+		$layoutPath		= isset( $config[ 'layoutPath' ] ) ? $config[ 'layoutPath' ] : null;
+		$view			= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : null;
 
 		$fileRender		= $template->renderFile;
 		$renderEngine 	= $template->renderer;
@@ -63,14 +68,24 @@ class TemplateSource extends \yii\base\Component {
 			// Default Rendering using php view file
 			if( isset( $theme ) && isset( $renderEngine ) && strcmp( $renderEngine, 'default' ) == 0 ) {
 
-				$path	= "$theme->basePath/$template->viewPath/$templateView";
+				$path	= "$theme->basePath/$template->viewPath/$view";
 
 				// Render using controller
 				if( $page ) {
 
-					if( $layout && isset( $template->layout ) ) {
-	
-						Yii::$app->controller->layout = "//$template->layout";
+					// Layout is required to render
+					if( $layout ) {
+
+						// Override DB Layout
+						if( isset( $layoutPath ) ) {
+
+							Yii::$app->controller->layout = $layoutPath;
+						}
+						// Use DB Layout by default			
+						else if( isset( $template->layout ) ) {
+
+							Yii::$app->controller->layout = "//$template->layout";	
+						}
 					}
 
 					return Yii::$app->controller->render( $path, $models );
@@ -88,19 +103,53 @@ class TemplateSource extends \yii\base\Component {
 		}
 	}
 
-	public function renderViewAdmin( $template, $models, $page = false, $layout = false ) {
+	public function renderViewAdmin( $template, $models, $config = [] ) {
 
-		return $this->renderView( $template, $models, $page, $layout, CoreGlobal::TEMPLATE_VIEW_ADMIN );
+		$config[ 'viewFile' ] = CoreGlobal::TEMPLATE_VIEW_ADMIN;
+
+		return $this->renderView( $template, $models, $config );
 	}
 
-	public function renderViewPrivate( $template, $models, $page = false, $layout = true ) {
+	public function renderViewPrivate( $template, $models, $config = [] ) {
 
-		return $this->renderView( $template, $models, $page, $layout, CoreGlobal::TEMPLATE_VIEW_PRIVATE );
+		$config[ 'viewFile' ] = CoreGlobal::TEMPLATE_VIEW_PRIVATE;
+
+		return $this->renderView( $template, $models, $config );
 	}
 
-	public function renderViewPublic( $template, $models, $page = false, $layout = true ) {
+	public function renderViewPublic( $template, $models, $config = [] ) {
 
-		return $this->renderView( $template, $models, $page, $layout, CoreGlobal::TEMPLATE_VIEW_PUBLIC );
+		$config[ 'viewFile' ] = CoreGlobal::TEMPLATE_VIEW_PUBLIC;
+
+		return $this->renderView( $template, $models, $config );
+	}
+
+	public function renderViewSearch( $template, $models, $config = [] ) {
+
+		$config[ 'viewFile' ] = CoreGlobal::TEMPLATE_VIEW_SEARCH;
+
+		return $this->renderView( $template, $models, $config );
+	}
+
+	public function renderViewCategory( $template, $models, $config = [] ) {
+
+		$config[ 'viewFile' ] = CoreGlobal::TEMPLATE_VIEW_CATEGRY;
+
+		return $this->renderView( $template, $models, $config );
+	}
+
+	public function renderViewTag( $template, $models, $config = [] ) {
+
+		$config[ 'viewFile' ] = CoreGlobal::TEMPLATE_VIEW_TAG;
+
+		return $this->renderView( $template, $models, $config );
+	}
+
+	public function renderViewAuthor( $template, $models, $config = [] ) {
+
+		$config[ 'viewFile' ] = CoreGlobal::TEMPLATE_VIEW_AUTHOR;
+
+		return $this->renderView( $template, $models, $config );
 	}
 }
 

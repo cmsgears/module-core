@@ -88,6 +88,10 @@ class CoreGlobal {
 	const TEMPLATE_VIEW_ADMIN			= 'admin';
 	const TEMPLATE_VIEW_PRIVATE			= 'private';
 	const TEMPLATE_VIEW_PUBLIC			= 'public';
+	const TEMPLATE_VIEW_SEARCH			= 'search';
+	const TEMPLATE_VIEW_CATEGRY			= 'category';
+	const TEMPLATE_VIEW_TAG				= 'tag';
+	const TEMPLATE_VIEW_AUTHOR			= 'author';
 
 	// Common Status ---------------------------------------------------
 

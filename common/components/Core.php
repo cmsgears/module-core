@@ -19,6 +19,11 @@ class Core extends \yii\base\Component {
 	/**
 	 * @var main site to load configurations in case sub sites are not configured.
 	 */
+	public $mainSiteId			= 1;
+
+	/**
+	 * @var main site to load configurations in case sub sites are not configured.
+	 */
 	public $mainSiteSlug		= 'main';
 
 	/**
@@ -135,6 +140,11 @@ class Core extends \yii\base\Component {
 
 		//TODO - Add code to check availability of a widget from database and widgets folder
     }
+
+	public function getMainSiteId() {
+
+		return $this->mainSiteId;
+	}
 
 	/**
 	 * The method getMainSiteSlug returns the site slug for main site.

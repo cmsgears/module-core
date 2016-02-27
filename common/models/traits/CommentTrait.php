@@ -16,7 +16,7 @@ trait CommentTrait {
 
 	public function getModelComments() {
 
-		return ModelComment::findApprovedByParent( $this->id, $this->commentType );
+		return ModelComment::findApprovedByParent( $this->id, $this->parentType, $this->commentType );
 	}
 
 	public function getAverageRating() {

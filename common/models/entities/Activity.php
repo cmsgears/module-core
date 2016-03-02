@@ -27,7 +27,6 @@ use cmsgears\core\common\models\traits\DataTrait;
 class Activity extends CmgEntity {
 
 	use TemplateTrait;
-
 	use DataTrait;
 
 	// Instance Methods --------------------------------------------

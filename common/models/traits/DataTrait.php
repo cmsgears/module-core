@@ -53,4 +53,5 @@ trait DataTrait {
 		$this->generateJsonFromObject( $object );
 	}
 }
+
 ?>

@@ -12,10 +12,8 @@ trait TagTrait {
 
 	public function getModelTags() {
 
-		$parentType	= $this->tagType;
-
 		return $this->hasMany( ModelTag::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$parentType'" );
+					->where( "parentType='$this->parentType'" );
 	}
 
 	/**
@@ -28,7 +26,7 @@ trait TagTrait {
 
 						$modelTagTable	= CoreTables::TABLE_MODEL_TAG;
 
-                      	$query->onCondition( [ "$modelTagTable.parentType" => $this->tagType ] );
+                      	$query->onCondition( [ "$modelTagTable.parentType" => $this->parentType ] );
 					});
 	}
 
@@ -39,7 +37,7 @@ trait TagTrait {
 
 						$modelTagTable	= CoreTables::TABLE_MODEL_TAG;
 
-                      	$query->onCondition( [ "$modelTagTable.parentType" => $this->tagType, "$modelTagTable.active" => true ] );
+                      	$query->onCondition( [ "$modelTagTable.parentType" => $this->parentType, "$modelTagTable.active" => true ] );
 					});
 	}
 

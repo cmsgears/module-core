@@ -16,10 +16,8 @@ trait AttributeTrait {
 	 */
 	public function getModelAttributes() {
 
-		$parentType	= $this->attributeType;
-
     	return $this->hasMany( ModelAttribute::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$parentType'" );
+					->where( "parentType='$this->parentType'" );
 	}
 
 	/**
@@ -27,10 +25,8 @@ trait AttributeTrait {
 	 */
 	public function getModelAttributesByType( $type ) {
 
-		$parentType	= $this->attributeType;
-
     	return $this->hasMany( ModelAttribute::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $parentType, ':type' => $type ] )->all();
+					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->parentType, ':type' => $type ] )->all();
 	}
 
 	/**
@@ -38,10 +34,8 @@ trait AttributeTrait {
 	 */
 	public function getModelAttributeByTypeName( $type, $name ) {
 
-		$parentType	= $this->attributeType;
-
     	return $this->hasMany( ModelAttribute::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType=:ptype AND type=:type AND name=:name", [ ':ptype' => $parentType, ':type' => $type, ':name' => $name ] )->one();
+					->where( "parentType=:ptype AND type=:type AND name=:name", [ ':ptype' => $this->parentType, ':type' => $type, ':name' => $name ] )->one();
 	}
 
 	/**

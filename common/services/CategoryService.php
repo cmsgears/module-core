@@ -77,7 +77,7 @@ class CategoryService extends HierarchyService {
 
 	public static function getLevelListByType( $type ) {
 
-		return self::getLevelList( [ 'node.type' => $type ] );
+		return self::getLevelList( [ 'node.type1' => $type ] );
 	}
 
 	// Read - Maps -----

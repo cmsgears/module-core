@@ -4,15 +4,15 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Update Testimonial | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Add Testimonial | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
 <div class="box box-cud">
 	<div class="box-wrap-header">
-		<div class="header">Update Testimonial</div>
+		<div class="header">Add Testimonial</div>
 	</div>
 	<div class="box-wrap-content frm-split-40-60">
-		<?php $form = ActiveForm::begin( [ 'id' => 'frm-testimonial' ] );?>
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-testimonial' ] ); ?>
 
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'email' ) ?>
@@ -23,7 +23,7 @@ $returnUrl		= $this->context->returnUrl;
 
 		<div class="align align-center">
 			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
-			<input class="element-medium" type="submit" value="Update" />
+			<input class="element-medium" type="submit" value="Create" />
 		</div>
 
 		<?php ActiveForm::end(); ?>

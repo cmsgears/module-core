@@ -17,7 +17,7 @@ $returnUrl		= $this->context->returnUrl;
 		<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
         <?= $form->field( $model, 'email' )->textInput( [ 'readonly' => true ] ) ?>
         <?= $form->field( $model, 'content' )->textarea( [ 'readonly' => true ] ) ?>
-        <?= $form->field($model, 'status')->radioList( $model::$statusMap, [ 'disabled' => true ] ) ?>
+        <?= $form->field( $model, 'status')->dropDownList( $statusMap, [ 'disabled' => true ] ) ?>
 
 		<div class="clear filler-height"></div>
 

@@ -96,8 +96,7 @@ class Province extends CmgEntity {
 
 			$existingProvince = self::findByNameCountryId( $this->name, $this->countryId );
 
-			if( isset( $existingProvince ) && $this->countryId == $existingProvince->countryId && 
-				$this->id != $existingProvince->id && strcmp( $existingProvince->name, $this->name ) == 0 ) {
+			if( isset( $existingProvince ) && $this->id != $existingProvince->id ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}

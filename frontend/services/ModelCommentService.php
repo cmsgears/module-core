@@ -53,22 +53,15 @@ class ModelCommentService extends \cmsgears\core\common\services\ModelCommentSer
 		
 		return self::getDataProvider( new ModelComment(), $config );
 	}
- 
-	// Create -----------
  	
 	// Update -----------
+
 	public static function updateStatus( $model, $status ) {
-		
+
 		$model->status	= $status;
+
 		$model->update();
 	}
- 
-	// Delete -----------
-	public static function delete( $model ) {
-		
-		$model->delete();
-	}
-	 
 }
 
 ?>

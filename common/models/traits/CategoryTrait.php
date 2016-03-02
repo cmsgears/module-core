@@ -10,17 +10,15 @@ use cmsgears\core\common\models\entities\ModelCategory;
  */
 trait CategoryTrait {
 
-	private $categoryLimit = 0;
+	private $categoryLimit 	= 0;
 
 	/**
 	 * @return array - ModelCategory associated with parent
 	 */
 	public function getModelCategories() {
 
-		$parentType	= $this->categoryType;
-
     	return $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$parentType'" );
+					->where( "parentType='$this->parentType'" );
 	}
 
 	/**
@@ -28,13 +26,16 @@ trait CategoryTrait {
 	 */
 	public function getCategories() {
 
+		$category	= CoreTables::TABLE_CATEGORY;
+
     	$query = $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
 
 						$modelCategory	= CoreTables::TABLE_MODEL_CATEGORY;
 
-                      	$query->onCondition( [ "$modelCategory.parentType" => $this->categoryType ] );
-					});
+                      	$query->onCondition( [ "$modelCategory.parentType" => $this->parentType ] );
+					})
+					->where( "$category.type='$this->categoryType'" );
 
 		if( $this->categoryLimit > 0 ) {
 
@@ -46,13 +47,16 @@ trait CategoryTrait {
 
 	public function getActiveCategories() {
 
+		$category	= CoreTables::TABLE_CATEGORY;
+
     	$query = $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
 
 						$modelCategory	= CoreTables::TABLE_MODEL_CATEGORY;
 
-                      	$query->onCondition( [ "$modelCategory.parentType" => $this->categoryType, "$modelCategory.active" => true ] );
-					});
+                      	$query->onCondition( [ "$modelCategory.parentType" => $this->parentType, "$modelCategory.active" => true ] );
+					})
+					->where( "$category.type='$this->categoryType'" );
 
 		if( $this->categoryLimit > 0 ) {
 
@@ -62,20 +66,42 @@ trait CategoryTrait {
 		return $query;
 	}
 
+	public function getCategoriesByType( $type ) {
+
+		$category	= CoreTables::TABLE_CATEGORY;
+
+		$categories = $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
+							->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
+
+								$modelCategory	= CoreTables::TABLE_MODEL_CATEGORY;
+
+                      			$query->onCondition( [ "$modelCategory.parentType" => $this->parentType, "$modelCategory.active" => true ] );
+							})
+							->where( "$category.type='$type'" )
+							->all();
+
+		return $categories;
+	}
+
 	/**
 	 * @return array - list of category id associated with parent
 	 */
 	public function getCategoryIdList( $active = false ) {
 
-    	$categories 		= null;
+    	$categories 		= [];
 		$categoriesList		= [];
-    	
+
+		if( isset( $type ) ) {
+
+			$this->categoryType	= $type;
+		}
+
 		if( $active ) {
-			
-			$categories = $this->activeCategories;			
+
+			$categories = $this->activeCategories;
 		}
 		else {
-			
+
 			$categories = $this->categories;
 		}
 
@@ -87,14 +113,49 @@ trait CategoryTrait {
 		return $categoriesList;
 	}
 
-	public function getCategoryNameList() {
+	public function getCategoryIdListByType( $type ) {
 
-    	$categories 		= $this->categories;
+		$categories 		= $this->getCategoriesByType( $type );
 		$categoriesList		= [];
 
 		foreach ( $categories as $category ) {
 
+			array_push( $categoriesList, $category->id );
+		}
+
+		return $categoriesList;
+	}
+
+	public function getCategoryNameList( $active = false ) {
+
+    	$categories 		= [];
+		$categoriesList		= [];
+
+		if( $active ) {
+
+			$categories = $this->activeCategories;
+		}
+		else {
+
+			$categories = $this->categories;
+		}
+
+		foreach ( $categories as $category ) {
+
 			array_push( $categoriesList, $category->name );
+		}
+
+		return $categoriesList;
+	}
+
+	public function getCategoryNameListByType( $type ) {
+
+		$categories 		= $this->getCategoriesByType( $type );
+		$categoriesList		= [];
+
+		foreach ( $categories as $category ) {
+
+			array_push( $categoriesList, $category->id );
 		}
 
 		return $categoriesList;

@@ -7,7 +7,7 @@ use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\models\entities\ModelComment;
- 
+
 /**
  * The class ModelCommentService is base class to perform database activities for ModelComment Entity.
  */
@@ -73,22 +73,12 @@ class ModelCommentService extends \cmsgears\core\common\services\ModelCommentSer
     /**
      * @return ActiveDataProvider
      */
-    public static function getPaginationByType( $type = null, $config = [] ) {
+    public static function getPaginationByType( $type, $config = [] ) {
 
-        if( isset( $type ) ) {
-
-            $config[ 'conditions' ][ 'type' ] = $type;
-        }
+        $config[ 'conditions' ][ 'type' ] = $type;
 
         return self::getPagination( $config );
     }
-    
-	// Create -----------
-	
-	// Update -----------
- 
-	// Delete -----------
-	 
 }
 
 ?>

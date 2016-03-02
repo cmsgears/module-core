@@ -40,7 +40,7 @@ abstract class NamedCmgEntity extends CmgEntity {
 
 			$existingEntity = static::findByName( $this->name );
 
-			if( isset( $existingEntity ) && $existingEntity->id != $this->id && strcmp( $existingEntity->name, $this->name ) == 0 ) {
+			if( isset( $existingEntity ) && $existingEntity->id != $this->id ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}

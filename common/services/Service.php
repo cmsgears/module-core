@@ -3,8 +3,10 @@ namespace cmsgears\core\common\services;
 
 // Yii Imports
 use \Yii;
+
 use yii\db\Query;
 use yii\data\ActiveDataProvider;
+
 use yii\helpers\HtmlPurifier;
 use yii\helpers\ArrayHelper;
 
@@ -37,7 +39,7 @@ class Service {
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
 		$searchCol		= isset( $config[ 'search-col' ] ) ? $config[ 'search-col' ] : null;
-		$sort			= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : null;
+		$sort			= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
 		$route			= isset( $config[ 'route' ] ) ? $config[ 'route' ] : null;
 
 		$pagination	= array();
@@ -52,7 +54,7 @@ class Service {
 		// Searching ----------
 
 		// Single Column
-		$searchTerms	= Yii::$app->request->getQueryParam( "search" );
+		$searchTerms	= Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchTerms ) && strlen( $searchTerms ) > 0 && isset( $searchCol ) ) {
 
@@ -61,16 +63,18 @@ class Service {
 			$query 			= $query->andWhere( $searchQuery );
 		}
 
-		// Multiple Columns
+		// Additional Filters --
+
 		if( isset( $filters ) ) {
 
 			foreach ( $filters as $filter ) {
 
-				$query 	= $query->andFilterWhere( $filter );	
+				$query 	= $query->andFilterWhere( $filter );
 			}
 		}
 
-		// Print Query
+		// Print to Debug -------
+
 		if( isset( $config[ 'pquery' ] ) && $config[ 'pquery' ] ) {
 
 			$command = $query->createCommand();
@@ -78,7 +82,8 @@ class Service {
 			var_dump( $command );
 		}
 
-		// Data Provider
+		// Data Provider --------
+
 	    $dataProvider	= new ActiveDataProvider([
             'query' => $query,
             'sort' => $sort,

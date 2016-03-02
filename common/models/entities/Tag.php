@@ -114,8 +114,7 @@ class Tag extends CmgEntity {
 
 			$existingTag = self::findByNameType( $this->name, $this->type );
 
-			if( isset( $existingTag ) && $existingTag->id != $this->id && 
-				strcmp( $existingTag->name, $this->name ) == 0 && $existingTag->type == $this->type ) {
+			if( isset( $existingTag ) && $existingTag->id != $this->id ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}

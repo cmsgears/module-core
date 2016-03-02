@@ -3,8 +3,10 @@ namespace cmsgears\core\common\services;
 
 // Yii Imports
 use \Yii;
+use yii\db\Query;
 
 // CMG Imports 
+use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\models\entities\ModelCategory; 
 
 /**
@@ -53,6 +55,34 @@ class ModelCategoryService extends Service {
 		return ModelCategory::findActiveByParentIdParentType( $parentId, $parentType );
 	}
 
+	public static function getModelCounts( $parentType, $categoryType ) {
+
+		$categoryTable	= CoreTables::TABLE_CATEGORY;
+		$mcategoryTable	= CoreTables::TABLE_MODEL_CATEGORY;
+		$query			= new Query();
+
+    	$query->select( [ 'slug', "count($categoryTable.id) as total" ] )
+				->from( $categoryTable )
+				->leftJoin( $mcategoryTable, "$mcategoryTable.categoryId=$categoryTable.id" )
+				->where( "$mcategoryTable.parentType='$parentType' AND $categoryTable.type='$categoryType'" )
+				->groupBy( "$categoryTable.id" );
+
+		$counts 	= $query->all();
+		$returnArr	= [];
+		$counter	= 0;
+
+		foreach ( $counts as $count ) {
+
+			$returnArr[ $count[ 'slug' ] ] = $count[ 'total' ];
+
+			$counter	= $counter + $count[ 'total' ];
+		}
+
+		$returnArr[ 'all' ] = $counter;
+
+		return $returnArr;
+	}
+	
 	// Read - Lists ----
 
 	public static function findActiveCategoryIdList( $parentId, $parentType ) {

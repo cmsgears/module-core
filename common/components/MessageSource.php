@@ -140,6 +140,7 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_DAY_WEEK => 'Week Day',
 		CoreGlobal::FIELD_DAY_MONTH => 'Month Day',
 		CoreGlobal::FIELD_IP => 'IP Address',
+		CoreGlobal::FIELD_AGENT_BROWSER => 'Browser Agent',
 		CoreGlobal::FIELD_DATA => 'Data',
 		CoreGlobal::FIELD_HTML_OPTIONS => 'HTML Options',
 		CoreGlobal::FIELD_COMPRESS => 'Store Compressed',

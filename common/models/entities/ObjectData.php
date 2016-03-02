@@ -41,9 +41,7 @@ use cmsgears\core\common\models\traits\DataTrait;
 class ObjectData extends CmgEntity {
 
 	use TemplateTrait;
-
 	use CreateModifyTrait;
-
 	use DataTrait;
 
 	// Instance Methods --------------------------------------------
@@ -165,8 +163,7 @@ class ObjectData extends CmgEntity {
 
 			$existingObj = self::findByNameType( $this->name, $this->type );
 
-			if( isset( $existingObj ) && $this->id != $existingObj->id && $this->siteId == $existingObj->siteId && 
-				strcmp( $existingObj->name, $this->name ) == 0 && strcmp( $existingObj->type, $this->type ) == 0 ) {
+			if( isset( $existingObj ) && $this->id != $existingObj->id ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}

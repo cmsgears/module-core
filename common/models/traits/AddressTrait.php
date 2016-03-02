@@ -15,10 +15,8 @@ trait AddressTrait {
 	 */
 	public function getModelAddresss() {
 
-		$parentType	= $this->addressType;
-
     	return $this->hasMany( ModelAddress::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$parentType'" );
+					->where( "parentType='$this->parentType'" );
 	}
 
 	/**
@@ -26,10 +24,22 @@ trait AddressTrait {
 	 */
 	public function getModelAddressByType( $type ) {
 
-		$parentType	= $this->addressType;
-
     	return $this->hasOne( ModelAddress::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $parentType, ':type' => $type ] )->one();
+					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->parentType, ':type' => $type ] )->one();
+	}
+
+	/**
+	 * @return Address - associated with parent having type set to primary
+	 */
+	public function getPrimaryAddress() {
+
+    	return $this->hasOne( Address::className(), [ 'id' => 'addressId' ] )
+					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query, $type = Address::TYPE_PRIMARY ) {
+
+						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
+
+                      	$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->parentType, ':type' => $type ] );
+					});
 	}
 
 	/**
@@ -42,49 +52,7 @@ trait AddressTrait {
 
 						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
 
-                      	$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->addressType, ':type' => $type ] );
-					});
-	}
-
-	/**
-	 * @return Address - associated with parent having type set to residential
-	 */
-	public function getPrimaryAddress() {
-
-    	return $this->hasOne( Address::className(), [ 'id' => 'addressId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query, $type = Address::TYPE_PRIMARY ) {
-
-						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
-
-                      	$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->addressType, ':type' => $type ] );
-					});
-	}
-
-	/**
-	 * @return Address - associated with parent having type set to office
-	 */
-	public function getOfficeAddress() {
-
-    	return $this->hasOne( Address::className(), [ 'id' => 'addressId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query, $type = Address::TYPE_OFFICE ) {
-
-						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
-
-                      	$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->addressType, ':type' => $type ] );
-					});
-	}
-
-	/**
-	 * @return Address - associated with parent having type set to mailing
-	 */
-	public function getMailingAddress() {
-
-    	return $this->hasOne( Address::className(), [ 'id' => 'addressId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query, $type = Address::TYPE_MAILING ) {
-
-						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
-
-                      	$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->addressType, ':type' => $type ] );
+                      	$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->parentType, ':type' => $type ] );
 					});
 	}
 
@@ -98,7 +66,7 @@ trait AddressTrait {
 
 						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
 
-                      	$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->addressType, ':type' => $type ] );
+                      	$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->parentType, ':type' => $type ] );
 					});
 	}
 
@@ -112,7 +80,49 @@ trait AddressTrait {
 
 						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
 
-                      	$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->addressType, ':type' => $type ] );
+                      	$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->parentType, ':type' => $type ] );
+					});
+	}
+
+	/**
+	 * @return Address - associated with parent having type set to office
+	 */
+	public function getOfficeAddress() {
+
+    	return $this->hasOne( Address::className(), [ 'id' => 'addressId' ] )
+					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query, $type = Address::TYPE_OFFICE ) {
+
+						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
+
+                      	$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->parentType, ':type' => $type ] );
+					});
+	}
+
+	/**
+	 * @return Address - associated with parent having type set to mailing
+	 */
+	public function getMailingAddress() {
+
+    	return $this->hasOne( Address::className(), [ 'id' => 'addressId' ] )
+					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query, $type = Address::TYPE_MAILING ) {
+
+						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
+
+                      	$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->parentType, ':type' => $type ] );
+					});
+	}
+
+	/**
+	 * @return Address - associated with parent having type set to mailing
+	 */
+	public function getBranchAddress() {
+
+    	return $this->hasMany( Address::className(), [ 'id' => 'addressId' ] )
+					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query, $type = Address::TYPE_BRANCH ) {
+
+						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
+
+                      	$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->parentType, ':type' => $type ] );
 					});
 	}
 }

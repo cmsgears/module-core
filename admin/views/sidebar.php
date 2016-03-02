@@ -56,12 +56,12 @@ $user	= Yii::$app->user->getIdentity();
 			<ul>
 				<li class='site <?php if( strcmp( $child, 'site' ) == 0 ) echo 'active';?>'><?= Html::a( 'Sites', [ '/cmgcore/sites/all' ] ) ?></li>
 				<li class='theme <?php if( strcmp( $child, 'theme' ) == 0 ) echo 'active';?>'><?= Html::a( 'Themes', [ '/cmgcore/theme/all' ] ) ?></li>
+				<li class='testimonials <?php if( strcmp( $child, 'testimonials' ) == 0 ) echo 'active';?>'><?= Html::a( 'Testimonials', [ '/cmgcore/testimonial/all' ] ) ?></li>
 				<li class='gallery <?php if( strcmp( $child, 'gallery' ) == 0 ) echo 'active';?>'><?= Html::a( 'Galleries', [ '/cmgcore/gallery/all' ] ) ?></li>
 				<li class='gallery-template <?php if( strcmp( $child, 'gallery-template' ) == 0 ) echo 'active';?>'><?= Html::a( 'Gallery Templates', [ '/cmgcore/gallery/template/all' ] ) ?></li>
 				<li class='country <?php if( strcmp( $child, 'country' ) == 0 ) echo 'active';?>'><?= Html::a( 'Countries', [ '/cmgcore/country/all' ] ) ?></li>
 				<li class='dropdown <?php if( strcmp( $child, 'dropdown' ) == 0 ) echo 'active';?>'><?= Html::a( 'Dropdowns', [ '/cmgcore/dropdown/all' ] ) ?></li>
 				<li class='checkbox-group <?php if( strcmp( $child, 'checkbox-group' ) == 0 ) echo 'active';?>'><?= Html::a( 'Checkbox Groups', [ '/cmgcore/checkbox-group/all' ] ) ?></li>
-				<li class='testimonials <?php if( strcmp( $child, 'testimonials' ) == 0 ) echo 'active';?>'><?= Html::a( 'Testimonials', [ '/cmgcore/testimonial/all' ] ) ?></li>    
 			</ul>
 		</div>
 	</div>

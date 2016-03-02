@@ -12,6 +12,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\traits\VisualTrait;
 use cmsgears\core\common\models\traits\AttributeTrait;
+use cmsgears\core\common\models\traits\CommentTrait;
 
 /**
  * Site Entity
@@ -29,9 +30,10 @@ class Site extends NamedCmgEntity {
 
 	use VisualTrait;
 
-	use AttributeTrait;
+	public $parentType	= CoreGlobal::TYPE_SITE;
 
-	public $attributeType	= CoreGlobal::TYPE_SITE;
+	use AttributeTrait;
+	use CommentTrait;
 
 	// Instance Methods --------------------------------------------
 

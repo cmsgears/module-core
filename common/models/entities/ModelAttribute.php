@@ -96,9 +96,7 @@ class ModelAttribute extends Attribute {
 
 			$existingConfig = self::findByTypeName( $this->parentId, $this->parentType, $this->type, $this->name );
 
-			if( isset( $existingConfig ) && $existingConfig->id != $this->id && 
-				$existingConfig->parentId == $this->parentId && strcmp( $existingConfig->parentType, $this->parentType ) == 0 && 
-				strcmp( $existingConfig->name, $this->name ) == 0 && $existingConfig->type == $this->type ) {
+			if( isset( $existingConfig ) && $existingConfig->id != $this->id ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}

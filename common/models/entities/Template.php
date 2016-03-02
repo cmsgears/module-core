@@ -25,10 +25,11 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property string $slug
  * @property string $icon
  * @property string $type
- * @property string $renderer
- * @property integer $renderFile
  * @property string $description
+ * @property string $renderer
+ * @property integer $fileRender
  * @property string $layout
+ * @property string $layoutGroup
  * @property string $viewPath
  * @property datetime $createdAt
  * @property datetime $modifiedAt
@@ -81,7 +82,7 @@ class Template extends CmgEntity {
             [ 'name', 'alphanumspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ 'renderFile', 'boolean' ],
+            [ [ 'fileRender', 'layoutGroup' ], 'boolean' ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
@@ -139,8 +140,7 @@ class Template extends CmgEntity {
 
 			$existingTemplate = self::findByNameType( $this->name, $this->type );
 
-			if( isset( $existingTemplate ) && $this->id != $existingTemplate->id && 
-				strcmp( $existingTemplate->name, $this->name ) == 0 && strcmp( $existingTemplate->type, $this->type ) == 0 ) {
+			if( isset( $existingTemplate ) && $this->id != $existingTemplate->id ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}

@@ -34,9 +34,7 @@ use cmsgears\core\common\models\traits\DataTrait;
 class Newsletter extends NamedCmgEntity {
 
 	use TemplateTrait;
-
 	use CreateModifyTrait;
-
 	use DataTrait;
 
 	// Instance Methods --------------------------------------------

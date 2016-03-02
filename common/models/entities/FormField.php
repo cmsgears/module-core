@@ -190,8 +190,7 @@ class FormField extends CmgEntity {
 
 			$existingField = self::findByNameFormId( $this->name, $this->formId );
 
-			if( isset( $existingField ) && $this->formId == $existingField->formId && 
-				$this->id != $existingField->id && strcmp( $existingField->name, $this->name ) == 0 ) {
+			if( isset( $existingField ) && $this->id != $existingField->id ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}

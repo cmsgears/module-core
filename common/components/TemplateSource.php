@@ -36,7 +36,7 @@ class TemplateSource extends \yii\base\Component {
 
 	public function getRenderPath( $template ) {
 
-		$fileRender	= $template->renderFile;
+		$fileRender	= $template->fileRender;
 
 		// Render from file
 		if( $fileRender ) {
@@ -57,7 +57,7 @@ class TemplateSource extends \yii\base\Component {
 		$layoutPath		= isset( $config[ 'layoutPath' ] ) ? $config[ 'layoutPath' ] : null;
 		$view			= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : null;
 
-		$fileRender		= $template->renderFile;
+		$fileRender		= $template->fileRender;
 		$renderEngine 	= $template->renderer;
 
 		// Render from file
@@ -81,10 +81,17 @@ class TemplateSource extends \yii\base\Component {
 
 							Yii::$app->controller->layout = $layoutPath;
 						}
-						// Use DB Layout by default			
+						// Use DB Layout by default
 						else if( isset( $template->layout ) ) {
 
-							Yii::$app->controller->layout = "//$template->layout";	
+							if( $template->layoutGroup ) {
+
+								Yii::$app->controller->layout = "//$template->layout/$view";
+							}
+							else {
+
+								Yii::$app->controller->layout = "//$template->layout";
+							}
 						}
 					}
 
@@ -93,7 +100,7 @@ class TemplateSource extends \yii\base\Component {
 				// Render using view
 				else {
 
-					return Yii::$app->controller->view->render( $path, $models );	
+					return Yii::$app->controller->view->render( $path, $models );
 				}
 			}
 			else {
@@ -103,51 +110,79 @@ class TemplateSource extends \yii\base\Component {
 		}
 	}
 
+	/**
+	 * Admin view to be used for review purpose for data created by site users. The data collected by user will be submitted for admin review as part of approval process.
+	 */
 	public function renderViewAdmin( $template, $models, $config = [] ) {
 
-		$config[ 'viewFile' ] = CoreGlobal::TEMPLATE_VIEW_ADMIN;
+		$config[ 'viewFile' ] 	= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : CoreGlobal::TEMPLATE_VIEW_ADMIN;
+		$config[ 'page' ] 		= isset( $config[ 'page' ] ) ? $config[ 'page' ] : true;
 
 		return $this->renderView( $template, $models, $config );
 	}
 
+	/**
+	 * Private view to be viewed by logged in users. It's required for specific cases where views are different for logged in vs non logged in users.
+	 */
 	public function renderViewPrivate( $template, $models, $config = [] ) {
 
-		$config[ 'viewFile' ] = CoreGlobal::TEMPLATE_VIEW_PRIVATE;
+		$config[ 'viewFile' ] 	= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : CoreGlobal::TEMPLATE_VIEW_PRIVATE;
+		$config[ 'page' ] 		= isset( $config[ 'page' ] ) ? $config[ 'page' ] : true;
 
 		return $this->renderView( $template, $models, $config );
 	}
 
+	/**
+	 * Public view to be viewed by all users. Private view might override in specific scenarios.
+	 */
 	public function renderViewPublic( $template, $models, $config = [] ) {
 
-		$config[ 'viewFile' ] = CoreGlobal::TEMPLATE_VIEW_PUBLIC;
+		$config[ 'viewFile' ] 	= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : CoreGlobal::TEMPLATE_VIEW_PUBLIC;
+		$config[ 'page' ] 		= isset( $config[ 'page' ] ) ? $config[ 'page' ] : true;
 
 		return $this->renderView( $template, $models, $config );
 	}
-
+	
+	/**
+	 * Default search page for public/private views.
+	 */
 	public function renderViewSearch( $template, $models, $config = [] ) {
 
-		$config[ 'viewFile' ] = CoreGlobal::TEMPLATE_VIEW_SEARCH;
+		$config[ 'viewFile' ] 	= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : CoreGlobal::TEMPLATE_VIEW_SEARCH;
+		$config[ 'page' ] 		= isset( $config[ 'page' ] ) ? $config[ 'page' ] : true;
 
 		return $this->renderView( $template, $models, $config );
 	}
 
+	/**
+	 * Category search page for public/private views.
+	 */
 	public function renderViewCategory( $template, $models, $config = [] ) {
 
-		$config[ 'viewFile' ] = CoreGlobal::TEMPLATE_VIEW_CATEGRY;
+		$config[ 'viewFile' ] 	= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : CoreGlobal::TEMPLATE_VIEW_CATEGRY;
+		$config[ 'page' ] 		= isset( $config[ 'page' ] ) ? $config[ 'page' ] : true;
 
 		return $this->renderView( $template, $models, $config );
 	}
 
+	/**
+	 * Tag search page for public/private views.
+	 */
 	public function renderViewTag( $template, $models, $config = [] ) {
 
-		$config[ 'viewFile' ] = CoreGlobal::TEMPLATE_VIEW_TAG;
+		$config[ 'viewFile' ] 	= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : CoreGlobal::TEMPLATE_VIEW_TAG;
+		$config[ 'page' ] 		= isset( $config[ 'page' ] ) ? $config[ 'page' ] : true;
 
 		return $this->renderView( $template, $models, $config );
 	}
 
+	/**
+	 * Author search page for public/private views.
+	 */
 	public function renderViewAuthor( $template, $models, $config = [] ) {
 
-		$config[ 'viewFile' ] = CoreGlobal::TEMPLATE_VIEW_AUTHOR;
+		$config[ 'viewFile' ] 	= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : CoreGlobal::TEMPLATE_VIEW_AUTHOR;
+		$config[ 'page' ] 		= isset( $config[ 'page' ] ) ? $config[ 'page' ] : true;
 
 		return $this->renderView( $template, $models, $config );
 	}

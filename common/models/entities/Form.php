@@ -51,12 +51,11 @@ class Form extends NamedCmgEntity {
 	];
 	
 	use TemplateTrait;
+	use DataTrait;
+
+	public $parentType	= CoreGlobal::TYPE_FORM;
 
 	use AttributeTrait;
-
-	public $attributeType	= CoreGlobal::TYPE_FORM;
-
-	use DataTrait;
 
 	// Instance Methods --------------------------------------------
 

@@ -105,8 +105,7 @@ class Option extends CmgEntity {
 
 			$existingOption = self::findByNameCategoryId( $this->name, $this->categoryId );
 
-			if( isset( $existingOption ) && $existingOption->id != $this->id && 
-				strcmp( $existingOption->name, $this->name ) == 0 && $existingOption->categoryId == $this->categoryId ) {
+			if( isset( $existingOption ) && $existingOption->id != $this->id ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}

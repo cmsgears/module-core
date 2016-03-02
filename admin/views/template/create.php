@@ -25,10 +25,11 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
     	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
     	<?= $form->field( $model, 'renderer' )->dropDownList( $renderers ) ?>
 
-		<?= $form->field( $model, 'renderFile' )->checkbox( [ 'class' => 'template-file' ] ) ?>
+		<?= $form->field( $model, 'fileRender' )->checkbox( [ 'class' => 'template-file' ] ) ?>
 
     	<div class="render-file">
 	    	<?= $form->field( $model, 'layout' ) ?>
+	    	<?= $form->field( $model, 'layoutGroup' )->checkbox() ?>
 			<?= $form->field( $model, 'viewPath' ) ?>
 		</div>
 

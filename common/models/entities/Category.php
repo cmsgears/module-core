@@ -141,15 +141,15 @@ class Category extends HierarchicalModel {
 	}
 
 	// Category --------------------------
-	
+
 	/**
-	 * Validates to ensure that name is used only for one category for a particular type
+	 * Validates to ensure that name is used only for one category for a particular type and belonging to same parent
 	 */
     public function validateNameCreate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
-            if( self::isExistByNameType( $this->name, $this->type ) ) {
+            if( self::isExistByNameType( $this->parentId, $this->name, $this->type ) ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
@@ -157,16 +157,15 @@ class Category extends HierarchicalModel {
     }
 
 	/**
-	 * Validates to ensure that name is used only for one category for a particular type
+	 * Validates to ensure that name is used only for one category for a particular type and belonging to same parent
 	 */
     public function validateNameUpdate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
-			$existingCategory = self::findByNameType( $this->name, $this->type );
+			$existingCategory = self::findByNameType( $this->parentId, $this->name, $this->type );
 
-			if( isset( $existingCategory ) && $existingCategory->id != $this->id && 
-				strcmp( $existingCategory->name, $this->name ) == 0 && $existingCategory->type == $this->type ) {
+			if( isset( $existingCategory ) && $existingCategory->id != $this->id ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}
@@ -218,27 +217,27 @@ class Category extends HierarchicalModel {
 	/**
 	 * @return Category - by type and name
 	 */
-	public static function findByNameType( $name, $type ) {
+	public static function findByNameType( $parentId, $name, $type ) {
 
 		$siteId	= Yii::$app->cmgCore->siteId;
 
-		return self::find()->where( 'name=:name AND type=:type AND siteId=:siteId', [ ':name' => $name, ':type' => $type, ':siteId' => $siteId ] )->one();
+		return self::find()->where( 'parentId=:pid AND name=:name AND type=:type AND siteId=:siteId', [ ':pid' => $parentId, ':name' => $name, ':type' => $type, ':siteId' => $siteId ] )->one();
 	}
 	
 	/**
 	 * @return Category - by type and featured
 	 */
 	public static function getFeaturedByType( $type ) {
-		
+
 		return self::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->all();
 	}
 
 	/**
 	 * @return Category - checks whether category exist by type and name
 	 */
-	public static function isExistByNameType( $name, $type ) {
+	public static function isExistByNameType( $parentId, $name, $type ) {
 
-		$category = self::findByNameType( $name, $type );
+		$category = self::findByNameType( $parentId, $name, $type );
 
 		return isset( $category );
 	}

@@ -6,7 +6,7 @@ use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\models\entities\ModelComment;
- 
+
 /**
  * The class ModelCommentService is base class to perform database activities for ModelComment Entity.
  */
@@ -14,54 +14,72 @@ class ModelCommentService extends Service {
 
 	// Static Methods ----------------------------------------------
 
-	// Read ---------------- 
-	
-	public static function findById( $id ) {
-	    
-        return ModelComment::findOne( $id );
-	}
-	
-	public static function getAllByParentType( $type, $commentType = ModelComment::TYPE_COMMENT ) {
-		
-		return ModelComment::getAllByParentType( $type, $commentType );
-	}
-	
-	public static function findByBaseIdParentId( $baseId, $parentId, $commentType = ModelComment::TYPE_COMMENT ) {
-		
-		return ModelComment::findByBaseIdParentId( $baseId, $parentId, $commentType );
-	}
-	
-	public static function findByParentIdType( $parentId, $parentType, $commentType = ModelComment::TYPE_COMMENT ) {
-		
-		return ModelComment::findByParentIdType( $parentId, $parentType, $commentType );
-	}
-    
-    public static function findByType( $type ) {
+	// Read ----------------
 
-        return ModelComment::findAll( [ 'type' => $type ] );                     
+	public static function findById( $id ) {
+
+        return ModelComment::findById( $id );
+	}
+
+    public static function findApprovedByType( $type ) {
+
+        return ModelComment::findAll( [ 'type' => $type, 'status' =>  ModelComment::STATUS_APPROVED ] );                     
     }
+
+	public static function findApprovedByBaseId( $baseId, $commentType = ModelComment::TYPE_COMMENT ) {
+
+		return ModelComment::findByBaseId( $baseId, $commentType );
+	}
+
+	public static function findApprovedByParent( $parentId, $parentType, $commentType = ModelComment::TYPE_COMMENT ) {
+
+		return ModelComment::findByParent( $parentId, $parentType, $commentType );
+	}
+
+	public static function findApprovedByParentType( $parentType, $commentType = ModelComment::TYPE_COMMENT ) {
+
+		return ModelComment::findByParentType( $parentType, $commentType );
+	}
 
 	// Create -----------
- 	
- 	public static function create( $model ) {
- 		
-		$model->save();
+
+ 	public static function create( $comment ) {
+
+		$comment->agent	= Yii::$app->request->userAgent;
+		$comment->ip	= Yii::$app->request->userIP;
+
+		$comment->save();
+		
+		return $comment;
  	}
- 	
+
 	// Update -----------
-	
-	public static function update( $model ) {
-	    
-        $model->update();
+
+	public static function update( $comment ) {
+
+		// Find existing Comment
+		$commentToUpdate	= self::findById( $comment->id );
+
+		// Copy and set Attributes
+		$commentToUpdate->copyForUpdateFrom( $comment, [ 'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content', 'status' ] );
+
+		// Update Comment
+		$commentToUpdate->update();
+
+		// Return updated Comment
+		return $commentToUpdate;
 	}
- 
+
 	// Delete -----------
-	
-	public static function delete( $model ) {
-        
-        $model->delete();
+
+	public static function delete( $comment ) {
+
+		// Find existing Comment
+		$commentToDelete	= self::findById( $comment->id );
+
+		// Delete Comment
+		$commentToDelete->delete();
     }
-	 
 }
 
 ?>

@@ -40,22 +40,14 @@ use cmsgears\core\common\models\traits\DataTrait;
 class Gallery extends NamedCmgEntity {
 
 	use TemplateTrait;
+	use DataTrait;
+
+	public $parentType		= CoreGlobal::TYPE_GALLERY;
 
 	use FileTrait;
-
-	public $fileType		= CoreGlobal::TYPE_GALLERY;
-
 	use AttributeTrait;
-
-	public $attributeType	= CoreGlobal::TYPE_GALLERY;
-
 	use CategoryTrait;
-
-	public $categoryType	= CoreGlobal::TYPE_GALLERY;
-
 	use CreateModifyTrait;
-
-	use DataTrait;
 
 	// Instance Methods --------------------------------------------
 
@@ -185,6 +177,13 @@ class Gallery extends NamedCmgEntity {
 	public static function findBySlug( $slug ) {
 
 		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+	}
+
+	public static function findByName( $name ) {
+
+		$siteId	= Yii::$app->cmgCore->siteId;
+
+		return self::find()->where( 'name=:name AND siteId=:siteId', [ ':name' => $name, ':siteId' => $siteId ] )->one();
 	}
 }
 

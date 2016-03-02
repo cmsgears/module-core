@@ -222,6 +222,7 @@ class CoreGlobal {
 	const FIELD_DAY_WEEK 			= 'Week Day';
 	const FIELD_DAY_MONTH			= 'Month Day';
 	const FIELD_IP					= 'ipField';
+	const FIELD_AGENT_BROWSER		= 'browserAgentField';
 	const FIELD_DATA				= 'dataField';
 	const FIELD_HTML_OPTIONS		= 'htmlOptionsField';
 	const FIELD_COMPRESS			= 'compressField';

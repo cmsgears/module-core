@@ -15,10 +15,8 @@ trait ActivityTrait {
 	 */
 	public function getModelActivities() {
 
-		$parentType	= $this->activityType;
-
     	return $this->hasMany( ModelActivity::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$parentType'" );
+					->where( "parentType='$this->parentType'" );
 	}
 
 	/**
@@ -31,7 +29,7 @@ trait ActivityTrait {
 
 						$modelActivity	= CoreTables::TABLE_MODEL_ACTIVITY;
 	
-                      	$query->onCondition( [ "$modelActivity.parentType" => $this->activityType ] );
+                      	$query->onCondition( [ "$modelActivity.parentType" => $this->parentType ] );
 						$query->where( "$modelActivity.admin=0" );
 					});
 
@@ -50,7 +48,7 @@ trait ActivityTrait {
 
 						$modelActivity	= CoreTables::TABLE_MODEL_ACTIVITY;
 	
-                      	$query->onCondition( [ "$modelActivity.parentType" => $this->activityType ] );
+                      	$query->onCondition( [ "$modelActivity.parentType" => $this->parentType ] );
 						$query->where( "$modelActivity.admin=1" );
 					});
 

@@ -16,10 +16,8 @@ trait FileTrait {
 	 */
 	public function getModelFiles() {
 
-		$parentType	= $this->fileType;
-
     	return $this->hasMany( ModelFile::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$parentType'" );
+					->where( "parentType='$this->parentType'" );
 	}
 
 	/**
@@ -27,10 +25,8 @@ trait FileTrait {
 	 */
 	public function getModelFilesByType( $type ) {
 
-		$parentType	= $this->fileType;
-
     	return $this->hasMany( ModelFile::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $parentType, ':type' => $type ] )->all();
+					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->parentType, ':type' => $type ] )->all();
 	}
 
 	/**
@@ -43,7 +39,7 @@ trait FileTrait {
 
 						$modelFile	= CoreTables::TABLE_MODEL_FILE;
 
-                      	$query->onCondition( "$modelFile.parentType=:type", [ ':type' => $this->fileType ] );
+                      	$query->onCondition( "$modelFile.parentType=:type", [ ':type' => $this->parentType ] );
 					});
 	}
 
@@ -57,7 +53,7 @@ trait FileTrait {
 
 								$modelFileTable	= CoreTables::TABLE_MODEL_FILE;
 
-                      			$query->onCondition( "$modelFileTable.parentType=:type", [ ':type' => $this->fileType ] );
+                      			$query->onCondition( "$modelFileTable.parentType=:type", [ ':type' => $this->parentType ] );
 							})->one();
 
 		return $file;

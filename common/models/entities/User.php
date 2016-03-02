@@ -80,17 +80,11 @@ class User extends CmgEntity implements IdentityInterface {
 
 	use VisualTrait;
 
+	public $parentType	= CoreGlobal::TYPE_USER;
+
 	use AttributeTrait;
-
-	public $attributeType	= CoreGlobal::TYPE_USER;
-
 	use FileTrait;
-
-	public $fileType		= CoreGlobal::TYPE_USER;
-
 	use AddressTrait;
-
-	public $addressType		= CoreGlobal::TYPE_USER;
 
 	public $permissions	= [];
 

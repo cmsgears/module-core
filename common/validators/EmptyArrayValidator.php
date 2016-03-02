@@ -13,7 +13,7 @@ class EmptyArrayValidator extends \yii\validators\Validator {
 
 		$submittedData = $model->submittedData;
 
-		if( !isset( $submittedData[ $attribute ] ) ) {
+		if( !isset( $submittedData[ $attribute ] ) || !is_array( $submittedData[ $attribute ] ) ) {
 
 			$model->$attribute	= [];
 		}

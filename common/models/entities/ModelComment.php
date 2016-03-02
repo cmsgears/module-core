@@ -3,7 +3,6 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
 use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
@@ -26,21 +25,25 @@ use cmsgears\core\common\models\traits\CreateModifyTrait;
  * @property string $parentType
  * @property string $name
  * @property string $email
+ * @property string $avatarUrl
+ * @property string $websiteUrl
  * @property string $ip
- * @property string $content
- * @property string $data
+ * @property string $agent
  * @property integer $status
+ * @property integer $type
  * @property integer $rating
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property datetime $approvedAt
+ * @property string $content
+ * @property string $data
  */
 class ModelComment extends CmgModel {
-    
-    const TYPE_COMMENT      = 5;
-    const TYPE_REVIEW       = 10;
-    const TYPE_TESTIMONIAL  = 15;
-    
+
+    const TYPE_COMMENT      =   0;
+    const TYPE_REVIEW       =  10;
+    const TYPE_TESTIMONIAL  =  20;
+
 	const STATUS_NEW		=  500;
 	const STATUS_BLOCKED	=  750;
 	const STATUS_APPROVED	= 1000;
@@ -78,7 +81,6 @@ class ModelComment extends CmgModel {
     public function behaviors() {
 
         return [
-
             'authorBehavior' => [
                 'class' => AuthorBehavior::className()
 			],
@@ -100,18 +102,20 @@ class ModelComment extends CmgModel {
 
 		// model rules
         $rules = [
-            [ [ 'parentId', 'parentType', 'content', 'name', 'rating', 'email' ], 'required' ],
-            [ [ 'id', 'email', 'status', 'rating', 'data' ], 'safe' ],
+            [ [ 'parentId', 'parentType', 'name', 'email' ], 'required' ],
+            [ [ 'id', 'agent', 'status', 'rating', 'content', 'data' ], 'safe' ],
             [ 'email', 'email' ],
             [ [ 'parentType', 'name', 'ip' ], 'string', 'min' => 1, 'max' => 100 ],
-			[ [ 'parentId', 'baseId', 'createdBy', 'modifiedBy', 'rating' ], 'number', 'integerOnly' => true, 'min' => 1 ], 
+			[ [ 'parentId', 'baseId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'rating' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
             [ [ 'createdAt', 'modifiedAt', 'approvedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
 		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'ip', 'name', 'email', 'rating' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'email','avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -130,7 +134,10 @@ class ModelComment extends CmgModel {
 			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
 			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+			'avatarUrl' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
+			'websiteUrl' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
 			'ip' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_IP ),
+			'agent' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AGENT_BROWSER ),
 			'status' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
 			'rating' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_RATING ),
 			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
@@ -156,19 +163,19 @@ class ModelComment extends CmgModel {
 
 	// Read ------
 
-	public static function getAllByParentType( $type, $commentType ) {
+	public static function findByBaseId( $baseId, $commentType, $status = self::STATUS_APPROVED ) {
 
-		return self::find()->where( [ 'status' => self::STATUS_APPROVED, 'parentType' => $type, 'type' => $commentType ] )->all();
+		return self::find()->where( [ 'baseId' => $baseId, 'type' => $commentType, 'status' => $status ] )->all();
 	}
 
-	public static function findByBaseIdParentId( $baseId = null, $parentId, $commentType ) {
+	public static function findByParent( $parentId, $parentType, $commentType, $status = self::STATUS_APPROVED ) {
 
-		return self::find()->where( [ 'baseId' => $baseId, 'parentId' => $parentId, 'status' => self::STATUS_APPROVED, 'type' => $commentType ] )->all();
+		return self::find()->where( [ 'parentId' => $parentId, 'parentType' => $parentType, 'type' => $commentType, 'status' => $status ] )->all();
 	}
 
-	public static function findApprovedByParent( $parentId, $parentType, $commentType ) {
+	public static function findByParentType( $parentType, $commentType, $status = self::STATUS_APPROVED ) {
 
-		return self::find()->where( [ 'parentId' => $parentId, 'parentType' => $parentType, 'status' => self::STATUS_APPROVED, 'type' => $commentType ] )->all();
+		return self::find()->where( [ 'parentType' => $parentType, 'type' => $commentType, 'status' => $status ] )->all();
 	}
 }
 

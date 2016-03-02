@@ -100,9 +100,7 @@ class ModelMessage extends CmgModel {
 
 			$existingMessage = self::findByNameLocaleId( $this->parentId, $this->parentType, $this->name, $this->localeId );
 
-			if( isset( $existingMessage ) && $existingMessage->id != $this->id && 
-				$existingMessage->parentId == $this->parentId && $existingMessage->parentType == $this->parentType &&
-				strcmp( $existingMessage->name, $this->name ) == 0 && $existingMessage->localeId == $this->localeId ) {
+			if( isset( $existingMessage ) && $existingMessage->id != $this->id ) {
 	
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}

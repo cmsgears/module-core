@@ -34,7 +34,6 @@ use cmsgears\core\common\models\traits\DataTrait;
 class Theme extends NamedCmgEntity {
 
 	use CreateModifyTrait;
-
 	use DataTrait;
 
 	// Instance Methods --------------------------------------------

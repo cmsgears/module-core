@@ -15,16 +15,18 @@ use cmsgears\core\frontend\services\ModelCommentService;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class CommentController extends \cmsgears\core\admin\controllers\base\Controller {
-    
+
     protected $parentId;
     protected $parentType;
     protected $commentType;
-     
+
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+
+		$this->commentType	= ModelComment::TYPE_COMMENT;
 	}
 
 	// Instance Methods --------------------------------------------
@@ -37,8 +39,8 @@ class CommentController extends \cmsgears\core\admin\controllers\base\Controller
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'delete' => [ 'permission' => CoreGlobal::PERM_USER ],
-	                'approve' => [ 'permission' => CoreGlobal::PERM_USER ], 
+	                'approve' => [ 'permission' => CoreGlobal::PERM_USER ],
+	                'delete' => [ 'permission' => CoreGlobal::PERM_USER ]
                 ]
             ],
             'verbs' => [
@@ -46,57 +48,70 @@ class CommentController extends \cmsgears\core\admin\controllers\base\Controller
                 'actions' => [
                     'create' => [ 'post' ],
                     'approve' => [ 'post' ],
-                    'delete' => [ 'post' ], 
+                    'delete' => [ 'post' ] 
                 ]
             ]
         ];
     }
 
 	// CommentController
+
  	public function actionCreate() {
 
 		$model                = new ModelComment();
-		$parentType           = $this->parentType;		
+
 		$model->parentId      = $this->parentId;
 		$model->parentType    = $this->parentType;
         $model->type          = $this->commentType;
-		$model->ip            = Yii::$app->request->getUserIP();	
 		$model->status        = ModelComment::STATUS_NEW;
-		
-		if( $model->load( Yii::$app->request->post(), 'ModelComment' ) && $model->validate()  ) {
-			
+
+		if( $model->load( Yii::$app->request->post(), 'ModelComment' ) && $model->validate() ) {
+
 			ModelCommentService::create( $model );
-			
+
+			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 		}
 		else {
+
+			// Generate Errors
+			$errors = AjaxUtil::generateErrorMessage( $model );
 			
 			// Trigger Ajax Failure
-			$errors = AjaxUtil::generateErrorMessage( $model );
         	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
  	}
-	
+
 	public function actionApprove( $id ) {
-		
+
 		$model	= ModelCommentService::findById( $id );
-		
+
 		if( isset( $model ) ) {
-			
+
 			ModelCommentService::updateStatus( $model, ModelComment::STATUS_APPROVED );
+
+			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 		}
+
+		// Trigger Ajax Failure
+    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
-	
+
 	public function actionDelete( $id ) {
-		
+
 		$model	= ModelCommentService::findById( $id );
-		
+
 		if( isset( $model ) ) {
-			
+
 			ModelCommentService::delete( $model );
+
+			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 		}
+
+		// Trigger Ajax Failure
+    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
 }
 

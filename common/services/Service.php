@@ -10,9 +10,6 @@ use yii\data\ActiveDataProvider;
 use yii\helpers\HtmlPurifier;
 use yii\helpers\ArrayHelper;
 
-// CMG Imports
-use cmsgears\core\common\models\entities\CMGEntity;
-
 /**
  * The class Service defines several static methods used for pagination and generating map and list by specifying the columns.
  */
@@ -53,13 +50,12 @@ class Service {
 
 		// Searching ----------
 
-		// Single Column
 		$searchTerms	= Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchTerms ) && strlen( $searchTerms ) > 0 && isset( $searchCol ) ) {
 
 			$searchTerms	= HtmlPurifier::process( $searchTerms );
-			$searchQuery 	= CMGEntity::generateSearchQuery( $searchCol, $searchTerms );
+			$searchQuery 	= self::generateSearchQuery( $searchCol, $searchTerms );
 			$query 			= $query->andWhere( $searchQuery );
 		}
 
@@ -93,6 +89,63 @@ class Service {
         ]);
 
 		return $dataProvider;
+	}
+
+	/**
+	 * It generate search query for specified columns by parsing the comma seperated search terms 
+	 */
+	public static function generateSearchQuery( $columns, $searchTerms ) {
+
+		$searchTerms	= preg_split( '/,/', $searchTerms );
+		$searchQuery	= "";
+
+		if( is_array( $columns ) ) {
+
+			foreach ( $columns as $ckey => $column ) {
+
+				$query	= null;
+
+				foreach ( $searchTerms as $skey => $term ) {
+
+					if( $skey  == 0 ) {
+
+						$query = " $column like '%$term%' ";
+					}
+					else {
+
+						$query .= " OR $column like '%$term%' ";
+					}
+				}
+
+				if( isset( $query ) ) {
+
+					if( $ckey  == 0 ) {
+
+						$searchQuery = 	"( $query )";
+					}
+					else {
+
+						$searchQuery .= " OR ( $query )";
+					}
+				}
+			}
+		}
+		else {
+
+			foreach ( $searchTerms as $key => $value ) {
+
+				if( $key  == 0 ) {
+	
+					$searchQuery .= " $columns like '%$value%' ";
+				}
+				else {
+	
+					$searchQuery .= " OR $columns like '%$value%' ";
+				}
+			}
+		}
+
+		return $searchQuery;
 	}
 
 	// Maps -------------------------------------------------------

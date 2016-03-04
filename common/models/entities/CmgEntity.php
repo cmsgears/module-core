@@ -52,29 +52,6 @@ abstract class CmgEntity extends ActiveRecord {
 		return self::find()->where( $conditions )->count();
 	}
 
-	/**
-	 * It generate search query for a column by parsing the comma seperated string. 
-	 */
-	public static function generateSearchQuery( $culumn, $searchTerms ) {
-
-		$searchTerms	= preg_split( '/,/', $searchTerms );
-		$searchQuery	= "";
-
-		foreach ( $searchTerms as $key => $value ) {
-
-			if( $key  == 0 ) {
-
-				$searchQuery .= " $culumn like '%$value%' ";
-			}
-			else {
-
-				$searchQuery .= " or $culumn like '%$value%' ";
-			}
-		}
-
-		return $searchQuery;
-	}
-
 	// Default Searching - Useful for id based models
 
 	public static function findById( $id ) {

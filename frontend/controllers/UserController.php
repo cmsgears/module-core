@@ -52,11 +52,13 @@ class UserController extends base\Controller {
 
 	// UserController
 
+	// Redirect user to appropriate home page
     public function actionIndex() {
 
-        return $this->render( WebGlobalCore::PAGE_INDEX );
+        $this->checkHome();
     }
 
+	// Default home page for user
     public function actionHome() {
 
         return $this->render( WebGlobalCore::PAGE_INDEX );

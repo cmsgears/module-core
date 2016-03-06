@@ -155,7 +155,7 @@ trait CategoryTrait {
 
 		foreach ( $categories as $category ) {
 
-			array_push( $categoriesList, $category->id );
+			array_push( $categoriesList, $category->name );
 		}
 
 		return $categoriesList;

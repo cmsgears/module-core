@@ -37,7 +37,7 @@ trait CommentTrait {
 		$command 		= $query->createCommand();
 		$average 		= $command->queryOne();
 
-		return $average[ 'average' ];
+		return round( $average[ 'average' ] );
 	}
 
 	public function getReviewCounts() {

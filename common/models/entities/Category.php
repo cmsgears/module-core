@@ -217,12 +217,19 @@ class Category extends HierarchicalModel {
 	/**
 	 * @return Category - by type and name
 	 */
-	public static function findByNameType( $parentId, $name, $type ) {
+	public static function findByNameType( $name, $type, $parentId = null ) {
 
-		$siteId	= Yii::$app->cmgCore->siteId;
+        $siteId = Yii::$app->cmgCore->siteId;
+        
+        if( isset( $parentId ) ) {
+            
+            return self::find()->where( 'parentId=:pid AND name=:name AND type=:type AND siteId=:siteId', [ ':pid' => $parentId, ':name' => $name, ':type' => $type, ':siteId' => $siteId ] )->one();
+        }        
+        else {
 
-		return self::find()->where( 'parentId=:pid AND name=:name AND type=:type AND siteId=:siteId', [ ':pid' => $parentId, ':name' => $name, ':type' => $type, ':siteId' => $siteId ] )->one();
-	}
+            return self::find()->where( 'name=:name AND type=:type AND siteId=:siteId', [ ':name' => $name, ':type' => $type, ':siteId' => $siteId ] )->one();
+        }
+    }
 	
 	/**
 	 * @return Category - by type and featured

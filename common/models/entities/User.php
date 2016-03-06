@@ -465,7 +465,12 @@ class User extends CmgEntity implements IdentityInterface {
 	 */
 	public function validatePassword( $password ) {
 
-		return Yii::$app->getSecurity()->validatePassword( $password, $this->passwordHash );
+		if( isset( $password ) && isset( $this->passwordHash ) ) {
+
+			return Yii::$app->getSecurity()->validatePassword( $password, $this->passwordHash );
+		}
+
+		return false;
 	}
 
 	/**

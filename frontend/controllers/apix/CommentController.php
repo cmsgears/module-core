@@ -16,103 +16,52 @@ use cmsgears\core\common\utilities\AjaxUtil;
 
 class CommentController extends \cmsgears\core\admin\controllers\base\Controller {
 
-    protected $parentId;
-    protected $parentType;
-    protected $commentType;
+    // Constructor and Initialisation ------------------------------
 
-	// Constructor and Initialisation ------------------------------
-
- 	public function __construct( $id, $module, $config = [] ) {
+    public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+    }
 
-		$this->commentType	= ModelComment::TYPE_COMMENT;
-	}
+    // Instance Methods --------------------------------------------
 
-	// Instance Methods --------------------------------------------
-
-	// yii\base\Component
+    // yii\base\Component
 
     public function behaviors() {
 
         return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'approve' => [ 'permission' => CoreGlobal::PERM_USER ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_USER ]
-                ]
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'create' => [ 'post' ],
-                    'approve' => [ 'post' ],
-                    'delete' => [ 'post' ] 
+                    'create' => [ 'post' ]
                 ]
             ]
         ];
     }
 
-	// CommentController
+    // CommentController
 
- 	public function actionCreate() {
+    public function actionCreate() {
 
-		$model                = new ModelComment();
+        $model            = new ModelComment();
+        $model->status    = ModelComment::STATUS_NEW;
 
-		$model->parentId      = $this->parentId;
-		$model->parentType    = $this->parentType;
-        $model->type          = $this->commentType;
-		$model->status        = ModelComment::STATUS_NEW;
+        if( $model->load( Yii::$app->request->post(), 'ModelComment' ) && $model->validate() ) {
 
-		if( $model->load( Yii::$app->request->post(), 'ModelComment' ) && $model->validate() ) {
+            ModelCommentService::create( $model );
 
-			ModelCommentService::create( $model );
+            // Trigger Ajax Success
+            return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+        }
+        else {
 
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
-		}
-		else {
+            // Generate Errors
+            $errors = AjaxUtil::generateErrorMessage( $model );
 
-			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $model );
-			
-			// Trigger Ajax Failure
-        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-		}
- 	}
-
-	public function actionApprove( $id ) {
-
-		$model	= ModelCommentService::findById( $id );
-
-		if( isset( $model ) ) {
-
-			ModelCommentService::updateStatus( $model, ModelComment::STATUS_APPROVED );
-
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
-		}
-
-		// Trigger Ajax Failure
-    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
-	}
-
-	public function actionDelete( $id ) {
-
-		$model	= ModelCommentService::findById( $id );
-
-		if( isset( $model ) ) {
-
-			ModelCommentService::delete( $model );
-
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
-		}
-
-		// Trigger Ajax Failure
-    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
-	}
+            // Trigger Ajax Failure
+            return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+        }
+    }
 }
 
 ?>

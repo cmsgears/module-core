@@ -44,36 +44,36 @@ class ModelComment extends CmgModel {
     const TYPE_REVIEW       =  10;
     const TYPE_TESTIMONIAL  =  20;
 
-	const STATUS_NEW		=  500;
-	const STATUS_BLOCKED	=  750;
-	const STATUS_APPROVED	= 1000;
+    const STATUS_NEW        =  500;
+    const STATUS_BLOCKED    =  750;
+    const STATUS_APPROVED   = 1000;
 
-	public static $statusMap = [
-		self::STATUS_NEW => 'New',
-		self::STATUS_BLOCKED => 'Blocked',
-		self::STATUS_APPROVED => 'Approved'
-	];
+    public static $statusMap = [
+        self::STATUS_NEW => 'New',
+        self::STATUS_BLOCKED => 'Blocked',
+        self::STATUS_APPROVED => 'Approved'
+    ];
 
-	use CreateModifyTrait;
+    use CreateModifyTrait;
 
-	// Instance Methods --------------------------------------------
+    // Instance Methods --------------------------------------------
 
-	public function getBaseComment() {
+    public function getBaseComment() {
 
-		return $this->hasOne( ModelComment::className(), [ 'id' => 'baseId' ] );
-	}
+        return $this->hasOne( ModelComment::className(), [ 'id' => 'baseId' ] );
+    }
 
-	public function getChildComments() {
+    public function getChildComments() {
 
-		return $this->hasMany( ModelComment::className(), [ 'baseId' => 'id' ] );
-	}
+        return $this->hasMany( ModelComment::className(), [ 'baseId' => 'id' ] );
+    }
 
-	public function getStatusStr() {
+    public function getStatusStr() {
 
-		return self::$statusMap[ $this->status ];
-	}
+        return self::$statusMap[ $this->status ];
+    }
 
-	// yii\base\Component ----------------
+    // yii\base\Component ----------------
 
     /**
      * @inheritdoc
@@ -83,100 +83,100 @@ class ModelComment extends CmgModel {
         return [
             'authorBehavior' => [
                 'class' => AuthorBehavior::className()
-			],
+            ],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
-				'createdAtAttribute' => 'createdAt',
- 				'updatedAtAttribute' => 'modifiedAt',
- 				'value' => new Expression('NOW()')
+                'createdAtAttribute' => 'createdAt',
+                'updatedAtAttribute' => 'modifiedAt',
+                'value' => new Expression('NOW()')
             ]
         ];
     }
 
-	// yii\base\Model --------------------
+    // yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-	public function rules() {
+    public function rules() {
 
-		// model rules
+        // model rules
         $rules = [
             [ [ 'parentId', 'parentType', 'name', 'email' ], 'required' ],
-            [ [ 'id', 'agent', 'status', 'rating', 'content', 'data' ], 'safe' ],
+            [ [ 'id', 'agent', 'status', 'rating', 'content', 'type', 'data' ], 'safe' ],
             [ 'email', 'email' ],
             [ [ 'parentType', 'name', 'ip' ], 'string', 'min' => 1, 'max' => 100 ],
-			[ [ 'parentId', 'baseId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ [ 'rating' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
+            [ [ 'parentId', 'baseId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'rating' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+            [ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
             [ [ 'createdAt', 'modifiedAt', 'approvedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
-		// trim if required
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+        // trim if required
+        if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'email','avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'name', 'email','avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-			return ArrayHelper::merge( $trim, $rules );
-		}
+            return ArrayHelper::merge( $trim, $rules );
+        }
 
-		return $rules;
+        return $rules;
     }
 
     /**
      * @inheritdoc
      */
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'baseId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
-			'avatarUrl' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
-			'websiteUrl' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
-			'ip' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_IP ),
-			'agent' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AGENT_BROWSER ),
-			'status' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
-			'rating' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_RATING ),
-			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
-			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
-		];
-	}
+        return [
+            'baseId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+            'avatarUrl' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
+            'websiteUrl' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
+            'ip' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_IP ),
+            'agent' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AGENT_BROWSER ),
+            'status' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
+            'rating' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_RATING ),
+            'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
+            'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
+        ];
+    }
 
-	// ModelTag --------------------------
+    // ModelTag --------------------------
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+    // yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-	public static function tableName() {
+    public static function tableName() {
 
-		return CoreTables::TABLE_MODEL_COMMENT;
-	}
+        return CoreTables::TABLE_MODEL_COMMENT;
+    }
 
-	// ModelComment ----------------------
+    // ModelComment ----------------------
 
-	// Read ------
+    // Read ------
 
-	public static function findByBaseId( $baseId, $commentType, $status = self::STATUS_APPROVED ) {
+    public static function findByBaseId( $baseId, $commentType, $status = self::STATUS_APPROVED ) {
 
-		return self::find()->where( [ 'baseId' => $baseId, 'type' => $commentType, 'status' => $status ] )->all();
-	}
+        return self::find()->where( [ 'baseId' => $baseId, 'type' => $commentType, 'status' => $status ] )->all();
+    }
 
-	public static function findByParent( $parentId, $parentType, $commentType, $status = self::STATUS_APPROVED ) {
+    public static function findByParent( $parentId, $parentType, $commentType, $status = self::STATUS_APPROVED ) {
 
-		return self::find()->where( [ 'parentId' => $parentId, 'parentType' => $parentType, 'type' => $commentType, 'status' => $status ] )->all();
-	}
+        return self::find()->where( [ 'parentId' => $parentId, 'parentType' => $parentType, 'type' => $commentType, 'status' => $status ] )->all();
+    }
 
-	public static function findByParentType( $parentType, $commentType, $status = self::STATUS_APPROVED ) {
+    public static function findByParentType( $parentType, $commentType, $status = self::STATUS_APPROVED ) {
 
-		return self::find()->where( [ 'parentType' => $parentType, 'type' => $commentType, 'status' => $status ] )->all();
-	}
+        return self::find()->where( [ 'parentType' => $parentType, 'type' => $commentType, 'status' => $status ] )->all();
+    }
 }
 
 ?>

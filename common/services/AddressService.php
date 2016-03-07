@@ -57,7 +57,7 @@ class AddressService extends Service {
 
 		// Copy Attributes
 		$addressToUpdate->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'city', 'zip', 
-											'firstName', 'lastName', 'phone', 'email', 'fax', 'longitude', 'latitude', 'zoomLevel' ] );
+											'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude', 'zoomLevel' ] );
 
 		// Update Category
 		$addressToUpdate->update();

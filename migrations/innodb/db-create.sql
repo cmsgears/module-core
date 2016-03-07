@@ -304,6 +304,7 @@ CREATE TABLE `cmg_core_address` (
   `phone` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `fax` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `website` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `latitude` decimal(8,4) DEFAULT 0,
   `longitude` decimal(8,4) DEFAULT 0,
   `zoomLevel` smallint(6) DEFAULT 5,

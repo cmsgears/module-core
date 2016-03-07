@@ -16,12 +16,12 @@ trait CommentTrait {
 
 	public function getModelComments() {
 
-		return ModelComment::findByParent( $this->id, $this->commentType, ModelComment::TYPE_COMMENT );
+		return ModelComment::findByParent( $this->id, $this->parentType, ModelComment::TYPE_COMMENT );
 	}
 
 	public function getModelReviews() {
 
-		return ModelComment::findByParent( $this->id, $this->commentType, ModelComment::TYPE_REVIEW );
+		return ModelComment::findByParent( $this->id, $this->parentType, ModelComment::TYPE_REVIEW );
 	}
 
 	// Average rating for all the reviews
@@ -79,6 +79,26 @@ trait CommentTrait {
 		}
 
 		return $returnArr;
+	}
+
+	public function getApprovedReviewCount() {
+
+		$commentTable	= CoreTables::TABLE_MODEL_COMMENT;
+		$query			= new Query();
+
+    	$query->select( [ 'count(id) as total' ] )
+				->from( $commentTable )
+				->where( [ 'parentId' => $this->id, 'parentType' => $this->parentType, 'type' => ModelComment::TYPE_REVIEW, 'status' => ModelComment::STATUS_APPROVED ] )
+				->groupBy( 'status' );
+
+		$count = $query->one();
+
+		if( $count ) {
+
+			return $count[ 'total' ];
+		}
+
+		return 0;
 	}
 }
 

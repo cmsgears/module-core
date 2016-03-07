@@ -24,6 +24,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $phone
  * @property string $email
  * @property string $fax
+ * @property string $website
  * @property string $longitude
  * @property string $latitude
  * @property string $zoomLevel
@@ -98,7 +99,7 @@ class Address extends CmgEntity {
         $rules = [
 			[ [ 'provinceId', 'countryId', 'line1', 'city', 'zip' ], 'required' ],
 			[ [ 'longitude', 'latitude' ], 'required', 'on' => 'location' ],
-			[ [ 'id', 'firstName', 'lastName', 'email' ], 'safe' ],
+			[ [ 'id', 'firstName', 'lastName', 'email', 'website' ], 'safe' ],
 			[ [ 'line1', 'line2', 'line3' ], 'alphanumpun' ],
 			[ 'city', 'alphanumspace' ],
 			[ 'zip', 'alphanumhyphenspace' ],
@@ -110,7 +111,7 @@ class Address extends CmgEntity {
 		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'line1', 'line2', 'line3', 'city', 'zip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'longitude', 'latitude' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'line1', 'line2', 'line3', 'city', 'zip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -136,6 +137,7 @@ class Address extends CmgEntity {
 			'phone' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
 			'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
 			'fax' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FAX ),
+			'website' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
 			'longitude' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LONGITUDE ),
 			'latitude' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LATITUDE ),
 			'zoomLevel' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ZOOM )

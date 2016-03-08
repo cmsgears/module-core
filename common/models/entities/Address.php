@@ -78,7 +78,7 @@ class Address extends CmgEntity {
 			$address .= ", $this->line2";
 		}
 
-		if( isset( $this->line3 ) && strlen( $this->line2 ) > 0 ) {
+		if( isset( $this->line3 ) && strlen( $this->line3 ) > 0 ) {
 
 			$address .= ", $this->line3";
 		}

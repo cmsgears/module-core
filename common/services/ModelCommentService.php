@@ -70,6 +70,23 @@ class ModelCommentService extends Service {
 		return $commentToUpdate;
 	}
 
+	public static function updateStatus( $model, $status ) {
+
+		$model->status	= $status;
+
+		$model->update();
+	}
+
+	public static function block( $model ) {
+
+		self::updateStatus( $model, ModelComment::STATUS_BLOCKED );
+	}
+
+	public static function approve( $model ) {
+
+		self::updateStatus( $model, ModelComment::STATUS_APPROVED );
+	}
+
 	// Delete -----------
 
 	public static function delete( $comment ) {

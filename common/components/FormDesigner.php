@@ -607,34 +607,6 @@ class FormDesigner extends \yii\base\Component {
 
 		return $fieldHtml;
 	}
-	
-	public function getApixRatingList( $selected, $endVal, $hover = false ) {
-		        
-		$hoverClass   = null; 
-		
-        if( $hover ) {
-            
-            $hoverClass = 'hover';
-        }
-        
-		$ratingHtml	= "<div class='cmt-rating $hoverClass'>";
-        
-		for( $i = 1; $i <= $endVal; $i++ ) {
-		        
-            $icon   = "<span data='$i'>&#9734;</span>";
-		    
-		    if( $selected == $i ) {
-		            
-		        $icon   = "<span data='$i' class='filled'>&#9733;</span>";
-		    }
-		       
-		    $ratingHtml   .= $icon;
-		}
-		
-		$ratingHtml	.= "</div>";	
-		
-		return $ratingHtml;
-	}
 
 	// HTML Generator
 
@@ -695,6 +667,32 @@ class FormDesigner extends \yii\base\Component {
 					    </div>";
 
 		return $fieldHtml;
+	}
+
+	public function getRatingStars( $selected, $endVal, $hover = false ) {
+
+		$ratingHtml	= "<div class='cmt-rating'>";
+
+        if( $hover ) {
+
+            $ratingHtml	= "<div class='cmt-rating hover'>";
+        }
+
+		for( $i = 1; $i <= $endVal; $i++ ) {
+
+            $icon   = "<span data='$i'>&#9734;</span>";
+
+		    if( isset( $selected ) && $selected <= $i ) {
+
+		        $icon   = "<span data='$i' class='filled'>&#9733;</span>";
+		    }
+
+		    $ratingHtml   .= $icon;
+		}
+
+		$ratingHtml	.= "</div>";
+
+		return $ratingHtml;
 	}
 }
 

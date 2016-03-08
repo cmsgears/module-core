@@ -138,6 +138,34 @@ trait TagTrait {
 
 		return implode( ", ", $tagsCsv );
 	}
+
+	public function getTagLinks( $baseUrl, $limit = 0, $wrapper = 'li' ) {
+
+		$tags 		= $this->activeTags;
+		$tagLinks	= null;
+		$count		= 1;
+
+		foreach ( $tags as $tag ) {
+
+			if( isset( $wrapper ) ) {
+				
+				$tagLinks	.= "<$wrapper><a href='$baseUrl?slug=$tag->slug'>$tag->name</a></$wrapper>";
+			}
+			else {
+
+				$tagLinks	.= "<a href='$baseUrl?slug=$tag->slug'>$tag->name</a>";
+			}
+
+			if( $limit > 0 && $count >= $limit ) {
+
+				break;
+			}
+
+			$count++;
+		}
+
+		return $tagLinks;
+	}
 }
 
 ?>

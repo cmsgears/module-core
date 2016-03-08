@@ -205,17 +205,24 @@ trait CategoryTrait {
 		}
 
 		return implode( ", ", $categoriesCsv );
-	} 
-	
-	public function getCategoryLinks( $baseUrl, $limit = 0 ) {
-		
-		$categories 	= $this->categories;
+	}
+
+	public function getCategoryLinks( $baseUrl, $limit = 0, $wrapper = 'li' ) {
+
+		$categories 	= $this->activeCategories;
 		$categoryLinks	= null;
 		$count			= 1;
 
 		foreach ( $categories as $category ) {
-			 
-			$categoryLinks	.= "<li><a href='$baseUrl?slug=$category->slug'>$category->name</a></li>";
+			
+			if( isset( $wrapper ) ) {
+				
+				$categoryLinks	.= "<$wrapper><a href='$baseUrl?slug=$category->slug'>$category->name</a></$wrapper>";
+			}
+			else {
+
+				$categoryLinks	.= "<a href='$baseUrl?slug=$category->slug'>$category->name</a>";
+			}
 
 			if( $limit > 0 && $count >= $limit ) {
 

@@ -13,7 +13,7 @@ trait AddressTrait {
 	/**
 	 * @return array - ModelAddress associated with parent
 	 */
-	public function getModelAddresss() {
+	public function getModelAddresses() {
 
     	return $this->hasMany( ModelAddress::className(), [ 'parentId' => 'id' ] )
 					->where( "parentType='$this->parentType'" );

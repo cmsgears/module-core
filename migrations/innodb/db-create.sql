@@ -459,7 +459,7 @@ CREATE TABLE `cmg_core_activity` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `templateId` bigint(20) DEFAULT NULL,
   `type` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `consumed` tinyint(1) DEFAULT 0,
+  `ip` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime NOT NULL,
   `scheduledAt` datetime DEFAULT NULL,
@@ -655,6 +655,7 @@ CREATE TABLE `cmg_core_model_activity` (
   `activityId` bigint(20) NOT NULL,
   `parentId` bigint(20) NOT NULL,
   `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `consumed` tinyint(1) NOT NULL DEFAULT 0,
   `admin` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `fk_model_activity_1` (`activityId`)
@@ -677,6 +678,25 @@ CREATE TABLE `cmg_core_model_category` (
   `active` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   KEY `fk_model_category_1` (`categoryId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `cmg_core_model_option`
+--
+
+DROP TABLE IF EXISTS `cmg_core_model_option`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmg_core_model_option` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `optionId` bigint(20) NOT NULL,
+  `parentId` bigint(20) NOT NULL,
+  `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `order` smallint(6) NOT NULL DEFAULT 0,
+  `active` tinyint(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
+  KEY `fk_model_option_1` (`optionId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -969,6 +989,13 @@ ALTER TABLE `cmg_core_model_activity`
 
 ALTER TABLE `cmg_core_model_category`
   	ADD CONSTRAINT `fk_model_category_1` FOREIGN KEY (`categoryId`) REFERENCES `cmg_core_category` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cmg_core_model_option`
+--
+
+ALTER TABLE `cmg_core_model_option`
+  	ADD CONSTRAINT `fk_model_option_1` FOREIGN KEY (`optionId`) REFERENCES `cmg_core_option` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `cmg_core_model_file`

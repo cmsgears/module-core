@@ -141,7 +141,7 @@ class ModelCategoryService extends Service {
 		$model->update();
 	}
 
-	public static function bindCategories( $binder, $type ) {
+	public static function bindCategories( $binder, $parentType ) {
 
 		$parentId	= $binder->binderId;
 		$allData	= $binder->allData;
@@ -149,7 +149,7 @@ class ModelCategoryService extends Service {
 
 		foreach ( $allData as $id ) {
 
-			$toSave		= ModelCategory::findByCategoryId( $parentId, $type, $id );
+			$toSave		= ModelCategory::findByCategoryId( $parentId, $parentType, $id );
 
 			// Existing mapping
 			if( isset( $toSave ) ) {
@@ -171,7 +171,7 @@ class ModelCategoryService extends Service {
 				$toSave		= new ModelCategory();
 
 				$toSave->parentId	= $parentId;
-				$toSave->parentType	= $type;
+				$toSave->parentType	= $parentType;
 				$toSave->categoryId	= $id;
 				$toSave->active		= true;
 

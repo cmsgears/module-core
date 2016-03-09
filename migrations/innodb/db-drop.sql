@@ -58,6 +58,8 @@ DROP TABLE IF EXISTS `cmg_core_model_activity`;
 
 DROP TABLE IF EXISTS `cmg_core_model_category`;
 
+DROP TABLE IF EXISTS `cmg_core_model_option`;
+
 DROP TABLE IF EXISTS `cmg_core_model_file`;
 
 DROP TABLE IF EXISTS `cmg_core_model_tag`;

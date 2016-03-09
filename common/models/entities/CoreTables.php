@@ -52,6 +52,7 @@ class CoreTables {
 	// Model Traits
 	const TABLE_MODEL_MESSAGE		= 'cmg_core_model_message';
 	const TABLE_MODEL_CATEGORY		= 'cmg_core_model_category';
+	const TABLE_MODEL_OPTION		= 'cmg_core_model_option';
 	const TABLE_MODEL_ATTRIBUTE		= 'cmg_core_model_attribute';
 	const TABLE_MODEL_FILE			= 'cmg_core_model_file';
 	const TABLE_MODEL_TAG			= 'cmg_core_model_tag';

@@ -14,6 +14,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property integer $activityId
  * @property integer $parentId
  * @property string $parentType
+ * @property integer $consumed 
  * @property integer $admin
  */
 class ModelActivity extends CmgModel {
@@ -28,6 +29,22 @@ class ModelActivity extends CmgModel {
     	return $this->hasOne( Activity::className(), [ 'id' => 'activityId' ] );
 	}
 
+	/**
+	 * @return string representation of flag
+	 */
+	public function getConsumedStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->consumed ); 
+	}
+
+	/**
+	 * @return string representation of flag
+	 */
+	public function getAdminStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->admin ); 
+	}
+
 	// yii\base\Model --------------------
 
     /**
@@ -40,7 +57,7 @@ class ModelActivity extends CmgModel {
             [ [ 'id' ], 'safe' ],
             [ [ 'activityId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'parentType' ], 'string', 'min' => 1, 'max' => 100 ],
-            [ 'admin', 'boolean' ]
+            [ [ 'consumed', 'admin' ], 'boolean' ]
         ];
     }
 
@@ -53,6 +70,7 @@ class ModelActivity extends CmgModel {
 			'activityId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVITY ),
 			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+			'consumed' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONSUMED ),
 			'admin' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ADMIN )
 		];
 	}

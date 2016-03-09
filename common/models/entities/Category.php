@@ -83,9 +83,7 @@ class Category extends HierarchicalModel {
 
             'sluggableBehavior' => [
                 'class' => SluggableBehavior::className(),
-                'attribute' => 'name',
-                'slugAttribute' => 'slug',
-                'ensureUnique' => true
+                'attribute' => 'name'
             ]
         ];
     }

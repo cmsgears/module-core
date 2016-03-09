@@ -18,7 +18,7 @@ use cmsgears\core\common\models\traits\DataTrait;
  * @property integer $id
  * @property integer $templateId
  * @property string $type
- * @property integer $consumed
+ * @property string $ip
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property datetime $scheduledAt
@@ -30,14 +30,6 @@ class Activity extends CmgEntity {
 	use DataTrait;
 
 	// Instance Methods --------------------------------------------
-
-	/**
-	 * @return string representation of flag
-	 */
-	public function getConsumedStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->consumed ); 
-	}
 
 	// yii\base\Component ----------------
 
@@ -66,8 +58,7 @@ class Activity extends CmgEntity {
         return [
             [ [ 'type' ], 'required' ],
 			[ [ 'data' ], 'safe' ],
-			[ [ 'type' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
-			[ 'consumed', 'boolean' ],
+			[ [ 'type', 'ip' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'createdAt', 'modifiedAt', 'scheduledAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
@@ -81,7 +72,7 @@ class Activity extends CmgEntity {
 		return [
 			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'consumed' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONSUMED ),
+			'ip' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_IP ),
 			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}

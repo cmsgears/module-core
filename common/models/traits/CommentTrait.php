@@ -25,19 +25,30 @@ trait CommentTrait {
 	}
 
 	// Average rating for all the reviews
-	public function getAverageRating() {
+	public function getAverageRating( $type = ModelComment::TYPE_REVIEW ) {
 
 		$commentTable	= CoreTables::TABLE_MODEL_COMMENT;
 		$query			= new Query();
 
-    	$query->select( [ 'avg(rating) as average' ] )
+    	$query->select( [ 'avg(rating) as average, count(id) as total' ] )
 				->from( $commentTable )
-				->where( [ 'parentId' => $this->id, 'parentType' => $this->parentType, 'type' => ModelComment::TYPE_REVIEW, 'status' => ModelComment::STATUS_APPROVED ] );
+				->where( [ 'parentId' => $this->id, 'parentType' => $this->parentType, 'type' => $type, 'status' => ModelComment::STATUS_APPROVED ] );
 
 		$command 		= $query->createCommand();
 		$average 		= $command->queryOne();
 
-		return round( $average[ 'average' ] );
+		if( isset( $average ) && count( $average ) < 2 ) {
+
+			$average				= [];
+			$average[ 'average' ]	= 0;
+			$average[ 'total' ]		= 0;
+		}
+		else {
+
+			$average[ 'average' ]	= round( $average[ 'average' ] );
+		}
+
+		return $average;
 	}
 
 	public function getReviewCounts() {

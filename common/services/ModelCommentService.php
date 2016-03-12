@@ -40,6 +40,11 @@ class ModelCommentService extends Service {
 
 		return ModelComment::findByParentType( $parentType, $commentType );
 	}
+    
+    public static function findByEmail( $email ) {
+        
+        return ModelComment::findByEmail( $email );
+    }
 
 	// Create -----------
 

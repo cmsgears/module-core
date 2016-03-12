@@ -177,6 +177,11 @@ class ModelComment extends CmgModel {
 
         return self::find()->where( [ 'parentType' => $parentType, 'type' => $commentType, 'status' => $status ] )->all();
     }
+    
+    public static function findByEmail( $email ) {
+        
+        return self::find()->where( [ 'email' => $email ] )->one();
+    }
 }
 
 ?>

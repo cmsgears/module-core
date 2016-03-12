@@ -682,7 +682,7 @@ class FormDesigner extends \yii\base\Component {
 
             $icon   = "<span data='$i'>&#9734;</span>";
 
-		    if( isset( $selected ) && $selected <= $i ) {
+		    if( isset( $selected ) && $selected == $i ) {
 
 		        $icon   = "<span data='$i' class='filled'>&#9733;</span>";
 		    }

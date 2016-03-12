@@ -50,6 +50,18 @@ trait CommentTrait {
 
 		return $average;
 	}
+    
+    public function getRatingCounts() {
+        
+        $counts = [];
+        
+        for( $i = 1; $i <= 5; $i++ ) {
+            
+            $counts[ $i ]   = count( ModelComment::findAll( [ 'status' => ModelComment::STATUS_APPROVED, 'rating' => $i ] ) ); 
+        }
+        
+        return $counts;
+    }
 
 	public function getReviewCounts() {
 

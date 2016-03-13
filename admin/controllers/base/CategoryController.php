@@ -27,6 +27,8 @@ abstract class CategoryController extends Controller {
 		$this->returnUrl	= Url::previous( 'categories' );
 
 		$this->type			= CoreGlobal::TYPE_SITE;
+        
+        $this->setViewPath( "@cmsgears/module-core/admin/views/category" );
 	}
 
 	// Instance Methods --------------------------------------------
@@ -70,7 +72,7 @@ abstract class CategoryController extends Controller {
 
 		$dataProvider = CategoryService::getPaginationByType( $this->type );
 
-	    return $this->render( '@cmsgears/module-core/admin/views/category/all', [
+	    return $this->render( 'all', [
 			'dataProvider' => $dataProvider
 	    ]);
 	}
@@ -92,7 +94,7 @@ abstract class CategoryController extends Controller {
 
 		$categoryMap	= CategoryService::getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'value' => 'Choose Category', 'name' => 0 ] ] ] );
 
-    	return $this->render( '@cmsgears/module-core/admin/views/category/create', [
+    	return $this->render( 'create', [
     		'model' => $model,
     		'categoryMap' => $categoryMap
     	]);
@@ -122,7 +124,7 @@ abstract class CategoryController extends Controller {
 									'filters' => [ [ 'not in', 'id', [ $id ] ] ]
 								]);
 
-	    	return $this->render( '@cmsgears/module-core/admin/views/category/update', [
+	    	return $this->render( 'update', [
 	    		'model' => $model,
 	    		'categoryMap' => $categoryMap
 	    	]);
@@ -149,7 +151,7 @@ abstract class CategoryController extends Controller {
 
 			$categoryMap	= CategoryService::getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'value' => 'Choose Category', 'name' => 0 ] ] ] );
 
-	    	return $this->render( '@cmsgears/module-core/admin/views/category/delete', [
+	    	return $this->render( 'delete', [
 	    		'model' => $model,
 	    		'categoryMap' => $categoryMap
 	    	]);

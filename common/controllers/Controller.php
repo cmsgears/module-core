@@ -2,7 +2,8 @@
 namespace cmsgears\core\common\controllers;
 
 // Yii Imports
-use Yii;
+use \Yii;
+use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -69,11 +70,16 @@ abstract class Controller extends \yii\web\Controller {
 		// Send user to home if already logged in
 	    if ( !Yii::$app->user->isGuest ) {
 
-			$user	= Yii::$app->user->getIdentity();
-			$role	= $user->role;
+			$user		= Yii::$app->user->getIdentity();
+			$role		= $user->role;
+			$storedLink	= Url::previous( CoreGlobal::REDIRECT_LOGIN );
 
 			// Redirect user to home
-			if( isset( $role ) && isset( $role->homeUrl ) ) {
+			if( isset( $storedLink ) ) {
+
+				Yii::$app->response->redirect( $storedLink )->send();
+			}
+			else if( isset( $role ) && isset( $role->homeUrl ) ) {
 
 				Yii::$app->response->redirect( [ "/$role->homeUrl" ] )->send();
 			}

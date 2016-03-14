@@ -17,6 +17,10 @@ class CoreGlobal {
 	const MODEL_GENERIC 		= 'model';
 	const MODEL_EMAIL	 		= 'email';
 
+	// Standard Redirects ----------------------------------------------
+
+	const REDIRECT_LOGIN		= 'loginRedirectLink';
+
 	// Model Traits - Metas, Attachments, Addresses --------------------
 
 	const TYPE_DEFAULT			= 'default';

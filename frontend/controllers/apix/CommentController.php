@@ -53,14 +53,12 @@ class CommentController extends \cmsgears\core\admin\controllers\base\Controller
             // Trigger Ajax Success
             return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
         }
-        else {
 
-            // Generate Errors
-            $errors = AjaxUtil::generateErrorMessage( $model );
+        // Generate Errors
+        $errors = AjaxUtil::generateErrorMessage( $model );
 
-            // Trigger Ajax Failure
-            return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-        }
+        // Trigger Ajax Failure
+        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
     }
 }
 

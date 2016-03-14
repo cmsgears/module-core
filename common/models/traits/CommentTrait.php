@@ -65,6 +65,8 @@ trait CommentTrait {
 
 	public function getReviewCounts() {
 
+		$returnArr		= [ 'all' => 0, ModelComment::STATUS_NEW => 0, ModelComment::STATUS_BLOCKED => 0, ModelComment::STATUS_APPROVED => 0 ];
+
 		$commentTable	= CoreTables::TABLE_MODEL_COMMENT;
 		$query			= new Query();
 
@@ -74,7 +76,6 @@ trait CommentTrait {
 				->groupBy( 'status' );
 
 		$counts 	= $query->all();
-		$returnArr	= [];
 		$counter	= 0;
 
 		foreach ( $counts as $count ) {
@@ -85,21 +86,6 @@ trait CommentTrait {
 		}
 
 		$returnArr[ 'all' ] = $counter;
-
-		if( !isset( $returnArr[ ModelComment::STATUS_NEW ] ) ) {
-
-			$returnArr[ ModelComment::STATUS_NEW ]	= 0;
-		}
-
-		if( !isset( $returnArr[ ModelComment::STATUS_BLOCKED ] ) ) {
-
-			$returnArr[ ModelComment::STATUS_BLOCKED ]	= 0;
-		}
-
-		if( !isset( $returnArr[ ModelComment::STATUS_APPROVED ] ) ) {
-
-			$returnArr[ ModelComment::STATUS_APPROVED ]	= 0;
-		}
 
 		return $returnArr;
 	}

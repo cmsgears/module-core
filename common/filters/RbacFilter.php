@@ -19,7 +19,7 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 class RbacFilter extends \yii\base\Behavior {
 
-	//TODO Add code for caching the roles and permissions
+	//TODO Add code for caching the roles and permissions to avoid reloading them for each request
 
 	/**
 	 * @var maps the action to permission and permission filters.
@@ -28,10 +28,10 @@ class RbacFilter extends \yii\base\Behavior {
 
     public function events() {
 
-        return [ Controller::EVENT_BEFORE_ACTION => 'beforeAction' ];
+        return [ Controller::EVENT_BEFORE_ACTION => 'validateRbac' ];
     }
 
-    public function beforeAction( $event ) {
+    public function validateRbac( $event ) {
 
 		if( Yii::$app->cmgCore->isRbac() ) {
 
@@ -40,35 +40,41 @@ class RbacFilter extends \yii\base\Behavior {
 			// Check whether action is permitted
 	        if ( array_key_exists( $action, $this->actions ) ) {
 
-				// Redirect to post logout page if guest
+				$action	= $this->actions[ $action ];
+
+				// Redirect to post logout page if user is guest
 				if( Yii::$app->user->isGuest ) {
 
+					// Redirect to post logout page
 					Yii::$app->response->redirect( Url::toRoute( [ Yii::$app->cmgCore->getLogoutRedirectPage() ], true ) );
 
+					// Unset event validity
 					$event->isValid = false;
 
+					// Move back and pass execution to controller
 					return $event->isValid;
 				}
 
 				// find User and Action Permission
 				$user		= Yii::$app->user->getIdentity();
-				$action 	= $this->actions[ $action ];
 				$permission	= $action[ 'permission' ];
 
-				// Check whether user is permitted
-
-				if( !isset( $user ) || !$user->isPermitted( $permission ) ) {
+				// Disallow action in case user is not permitted
+				if( !isset( $user ) || !isset( $permission ) || !$user->isPermitted( $permission ) ) {
 
 					throw new ForbiddenHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 				}
 
-				// Check permission filters to filter the permission for the current action
+				// Execute filters in the order defined in controller behaviours for rbac behaviour. The filters must be configured in appropriate application config file.
 				if( isset( $action[ 'filters' ] ) ) {
 
-					$filters	= $action[ 'filters' ];
-					$filterKeys	= array_keys( $action[ 'filters' ] );
+					$filters		= $action[ 'filters' ];
+					$filterKeys		= array_keys( $action[ 'filters' ] );
+					$filterResult	= true;
 
 					foreach ( $filterKeys as $key ) {
+
+						$filterResult	= true;
 
 						// Permission Filter with filter config params
 						if( is_array( $filters[ $key ] ) ) {
@@ -76,7 +82,7 @@ class RbacFilter extends \yii\base\Behavior {
 							$filter	= Yii::createObject( Yii::$app->cmgCore->rbacFilters[ $key ] );
 
 							// Pass filter config while performing filter
-							$filter->doFilter( $filters[ $key ] );
+							$filterResult = $filter->doFilter( $filters[ $key ] );
 						}
 						// Permission Filter without filter config params
 						else {
@@ -84,14 +90,29 @@ class RbacFilter extends \yii\base\Behavior {
 							$filter	= Yii::createObject( Yii::$app->cmgCore->rbacFilters[ $filters[ $key ] ] );
 
 							// Do filter without any config
-							$filter->doFilter();
+							$filterResult = $filter->doFilter();
 						}
+
+						// Break the loop in case filter failed and filter didn't throw any exception
+						if( !$filterResult ) {
+
+							break;
+						}
+					}
+
+					// Filter might throw exception to hault execution or return true/false on successful execution
+					if( !$filterResult ) {
+
+						// Unset event validity
+						$event->isValid = false;
+
+						return $event->isValid;
 					}
 				}
 	        }
 		}
 
-        return $event->isValid;
+		return $event->isValid;
     }
 }
 

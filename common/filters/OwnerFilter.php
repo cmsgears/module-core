@@ -53,6 +53,8 @@ class OwnerFilter {
 				throw new ForbiddenHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 			}
 		}
+
+		return true;
 	}
 }
 

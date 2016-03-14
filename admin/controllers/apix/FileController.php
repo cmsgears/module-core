@@ -3,14 +3,11 @@ namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
 use \Yii;
-use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\utilities\AjaxUtil;
-
-class FileController extends \yii\web\Controller {
+class FileController extends \cmsgears\core\common\controllers\apix\FileController {
 
 	// Constructor and Initialisation ------------------------------
 
@@ -27,38 +24,12 @@ class FileController extends \yii\web\Controller {
 
 	public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'fileHandler'  => [ 'permission' => CoreGlobal::PERM_ADMIN ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'fileHandler'  => ['post']
-                ]
-            ]
-        ];
+        $behaviors  = parent::behaviors();
+        
+        $behaviors[ 'rbac' ][ 'actions' ]   = [ 'fileHandler' => [ 'permission' => CoreGlobal::PERM_ADMIN ] ];
+        
+        return $behaviors;
     }
-
-	// UserController --------------------
-
-	public function actionFileHandler( $directory, $type ) {
-
-		$data	= Yii::$app->fileManager->handleFileUpload( $directory, $type );
-		$keys	= array_keys( $data );
-
-		if( !in_array( 'error', array_keys( $data ) ) ) {
-
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-		}
-
-		// Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $data );
-	}
 }
 
 ?>

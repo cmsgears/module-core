@@ -38,11 +38,11 @@ class CoreGlobal {
 	const TYPE_CATEGORY			= 'category';
 	const TYPE_NEWSLETTER		= 'newsletter';
 
-	// Categories ------------------------------------------------------
+	// Categories Slug -------------------------------------------------
 
 	const CATEGORY_GENDER		= 'gender';
 
-	// Text Limits -----------------------------------------------------
+	// Text Limits - Ideal for string validators -----------------------
 
 	const TEXT_SMALL			=  50;
 	const TEXT_MEDIUM			= 100;
@@ -86,6 +86,15 @@ class CoreGlobal {
 	const DISPLAY_LIMIT_MESSAGE			= 200;
 	const DISPLAY_LIMIT_NOTIFICATION	= 100;
 	const DISPLAY_LIMIT_REMINDER		= 100;
+
+	// Model Attributes ------------------------------------------------
+
+	// data attributes
+	const DATA_REJECT_REASON		= 'rejectReason';
+
+	// model attributes
+	const ATTRIBUTE_TYPE_USER		= 'user';
+	const ATTRIBUTE_TYPE_SETTING	= 'setting';
 
 	// Template Views --------------------------------------------------
 

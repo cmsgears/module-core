@@ -136,7 +136,7 @@ class ModelAttribute extends Attribute {
 	 */
 	public static function findByName( $parentId, $parentType, $name ) {
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name', [ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name ] )->one();
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name', [ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name ] )->all();
 	}
 
 	/**

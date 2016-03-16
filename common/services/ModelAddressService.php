@@ -47,9 +47,9 @@ class ModelAddressService extends Service {
 		return ModelAddress::findFirstByType( $parentId, $parentType, $type );
 	}
 
-	public static function findByParentIdParentType( $parentId, $parentType ) {
+	public static function findByParent( $parentId, $parentType ) {
 
-		return ModelAddress::findByParentIdParentType( $parentId, $parentType );
+		return ModelAddress::findByParent( $parentId, $parentType );
 	}
 
 	public static function findByAddressId( $parentId, $parentType, $addressId ) {

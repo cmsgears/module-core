@@ -13,7 +13,7 @@ use yii\helpers\ArrayHelper;
 /**
  * The class Service defines several static methods used for pagination and generating map and list by specifying the columns.
  */
-class Service {
+class Service extends \yii\base\Component {
 
 	/**
 	 * The default page limit.

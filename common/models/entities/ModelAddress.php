@@ -102,6 +102,11 @@ class ModelAddress extends CmgModel {
 
 		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND addressId=:aid', [ ':pid' => $parentId, ':ptype' => $parentType, ':aid' => $addressId ] )->one(); 
 	}
+    
+    public static function findByParentId( $parentId ) {
+        
+        return self::find()->where( 'parentId=:pid',[ ':pid' => $parentId ] )->all();
+    }
 
 	// Delete ----
 

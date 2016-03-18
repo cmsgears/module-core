@@ -109,6 +109,7 @@ class ModelComment extends CmgModel {
             [ [ 'parentId', 'baseId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'rating' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
+            [ 'content', 'required', 'on' => [ 'testimonial' ] ],
             [ [ 'createdAt', 'modifiedAt', 'approvedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 

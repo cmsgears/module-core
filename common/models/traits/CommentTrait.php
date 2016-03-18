@@ -52,15 +52,30 @@ trait CommentTrait {
 	}
     
     public function getRatingCounts() {
-        
-        $counts = [];
-        
-        for( $i = 1; $i <= 5; $i++ ) {
-            
-            $counts[ $i ]   = count( ModelComment::findAll( [ 'status' => ModelComment::STATUS_APPROVED, 'rating' => $i ] ) ); 
+
+        $returnArr      = [ 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0 ];
+
+        $commentTable   = CoreTables::TABLE_MODEL_COMMENT;
+        $query          = new Query();
+
+        $query->select( [ 'rating', 'count(id) as total' ] )
+                ->from( $commentTable )
+                ->where( [ 'status' => ModelComment::STATUS_APPROVED, 'parentType' => $this->parentType, 'parentId' => $this->id ] )
+                ->groupBy( 'rating' );
+
+        $counts     = $query->all();
+        $counter    = 1;
+
+        foreach ( $counts as $count ) {
+
+            $returnArr[ $count[ 'rating' ] ] = $count[ 'total' ];
+
+            $counter++;
         }
-        
-        return $counts;
+
+        $returnArr[ 'all' ] = $counter;
+
+        return $returnArr;
     }
 
 	public function getReviewCounts() {

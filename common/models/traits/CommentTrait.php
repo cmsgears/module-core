@@ -64,7 +64,7 @@ trait CommentTrait {
                 ->groupBy( 'rating' );
 
         $counts     = $query->all();
-        $counter    = 1;
+        $counter    = 0;
 
         foreach ( $counts as $count ) {
 

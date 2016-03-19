@@ -55,34 +55,6 @@ class UserService extends \cmsgears\core\common\services\UserService {
 	// Update -----------
 
 	/**
-	 * Activate User created from Admin Panel.
-	 * @param User $user
-	 * @param ResetPasswordForm $resetForm
-	 * @param boolean $activate
-	 * @return boolean
-	 */
-	public static function activate( $user, $resetForm, $activate = true ) {
-
-		// Find existing user
-		$userToUpdate	= User::findById( $user->id );
-
-		// Generate Password
-		$userToUpdate->generatePassword( $resetForm->password );
-
-		// Activate User
-		if( $activate ) {
-
-			$userToUpdate->status = User::STATUS_ACTIVE;
-		}
-
-		$userToUpdate->unsetResetToken();
-
-		$userToUpdate->update();
-
-		return true;
-	}
-
-	/**
 	 * The method verify and confirm user by accepting valid token sent via mail. It also set user status to active.
 	 * @param User $user
 	 * @param string $token
@@ -111,74 +83,6 @@ class UserService extends \cmsgears\core\common\services\UserService {
 		}
 
 		return false;
-	}
-
-	/**
-	 * The method generate a new reset token which can be used later to update user password.
-	 * @param User $user
-	 * @return User
-	 */
-	public static function forgotPassword( $user ) {
-
-		// Find existing user
-		$userToUpdate	= User::findById( $user->id );
-
-		// Generate Token
-		$userToUpdate->generateResetToken();
-
-		// Update User
-		$userToUpdate->update();
-
-		return $userToUpdate;
-	}
-
-	/**
-	 * The method generate a new secure password for the given password and unset the reset token. It also activate user.
-	 * @param User $user
-	 * @param ResetPasswordForm $resetForm
-	 * @param boolean $activate
-	 * @return User
-	 */
-	public static function resetPassword( $user, $resetForm, $activate = true ) {
-
-		// Find existing user
-		$userToUpdate	= User::findById( $user->id );
-
-		// Generate Password
-		$userToUpdate->generatePassword( $resetForm->password );
-		$userToUpdate->unsetResetToken();
-
-		// Activate User
-		if( $userToUpdate->isNew() && $activate ) {
-
-			$userToUpdate->status = User::STATUS_ACTIVE;
-		}
-
-		// Update User
-		$userToUpdate->update();
-
-		return $userToUpdate;
-	}
-	
-	/**
-	 * The method create user avatar if it does not exist or save existing avatar.
-	 * @param User $user
-	 * @param CmgFile $avatar
-	 * @return User - updated User
-	 */
-	public function updateAvatar( $user, $avatar ) {
-
-		// Find existing user
-		$userToUpdate	= User::findById( $user->id );
-
-		// Save Avatar
-		FileService::saveImage( $avatar, [ 'model' => $userToUpdate, 'attribute' => 'avatarId' ] );
-
-		// Update User
-		$userToUpdate->update();
-
-		// Return updated User
-		return $userToUpdate;
 	}
 }
 

@@ -75,7 +75,7 @@ trait ApprovalTrait {
 		return $this->status == IApproval::STATUS_BLOCKED;
 	}
 
-	// User can edit listing in these situations
+	// User can edit model in these situations
 	public function isEditable() {
 
 		return $this->status != IApproval::STATUS_NEW && $this->status != IApproval::STATUS_RE_SUBMIT;
@@ -87,7 +87,7 @@ trait ApprovalTrait {
 		return $this->status == IApproval::STATUS_NEW || $this->status == IApproval::STATUS_RE_SUBMIT;
 	}
 
-	// User can submit the listing for limit removal
+	// User can submit the model for limit removal
 	public function isSubmittable() {
 
 		return $this->status < IApproval::STATUS_NEW || $this->status == IApproval::STATUS_REJECTED || 

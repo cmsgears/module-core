@@ -32,7 +32,7 @@ trait ApprovalTrait {
 			$model->setDataAttribute( CoreGlobal::DATA_REJECT_REASON, $message );
 		}
 		else {
-			
+
 			$model->removeDataAttribute( CoreGlobal::DATA_REJECT_REASON );
 		}
 	}

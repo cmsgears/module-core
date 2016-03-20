@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\listing\common\models\entities;
+namespace cmsgears\listing\common\guidelines;
 
 // Yii Imports
 /**

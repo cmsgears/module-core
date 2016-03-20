@@ -217,11 +217,11 @@ trait CategoryTrait {
 			
 			if( isset( $wrapper ) ) {
 				
-				$categoryLinks	.= "<$wrapper><a href='$baseUrl?slug=$category->slug'>$category->name</a></$wrapper>";
+				$categoryLinks	.= "<$wrapper><a href='$baseUrl/$category->slug'>$category->name</a></$wrapper>";
 			}
 			else {
 
-				$categoryLinks	.= "<a href='$baseUrl?slug=$category->slug'>$category->name</a>";
+				$categoryLinks	.= "<a href='$baseUrl/$category->slug'>$category->name</a>";
 			}
 
 			if( $limit > 0 && $count >= $limit ) {

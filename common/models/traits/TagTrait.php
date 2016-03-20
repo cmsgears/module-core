@@ -149,11 +149,11 @@ trait TagTrait {
 
 			if( isset( $wrapper ) ) {
 				
-				$tagLinks	.= "<$wrapper><a href='$baseUrl?slug=$tag->slug'>$tag->name</a></$wrapper>";
+				$tagLinks	.= "<$wrapper><a href='$baseUrl/$tag->slug'>$tag->name</a></$wrapper>";
 			}
 			else {
 
-				$tagLinks	.= "<a href='$baseUrl?slug=$tag->slug'>$tag->name</a>";
+				$tagLinks	.= "<a href='$baseUrl/$tag->slug'>$tag->name</a>";
 			}
 
 			if( $limit > 0 && $count >= $limit ) {

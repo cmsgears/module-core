@@ -24,19 +24,36 @@ class CoreGlobal {
 	// Model Traits - Metas, Attachments, Addresses --------------------
 
 	const TYPE_DEFAULT			= 'default';
+	const TYPE_CORE				= 'core';
 	const TYPE_SYSTEM			= 'system';
+
 	const TYPE_COMBO			= 'combo';
 	const TYPE_CHECKBOX_GROUP	= 'checkbox-group';
+
 	const TYPE_SITE				= 'site';
 	const TYPE_USER				= 'user';
-	const TYPE_GALLERY			= 'gallery';
 	const TYPE_ACTIVITY			= 'activity';
 	const TYPE_NOTIFICATION		= 'notification';
-	const TYPE_REMINDER			= 'reminder';  
-	const TYPE_CORE				= 'core';
-	const TYPE_FORM				= 'form';
+	const TYPE_REMINDER			= 'reminder';
 	const TYPE_CATEGORY			= 'category';
+	const TYPE_FORM				= 'form';
+	const TYPE_GALLERY			= 'gallery';
 	const TYPE_NEWSLETTER		= 'newsletter';
+
+
+	// Templates -------------------------------------------------------
+
+	const TEMPLATE_DEFAULT			= 'default';
+
+	// Template Views --------------------------------------------------
+
+	const TEMPLATE_VIEW_ADMIN		= 'admin';
+	const TEMPLATE_VIEW_PRIVATE		= 'private';
+	const TEMPLATE_VIEW_PUBLIC		= 'public';
+	const TEMPLATE_VIEW_SEARCH		= 'search';
+	const TEMPLATE_VIEW_CATEGRY		= 'category';
+	const TEMPLATE_VIEW_TAG			= 'tag';
+	const TEMPLATE_VIEW_AUTHOR		= 'author';
 
 	// Categories Slug -------------------------------------------------
 
@@ -49,6 +66,13 @@ class CoreGlobal {
 	const TEXT_LARGE			= 150;
 	const TEXT_XLARGE			= 255;
 
+	// Text/Notifications/Reminders/Messages ---------------------------
+
+	const DISPLAY_LIMIT_TEXT			= 250;
+	const DISPLAY_LIMIT_MESSAGE			= 200;
+	const DISPLAY_LIMIT_NOTIFICATION	= 100;
+	const DISPLAY_LIMIT_REMINDER		= 100;
+
 	// Hierarchy -- Nested Set -----------------------------------------
 
 	const HIERARCHY_VALUE_L		= 1;
@@ -56,8 +80,8 @@ class CoreGlobal {
 
 	// Config ----------------------------------------------------------
 
-	const CONFIG_CORE			= 'core';
-	const CONFIG_MAIL			= 'mail';
+	const CONFIG_CORE			= 'core';		// Core Config defining site configuration
+	const CONFIG_MAIL			= 'mail';		// Mail Config defining mail configurations and useful in case SMTP is required
 	const CONFIG_ADMIN			= 'backend';
 	const CONFIG_FRONTEND		= 'frontend';
 
@@ -67,25 +91,18 @@ class CoreGlobal {
 
 	// Permissions -----------------------------------------------------
 
-	// Site Module
+	// Site
 	const PERM_ADMIN				= 'admin'; 	// Allows to view Admin Site Home
 	const PERM_USER					= 'user'; 	// Allows to view User Site Home
 
-	// System Forms, Galleries, Settings
+	// Site specific - Forms, Galleries, Settings, Newsletters, Testimonials, Categories, Geo DB
 	const PERM_CORE					= 'core';
 
-	// User Module
-	const PERM_IDENTITY				= 'identity';
-	const PERM_RBAC					= 'rbac';
+	// User
+	const PERM_IDENTITY				= 'identity';	// Allows admin to manage site users
+	const PERM_RBAC					= 'rbac';		// Allows admin to manage roles and permissions
 
 	// TODO: Implement internationalisation for Messages, Errors and Field Labels
-
-	// Text/Notifications/Reminders/Messages ---------------------------
-
-	const DISPLAY_LIMIT_TEXT			= 250;
-	const DISPLAY_LIMIT_MESSAGE			= 200;
-	const DISPLAY_LIMIT_NOTIFICATION	= 100;
-	const DISPLAY_LIMIT_REMINDER		= 100;
 
 	// Model Attributes ------------------------------------------------
 
@@ -95,16 +112,6 @@ class CoreGlobal {
 	// model attributes
 	const ATTRIBUTE_TYPE_USER		= 'user';
 	const ATTRIBUTE_TYPE_SETTING	= 'setting';
-
-	// Template Views --------------------------------------------------
-
-	const TEMPLATE_VIEW_ADMIN			= 'admin';
-	const TEMPLATE_VIEW_PRIVATE			= 'private';
-	const TEMPLATE_VIEW_PUBLIC			= 'public';
-	const TEMPLATE_VIEW_SEARCH			= 'search';
-	const TEMPLATE_VIEW_CATEGRY			= 'category';
-	const TEMPLATE_VIEW_TAG				= 'tag';
-	const TEMPLATE_VIEW_AUTHOR			= 'author';
 
 	// Common Status ---------------------------------------------------
 

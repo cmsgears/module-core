@@ -70,7 +70,7 @@ abstract class CommentController extends Controller {
             
             Url::remember( [ "$this->rememberUrl/all?slug=$slug" ], $this->rememberUrl );
             
-            $model    = $this->modelService->findModelBySlug( $slug );
+            $model    = $this->modelService->findBySlug( $slug );
 
             if( isset( $model ) ) {
 
@@ -99,7 +99,7 @@ abstract class CommentController extends Controller {
 
         if( isset( $slug ) ) {
 
-            $parentModel    = $this->modelService->findModelBySlug( $slug );
+            $parentModel    = $this->modelService->findBySlug( $slug );
 
             if( isset( $parentModel ) ) {
 

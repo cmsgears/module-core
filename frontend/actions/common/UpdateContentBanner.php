@@ -39,11 +39,10 @@ class UpdateContentBanner extends ModelAction {
 		if( isset( $this->model ) ) {
 
 			$content	= $this->model->content;
-			$banner	 	= CmgFile::loadFile( $content->banner, 'Banner' );
+			$banner	 	= CmgFile::loadFile( $content->banner, 'File' );
 
 			if( ModelContentService::updateBanner( $content, $banner ) ) {
 
-				$banner		= $content->banner;
 				$response	= [ 'fileUrl' => $banner->getFileUrl() ];
 
 				// Trigger Ajax Success

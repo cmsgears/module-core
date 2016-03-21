@@ -36,11 +36,11 @@ class UpdateAvatar extends ModelAction {
 
 		if( isset( $this->model ) ) {
 
-			$avatar = CmgFile::loadFile( $listing->avatar, 'Avatar' );
+			$avatar = CmgFile::loadFile( $this->model->avatar, 'Avatar' );
 
-			if( $this->modelService->updateAvatar( $this->model, $avatar ) ) {
+			if( Yii::$app->controller->modelService->updateAvatar( $this->model, $avatar ) ) {
 
-				$avatar		= $this->model->banner;
+				$avatar		= $this->model->avatar;
 				$response	= [ 'fileUrl' => $avatar->getFileUrl() ];
 
 				// Trigger Ajax Success

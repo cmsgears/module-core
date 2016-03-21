@@ -15,8 +15,8 @@ use cmsgears\core\common\models\traits\DataTrait;
 /**
  * Activity Entity
  *
- * @property integer $id
- * @property integer $templateId
+ * @property long $id
+ * @property long $templateId
  * @property string $type
  * @property string $ip
  * @property datetime $createdAt
@@ -26,12 +26,23 @@ use cmsgears\core\common\models\traits\DataTrait;
  */
 class Activity extends CmgEntity {
 
-	use TemplateTrait;
-	use DataTrait;
+    // Variables ---------------------------------------------------
 
-	// Instance Methods --------------------------------------------
+    // Constants/Statics --
 
-	// yii\base\Component ----------------
+    // Public -------------
+
+    // Private/Protected --
+
+    // Traits ------------------------------------------------------
+    use TemplateTrait;
+    use DataTrait;
+
+    // Constructor and Initialisation ------------------------------
+
+    // Instance Methods --------------------------------------------
+
+    // yii\base\Component ----------------
 
     /**
      * @inheritdoc
@@ -41,55 +52,65 @@ class Activity extends CmgEntity {
         return [
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
-				'createdAtAttribute' => 'createdAt',
- 				'updatedAtAttribute' => 'modifiedAt',
- 				'value' => new Expression('NOW()')
+                'createdAtAttribute' => 'createdAt',
+                'updatedAtAttribute' => 'modifiedAt',
+                'value' => new Expression('NOW()')
             ]
         ];
     }
 
-	// yii\base\Model --------------------
+    // yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-	public function rules() {
+    public function rules() {
 
         return [
             [ [ 'type' ], 'required' ],
-			[ [ 'data' ], 'safe' ],
-			[ [ 'type', 'ip' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
+            [ [ 'data' ], 'safe' ],
+            [ [ 'type', 'ip' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'createdAt', 'modifiedAt', 'scheduledAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+            [ [ 'createdAt', 'modifiedAt', 'scheduledAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }
 
     /**
      * @inheritdoc
      */
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
-			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'ip' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_IP ),
-			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
-		];
-	}
+        return [
+            'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
+            'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'ip' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_IP ),
+            'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
+        ];
+    }
 
-	// Static Methods ----------------------------------------------
+    // Activity --------------------------
 
-	// yii\db\ActiveRecord ---------------
+    // Static Methods ----------------------------------------------
+
+    // yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-	public static function tableName() {
+    public static function tableName() {
 
-		return CoreTables::TABLE_ACTIVITY;
-	}
+        return CoreTables::TABLE_ACTIVITY;
+    }
 
-	// Activity --------------------------
+    // Activity --------------------------
+
+    // Create -------------
+
+    // Read ---------------
+
+    // Update -------------
+
+    // Delete -------------
 }
 
 ?>

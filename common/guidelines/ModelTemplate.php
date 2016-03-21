@@ -7,8 +7,9 @@ namespace cmsgears\listing\common\guidelines;
  * 1. \Yii
  * 2. base
  * 3. data
- * 4. helpers
- * 5. Exceptions
+ * 4. db
+ * 5. helpers
+ * 6. Exceptions
  */
 use \Yii;
 

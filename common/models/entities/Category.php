@@ -14,16 +14,16 @@ use cmsgears\core\common\models\traits\DataTrait;
 /**
  * Category Entity
  *
- * @property integer $id
- * @property integer $siteId
- * @property integer $parentId
- * @property integer $rootId
+ * @property long $id
+ * @property long $siteId
+ * @property long $parentId
+ * @property long $rootId
  * @property string $name
  * @property string $slug
  * @property string $icon
- * @property string $type 
+ * @property string $type
  * @property string $description
- * @property string $featured
+ * @property integer $featured
  * @property integer lValue
  * @property integer rValue
  * @property string $htmlOptions
@@ -31,49 +31,61 @@ use cmsgears\core\common\models\traits\DataTrait;
  */
 class Category extends HierarchicalModel {
 
-	use DataTrait;
-	
-	// Instance Methods --------------------------------------------
+    // Variables ---------------------------------------------------
 
-	public function getSite() {
+    // Constants/Statics --
 
-		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
-	}
+    // Public -------------
 
-	/**
-	 * @return Category - parent category
-	 */
-	public function getParent() {
+    // Private/Protected --
 
-		return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] );
-	}
+    // Traits ------------------------------------------------------
 
-	/**
-	 * @return array - list of immediate child categories
-	 */
-	public function getChildren() {
+    use DataTrait;
 
-    	return $this->hasMany( Category::className(), [ 'parentId' => 'id' ] );
-	}
+    // Constructor and Initialisation ------------------------------
 
-	/**
-	 * @return array - list of Option having all the options belonging to this category
-	 */
-	public function getOptions() {
+    // Instance Methods --------------------------------------------
 
-    	return $this->hasMany( Option::className(), [ 'categoryId' => 'id' ] );
-	}
+    public function getSite() {
 
-	/**
-	 * @return string representation of flag
-	 */
-	public function getFeaturedStr() {
+        return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+    }
 
-		return Yii::$app->formatter->asBoolean( $this->featured ); 
-	}
+    /**
+     * @return Category - parent category
+     */
+    public function getParent() {
 
-	// yii\base\Component ----------------
-	
+        return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] );
+    }
+
+    /**
+     * @return array - list of immediate child categories
+     */
+    public function getChildren() {
+
+        return $this->hasMany( Category::className(), [ 'parentId' => 'id' ] );
+    }
+
+    /**
+     * @return array - list of Option having all the options belonging to this category
+     */
+    public function getOptions() {
+
+        return $this->hasMany( Option::className(), [ 'categoryId' => 'id' ] );
+    }
+
+    /**
+     * @return string representation of flag
+     */
+    public function getFeaturedStr() {
+
+        return Yii::$app->formatter->asBoolean( $this->featured );
+    }
+
+    // yii\base\Component ----------------
+
     /**
      * @inheritdoc
      */
@@ -88,14 +100,14 @@ class Category extends HierarchicalModel {
         ];
     }
 
-	// yii\base\Model --------------------
+    // yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-	public function rules() {
-		
-		// model rules
+    public function rules() {
+
+        // model rules
         $rules = [
             [ [ 'siteId', 'name' ], 'required' ],
             [ [ 'id', 'featured', 'description', 'htmlOptions', 'data' ], 'safe' ],
@@ -108,144 +120,150 @@ class Category extends HierarchicalModel {
             [ 'featured', 'boolean' ]
         ];
 
-		// trim if required
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+        // trim if required
+        if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'description', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'name', 'description', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-			return ArrayHelper::merge( $trim, $rules );
-		}
+            return ArrayHelper::merge( $trim, $rules );
+        }
 
-		return $rules;
+        return $rules;
     }
 
     /**
      * @inheritdoc
      */
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
-			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
-			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-			'featured' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
-			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
-		];
-	}
+        return [
+            'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+            'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+            'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+            'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+            'featured' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+            'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+            'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
+        ];
+    }
 
-	// Category --------------------------
+    // Category --------------------------
 
-	/**
-	 * Validates to ensure that name is used only for one category for a particular type and belonging to same parent
-	 */
+    /**
+     * Validates to ensure that name is used only for one category for a particular type and belonging to same parent
+     */
     public function validateNameCreate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
             if( self::isExistByNameType( $this->parentId, $this->name, $this->type ) ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
 
-	/**
-	 * Validates to ensure that name is used only for one category for a particular type and belonging to same parent
-	 */
+    /**
+     * Validates to ensure that name is used only for one category for a particular type and belonging to same parent
+     */
     public function validateNameUpdate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
-			$existingCategory = self::findByNameType( $this->parentId, $this->name, $this->type );
+            $existingCategory = self::findByNameType( $this->parentId, $this->name, $this->type );
 
-			if( isset( $existingCategory ) && $existingCategory->id != $this->id ) {
+            if( isset( $existingCategory ) && $existingCategory->id != $this->id ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-			}
+                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+            }
         }
     }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+    // yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-	public static function tableName() {
+    public static function tableName() {
 
-		return CoreTables::TABLE_CATEGORY;
-	}
+        return CoreTables::TABLE_CATEGORY;
+    }
 
-	// Category --------------------------
+    // Category --------------------------
 
-	// Read ----
+    // Create -------------
 
-	/**
-	 * @return Category - by type
-	 */
-	public static function findByType( $type ) {
+    // Read ---------------
 
-		return self::find()->where( 'type=:type', [ ':type' => $type ] )->all();
-	}
+    /**
+     * @return Category - by type
+     */
+    public static function findByType( $type ) {
 
-	/**
-	 * @return Category - by name
-	 */
-	public static function findByName( $name ) {
+        return self::find()->where( 'type=:type', [ ':type' => $type ] )->all();
+    }
 
-		return self::find()->where( 'name=:name', [ ':name' => $name ] )->all();
-	}
+    /**
+     * @return Category - by name
+     */
+    public static function findByName( $name ) {
 
-	public static function findBySlug( $slug ) {
+        return self::find()->where( 'name=:name', [ ':name' => $name ] )->all();
+    }
 
-		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
-	}
+    public static function findBySlug( $slug ) {
 
-	public static function findByParentId( $id ) {
+        return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+    }
 
-		return self::find()->where( 'parentId=:id', [ ':id' => $id ] )->all();
-	}
+    public static function findByParentId( $id ) {
 
-	/**
-	 * @return Category - by type and name
-	 */
-	public static function findByNameType( $name, $type, $parentId = null ) {
+        return self::find()->where( 'parentId=:id', [ ':id' => $id ] )->all();
+    }
+
+    /**
+     * @return Category - by type and name
+     */
+    public static function findByNameType( $name, $type, $parentId = null ) {
 
         $siteId = Yii::$app->cmgCore->siteId;
-        
+
         if( isset( $parentId ) ) {
-            
+
             return self::find()->where( 'parentId=:pid AND name=:name AND type=:type AND siteId=:siteId', [ ':pid' => $parentId, ':name' => $name, ':type' => $type, ':siteId' => $siteId ] )->one();
-        }        
+        }
         else {
 
             return self::find()->where( 'name=:name AND type=:type AND siteId=:siteId', [ ':name' => $name, ':type' => $type, ':siteId' => $siteId ] )->one();
         }
     }
-	
-	/**
-	 * @return Category - by type and featured
-	 */
-	public static function getFeaturedByType( $type ) {
 
-		return self::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->all();
-	}
+    /**
+     * @return Category - by type and featured
+     */
+    public static function getFeaturedByType( $type ) {
 
-	/**
-	 * @return Category - checks whether category exist by type and name
-	 */
-	public static function isExistByNameType( $parentId, $name, $type ) {
+        return self::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->all();
+    }
 
-		$category = self::findByNameType( $parentId, $name, $type );
+    /**
+     * @return Category - checks whether category exist by type and name
+     */
+    public static function isExistByNameType( $parentId, $name, $type ) {
 
-		return isset( $category );
-	}
+        $category = self::findByNameType( $parentId, $name, $type );
+
+        return isset( $category );
+    }
+
+    // Update -------------
+
+    // Delete -------------
 }
 
 ?>

@@ -45,13 +45,17 @@ class ModelComment extends CmgModel {
     const TYPE_TESTIMONIAL  =  20;
 
     const STATUS_NEW        =  500;
-    const STATUS_BLOCKED    =  750;
-    const STATUS_APPROVED   = 1000;
+	const STATUS_SPAM		=  600;
+    const STATUS_BLOCKED    =  700;
+    const STATUS_APPROVED   =  800;
+	const STATUS_DELETED	= 1000;
 
     public static $statusMap = [
         self::STATUS_NEW => 'New',
+        self::STATUS_SPAM => 'Spam',
         self::STATUS_BLOCKED => 'Blocked',
-        self::STATUS_APPROVED => 'Approved'
+        self::STATUS_APPROVED => 'Approved',
+        self::STATUS_DELETED => 'Trash'
     ];
 
     use CreateModifyTrait;
@@ -110,6 +114,7 @@ class ModelComment extends CmgModel {
             [ [ 'rating' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
             [ 'content', 'required', 'on' => [ 'testimonial' ] ],
+            [ 'rating', 'required', 'on' => [ 'review' ] ],
             [ [ 'createdAt', 'modifiedAt', 'approvedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
@@ -164,24 +169,24 @@ class ModelComment extends CmgModel {
 
     // Read ------
 
-    public static function findByBaseId( $baseId, $commentType, $status = self::STATUS_APPROVED ) {
+    public static function queryByParent( $parentId, $parentType, $type = self::TYPE_COMMENT, $status = self::STATUS_APPROVED ) {
 
-        return self::find()->where( [ 'baseId' => $baseId, 'type' => $commentType, 'status' => $status ] )->all();
+        return self::find()->where( [ 'parentId' => $parentId, 'parentType' => $parentType, 'type' => $type, 'status' => $status ] );
     }
 
-    public static function findByParent( $parentId, $parentType, $commentType, $status = self::STATUS_APPROVED ) {
+    public static function queryByParentType( $parentType, $type = self::TYPE_COMMENT, $status = self::STATUS_APPROVED ) {
 
-        return self::find()->where( [ 'parentId' => $parentId, 'parentType' => $parentType, 'type' => $commentType, 'status' => $status ] )->all();
+        return self::find()->where( [ 'parentType' => $parentType, 'type' => $type, 'status' => $status ] );
     }
 
-    public static function findByParentType( $parentType, $commentType, $status = self::STATUS_APPROVED ) {
+    public static function queryByBaseId( $baseId, $type = self::TYPE_COMMENT, $status = self::STATUS_APPROVED ) {
 
-        return self::find()->where( [ 'parentType' => $parentType, 'type' => $commentType, 'status' => $status ] )->all();
+        return self::find()->where( [ 'baseId' => $baseId, 'type' => $type, 'status' => $status ] );
     }
-    
-    public static function findByEmail( $email ) {
-        
-        return self::find()->where( [ 'email' => $email ] )->one();
+
+    public static function queryByEmail( $email ) {
+
+		return self::find()->where( [ 'email' => $email ] );
     }
 }
 

@@ -8,42 +8,67 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\ModelComment;
-
-use cmsgears\core\frontend\actions\comment\CreateTrait;
-
-use cmsgears\core\frontend\services\ModelCommentService;
-
-use cmsgears\core\common\utilities\AjaxUtil;
-
 class CommentController extends \cmsgears\core\admin\controllers\base\Controller {
 
-    protected $scenario = null;
+	public $modelName;
+	public $modelType;
+
+	/**
+	 * Parent Service can be used to find parent to which the model is associated. It can used to check parent ownership for current user using rbac action. 
+	 */
+	public $parentService;
 
     // Constructor and Initialisation ------------------------------
 
-    public function __construct( $id, $module, $config = [] ) {
+ 	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
     }
 
     // Instance Methods --------------------------------------------
 
-    // yii\base\Component
+    // yii\base\Component ----------------
 
     public function behaviors() {
 
         return [
+            'rbac' => [
+                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'actions' => [
+                	// rbac actions
+                ]
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'create' => [ 'post' ]
+                    'create' => [ 'post' ],
+                    //'update' => [ 'post' ],
+                    //'approve' => [ 'post' ],
+                    //'spam' => [ 'post' ],
+                    //'block' => [ 'post' ],
+                    //'trash' => [ 'post' ],
+                    //'delete' => [ 'post' ],
+                    //'approve-request' => [ 'post' ],
+                    //'spam-request' => [ 'post' ],
+                    //'delete-request' => [ 'post' ]
                 ]
             ]
         ];
     }
 
-    use CreateTrait;
+	// yii\base\Controller ---------------
+
+    public function actions() {
+
+        return [
+            'create' => [
+                'class' => 'cmsgears\core\frontend\actions\comment\CreateComment'
+            ]
+        ];
+    }
+
+	// CommentController -----------------
+
 }
 
 ?>

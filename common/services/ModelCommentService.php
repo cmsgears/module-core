@@ -7,6 +7,8 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\models\entities\ModelComment;
 
+use cmsgears\core\common\utilities\DateUtil;
+
 /**
  * The class ModelCommentService is base class to perform database activities for ModelComment Entity.
  */
@@ -16,34 +18,35 @@ class ModelCommentService extends Service {
 
 	// Read ----------------
 
-	public static function findById( $id ) {
+	public static function getById( $id ) {
 
         return ModelComment::findById( $id );
 	}
 
-    public static function findApprovedByType( $type ) {
+	public static function getByParent( $parentId, $parentType, $type = ModelComment::TYPE_COMMENT, $status = ModelComment::STATUS_APPROVED ) {
 
-        return ModelComment::findAll( [ 'type' => $type, 'status' =>  ModelComment::STATUS_APPROVED ] );                     
-    }
-
-	public static function findApprovedByBaseId( $baseId, $commentType = ModelComment::TYPE_COMMENT ) {
-
-		return ModelComment::findByBaseId( $baseId, $commentType );
+		return ModelComment::queryByParent( $parentId, $parentType, $type, $status )->andWhere( [ 'baseId' => null ] )->all();
 	}
 
-	public static function findApprovedByParent( $parentId, $parentType, $commentType = ModelComment::TYPE_COMMENT ) {
+	public static function getByParentType( $parentType, $type = ModelComment::TYPE_COMMENT, $status = ModelComment::STATUS_APPROVED ) {
 
-		return ModelComment::findByParent( $parentId, $parentType, $commentType );
+		return ModelComment::queryByParentType( $parentType, $type, $status )->andWhere( [ 'baseId' => null ] )->all();
 	}
 
-	public static function findApprovedByParentType( $parentType, $commentType = ModelComment::TYPE_COMMENT ) {
+	/**
+	 * It can be used to get child comments for given base id.
+	 */ 
+	public static function getByBaseId( $baseId, $type = ModelComment::TYPE_COMMENT, $status = ModelComment::STATUS_APPROVED ) {
 
-		return ModelComment::findByParentType( $parentType, $commentType );
+		return ModelComment::queryByBaseId( $baseId, $type, $status )->all();
 	}
-    
-    public static function findByEmail( $email ) {
-        
-        return ModelComment::findByEmail( $email );
+
+    /**
+	 * It can be used in cases where only one comment is allowed for an email.
+	 */
+    public static function isExistByEmail( $email ) {
+
+        return ModelComment::queryByEmail( $email )->one() != null;
     }
 
 	// Create -----------
@@ -54,7 +57,7 @@ class ModelCommentService extends Service {
 		$comment->ip	= Yii::$app->request->userIP;
 
 		$comment->save();
-		
+
 		return $comment;
  	}
 
@@ -66,7 +69,7 @@ class ModelCommentService extends Service {
 		$commentToUpdate	= self::findById( $comment->id );
 
 		// Copy and set Attributes
-		$commentToUpdate->copyForUpdateFrom( $comment, [ 'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content', 'status' ] );
+		$commentToUpdate->copyForUpdateFrom( $comment, [ 'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content' ] );
 
 		// Update Comment
 		$commentToUpdate->update();
@@ -82,14 +85,26 @@ class ModelCommentService extends Service {
 		$model->update();
 	}
 
+	public static function approve( $model ) {
+
+		$model->approvedAt	= DateUtil::getDateTime();
+
+		self::updateStatus( $model, ModelComment::STATUS_APPROVED );
+	}
+
 	public static function block( $model ) {
 
 		self::updateStatus( $model, ModelComment::STATUS_BLOCKED );
 	}
 
-	public static function approve( $model ) {
+	public static function markSpam( $model ) {
 
-		self::updateStatus( $model, ModelComment::STATUS_APPROVED );
+		self::updateStatus( $model, ModelComment::STATUS_SPAM );
+	}
+
+	public static function markDelete( $model ) {
+
+		self::updateStatus( $model, ModelComment::STATUS_DELETED );
 	}
 
 	// Delete -----------

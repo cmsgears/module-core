@@ -12,6 +12,9 @@ class ModelAction extends \yii\base\Action {
 
 	// Public -------------
 
+	public $idParam		= 'id';
+	public $slugParam	= 'slug';
+
 	public $model;
 	public $modelType;
 	public $modelService;
@@ -22,11 +25,11 @@ class ModelAction extends \yii\base\Action {
 
     public function init() {
 
-		// Model is not given by listing
+		// Model is not provided by controller
 		if( !isset( $this->model ) ) {
 
 			// Try to find model using slug
-			$slug	= Yii::$app->request->get( 'slug', null );
+			$slug	= Yii::$app->request->get( $this->slugParam, null );
 
 			if( isset( $slug ) ) {
 
@@ -42,7 +45,7 @@ class ModelAction extends \yii\base\Action {
 			else {
 
 				// Try to find model using id
-				$id	= Yii::$app->request->get( 'id', null );
+				$id	= Yii::$app->request->get( $this->idParam, null );
 
 				if( isset( $id ) ) {
 

@@ -2,28 +2,48 @@
 namespace cmsgears\core\frontend\actions\comment;
 
 // Yii Imports
-use \yii;
+use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\ModelComment;
 
-use cmsgears\core\frontend\services\ModelCommentService;
+use cmsgears\core\common\services\ModelCommentService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
-trait CreateTrait {
+/**
+ * CreateComment can be used to create a comment for a model.
+ */
+class CreateComment extends \yii\base\Action {
 
-    public function actionCreate() {
+	// Variables ---------------------------------------------------
 
-        $model            = new ModelComment();
-        $model->status    = ModelComment::STATUS_NEW;
+	// Constants/Statics --
 
-        if( $this->scenario != null ) {
+	// Public -------------
 
-            $model->scenario    = $this->scenario;
-        }
+	public $scenario;
+
+	// Private/Protected --
+
+	// Constructor and Initialisation ------------------------------
+
+    public function init() {
+
+		// Do Init
+    }
+
+	// Instance Methods --------------------------------------------
+
+	// CreateComment ---------------------
+
+    public function run() {
+
+        $model            	= new ModelComment();
+        $model->status    	= ModelComment::STATUS_NEW;
+		$model->scenario	= $this->scenario;
 
         if( $model->load( Yii::$app->request->post(), 'ModelComment' ) && $model->validate() ) {
 

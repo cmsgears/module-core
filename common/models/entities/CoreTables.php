@@ -59,6 +59,7 @@ class CoreTables {
 	const TABLE_MODEL_ADDRESS		= 'cmg_core_model_address';
 	const TABLE_MODEL_COMMENT		= 'cmg_core_model_comment';
 	const TABLE_MODEL_FORM			= 'cmg_core_model_form';
+	const TABLE_MODEL_GALLERY		= 'cmg_core_model_gallery';
 }
 
 ?>

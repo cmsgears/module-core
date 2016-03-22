@@ -194,7 +194,7 @@ trait CategoryTrait {
 	}
 
 	public function getCategoryCsv( $limit = 0 ) {
-		
+
 		$this->categoryLimit	= $limit;
     	$categories 			= $this->categories;
 		$categoriesCsv			= [];
@@ -214,9 +214,9 @@ trait CategoryTrait {
 		$count			= 1;
 
 		foreach ( $categories as $category ) {
-			
+
 			if( isset( $wrapper ) ) {
-				
+
 				$categoryLinks	.= "<$wrapper><a href='$baseUrl/$category->slug'>$category->name</a></$wrapper>";
 			}
 			else {

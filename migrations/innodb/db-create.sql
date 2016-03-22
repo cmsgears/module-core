@@ -811,6 +811,26 @@ CREATE TABLE `cmg_core_model_form` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `cmg_core_model_gallery`
+--
+
+DROP TABLE IF EXISTS `cmg_core_model_gallery`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cmg_core_model_gallery` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `galleryId` bigint(20) NOT NULL,
+  `parentId` bigint(20) NOT NULL,
+  `parentType` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `type` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `order` smallint(6) NOT NULL DEFAULT 0,
+  `active` tinyint(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
+  KEY `fk_model_gallery_1` (`galleryId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 SET FOREIGN_KEY_CHECKS=0;
 
 --
@@ -1031,5 +1051,12 @@ ALTER TABLE `cmg_core_model_comment`
 
 ALTER TABLE `cmg_core_model_form`
   	ADD CONSTRAINT `fk_model_form_1` FOREIGN KEY (`formId`) REFERENCES `cmg_core_form` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cmg_core_model_address`
+--
+
+ALTER TABLE `cmg_core_model_gallery`
+  	ADD CONSTRAINT `fk_model_gallery_1` FOREIGN KEY (`galleryId`) REFERENCES `cmg_core_gallery` (`id`) ON DELETE CASCADE;
 
 SET FOREIGN_KEY_CHECKS=1;

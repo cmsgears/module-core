@@ -10,113 +10,132 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * ModelAddress Entity
  *
- * @property integer $id
- * @property integer $addressId
- * @property integer $parentId
+ * @property long $id
+ * @property long $addressId
+ * @property long $parentId
  * @property string $parentType
- * @property integer $type
+ * @property short $type
  * @property short $order
- * @property short $active
+ * @property boolean $active
  */
 class ModelAddress extends CmgModel {
 
-	// Instance Methods --------------------------------------------
+    // Variables ---------------------------------------------------
 
-	/**
-	 * @return Address - associated address
-	 */
-	public function getAddress() {
+    // Constants/Statics --
 
-    	return $this->hasOne( Address::className(), [ 'id' => 'addressId' ] );
-	}
+    // Public -------------
 
-	// yii\base\Model --------------------
+    // Private/Protected --
+
+    // Traits ------------------------------------------------------
+
+    // Constructor and Initialisation ------------------------------
+
+    // Instance Methods --------------------------------------------
 
     /**
+     * @return Address - associated address
+     */
+    public function getAddress() {
+
+        return $this->hasOne( Address::className(), [ 'id' => 'addressId' ] );
+    }
+
+    // yii\base\Component ----------------
+
+    // yii\base\Model --------------------
+
+     /**
      * @inheritdoc
      */
-	public function rules() {
+    public function rules() {
 
         return [
             [ [ 'addressId', 'parentId', 'parentType' ], 'required' ],
-            [ [ 'id', 'active' ], 'safe' ],
+            [ [ 'id' ], 'safe' ],
             [ [ 'addressId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'parentType', 'string', 'min' => 1, 'max' => 100 ],
-            [ [ 'type', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ]
+            [ [ 'type', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+            [ [ 'active' ], 'boolean' ]
         ];
     }
 
     /**
      * @inheritdoc
      */
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'addressId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ADDRESS ),
-			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ADDRESS_TYPE ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
-		];
-	}
+        return [
+            'addressId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ADDRESS ),
+            'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+            'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ADDRESS_TYPE ),
+            'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+            'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
+        ];
+    }
 
-	// ModelAddress ----------------------
+    // ModelAddress-----------------------
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+    // yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-	public static function tableName() {
+    public static function tableName() {
 
-		return CoreTables::TABLE_MODEL_ADDRESS;
-	}
+        return CoreTables::TABLE_MODEL_ADDRESS;
+    }
 
-	// ModelAddress ----------------------
+    // ModelAddress-----------------------
 
-	// Read ------
+    // Create -------------
 
-	/**
-	 * @param int $parentId
-	 * @param string $parentType
-	 * @param string $type
-	 * @return ModelAddress by parent id, parent type and type
-	 */
-	public static function findByType( $parentId, $parentType, $type ) {
+    // Read ---------------
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] )->all();
-	}
+    /**
+     * @param int $parentId
+     * @param string $parentType
+     * @param string $type
+     * @return ModelAddress by parent id, parent type and type
+     */
+    public static function findByType( $parentId, $parentType, $type ) {
 
-	/**
-	 * Models Supporting one address for same type.
-	 */
-	public static function findFirstByType( $parentId, $parentType, $type ) {
+        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] )->all();
+    }
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] )->one();
-	}
+    /**
+     * Models Supporting one address for same type.
+     */
+    public static function findFirstByType( $parentId, $parentType, $type ) {
 
-	public static function findByAddressId( $parentId, $parentType, $addressId ) {
+        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] )->one();
+    }
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND addressId=:aid', [ ':pid' => $parentId, ':ptype' => $parentType, ':aid' => $addressId ] )->one(); 
-	}
-    
+    public static function findByAddressId( $parentId, $parentType, $addressId ) {
+
+        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND addressId=:aid', [ ':pid' => $parentId, ':ptype' => $parentType, ':aid' => $addressId ] )->one();
+    }
+
     public static function findByParentId( $parentId ) {
-        
+
         return self::find()->where( 'parentId=:pid',[ ':pid' => $parentId ] )->all();
     }
 
-	// Delete ----
+    // Update -------------
 
-	/**
-	 * Delete all entries related to a address
-	 */
-	public static function deleteByAddressId( $addressId ) {
+    // Delete -------------
 
-		self::deleteAll( 'addressId=:id', [ ':id' => $addressId ] );
-	}
+    /**
+     * Delete all entries related to a address
+     */
+    public static function deleteByAddressId( $addressId ) {
+
+        self::deleteAll( 'addressId=:id', [ ':id' => $addressId ] );
+    }
 }
 
 ?>

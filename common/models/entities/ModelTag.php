@@ -10,99 +10,118 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * ModelTag Entity
  *
- * @property integer $id
- * @property integer $tagId
- * @property integer $parentId
+ * @property long $id
+ * @property long $tagId
+ * @property long $parentId
  * @property string $parentType
  * @property short $order
- * @property short $active
+ * @property boolean $active
  */
 class ModelTag extends CmgModel {
 
-	// Instance Methods --------------------------------------------
+    // Variables ---------------------------------------------------
 
-	public function getTag() {
+    // Constants/Statics --
 
-		return $this->hasOne( Tag::className(), [ 'id' => 'tagId' ] );
-	}
- 
-	// yii\base\Model --------------------
+    // Public -------------
+
+    // Private/Protected --
+
+    // Traits ------------------------------------------------------
+
+    // Constructor and Initialisation ------------------------------
+
+    // Instance Methods --------------------------------------------
+
+    public function getTag() {
+
+        return $this->hasOne( Tag::className(), [ 'id' => 'tagId' ] );
+    }
+
+    // yii\base\Component ----------------
+
+    // yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-	public function rules() {
+    public function rules() {
 
         return [
             [ [ 'tagId', 'parentId', 'parentType' ], 'required' ],
-            [ [ 'id', 'active' ], 'safe' ],
+            [ [ 'id' ], 'safe' ],
             [ [ 'tagId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'parentType', 'string', 'min' => 1, 'max' => 100 ],
-            [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ]
+            [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
+            [ [ 'active' ], 'boolean' ]
         ];
     }
 
     /**
      * @inheritdoc
      */
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'tagId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TAG ),
-			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
-		];
-	}
+        return [
+            'tagId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TAG ),
+            'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+            'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+            'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
+        ];
+    }
 
-	// ModelTag --------------------------
+    // ModelTag --------------------------
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+    // yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-	public static function tableName() {
+    public static function tableName() {
 
-		return CoreTables::TABLE_MODEL_TAG;
-	}
+        return CoreTables::TABLE_MODEL_TAG;
+    }
 
-	// ModelTag --------------------------
+    // ModelTag --------------------------
 
-	// Read ----
+    // Create -------------
 
-	public static function findByTagId( $parentId, $parentType, $tagId ) {
+    // Read ---------------
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND tagId=:tid', [ ':pid' => $parentId, ':ptype' => $parentType, ':tid' => $tagId ] )->one(); 
-	}
+    public static function findByTagId( $parentId, $parentType, $tagId ) {
 
-	public static function findActiveByParentId( $parentId ) {
+        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND tagId=:tid', [ ':pid' => $parentId, ':ptype' => $parentType, ':tid' => $tagId ] )->one();
+    }
 
-		return self::find()->where( 'parentId=:pid AND active=1', [ ':pid' => $parentId ] )->all();
-	}
+    public static function findActiveByParentId( $parentId ) {
 
-	public static function findActiveByParentIdParentType( $parentId, $parentType ) {
+        return self::find()->where( 'parentId=:pid AND active=1', [ ':pid' => $parentId ] )->all();
+    }
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND active=1', [ ':pid' => $parentId, ':ptype' => $parentType ] )->all();
-	}
-	
-	public static function findActiveByTagIdParentType( $tagId, $parentType ) {
-		
-		return self::find()->where( 'tagId=:tid AND parentType=:ptype AND active=1',  [ ':tid' => $tagId, ':ptype' => $parentType] )->all();
-	}
+    public static function findActiveByParentIdParentType( $parentId, $parentType ) {
 
-	// Delete ----
+        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND active=1', [ ':pid' => $parentId, ':ptype' => $parentType ] )->all();
+    }
 
-	/**
-	 * Delete all entries related to a tag. It's required while deleting a tag.
-	 */
-	public static function deleteByTagId( $tagId ) {
+    public static function findActiveByTagIdParentType( $tagId, $parentType ) {
 
-		self::deleteAll( 'tagId=:tid', [ ':tid' => $tagId ] );
-	}
+        return self::find()->where( 'tagId=:tid AND parentType=:ptype AND active=1',  [ ':tid' => $tagId, ':ptype' => $parentType] )->all();
+    }
+
+    // Update -------------
+
+    // Delete -------------
+
+    /**
+     * Delete all entries related to a tag. It's required while deleting a tag.
+     */
+    public static function deleteByTagId( $tagId ) {
+
+        self::deleteAll( 'tagId=:tid', [ ':tid' => $tagId ] );
+    }
 }
 
 ?>

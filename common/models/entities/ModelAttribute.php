@@ -3,8 +3,8 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
+use yii\validators\FilterValidator;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -12,8 +12,8 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * ModelAttribute Entity
  *
- * @property integer $id
- * @property integer $parentId
+ * @property long $id
+ * @property long $parentId
  * @property string $parentType
  * @property string $name
  * @property string $label
@@ -23,16 +23,30 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 class ModelAttribute extends Attribute {
 
-	// Instance Methods --------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// yii\base\Model --------------------
+    // Constants/Statics --
+
+    // Public -------------
+
+    // Private/Protected --
+
+    // Traits ------------------------------------------------------
+
+    // Constructor and Initialisation ------------------------------
+
+    // Instance Methods --------------------------------------------
+
+    // yii\base\Component ----------------
+
+    // yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-	public function rules() {
-		
-		// model rules
+    public function rules() {
+
+        // model rules
         $rules = [
             [ [ 'parentId', 'parentType', 'name' ], 'required' ],
             [ [ 'id', 'label', 'value' ], 'safe' ],
@@ -44,127 +58,135 @@ class ModelAttribute extends Attribute {
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
 
-		// trim if required
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+        // trim if required
+        if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'value', 'valueType', 'type' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'name', 'value', 'valueType', 'type' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-			return ArrayHelper::merge( $trim, $rules );
-		}
+            return ArrayHelper::merge( $trim, $rules );
+        }
 
-		return $rules;
+        return $rules;
     }
 
     /**
      * @inheritdoc
      */
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'label' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
-			'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
-			'valueType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE_TYPE ),
-			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE )
-		];
-	}
+        return [
+            'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'label' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
+            'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'valueType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE_TYPE ),
+            'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE )
+        ];
+    }
 
-	// ModelAttribute --------------------
+    // ModelAttribute --------------------
 
-	/**
-	 * Validates to ensure that only one attribute exist with one name.
-	 */
+    /**
+     * Validates to ensure that only one attribute exist with one name.
+     */
     public function validateNameCreate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
             if( self::isExistByTypeName( $this->parentId, $this->parentType, $this->type, $this->name ) ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
 
-	/**
-	 * Validates to ensure that only one attribute exist with one name.
-	 */
+    /**
+     * Validates to ensure that only one attribute exist with one name.
+     */
     public function validateNameUpdate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
-			$existingConfig = self::findByTypeName( $this->parentId, $this->parentType, $this->type, $this->name );
+            $existingConfig = self::findByTypeName( $this->parentId, $this->parentType, $this->type, $this->name );
 
-			if( isset( $existingConfig ) && $existingConfig->id != $this->id ) {
+            if( isset( $existingConfig ) && $existingConfig->id != $this->id ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-			}
+                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+            }
         }
     }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+    // yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-	public static function tableName() {
+    public static function tableName() {
 
-		return CoreTables::TABLE_MODEL_ATTRIBUTE;
-	}
+        return CoreTables::TABLE_MODEL_ATTRIBUTE;
+    }
 
-	// ModelAttribute --------------------
+    // ModelAttribute --------------------
 
-	/**
-	 * @param integer $parentId
-	 * @param string $parentType
-	 * @param string $type
-	 * @return array - ModelAttribute by type
-	 */
-	public static function findByType( $parentId, $parentType, $type ) {
+    // Create -------------
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] )->all();
-	}
+    // Read ---------------
 
-	/**
-	 * @param integer $parentId
-	 * @param string $parentType
-	 * @param string $name
-	 * @return ModelAttribute - by name
-	 */
-	public static function findByName( $parentId, $parentType, $name ) {
+    /**
+     * @param integer $parentId
+     * @param string $parentType
+     * @param string $type
+     * @return array - ModelAttribute by type
+     */
+    public static function findByType( $parentId, $parentType, $type ) {
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name', [ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name ] )->all();
-	}
+        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] )->all();
+    }
 
-	/**
-	 * @param integer $parentId
-	 * @param string $parentType
-	 * @param string $type
-	 * @param string $name
-	 * @return ModelAttribute - by type and name
-	 */
-	public static function findByTypeName( $parentId, $parentType, $type, $name ) {
+    /**
+     * @param integer $parentId
+     * @param string $parentType
+     * @param string $name
+     * @return ModelAttribute - by name
+     */
+    public static function findByName( $parentId, $parentType, $name ) {
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type AND name=:name', 
-				[ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type, ':name' => $name ] )->one();
-	}
+        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name', [ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name ] )->all();
+    }
 
-	/**
-	 * @param integer $parentId
-	 * @param string $parentType
-	 * @param string $type
-	 * @param string $name
-	 * @return boolean - Check whether attribute exist by type and name
-	 */
-	public static function isExistByTypeName( $parentId, $parentType, $type, $name ) {
+    /**
+     * @param integer $parentId
+     * @param string $parentType
+     * @param string $type
+     * @param string $name
+     * @return ModelAttribute - by type and name
+     */
+    public static function findByTypeName( $parentId, $parentType, $type, $name ) {
 
-		$config = self::findByTypeName( $parentId, $parentType, $type, $name );
+        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type AND name=:name',
+                [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type, ':name' => $name ] )->one();
+    }
 
-		return isset( $config );
-	}
+    /**
+     * @param integer $parentId
+     * @param string $parentType
+     * @param string $type
+     * @param string $name
+     * @return boolean - Check whether attribute exist by type and name
+     */
+    public static function isExistByTypeName( $parentId, $parentType, $type, $name ) {
+
+        $config = self::findByTypeName( $parentId, $parentType, $type, $name );
+
+        return isset( $config );
+    }
+
+    // Update -------------
+
+    // Delete -------------
 }
 
 ?>

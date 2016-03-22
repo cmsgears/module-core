@@ -3,10 +3,10 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
-use yii\helpers\ArrayHelper;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
+use yii\validators\FilterValidator;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -14,26 +14,38 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * NewsletterMember Entity
  *
- * @property integer $id
+ * @property long $id
  * @property string $name
  * @property string $email
- * @property integer $active
+ * @property boolean $active
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
 class NewsletterMember extends CmgEntity {
 
-	// Instance Methods --------------------------------------------
+    // Variables ---------------------------------------------------
 
-	/**
-	 * @return string representation of flag
-	 */
-	public function getActiveStr() {
+    // Constants/Statics --
 
-		return Yii::$app->formatter->asBoolean( $this->active ); 
-	}
+    // Public -------------
 
-	// yii\base\Component ----------------
+    // Private/Protected --
+
+    // Traits ------------------------------------------------------
+
+    // Constructor and Initialisation ------------------------------
+
+    // Instance Methods --------------------------------------------
+
+    /**
+     * @return string representation of flag
+     */
+    public function getActiveStr() {
+
+        return Yii::$app->formatter->asBoolean( $this->active ); 
+    }
+
+    // yii\base\Component ----------------
 
     /**
      * @inheritdoc
@@ -44,21 +56,21 @@ class NewsletterMember extends CmgEntity {
 
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
-				'createdAtAttribute' => 'createdAt',
- 				'updatedAtAttribute' => 'modifiedAt',
- 				'value' => new Expression('NOW()')
+                'createdAtAttribute' => 'createdAt',
+                'updatedAtAttribute' => 'modifiedAt',
+                'value' => new Expression('NOW()')
             ]
         ];
     }
 
-	// yii\base\Model --------------------
+    // yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-	public function rules() {
+    public function rules() {
 
-		// model rules
+        // model rules
         $rules = [
             [ [ 'email' ], 'required' ],
             [ [ 'id', 'name' ], 'safe' ],
@@ -67,74 +79,80 @@ class NewsletterMember extends CmgEntity {
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
-		// trim if required
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+        // trim if required
+        if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'email' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'name', 'email' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-			return ArrayHelper::merge( $trim, $rules );
-		}
+            return ArrayHelper::merge( $trim, $rules );
+        }
 
-		return $rules;
+        return $rules;
     }
 
     /**
      * @inheritdoc
      */
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
-		];
-	}
+        return [
+            'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+        ];
+    }
 
-	// Static Methods ----------------------------------------------
+    // NewsletterMember-------------------
 
-	// yii\db\ActiveRecord ---------------
+    // Static Methods ----------------------------------------------
+
+    // yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-	public static function tableName() {
+    public static function tableName() {
 
-		return CoreTables::TABLE_NEWSLETTER_MEMBER;
-	}
+        return CoreTables::TABLE_NEWSLETTER_MEMBER;
+    }
 
-	// NewsletterMember ------------------
-	
-	// Read ----
+    // NewsletterMember-------------------
 
-	/**
-	 * @param string $email
-	 * @return NewsletterMember - by email
-	 */
-	public static function findByEmail( $email ) {
+    // Create -------------
 
-		return self::find()->where( 'email=:email', [ ':email' => $email ] )->one();
-	}
+    // Read ---------------
 
-	/**
-	 * @param string $email
-	 * @return NewsletterMember - by email
-	 */
-	public static function isExistByEmail( $email ) {
+    /**
+     * @param string $email
+     * @return NewsletterMember - by email
+     */
+    public static function findByEmail( $email ) {
 
-		$member = self::findByEmail( $email );
+        return self::find()->where( 'email=:email', [ ':email' => $email ] )->one();
+    }
 
-		return isset( $member );
-	}
+    /**
+     * @param string $email
+     * @return NewsletterMember - by email
+     */
+    public static function isExistByEmail( $email ) {
 
-	// Delete ----
-	
-	/**
-	 * Delete the member.
-	 */
-	public static function deleteByEmail( $email ) {
+        $member = self::findByEmail( $email );
 
-		self::deleteAll( 'email=:email', [ ':email' => $email ] );
-	}
+        return isset( $member );
+    }
+
+    // Update -------------
+
+    // Delete -------------
+
+    /**
+     * Delete the member.
+     */
+    public static function deleteByEmail( $email ) {
+
+        self::deleteAll( 'email=:email', [ ':email' => $email ] );
+    }
 }
 
 ?>

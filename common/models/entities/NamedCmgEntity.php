@@ -13,59 +13,87 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 abstract class NamedCmgEntity extends CmgEntity {
 
-	// Instance Methods --------------------------------------------
-	
-	/**
-	 * Validate name on creation to ensure that name is unique for all rows.
-	 */
+    // Variables ---------------------------------------------------
+
+    // Constants/Statics --
+
+    // Public -------------
+
+    // Private/Protected --
+
+    // Traits ------------------------------------------------------
+
+    // Constructor and Initialisation ------------------------------
+
+    // Instance Methods --------------------------------------------
+
+    /**
+     * Validate name on creation to ensure that name is unique for all rows.
+     */
     public function validateNameCreate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
-			$entity = static::findByName( $this->name );
+            $entity = static::findByName( $this->name );
 
             if( $entity ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
 
-	/**
-	 * Validate name on creation to ensure that name is unique for all rows.
-	 */
+    /**
+     * Validate name on creation to ensure that name is unique for all rows.
+     */
     public function validateNameUpdate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
-			$existingEntity = static::findByName( $this->name );
+            $existingEntity = static::findByName( $this->name );
 
-			if( isset( $existingEntity ) && $existingEntity->id != $this->id ) {
+            if( isset( $existingEntity ) && $existingEntity->id != $this->id ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-			}
+                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+            }
         }
     }
 
-	// Static Methods ----------------------------------------------
+    // yii\base\Component ----------------
 
-	// Read
+    // yii\base\Model --------------------
 
-	/**
-	 * @return ActiveRecord - by id
-	 */
-	public static function findById( $id ) {
+    // NamedCmgEntity --------------------
 
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
+    // Static Methods ----------------------------------------------
 
-	/**
-	 * @return ActiveRecord - by name
-	 */
-	public static function findByName( $name ) {
+    // yii\db\ActiveRecord ---------------
 
-		return self::find()->where( 'name=:name', [ ':name' => $name ] )->one();
-	}
+    // NamedCmgEntity --------------------
+
+    // Create -------------
+
+    // Read ---------------
+
+    /**
+     * @return ActiveRecord - by id
+     */
+    public static function findById( $id ) {
+
+        return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
+    }
+
+    /**
+     * @return ActiveRecord - by name
+     */
+    public static function findByName( $name ) {
+
+        return self::find()->where( 'name=:name', [ ':name' => $name ] )->one();
+    }
+
+    // Update -------------
+
+    // Delete -------------
 }
 
 ?>

@@ -12,26 +12,38 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * NewsletterList Entity
  *
- * @property integer $id
- * @property integer $newsletterId
- * @property integer $memberId
- * @property integer $active
+ * @property long $id
+ * @property long $newsletterId
+ * @property long $memberId
+ * @property boolean $active
  * @property datetime $createdAt
- * @property datetime $modifiedAt 
+ * @property datetime $modifiedAt
  */
 class NewsletterList extends CmgEntity {
 
-	// Instance Methods --------------------------------------------
+    // Variables ---------------------------------------------------
 
-	/**
-	 * @return string representation of flag
-	 */
-	public function getActiveStr() {
+    // Constants/Statics --
 
-		return Yii::$app->formatter->asBoolean( $this->active ); 
-	}
+    // Public -------------
 
-	// yii\base\Component ----------------
+    // Private/Protected --
+
+    // Traits ------------------------------------------------------
+
+    // Constructor and Initialisation ------------------------------
+
+    // Instance Methods --------------------------------------------
+
+    /**
+     * @return string representation of flag
+     */
+    public function getActiveStr() {
+
+        return Yii::$app->formatter->asBoolean( $this->active ); 
+    }
+
+    // yii\base\Component ----------------
 
     /**
      * @inheritdoc
@@ -42,19 +54,19 @@ class NewsletterList extends CmgEntity {
 
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
-				'createdAtAttribute' => 'createdAt',
- 				'updatedAtAttribute' => 'modifiedAt',
- 				'value' => new Expression('NOW()')
+                'createdAtAttribute' => 'createdAt',
+                'updatedAtAttribute' => 'modifiedAt',
+                'value' => new Expression('NOW()')
             ]
         ];
     }
 
-	// yii\base\Model --------------------
+    // yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-	public function rules() {
+    public function rules() {
 
         return [
             [ [ 'newsletterId', 'memberId' ], 'required' ],
@@ -68,46 +80,54 @@ class NewsletterList extends CmgEntity {
     /**
      * @inheritdoc
      */
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'newsletterId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NEWSLETTER ),
-			'memberId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MEMBER ),
-			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
-		];
-	}
+        return [
+            'newsletterId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NEWSLETTER ),
+            'memberId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MEMBER ),
+            'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
+        ];
+    }
 
-	// Static Methods ----------------------------------------------
+    // NewsletterList --------------------
 
-	// yii\db\ActiveRecord ---------------
+    // Static Methods ----------------------------------------------
+
+    // yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-	public static function tableName() {
+    public static function tableName() {
 
-		return CoreTables::TABLE_NEWSLETTER_LIST;
-	}
+        return CoreTables::TABLE_NEWSLETTER_LIST;
+    }
 
-	// NewsletterMember ------------------
+    // NewsletterList --------------------
 
-	// Delete ----
+    // Create -------------
 
-	/**
-	 * Delete the member.
-	 */
-	public static function deleteByNewsletterId( $newsletterId ) {
+    // Read ---------------
 
-		self::deleteAll( 'newsletterId=:id', [ ':id' => $newsletterId ] );
-	}
+    // Update -------------
 
-	/**
-	 * Delete the member.
-	 */
-	public static function deleteByMemberId( $memberId ) {
+    // Delete -------------
 
-		self::deleteAll( 'memberId=:id', [ ':id' => $memberId ] );
-	}
+    /**
+     * Delete the member.
+     */
+    public static function deleteByNewsletterId( $newsletterId ) {
+
+        self::deleteAll( 'newsletterId=:id', [ ':id' => $newsletterId ] );
+    }
+
+    /**
+     * Delete the member.
+     */
+    public static function deleteByMemberId( $memberId ) {
+
+        self::deleteAll( 'memberId=:id', [ ':id' => $memberId ] );
+    }
 }
 
 ?>

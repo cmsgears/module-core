@@ -10,47 +10,61 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * ModelActivity Entity
  *
- * @property integer $id
- * @property integer $activityId
- * @property integer $parentId
+ * @property long $id
+ * @property long $activityId
+ * @property long $parentId
  * @property string $parentType
- * @property integer $consumed 
- * @property integer $admin
+ * @property boolean $consumed
+ * @property boolean $admin
  */
 class ModelActivity extends CmgModel {
 
-	// Instance Methods --------------------------------------------
+    // Variables ---------------------------------------------------
 
-	/**
-	 * @return Activity - associated activity
-	 */
-	public function getActivity() {
+    // Constants/Statics --
 
-    	return $this->hasOne( Activity::className(), [ 'id' => 'activityId' ] );
-	}
+    // Public -------------
 
-	/**
-	 * @return string representation of flag
-	 */
-	public function getConsumedStr() {
+    // Private/Protected --
 
-		return Yii::$app->formatter->asBoolean( $this->consumed ); 
-	}
+    // Traits ------------------------------------------------------
 
-	/**
-	 * @return string representation of flag
-	 */
-	public function getAdminStr() {
+    // Constructor and Initialisation ------------------------------
 
-		return Yii::$app->formatter->asBoolean( $this->admin ); 
-	}
+    // Instance Methods --------------------------------------------
 
-	// yii\base\Model --------------------
+    /**
+     * @return Activity - associated activity
+     */
+    public function getActivity() {
+
+        return $this->hasOne( Activity::className(), [ 'id' => 'activityId' ] );
+    }
+
+    /**
+     * @return string representation of flag
+     */
+    public function getConsumedStr() {
+
+        return Yii::$app->formatter->asBoolean( $this->consumed );
+    }
+
+    /**
+     * @return string representation of flag
+     */
+    public function getAdminStr() {
+
+        return Yii::$app->formatter->asBoolean( $this->admin );
+    }
+
+    // yii\base\Component ----------------
+
+    // yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-	public function rules() {
+    public function rules() {
 
         return [
             [ [ 'activityId', 'parentId', 'parentType' ], 'required' ],
@@ -64,49 +78,53 @@ class ModelActivity extends CmgModel {
     /**
      * @inheritdoc
      */
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'activityId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVITY ),
-			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'consumed' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONSUMED ),
-			'admin' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ADMIN )
-		];
-	}
+        return [
+            'activityId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVITY ),
+            'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+            'consumed' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONSUMED ),
+            'admin' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ADMIN )
+        ];
+    }
 
-	// ModelActivity ---------------------
+    // ModelActivity ---------------------
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+    // yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-	public static function tableName() {
+    public static function tableName() {
 
-		return CoreTables::TABLE_MODEL_ACTIVITY;
-	}
+        return CoreTables::TABLE_MODEL_ACTIVITY;
+    }
 
-	// ModelActivity ---------------------
+    // ModelActivity ---------------------
 
-	// Read ------
+    // Create -------------
 
-	public static function findByParentId( $parentId ) {
+    // Read ---------------
 
-		return self::find()->where( 'parentId=:pid', [ ':pid' => $parentId ] )->all();
-	}
+    public static function findByParentId( $parentId ) {
 
-	// Delete ----
+        return self::find()->where( 'parentId=:pid', [ ':pid' => $parentId ] )->all();
+    }
 
-	/**
-	 * Delete all entries related to a parent
-	 */
-	public static function deleteByParentId( $parentId ) {
+    // Update -------------
 
-		self::deleteAll( 'parentId=:id', [ ':id' => $parentId ] );
-	}
+    // Delete -------------
+
+    /**
+     * Delete all entries related to a parent
+     */
+    public static function deleteByParentId( $parentId ) {
+
+        self::deleteAll( 'parentId=:id', [ ':id' => $parentId ] );
+    }
 }
 
 ?>

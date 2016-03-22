@@ -23,9 +23,9 @@ use cmsgears\core\common\models\traits\DataTrait;
  * @property string $icon
  * @property string $type
  * @property string $description
- * @property integer $featured
- * @property integer lValue
- * @property integer rValue
+ * @property boolean $featured
+ * @property short lValue
+ * @property short rValue
  * @property string $htmlOptions
  * @property string $data
  */

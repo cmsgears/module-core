@@ -10,97 +10,116 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * ModelFile Entity
  *
- * @property integer $id
- * @property integer $fileId
- * @property integer $parentId
+ * @property long $id
+ * @property long $fileId
+ * @property long $parentId
  * @property string $parentType
  * @property short $order
- * @property short $active
+ * @property boolean $active
  */
 class ModelFile extends CmgModel {
 
-	// Instance Methods --------------------------------------------
+    // Variables ---------------------------------------------------
 
-	/**
-	 * @return CmgFile - associated file
-	 */
-	public function getFile() {
+    // Constants/Statics --
 
-    	return $this->hasOne( CmgFile::className(), [ 'id' => 'fileId' ] );
-	}
+    // Public -------------
 
-	// yii\base\Model --------------------
+    // Private/Protected --
+
+    // Traits ------------------------------------------------------
+
+    // Constructor and Initialisation ------------------------------
+
+    // Instance Methods --------------------------------------------
+
+    /**
+     * @return CmgFile - associated file
+     */
+    public function getFile() {
+
+        return $this->hasOne( CmgFile::className(), [ 'id' => 'fileId' ] );
+    }
+
+    // yii\base\Component ----------------
+
+    // yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-	public function rules() {
+    public function rules() {
 
         return [
             [ [ 'fileId', 'parentId', 'parentType' ], 'required' ],
-            [ [ 'id', 'active' ], 'safe' ],
+            [ [ 'id' ], 'safe' ],
             [ [ 'fileId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'parentType', 'string', 'min' => 1, 'max' => 100 ],
-            [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ]
+            [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
+            [ [ 'active' ], 'boolean' ]
         ];
     }
 
     /**
      * @inheritdoc
      */
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'fileId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FILE ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
-		];
-	}
+        return [
+            'fileId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FILE ),
+            'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+            'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+            'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
+        ];
+    }
 
-	// ModelFile -------------------------
+    // ModelFile -------------------------
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+    // yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-	public static function tableName() {
+    public static function tableName() {
 
-		return CoreTables::TABLE_MODEL_FILE;
-	}
+        return CoreTables::TABLE_MODEL_FILE;
+    }
 
-	// ModelFile -------------------------
-	
-	// Read ------
+    // ModelFile -------------------------
 
-	public static function findByFileId( $parentId, $parentType, $fileId ) {
+    // Create -------------
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND fileId=:fid', [ ':pid' => $parentId, ':ptype' => $parentType, ':fid' => $fileId ] )->one(); 
-	}
+    // Read ---------------
 
-	public static function findByFileTitle( $parentId, $parentType, $fileTitle ) {
+    public static function findByFileId( $parentId, $parentType, $fileId ) {
 
-		return self::find()->joinWith( 'file' )->where( 'parentId=:pid AND parentType=:ptype AND title=:title', [ ':pid' => $parentId, ':ptype' => $parentType, ':title' => $fileTitle ] )->one(); 
-	}
+        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND fileId=:fid', [ ':pid' => $parentId, ':ptype' => $parentType, ':fid' => $fileId ] )->one();
+    }
 
-	public static function findByFileTitleLike( $parentId, $parentType, $likeTitle ) {
+    public static function findByFileTitle( $parentId, $parentType, $fileTitle ) {
 
-		return self::find()->joinWith( 'file' )->where( 'parentId=:pid AND parentType=:ptype AND title LIKE :title', [ ':pid' => $parentId, ':ptype' => $parentType, ':title' => $likeTitle ] )->all(); 
-	}
+        return self::find()->joinWith( 'file' )->where( 'parentId=:pid AND parentType=:ptype AND title=:title', [ ':pid' => $parentId, ':ptype' => $parentType, ':title' => $fileTitle ] )->one();
+    }
 
-	// Delete ----
+    public static function findByFileTitleLike( $parentId, $parentType, $likeTitle ) {
 
-	/**
-	 * Delete all entries related to a file
-	 */
-	public static function deleteByFileId( $fileId ) {
+        return self::find()->joinWith( 'file' )->where( 'parentId=:pid AND parentType=:ptype AND title LIKE :title', [ ':pid' => $parentId, ':ptype' => $parentType, ':title' => $likeTitle ] )->all();
+    }
 
-		self::deleteAll( 'fileId=:id', [ ':id' => $fileId ] );
-	}
+    // Update -------------
+
+    // Delete -------------
+
+    /**
+     * Delete all entries related to a file
+     */
+    public static function deleteByFileId( $fileId ) {
+
+        self::deleteAll( 'fileId=:id', [ ':id' => $fileId ] );
+    }
 }
 
 ?>

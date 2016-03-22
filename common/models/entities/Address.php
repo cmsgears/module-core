@@ -27,7 +27,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $website
  * @property integer $longitude
  * @property integer $latitude
- * @property integer $zoomLevel
+ * @property short $zoomLevel
  */
 class Address extends CmgEntity {
 

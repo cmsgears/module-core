@@ -2,62 +2,92 @@
 namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
+use \Yii;
 use yii\db\ActiveRecord;
 
-/**
- * CmgEntity Entity
- * It's the parent entity for all the CMSGears based entities and provide the common methods to be utilised by all the entities.
- */
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 abstract class CmgEntity extends ActiveRecord {
 
-	public $traitParams	= [];
+    // Variables ---------------------------------------------------
 
-	// Instance Methods --------------------------------------------
+    // Constants/Statics --
 
-	// Check whether model already exist	
-	public function isExisting() {
+    // Public -------------
 
-		return isset( $this->id ) && $this->id > 0;
-	}
+    public $traitParams = [];
 
-	/**
-	 * The method allows to update a model for selected columns to target model.
-	 */
-	public function copyForUpdateTo( $toModel, $attributes = [] ) {
+    // Private/Protected --
 
-		foreach ( $attributes as $attribute ) {
+    // Traits ------------------------------------------------------
 
-			$toModel->setAttribute( $attribute, $this->getAttribute( $attribute ) ); 
-		}
-	}
+    // Constructor and Initialisation ------------------------------
 
-	/**
-	 * The method allows to update a model for selected columns from target model.
-	 */
-	public function copyForUpdateFrom( $fromModel, $attributes = [] ) {
+    // Instance Methods --------------------------------------------
 
-		foreach ( $attributes as $attribute ) {
+    // Check whether model already exist    
+    public function isExisting() {
 
-			$this->setAttribute( $attribute, $fromModel->getAttribute( $attribute ) ); 
-		}
-	}
+        return isset( $this->id ) && $this->id > 0;
+    }
 
-	// Static Methods --------------------------------------------
+    /**
+     * The method allows to update a model for selected columns to target model.
+     */
+    public function copyForUpdateTo( $toModel, $attributes = [] ) {
 
-	/**
-	 * Returns row count for the model
-	 */
-	public static function getCount( $conditions = [] ) {
+        foreach ( $attributes as $attribute ) {
 
-		return self::find()->where( $conditions )->count();
-	}
+            $toModel->setAttribute( $attribute, $this->getAttribute( $attribute ) ); 
+        }
+    }
 
-	// Default Searching - Useful for id based models
+    /**
+     * The method allows to update a model for selected columns from target model.
+     */
+    public function copyForUpdateFrom( $fromModel, $attributes = [] ) {
 
-	public static function findById( $id ) {
+        foreach ( $attributes as $attribute ) {
 
-		return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
-	}
+            $this->setAttribute( $attribute, $fromModel->getAttribute( $attribute ) );
+        }
+    }
+
+    // yii\base\Component ----------------
+
+    // yii\base\Model --------------------
+
+    // CmgEntity -------------------------
+
+    // Static Methods ----------------------------------------------
+
+    /**
+     * Returns row count for the model
+     */
+    public static function getCount( $conditions = [] ) {
+
+        return self::find()->where( $conditions )->count();
+    }
+
+    // Default Searching - Useful for id based models
+
+    public static function findById( $id ) {
+
+        return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
+    }
+
+    // yii\db\ActiveRecord ---------------
+
+    // CmgEntity -------------------------
+
+    // Create -------------
+
+    // Read ---------------
+
+    // Update -------------
+
+    // Delete -------------
 }
 
 ?>

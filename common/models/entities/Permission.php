@@ -3,73 +3,85 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
-use yii\helpers\ArrayHelper;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
+use yii\validators\FilterValidator;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\behaviors\AuthorBehavior;
-
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+
+use cmsgears\core\common\behaviors\AuthorBehavior;
 
 /**
  * Permission Entity
  *
- * @property integer $id
- * @property integer $createdBy
- * @property integer $modifiedBy
+ * @property long $id
+ * @property long $createdBy
+ * @property long $modifiedBy
  * @property string $name
  * @property string $slug
  * @property string $type
- * @property string $icon 
- * @property string $description 
+ * @property string $icon
+ * @property string $description
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
 class Permission extends NamedCmgEntity {
 
-	use CreateModifyTrait;
+    // Variables ---------------------------------------------------
 
-	// Instance Methods --------------------------------------------
+    // Constants/Statics --
 
-	/**
-	 * @return Role array
-	 */
-	public function getRoles() {
-	
-    	return $this->hasMany( Role::className(), [ 'id' => 'roleId' ] )
-					->viaTable( CoreTables::TABLE_ROLE_PERMISSION, [ 'permissionId' => 'id' ] );
-	}
+    // Public -------------
 
-	/**
-	 * @return array having role element.
-	 */
-	public function getRoleMappingList() {
+    // Private/Protected --
 
-    	return $this->hasMany( RolePermission::className(), [ 'permissionId' => 'id' ] );
-	}
+    // Traits ------------------------------------------------------
 
-	/**
-	 * @return array having role id element.
-	 */
-	public function getRolesIdList() {
+    use CreateModifyTrait;
 
-    	$roles 		= $this->roleMappingList;
-		$rolesList	= array();
+    // Constructor and Initialisation ------------------------------
 
-		foreach ( $roles as $role ) {
+    // Instance Methods --------------------------------------------
 
-			array_push( $rolesList, $role->roleId );
-		}
+    /**
+     * @return Role array
+     */
+    public function getRoles() {
 
-		return $rolesList;
-	}
+        return $this->hasMany( Role::className(), [ 'id' => 'roleId' ] )
+                    ->viaTable( CoreTables::TABLE_ROLE_PERMISSION, [ 'permissionId' => 'id' ] );
+    }
 
-	// yii\base\Component ----------------
+    /**
+     * @return array having role element.
+     */
+    public function getRoleMappingList() {
+
+        return $this->hasMany( RolePermission::className(), [ 'permissionId' => 'id' ] );
+    }
+
+    /**
+     * @return array having role id element.
+     */
+    public function getRolesIdList() {
+
+        $roles      = $this->roleMappingList;
+        $rolesList  = array();
+
+        foreach ( $roles as $role ) {
+
+            array_push( $rolesList, $role->roleId );
+        }
+
+        return $rolesList;
+    }
+
+    // yii\base\Component ----------------
 
     /**
      * @inheritdoc
@@ -79,7 +91,7 @@ class Permission extends NamedCmgEntity {
         return [
             'authorBehavior' => [
                 'class' => AuthorBehavior::className()
-			],
+            ],
             'sluggableBehavior' => [
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
@@ -88,21 +100,21 @@ class Permission extends NamedCmgEntity {
             ],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
-				'createdAtAttribute' => 'createdAt',
- 				'updatedAtAttribute' => 'modifiedAt',
- 				'value' => new Expression('NOW()')
+                'createdAtAttribute' => 'createdAt',
+                'updatedAtAttribute' => 'modifiedAt',
+                'value' => new Expression('NOW()')
             ]
         ];
     }
 
-	// yii\base\Model --------------------
+    // yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-	public function rules() {
+    public function rules() {
 
-		// model rules
+        // model rules
         $rules = [
             [ [ 'name' ], 'required' ],
             [ [ 'id', 'slug', 'description' ], 'safe' ],
@@ -115,51 +127,61 @@ class Permission extends NamedCmgEntity {
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
-		// trim if required
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+        // trim if required
+        if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-			return ArrayHelper::merge( $trim, $rules );
-		}
+            return ArrayHelper::merge( $trim, $rules );
+        }
 
-		return $rules;
+        return $rules;
     }
 
     /**
      * @inheritdoc
      */
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION )
-		];
-	}
+        return [
+            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+            'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION )
+        ];
+    }
 
-	// Static Methods ----------------------------------------------
+    // Permission ------------------------
 
-	// yii\db\ActiveRecord ---------------
+    // Static Methods ----------------------------------------------
+
+    // yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-	public static function tableName() {
+    public static function tableName() {
 
-		return CoreTables::TABLE_PERMISSION;
-	}
+        return CoreTables::TABLE_PERMISSION;
+    }
 
-	// Permission ------------------------
+    // Permission ------------------------
 
-	/**
-	 * @return Permission - by slug
-	 */
-	public static function findBySlug( $slug ) {
+    // Create -------------
 
-		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
-	}
+    // Read ---------------
+
+    /**
+     * @return Permission - by slug
+     */
+    public static function findBySlug( $slug ) {
+
+        return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+    }
+
+    // Update -------------
+
+    // Delete -------------
 }
 
 ?>

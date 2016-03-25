@@ -10,122 +10,103 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * ModelCategory Entity
  *
- * @property long $id
- * @property long $categoryId
- * @property long $parentId
+ * @property integer $id
+ * @property integer $categoryId
+ * @property integer $parentId
  * @property string $parentType
  * @property short $order
- * @property boolean $active
+ * @property short $active
  */
 class ModelCategory extends CmgModel {
 
-    // Variables ---------------------------------------------------
+	// Instance Methods --------------------------------------------
 
-    // Constants/Statics --
+	/**
+	 * @return Category - associated category
+	 */
+	public function getCategory() {
 
-    // Public -------------
+    	return $this->hasOne( Category::className(), [ 'id' => 'categoryId' ] );
+	}
 
-    // Private/Protected --
-
-    // Traits ------------------------------------------------------
-
-    // Constructor and Initialisation ------------------------------
-
-    // Instance Methods --------------------------------------------
-
-    /**
-     * @return Category - associated category
-     */
-    public function getCategory() {
-
-        return $this->hasOne( Category::className(), [ 'id' => 'categoryId' ] );
-    }
-
-    // yii\base\Component ----------------
-
-    // yii\base\Model --------------------
+	// yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-    public function rules() {
+	public function rules() {
 
         return [
             [ [ 'categoryId', 'parentId', 'parentType' ], 'required' ],
-            [ [ 'id'], 'safe' ],
+            [ [ 'id', 'active' ], 'safe' ],
             [ [ 'categoryId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'parentType' ], 'string', 'min' => 1, 'max' => 100 ],
-            [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'active' ], 'boolean' ]
+            [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ]
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels() {
+	public function attributeLabels() {
 
-        return [
-            'categoryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CATEGORY ),
-            'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-            'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-            'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-            'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
-        ];
-    }
+		return [
+			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+			'categoryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CATEGORY ),
+			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
+		];
+	}
 
-    // ModelCategory ---------------------
+	// ModelCategory ---------------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-    public static function tableName() {
+	public static function tableName() {
 
-        return CoreTables::TABLE_MODEL_CATEGORY;
-    }
+		return CoreTables::TABLE_MODEL_CATEGORY;
+	}
 
-    // ModelCategory ---------------------
+	// ModelCategory ---------------------
 
-    // Create -------------
+	// Read ------
 
-    // Read ---------------
+	public static function findByCategoryId( $parentId, $parentType, $categoryId ) {
 
-    public static function findByCategoryId( $parentId, $parentType, $categoryId ) {
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND categoryId=:cid', [ ':pid' => $parentId, ':ptype' => $parentType, ':cid' => $categoryId ] )->one(); 
+	}
 
-        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND categoryId=:cid', [ ':pid' => $parentId, ':ptype' => $parentType, ':cid' => $categoryId ] )->one();
-    }
+	public static function findActiveByParentId( $parentId ) {
 
-    public static function findActiveByParentId( $parentId ) {
+		return self::find()->where( 'parentId=:pid AND active=1', [ ':pid' => $parentId ] )->all();
+	}
+	
+	public static function findActiveByCategoryIdParentType( $categoryId, $parentType ) {
+		
+		return self::find()->where( 'categoryId=:cid AND parentType=:ptype AND active=1', [ ':cid' => $categoryId, ':ptype' => $parentType ] )->all(); 
+	}
 
-        return self::find()->where( 'parentId=:pid AND active=1', [ ':pid' => $parentId ] )->all();
-    }
+	public static function findActiveByParentIdParentType( $parentId, $parentType ) {
 
-    public static function findActiveByCategoryIdParentType( $categoryId, $parentType ) {
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND active=1', [ ':pid' => $parentId, ':ptype' => $parentType ] )->all();
+	} 
 
-        return self::find()->where( 'categoryId=:cid AND parentType=:ptype AND active=1', [ ':cid' => $categoryId, ':ptype' => $parentType ] )->all();
-    }
+	// Delete ----
 
-    public static function findActiveByParentIdParentType( $parentId, $parentType ) {
-
-        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND active=1', [ ':pid' => $parentId, ':ptype' => $parentType ] )->all();
-    }
-
-    // Update -------------
-
-    // Delete -------------
-
-    /**
-     * Delete all entries related to a category
-     */
-    public static function deleteByCategoryId( $categoryId ) {
-
-        self::deleteAll( 'categoryId=:id', [ ':id' => $categoryId ] );
-    }
+	/**
+	 * Delete all entries related to a category
+	 */
+	public static function deleteByCategoryId( $categoryId ) {
+		
+		self::deleteAll( 'categoryId=:id', [ ':id' => $categoryId ] );
+	}
 }
 
 ?>

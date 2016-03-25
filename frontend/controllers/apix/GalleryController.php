@@ -25,7 +25,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
+
 		$this->ownerService	= new GalleryService();
 	}
 
@@ -67,7 +67,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
 
 				$item	= GalleryService::createItem( $gallery, $item );
 				$item	= FileService::findById( $item->id );
-				$data	= [ 'id' => $item->id, 'thumbUrl' => $item->getThumbUrl() ];
+				$data	= [ 'id' => $item->id, 'thumbUrl' => $item->getThumbUrl(), 'title' => $item->title, 'description' => $item->description, 'alt' => $item->altText, 'url' => $item->url ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
@@ -75,7 +75,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
 
 			// Generate Errors
 			$errors = AjaxUtil::generateErrorMessage( $item );
-	
+
 			// Trigger Ajax Failure
 	        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
@@ -95,7 +95,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
 			if( isset( $modelFile ) ) {
 
 				if ( ModelFileService::delete( $modelFile ) ) {
-					
+
 					// Trigger Ajax Success
 					return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $id );
 				}

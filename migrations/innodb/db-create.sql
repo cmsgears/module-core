@@ -421,6 +421,7 @@ CREATE TABLE `cmg_core_newsletter_member` (
   `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `active` tinyint DEFAULT NULL,
+  `global` tinyint DEFAULT NULL,
   `createdAt` datetime DEFAULT NULL,
   `modifiedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)

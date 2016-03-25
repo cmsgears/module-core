@@ -10,49 +10,35 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * RolePermission Entity
  *
- * @property long $roleId
- * @property long $permissionId
+ * @property integer $roleId
+ * @property integer $permissionId
  */
 class RolePermission extends CmgEntity {
 
-    // Variables ---------------------------------------------------
+	// Instance Methods --------------------------------------------
 
-    // Constants/Statics --
+	/**
+	 * @return Role - from the mapping.
+	 */
+	public function getRole() {
 
-    // Public -------------
+		return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
+	}
 
-    // Private/Protected --
+	/**
+	 * @return Permission - from the mapping.
+	 */
+	public function getPermission() {
 
-    // Traits ------------------------------------------------------
+		return $this->hasOne( Permission::className(), [ 'id' => 'permissionId' ] );
+	}
 
-    // Constructor and Initialisation ------------------------------
-
-    // Instance Methods --------------------------------------------
-
-    /**
-     * @return Role - from the mapping.
-     */
-    public function getRole() {
-
-        return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
-    }
-
-    /**
-     * @return Permission - from the mapping.
-     */
-    public function getPermission() {
-
-        return $this->hasOne( Permission::className(), [ 'id' => 'permissionId' ] );
-    }
-
-    // yii\base\Component ----------------
-
-    // yii\base\Model --------------------
+	// yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-    public function rules() {
+	public function rules() {
 
         return [
             [ [ 'roleId', 'permissionId' ], 'required' ],
@@ -63,53 +49,45 @@ class RolePermission extends CmgEntity {
     /**
      * @inheritdoc
      */
-    public function attributeLabels() {
+	public function attributeLabels() {
 
-        return [
-            'roleId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ROLE ),
-            'permissionId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PERMISSION )
-        ];
-    }
+		return [
+			'roleId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ROLE ),
+			'permissionId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PERMISSION )
+		];
+	}
 
-    // RolePermission --------------------
+	// Static Methods ----------------------------------------------
 
-    // Static Methods ----------------------------------------------
-
-    // yii\db\ActiveRecord ---------------
+	// yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-    public static function tableName() {
+	public static function tableName() {
 
-        return CoreTables::TABLE_ROLE_PERMISSION;
-    }
+		return CoreTables::TABLE_ROLE_PERMISSION;
+	}
 
-    // RolePermission --------------------
+	// RolePermission --------------------
 
-    // Create -------------
+	// Delete ----
 
-    // Read ---------------
+	/**
+	 * Delete the mappings by given role id.
+	 */
+	public static function deleteByRoleId( $roleId ) {
 
-    // Update -------------
+		self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
+	}
 
-    // Delete -------------
+	/**
+	 * Delete the mappings by given permission id.
+	 */
+	public static function deleteByPermissionId( $permissionId ) {
 
-    /**
-     * Delete the mappings by given role id.
-     */
-    public static function deleteByRoleId( $roleId ) {
-
-        self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
-    }
-
-    /**
-     * Delete the mappings by given permission id.
-     */
-    public static function deleteByPermissionId( $permissionId ) {
-
-        self::deleteAll( 'permissionId=:id', [ ':id' => $permissionId ] );
-    }
+		self::deleteAll( 'permissionId=:id', [ ':id' => $permissionId ] );
+	}
 }
 
 ?>

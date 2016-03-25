@@ -12,53 +12,41 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * SiteMember Entity
  *
- * @property long $siteId
- * @property long $userId
- * @property long $roleId
+ * @property integer $siteId
+ * @property integer $userId
+ * @property integer $roleId
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
 class SiteMember extends CmgEntity {
 
-    // Variables ---------------------------------------------------
+	// Instance Methods --------------------------------------------
 
-    // Constants/Statics --
+	/**
+	 * @return Site
+	 */
+	public function getSite() {
 
-    // Public -------------
+    	return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+	}
 
-    // Private/Protected --
+	/**
+	 * @return User
+	 */
+	public function getUser() {
 
-    // Traits ------------------------------------------------------
+    	return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
+	}
 
-    // Constructor and Initialisation ------------------------------
+	/**
+	 * @return Role
+	 */
+	public function getRole() {
 
-    // Instance Methods --------------------------------------------
+    	return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
+	}
 
-    /**
-     * @return Site
-     */
-    public function getSite() {
-
-        return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
-    }
-
-    /**
-     * @return User
-     */
-    public function getUser() {
-
-        return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
-    }
-
-    /**
-     * @return Role
-     */
-    public function getRole() {
-
-        return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
-    }
-
-    // yii\base\Component ----------------
+	// yii\base\Component ----------------
 
     /**
      * @inheritdoc
@@ -69,19 +57,19 @@ class SiteMember extends CmgEntity {
 
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
-                'createdAtAttribute' => 'createdAt',
-                'updatedAtAttribute' => 'modifiedAt',
-                'value' => new Expression('NOW()')
+				'createdAtAttribute' => 'createdAt',
+ 				'updatedAtAttribute' => 'modifiedAt',
+ 				'value' => new Expression('NOW()')
             ]
         ];
     }
 
-    // yii\base\Model --------------------
+	// yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-    public function rules() {
+	public function rules() {
 
         return [
             [ [ 'siteId', 'userId', 'roleId' ], 'required' ],
@@ -93,78 +81,72 @@ class SiteMember extends CmgEntity {
     /**
      * @inheritdoc
      */
-    public function attributeLabels() {
+	public function attributeLabels() {
 
-        return [
-            'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
-            'userId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USER ),
-            'roleId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ROLE )
-        ];
-    }
+		return [
+			'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'userId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USER ),
+			'roleId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ROLE )
+		];
+	}
 
-    // SiteMember ------------------------
+	// Static Methods ----------------------------------------------
 
-    // Static Methods ----------------------------------------------
-
-    // yii\db\ActiveRecord ---------------
+	// yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-    public static function tableName() {
+	public static function tableName() {
 
-        return CoreTables::TABLE_SITE_MEMBER;
-    }
+		return CoreTables::TABLE_SITE_MEMBER;
+	}
 
-    // SiteMember ------------------------
+	// SiteMember ------------------------
 
-    // Create -------------
+	// Read ----
 
-    // Read ---------------
+	/**
+	 * @return ActiveRecord - with site member and role.
+	 */
+	public static function findWithUserRole() {
 
-    /**
-     * @return ActiveRecord - with site member and role.
-     */
-    public static function findWithUserRole() {
+		return self::find()->joinWith( 'user' )->joinWith( 'role' );
+	}
 
-        return self::find()->joinWith( 'user' )->joinWith( 'role' );
-    }
+	/**
+	 * @return Site - by id
+	 */
+	public static function findBySiteIdUserId( $siteId, $userId ) {
 
-    /**
-     * @return Site - by id
-     */
-    public static function findBySiteIdUserId( $siteId, $userId ) {
+		return self::find()->where( 'siteId=:sid AND userId=:uid', [ ':sid' => $siteId, ':uid' => $userId ] )->one();
+	}
 
-        return self::find()->where( 'siteId=:sid AND userId=:uid', [ ':sid' => $siteId, ':uid' => $userId ] )->one();
-    }
+	// Delete ----
 
-    // Update -------------
+	/**
+	 * Delete the mappings by given site id.
+	 */
+	public static function deleteBySiteId( $siteId ) {
 
-    // Delete -------------
+		self::deleteAll( 'siteId=:id', [ ':id' => $siteId ] );
+	}
 
-    /**
-     * Delete the mappings by given site id.
-     */
-    public static function deleteBySiteId( $siteId ) {
+	/**
+	 * Delete the mappings by given user id.
+	 */
+	public static function deleteByUserId( $memberId ) {
 
-        self::deleteAll( 'siteId=:id', [ ':id' => $siteId ] );
-    }
+		self::deleteAll( 'userId=:id', [ ':id' => $memberId ] );
+	}
 
-    /**
-     * Delete the mappings by given user id.
-     */
-    public static function deleteByUserId( $memberId ) {
+	/**
+	 * Delete the mappings by given role id.
+	 */
+	public static function deleteByRoleId( $roleId ) {
 
-        self::deleteAll( 'userId=:id', [ ':id' => $memberId ] );
-    }
-
-    /**
-     * Delete the mappings by given role id.
-     */
-    public static function deleteByRoleId( $roleId ) {
-
-        self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
-    }
+		self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
+	}
 }
 
 ?>

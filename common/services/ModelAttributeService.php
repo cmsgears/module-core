@@ -16,12 +16,41 @@ class ModelAttributeService extends Service {
 
 	// Read ----------------
 
-	public static function findAttributeByType( $parentId, $parentType, $type ) {
+	public static function findById( $id ) {
+
+		return ModelAttribute::findById( $id );
+	}
+
+	public static function findByType( $parentId, $parentType, $type ) {
 
 		return ModelAttribute::findByType( $parentId, $parentType, $type );
 	}
 
-	public static function findAttributeMapByType( $parentId, $parentType, $type ) {
+	public static function findByTypeName( $parentId, $parentType, $type, $name ) {
+
+		return ModelAttribute::findByTypeName( $parentId, $parentType, $type, $name );
+	}
+
+	public static function findOrGetByTypeName( $parentId, $parentType, $type, $name, $valueType = 'text' ) {
+
+		$attribute	= self::findByTypeName( $parentId, $parentType, $type, $name );
+
+		if( !isset( $attribute ) ) {
+
+			$attribute				= new ModelAttribute();
+			$attribute->parentId	= $parentId;
+			$attribute->parentType	= $parentType;
+			$attribute->name		= $name;
+			$attribute->type		= $type;
+			$attribute->valueType	= $valueType;
+		}
+
+		return $attribute;
+	}
+
+	// Maps --
+
+	public static function findMapByType( $parentId, $parentType, $type ) {
 
 		$attributes 	= ModelAttribute::findByType( $parentId, $parentType, $type );
 		$attributeMap	= [];
@@ -34,46 +63,85 @@ class ModelAttributeService extends Service {
 		return $attributeMap;
 	}
 
-	// Create -----------
+	// Create ----------------
+
+ 	public static function create( $model, $config = [] ) {
+
+		if( !isset( $model->label ) || strlen( $model->label ) <= 0 ) {
+
+			$model->label = $model->name;
+		}
+
+		$model->save();
+
+		return $model;
+ 	}
 
 	// Update -----------
 
-	public static function update( $attribute ) {
+	public static function update( $model, $config = [] ) {
 
-		$existingAttribute	= ModelAttribute::findByTypeName( $attribute->parentId, $attribute->parentType, $attribute->type, $attribute->name );
+		// Create if it does not exist
+		if( !isset( $model->id ) || $model->id <= 0 ) {
 
-		if( isset( $existingAttribute ) ) {
+			return self::create( $model );
+		}
 
-			if( isset( $attribute->valueType ) ) {
+		$existingModel	= ModelAttribute::findById( $model->id );
 
-				$existingAttribute->copyForUpdateFrom( $attribute, [ 'valueType', 'value' ] );
-			}
-			else {
+		if( isset( $model->valueType ) ) {
 
-				$existingAttribute->copyForUpdateFrom( $attribute, [ 'value' ] );
-			}
-
-			$existingAttribute->update();
-
-			return $existingAttribute;
+			$existingModel->copyForUpdateFrom( $model, [ 'valueType', 'value' ] );
 		}
 		else {
 
-			$attribute->save();
+			$existingModel->copyForUpdateFrom( $model, [ 'value' ] );
+		}
 
-			return $attribute;
+		$existingModel->update();
+
+		return $existingModel;
+	}
+
+	public static function updateMultiple( $models, $config = [] ) {
+
+		$parent	= $config[ 'parent' ];
+
+		foreach( $models as $model ) {
+
+			if( $model->parentId == $parent->id ) {
+
+				self::update( $model );
+			}
 		}
 	}
 
-	public static function updateAll( $settings ) {
+	public static function updateByForm( $form, $config = [] ) {
 
-		foreach ( $settings as $key => $setting ) {
+		$attributes = $form->getArrayToStore();
 
-			$setting->update();
+		foreach ( $attributes as $attribute ) {
+
+			if( !isset( $attribute[ 'valueType' ] ) ) {
+
+				$attribute[ 'valueType' ]	= ModelAttribute::VALUE_TYPE_TEXT;
+			}
+
+			$model			= self::findOrGetByTypeName( $config[ 'parentId' ], $config[ 'parentType' ], $config[ 'type' ], $attribute[ 'name' ], $attribute[ 'valueType' ] );
+
+			$model->value	= $attribute[ 'value' ];
+			$model->label	= $form->getAttributeLabel( $attribute[ 'name' ] );
+
+			self::update( $model );
 		}
-	}
+ 	}
 
 	// Delete -----------
+
+	public static function delete( $model, $config = [] ) {
+
+		$model->delete();
+	}
 }
 
 ?>

@@ -3,25 +3,25 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\db\Expression;
 use yii\helpers\ArrayHelper;
+use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\traits\CreateModifyTrait;
+use \cmsgears\core\common\behaviors\AuthorBehavior;
 
-use cmsgears\core\common\behaviors\AuthorBehavior;
+use cmsgears\core\common\models\traits\CreateModifyTrait;
 
 /**
  * ModelComment Entity
  *
- * @property long $id
- * @property long $baseId
- * @property long $parentId
- * @property long $createdBy
- * @property long $modifiedBy
+ * @property integer $id
+ * @property integer $baseId
+ * @property integer $parentId 
+ * @property integer $createdBy
+ * @property integer $modifiedBy
  * @property string $parentType
  * @property string $name
  * @property string $email
@@ -29,9 +29,9 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $websiteUrl
  * @property string $ip
  * @property string $agent
- * @property short $status
- * @property short $type
- * @property short $rating
+ * @property integer $status
+ * @property integer $type
+ * @property integer $rating
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property datetime $approvedAt
@@ -40,19 +40,15 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class ModelComment extends CmgModel {
 
-    // Variables ---------------------------------------------------
-
-    // Constants/Statics --
-
     const TYPE_COMMENT      =   0;
     const TYPE_REVIEW       =  10;
     const TYPE_TESTIMONIAL  =  20;
 
     const STATUS_NEW        =  500;
-    const STATUS_SPAM       =  600;
+	const STATUS_SPAM		=  600;
     const STATUS_BLOCKED    =  700;
     const STATUS_APPROVED   =  800;
-    const STATUS_DELETED    = 1000;
+	const STATUS_DELETED	= 1000;
 
     public static $statusMap = [
         self::STATUS_NEW => 'New',
@@ -62,15 +58,7 @@ class ModelComment extends CmgModel {
         self::STATUS_DELETED => 'Trash'
     ];
 
-    // Public -------------
-
-    // Private/Protected --
-
-    // Traits ------------------------------------------------------
-
     use CreateModifyTrait;
-
-    // Constructor and Initialisation ------------------------------
 
     // Instance Methods --------------------------------------------
 
@@ -163,7 +151,7 @@ class ModelComment extends CmgModel {
         ];
     }
 
-    // ModelComment ----------------------
+    // ModelTag --------------------------
 
     // Static Methods ----------------------------------------------
 
@@ -179,9 +167,7 @@ class ModelComment extends CmgModel {
 
     // ModelComment ----------------------
 
-    // Create -------------
-
-    // Read ---------------
+    // Read ------
 
     public static function queryByParent( $parentId, $parentType, $type = self::TYPE_COMMENT, $status = self::STATUS_APPROVED ) {
 
@@ -200,12 +186,8 @@ class ModelComment extends CmgModel {
 
     public static function queryByEmail( $email ) {
 
-        return self::find()->where( [ 'email' => $email ] );
+		return self::find()->where( [ 'email' => $email ] );
     }
-
-    // Update -------------
-
-    // Delete -------------
 }
 
 ?>

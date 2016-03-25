@@ -11,33 +11,22 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * Locale Entity
  *
- * @property long $id
+ * @property integer $id
  * @property string $code
  * @property string $name
  */
 class Locale extends NamedCmgEntity {
+	
+	// Instance Methods --------------------------------------------
 
-    // Variables ---------------------------------------------------
+	// yii\base\Model --------------------
 
-    // Constants/Statics --
+    /**
+     * @inheritdoc
+     */
+	public function rules() {
 
-    // Public -------------
-
-    // Private/Protected --
-
-    // Traits ------------------------------------------------------
-
-    // Constructor and Initialisation ------------------------------
-
-    // Instance Methods --------------------------------------------
-
-    // yii\base\Component ----------------
-
-    // yii\base\Model --------------------
-
-    public function rules() {
-
-        // model rules
+		// model rules
         $rules = [
             [ [ 'code', 'name' ], 'required' ],
             [ 'id', 'safe' ],
@@ -48,59 +37,51 @@ class Locale extends NamedCmgEntity {
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
 
-        // trim if required
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+		// trim if required
+		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-            $trim[] = [ [ 'name', 'code' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'code' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
+		return $rules;
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels() {
+	public function attributeLabels() {
 
-        return [
-            'code' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE ),
-            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
-        ];
-    }
+		return [
+			'code' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
+		];
+	}
 
-    // Locale ----------------------------
+	// Static Methods ----------------------------------------------
 
-    // Static Methods ----------------------------------------------
-
-    // yii\db\ActiveRecord ---------------
+	// yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-    public static function tableName() {
+	public static function tableName() {
 
-        return CoreTables::TABLE_LOCALE;
-    }
+		return CoreTables::TABLE_LOCALE;
+	}
 
-    // Locale ----------------------------
+	// Locale ----------------------------
 
-    // Create -------------
+	// Read ----
 
-    // Read ---------------
+	/**
+	 * @return Locale - by code
+	 */
+	public static function findByCode( $code ) {
 
-    /**
-     * @return Locale - by code
-     */
-    public static function findByCode( $code ) {
-
-        return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
-    }
-
-    // Update -------------
-
-    // Delete -------------
+		return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
+	}
 }
 
 ?>

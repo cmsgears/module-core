@@ -10,104 +10,85 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * ModelForm Entity
  *
- * @property long $id
- * @property long $formId
- * @property long $parentId
+ * @property integer $id
+ * @property integer $formId
+ * @property integer $parentId
  * @property string $parentType
  * @property short $order
- * @property boolean $active
+ * @property short $active
  */
 class ModelForm extends CmgModel {
 
-    // Variables ---------------------------------------------------
+	// Instance Methods --------------------------------------------
 
-    // Constants/Statics --
+	public function getTag() {
 
-    // Public -------------
-
-    // Private/Protected --
-
-    // Traits ------------------------------------------------------
-
-    // Constructor and Initialisation ------------------------------
-
-    // Instance Methods --------------------------------------------
-
-    public function getTag() {
-
-        return $this->hasOne( Form::className(), [ 'id' => 'formId' ] );
-    }
-
-    // yii\base\Component ----------------
-
-    // yii\base\Model --------------------
+		return $this->hasOne( Form::className(), [ 'id' => 'formId' ] );
+	}
+	
+	// yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-    public function rules() {
+	public function rules() {
 
         return [
             [ [ 'formId', 'parentId', 'parentType' ], 'required' ],
-            [ [ 'id' ], 'safe' ],
+            [ [ 'id', 'active' ], 'safe' ],
             [ [ 'formId' ], 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ 'parentType', 'string', 'min' => 1, 'max' => 100 ],
-            [ 'order', 'number', 'integerOnly', 'min' => 0 ],
-            [ [ 'active' ], 'boolean' ]
+            [ 'order', 'number', 'integerOnly', 'min' => 0 ]
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels() {
+	public function attributeLabels() {
 
-        return [
-            'formId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FORM ),
-            'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-            'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-            'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-            'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
-        ];
-    }
+		return [
+			'formId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FORM ),
+			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
+		];
+	}
 
-    // ModelForm -------------------------
+	// ModelForm -------------------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-    public static function tableName() {
+	public static function tableName() {
 
-        return CoreTables::TABLE_MODEL_FORM;
-    }
+		return CoreTables::TABLE_MODEL_FORM;
+	}
 
-    // ModelForm -------------------------
+	// ModelForm -------------------------
 
-    // Create -------------
+	// Read ----
 
-    // Read ---------------
+	public static function findByFormId( $parentId, $parentType, $formId ) {
 
-    public static function findByFormId( $parentId, $parentType, $formId ) {
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND formId=:fid', [ ':pid' => $parentId, ':ptype' => $parentType, ':fid' => $formId ] )->one(); 
+	}
 
-        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND formId=:fid', [ ':pid' => $parentId, ':ptype' => $parentType, ':fid' => $formId ] )->one();
-    }
+	// Delete ----
 
-    // Update -------------
+	/**
+	 * Delete all entries related to a form
+	 */
+	public static function deleteByFormId( $formId ) {
 
-    // Delete -------------
-
-    /**
-     * Delete all entries related to a form
-     */
-    public static function deleteByFormId( $formId ) {
-
-        self::deleteAll( 'formId=:fid', [ ':fid' => $formId ] );
-    }
+		self::deleteAll( 'formId=:fid', [ ':fid' => $formId ] );
+	}
 }
 
 ?>

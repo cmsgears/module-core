@@ -18,55 +18,23 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 abstract class HierarchicalModel extends CmgEntity {
 
-    // Variables ---------------------------------------------------
+	// Instance Methods --------------------------------------------
 
-    // Constants/Statics --
+	abstract public function getParent();
 
-    // Public -------------
+	public function hasParent() {
 
-    // Private/Protected --
+		return isset( $this->parentId ) && $this->parentId > 0;
+	}
 
-    // Traits ------------------------------------------------------
+	public function getParentName() {
 
-    // Constructor and Initialisation ------------------------------
+		$parent	= $this->parent;
 
-    // Instance Methods --------------------------------------------
+		return isset( $parent ) ? $parent->name : null;
+	}
 
-    abstract public function getParent();
-
-    public function hasParent() {
-
-        return isset( $this->parentId ) && $this->parentId > 0;
-    }
-
-    public function getParentName() {
-
-        $parent = $this->parent;
-
-        return isset( $parent ) ? $parent->name : null;
-    }
-
-    abstract public function getChildren();
-
-    // yii\base\Component ----------------
-
-    // yii\base\Model --------------------
-
-    // HierarchicalModel------------------
-
-    // Static Methods ----------------------------------------------
-
-    // yii\db\ActiveRecord ---------------
-
-    // HierarchicalModel------------------
-
-    // Create -------------
-
-    // Read ---------------
-
-    // Update -------------
-
-    // Delete -------------
+	abstract public function getChildren();
 }
 
 ?>

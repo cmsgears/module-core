@@ -11,44 +11,30 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * Country Entity
  *
- * @property long $id
+ * @property integer $id
  * @property string $code
  * @property string $name
  */
 class Country extends NamedCmgEntity {
+	
+	// Instance Methods --------------------------------------------
 
-    // Variables ---------------------------------------------------
+	/**
+	 * @return array - list of Province having all the provinces belonging to this country
+	 */
+	public function getProvinces() {
 
-    // Constants/Statics --
+    	return $this->hasMany( Province::className(), [ 'countryId' => 'id' ] );
+	}
 
-    // Public -------------
-
-    // Private/Protected --
-
-    // Traits ------------------------------------------------------
-
-    // Constructor and Initialisation ------------------------------
-
-    // Instance Methods --------------------------------------------
-
-    /**
-     * @return array - list of Province having all the provinces belonging to this country
-     */
-    public function getProvinces() {
-
-        return $this->hasMany( Province::className(), [ 'countryId' => 'id' ] );
-    }
-
-    // yii\base\Component ----------------
-
-    // yii\base\Model --------------------
+	// yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-    public function rules() {
+	public function rules() {
 
-        // model rules
+		// model rules
         $rules = [
             [ [ 'name', 'code' ], 'required' ],
             [ 'id', 'safe' ],
@@ -59,59 +45,49 @@ class Country extends NamedCmgEntity {
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
 
-        // trim if required
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+		// trim if required
+		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-            $trim[] = [ [ 'name', 'code' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'code' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
+		return $rules;
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels() {
+	public function attributeLabels() {
 
-        return [
-            'code' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE ),
-            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
-        ];
-    }
+		return [
+			'code' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
+		];
+	}
 
-    // Country ---------------------------
+	// Static Methods ----------------------------------------------
 
-    // Static Methods ----------------------------------------------
-
-     /**
-     * @inheritdoc
-     */
-    public static function tableName() {
-
-        return CoreTables::TABLE_COUNTRY;
-    }
-
-    // Country ---------------------------
-
-    // yii\db\ActiveRecord ---------------
-
-    // Create -------------
-
-    // Read ---------------
+	// yii\db\ActiveRecord ---------------
 
     /**
-     * @return Country by code
+     * @inheritdoc
      */
-    public static function findByCode( $code ) {
+	public static function tableName() {
 
-        return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
-    }
+		return CoreTables::TABLE_COUNTRY;
+	}
 
-    // Update -------------
+	// Country ---------------------------
 
-    // Delete -------------
+	/**
+	 * @return Country by code
+	 */
+	public static function findByCode( $code ) {
+
+		return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
+	}
 }
 
 ?>

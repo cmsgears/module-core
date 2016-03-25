@@ -3,8 +3,8 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\helpers\ArrayHelper;
 use yii\validators\FilterValidator;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -14,8 +14,8 @@ use cmsgears\core\common\models\traits\DataTrait;
 /**
  * Option Entity
  *
- * @property long $id
- * @property long $categoryId
+ * @property integer $id
+ * @property integer $categoryId
  * @property string $name
  * @property string $value
  * @property string $icon
@@ -24,40 +24,26 @@ use cmsgears\core\common\models\traits\DataTrait;
  */
 class Option extends CmgEntity {
 
-    // Variables ---------------------------------------------------
+	use DataTrait;
 
-    // Constants/Statics --
+	// Instance Methods --------------------------------------------
 
-    // Public -------------
+	/**
+	 * @return Category - The parent category.
+	 */
+	public function getCategory() {
 
-    // Private/Protected --
+		return $this->hasOne( Category::className(), [ 'id' => 'categoryId' ] );
+	}
 
-    // Traits ------------------------------------------------------
-
-    use DataTrait;
-
-    // Constructor and Initialisation ------------------------------
-
-    // Instance Methods --------------------------------------------
-
-    /**
-     * @return Category - The parent category.
-     */
-    public function getCategory() {
-
-        return $this->hasOne( Category::className(), [ 'id' => 'categoryId' ] );
-    }
-
-    // yii\base\Component ----------------
-
-    // yii\base\Model --------------------
+	// yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-    public function rules() {
+	public function rules() {
 
-        // model rules
+		// model rules
         $rules = [
             [ [ 'name' ], 'required' ],
             [ [ 'id', 'categoryId', 'value', 'htmlOptions', 'data' ], 'safe' ],
@@ -68,177 +54,173 @@ class Option extends CmgEntity {
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
         ];
 
-        // trim if required
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+		// trim if required
+		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-            $trim[] = [ [ 'name', 'value', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'value', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
+		return $rules;
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels() {
+	public function attributeLabels() {
 
-        return [
-            'categoryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CATEGORY ),
-            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
-            'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-            'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-            'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
-        ];
-    }
+		return [
+			'categoryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CATEGORY ),
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
+			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
+		];
+	}
 
-    // Option ----------------------------
+	// Config ----------------------------
 
-    /**
-     * Validates to ensure that only one option exist for a category with the same name.
-     */
+	/**
+	 * Validates to ensure that only one option exist for a category with the same name.
+	 */
     public function validateNameCreate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
             if( self::isExistByNameCategoryId( $this->name, $this->categoryId ) ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
 
-    /**
-     * Validates to ensure that only one option exist for a category with the same name.
-     */
+	/**
+	 * Validates to ensure that only one option exist for a category with the same name.
+	 */
     public function validateNameUpdate( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
-            $existingOption = self::findByNameCategoryId( $this->name, $this->categoryId );
+			$existingOption = self::findByNameCategoryId( $this->name, $this->categoryId );
 
-            if( isset( $existingOption ) && $existingOption->id != $this->id ) {
+			if( isset( $existingOption ) && $existingOption->id != $this->id ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-            }
+				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+			}
         }
     }
 
-    // Static Methods ----------------------------------------------
+	// Static methods --------------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// yii\db\ActiveRecord ----------------
 
     /**
      * @inheritdoc
      */
-    public static function tableName() {
+	public static function tableName() {
+		
+		return CoreTables::TABLE_OPTION;
+	}
 
-        return CoreTables::TABLE_OPTION;
-    }
+	// Option -----------------------------
+	
+	// Read ----
 
-    // Option ----------------------------
+	/**
+	 * @return Option - by category
+	 */
+	public static function findByCategory( $category ) {
 
-    // Create -------------
+		return self::find()->where( 'categoryId=:id', [ ':id' => $category->id ] )->all();
+	}
 
-    // Read ---------------
+	/**
+	 * @return Option - by category id
+	 */
+	public static function findByCategoryId( $categoryId ) {
 
-    /**
-     * @return Option - by category
-     */
-    public static function findByCategory( $category ) {
+		return self::find()->where( 'categoryId=:id', [ ':id' => $categoryId ] )->all();
+	}
 
-        return self::find()->where( 'categoryId=:id', [ ':id' => $category->id ] )->all();
-    }
+	/**
+	 * @return Option - by category name
+	 */
+	public static function findByCategoryName( $categoryName, $categoryType ) {
 
-    /**
-     * @return Option - by category id
-     */
-    public static function findByCategoryId( $categoryId ) {
+		$categoryTable = CoreTables::TABLE_CATEGORY;
 
-        return self::find()->where( 'categoryId=:id', [ ':id' => $categoryId ] )->all();
-    }
+		return self::find()->joinWith( 'category' )->where( "$categoryTable.name=:cname AND $categoryTable.type=:ctype" ) 
+							->addParams( [ ':cname' => $categoryName, ':ctype' => $categoryType ] )
+							->all();
+	}
 
-    /**
-     * @return Option - by category name
-     */
-    public static function findByCategoryName( $categoryName, $categoryType ) {
+	/**
+	 * @return Option - by name and category
+	 */
+	public static function findByNameCategory( $name, $category ) {
 
-        $categoryTable = CoreTables::TABLE_CATEGORY;
+		$optionTable = CoreTables::TABLE_OPTION;
 
-        return self::find()->joinWith( 'category' )->where( "$categoryTable.name=:cname AND $categoryTable.type=:ctype" )
-                            ->addParams( [ ':cname' => $categoryName, ':ctype' => $categoryType ] )
-                            ->all();
-    }
+		return self::find()->where( "$optionTable.name=:name AND categoryId=:id", [ ':name' => $name, ':id' => $category->id ] )->one();
+	}
 
-    /**
-     * @return Option - by name and category
-     */
-    public static function findByNameCategory( $name, $category ) {
+	/**
+	 * @return Option - by name and category id
+	 */
+	public static function findByNameCategoryId( $name, $categoryId ) {
 
-        $optionTable = CoreTables::TABLE_OPTION;
+		$optionTable = CoreTables::TABLE_OPTION;
 
-        return self::find()->where( "$optionTable.name=:name AND categoryId=:id", [ ':name' => $name, ':id' => $category->id ] )->one();
-    }
+		return self::find()->where( "$optionTable.name=:name AND categoryId=:id", [ ':name' => $name, ':id' => $categoryId ] )->one();
+	}
 
-    /**
-     * @return Option - by name and category id
-     */
-    public static function findByNameCategoryId( $name, $categoryId ) {
+	/**
+	 * @return boolean - check whether option exist by name and category id
+	 */
+	public static function isExistByNameCategoryId( $name, $categoryId ) {
 
-        $optionTable = CoreTables::TABLE_OPTION;
+		$option = self::findByNameCategoryId( $name, $categoryId );
 
-        return self::find()->where( "$optionTable.name=:name AND categoryId=:id", [ ':name' => $name, ':id' => $categoryId ] )->one();
-    }
+		return isset( $option );
+	}
 
-    /**
-     * @return boolean - check whether option exist by name and category id
-     */
-    public static function isExistByNameCategoryId( $name, $categoryId ) {
+	/**
+	 * @return Option - by name and category name
+	 */
+	public static function findByNameCategoryName( $name, $categoryName, $categoryType ) {
+		
+		$categoryTable 	= CoreTables::TABLE_CATEGORY;
+		$optionTable 	= CoreTables::TABLE_OPTION;
 
-        $option = self::findByNameCategoryId( $name, $categoryId );
+		return self::findWithAlias()->joinWith( 'category' )->where( "$optionTable.name=:name AND $categoryTable.name=:cname AND $categoryTable.type=:ctype" )
+							->addParams( [ ':name' => $name, ':cname' => $categoryName, ':ctype' => $categoryType ] )
+							->one();
+	}
 
-        return isset( $option );
-    }
+	/**
+	 * @return Option - by value and category id
+	 */
+	public static function findByValueCategoryName( $value, $categoryName, $categoryType ) {
 
-    /**
-     * @return Option - by name and category name
-     */
-    public static function findByNameCategoryName( $name, $categoryName, $categoryType ) {
+		$categoryTable 	= CoreTables::TABLE_CATEGORY;
+		$optionTable 	= CoreTables::TABLE_OPTION;
 
-        $categoryTable  = CoreTables::TABLE_CATEGORY;
-        $optionTable    = CoreTables::TABLE_OPTION;
+		return self::findWithAlias()->joinWith( 'category' )->where( "$optionTable.value=:value AND $categoryTable.name=:cname AND $categoryTable.type=:ctype" )
+							->addParams( [ ':value' => $value, ':cname' => $categoryName, ':ctype' => $categoryType ] )
+							->one();
+	}
+	
+	// Delete ----
 
-        return self::findWithAlias()->joinWith( 'category' )->where( "$optionTable.name=:name AND $categoryTable.name=:cname AND $categoryTable.type=:ctype" )
-                            ->addParams( [ ':name' => $name, ':cname' => $categoryName, ':ctype' => $categoryType ] )
-                            ->one();
-    }
+	/**
+	 * Delete Option - by category id
+	 */
+	public static function deleteByCategoryId( $categoryId ) {
 
-    /**
-     * @return Option - by value and category id
-     */
-    public static function findByValueCategoryName( $value, $categoryName, $categoryType ) {
-
-        $categoryTable  = CoreTables::TABLE_CATEGORY;
-        $optionTable    = CoreTables::TABLE_OPTION;
-
-        return self::findWithAlias()->joinWith( 'category' )->where( "$optionTable.value=:value AND $categoryTable.name=:cname AND $categoryTable.type=:ctype" )
-                            ->addParams( [ ':value' => $value, ':cname' => $categoryName, ':ctype' => $categoryType ] )
-                            ->one();
-    }
-
-    // Update -------------
-
-    // Delete -------------
-
-    /**
-     * Delete Option - by category id
-     */
-    public static function deleteByCategoryId( $categoryId ) {
-
-        return self::deleteAll( 'categoryId=:id', [ ':id' => $categoryId ] );
-    }
+		return self::deleteAll( 'categoryId=:id', [ ':id' => $categoryId ] );
+	}
 }
 
 ?>

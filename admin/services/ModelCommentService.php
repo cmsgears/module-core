@@ -15,8 +15,8 @@ class ModelCommentService extends \cmsgears\core\common\services\ModelCommentSer
 
 	// Static Methods ----------------------------------------------
 
-	// Read ---------------- 
-	
+	// Read ----------------
+
 	// Pagination -------
 
     public static function getPagination( $config = [] ) {
@@ -69,7 +69,7 @@ class ModelCommentService extends \cmsgears\core\common\services\ModelCommentSer
 
         return self::getDataProvider( new ModelComment(), $config );
     }
-    
+
     /**
      * @return ActiveDataProvider
      */
@@ -79,6 +79,24 @@ class ModelCommentService extends \cmsgears\core\common\services\ModelCommentSer
 
         return self::getPagination( $config );
     }
+
+        // Update -----------
+
+    public static function update( $comment ) {
+
+        // Find existing Comment
+        $commentToUpdate    = self::getById( $comment->id );
+
+        // Copy and set Attributes
+        $commentToUpdate->copyForUpdateFrom( $comment, [ 'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content', 'status' ] );
+
+        // Update Comment
+        $commentToUpdate->update();
+
+        // Return updated Comment
+        return $commentToUpdate;
+    }
+
 }
 
 ?>

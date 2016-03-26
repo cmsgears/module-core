@@ -35,7 +35,7 @@ class ModelCommentService extends Service {
 
 	/**
 	 * It can be used to get child comments for given base id.
-	 */ 
+	 */
 	public static function getByBaseId( $baseId, $type = ModelComment::TYPE_COMMENT, $status = ModelComment::STATUS_APPROVED ) {
 
 		return ModelComment::queryByBaseId( $baseId, $type, $status )->all();
@@ -47,6 +47,11 @@ class ModelCommentService extends Service {
     public static function isExistByEmail( $email ) {
 
         return ModelComment::queryByEmail( $email )->one() != null;
+    }
+
+    public static function getByEmail( $email ) {
+
+        return ModelComment::queryByEmail( $email )->one();
     }
 
 	// Create -----------
@@ -66,7 +71,7 @@ class ModelCommentService extends Service {
 	public static function update( $comment ) {
 
 		// Find existing Comment
-		$commentToUpdate	= self::findById( $comment->id );
+		$commentToUpdate	= self::getById( $comment->id );
 
 		// Copy and set Attributes
 		$commentToUpdate->copyForUpdateFrom( $comment, [ 'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content' ] );

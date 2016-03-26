@@ -104,10 +104,10 @@ class UserService extends Service {
 
 		return $usersMap;
 	}
-	
+
 	public static function findAttributeMapByType( $user, $type ) {
-		
-		return ModelAttributeService::findAttributeMapByType( $user->id, CoreGlobal::TYPE_USER, $type );
+
+		return ModelAttributeService::findByType( $user->id, CoreGlobal::TYPE_USER, $type );
 	}
 
 	// Data Provider ----
@@ -143,7 +143,7 @@ class UserService extends Service {
 		// Generate Tokens
 		$user->generateVerifyToken();
 		$user->generateAuthKey();
-		
+
 		// Save Files
 		FileService::saveFiles( $user, [ 'avatarId' => $avatar ] );
 

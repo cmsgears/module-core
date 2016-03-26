@@ -15,12 +15,12 @@ use cmsgears\core\common\models\entities\ModelComment;
 use cmsgears\core\admin\services\ModelCommentService;
 
 abstract class CommentController extends Controller {
-    
+
     public $returnUrl;
     public $commentType;
     public $modelService;
     public $rememberUrl;
-    
+
 	// Constructor and Initialisation ------------------------------
 
     public function __construct( $id, $module, $config = [] ) {
@@ -62,14 +62,14 @@ abstract class CommentController extends Controller {
     public function actionAll( $slug = null ) {
 
         Url::remember( [ "$this->rememberUrl/all" ], $this->rememberUrl );
-        
+
         $dataProvider   = null;
         $model          = null;
 
         if( isset( $slug ) ) {
-            
+
             Url::remember( [ "$this->rememberUrl/all?slug=$slug" ], $this->rememberUrl );
-            
+
             $model    = $this->modelService->findBySlug( $slug );
 
             if( isset( $model ) ) {
@@ -80,7 +80,7 @@ abstract class CommentController extends Controller {
         else {
 
             $dataProvider = ModelCommentService::getPaginationByType( $this->commentType );
-        } 
+        }
 
         return $this->render( 'all', [
              'dataProvider' => $dataProvider,
@@ -123,13 +123,13 @@ abstract class CommentController extends Controller {
     public function actionUpdate( $id ) {
 
         // Find Model
-        $model  = ModelCommentService::findById( $id );
+        $model  = ModelCommentService::getById( $id );
 
         // Update/Render if exist
         if( isset( $model ) ) {
 
             if( $model->load( Yii::$app->request->post(), 'ModelComment' )  && $model->validate() ) {
-    
+
                 ModelCommentService::update( $model );
 
                 return $this->redirect( $this->returnUrl );
@@ -148,7 +148,7 @@ abstract class CommentController extends Controller {
     public function actionDelete( $id ) {
 
         // Find Model
-        $model  = ModelCommentService::findById( $id );
+        $model  = ModelCommentService::getById( $id );
 
         // Update/Render if exist
         if( isset( $model ) ) {

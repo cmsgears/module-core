@@ -50,7 +50,7 @@ trait CommentTrait {
 
 		return $average;
 	}
-    
+
     public function getRatingCounts() {
 
         $returnArr      = [ 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0 ];
@@ -69,8 +69,11 @@ trait CommentTrait {
         foreach ( $counts as $count ) {
 
             $returnArr[ $count[ 'rating' ] ] = $count[ 'total' ];
+        }
 
-            $counter++;
+        foreach( $returnArr as $val ) {
+
+            $counter    += $val;
         }
 
         $returnArr[ 'all' ] = $counter;

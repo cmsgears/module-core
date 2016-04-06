@@ -1,7 +1,7 @@
 <?php
 namespace cmsgears\core\common\models\traits;
 
-use cmsgears\core\common\models\entities\CoreTables;
+use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\User;
 
 /**
@@ -23,14 +23,6 @@ trait CreateModifyTrait {
 	public function getModifier() {
 
 		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] );
-	}
-
-	/**
-	 * @return boolean - whether given user is creator. It's useful to apply filter to check model ownership.
-	 */
-	public function checkOwner( $user ) {
-
-		return $this->createdBy	= $user->id;
 	}
 }
 

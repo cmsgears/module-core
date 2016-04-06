@@ -21,25 +21,28 @@ class CoreGlobal {
 
 	const REDIRECT_LOGIN		= 'loginRedirectLink';
 
-	// Model Traits - Metas, Attachments, Addresses --------------------
+	// Grouping by type ------------------------------------------------
 
 	const TYPE_DEFAULT			= 'default';
 	const TYPE_CORE				= 'core';
 	const TYPE_SYSTEM			= 'system';
 
-	const TYPE_COMBO			= 'combo';
-	const TYPE_CHECKBOX_GROUP	= 'checkbox-group';
-
-	const TYPE_SITE				= 'site';
+	const TYPE_LOCALE			= 'locale';
+	const TYPE_THEME			= 'theme';
+	const TYPE_TEMPLATE			= 'template';
+	const TYPE_OBJECT			= 'object';
+	const TYPE_COUNTRY			= 'country';
+	const TYPE_PROVINCE			= 'province';
+	const TYPE_CITY				= 'city';
+	const TYPE_ROLE				= 'role';
+	const TYPE_PERMISSION		= 'permission';
 	const TYPE_USER				= 'user';
+	const TYPE_SITE				= 'site';
+
 	const TYPE_ACTIVITY			= 'activity';
-	const TYPE_NOTIFICATION		= 'notification';
-	const TYPE_REMINDER			= 'reminder';
 	const TYPE_CATEGORY			= 'category';
 	const TYPE_FORM				= 'form';
 	const TYPE_GALLERY			= 'gallery';
-	const TYPE_NEWSLETTER		= 'newsletter';
-
 
 	// Templates -------------------------------------------------------
 
@@ -59,6 +62,9 @@ class CoreGlobal {
 
 	const CATEGORY_GENDER		= 'gender';
 
+	const TYPE_COMBO			= 'combo';
+	const TYPE_CHECKBOX_GROUP	= 'checkbox-group';
+
 	// Text Limits - Ideal for string validators -----------------------
 
 	const TEXT_SMALL			=  50;
@@ -66,12 +72,10 @@ class CoreGlobal {
 	const TEXT_LARGE			= 150;
 	const TEXT_XLARGE			= 255;
 
-	// Text/Notifications/Reminders/Messages ---------------------------
+	// Text limit for display ------------------------------------------
 
-	const DISPLAY_LIMIT_TEXT			= 250;
-	const DISPLAY_LIMIT_MESSAGE			= 200;
-	const DISPLAY_LIMIT_NOTIFICATION	= 100;
-	const DISPLAY_LIMIT_REMINDER		= 100;
+	const DISPLAY_TEXT_SMALL	= 160;
+	const DISPLAY_TEXT_MEDIUM	= 255;
 
 	// Hierarchy -- Nested Set -----------------------------------------
 
@@ -95,7 +99,7 @@ class CoreGlobal {
 	const PERM_ADMIN				= 'admin'; 	// Allows to view Admin Site Home
 	const PERM_USER					= 'user'; 	// Allows to view User Site Home
 
-	// Site specific - Forms, Galleries, Settings, Newsletters, Testimonials, Categories, Geo DB
+	// Site specific - Forms, Galleries, Settings, Testimonials, Categories, Geo DB
 	const PERM_CORE					= 'core';
 
 	// User
@@ -130,8 +134,6 @@ class CoreGlobal {
 	const MESSAGE_FORGOT_PASSWORD 	= 'forgotPwdMessage';
 	const MESSAGE_RESET_PASSWORD 	= 'resetPwdMessage';
 
-	const MESSAGE_NEWSLETTER_SIGNUP = 'newsletterlSignupMessage';
-
 	// Errors ----------------------------------------------------------
 
 	// Errors - Generic
@@ -161,7 +163,7 @@ class CoreGlobal {
 	const ERROR_TERMS				= 'termsError';
 
 	// Errors - User Login
-	const ERROR_USER_NOT_EXIST		= 'userNotExistError';	
+	const ERROR_USER_NOT_EXIST		= 'userNotExistError';
 	const ERROR_USER_VERIFICATION	= 'userVerificationError';
 	const ERROR_BLOCKED				= 'blockedError';
 	const ERROR_LOGIN_FAILED		= 'loginFailedError';
@@ -273,11 +275,11 @@ class CoreGlobal {
 	const FIELD_LASTNAME			= 'lastNameField';
 	const FIELD_DOB					= 'dobField';
 	const FIELD_TERMS				= 'termsField';
-	const FIELD_NEWSLETTER			= 'newsletterField';
-	
+
 	// File Fields
 	const FIELD_EXTENSION			= 'extensionField';
 	const FIELD_DIRECTORY			= 'directoryField';
+	const FIELD_SIZE				= 'sizeField';
 	const FIELD_URL					= 'urlField';
 	const FIELD_LINK				= 'linkField';
 
@@ -307,7 +309,7 @@ class CoreGlobal {
 	const FIELD_MAIL_ADMIN		= 'adminMailField';
 	const FIELD_META			= 'metaField';
 	const FIELD_RATING			= 'ratingField';
-	
+
 	// Visibility
 	const FIELD_PRIVATE			= 'privateField';
 	const FIELD_PUBLIC			= 'publicField';

@@ -7,13 +7,13 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\core\common\models\entities\resources\CmgFile;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
  * UpdateAvatar can be used to update avatar for models.
- * 
+ *
  * The controller must provide modelService variable using approprite service class.
  */
 class UpdateAvatar extends ModelAction {
@@ -38,7 +38,7 @@ class UpdateAvatar extends ModelAction {
 
 			$avatar = CmgFile::loadFile( $this->model->avatar, 'Avatar' );
 
-			if( Yii::$app->controller->modelService->updateAvatar( $this->model, $avatar ) ) {
+			if( $this->model = Yii::$app->controller->modelService->updateAvatar( $this->model, $avatar ) ) {
 
 				$avatar		= $this->model->avatar;
 				$response	= [ 'fileUrl' => $avatar->getFileUrl() ];

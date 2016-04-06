@@ -8,10 +8,10 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Permission;
 use cmsgears\core\common\models\forms\Binder;
+use cmsgears\core\common\models\entities\Permission;
 
-use cmsgears\core\admin\services\PermissionService;
+use cmsgears\core\admin\services\entities\PermissionService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 

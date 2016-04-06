@@ -8,14 +8,14 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\ModelAttribute;
-use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\forms\ResetPassword;
 use cmsgears\core\common\models\entities\Address;
+use cmsgears\core\common\models\resources\CmgFile;
+use cmsgears\core\common\models\mappers\ModelAttribute;
 
-use cmsgears\core\common\services\UserService;
-use cmsgears\core\common\services\ProvinceService;
-use cmsgears\core\common\services\ModelAddressService;
+use cmsgears\core\common\services\entities\UserService;
+use cmsgears\core\common\services\entities\ProvinceService;
+use cmsgears\core\common\services\mappers\ModelAddressService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 use cmsgears\core\common\utilities\CodeGenUtil;
@@ -101,7 +101,7 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
 
 				// Generate Errors
 				$errors = AjaxUtil::generateErrorMessage( $model );
-	
+
 				// Trigger Ajax Failure
 	        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 			}
@@ -112,7 +112,7 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
     }
 
 	public function actionSettings() {
-		
+
 		$user			= Yii::$app->user->getIdentity();
 
 		// Update/Render if exist
@@ -125,7 +125,7 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
 			for ( $i = 0; $i < $count; $i++ ) {
 
 				$attribute		= new ModelAttribute( [ 'parentId' => $user->id, 'parentType' => CoreGlobal::TYPE_USER ] );
-				$attributes[] 	= $attribute; 
+				$attributes[] 	= $attribute;
 			}
 
 			// Load SchoolItem models
@@ -170,8 +170,8 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
                 UserService::update( $user );
 
                 $data   = [
-                            'email' => $user->email, 'username' => $user->username, 'firstName' => $user->firstName, 
-                            'lastName' => $user->lastName, 'gender' => $user->getGenderStr(), 'phone' => $user->phone 
+                            'email' => $user->email, 'username' => $user->username, 'firstName' => $user->firstName,
+                            'lastName' => $user->lastName, 'gender' => $user->getGenderStr(), 'phone' => $user->phone
                         ];
 
                 // Trigger Ajax Success
@@ -181,7 +181,7 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
 
                 // Generate Errors
                 $errors = AjaxUtil::generateErrorMessage( $user );
-    
+
                 // Trigger Ajax Failure
                 return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
             }
@@ -205,12 +205,12 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
             $address        = $modelAddress->address;
 
             $data   = [
-                        'line1' => $address->line1, 'line2' => $address->line2, 'city' => $address->city, 
-                        'country' => $address->country->name, 'province' => $address->province->name, 'phone' => $address->phone, 'zip' => $address->zip 
+                        'line1' => $address->line1, 'line2' => $address->line2, 'city' => $address->city,
+                        'country' => $address->country->name, 'province' => $address->province->name, 'phone' => $address->phone, 'zip' => $address->zip
                     ];
 
                 // Trigger Ajax Success
-                return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data ); 
+                return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
             }
 
             // Generate Errors

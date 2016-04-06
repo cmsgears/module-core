@@ -28,8 +28,6 @@ class MessageSource extends Component {
 		CoreGlobal::MESSAGE_FORGOT_PASSWORD => 'A confirmation email having password reset link was sent to the given email address.',
 		CoreGlobal::MESSAGE_RESET_PASSWORD => 'Your password reset request was processed successfully. Please login to continue with us.',
 
-		CoreGlobal::MESSAGE_NEWSLETTER_SIGNUP => 'Thanks for joining our newsletter. We will keep you updated with latest news and happenings.',
-
 		// Errors ----------------------------------------------------------
 
 		// Errors - Generic
@@ -59,7 +57,7 @@ class MessageSource extends Component {
 		CoreGlobal::ERROR_TERMS => 'Please accept our terms and conditions to continue.',
 
 		// Errors - User Login
-		CoreGlobal::ERROR_USER_NOT_EXIST => 'A user with the provided email is not registered.',	
+		CoreGlobal::ERROR_USER_NOT_EXIST => 'A user with the provided email is not registered.',
 		CoreGlobal::ERROR_USER_VERIFICATION	=> 'The account with this email is not confirmed yet. Please follow the mail sent while registration or try to reset password.',
 		CoreGlobal::ERROR_BLOCKED => 'The account is blocked by Admin. Please contact Admin to re-activate it.',
 		CoreGlobal::ERROR_LOGIN_FAILED => 'The provided username and password does not match.',
@@ -171,11 +169,11 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_LASTNAME => 'Last Name',
 		CoreGlobal::FIELD_DOB => 'Date of Birth',
 		CoreGlobal::FIELD_TERMS => 'Terms',
-		CoreGlobal::FIELD_NEWSLETTER => 'Newsletter',
 
 		// File Fields
 		CoreGlobal::FIELD_EXTENSION => 'Extension',
 		CoreGlobal::FIELD_DIRECTORY => 'Directory',
+		CoreGlobal::FIELD_SIZE => 'Size',
 		CoreGlobal::FIELD_URL => 'Url',
 		CoreGlobal::FIELD_LINK => 'Link',
 

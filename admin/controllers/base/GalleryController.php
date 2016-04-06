@@ -10,10 +10,10 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Gallery;
+use cmsgears\core\common\models\resources\Gallery;
 
-use cmsgears\core\admin\services\GalleryService;
-use cmsgears\core\admin\services\TemplateService;
+use cmsgears\core\admin\services\entities\TemplateService;
+use cmsgears\core\admin\services\resources\GalleryService;
 
 abstract class GalleryController extends Controller {
 
@@ -71,7 +71,7 @@ abstract class GalleryController extends Controller {
 
 		return $this->redirect( 'all' );
 	}
-	
+
 	public function actionAll() {
 
 		$dataProvider = GalleryService::getPaginationByType( $this->type );
@@ -88,7 +88,7 @@ abstract class GalleryController extends Controller {
 		$model			= new Gallery();
 		$model->type 	= $this->type;
 		$model->siteId	= Yii::$app->cmgCore->siteId;
-		
+
 		$model->setScenario( 'create' );
 
 		if( $model->load( Yii::$app->request->post(), 'Gallery' )  && $model->validate() ) {
@@ -118,9 +118,9 @@ abstract class GalleryController extends Controller {
 			$model->type 	= $this->type;
 
 			$model->setScenario( 'update' );
-	
+
 			if( $model->load( Yii::$app->request->post(), 'Gallery' )  && $model->validate() ) {
-	
+
 				if( GalleryService::update( $model ) ) {
 
 					return $this->redirect( $this->returnUrl );

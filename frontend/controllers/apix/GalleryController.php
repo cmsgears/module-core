@@ -8,11 +8,11 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\core\common\models\resources\CmgFile;
 
-use cmsgears\core\common\services\FileService;
-use cmsgears\core\common\services\ModelFileService;
-use cmsgears\core\frontend\services\GalleryService;
+use cmsgears\core\common\services\resources\FileService;
+use cmsgears\core\common\services\mappers\ModelFileService;
+use cmsgears\core\frontend\services\resources\GalleryService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 

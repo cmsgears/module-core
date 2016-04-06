@@ -10,7 +10,7 @@ use yii\base\Model;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\services\UserService;
+use cmsgears\core\common\services\entities\UserService;
 
 class Register extends Model {
 
@@ -29,11 +29,11 @@ class Register extends Model {
 	public $newsletter;
 
 	// Instance Methods --------------------------------------------
-	
+
 	// yii\base\Model
 
 	public function rules() {
-		
+
 		$trim		= [];
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
@@ -82,7 +82,7 @@ class Register extends Model {
         if( !$this->hasErrors() ) {
 
             if( UserService::isExistByEmail( $this->email ) ) {
-            	
+
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
             }
         }

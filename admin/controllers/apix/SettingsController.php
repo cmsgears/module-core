@@ -8,11 +8,11 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\ModelMeta;
 use cmsgears\core\common\models\forms\GenericForm;
+use cmsgears\core\common\models\mappers\ModelMeta;
 
-use cmsgears\core\common\services\ModelAttributeService;
-use cmsgears\core\admin\services\SiteService;
+use cmsgears\core\common\services\mappers\ModelAttributeService;
+use cmsgears\core\admin\services\entities\SiteService;
 
 use cmsgears\core\common\utilities\FormUtil;
 use cmsgears\core\common\utilities\AjaxUtil;
@@ -73,15 +73,15 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 
 			$settings	= FormUtil::getModelAttributes( $model, $settings );
 
-			ModelAttributeService::updateAll( $settings );
+			ModelAttributeService::updateMultiple( $settings, [ 'parent' => Yii::$app->cmgCore->site ] );
 
 			$data		= [];
 
 			foreach ( $settings as $key => $value ) {
-				
+
 				$data[]	= $value->getFieldInfo();
 			}
-			
+
 			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 		}
 

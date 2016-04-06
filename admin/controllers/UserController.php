@@ -9,8 +9,8 @@ use yii\helpers\Url;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\admin\config\AdminGlobalCore;
 
-use cmsgears\core\admin\services\OptionService;
-use cmsgears\core\admin\services\UserService;
+use cmsgears\core\admin\services\entities\UserService;
+use cmsgears\core\admin\services\resources\OptionService;
 
 class UserController extends \cmsgears\core\admin\controllers\base\UserController {
 
@@ -34,13 +34,13 @@ class UserController extends \cmsgears\core\admin\controllers\base\UserControlle
 	// yii\base\Component ----------------
 
     public function behaviors() {
-		
+
 		$behaviours	= parent::behaviors();
 
 		$behaviours[ 'rbac' ][ 'actions' ][ 'profile'] 	= [ 'permission' => CoreGlobal::PERM_USER ];
 
 		$behaviours[ 'verbs' ][ 'actions' ][ 'profile' ] 	= [ 'get', 'post' ];
-		
+
 		return $behaviours;
     }
 
@@ -61,8 +61,6 @@ class UserController extends \cmsgears\core\admin\controllers\base\UserControlle
 		$username		= $model->username;
 
 		$model->setScenario( 'profile' );
-
-		UserService::checkNewsletterMember( $model );
 
 		if( $model->load( Yii::$app->request->post(), 'User' ) && $model->validate() ) {
 

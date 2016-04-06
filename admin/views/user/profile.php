@@ -19,7 +19,7 @@ $user			= Yii::$app->user->getIdentity();
 		<div class="box-content clearfix">
 			<div class="header">User Avatar</div>
 			<?= AvatarUploader::widget([
-				'options' => [ 'id' => 'avatar-user', 'class' => 'file-uploader' ], 
+				'options' => [ 'id' => 'avatar-user', 'class' => 'file-uploader' ],
 				'model' => $user->avatar, 'cmtController' => 'user',
 				'postAction' => true, 'postViewIcon' => 'cmti cmti-2x cmti-user'
 			]); ?>
@@ -37,40 +37,38 @@ $user			= Yii::$app->user->getIdentity();
 						<tr><td>Lastname</td><td><?= $model->lastName ?></td></tr>
 						<tr><td>Gender</td><td><?= $model->getGenderStr() ?></td></tr>
 						<tr><td>Phone</td><td><?= $model->phone ?></td></tr>
-						<tr><td>Newsletter</td><td><?= $model->getNewsletterStr() ?></td></tr>
 					</table>
 				</div>
 				<div class="wrap-form">
 					<?php $form = ActiveForm::begin( [ 'id' => 'frm-user-profile', 'options' => [ 'class' => 'frm-split-40-60' ] ] );?>
-		
-					<?php 
+
+					<?php
 						if( !$coreProperties->isChangeEmail() ) {
-		
+
 							echo $form->field( $model, 'email' )->textInput( [ 'readonly' => true ] );
 						}
 						else {
-		
+
 							echo $form->field( $model, 'email' );
 						}
 					?>
-		
-					<?php 
+
+					<?php
 						if( !$coreProperties->isChangeUsername() ) {
-		
+
 							echo $form->field( $model, 'username' )->textInput( [ 'readonly' => true ] );
 						}
 						else {
-		
+
 							echo $form->field( $model, 'username' );
 						}
 					?>
-		
+
 					<?= $form->field( $model, 'firstName' ) ?>
 					<?= $form->field( $model, 'lastName' ) ?>
 					<?= $form->field( $model, 'genderId' )->dropDownList( $genders )  ?>
 					<?= $form->field( $model, 'phone' ) ?>
-					<?= $form->field( $model, 'newsletter' )->checkbox() ?>
-			
+
 					<div class="clear"></div>
 
 					<div class="align align-center">
@@ -80,6 +78,6 @@ $user			= Yii::$app->user->getIdentity();
 					<?php ActiveForm::end(); ?>
 				</div>
 			</div>
-		</div> 
+		</div>
 	</div>
 </div>

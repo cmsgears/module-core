@@ -7,13 +7,13 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\services\ModelCommentService;
+use cmsgears\core\common\services\mappers\ModelCommentService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
  * DeleteRequest can be used to mark a comment for user deletion and trigger notification and mail to admin and model owner.
- * 
+ *
  * The controller must provide modelService variable using approprite service class.
  */
 class DeleteRequest extends Delete {

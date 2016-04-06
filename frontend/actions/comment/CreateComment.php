@@ -7,9 +7,9 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\ModelComment;
+use cmsgears\core\common\models\entities\mappers\ModelComment;
 
-use cmsgears\core\common\services\ModelCommentService;
+use cmsgears\core\common\services\mappers\ModelCommentService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 

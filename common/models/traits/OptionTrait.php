@@ -1,9 +1,9 @@
 <?php
 namespace cmsgears\core\common\models\traits;
 
-use cmsgears\core\common\models\entities\CoreTables;
-use cmsgears\core\common\models\entities\Option;
-use cmsgears\core\common\models\entities\ModelOption;
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\resources\Option;
+use cmsgears\core\common\models\mappers\ModelOption;
 
 /**
  * OptionTrait can be used to map options to relevant models.

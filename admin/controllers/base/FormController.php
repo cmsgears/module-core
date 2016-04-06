@@ -11,10 +11,10 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Form;
+use cmsgears\core\common\models\resources\Form;
 
-use cmsgears\core\admin\services\FormService;
-use cmsgears\core\admin\services\TemplateService;
+use cmsgears\core\admin\services\entities\TemplateService;
+use cmsgears\core\admin\services\resources\FormService;
 
 abstract class FormController extends Controller {
 
@@ -114,7 +114,7 @@ abstract class FormController extends Controller {
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
-			
+
 			$model->type = $this->type;
 
 			$model->setScenario( 'update' );
@@ -135,7 +135,7 @@ abstract class FormController extends Controller {
 	    		'visibilityMap' => Form::$visibilityMap
 	    	]);
 		}
-		
+
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}

@@ -10,11 +10,11 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Permission;
 use cmsgears\core\common\models\forms\Binder;
+use cmsgears\core\common\models\entities\Permission;
 
-use cmsgears\core\admin\services\PermissionService;
-use cmsgears\core\admin\services\RoleService;
+use cmsgears\core\admin\services\entities\PermissionService;
+use cmsgears\core\admin\services\entities\RoleService;
 
 abstract class PermissionController extends Controller {
 
@@ -25,9 +25,9 @@ abstract class PermissionController extends Controller {
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
+
 		$this->returnUrl	= Url::previous( 'permissions' );
-		
+
 		$this->type			= CoreGlobal::TYPE_SYSTEM;
 	}
 
@@ -69,7 +69,7 @@ abstract class PermissionController extends Controller {
 
 		return $this->redirect( 'all' );
 	}
-	
+
 	public function actionAll() {
 
 		$dataProvider = PermissionService::getPaginationByType( $this->type );
@@ -122,33 +122,33 @@ abstract class PermissionController extends Controller {
 
 	public function actionUpdate( $id ) {
 
-		// Find Model		
+		// Find Model
 		$model		= PermissionService::findById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
-			
+
 			$model->type 	= $this->type;
 
 			$model->setScenario( 'update' );
 
 			if( $model->load( Yii::$app->request->post(), 'Permission' )  && $model->validate() ) {
-	
+
 				if( PermissionService::update( $model ) ) {
-	
+
 					$binder 			= new Binder();
 					$binder->binderId	= $model->id;
-	
+
 					$binder->load( Yii::$app->request->post(), 'Binder' );
-	
+
 					PermissionService::bindRoles( $binder );
-	
+
 					return $this->redirect( $this->returnUrl );
 				}
 			}
-	
+
 			$roles	= RoleService::getIdNameListByType( $this->type );
-	
+
 	    	return $this->render( 'update', [
 	    		'model' => $model,
 	    		'roles' => $roles
@@ -176,7 +176,7 @@ abstract class PermissionController extends Controller {
 			}
 
 			$roles	= RoleService::getIdNameListByType( $this->type );
-	
+
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
 	    		'roles' => $roles

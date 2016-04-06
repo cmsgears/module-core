@@ -3,42 +3,56 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\helpers\ArrayHelper;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\behaviors\AuthorBehavior;
+use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 use cmsgears\core\common\models\traits\DataTrait;
 
+use cmsgears\core\common\behaviors\AuthorBehavior;
+
 /**
  * Theme Entity
  *
- * @property integer $id
- * @property integer $createdBy
- * @property integer $modifiedBy
+ * @property long $id
+ * @property long $createdBy
+ * @property long $modifiedBy
  * @property string $name
  * @property string $slug
  * @property string $description
- * @property string $basePath
  * @property string $renderer
+ * @property string $basePath
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $data
  */
-class Theme extends NamedCmgEntity {
+class Theme extends \cmsgears\core\common\models\base\NamedCmgEntity {
 
-	use CreateModifyTrait;
-	use DataTrait;
+    // Variables ---------------------------------------------------
 
-	// Instance Methods --------------------------------------------
+    // Constants/Statics --
 
-	// yii\base\Component ----------------
+    // Public -------------
+
+    // Private/Protected --
+
+    // Traits ------------------------------------------------------
+
+    use CreateModifyTrait;
+    use DataTrait;
+
+    // Constructor and Initialisation ------------------------------
+
+    // Instance Methods --------------------------------------------
+
+    // yii\base\Component ----------------
 
     /**
      * @inheritdoc
@@ -46,7 +60,7 @@ class Theme extends NamedCmgEntity {
     public function behaviors() {
 
         return [
-			AuthorBehavior::className(),
+            AuthorBehavior::className(),
             'sluggableBehavior' => [
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
@@ -55,87 +69,95 @@ class Theme extends NamedCmgEntity {
             ],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
-				'createdAtAttribute' => 'createdAt',
- 				'updatedAtAttribute' => 'modifiedAt',
- 				'value' => new Expression('NOW()')
+                'createdAtAttribute' => 'createdAt',
+                'updatedAtAttribute' => 'modifiedAt',
+                'value' => new Expression('NOW()')
             ]
         ];
     }
 
-	// yii\base\Model --------------------
+    // yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-	public function rules() {
+    public function rules() {
 
-		// model rules
+        // model rules
         $rules = [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'slug', 'description', 'basePath', 'renderer', 'data' ], 'safe' ],
-            [ 'name', 'alphanumhyphenspace' ],
-            [ [ 'name', 'renderer' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
-            [ 'slug', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
-            [ 'description', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_XLARGE ],
+            [ [ 'id', 'data' ], 'safe' ],
+            [ 'name', 'alphanumpun' ],
+            [ [ 'name', 'renderer' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
+            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
+            [ [ 'description', 'basePath' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->extraLargeText ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
-		// trim if required
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+        // trim if required
+        if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'description', 'basePath', 'renderer' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'name', 'description', 'basePath', 'renderer' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-			return ArrayHelper::merge( $trim, $rules );
-		}
+            return ArrayHelper::merge( $trim, $rules );
+        }
 
-		return $rules;
+        return $rules;
     }
 
     /**
      * @inheritdoc
      */
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'basePath' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BASE_PATH ),
-			'renderer' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_RENDERER ),
-			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
-		];
-	}
+        return [
+            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+            'basePath' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BASE_PATH ),
+            'renderer' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_RENDERER ),
+            'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
+        ];
+    }
 
-	// Theme -----------------------------
+    // Theme -----------------------------
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+    // yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-	public static function tableName() {
+    public static function tableName() {
 
-		return CoreTables::TABLE_THEME;
-	}
+        return CoreTables::TABLE_THEME;
+    }
 
-	// Theme -----------------------------
+    // Theme -----------------------------
 
-	/**
-	 * @return ObjectData - by slug and type
-	 */
-	public static function findBySlug( $slug ) {
+    // Create -------------
 
-		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
-	}
+    // Read ---------------
 
-	public static function findDefault() {
+    /**
+     * @return Theme - by slug
+     */
+    public static function findBySlug( $slug ) {
 
-		return self::find()->one();
-	}
+        return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+    }
+
+    public static function findDefault() {
+
+        return self::find()->one();
+    }
+
+    // Update -------------
+
+    // Delete -------------
 }
 
 ?>

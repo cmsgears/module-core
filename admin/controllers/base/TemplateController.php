@@ -10,9 +10,9 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Template; 
+use cmsgears\core\common\models\entities\Template;
 
-use cmsgears\core\admin\services\TemplateService;
+use cmsgears\core\admin\services\entities\TemplateService;
 
 abstract class TemplateController extends Controller {
 
@@ -86,8 +86,8 @@ abstract class TemplateController extends Controller {
     		'model' => $model,
     		'renderers' => Yii::$app->templateSource->renderers
     	]);
-	}	
- 	
+	}
+
 	public function actionUpdate( $id ) {
 
 		// Find Model
@@ -103,7 +103,7 @@ abstract class TemplateController extends Controller {
 				if( TemplateService::update( $model ) ) {
 
 					return $this->redirect( $this->returnUrl );
-				} 
+				}
 			}
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/template/update', [
@@ -111,7 +111,7 @@ abstract class TemplateController extends Controller {
 	    		'renderers' => Yii::$app->templateSource->renderers
 	    	]);
 		}
-		
+
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
@@ -121,12 +121,12 @@ abstract class TemplateController extends Controller {
 		// Find Model
 		$model	= TemplateService::findById( $id );
 
-		// Delete/Render if exist		
+		// Delete/Render if exist
 		if( isset( $model ) ) {
 
 			if( $model->load( Yii::$app->request->post(), 'Template' )  && $model->validate() ) {
 
-				if( TemplateService::delete( $model ) ) { 
+				if( TemplateService::delete( $model ) ) {
 
 					return $this->redirect( $this->returnUrl );
 				}
@@ -137,7 +137,7 @@ abstract class TemplateController extends Controller {
 	    		'renderers' => Yii::$app->templateSource->renderers
 	    	]);
 		}
-		
+
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}

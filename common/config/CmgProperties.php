@@ -5,7 +5,7 @@ namespace cmsgears\core\common\config;
 use \Yii;
 
 // CMG Imports
-use cmsgears\core\common\services\SiteService;
+use cmsgears\core\common\services\entities\SiteService;
 
 class CmgProperties {
 

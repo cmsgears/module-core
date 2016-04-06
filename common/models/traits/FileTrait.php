@@ -1,9 +1,9 @@
 <?php
 namespace cmsgears\core\common\models\traits;
 
-use cmsgears\core\common\models\entities\CoreTables;
-use cmsgears\core\common\models\entities\ModelFile;
-use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\resources\CmgFile;
+use cmsgears\core\common\models\mappers\ModelFile;
 
 /**
  * FileTrait can be used to add files feature to relevant models. It allows to have a list of files for a Model.

@@ -17,7 +17,7 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Register";
 		}
 		else {
 
-			$form 	= ActiveForm::begin( [ 'id' => 'frm-registration' ] ); 
+			$form 	= ActiveForm::begin( [ 'id' => 'frm-registration' ] );
 			$terms	= "I agree to the " . Html::a( "Terms", [ '/terms' ], null ) . " and " . Html::a( "Privacy Policy", [ '/privacy' ], null ) . ".";
 ?>
     	<ul>
@@ -41,9 +41,6 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Register";
     		</li>
     		<li>
     			<?= $form->field( $model, 'terms' )->checkbox( [ 'label' => $terms ] ) ?>
-    		</li>
-    		<li>
-    			<?= $form->field( $model, 'newsletter' )->checkbox() ?>
     		</li>
     		<li>
     			<input type="submit" value="Register" />

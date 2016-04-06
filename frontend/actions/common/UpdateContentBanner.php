@@ -7,15 +7,15 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\core\common\models\entities\resources\CmgFile;
 
-use cmsgears\cms\common\services\ModelContentService;
+use cmsgears\cms\common\services\mappers\ModelContentService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
  * UpdateContentBanner can be used to update banner for models using ModelContent trait.
- * 
+ *
  * The controller must provide modelService variable using approprite service class.
  */
 class UpdateContentBanner extends ModelAction {

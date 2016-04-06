@@ -9,11 +9,11 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\Site;
+use cmsgears\core\common\models\resources\CmgFile;
 
-use cmsgears\core\common\services\ThemeService;
-use cmsgears\core\admin\services\SiteService;
+use cmsgears\core\common\services\entities\ThemeService;
+use cmsgears\core\admin\services\entities\SiteService;
 
 class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 
@@ -75,7 +75,7 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 	public function actionCreate() {
 
 		$model		= new Site();
-		$avatar 	= CmgFile::loadFile( $model->avatar, 'Avatar' ); 
+		$avatar 	= CmgFile::loadFile( $model->avatar, 'Avatar' );
 		$banner 	= CmgFile::loadFile( $model->banner, 'Banner' );
 
 		$model->setScenario( 'create' );
@@ -87,9 +87,9 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 				return $this->redirect( 'all' );
 			}
 		}
-		
+
 		$themesMap = ThemeService::getIdNameMap();
-		
+
     	return $this->render( 'create', [
     		'model' => $model,
     		'avatar' => $avatar,
@@ -105,8 +105,8 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
- 
-			$avatar 	= CmgFile::loadFile( $model->avatar, 'Avatar' ); 
+
+			$avatar 	= CmgFile::loadFile( $model->avatar, 'Avatar' );
 			$banner 	= CmgFile::loadFile( $model->banner, 'Banner' );
 
 			$model->setScenario( 'update' );
@@ -116,13 +116,13 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 				if( SiteService::update( $model, $avatar, $banner ) ) {
 
 					return $this->redirect( 'all' );
-				} 
+				}
 			}
-			
+
 			$themesMap = ThemeService::getIdNameMap();
-			
+
 	    	return $this->render( 'update', [
-	    		'model' => $model, 
+	    		'model' => $model,
 	    		'avatar' => $avatar,
 	    		'banner' => $banner,
 	    		'themesMap' => $themesMap
@@ -154,14 +154,14 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 				}
 				catch( Exception $e ) {
 
-					throw new HttpException( 409,  Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  ); 
+					throw new HttpException( 409,  Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
 				}
 			}
 
 			$themesMap = ThemeService::getIdNameMap();
 
 	    	return $this->render( 'delete', [
-	    		'model' => $model, 
+	    		'model' => $model,
 	    		'avatar' => $avatar,
 	    		'banner' => $banner,
 	    		'themesMap' => $themesMap

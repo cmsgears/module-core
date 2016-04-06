@@ -6,8 +6,8 @@ use \Yii;
 use \yii\db\Query;
 
 // CMG Imports
-use cmsgears\core\common\models\entities\CoreTables;
-use cmsgears\core\common\models\entities\ModelComment;
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\mappers\ModelComment;
 
 /**
  * CommentTrait can be used to add comment feature to relevant models. The model must define the member variable $commentType which is unique for the model.

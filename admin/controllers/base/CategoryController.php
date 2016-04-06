@@ -10,14 +10,14 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Category;
+use cmsgears\core\common\models\resources\Category;
 
-use cmsgears\core\admin\services\CategoryService;
+use cmsgears\core\admin\services\resources\CategoryService;
 
 abstract class CategoryController extends Controller {
 
 	protected $type;
-	
+
 	// Constructor and Initialisation ------------------------------
 
  	public function __construct( $id, $module, $config = [] ) {
@@ -27,8 +27,8 @@ abstract class CategoryController extends Controller {
 		$this->returnUrl	= Url::previous( 'categories' );
 
 		$this->type			= CoreGlobal::TYPE_SITE;
-        
-        $this->setViewPath( "@cmsgears/module-core/admin/views/category" );
+
+        $this->setViewPath( '@cmsgears/module-core/admin/views/category' );
 	}
 
 	// Instance Methods --------------------------------------------
@@ -67,7 +67,7 @@ abstract class CategoryController extends Controller {
 
 		return $this->redirect( 'all' );
 	}
-	
+
 	public function actionAll() {
 
 		$dataProvider = CategoryService::getPaginationByType( $this->type );
@@ -89,7 +89,7 @@ abstract class CategoryController extends Controller {
 
 			CategoryService::create( $model );
 
-			return $this->redirect( $this->returnUrl ); 
+			return $this->redirect( $this->returnUrl );
 		}
 
 		$categoryMap	= CategoryService::getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'value' => 'Choose Category', 'name' => 0 ] ] ] );
@@ -98,17 +98,17 @@ abstract class CategoryController extends Controller {
     		'model' => $model,
     		'categoryMap' => $categoryMap
     	]);
-	}	
- 	
+	}
+
 	public function actionUpdate( $id ) {
-		
+
 		// Find Model
 		$model	= CategoryService::findById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->type 	= $this->type; 
+			$model->type 	= $this->type;
 
 			$model->setScenario( 'update' );
 
@@ -129,7 +129,7 @@ abstract class CategoryController extends Controller {
 	    		'categoryMap' => $categoryMap
 	    	]);
 		}
-		
+
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}

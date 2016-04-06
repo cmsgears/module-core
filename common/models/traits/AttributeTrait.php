@@ -1,9 +1,10 @@
 <?php
 namespace cmsgears\core\common\models\traits;
 
-use cmsgears\core\common\models\entities\CoreTables;
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\common\models\entities\ModelAttribute;
+
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\mappers\ModelAttribute;
 
 /**
  * AttributeTrait can be used to add attribute feature to relevant models. It allows us to make existing tables extandable without adding additional columns.
@@ -102,7 +103,7 @@ trait AttributeTrait {
 			}
 			else {
 
-				$attributeElement->save(); 
+				$attributeElement->save();
 			}
 		}
 	}

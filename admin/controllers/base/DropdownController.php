@@ -10,12 +10,11 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile; 
+use cmsgears\core\common\models\resources\CmgFile;
+use cmsgears\core\common\models\resources\Category;
 
-use cmsgears\core\common\models\entities\Category; 
-
-use cmsgears\core\admin\services\CategoryService;  
-use cmsgears\core\admin\services\OptionService; 
+use cmsgears\core\admin\services\resources\CategoryService;
+use cmsgears\core\admin\services\resources\OptionService;
 
 abstract class DropdownController extends Controller {
 
@@ -27,9 +26,9 @@ abstract class DropdownController extends Controller {
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
+
 		$this->returnUrl	= Url::previous( 'categories' );
-		
+
 		$this->type 		= CoreGlobal::TYPE_COMBO;
 		$this->title 		= 'Dropdown';
 	}
@@ -70,7 +69,7 @@ abstract class DropdownController extends Controller {
 
 		return $this->redirect( 'all' );
 	}
-	
+
 	public function actionAll() {
 
 		$dataProvider = CategoryService::getPaginationByType( $this->type );
@@ -92,20 +91,20 @@ abstract class DropdownController extends Controller {
 
 		if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
-			if( CategoryService::create( $model ) ) { 
+			if( CategoryService::create( $model ) ) {
 
 				return $this->redirect( $this->returnUrl );
-			} 
-		} 
+			}
+		}
 
     	return $this->render( '@cmsgears/module-core/admin/views/dropdown/create', [
     		'model' => $model,
     		'title' => $this->title
     	]);
-	}	
- 	
+	}
+
 	public function actionUpdate( $id ) {
-		
+
 		// Find Model
 		$model	= CategoryService::findById( $id );
 
@@ -119,50 +118,50 @@ abstract class DropdownController extends Controller {
 			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
 				if( CategoryService::update( $model ) ) {
- 
+
 
 					return $this->redirect( $this->returnUrl );
-				} 
+				}
 			}
 
 	    	return $this->render( '@cmsgears/module-core/admin/views/dropdown/update', [
-	    		'model' => $model, 
+	    		'model' => $model,
     			'title' => $this->title
 	    	]);
 		}
-		
+
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	} 
-	
+	}
+
 	public function actionDelete( $id ) {
 
 		// Find Model
 		$model	= CategoryService::findById( $id );
 
-		// Delete/Render if exist		
+		// Delete/Render if exist
 		if( isset( $model ) ) {
 
 			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
 				$categoryOptions	= OptionService::findByCategoryId( $id );
-				
+
 				if( isset( $categoryOptions ) ) {
-				
-					foreach( $categoryOptions as $option ) { 
-						
+
+					foreach( $categoryOptions as $option ) {
+
 						try {
-							
+
 					    	OptionService::delete( $option );
-					    } 
+					    }
 					    catch( Exception $e) {
-					    	 
-						    throw new HttpException( 409,  Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  ); 
+
+						    throw new HttpException( 409,  Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
 						}
 					}
 				}
 
-				if( CategoryService::delete( $model ) ) { 
+				if( CategoryService::delete( $model ) ) {
 
 					return $this->redirect( $this->returnUrl );
 				}

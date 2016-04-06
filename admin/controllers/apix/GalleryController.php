@@ -9,10 +9,10 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\core\common\models\resources\CmgFile;
 
-use cmsgears\core\admin\services\FileService;
-use cmsgears\core\admin\services\GalleryService;
+use cmsgears\core\admin\services\resources\FileService;
+use cmsgears\core\admin\services\resources\GalleryService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
@@ -67,7 +67,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
 
 			// Generate Errors
 			$errors = AjaxUtil::generateErrorMessage( $item );
-	
+
 			// Trigger Ajax Success
 	        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
@@ -84,13 +84,13 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
 			if( $item->load( Yii::$app->request->post(), "File" ) && GalleryService::updateItem( $item ) ) {
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );	
+				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 			}
 			else {
 
 				// Generate Errors
 				$errors = AjaxUtil::generateErrorMessage( $item );
-		
+
 				// Trigger Ajax Success
 		        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 			}

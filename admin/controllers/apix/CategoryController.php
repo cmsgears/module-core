@@ -9,9 +9,9 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Category;
+use cmsgears\core\common\models\resources\Category;
 
-use cmsgears\core\admin\services\CategoryService;
+use cmsgears\core\admin\services\resources\CategoryService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
@@ -70,46 +70,46 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 			}
 		}
-		
+
 		// Generate Errors
 		$errors = AjaxUtil::generateErrorMessage( $model );
 
 		// Trigger Ajax Failure
     	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 	}
-	
+
 	public function actionUpdate( $id ) {
-		
-		// Find Model		
+
+		// Find Model
 		$model	= CategoryService::findById( $id );
-		
+
 		$model->setScenario( 'update' );
-		
+
 		if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
 			if( CategoryService::update( $model ) ) {
-				
+
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 			}
 		}
-		
+
 		// Generate Errors
 		$errors = AjaxUtil::generateErrorMessage( $model );
 
 		// Trigger Ajax Failure
     	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 	}
-	
+
 	public function actionDelete( $id ) {
-		
+
 		// Find Model
 		$model	= CategoryService::findById( $id );
-		
+
 		if( isset( $_POST ) && count( $_POST ) > 0 ) {
-				
+
 			if( CategoryService::delete( $model ) ) {
-				
+
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 			}

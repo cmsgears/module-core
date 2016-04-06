@@ -14,7 +14,6 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Profile";
 <?= $form->field( $model, 'lastName' ) ?>
 <?= $form->field( $model, 'genderId' )->dropDownList( $genderMap )  ?>
 <?= $form->field( $model, 'phone' ) ?>
-<?= $form->field( $model, 'newsletter' )->checkbox() ?>
 
 <input type="submit" value="Update" />
 

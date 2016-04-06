@@ -3,21 +3,20 @@ namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
-use yii\base\Model;
+use yii\validators\FilterValidator;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\User;
 
-use cmsgears\core\common\services\UserService;
+use cmsgears\core\common\services\entities\UserService;
 
 use cmsgears\core\common\utilities\MessageUtil;
 use cmsgears\core\common\utilities\DateUtil;
 
-class Login extends Model {
+class Login extends \yii\base\Model {
 
 	// Variables ---------------------------------------------------
 
@@ -26,7 +25,7 @@ class Login extends Model {
 	public $email;
 	public $password;
 	public $rememberMe;
-	public  $admin;
+	public $admin;
 
 	// Private Variables -------------------
 
@@ -35,7 +34,7 @@ class Login extends Model {
 	// Constructor and Initialisation ------------------------------
 
 	public function __construct( $admin = false )  {
-		
+
 		$this->admin	= $admin;
 		$this->_user 	= false;
 	}

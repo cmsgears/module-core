@@ -1,9 +1,9 @@
 <?php
 namespace cmsgears\core\common\models\traits;
 
-use cmsgears\core\common\models\entities\CoreTables;
-use cmsgears\core\common\models\entities\Gallery;
-use cmsgears\core\common\models\entities\ModelGallery;
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\resources\Gallery;
+use cmsgears\core\common\models\mappers\ModelGallery;
 
 /**
  * A model can support for multiple or single gallery. In case of single gallery, model must have galleryId column.

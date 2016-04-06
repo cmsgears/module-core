@@ -1,7 +1,7 @@
 <?php
 namespace cmsgears\core\common\models\traits;
 
-use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\core\common\models\resources\CmgFile;
 
 /**
  * VisualTrait can be used to assist models supporting avatar, banner, texture and video. It might be possible that few models support only one or two among these four.

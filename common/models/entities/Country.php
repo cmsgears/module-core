@@ -8,86 +8,113 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\base\CoreTables;
+
 /**
  * Country Entity
  *
- * @property integer $id
+ * @property long $id
  * @property string $code
  * @property string $name
  */
-class Country extends NamedCmgEntity {
-	
-	// Instance Methods --------------------------------------------
+class Country extends \cmsgears\core\common\models\base\NamedCmgEntity {
 
-	/**
-	 * @return array - list of Province having all the provinces belonging to this country
-	 */
-	public function getProvinces() {
+    // Variables ---------------------------------------------------
 
-    	return $this->hasMany( Province::className(), [ 'countryId' => 'id' ] );
-	}
+    // Constants/Statics --
 
-	// yii\base\Model --------------------
+    // Public -------------
+
+    // Private/Protected --
+
+    // Traits ------------------------------------------------------
+
+    // Constructor and Initialisation ------------------------------
+
+    // Instance Methods --------------------------------------------
+
+    // yii\base\Component ----------------
+
+    // yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-	public function rules() {
+    public function rules() {
 
-		// model rules
+        // model rules
         $rules = [
             [ [ 'name', 'code' ], 'required' ],
             [ 'id', 'safe' ],
-            [ 'code', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_SMALL ],
-            [ 'name', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
-            [ 'name', 'alphanumhyphenspace' ],
+            [ 'code', 'unique' ],
+            [ 'code', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->smallText ],
+            [ 'name', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
+            [ 'name', 'alphanumpun' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
 
-		// trim if required
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+        // trim if required
+        if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'code' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'name', 'code' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-			return ArrayHelper::merge( $trim, $rules );
-		}
+            return ArrayHelper::merge( $trim, $rules );
+        }
 
-		return $rules;
+        return $rules;
     }
 
     /**
      * @inheritdoc
      */
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'code' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE ),
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
-		];
-	}
+        return [
+            'code' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE ),
+            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
+        ];
+    }
 
-	// Static Methods ----------------------------------------------
-
-	// yii\db\ActiveRecord ---------------
+    // Country ---------------------------
 
     /**
+     * @return array - list of Province having all the provinces belonging to this country
+     */
+    public function getProvinces() {
+
+        return $this->hasMany( Province::className(), [ 'countryId' => 'id' ] );
+    }
+
+    // Static Methods ----------------------------------------------
+
+    // yii\db\ActiveRecord ---------------
+
+     /**
      * @inheritdoc
      */
-	public static function tableName() {
+    public static function tableName() {
 
-		return CoreTables::TABLE_COUNTRY;
-	}
+        return CoreTables::TABLE_COUNTRY;
+    }
 
-	// Country ---------------------------
+    // Country ---------------------------
 
-	/**
-	 * @return Country by code
-	 */
-	public static function findByCode( $code ) {
+    // Create -------------
 
-		return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
-	}
+    // Read ---------------
+
+    /**
+     * @return Country by code
+     */
+    public static function findByCode( $code ) {
+
+        return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
+    }
+
+    // Update -------------
+
+    // Delete -------------
 }
 
 ?>

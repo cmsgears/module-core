@@ -10,11 +10,11 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Role;
 use cmsgears\core\common\models\forms\Binder;
+use cmsgears\core\common\models\entities\Role;
 
-use cmsgears\core\admin\services\RoleService;
-use cmsgears\core\admin\services\PermissionService;
+use cmsgears\core\admin\services\entities\RoleService;
+use cmsgears\core\admin\services\entities\PermissionService;
 
 abstract class RoleController extends Controller {
 
@@ -25,9 +25,9 @@ abstract class RoleController extends Controller {
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
+
 		$this->returnUrl	= Url::previous( 'roles' );
-		
+
 		$this->type			= CoreGlobal::TYPE_SYSTEM;
 	}
 
@@ -59,7 +59,7 @@ abstract class RoleController extends Controller {
             ]
         ];
     }
-	
+
 	// BaseRoleController -----------------
 
 	public function actionIndex() {
@@ -113,7 +113,7 @@ abstract class RoleController extends Controller {
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
-			
+
 			$model->type 	= $this->type;
 
 			$model->setScenario( 'update' );
@@ -128,7 +128,7 @@ abstract class RoleController extends Controller {
 					$binder->load( Yii::$app->request->post(), 'Binder' );
 
 					RoleService::bindPermissions( $binder );
-	
+
 					return $this->redirect( $this->returnUrl );
 				}
 			}

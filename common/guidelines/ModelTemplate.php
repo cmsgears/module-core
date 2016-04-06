@@ -9,7 +9,8 @@ namespace cmsgears\listing\common\guidelines;
  * 3. data
  * 4. db
  * 5. helpers
- * 6. Exceptions
+ * 6. Behaviours
+ * 7. Exceptions
  */
 use \Yii;
 
@@ -60,21 +61,27 @@ class ModelTemplate {
 
 	// Instance Methods --------------------------------------------
 
+	// <Yii Interfaces > -----------------
+
 	// yii\base\Component ----------------
 
 	// yii\base\Model --------------------
 
 	// < parent class > ------------------
 
-	// IOwner ----------------------------
+	// <CMG Interfaces > -----------------
 
 	// <Model> ---------------------------
 
 	// Static Methods ----------------------------------------------
 
+	// <Yii Interfaces > -----------------
+
 	// yii\db\ActiveRecord ---------------
 
 	// < parent class > ------------------
+
+	// <CMG Interfaces > -----------------
 
 	// <Model> ---------------------------
 

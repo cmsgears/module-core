@@ -11,7 +11,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\Theme;
 
-use cmsgears\core\admin\services\ThemeService;
+use cmsgears\core\admin\services\entities\ThemeService;
 
 class ThemeController extends \cmsgears\core\admin\controllers\base\Controller {
 
@@ -83,7 +83,7 @@ class ThemeController extends \cmsgears\core\admin\controllers\base\Controller {
 				return $this->redirect( 'all' );
 			}
 		}
-		
+
     	return $this->render( 'create', [
     		'model' => $model,
     		'renderers' => Yii::$app->templateSource->renderers
@@ -105,11 +105,11 @@ class ThemeController extends \cmsgears\core\admin\controllers\base\Controller {
 				if( ThemeService::update( $model ) ) {
 
 					return $this->redirect( 'all' );
-				} 
+				}
 			}
 
 	    	return $this->render( 'update', [
-	    		'model' => $model, 
+	    		'model' => $model,
 	    		'renderers' => Yii::$app->templateSource->renderers
 	    	]);
 		}
@@ -136,12 +136,12 @@ class ThemeController extends \cmsgears\core\admin\controllers\base\Controller {
 				}
 				catch( Exception $e ) {
 
-					throw new HttpException( 409,  Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  ); 
+					throw new HttpException( 409,  Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
 				}
 			}
 
 	    	return $this->render( 'delete', [
-	    		'model' => $model, 
+	    		'model' => $model,
 	    		'renderers' => Yii::$app->templateSource->renderers
 	    	]);
 		}

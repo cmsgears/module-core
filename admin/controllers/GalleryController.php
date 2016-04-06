@@ -8,10 +8,6 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Gallery;
-
-use cmsgears\core\admin\services\GalleryService;
-
 class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryController {
 
 	// Constructor and Initialisation ------------------------------
@@ -19,7 +15,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryCon
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
+
 		$this->sidebar 		= [ 'parent' => 'sidebar-core', 'child' => 'gallery' ];
 	}
 

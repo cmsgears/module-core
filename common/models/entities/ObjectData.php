@@ -3,68 +3,78 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\helpers\ArrayHelper;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\cms\admin\models\forms\WidgetForm;
+use cmsgears\core\common\models\interfaces\IOwner;
 
-use cmsgears\core\common\behaviors\AuthorBehavior;
+use cmsgears\core\common\models\base\CoreTables;
 
+use cmsgears\core\common\models\traits\VisualTrait;
+use cmsgears\core\common\models\traits\AttributeTrait;
+use cmsgears\core\common\models\traits\FileTrait;
 use cmsgears\core\common\models\traits\TemplateTrait;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 use cmsgears\core\common\models\traits\DataTrait;
 
+use cmsgears\core\common\behaviors\AuthorBehavior;
+
 /**
  * ObjectData Entity
  *
- * @property integer $id
- * @property integer $siteId
- * @property integer $templateId
- * @property integer $createdBy
- * @property integer $modifiedBy
+ * @property long $id
+ * @property long $siteId
+ * @property long $templateId
+ * @property long $avatarId
+ * @property long $createdBy
+ * @property long $modifiedBy
  * @property string $name
  * @property string $slug
  * @property string $icon
- * @property string $description
  * @property string $type
- * @property string $active
+ * @property string $description
+ * @property boolean $active
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $htmlOptions
+ * @property string $content
  * @property string $data
  */
-class ObjectData extends CmgEntity {
+class ObjectData extends \cmsgears\core\common\models\base\TypedCmgEntity implements IOwner {
 
-	use TemplateTrait;
-	use CreateModifyTrait;
-	use DataTrait;
+    // Variables ---------------------------------------------------
 
-	// Instance Methods --------------------------------------------
+    // Constants/Statics --
 
-	public function getSite() {
+    protected static $siteSpecific	= true;
 
-		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
-	}
+    // Public -------------
 
-	/**
-	 * @return string representation of flag
-	 */
-	public function getActiveStr() {
+    public $parentType  = CoreGlobal::TYPE_OBJECT;
 
-		return Yii::$app->formatter->asBoolean( $this->active ); 
-	}
+    // Private/Protected --
 
-	public function getWidgetForm() {
-		
-		$form = new WidgetForm();		
-	}
+	protected $checkOwnership	= false;
 
-	// yii\base\Component ----------------
+    // Traits ------------------------------------------------------
+
+    use VisualTrait;
+    use AttributeTrait;
+    use FileTrait;
+    use TemplateTrait;
+    use CreateModifyTrait;
+    use DataTrait;
+
+    // Constructor and Initialisation ------------------------------
+
+    // Instance Methods --------------------------------------------
+
+    // yii\base\Component ----------------
 
     /**
      * @inheritdoc
@@ -72,7 +82,7 @@ class ObjectData extends CmgEntity {
     public function behaviors() {
 
         return [
-			AuthorBehavior::className(),
+            AuthorBehavior::className(),
             'sluggableBehavior' => [
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
@@ -81,136 +91,148 @@ class ObjectData extends CmgEntity {
             ],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
-				'createdAtAttribute' => 'createdAt',
- 				'updatedAtAttribute' => 'modifiedAt',
- 				'value' => new Expression('NOW()')
+                'createdAtAttribute' => 'createdAt',
+                'updatedAtAttribute' => 'modifiedAt',
+                'value' => new Expression('NOW()')
             ]
         ];
     }
 
-	// yii\base\Model --------------------
+    // yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-	public function rules() {
+    public function rules() {
 
-		// model rules
+        // model rules
         $rules = [
-            [ [ 'siteId', 'name' ], 'required' ],
-            [ [ 'id', 'templateId', 'slug', 'icon', 'description', 'active', 'htmlOptions', 'data' ], 'safe' ],
-            [ 'name', 'alphanumhyphenspace' ],
-            [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
-            [ 'slug', 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
+            [ [ 'siteId', 'name', 'type' ], 'required' ],
+            [ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
+            [ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
+            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
+            [ [ 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->extraLargeText ],
+			[ 'name', 'alphanumpun' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+			[ [ 'active' ], 'boolean' ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'siteId', 'avatarId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
-		// trim if required
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+        // trim if required
+        if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-			return ArrayHelper::merge( $trim, $rules );
+            return ArrayHelper::merge( $trim, $rules );
+        }
+
+        return $rules;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels() {
+
+        return [
+            'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+            'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
+            'avatarId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
+            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+            'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+            'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+            'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+            'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+            'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
+        ];
+    }
+
+	// yii\db\BaseActiveRecord -----------
+
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			if( $this->templateId <= 0 ) {
+
+				$this->templateId = null;
+			}
+
+	        return true;
+	    }
+
+		return false;
+	}
+
+	// IOwner ----------------------------
+
+	public function isOwner( $user = null ) {
+
+		if( $this->checkOwnership ) {
+
+			if( !isset( $user ) ) {
+
+				$user	= Yii::$app->user->getIdentity();
+			}
+
+			if( isset( $user ) ) {
+
+				return $this->createdBy == $user->id;
+			}
 		}
 
-		return $rules;
+		return false;
+	}
+
+    // ObjectData ------------------------
+
+    public function getSite() {
+
+        return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
     }
+
+    /**
+     * @return string representation of flag
+     */
+    public function getActiveStr() {
+
+        return Yii::$app->formatter->asBoolean( $this->active );
+    }
+
+    // Static Methods ----------------------------------------------
+
+    // yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-	public function attributeLabels() {
+    public static function tableName() {
 
-		return [
-			'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
-			'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
-			'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-			'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
-		];
-	}
-
-	// ObjectData ------------------------
-
-	/**
-	 * Validates whether a objext existing with the same name and type for same site.
-	 */
-    public function validateNameCreate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-            if( self::isExistByNameType( $this->name, $this->type ) ) {
-
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-            }
-        }
+        return CoreTables::TABLE_OBJECT_DATA;
     }
 
-	/**
-	 * Validates whether a objext existing with the same name and type for same site.
-	 */
-    public function validateNameUpdate( $attribute, $params ) {
+    // ObjectData ------------------------
 
-        if( !$this->hasErrors() ) {
+    // Create -------------
 
-			$existingObj = self::findByNameType( $this->name, $this->type );
-
-			if( isset( $existingObj ) && $this->id != $existingObj->id ) {
-
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-			}
-        }
-    }
-
-	// Static Methods ----------------------------------------------
-
-	// yii\db\ActiveRecord ---------------
+    // Read ---------------
 
     /**
-     * @inheritdoc
+     * @return ObjectData - by slug
      */
-	public static function tableName() {
+    public static function findBySlug( $slug ) {
 
-		return CoreTables::TABLE_OBJECT_DATA;
-	}
+        return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+    }
 
-	// ObjectData ------------------------
+    // Update -------------
 
-	/**
-	 * @return ObjectData - by slug and type
-	 */
-	public static function findBySlugType( $slug, $type ) {
-
-		return self::find()->where( 'slug=:slug AND type=:type', [ ':slug' => $slug, ':type' => $type ] )->one();
-	}
-
-	/**
-	 * @return ObjectData - by name and type for current site
-	 */
-	public static function findByNameType( $name, $type ) {
-
-		$siteId	= Yii::$app->cmgCore->siteId;
-
-		return self::find()->where( 'name=:name AND type=:type AND siteId=:siteId', [ ':name' => $name, ':type' => $type, ':siteId' => $siteId ] )->one();
-	}
-
-	/**
-	 * @return boolean - check whether a object exist by the provided name and type for current site
-	 */
-	public static function isExistByNameType( $name, $type ) {
-
-		$obj = self::findByNameType( $name, $type );
-
-		return isset( $obj );
-	}
+    // Delete -------------
 }
 
 ?>

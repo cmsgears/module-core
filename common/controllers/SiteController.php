@@ -12,7 +12,7 @@ use cmsgears\core\common\models\forms\Login;
 use cmsgears\core\common\models\forms\ForgotPassword;
 use cmsgears\core\common\models\forms\ResetPassword;
 
-use cmsgears\core\frontend\services\UserService;
+use cmsgears\core\common\services\entities\UserService;
 
 class SiteController extends Controller {
 
@@ -77,7 +77,7 @@ class SiteController extends Controller {
 
 					// Activate User
 					if( UserService::activate( $user, $model ) ) {
-	
+
 						// Send Register Mail
 						Yii::$app->cmgCoreMailer->sendActivateUserMail( $user );
 
@@ -86,7 +86,7 @@ class SiteController extends Controller {
 					}
 				}
 				else {
-	
+
 					// Set Failure Message
 					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
 				}
@@ -111,9 +111,9 @@ class SiteController extends Controller {
 
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post() ) && $model->validate() ) {
-			
+
 			$user	= UserService::findByEmail( $model->email );
-			
+
 			// Trigger Reset Password
 			if( isset( $user ) && UserService::forgotPassword( $user ) ) {
 
@@ -168,7 +168,7 @@ class SiteController extends Controller {
 					}
 				}
 				else {
-	
+
 					// Set Failure Message
 					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_PASSWORD_RESET ) );
 				}

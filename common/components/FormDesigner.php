@@ -6,11 +6,11 @@ use \Yii;
 use yii\helpers\Html;
 
 // CMG Imports
-use cmsgears\core\common\models\entities\FormField;
+use cmsgears\core\common\models\resources\FormField;
 
 /**
  * Default form designer component to generate html for form elements using form and form fields.
- * It supports CMGTools UI, JS and IconLib by default, but can be overriden to support other ui libraries. 
+ * It supports CMGTools UI, JS and IconLib by default, but can be overriden to support other ui libraries.
  */
 class FormDesigner extends \yii\base\Component {
 
@@ -25,9 +25,9 @@ class FormDesigner extends \yii\base\Component {
 	public function getFieldHtml( $form, $model, $config, $key, $field ) {
 
 		switch( $field->type ) {
-	
+
 			case FormField::TYPE_TEXT: {
-	
+
 				return $this->getTextHtml( $form, $model, $config, $key, $field );
 			}
 			case FormField::TYPE_PASSWORD: {
@@ -47,7 +47,7 @@ class FormDesigner extends \yii\base\Component {
 				return $form->field( $model, $key, [ 'class' => 'switch' ] )->checkbox( $field->htmlOptions );
 			}
 			case FormField::TYPE_CHECKBOX_GROUP: {
-				
+
 				return $this->getCheckboxGroupHtml( $form, $model, $config, $key, $field );
 			}
 			case FormField::TYPE_RADIO: {
@@ -55,7 +55,7 @@ class FormDesigner extends \yii\base\Component {
 				return $form->field( $model, $key )->radio( $field->htmlOptions );
 			}
 			case FormField::TYPE_RADIO_GROUP: {
-				
+
 				return $this->getRadioGroupHtml( $form, $model, $config, $key, $field );
 			}
 			case FormField::TYPE_SELECT: {
@@ -68,16 +68,16 @@ class FormDesigner extends \yii\base\Component {
 	protected function getTextHtml( $form, $model, $config, $key, $field ) {
 
 		$fieldHtml = $form->field( $model, $key )->textInput( $field->htmlOptions );
-		
+
 		if( $config[ 'label' ] ) {
-			
+
 			$fieldHtml = $fieldHtml->label( $field->label );
 		}
 		else {
-	
+
 			$fieldHtml = $fieldHtml->label( false );
 		}
-		
+
 		return $fieldHtml;
 	}
 
@@ -86,14 +86,14 @@ class FormDesigner extends \yii\base\Component {
 		$fieldHtml = $form->field( $model, $key )->passwordInput( $field->htmlOptions );
 
 		if( $config[ 'label' ] ) {
-			
+
 			$fieldHtml = $fieldHtml->label( $field->label );
 		}
 		else {
 
 			$fieldHtml = $fieldHtml->label( false );
 		}
-		
+
 		return $fieldHtml;
 	}
 
@@ -102,14 +102,14 @@ class FormDesigner extends \yii\base\Component {
 		$fieldHtml = $form->field( $model, $key )->textArea( $field->htmlOptions );
 
 		if( $config[ 'label' ] ) {
-			
+
 			$fieldHtml = $fieldHtml->label( $field->label );
 		}
 		else {
 
 			$fieldHtml = $fieldHtml->label( false );
 		}
-		
+
 		return $fieldHtml;
 	}
 
@@ -232,7 +232,7 @@ class FormDesigner extends \yii\base\Component {
 									$html .= 'checked';
 								}
 
-			                    $html .= " type='radio' name='$name' value='$value'><span class='label pad-label'>$label</span></label>"; 
+			                    $html .= " type='radio' name='$name' value='$value'><span class='label pad-label'>$label</span></label>";
 
 			                    return $html;
 			                }
@@ -273,7 +273,7 @@ class FormDesigner extends \yii\base\Component {
 					);
 	}
 
-	
+
 	// Apix Flavored Forms -------------------------------------------
 
 	/**
@@ -283,9 +283,9 @@ class FormDesigner extends \yii\base\Component {
 	public function getApixFieldHtml( $config, $field, $value = null ) {
 
 		switch( $field->type ) {
-	
+
 			case FormField::TYPE_TEXT: {
-	
+
 				return $this->getApixTextHtml( $config, $field, $value );
 			}
 			case FormField::TYPE_PASSWORD: {
@@ -305,7 +305,7 @@ class FormDesigner extends \yii\base\Component {
 				return $this->getApixToggleHtml( $config, $field, $value );
 			}
 			case FormField::TYPE_CHECKBOX_GROUP: {
-				
+
 				return $this->getApixCheckboxGroupHtml( $config, $field, $value );
 			}
 			case FormField::TYPE_RADIO: {
@@ -313,7 +313,7 @@ class FormDesigner extends \yii\base\Component {
 				return $this->getApixRadioHtml( $config, $field, $value );
 			}
 			case FormField::TYPE_RADIO_GROUP: {
-				
+
 				return $this->getApixRadioGroupHtml( $config, $field, $value );
 			}
 			case FormField::TYPE_SELECT: {
@@ -447,12 +447,12 @@ class FormDesigner extends \yii\base\Component {
 	}
 
 	protected function getApixCheckboxGroupHtml( $config, $field, $value ) {
-			
+
 		if( isset( $value ) ) {
-			
+
 			$value	= preg_split( "/,/", $value );
-		} 
-		
+		}
+
 		$modelName	= $config[ 'modelName' ];
 		$fieldHtml 	= null;
 
@@ -484,21 +484,21 @@ class FormDesigner extends \yii\base\Component {
 	}
 
 	protected function getApixRadioHtml( $config, $field, $value ) {
-		
+
 		$htmlOptions	= $field->htmlOptions;
-		
+
 		if( isset( $value ) && ( $value || strcmp( $value, 'Yes' ) == 0 ) ){
 
 			if( !isset( $htmlOptions ) ) {
-				
+
 				$htmlOptions	= [];
 			}
-			
+
 			$htmlOptions[ 'value' ]	= $value;
 			$value					= true;
 		}
 		else {
-			
+
 			$value	= false;
 		}
 
@@ -551,7 +551,7 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixSelectHtml( $config, $field, $value ) {
 
 		if( isset( $value ) ) {
-			
+
 			$value	= preg_split( "/,/", $value );
 		}
 
@@ -611,7 +611,7 @@ class FormDesigner extends \yii\base\Component {
 	// HTML Generator
 
 	public function generateMultipleInputHtml( $model, $fieldName, $config = [] ) {
-		
+
 		$defaultField 	= isset( $config[ 'defaultField' ] ) ? $config[ 'defaultField' ] : true;
 		$label 			= isset( $config[ 'label' ] ) ? $config[ 'label' ] : 'Name';
 		$placeholder 	= isset( $config[ 'placeholder' ] ) ? $config[ 'placeholder' ] : 'Name';
@@ -639,7 +639,7 @@ class FormDesigner extends \yii\base\Component {
 
 					$fieldHtml	.= "<div class='clearfix'>
 										<label>$label</label>
-				    		 			<input type='text' placeholder='$placeholder' name='" . $modelName . "[$fieldName][]' value='$field'>						 
+				    		 			<input type='text' placeholder='$placeholder' name='" . $modelName . "[$fieldName][]' value='$field'>
 									</div>";
 				}
 				else {

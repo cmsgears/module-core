@@ -8,7 +8,7 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\services\ProvinceService;
+use cmsgears\core\common\services\entities\ProvinceService;
 
 use cmsgears\core\common\utilities\CodeGenUtil;
 use cmsgears\core\common\utilities\AjaxUtil;

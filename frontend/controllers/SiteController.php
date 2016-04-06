@@ -11,8 +11,8 @@ use cmsgears\core\frontend\config\WebGlobalCore;
 use cmsgears\core\common\models\forms\Login;
 use cmsgears\core\frontend\models\forms\Register;
 
-use cmsgears\core\common\services\SiteMemberService;
-use cmsgears\core\frontend\services\UserService;
+use cmsgears\core\common\services\mappers\SiteMemberService;
+use cmsgears\core\frontend\services\entities\UserService;
 
 class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
@@ -70,10 +70,10 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
     }
 
 	public function actionLogin() {
-		
+
 		return parent::actionLogin( false );
 	}
-	
+
     public function actionRegister() {
 
 		// Send user to home if already logged in
@@ -92,7 +92,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 			if( isset( $user ) ) {
 
-				// Add User to current Site 
+				// Add User to current Site
 				SiteMemberService::create( $user );
 
 				// Send Register Mail

@@ -10,14 +10,14 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\SiteMember;
+use cmsgears\core\common\models\resources\CmgFile;
 
-use cmsgears\core\admin\services\OptionService;
-use cmsgears\core\admin\services\SiteMemberService;
-use cmsgears\core\admin\services\UserService;
-use cmsgears\core\admin\services\RoleService;
+use cmsgears\core\common\services\mappers\SiteMemberService;
+use cmsgears\core\admin\services\entities\UserService;
+use cmsgears\core\admin\services\entities\RoleService;
+use cmsgears\core\admin\services\resources\OptionService;
 
 abstract class UserController extends Controller {
 
@@ -76,7 +76,7 @@ abstract class UserController extends Controller {
 
 		return $this->redirect( 'all' );
 	}
-	
+
 	public function actionAll() {
 
 		$dataProvider = null;
@@ -123,7 +123,7 @@ abstract class UserController extends Controller {
 			$siteMember	= SiteMemberService::create( $model, $siteMember );
 
 			if( $user && $siteMember ) {
-				
+
 				// Load User Permissions
 				$model->loadPermissions();
 
@@ -151,7 +151,7 @@ abstract class UserController extends Controller {
 				'siteMember' => $siteMember,
 	    		'avatar' => $avatar,
 				'roleMap' => $roleMap
-			]);			
+			]);
 		}
 	}
 
@@ -167,8 +167,6 @@ abstract class UserController extends Controller {
 			$avatar 	= CmgFile::loadFile( $model->avatar, 'Avatar' );
 
 			$model->setScenario( 'update' );
-
-			UserService::checkNewsletterMember( $model );
 
 			if( $model->load( Yii::$app->request->post(), 'User' ) && $siteMember->load( Yii::$app->request->post(), 'SiteMember' ) && $model->validate() ) {
 

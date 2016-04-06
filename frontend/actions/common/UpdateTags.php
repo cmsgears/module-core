@@ -7,13 +7,13 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\services\ModelTagService;
+use cmsgears\core\common\services\mappers\ModelTagService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
  * UpdateTags can be used to create or update tags for models.
- * 
+ *
  * The controller must provide modelService variable using approprite service class.
  */
 class UpdateTags extends ModelAction {

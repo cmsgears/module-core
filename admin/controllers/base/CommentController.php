@@ -10,9 +10,9 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\ModelComment;
+use cmsgears\core\common\models\mappers\ModelComment;
 
-use cmsgears\core\admin\services\ModelCommentService;
+use cmsgears\core\admin\services\mappers\ModelCommentService;
 
 abstract class CommentController extends Controller {
 

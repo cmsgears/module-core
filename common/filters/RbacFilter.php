@@ -3,9 +3,9 @@ namespace cmsgears\core\common\filters;
 
 // Yii Imports
 use \Yii;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
-use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -13,8 +13,8 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * The class RbacFilter use the roles and permissions defined for the project using the database tables.
  * It identify whether a user is assigned a permission. It trigger ForbiddenException in case a user does not have
- * required permission and try to execute the controller action by indirect means. It only works when 
- * useRbac is set for the cmgCore Component within the application config file and action is configured within the 
+ * required permission and try to execute the controller action by indirect means. It only works when
+ * useRbac is set for the cmgCore Component within the application config file and action is configured within the
  * controller behaviours.
  */
 class RbacFilter extends \yii\base\Behavior {

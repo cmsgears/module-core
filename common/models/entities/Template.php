@@ -3,45 +3,62 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\helpers\ArrayHelper;
 use yii\db\Expression;
+use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\behaviors\AuthorBehavior;
+use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+use cmsgears\core\common\models\traits\DataTrait;
+
+use cmsgears\core\common\behaviors\AuthorBehavior;
 
 /**
  * Template Entity
  *
- * @property integer $id
- * @property integer $createdBy
- * @property integer $modifiedBy
+ * @property long $id
+ * @property long $createdBy
+ * @property long $modifiedBy
  * @property string $name
  * @property string $slug
  * @property string $icon
  * @property string $type
  * @property string $description
  * @property string $renderer
- * @property integer $fileRender
+ * @property boolean $fileRender
  * @property string $layout
- * @property string $layoutGroup
+ * @property boolean $layoutGroup
  * @property string $viewPath
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $content
+ * @property string $data
  */
-class Template extends CmgEntity {
+class Template extends \cmsgears\core\common\models\base\TypedCmgEntity {
 
-	use CreateModifyTrait;
+    // Variables ---------------------------------------------------
 
-	// Instance Methods --------------------------------------------
+    // Constants/Statics --
 
-	// yii\base\Component ----------------
+    // Public -------------
+
+    // Private/Protected --
+
+    // Traits ------------------------------------------------------
+
+    use CreateModifyTrait;
+    use DataTrait;
+
+    // Constructor and Initialisation ------------------------------
+
+    // Instance Methods --------------------------------------------
+
+    // yii\base\Component ----------------
 
     /**
      * @inheritdoc
@@ -58,28 +75,28 @@ class Template extends CmgEntity {
             ],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
-				'createdAtAttribute' => 'createdAt',
- 				'updatedAtAttribute' => 'modifiedAt',
- 				'value' => new Expression('NOW()')
+                'createdAtAttribute' => 'createdAt',
+                'updatedAtAttribute' => 'modifiedAt',
+                'value' => new Expression('NOW()')
             ]
         ];
     }
 
-	// yii\base\Model --------------------
+    // yii\base\Model --------------------
 
     /**
      * @inheritdoc
      */
-	public function rules() {
+    public function rules() {
 
-		// model rules
+        // model rules
         $rules = [
             [ [ 'name', 'type' ], 'required' ],
-            [ [ 'id', 'slug', 'icon', 'renderer', 'description', 'layout', 'viewPath', 'content' ], 'safe' ],
-            [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_MEDIUM ],
-            [ [ 'slug' ], 'string', 'min' => 1, 'max' => CoreGlobal::TEXT_LARGE ],
-            [ [ 'description' ], 'string', 'min' => 0, 'max' => CoreGlobal::TEXT_XLARGE ],
-            [ 'name', 'alphanumspace' ],
+            [ [ 'id', 'content', 'data' ], 'safe' ],
+            [ [ 'name', 'icon', 'type', 'renderer' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
+            [ [ 'slug' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
+            [ [ 'description', 'layout', 'viewPath' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->extraLargeText ],
+            [ 'name', 'alphanumpun' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'fileRender', 'layoutGroup' ], 'boolean' ],
@@ -87,110 +104,62 @@ class Template extends CmgEntity {
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
-		// trim if required
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+        // trim if required
+        if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'renderer', 'description', 'layout', 'viewPath' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'name', 'renderer', 'description', 'layout', 'viewPath' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-			return ArrayHelper::merge( $trim, $rules );
-		}
+            return ArrayHelper::merge( $trim, $rules );
+        }
 
-		return $rules;
+        return $rules;
     }
 
     /**
      * @inheritdoc
      */
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'renderer' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_RENDERER ),
-			'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'layout' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LAYOUT ),
-			'viewPath' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_PATH ),
-			'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
-		];
-	}
-
-	// Template --------------------------
-
-	/**
-	 * Validates whether a province existing with the same name for same country.
-	 */
-    public function validateNameCreate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-            if( self::isExistByNameType( $this->name, $this->type ) ) {
-
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-            }
-        }
+        return [
+            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+            'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+            'renderer' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_RENDERER ),
+            'layout' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LAYOUT ),
+            'viewPath' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_PATH ),
+            'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+        ];
     }
 
-	/**
-	 * Validates whether a province existing with the same name for same country.
-	 */
-    public function validateNameUpdate( $attribute, $params ) {
+    // Template --------------------------
 
-        if( !$this->hasErrors() ) {
+    // Static Methods ----------------------------------------------
 
-			$existingTemplate = self::findByNameType( $this->name, $this->type );
-
-			if( isset( $existingTemplate ) && $this->id != $existingTemplate->id ) {
-
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-			}
-        }
-    }
-
-	// Static Methods ----------------------------------------------
-
-	// yii\db\ActiveRecord ---------------
+    // yii\db\ActiveRecord ---------------
 
     /**
      * @inheritdoc
      */
-	public static function tableName() {
+    public static function tableName() {
 
-		return CoreTables::TABLE_TEMPLATE;
-	}
+        return CoreTables::TABLE_TEMPLATE;
+    }
 
-	// Template --------------------------
+    // Template --------------------------
 
-	/**
-	 * @return array - Template by type
-	 */
-	public static function findByType( $type ) {
+    // Create -------------
 
-		return self::find()->where( 'type=:type', [ ':type' => $type ] )->all();
-	}
+    // Read ---------------
 
-	/**
-	 * @return Template - by name and type
-	 */
-	public static function findByNameType( $name, $type ) {
+    public static function findBySlug( $slug ) {
 
-		return self::find()->where( 'name=:name AND type=:type', [ ':name' => $name, ':type' => $type ] )->one();
-	}
+        return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+    }
 
-	/**
-	 * @return boolean - check whether a template exist by the provided name and type
-	 */
-	public static function isExistByNameType( $name, $type ) {
+    // Update -------------
 
-		$template = self::findByNameType( $name, $type );
-
-		return isset( $template );
-	}
-
-	public static function findBySlugType( $slug, $type ) {
-
-		return self::find()->where( 'slug=:slug AND type=:type', [ ':slug' => $slug, ':type' => $type ] )->one();
-	}
+    // Delete -------------
 }
 
 ?>

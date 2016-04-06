@@ -5,7 +5,7 @@ namespace cmsgears\core\common\base;
 use \Yii;
 
 // CMSGears Imports
-use cmsgears\core\common\services\SiteService;
+use cmsgears\core\common\services\entities\SiteService;
 
 class Application extends \yii\web\Application {
 
@@ -15,10 +15,10 @@ class Application extends \yii\web\Application {
 		if( Yii::$app->cmgCore->multiSite ) {
 
 	        if( $route === '' ) {
-	
+
 	            $route = $this->defaultRoute;
 	        }
-	
+
 	        // double slashes or leading/ending slashes may cause substr problem
 	        $route = trim( $route, '/' );
 
@@ -26,28 +26,28 @@ class Application extends \yii\web\Application {
 
 	            return false;
 	        }
-			
+
 			// Sub-Directory
 			if( Yii::$app->cmgCore->subDirectory ) {
 
 		        if( strpos( $route, '/' ) !== false ) {
-	
+
 					list ( $site, $siteRoute ) = explode( '/', $route, 2 );
-	
+
 					// Find Site
 					$site = SiteService::findBySlug( $site );
-	
+
 					// Site Found
 					if( isset( $site ) ) {
-						
+
 						// Configure Current Site
 						Yii::$app->cmgCore->site 		= $site;
 						Yii::$app->cmgCore->siteId		= $site->id;
 						Yii::$app->cmgCore->siteSlug 	= $site->slug;
-	
-						Yii::$app->urlManager->baseUrl	= Yii::$app->urlManager->baseUrl . "/" . $site->name; 
-	
-						return parent::createController( $siteRoute );	
+
+						Yii::$app->urlManager->baseUrl	= Yii::$app->urlManager->baseUrl . "/" . $site->name;
+
+						return parent::createController( $siteRoute );
 					}
 		        }
 			}
@@ -72,7 +72,7 @@ class Application extends \yii\web\Application {
 					Yii::$app->cmgCore->siteId		= $site->id;
 					Yii::$app->cmgCore->siteSlug 	= $site->slug;
 
-					return parent::createController( $route );	
+					return parent::createController( $route );
 				}
 			}
 		}

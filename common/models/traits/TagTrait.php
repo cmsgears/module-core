@@ -1,9 +1,9 @@
 <?php
 namespace cmsgears\core\common\models\traits;
 
-use cmsgears\core\common\models\entities\CoreTables;
-use cmsgears\core\common\models\entities\Tag;
-use cmsgears\core\common\models\entities\ModelTag;
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\resources\Tag;
+use cmsgears\core\common\models\mappers\ModelTag;
 
 /**
  * TagTrait can be used to add tagging feature to relevant models. The model must define the member variable $tagType which is unique for the model.
@@ -48,7 +48,7 @@ trait TagTrait {
 
 		if( $active ) {
 
-			$tags = $this->activeTags;			
+			$tags = $this->activeTags;
 		}
 		else {
 
@@ -120,7 +120,7 @@ trait TagTrait {
 
 	public function getTagCsv( $limit = 0 ) {
 
-    	$tags 		= $this->tags;
+    	$tags 		= $this->activeTags;
 		$tagsCsv	= [];
 		$count		= 1;
 
@@ -148,7 +148,7 @@ trait TagTrait {
 		foreach ( $tags as $tag ) {
 
 			if( isset( $wrapper ) ) {
-				
+
 				$tagLinks	.= "<$wrapper><a href='$baseUrl/$tag->slug'>$tag->name</a></$wrapper>";
 			}
 			else {

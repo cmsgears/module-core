@@ -1,9 +1,9 @@
 <?php
 namespace cmsgears\core\common\models\traits;
 
-use cmsgears\core\common\models\entities\CoreTables;
-use cmsgears\core\common\models\entities\Category;
-use cmsgears\core\common\models\entities\ModelCategory;
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\resources\Category;
+use cmsgears\core\common\models\mappers\ModelCategory;
 
 /**
  * CategoryTrait can be used to categories relevant models. The model must define the member variable $categoryType which is unique for the model.
@@ -196,7 +196,7 @@ trait CategoryTrait {
 	public function getCategoryCsv( $limit = 0 ) {
 
 		$this->categoryLimit	= $limit;
-    	$categories 			= $this->categories;
+    	$categories 			= $this->activeCategories;
 		$categoriesCsv			= [];
 
 		foreach ( $categories as $category ) {

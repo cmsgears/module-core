@@ -1,9 +1,9 @@
 <?php
 namespace cmsgears\core\common\models\traits;
 
-use cmsgears\core\common\models\entities\CoreTables;
-use cmsgears\core\common\models\entities\Address;
-use cmsgears\core\common\models\entities\ModelAddress;
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\resources\Address;
+use cmsgears\core\common\models\mappers\ModelAddress;
 
 /**
  * AddressTrait can be used to add address feature to relevant models. The model must define the member variable $addressType which is unique for the model.

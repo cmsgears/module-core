@@ -5,10 +5,10 @@ namespace cmsgears\core\common\utilities;
 use \Yii;
 
 // CMG Imports
-use cmsgears\core\common\models\entities\FormField;
-use cmsgears\core\common\models\entities\ModelAttribute;
+use cmsgears\core\common\models\resources\FormField;
+use cmsgears\core\common\models\mappers\ModelAttribute;
 
-use cmsgears\core\admin\services\FormService;
+use cmsgears\core\common\services\resources\FormService;
 
 class FormUtil {
 

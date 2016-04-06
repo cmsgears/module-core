@@ -10,10 +10,10 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\FormField;
+use cmsgears\core\common\models\resources\FormField;
 
-use cmsgears\core\admin\services\FormService;
-use cmsgears\core\admin\services\FormFieldService;
+use cmsgears\core\admin\services\resources\FormService;
+use cmsgears\core\admin\services\resources\FormFieldService;
 
 class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
 
@@ -22,7 +22,7 @@ class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
  	public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
-		
+
 		$this->returnUrl	= Url::previous( 'fields' );
 	}
 
@@ -112,7 +112,7 @@ class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
 				'typeMap' => FormField::$typeMap
 	    	]);
 		}
-		
+
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}

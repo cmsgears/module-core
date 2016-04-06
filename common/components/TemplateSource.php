@@ -105,7 +105,7 @@ class TemplateSource extends \yii\base\Component {
 			}
 			else {
 
-				return "<p>Theme or appropriate renderer is not found for this resource. Please configure appropriate theme.</p>";	
+				return "<p>Theme or appropriate renderer is not found for this resource. Please configure appropriate theme.</p>";
 			}
 		}
 	}
@@ -142,7 +142,7 @@ class TemplateSource extends \yii\base\Component {
 
 		return $this->renderView( $template, $models, $config );
 	}
-	
+
 	/**
 	 * Default search page for public/private views.
 	 */

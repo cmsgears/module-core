@@ -7,13 +7,13 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\services\ModelTagService;
+use cmsgears\core\common\services\mappers\ModelTagService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
  * DeleteTag can be used to delete a tag for model.
- * 
+ *
  * The controller must provide modelService variable using approprite service class.
  */
 class DeleteTag extends ModelAction {

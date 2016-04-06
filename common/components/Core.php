@@ -5,14 +5,16 @@ namespace cmsgears\core\common\components;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\validators\CoreValidator;
 
 /**
- * The core component for CMSGears based sites. It must be initialised for app bootstrap using the name cmgCore. 
- * It define the post login and logout path to redirect user to a different path than the default one. Though ajax 
+ * The core component for CMSGears based sites. It must be initialised for app bootstrap using the name cmgCore.
+ * It define the post login and logout path to redirect user to a different path than the default one. Though ajax
  * based login need to specify the path within the javascript code.
- * 
- * All the admin sites must set useRbac to true to get the admin functional since the admin controllers use it for almost every action. 
+ *
+ * All the admin sites must set useRbac to true to get the admin functional since the admin controllers use it for almost every action.
  */
 class Core extends \yii\base\Component {
 
@@ -52,7 +54,7 @@ class Core extends \yii\base\Component {
 	public $subDirectory		= true;
 
 	/**
-	 * @var default redirect path to be used for post login. It will be used by login action of Site Controller to redirect users 
+	 * @var default redirect path to be used for post login. It will be used by login action of Site Controller to redirect users
 	 * after successful login in case user role home url is not set.
 	 */
 	public $loginRedirectPage	= '/';
@@ -63,7 +65,7 @@ class Core extends \yii\base\Component {
 	public $logoutRedirectPage	= '/login';
 
 	/**
-	 * @var The indicator whether CMG RBAC has to be used for the project. All the admin sites must set this to true. Though it's optional for 
+	 * @var The indicator whether CMG RBAC has to be used for the project. All the admin sites must set this to true. Though it's optional for
 	 * front end sites. The front end sites can use either CMG RBAC or Yii's RBAC system or no RBAC system based on project needs.
 	 */
 	public $useRbac				= true;
@@ -71,7 +73,7 @@ class Core extends \yii\base\Component {
 	/**
 	 * @var The default filter class available for CMG RBAC system. A different filter can be used based on project needs.
 	 */
-	public $rbacFilterClass		= 'cmsgears\core\common\\filters\RbacFilter'; 
+	public $rbacFilterClass		= 'cmsgears\core\common\\filters\RbacFilter';
 
 	/**
 	 * @var It store the list of filters available for the Rbac Filter and works only when rbac is enabled.
@@ -94,6 +96,12 @@ class Core extends \yii\base\Component {
 	 */
 	public $trimFieldValue		= true;
 
+	// Different Text Sizes - These can be overriden using config if required
+	public $smallText			= CoreGlobal::TEXT_SMALL;
+	public $mediumText			= CoreGlobal::TEXT_MEDIUM;
+	public $largeText			= CoreGlobal::TEXT_LARGE;
+	public $extraLargeText		= CoreGlobal::TEXT_XLARGE;
+
 	/**
 	 * Initialise the CMG Core Component.
 	 */
@@ -111,7 +119,7 @@ class Core extends \yii\base\Component {
 	/**
 	 * The hasModule method check whether a module is available for the app. We can use it for conditional cases.
 	 * @param string $name the module name
-	 * @return whether module name and root path are set in app config file 
+	 * @return whether module name and root path are set in app config file
 	 */
     public function hasModule( $name ) {
 
@@ -121,7 +129,7 @@ class Core extends \yii\base\Component {
     }
 
 	/**
-	 * The hasTheme method check whether a theme is available for the app. We can use it to make certain things available in a different theme 
+	 * The hasTheme method check whether a theme is available for the app. We can use it to make certain things available in a different theme
 	 * apart from currently active theme.
 	 * @param string $name the theme name
 	 * @return whether theme name and root path are set in app config file
@@ -148,7 +156,7 @@ class Core extends \yii\base\Component {
 
 	/**
 	 * The method getMainSiteSlug returns the site slug for main site.
-	 * @return string 
+	 * @return string
 	 */
 	public function getMainSiteSlug() {
 
@@ -157,7 +165,7 @@ class Core extends \yii\base\Component {
 
 	/**
 	 * The method getSiteId returns the site id for default site. It's more useful in case multi-site feature is enabled.
-	 * @return string 
+	 * @return string
 	 */
 	public function getSiteId() {
 
@@ -166,7 +174,7 @@ class Core extends \yii\base\Component {
 
 	/**
 	 * The method getSiteSlug returns the site slug for default site. It's more useful in case multi-site feature is enabled.
-	 * @return string 
+	 * @return string
 	 */
 	public function getSiteSlug() {
 
@@ -180,7 +188,7 @@ class Core extends \yii\base\Component {
 
 	/**
 	 * The method isMultiSite can be used to check whether multi-site feature is required.
-	 * @return boolean 
+	 * @return boolean
 	 */
 	public function isMultiSite() {
 
@@ -189,7 +197,7 @@ class Core extends \yii\base\Component {
 
 	/**
 	 * The method isSubDirectory can be used to check whether multi-site feature needs to follow sub directory approach instead of sub domain.
-	 * @return boolean 
+	 * @return boolean
 	 */
 	public function isSubDirectory() {
 
@@ -217,16 +225,16 @@ class Core extends \yii\base\Component {
 	/**
 	 * The method isRbac is used by the User class to check whether RBAC is enabled. It can be used by any other class or code snippet.
 	 * @return whether CMSGears simplified RBAC system has to be used
-	 */	
+	 */
 	public function isRbac() {
 
 		return $this->useRbac;
 	}
-	
+
 	/**
 	 * The method isRbac is used by the Controller classes.
 	 * @return whether CMSGears simplified RBAC system has to be used
-	 */	
+	 */
 	public function getRbacFilterClass() {
 
 		return $this->rbacFilterClass;
@@ -241,18 +249,18 @@ class Core extends \yii\base\Component {
 	}
 
 	/**
-	 * The method isApis is used to check whether apis are supported by the applications. 
+	 * The method isApis is used to check whether apis are supported by the applications.
 	 * @return the class name
-	 */	
+	 */
 	public function isApis() {
 
 		return $this->apis;
 	}
 
 	/**
-	 * The method getEditorClass is used by the views to make a text area to edit html. It must be set 
+	 * The method getEditorClass is used by the views to make a text area to edit html. It must be set
 	 * @return the class name
-	 */	
+	 */
 	public function getEditorClass() {
 
 		return $this->editorClass;
@@ -261,6 +269,26 @@ class Core extends \yii\base\Component {
 	public function isTrimFieldValue() {
 
 		return $this->trimFieldValue;
+	}
+
+	public function getSmallText() {
+
+		return $this->smallText;
+	}
+
+	public function getMediumText() {
+
+		return $this->mediumText;
+	}
+
+	public function getLargeText() {
+
+		return $this->largeText;
+	}
+
+	public function getExtraLargeText() {
+
+		return $this->extraLargeText;
 	}
 }
 

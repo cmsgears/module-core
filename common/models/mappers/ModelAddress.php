@@ -49,8 +49,8 @@ class ModelAddress extends \cmsgears\core\common\models\base\CmgModel {
         return [
             [ [ 'addressId', 'parentId', 'parentType' ], 'required' ],
             [ [ 'id' ], 'safe' ],
-            [ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
+            [ [ 'parentType' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
+            [ [ 'order', 'type' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'active' ], 'boolean' ],
             [ [ 'addressId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
         ];

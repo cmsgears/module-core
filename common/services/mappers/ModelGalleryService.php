@@ -8,6 +8,8 @@ use \Yii;
 use cmsgears\core\common\models\resources\Gallery;
 use cmsgears\core\common\models\mappers\ModelGallery;
 
+use cmsgears\core\common\services\resources\GalleryService;
+
 /**
  * The class ModelGalleryService is base class to perform database activities for ModelGallery Entity.
  */

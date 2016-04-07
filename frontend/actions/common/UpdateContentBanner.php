@@ -7,7 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\resources\CmgFile;
+use cmsgears\core\common\models\resources\CmgFile;
 
 use cmsgears\cms\common\services\mappers\ModelContentService;
 

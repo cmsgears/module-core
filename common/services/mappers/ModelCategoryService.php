@@ -85,9 +85,9 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\Service {
 
 	// Read - Lists ----
 
-	public static function findActiveCategoryIdList( $parentId, $parentType ) {
+	public static function findActiveCategoryIdList( $categoryId, $parentType ) {
 
-		$models = ModelCategory::findActiveByParentIdParentType( $parentId, $parentType );
+		$models = ModelCategory::findActiveByCategoryIdParentType( $categoryId, $parentType );
 		$ids	= [];
 
 		foreach ( $models as $model ) {

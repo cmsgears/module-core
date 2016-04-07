@@ -39,9 +39,9 @@ class ModelTagService extends \cmsgears\core\common\services\base\Service {
 		return ModelTag::findByTagId( $parentId, $parentType, $tagId );
 	}
 
-	public static function findByParentIdParentType( $parentId, $parentType ) {
+	public static function findByParent( $parentId, $parentType ) {
 
-		return ModelTag::findByParentIdParentType( $parentId, $parentType );
+		return ModelTag::findByParent( $parentId, $parentType );
 	}
 
 	public static function findActiveByTagIdParentType( $tagId, $parentType ) {
@@ -49,9 +49,9 @@ class ModelTagService extends \cmsgears\core\common\services\base\Service {
 		return ModelTag::findActiveByTagIdParentType( $tagId, $parentType );
 	}
 
-	public static function findActiveByParentIdParentType( $parentId, $parentType ) {
+	public static function findActiveByParent( $parentId, $parentType ) {
 
-		return ModelTag::findActiveByParentIdParentType( $parentId, $parentType );
+		return ModelTag::findActiveByParent( $parentId, $parentType );
 	}
 
 	public static function findAllByTagId( $tagId ) {

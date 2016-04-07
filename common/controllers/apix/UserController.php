@@ -9,7 +9,7 @@ use yii\filters\VerbFilter;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\forms\ResetPassword;
-use cmsgears\core\common\models\entities\Address;
+use cmsgears\core\common\models\resources\Address;
 use cmsgears\core\common\models\resources\CmgFile;
 use cmsgears\core\common\models\mappers\ModelAttribute;
 
@@ -161,8 +161,6 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
         if( isset( $user ) ) {
 
             $user->setScenario( 'profile' );
-
-            UserService::checkNewsletterMember( $user );
 
             if( $user->load( Yii::$app->request->post(), 'User' ) && $user->validate() ) {
 

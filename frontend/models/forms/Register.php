@@ -26,7 +26,6 @@ class Register extends Model {
 	public $lastName;
 	public $mobile;
 	public $terms;
-	public $newsletter;
 
 	// Instance Methods --------------------------------------------
 
@@ -51,8 +50,7 @@ class Register extends Model {
 			[ 'username', 'alphanumdotu' ],
 			[ 'mobile', 'phone' ],
 			[ [ 'firstName', 'lastName' ], 'alphanumspace' ],
-			[ 'terms', 'termsValidator' ],
-			[ 'newsletter', 'safe' ]
+			[ 'terms', 'termsValidator' ]
 		];
 
 		if( Yii::$app->cmgCore->trimFieldValue ) {
@@ -72,8 +70,7 @@ class Register extends Model {
 			'username' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USERNAME ),
 			'firstName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
 			'lastName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
-			'terms' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TERMS ),
-			'newsletter' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NEWSLETTER )
+			'terms' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TERMS )
 		];
 	}
 

@@ -13,7 +13,7 @@ use cmsgears\core\common\models\forms\Login;
 use cmsgears\core\common\models\forms\ForgotPassword;
 use cmsgears\core\frontend\models\forms\Register;
 
-use cmsgears\core\common\services\entities\SiteMemberService;
+use cmsgears\core\common\services\mappers\SiteMemberService;
 use cmsgears\core\frontend\services\entities\UserService;
 
 use cmsgears\core\common\utilities\AjaxUtil;

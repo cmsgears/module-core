@@ -10,6 +10,8 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\entities\Site;
+use cmsgears\core\common\models\entities\Role;
 
 /**
  * SiteMember Entity

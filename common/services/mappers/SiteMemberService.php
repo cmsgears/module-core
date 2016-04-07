@@ -10,6 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\mappers\SiteMember;
 
+use cmsgears\core\common\services\entities\RoleService;
+
 /**
  * The class SiteMemberService is base class to perform database activities for SiteMember Entity.
  */

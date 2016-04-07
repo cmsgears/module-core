@@ -15,6 +15,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\config\CoreProperties;
 
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\resources\Option;
 use cmsgears\core\common\models\mappers\SiteMember;
 
 use cmsgears\core\common\models\traits\VisualTrait;

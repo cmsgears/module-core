@@ -27,6 +27,11 @@ class CountryService extends \cmsgears\core\common\services\base\Service {
 		return Country::findById( $id );
 	}
 
+	public static function findByCode( $code ) {
+
+		return Country::findByCode( $code );
+	}
+
 	public static function getIdNameList() {
 
 		return self::findMap( 'id', 'name', CoreTables::TABLE_COUNTRY );

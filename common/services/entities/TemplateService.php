@@ -19,14 +19,14 @@ class TemplateService extends \cmsgears\core\common\services\base\Service {
 		return Template::findById( $id );
 	}
 
+	public static function findBySlug( $slug ) {
+
+		return Template::findBySlug( $slug );
+	}
+
 	public static function findByType( $type ) {
 
 		return Template::findByType( $type );
-	}
-
-	public static function findBySlugType( $slug, $type ) {
-
-		return Template::findBySlugType( $slug, $type );
 	}
 
 	public static function getIdNameMap( $options = [] ) {

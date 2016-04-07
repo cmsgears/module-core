@@ -32,7 +32,6 @@ class UserService extends \cmsgears\core\common\services\entities\UserService {
 		$user->username 	= $registerForm->username;
 		$user->firstName	= $registerForm->firstName;
 		$user->lastName		= $registerForm->lastName;
-		$user->newsletter	= $registerForm->newsletter;
 		$user->registeredAt	= $date;
 		$user->status		= User::STATUS_NEW;
 

@@ -11,6 +11,7 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\User;
 
 use cmsgears\core\common\services\resources\FileService;
+use cmsgears\core\common\services\mappers\ModelAttributeService;
 
 use cmsgears\core\common\utilities\DateUtil;
 

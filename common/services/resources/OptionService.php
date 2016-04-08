@@ -147,17 +147,17 @@ class OptionService extends \cmsgears\core\common\services\base\Service {
 
 	public static function getValueNameMapByCategorySlug( $categorySlug, $type = CoreGlobal::TYPE_COMBO ) {
 
-		$category	= Category::findBySlug( $categorySlug );
-		$options	= $category->options;
-		$optionsMap	= array();
+        $category   = Category::findBySlugType( $categorySlug, $type );
+        $options    = $category->options;
+        $optionsMap = array();
 
-		foreach ( $options as $option ) {
+        foreach ( $options as $option ) {
 
-			$optionsMap[ $option->value ] = $option->name;
-		}
+            $optionsMap[ $option->value ] = $option->name;
+        }
 
-		return $optionsMap;
-	}
+        return $optionsMap;
+    }
 
 	// Data Provider ----
 

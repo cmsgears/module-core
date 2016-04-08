@@ -141,31 +141,31 @@ trait TagTrait {
 
 	public function getTagLinks( $baseUrl, $limit = 0, $wrapper = 'li' ) {
 
-		$tags 		= $this->activeTags;
-		$tagLinks	= null;
-		$count		= 1;
+        $tags       = $this->activeTags;
+        $tagLinks   = null;
+        $count      = 1;
 
-		foreach ( $tags as $tag ) {
+        foreach ( $tags as $tag ) {
 
-			if( isset( $wrapper ) ) {
+            if( isset( $wrapper ) ) {
 
-				$tagLinks	.= "<$wrapper><a href='$baseUrl/$tag->slug'>$tag->name</a></$wrapper>";
-			}
-			else {
+                $tagLinks   .= "<$wrapper><a href='$baseUrl/$tag->slug'>$tag->name</a></$wrapper>";
+            }
+            else {
 
-				$tagLinks	.= "<a href='$baseUrl/$tag->slug'>$tag->name</a>";
-			}
+                $tagLinks   .= " <a href='$baseUrl/$tag->slug'>$tag->name</a>";
+            }
 
-			if( $limit > 0 && $count >= $limit ) {
+            if( $limit > 0 && $count >= $limit ) {
 
-				break;
-			}
+                break;
+            }
 
-			$count++;
-		}
+            $count++;
+        }
 
-		return $tagLinks;
-	}
+        return $tagLinks;
+    }
 }
 
 ?>

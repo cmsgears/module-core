@@ -40,9 +40,9 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\Service {
 		return ModelCategory::findByCategoryId( $parentId, $parentType, $categoryId );
 	}
 
-	public static function findByParentIdParentType( $parentId, $parentType ) {
+	public static function findByParent( $parentId, $parentType ) {
 
-		return ModelCategory::findByParentIdParentType( $parentId, $parentType );
+		return ModelCategory::findByParent( $parentId, $parentType );
 	}
 
 	public static function findActiveByCategoryIdParentType( $categoryId, $parentType ) {
@@ -50,9 +50,9 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\Service {
 		return ModelCategory::findActiveByCategoryIdParentType( $categoryId, $parentType );
 	}
 
-	public static function findActiveByParentIdParentType( $parentId, $parentType ) {
+	public static function findActiveByParent( $parentId, $parentType ) {
 
-		return ModelCategory::findActiveByParentIdParentType( $parentId, $parentType );
+		return ModelCategory::findActiveByParent( $parentId, $parentType );
 	}
 
 	public static function getModelCounts( $parentType, $categoryType ) {

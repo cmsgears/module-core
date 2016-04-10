@@ -11,7 +11,7 @@ use yii\helpers\Url;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\User;
-use cmsgears\core\common\models\entities\SiteMember;
+use cmsgears\core\common\models\mappers\SiteMember;
 use cmsgears\core\common\models\resources\CmgFile;
 
 use cmsgears\core\common\services\mappers\SiteMemberService;

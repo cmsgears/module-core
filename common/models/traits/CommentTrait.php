@@ -108,14 +108,14 @@ trait CommentTrait {
 		return $returnArr;
 	}
 
-	public function getApprovedReviewCount() {
+	public function getApprovedCommentCount( $type = ModelComment::TYPE_COMMENT ) {
 
 		$commentTable	= CoreTables::TABLE_MODEL_COMMENT;
 		$query			= new Query();
 
     	$query->select( [ 'count(id) as total' ] )
 				->from( $commentTable )
-				->where( [ 'parentId' => $this->id, 'parentType' => $this->parentType, 'type' => ModelComment::TYPE_REVIEW, 'status' => ModelComment::STATUS_APPROVED ] )
+				->where( [ 'parentId' => $this->id, 'parentType' => $this->parentType, 'type' => $type, 'status' => ModelComment::STATUS_APPROVED ] )
 				->groupBy( 'status' );
 
 		$count = $query->one();
@@ -126,6 +126,11 @@ trait CommentTrait {
 		}
 
 		return 0;
+	}
+
+	public function getApprovedReviewCount() {
+
+		return $this->getApprovedCommentCount( ModelComment::TYPE_REVIEW );
 	}
 }
 

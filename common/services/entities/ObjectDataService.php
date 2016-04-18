@@ -113,7 +113,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\Service {
 
 	// Create -----------
 
-	public static function create( $object, $data = null, $avatar = null ) {
+	public static function create( $object, $data = null, $avatar = null, $banner = null ) {
 
 		// Unset Template
 		if( isset( $object->templateId ) && $object->templateId <= 0 ) {
@@ -128,7 +128,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\Service {
 		}
 
 		// Save Files
-		FileService::saveFiles( $object, [ 'avatarId' => $avatar ] );
+		FileService::saveFiles( $object, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
 
 		$object->save();
 
@@ -137,7 +137,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\Service {
 
 	// Update -----------
 
-	public static function update( $object, $data = null, $avatar = null ) {
+	public static function update( $object, $data = null, $avatar = null, $banner = null ) {
 
 		// Unset Template
 		if( isset( $object->templateId ) && $object->templateId <= 0 ) {
@@ -155,7 +155,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\Service {
 		}
 
 		// Save Files
-		FileService::saveFiles( $objectToUpdate, [ 'avatarId' => $avatar ] );
+		FileService::saveFiles( $objectToUpdate, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
 
 		$objectToUpdate->update();
 
@@ -164,7 +164,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\Service {
 
 	// Delete -----------
 
-	public static function delete( $object, $avatar = null ) {
+	public static function delete( $object, $avatar = null, $banner = null ) {
 
 		$existingObject	= self::findById( $object->id );
 
@@ -172,7 +172,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\Service {
 		$existingObject->delete();
 
 		// Delete Files
-		FileService::deleteFiles( [ $avatar ] );
+		FileService::deleteFiles( [ $avatar, $banner ] );
 
 		return true;
 	}

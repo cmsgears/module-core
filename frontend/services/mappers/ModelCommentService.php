@@ -83,14 +83,24 @@ class ModelCommentService extends \cmsgears\core\common\services\mappers\ModelCo
 		return self::getDataProvider( new ModelComment(), $config );
 	}
 
-	public static function getPaginationByParent( $parentId, $parentType, $type = ModelComment::TYPE_COMMENT, $status = ModelComment::STATUS_APPROVED ) {
+	public static function getPaginationByParent( $parentId, $parentType, $config = [] ) {
 
-		return self::getPagination( [ 'conditions' => [ 'baseId' => null, 'parentId' => $parentId, 'parentType' => $parentType, 'type' => $type, 'status' => $status ] ] );
+		$type 	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : ModelComment::TYPE_COMMENT;
+		$status = isset( $config[ 'status' ] ) ? $config[ 'status' ] : ModelComment::STATUS_APPROVED;
+
+		$config[ 'conditions' ] = [ 'baseId' => null, 'parentId' => $parentId, 'parentType' => $parentType, 'type' => $type, 'status' => $status ];
+
+		return self::getPagination( $config );
 	}
 
-	public static function getPaginationByParentType( $parentType, $type = ModelComment::TYPE_COMMENT, $status = ModelComment::STATUS_APPROVED ) {
+	public static function getPaginationByParentType( $parentType ) {
 
-		return self::getPagination( [ 'conditions' => [ 'baseId' => null, 'parentType' => $parentType, 'type' => $type, 'status' => $status ] ] );
+		$type 	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : ModelComment::TYPE_COMMENT;
+		$status = isset( $config[ 'status' ] ) ? $config[ 'status' ] : ModelComment::STATUS_APPROVED;
+
+		$config[ 'conditions' ] = [ 'baseId' => null, 'parentType' => $parentType, 'type' => $type, 'status' => $status ];
+
+		return self::getPagination( $config );
 	}
 
 	public static function getPaginationByBaseId( $baseId, $type = ModelComment::TYPE_COMMENT, $status = ModelComment::STATUS_APPROVED ) {

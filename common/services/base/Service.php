@@ -80,12 +80,17 @@ class Service extends \yii\base\Component {
 
 		// Data Provider --------
 
+		$pagination	= [ 'pageSize' => $limit ];
+
+		if( isset( $route ) ) {
+
+			$pagination[ 'route' ]	= $route;
+		}
+
 	    $dataProvider	= new ActiveDataProvider([
             'query' => $query,
             'sort' => $sort,
-            'pagination' => [
-            	'pageSize' => $limit
-            ]
+            'pagination' => $pagination
         ]);
 
 		return $dataProvider;

@@ -83,6 +83,7 @@ CREATE TABLE `cmg_core_object` (
   `siteId` bigint(20) NOT NULL,
   `templateId` bigint(20) DEFAULT NULL,
   `avatarId` bigint(20) DEFAULT NULL,
+  `bannerId` bigint(20) DEFAULT NULL,
   `createdBy` bigint(20) NOT NULL,
   `modifiedBy` bigint(20) DEFAULT NULL,
   `name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -100,8 +101,9 @@ CREATE TABLE `cmg_core_object` (
   KEY `fk_object_1` (`siteId`),
   KEY `fk_object_2` (`templateId`),
   KEY `fk_object_3` (`avatarId`),
-  KEY `fk_object_4` (`createdBy`),
-  KEY `fk_object_5` (`modifiedBy`)
+  KEY `fk_object_4` (`bannerId`),
+  KEY `fk_object_5` (`createdBy`),
+  KEY `fk_object_6` (`modifiedBy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -786,8 +788,9 @@ ALTER TABLE `cmg_core_object`
 	ADD CONSTRAINT `fk_object_1` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`),
 	ADD CONSTRAINT `fk_object_2` FOREIGN KEY (`templateId`) REFERENCES `cmg_core_template` (`id`),
 	ADD CONSTRAINT `fk_object_3` FOREIGN KEY (`avatarId`) REFERENCES `cmg_core_file` (`id`),
-	ADD CONSTRAINT `fk_object_4` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
-  	ADD CONSTRAINT `fk_object_5` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
+	ADD CONSTRAINT `fk_object_4` FOREIGN KEY (`bannerId`) REFERENCES `cmg_core_file` (`id`),
+	ADD CONSTRAINT `fk_object_5` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
+  	ADD CONSTRAINT `fk_object_6` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
 
 --
 -- Constraints for table `cmg_core_province`

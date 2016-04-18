@@ -12,7 +12,7 @@ abstract class Widget extends \yii\base\Widget {
 
 	// html options for Yii Widget
 	public $options 		= [];
-	
+
 	/**
 	 * Flag to check whether assets can be loaded. We can load widget assets seperately in case the bundle is not added as dependency to layout asset bundle.
 	 */
@@ -30,10 +30,10 @@ abstract class Widget extends \yii\base\Widget {
 
 	// Instance Methods --------------------------------------------
 
-	// yii\base\Widget
+	// yii\base\Widget ----------------------
 
 	/**
-	 * The method returns the view path for this widget if set while calling widget. 
+	 * The method returns the view path for this widget if set while calling widget.
 	 */
 	public function getViewPath() {
 
@@ -45,6 +45,17 @@ abstract class Widget extends \yii\base\Widget {
 		return parent::getViewPath();
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+    public function run() {
+
+		return $this->renderWidget();
+    }
+
+	/**
+	 * Render logic to be implemented by child classes. The child classes can override run method to enhance rendering.
+	 */
 	abstract public function renderWidget( $config = [] );
 }
 

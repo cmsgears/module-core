@@ -55,7 +55,8 @@ class Login extends \yii\base\Model {
 		$rules =  [
 			[ [ 'email', 'password' ], 'required' ],
 			[ 'rememberMe', 'boolean' ],
-			[ 'email', 'email' ],
+			// Disabled email validation to allow both email and username for login.
+			//[ 'email', 'email' ],
 			[ 'email', 'validateUser' ],
 			[ 'password', 'validatePassword' ]
 		];
@@ -80,9 +81,15 @@ class Login extends \yii\base\Model {
 
     public function getUser() {
 
-        if( $this->_user === false ) {
+		// Find user having email or username
+        if( empty( $this->_user ) ) {
 
             $this->_user = UserService::findByEmail( $this->email );
+
+			if( empty( $this->_user ) ) {
+
+				$this->_user = UserService::findByUsername( $this->email );
+			}
         }
 
         return $this->_user;
@@ -92,19 +99,23 @@ class Login extends \yii\base\Model {
 
         if( !$this->hasErrors() ) {
 
-            if( !$this->user ) {
+			$user = $this->user;
+
+            if( !isset( $user ) ) {
 
 				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
             }
+			else {
 
-			if( !$this->hasErrors() && !$this->user->isConfirmed() ) {
+				if( !$this->hasErrors() && !$user->isConfirmed() ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_VERIFICATION ) );
-			}
+					$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_VERIFICATION ) );
+				}
 
-			if( !$this->hasErrors() && $this->user->isBlocked() ) {
+				if( !$this->hasErrors() && $user->isBlocked() ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_BLOCKED ) );
+					$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_BLOCKED ) );
+				}
 			}
         }
     }

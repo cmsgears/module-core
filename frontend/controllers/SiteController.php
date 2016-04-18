@@ -53,6 +53,10 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 		}
 
         return [
+            'captcha' => [
+                'class' => 'yii\captcha\CaptchaAction',
+                'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+            ],
             'error' => [
                 'class' => 'yii\web\ErrorAction'
             ]

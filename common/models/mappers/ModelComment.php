@@ -67,6 +67,8 @@ class ModelComment extends \cmsgears\core\common\models\base\CmgModel {
 
     // Public -------------
 
+    public $captcha;
+
     // Private/Protected --
 
     // Traits ------------------------------------------------------
@@ -114,6 +116,7 @@ class ModelComment extends \cmsgears\core\common\models\base\CmgModel {
             [ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
             [ 'content', 'required', 'on' => [ 'testimonial' ] ],
             [ 'rating', 'required', 'on' => [ 'review' ] ],
+            [ 'captcha', 'captcha', 'captchaAction' => '/cmgcore/site/captcha', 'on' => 'captcha' ],
             [ [ 'parentId', 'baseId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt', 'approvedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];

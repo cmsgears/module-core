@@ -43,7 +43,11 @@ class CreateComment extends \yii\base\Action {
 
         $model            	= new ModelComment();
         $model->status    	= ModelComment::STATUS_NEW;
-		$model->scenario	= $this->scenario;
+
+		if( isset( $this->scenario ) ) {
+
+			$model->scenario	= $this->scenario;
+		}
 
         if( $model->load( Yii::$app->request->post(), 'ModelComment' ) && $model->validate() ) {
 

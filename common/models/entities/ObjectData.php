@@ -31,6 +31,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property long $siteId
  * @property long $templateId
  * @property long $avatarId
+ * @property long $bannerId
  * @property long $createdBy
  * @property long $modifiedBy
  * @property string $name
@@ -117,7 +118,7 @@ class ObjectData extends \cmsgears\core\common\models\base\TypedCmgEntity implem
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
 			[ [ 'active' ], 'boolean' ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'siteId', 'avatarId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'siteId', 'avatarId', 'bannerId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
@@ -141,6 +142,7 @@ class ObjectData extends \cmsgears\core\common\models\base\TypedCmgEntity implem
             'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
             'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
             'avatarId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
+            'bannerId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
             'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
             'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
             'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),

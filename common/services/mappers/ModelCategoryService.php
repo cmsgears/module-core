@@ -100,6 +100,21 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\Service {
 		return $ids;
 	}
 
+    public static function findActiveCategoryIdListByParent( $parentId, $parentType ) {
+
+        $models = ModelCategory::findActiveByParent( $parentId, $parentType );
+        $ids    = [];
+
+        foreach ( $models as $model ) {
+
+            $category   = $model->category;
+
+            $ids[]      = $category->id;
+        }
+
+        return $ids;
+    }
+
 	// Create -----------
 
 	public static function create( $categoryId, $parentId, $parentType ) {

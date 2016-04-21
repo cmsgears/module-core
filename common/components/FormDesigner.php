@@ -30,6 +30,10 @@ class FormDesigner extends \yii\base\Component {
 
 				return $this->getTextHtml( $form, $model, $config, $key, $field );
 			}
+			case FormField::TYPE_HIDDEN: {
+
+				return $this->getHiddenHtml( $form, $model, $config, $key, $field );
+			}
 			case FormField::TYPE_PASSWORD: {
 
 				return $this->getPasswordHtml( $form, $model, $config, $key, $field );
@@ -77,6 +81,15 @@ class FormDesigner extends \yii\base\Component {
 
 			$fieldHtml = $fieldHtml->label( false );
 		}
+
+		return $fieldHtml;
+	}
+
+	protected function getHiddenHtml( $form, $model, $config, $key, $field ) {
+
+		$fieldHtml = $form->field( $model, $key )->hiddenInput( $field->htmlOptions );
+
+		$fieldHtml = $fieldHtml->label( false );
 
 		return $fieldHtml;
 	}
@@ -288,6 +301,10 @@ class FormDesigner extends \yii\base\Component {
 
 				return $this->getApixTextHtml( $config, $field, $value );
 			}
+			case FormField::TYPE_HIDDEN: {
+
+				return $this->getApixHiddenHtml( $config, $field, $value );
+			}
 			case FormField::TYPE_PASSWORD: {
 
 				return $this->getApixPasswordHtml( $config, $field );
@@ -340,6 +357,16 @@ class FormDesigner extends \yii\base\Component {
 
 			$fieldHtml = "<div class='frm-field'>$fieldHtml<span class='error' cmt-error='$field->name'></span></div>";
 		}
+
+		return $fieldHtml;
+	}
+
+	protected function getApixHiddenHtml( $config, $field, $value ) {
+
+		$modelName	= $config[ 'modelName' ];
+		$fieldHtml 	= Html::hiddenInput( $modelName . "[$field->name]", $value, $field->htmlOptions );
+
+		$fieldHtml = "<div class='frm-field'>$fieldHtml<span class='error' cmt-error='$field->name'></span></div>";
 
 		return $fieldHtml;
 	}

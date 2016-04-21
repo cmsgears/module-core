@@ -17,7 +17,10 @@ use cmsgears\core\admin\services\mappers\ModelCommentService;
 abstract class CommentController extends Controller {
 
     public $returnUrl;
+
     public $commentType;
+    public $parentType;
+
     public $modelService;
     public $rememberUrl;
 
@@ -26,6 +29,8 @@ abstract class CommentController extends Controller {
     public function __construct( $id, $module, $config = [] ) {
 
         parent::__construct( $id, $module, $config );
+
+		$this->setViewPath( '@cmsgears/module-core/admin/views/comment' );
     }
 
     // Instance Methods --------------------------------------------
@@ -57,7 +62,7 @@ abstract class CommentController extends Controller {
         ];
     }
 
-    // TestimonialController -----------------
+    // CommentController ---------------------
 
     public function actionAll( $slug = null ) {
 
@@ -74,12 +79,12 @@ abstract class CommentController extends Controller {
 
             if( isset( $model ) ) {
 
-                $dataProvider = ModelCommentService::getPaginationByType( $this->commentType, [ 'conditions' => [ 'parentId' => $model->id ] ] );
+                $dataProvider = ModelCommentService::getPaginationByType( $this->commentType, [ 'conditions' => [ 'parentType' => $this->parentType, 'parentId' => $model->id ] ] );
             }
         }
         else {
 
-            $dataProvider = ModelCommentService::getPaginationByType( $this->commentType );
+            $dataProvider = ModelCommentService::getPaginationByType( $this->commentType, [ 'conditions' => [ 'parentType' => $this->parentType ] ] );
         }
 
         return $this->render( 'all', [
@@ -94,7 +99,7 @@ abstract class CommentController extends Controller {
         $model  = new ModelComment();
 
         $model->parentId    = Yii::$app->cmgCore->siteId;
-        $model->parentType  = CoreGlobal::TYPE_SITE;
+        $model->parentType  = $this->parentType;
         $model->type        = $this->commentType;
 
         if( isset( $slug ) ) {

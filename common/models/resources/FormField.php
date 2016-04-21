@@ -35,6 +35,7 @@ class FormField extends \cmsgears\core\common\models\base\CmgEntity {
     // Constants/Statics --
 
     const TYPE_TEXT             =   0;
+	const TYPE_HIDDEN           =   5;
     const TYPE_PASSWORD         =  10;
     const TYPE_TEXTAREA         =  20;
     const TYPE_CHECKBOX         =  30;
@@ -49,6 +50,7 @@ class FormField extends \cmsgears\core\common\models\base\CmgEntity {
 
     public static $typeMap = [
         self::TYPE_TEXT => 'Text',
+        self::TYPE_HIDDEN => 'Hidden',
         self::TYPE_PASSWORD => 'Password',
         self::TYPE_TEXTAREA => 'Textarea',
         self::TYPE_CHECKBOX => 'Checkbox',

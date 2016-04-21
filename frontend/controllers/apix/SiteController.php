@@ -39,7 +39,8 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
                 'actions' => [
                     'register' => [ 'post' ],
                     'login' => [ 'post' ],
-                    'forgotPassword' => [ 'post' ]
+                    'forgotPassword' => [ 'post' ],
+                    'checkUser' => [ 'get' ]
                 ]
             ]
         ];
@@ -90,9 +91,15 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 
 			$user		= Yii::$app->user->getIdentity();
 			$role		= $user->role;
+			$storedLink	= Url::previous( CoreGlobal::REDIRECT_LOGIN );
 
+			// Redirect user to home
+			if( isset( $storedLink ) ) {
+
+				$homeUrl = $storedLink;
+			}
 			// Redirect user to home set by admin
-			if( isset( $role ) && isset( $role->homeUrl ) ) {
+			else if( isset( $role ) && isset( $role->homeUrl ) ) {
 
 				$homeUrl	= Url::to( [ "/$role->homeUrl" ], true );
 			}
@@ -152,6 +159,26 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		// Trigger Ajax Failure
     	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
     }
+
+	public function actionCheckUser( $redirect = null ) {
+
+		$user		= Yii::$app->user->getIdentity();
+
+		if( isset( $user ) ) {
+
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $redirect );
+		}
+
+		// Remember url for redirect on login
+		if( isset( $redirect ) ) {
+
+			Url::remember( $redirect, CoreGlobal::REDIRECT_LOGIN );
+		}
+
+		// Trigger Ajax Failure
+    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+	}
 }
 
 ?>

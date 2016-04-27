@@ -18,6 +18,7 @@ $returnUrl		= $this->context->returnUrl;
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-role' ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>
+    	<?= $form->field( $model, 'parentId' )->dropDownList( $roleMap ) ?>
     	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
     	<?= $form->field( $model, 'homeUrl' ) ?>
@@ -27,13 +28,13 @@ $returnUrl		= $this->context->returnUrl;
 			<div class="header">Assign Permissions</div>
 			<?php
 				$modelPermissions	= $model->getPermissionsIdList();
-		
-				foreach ( $permissions as $permission ) { 
-		
+
+				foreach ( $permissions as $permission ) {
+
 					if( in_array( $permission['id'], $modelPermissions ) ) {
-			?>		
+			?>
 						<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?= $permission[ 'id' ] ?>" checked /><?= $permission[ 'name' ] ?></span>
-			<?php 
+			<?php
 					}
 					else {
 			?>

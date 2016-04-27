@@ -18,6 +18,7 @@ $returnUrl		= $this->context->returnUrl;
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-role' ] );?>
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
+    	<?= $form->field( $model, 'parentId' )->dropDownList( $roleMap, [ 'disabled' => true ] ) ?>
     	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ], 'disabled' => true ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
 		<?= $form->field( $model, 'homeUrl' )->textInput( [ 'readonly '=> 'true' ] ) ?>
@@ -27,13 +28,13 @@ $returnUrl		= $this->context->returnUrl;
 			<div class="header">Assign Permissions</div>
 			<?php
 				$modelPermissions	= $model->getPermissionsIdList();
-		
-				foreach ( $permissions as $permission ) { 
-		
+
+				foreach ( $permissions as $permission ) {
+
 					if( in_array( $permission['id'], $modelPermissions ) ) {
-			?>		
+			?>
 						<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?= $permission[ 'id' ] ?>" checked readonly /><?= $permission[ 'name' ] ?></span>
-			<?php 
+			<?php
 					}
 					else {
 			?>

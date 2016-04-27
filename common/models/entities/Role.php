@@ -23,6 +23,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * Role Entity
  *
  * @property long $id
+ * @property long $parentId
+ * @property long $rootId
  * @property long $createdBy
  * @property long $modifiedBy
  * @property string $name
@@ -31,10 +33,12 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $icon
  * @property string $description
  * @property string $homeUrl
+ * @property short lValue
+ * @property short rValue
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
-class Role extends \cmsgears\core\common\models\base\TypedCmgEntity {
+class Role extends \cmsgears\core\common\models\base\TypedHierarchicalModel {
 
     // Variables ---------------------------------------------------
 
@@ -95,6 +99,7 @@ class Role extends \cmsgears\core\common\models\base\TypedCmgEntity {
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
@@ -125,6 +130,22 @@ class Role extends \cmsgears\core\common\models\base\TypedCmgEntity {
     }
 
     // Role ------------------------------
+
+    /**
+     * @return Role - parent role
+     */
+    public function getParent() {
+
+        return $this->hasOne( Role::className(), [ 'id' => 'parentId' ] );
+    }
+
+    /**
+     * @return array - list of immediate child roles
+     */
+    public function getChildren() {
+
+        return $this->hasMany( Role::className(), [ 'parentId' => 'id' ] );
+    }
 
     /**
      * @return array - Permission

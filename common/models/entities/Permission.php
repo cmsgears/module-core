@@ -23,6 +23,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * Permission Entity
  *
  * @property long $id
+ * @property long $parentId
+ * @property long $rootId
  * @property long $createdBy
  * @property long $modifiedBy
  * @property string $name
@@ -30,10 +32,12 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $type
  * @property string $icon
  * @property string $description
+ * @property short lValue
+ * @property short rValue
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
-class Permission extends \cmsgears\core\common\models\base\TypedCmgEntity {
+class Permission extends \cmsgears\core\common\models\base\TypedHierarchicalModel {
 
     // Variables ---------------------------------------------------
 
@@ -94,6 +98,7 @@ class Permission extends \cmsgears\core\common\models\base\TypedCmgEntity {
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
@@ -123,6 +128,22 @@ class Permission extends \cmsgears\core\common\models\base\TypedCmgEntity {
     }
 
     // Permission ------------------------
+
+    /**
+     * @return Permission - parent permission
+     */
+    public function getParent() {
+
+        return $this->hasOne( Permission::className(), [ 'id' => 'parentId' ] );
+    }
+
+    /**
+     * @return array - list of immediate child permissions
+     */
+    public function getChildren() {
+
+        return $this->hasMany( Permission::className(), [ 'parentId' => 'id' ] );
+    }
 
     /**
      * @return Role array

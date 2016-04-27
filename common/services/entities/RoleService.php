@@ -12,7 +12,7 @@ use cmsgears\core\common\models\mappers\RolePermission;
 /**
  * The class RoleService is base class to perform database activities for Role Entity.
  */
-class RoleService extends \cmsgears\core\common\services\base\Service {
+class RoleService extends \cmsgears\core\common\services\base\HierarchyService {
 
 	// Static Methods ----------------------------------------------
 
@@ -25,6 +25,11 @@ class RoleService extends \cmsgears\core\common\services\base\Service {
 	public static function findById( $id ) {
 
 		return Role::findById( $id );
+	}
+
+	public static function findByParentId( $id ) {
+
+		return Role::findByParentId( $id );
 	}
 
 	/**
@@ -45,36 +50,7 @@ class RoleService extends \cmsgears\core\common\services\base\Service {
 		return Role::findBySlug( $slug );
 	}
 
-	/**
-	 * @param array $config
-	 * @return array - an array having id as key and name as value.
-	 */
-	public static function getIdNameMap( $config = [] ) {
-
-		return self::findMap( 'id', 'name', CoreTables::TABLE_ROLE, $config );
-	}
-
-	/**
-	 * @param array $config
-	 * @return array - an array having id as key and name as value.
-	 */
-	public static function getIdNameMapByType( $type ) {
-
-		if( isset( $type ) ) {
-
-			return self::getIdNameMap( [ 'conditions' => [ 'type' => $type ] ] );
-		}
-
-		return self::getIdNameMap();
-	}
-
-	/**
-	 * @return array - an array having id as key and name as value.
-	 */
-	public static function getIdNameMapByRoles( $roles ) {
-
-		return self::findMap( 'id', 'name', CoreTables::TABLE_ROLE, [ 'filters' => [ [ 'in', 'slug', $roles ] ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Role' ] ] ] );
-	}
+	// Read - Lists ----
 
 	/**
 	 * @param array $config
@@ -99,6 +75,41 @@ class RoleService extends \cmsgears\core\common\services\base\Service {
 		return self::getIdNameList();
 	}
 
+	public static function getLevelListByType( $type ) {
+
+		return self::getLevelList( [ 'node.type' => $type ] );
+	}
+
+	// Read - Maps -----
+
+	/**
+	 * @param array $config
+	 * @return array - an array having id as key and name as value.
+	 */
+	public static function getIdNameMap( $config = [] ) {
+
+		return self::findMap( 'id', 'name', CoreTables::TABLE_ROLE, $config );
+	}
+
+	/**
+	 * @param array $config
+	 * @return array - an array having id as key and name as value.
+	 */
+	public static function getIdNameMapByType( $type, $config = [] ) {
+
+		$config[ 'conditions' ][ 'type' ] 	= $type;
+
+		return self::getIdNameMap( $config );
+	}
+
+	/**
+	 * @return array - an array having id as key and name as value.
+	 */
+	public static function getIdNameMapByRoles( $roles ) {
+
+		return self::findMap( 'id', 'name', CoreTables::TABLE_ROLE, [ 'filters' => [ [ 'in', 'slug', $roles ] ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Role' ] ] ] );
+	}
+
 	// Data Provider ----
 
 	/**
@@ -119,7 +130,7 @@ class RoleService extends \cmsgears\core\common\services\base\Service {
 	public static function create( $role ) {
 
 		// Create Role
-		$role->save();
+		$role	= self::createInHierarchy( CoreTables::TABLE_ROLE, $role );
 
 		// Return Role
 		return $role;
@@ -135,6 +146,9 @@ class RoleService extends \cmsgears\core\common\services\base\Service {
 
 		// Find existing role
 		$roleToUpdate	= self::findById( $role->id );
+
+		// Update Hierarchy
+		$roleToUpdate = self::updateInHierarchy( CoreTables::TABLE_ROLE, $role, $roleToUpdate );
 
 		// Copy and set Attributes
 		$roleToUpdate->copyForUpdateFrom( $role, [ 'name', 'description', 'homeUrl' ] );
@@ -189,7 +203,7 @@ class RoleService extends \cmsgears\core\common\services\base\Service {
 		$roleToDelete	= self::findById( $role->id );
 
 		// Delete Role
-		$roleToDelete->delete();
+		$roleToDelete = self::deleteInHierarchy( CoreTables::TABLE_ROLE, $roleToDelete );
 
 		return true;
 	}

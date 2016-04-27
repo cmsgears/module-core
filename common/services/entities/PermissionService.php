@@ -12,7 +12,7 @@ use cmsgears\core\common\models\mappers\RolePermission;
 /**
  * The class PermissionService is base class to perform database activities for Permission Entity.
  */
-class PermissionService extends \cmsgears\core\common\services\base\Service {
+class PermissionService extends \cmsgears\core\common\services\base\HierarchyService {
 
 	// Static Methods ----------------------------------------------
 
@@ -27,6 +27,11 @@ class PermissionService extends \cmsgears\core\common\services\base\Service {
 		return Permission::findById( $id );
 	}
 
+	public static function findByParentId( $id ) {
+
+		return Permission::findByParentId( $id );
+	}
+
 	/**
 	 * @param string $slug
 	 * @return Permission
@@ -35,6 +40,30 @@ class PermissionService extends \cmsgears\core\common\services\base\Service {
 
 		return Permission::findBySlug( $slug );
 	}
+
+	// Read - Maps -----
+
+	/**
+	 * @param array $config
+	 * @return array - an array having id as key and name as value.
+	 */
+	public static function getIdNameMap( $config = [] ) {
+
+		return self::findMap( 'id', 'name', CoreTables::TABLE_PERMISSION, $config );
+	}
+
+	/**
+	 * @param array $config
+	 * @return array - an array having id as key and name as value.
+	 */
+	public static function getIdNameMapByType( $type, $config = [] ) {
+
+		$config[ 'conditions' ][ 'type' ] 	= $type;
+
+		return self::getIdNameMap( $config );
+	}
+
+	// Read - Lists ----
 
 	/**
 	 * @param array $config
@@ -59,6 +88,11 @@ class PermissionService extends \cmsgears\core\common\services\base\Service {
 		return self::getIdNameList();
 	}
 
+	public static function getLevelListByType( $type ) {
+
+		return self::getLevelList( [ 'node.type' => $type ] );
+	}
+
 	// Data Provider ----
 
 	/**
@@ -79,7 +113,7 @@ class PermissionService extends \cmsgears\core\common\services\base\Service {
 	public static function create( $permission ) {
 
 		// Create Permission
-		$permission->save();
+		$permission	= self::createInHierarchy( CoreTables::TABLE_PERMISSION, $permission );
 
 		// Return Permission
 		return $permission;
@@ -95,6 +129,9 @@ class PermissionService extends \cmsgears\core\common\services\base\Service {
 
 		// Find existing Permission
 		$permissionToUpdate	= self::findById( $permission->id );
+
+		// Update Hierarchy
+		$permissionToUpdate = self::updateInHierarchy( CoreTables::TABLE_PERMISSION, $permission, $permissionToUpdate );
 
 		// Copy and set Attributes
 		$permissionToUpdate->copyForUpdateFrom( $permission, [ 'name', 'description' ] );
@@ -149,7 +186,7 @@ class PermissionService extends \cmsgears\core\common\services\base\Service {
 		$permisisonToDelete	= self::findById( $permission->id );
 
 		// Delete Permission
-		$permisisonToDelete->delete();
+		$permisisonToDelete = self::deleteInHierarchy( CoreTables::TABLE_PERMISSION, $permisisonToDelete );
 
 		return true;
 	}

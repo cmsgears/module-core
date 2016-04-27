@@ -142,29 +142,40 @@ INSERT INTO `cmg_core_option` (`categoryId`,`name`,`value`,`icon`,`htmlOptions`,
 -- Core module roles and permissions
 --
 
-INSERT INTO `cmg_core_role` (`createdBy`,`modifiedBy`,`name`,`slug`,`homeUrl`,`type`,`icon`,`description`,`createdAt`,`modifiedAt`) VALUES
-	(1,1,'Super Admin','super-admin','dashboard','system',NULL,'The Super Admin have all the permisisons to perform operations on the admin site and website.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(1,1,'Admin','admin','dashboard','system',NULL,'The Admin have all the permisisons to perform operations on the admin site and website except RBAC module.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(1,1,'User','user',NULL,'system',NULL,'The role User is limited to website users.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(1,1,'User Manager','user-manager','dashboard','system',NULL,'The role User Manager is limited to manage site users from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54');
+INSERT INTO `cmg_core_role` (`createdBy`,`modifiedBy`,`name`,`slug`,`homeUrl`,`type`,`icon`,`description`,`lValue`,`rValue`,`createdAt`,`modifiedAt`) VALUES
+	(1,1,'Super Admin','super-admin','dashboard','system',NULL,'The Super Admin have all the permisisons to perform operations on the admin site and website.',1,2,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(1,1,'Admin','admin','dashboard','system',NULL,'The Admin have all the permisisons to perform operations on the admin site and website except RBAC module.',1,2,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(1,1,'User','user',NULL,'system',NULL,'The role User is limited to website users.',1,2,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(1,1,'User Manager','user-manager','dashboard','system',NULL,'The role User Manager is limited to manage site users from admin.',1,2,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 SELECT @rolesadmin := `id` FROM cmg_core_role WHERE slug = 'super-admin';
 SELECT @roleadmin := `id` FROM cmg_core_role WHERE slug = 'admin';
 SELECT @roleuser := `id` FROM cmg_core_role WHERE slug = 'user';
 SELECT @roleuserm := `id` FROM cmg_core_role WHERE slug = 'user-manager';
 
-INSERT INTO `cmg_core_permission` (`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`icon`,`description`,`createdAt`,`modifiedAt`) VALUES 
-	(1,1,'Admin','admin','system',NULL,'The permission admin is to distinguish between admin and site user. It is a must have permission for admins.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(1,1,'User','user','system',NULL,'The permission user is to distinguish between admin and site user. It is a must have permission for users.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(1,1,'Core','core','system',NULL,'The permission core is to manage settings, drop downs, world countries, galleries and newsletters from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(1,1,'Identity','identity','system',NULL,'The permission identity is to manage users from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54'),
-	(1,1,'RBAC','rbac','system',NULL,'The permission rbac is to manage roles and permissions from admin.','2014-10-11 14:22:54','2014-10-11 14:22:54');
+UPDATE cmg_core_role SET rootId=@rolesadmin where id=@rolesadmin;
+UPDATE cmg_core_role SET rootId=@roleadmin where id=@roleadmin;
+UPDATE cmg_core_role SET rootId=@roleuser where id=@roleuser;
+UPDATE cmg_core_role SET rootId=@roleuserm where id=@roleuserm;
+
+INSERT INTO `cmg_core_permission` (`createdBy`,`modifiedBy`,`name`,`slug`,`type`,`icon`,`description`,`lValue`,`rValue`,`createdAt`,`modifiedAt`) VALUES 
+	(1,1,'Admin','admin','system',NULL,'The permission admin is to distinguish between admin and site user. It is a must have permission for admins.',1,2,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(1,1,'User','user','system',NULL,'The permission user is to distinguish between admin and site user. It is a must have permission for users.',1,2,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(1,1,'Core','core','system',NULL,'The permission core is to manage settings, drop downs, world countries, galleries and newsletters from admin.',1,2,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(1,1,'Identity','identity','system',NULL,'The permission identity is to manage users from admin.',1,2,'2014-10-11 14:22:54','2014-10-11 14:22:54'),
+	(1,1,'RBAC','rbac','system',NULL,'The permission rbac is to manage roles and permissions from admin.',1,2,'2014-10-11 14:22:54','2014-10-11 14:22:54');
 
 SELECT @permadmin := `id` FROM cmg_core_permission WHERE slug = 'admin';
 SELECT @permuser := `id` FROM cmg_core_permission WHERE slug = 'user';
 SELECT @permcore := `id` FROM cmg_core_permission WHERE slug = 'core';
 SELECT @permidentity := `id` FROM cmg_core_permission WHERE slug = 'identity';
 SELECT @permrbac := `id` FROM cmg_core_permission WHERE slug = 'rbac';
+
+UPDATE cmg_core_permission SET rootId=@permadmin where id=@permadmin;
+UPDATE cmg_core_permission SET rootId=@permuser where id=@permuser;
+UPDATE cmg_core_permission SET rootId=@permcore where id=@permcore;
+UPDATE cmg_core_permission SET rootId=@permidentity where id=@permidentity;
+UPDATE cmg_core_permission SET rootId=@permrbac where id=@permrbac;
 
 INSERT INTO `cmg_core_role_permission` VALUES 
 	(@rolesadmin,@permadmin),(@rolesadmin,@permuser),(@rolesadmin,@permcore),(@rolesadmin,@permidentity),(@rolesadmin,@permrbac),

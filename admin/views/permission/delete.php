@@ -18,21 +18,22 @@ $returnUrl		= $this->context->returnUrl;
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-permission' ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>
+    	<?= $form->field( $model, 'parentId' )->dropDownList( $permissionMap, [ 'disabled' => true ] ) ?>
     	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ], 'disabled' => true ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
 
 		<?php if( count( $roles ) > 0 ) { ?>
 		<div class="box-content clearfix">
 			<div class="header">Assign Roles</div>
-			<?php 
+			<?php
 				$modelRoles	= $model->getRolesIdList();
-	
-				foreach ( $roles as $role ) { 
-	
+
+				foreach ( $roles as $role ) {
+
 					if( in_array( $role[ 'id' ], $modelRoles ) ) {
-			?>		
+			?>
 						<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$role['id']?>" checked readonly /><?=$role['name']?></span>
-			<?php 
+			<?php
 					}
 					else {
 			?>

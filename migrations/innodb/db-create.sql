@@ -166,6 +166,8 @@ DROP TABLE IF EXISTS `cmg_core_role`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_role` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `parentId` bigint(20) DEFAULT NULL,
+  `rootId` bigint(20) DEFAULT NULL,
   `createdBy` bigint(20) NOT NULL,
   `modifiedBy` bigint(20) DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
@@ -174,11 +176,15 @@ CREATE TABLE `cmg_core_role` (
   `icon` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `homeUrl` varchar(255) DEFAULT NULL,
+  `lValue` smallint(6) NOT NULL DEFAULT '1',
+  `rValue` smallint(6) NOT NULL DEFAULT '2',
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_cmg_role_1` (`createdBy`),
-  KEY `fk_cmg_role_2` (`modifiedBy`)
+  KEY `fk_cmg_role_1` (`parentId`),
+  KEY `fk_cmg_role_2` (`rootId`),
+  KEY `fk_cmg_role_3` (`createdBy`),
+  KEY `fk_cmg_role_4` (`modifiedBy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -191,6 +197,8 @@ DROP TABLE IF EXISTS `cmg_core_permission`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `cmg_core_permission` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `parentId` bigint(20) DEFAULT NULL,
+  `rootId` bigint(20) DEFAULT NULL,
   `createdBy` bigint(20) NOT NULL,
   `modifiedBy` bigint(20) DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
@@ -198,11 +206,15 @@ CREATE TABLE `cmg_core_permission` (
   `type` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `icon` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
+  `lValue` smallint(6) NOT NULL DEFAULT '1',
+  `rValue` smallint(6) NOT NULL DEFAULT '2',
   `createdAt` datetime NOT NULL,
   `modifiedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `fk_cmg_permission_1` (`createdBy`),
-  KEY `fk_cmg_permission_2` (`modifiedBy`)
+  KEY `fk_cmg_permission_1` (`parentId`),
+  KEY `fk_cmg_permission_2` (`rootId`),
+  KEY `fk_cmg_permission_3` (`createdBy`),
+  KEY `fk_cmg_permission_4` (`modifiedBy`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -381,7 +393,8 @@ CREATE TABLE `cmg_core_category` (
   `data` longtext COLLATE utf8_unicode_ci,
   PRIMARY KEY (`id`),
   KEY `fk_cmg_category_1` (`siteId`),
-  KEY `fk_cmg_category_2` (`parentId`)
+  KEY `fk_cmg_category_2` (`parentId`),
+  KEY `fk_cmg_category_3` (`rootId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -809,15 +822,19 @@ ALTER TABLE `cmg_core_city`
 -- Constraints for table `cmg_core_role`
 --
 ALTER TABLE `cmg_core_role`
-	ADD CONSTRAINT `fk_cmg_role_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
-  	ADD CONSTRAINT `fk_cmg_role_2` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
+  	ADD CONSTRAINT `fk_cmg_role_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_core_role` (`id`),
+	ADD CONSTRAINT `fk_cmg_role_2` FOREIGN KEY (`rootId`) REFERENCES `cmg_core_role` (`id`),
+	ADD CONSTRAINT `fk_cmg_role_3` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
+  	ADD CONSTRAINT `fk_cmg_role_4` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
 
 --
 -- Constraints for table `cmg_core_permission`
 --
 ALTER TABLE `cmg_core_permission`
-  	ADD CONSTRAINT `fk_cmg_permission_1` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
-  	ADD CONSTRAINT `fk_cmg_permission_2` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
+  	ADD CONSTRAINT `fk_cmg_permission_1` FOREIGN KEY (`parentId`) REFERENCES `cmg_core_permission` (`id`),
+	ADD CONSTRAINT `fk_cmg_permission_2` FOREIGN KEY (`rootId`) REFERENCES `cmg_core_permission` (`id`),
+  	ADD CONSTRAINT `fk_cmg_permission_3` FOREIGN KEY (`createdBy`) REFERENCES `cmg_core_user` (`id`),
+  	ADD CONSTRAINT `fk_cmg_permission_4` FOREIGN KEY (`modifiedBy`) REFERENCES `cmg_core_user` (`id`);
 
 --
 -- Constraints for table `cmg_core_role_permission`
@@ -873,7 +890,8 @@ ALTER TABLE `cmg_core_tag`
 --
 ALTER TABLE `cmg_core_category`
 	ADD CONSTRAINT `fk_cmg_category_1` FOREIGN KEY (`siteId`) REFERENCES `cmg_core_site` (`id`),
-	ADD CONSTRAINT `fk_cmg_category_2` FOREIGN KEY (`parentId`) REFERENCES `cmg_core_category` (`id`);
+	ADD CONSTRAINT `fk_cmg_category_2` FOREIGN KEY (`parentId`) REFERENCES `cmg_core_category` (`id`),
+	ADD CONSTRAINT `fk_cmg_category_3` FOREIGN KEY (`rootId`) REFERENCES `cmg_core_category` (`id`);
 
 --
 -- Constraints for table `cmg_core_option`

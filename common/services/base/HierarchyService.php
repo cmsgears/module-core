@@ -323,10 +323,10 @@ class HierarchyService extends Service {
 			if( !$parent->hasParent() ) {
 
 				// Promote Children
-				Yii::$app->db->createCommand( "UPDATE $table set lValue = lValue + $cdiff, rValue = rValue + $cdiff, rootId = $rootId WHERE rootId = $modelToUpdate->id" )->execute();
+				Yii::$app->db->createCommand( "UPDATE $table set lValue = lValue + $cdiff, rValue = rValue + $cdiff, rootId = $parent->id WHERE rootId = $modelToUpdate->id" )->execute();
 
 				// Update Parent Id
-				Yii::$app->db->createCommand( "UPDATE $table set lValue=$prValue, parentId = $rootId WHERE id = $modelToUpdate->id" )->execute();
+				Yii::$app->db->createCommand( "UPDATE $table set lValue=$prValue, parentId = $parent->id WHERE id = $modelToUpdate->id" )->execute();
 			}
 			else {
 
@@ -335,10 +335,10 @@ class HierarchyService extends Service {
 				Yii::$app->db->createCommand( "UPDATE $table set rValue = rValue + $diff WHERE rootId = $rootId and rValue > $prValue" )->execute();
 
 				// Promote Children
-				Yii::$app->db->createCommand( "UPDATE $table set lValue = lValue + $cdiff, rValue = rValue + $cdiff, rootId = $rootId WHERE rootId = $modelToUpdate->id" )->execute();
+				Yii::$app->db->createCommand( "UPDATE $table set lValue = lValue + $cdiff, rValue = rValue + $cdiff, rootId = $rootId WHERE rootId = $rootId" )->execute();
 
 				// Update Parent Id
-				Yii::$app->db->createCommand( "UPDATE $table set parentId = $model->parentId WHERE id = $modelToUpdate->id" )->execute();
+				Yii::$app->db->createCommand( "UPDATE $table set parentId = $parent->id WHERE id = $modelToUpdate->id" )->execute();
 			}
 
 			// Update Parent

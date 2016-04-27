@@ -29,6 +29,8 @@ abstract class PermissionController extends Controller {
 		$this->returnUrl	= Url::previous( 'permissions' );
 
 		$this->type			= CoreGlobal::TYPE_SYSTEM;
+
+		$this->setViewPath( '@cmsgears/module-core/admin/views/permission' );
 	}
 
 	// Instance Methods --------------------------------------------
@@ -112,10 +114,12 @@ abstract class PermissionController extends Controller {
 			}
 		}
 
-		$roles	= RoleService::getIdNameListByType( $this->type );
+		$permissionMap	= PermissionService::getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'value' => 'Choose Permission', 'name' => 0 ] ] ] );
+		$roles			= RoleService::getIdNameListByType( $this->type );
 
     	return $this->render( 'create', [
     		'model' => $model,
+    		'permissionMap' => $permissionMap,
     		'roles' => $roles
     	]);
 	}
@@ -147,10 +151,12 @@ abstract class PermissionController extends Controller {
 				}
 			}
 
-			$roles	= RoleService::getIdNameListByType( $this->type );
+			$permissionMap	= PermissionService::getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'value' => 'Choose Permission', 'name' => 0 ] ] ] );
+			$roles			= RoleService::getIdNameListByType( $this->type );
 
 	    	return $this->render( 'update', [
 	    		'model' => $model,
+	    		'permissionMap' => $permissionMap,
 	    		'roles' => $roles
 	    	]);
 		}
@@ -175,10 +181,12 @@ abstract class PermissionController extends Controller {
 				}
 			}
 
-			$roles	= RoleService::getIdNameListByType( $this->type );
+			$permissionMap	= PermissionService::getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'value' => 'Choose Permission', 'name' => 0 ] ] ] );
+			$roles			= RoleService::getIdNameListByType( $this->type );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
+	    		'permissionMap' => $permissionMap,
 	    		'roles' => $roles
 	    	]);
 		}

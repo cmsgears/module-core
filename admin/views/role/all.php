@@ -30,7 +30,7 @@ if( !isset( $sortOrder ) ) {
 		<span class="frm-icon-element element-small">
 			<i class="cmti cmti-plus"></i>
 			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
-		</span>				
+		</span>
 	</div>
 	<div class="header-search col15x5">
 		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
@@ -67,6 +67,12 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-slug' class="icon-sort <?php if( strcmp( $sortOrder, '-slug') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
+					<th>Parent
+						<span class='box-icon-sort'>
+							<span sort-order='parent' class="icon-sort <?php if( strcmp( $sortOrder, 'parent') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
+							<span sort-order='-parent' class="icon-sort <?php if( strcmp( $sortOrder, '-parent') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
+						</span>
+					</th>
 					<th>Description</th>
 					<th>Home URL</th>
 					<th>Actions</th>
@@ -83,6 +89,7 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $role->name ?></td>
 						<td> <span class="<?= $role->icon ?>" title="<?= $role->name ?>"></span></td>
 						<td><?= $role->slug ?></td>
+						<td><?= $role->getParentName() ?></td>
 						<td><?= $role->description ?></td>
 						<td><?= $role->homeUrl ?></td>
 						<td class="actions">

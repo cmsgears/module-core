@@ -11,7 +11,7 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Gallery;
 use cmsgears\core\common\models\mappers\ModelFile;
 
-use cmsgears\core\admin\services\resources\FileService;
+use cmsgears\core\common\services\resources\FileService;
 
 /**
  * The class GalleryService is base class to perform database activities for Gallery Entity.

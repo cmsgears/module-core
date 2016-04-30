@@ -13,6 +13,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+use cmsgears\core\common\models\traits\DataTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -74,6 +75,7 @@ class ModelComment extends \cmsgears\core\common\models\base\CmgModel {
     // Traits ------------------------------------------------------
 
     use CreateModifyTrait;
+    use DataTrait;
 
     // Constructor and Initialisation ------------------------------
 

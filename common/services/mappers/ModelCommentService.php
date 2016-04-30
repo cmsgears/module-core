@@ -5,6 +5,8 @@ namespace cmsgears\core\common\services\mappers;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\mappers\ModelComment;
 
 use cmsgears\core\common\utilities\DateUtil;
@@ -82,6 +84,18 @@ class ModelCommentService extends \cmsgears\core\common\services\base\Service {
 		// Return updated Comment
 		return $commentToUpdate;
 	}
+
+    public static function updateSpamRequest( $model ) {
+
+        $model->setDataAttribute( CoreGlobal::ATTRIBUTE_COMMENT_SPAM_REQUEST, true );
+        $model->update();
+    }
+
+    public static function updateDeleteRequest( $model ) {
+
+        $model->setDataAttribute( CoreGlobal::ATTRIBUTE_COMMENT_DELETE_REQUEST, true );
+        $model->update();
+    }
 
 	public static function updateStatus( $model, $status ) {
 

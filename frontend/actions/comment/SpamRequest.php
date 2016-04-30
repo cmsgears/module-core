@@ -16,7 +16,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * The controller must provide modelService variable using approprite service class.
  */
-class DeleteRequest extends Delete {
+class SpamRequest extends Delete {
 
 	// Variables ---------------------------------------------------
 
@@ -40,9 +40,8 @@ class DeleteRequest extends Delete {
 
 		if( isset( $model ) && $parent->isOwner( $user ) ) {
 
-			ModelCommentService::updateDeleteRequest( $model );
-            Yii::$app->cmgCoreMailer->sendCommentDeleteRequestMail( $model );
-
+		    ModelCommentService::updateSpamRequest( $model );
+            Yii::$app->cmgCoreMailer->sendCommentSpamRequestMail( $model );
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );

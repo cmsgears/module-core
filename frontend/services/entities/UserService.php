@@ -66,10 +66,6 @@ class UserService extends \cmsgears\core\common\services\entities\UserService {
 
 				$userToUpdate->status = User::STATUS_ACTIVE;
 			}
-			else {
-
-				$userToUpdate->status = User::STATUS_CONFIRMED;
-			}
 
 			$userToUpdate->unsetVerifyToken();
 

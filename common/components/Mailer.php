@@ -5,16 +5,18 @@ namespace cmsgears\core\common\components;
 use \Yii;
 
 /**
- * The mail component used for sending possible mails by the CMSGears core module. It must be initialised 
- * for app using the name cmgCoreMailer. It's used by various controllers to trigger mails.  
+ * The mail component used for sending possible mails by the CMSGears core module. It must be initialised
+ * for app using the name cmgCoreMailer. It's used by various controllers to trigger mails.
  */
 class Mailer extends \cmsgears\core\common\base\Mailer {
 
-	const MAIL_ACCOUNT_CREATE		= "account-create";	
-	const MAIL_ACCOUNT_ACTIVATE		= "account-activate";
-	const MAIL_REG					= "register";
-	const MAIL_REG_CONFIRM			= "register-confirm";
-	const MAIL_PASSWORD_RESET		= "password-reset";
+	const MAIL_ACCOUNT_CREATE		        = "account-create";
+	const MAIL_ACCOUNT_ACTIVATE		        = "account-activate";
+	const MAIL_REG					        = "register";
+	const MAIL_REG_CONFIRM			        = "register-confirm";
+	const MAIL_PASSWORD_RESET               = "password-reset";
+    const MAIL_COMMENT_SPAM_REQUEST         = 'comment-spam-request';
+    const MAIL_COMMENT_DELETE_REQUEST       = 'comment-delete-request';
 
     public $htmlLayout 			= '@cmsgears/module-core/common/mails/layouts/html';
     public $textLayout 			= '@cmsgears/module-core/common/mails/layouts/text';
@@ -104,6 +106,42 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
             //->setTextBody( "heroor" )
             ->send();
 	}
+
+    /**
+     * The method sends mail for spam comment request by users from website.
+     */
+    public function sendCommentSpamRequestMail( $comment ) {
+
+        $fromEmail      = $this->mailProperties->getSenderEmail();
+        $fromName       = $this->mailProperties->getSenderName();
+        $contactEmail   = $this->mailProperties->getContactEmail();
+
+        // Send Mail
+        $this->getMailer()->compose( self::MAIL_COMMENT_SPAM_REQUEST, [ 'coreProperties' => $this->coreProperties, 'comment' => $comment ] )
+            ->setTo( $contactEmail )
+            ->setFrom( [ $fromEmail => $fromName ] )
+            ->setSubject( "Spam Request | " . $this->coreProperties->getSiteName() )
+            //->setTextBody( "heroor" )
+            ->send();
+    }
+
+    /**
+     * The method sends mail for spam comment request by users from website.
+     */
+    public function sendCommentDeleteRequestMail( $comment ) {
+
+        $fromEmail      = $this->mailProperties->getSenderEmail();
+        $fromName       = $this->mailProperties->getSenderName();
+        $contactEmail   = $this->mailProperties->getContactEmail();
+
+        // Send Mail
+        $this->getMailer()->compose( self::MAIL_COMMENT_DELETE_REQUEST, [ 'coreProperties' => $this->coreProperties, 'comment' => $comment ] )
+            ->setTo( $contactEmail )
+            ->setFrom( [ $fromEmail => $fromName ] )
+            ->setSubject( "Delete Request | " . $this->coreProperties->getSiteName() )
+            //->setTextBody( "heroor" )
+            ->send();
+    }
 }
 
 ?>

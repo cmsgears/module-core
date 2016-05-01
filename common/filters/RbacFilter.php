@@ -40,7 +40,7 @@ class RbacFilter extends \yii\base\Behavior {
 			// Check whether action is permitted
 	        if ( array_key_exists( $action, $this->actions ) ) {
 
-				$action	= $this->actions[ $action ];
+				$actionConfig	= $this->actions[ $action ];
 
 				// Redirect to post logout page if user is guest
 				if( Yii::$app->user->isGuest ) {
@@ -57,7 +57,7 @@ class RbacFilter extends \yii\base\Behavior {
 
 				// find User and Action Permission
 				$user		= Yii::$app->user->getIdentity();
-				$permission	= $action[ 'permission' ];
+				$permission	= $actionConfig[ 'permission' ];
 
 				// Disallow action in case user is not permitted
 				if( !isset( $user ) || !isset( $permission ) || !$user->isPermitted( $permission ) ) {
@@ -65,11 +65,23 @@ class RbacFilter extends \yii\base\Behavior {
 					throw new ForbiddenHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 				}
 
-				// Execute filters in the order defined in controller behaviours for rbac behaviour. The filters must be configured in appropriate application config file.
-				if( isset( $action[ 'filters' ] ) ) {
+				if( $user->isConfirmed( true ) && strcmp( $action, 'logout' ) != 0 ) {
 
-					$filters		= $action[ 'filters' ];
-					$filterKeys		= array_keys( $action[ 'filters' ] );
+					// Redirect to post logout page
+					Yii::$app->response->redirect( Url::toRoute( [ Yii::$app->cmgCore->getConfirmRedirectPage() ], true ) );
+
+					// Unset event validity
+					$event->isValid = false;
+
+					// Move back and pass execution to controller
+					return $event->isValid;
+				}
+
+				// Execute filters in the order defined in controller behaviours for rbac behaviour. The filters must be configured in appropriate application config file.
+				if( isset( $actionConfig[ 'filters' ] ) ) {
+
+					$filters		= $actionConfig[ 'filters' ];
+					$filterKeys		= array_keys( $actionConfig[ 'filters' ] );
 					$filterResult	= true;
 
 					foreach ( $filterKeys as $key ) {

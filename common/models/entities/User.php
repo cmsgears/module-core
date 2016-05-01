@@ -22,6 +22,7 @@ use cmsgears\core\common\models\traits\VisualTrait;
 use cmsgears\core\common\models\traits\AttributeTrait;
 use cmsgears\core\common\models\traits\FileTrait;
 use cmsgears\core\common\models\traits\AddressTrait;
+use cmsgears\core\common\models\traits\DataTrait;
 
 /**
  * User Entity - The primary class.
@@ -61,10 +62,12 @@ class User extends \cmsgears\core\common\models\base\CmgEntity implements Identi
      * The status types available for a User by default.
      *
      * 1. new - assigned for newly registered User.
-     * 2. active - It will be set when user confirm their account or admin activate the account.
-     * 3. blocked - It can be set by admin to block a particular user on false behaviour.
+	 * 2. confirmed - It can be required in case user need admin approval.
+     * 3. active - It will be set when user confirm their account or admin activate the account.
+     * 4. blocked - It can be set by admin to block a particular user on false behaviour.
      */
     const STATUS_NEW        =  500;
+    const STATUS_CONFIRMED	=  600;
     const STATUS_ACTIVE     =  750;
     const STATUS_BLOCKED    = 1000;
 
@@ -73,6 +76,7 @@ class User extends \cmsgears\core\common\models\base\CmgEntity implements Identi
      */
     public static $statusMap = [
         self::STATUS_NEW => 'New',
+        self::STATUS_CONFIRMED => 'Confirmed',
         self::STATUS_ACTIVE => 'Active',
         self::STATUS_BLOCKED => 'Blocked'
     ];
@@ -98,6 +102,7 @@ class User extends \cmsgears\core\common\models\base\CmgEntity implements Identi
     use AttributeTrait;
     use FileTrait;
     use AddressTrait;
+	use DataTrait;
 
     // Constructor and Initialisation ------------------------------
 
@@ -393,9 +398,14 @@ class User extends \cmsgears\core\common\models\base\CmgEntity implements Identi
     /**
      * @return boolean whether user is confirmed.
      */
-    public function isConfirmed() {
+    public function isConfirmed( $strict = false ) {
 
-        return $this->status > User::STATUS_NEW;
+        if( $strict ) {
+
+        	return $this->status == User::STATUS_CONFIRMED;
+		}
+
+		return $this->status >= User::STATUS_CONFIRMED;
     }
 
     /**

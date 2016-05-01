@@ -54,15 +54,25 @@ class Core extends \yii\base\Component {
 	public $subDirectory		= true;
 
 	/**
+	 * It can be used in case user approval from admin is required.
+	 */
+	public $userApproval		= false;
+
+	/**
 	 * @var default redirect path to be used for post login. It will be used by login action of Site Controller to redirect users
 	 * after successful login in case user role home url is not set.
 	 */
-	public $loginRedirectPage	= '/';
+	public $loginRedirectPage		= '/';
+
+	/**
+	 * @var Redirect path to be used when user is newly registered and not active. $userApproval must be true for it.
+	 */
+	public $confirmRedirectPage		= '/';
 
 	/**
 	 * @var Redirect path to be used for post logout.
 	 */
-	public $logoutRedirectPage	= '/login';
+	public $logoutRedirectPage		= '/login';
 
 	/**
 	 * @var The indicator whether CMG RBAC has to be used for the project. All the admin sites must set this to true. Though it's optional for
@@ -204,6 +214,11 @@ class Core extends \yii\base\Component {
 		return $this->subDirectory;
 	}
 
+	public function isUserApproval() {
+
+		return $this->userApproval;
+	}
+
 	/**
 	 * The method getLoginRedirectPage returns the default path to be redirected after login using the non-ajax based form.
 	 * @return string - path used for post login
@@ -211,6 +226,11 @@ class Core extends \yii\base\Component {
 	public function getLoginRedirectPage() {
 
 		return $this->loginRedirectPage;
+	}
+
+	public function getConfirmRedirectPage() {
+
+		return $this->confirmRedirectPage;
 	}
 
 	/**

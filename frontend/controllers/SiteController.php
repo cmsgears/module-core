@@ -125,25 +125,34 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 			$user	= UserService::findByEmail( $email );
 
-			if( isset( $user ) && UserService::verify( $user, $token ) ) {
+			if( isset( $user ) ) {
 
-				// Send Register Mail
-				Yii::$app->cmgCoreMailer->sendVerifyUserMail( $user );
+				$success = false;
 
-				// Set Success Message
-				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
-			}
-			else {
+				if( Yii::$app->cmgCore->isUserApproval() && UserService::verify( $user, $token, false ) ) {
 
-				// Set Failure Message
-				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
+					$success = true;
+				}
+				else if( UserService::verify( $user, $token ) ) {
+
+					$success = true;
+				}
+
+				if( $success ) {
+
+					// Send Verify Mail
+					Yii::$app->cmgCoreMailer->sendVerifyUserMail( $user );
+
+					// Set Success Message
+					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
+
+					return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM );
+				}
 			}
 		}
-		else {
 
-			// Set Failure Message
-			Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, MYii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
-		}
+		// Set Failure Message
+		Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, MYii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
 
         return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM );
     }

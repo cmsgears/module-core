@@ -117,9 +117,8 @@ class CoreGlobal {
 	const ATTRIBUTE_TYPE_USER		= 'user';
 	const ATTRIBUTE_TYPE_SETTING	= 'setting';
 
-    const ATTRIBUTE_COMMENT_SPAM_REQUEST    = 'spam-request';
-    const ATTRIBUTE_COMMENT_DELETE_REQUEST  = 'delete-request';
-
+	const ATTRIBUTE_COMMENT_SPAM_REQUEST    = 'spam-request';
+	const ATTRIBUTE_COMMENT_DELETE_REQUEST  = 'delete-request';
 
 	// Common Status ---------------------------------------------------
 

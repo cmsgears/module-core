@@ -16,6 +16,7 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\mappers\RolePermission;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+use cmsgears\core\common\models\traits\HierarchyTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -23,8 +24,6 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * Role Entity
  *
  * @property long $id
- * @property long $parentId
- * @property long $rootId
  * @property long $createdBy
  * @property long $modifiedBy
  * @property string $name
@@ -33,12 +32,10 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $icon
  * @property string $description
  * @property string $homeUrl
- * @property short lValue
- * @property short rValue
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
-class Role extends \cmsgears\core\common\models\base\TypedHierarchicalModel {
+class Role extends \cmsgears\core\common\models\base\TypedCmgEntity {
 
     // Variables ---------------------------------------------------
 
@@ -46,11 +43,14 @@ class Role extends \cmsgears\core\common\models\base\TypedHierarchicalModel {
 
     // Public -------------
 
+	private $parentType		= CoreGlobal::TYPE_ROLE; // required for traits
+
     // Private/Protected --
 
     // Traits ------------------------------------------------------
 
     use CreateModifyTrait;
+	use HierarchyTrait;
 
     // Constructor and Initialisation ------------------------------
 
@@ -99,7 +99,6 @@ class Role extends \cmsgears\core\common\models\base\TypedHierarchicalModel {
             [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
@@ -130,22 +129,6 @@ class Role extends \cmsgears\core\common\models\base\TypedHierarchicalModel {
     }
 
     // Role ------------------------------
-
-    /**
-     * @return Role - parent role
-     */
-    public function getParent() {
-
-        return $this->hasOne( Role::className(), [ 'id' => 'parentId' ] );
-    }
-
-    /**
-     * @return array - list of immediate child roles
-     */
-    public function getChildren() {
-
-        return $this->hasMany( Role::className(), [ 'parentId' => 'id' ] );
-    }
 
     /**
      * @return array - Permission

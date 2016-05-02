@@ -52,6 +52,7 @@ class CoreTables {
 
 	// Mapped to models without resources
 	const TABLE_MODEL_MESSAGE		= 'cmg_core_model_message';
+	const TABLE_MODEL_HIERARCHY		= 'cmg_core_model_hierarchy';
 	const TABLE_MODEL_COMMENT		= 'cmg_core_model_comment';
 	const TABLE_MODEL_ATTRIBUTE		= 'cmg_core_model_attribute';
 	const TABLE_MODEL_ACTIVITY		= 'cmg_core_model_activity';

@@ -12,7 +12,7 @@ use cmsgears\core\common\models\mappers\RolePermission;
 /**
  * The class PermissionService is base class to perform database activities for Permission Entity.
  */
-class PermissionService extends \cmsgears\core\common\services\base\HierarchyService {
+class PermissionService extends \cmsgears\core\common\services\base\Service {
 
 	// Static Methods ----------------------------------------------
 
@@ -88,11 +88,6 @@ class PermissionService extends \cmsgears\core\common\services\base\HierarchySer
 		return self::getIdNameList();
 	}
 
-	public static function getLevelListByType( $type ) {
-
-		return self::getLevelList( [ 'node.type' => $type ] );
-	}
-
 	// Data Provider ----
 
 	/**
@@ -113,7 +108,7 @@ class PermissionService extends \cmsgears\core\common\services\base\HierarchySer
 	public static function create( $permission ) {
 
 		// Create Permission
-		$permission	= self::createInHierarchy( CoreTables::TABLE_PERMISSION, $permission );
+		$permission->save();
 
 		// Return Permission
 		return $permission;
@@ -129,9 +124,6 @@ class PermissionService extends \cmsgears\core\common\services\base\HierarchySer
 
 		// Find existing Permission
 		$permissionToUpdate	= self::findById( $permission->id );
-
-		// Update Hierarchy
-		$permissionToUpdate = self::updateInHierarchy( CoreTables::TABLE_PERMISSION, $permission, $permissionToUpdate );
 
 		// Copy and set Attributes
 		$permissionToUpdate->copyForUpdateFrom( $permission, [ 'name', 'description' ] );
@@ -186,7 +178,7 @@ class PermissionService extends \cmsgears\core\common\services\base\HierarchySer
 		$permisisonToDelete	= self::findById( $permission->id );
 
 		// Delete Permission
-		$permisisonToDelete = self::deleteInHierarchy( CoreTables::TABLE_PERMISSION, $permisisonToDelete );
+		$permisisonToDelete->delete();
 
 		return true;
 	}

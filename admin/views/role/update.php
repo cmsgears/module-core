@@ -18,7 +18,6 @@ $returnUrl		= $this->context->returnUrl;
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-role' ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>
-    	<?= $form->field( $model, 'parentId' )->dropDownList( $roleMap ) ?>
     	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
     	<?= $form->field( $model, 'homeUrl' ) ?>

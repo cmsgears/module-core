@@ -15,6 +15,7 @@ use cmsgears\core\common\models\entities\Role;
 
 use cmsgears\core\admin\services\entities\RoleService;
 use cmsgears\core\admin\services\entities\PermissionService;
+use cmsgears\core\common\services\mappers\ModelHierarchyService;
 
 abstract class RoleController extends Controller {
 
@@ -96,11 +97,17 @@ abstract class RoleController extends Controller {
 
 				RoleService::bindPermissions( $binder );
 
+				/*
+				$binder->load( Yii::$app->request->post(), 'Children' );
+
+				ModelHierarchyService::assignChildren( CoreGlobal::TYPE_ROLE, $binder );
+				*/
+
 				return $this->redirect( $this->returnUrl );
 			}
 		}
 
-		$roleMap		= RoleService::getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'value' => 'Choose Role', 'name' => 0 ] ] ] );
+		$roleMap		= RoleService::getIdNameMapByType( $this->type );
 		$permissions	= PermissionService::getIdNameListByType( $this->type );
 
     	return $this->render( 'create', [

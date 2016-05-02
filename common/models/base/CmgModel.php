@@ -1,6 +1,13 @@
 <?php
 namespace cmsgears\core\common\models\base;
 
+/**
+ * CmgModel Entity
+ *
+ * @property integer $id
+ * @property integer $parentId
+ * @property string $parentType
+ */
 abstract class CmgModel extends \cmsgears\core\common\models\base\CmgEntity {
 
     // Variables ---------------------------------------------------

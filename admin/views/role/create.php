@@ -18,7 +18,6 @@ $returnUrl		= $this->context->returnUrl;
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-role' ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>
-    	<?= $form->field( $model, 'parentId' )->dropDownList( $roleMap ) ?>
     	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
     	<?= $form->field( $model, 'homeUrl' ) ?>
@@ -27,10 +26,26 @@ $returnUrl		= $this->context->returnUrl;
 		<div class="box-content clearfix">
 			<div class="header">Assign Permissions</div>
 			<?php foreach ( $permissions as $permission ) { ?>
-				<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?= $permission['id'] ?>" /><?= $permission['name'] ?></span>
+				<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?= $permission[ 'id' ] ?>" /><?= $permission[ 'name' ] ?></span>
 			<?php } ?>
 		</div>
 		<?php } ?>
+
+		<?php /* if( count( $roleMap ) > 0 ) { ?>
+		<div class="box-content clearfix">
+			<div class="header">Map Children</div>
+			<?php
+				foreach ( $roleMap as $key => $value ) {
+
+					if( $model->id != $key ) {
+			?>
+						<span class="box-half"><input type="checkbox" name="Children[bindedData][]" value="<?= $key ?>" /><?= $value ?></span>
+			<?php
+					}
+				}
+			?>
+		</div>
+		<?php } */ ?>
 
 		<div class="clear filler-height"></div>
 

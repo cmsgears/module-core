@@ -18,7 +18,6 @@ $returnUrl		= $this->context->returnUrl;
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-permission' ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>
-    	<?= $form->field( $model, 'parentId' )->dropDownList( $permissionMap, [ 'disabled' => true ] ) ?>
     	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ], 'disabled' => true ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
 

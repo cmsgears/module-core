@@ -12,7 +12,7 @@ use cmsgears\core\common\models\mappers\RolePermission;
 /**
  * The class RoleService is base class to perform database activities for Role Entity.
  */
-class RoleService extends \cmsgears\core\common\services\base\HierarchyService {
+class RoleService extends \cmsgears\core\common\services\base\Service {
 
 	// Static Methods ----------------------------------------------
 
@@ -75,11 +75,6 @@ class RoleService extends \cmsgears\core\common\services\base\HierarchyService {
 		return self::getIdNameList();
 	}
 
-	public static function getLevelListByType( $type ) {
-
-		return self::getLevelList( [ 'node.type' => $type ] );
-	}
-
 	// Read - Maps -----
 
 	/**
@@ -130,7 +125,7 @@ class RoleService extends \cmsgears\core\common\services\base\HierarchyService {
 	public static function create( $role ) {
 
 		// Create Role
-		$role	= self::createInHierarchy( CoreTables::TABLE_ROLE, $role );
+		$role->save();
 
 		// Return Role
 		return $role;
@@ -146,9 +141,6 @@ class RoleService extends \cmsgears\core\common\services\base\HierarchyService {
 
 		// Find existing role
 		$roleToUpdate	= self::findById( $role->id );
-
-		// Update Hierarchy
-		$roleToUpdate = self::updateInHierarchy( CoreTables::TABLE_ROLE, $role, $roleToUpdate );
 
 		// Copy and set Attributes
 		$roleToUpdate->copyForUpdateFrom( $role, [ 'name', 'description', 'homeUrl' ] );
@@ -203,7 +195,7 @@ class RoleService extends \cmsgears\core\common\services\base\HierarchyService {
 		$roleToDelete	= self::findById( $role->id );
 
 		// Delete Role
-		$roleToDelete = self::deleteInHierarchy( CoreTables::TABLE_ROLE, $roleToDelete );
+		$roleToDelete->delete();
 
 		return true;
 	}

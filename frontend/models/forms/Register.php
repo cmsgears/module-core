@@ -41,39 +41,39 @@ class Register extends Model {
         }
 
         $rules = [
-            [ [ 'email', 'password', 'password_repeat', 'terms' ], 'required' ],
-            [  [ 'firstName', 'lastName' ], 'required', 'on' => [ 'requiredName' ]  ],
-            [ 'email', 'email' ],
-            [ 'password', 'compare' ],
-            [ 'password', 'password' ],
-            [ 'email', 'validateEmail' ],
-            [ 'username', 'validateUsername' ],
-            [ 'username', 'alphanumdotu' ],
-            [ 'mobile', 'phone' ],
-            [ [ 'firstName', 'lastName' ], 'alphanumspace' ],
-            [ 'terms', 'termsValidator' ]
-        ];
+			[ [ 'email', 'password', 'password_repeat', 'terms' ], 'required' ],
+			[ [ 'firstName', 'lastName' ], 'required', 'on' => [ 'name' ] ],
+			[ 'email', 'email' ],
+			[ 'password', 'compare' ],
+			[ 'password', 'password' ],
+			[ 'email', 'validateEmail' ],
+			[ 'username', 'validateUsername' ],
+			[ 'username', 'alphanumdotu' ],
+			[ 'mobile', 'phone' ],
+			[ [ 'firstName', 'lastName' ], 'alphanumspace' ],
+			[ 'terms', 'termsValidator' ]
+		];
 
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
-    }
+		return $rules;
+	}
 
-    public function attributeLabels() {
+	public function attributeLabels() {
 
-        return [
-            'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
-            'password' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PASSWORD ),
-            'password_repeat' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PASSWORD_REPEAT ),
-            'username' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USERNAME ),
-            'firstName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
-            'lastName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
-            'terms' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TERMS )
-        ];
-    }
+		return [
+			'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+			'password' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PASSWORD ),
+			'password_repeat' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PASSWORD_REPEAT ),
+			'username' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USERNAME ),
+			'firstName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
+			'lastName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
+			'terms' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TERMS )
+		];
+	}
 
     public function validateEmail( $attribute, $params ) {
 

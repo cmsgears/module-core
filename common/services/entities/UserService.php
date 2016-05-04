@@ -197,6 +197,20 @@ class UserService extends \cmsgears\core\common\services\base\Service {
 		return true;
 	}
 
+	public static function setForApproval( $user ) {
+
+		$user->status = User::STATUS_SUBMITTED;
+
+		$user->update();
+	}
+
+	public static function setForActivation( $user ) {
+
+		$user->status = User::STATUS_ACTIVE;
+
+		$user->update();
+	}
+
     /**
      * Activate User created from Admin Panel.
      * @param User $user

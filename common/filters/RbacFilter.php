@@ -65,7 +65,7 @@ class RbacFilter extends \yii\base\Behavior {
 					throw new ForbiddenHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 				}
 
-				if( $user->isConfirmed( true ) && strcmp( $action, 'logout' ) != 0 ) {
+				if( ( $user->isConfirmed( true ) || $user->isBeingApproved( true ) ) && strcmp( $action, 'logout' ) != 0 ) {
 
 					// Redirect to post logout page
 					Yii::$app->response->redirect( Url::toRoute( [ Yii::$app->cmgCore->getConfirmRedirectPage() ], true ) );

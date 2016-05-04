@@ -7,6 +7,8 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\services\entities\TemplateService;
+
 class TemplateSource extends \yii\base\Component {
 
 	// Variables ---------------------------------------------------
@@ -109,6 +111,35 @@ class TemplateSource extends \yii\base\Component {
 			}
 		}
 	}
+
+	// --------- Message / Notifications ---------------------- //
+
+	/**
+	 * Render generic message using appropriate template.
+	 */
+	public function renderMessage( $template, $models, $config = [] ) {
+
+		return $this->renderView( $template, $models, $config );
+	}
+
+	/**
+	 * Render generic message using appropriate template and trigger notification.
+	 */
+	public function triggerNotification( $templateSlug, $models, $config = [] ) {
+
+		$notificationManager	= Yii::$app->notificationManager;
+
+		if( Yii::$app->cmgCore->isNotifications() && isset( $notificationManager ) ) {
+
+			$template	= TemplateService::findBySlug( $templateSlug );
+
+			$message	= $this->renderMessage( $template, $models, $config );
+
+			Yii::$app->notificationManager->triggerNotification( $message, $models, $config );
+		}
+	}
+
+	// --------- Default Page Views --------------------------- //
 
 	/**
 	 * Admin view to be used for review purpose for data created by site users. The data collected by user will be submitted for admin review as part of approval process.

@@ -7,13 +7,15 @@ namespace cmsgears\core\common\models\interfaces;
  */
 interface IApproval {
 
+	// Note: Applications having registration process for a model can allocate registration status till 10000 and than follow these standard status as part of approval process.
+
 	// Pre-Defined Status
-	const STATUS_NEW		= 500;
-	const STATUS_REJECTED	= 520;
-	const STATUS_RE_SUBMIT	= 540;
-	const STATUS_APPROVED	= 560;
-	const STATUS_FROJEN		= 580;
-	const STATUS_BLOCKED	= 600;
+	const STATUS_NEW		= 10000;
+	const STATUS_REJECTED	= 12000;
+	const STATUS_RE_SUBMIT	= 14000;
+	const STATUS_APPROVED	= 16000;
+	const STATUS_FROJEN		= 18000;
+	const STATUS_BLOCKED	= 20000;
 
 	public function isRegistration();
 

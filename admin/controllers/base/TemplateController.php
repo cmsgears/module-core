@@ -25,6 +25,8 @@ abstract class TemplateController extends Controller {
         parent::__construct( $id, $module, $config );
 
 		$this->returnUrl	= Url::previous( 'templates' );
+
+		$this->setViewPath( '@cmsgears/module-core/admin/views/template' );
 	}
 
 	// Instance Methods ---------------------------------------------
@@ -61,7 +63,7 @@ abstract class TemplateController extends Controller {
 
 		$dataProvider = TemplateService::getPaginationByType( $this->type );
 
-	    return $this->render( '@cmsgears/module-core/admin/views/template/all', [
+	    return $this->render( 'all', [
 
 			'dataProvider' => $dataProvider
 	    ]);
@@ -82,7 +84,7 @@ abstract class TemplateController extends Controller {
 			}
 		}
 
-    	return $this->render( '@cmsgears/module-core/admin/views/template/create', [
+    	return $this->render( 'create', [
     		'model' => $model,
     		'renderers' => Yii::$app->templateSource->renderers
     	]);
@@ -106,7 +108,7 @@ abstract class TemplateController extends Controller {
 				}
 			}
 
-	    	return $this->render( '@cmsgears/module-core/admin/views/template/update', [
+	    	return $this->render( 'update', [
 	    		'model' => $model,
 	    		'renderers' => Yii::$app->templateSource->renderers
 	    	]);
@@ -132,7 +134,7 @@ abstract class TemplateController extends Controller {
 				}
 			}
 
-	    	return $this->render( '@cmsgears/module-core/admin/views/template/delete', [
+	    	return $this->render( 'delete', [
 	    		'model' => $model,
 	    		'renderers' => Yii::$app->templateSource->renderers
 	    	]);

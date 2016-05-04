@@ -283,14 +283,17 @@ class FileService extends \cmsgears\core\common\services\base\Service {
 
 	public static function delete( $file ) {
 
-		// Find existing File
-		$existingFile	= self::findById( $file->id );
-
 		// Delete dependency
 		ModelFile::deleteByFileId( $file->id );
 
-		// Delete File
-		$existingFile->delete();
+		// Find existing File
+		$existingFile	= self::findById( $file->id );
+
+		if( isset( $existingFile ) ) {
+
+			// Delete File
+			$existingFile->delete();
+		}
 
 		return true;
 	}

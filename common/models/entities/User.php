@@ -58,6 +58,8 @@ class User extends \cmsgears\core\common\models\base\CmgEntity implements Identi
 
     // Constants/Statics --
 
+	// Note: Applications having registration process for a user can allocate registration status till 10000 and than follow these standard status as part of approval process.
+
     /**
      * The status types available for a User by default.
      *
@@ -66,10 +68,11 @@ class User extends \cmsgears\core\common\models\base\CmgEntity implements Identi
      * 3. active - It will be set when user confirm their account or admin activate the account.
      * 4. blocked - It can be set by admin to block a particular user on false behaviour.
      */
-    const STATUS_NEW        =  500;
-    const STATUS_CONFIRMED	=  600;
-    const STATUS_ACTIVE     =  750;
-    const STATUS_BLOCKED    = 1000;
+    const STATUS_NEW        = 10000;
+    const STATUS_CONFIRMED	= 14000;
+	const STATUS_SUBMITTED	= 16000;
+    const STATUS_ACTIVE     = 18000;
+    const STATUS_BLOCKED    = 20000;
 
     /**
      * The status map having string form of status.
@@ -77,6 +80,7 @@ class User extends \cmsgears\core\common\models\base\CmgEntity implements Identi
     public static $statusMap = [
         self::STATUS_NEW => 'New',
         self::STATUS_CONFIRMED => 'Confirmed',
+        self::STATUS_SUBMITTED => 'Awaiting Approval',
         self::STATUS_ACTIVE => 'Active',
         self::STATUS_BLOCKED => 'Blocked'
     ];
@@ -406,6 +410,16 @@ class User extends \cmsgears\core\common\models\base\CmgEntity implements Identi
 		}
 
 		return $this->status >= User::STATUS_CONFIRMED;
+    }
+
+    public function isBeingApproved( $strict = false ) {
+
+        if( $strict ) {
+
+        	return $this->status == User::STATUS_SUBMITTED;
+		}
+
+		return $this->status >= User::STATUS_SUBMITTED;
     }
 
     /**

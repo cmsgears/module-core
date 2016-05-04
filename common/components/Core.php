@@ -112,6 +112,8 @@ class Core extends \yii\base\Component {
 	public $largeText			= CoreGlobal::TEXT_LARGE;
 	public $extraLargeText		= CoreGlobal::TEXT_XLARGE;
 
+	public $notifications		= false;
+
 	/**
 	 * Initialise the CMG Core Component.
 	 */
@@ -309,6 +311,14 @@ class Core extends \yii\base\Component {
 	public function getExtraLargeText() {
 
 		return $this->extraLargeText;
+	}
+
+	/**
+	 * To test whether notifications are enabled.
+	 */
+	public function isNotifications() {
+
+		return $this->notifications;
 	}
 }
 

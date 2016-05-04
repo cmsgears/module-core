@@ -57,6 +57,14 @@ abstract class CmgModel extends \cmsgears\core\common\models\base\CmgEntity {
     }
 
     /**
+     * @return Query - by given parent id and type.
+     */
+    public static function queryByParent( $parentId, $parentType ) {
+
+        return self::find()->where( 'parentId=:pid AND parentType=:type', [ ':pid' => $parentId, ':type' => $parentType ] );
+    }
+
+    /**
      * @return array - model by given parent id and type.
      */
     public static function findByParent( $parentId, $parentType ) {

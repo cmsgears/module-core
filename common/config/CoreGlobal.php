@@ -112,6 +112,7 @@ class CoreGlobal {
 
 	// data attributes
 	const DATA_REJECT_REASON		= 'rejectReason';
+	const DATA_CONFIG				= 'config';
 
 	// model attributes
 	const ATTRIBUTE_TYPE_USER		= 'user';

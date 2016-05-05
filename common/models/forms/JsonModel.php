@@ -15,7 +15,7 @@ class JsonModel extends \yii\base\Model {
 				$this->copyFromObject( $jsonData );
 			}
 			else if( is_array( $jsonData ) ) {
-				
+
 				$this->copyFromArray( $jsonData );
 			}
 			else {
@@ -50,6 +50,11 @@ class JsonModel extends \yii\base\Model {
             $this->{ $key } = $value;
         }
     }
+
+	public function getData() {
+
+		return json_encode( $this );
+	}
 }
 
 ?>

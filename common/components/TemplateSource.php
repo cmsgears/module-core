@@ -135,7 +135,7 @@ class TemplateSource extends \yii\base\Component {
 
 			$message	= $this->renderMessage( $template, $models, $config );
 
-			Yii::$app->notificationManager->triggerNotification( $message, $models, $config );
+			Yii::$app->notificationManager->triggerNotification( $template, $message, $models, $config );
 		}
 	}
 

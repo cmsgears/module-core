@@ -87,6 +87,23 @@ abstract class TypedCmgEntity extends CmgEntity {
     }
 
 	/**
+	 * @return ActiveRecord - by name
+	 */
+	public static function findByName( $name ) {
+
+		if( static::$siteSpecific ) {
+
+			$siteId	= Yii::$app->cmgCore->siteId;
+
+			return static::find()->where( 'name=:name AND siteId=:siteId', [ ':name' => $name, ':siteId' => $siteId ] )->one();
+		}
+		else {
+
+			return static::find()->where( 'name=:name', [ ':name' => $name ] )->one();
+		}
+	}
+
+	/**
 	 * @return ActiveRecord - by name and type
 	 */
 	public static function findByNameType( $name, $type ) {

@@ -52,7 +52,8 @@ class ModelActivity extends \cmsgears\core\common\models\base\CmgModel {
         return [
             [ [ 'userId', 'parentId', 'parentType' ], 'required' ],
             [ [ 'id', 'content' ], 'safe' ],
-            [ [ 'parentType', 'type', 'ip', 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
+            [ [ 'parentType', 'type', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
+            [ [ 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->extraLargeText ],
             [ [ 'activityId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];

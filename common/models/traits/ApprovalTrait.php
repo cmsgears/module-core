@@ -45,34 +45,74 @@ trait ApprovalTrait {
 		return $this->status < IApproval::STATUS_NEW;
 	}
 
-	public function isNew() {
+	public function isNew(  $strict = true ) {
 
-		return $this->status == IApproval::STATUS_NEW;
+		if( $strict ) {
+
+			return $this->status == IApproval::STATUS_NEW;
+		}
+
+		return $this->status >= IApproval::STATUS_NEW;
 	}
 
-	public function isRejected() {
+	public function isRejected(  $strict = true ) {
 
-		return $this->status == IApproval::STATUS_REJECTED;
+		if( $strict ) {
+
+			return $this->status == IApproval::STATUS_REJECTED;
+		}
+
+		return $this->status >= IApproval::STATUS_REJECTED;
 	}
 
-	public function isReSubmit() {
+	public function isReSubmit(  $strict = true ) {
 
-		return $this->status == IApproval::STATUS_RE_SUBMIT;
+		if( $strict ) {
+
+			return $this->status == IApproval::STATUS_RE_SUBMIT;
+		}
+
+		return $this->status >= IApproval::STATUS_RE_SUBMIT;
 	}
 
-	public function isApproved() {
+	public function isApproved(  $strict = true ) {
 
-		return $this->status == IApproval::STATUS_APPROVED;
+		if( $strict ) {
+
+			return $this->status == IApproval::STATUS_APPROVED;
+		}
+
+		return $this->status >= IApproval::STATUS_APPROVED;
 	}
 
-	public function isFrojen() {
+	public function isFrojen(  $strict = true ) {
 
-		return $this->status == IApproval::STATUS_FROJEN;
+		if( $strict ) {
+
+			return $this->status == IApproval::STATUS_FROJEN;
+		}
+
+		return $this->status >= IApproval::STATUS_FROJEN;
 	}
 
-	public function isBlocked() {
+	public function isBlocked(  $strict = true ) {
 
-		return $this->status == IApproval::STATUS_BLOCKED;
+		if( $strict ) {
+
+			return $this->status == IApproval::STATUS_BLOCKED;
+		}
+
+		return $this->status >= IApproval::STATUS_BLOCKED;
+	}
+
+	public function isTerminated( $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->status == IApproval::STATUS_TERMINATED;
+		}
+
+		return $this->status >= IApproval::STATUS_TERMINATED;
 	}
 
 	// User can edit model in these situations
@@ -90,7 +130,7 @@ trait ApprovalTrait {
 	// User can submit the model for limit removal
 	public function isSubmittable() {
 
-		return $this->status < IApproval::STATUS_NEW || $this->status == IApproval::STATUS_REJECTED || 
+		return $this->status < IApproval::STATUS_NEW || $this->status == IApproval::STATUS_REJECTED ||
 				$this->status == IApproval::STATUS_FROJEN || $this->status == IApproval::STATUS_BLOCKED;
 	}
 

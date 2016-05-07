@@ -15,21 +15,24 @@ interface IApproval {
 	const STATUS_RE_SUBMIT	= 14000;
 	const STATUS_APPROVED	= 16000;
 	const STATUS_FROJEN		= 18000;
-	const STATUS_BLOCKED	= 20000;
+	const STATUS_BLOCKED	= 19000;
+	const STATUS_TERMINATED	= 20000;
 
 	public function isRegistration();
 
-	public function isNew();
+	public function isNew(  $strict = true );
 
-	public function isRejected();
+	public function isRejected( $strict = true );
 
-	public function isReSubmit();
+	public function isReSubmit( $strict = true );
 
-	public function isApproved();
+	public function isApproved( $strict = true );
 
-	public function isFrojen();
+	public function isFrojen( $strict = true );
 
-	public function isBlocked();
+	public function isBlocked( $strict = true );
+
+	public function isTerminated( $strict = true );
 
 	// User can edit model in these situations
 	public function isEditable();

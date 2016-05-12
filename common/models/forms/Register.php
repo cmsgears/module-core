@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\frontend\models\forms;
+namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
 use \Yii;

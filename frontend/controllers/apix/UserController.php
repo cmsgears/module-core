@@ -10,7 +10,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\forms\ResetPassword;
 
-use cmsgears\core\frontend\services\entities\UserService;
+use cmsgears\core\common\services\entities\UserService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 

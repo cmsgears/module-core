@@ -6,6 +6,8 @@ use \Yii;
 use yii\helpers\Url;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\mappers\ModelComment;
 
 class TestimonialController extends \cmsgears\core\admin\controllers\base\CommentController {
@@ -19,7 +21,10 @@ class TestimonialController extends \cmsgears\core\admin\controllers\base\Commen
         $this->rememberUrl  = 'testimonial';
         $this->returnUrl    = Url::previous( 'testimonial' );
 		$this->sidebar 		= [ 'parent' => 'sidebar-core', 'child' => 'testimonials' ];
+        $this->parentType	= CoreGlobal::TYPE_TESTIMONIAL;
         $this->commentType  = ModelComment::TYPE_TESTIMONIAL;
+
+		$this->setViewPath( '@cmsgears/module-core/admin/views/testimonial' );
 	}
 }
 

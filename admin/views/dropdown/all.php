@@ -31,7 +31,7 @@ if( !isset( $sortOrder ) ) {
 		<span class="frm-icon-element element-small">
 			<i class="cmti cmti-plus"></i>
 			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
-		</span>				
+		</span>
 	</div>
 	<div class="header-search col15x5">
 		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
@@ -63,7 +63,7 @@ if( !isset( $sortOrder ) ) {
 					</th>
 					<th>Icon</th>
 					<th>Description</th>
-					<th>Actions</th> 
+					<th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -71,19 +71,19 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $model ) {
 
-						$id = $model->id;	 
-						
+						$id = $model->id;
+
 				?>
 					<tr>
 						<td><?= $model->name ?></td>
 						<td> <span class="<?= $model->icon ?>" title="<?= $model->name ?>"></span></td>
 						<td><?= $model->description ?></td>
 						<td class="actions">
-							<?php if( $title == 'Dropdown' ) { ?>						
-								<span title="View Options"><?= Html::a( "", [ "/cmgcore/dropdown/option/all?id=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
+							<?php if( $title == 'Dropdown' ) { ?>
+								<span title="View Options"><?= Html::a( "", [ "dropdown/option/all?id=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
 							<?php } ?>
-							<?php if( $title == 'Checkbox Group' ) { ?>						
-								<span title="View Options"><?= Html::a( "", [ "/cmgcore/checkboxgroup/option/all?id=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
+							<?php if( $title == 'Checkbox Group' ) { ?>
+								<span title="View Options"><?= Html::a( "", [ "checkboxgroup/option/all?id=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
 							<?php } ?>
 							<span title="Update <?= $title ?>"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete <?= $title ?>"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>

@@ -12,7 +12,7 @@ use cmsgears\core\common\models\resources\CmgFile;
 
 use cmsgears\core\common\services\resources\FileService;
 use cmsgears\core\common\services\mappers\ModelFileService;
-use cmsgears\core\frontend\services\resources\GalleryService;
+use cmsgears\core\common\services\resources\GalleryService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 

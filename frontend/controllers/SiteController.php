@@ -9,10 +9,10 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 
 use cmsgears\core\common\models\forms\Login;
-use cmsgears\core\frontend\models\forms\Register;
+use cmsgears\core\common\models\forms\Register;
 
 use cmsgears\core\common\services\mappers\SiteMemberService;
-use cmsgears\core\frontend\services\entities\UserService;
+use cmsgears\core\common\services\entities\UserService;
 
 class SiteController extends \cmsgears\core\common\controllers\SiteController {
 

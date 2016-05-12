@@ -35,6 +35,7 @@ class Service extends \yii\base\Component {
 		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::PAGE_LIMIT;
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
+		$searchParam	= isset( $config[ 'search-param' ] ) ? $config[ 'search-param' ] : 'search';
 		$searchCol		= isset( $config[ 'search-col' ] ) ? $config[ 'search-col' ] : null;
 		$sort			= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
 		$route			= isset( $config[ 'route' ] ) ? $config[ 'route' ] : null;
@@ -50,7 +51,7 @@ class Service extends \yii\base\Component {
 
 		// Searching ----------
 
-		$searchTerms	= Yii::$app->request->getQueryParam( 'search' );
+		$searchTerms	= Yii::$app->request->getQueryParam( $searchParam );
 
 		if( isset( $searchTerms ) && strlen( $searchTerms ) > 0 && isset( $searchCol ) ) {
 

@@ -11,7 +11,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 
 use cmsgears\core\common\services\resources\OptionService;
-use cmsgears\core\frontend\services\entities\UserService;
+use cmsgears\core\common\services\entities\UserService;
 
 class UserController extends base\Controller {
 
@@ -92,9 +92,9 @@ class UserController extends base\Controller {
 		// Update/Render if exist
 		if( isset( $user ) ) {
 
-			$privacy		= UserService::findAttributeMapByType( $user, WebGlobalCore::SETTINGS_PRIVACY );
-			$notification	= UserService::findAttributeMapByType( $user, WebGlobalCore::SETTINGS_NOTIFICATION );
-			$reminder		= UserService::findAttributeMapByType( $user, WebGlobalCore::SETTINGS_REMINDER );
+			$privacy		= UserService::findAttributeMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
+			$notification	= UserService::findAttributeMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
+			$reminder		= UserService::findAttributeMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
 
 	    	return $this->render( WebGlobalCore::PAGE_SETTINGS, [
 	    		'user' => $user,

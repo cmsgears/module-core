@@ -186,6 +186,16 @@ class Permission extends \cmsgears\core\common\models\base\TypedCmgEntity {
         return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
     }
 
+    public static function getChildrenForL0( $l0Ids = [] ) {
+
+		$permission 	= CoreTables::TABLE_PERMISSION;
+		$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
+		$l0Ids			= join( ",", $l0Ids );
+
+    	return Permission::find()->leftJoin( $modelHierarchy, "`$permission`.`id` = `$modelHierarchy`.`childId`" )
+    					  ->where( "`$modelHierarchy`.`parentType` = 'permission' AND `$modelHierarchy`.`parentId` IN ($l0Ids)" )->all();
+    }
+
     // Update -------------
 
     // Delete -------------

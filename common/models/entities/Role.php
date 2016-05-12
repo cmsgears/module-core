@@ -165,17 +165,35 @@ class Role extends \cmsgears\core\common\models\base\TypedCmgEntity {
     /**
      * @return array having permission name element.
      */
-    public function getPermissionsSlugList() {
+    public function getPermissionsSlugList( $level = 0 ) {
 
-        $permissions        = $this->permissions;
-        $permissionsList    = array();
+		$slugList	= [];
+		$idList		= [];
 
-        foreach ( $permissions as $permission ) {
+		// Generate L0 Slugs and Ids List
+		if( $level <= 1 ) {
 
-            array_push( $permissionsList, $permission->slug );
-        }
+			$permissions	= $this->permissions;
 
-        return $permissionsList;
+	        foreach ( $permissions as $permission ) {
+
+	            array_push( $slugList, $permission->slug );
+				array_push( $idList, $permission->id );
+	        }
+		}
+
+		// Add L1 slugs to L0 slugs
+		if( $level == 1 ) {
+
+			$permissions	= Permission::getChildrenForL0( $idList );
+
+	        foreach ( $permissions as $permission ) {
+
+	            array_push( $slugList, $permission->slug );
+	        }
+		}
+
+        return $slugList;
     }
 
     // Static Methods ----------------------------------------------

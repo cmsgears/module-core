@@ -28,11 +28,11 @@ $id				= $gallery->id;
 
 		<div class="box-content frm-split-40-60 clearfix">
 			<div class="header">Create Item</div>
-			<?= ImageUploader::widget([ 
+			<?= ImageUploader::widget([
 					'options' => [ 'id' => 'gallery-item', 'class' => 'file-uploader' ],
 					'directory' => 'gallery', 'info' => true,
 					'postAction' => 'true', 'cmtController' => 'gallery', 'cmtAction' => 'updateItem',
-					'postActionUrl' => "cmgcore/gallery/create-item?id=$id" 
+					'postActionUrl' => "core/gallery/create-item?id=$id"
 			]); ?>
 		</div>
 
@@ -45,11 +45,11 @@ $id				= $gallery->id;
 					$id	= $item->id;
 			?>
 				<li>
-					<?= ImageUploader::widget([ 
+					<?= ImageUploader::widget([
 							'options' => [ 'id' => "item-update-$id", 'class' => 'file-uploader' ],
 							'directory' => 'gallery', 'info' => true, 'model' => $item,
 							'postAction' => 'true', 'postActionId' => "frm-item-update-$id", 'cmtController' => 'gallery', 'cmtAction' => 'updateItem',
-							'postActionVisible' => true, 'postActionUrl' => "cmgcore/gallery/update-item?id=$id"
+							'postActionVisible' => true, 'postActionUrl' => "core/gallery/update-item?id=$id"
 					]); ?>
 				</li>
 			<?php

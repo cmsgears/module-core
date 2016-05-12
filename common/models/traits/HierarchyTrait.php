@@ -12,7 +12,7 @@ trait HierarchyTrait {
 
     public function getParent() {
 
-    	return $this->hasOne( get_class( $this ), [ 'id' => 'childId' ] )
+    	return $this->hasOne( get_class( $this ), [ 'id' => 'parentId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_HIERARCHY, [ 'childId' => 'id' ], function( $query ) {
 
 						$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
@@ -23,7 +23,7 @@ trait HierarchyTrait {
 
     public function getParents() {
 
-    	return $this->hasMany( get_class( $this ), [ 'id' => 'childId' ] )
+    	return $this->hasMany( get_class( $this ), [ 'id' => 'parentId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_HIERARCHY, [ 'childId' => 'id' ], function( $query ) {
 
 						$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
@@ -37,7 +37,7 @@ trait HierarchyTrait {
      */
     public function getChildren() {
 
-    	return $this->hasMany( get_class( $this ), [ 'id' => 'parentId' ] )
+    	return $this->hasMany( get_class( $this ), [ 'id' => 'childId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_HIERARCHY, [ 'parentId' => 'id' ], function( $query ) {
 
 						$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;

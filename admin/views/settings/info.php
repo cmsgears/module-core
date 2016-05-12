@@ -16,7 +16,7 @@ use cmsgears\widgets\aform\AjaxForm;
 		?>
 				<label><?= $field->label ?></label>
 				<label><?= $field->getFieldValue() ?></label>
-		<?php 
+		<?php
 				}
 			}
 			else {
@@ -27,10 +27,10 @@ use cmsgears\widgets\aform\AjaxForm;
 	<div class="wrap-form frm-split-40-60">
 		<?php if( isset( $fieldsMap ) && count( $fieldsMap ) > 0 ) { ?>
 
-		<?= AjaxForm::widget([ 
+		<?= AjaxForm::widget([
 			'options' => [ 'class' => 'cmt-form', 'id' => "frm-setting-$type", 'cmt-keep' => 1 ],
 			'slug' => "config-$type", 'showLabel' => true, 'model' => $model,
-			'ajaxUrl' => "cmgcore/settings/update?type=$type",
+			'ajaxUrl' => "core/settings/update?type=$type",
 			'cmtController' => 'settings', 'cmtAction' => 'update',
 			'modelName' => "setting$type"
 		])?>

@@ -17,6 +17,12 @@ class CoreGlobal {
 	const MODEL_GENERIC 		= 'model';
 	const MODEL_EMAIL	 		= 'email';
 
+	// Default Settings ------------------------------------------------
+
+	const SETTINGS_PRIVACY		= 'privacy';
+	const SETTINGS_NOTIFICATION	= 'notification';
+	const SETTINGS_REMINDER		= 'reminder';
+
 	// Standard Redirects ----------------------------------------------
 
 	const REDIRECT_LOGIN		= 'loginRedirectLink';
@@ -38,6 +44,7 @@ class CoreGlobal {
 	const TYPE_PERMISSION		= 'permission';
 	const TYPE_USER				= 'user';
 	const TYPE_SITE				= 'site';
+	const TYPE_TESTIMONIAL		= 'testimonial';
 
 	const TYPE_ACTIVITY			= 'activity';
 	const TYPE_CATEGORY			= 'category';
@@ -125,6 +132,9 @@ class CoreGlobal {
 	// Common Status ---------------------------------------------------
 
 	// Active/Inactive
+	const STATUS_NO			= 0;
+	const STATUS_YES		= 1;
+
 	const STATUS_INACTIVE	= 0;
 	const STATUS_ACTIVE		= 1;
 
@@ -235,6 +245,7 @@ class CoreGlobal {
 	const FIELD_VIDEO				= 'videoField';
 	const FIELD_GALLERY				= 'galleryField';
 	const FIELD_USER				= 'userField';
+	const FIELD_ADMIN				= 'adminField';
 	const FIELD_AUTHOR				= 'authorField';
 	const FIELD_MEMBER				= 'memberField';
 	const FIELD_OWNER				= 'ownerField';

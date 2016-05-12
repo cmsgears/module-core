@@ -124,6 +124,7 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_VIDEO => 'Video',
 		CoreGlobal::FIELD_GALLERY => 'Gallery',
 		CoreGlobal::FIELD_USER => 'User',
+		CoreGlobal::FIELD_ADMIN => 'Admin',
 		CoreGlobal::FIELD_AUTHOR => 'Author',
 		CoreGlobal::FIELD_MEMBER => 'Member',
 		CoreGlobal::FIELD_OWNER => 'Owner',

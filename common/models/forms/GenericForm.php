@@ -2,11 +2,11 @@
 namespace cmsgears\core\common\models\forms;
 
 class GenericForm extends \yii\base\Model {
-		
+
 	public $active;
 
 	public $fields;
-	
+
 	public $attribs;
 
 	public $captcha;
@@ -20,13 +20,13 @@ class GenericForm extends \yii\base\Model {
 		unset( $config[ 'fields' ] );
 
 		foreach ( $fields as $key => $field ) {
-			
+
 			if( isset( $field->value ) ) {
 
 				$this->__set( $key, $field->value );
 			}
 			else {
-				
+
 				$this->__set( $key, null );
 			}
 
@@ -57,7 +57,7 @@ class GenericForm extends \yii\base\Model {
 	// yii\base\Model
 
  	public function rules() {
-		
+
 		// Prepare validators list
 		$validators		= [];
 		$fields			= $this->fields;
@@ -65,9 +65,9 @@ class GenericForm extends \yii\base\Model {
 		foreach ( $fields as $key => $field ) {
 
 			if( isset( $field->validators ) ) {
-				
+
 				$fieldValidators = preg_split( "/,/", $field->validators );
-				
+
 				foreach ( $fieldValidators as $validator ) {
 
 					if( !isset( $validators[ $validator ] ) ) {
@@ -84,7 +84,7 @@ class GenericForm extends \yii\base\Model {
 		}
 
         $rules = [
-            [ 'captcha', 'captcha', 'captchaAction' => '/cmgforms/site/captcha', 'on' => 'captcha' ],
+            [ 'captcha', 'captcha', 'captchaAction' => '/forms/site/captcha', 'on' => 'captcha' ],
             [ $this->attribs, 'safe' ]
         ];
 
@@ -98,7 +98,7 @@ class GenericForm extends \yii\base\Model {
 
 		return $rules;
     }
- 
+
     public function attributeLabels() {
 
 		$fields	= $this->fields;
@@ -126,9 +126,9 @@ class GenericForm extends \yii\base\Model {
 	 * return array - list of class members and their value
 	 */
 	public function getFormAttributes( $classPath = null ) {
-		
+
 		if( !isset( $classPath ) ) {
-			
+
 			$classPath	= 'cmsgears\core\common\models\forms\GenericForm';
 		}
 

@@ -37,9 +37,11 @@ class UserController extends \cmsgears\core\admin\controllers\base\UserControlle
 
 		$behaviours	= parent::behaviors();
 
-		$behaviours[ 'rbac' ][ 'actions' ][ 'profile'] 	= [ 'permission' => CoreGlobal::PERM_USER ];
+		$behaviours[ 'rbac' ][ 'actions' ][ 'profile'] 		= [ 'permission' => CoreGlobal::PERM_USER ];
+		$behaviours[ 'rbac' ][ 'actions' ][ 'settings'] 	= [ 'permission' => CoreGlobal::PERM_USER ];
 
 		$behaviours[ 'verbs' ][ 'actions' ][ 'profile' ] 	= [ 'get', 'post' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'settings' ] 	= [ 'get', 'post' ];
 
 		return $behaviours;
     }
@@ -53,30 +55,51 @@ class UserController extends \cmsgears\core\admin\controllers\base\UserControlle
 		return parent::actionAll();
 	}
 
-	public function actionProfile() {
+    public function actionProfile() {
 
-		$this->sidebar 	= [ ];
-		$model			= Yii::$app->user->getIdentity();
-		$email			= $model->email;
-		$username		= $model->username;
+		// Find Model
+		$user				= Yii::$app->user->getIdentity();
+		$this->sidebar 		= [];
 
-		$model->setScenario( 'profile' );
+		// Update/Render if exist
+		if( isset( $user ) ) {
 
-		if( $model->load( Yii::$app->request->post(), 'User' ) && $model->validate() ) {
+			$genderMap 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER, [ [ 'value' => 'Choose Gender', 'name' => '0' ] ] );
 
-			if( UserService::update( $model ) ) {
-
-				return $this->refresh();
-			}
+	    	return $this->render( 'profile', [
+	    		'user' => $user,
+	    		'genderMap' => $genderMap
+	    	]);
 		}
 
-		$genders 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER, [ [ 'name' => null, 'value' => 'Select Gender' ] ] );
-
-    	return $this->render( 'profile', [
-    		'model' => $model,
-    		'genders' => $genders
-    	]);
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
     }
+
+	public function actionSettings() {
+
+		// Find Model
+		$user				= Yii::$app->user->getIdentity();
+		$this->sidebar 		= [];
+
+		// Update/Render if exist
+		if( isset( $user ) ) {
+
+			$privacy		= UserService::findAttributeMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
+			$notification	= UserService::findAttributeMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
+			$reminder		= UserService::findAttributeMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
+
+	    	return $this->render( 'settings', [
+	    		'user' => $user,
+	    		'privacy' => $privacy,
+	    		'notification' => $notification,
+	    		'reminder' => $reminder
+	    	]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 }
 
 ?>

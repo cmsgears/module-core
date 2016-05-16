@@ -47,13 +47,29 @@ class ServiceTemplate {
 
 	// <Service> -------------------------
 
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
+
 	// Static Methods ----------------------------------------------
 
 	// < parent class > ------------------
 
 	// <Service> -------------------------
 
-	// Pagination ---------
+	// Data Provider ------
 
 	// Read ---------------
 

@@ -63,18 +63,27 @@ trait TagTrait {
 		return $tagsList;
 	}
 
-	public function getTagNameList() {
+	public function getTagNameList( $active = false ) {
 
-    	$tags 		= $this->tags;
-		$tagsList	= [];
+        $tags       = null;
+        $tagsList   = [];
 
-		foreach ( $tags as $tag ) {
+        if( $active ) {
 
-			array_push( $tagsList, $tag->name );
-		}
+            $tags = $this->activeTags;
+        }
+        else {
 
-		return $tagsList;
-	}
+            $tags = $this->tags;
+        }
+
+        foreach ( $tags as $tag ) {
+
+            array_push( $tagsList, $tag->name );
+        }
+
+        return $tagsList;
+    }
 
 	public function getTagIdNameList() {
 

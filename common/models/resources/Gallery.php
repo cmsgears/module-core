@@ -212,6 +212,14 @@ class Gallery extends \cmsgears\core\common\models\base\TypedCmgEntity {
         return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
     }
 
+    /**
+     * @return Gallery - by name
+     */
+    public static function findByName( $name ) {
+
+        return self::find()->where( 'name=:name', [ ':name' => $name ] )->one();
+    }
+
     // Update -------------
 
     // Delete -------------

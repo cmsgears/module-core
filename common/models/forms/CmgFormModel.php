@@ -7,7 +7,7 @@ use \Yii;
 /**
  * Useful for models which need submitted data for special processing.
  */
-abstract class CmgFormModel extends \yii\base\Model {
+abstract class CmgFormModel extends \cmsgears\core\common\models\forms\JsonModel {
 
 	public $submittedData;
 

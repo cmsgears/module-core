@@ -152,7 +152,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 		}
 
 		// Set Failure Message
-		Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, MYii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
+		Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
 
         return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM );
     }

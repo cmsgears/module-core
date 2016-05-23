@@ -57,6 +57,8 @@ class ServiceTemplate {
 
     // Read - Maps -----
 
+	// Read - Others ---
+
 	// Create -------------
 
 	// Update -------------
@@ -78,6 +80,8 @@ class ServiceTemplate {
     // Read - Lists ----
 
     // Read - Maps -----
+
+	// Read - Others ---
 
 	// Create -------------
 

@@ -72,6 +72,11 @@ class ModelAttributeService extends \cmsgears\core\common\services\base\Service 
 			$model->label = $model->name;
 		}
 
+		if( !isset( $model->valueType ) ) {
+
+			$model->valueType = ModelAttribute::VALUE_TYPE_TEXT;
+		}
+
 		$model->save();
 
 		return $model;

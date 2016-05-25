@@ -55,6 +55,7 @@ class Login extends \yii\base\Model {
 		$rules =  [
 			[ [ 'email', 'password' ], 'required' ],
 			[ 'rememberMe', 'boolean' ],
+			[ [ 'redirectUrl' ], 'safe' ],
 			// Disabled email validation to allow both email and username for login.
 			//[ 'email', 'email' ],
 			[ 'email', 'validateUser' ],

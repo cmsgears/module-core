@@ -82,7 +82,7 @@ class ProvinceService extends \cmsgears\core\common\services\base\Service {
 		$modelToUpdate	= self::findById( $model->id );
 
 		// Copy Attributes
-		$modelToUpdate->copyForUpdateFrom( $model, [ 'countryId', 'code', 'name' ] );
+		$modelToUpdate->copyForUpdateFrom( $model, [ 'countryId', 'code', 'codeNum', 'name' ] );
 
 		// Update Province
 		$modelToUpdate->update();

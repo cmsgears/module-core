@@ -16,6 +16,7 @@ use cmsgears\core\common\models\base\CoreTables;
  * @property long $id
  * @property long $countryId
  * @property string $code
+ * @property string $codeNum
  * @property string $name
  */
 class Province extends \cmsgears\core\common\models\base\CmgEntity {
@@ -49,7 +50,7 @@ class Province extends \cmsgears\core\common\models\base\CmgEntity {
             [ [ 'id' ], 'safe' ],
             [ [ 'countryId', 'code' ], 'unique', 'targetAttribute' => [ 'countryId', 'code' ] ],
             [ 'countryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ 'code', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->smallText ],
+            [ [ 'code', 'codeNum' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->smallText ],
             [ 'name', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
             [ 'name', 'alphanumpun' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
@@ -75,6 +76,7 @@ class Province extends \cmsgears\core\common\models\base\CmgEntity {
         return [
             'countryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
             'code' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE ),
+            'codeNum' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE_NUM ),
             'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
         ];
     }

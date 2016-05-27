@@ -56,7 +56,7 @@ class AddressService extends \cmsgears\core\common\services\base\Service {
 		$addressToUpdate	= self::findById( $address->id );
 
 		// Copy Attributes
-		$addressToUpdate->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'city', 'zip',
+		$addressToUpdate->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'title', 'line1', 'line2', 'line3', 'city', 'zip', 'zip4',
 											'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude', 'zoomLevel' ] );
 
 		// Update Category

@@ -202,6 +202,7 @@ class CoreGlobal {
 
 	// Generic Fields
 	const FIELD_CODE				= 'codeField';
+	const FIELD_CODE_NUM			= 'codeNumField';
 	const FIELD_NAME				= 'nameField';
 	const FIELD_LABEL				= 'labelField';
 	const FIELD_TITLE				= 'titleField';
@@ -274,6 +275,7 @@ class CoreGlobal {
 	const FIELD_LINE3				= 'line3Field';
 	const FIELD_CITY				= 'cityField';
 	const FIELD_ZIP					= 'zipField';
+	const FIELD_ZIP4				= 'zip4Field';
 	const FIELD_PHONE				= 'phoneField';
 	const FIELD_FAX					= 'faxField';
 	const FIELD_LONGITUDE			= 'longitudeField';

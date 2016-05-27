@@ -117,6 +117,7 @@ DROP TABLE IF EXISTS `cmg_core_country`;
 CREATE TABLE `cmg_core_country` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `code` varchar(50) DEFAULT NULL,
+  `codeNum` varchar(50) DEFAULT NULL,
   `name` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -133,6 +134,7 @@ CREATE TABLE `cmg_core_province` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `countryId` bigint(20) NOT NULL,
   `code` varchar(50) DEFAULT NULL,
+  `codeNum` varchar(50) DEFAULT NULL,
   `name` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_cmg_province_1` (`countryId`)
@@ -418,11 +420,13 @@ CREATE TABLE `cmg_core_address` (
   `countryId` bigint(20) NOT NULL,
   `provinceId` bigint(20) NOT NULL,
   `cityId` bigint(20) DEFAULT NULL,
+  `title` varchar(150) COLLATE utf8_unicode_ci DEFAULT NULL,
   `line1` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `line2` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `line3` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `city` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `zip` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `zip` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `zip4` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `firstName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `lastName` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `phone` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,

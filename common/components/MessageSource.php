@@ -81,6 +81,7 @@ class MessageSource extends Component {
 
 		// Generic Fields
 		CoreGlobal::FIELD_CODE => 'Code',
+		CoreGlobal::FIELD_CODE_NUM => 'Numeric Code',
 		CoreGlobal::FIELD_NAME => 'Name',
 		CoreGlobal::FIELD_LABEL => 'Label',
 		CoreGlobal::FIELD_TITLE => 'Title',
@@ -153,6 +154,7 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_LINE3 => 'Line 3',
 		CoreGlobal::FIELD_CITY => 'City',
 		CoreGlobal::FIELD_ZIP => 'Postal Code',
+		CoreGlobal::FIELD_ZIP4 => 'Postal Code Ext',
 		CoreGlobal::FIELD_PHONE => 'Phone',
 		CoreGlobal::FIELD_FAX => 'Fax',
 		CoreGlobal::FIELD_LONGITUDE => 'Longitude',

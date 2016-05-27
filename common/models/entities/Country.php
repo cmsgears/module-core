@@ -15,6 +15,7 @@ use cmsgears\core\common\models\base\CoreTables;
  *
  * @property long $id
  * @property string $code
+ * @property string $codeNum
  * @property string $name
  */
 class Country extends \cmsgears\core\common\models\base\NamedCmgEntity {
@@ -47,7 +48,7 @@ class Country extends \cmsgears\core\common\models\base\NamedCmgEntity {
             [ [ 'name', 'code' ], 'required' ],
             [ 'id', 'safe' ],
             [ 'code', 'unique' ],
-            [ 'code', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->smallText ],
+            [ [ 'code', 'codeNum' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->smallText ],
             [ 'name', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
             [ 'name', 'alphanumpun' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
@@ -72,6 +73,7 @@ class Country extends \cmsgears\core\common\models\base\NamedCmgEntity {
 
         return [
             'code' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE ),
+            'codeNum' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE_NUM ),
             'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
         ];
     }

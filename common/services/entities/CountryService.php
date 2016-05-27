@@ -64,7 +64,7 @@ class CountryService extends \cmsgears\core\common\services\base\Service {
 		$modelToUpdate	= self::findById( $model->id );
 
 		// Copy Attributes
-		$modelToUpdate->copyForUpdateFrom( $model, [ 'code', 'name' ] );
+		$modelToUpdate->copyForUpdateFrom( $model, [ 'code', 'codeNum', 'name' ] );
 
 		// Update Country
 		$modelToUpdate->update();

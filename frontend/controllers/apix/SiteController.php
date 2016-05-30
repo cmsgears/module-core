@@ -102,16 +102,16 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 
                 $homeUrl = $storedLink;
             }
-            // Redirect user to home set by admin
-            else if( isset( $role ) && isset( $role->homeUrl ) ) {
+			// Redirect user to home set by admin
+			else if( isset( $role ) && isset( $role->homeUrl ) ) {
 
-                $homeUrl    = Url::to( [ "/$role->homeUrl" ], true );
-            }
-            // Redirect user to home set by app config
-            else {
+				$homeUrl	= Url::to( [ "/$role->homeUrl" ], true );
+			}
+			// Redirect user to home set by app config
+			else {
 
-                $homeUrl    = Url::to( [ Yii::$app->cmgCore->getLoginRedirectPage() ], true );
-            }
+				$homeUrl	= Url::to( [ Yii::$app->cmgCore->getLoginRedirectPage() ], true );
+			}
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $homeUrl );

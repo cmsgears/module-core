@@ -26,6 +26,7 @@ class Login extends \yii\base\Model {
 	public $password;
 	public $rememberMe;
 	public $admin;
+    public $redirectUrl;
 
 	// Private Variables -------------------
 

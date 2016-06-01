@@ -334,7 +334,7 @@ class Core extends \yii\base\Component {
 
             $data = unserialize( $_COOKIE[ $cookieName ] );
 
-            $data[ 'user' ]    = $guestUser;
+            $data   = $guestUser;
 
             return setcookie( $cookieName, serialize( $data ), time() + ( 10 * 365 * 24 * 60 * 60 ), "/", null );
         }
@@ -365,7 +365,7 @@ class Core extends \yii\base\Component {
 
                 //$appUser    = (object) $data[ 'user' ]['user'];
 
-                $appUser    = UserService::findById( $data[ 'user' ]['user']['id'] );
+                $appUser    = UserService::findById( $data[ 'user' ]['id'] );
             }
         }
 

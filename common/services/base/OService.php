@@ -89,13 +89,59 @@ abstract class OService extends \yii\base\Component {
 	}
 
 	// Read - Others ---
+/*
+	// Create ----------------
 
-	// Create -------------
+ 	public function create( $model, $config = [] ) {
 
-	// Update -------------
+		$model->save();
+
+		return $model;
+ 	}
+
+	// Update ----------------
+
+	public function update( $model, $config = [] ) {
+
+        $existingModel  = $this->getById( $model->id );
+
+		$existingModel->copyForUpdateFrom( $model, [ 'name' ] );
+
+		$existingModel->update();
+
+		return $existingModel;
+ 	}
+
+	public function updateMultiple( $models, $config = [] ) {
+
+		foreach( $models as $model ) {
+
+			$this->update( $model );
+		}
+	}
+
+	public function updateByForm( $form, $config = [] ) {
+
+		$existingModel  = $this->getById( $model->id );
+		$attributes 	= $form->getArrayToStore();
+
+		foreach ( $attributes as $key => $value ) {
+
+			$existingModel->$key	= $value;
+		}
+
+		$this->update( $existingModel );
+ 	}
 
 	// Delete -------------
 
+	public function delete( $model ) {
+
+		$existingModel  = $this->getById( $model->id );
+
+		$existingModel->delete();
+	}
+*/
 	// Static Methods ----------------------------------------------
 
 	// < parent class > ------------------
@@ -187,6 +233,11 @@ abstract class OService extends \yii\base\Component {
 		$modelClass	= static::$modelClass;
 
 		return $modelClass::findById( $id );
+	}
+
+	public static function findModels( $config = [] ) {
+
+		return $modelClass::findAll( $config );
 	}
 
     // Read - Lists ----

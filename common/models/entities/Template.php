@@ -152,9 +152,14 @@ class Template extends \cmsgears\core\common\models\base\TypedCmgEntity {
 
     // Read ---------------
 
-    public static function findBySlug( $slug ) {
+    public static function queryBySlug( $slug ) {
 
-        return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+        return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] );
+    }
+
+    public static function queryByTypeSlug( $type, $slug ) {
+
+        return self::find()->where( 'type=:type AND slug=:slug', [ ':type' => $type, ':slug' => $slug ] );
     }
 
     // Update -------------

@@ -3,6 +3,7 @@ namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
 use \Yii;
+use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\models\base\CoreTables;
@@ -54,6 +55,52 @@ class TagService extends \cmsgears\core\common\services\base\Service {
 		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_TAG );
 	}
 
+	// Pagination -------
+
+	public static function getPagination( $config = [] ) {
+
+	    $sort = new Sort([
+	        'attributes' => [
+	            'name' => [
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'name',
+	            ]
+	        ]
+	    ]);
+
+		if( !isset( $config[ 'conditions' ] ) ) {
+
+			$config[ 'conditions' ] = [];
+		}
+
+		// Restrict to site
+		if( !isset( $config[ 'site' ] ) || !$config[ 'site' ] ) {
+
+			$config[ 'conditions' ][ 'siteId' ] = Yii::$app->cmgCore->siteId;
+
+			unset( $config[ 'site' ] );
+		}
+
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		if( !isset( $config[ 'search-col' ] ) ) {
+
+			$config[ 'search-col' ] = 'name';
+		}
+
+		return self::getDataProvider( new Tag(), $config );
+	}
+
+	public static function getPaginationByType( $type ) {
+
+		return self::getPagination( [ 'conditions' => [ 'type' => $type ] ] );
+	}
+
 	// Create ----------------
 
 	public static function create( $tag ) {
@@ -61,6 +108,23 @@ class TagService extends \cmsgears\core\common\services\base\Service {
 		$tag->save();
 
 		return $tag;
+	}
+
+	// Update -----------
+
+	public static function update( $tag ) {
+
+		// Find existing Tag
+		$tagToUpdate	= self::findById( $tag->id );
+
+		// Copy Attributes
+		$tagToUpdate->copyForUpdateFrom( $tag, [ 'name', 'description' ] );
+
+		// Update Tag
+		$tagToUpdate->update();
+
+		// Return updated Tag
+		return $tagToUpdate;
 	}
 
 	// Delete -----------

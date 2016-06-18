@@ -74,7 +74,7 @@ class MessageSource extends Component {
 		CoreGlobal::ERROR_APIS_DISABLED => 'APIs are not supported by this application.',
 
 		// Errors - View
-		CoreGlobal::ERROR_NO_TEMPLATE => 'No teplate defined.',
+		CoreGlobal::ERROR_NO_TEMPLATE => 'No template defined.',
 		CoreGlobal::ERROR_NO_VIEW => 'Layout or view is missing.',
 
 		// Model Fields ----------------------------------------------------
@@ -91,6 +91,8 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_MESSAGE_SUCCESS => 'Success Message',
 		CoreGlobal::FIELD_MESSAGE_FAILURE => 'Failure Message',
 		CoreGlobal::FIELD_DESCRIPTION => 'Description',
+		CoreGlobal::FIELD_NOTES => 'Notes',
+		CoreGlobal::FIELD_COMMENT => 'Comment',
 		CoreGlobal::FIELD_SESSION => 'Session',
 		CoreGlobal::FIELD_SLUG => 'Slug',
 		CoreGlobal::FIELD_LIMIT => 'Limit',
@@ -129,6 +131,7 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_AUTHOR => 'Author',
 		CoreGlobal::FIELD_MEMBER => 'Member',
 		CoreGlobal::FIELD_OWNER => 'Owner',
+		CoreGlobal::FIELD_APPROVER => 'Approver',
 		CoreGlobal::FIELD_TEMPLATE => 'Template',
 		CoreGlobal::FIELD_RENDERER => 'Render Engine',
 		CoreGlobal::FIELD_EVENT => 'Event',
@@ -209,7 +212,11 @@ class MessageSource extends Component {
 
 		// Visibility
 		CoreGlobal::FIELD_PRIVATE => 'Private',
-		CoreGlobal::FIELD_PUBLIC => 'Public'
+		CoreGlobal::FIELD_PUBLIC => 'Public',
+
+		// Orders
+		CoreGlobal::FIELD_PRIORITY => 'Priority',
+		CoreGlobal::FIELD_SEVERITY => 'Severity'
 	];
 
 	/**

@@ -34,6 +34,11 @@ class TemplateService extends \cmsgears\core\common\services\base\Service {
 		return Template::queryByTypeSlug( $type, $slug )->one();
 	}
 
+	public static function findByTypeName( $type, $name ) {
+
+		return Template::queryByTypeName( $type, $name )->one();
+	}
+
 	public static function getIdNameMap( $options = [] ) {
 
 		$map = self::findMap( 'id', 'name', CoreTables::TABLE_TEMPLATE, $options );

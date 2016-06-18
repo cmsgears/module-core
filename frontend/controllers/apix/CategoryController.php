@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\admin\controllers\apix;
+namespace cmsgears\core\frontend\controllers\apix;
 
 // Yii Imports
 use \Yii;
@@ -11,7 +11,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\Category;
 
-use \cmsgears\core\common\services\resources\CategoryService;
+use cmsgears\core\common\services\resources\CategoryService;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
@@ -34,23 +34,13 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'autoSearch' => [ 'permission' => CoreGlobal::PERM_ADMIN ],
-	                'all'   => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_CORE ]
+	                'autoSearch' => [ 'permission' => CoreGlobal::PERM_ADMIN ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index'  => ['get'],
-	                'autoSearch' => [ 'post'],
-	                'all'   => ['get'],
-	                'create' => ['get', 'post'],
-	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post']
+	                'autoSearch' => [ 'post']
                 ]
             ]
         ];

@@ -140,12 +140,7 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\Service {
 		}
 		else {
 
-			$modelCategory				= new ModelCategory();
-			$modelCategory->categoryId	= $categoryId;
-			$modelCategory->parentId	= $parentId;
-			$modelCategory->parentType	= $parentType;
-
-			self::create( $modelCategory );
+			self::create( $categoryId, $parentId, $parentType );
 		}
 	}
 
@@ -198,6 +193,15 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\Service {
 	}
 
 	// Delete -----------
+
+	public static function delete( $model ) {
+
+		$existingModel	= self::findById( $model->id );
+
+		$existingModel->delete();
+
+		return true;
+	}
 
 	public static function deleteByCategoryId( $categoryId ) {
 

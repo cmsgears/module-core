@@ -30,17 +30,19 @@ abstract class OService extends \yii\base\Component {
 	/**
 	 * Page limit for data provider.
 	 */
-	protected static $pageLimit		= self::PAGE_LIMIT;
+	public static $pageLimit	= self::PAGE_LIMIT;
 
 	/**
 	 * The model class used to call model static methods.
 	 */
-	protected static $modelClass	= '\cmsgears\core\common\models\entities\ObjectData';
+	public static $modelClass	= '\cmsgears\core\common\models\entities\ObjectData';
 
 	/**
 	 * The model table used for advanced model operations.
 	 */
-	protected static $modelTable	= CoreTables::TABLE_OBJECT_DATA;
+	public static $modelTable	= CoreTables::TABLE_OBJECT_DATA;
+
+	public static $parentType	= null;
 
 	// Public -------------
 
@@ -222,6 +224,102 @@ abstract class OService extends \yii\base\Component {
         ]);
 
 		return $dataProvider;
+	}
+
+	public static function findPage( $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable = static::$modelTable;
+
+	    $sort = new Sort([
+	        'attributes' => [
+	            'id' => [
+	                'asc' => [ "$modelTable.id" => SORT_ASC ],
+	                'desc' => [ "$modelTable.id" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Id'
+	            ]
+	        ]
+	    ]);
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$modelClass 		= static::$modelClass;
+
+			$config[ 'query' ] 	= $modelClass::queryWithAll();
+		}
+
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		if( !isset( $config[ 'search-col' ] ) ) {
+
+			$config[ 'search-col' ] = 'name';
+		}
+
+		return self::findDataProvider( $modelClass, $config );
+	}
+
+	/**
+	 * Generate search query using content, tag and category tables.
+	 */
+	public static function findPageForSearch( $config = [] ) {
+
+		$modelClass			= static::$modelClass;
+		$modelTable 		= static::$modelTable;
+		$parentType			= static::$parentType;
+
+		// DB Tables
+		$mcategoryTable		= CoreTables::TABLE_MODEL_CATEGORY;
+		$categoryTable		= CoreTables::TABLE_CATEGORY;
+		$mtagTable			= CoreTables::TABLE_MODEL_TAG;
+		$tagTable			= CoreTables::TABLE_TAG;
+
+		// Search Query
+		$query			 	= $modelClass::queryWithAll();
+
+		// Tag
+		if( isset( $search ) || isset( $config[ 'tag' ] ) ) {
+
+			$query->leftJoin( $mtagTable, "$modelTable.id=$mtagTable.parentId AND $mtagTable.parentType='$parentType' AND $mtagTable.active=TRUE" )
+				->leftJoin( $tagTable, "$mtagTable.tagId=$tagTable.id" );
+		}
+
+		if( isset( $config[ 'tag' ] ) ) {
+
+			$query->andWhere( "$tagTable.id=" . $config[ 'tag' ]->id );
+		}
+
+		// Category
+		if( isset( $search ) || isset( $config[ 'category' ] ) ) {
+
+			$query->leftJoin( "$mcategoryTable", "$modelTable.id=$mcategoryTable.parentId AND $mcategoryTable.parentType='$parentType' AND $mcategoryTable.active=TRUE" )
+				->leftJoin( "$categoryTable", "$mcategoryTable.categoryId=$categoryTable.id" );
+		}
+
+		if( isset( $config[ 'category' ] ) ) {
+
+			$query->andWhere( "$categoryTable.id=" . $config[ 'category' ]->id );
+		}
+
+		// Search
+		$search 	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $search ) ) {
+
+			$config[ 'search-col' ]	= [ "$categoryTable.name", "$tagTable.name" ];
+		}
+
+		if( isset( $search ) || isset( $config[ 'category' ] ) ) {
+
+			$query->groupBy( "$modelTable.id" );
+		}
+
+		$config[ 'query' ]	= $query;
+
+		return static::findPage( $config );
 	}
 
 	// Read ---------------

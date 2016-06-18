@@ -83,6 +83,11 @@ abstract class TypedCmgEntity extends CmgEntity {
         return static::find()->where( 'type=:type', [ ':type' => $type ] );
     }
 
+    public static function queryByTypeName( $type, $name ) {
+
+        return self::find()->where( 'type=:type AND slug=:name', [ ':type' => $type, ':name' => $name ] );
+    }
+
     /**
      * @return array - ActiveRecord by type
      */

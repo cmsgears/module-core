@@ -42,6 +42,34 @@ class CategoryService extends \cmsgears\core\common\services\base\HierarchyServi
 		return Category::findByName( $name );
 	}
 
+	public static function searchByName( $name, $config = [] ) {
+
+		$conditions		= $config[ 'conditions' ];
+
+		$categoryTable	= CoreTables::TABLE_CATEGORY;
+		$categories 	= Category::queryWithSite()->andWhere( [ "$categoryTable.siteId" => Yii::$app->cmgCore->siteId ] );
+
+		$categories->andFilterWhere( [ 'like', "$categoryTable.name", $name ] );
+
+		if( isset( $conditions ) && count( $conditions ) > 0 ) {
+
+			foreach ( $conditions as $condition ) {
+
+				$categories->andWhere( $condition );
+			}
+		}
+
+		$categories	= $categories->all();
+		$map		= [];
+
+		foreach ( $categories as $category ) {
+
+			$map[ $category->id ]	= $category->name;
+		}
+
+		return $map;
+	}
+
 	public static function findByType( $type ) {
 
 		return Category::findByType( $type );

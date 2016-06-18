@@ -180,10 +180,19 @@ trait CategoryTrait {
 	/**
 	 * @return array - map of category id and name associated with parent
 	 */
-	public function getCategoryIdNameMap() {
+	public function getCategoryIdNameMap( $active = true ) {
 
-		$categories 	= $this->categories;
+		$categories 	= null;
 		$categoriesMap	= [];
+
+		if( $active ) {
+
+			$categories 	= $this->activeCategories;
+		}
+		else {
+
+			$categories 	= $this->categories;
+		}
 
 		foreach ( $categories as $category ) {
 

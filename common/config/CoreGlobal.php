@@ -129,14 +129,44 @@ class CoreGlobal {
 	const ATTRIBUTE_COMMENT_SPAM_REQUEST    = 'spam-request';
 	const ATTRIBUTE_COMMENT_DELETE_REQUEST  = 'delete-request';
 
-	// Common Status ---------------------------------------------------
+	// Default Maps ----------------------------------------------------
 
 	// Active/Inactive
 	const STATUS_NO			= 0;
 	const STATUS_YES		= 1;
 
+    public static $yesNoMap = [
+        self::STATUS_NO => 'No',
+        self::STATUS_YES => 'Yes'
+    ];
+
 	const STATUS_INACTIVE	= 0;
 	const STATUS_ACTIVE		= 1;
+
+    public static $activeMap = [
+        self::STATUS_INACTIVE => 'Inactive',
+        self::STATUS_ACTIVE => 'Active'
+    ];
+
+	const SEVERITY_LOW		=   0;
+	const SEVERITY_MEDIUM	= 100;
+	const SEVERITY_HIGH		= 200;
+
+    public static $severityMap = [
+        self::SEVERITY_LOW => 'Low',
+        self::SEVERITY_MEDIUM => 'Medium',
+        self::SEVERITY_HIGH => 'High'
+    ];
+
+	const PRIORITY_LOW		=   0;
+	const PRIORITY_MEDIUM	= 100;
+	const PRIORITY_HIGH		= 200;
+
+    public static $priorityMap = [
+        self::PRIORITY_LOW => 'Low',
+        self::PRIORITY_MEDIUM => 'Medium',
+        self::PRIORITY_HIGH => 'High'
+    ];
 
 	// Messages --------------------------------------------------------
 
@@ -212,6 +242,8 @@ class CoreGlobal {
 	const FIELD_MESSAGE_SUCCESS		= 'messageSuccessField';
 	const FIELD_MESSAGE_FAILURE		= 'messageFailureField';
 	const FIELD_DESCRIPTION			= 'descField';
+	const FIELD_NOTES				= 'notesField';
+	const FIELD_COMMENT				= 'commentField';
 	const FIELD_SESSION				= 'sessionField';
 	const FIELD_SLUG				= 'slugField';
 	const FIELD_LIMIT				= 'limitField';
@@ -250,6 +282,7 @@ class CoreGlobal {
 	const FIELD_AUTHOR				= 'authorField';
 	const FIELD_MEMBER				= 'memberField';
 	const FIELD_OWNER				= 'ownerField';
+	const FIELD_APPROVER			= 'approverField';
 	const FIELD_TEMPLATE			= 'templateField';
 	const FIELD_RENDERER			= 'rendererField';
 	const FIELD_EVENT				= 'eventField';
@@ -331,6 +364,10 @@ class CoreGlobal {
 	// Visibility
 	const FIELD_PRIVATE			= 'privateField';
 	const FIELD_PUBLIC			= 'publicField';
+
+	// Orders
+	const FIELD_PRIORITY		= 'priorityField';
+	const FIELD_SEVERITY		= 'severityField';
 }
 
 ?>

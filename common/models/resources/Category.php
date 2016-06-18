@@ -174,6 +174,11 @@ class Category extends \cmsgears\core\common\models\base\TypedHierarchicalModel 
 
     // Read ---------------
 
+	public static function queryWithSite() {
+
+		return self::find()->joinWith( 'site' );
+	}
+
     public static function findByParentId( $id ) {
 
         return self::find()->where( 'parentId=:id', [ ':id' => $id ] )->all();

@@ -66,6 +66,36 @@ abstract class CmgEntity extends ActiveRecord {
         }
     }
 
+	public function getMediumText( $attribute ) {
+
+		if( strlen( $attribute ) > CoreGlobal::DISPLAY_TEXT_MEDIUM ) {
+
+			$attribute	= substr( $attribute, 0, CoreGlobal::DISPLAY_TEXT_MEDIUM );
+			$attribute	= "$notes ...";
+		}
+
+		return $attribute;
+	}
+
+	public function getClasspath() {
+
+		return get_class( $this );
+	}
+
+	public function getNamespace() {
+
+		$name	= get_class( $this );
+
+		return array_slice(explode('\\', $name), 0, -1);
+	}
+
+	public function getClassname() {
+
+		$name	= get_class( $this );
+
+		return join( '', array_slice( explode( '\\', $name ), -1 ) );
+	}
+
     // Static Methods ----------------------------------------------
 
     /**

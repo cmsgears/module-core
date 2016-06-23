@@ -20,7 +20,7 @@ use cmsgears\core\common\models\resources\Form;
  * @property short $order
  * @property boolean $active
  */
-class ModelForm extends \cmsgears\core\common\models\base\CmgModel {
+class ModelForm extends \cmsgears\core\common\models\base\ParentMapper {
 
     // Variables ---------------------------------------------------
 

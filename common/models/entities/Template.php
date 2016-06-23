@@ -14,7 +14,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
-use cmsgears\core\common\models\traits\DataTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -39,7 +39,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $content
  * @property string $data
  */
-class Template extends \cmsgears\core\common\models\base\TypedCmgEntity {
+class Template extends \cmsgears\core\common\models\base\TypedEntity {
 
     // Variables ---------------------------------------------------
 
@@ -160,6 +160,11 @@ class Template extends \cmsgears\core\common\models\base\TypedCmgEntity {
     public static function queryByTypeSlug( $type, $slug ) {
 
         return self::find()->where( 'type=:type AND slug=:slug', [ ':type' => $type, ':slug' => $slug ] );
+    }
+
+    public static function findByTypeSlug( $type, $slug ) {
+
+        return self::find()->where( 'type=:type AND slug=:slug', [ ':type' => $type, ':slug' => $slug ] )->one();
     }
 
     // Update -------------

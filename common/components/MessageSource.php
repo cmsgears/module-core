@@ -147,6 +147,7 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_DATA => 'Data',
 		CoreGlobal::FIELD_HTML_OPTIONS => 'HTML Options',
 		CoreGlobal::FIELD_COMPRESS => 'Store Compressed',
+		CoreGlobal::FIELD_OBJECT => 'Object',
 
 		// Role Fields
 		CoreGlobal::FIELD_HOME_URL => 'Home Url',

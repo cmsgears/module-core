@@ -14,11 +14,11 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
 
-use cmsgears\core\common\models\traits\TemplateTrait;
-use cmsgears\core\common\models\traits\AttributeTrait;
-use cmsgears\core\common\models\traits\DataTrait;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
-use cmsgears\core\common\models\traits\FileTrait;
+use cmsgears\core\common\models\traits\resources\AttributeTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\mappers\FileTrait;
+use cmsgears\core\common\models\traits\mappers\TemplateTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -41,7 +41,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $content
  * @property string $data
  */
-class Gallery extends \cmsgears\core\common\models\base\TypedCmgEntity {
+class Gallery extends \cmsgears\core\common\models\base\TypedResource {
 
 	// Variables ---------------------------------------------------
 

@@ -17,7 +17,7 @@ use cmsgears\core\common\models\base\CoreTables;
  * @property string $code
  * @property string $name
  */
-class Locale extends \cmsgears\core\common\models\base\NamedCmgEntity {
+class Locale extends \cmsgears\core\common\models\base\NamedEntity {
 
     // Variables ---------------------------------------------------
 

@@ -15,12 +15,12 @@ use cmsgears\core\common\models\interfaces\IOwner;
 
 use cmsgears\core\common\models\base\CoreTables;
 
-use cmsgears\core\common\models\traits\VisualTrait;
-use cmsgears\core\common\models\traits\AttributeTrait;
-use cmsgears\core\common\models\traits\FileTrait;
-use cmsgears\core\common\models\traits\TemplateTrait;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
-use cmsgears\core\common\models\traits\DataTrait;
+use cmsgears\core\common\models\traits\resources\AttributeTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\resources\VisualTrait;
+use cmsgears\core\common\models\traits\mappers\FileTrait;
+use cmsgears\core\common\models\traits\mappers\TemplateTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -46,7 +46,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $content
  * @property string $data
  */
-class ObjectData extends \cmsgears\core\common\models\base\TypedCmgEntity implements IOwner {
+class ObjectData extends \cmsgears\core\common\models\base\TypedEntity implements IOwner {
 
     // Variables ---------------------------------------------------
 
@@ -64,12 +64,12 @@ class ObjectData extends \cmsgears\core\common\models\base\TypedCmgEntity implem
 
     // Traits ------------------------------------------------------
 
-    use VisualTrait;
     use AttributeTrait;
-    use FileTrait;
-    use TemplateTrait;
     use CreateModifyTrait;
     use DataTrait;
+	use FileTrait;
+	use TemplateTrait;
+	use VisualTrait;
 
     // Constructor and Initialisation ------------------------------
 

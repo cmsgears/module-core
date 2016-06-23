@@ -14,15 +14,18 @@ use yii\base\NotSupportedException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\config\CoreProperties;
 
+use cmsgears\core\common\models\interfaces\IApproval;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Option;
 use cmsgears\core\common\models\mappers\SiteMember;
 
-use cmsgears\core\common\models\traits\VisualTrait;
-use cmsgears\core\common\models\traits\AttributeTrait;
-use cmsgears\core\common\models\traits\FileTrait;
-use cmsgears\core\common\models\traits\AddressTrait;
-use cmsgears\core\common\models\traits\DataTrait;
+use cmsgears\core\common\models\traits\interfaces\ApprovalTrait;
+use cmsgears\core\common\models\traits\resources\AttributeTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\resources\VisualTrait;
+use cmsgears\core\common\models\traits\mappers\AddressTrait;
+use cmsgears\core\common\models\traits\mappers\FileTrait;
 
 /**
  * User Entity - The primary class.
@@ -52,45 +55,20 @@ use cmsgears\core\common\models\traits\DataTrait;
  * @property datetime accessTokenAccessedAt
  * @property string data
  */
-class User extends \cmsgears\core\common\models\base\CmgEntity implements IdentityInterface {
+class User extends \cmsgears\core\common\models\base\Entity implements IdentityInterface, IApproval {
 
     // Variables ---------------------------------------------------
 
     // Constants/Statics --
 
-	// Note: Applications having registration process for a user can allocate registration status till 10000 and than follow these standard status as part of approval process.
-
-    /**
-     * The status types available for a User by default.
-     *
-     * 1. new - assigned for newly registered User.
-	 * 2. confirmed - It can be required in case user need admin approval.
-     * 3. active - It will be set when user confirm their account or admin activate the account.
-     * 4. blocked - It can be set by admin to block a particular user on false behaviour.
-     */
-    const STATUS_NEW        = 10000;
-    const STATUS_CONFIRMED	= 14000;
-	const STATUS_SUBMITTED	= 16000;
-    const STATUS_ACTIVE     = 18000;
-    const STATUS_BLOCKED    = 20000;
-
-    /**
-     * The status map having string form of status.
-     */
-    public static $statusMap = [
-        self::STATUS_NEW => 'New',
-        self::STATUS_CONFIRMED => 'Confirmed',
-        self::STATUS_SUBMITTED => 'Awaiting Approval',
-        self::STATUS_ACTIVE => 'Active',
-        self::STATUS_BLOCKED => 'Blocked'
-    ];
-
     /**
      * The status map having string form of status available for admin to make status change.
      */
     public static $statusMapUpdate = [
-        self::STATUS_ACTIVE => 'Active',
-        self::STATUS_BLOCKED => 'Blocked'
+        self::STATUS_APPROVED => 'Approved',
+        self::STATUS_FROJEN => 'Frozen',
+        self::STATUS_BLOCKED => 'Blocked',
+        self::STATUS_TERMINATED => 'Terminated'
     ];
 
     // Public -------------
@@ -102,11 +80,12 @@ class User extends \cmsgears\core\common\models\base\CmgEntity implements Identi
 
     // Traits ------------------------------------------------------
 
-    use VisualTrait;
-    use AttributeTrait;
-    use FileTrait;
-    use AddressTrait;
+	use AddressTrait;
+	use ApprovalTrait;
+	use AttributeTrait;
 	use DataTrait;
+	use FileTrait;
+	use VisualTrait;
 
     // Constructor and Initialisation ------------------------------
 
@@ -389,53 +368,6 @@ class User extends \cmsgears\core\common\models\base\CmgEntity implements Identi
     public function getStatusStr() {
 
         return self::$statusMap[ $this->status ];
-    }
-
-    /**
-     * @return boolean whether user is new.
-     */
-    public function isNew() {
-
-        return $this->status == self::STATUS_NEW;
-    }
-
-    /**
-     * @return boolean whether user is confirmed.
-     */
-    public function isConfirmed( $strict = false ) {
-
-        if( $strict ) {
-
-        	return $this->status == User::STATUS_CONFIRMED;
-		}
-
-		return $this->status >= User::STATUS_CONFIRMED;
-    }
-
-    public function isBeingApproved( $strict = false ) {
-
-        if( $strict ) {
-
-        	return $this->status == User::STATUS_SUBMITTED;
-		}
-
-		return $this->status >= User::STATUS_SUBMITTED;
-    }
-
-    /**
-     * @return boolean whether user is active.
-     */
-    public function isActive() {
-
-        return $this->status == self::STATUS_ACTIVE;
-    }
-
-    /**
-     * @return boolean whether user is blocked by admin.
-     */
-    public function isBlocked() {
-
-        return $this->status == self::STATUS_BLOCKED;
     }
 
     /**

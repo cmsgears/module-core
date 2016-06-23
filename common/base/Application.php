@@ -5,11 +5,21 @@ namespace cmsgears\core\common\base;
 use \Yii;
 
 // CMSGears Imports
+use cmsgears\core\common\config\CoreProperties;
+
 use cmsgears\core\common\services\entities\SiteService;
 
 class Application extends \yii\web\Application {
 
     public function createController( $route ) {
+
+		// site config
+		$coreProperties	= CoreProperties::getInstance();
+
+		Yii::$app->formatter->dateFormat		= $coreProperties->getDateFormat();
+		Yii::$app->formatter->timeFormat		= $coreProperties->getTimeFormat();
+		Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
+		Yii::$app->timeZone						= $coreProperties->getTimezone();
 
 		// find whether multisite is enabled
 		if( Yii::$app->cmgCore->multiSite ) {

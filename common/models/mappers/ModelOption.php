@@ -20,7 +20,7 @@ use cmsgears\core\common\models\resources\Option;
  * @property short $order
  * @property short $active
  */
-class ModelOption extends \cmsgears\core\common\models\base\CmgModel {
+class ModelOption extends \cmsgears\core\common\models\base\ParentMapper {
 
 	// Instance Methods --------------------------------------------
 

@@ -20,7 +20,7 @@ use cmsgears\core\common\models\resources\Category;
  * @property short $order
  * @property boolean $active
  */
-class ModelCategory extends \cmsgears\core\common\models\base\CmgModel {
+class ModelCategory extends \cmsgears\core\common\models\base\ParentMapper {
 
     // Variables ---------------------------------------------------
 

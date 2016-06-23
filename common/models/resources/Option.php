@@ -10,7 +10,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 
-use cmsgears\core\common\models\traits\DataTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
  * Option Entity
@@ -23,7 +23,7 @@ use cmsgears\core\common\models\traits\DataTrait;
  * @property string $htmlOptions
  * @property string $data
  */
-class Option extends \cmsgears\core\common\models\base\CmgEntity {
+class Option extends \cmsgears\core\common\models\base\Resource {
 
     // Variables ---------------------------------------------------
 

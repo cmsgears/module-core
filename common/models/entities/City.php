@@ -18,7 +18,7 @@ use cmsgears\core\common\models\base\CoreTables;
  * @property long $provinceId
  * @property string $name
  */
-class City extends \cmsgears\core\common\models\base\CmgEntity {
+class City extends \cmsgears\core\common\models\base\Entity {
 
 	// Variables ---------------------------------------------------
 

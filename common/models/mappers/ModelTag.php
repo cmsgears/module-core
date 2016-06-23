@@ -20,7 +20,7 @@ use cmsgears\core\common\models\resources\Tag;
  * @property short $order
  * @property boolean $active
  */
-class ModelTag extends \cmsgears\core\common\models\base\CmgModel {
+class ModelTag extends \cmsgears\core\common\models\base\ParentMapper {
 
     // Variables ---------------------------------------------------
 

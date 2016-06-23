@@ -14,7 +14,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
-use cmsgears\core\common\models\traits\DataTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -33,7 +33,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property datetime $modifiedAt
  * @property string $data
  */
-class Theme extends \cmsgears\core\common\models\base\NamedCmgEntity {
+class Theme extends \cmsgears\core\common\models\base\NamedEntity {
 
     // Variables ---------------------------------------------------
 

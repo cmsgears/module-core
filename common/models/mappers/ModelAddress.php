@@ -21,7 +21,7 @@ use cmsgears\core\common\models\resources\Address;
  * @property short $order
  * @property boolean $active
  */
-class ModelAddress extends \cmsgears\core\common\models\base\CmgModel {
+class ModelAddress extends \cmsgears\core\common\models\base\ParentMapper {
 
     // Variables ---------------------------------------------------
 

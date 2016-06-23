@@ -37,7 +37,7 @@ use cmsgears\core\common\models\entities\City;
  * @property integer $latitude
  * @property short $zoomLevel
  */
-class Address extends \cmsgears\core\common\models\base\CmgEntity {
+class Address extends \cmsgears\core\common\models\base\Resource {
 
     // Variables ---------------------------------------------------
 

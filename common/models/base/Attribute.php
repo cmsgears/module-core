@@ -15,10 +15,10 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $name
  * @property string $label
  * @property string $type
- * @property string $value
  * @property string $valueType
+ * @property string $value
  */
-abstract class Attribute extends CmgModel {
+abstract class Attribute extends Entity {
 
     // Variables ---------------------------------------------------
 

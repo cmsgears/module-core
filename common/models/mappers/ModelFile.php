@@ -8,7 +8,7 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\CmgFile;
+use cmsgears\core\common\models\resources\File;
 
 /**
  * ModelFile Entity
@@ -20,7 +20,7 @@ use cmsgears\core\common\models\resources\CmgFile;
  * @property short $order
  * @property boolean $active
  */
-class ModelFile extends \cmsgears\core\common\models\base\CmgModel {
+class ModelFile extends \cmsgears\core\common\models\base\ParentMapper {
 
     // Variables ---------------------------------------------------
 

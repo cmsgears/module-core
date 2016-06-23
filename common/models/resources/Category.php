@@ -12,7 +12,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
 
-use cmsgears\core\common\models\traits\DataTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
  * Category Entity
@@ -32,7 +32,7 @@ use cmsgears\core\common\models\traits\DataTrait;
  * @property string $htmlOptions
  * @property string $data
  */
-class Category extends \cmsgears\core\common\models\base\TypedHierarchicalModel {
+class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalModel {
 
     // Variables ---------------------------------------------------
 

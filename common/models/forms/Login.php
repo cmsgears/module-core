@@ -4,7 +4,6 @@ namespace cmsgears\core\common\models\forms;
 // Yii Imports
 use \Yii;
 use yii\helpers\ArrayHelper;
-use yii\validators\FilterValidator;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;

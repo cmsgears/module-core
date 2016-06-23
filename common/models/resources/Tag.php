@@ -24,7 +24,7 @@ use cmsgears\core\common\models\entities\Site;
  * @property string $type
  * @property string $description
  */
-class Tag extends \cmsgears\core\common\models\base\TypedCmgEntity {
+class Tag extends \cmsgears\core\common\models\base\TypedResource {
 
     // Variables ---------------------------------------------------
 

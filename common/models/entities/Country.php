@@ -18,7 +18,7 @@ use cmsgears\core\common\models\base\CoreTables;
  * @property string $codeNum
  * @property string $name
  */
-class Country extends \cmsgears\core\common\models\base\NamedCmgEntity {
+class Country extends \cmsgears\core\common\models\base\NamedEntity {
 
     // Variables ---------------------------------------------------
 

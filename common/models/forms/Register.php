@@ -3,16 +3,14 @@ namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
-use yii\base\Model;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\entities\UserService;
 
-class Register extends Model {
+class Register extends \yii\base\Model {
 
     // Variables ---------------------------------------------------
 

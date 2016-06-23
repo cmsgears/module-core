@@ -19,7 +19,7 @@ use cmsgears\core\common\models\base\CoreTables;
  * @property string $codeNum
  * @property string $name
  */
-class Province extends \cmsgears\core\common\models\base\CmgEntity {
+class Province extends \cmsgears\core\common\models\base\Entity {
 
     // Variables ---------------------------------------------------
 

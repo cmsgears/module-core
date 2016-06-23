@@ -21,7 +21,7 @@ use cmsgears\core\common\models\resources\Gallery;
  * @property short $order
  * @property short $active
  */
-class ModelGallery extends \cmsgears\core\common\models\base\CmgModel {
+class ModelGallery extends \cmsgears\core\common\models\base\ParentMapper {
 
     // Variables ---------------------------------------------------
 

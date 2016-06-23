@@ -10,7 +10,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 
-use cmsgears\core\common\models\traits\DataTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
  * FormField Entity
@@ -28,7 +28,7 @@ use cmsgears\core\common\models\traits\DataTrait;
  * @property string $content
  * @property string $data
  */
-class FormField extends \cmsgears\core\common\models\base\CmgEntity {
+class FormField extends \cmsgears\core\common\models\base\Resource {
 
     // Variables ---------------------------------------------------
 

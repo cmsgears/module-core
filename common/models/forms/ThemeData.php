@@ -3,23 +3,21 @@ namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
-use yii\base\Model;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class ThemeData extends Model {
+class ThemeData extends \yii\base\Model {
 
 	// Variables ---------------------------------------------------
 
 	// Public Variables --------------------
-	
+
 	public $css;
 
 	// Instance Methods --------------------------------------------
-	
+
 	// yii\base\Model
 
 	public function rules() {

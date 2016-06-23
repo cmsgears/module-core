@@ -22,7 +22,7 @@ use cmsgears\core\common\models\entities\Role;
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
-class SiteMember extends \cmsgears\core\common\models\base\CmgEntity {
+class SiteMember extends \cmsgears\core\common\models\base\Entity {
 
     // Variables ---------------------------------------------------
 

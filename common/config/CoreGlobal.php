@@ -6,6 +6,12 @@ namespace cmsgears\core\common\config;
  */
 class CoreGlobal {
 
+	// System Sites ---------------------------------------------------
+
+	const SITE_MAIN				= 'main';
+	const SITE_BLOG				= 'blog';
+	const SITE_FORUM			= 'forum';
+
 	// System Pages ---------------------------------------------------
 
 	const PAGE_ACCOUNT_ACTIVATE	= 'activate-account';
@@ -51,6 +57,8 @@ class CoreGlobal {
 	const TYPE_FORM				= 'form';
 	const TYPE_GALLERY			= 'gallery';
 
+	const TYPE_OPTION_GROUP		= 'option-group';
+
 	// Templates -------------------------------------------------------
 
 	const TEMPLATE_DEFAULT			= 'default';
@@ -68,9 +76,6 @@ class CoreGlobal {
 	// Categories Slug -------------------------------------------------
 
 	const CATEGORY_GENDER		= 'gender';
-
-	const TYPE_COMBO			= 'combo';
-	const TYPE_CHECKBOX_GROUP	= 'checkbox-group';
 
 	// Text Limits - Ideal for string validators -----------------------
 
@@ -114,7 +119,7 @@ class CoreGlobal {
 	const PERM_IDENTITY				= 'identity';	// Allows admin to manage site users
 	const PERM_RBAC					= 'rbac';		// Allows admin to manage roles and permissions
 
-	// TODO: Implement internationalisation for Messages, Errors and Field Labels
+	// TODO: Implement I18N for Messages, Errors and Field Labels
 
 	// Model Attributes ------------------------------------------------
 
@@ -126,12 +131,13 @@ class CoreGlobal {
 	const ATTRIBUTE_TYPE_USER		= 'user';
 	const ATTRIBUTE_TYPE_SETTING	= 'setting';
 
+	// Comment Attributes
 	const ATTRIBUTE_COMMENT_SPAM_REQUEST    = 'spam-request';
 	const ATTRIBUTE_COMMENT_DELETE_REQUEST  = 'delete-request';
 
 	// Default Maps ----------------------------------------------------
 
-	// Active/Inactive
+	// Yes/No
 	const STATUS_NO			= 0;
 	const STATUS_YES		= 1;
 
@@ -140,32 +146,13 @@ class CoreGlobal {
         self::STATUS_YES => 'Yes'
     ];
 
+	// Active/Inactive
 	const STATUS_INACTIVE	= 0;
 	const STATUS_ACTIVE		= 1;
 
     public static $activeMap = [
         self::STATUS_INACTIVE => 'Inactive',
         self::STATUS_ACTIVE => 'Active'
-    ];
-
-	const SEVERITY_LOW		=   0;
-	const SEVERITY_MEDIUM	= 100;
-	const SEVERITY_HIGH		= 200;
-
-    public static $severityMap = [
-        self::SEVERITY_LOW => 'Low',
-        self::SEVERITY_MEDIUM => 'Medium',
-        self::SEVERITY_HIGH => 'High'
-    ];
-
-	const PRIORITY_LOW		=   0;
-	const PRIORITY_MEDIUM	= 100;
-	const PRIORITY_HIGH		= 200;
-
-    public static $priorityMap = [
-        self::PRIORITY_LOW => 'Low',
-        self::PRIORITY_MEDIUM => 'Medium',
-        self::PRIORITY_HIGH => 'High'
     ];
 
 	// Messages --------------------------------------------------------
@@ -298,6 +285,7 @@ class CoreGlobal {
 	const FIELD_DATA				= 'dataField';
 	const FIELD_HTML_OPTIONS		= 'htmlOptionsField';
 	const FIELD_COMPRESS			= 'compressField';
+	const FIELD_OBJECT				= 'objectField';
 
 	// Role Fields
 	const FIELD_HOME_URL			= 'homeUrlField';

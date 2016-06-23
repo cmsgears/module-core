@@ -11,13 +11,15 @@ use yii\behaviors\SluggableBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\IVisibility;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
 
-use cmsgears\core\common\models\traits\TemplateTrait;
-use cmsgears\core\common\models\traits\AttributeTrait;
-use cmsgears\core\common\models\traits\DataTrait;
+use cmsgears\core\common\models\traits\interfaces\VisibilityTrait;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+use cmsgears\core\common\models\traits\resources\AttributeTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\mappers\TemplateTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -45,19 +47,11 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $content
  * @property string $data
  */
-class Form extends \cmsgears\core\common\models\base\NamedCmgEntity {
+class Form extends \cmsgears\core\common\models\base\NamedResource implements IVisibility {
 
     // Variables ---------------------------------------------------
 
     // Constants/Statics --
-
-    const VISIBILITY_PUBLIC     =  0;
-    const VISIBILITY_PRIVATE    = 10;
-
-    public static $visibilityMap = [
-        self::VISIBILITY_PUBLIC => 'Public',
-        self::VISIBILITY_PRIVATE => 'Private'
-    ];
 
 	protected static $siteSpecific	= true;
 
@@ -73,6 +67,7 @@ class Form extends \cmsgears\core\common\models\base\NamedCmgEntity {
 	use AttributeTrait;
 	use DataTrait;
 	use CreateModifyTrait;
+	use VisibilityTrait;
 
     // Constructor and Initialisation ------------------------------
 

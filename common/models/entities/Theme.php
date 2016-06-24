@@ -31,28 +31,45 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $basePath
  * @property datetime $createdAt
  * @property datetime $modifiedAt
+ * @property string $content
  * @property string $data
  */
 class Theme extends \cmsgears\core\common\models\base\NamedEntity {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	public $parentType  = CoreGlobal::TYPE_THEME;
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
 
     use CreateModifyTrait;
     use DataTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -76,7 +93,7 @@ class Theme extends \cmsgears\core\common\models\base\NamedEntity {
         ];
     }
 
-    // yii\base\Model --------------------
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -86,11 +103,10 @@ class Theme extends \cmsgears\core\common\models\base\NamedEntity {
         // model rules
         $rules = [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'data' ], 'safe' ],
-            [ 'name', 'alphanumpun' ],
+            [ [ 'id', 'content', 'data' ], 'safe' ],
             [ [ 'name', 'renderer' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ [ 'description', 'basePath' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->extraLargeText ],
+            [ [ 'description', 'basePath' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->xLargeText ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -122,11 +138,19 @@ class Theme extends \cmsgears\core\common\models\base\NamedEntity {
         ];
     }
 
-    // Theme -----------------------------
+	// CMG interfaces ------------------------
 
-    // Static Methods ----------------------------------------------
+	// CMG parent classes --------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Validators ----------------------------
+
+	// Theme ---------------------------------
+
+	// Static Methods ----------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -136,11 +160,13 @@ class Theme extends \cmsgears\core\common\models\base\NamedEntity {
         return CoreTables::TABLE_THEME;
     }
 
-    // Theme -----------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// Theme ---------------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     /**
      * @return Theme - by slug
@@ -155,9 +181,11 @@ class Theme extends \cmsgears\core\common\models\base\NamedEntity {
         return self::find()->one();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

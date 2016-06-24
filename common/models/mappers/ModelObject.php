@@ -22,23 +22,37 @@ use cmsgears\core\common\models\entities\ObjectData;
  */
 class ModelObject extends \cmsgears\core\common\models\base\ParentResource {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    // Constructor and Initialisation ------------------------------
+	// Variables -----------------------------
 
-    // Instance Methods --------------------------------------------
+	// Public -----------------
 
-    // yii\base\Component ----------------
+	// Protected --------------
 
-    // yii\base\Model --------------------
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -69,7 +83,13 @@ class ModelObject extends \cmsgears\core\common\models\base\ParentResource {
         ];
     }
 
-	// ModelObject -----------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// ModelObject ---------------------------
 
     /**
      * @return ObjectData - associated object
@@ -79,27 +99,25 @@ class ModelObject extends \cmsgears\core\common\models\base\ParentResource {
         return $this->hasOne( ObjectData::className(), [ 'id' => 'objectId' ] );
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName() {
+	// yii\db\ActiveRecord ----
 
-        return CoreTables::TABLE_MODEL_OBJECT;
-    }
+	// CMG parent classes --------------------
 
-    // ModelObject -----------------------
+	// ModelObject ---------------------------
 
-    // Create -------------
+	// Read - Query -----------
 
-    // Read ---------------
+	// Read - Find ------------
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

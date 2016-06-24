@@ -317,40 +317,40 @@ class m160621_014408_core_data extends \yii\db\Migration {
 
 	private function insertDefaultConfig() {
 
-		$columns = [ 'parentId', 'parentType', 'name', 'label', 'type', 'valueType', 'value' ];
+		$columns = [ 'siteId', 'name', 'label', 'type', 'valueType', 'value' ];
 
 		$attributes	= [
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'locale_message', 'Locale Message', 'core', 'flag', '0' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'language', 'Language', 'core', 'text', 'en-US' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'locale', 'Locale', 'core', 'text', 'en_US'],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'charset', 'Charset', 'core', 'text', 'UTF-8' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'site_title', 'Site Title', 'core', 'text', $this->siteTitle ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'site_name','Site Name','core', 'text', $this->siteName ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'site_url', 'Site Url', 'core', 'text', $this->defaultSite ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'admin_url', 'Admin Url', 'core', 'text', $this->defaultAdmin ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'registration','Registration','core','flag','1' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'change_email','Change Email','core','flag','1' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'change_username','Change Username','core','flag','1' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'date_format','Date Format','core','text','yyyy-MM-dd' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'time_format','Time Format','core','text','HH:mm:ss' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'date_time_format','Date Time Format','core','text','yyyy-MM-dd HH:mm:ss' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'timezone','Timezone','core','text','UTC+0' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'smtp','SMTP','mail','flag','0' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'smtp_username','SMTP Username','mail','text','' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'smtp_password','SMTP Password','mail','text','' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'smtp_host','SMTP Host','mail','text','' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'smtp_port','SMTP Port','mail','text','587' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'smtp_encryption','SMTP Encryption','mail','text','tls' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'debug','Debug','mail','flag','1' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'sender_name','Sender Name','mail','text','Admin' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'sender_email','Sender Email','mail','text', "demoadmin@$this->primaryDomain" ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'contact_name','Contact Name','mail','text','Contact Us' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'contact_email','Contact Email','mail','text', "democontact@$this->primaryDomain" ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'info_name','Info Name','mail','text','Info' ],
-			[ $this->site->id, CoreGlobal::TYPE_SITE, 'info_email','Info Email','mail','text',"demoinfo@$this->primaryDomain" ]
+			[ $this->site->id, 'locale_message', 'Locale Message', 'core', 'flag', '0' ],
+			[ $this->site->id, 'language', 'Language', 'core', 'text', 'en-US' ],
+			[ $this->site->id, 'locale', 'Locale', 'core', 'text', 'en_US'],
+			[ $this->site->id, 'charset', 'Charset', 'core', 'text', 'UTF-8' ],
+			[ $this->site->id, 'site_title', 'Site Title', 'core', 'text', $this->siteTitle ],
+			[ $this->site->id, 'site_name','Site Name','core', 'text', $this->siteName ],
+			[ $this->site->id, 'site_url', 'Site Url', 'core', 'text', $this->defaultSite ],
+			[ $this->site->id, 'admin_url', 'Admin Url', 'core', 'text', $this->defaultAdmin ],
+			[ $this->site->id, 'registration','Registration','core','flag','1' ],
+			[ $this->site->id, 'change_email','Change Email','core','flag','1' ],
+			[ $this->site->id, 'change_username','Change Username','core','flag','1' ],
+			[ $this->site->id, 'date_format','Date Format','core','text','yyyy-MM-dd' ],
+			[ $this->site->id, 'time_format','Time Format','core','text','HH:mm:ss' ],
+			[ $this->site->id, 'date_time_format','Date Time Format','core','text','yyyy-MM-dd HH:mm:ss' ],
+			[ $this->site->id, 'timezone','Timezone','core','text','UTC+0' ],
+			[ $this->site->id, 'smtp','SMTP','mail','flag','0' ],
+			[ $this->site->id, 'smtp_username','SMTP Username','mail','text','' ],
+			[ $this->site->id, 'smtp_password','SMTP Password','mail','text','' ],
+			[ $this->site->id, 'smtp_host','SMTP Host','mail','text','' ],
+			[ $this->site->id, 'smtp_port','SMTP Port','mail','text','587' ],
+			[ $this->site->id, 'smtp_encryption','SMTP Encryption','mail','text','tls' ],
+			[ $this->site->id, 'debug','Debug','mail','flag','1' ],
+			[ $this->site->id, 'sender_name','Sender Name','mail','text','Admin' ],
+			[ $this->site->id, 'sender_email','Sender Email','mail','text', "demoadmin@$this->primaryDomain" ],
+			[ $this->site->id, 'contact_name','Contact Name','mail','text','Contact Us' ],
+			[ $this->site->id, 'contact_email','Contact Email','mail','text', "democontact@$this->primaryDomain" ],
+			[ $this->site->id, 'info_name','Info Name','mail','text','Info' ],
+			[ $this->site->id, 'info_email','Info Email','mail','text',"demoinfo@$this->primaryDomain" ]
 		];
 
-		$this->batchInsert( $this->prefix . 'core_model_attribute', $columns, $attributes );
+		$this->batchInsert( $this->prefix . 'core_site_attribute', $columns, $attributes );
 	}
 
 	private function insertCategories() {
@@ -382,3 +382,5 @@ class m160621_014408_core_data extends \yii\db\Migration {
         echo "m160621_014408_core_data will be deleted with m160621_014408_core.\n";
     }
 }
+
+?>

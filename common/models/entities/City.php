@@ -17,26 +17,43 @@ use cmsgears\core\common\models\base\CoreTables;
  * @property long $countryId
  * @property long $provinceId
  * @property string $name
+ * @property string $postal
+ * @property float $latitude
+ * @property float $longitude
  */
 class City extends \cmsgears\core\common\models\base\Entity {
 
 	// Variables ---------------------------------------------------
 
-	// Constants/Statics --
+	// Globals -------------------------------
 
-	// Public -------------
+	// Constants --------------
 
-	// Private/Protected --
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-	// yii\base\Model --------------------
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -45,19 +62,20 @@ class City extends \cmsgears\core\common\models\base\Entity {
 
 		// model rules
         $rules = [
-            [ [ 'countryId', 'provinceId', 'name' ], 'required' ],
+            [ [ 'countryId', 'name' ], 'required' ],
             [ [ 'id' ], 'safe' ],
             [ [ 'countryId', 'provinceId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ 'name', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ 'name', 'alphanumpun' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
+            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ 'name', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
+            [ 'postal', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->smallText ],
+            [ [ 'latitude', 'longitude' ], 'number' ]
         ];
 
 		// trim if required
 		if( Yii::$app->cmgCore->trimFieldValue ) {
 
-			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'postal' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -73,11 +91,18 @@ class City extends \cmsgears\core\common\models\base\Entity {
 		return [
 			'countryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
 			'provinceId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PROVINCE ),
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
+			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'postal' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ZIP ),
+			'latitude' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LATITUDE ),
+			'longitude' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LONGITUDE )
 		];
 	}
 
-	// City ------------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
 
 	/**
 	 * Validates whether a province existing with the same name for same country.
@@ -109,6 +134,8 @@ class City extends \cmsgears\core\common\models\base\Entity {
         }
     }
 
+	// City ----------------------------------
+
 	/**
 	 * @return Country - parent country for province
 	 */
@@ -127,21 +154,17 @@ class City extends \cmsgears\core\common\models\base\Entity {
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
 
-    /**
-     * @inheritdoc
-     */
-	public static function tableName() {
+	// yii\db\ActiveRecord ----
 
-		return CoreTables::TABLE_PROVINCE;
-	}
+	// CMG parent classes --------------------
 
-	// City ------------------------------
+	// City ----------------------------------
 
-	// Create -------------
+	// Read - Query -----------
 
-	// Read ---------------
+	// Read - Find ------------
 
 	/**
 	 * @return array - by country id
@@ -185,9 +208,11 @@ class City extends \cmsgears\core\common\models\base\Entity {
 		return isset( $city );
 	}
 
-	// Update -------------
+	// Create -----------------
 
-	// Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

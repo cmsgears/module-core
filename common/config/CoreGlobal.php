@@ -54,8 +54,10 @@ class CoreGlobal {
 
 	const TYPE_ACTIVITY			= 'activity';
 	const TYPE_CATEGORY			= 'category';
+	const TYPE_OPTION			= 'option';
 	const TYPE_FORM				= 'form';
 	const TYPE_GALLERY			= 'gallery';
+	const TYPE_COMMENT			= 'comment';
 
 	const TYPE_OPTION_GROUP		= 'option-group';
 

@@ -3,7 +3,6 @@ namespace cmsgears\core\common\models\base;
 
 // Yii Imports
 use \Yii;
-use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -11,7 +10,7 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * Attribute Entity
  *
- * @property integer $id
+ * @property long $id
  * @property string $name
  * @property string $label
  * @property string $type
@@ -20,9 +19,11 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 abstract class Attribute extends Entity {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
+
+	// Constants --------------
 
     const VALUE_TYPE_TEXT       = 'text';
     const VALUE_TYPE_FLAG       = 'flag';
@@ -33,21 +34,39 @@ abstract class Attribute extends Entity {
     const VALUE_TYPE_HTML       = 'html';
     const VALUE_TYPE_MARKDOWN   = 'markdown';
 
-	// Public -------------
+	// Public -----------------
 
-    // Private/Protected --
+	// Protected --------------
 
-    // Traits ------------------------------------------------------
+	// Variables -----------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Public -----------------
 
-    // Instance Methods --------------------------------------------
+	// Protected --------------
 
-    // yii\base\Component ----------------
+	// Private ----------------
 
-    // yii\base\Model --------------------
+	// Traits ------------------------------------------------------
 
-    // Attribute -------------------------
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Attribute -----------------------------
 
     public function getLabel() {
 
@@ -149,19 +168,25 @@ abstract class Attribute extends Entity {
         }
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
 
-    // Attribute -------------------------
+	// yii\db\ActiveRecord ----
 
-    // Create -------------
+	// CMG parent classes --------------------
 
-    // Read ---------------
+	// Attribute -----------------------------
 
-    // Update -------------
+	// Read - Query -----------
 
-    // Delete -------------
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

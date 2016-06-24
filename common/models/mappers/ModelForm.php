@@ -22,23 +22,37 @@ use cmsgears\core\common\models\resources\Form;
  */
 class ModelForm extends \cmsgears\core\common\models\base\ParentMapper {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    // Constructor and Initialisation ------------------------------
+	// Variables -----------------------------
 
-    // Instance Methods --------------------------------------------
+	// Public -----------------
 
-    // yii\base\Component ----------------
+	// Protected --------------
 
-    // yii\base\Model --------------------
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -70,16 +84,24 @@ class ModelForm extends \cmsgears\core\common\models\base\ParentMapper {
         ];
     }
 
-    // ModelForm -------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+    // ModelForm -----------------------------
 
     public function getForm() {
 
         return $this->hasOne( Form::className(), [ 'id' => 'formId' ] );
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -89,20 +111,24 @@ class ModelForm extends \cmsgears\core\common\models\base\ParentMapper {
         return CoreTables::TABLE_MODEL_FORM;
     }
 
-    // ModelForm -------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// ModelForm -----------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     public static function findByFormId( $parentId, $parentType, $formId ) {
 
         return self::find()->where( 'parentId=:pid AND parentType=:ptype AND formId=:fid', [ ':pid' => $parentId, ':ptype' => $parentType, ':fid' => $formId ] )->one();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 
     /**
      * Delete all entries related to a form

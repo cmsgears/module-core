@@ -1,6 +1,12 @@
 <?php
 namespace cmsgears\core\common\models\base;
 
+// Yii Imports
+use \Yii;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 /**
  * Resource Entity
  *
@@ -8,40 +14,65 @@ namespace cmsgears\core\common\models\base;
  */
 abstract class Resource extends Entity {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    // Constructor and Initialisation ------------------------------
+	// Variables -----------------------------
 
-    // Instance Methods --------------------------------------------
+	// Public -----------------
 
-    // yii\base\Component ----------------
+	// Protected --------------
 
-    // yii\base\Model --------------------
+	// Private ----------------
 
-    // CmgModel --------------------------
+	// Traits ------------------------------------------------------
 
-    // Static Methods ----------------------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Instance methods --------------------------------------------
 
-    // CmgModel --------------------------
+	// Yii interfaces ------------------------
 
-    // Create -------------
+	// Yii parent classes --------------------
 
-    // Read ---------------
+	// yii\base\Component -----
 
-    // Update -------------
+	// yii\base\Model ---------
 
-    // Delete -------------
+	// CMG interfaces ------------------------
 
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Resource ------------------------------
+
+	// Static Methods ----------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
+
+	// CMG parent classes --------------------
+
+	// Resource ------------------------------
+
+	// Read - Query -----------
+
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

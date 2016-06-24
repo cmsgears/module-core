@@ -22,23 +22,37 @@ use cmsgears\core\common\models\resources\Category;
  */
 class ModelCategory extends \cmsgears\core\common\models\base\ParentMapper {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    // Constructor and Initialisation ------------------------------
+	// Variables -----------------------------
 
-    // Instance Methods --------------------------------------------
+	// Public -----------------
 
-    // yii\base\Component ----------------
+	// Protected --------------
 
-    // yii\base\Model --------------------
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -70,7 +84,13 @@ class ModelCategory extends \cmsgears\core\common\models\base\ParentMapper {
         ];
     }
 
-    // ModelCategory ---------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+    // ModelCategory -------------------------
 
     /**
      * @return Category - associated category
@@ -80,9 +100,11 @@ class ModelCategory extends \cmsgears\core\common\models\base\ParentMapper {
         return $this->hasOne( Category::className(), [ 'id' => 'categoryId' ] );
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -92,11 +114,13 @@ class ModelCategory extends \cmsgears\core\common\models\base\ParentMapper {
         return CoreTables::TABLE_MODEL_CATEGORY;
     }
 
-    // ModelCategory ---------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// ModelCategory -------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     public static function findByCategoryId( $parentId, $parentType, $categoryId ) {
 
@@ -118,9 +142,11 @@ class ModelCategory extends \cmsgears\core\common\models\base\ParentMapper {
         return self::find()->where( 'parentId=:pid AND parentType=:ptype AND active=1', [ ':pid' => $parentId, ':ptype' => $parentType ] )->all();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 
     /**
      * Delete all entries related to a category

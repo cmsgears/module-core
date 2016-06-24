@@ -22,9 +22,37 @@ use cmsgears\core\common\models\resources\Option;
  */
 class ModelOption extends \cmsgears\core\common\models\base\ParentMapper {
 
-	// Instance Methods --------------------------------------------
+	// Variables ---------------------------------------------------
 
-	// yii\base\Model --------------------
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -56,7 +84,13 @@ class ModelOption extends \cmsgears\core\common\models\base\ParentMapper {
 		];
 	}
 
-	// ModelOption -----------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// ModelOption ---------------------------
 
 	/**
 	 * @return Option - associated option
@@ -68,7 +102,9 @@ class ModelOption extends \cmsgears\core\common\models\base\ParentMapper {
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -78,9 +114,13 @@ class ModelOption extends \cmsgears\core\common\models\base\ParentMapper {
 		return CoreTables::TABLE_MODEL_OPTION;
 	}
 
-	// ModelOption -----------------------
+	// CMG parent classes --------------------
 
-	// Read ------
+	// ModelOption ---------------------------
+
+	// Read - Query -----------
+
+	// Read - Find ------------
 
 	public static function findByOptionId( $parentId, $parentType, $optionId ) {
 
@@ -102,7 +142,11 @@ class ModelOption extends \cmsgears\core\common\models\base\ParentMapper {
 		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND active=1', [ ':pid' => $parentId, ':ptype' => $parentType ] )->all();
 	}
 
-	// Delete ----
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
 
 	/**
 	 * Delete all entries related to a option

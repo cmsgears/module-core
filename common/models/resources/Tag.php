@@ -5,7 +5,6 @@ namespace cmsgears\core\common\models\resources;
 use \Yii;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
-use yii\validators\FilterValidator;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -20,29 +19,43 @@ use cmsgears\core\common\models\entities\Site;
  * @property long $siteId
  * @property string $name
  * @property string $slug
- * @property string $icon
  * @property string $type
+ * @property string $icon
  * @property string $description
  */
 class Tag extends \cmsgears\core\common\models\base\TypedResource {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    protected static $siteSpecific	= true;
+	// Constants --------------
 
-    // Public -------------
+	// Public -----------------
 
-    // Private/Protected --
+	protected static $multisite	= true;
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    // Constructor and Initialisation ------------------------------
+	// Variables -----------------------------
 
-    // Instance Methods --------------------------------------------
+	// Public -----------------
 
-    // yii\base\Component ----------------
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -60,7 +73,7 @@ class Tag extends \cmsgears\core\common\models\base\TypedResource {
         ];
     }
 
-    // yii\base\Model --------------------
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -73,8 +86,7 @@ class Tag extends \cmsgears\core\common\models\base\TypedResource {
             [ 'id', 'safe' ],
             [ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ 'description', 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->extraLargeText ],
-            [ 'name', 'alphanumhyphenspace' ],
+            [ 'description', 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->xLargeText ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
@@ -104,16 +116,24 @@ class Tag extends \cmsgears\core\common\models\base\TypedResource {
         ];
     }
 
-    // Tag -------------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+    // Tag -----------------------------------
 
     public function getSite() {
 
         return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -123,11 +143,13 @@ class Tag extends \cmsgears\core\common\models\base\TypedResource {
         return CoreTables::TABLE_TAG;
     }
 
-    // Tag -------------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// Tag -----------------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     /**
      * @return Tag - by type
@@ -137,9 +159,11 @@ class Tag extends \cmsgears\core\common\models\base\TypedResource {
         return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

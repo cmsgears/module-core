@@ -35,26 +35,40 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class Permission extends \cmsgears\core\common\models\base\TypedEntity {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
 	private $parentType		= CoreGlobal::TYPE_PERMISSION; // required for traits
 
-    // Private/Protected --
+	// Protected --------------
 
-    // Traits ------------------------------------------------------
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
 
     use CreateModifyTrait;
 	use HierarchyTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -80,7 +94,7 @@ class Permission extends \cmsgears\core\common\models\base\TypedEntity {
         ];
     }
 
-    // yii\base\Model --------------------
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -93,8 +107,7 @@ class Permission extends \cmsgears\core\common\models\base\TypedEntity {
             [ [ 'id' ], 'safe' ],
             [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ [ 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->extraLargeText ],
-            [ 'name', 'alphanumhyphenspace' ],
+            [ [ 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->xLargeText ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -125,7 +138,13 @@ class Permission extends \cmsgears\core\common\models\base\TypedEntity {
         ];
     }
 
-    // Permission ------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Permission ----------------------------
 
     /**
      * @return Role array
@@ -160,9 +179,11 @@ class Permission extends \cmsgears\core\common\models\base\TypedEntity {
         return $rolesList;
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -172,11 +193,13 @@ class Permission extends \cmsgears\core\common\models\base\TypedEntity {
         return CoreTables::TABLE_PERMISSION;
     }
 
-    // Permission ------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// Permission ----------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     /**
      * @return Permission - by slug
@@ -196,9 +219,11 @@ class Permission extends \cmsgears\core\common\models\base\TypedEntity {
     					  ->where( "`$modelHierarchy`.`parentType` = 'permission' AND `$modelHierarchy`.`parentId` IN ($l0Ids)" )->all();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

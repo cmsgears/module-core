@@ -5,6 +5,8 @@ namespace cmsgears\core\common\models\base;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\traits\NameTypeTrait;
 
 /**
@@ -14,41 +16,67 @@ use cmsgears\core\common\models\traits\NameTypeTrait;
  */
 abstract class TypedResource extends Resource {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
 
 	use NameTypeTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    // yii\base\Model --------------------
+	// Yii parent classes --------------------
 
-    // TypedEntity -----------------------
+	// yii\base\Component -----
 
-    // Static Methods ----------------------------------------------
+	// yii\base\Model ---------
 
-    // yii\db\ActiveRecord ---------------
+	// CMG interfaces ------------------------
 
-    // TypedCmgEntity --------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// Validators ----------------------------
 
-    // Read ---------------
+	// TypedResource -------------------------
 
-    // Update -------------
+	// Static Methods ----------------------------------------------
 
-    // Delete -------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
+
+	// CMG parent classes --------------------
+
+	// TypedResource -------------------------
+
+	// Read - Query -----------
+
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

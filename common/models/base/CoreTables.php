@@ -51,6 +51,7 @@ class CoreTables {
 
 	// Direct Mappers
 	const TABLE_ROLE_PERMISSION		= 'cmg_core_role_permission';
+	const TABLE_SITE_ATTRIBUTE		= 'cmg_core_site_attribute';
 	const TABLE_SITE_MEMBER			= 'cmg_core_site_member';
 
 	// Model Resources

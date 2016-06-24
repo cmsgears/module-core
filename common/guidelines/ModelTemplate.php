@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\listing\common\guidelines;
+namespace cmsgears\core\common\guidelines;
 
 /**
  * A model extending CmgEntity can be further divided into below mentioned sections:
@@ -8,25 +8,30 @@ namespace cmsgears\listing\common\guidelines;
  * 3. Project imports
  * 4. Class definition
  * 5. Variables
- * 		5.1. Global and Static variables
- * 		5.2. Public variables
- * 		5.3. Private and Protected Variables
+ * 		5.1. Globals
+ * 				5.1.1. Constants
+ * 				5.1.2. Public
+ * 				5.1.3. Protected
+ * 		5.2. Variables
+ * 				5.2.1. Public
+ * 				5.2.2. Protected
+ * 				5.2.3. Private
  * 6. Traits
  * 7. Constructor and Initialisation
  * 8. Instance methods
  * 		8.1. Yii interface implementation
- * 		8.2. Yii base component overriden methods including behaviours
- * 		8.3. Yii base model overriden methods including rules and labels
- * 		8.4. Yii parent class overriden methods
- * 		8.5. CMG interface implementation
- * 		8.6. CMG parent class overriden methods
- * 		8.7. Current class validators
- * 		8.8. Current class methods - hasOne, hasMany following other methods
+ * 		8.2. Yii parent class overriden methods
+ * 				8.2.1. Yii base component overriden methods including behaviours
+ * 				8.2.2. Yii base model overriden methods including rules and labels
+ * 		8.3. CMG interface implementation
+ * 		8.4. CMG parent class overriden methods
+ * 		8.5. Current class validators
+ * 		8.6. Current class methods - hasOne, hasMany following other methods
  * 9. Static methods
- * 		9.1. ActiveRecord overriden methods including getTableName
- * 		9.2. Yii parent class overriden methods
- * 		9.3. CMG parent class overriden methods
- * 		9.4. Current class methods
+ * 		9.1. Yii parent class overriden methods
+ * 				9.1.1. ActiveRecord overriden methods including getTableName
+ * 		9.2. CMG parent class overriden methods
+ * 		9.3. Current class methods
  * 				9.4.1. Read - query<method>
  * 				9.4.2. Read - find<method>
  * 				9.4.3. Create
@@ -72,22 +77,32 @@ use cmsgears\core\common\config\CoreGlobal;
  * ModelTemplate Entity
  *
  * @property short $<integer member>
- * @property int $<integer member>
+ * @property integer $<integer member>
  * @property long $<integer member>
  * @property float $<float member>
  * @property double $<float member>
  * @property string $<string member>
  * @property boolean $<boolean member>
  */
-class ModelTemplate extends \cmsgears\core\common\models\base\CmgEntity {
+class ModelTemplate extends \cmsgears\core\common\models\base\Entity {
 
 	// Variables ---------------------------------------------------
 
-	// Constants/Statics --
+	// Globals -------------------------------
 
-	// Public -------------
+	// Constants --------------
 
-	// Private/Protected --
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
@@ -95,41 +110,41 @@ class ModelTemplate extends \cmsgears\core\common\models\base\CmgEntity {
 
 	// Instance methods --------------------------------------------
 
-	// Yii interfaces --------------------
+	// Yii interfaces ------------------------
 
-	// yii\base\Component ----------------
+	// Yii parent classes --------------------
 
-	// yii\base\Model --------------------
+	// yii\base\Component -----
 
-	// Yii parent class ------------------
+	// yii\base\Model ---------
 
-	// CMG interfaces --------------------
+	// CMG interfaces ------------------------
 
-	// CMG parent class ------------------
+	// CMG parent classes --------------------
 
-	// Validators ------------------------
+	// Validators ----------------------------
 
-	// <Model> ---------------------------
+	// <Model> -------------------------------
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
 
-	// Yii parent class ------------------
+	// yii\db\ActiveRecord ----
 
-	// CMG parent class ------------------
+	// CMG parent classes --------------------
 
-	// <Model> ---------------------------
+	// <Model> -------------------------------
 
-	// Read - Query -------
+	// Read - Query -----------
 
-	// Read - Find --------
+	// Read - Find ------------
 
-	// Create -------------
+	// Create -----------------
 
-	// Update -------------
+	// Update -----------------
 
-	// Delete -------------
+	// Delete -----------------
 }
 
 ?>

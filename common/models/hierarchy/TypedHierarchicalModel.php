@@ -10,8 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * TypedHierarchicalModel - It can be used by models which need parent child relationship and support type.
  *
- * @property integer $parentId
- * @property integer $rootId
+ * @property long $parentId
+ * @property long $rootId
  * @property string $name
  * @property string $type
  * @property integer lValue
@@ -19,30 +19,43 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 abstract class TypedHierarchicalModel extends HierarchicalModel {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-	/**
-	 * It can be used to determine whether entity is available only for a specific site.
-	 */
-	protected static $siteSpecific	= false;
+	// Constants --------------
 
-    // Public -------------
+	// Public -----------------
 
-    // Private/Protected --
+	// Protected --------------
 
-    // Traits ------------------------------------------------------
+	// Variables -----------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Public -----------------
 
-    // Instance Methods --------------------------------------------
+	// Protected --------------
 
-    // yii\base\Component ----------------
+	// Private ----------------
 
-    // yii\base\Model --------------------
+	// Traits ------------------------------------------------------
 
-    // TypedHierarchicalModel ------------
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
 
     /**
      * Validates to ensure that name is used only for one model for a particular type and belonging to same parent
@@ -74,22 +87,28 @@ abstract class TypedHierarchicalModel extends HierarchicalModel {
         }
     }
 
-    // Static Methods ----------------------------------------------
+	// TypedHierarchicalModel ----------------
 
-    // yii\db\ActiveRecord ---------------
+	// Static Methods ----------------------------------------------
 
-    // TypedHierarchicalModel ------------
+	// Yii parent classes --------------------
 
-    // Create -------------
+	// yii\db\ActiveRecord ----
 
-    // Read ---------------
+	// CMG parent classes --------------------
+
+	// TypedHierarchicalModel ----------------
+
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     /**
      * @return Category - by type and name
      */
     public static function findByNameType( $name, $type, $parentId = null ) {
 
-		if( static::$siteSpecific ) {
+		if( static::$multisite ) {
 
 	        $siteId = Yii::$app->cmgCore->siteId;
 
@@ -125,9 +144,11 @@ abstract class TypedHierarchicalModel extends HierarchicalModel {
         return isset( $category );
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

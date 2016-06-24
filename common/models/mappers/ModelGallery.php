@@ -23,21 +23,37 @@ use cmsgears\core\common\models\resources\Gallery;
  */
 class ModelGallery extends \cmsgears\core\common\models\base\ParentMapper {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    // Constructor and Initialisation ------------------------------
+	// Variables -----------------------------
 
-    // Instance Methods --------------------------------------------
+	// Public -----------------
 
-	// yii\base\Model --------------------
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -69,7 +85,13 @@ class ModelGallery extends \cmsgears\core\common\models\base\ParentMapper {
 		];
 	}
 
-	// ModelGallery ----------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// ModelGallery --------------------------
 
 	/**
 	 * @return Gallery - associated address
@@ -81,7 +103,9 @@ class ModelGallery extends \cmsgears\core\common\models\base\ParentMapper {
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -91,11 +115,11 @@ class ModelGallery extends \cmsgears\core\common\models\base\ParentMapper {
 		return CoreTables::TABLE_MODEL_GALLERY;
 	}
 
-	// ModelGallery ----------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// ModelGallery --------------------------
 
-    // Read ---------------
+	// Read - Query -----------
 
 	public static function queryByGalleryId( $parentId, $parentType, $galleryId ) {
 
@@ -107,9 +131,13 @@ class ModelGallery extends \cmsgears\core\common\models\base\ParentMapper {
         return self::find()->where( 'parentId=:pid',[ ':pid' => $parentId ] );
     }
 
-    // Update -------------
+	// Read - Find ------------
 
-    // Delete -------------
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
 
 	public static function deleteByGalleryId( $galleryId ) {
 

@@ -24,23 +24,37 @@ use cmsgears\core\common\models\base\CoreTables;
  */
 class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    // Constructor and Initialisation ------------------------------
+	// Variables -----------------------------
 
-    // Instance Methods --------------------------------------------
+	// Public -----------------
 
-    // yii\base\Component ----------------
+	// Protected --------------
 
-    // yii\base\Model --------------------
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -53,7 +67,6 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
             [ [ 'id', 'value' ], 'safe' ],
             [ [ 'parentType', 'name', 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
             [ 'label', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ 'name', 'alphanumu' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
@@ -86,7 +99,11 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
         ];
     }
 
-    // ModelAttribute --------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
 
     /**
      * Validates to ensure that only one attribute exist with one name.
@@ -118,9 +135,13 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
         }
     }
 
-    // Static Methods ----------------------------------------------
+	// ModelAttribute ------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Static Methods ----------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -130,11 +151,13 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
         return CoreTables::TABLE_MODEL_ATTRIBUTE;
     }
 
-    // ModelAttribute --------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// <Model> -------------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     /**
      * @param integer $parentId
@@ -185,9 +208,11 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
         return isset( $config );
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

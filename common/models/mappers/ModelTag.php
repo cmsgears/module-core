@@ -22,23 +22,37 @@ use cmsgears\core\common\models\resources\Tag;
  */
 class ModelTag extends \cmsgears\core\common\models\base\ParentMapper {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    // Constructor and Initialisation ------------------------------
+	// Variables -----------------------------
 
-    // Instance Methods --------------------------------------------
+	// Public -----------------
 
-    // yii\base\Component ----------------
+	// Protected --------------
 
-    // yii\base\Model --------------------
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -69,16 +83,28 @@ class ModelTag extends \cmsgears\core\common\models\base\ParentMapper {
         ];
     }
 
-    // ModelTag --------------------------
 
-    public function getTag() {
+	// CMG interfaces ------------------------
 
-        return $this->hasOne( Tag::className(), [ 'id' => 'tagId' ] );
-    }
+	// CMG parent classes --------------------
 
-    // Static Methods ----------------------------------------------
+	// Validators ----------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// ModelTag ------------------------------
+
+	/**
+	 * @return Tag - associated tag
+	 */
+	public function getTag() {
+
+    	return $this->hasOne( Tag::className(), [ 'id' => 'tagId' ] );
+	}
+
+	// Static Methods ----------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -88,11 +114,13 @@ class ModelTag extends \cmsgears\core\common\models\base\ParentMapper {
         return CoreTables::TABLE_MODEL_TAG;
     }
 
-    // ModelTag --------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// ModelTag ------------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     public static function findByTagId( $parentId, $parentType, $tagId ) {
 
@@ -114,9 +142,11 @@ class ModelTag extends \cmsgears\core\common\models\base\ParentMapper {
         return self::find()->where( 'tagId=:tid AND parentType=:ptype AND active=1',  [ ':tid' => $tagId, ':ptype' => $parentType] )->all();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 
     /**
      * Delete all entries related to a tag. It's required while deleting a tag.

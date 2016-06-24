@@ -22,23 +22,37 @@ use cmsgears\core\common\models\resources\File;
  */
 class ModelFile extends \cmsgears\core\common\models\base\ParentMapper {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    // Constructor and Initialisation ------------------------------
+	// Variables -----------------------------
 
-    // Instance Methods --------------------------------------------
+	// Public -----------------
 
-    // yii\base\Component ----------------
+	// Protected --------------
 
-    // yii\base\Model --------------------
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -69,7 +83,13 @@ class ModelFile extends \cmsgears\core\common\models\base\ParentMapper {
         ];
     }
 
-    // ModelFile -------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+    // ModelFile -----------------------------
 
     /**
      * @return CmgFile - associated file
@@ -79,9 +99,11 @@ class ModelFile extends \cmsgears\core\common\models\base\ParentMapper {
         return $this->hasOne( CmgFile::className(), [ 'id' => 'fileId' ] );
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -91,11 +113,13 @@ class ModelFile extends \cmsgears\core\common\models\base\ParentMapper {
         return CoreTables::TABLE_MODEL_FILE;
     }
 
-    // ModelFile -------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// ModelFile -----------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     public static function findByFileId( $parentId, $parentType, $fileId ) {
 
@@ -112,9 +136,11 @@ class ModelFile extends \cmsgears\core\common\models\base\ParentMapper {
         return self::find()->joinWith( 'file' )->where( 'parentId=:pid AND parentType=:ptype AND title LIKE :title', [ ':pid' => $parentId, ':ptype' => $parentType, ':title' => $likeTitle ] )->all();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 
     /**
      * Delete all entries related to a file

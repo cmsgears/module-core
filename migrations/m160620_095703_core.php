@@ -55,6 +55,7 @@ class m160620_095703_core extends \yii\db\Migration {
 		// User
 		$this->upUser();
 		$this->upSite();
+		$this->upSiteAttribute();
 		$this->upSiteMember();
 
 		// Files
@@ -115,6 +116,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'basePath' => $this->string( CoreGlobal::TEXT_XLARGE )->defaultValue( null ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
+			'content' => $this->text(),
 			'data' => $this->text()
         ], $this->options );
 
@@ -367,13 +369,29 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'site_theme', $this->prefix . 'core_site', 'themeId' );
 	}
 
+	private function upSiteAttribute() {
+
+        $this->createTable( $this->prefix . 'core_site_attribute', [
+			'id' => $this->bigPrimaryKey( 20 ),
+			'siteId' => $this->bigInteger( 20 )->notNull(),
+			'name' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
+			'label' => $this->string( CoreGlobal::TEXT_LARGE )->notNull(),
+			'type' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull()->defaultValue( 'default' ),
+			'valueType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull()->defaultValue( 'text' ),
+			'value' => $this->text()
+        ], $this->options );
+
+        // Index for columns site, parent, creator and modifier
+		$this->createIndex( 'idx_' . $this->prefix . 'site_attribute_parent', $this->prefix . 'core_site_attribute', 'siteId' );
+	}
+
 	private function upSiteMember() {
 
         $this->createTable( $this->prefix . 'core_site_member', [
             'id' => $this->bigPrimaryKey( 20 ),
-            'siteId' => $this->bigInteger( 20 ),
-            'userId' => $this->bigInteger( 20 ),
-            'roleId' => $this->bigInteger( 20 ),
+            'siteId' => $this->bigInteger( 20 )->notNull(),
+            'userId' => $this->bigInteger( 20 )->notNull(),
+            'roleId' => $this->bigInteger( 20 )->notNull(),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime()
         ], $this->options );
@@ -492,6 +510,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'value' => $this->string( CoreGlobal::TEXT_XLARGE )->defaultValue( null ),
 			'icon' => $this->string( CoreGlobal::TEXT_MEDIUM )->defaultValue( null ),
 			'htmlOptions' => $this->text(),
+			'content' => $this->text(),
 			'data' => $this->text()
         ], $this->options );
 
@@ -574,7 +593,7 @@ class m160620_095703_core extends \yii\db\Migration {
             'id' => $this->bigPrimaryKey( 20 ),
             'parentId' => $this->bigInteger( 20 ),
             'childId' => $this->bigInteger( 20 ),
-            'rootId' => $this->bigInteger( 20 ),
+            'rootId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
 			'lValue' => $this->smallInteger( 6 ),
 			'rValue' => $this->smallInteger( 6 )
@@ -821,6 +840,9 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'site_banner', $this->prefix . 'core_site', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'site_theme', $this->prefix . 'core_site', 'themeId', $this->prefix . 'core_theme', 'id', 'SET NULL' );
 
+		// Site Atribute
+        $this->addForeignKey( 'fk_' . $this->prefix . 'site_attribute_parent', $this->prefix . 'core_site_attribute', 'siteId', $this->prefix . 'core_site', 'id', 'CASCADE' );
+
 		// Site Member
         $this->addForeignKey( 'fk_' . $this->prefix . 'site_member_site', $this->prefix . 'core_site_member', 'siteId', $this->prefix . 'core_site', 'id', 'CASCADE' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'site_member_user', $this->prefix . 'core_site_member', 'userId', $this->prefix . 'core_user', 'id', 'CASCADE' );
@@ -916,6 +938,7 @@ class m160620_095703_core extends \yii\db\Migration {
 
 		$this->dropTable( $this->prefix . 'core_user' );
 		$this->dropTable( $this->prefix . 'core_site' );
+		$this->dropTable( $this->prefix . 'core_site_attribute' );
 		$this->dropTable( $this->prefix . 'core_site_member' );
 
 		$this->dropTable( $this->prefix . 'core_file' );
@@ -996,6 +1019,9 @@ class m160620_095703_core extends \yii\db\Migration {
         $this->dropForeignKey( 'fk_' . $this->prefix . 'site_avatar', $this->prefix . 'core_site' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_banner', $this->prefix . 'core_site' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_theme', $this->prefix . 'core_site' );
+
+		// Site Atribute
+        $this->dropForeignKey( 'fk_' . $this->prefix . 'site_attribute_parent', $this->prefix . 'core_site_attribute' );
 
 		// Site Member
         $this->dropForeignKey( 'fk_' . $this->prefix . 'site_member_site', $this->prefix . 'core_site_member' );

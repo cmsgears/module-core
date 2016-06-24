@@ -26,8 +26,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property long $modifiedBy
  * @property string $name
  * @property string $slug
- * @property string $icon
  * @property string $type
+ * @property string $icon
  * @property string $description
  * @property string $renderer
  * @property boolean $fileRender
@@ -41,24 +41,40 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class Template extends \cmsgears\core\common\models\base\TypedEntity {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	public $parentType  = CoreGlobal::TYPE_TEMPLATE;
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
 
     use CreateModifyTrait;
     use DataTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -82,7 +98,7 @@ class Template extends \cmsgears\core\common\models\base\TypedEntity {
         ];
     }
 
-    // yii\base\Model --------------------
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -95,8 +111,7 @@ class Template extends \cmsgears\core\common\models\base\TypedEntity {
             [ [ 'id', 'content', 'data' ], 'safe' ],
             [ [ 'name', 'icon', 'type', 'renderer' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
             [ [ 'slug' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ [ 'description', 'layout', 'viewPath' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->extraLargeText ],
-            [ 'name', 'alphanumpun' ],
+            [ [ 'description', 'layout', 'viewPath' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->xLargeText ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'fileRender', 'layoutGroup' ], 'boolean' ],
@@ -132,11 +147,19 @@ class Template extends \cmsgears\core\common\models\base\TypedEntity {
         ];
     }
 
-    // Template --------------------------
+	// CMG interfaces ------------------------
 
-    // Static Methods ----------------------------------------------
+	// CMG parent classes --------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Validators ----------------------------
+
+	// Template ------------------------------
+
+	// Static Methods ----------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -146,11 +169,11 @@ class Template extends \cmsgears\core\common\models\base\TypedEntity {
         return CoreTables::TABLE_TEMPLATE;
     }
 
-    // Template --------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// Template ------------------------------
 
-    // Read ---------------
+	// Read - Query -----------
 
     public static function queryBySlug( $slug ) {
 
@@ -162,14 +185,18 @@ class Template extends \cmsgears\core\common\models\base\TypedEntity {
         return self::find()->where( 'type=:type AND slug=:slug', [ ':type' => $type, ':slug' => $slug ] );
     }
 
+	// Read - Find ------------
+
     public static function findByTypeSlug( $type, $slug ) {
 
         return self::find()->where( 'type=:type AND slug=:slug', [ ':type' => $type, ':slug' => $slug ] )->one();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

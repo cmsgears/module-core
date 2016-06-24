@@ -14,25 +14,45 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 abstract class ParentModel extends \cmsgears\core\common\models\base\Entity {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    // Constructor and Initialisation ------------------------------
+	// Variables -----------------------------
 
-    // Instance Methods --------------------------------------------
+	// Public -----------------
 
-    // yii\base\Component ----------------
+	// Protected --------------
 
-    // yii\base\Model --------------------
+	// Private ----------------
 
-    // HierarchicalModel------------------
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// ParentModel ---------------------------
 
 	abstract public function getParent();
 
@@ -50,19 +70,25 @@ abstract class ParentModel extends \cmsgears\core\common\models\base\Entity {
 
 	abstract public function getChildren();
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
 
-    // HierarchicalModel------------------
+	// yii\db\ActiveRecord ----
 
-    // Create -------------
+	// CMG parent classes --------------------
 
-    // Read ---------------
+	// ParentModel ---------------------------
 
-    // Update -------------
+	// Read - Query -----------
 
-    // Delete -------------
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

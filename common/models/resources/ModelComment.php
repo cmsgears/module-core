@@ -44,9 +44,11 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class ModelComment extends \cmsgears\core\common\models\base\ParentResource {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
+
+	// Constants --------------
 
     const TYPE_COMMENT      =   0;
     const TYPE_REVIEW       =  10;
@@ -58,6 +60,8 @@ class ModelComment extends \cmsgears\core\common\models\base\ParentResource {
     const STATUS_APPROVED   =  800;
     const STATUS_TRASH    	=  900;
 
+	// Public -----------------
+
     public static $statusMap = [
         self::STATUS_NEW => 'New',
         self::STATUS_SPAM => 'Spam',
@@ -66,22 +70,32 @@ class ModelComment extends \cmsgears\core\common\models\base\ParentResource {
         self::STATUS_TRASH => 'Trash'
     ];
 
-    // Public -------------
+	// Protected --------------
 
-    public $captcha;
+	// Variables -----------------------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	public $parentType	= CoreGlobal::TYPE_COMMENT;
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
 
     use CreateModifyTrait;
     use DataTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -101,7 +115,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ParentResource {
         ];
     }
 
-    // yii\base\Model --------------------
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -114,7 +128,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ParentResource {
             [ [ 'id', 'content', 'data' ], 'safe' ],
             [ 'email', 'email' ],
             [ [ 'parentType', 'name', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ [ 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->extraLargeText ],
+            [ [ 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->xLargeText ],
             [ [ 'status', 'rating', 'type' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
             [ 'content', 'required', 'on' => [ 'testimonial' ] ],
@@ -127,7 +141,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ParentResource {
         // trim if required
         if( Yii::$app->cmgCore->trimFieldValue ) {
 
-            $trim[] = [ [ 'name', 'email','avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'name', 'email', 'avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
             return ArrayHelper::merge( $trim, $rules );
         }
@@ -158,7 +172,13 @@ class ModelComment extends \cmsgears\core\common\models\base\ParentResource {
         ];
     }
 
-    // ModelComment ----------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+    // ModelComment --------------------------
 
     public function getBaseComment() {
 
@@ -180,9 +200,11 @@ class ModelComment extends \cmsgears\core\common\models\base\ParentResource {
         return Yii::$app->formatter->asBoolean( $this->featured );
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -192,11 +214,13 @@ class ModelComment extends \cmsgears\core\common\models\base\ParentResource {
         return CoreTables::TABLE_MODEL_COMMENT;
     }
 
-    // ModelComment ----------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// ModelComment --------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     public static function queryByParent( $parentId, $parentType, $type = self::TYPE_COMMENT, $status = self::STATUS_APPROVED ) {
 
@@ -218,9 +242,11 @@ class ModelComment extends \cmsgears\core\common\models\base\ParentResource {
         return self::find()->where( [ 'email' => $email ] );
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

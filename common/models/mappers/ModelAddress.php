@@ -23,23 +23,37 @@ use cmsgears\core\common\models\resources\Address;
  */
 class ModelAddress extends \cmsgears\core\common\models\base\ParentMapper {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    // Constructor and Initialisation ------------------------------
+	// Variables -----------------------------
 
-    // Instance Methods --------------------------------------------
+	// Public -----------------
 
-    // yii\base\Component ----------------
+	// Protected --------------
 
-    // yii\base\Model --------------------
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
      /**
      * @inheritdoc
@@ -71,7 +85,13 @@ class ModelAddress extends \cmsgears\core\common\models\base\ParentMapper {
         ];
     }
 
-    // ModelAddress-----------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+    // ModelAddress --------------------------
 
     /**
      * @return Address - associated address
@@ -81,9 +101,11 @@ class ModelAddress extends \cmsgears\core\common\models\base\ParentMapper {
         return $this->hasOne( Address::className(), [ 'id' => 'addressId' ] );
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -93,11 +115,13 @@ class ModelAddress extends \cmsgears\core\common\models\base\ParentMapper {
         return CoreTables::TABLE_MODEL_ADDRESS;
     }
 
-    // ModelAddress-----------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// ModelAddress --------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     /**
      * @param int $parentId
@@ -123,9 +147,11 @@ class ModelAddress extends \cmsgears\core\common\models\base\ParentMapper {
         return self::find()->where( 'parentId=:pid AND parentType=:ptype AND addressId=:aid', [ ':pid' => $parentId, ':ptype' => $parentType, ':aid' => $addressId ] )->one();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 
     /**
      * Delete all entries related to a address

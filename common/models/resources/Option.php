@@ -21,29 +21,46 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * @property string $value
  * @property string $icon
  * @property string $htmlOptions
+ * @property string $content
  * @property string $data
  */
 class Option extends \cmsgears\core\common\models\base\Resource {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    use DataTrait;
+	// Variables -----------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Public -----------------
 
-    // Instance Methods --------------------------------------------
+	public $parentType = CoreGlobal::TYPE_OPTION;
 
-    // yii\base\Component ----------------
+	// Protected --------------
 
-    // yii\base\Model --------------------
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	use DataTrait;
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -53,10 +70,9 @@ class Option extends \cmsgears\core\common\models\base\Resource {
         // model rules
         $rules = [
             [ [ 'name' ], 'required' ],
-            [ [ 'id', 'value', 'htmlOptions', 'data' ], 'safe' ],
+            [ [ 'id', 'value', 'htmlOptions', 'content', 'data' ], 'safe' ],
             [ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
         ];
@@ -87,7 +103,11 @@ class Option extends \cmsgears\core\common\models\base\Resource {
         ];
     }
 
-    // Option ----------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
 
     /**
      * Validates to ensure that only one option exist for a category with the same name.
@@ -119,6 +139,8 @@ class Option extends \cmsgears\core\common\models\base\Resource {
         }
     }
 
+    // Option --------------------------------
+
     /**
      * @return Category - The parent category.
      */
@@ -127,9 +149,11 @@ class Option extends \cmsgears\core\common\models\base\Resource {
         return $this->hasOne( Category::className(), [ 'id' => 'categoryId' ] );
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -139,11 +163,13 @@ class Option extends \cmsgears\core\common\models\base\Resource {
         return CoreTables::TABLE_OPTION;
     }
 
-    // Option ----------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// Option --------------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     /**
      * @return Option - by category
@@ -229,9 +255,11 @@ class Option extends \cmsgears\core\common\models\base\Resource {
                             ->one();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 
     /**
      * Delete Option - by category id

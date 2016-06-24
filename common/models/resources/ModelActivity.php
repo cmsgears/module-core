@@ -26,23 +26,37 @@ use cmsgears\core\common\models\entities\User;
  */
 class ModelActivity extends \cmsgears\core\common\models\base\ParentResource {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    // Constructor and Initialisation ------------------------------
+	// Variables -----------------------------
 
-    // Instance Methods --------------------------------------------
+	// Public -----------------
 
-    // yii\base\Component ----------------
+	// Protected --------------
 
-    // yii\base\Model --------------------
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -53,8 +67,8 @@ class ModelActivity extends \cmsgears\core\common\models\base\ParentResource {
             [ [ 'userId', 'parentId', 'parentType' ], 'required' ],
             [ [ 'id', 'content' ], 'safe' ],
             [ [ 'parentType', 'type', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ [ 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->extraLargeText ],
-            [ [ 'activityId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->xLargeText ],
+            [ [ 'userId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }
@@ -74,7 +88,13 @@ class ModelActivity extends \cmsgears\core\common\models\base\ParentResource {
         ];
     }
 
-    // ModelActivity ---------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+    // ModelActivity -------------------------
 
     /**
      * @return User - associated user
@@ -84,9 +104,11 @@ class ModelActivity extends \cmsgears\core\common\models\base\ParentResource {
         return $this->hasOne( Activity::className(), [ 'id' => 'userId' ] );
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -96,15 +118,19 @@ class ModelActivity extends \cmsgears\core\common\models\base\ParentResource {
         return CoreTables::TABLE_MODEL_ACTIVITY;
     }
 
-    // ModelActivity ---------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// ModelActivity -------------------------
 
-    // Read ---------------
+	// Read - Query -----------
 
-    // Update -------------
+	// Read - Find ------------
 
-    // Delete -------------
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

@@ -22,21 +22,37 @@ use cmsgears\core\common\models\base\CoreTables;
  */
 class ModelHierarchy extends \cmsgears\core\common\models\base\ParentResource {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    // Constructor and Initialisation ------------------------------
+	// Variables -----------------------------
 
-    // Instance Methods --------------------------------------------
+	// Public -----------------
 
-	// yii\base\Model --------------------
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -44,7 +60,7 @@ class ModelHierarchy extends \cmsgears\core\common\models\base\ParentResource {
 	public function rules() {
 
         return [
-            [ [ 'rootId' ], 'required' ],
+            [ [ 'rootId', 'parentType' ], 'required' ],
             [ [ 'id' ], 'safe' ],
             [ [ 'parentType' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
             [ [ 'parentId', 'childId', 'rootId', 'lValue', 'rValue' ], 'number', 'integerOnly' => true, 'min' => 1 ]
@@ -62,11 +78,19 @@ class ModelHierarchy extends \cmsgears\core\common\models\base\ParentResource {
 		];
 	}
 
-	// ModelHierarchy --------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// ModelHierarchy ------------------------
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -76,20 +100,24 @@ class ModelHierarchy extends \cmsgears\core\common\models\base\ParentResource {
 		return CoreTables::TABLE_MODEL_HIERARCHY;
 	}
 
-	// ModelHierarchy --------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// ModelHierarchy ------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     public static function findRoot( $rootId, $parentType ) {
 
         return self::find()->where( 'rootId=:rid AND parentId=NULL parentType=:type', [ ':rid' => $rootId, ':type' => $parentType ] )->one();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

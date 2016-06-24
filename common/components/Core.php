@@ -112,7 +112,7 @@ class Core extends \yii\base\Component {
     public $smallText           = CoreGlobal::TEXT_SMALL;
     public $mediumText          = CoreGlobal::TEXT_MEDIUM;
     public $largeText           = CoreGlobal::TEXT_LARGE;
-    public $extraLargeText      = CoreGlobal::TEXT_XLARGE;
+    public $xLargeText     	 	= CoreGlobal::TEXT_XLARGE;
 
     public $notifications       = false;
 
@@ -312,7 +312,7 @@ class Core extends \yii\base\Component {
 
     public function getExtraLargeText() {
 
-        return $this->extraLargeText;
+        return $this->xLargeText;
     }
 
     /**

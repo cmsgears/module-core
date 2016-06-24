@@ -14,8 +14,8 @@ use cmsgears\core\common\models\entities\Locale;
 /**
  * ModelMessage Entity
  *
- * @property integer $id
- * @property integer $localeId
+ * @property long $id
+ * @property long $localeId
  * @property integer $parentId
  * @property string $parentType
  * @property string $name
@@ -23,9 +23,37 @@ use cmsgears\core\common\models\entities\Locale;
  */
 class ModelMessage extends \cmsgears\core\common\models\base\ParentResource {
 
-	// Instance Methods --------------------------------------------
+	// Variables ---------------------------------------------------
 
-	// yii\base\Model --------------------
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -34,12 +62,11 @@ class ModelMessage extends \cmsgears\core\common\models\base\ParentResource {
 
 		// model rules
         $rules = [
-            [ [ 'localeId', 'parentId', 'parentType', 'name', 'value' ], 'required' ],
-            [ 'id', 'safe' ],
+            [ [ 'localeId', 'parentId', 'parentType', 'name' ], 'required' ],
+            [ [ 'id', 'value' ], 'safe' ],
             [ [ 'localeId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'parentType', 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ 'name', 'alphanumpun' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
@@ -69,7 +96,11 @@ class ModelMessage extends \cmsgears\core\common\models\base\ParentResource {
 		];
 	}
 
-	// ModelMessage ----------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
 
 	/**
 	 * Validates to ensure that only one message exist with one name for a particular locale.
@@ -101,6 +132,8 @@ class ModelMessage extends \cmsgears\core\common\models\base\ParentResource {
         }
     }
 
+	// ModelMessage --------------------------
+
 	/**
 	 * @return Locale - parent locale.
 	 */
@@ -111,7 +144,9 @@ class ModelMessage extends \cmsgears\core\common\models\base\ParentResource {
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -121,7 +156,13 @@ class ModelMessage extends \cmsgears\core\common\models\base\ParentResource {
 		return CoreTables::TABLE_LOCALE_MESSAGE;
 	}
 
-	// ModelMessage ----------------------
+	// CMG parent classes --------------------
+
+	// ModelMessage --------------------------
+
+	// Read - Query -----------
+
+	// Read - Find ------------
 
 	/**
 	 * @param integer $parentId
@@ -149,7 +190,11 @@ class ModelMessage extends \cmsgears\core\common\models\base\ParentResource {
 		return isset( self::findByNameLocaleId( $parentId, $parentType, $name, $localeId ) );
 	}
 
-	// Delete ----
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
 
 	/**
 	 * Delete all entries related to a locale

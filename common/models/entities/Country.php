@@ -20,23 +20,37 @@ use cmsgears\core\common\models\base\CoreTables;
  */
 class Country extends \cmsgears\core\common\models\base\NamedEntity {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    // Constructor and Initialisation ------------------------------
+	// Variables -----------------------------
 
-    // Instance Methods --------------------------------------------
+	// Public -----------------
 
-    // yii\base\Component ----------------
+	// Protected --------------
 
-    // yii\base\Model --------------------
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -47,10 +61,8 @@ class Country extends \cmsgears\core\common\models\base\NamedEntity {
         $rules = [
             [ [ 'name', 'code' ], 'required' ],
             [ 'id', 'safe' ],
-            [ 'code', 'unique' ],
             [ [ 'code', 'codeNum' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->smallText ],
             [ 'name', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ 'name', 'alphanumpun' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
@@ -78,7 +90,13 @@ class Country extends \cmsgears\core\common\models\base\NamedEntity {
         ];
     }
 
-    // Country ---------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Country -------------------------------
 
     /**
      * @return array - list of Province having all the provinces belonging to this country
@@ -88,11 +106,13 @@ class Country extends \cmsgears\core\common\models\base\NamedEntity {
         return $this->hasMany( Province::className(), [ 'countryId' => 'id' ] );
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
 
-     /**
+	// yii\db\ActiveRecord ----
+
+	/**
      * @inheritdoc
      */
     public static function tableName() {
@@ -100,11 +120,13 @@ class Country extends \cmsgears\core\common\models\base\NamedEntity {
         return CoreTables::TABLE_COUNTRY;
     }
 
-    // Country ---------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// Country -------------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     /**
      * @return Country by code
@@ -114,9 +136,11 @@ class Country extends \cmsgears\core\common\models\base\NamedEntity {
         return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

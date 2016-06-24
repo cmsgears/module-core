@@ -3,12 +3,12 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
-use yii\helpers\ArrayHelper;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
-use yii\web\NotFoundHttpException;
+
 use yii\base\NotSupportedException;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -31,9 +31,9 @@ use cmsgears\core\common\models\traits\mappers\FileTrait;
  * User Entity - The primary class.
  *
  * @property long $id
- * @property long localeId
- * @property long genderId
- * @property long avatarId
+ * @property long $localeId
+ * @property long $genderId
+ * @property long $avatarId
  * @property short $status
  * @property string $email
  * @property string $username
@@ -44,22 +44,27 @@ use cmsgears\core\common\models\traits\mappers\FileTrait;
  * @property string $phone
  * @property string $avatarUrl
  * @property string $websiteUrl
- * @property string verifyToken
- * @property string resetToken
- * @property string registeredAt
- * @property datetime lastLoginAt
- * @property datetime lastActivityAt
- * @property string authKey
- * @property string accessToken
- * @property datetime accessTokenCreatedAt
- * @property datetime accessTokenAccessedAt
- * @property string data
+ * @property string $verifyToken
+ * @property string $resetToken
+ * @property string $registeredAt
+ * @property datetime $lastLoginAt
+ * @property datetime $lastActivityAt
+ * @property string $authKey
+ * @property string $token
+ * @property datetime $tokenCreatedAt
+ * @property datetime $tokenAccessedAt
+ * @property string $content
+ * @property string $data
  */
 class User extends \cmsgears\core\common\models\base\Entity implements IdentityInterface, IApproval {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
 
     /**
      * The status map having string form of status available for admin to make status change.
@@ -71,14 +76,20 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         self::STATUS_TERMINATED => 'Terminated'
     ];
 
-    // Public -------------
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
     public $parentType  = CoreGlobal::TYPE_USER;
     public $permissions = [];
 
-    // Private/Protected --
+	// Protected --------------
 
-    // Traits ------------------------------------------------------
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
 
 	use AddressTrait;
 	use ApprovalTrait;
@@ -87,11 +98,13 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	use FileTrait;
 	use VisualTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // yii\web\IdentityInterface ----------
+	// Yii interfaces ------------------------
+
+    // yii\web\IdentityInterface
 
     /**
      * @inheritdoc
@@ -117,9 +130,11 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         return $this->authKey === $authKey;
     }
 
-    // yii\base\Component ----------------
+	// Yii parent classes --------------------
 
-    // yii\base\Model --------------------
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -129,21 +144,23 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         // model rules
         $rules = [
             [ [ 'email' ], 'required' ],
-            [ [ 'id', 'phone', 'data' ], 'safe' ],
+            [ [ 'id', 'phone', 'content', 'data' ], 'safe' ],
+
             [ 'email', 'email' ],
             [ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],
             [ 'email', 'validateEmailUpdate', 'on' => [ 'update', 'profile' ] ],
             [ 'email', 'validateEmailChange', 'on' => [ 'profile' ] ],
+
             [ 'username', 'alphanumdotu' ],
             [ 'username', 'validateUsernameCreate', 'on' => [ 'create' ] ],
             [ 'username', 'validateUsernameUpdate', 'on' => [ 'update', 'profile' ] ],
             [ 'username', 'validateUsernameChange', 'on' => [ 'profile' ] ],
-            [ [ 'firstName', 'lastName' ], 'alphanumspace' ],
+
             [ [ 'id', 'localeId', 'genderId', 'avatarId', 'status' ], 'number', 'integerOnly' => true ],
-            [ 'dob', 'date', 'format' => Yii::$app->formatter->dateFormat ],
             [ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
-            [ [ 'registeredAt', 'lastLoginAt', 'lastActivityAt', 'accessTokenCreatedAt', 'accessTokenAccessedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ],
-            [ [ 'email', 'username', 'passwordHash', 'firstName', 'lastName', 'phone', 'avatarUrl', 'websiteUrl', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->extraLargeText ]
+            [ [ 'email', 'username', 'passwordHash', 'firstName', 'lastName', 'phone', 'avatarUrl', 'websiteUrl', 'verifyToken', 'resetToken', 'authKey', 'token' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->xLargeText ],
+            [ 'dob', 'date', 'format' => Yii::$app->formatter->dateFormat ],
+            [ [ 'registeredAt', 'lastLoginAt', 'lastActivityAt', 'tokenCreatedAt', 'tokenAccessedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
         // trim if required
@@ -178,7 +195,11 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         ];
     }
 
-    // User ------------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
 
     /**
      * Validates user email to ensure that only one user exist with the given email.
@@ -287,26 +308,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         return false;
     }
 
-    /**
-     * @return user name from email in case it's not set by user
-     */
-    public function getName() {
-
-        $name   = $this->firstName . ' ' . $this->lastName;
-
-        if( !isset( $name ) || strlen( $name ) <= 1 ) {
-
-            $name   = $this->username;
-
-            if( !isset( $name ) || strlen( $name ) <= 1 ) {
-
-                $name   = preg_split( '/@/', $this->email );
-                $name   = $name[ 0 ];
-            }
-        }
-
-        return $name;
-    }
+	// User ----------------------------------
 
     /**
      * @return Site Member - assigned to User.
@@ -360,6 +362,27 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         }
 
         return '';
+    }
+
+    /**
+     * @return user name from email in case it's not set by user
+     */
+    public function getName() {
+
+        $name   = $this->firstName . ' ' . $this->lastName;
+
+        if( !isset( $name ) || strlen( $name ) <= 1 ) {
+
+            $name   = $this->username;
+
+            if( !isset( $name ) || strlen( $name ) <= 1 ) {
+
+                $name   = preg_split( '/@/', $this->email );
+                $name   = $name[ 0 ];
+            }
+        }
+
+        return $name;
     }
 
     /**
@@ -453,9 +476,11 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         return in_array( $permission, $this->permissions );
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\web\IdentityInterface ---------
+	// Yii interfaces ------------------------
+
+    // yii\web\IdentityInterface
 
     /**
      * The method finds the user identity using the given id and also loads the available permissions if rbac is enabled for the application.
@@ -515,7 +540,9 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         throw new NotSupportedException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_APIS_DISABLED ) );
     }
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @return string - db table name
@@ -525,11 +552,13 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         return CoreTables::TABLE_USER;
     }
 
-    // User ------------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// User ----------------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     /**
      * @return ActiveRecord - with site member and role.
@@ -596,9 +625,11 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         return isset( $user );
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

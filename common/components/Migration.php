@@ -27,6 +27,8 @@ class Migration extends \yii\base\Component {
 	public $uploadsDir		= null;
 	public $uploadsUrl		= 'http://localhost/test/uploads/';
 
+	public $siteMaster		= 'demomaster';
+
     /**
      * Initialise the Component.
      */
@@ -78,6 +80,11 @@ class Migration extends \yii\base\Component {
     public function getUploadsUrl() {
 
         return $this->uploadsUrl;
+    }
+
+    public function getSiteMaster() {
+
+        return $this->siteMaster;
     }
 }
 

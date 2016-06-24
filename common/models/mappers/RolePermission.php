@@ -17,23 +17,37 @@ use cmsgears\core\common\models\base\CoreTables;
  */
 class RolePermission extends \cmsgears\core\common\models\base\Entity {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    // Constructor and Initialisation ------------------------------
+	// Variables -----------------------------
 
-    // Instance Methods --------------------------------------------
+	// Public -----------------
 
-    // yii\base\Component ----------------
+	// Protected --------------
 
-    // yii\base\Model --------------------
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -58,7 +72,13 @@ class RolePermission extends \cmsgears\core\common\models\base\Entity {
         ];
     }
 
-    // RolePermission --------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// RolePermission ------------------------
 
     /**
      * @return Role - from the mapping.
@@ -76,9 +96,11 @@ class RolePermission extends \cmsgears\core\common\models\base\Entity {
         return $this->hasOne( Permission::className(), [ 'id' => 'permissionId' ] );
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -88,15 +110,19 @@ class RolePermission extends \cmsgears\core\common\models\base\Entity {
         return CoreTables::TABLE_ROLE_PERMISSION;
     }
 
-    // RolePermission --------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// RolePermission ------------------------
 
-    // Read ---------------
+	// Read - Query -----------
 
-    // Update -------------
+	// Read - Find ------------
 
-    // Delete -------------
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
 
     /**
      * Delete the mappings by given role id.

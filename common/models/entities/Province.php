@@ -21,23 +21,37 @@ use cmsgears\core\common\models\base\CoreTables;
  */
 class Province extends \cmsgears\core\common\models\base\Entity {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    // Constructor and Initialisation ------------------------------
+	// Variables -----------------------------
 
-    // Instance Methods --------------------------------------------
+	// Public -----------------
 
-    // yii\base\Component ----------------
+	// Protected --------------
 
-    // yii\base\Model --------------------
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -52,7 +66,6 @@ class Province extends \cmsgears\core\common\models\base\Entity {
             [ 'countryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'code', 'codeNum' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->smallText ],
             [ 'name', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ 'name', 'alphanumpun' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
@@ -81,7 +94,11 @@ class Province extends \cmsgears\core\common\models\base\Entity {
         ];
     }
 
-    // Province --------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
 
     /**
      * Validates whether a province existing with the same name for same country.
@@ -113,6 +130,8 @@ class Province extends \cmsgears\core\common\models\base\Entity {
         }
     }
 
+	// Province ------------------------------
+
     /**
      * @return Country - parent country for province
      */
@@ -121,9 +140,11 @@ class Province extends \cmsgears\core\common\models\base\Entity {
         return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] );
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -133,11 +154,13 @@ class Province extends \cmsgears\core\common\models\base\Entity {
         return CoreTables::TABLE_PROVINCE;
     }
 
-    // Province --------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// Province ------------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     /**
      * @return array - by country id
@@ -173,9 +196,11 @@ class Province extends \cmsgears\core\common\models\base\Entity {
         return self::find()->where( 'countryId=:id AND code=:code', [ ':id' => $countryId, ':code' => $code ] )->one();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

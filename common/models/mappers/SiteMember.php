@@ -11,34 +11,50 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
+use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Role;
 
 /**
  * SiteMember Entity
  *
+ * @property long $id
  * @property long $siteId
  * @property long $userId
  * @property long $roleId
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
-class SiteMember extends \cmsgears\core\common\models\base\Entity {
+class SiteMember extends \cmsgears\core\common\models\base\Mapper {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    // Constructor and Initialisation ------------------------------
+	// Variables -----------------------------
 
-    // Instance Methods --------------------------------------------
+	// Public -----------------
 
-    // yii\base\Component ----------------
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -55,7 +71,7 @@ class SiteMember extends \cmsgears\core\common\models\base\Entity {
         ];
     }
 
-    // yii\base\Model --------------------
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -81,7 +97,13 @@ class SiteMember extends \cmsgears\core\common\models\base\Entity {
         ];
     }
 
-    // SiteMember ------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// SiteMember ----------------------------
 
     /**
      * @return Site
@@ -107,9 +129,11 @@ class SiteMember extends \cmsgears\core\common\models\base\Entity {
         return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -119,11 +143,13 @@ class SiteMember extends \cmsgears\core\common\models\base\Entity {
         return CoreTables::TABLE_SITE_MEMBER;
     }
 
-    // SiteMember ------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// SiteMember ----------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     /**
      * @return ActiveRecord - with site member and role.
@@ -141,9 +167,11 @@ class SiteMember extends \cmsgears\core\common\models\base\Entity {
         return self::find()->where( 'siteId=:sid AND userId=:uid', [ ':sid' => $siteId, ':uid' => $userId ] )->one();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 
     /**
      * Delete the mappings by given site id.

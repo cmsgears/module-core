@@ -12,35 +12,55 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 abstract class Entity extends \yii\db\ActiveRecord {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
 
 	/**
-	 * It can be used to differentiate multisite models.
+	 * It can be used to differentiate multisite models. The model must have siteId column referring to Site.
 	 */
-	public $multisite = false;
+	protected static $multisite = false;
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
 	/**
 	 * It can be used by models to pass variables to trait methods before calling them. This will help us to avoid maintaining object state in traits.
 	 */
     public $traitParams = [];
 
-    // Private/Protected --
+	// Protected --------------
 
-    // Traits ------------------------------------------------------
+	// Private ----------------
 
-    // Constructor and Initialisation ------------------------------
+	// Traits ------------------------------------------------------
 
-    // Instance Methods --------------------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // yii\base\Component ----------------
+	// Instance methods --------------------------------------------
 
-    // yii\base\Model --------------------
+	// Yii interfaces ------------------------
 
-    // Entity ----------------------------
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Entity --------------------------------
 
     // Check whether model already exist
     public function isExisting() {
@@ -100,12 +120,24 @@ abstract class Entity extends \yii\db\ActiveRecord {
 		return join( '', array_slice( explode( '\\', $name ), -1 ) );
 	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
+
+	// CMG parent classes --------------------
+
+	// Entity --------------------------------
+
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     /**
      * Returns row count for the model
      */
-    public static function getCount( $conditions = [] ) {
+    public static function findCount( $conditions = [] ) {
 
         return self::find()->where( $conditions )->count();
     }
@@ -117,17 +149,11 @@ abstract class Entity extends \yii\db\ActiveRecord {
         return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
     }
 
-    // yii\db\ActiveRecord ---------------
+	// Create -----------------
 
-    // Entity ----------------------------
+	// Update -----------------
 
-    // Create -------------
-
-    // Read ---------------
-
-    // Update -------------
-
-    // Delete -------------
+	// Delete -----------------
 }
 
 ?>

@@ -45,29 +45,43 @@ class Gallery extends \cmsgears\core\common\models\base\TypedResource {
 
 	// Variables ---------------------------------------------------
 
-	// Constants/Statics --
+	// Globals -------------------------------
 
-	protected static $siteSpecific	= true;
+	// Constants --------------
 
-	// Public -------------
+	// Public -----------------
+
+	// Protected --------------
+
+	protected static $multisite	= true;
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
 	public $parentType		= CoreGlobal::TYPE_GALLERY;
 
-	// Private/Protected --
+	// Protected --------------
+
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
-	use TemplateTrait;
 	use AttributeTrait;
-	use DataTrait;
 	use CreateModifyTrait;
+	use DataTrait;
 	use FileTrait;
+	use TemplateTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -93,7 +107,7 @@ class Gallery extends \cmsgears\core\common\models\base\TypedResource {
         ];
     }
 
-    // yii\base\Model --------------------
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -106,8 +120,7 @@ class Gallery extends \cmsgears\core\common\models\base\TypedResource {
             [ [ 'id', 'content', 'data' ], 'safe' ],
             [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ [ 'title', 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->extraLargeText ],
-			[ 'name', 'alphanumpun' ],
+            [ [ 'title', 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->xLargeText ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ 'active', 'boolean' ],
@@ -143,7 +156,7 @@ class Gallery extends \cmsgears\core\common\models\base\TypedResource {
         ];
     }
 
-	// yii\db\BaseActiveRecord -----------
+	// yii\db\BaseActiveRecord
 
 	public function beforeSave( $insert ) {
 
@@ -160,7 +173,13 @@ class Gallery extends \cmsgears\core\common\models\base\TypedResource {
 		return false;
 	}
 
-    // Gallery ---------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Gallery -------------------------------
 
     /**
      * @return Site
@@ -178,9 +197,11 @@ class Gallery extends \cmsgears\core\common\models\base\TypedResource {
         return Yii::$app->formatter->asBoolean( $this->active );
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -190,11 +211,13 @@ class Gallery extends \cmsgears\core\common\models\base\TypedResource {
         return CoreTables::TABLE_GALLERY;
     }
 
-    // Gallery ---------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// Gallery -------------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     /**
      * @return ActiveRecord - with site member and role.
@@ -220,9 +243,11 @@ class Gallery extends \cmsgears\core\common\models\base\TypedResource {
         return self::find()->where( 'name=:name', [ ':name' => $name ] )->one();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

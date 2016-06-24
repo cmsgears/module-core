@@ -10,33 +10,53 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * HierarchicalModel - It can be used by models which need parent child relationship. It supports two way relationship i.e. by parentId and Nested Set(left, right value).
  *
- * @property integer $parentId
- * @property integer $rootId
+ * @property long $parentId
+ * @property long $rootId
  * @property string $name
  * @property integer lValue
  * @property integer rValue
  */
 abstract class HierarchicalModel extends \cmsgears\core\common\models\base\Entity {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	// Protected --------------
 
-    // Constructor and Initialisation ------------------------------
+	// Variables -----------------------------
 
-    // Instance Methods --------------------------------------------
+	// Public -----------------
 
-    // yii\base\Component ----------------
+	// Protected --------------
 
-    // yii\base\Model --------------------
+	// Private ----------------
 
-    // HierarchicalModel------------------
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// HierarchicalModel ---------------------
 
 	abstract public function getParent();
 
@@ -54,19 +74,25 @@ abstract class HierarchicalModel extends \cmsgears\core\common\models\base\Entit
 
 	abstract public function getChildren();
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
 
-    // HierarchicalModel------------------
+	// yii\db\ActiveRecord ----
 
-    // Create -------------
+	// CMG parent classes --------------------
 
-    // Read ---------------
+	// HierarchicalModel ---------------------
 
-    // Update -------------
+	// Read - Query -----------
 
-    // Delete -------------
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

@@ -36,26 +36,40 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class Role extends \cmsgears\core\common\models\base\TypedEntity {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
 	private $parentType		= CoreGlobal::TYPE_ROLE; // required for traits
 
-    // Private/Protected --
+	// Protected --------------
 
-    // Traits ------------------------------------------------------
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
 
     use CreateModifyTrait;
 	use HierarchyTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -81,7 +95,7 @@ class Role extends \cmsgears\core\common\models\base\TypedEntity {
         ];
     }
 
-    // yii\base\Model --------------------
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -95,7 +109,6 @@ class Role extends \cmsgears\core\common\models\base\TypedEntity {
             [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
             [ [ 'description', 'homeUrl' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->extraLargeText ],
-            [ 'name', 'alphanumhyphenspace' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -127,7 +140,13 @@ class Role extends \cmsgears\core\common\models\base\TypedEntity {
         ];
     }
 
-    // Role ------------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Role ----------------------------------
 
     /**
      * @return array - Permission
@@ -196,9 +215,11 @@ class Role extends \cmsgears\core\common\models\base\TypedEntity {
         return $slugList;
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -208,11 +229,13 @@ class Role extends \cmsgears\core\common\models\base\TypedEntity {
         return CoreTables::TABLE_ROLE;
     }
 
-    // Role ------------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// Role ----------------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     /**
      * @return Role - by slug
@@ -222,9 +245,11 @@ class Role extends \cmsgears\core\common\models\base\TypedEntity {
         return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

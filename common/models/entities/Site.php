@@ -5,12 +5,12 @@ namespace cmsgears\core\common\models\entities;
 use \Yii;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
-use yii\validators\FilterValidator;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\resources\SiteAttribute;
 
 use cmsgears\core\common\models\traits\resources\AttributeTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
@@ -29,26 +29,40 @@ use cmsgears\core\common\models\traits\resources\VisualTrait;
  */
 class Site extends \cmsgears\core\common\models\base\NamedEntity {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    // Public -------------
+	// Constants --------------
 
-    public $parentType  = CoreGlobal::TYPE_SITE;
+	// Public -----------------
 
-    // Private/Protected --
+	// Protected --------------
 
-    // Traits ------------------------------------------------------
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	public $parentType  = CoreGlobal::TYPE_SITE;
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
 
     use AttributeTrait;
 	use VisualTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -65,7 +79,7 @@ class Site extends \cmsgears\core\common\models\base\NamedEntity {
         ];
     }
 
-    // yii\base\Model --------------------
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -77,7 +91,6 @@ class Site extends \cmsgears\core\common\models\base\NamedEntity {
             [ [ 'name' ], 'required' ],
             [ [ 'id' ], 'safe' ],
             [ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ 'name', 'alphanumpun' ],
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
@@ -112,11 +125,25 @@ class Site extends \cmsgears\core\common\models\base\NamedEntity {
         ];
     }
 
-    // Site ------------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Site ----------------------------------
 
     public function getTheme() {
 
         return $this->hasOne( Theme::className(), [ 'id' => 'themeId' ] );
+    }
+
+    /**
+     * @return array - SiteAttribute
+     */
+    public function getAttributes() {
+
+        return $this->hasMany( SiteAttribute::className(), [ 'siteId' => 'id' ] );
     }
 
     /**
@@ -136,9 +163,11 @@ class Site extends \cmsgears\core\common\models\base\NamedEntity {
         return Yii::$app->formatter->asBoolean( $this->active );
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -148,11 +177,13 @@ class Site extends \cmsgears\core\common\models\base\NamedEntity {
         return CoreTables::TABLE_SITE;
     }
 
-    // Site ------------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// Site ----------------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     /**
      * @return Site - by slug
@@ -162,9 +193,11 @@ class Site extends \cmsgears\core\common\models\base\NamedEntity {
         return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

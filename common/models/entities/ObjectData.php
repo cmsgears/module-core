@@ -29,6 +29,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @property long $id
  * @property long $siteId
+ * @property long $themeId
  * @property long $templateId
  * @property long $avatarId
  * @property long $bannerId
@@ -36,8 +37,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property long $modifiedBy
  * @property string $name
  * @property string $slug
- * @property string $icon
  * @property string $type
+ * @property string $icon
  * @property string $description
  * @property boolean $active
  * @property datetime $createdAt
@@ -48,21 +49,31 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class ObjectData extends \cmsgears\core\common\models\base\TypedEntity implements IOwner {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-    protected static $siteSpecific	= true;
+	// Constants --------------
 
-    // Public -------------
+	// Public -----------------
 
-    public $parentType  = CoreGlobal::TYPE_OBJECT;
+	// Protected --------------
 
-    // Private/Protected --
+	protected static $multisite = true;
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	public $parentType  		= CoreGlobal::TYPE_OBJECT;
+
+	// Protected --------------
 
 	protected $checkOwnership	= false;
 
-    // Traits ------------------------------------------------------
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
 
     use AttributeTrait;
     use CreateModifyTrait;
@@ -71,11 +82,15 @@ class ObjectData extends \cmsgears\core\common\models\base\TypedEntity implement
 	use TemplateTrait;
 	use VisualTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -99,7 +114,7 @@ class ObjectData extends \cmsgears\core\common\models\base\TypedEntity implement
         ];
     }
 
-    // yii\base\Model --------------------
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -112,12 +127,11 @@ class ObjectData extends \cmsgears\core\common\models\base\TypedEntity implement
             [ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
             [ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ [ 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->extraLargeText ],
-			[ 'name', 'alphanumpun' ],
+            [ [ 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->xLargeText ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
 			[ [ 'active' ], 'boolean' ],
-            [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'themeId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'siteId', 'avatarId', 'bannerId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
@@ -140,6 +154,7 @@ class ObjectData extends \cmsgears\core\common\models\base\TypedEntity implement
 
         return [
             'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+            'themeId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_THEME ),
             'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
             'avatarId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
             'bannerId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
@@ -154,11 +169,16 @@ class ObjectData extends \cmsgears\core\common\models\base\TypedEntity implement
         ];
     }
 
-	// yii\db\BaseActiveRecord -----------
+	// yii\db\BaseActiveRecord
 
 	public function beforeSave( $insert ) {
 
 	    if( parent::beforeSave( $insert ) ) {
+
+			if( $this->themeId <= 0 ) {
+
+				$this->themeId = null;
+			}
 
 			if( $this->templateId <= 0 ) {
 
@@ -171,7 +191,9 @@ class ObjectData extends \cmsgears\core\common\models\base\TypedEntity implement
 		return false;
 	}
 
-	// IOwner ----------------------------
+	// CMG interfaces ------------------------
+
+	// IOwner -----------------
 
 	public function isOwner( $user = null ) {
 
@@ -191,7 +213,11 @@ class ObjectData extends \cmsgears\core\common\models\base\TypedEntity implement
 		return false;
 	}
 
-    // ObjectData ------------------------
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// ObjectData ----------------------------
 
     public function getSite() {
 
@@ -206,9 +232,11 @@ class ObjectData extends \cmsgears\core\common\models\base\TypedEntity implement
         return Yii::$app->formatter->asBoolean( $this->active );
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -218,11 +246,13 @@ class ObjectData extends \cmsgears\core\common\models\base\TypedEntity implement
         return CoreTables::TABLE_OBJECT_DATA;
     }
 
-    // ObjectData ------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// ObjectData ----------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     /**
      * @return ObjectData - by slug
@@ -232,9 +262,11 @@ class ObjectData extends \cmsgears\core\common\models\base\TypedEntity implement
         return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

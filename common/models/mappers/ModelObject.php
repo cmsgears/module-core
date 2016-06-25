@@ -10,6 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\ObjectData;
 
+use cmsgears\core\common\models\traits\ParentTypeTrait;
+
 /**
  * ModelObject Entity
  *
@@ -20,7 +22,7 @@ use cmsgears\core\common\models\entities\ObjectData;
  * @property short $order
  * @property boolean $active
  */
-class ModelObject extends \cmsgears\core\common\models\base\ParentResource {
+class ModelObject extends \cmsgears\core\common\models\base\Resource {
 
 	// Variables ---------------------------------------------------
 
@@ -41,6 +43,8 @@ class ModelObject extends \cmsgears\core\common\models\base\ParentResource {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use ParentTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 

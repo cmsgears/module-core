@@ -30,29 +30,46 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * @property short lValue
  * @property short rValue
  * @property string $htmlOptions
+ * @property string $content
  * @property string $data
  */
 class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalModel {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-	protected static $siteSpecific	= true;
+	// Constants --------------
 
-    // Public -------------
+	// Public -----------------
 
-    // Private/Protected --
+	// Protected --------------
 
-    // Traits ------------------------------------------------------
+	protected static $multiSite = true;
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	public $parentType	= CoreGlobal::TYPE_CATEGORY;
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
 
     use DataTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -67,7 +84,7 @@ class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalM
         ];
     }
 
-    // yii\base\Model --------------------
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -77,13 +94,13 @@ class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalM
         // model rules
         $rules = [
             [ [ 'siteId', 'name' ], 'required' ],
-            [ [ 'id', 'htmlOptions', 'data' ], 'safe' ],
+            [ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
             [ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ 'description', 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->extraLargeText ],
+            [ 'description', 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->xLargeText ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'parentId', 'rootId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ 'featured', 'boolean' ]
         ];
 
@@ -117,7 +134,13 @@ class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalM
         ];
     }
 
-    // Category --------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+    // Category ------------------------------
 
     public function getSite() {
 
@@ -156,9 +179,11 @@ class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalM
         return Yii::$app->formatter->asBoolean( $this->featured );
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -168,16 +193,18 @@ class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalM
         return CoreTables::TABLE_CATEGORY;
     }
 
-    // Category --------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// Category ------------------------------
 
-    // Read ---------------
+	// Read - Query -----------
 
 	public static function queryWithSite() {
 
 		return self::find()->joinWith( 'site' );
 	}
+
+	// Read - Find ------------
 
     public static function findByParentId( $id ) {
 
@@ -213,9 +240,11 @@ class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalM
         return self::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( [ 'name' => SORT_ASC ] )->all();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

@@ -15,6 +15,7 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+use cmsgears\core\common\models\traits\NameTypeTrait;
 use cmsgears\core\common\models\traits\resources\AttributeTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
@@ -41,7 +42,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $content
  * @property string $data
  */
-class Gallery extends \cmsgears\core\common\models\base\TypedResource {
+class Gallery extends \cmsgears\core\common\models\base\Resource {
 
 	// Variables ---------------------------------------------------
 
@@ -53,7 +54,7 @@ class Gallery extends \cmsgears\core\common\models\base\TypedResource {
 
 	// Protected --------------
 
-	protected static $multisite	= true;
+	protected static $multiSite	= true;
 
 	// Variables -----------------------------
 
@@ -71,6 +72,7 @@ class Gallery extends \cmsgears\core\common\models\base\TypedResource {
 	use CreateModifyTrait;
 	use DataTrait;
 	use FileTrait;
+	use NameTypeTrait;
 	use TemplateTrait;
 
 	// Constructor and Initialisation ------------------------------

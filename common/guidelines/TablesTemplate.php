@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\listing\common\guidelines;
+namespace cmsgears\core\common\guidelines;
 
 class TablesTemplate {
 

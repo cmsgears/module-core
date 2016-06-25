@@ -114,7 +114,15 @@ class Core extends \yii\base\Component {
     public $largeText           = CoreGlobal::TEXT_LARGE;
     public $xLargeText     	 	= CoreGlobal::TEXT_XLARGE;
 
+	/**
+	 * @var Switch for notification feature.
+	 */
     public $notifications       = false;
+
+	/**
+	 * @var Update selective allows services to updated selected columns.
+	 */
+    public $updateSelective		= true;
 
     /**
      * Initialise the CMG Core Component.
@@ -321,6 +329,11 @@ class Core extends \yii\base\Component {
     public function isNotifications() {
 
         return $this->notifications;
+    }
+
+    public function isUpdateSelective() {
+
+        return $this->updateSelective;
     }
 
     /*Set App User */

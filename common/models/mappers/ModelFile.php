@@ -10,6 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\File;
 
+use cmsgears\core\common\models\traits\ParentTypeTrait;
+
 /**
  * ModelFile Entity
  *
@@ -20,7 +22,7 @@ use cmsgears\core\common\models\resources\File;
  * @property short $order
  * @property boolean $active
  */
-class ModelFile extends \cmsgears\core\common\models\base\ParentMapper {
+class ModelFile extends \cmsgears\core\common\models\base\Mapper {
 
 	// Variables ---------------------------------------------------
 
@@ -41,6 +43,8 @@ class ModelFile extends \cmsgears\core\common\models\base\ParentMapper {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use ParentTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 

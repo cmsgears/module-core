@@ -25,7 +25,7 @@ abstract class Entity extends \yii\db\ActiveRecord {
 	/**
 	 * It can be used to differentiate multisite models. The model must have siteId column referring to Site.
 	 */
-	protected static $multisite = false;
+	protected static $multiSite = false;
 
 	// Variables -----------------------------
 
@@ -131,6 +131,20 @@ abstract class Entity extends \yii\db\ActiveRecord {
 	// Entity --------------------------------
 
 	// Read - Query -----------
+
+	public static function queryWithAll( $config = [] ) {
+
+		$relations	= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [];
+		$query		= self::find();
+
+		// Find with relations
+		foreach ( $relations as $relation ) {
+
+			$query->findWith( $relation );
+		}
+
+		return $query;
+	}
 
 	// Read - Find ------------
 

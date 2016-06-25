@@ -30,9 +30,11 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  */
 class FormField extends \cmsgears\core\common\models\base\Resource {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
+
+	// Constants --------------
 
     const TYPE_TEXT             =   0;
 	const TYPE_HIDDEN           =   5;
@@ -47,6 +49,8 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
     const TYPE_RATING           =  90;
     const TYPE_ICON             = 100;
     const TYPE_DATE             = 110;
+
+	// Public -----------------
 
     public static $typeMap = [
         self::TYPE_TEXT => 'Text',
@@ -64,23 +68,35 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
         self::TYPE_DATE => 'Date'
     ];
 
-    // Public -------------
+	// Protected --------------
 
-    public $value;
+	// Variables -----------------------------
 
-    // Private/Protected --
+	// Public -----------------
 
-    // Traits ------------------------------------------------------
+	public $parentType	= CoreGlobal::TYPE_FORM_FIELD;
 
-    use DataTrait;
+	public $value;
 
-    // Constructor and Initialisation ------------------------------
+	// Protected --------------
 
-    // Instance Methods --------------------------------------------
+	// Private ----------------
 
-    // yii\base\Component ----------------
+	// Traits ------------------------------------------------------
 
-    // yii\base\Model --------------------
+	use DataTrait;
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -91,8 +107,8 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
         $rules = [
             [ [ 'formId', 'name' ], 'required' ],
             [ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
-            [ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ [ 'label', 'validators', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->extraLargeText ],
+            [ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
+            [ [ 'label', 'validators' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->extraLargeText ],
             [ 'name', 'alphanumu' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
@@ -130,7 +146,11 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
         ];
     }
 
-    // FormField -------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
 
     /**
      * Validates whether a filed exist with the same name for same form.
@@ -161,6 +181,8 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
             }
         }
     }
+
+	// FormField -----------------------------
 
     /**
      * @return Form
@@ -217,7 +239,11 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
         }
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -227,13 +253,13 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
         return CoreTables::TABLE_FORM_FIELD;
     }
 
-    // yii\db\ActiveRecord ---------------
+	// CMG parent classes --------------------
 
-    // FormField -------------------------
+	// FormField -----------------------------
 
-    // Create -------------
+	// Read - Query -----------
 
-    // Read ---------------
+	// Read - Find ------------
 
     public static function findByFormId( $formId ) {
 
@@ -254,9 +280,11 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
         return isset( $field );
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

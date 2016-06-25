@@ -12,6 +12,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\SiteAttribute;
 
+use cmsgears\core\common\models\traits\NameTrait;
 use cmsgears\core\common\models\traits\resources\AttributeTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
 
@@ -27,7 +28,7 @@ use cmsgears\core\common\models\traits\resources\VisualTrait;
  * @property short $order
  * @property boolean $active
  */
-class Site extends \cmsgears\core\common\models\base\NamedEntity {
+class Site extends \cmsgears\core\common\models\base\Entity {
 
 	// Variables ---------------------------------------------------
 
@@ -52,6 +53,7 @@ class Site extends \cmsgears\core\common\models\base\NamedEntity {
 	// Traits ------------------------------------------------------
 
     use AttributeTrait;
+	use NameTrait;
 	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------

@@ -10,6 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Address;
 
+use cmsgears\core\common\models\traits\ParentTypeTrait;
+
 /**
  * ModelAddress Entity
  *
@@ -21,7 +23,7 @@ use cmsgears\core\common\models\resources\Address;
  * @property short $order
  * @property boolean $active
  */
-class ModelAddress extends \cmsgears\core\common\models\base\ParentMapper {
+class ModelAddress extends \cmsgears\core\common\models\base\Mapper {
 
 	// Variables ---------------------------------------------------
 
@@ -42,6 +44,8 @@ class ModelAddress extends \cmsgears\core\common\models\base\ParentMapper {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use ParentTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 

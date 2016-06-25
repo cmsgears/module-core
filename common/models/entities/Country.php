@@ -10,6 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 
+use cmsgears\core\common\models\traits\NameTrait;
+
 /**
  * Country Entity
  *
@@ -18,7 +20,7 @@ use cmsgears\core\common\models\base\CoreTables;
  * @property string $codeNum
  * @property string $name
  */
-class Country extends \cmsgears\core\common\models\base\NamedEntity {
+class Country extends \cmsgears\core\common\models\base\Entity {
 
 	// Variables ---------------------------------------------------
 
@@ -39,6 +41,8 @@ class Country extends \cmsgears\core\common\models\base\NamedEntity {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use NameTrait;
 
 	// Constructor and Initialisation ------------------------------
 

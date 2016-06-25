@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\listing\common\guidelines;
+namespace cmsgears\core\common\guidelines;
 
 /**
  * Actions extending yii base action can be further divided into below mentioned sections:

@@ -10,6 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\User;
 
+use cmsgears\core\common\models\traits\ParentTypeTrait;
+
 /**
  * ModelActivity Entity
  *
@@ -24,7 +26,7 @@ use cmsgears\core\common\models\entities\User;
  * @property datetime $modifiedAt
  * @property string $content
  */
-class ModelActivity extends \cmsgears\core\common\models\base\ParentResource {
+class ModelActivity extends \cmsgears\core\common\models\base\Resource {
 
 	// Variables ---------------------------------------------------
 
@@ -45,6 +47,8 @@ class ModelActivity extends \cmsgears\core\common\models\base\ParentResource {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use ParentTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 

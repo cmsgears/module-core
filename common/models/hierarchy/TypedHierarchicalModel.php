@@ -108,7 +108,7 @@ abstract class TypedHierarchicalModel extends HierarchicalModel {
      */
     public static function findByNameType( $name, $type, $parentId = null ) {
 
-		if( static::$multisite ) {
+		if( static::$multiSite ) {
 
 	        $siteId = Yii::$app->cmgCore->siteId;
 

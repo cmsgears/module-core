@@ -16,6 +16,7 @@ use cmsgears\core\common\models\interfaces\IOwner;
 use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+use cmsgears\core\common\models\traits\NameTypeTrait;
 use cmsgears\core\common\models\traits\resources\AttributeTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
@@ -47,7 +48,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $content
  * @property string $data
  */
-class ObjectData extends \cmsgears\core\common\models\base\TypedEntity implements IOwner {
+class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOwner {
 
 	// Variables ---------------------------------------------------
 
@@ -59,7 +60,7 @@ class ObjectData extends \cmsgears\core\common\models\base\TypedEntity implement
 
 	// Protected --------------
 
-	protected static $multisite = true;
+	protected static $multiSite = true;
 
 	// Variables -----------------------------
 
@@ -79,6 +80,7 @@ class ObjectData extends \cmsgears\core\common\models\base\TypedEntity implement
     use CreateModifyTrait;
     use DataTrait;
 	use FileTrait;
+	use NameTypeTrait;
 	use TemplateTrait;
 	use VisualTrait;
 

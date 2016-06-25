@@ -10,6 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 
+use cmsgears\core\common\models\traits\NameTrait;
+
 /**
  * Locale Entity
  *
@@ -17,7 +19,7 @@ use cmsgears\core\common\models\base\CoreTables;
  * @property string $code
  * @property string $name
  */
-class Locale extends \cmsgears\core\common\models\base\NamedEntity {
+class Locale extends \cmsgears\core\common\models\base\Entity {
 
 	// Variables ---------------------------------------------------
 
@@ -38,6 +40,8 @@ class Locale extends \cmsgears\core\common\models\base\NamedEntity {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use NameTrait;
 
 	// Constructor and Initialisation ------------------------------
 

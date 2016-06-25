@@ -11,9 +11,12 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\config\CoreProperties;
 
+use cmsgears\core\common\models\interfaces\IVisibility;
+
 use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+use cmsgears\core\common\models\traits\interfaces\VisibilityTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -40,21 +43,29 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
-class File extends \cmsgears\core\common\models\base\Resource {
+class File extends \cmsgears\core\common\models\base\Resource implements IVisibility {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
+
+	// Constants --------------
 
     const VISIBILITY_PUBLIC     =  0;
     const VISIBILITY_PRIVATE    = 10;
+
+	// Public -----------------
 
     public static $typeMap = [
         self::VISIBILITY_PUBLIC => 'public',
         self::VISIBILITY_PRIVATE => 'private'
     ];
 
-    // Public -------------
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
     /**
      * @property boolean - used to detect whether the file is changed by user.
@@ -69,17 +80,24 @@ class File extends \cmsgears\core\common\models\base\Resource {
     public $twidth;
     public $theight;
 
-    // Private/Protected --
+	// Protected --------------
 
-    // Traits ------------------------------------------------------
+	// Private ----------------
 
-    use CreateModifyTrait;
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	use CreateModifyTrait;
+	use VisibilityTrait;
 
-    // Instance Methods --------------------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // yii\base\Component ----------------
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -100,7 +118,7 @@ class File extends \cmsgears\core\common\models\base\Resource {
         ];
     }
 
-    // yii\base\Model --------------------
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -112,8 +130,8 @@ class File extends \cmsgears\core\common\models\base\Resource {
             [ [ 'name', 'extension', 'directory' ], 'required' ],
             [ [ 'id' ], 'safe' ],
             [ [ 'extension', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ [ 'title', 'name', 'directory' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ [ 'description', 'altText', 'url', 'thumb', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->extraLargeText ],
+            [ [ 'title', 'directory' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
+            [ [ 'name', 'description', 'altText', 'url', 'medium', 'thumb', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->xLargeText ],
             [ [ 'visibility', 'width', 'height', 'mwidth', 'mheight', 'twidth', 'theight' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'size' ], 'number', 'min' => 0 ],
             [ [ 'shared', 'changed' ], 'boolean' ],
@@ -124,7 +142,7 @@ class File extends \cmsgears\core\common\models\base\Resource {
         // trim if required
         if( Yii::$app->cmgCore->trimFieldValue ) {
 
-            $trim[] = [ [ 'name', 'extension', 'directory', 'title', 'description', 'altText' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'name', 'extension', 'directory', 'title', 'description', 'altText', 'url', 'medium', 'thumb', 'link' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
             return ArrayHelper::merge( $trim, $rules );
         }
@@ -152,7 +170,13 @@ class File extends \cmsgears\core\common\models\base\Resource {
         ];
     }
 
-    // CmgFile ----------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// File ----------------------------------
 
     public function getTypeStr() {
 
@@ -212,9 +236,11 @@ class File extends \cmsgears\core\common\models\base\Resource {
         return "";
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -224,16 +250,24 @@ class File extends \cmsgears\core\common\models\base\Resource {
         return CoreTables::TABLE_FILE;
     }
 
+	// CMG parent classes --------------------
+
+	// File ----------------------------------
+
+	// Read - Query -----------
+
+	// Read - Find ------------
+
     /**
-     * @param CmgFile $file
+     * @param File $file
      * @param string $name
-     * @return CmgFile - after loading from request url
+     * @return File - after loading from request url
      */
     public static function loadFile( $file, $name ) {
 
         if( !isset( $file ) ) {
 
-            $file   = new CmgFile();
+            $file   = new File();
         }
 
         $file->load( Yii::$app->request->post(), $name );
@@ -241,13 +275,11 @@ class File extends \cmsgears\core\common\models\base\Resource {
         return $file;
     }
 
-    // Create -------------
+	// Create -----------------
 
-    // Read ---------------
+	// Update -----------------
 
-    // Update -------------
-
-    // Delete -------------
+	// Delete -----------------
 }
 
 ?>

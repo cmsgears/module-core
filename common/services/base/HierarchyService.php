@@ -13,11 +13,71 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * Managing hierarchy using Nested Set Model
  */
-class HierarchyService extends Service {
+class HierarchyService extends EntityService {
+
+	// Variables ---------------------------------------------------
+
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// <Service> -----------------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 
 	// Static Methods ----------------------------------------------
 
-	// Read ----------------
+	// CMG parent classes --------------------
+
+	// <Service> -----------------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
 
 	/** Return all the possible trees in hierarchical fashion with depth level and given conditions.
 	 * Example Query for category without conditions:
@@ -33,7 +93,7 @@ class HierarchyService extends Service {
 		group by node.id
 		order by node.rootId, node.lValue, depth;
 	 */
-	public static function getLevelList( $conditions = [] ) {
+	public static function findLevelList( $conditions = [] ) {
 
 		$query	= new Query();
 
@@ -79,7 +139,7 @@ class HierarchyService extends Service {
 		group by node.id
 		order by node.rootId, node.lValue, depth;
 	 */
-	public static function getSubLevelList( $parentId, $rootId, $conditions = [], $having = null ) {
+	public static function findSubLevelList( $parentId, $rootId, $conditions = [], $having = null ) {
 
 		$query	= new Query();
 
@@ -128,7 +188,7 @@ class HierarchyService extends Service {
 		FROM cmg_core_category AS node, cmg_core_category AS parent
 		WHERE node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId AND parent.id=<parent id> order by node.lValue;
 	 */
-	public static function getChildNodes( $table, $parentId, $conditions = [] ) {
+	public static function findChildNodes( $table, $parentId, $conditions = [] ) {
 
 		$query	= new Query();
 
@@ -158,7 +218,7 @@ class HierarchyService extends Service {
 		FROM cmg_core_category
 		WHERE rValue = lValue + 1 AND rootId=<root id>;
 	 */
-	public static function getLeafNodes( $table, $rootId, $conditions = [] ) {
+	public static function findLeafNodes( $table, $rootId, $conditions = [] ) {
 
 		$query	= new Query();
 
@@ -187,7 +247,7 @@ class HierarchyService extends Service {
 		where node.lValue BETWEEN parent.lValue AND parent.rValue AND parent.rootId = node.rootId AND node.id = <leaf id>
 		ORDER BY node.lValue;
 	 */
-	public static function getParentNodes( $table, $leafId, $conditions = [] ) {
+	public static function findParentNodes( $table, $leafId, $conditions = [] ) {
 
 		$query	= new Query();
 
@@ -211,7 +271,13 @@ class HierarchyService extends Service {
 		return $list;
 	}
 
-	// Create --------------
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
 
 	public static function createInHierarchy( $table, $model ) {
 
@@ -285,7 +351,7 @@ class HierarchyService extends Service {
 		return $model;
 	}
 
-	// Update -----------
+	// Update -------------
 
 	public static function updateInHierarchy( $table, $model, $modelToUpdate ) {
 
@@ -348,7 +414,7 @@ class HierarchyService extends Service {
 		return $modelToUpdate;
 	}
 
-	// Delete -----------
+	// Delete -------------
 
 	public static function deleteInHierarchy( $table, $model ) {
 

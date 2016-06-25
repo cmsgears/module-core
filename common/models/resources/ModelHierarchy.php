@@ -9,6 +9,8 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 
+use cmsgears\core\common\models\traits\ParentTypeTrait;
+
 /**
  * ModelHierarchy Entity
  *
@@ -20,7 +22,7 @@ use cmsgears\core\common\models\base\CoreTables;
  * @property string $lValue
  * @property short $rValue
  */
-class ModelHierarchy extends \cmsgears\core\common\models\base\ParentResource {
+class ModelHierarchy extends \cmsgears\core\common\models\base\Resource {
 
 	// Variables ---------------------------------------------------
 
@@ -41,6 +43,8 @@ class ModelHierarchy extends \cmsgears\core\common\models\base\ParentResource {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use ParentTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 

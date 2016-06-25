@@ -12,6 +12,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
 
+use cmsgears\core\common\models\traits\NameTypeTrait;
+
 /**
  * Tag Entity
  *
@@ -23,7 +25,7 @@ use cmsgears\core\common\models\entities\Site;
  * @property string $icon
  * @property string $description
  */
-class Tag extends \cmsgears\core\common\models\base\TypedResource {
+class Tag extends \cmsgears\core\common\models\base\Resource {
 
 	// Variables ---------------------------------------------------
 
@@ -33,7 +35,7 @@ class Tag extends \cmsgears\core\common\models\base\TypedResource {
 
 	// Public -----------------
 
-	protected static $multisite	= true;
+	protected static $multiSite	= true;
 
 	// Protected --------------
 
@@ -46,6 +48,8 @@ class Tag extends \cmsgears\core\common\models\base\TypedResource {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use NameTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 

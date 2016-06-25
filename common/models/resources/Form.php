@@ -12,11 +12,13 @@ use yii\behaviors\SluggableBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\interfaces\IVisibility;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
 
-use cmsgears\core\common\models\traits\interfaces\VisibilityTrait;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+use cmsgears\core\common\models\traits\NameTrait;
+use cmsgears\core\common\models\traits\interfaces\VisibilityTrait;
 use cmsgears\core\common\models\traits\resources\AttributeTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\mappers\TemplateTrait;
@@ -34,6 +36,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $name
  * @property string $slug
  * @property string $type
+ * @property string $icon
  * @property string $description
  * @property string $successMessage
  * @property boolean $captcha
@@ -47,33 +50,48 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $content
  * @property string $data
  */
-class Form extends \cmsgears\core\common\models\base\NamedResource implements IVisibility {
+class Form extends \cmsgears\core\common\models\base\Resource implements IVisibility {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
 
-	protected static $siteSpecific	= true;
+	// Constants --------------
 
-    // Public -------------
+	// Public -----------------
 
-    public $parentType  = CoreGlobal::TYPE_FORM;
+	// Protected --------------
 
-    // Private/Protected --
+	protected static $multiSite	= true;
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	public $parentType  = CoreGlobal::TYPE_FORM;
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
-	use TemplateTrait;
 	use AttributeTrait;
-	use DataTrait;
 	use CreateModifyTrait;
+	use DataTrait;
+	use NameTrait;
+	use TemplateTrait;
 	use VisibilityTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
      /**
      * @inheritdoc
@@ -99,7 +117,7 @@ class Form extends \cmsgears\core\common\models\base\NamedResource implements IV
         ];
     }
 
-    // yii\base\Model --------------------
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -112,12 +130,12 @@ class Form extends \cmsgears\core\common\models\base\NamedResource implements IV
             [ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
             [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ [ 'description', 'successMessage' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->extraLargeText ],
+            [ [ 'description', 'successMessage' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->xLargeText ],
 			[ 'name', 'alphanumpun' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'visibility' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'active', 'userMail', 'adminMail' ], 'boolean' ],
+            [ [ 'captcha', 'active', 'userMail', 'adminMail' ], 'boolean' ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -156,7 +174,7 @@ class Form extends \cmsgears\core\common\models\base\NamedResource implements IV
         ];
     }
 
-	// yii\db\BaseActiveRecord -----------
+	// yii\db\BaseActiveRecord
 
 	public function beforeSave( $insert ) {
 
@@ -173,7 +191,37 @@ class Form extends \cmsgears\core\common\models\base\NamedResource implements IV
 		return false;
 	}
 
-    // Form ------------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Form ----------------------------------
+
+    /**
+     * @return array - array of FormField
+     */
+    public function getFields() {
+
+        return $this->hasMany( FormField::className(), [ 'formId' => 'id' ] );
+    }
+
+    /**
+     * @return array - map of FormField having field name as key
+     */
+    public function getFieldsMap() {
+
+        $formFields     = $this->fields;
+        $formFieldsMap  = array();
+
+        foreach ( $formFields as $formField ) {
+
+            $formFieldsMap[ $formField->name ] = $formField;
+        }
+
+        return $formFieldsMap;
+    }
 
     public function getCaptchaStr() {
 
@@ -202,43 +250,11 @@ class Form extends \cmsgears\core\common\models\base\NamedResource implements IV
         return Yii::$app->formatter->asBoolean( $this->adminMail );
     }
 
-    /**
-     * @return array - array of FormField
-     */
-    public function getFields() {
+	// Static Methods ----------------------------------------------
 
-        return $this->hasMany( FormField::className(), [ 'formId' => 'id' ] );
-    }
+	// Yii parent classes --------------------
 
-    /**
-     * @return array - map of FormField having field name as key
-     */
-    public function getFieldsMap() {
-
-        $formFields     = $this->fields;
-        $formFieldsMap  = array();
-
-        foreach ( $formFields as $formField ) {
-
-            $formFieldsMap[ $formField->name ] = $formField;
-        }
-
-        return $formFieldsMap;
-    }
-
-    public function isPublic() {
-
-        return $this->visibility == self::VISIBILITY_PUBLIC;
-    }
-
-    public function isPrivate() {
-
-        return $this->visibility == self::VISIBILITY_PRIVATE;
-    }
-
-    // Static Methods ----------------------------------------------
-
-    // yii\db\ActiveRecord ---------------
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -248,11 +264,13 @@ class Form extends \cmsgears\core\common\models\base\NamedResource implements IV
         return CoreTables::TABLE_FORM;
     }
 
-    // Form ------------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// Form ----------------------------------
 
-    // Read ---------------
+	// Read - Query -----------
+
+	// Read - Find ------------
 
     /**
      * @return Form - by slug.
@@ -262,9 +280,11 @@ class Form extends \cmsgears\core\common\models\base\NamedResource implements IV
         return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
     }
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

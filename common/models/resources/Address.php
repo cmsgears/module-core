@@ -26,22 +26,24 @@ use cmsgears\core\common\models\entities\City;
  * @property string $line3
  * @property string $city
  * @property string $zip
- * @property string $zip4
+ * @property string $subZip
  * @property string $firstName
  * @property string $lastName
  * @property string $phone
  * @property string $email
  * @property string $fax
  * @property string $website
- * @property integer $longitude
  * @property integer $latitude
+ * @property integer $longitude
  * @property short $zoomLevel
  */
 class Address extends \cmsgears\core\common\models\base\Resource {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Constants/Statics --
+	// Globals -------------------------------
+
+	// Constants --------------
 
     const TYPE_DEFAULT      =  0;
     const TYPE_PRIMARY      = 10;
@@ -51,6 +53,8 @@ class Address extends \cmsgears\core\common\models\base\Resource {
     const TYPE_OFFICE       = 50;   // Office/ Registered
     const TYPE_MAILING      = 60;   // Mailing/ Communication
     const TYPE_BRANCH       = 70;   // Office having multiple branches
+
+	// Public -----------------
 
     public static $typeMap = [
         self::TYPE_DEFAULT => 'Default',
@@ -63,19 +67,29 @@ class Address extends \cmsgears\core\common\models\base\Resource {
         self::TYPE_BRANCH => 'Branch'
     ];
 
-    // Public -------------
+	// Protected --------------
 
-    // Private/Protected --
+	// Variables -----------------------------
 
-    // Traits ------------------------------------------------------
+	// Public -----------------
 
-    // Constructor and Initialisation ------------------------------
+	// Protected --------------
 
-    // Instance Methods --------------------------------------------
+	// Private ----------------
 
-    // yii\base\Component ----------------
+	// Traits ------------------------------------------------------
 
-    // yii\base\Model --------------------
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -91,11 +105,10 @@ class Address extends \cmsgears\core\common\models\base\Resource {
             [ [ 'longitude', 'latitude', 'cityId' ], 'required', 'on' => 'locationWithCityId' ],
             [ [ 'longitude', 'latitude', 'city' ], 'required', 'on' => 'locationWithCityName' ],
             [ [ 'id' ], 'safe' ],
-			[ [ 'zip', 'zip4' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->smallText ],
+			[ [ 'zip', 'subZip' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->smallText ],
 			[ [ 'phone', 'fax' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
 			[ [ 'title' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ [ 'line1', 'line2', 'line3', 'firstName', 'lastName', 'email', 'website' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->extraLargeText ],
-            [ [ 'line1', 'line2', 'line3', 'city' ], 'alphanumpun' ],
+            [ [ 'line1', 'line2', 'line3', 'firstName', 'lastName', 'email', 'website' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->xLargeText ],
             [ [ 'zip', 'zip4' ], 'alphanumhyphenspace' ],
             [ [ 'countryId', 'provinceId', 'cityId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'longitude', 'latitude', 'zoomLevel' ], 'number' ]
@@ -104,7 +117,7 @@ class Address extends \cmsgears\core\common\models\base\Resource {
         // trim if required
         if( Yii::$app->cmgCore->trimFieldValue ) {
 
-            $trim[] = [ [ 'line1', 'line2', 'line3', 'city', 'zip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'line1', 'line2', 'line3', 'city', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'latitude', 'longitude' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
             return ArrayHelper::merge( $trim, $rules );
         }
@@ -140,7 +153,13 @@ class Address extends \cmsgears\core\common\models\base\Resource {
         ];
     }
 
-    // Address ---------------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Address -------------------------------
 
     /**
      * @return Country
@@ -192,9 +211,11 @@ class Address extends \cmsgears\core\common\models\base\Resource {
         return $address;
     }
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -204,15 +225,19 @@ class Address extends \cmsgears\core\common\models\base\Resource {
         return CoreTables::TABLE_ADDRESS;
     }
 
-    // Address ---------------------------
+	// CMG parent classes --------------------
 
-    // Create -------------
+	// Address -------------------------------
 
-    // Read ---------------
+	// Read - Query -----------
 
-    // Update -------------
+	// Read - Find ------------
 
-    // Delete -------------
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
 }
 
 ?>

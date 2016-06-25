@@ -10,6 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Form;
 
+use cmsgears\core\common\models\traits\ParentTypeTrait;
+
 /**
  * ModelForm Entity
  *
@@ -20,7 +22,7 @@ use cmsgears\core\common\models\resources\Form;
  * @property short $order
  * @property boolean $active
  */
-class ModelForm extends \cmsgears\core\common\models\base\ParentMapper {
+class ModelForm extends \cmsgears\core\common\models\base\Mapper {
 
 	// Variables ---------------------------------------------------
 
@@ -41,6 +43,8 @@ class ModelForm extends \cmsgears\core\common\models\base\ParentMapper {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use ParentTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 

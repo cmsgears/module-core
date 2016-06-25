@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\guidelines;
 
 /**
- * A model extending CmgEntity can be further divided into below mentioned sections:
+ * A model extending Entity can be further divided into below mentioned sections:
  * 1. Yii imports
  * 2. CMG imports
  * 3. Project imports
@@ -74,7 +74,7 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 
 /**
- * ModelTemplate Entity
+ * EntityTemplate Entity
  *
  * @property short $<integer member>
  * @property integer $<integer member>
@@ -84,7 +84,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $<string member>
  * @property boolean $<boolean member>
  */
-class ModelTemplate extends \cmsgears\core\common\models\base\Entity {
+class EntityTemplate extends \cmsgears\core\common\models\base\Entity {
 
 	// Variables ---------------------------------------------------
 

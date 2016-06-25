@@ -39,26 +39,33 @@ class CoreGlobal {
 	const TYPE_CORE				= 'core';
 	const TYPE_SYSTEM			= 'system';
 
-	const TYPE_LOCALE			= 'locale';
-	const TYPE_THEME			= 'theme';
-	const TYPE_TEMPLATE			= 'template';
-	const TYPE_OBJECT			= 'object';
-	const TYPE_COUNTRY			= 'country';
-	const TYPE_PROVINCE			= 'province';
+	// Entities
 	const TYPE_CITY				= 'city';
-	const TYPE_ROLE				= 'role';
+	const TYPE_COUNTRY			= 'country';
+	const TYPE_LOCALE			= 'locale';
+	const TYPE_OBJECT			= 'object';
 	const TYPE_PERMISSION		= 'permission';
-	const TYPE_USER				= 'user';
+	const TYPE_PROVINCE			= 'province';
+	const TYPE_ROLE				= 'role';
 	const TYPE_SITE				= 'site';
-	const TYPE_TESTIMONIAL		= 'testimonial';
+	const TYPE_TEMPLATE			= 'template';
+	const TYPE_THEME			= 'theme';
+	const TYPE_USER				= 'user';
 
+	// Resources
 	const TYPE_ACTIVITY			= 'activity';
+	const TYPE_ADDRESS			= 'address';
 	const TYPE_CATEGORY			= 'category';
-	const TYPE_OPTION			= 'option';
-	const TYPE_FORM				= 'form';
-	const TYPE_GALLERY			= 'gallery';
 	const TYPE_COMMENT			= 'comment';
+	const TYPE_FILE				= 'file';
+	const TYPE_FORM				= 'form';
+	const TYPE_FORM_FIELD		= 'form-field';
+	const TYPE_GALLERY			= 'gallery';
+	const TYPE_OPTION			= 'option';
+	const TYPE_TAG				= 'tag';
 
+	// Additional
+	const TYPE_TESTIMONIAL		= 'testimonial';
 	const TYPE_OPTION_GROUP		= 'option-group';
 
 	// Templates -------------------------------------------------------

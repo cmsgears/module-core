@@ -10,6 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Gallery;
 
+use cmsgears\core\common\models\traits\ParentTypeTrait;
+
 /**
  * ModelGallery Entity
  *
@@ -21,7 +23,7 @@ use cmsgears\core\common\models\resources\Gallery;
  * @property short $order
  * @property short $active
  */
-class ModelGallery extends \cmsgears\core\common\models\base\ParentMapper {
+class ModelGallery extends \cmsgears\core\common\models\base\Mapper {
 
 	// Variables ---------------------------------------------------
 
@@ -42,6 +44,8 @@ class ModelGallery extends \cmsgears\core\common\models\base\ParentMapper {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use ParentTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 

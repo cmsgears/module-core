@@ -10,6 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Category;
 
+use cmsgears\core\common\models\traits\ParentTypeTrait;
+
 /**
  * ModelCategory Entity
  *
@@ -20,7 +22,7 @@ use cmsgears\core\common\models\resources\Category;
  * @property short $order
  * @property boolean $active
  */
-class ModelCategory extends \cmsgears\core\common\models\base\ParentMapper {
+class ModelCategory extends \cmsgears\core\common\models\base\Mapper {
 
 	// Variables ---------------------------------------------------
 
@@ -41,6 +43,8 @@ class ModelCategory extends \cmsgears\core\common\models\base\ParentMapper {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use ParentTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 

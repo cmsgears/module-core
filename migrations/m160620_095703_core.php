@@ -558,7 +558,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'formId' => $this->bigInteger( 20 )->notNull(),
 			'name' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
 			'label' => $this->string( CoreGlobal::TEXT_XLARGE )->notNull(),
-			'type' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
+			'type' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'icon' => $this->string( CoreGlobal::TEXT_MEDIUM )->defaultValue( null ),
 			'compress' => $this->boolean()->notNull()->defaultValue( false ),
 			'validators' => $this->string( CoreGlobal::TEXT_XLARGE )->defaultValue( false ),

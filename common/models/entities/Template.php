@@ -14,6 +14,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+use cmsgears\core\common\models\traits\NameTypeTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
@@ -39,7 +40,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $content
  * @property string $data
  */
-class Template extends \cmsgears\core\common\models\base\TypedEntity {
+class Template extends \cmsgears\core\common\models\base\Entity {
 
 	// Variables ---------------------------------------------------
 
@@ -64,6 +65,7 @@ class Template extends \cmsgears\core\common\models\base\TypedEntity {
 	// Traits ------------------------------------------------------
 
     use CreateModifyTrait;
+	use NameTypeTrait;
     use DataTrait;
 
 	// Constructor and Initialisation ------------------------------

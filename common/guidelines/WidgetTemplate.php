@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\listing\common\guidelines;
+namespace cmsgears\core\common\guidelines;
 
 /**
  * A widget extending CMG base widget can be further divided into below mentioned sections:

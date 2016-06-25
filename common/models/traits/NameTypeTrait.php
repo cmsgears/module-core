@@ -6,14 +6,19 @@ use cmsgears\core\common\config\CoreGlobal;
 
 trait NameTypeTrait {
 
-    // Constants/Statics --
+	// Instance methods --------------------------------------------
 
-	/**
-	 * It can be used to determine whether entity is available only for a specific site.
-	 */
-	protected static $siteSpecific	= false;
+	// Yii interfaces ------------------------
 
-	// Validators ---------
+	// Yii classes ---------------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG classes ---------------------------
+
+	// NameTypeTrait -------------------------
+
+	// Validators -------------
 
 	/**
 	 * Validate name on creation to ensure that name is unique for given type.
@@ -45,9 +50,15 @@ trait NameTypeTrait {
         }
     }
 
-    // Create -------------
+	// Static Methods ----------------------------------------------
 
-    // Read ---------------
+	// Yii classes ---------------------------
+
+	// CMG classes ---------------------------
+
+	// NameTypeTrait -------------------------
+
+	// Read - Query -----------
 
     public static function queryByType( $type ) {
 
@@ -58,6 +69,8 @@ trait NameTypeTrait {
 
         return self::find()->where( 'type=:type AND slug=:name', [ ':type' => $type, ':name' => $name ] );
     }
+
+	// Read - Find ------------
 
     /**
      * @return array - ActiveRecord by type
@@ -72,7 +85,7 @@ trait NameTypeTrait {
 	 */
 	public static function findByName( $name ) {
 
-		if( static::$siteSpecific ) {
+		if( static::$multiSite ) {
 
 			$siteId	= Yii::$app->cmgCore->siteId;
 
@@ -89,7 +102,7 @@ trait NameTypeTrait {
 	 */
 	public static function findByNameType( $name, $type ) {
 
-		if( static::$siteSpecific ) {
+		if( static::$multiSite ) {
 
 			$siteId	= Yii::$app->cmgCore->siteId;
 
@@ -111,9 +124,12 @@ trait NameTypeTrait {
 		return isset( $model );
 	}
 
-    // Update -------------
+	// Create -----------------
 
-    // Delete -------------
+	// Update -----------------
+
+	// Delete -----------------
+
 }
 
 ?>

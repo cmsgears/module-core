@@ -11,6 +11,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Locale;
 
+use cmsgears\core\common\models\traits\ParentTypeTrait;
+
 /**
  * ModelMessage Entity
  *
@@ -21,7 +23,7 @@ use cmsgears\core\common\models\entities\Locale;
  * @property string $name
  * @property string $value
  */
-class ModelMessage extends \cmsgears\core\common\models\base\ParentResource {
+class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 
 	// Variables ---------------------------------------------------
 
@@ -42,6 +44,8 @@ class ModelMessage extends \cmsgears\core\common\models\base\ParentResource {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use ParentTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 

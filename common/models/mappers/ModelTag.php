@@ -10,6 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Tag;
 
+use cmsgears\core\common\models\traits\ParentTypeTrait;
+
 /**
  * ModelTag Entity
  *
@@ -20,7 +22,7 @@ use cmsgears\core\common\models\resources\Tag;
  * @property short $order
  * @property boolean $active
  */
-class ModelTag extends \cmsgears\core\common\models\base\ParentMapper {
+class ModelTag extends \cmsgears\core\common\models\base\Mapper {
 
 	// Variables ---------------------------------------------------
 
@@ -41,6 +43,8 @@ class ModelTag extends \cmsgears\core\common\models\base\ParentMapper {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use ParentTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 

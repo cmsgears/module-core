@@ -13,6 +13,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+use cmsgears\core\common\models\traits\ParentTypeTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
@@ -42,7 +43,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $content
  * @property string $data
  */
-class ModelComment extends \cmsgears\core\common\models\base\ParentResource {
+class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
 	// Variables ---------------------------------------------------
 
@@ -86,6 +87,7 @@ class ModelComment extends \cmsgears\core\common\models\base\ParentResource {
 
     use CreateModifyTrait;
     use DataTrait;
+	use ParentTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 

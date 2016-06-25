@@ -15,6 +15,7 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\mappers\RolePermission;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
+use cmsgears\core\common\models\traits\NameTypeTrait;
 use cmsgears\core\common\models\traits\resources\HierarchyTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
@@ -33,7 +34,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
-class Permission extends \cmsgears\core\common\models\base\TypedEntity {
+class Permission extends \cmsgears\core\common\models\base\Entity {
 
 	// Variables ---------------------------------------------------
 
@@ -59,6 +60,7 @@ class Permission extends \cmsgears\core\common\models\base\TypedEntity {
 
     use CreateModifyTrait;
 	use HierarchyTrait;
+	use NameTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 

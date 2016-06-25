@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\listing\common\guidelines;
+namespace cmsgears\core\common\guidelines;
 
 /**
  * A model extending JsonModel, GenericForm or yii base model can be further divided into below mentioned sections:

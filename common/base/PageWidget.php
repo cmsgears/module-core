@@ -12,11 +12,24 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\utilities\CodeGenUtil;
 
+/**
+ * The class PageWidget can be used by widgets which need pagination support via either pagination links or user scroll.
+ */
 abstract class PageWidget extends Widget {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Public Variables --------------------
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
     /**
      * Used to decorate wrapper. The inherited $options will be used for div wrapping the models wrapper.
@@ -55,15 +68,15 @@ abstract class PageWidget extends Widget {
      */
     public $paging          = true;
 
+    /**
+     * Ajaxify the paging links in case $paging is set to true. In such cases, URL params will be updated using History API if supported by browser and the page will be loaded via ajax without refreshing full page.
+     */
+    public $ajaxifyLinks    = true;
+
     /*
      * Ajax url used to fetch pages. It must be a relative path for appropriate apix controller.
      */
     public $ajaxUrl         = null;
-
-    /**
-     * Ajaxify the paging links in case $paging is set to true.
-     */
-    public $ajaxifyLinks    = true;
 
     /**
      * Default page limit.
@@ -71,7 +84,7 @@ abstract class PageWidget extends Widget {
     public $limit           = 5;
 
     /*
-     * Useful in case limited text is displayed for a model irrespective of total length.
+     * Useful in case limited text is displayed for a model irrespective of total length. It will be useful in maintaining same height for all the models.
      */
     public $textLimit       = CoreGlobal::DISPLAY_TEXT_SMALL;
 
@@ -87,7 +100,7 @@ abstract class PageWidget extends Widget {
      */
     public $siteModels      = false;
 
-    // Protected Variables -----------------
+	// Protected --------------
 
     /**
      * DataProvider to fetch initial page.
@@ -109,9 +122,11 @@ abstract class PageWidget extends Widget {
      */
     protected $pageLinks    = null;
 
-    // Constructor and Initialisation ------------------------------
+	// Private ----------------
 
-    // yii\base\Object
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
 
     public function init() {
 
@@ -143,7 +158,20 @@ abstract class PageWidget extends Widget {
         }
     }
 
-    // Instance Methods --------------------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Widget --------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// cmsgears\core\common\base\Widget
 
     public function renderWidget( $config = [] ) {
 
@@ -155,9 +183,9 @@ abstract class PageWidget extends Widget {
         $wrapperView    = $this->template . '/wrapper';
         $singleView     = $this->template . '/single';
 
-        if( Yii::$app->cmgCore->multiSite && Yii::$app->cmgCore->subDirectory ) {
+        if( Yii::$app->core->multiSite && Yii::$app->core->subDirectory ) {
 
-            $siteName       = Yii::$app->cmgCore->getSiteName();
+            $siteName       = Yii::$app->core->getSiteName();
 
             if( strlen( $this->basePath ) > 0 ) {
 
@@ -194,6 +222,9 @@ abstract class PageWidget extends Widget {
 
         return Html::tag( 'div', $content, $this->options );
     }
+
+	// PageWidget ----------------------------
+
 }
 
 ?>

@@ -10,13 +10,13 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\ObjectData;
 
-use cmsgears\core\common\models\traits\ParentTypeTrait;
+use cmsgears\core\common\models\traits\MapperTrait;
 
 /**
  * ModelObject Entity
  *
  * @property long $id
- * @property long $objectId
+ * @property long $modelId
  * @property long $parentId
  * @property string $parentType
  * @property short $order
@@ -44,7 +44,7 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
 
 	// Traits ------------------------------------------------------
 
-	use ParentTypeTrait;
+	use MapperTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -64,12 +64,12 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
     public function rules() {
 
         return [
-            [ [ 'objectId', 'parentId', 'parentType' ], 'required' ],
+            [ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
             [ [ 'id' ], 'safe' ],
-            [ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
+            [ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'active' ], 'boolean' ],
-            [ [ 'objectId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+            [ [ 'modelId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
         ];
     }
 
@@ -79,11 +79,11 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
     public function attributeLabels() {
 
         return [
-            'objectId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_OBJECT ),
-            'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-            'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-            'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-            'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
+            'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_OBJECT ),
+            'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+            'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+            'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
         ];
     }
 
@@ -100,7 +100,7 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
      */
     public function getObject() {
 
-        return $this->hasOne( ObjectData::className(), [ 'id' => 'objectId' ] );
+        return $this->hasOne( ObjectData::className(), [ 'id' => 'modelId' ] );
     }
 
 	// Static Methods ----------------------------------------------
@@ -115,6 +115,21 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Query -----------
 
+	public static function queryWithAll( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'object' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithModel( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'object' ];
+
+		return parent::queryWithAll( $config );
+	}
+
 	// Read - Find ------------
 
 	// Create -----------------
@@ -122,6 +137,7 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
 	// Update -----------------
 
 	// Delete -----------------
+
 }
 
 ?>

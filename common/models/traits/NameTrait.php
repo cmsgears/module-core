@@ -1,19 +1,30 @@
 <?php
 namespace cmsgears\core\common\models\traits;
 
+// Yii Import
+use \Yii;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+/**
+ * The model using this trait must have name column. It must also support unique name.
+ */
 trait NameTrait {
 
-    // Constants/Statics --
+	// Instance methods --------------------------------------------
 
-	/**
-	 * It can be used to determine whether entity is available only for a specific site.
-	 */
-	protected static $siteSpecific	= false;
+	// Yii interfaces ------------------------
 
-	// Validators ---------
+	// Yii classes ---------------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG classes ---------------------------
+
+	// SlugTypeTrait -------------------------
+
+	// Validators -------------
 
 	/**
 	 * Validate name on creation to ensure that name is unique for all rows.
@@ -22,11 +33,11 @@ trait NameTrait {
 
         if( !$this->hasErrors() ) {
 
-			$entity = static::findByName( $this->name );
+			$entity = static::isExistByName( $this->name );
 
             if( $entity ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
@@ -42,35 +53,64 @@ trait NameTrait {
 
 			if( isset( $existingEntity ) && $existingEntity->id != $this->id ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}
         }
     }
 
-    // Create -------------
+	// Static Methods ----------------------------------------------
 
-    // Read ---------------
+	// Yii classes ---------------------------
+
+	// CMG classes ---------------------------
+
+	// SlugTypeTrait -------------------------
+
+	// Read - Query -----------
+
+	/**
+	 * @return ActiveRecord - having matching name.
+	 */
+    public static function queryByName( $name ) {
+
+		if( static::$multiSite ) {
+
+			$siteId	= Yii::$app->core->siteId;
+
+			return static::find()->where( 'name=:name AND siteId=:siteId', [ ':name' => $name, ':siteId' => $siteId ] );
+		}
+		else {
+
+			return static::find()->where( 'name=:name', [ ':name' => $name ] );
+		}
+	}
+
+	// Read - Find ------------
 
 	/**
 	 * @return ActiveRecord - by name
 	 */
 	public static function findByName( $name ) {
 
-		if( static::$siteSpecific ) {
-
-			$siteId	= Yii::$app->cmgCore->siteId;
-
-			return static::find()->where( 'name=:name AND siteId=:siteId', [ ':name' => $name, ':siteId' => $siteId ] )->one();
-		}
-		else {
-
-			return static::find()->where( 'name=:name', [ ':name' => $name ] )->one();
-		}
+		self::queryByName( $name )->one();
 	}
 
-    // Update -------------
+    /**
+     * @return boolean - check whether model exist for given name
+     */
+	public static function isExistByName( $name ) {
 
-    // Delete -------------
+		$model	= static::findByName( $name );
+
+		return isset( $model );
+	}
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
+
 }
 
 ?>

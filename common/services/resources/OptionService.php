@@ -9,163 +9,54 @@ use yii\data\Sort;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\Option;
 use cmsgears\core\common\models\resources\Category;
+use cmsgears\core\common\models\resources\Option;
+use cmsgears\core\common\models\mappers\ModelOption;
+
+use cmsgears\core\common\services\interfaces\resources\IOptionService;
 
 /**
  * The class OptionService is base class to perform database activities for Option Entity.
  */
-class OptionService extends \cmsgears\core\common\services\base\Service {
+class OptionService extends \cmsgears\core\common\services\base\EntityService implements IOptionService {
 
-	// Static Methods ----------------------------------------------
+	// Variables ---------------------------------------------------
 
-	// Create --------------
+	// Globals -------------------------------
 
-	public static function create( $model ) {
+	// Constants --------------
 
-		$model->value	= $model->name;
+	// Public -----------------
 
-		$model->save();
+	// Protected --------------
 
-		return $model;
-	}
+	// Variables -----------------------------
 
-	// Read ----------------
+	// Public -----------------
 
-	/**
-	 * @param integer $id
-	 * @return Option
-	 */
-	public static function findById( $id ) {
+	// Protected --------------
 
-		return Option::findById( $id );
-	}
+	// Private ----------------
 
-	/**
-	 * @param integer $categoryId - category id
-	 * @return Option
-	 */
-	public static function findByCategoryId( $categoryId ) {
+	// Traits ------------------------------------------------------
 
-		return Option::findByCategoryId( $categoryId );
-	}
+	// Constructor and Initialisation ------------------------------
 
-	/**
-	 * @param integer $categoryName - category name
-	 * @return Option
-	 */
-	public static function findByCategoryName( $categoryName, $categoryType = CoreGlobal::TYPE_COMBO ) {
+	// Instance methods --------------------------------------------
 
-		return Option::findByCategoryName( $categoryName, $categoryType );
-	}
+	// Yii parent classes --------------------
 
-	/**
-	 * @param string $name - option name
-	 * @param integer $categoryId - category name
-	 * @return Option
-	 */
-	public static function findByNameCategoryId( $name, $categoryId ) {
+	// yii\base\Component -----
 
-		return Option::findByNameCategoryId( $name, $categoryId );
-	}
+	// CMG interfaces ------------------------
 
-	/**
-	 * @param string $name - option name
-	 * @param integer $categoryName - category name
-	 * @return Option
-	 */
-	public static function findByNameCategoryName( $name, $categoryName, $categoryType = CoreGlobal::TYPE_COMBO ) {
+	// CMG parent classes --------------------
 
-		return Option::findByNameCategoryName( $name, $categoryName, $categoryType );
-	}
+	// OptionService -------------------------
 
-	/**
-	 * @param string $value - option value
-	 * @param integer $categoryName - category name
-	 * @return Option
-	 */
-	public static function findByValueCategoryName( $value, $categoryName, $categoryType = CoreGlobal::TYPE_COMBO ) {
+	// Data Provider ------
 
-		return Option::findByValueCategoryName( $value, $categoryName, $categoryType );
-	}
-
-	/**
-	 * @param integer $categoryId - category id
-	 * @return array - an array having id as key and name as value for given category id.
-	 */
-	public static function getIdNameMapByCategoryId( $categoryId, $prepend = [], $append = [] ) {
-
-		return self::findMap( 'id', 'name', CoreTables::TABLE_OPTION, [ 'conditions' => [ 'categoryId' => $categoryId ], 'prepend' => $prepend, 'append' => $append ] );
-	}
-
-	/**
-	 * @param integer $categoryName - category name
-	 * @return array - an array having id as key and name as value for given category name.
-	 */
-	public static function getIdNameMapByCategoryName( $categoryName, $prepend = [], $append = [], $type = CoreGlobal::TYPE_COMBO ) {
-
-		$category	= Category::findByNameType( $categoryName, $type );
-
-		return self::findMap( 'id', 'name', CoreTables::TABLE_OPTION, [ 'conditions' => [ 'categoryId' => $category->id ], 'prepend' => $prepend, 'append' => $append ] );
-	}
-
-	/**
-	 * @param integer $categoryId - category id
-	 * @return array - an array having value as key and name as value for given category id.
-	 */
-	public static function getValueNameMapByCategoryId( $categoryId ) {
-
-		$category	= Category::findById( $categoryId );
-		$options	= $category->options;
-		$optionsMap	= array();
-
-		foreach ( $options as $option ) {
-
-			$optionsMap[ $option->value ] = $option->name;
-		}
-
-		return $optionsMap;
-	}
-
-	/**
-	 * @param integer $categoryName - category name
-	 * @return array - an array having value as key and name as value for given category name.
-	 */
-	public static function getValueNameMapByCategoryName( $categoryName, $type = CoreGlobal::TYPE_COMBO ) {
-
-		$category	= Category::findByNameType( $categoryName, $type );
-		$options	= $category->options;
-		$optionsMap	= array();
-
-		foreach ( $options as $option ) {
-
-			$optionsMap[ $option->value ] = $option->name;
-		}
-
-		return $optionsMap;
-	}
-
-	public static function getValueNameMapByCategorySlug( $categorySlug, $type = CoreGlobal::TYPE_COMBO ) {
-
-        $category   = Category::findBySlugType( $categorySlug, $type );
-        $options    = $category->options;
-        $optionsMap = array();
-
-        foreach ( $options as $option ) {
-
-            $optionsMap[ $option->value ] = $option->name;
-        }
-
-        return $optionsMap;
-    }
-
-	// Data Provider ----
-
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+	public function getPage( $config = [] ) {
 
 		$sort = new Sort([
 	        'attributes' => [
@@ -184,42 +75,197 @@ class OptionService extends \cmsgears\core\common\services\base\Service {
 	        ]
 	    ]);
 
-		if( !isset( $config[ 'sort' ] ) ) {
+		$config[ 'sort' ] = $sort;
 
-			$config[ 'sort' ] = $sort;
+		return parent::findPage( $config );
+	}
+
+	// Read ---------------
+
+    // Read - Models ---
+
+	public function getByCategoryId( $categoryId ) {
+
+		return self::findByCategoryId( $categoryId );
+	}
+
+	public function getByCategoryName( $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
+
+		return self::findByCategoryName( $categoryName, $categoryType );
+	}
+
+	public function getByNameCategoryId( $name, $categoryId ) {
+
+		return self::findByNameCategoryId( $name, $categoryId );
+	}
+
+	public function getByNameCategoryName( $name, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
+
+		return self::findByNameCategoryName( $name, $categoryName, $categoryType );
+	}
+
+	public function getByValueCategoryName( $value, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
+
+		return self::findByValueCategoryName( $value, $categoryName, $categoryType );
+	}
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	/**
+	 * @param integer $categoryId - category id
+	 * @return array - an array having id as key and name as value for given category id.
+	 */
+	public function getIdNameMapByCategoryId( $categoryId, $config = [] ) {
+
+		$config[ 'conditions' ][ 'categoryId' ] = $categoryId;
+
+		return self::findIdNameMap( $config );
+	}
+
+	/**
+	 * @param integer $categoryName - category name
+	 * @return array - an array having id as key and name as value for given category name.
+	 */
+	public function getIdNameMapByCategoryName( $categoryName, $config = [], $type = CoreGlobal::TYPE_OPTION_GROUP ) {
+
+		$category	= Category::findByNameType( $categoryName, $type );
+
+		$config[ 'conditions' ][ 'categoryId' ] = $categoryId;
+
+		return self::findIdNameMap( $config );
+	}
+
+	/**
+	 * @param integer $categoryId - category id
+	 * @return array - an array having value as key and name as value for given category id.
+	 */
+	public function getValueNameMapByCategoryId( $categoryId ) {
+
+		$category	= Category::findById( $categoryId );
+		$options	= $category->options;
+		$optionsMap	= array();
+
+		foreach ( $options as $option ) {
+
+			$optionsMap[ $option->value ] = $option->name;
 		}
 
-		if( !isset( $config[ 'search-col' ] ) ) {
+		return $optionsMap;
+	}
 
-			$config[ 'search-col' ] = 'name';
+	/**
+	 * @param integer $categoryName - category name
+	 * @return array - an array having value as key and name as value for given category name.
+	 */
+	public function getValueNameMapByCategoryName( $categoryName, $type = CoreGlobal::TYPE_OPTION_GROUP ) {
+
+		$category	= Category::findByNameType( $categoryName, $type );
+		$options	= $category->options;
+		$optionsMap	= array();
+
+		foreach ( $options as $option ) {
+
+			$optionsMap[ $option->value ] = $option->name;
 		}
 
-		return self::getDataProvider( new Option(), $config );
+		return $optionsMap;
 	}
 
-	// Update ----
+	public function getValueNameMapByCategorySlug( $categorySlug, $type = CoreGlobal::TYPE_OPTION_GROUP ) {
 
-	public static function update( $model ) {
+        $category   = Category::findBySlugType( $categorySlug, $type );
+        $options    = $category->options;
+        $optionsMap = array();
 
-		$modelToUpdate	= self::findById( $model->id );
+        foreach ( $options as $option ) {
 
-		// Copy Attributes
-		$modelToUpdate->copyForUpdateFrom( $model, [ 'categoryId', 'name', 'value', 'icon', 'htmlOptions' ] );
+            $optionsMap[ $option->value ] = $option->name;
+        }
 
-		// Update Option
-		$modelToUpdate->update();
+        return $optionsMap;
+    }
 
-		// Return updated option
-		return $modelToUpdate;
+	// Read - Others ---
+
+	// Create -------------
+
+ 	public function create( $model, $config = [] ) {
+
+		$model->value	= $model->name;
+
+		return parent::create( $model, $config );
+ 	}
+
+	// Update -------------
+
+	public function update( $model, $config = [] ) {
+
+		return parent::update( $model, [
+			'attributes' => [ 'categoryId', 'name', 'value', 'icon', 'htmlOptions' ]
+		]);
+ 	}
+
+	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete dependencies
+		ModelOption::deleteByModelId( $model->id );
+
+		// Delete model
+		return parent::delete( $model, $config );
 	}
 
-	// Delete ----
+	// Static Methods ----------------------------------------------
 
-	public static function delete( $model ) {
+	// CMG parent classes --------------------
 
-		$model->delete();
+	// OptionService -------------------------
 
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+	public static function findByCategoryId( $categoryId ) {
+
+		return Option::findByCategoryId( $categoryId );
 	}
+
+	public static function findByCategoryName( $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
+
+		return Option::findByCategoryName( $categoryName, $categoryType );
+	}
+
+	public static function findByNameCategoryId( $name, $categoryId ) {
+
+		return Option::findByNameCategoryId( $name, $categoryId );
+	}
+
+	public static function findByNameCategoryName( $name, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
+
+		return Option::findByNameCategoryName( $name, $categoryName, $categoryType );
+	}
+
+	public static function findByValueCategoryName( $value, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
+
+		return Option::findByValueCategoryName( $value, $categoryName, $categoryType );
+	}
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

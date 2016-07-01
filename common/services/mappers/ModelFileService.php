@@ -5,62 +5,109 @@ namespace cmsgears\core\common\services\mappers;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\models\mappers\ModelFile;
 
-use cmsgears\core\common\services\resources\FileService;
+use cmsgears\core\common\services\interfaces\resources\IFileService;
+use cmsgears\core\common\services\interfaces\mappers\IModelFileService;
+
+use cmsgears\core\common\services\traits\MapperTrait;
 
 /**
  * The class ModelFileService is base class to perform database activities for ModelFile Entity.
  */
-class ModelFileService extends \cmsgears\core\common\services\base\Service {
+class ModelFileService extends \cmsgears\core\common\services\base\EntityService implements IModelFormService {
 
-	// Static Methods ----------------------------------------------
+	// Variables ---------------------------------------------------
 
-	// Read ----------------
+	// Globals -------------------------------
 
-	public static function findByParentType( $parentType ) {
+	// Constants --------------
 
-		return ModelFile::findByParentType( $parentType );
-	}
+	// Public -----------------
 
-	public static function findByParentId( $parentId ) {
+	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelFile';
 
-		return ModelFile::findByParentId( $parentId );
-	}
+	public static $modelTable	= CoreTables::TABLE_MODEL_FILE;
 
-	public static function findByFileId( $parentId, $parentType, $fileId ) {
+	public static $parentType	= null;
 
-		return ModelFile::findByFileId( $parentId, $parentType, $fileId );
-	}
+	// Protected --------------
 
-	public static function findByFileTitle( $parentId, $parentType, $fileTitle ) {
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	private $fileService;
+
+	// Traits ------------------------------------------------------
+
+	use MapperTrait;
+
+	// Constructor and Initialisation ------------------------------
+
+    public function __construct( IFileService $fileService, $config = [] ) {
+
+		$this->fileService	= $fileService;
+
+        parent::__construct( $config );
+    }
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// ModelFileService ----------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+	public function getByFileTitle( $parentId, $parentType, $fileTitle ) {
 
 		return ModelFile::findByFileTitle( $parentId, $parentType, $fileTitle );
 	}
 
-	public static function findByFileTitleLike( $parentId, $parentType, $likeTitle ) {
+	public function getByFileTitleLike( $parentId, $parentType, $likeTitle ) {
 
 		return ModelFile::findByFileTitleLike( $parentId, $parentType, $likeTitle );
 	}
 
-	// Create ----------------
+    // Read - Lists ----
 
-	public static function create( $model ) {
+    // Read - Maps -----
 
-		$model->save();
-	}
+	// Read - Others ---
 
-	// Update ----------------
+	// Create -------------
 
-	public static function createOrUpdateByTitle( $parent, $parentType, $file ) {
+	public static function createOrUpdateByTitle( $file, $config = [] ) {
+
+		$parent 	= $config[ 'parent' ];
+		$parentType = $config[ 'parentType' ];
 
 		if( isset( $file ) && isset( $file->title ) ) {
 
-			$fileModel	= ModelFile::findByFileTitle( $parent->id, $parentType, $file->title );
+			$fileModel	= $this->getByFileTitle( $parent->id, $parentType, $file->title );
 
 			if( isset( $fileModel ) ) {
 
-				FileService::saveFile( $file, [ 'model' => $fileModel, 'attribute' => 'fileId' ] );
+				$this->fileService->saveFile( $file, [ 'model' => $fileModel, 'attribute' => 'fileId' ] );
 
 				$fileModel->update();
 			}
@@ -71,7 +118,7 @@ class ModelFileService extends \cmsgears\core\common\services\base\Service {
 				$fileModel->parentId	= $parent->id;
 				$fileModel->parentType	= $parentType;
 
-				FileService::saveFile( $file, [ 'model' => $fileModel, 'attribute' => 'fileId' ] );
+				$this->fileService->saveFile( $file, [ 'model' => $fileModel, 'attribute' => 'fileId' ] );
 
 				$fileModel->save();
 			}
@@ -80,24 +127,44 @@ class ModelFileService extends \cmsgears\core\common\services\base\Service {
 		}
  	}
 
-	// Delete ----------------
+	// Update -------------
 
-	public static function delete( $model, $deleteFile = true ) {
+	// Delete -------------
 
-		// Find File
-		$file	= $model->file;
-
-		// Delete Model File
-		$model->delete();
+	public function delete( $model, $config = [] ) {
 
 		// Delete File
-		if( $deleteFile ) {
+		if( $model->file ) {
 
-			FileService::delete( $file );
+			$this->fileService->delete( $model->file );
 		}
 
-		return true;
+		return parent::delete( $model, $config );
 	}
+
+	// Static Methods ----------------------------------------------
+
+	// CMG parent classes --------------------
+
+	// ModelFileService ----------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

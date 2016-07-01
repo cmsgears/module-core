@@ -9,6 +9,8 @@ use cmsgears\files\widgets\ImageUploader;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Delete Theme | ' . $coreProperties->getSiteTitle();
+
+$renderers		= Yii::$app->templateManager->renderers;
 ?>
 <div class="box box-cud">
 	<div class="box-wrap-header">
@@ -18,7 +20,7 @@ $this->title 	= 'Delete Theme | ' . $coreProperties->getSiteTitle();
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-site' ] );?>
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
-    	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => true ] ) ?> 
+    	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => true ] ) ?>
 		<?= $form->field( $model, 'renderer' )->dropDownList( $renderers, [ 'disabled' => true ] ) ?>
 		<?= $form->field( $model, 'basePath' )->textInput( [ 'readonly' => true ] ) ?>
 

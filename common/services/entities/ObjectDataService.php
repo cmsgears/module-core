@@ -1,181 +1,162 @@
 <?php
 namespace cmsgears\core\common\services\entities;
 
-// Yii Imports
 use \Yii;
+use yii\data\Sort;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\ObjectData;
 
-use cmsgears\core\common\services\resources\FileService;
+use cmsgears\core\common\services\interfaces\entities\ICountryService;
+use cmsgears\core\common\services\interfaces\resources\IFileService;
 
-/**
- * The class ObjectDataService is base class to perform database activities for ObjectData Entity.
- */
-class ObjectDataService extends \cmsgears\core\common\services\base\Service {
+use cmsgears\core\common\services\traits\NameSlugTypeTrait;
 
-	// Static Methods ----------------------------------------------
+class ObjectDataService extends \cmsgears\core\common\services\base\EntityService implements IObjectService {
 
-	// Read ----------------
+	// Variables ---------------------------------------------------
 
-	/**
-	 * @param integer $id
-	 * @return ObjectData
-	 */
-	public static function findById( $id ) {
+	// Globals -------------------------------
 
-		return ObjectData::findById( $id );
-	}
+	// Constants --------------
 
-	/**
-	 * @param string $name
-	 * @param string $type
-	 * @return ObjectData
-	 */
-	public static function findByNameType( $name, $type ) {
+	// Public -----------------
 
-		return ObjectData::findByNameType( $name, $type );
-	}
+	public static $modelClass	= '\cmsgears\core\common\models\entities\ObjectData';
 
-	/**
-	 * @param string $slug
-	 * @param string $type
-	 * @return ObjectData
-	 */
-	public static function findBySlug( $slug ) {
+	public static $modelTable	= CoreTables::TABLE_OBJECT_DATA;
 
-		return ObjectData::findBySlug( $slug );
-	}
+	public static $parentType	= CoreGlobal::TYPE_OBJECT;
 
-	/**
-	 * @param array $config
-	 * @return array - an array having id as key and name as value.
-	 */
-	public static function getIdNameMap( $config = [] ) {
+	// Protected --------------
 
-		return self::findMap( 'id', 'name', CoreTables::TABLE_OBJECT_DATA, $config );
-	}
+	// Variables -----------------------------
 
-	/**
-	 * @param string $type
-	 * @return array - an array having id as key and name as value.
-	 */
-	public static function getIdNameMapByType( $type ) {
+	// Public -----------------
 
-		return self::getIdNameMap( [ 'conditions' => [ 'type' => $type ] ] );
-	}
+	// Protected --------------
 
-	/**
-	 * @return array - of all object data ids
-	 */
-	public static function getIdList( $config = [] ) {
+	// Private ----------------
 
-		return self::findList( 'id', CoreTables::TABLE_OBJECT_DATA, $config );
-	}
+	private $fileService;
 
-	/**
-	 * @return array - of all object data ids
-	 */
-	public static function getIdListByType( $type ) {
+	// Traits ------------------------------------------------------
 
-		return self::getIdList( [ 'conditions' => [ 'type' => $type ] ] );
-	}
+	use NameSlugTypeTrait;
 
-	/**
-	 * @param array $config
-	 * @return array - An array of associative array of object data id and name.
-	 */
-	public static function getIdNameList( $config = [] ) {
+	// Constructor and Initialisation ------------------------------
 
-		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_OBJECT_DATA, $config );
-	}
+    public function __construct( IFileService $fileService, $config = [] ) {
 
-	/**
-	 * @param string $id
-	 * @return array - An array of associative array of object data id and name.
-	 */
-	public static function getIdNameListByType( $type ) {
+		$this->fileService	= $fileService;
 
-		return self::getIdNameList( [ 'conditions' => [ 'type' => $type ] ] );
-	}
+        parent::__construct( $config );
+    }
 
-	// Data Provider ----
+	// Instance methods --------------------------------------------
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+	// Yii parent classes --------------------
 
-		return self::getDataProvider( new ObjectData(), $config );
-	}
+	// yii\base\Component -----
 
-	// Create -----------
+	// CMG interfaces ------------------------
 
-	public static function create( $object, $data = null, $avatar = null, $banner = null ) {
+	// CMG parent classes --------------------
 
-		// Unset Template
-		if( isset( $object->templateId ) && $object->templateId <= 0 ) {
+	// CountryService ------------------------
 
-			$object->templateId = null;
-		}
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	public function create( $model, $config = [] ) {
+
+		$data 	= isset( $config[ 'data' ] ) ? $config[ 'data' ] : null;
+		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 
 		// Generate Data
 		if( isset( $data ) ) {
 
-			$object->generateJsonFromObject( $data );
+			$model->generateJsonFromObject( $data );
 		}
 
-		// Save Files
-		FileService::saveFiles( $object, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
 
-		$object->save();
-
-		return $object;
+		return parent::create( $model, $config );
 	}
 
-	// Update -----------
+	// Update -------------
 
-	public static function update( $object, $data = null, $avatar = null, $banner = null ) {
+	public function update( $model, $config = [] ) {
 
-		// Unset Template
-		if( isset( $object->templateId ) && $object->templateId <= 0 ) {
+		$data 	= isset( $config[ 'data' ] ) ? $config[ 'data' ] : null;
+		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 
-			$object->templateId = null;
-		}
-
-		$objectToUpdate	= self::findById( $object->id );
-
-		$objectToUpdate->copyForUpdateFrom( $object, [ 'templateId', 'avatarId', 'name', 'icon', 'description', 'type', 'active', 'htmlOptions', 'data' ] );
-
+		// Generate Data
 		if( isset( $data ) ) {
 
-			$objectToUpdate->generateJsonFromObject( $data );
+			$model->generateJsonFromObject( $data );
 		}
 
-		// Save Files
-		FileService::saveFiles( $objectToUpdate, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
 
-		$objectToUpdate->update();
+		return parent::update( $model, [
+			'attributes' => [ 'templateId', 'avatarId', 'name', 'icon', 'description', 'type', 'active', 'htmlOptions', 'data' ]
+		]);
+ 	}
 
-		return $objectToUpdate;
+	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete dependencies
+		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+
+		$this->fileService->deleteFiles( [ $avatar, $banner ] );
+
+		// Delete model
+		return parent::delete( $model, $config );
 	}
 
-	// Delete -----------
+	// Static Methods ----------------------------------------------
 
-	public static function delete( $object, $avatar = null, $banner = null ) {
+	// CMG parent classes --------------------
 
-		$existingObject	= self::findById( $object->id );
+	// CountryService ------------------------
 
-		// Delete Object
-		$existingObject->delete();
+	// Data Provider ------
 
-		// Delete Files
-		FileService::deleteFiles( [ $avatar, $banner ] );
+	// Read ---------------
 
-		return true;
-	}
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

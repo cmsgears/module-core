@@ -1,6 +1,12 @@
 <?php
 namespace cmsgears\core\common\models\traits\resources;
 
+// Yii Import
+use \Yii;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 trait DataTrait {
 
 	public function generateJsonFromObject( $dataObject ) {

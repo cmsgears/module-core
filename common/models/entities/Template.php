@@ -15,6 +15,7 @@ use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 use cmsgears\core\common\models\traits\NameTypeTrait;
+use cmsgears\core\common\models\traits\SlugTypeTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
@@ -65,8 +66,9 @@ class Template extends \cmsgears\core\common\models\base\Entity {
 	// Traits ------------------------------------------------------
 
     use CreateModifyTrait;
+	use DataTrait;
 	use NameTypeTrait;
-    use DataTrait;
+	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -89,7 +91,8 @@ class Template extends \cmsgears\core\common\models\base\Entity {
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
-                'ensureUnique' => true
+                'ensureUnique' => true,
+                'uniqueValidator' => [ 'targetAttribute' => 'type' ]
             ],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
@@ -111,18 +114,18 @@ class Template extends \cmsgears\core\common\models\base\Entity {
         $rules = [
             [ [ 'name', 'type' ], 'required' ],
             [ [ 'id', 'content', 'data' ], 'safe' ],
-            [ [ 'name', 'icon', 'type', 'renderer' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ [ 'slug' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ [ 'description', 'layout', 'viewPath' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->xLargeText ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'name', 'icon', 'type', 'renderer' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ [ 'slug' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+            [ [ 'description', 'layout', 'viewPath' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
+            [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+            [ [ 'slug', 'type' ], 'unique', 'targetAttribute' => [ 'slug', 'type' ] ],
             [ [ 'fileRender', 'layoutGroup' ], 'boolean' ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
         // trim if required
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
             $trim[] = [ [ 'name', 'renderer', 'description', 'layout', 'viewPath' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -138,14 +141,14 @@ class Template extends \cmsgears\core\common\models\base\Entity {
     public function attributeLabels() {
 
         return [
-            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-            'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-            'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-            'renderer' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_RENDERER ),
-            'layout' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LAYOUT ),
-            'viewPath' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VIEW_PATH ),
-            'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+            'renderer' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RENDERER ),
+            'layout' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LAYOUT ),
+            'viewPath' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_PATH ),
+            'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
         ];
     }
 
@@ -177,22 +180,7 @@ class Template extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Query -----------
 
-    public static function queryBySlug( $slug ) {
-
-        return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] );
-    }
-
-    public static function queryByTypeSlug( $type, $slug ) {
-
-        return self::find()->where( 'type=:type AND slug=:slug', [ ':type' => $type, ':slug' => $slug ] );
-    }
-
 	// Read - Find ------------
-
-    public static function findByTypeSlug( $type, $slug ) {
-
-        return self::find()->where( 'type=:type AND slug=:slug', [ ':type' => $type, ':slug' => $slug ] )->one();
-    }
 
 	// Create -----------------
 

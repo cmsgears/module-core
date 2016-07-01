@@ -4,43 +4,64 @@ namespace cmsgears\core\admin\controllers;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\Site;
-use cmsgears\core\common\models\resources\CmgFile;
-
-use cmsgears\core\common\services\entities\ThemeService;
-use cmsgears\core\admin\services\entities\SiteService;
+use cmsgears\core\common\models\resources\File;
 
 class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	private $themeService;
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
 
-		$this->sidebar 	= [ 'parent' => 'sidebar-core', 'child' => 'site' ];
+		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'siteService' );
+		$this->sidebar 			= [ 'parent' => 'sidebar-core', 'child' => 'site' ];
+
+		$this->returnUrl		= Url::previous( 'sites' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/sites/all' ], true );
+
+		$this->themeService		= Yii::$app->factory->get( 'themeService' );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     public function behaviors() {
 
         return [
             'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
-	                'index' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'all' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_CORE ]
+	                'index' => [ 'permission' => $this->crudPermission ],
+	                'all' => [ 'permission' => $this->crudPermission ],
+	                'create' => [ 'permission' => $this->crudPermission ],
+	                'update' => [ 'permission' => $this->crudPermission ],
+	                'delete' => [ 'permission' => $this->crudPermission ]
                 ]
             ],
             'verbs' => [
@@ -56,39 +77,40 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
         ];
     }
 
-	// RoleController --------------------
+	// yii\base\Controller ----
 
-	public function actionIndex() {
+	// CMG interfaces ------------------------
 
-		return $this->redirect( 'all' );
-	}
+	// CMG parent classes --------------------
+
+	// SitesController------------------------
 
 	public function actionAll() {
 
-		$dataProvider = SiteService::getPagination();
+		Url::remember( [ 'sites/all' ], 'sites' );
+
+		$dataProvider = $this->modelService->getPage();
 
 	    return $this->render( 'all', [
-			'dataProvider' => $dataProvider
+	         'dataProvider' => $dataProvider
 	    ]);
 	}
 
 	public function actionCreate() {
 
-		$model		= new Site();
-		$avatar 	= CmgFile::loadFile( $model->avatar, 'Avatar' );
-		$banner 	= CmgFile::loadFile( $model->banner, 'Banner' );
+		$modelClass	= $this->modelService->getModelClass();
+		$model		= new $modelClass;
+		$avatar 	= File::loadFile( $model->avatar, 'Avatar' );
+		$banner 	= File::loadFile( $model->banner, 'Banner' );
 
-		$model->setScenario( 'create' );
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
 
-		if( $model->load( Yii::$app->request->post(), 'Site' )  && $model->validate() ) {
+			$this->modelService->create( $model, [ 'avatar' => $avatar, 'banner' => $banner ] );
 
-			if( SiteService::create( $model, $avatar, $banner ) ) {
-
-				return $this->redirect( 'all' );
-			}
+			return $this->redirect( $this->returnUrl );
 		}
 
-		$themesMap = ThemeService::getIdNameMap();
+		$themesMap = $this->themeService->getIdNameMap();
 
     	return $this->render( 'create', [
     		'model' => $model,
@@ -101,26 +123,24 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model		= SiteService::findById( $id );
+		$model	= $this->modelService->getById( $id );
 
-		// Update/Render if exist
+		// Update if exist
 		if( isset( $model ) ) {
 
-			$avatar 	= CmgFile::loadFile( $model->avatar, 'Avatar' );
-			$banner 	= CmgFile::loadFile( $model->banner, 'Banner' );
+			$avatar 	= File::loadFile( $model->avatar, 'Avatar' );
+			$banner 	= File::loadFile( $model->banner, 'Banner' );
 
-			$model->setScenario( 'update' );
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
 
-			if( $model->load( Yii::$app->request->post(), 'Site' )  && $model->validate() ) {
+				$this->modelService->update( $model, [ 'avatar' => $avatar, 'banner' => $banner ] );
 
-				if( SiteService::update( $model, $avatar, $banner ) ) {
-
-					return $this->redirect( 'all' );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 
-			$themesMap = ThemeService::getIdNameMap();
+			$themesMap = $this->themeService->getIdNameMap();
 
+			// Render view
 	    	return $this->render( 'update', [
 	    		'model' => $model,
 	    		'avatar' => $avatar,
@@ -130,46 +150,44 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model		= SiteService::findById( $id );
+		$model	= $this->modelService->getById( $id );
 
-		// Delete/Render if exist
+		// Delete if exist
 		if( isset( $model ) ) {
 
-			$avatar	= $model->avatar;
-			$banner	= $model->banner;
-
-			if( $model->load( Yii::$app->request->post(), 'Site' ) ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
 				try {
 
-					SiteService::delete( $model, $avatar, $banner );
+			    	$this->modelService->delete( $model );
 
-					return $this->redirect( 'all' );
-				}
-				catch( Exception $e ) {
+					return $this->redirect( $this->returnUrl );
+			    }
+			    catch( Exception $e ) {
 
-					throw new HttpException( 409,  Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+				    throw new HttpException( 409,  Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
 				}
 			}
 
-			$themesMap = ThemeService::getIdNameMap();
+			$themesMap = $this->themeService->getIdNameMap();
 
+			// Render view
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
-	    		'avatar' => $avatar,
-	    		'banner' => $banner,
+	    		'avatar' => $model->avatar,
+	    		'banner' => $model->banner,
 	    		'themesMap' => $themesMap
 	    	]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

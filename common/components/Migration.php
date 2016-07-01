@@ -12,6 +12,12 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 class Migration extends \yii\base\Component {
 
+	// Variables ---------------------------------------------------
+
+	// Global -----------------
+
+	// Public -----------------
+
     public $fk				= true;
 
     public $tableOptions	= null;
@@ -29,13 +35,19 @@ class Migration extends \yii\base\Component {
 
 	public $siteMaster		= 'demomaster';
 
-    /**
-     * Initialise the Component.
-     */
-    public function init() {
+	// Protected --------------
 
-        parent::init();
-    }
+	// Private ----------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG parent classes --------------------
+
+	// Migration -----------------------------
 
     public function isFk() {
 

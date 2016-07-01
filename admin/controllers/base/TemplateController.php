@@ -4,45 +4,60 @@ namespace cmsgears\core\admin\controllers\base;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
 use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\Template;
 
-use cmsgears\core\admin\services\entities\TemplateService;
-
 abstract class TemplateController extends Controller {
+
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
 
 	protected $type;
 
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
-
-		$this->returnUrl	= Url::previous( 'templates' );
+        parent::init();
 
 		$this->setViewPath( '@cmsgears/module-core/admin/views/template' );
+
+		$this->crudPermission 	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'templateService' );
+
+		// Notes: Configure type, sidebar and returnUrl exclusively in child classes.
 	}
 
-	// Instance Methods ---------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component -----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     public function behaviors() {
 
         return [
             'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
-	                'all'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_CORE ]
+	                'all'  => [ 'permission' => $this->crudPermission ],
+	                'create' => [ 'permission' => $this->crudPermission ],
+	                'update' => [ 'permission' => $this->crudPermission ],
+	                'delete' => [ 'permission' => $this->crudPermission ]
                 ]
             ],
             'verbs' => [
@@ -57,11 +72,17 @@ abstract class TemplateController extends Controller {
         ];
     }
 
-	// BaseRoleController -----------------
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// TemplateController --------------------
 
 	public function actionAll() {
 
-		$dataProvider = TemplateService::getPaginationByType( $this->type );
+		$dataProvider = $this->modelService->getPageByType( $this->type );
 
 	    return $this->render( 'all', [
 
@@ -78,22 +99,20 @@ abstract class TemplateController extends Controller {
 
 		if( $model->load( Yii::$app->request->post(), 'Template' )  && $model->validate() ) {
 
-			if( TemplateService::create( $model ) ) {
+			$this->modelService->create( $model );
 
-				return $this->redirect( $this->returnUrl );
-			}
+			return $this->redirect( $this->returnUrl );
 		}
 
     	return $this->render( 'create', [
-    		'model' => $model,
-    		'renderers' => Yii::$app->templateSource->renderers
+    		'model' => $model
     	]);
 	}
 
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model		= TemplateService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
@@ -102,46 +121,42 @@ abstract class TemplateController extends Controller {
 
 			if( $model->load( Yii::$app->request->post(), 'Template' )  && $model->validate() ) {
 
-				if( TemplateService::update( $model ) ) {
+				$this->modelService->update( $model );
 
-					return $this->redirect( $this->returnUrl );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 
 	    	return $this->render( 'update', [
-	    		'model' => $model,
-	    		'renderers' => Yii::$app->templateSource->renderers
+	    		'model' => $model
 	    	]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= TemplateService::findById( $id );
+		$model	= $this->modelService->getById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
 			if( $model->load( Yii::$app->request->post(), 'Template' )  && $model->validate() ) {
 
-				if( TemplateService::delete( $model ) ) {
+				$this->modelService->delete( $model );
 
-					return $this->redirect( $this->returnUrl );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 
 	    	return $this->render( 'delete', [
-	    		'model' => $model,
-	    		'renderers' => Yii::$app->templateSource->renderers
+	    		'model' => $model
 	    	]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

@@ -12,26 +12,42 @@ use cmsgears\core\common\models\forms\Login;
 use cmsgears\core\common\models\forms\ForgotPassword;
 use cmsgears\core\common\models\forms\ResetPassword;
 
-use cmsgears\core\common\services\entities\UserService;
-
 class SiteController extends Controller {
+
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	private $userService;
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
+
+		$this->userService 	= Yii::$app->factory->get( 'userService' );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     public function behaviors() {
 
         return [
             'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
 	                'logout' => [ 'permission' => CoreGlobal::PERM_USER ]
                 ]
@@ -49,7 +65,13 @@ class SiteController extends Controller {
         ];
     }
 
-	// SiteController --------------------
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// SiteController ------------------------
 
 	/**
 	 * The users added by site admin can be activated by providing valid token and email. If activation link is still valid, user will be activated.
@@ -68,7 +90,7 @@ class SiteController extends Controller {
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post() ) && $model->validate() ) {
 
-			$user	= UserService::findByEmail( $model->email );
+			$user	= $this->userService->getByEmail( $model->email );
 
 			// If valid user found
 			if( isset( $user ) ) {
@@ -76,25 +98,25 @@ class SiteController extends Controller {
 				if( $user->isVerifyTokenValid( $token ) ) {
 
 					// Activate User
-					if( UserService::activate( $user, $model ) ) {
+					if( $this->userService->activate( $user, $model ) ) {
 
 						// Send Register Mail
-						Yii::$app->cmgCoreMailer->sendActivateUserMail( $user );
+						Yii::$app->coreMailer->sendActivateUserMail( $user );
 
 						// Set Success Message
-						Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
+						Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
 					}
 				}
 				else {
 
 					// Set Failure Message
-					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
+					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
 				}
 			}
 			else {
 
 				// Set Failure Message
-				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
+				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
 			}
 		}
 
@@ -112,28 +134,28 @@ class SiteController extends Controller {
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post() ) && $model->validate() ) {
 
-			$user	= UserService::findByEmail( $model->email );
+			$user = $this->userService->findByEmail( $model->email );
 
 			// Trigger Reset Password
-			if( isset( $user ) && UserService::forgotPassword( $user ) ) {
+			if( isset( $user ) && $this->userService->forgotPassword( $user ) ) {
 
-				$user	= UserService::findByEmail( $model->email );
+				$user	= $this->userService->findByEmail( $model->email );
 
 				// Load User Permissions
 				$user->loadPermissions();
 
 				// Send Forgot Password Mail
-				Yii::$app->cmgCoreMailer->sendPasswordResetMail( $user );
+				Yii::$app->coreMailer->sendPasswordResetMail( $user );
 
 				// Set Flash Message
-				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_FORGOT_PASSWORD ) );
+				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_FORGOT_PASSWORD ) );
 
 				// Refresh the Page
 				return $this->refresh();
 			}
 			else {
 
-				$model->addError( CoreGlobal::MODEL_EMAIL, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
+				$model->addError( CoreGlobal::MODEL_EMAIL, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
 			}
 		}
 
@@ -154,29 +176,29 @@ class SiteController extends Controller {
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post() ) && $model->validate() ) {
 
-			$user	= UserService::findByEmail( $model->email );
+			$user	= $this->userService->findByEmail( $model->email );
 
 			// If valid user found
 			if( isset( $user ) ) {
 
 				if( $user->isResetTokenValid( $token ) ) {
 
-					if( UserService::resetPassword( $user, $model ) ) {
+					if( $this->userService->resetPassword( $user, $model ) ) {
 
 						// Set Success Message
-						Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_RESET_PASSWORD ) );
+						Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_RESET_PASSWORD ) );
 					}
 				}
 				else {
 
 					// Set Failure Message
-					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_PASSWORD_RESET ) );
+					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_PASSWORD_RESET ) );
 				}
 			}
 			else {
 
 				// Set Failure Message
-				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
+				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
 			}
 		}
 
@@ -217,7 +239,7 @@ class SiteController extends Controller {
 		Yii::$app->session->destroy();
 
 		// Redirect User to appropriate page
-    	return $this->redirect( [ Yii::$app->cmgCore->getLogoutRedirectPage() ] );
+    	return $this->redirect( [ Yii::$app->core->getLogoutRedirectPage() ] );
     }
 }
 

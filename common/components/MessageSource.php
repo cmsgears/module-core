@@ -3,14 +3,21 @@ namespace cmsgears\core\common\components;
 
 // Yii Imports
 use \Yii;
-use yii\base\Component;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class MessageSource extends Component {
+class MessageSource extends \yii\base\Component {
 
 	// Variables ---------------------------------------------------
+
+	// Global -----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	/**
 	 * The local message DB to be used directly in case file or database is not required.
@@ -220,13 +227,15 @@ class MessageSource extends Component {
 		CoreGlobal::FIELD_SEVERITY => 'Severity'
 	];
 
-	/**
-	 * Initialise the Core Message DB Component.
-	 */
-    public function init() {
+	// Constructor and Initialisation ------------------------------
 
-        parent::init();
-    }
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG parent classes --------------------
+
+	// MessageSource -------------------------
 
 	/**
 	 * Returns message using the message templates declared within $messageDb.

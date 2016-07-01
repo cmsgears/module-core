@@ -19,8 +19,8 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->prefix		= 'cmg_';
 
 		// Get the values via config
-		$this->fk			= Yii::$app->cmgMigration->isFk();
-		$this->options		= Yii::$app->cmgMigration->getTableOptions();
+		$this->fk			= Yii::$app->migration->isFk();
+		$this->options		= Yii::$app->migration->getTableOptions();
 
 		// Default collation
 		if( $this->db->driverName === 'mysql' ) {
@@ -112,6 +112,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'name' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
 			'slug' => $this->string( CoreGlobal::TEXT_LARGE )->notNull(),
 			'description' => $this->string( CoreGlobal::TEXT_XLARGE )->defaultValue( null ),
+			'default' => $this->boolean()->notNull()->defaultValue( false ),
 			'renderer' => $this->string( CoreGlobal::TEXT_MEDIUM )->defaultValue( null ),
 			'basePath' => $this->string( CoreGlobal::TEXT_XLARGE )->defaultValue( null ),
 			'createdAt' => $this->dateTime()->notNull(),
@@ -373,7 +374,7 @@ class m160620_095703_core extends \yii\db\Migration {
 
         $this->createTable( $this->prefix . 'core_site_attribute', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'siteId' => $this->bigInteger( 20 )->notNull(),
+			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'name' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
 			'label' => $this->string( CoreGlobal::TEXT_LARGE )->notNull(),
 			'type' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull()->defaultValue( 'default' ),
@@ -382,7 +383,7 @@ class m160620_095703_core extends \yii\db\Migration {
         ], $this->options );
 
         // Index for columns site, parent, creator and modifier
-		$this->createIndex( 'idx_' . $this->prefix . 'site_attribute_parent', $this->prefix . 'core_site_attribute', 'siteId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'site_attribute_parent', $this->prefix . 'core_site_attribute', 'modelId' );
 	}
 
 	private function upSiteMember() {
@@ -604,7 +605,7 @@ class m160620_095703_core extends \yii\db\Migration {
 
 		$this->createTable( $this->prefix . 'core_model_comment', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'baseId' => $this->bigInteger( 20 )->notNull(),
+			'baseId' => $this->bigInteger( 20 ),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
 			'modifiedBy' => $this->bigInteger( 20 ),
@@ -669,7 +670,7 @@ class m160620_095703_core extends \yii\db\Migration {
 
 		$this->createTable( $this->prefix . 'core_model_object', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'objectId' => $this->bigInteger( 20 )->notNull(),
+			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
 			'order' => $this->smallInteger( 6 ),
@@ -677,14 +678,14 @@ class m160620_095703_core extends \yii\db\Migration {
         ], $this->options );
 
         // Index for columns user
-        $this->createIndex( 'idx_' . $this->prefix . 'model_object_parent', $this->prefix . 'core_model_object', 'objectId' );
+        $this->createIndex( 'idx_' . $this->prefix . 'model_object_parent', $this->prefix . 'core_model_object', 'modelId' );
 	}
 
 	private function upModelAddress() {
 
 		$this->createTable( $this->prefix . 'core_model_address', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'addressId' => $this->bigInteger( 20 )->notNull(),
+			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
 			'type' => $this->smallInteger( 6 ),
@@ -693,14 +694,14 @@ class m160620_095703_core extends \yii\db\Migration {
         ], $this->options );
 
         // Index for columns user
-        $this->createIndex( 'idx_' . $this->prefix . 'model_address_parent', $this->prefix . 'core_model_address', 'addressId' );
+        $this->createIndex( 'idx_' . $this->prefix . 'model_address_parent', $this->prefix . 'core_model_address', 'modelId' );
 	}
 
 	private function upModelFile() {
 
 		$this->createTable( $this->prefix . 'core_model_file', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'fileId' => $this->bigInteger( 20 )->notNull(),
+			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
 			'order' => $this->smallInteger( 6 ),
@@ -708,14 +709,14 @@ class m160620_095703_core extends \yii\db\Migration {
         ], $this->options );
 
         // Index for columns user
-        $this->createIndex( 'idx_' . $this->prefix . 'model_file_parent', $this->prefix . 'core_model_file', 'fileId' );
+        $this->createIndex( 'idx_' . $this->prefix . 'model_file_parent', $this->prefix . 'core_model_file', 'modelId' );
 	}
 
 	private function upModelGallery() {
 
 		$this->createTable( $this->prefix . 'core_model_gallery', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'galleryId' => $this->bigInteger( 20 )->notNull(),
+			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
 			'type' => $this->string( CoreGlobal::TEXT_MEDIUM )->defaultValue( null ),
@@ -724,14 +725,14 @@ class m160620_095703_core extends \yii\db\Migration {
         ], $this->options );
 
         // Index for columns user
-        $this->createIndex( 'idx_' . $this->prefix . 'model_gallery_parent', $this->prefix . 'core_model_gallery', 'galleryId' );
+        $this->createIndex( 'idx_' . $this->prefix . 'model_gallery_parent', $this->prefix . 'core_model_gallery', 'modelId' );
 	}
 
 	private function upModelTag() {
 
 		$this->createTable( $this->prefix . 'core_model_tag', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'tagId' => $this->bigInteger( 20 )->notNull(),
+			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
 			'order' => $this->smallInteger( 6 ),
@@ -739,14 +740,14 @@ class m160620_095703_core extends \yii\db\Migration {
         ], $this->options );
 
         // Index for columns user
-        $this->createIndex( 'idx_' . $this->prefix . 'model_tag_parent', $this->prefix . 'core_model_tag', 'tagId' );
+        $this->createIndex( 'idx_' . $this->prefix . 'model_tag_parent', $this->prefix . 'core_model_tag', 'modelId' );
 	}
 
 	private function upModelCategory() {
 
 		$this->createTable( $this->prefix . 'core_model_category', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'categoryId' => $this->bigInteger( 20 )->notNull(),
+			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
 			'order' => $this->smallInteger( 6 ),
@@ -754,14 +755,14 @@ class m160620_095703_core extends \yii\db\Migration {
         ], $this->options );
 
         // Index for columns user
-        $this->createIndex( 'idx_' . $this->prefix . 'model_category_parent', $this->prefix . 'core_model_category', 'categoryId' );
+        $this->createIndex( 'idx_' . $this->prefix . 'model_category_parent', $this->prefix . 'core_model_category', 'modelId' );
 	}
 
 	private function upModelOption() {
 
 		$this->createTable( $this->prefix . 'core_model_option', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'optionId' => $this->bigInteger( 20 )->notNull(),
+			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
 			'order' => $this->smallInteger( 6 ),
@@ -769,14 +770,14 @@ class m160620_095703_core extends \yii\db\Migration {
         ], $this->options );
 
         // Index for columns user
-        $this->createIndex( 'idx_' . $this->prefix . 'model_option_parent', $this->prefix . 'core_model_option', 'optionId' );
+        $this->createIndex( 'idx_' . $this->prefix . 'model_option_parent', $this->prefix . 'core_model_option', 'modelId' );
 	}
 
 	private function upModelForm() {
 
 		$this->createTable( $this->prefix . 'core_model_form', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'formId' => $this->bigInteger( 20 )->notNull(),
+			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
 			'order' => $this->smallInteger( 6 ),
@@ -784,7 +785,7 @@ class m160620_095703_core extends \yii\db\Migration {
         ], $this->options );
 
         // Index for columns user
-        $this->createIndex( 'idx_' . $this->prefix . 'model_form_parent', $this->prefix . 'core_model_form', 'formId' );
+        $this->createIndex( 'idx_' . $this->prefix . 'model_form_parent', $this->prefix . 'core_model_form', 'modelId' );
 	}
 
 	private function generateForeignKeys() {
@@ -841,7 +842,7 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'site_theme', $this->prefix . 'core_site', 'themeId', $this->prefix . 'core_theme', 'id', 'SET NULL' );
 
 		// Site Atribute
-        $this->addForeignKey( 'fk_' . $this->prefix . 'site_attribute_parent', $this->prefix . 'core_site_attribute', 'siteId', $this->prefix . 'core_site', 'id', 'CASCADE' );
+        $this->addForeignKey( 'fk_' . $this->prefix . 'site_attribute_parent', $this->prefix . 'core_site_attribute', 'modelId', $this->prefix . 'core_site', 'id', 'CASCADE' );
 
 		// Site Member
         $this->addForeignKey( 'fk_' . $this->prefix . 'site_member_site', $this->prefix . 'core_site_member', 'siteId', $this->prefix . 'core_site', 'id', 'CASCADE' );
@@ -890,28 +891,28 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_activity_user', $this->prefix . 'core_model_activity', 'userId', $this->prefix . 'core_user', 'id', 'CASCADE' );
 
 		// Model Object
-		$this->addForeignKey( 'fk_' . $this->prefix . 'model_object_parent', $this->prefix . 'core_model_object', 'objectId', $this->prefix . 'core_object', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_object_parent', $this->prefix . 'core_model_object', 'modelId', $this->prefix . 'core_object', 'id', 'CASCADE' );
 
 		// Model Address
-		$this->addForeignKey( 'fk_' . $this->prefix . 'model_address_parent', $this->prefix . 'core_model_address', 'addressId', $this->prefix . 'core_address', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_address_parent', $this->prefix . 'core_model_address', 'modelId', $this->prefix . 'core_address', 'id', 'CASCADE' );
 
 		// Model File
-		$this->addForeignKey( 'fk_' . $this->prefix . 'model_file_parent', $this->prefix . 'core_model_file', 'fileId', $this->prefix . 'core_file', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_file_parent', $this->prefix . 'core_model_file', 'modelId', $this->prefix . 'core_file', 'id', 'CASCADE' );
 
 		// Model Gallery
-		$this->addForeignKey( 'fk_' . $this->prefix . 'model_gallery_parent', $this->prefix . 'core_model_gallery', 'galleryId', $this->prefix . 'core_gallery', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_gallery_parent', $this->prefix . 'core_model_gallery', 'modelId', $this->prefix . 'core_gallery', 'id', 'CASCADE' );
 
 		// Model Tag
-		$this->addForeignKey( 'fk_' . $this->prefix . 'model_tag_parent', $this->prefix . 'core_model_tag', 'tagId', $this->prefix . 'core_tag', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_tag_parent', $this->prefix . 'core_model_tag', 'modelId', $this->prefix . 'core_tag', 'id', 'CASCADE' );
 
 		// Model Category
-		$this->addForeignKey( 'fk_' . $this->prefix . 'model_category_parent', $this->prefix . 'core_model_category', 'categoryId', $this->prefix . 'core_category', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_category_parent', $this->prefix . 'core_model_category', 'modelId', $this->prefix . 'core_category', 'id', 'CASCADE' );
 
 		// Model Option
-		$this->addForeignKey( 'fk_' . $this->prefix . 'model_option_parent', $this->prefix . 'core_model_option', 'optionId', $this->prefix . 'core_option', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_option_parent', $this->prefix . 'core_model_option', 'modelId', $this->prefix . 'core_option', 'id', 'CASCADE' );
 
 		// Model Form
-		$this->addForeignKey( 'fk_' . $this->prefix . 'model_form_parent', $this->prefix . 'core_model_form', 'formId', $this->prefix . 'core_form', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_form_parent', $this->prefix . 'core_model_form', 'modelId', $this->prefix . 'core_form', 'id', 'CASCADE' );
 	}
 
     public function down() {

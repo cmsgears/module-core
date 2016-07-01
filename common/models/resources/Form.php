@@ -18,6 +18,7 @@ use cmsgears\core\common\models\entities\Site;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 use cmsgears\core\common\models\traits\NameTrait;
+use cmsgears\core\common\models\traits\SlugTrait;
 use cmsgears\core\common\models\traits\interfaces\VisibilityTrait;
 use cmsgears\core\common\models\traits\resources\AttributeTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
@@ -62,7 +63,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	// Protected --------------
 
-	protected static $multiSite	= true;
+	public static $multiSite	= true;
 
 	// Variables -----------------------------
 
@@ -80,6 +81,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 	use CreateModifyTrait;
 	use DataTrait;
 	use NameTrait;
+	use SlugTrait;
 	use TemplateTrait;
 	use VisibilityTrait;
 
@@ -128,15 +130,14 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
         $rules = [
             [ [ 'name', 'siteId', 'captcha', 'visibility', 'active' ], 'required' ],
             [ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
-            [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ [ 'description', 'successMessage' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->xLargeText ],
-			[ 'name', 'alphanumpun' ],
+            [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+            [ [ 'description', 'successMessage' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'visibility' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'captcha', 'active', 'userMail', 'adminMail' ], 'boolean' ],
-            [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
@@ -158,19 +159,19 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
     public function attributeLabels() {
 
         return [
-            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
-            'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-            'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-            'successMessage' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE_SUCCESS ),
-            'captcha' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CAPTCHA ),
-            'visibility' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
-            'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
-            'userMail' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MAIL_USER ),
-            'adminMail' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MAIL_ADMIN ),
-            'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-            'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
-            'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_META )
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+            'successMessage' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE_SUCCESS ),
+            'captcha' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CAPTCHA ),
+            'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
+            'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+            'userMail' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MAIL_USER ),
+            'adminMail' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MAIL_ADMIN ),
+            'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+            'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+            'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_META )
         ];
     }
 
@@ -270,15 +271,22 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	// Read - Query -----------
 
+	public static function queryWithAll( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'fields' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithForm( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'fields' ];
+
+		return parent::queryWithAll( $config );
+	}
+
 	// Read - Find ------------
-
-    /**
-     * @return Form - by slug.
-     */
-    public static function findBySlug( $slug ) {
-
-        return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
-    }
 
 	// Create -----------------
 

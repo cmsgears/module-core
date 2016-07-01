@@ -12,6 +12,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
 
+use cmsgears\core\common\models\traits\NameTypeTrait;
+use cmsgears\core\common\models\traits\SlugTypeTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
@@ -23,8 +25,8 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * @property long $rootId
  * @property string $name
  * @property string $slug
- * @property string $icon
  * @property string $type
+ * @property string $icon
  * @property string $description
  * @property boolean $featured
  * @property short lValue
@@ -45,7 +47,7 @@ class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalM
 
 	// Protected --------------
 
-	protected static $multiSite = true;
+	public static $multiSite = true;
 
 	// Variables -----------------------------
 
@@ -60,6 +62,8 @@ class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalM
 	// Traits ------------------------------------------------------
 
     use DataTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -79,7 +83,10 @@ class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalM
         return [
             'sluggableBehavior' => [
                 'class' => SluggableBehavior::className(),
-                'attribute' => 'name'
+                'attribute' => 'name',
+                'slugAttribute' => 'slug',
+                'ensureUnique' => true,
+                'uniqueValidator' => [ 'targetAttribute' => 'type' ]
             ]
         ];
     }
@@ -95,17 +102,17 @@ class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalM
         $rules = [
             [ [ 'siteId', 'name' ], 'required' ],
             [ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
-            [ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ 'description', 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->xLargeText ],
+            [ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+            [ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ [ 'parentId', 'rootId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'parentId', 'rootId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ 'featured', 'boolean' ]
         ];
 
         // trim if required
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
             $trim[] = [ [ 'name', 'description', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -121,16 +128,16 @@ class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalM
     public function attributeLabels() {
 
         return [
-            'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
-            'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
-            'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-            'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-            'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-            'featured' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
-            'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-            'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
+            'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+            'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+            'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+            'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+            'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+            'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
         ];
     }
 
@@ -199,9 +206,26 @@ class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalM
 
 	// Read - Query -----------
 
-	public static function queryWithSite() {
+	public static function queryWithAll( $config = [] ) {
 
-		return self::find()->joinWith( 'site' );
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'options' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithSite( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'site' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithOptions( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'options' ];
+
+		return parent::queryWithAll( $config );
 	}
 
 	// Read - Find ------------
@@ -209,27 +233,6 @@ class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalM
     public static function findByParentId( $id ) {
 
         return self::find()->where( 'parentId=:id', [ ':id' => $id ] )->all();
-    }
-
-    /**
-     * @return Category - by name
-     */
-    public static function findByName( $name ) {
-
-        return self::find()->where( 'name=:name', [ ':name' => $name ] )->all();
-    }
-
-    /**
-     * @return Category - by type
-     */
-    public static function findByType( $type ) {
-
-        return self::find()->where( 'type=:type', [ ':type' => $type ] )->all();
-    }
-
-    public static function findBySlugType( $slug, $type ) {
-
-        return self::find()->where( 'slug=:slug AND type=:type', [ ':slug' => $slug, ':type' => $type ] )->one();
     }
 
     /**

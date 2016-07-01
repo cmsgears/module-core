@@ -1,39 +1,62 @@
 <?php
 namespace cmsgears\core\common\services\entities;
 
-use yii;
+use \Yii;
 use yii\data\Sort;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Province;
 
-class ProvinceService extends \cmsgears\core\common\services\base\Service {
+use cmsgears\core\common\services\interfaces\entities\IProvinceService;
 
-	// Static Methods ----------------------------------------------
+class ProvinceService extends \cmsgears\core\common\services\base\EntityService implements IProvinceService {
 
-	// Create --------------
+	// Variables ---------------------------------------------------
 
-	public static function create( $model ) {
+	// Globals -------------------------------
 
-		$model->save();
+	// Constants --------------
 
-		return $model;
-	}
+	// Public -----------------
 
-	// Read ----------------
+	public static $modelClass	= '\cmsgears\core\common\models\entities\Province';
 
-	public static function findById( $id ) {
+	public static $modelTable	= CoreTables::TABLE_PROVINCE;
 
-		return Province::findById( $id );
-	}
+	public static $parentType	= CoreGlobal::TYPE_PROVINCE;
 
-	// Data Provider ----
+	// Protected --------------
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// ProvinceService -----------------------
+
+	// Data Provider ------
+
+	public function getPage( $config = [] ) {
 
 		$sort = new Sort([
 	        'attributes' => [
@@ -52,51 +75,67 @@ class ProvinceService extends \cmsgears\core\common\services\base\Service {
 	        ]
 	    ]);
 
-		if( !isset( $config[ 'sort' ] ) ) {
+		$config[ 'sort' ] = $sort;
 
-			$config[ 'sort' ] = $sort;
-		}
-
-		if( !isset( $config[ 'search-col' ] ) ) {
-
-			$config[ 'search-col' ] = 'name';
-		}
-
-		return self::getDataProvider( new Province(), $config );
+		return parent::findPage( $config );
 	}
 
-	public static function getListByCountryId( $countryId ) {
+	// Read ---------------
 
-		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_PROVINCE, [ 'conditions' => [ 'countryId' => $countryId ] ] );
+    // Read - Models ---
+
+    // Read - Lists ----
+
+	public function getListByCountryId( $countryId ) {
+
+		return self::findIdNameList( [ 'conditions' => [ 'countryId' => $countryId ] ] );
 	}
 
-	public static function getMapByCountryId( $countryId ) {
+    // Read - Maps -----
 
-		return self::findMap( 'id', 'name', CoreTables::TABLE_PROVINCE, [ 'conditions' => [ 'countryId' => $countryId ] ] );
+	public function getMapByCountryId( $countryId ) {
+
+		return self::findIdNameMap( [ 'conditions' => [ 'countryId' => $countryId ] ] );
 	}
 
-	// Update ---------
+	// Read - Others ---
 
-	public static function update( $model ) {
+	// Create -------------
 
-		$modelToUpdate	= self::findById( $model->id );
+	// Update -------------
 
-		// Copy Attributes
-		$modelToUpdate->copyForUpdateFrom( $model, [ 'countryId', 'code', 'codeNum', 'name' ] );
+	public function update( $model, $config = [] ) {
 
-		// Update Province
-		$modelToUpdate->update();
+		return parent::update( $model, [
+			'attributes' => [ 'countryId', 'code', 'codeNum', 'name' ]
+		]);
+ 	}
 
-		// Return updated province
-		return $modelToUpdate;
-	}
+	// Delete -------------
 
-	// Delete ---------
+	// Static Methods ----------------------------------------------
 
-	public static function delete( $model ) {
+	// CMG parent classes --------------------
 
-		$model->delete();
-	}
+	// ProvinceService -----------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

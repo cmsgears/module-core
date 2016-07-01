@@ -1,6 +1,12 @@
 <?php
 namespace cmsgears\core\common\models\traits\mappers;
 
+// Yii Import
+use \Yii;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Gallery;
 use cmsgears\core\common\models\mappers\ModelGallery;
@@ -40,7 +46,7 @@ trait GalleryTrait {
 
 		$modelGalleryTable	= CoreTables::TABLE_MODEL_GALLERY;
 
-    	return $this->hasMany( Gallery::className(), [ 'id' => 'galleryId' ] )
+    	return $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
 					->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ], function( $query ) use( &$modelGalleryTable ) {
                       	$query->onCondition( [ "$modelGalleryTable.parentType" => $this->parentType ] );
 					});
@@ -57,7 +63,7 @@ trait GalleryTrait {
 
 		$modelGalleryTable	= CoreTables::TABLE_MODEL_GALLERY;
 
-    	return $this->hasMany( Gallery::className(), [ 'id' => 'galleryId' ] )
+    	return $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
 					->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ], function( $query ) use( &$modelGalleryTable, &$type ) {
                       	$query->onCondition( [ "$modelGalleryTable.parentType" => $this->parentType, "$modelGalleryTable.type" => $type ] );
 					})->one();
@@ -67,8 +73,8 @@ trait GalleryTrait {
 
 		$modelGallery	= CoreTables::TABLE_MODEL_GALLERY;
 
-    	return $this->hasMany( Gallery::className(), [ 'id' => 'galleryId' ] )
-					->viaTable( $modelGallery, [ 'galleryId' => 'id' ], function( $query ) use( &$modelGallery, &$type ) {
+    	return $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
+					->viaTable( $modelGallery, [ 'modelId' => 'id' ], function( $query ) use( &$modelGallery, &$type ) {
 						$query->onCondition( [ "$modelGallery.parentType" => $this->parentType, "$modelGallery.type" => $type ] );
 					})->all();
 	}

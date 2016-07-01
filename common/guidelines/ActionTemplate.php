@@ -8,9 +8,14 @@ namespace cmsgears\core\common\guidelines;
  * 3. Project imports
  * 4. Class definition
  * 5. Variables
- * 		5.1. Global and Static variables
- * 		5.2. Public variables
- * 		5.3. Private and Protected Variables
+ * 		5.1. Globals
+ * 				5.1.1. Constants
+ * 				5.1.2. Public
+ * 				5.1.3. Protected
+ * 		5.2. Variables
+ * 				5.2.1. Public
+ * 				5.2.2. Protected
+ * 				5.2.3. Private
  * 6. Traits
  * 7. Constructor and Initialisation
  * 8. Instance methods
@@ -45,31 +50,41 @@ use cmsgears\core\common\config\CoreGlobal;
 
 // Project Imports
 
-class ActionTemplate extends \yii\base\Action {
+class ActionTemplate extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 
-	// Constants/Statics --
+	// Globals -------------------------------
 
-	// Public -------------
+	// Constants --------------
 
-	// Private/Protected --
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// Yii interfaces --------------------
+	// Yii interfaces ------------------------
 
-	// Yii parent class ------------------
+	// Yii parent classes --------------------
 
-	// CMG interfaces --------------------
+	// CMG interfaces ------------------------
 
-	// CMG parent class ------------------
+	// CMG parent classes --------------------
 
-	// <Action> --------------------------
+	// <Action> ------------------------------
 
 }
 

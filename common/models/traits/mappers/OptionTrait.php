@@ -1,6 +1,12 @@
 <?php
 namespace cmsgears\core\common\models\traits\mappers;
 
+// Yii Import
+use \Yii;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Option;
 use cmsgears\core\common\models\mappers\ModelOption;
@@ -20,7 +26,7 @@ trait OptionTrait {
 
 		$optionTable	= CoreTables::TABLE_OPTION;
 
-    	$query = $this->hasMany( Option::className(), [ 'id' => 'optionId' ] )
+    	$query = $this->hasMany( Option::className(), [ 'id' => 'modelId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_OPTION, [ 'parentId' => 'id' ], function( $query ) {
 
 						$modelOptionTable	= CoreTables::TABLE_MODEL_OPTION;
@@ -35,7 +41,7 @@ trait OptionTrait {
 
 		$optionTable	= CoreTables::TABLE_OPTION;
 
-    	$query = $this->hasMany( Option::className(), [ 'id' => 'optionId' ] )
+    	$query = $this->hasMany( Option::className(), [ 'id' => 'modelId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_OPTION, [ 'parentId' => 'id' ], function( $query ) {
 
 						$modelOptionTable	= CoreTables::TABLE_MODEL_OPTION;

@@ -9,36 +9,85 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\User;
-use cmsgears\core\common\models\resources\CmgFile;
+use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\common\services\resources\FileService;
-use cmsgears\core\common\services\mappers\ModelAttributeService;
+use cmsgears\core\common\services\interfaces\entities\IUserService;
+use cmsgears\core\common\services\interfaces\resources\IFileService;
+use cmsgears\core\common\services\interfaces\resources\IModelAttributeService;
+
+use cmsgears\core\common\services\traits\ApprovalTrait;
 
 use cmsgears\core\common\utilities\DateUtil;
 
 /**
  * The class UserService is base class to perform database activities for User Entity.
  */
-class UserService extends \cmsgears\core\common\services\base\Service {
+class UserService extends \cmsgears\core\common\services\base\EntityService implements IUserService {
 
-	// Static Methods ----------------------------------------------
+	// Variables ---------------------------------------------------
 
-	// Read ----------------
+	// Globals -------------------------------
 
-	/**
-	 * @param integer $id
-	 * @return User
-	 */
-	public static function findById( $id ) {
+	// Constants --------------
 
-		return User::findById( $id );
-	}
+	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\core\common\models\entities\User';
+
+	public static $modelTable	= CoreTables::TABLE_USER;
+
+	public static $parentType	= CoreGlobal::TYPE_USER;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	private $fileService;
+	private $modelAttributeService;
+
+	// Traits ------------------------------------------------------
+
+	use ApprovalTrait;
+
+	// Constructor and Initialisation ------------------------------
+
+    public function __construct( IFileService $fileService, IModelAttributeService $modelAttributeService, $config = [] ) {
+
+		$this->fileService				= $fileService;
+		$this->modelAttributeService	= $modelAttributeService;
+
+        parent::__construct( $config );
+    }
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// UserService ---------------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
 
 	/**
 	 * @param string $token
 	 * @return User
 	 */
-	public static function findByAccessToken( $token ) {
+	public function getByAccessToken( $token ) {
 
 		return User::findByAccessToken( $token );
 	}
@@ -47,7 +96,7 @@ class UserService extends \cmsgears\core\common\services\base\Service {
 	 * @param string $email
 	 * @return User
 	 */
-	public static function findByEmail( $email ) {
+	public function getByEmail( $email ) {
 
 		return User::findByEmail( $email );
 	}
@@ -56,7 +105,7 @@ class UserService extends \cmsgears\core\common\services\base\Service {
 	 * @param string $email
 	 * @return boolean
 	 */
-	public static function isExistByEmail( $email ) {
+	public function isExistByEmail( $email ) {
 
 		$user = User::findByEmail( $email );
 
@@ -67,7 +116,7 @@ class UserService extends \cmsgears\core\common\services\base\Service {
 	 * @param string $email
 	 * @return User
 	 */
-	public static function findByUsername( $username ) {
+	public function getByUsername( $username ) {
 
 		return User::findByUsername( $username );
 	}
@@ -76,18 +125,22 @@ class UserService extends \cmsgears\core\common\services\base\Service {
 	 * @param string $username
 	 * @return boolean
 	 */
-	public static function isExistByUsername( $username ) {
+	public function isExistByUsername( $username ) {
 
 		$user = User::findByUsername( $username );
 
 		return isset( $user );
 	}
 
+    // Read - Lists ----
+
+    // Read - Maps -----
+
 	/**
 	 * @param string $roleSlug
 	 * @return array
 	 */
-	public static function getIdNameMapByRoleSlug( $roleSlug ) {
+	public function getIdNameMapByRoleSlug( $roleSlug ) {
 
 		$roleTable			= CoreTables::TABLE_ROLE;
 		$userTable			= CoreTables::TABLE_USER;
@@ -109,129 +162,80 @@ class UserService extends \cmsgears\core\common\services\base\Service {
 		return $usersMap;
 	}
 
-	public static function findAttributeMapByType( $user, $type ) {
+	public function getAttributeMapByType( $user, $type ) {
 
-		return ModelAttributeService::findMapByType( $user->id, CoreGlobal::TYPE_USER, $type );
+		return $this->modelAttributeService->getObjectMapByType( $user->id, CoreGlobal::TYPE_USER, $type );
 	}
 
-	// Data Provider ----
+	// Read - Others ---
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
-
-		return self::getDataProvider( new User(), $config );
-	}
-
-	// Create -----------
+	// Create -------------
 
 	/**
 	 * The method create user.
-	 * @param User $user
-	 * @param CmgFile $avatar
+	 * @param User $model
+	 * @param array $config
 	 * @return User
 	 */
-	public static function create( $user, $avatar = null ) {
+	public function create( $model, $config = [] ) {
 
-		if( $user->genderId <= 0 ) {
-
-			unset( $user->genderId );
-		}
+		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 
 		// Set Attributes
-		$user->registeredAt = DateUtil::getDateTime();
-		$user->status		= User::STATUS_NEW;
+		$model->registeredAt 	= DateUtil::getDateTime();
+		$model->status			= User::STATUS_NEW;
 
 		// Generate Tokens
-		$user->generateVerifyToken();
-		$user->generateAuthKey();
+		$model->generateVerifyToken();
+		$model->generateAuthKey();
 
 		// Save Files
-		FileService::saveFiles( $user, [ 'avatarId' => $avatar ] );
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
 
 		// Create User
-		$user->save();
+		$model->save();
 
-		return $user;
+		return $model;
 	}
 
-	/**
-	 * The method registers website users and set their status to new at start. It also generate verification token.
-	 * @param RegisterForm $registerForm
-	 * @return User
-	 */
-	public static function register( $registerForm ) {
-
-		$user 	= new User();
-		$date	= DateUtil::getDateTime();
-
-		$user->email 		= $registerForm->email;
-		$user->username 	= $registerForm->username;
-		$user->firstName	= $registerForm->firstName;
-		$user->lastName		= $registerForm->lastName;
-		$user->registeredAt	= $date;
-		$user->status		= User::STATUS_NEW;
-
-		$user->generatePassword( $registerForm->password );
-		$user->generateVerifyToken();
-		$user->generateAuthKey();
-
-		$user->save();
-
-		return $user;
-	}
-
-	// Update -----------
+	// Update -------------
 
 	/**
 	 * The method update user including avatar.
-	 * @param User $user
-	 * @param CmgFile $avatar
+	 * @param User $model
+	 * @param array $config
 	 * @return User
 	 */
-	public static function update( $user, $avatar = null ) {
+	public function update( $model, $config = [] ) {
 
-		if( $user->genderId <= 0 ) {
-
-			unset( $user->genderId );
-		}
-
-		// Find existing user
-		$userToUpdate	= User::findById( $user->id );
-
-		// Copy Attributes
-		$userToUpdate->copyForUpdateFrom( $user, [ 'avatarId', 'genderId', 'email', 'username', 'firstName', 'lastName', 'status', 'phone', 'avatarUrl', 'websiteUrl' ] );
+		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 
 		// Save Files
-		FileService::saveFiles( $userToUpdate, [ 'avatarId' => $avatar ] );
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
 
-		// Update User
-		$userToUpdate->update();
-
-		// Return updated User
-		return $userToUpdate;
+		return parent::update( $model, [
+			'attributes' => [ 'avatarId', 'genderId', 'email', 'username', 'firstName', 'lastName', 'status', 'phone', 'avatarUrl', 'websiteUrl' ]
+		]);
 	}
 
-	public static function updateAttributes( $user, $attributes ) {
+	public function updateModelAttributes( $user, $attributes ) {
 
 		foreach ( $attributes as $attribute ) {
 
-			ModelAttributeService::update( $attribute );
+			$this->modelAttributeService->update( $attribute );
 		}
 
 		return true;
 	}
 
-	public static function setForApproval( $user ) {
+	public function setForApproval( $user ) {
 
 		$user->status = User::STATUS_SUBMITTED;
 
 		$user->update();
 	}
 
-	public static function setForActivation( $user ) {
+	public function setForActivation( $user ) {
 
 		$user->status = User::STATUS_ACTIVE;
 
@@ -245,7 +249,7 @@ class UserService extends \cmsgears\core\common\services\base\Service {
      * @param boolean $activate
      * @return boolean
      */
-    public static function activate( $user, $resetForm, $activate = true ) {
+    public function activate( $user, $resetForm, $activate = true ) {
 
         // Find existing user
         $userToUpdate   = User::findById( $user->id );
@@ -273,7 +277,7 @@ class UserService extends \cmsgears\core\common\services\base\Service {
 	 * @param boolean $activate
 	 * @return boolean
 	 */
-	public static function verify( $user, $token, $activate = true ) {
+	public function verify( $user, $token, $activate = true ) {
 
 		// Check Token
 		if( $user->isVerifyTokenValid( $token ) ) {
@@ -306,7 +310,7 @@ class UserService extends \cmsgears\core\common\services\base\Service {
      * @param User $user
      * @return User
      */
-    public static function forgotPassword( $user ) {
+    public function forgotPassword( $user ) {
 
         // Find existing user
         $userToUpdate   = User::findById( $user->id );
@@ -327,7 +331,7 @@ class UserService extends \cmsgears\core\common\services\base\Service {
      * @param boolean $activate
      * @return User
      */
-    public static function resetPassword( $user, $resetForm, $activate = true ) {
+    public function resetPassword( $user, $resetForm, $activate = true ) {
 
         // Find existing user
         $userToUpdate   = User::findById( $user->id );
@@ -360,7 +364,7 @@ class UserService extends \cmsgears\core\common\services\base\Service {
         $userToUpdate   = User::findById( $user->id );
 
         // Save Avatar
-        FileService::saveImage( $avatar, [ 'model' => $userToUpdate, 'attribute' => 'avatarId' ] );
+        $this->fileService->saveImage( $avatar, [ 'model' => $userToUpdate, 'attribute' => 'avatarId' ] );
 
         // Update User
         $userToUpdate->update();
@@ -369,26 +373,40 @@ class UserService extends \cmsgears\core\common\services\base\Service {
         return $userToUpdate;
     }
 
-	// Delete -----------
+	// Delete -------------
 
-	/**
-	 * The method delete existing user.
-	 * @param User $user
-	 * @return boolean
-	 */
-	public static function delete( $user, $avatar = null ) {
+	public function delete( $model, $config = [] ) {
 
-		// Find existing user
-		$userToDelete	= User::findById( $user->id );
+		// Delete dependencies
+		$this->fileService->deleteFiles( [ $model->avatar ] );
 
-		// Delete User
-		$userToDelete->delete();
-
-		// Delete Files
-		FileService::deleteFiles( [ $avatar ] );
-
-		return true;
+		// Delete model
+		return parent::delete( $model, $config );
 	}
+
+	// Static Methods ----------------------------------------------
+
+	// CMG parent classes --------------------
+
+	// UserService ---------------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

@@ -9,7 +9,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 
-use cmsgears\core\common\models\traits\ParentTypeTrait;
+use cmsgears\core\common\models\traits\ResourceTrait;
 
 /**
  * ModelHierarchy Entity
@@ -44,7 +44,7 @@ class ModelHierarchy extends \cmsgears\core\common\models\base\Resource {
 
 	// Traits ------------------------------------------------------
 
-	use ParentTypeTrait;
+	use ResourceTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -66,7 +66,7 @@ class ModelHierarchy extends \cmsgears\core\common\models\base\Resource {
         return [
             [ [ 'rootId', 'parentType' ], 'required' ],
             [ [ 'id' ], 'safe' ],
-            [ [ 'parentType' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
+            [ [ 'parentType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ [ 'parentId', 'childId', 'rootId', 'lValue', 'rValue' ], 'number', 'integerOnly' => true, 'min' => 1 ]
         ];
     }
@@ -77,8 +77,8 @@ class ModelHierarchy extends \cmsgears\core\common\models\base\Resource {
 	public function attributeLabels() {
 
 		return [
-			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE )
+			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE )
 		];
 	}
 

@@ -70,7 +70,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
      * The status map having string form of status available for admin to make status change.
      */
     public static $statusMapUpdate = [
-        self::STATUS_APPROVED => 'Approved',
+        self::STATUS_ACTIVE => 'Active',
         self::STATUS_FROJEN => 'Frozen',
         self::STATUS_BLOCKED => 'Blocked',
         self::STATUS_TERMINATED => 'Terminated'
@@ -158,13 +158,13 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
             [ [ 'id', 'localeId', 'genderId', 'avatarId', 'status' ], 'number', 'integerOnly' => true ],
             [ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
-            [ [ 'email', 'username', 'passwordHash', 'firstName', 'lastName', 'phone', 'avatarUrl', 'websiteUrl', 'verifyToken', 'resetToken', 'authKey', 'token' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->xLargeText ],
+            [ [ 'email', 'username', 'passwordHash', 'firstName', 'lastName', 'phone', 'avatarUrl', 'websiteUrl', 'verifyToken', 'resetToken', 'authKey', 'token' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
             [ 'dob', 'date', 'format' => Yii::$app->formatter->dateFormat ],
             [ [ 'registeredAt', 'lastLoginAt', 'lastActivityAt', 'tokenCreatedAt', 'tokenAccessedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
         // trim if required
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
             $trim[] = [ [ 'email', 'username', 'phone', 'firstName', 'lastName', 'avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -180,20 +180,37 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
     public function attributeLabels() {
 
         return [
-            'localeId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
-            'genderId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_GENDER ),
-            'avatarId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
-            'status' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
-            'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
-            'username' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USERNAME ),
-            'firstName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
-            'lastName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
-            'dob' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DOB ),
-            'phone' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
-            'avatarUrl' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
-            'websiteUrl' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_WEBSITE )
+            'localeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
+            'genderId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GENDER ),
+            'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
+            'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
+            'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+            'username' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USERNAME ),
+            'firstName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
+            'lastName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
+            'dob' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DOB ),
+            'phone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
+            'avatarUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
+            'websiteUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE )
         ];
     }
+
+	// yii\db\BaseActiveRecord
+
+	public function beforeSave( $insert ) {
+
+	    if( parent::beforeSave( $insert ) ) {
+
+			if( $this->genderId <= 0 ) {
+
+				$this->genderId = null;
+			}
+
+	        return true;
+	    }
+
+		return false;
+	}
 
 	// CMG interfaces ------------------------
 
@@ -210,7 +227,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
             if( self::isExistByEmail( $this->email ) ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
+                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
             }
         }
     }
@@ -226,7 +243,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
             if( isset( $existingUser ) && $this->id != $existingUser->id ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
+                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
             }
         }
     }
@@ -243,7 +260,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
             if( isset( $existingUser ) && strcmp( $existingUser->email, $this->email ) != 0 && !$properties->isChangeEmail() ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_CHANGE_EMAIL ) );
+                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_CHANGE_EMAIL ) );
             }
         }
     }
@@ -257,7 +274,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
             if( self::isExistByUsername( $this->username ) ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
+                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
             }
         }
     }
@@ -273,7 +290,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
             if( isset( $existingUser ) && $this->id != $existingUser->id ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
+                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
             }
         }
     }
@@ -290,7 +307,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
             if( isset( $existingUser ) && strcmp( $existingUser->username, $this->username ) != 0  && !$properties->isChangeUsername() ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_CHANGE_USERNAME ) );
+                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_CHANGE_USERNAME ) );
             }
         }
     }
@@ -311,12 +328,27 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	// User ----------------------------------
 
     /**
-     * @return Site Member - assigned to User.
+     * @return array - SiteMember
      */
-    public function getSiteMember() {
+    public function getSiteMembers() {
 
-        return $this->hasOne( SiteMember::className(), [ 'userId' => 'id' ] );
-    }
+        $userTable	= CoreTables::TABLE_USER;
+        $siteTable	= CoreTables::TABLE_SITE;
+
+        return $this->hasMany( SiteMember::className(), [ "$userTable.userId" => 'id' ] );
+	}
+
+    /**
+     * @return SiteMember
+     */
+    public function getActiveSiteMember() {
+
+        $userTable	= CoreTables::TABLE_USER;
+        $siteTable	= CoreTables::TABLE_SITE;
+		$site		= Yii::$app->core->site;
+
+        return $this->hasOne( SiteMember::className(), [ "$userTable.userId" => 'id' ] )->where( [ "$siteTable.siteId" => $site->id ] );
+	}
 
     /**
      * @return Role - assigned to User.
@@ -330,7 +362,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         return Role::find()
                     ->leftJoin( $siteMemberTable, "$siteMemberTable.roleId = $roleTable.id" )
                     ->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
-                    ->where( "$siteMemberTable.userId=:id AND $siteTable.slug=:slug", [ ':id' => $this->id, ':slug' => Yii::$app->cmgCore->getSiteSlug() ] );
+                    ->where( "$siteMemberTable.userId=:id AND $siteTable.slug=:slug", [ ':id' => $this->id, ':slug' => Yii::$app->core->getSiteSlug() ] );
     }
 
     /**
@@ -338,7 +370,10 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
      */
     public function getLocale() {
 
-        return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] );
+		$localeTable	= CoreTables::TABLE_LOCALE;
+		$userTable		= CoreTables::TABLE_USER;
+
+        return $this->hasOne( Locale::className(), [ "$localeTable.id" => "$userTable.localeId" ] );
     }
 
     /**
@@ -346,7 +381,10 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
      */
     public function getGender() {
 
-        return $this->hasOne( Option::className(), [ 'id' => 'genderId' ] );
+		$optionTable	= CoreTables::TABLE_OPTION;
+		$userTable		= CoreTables::TABLE_USER;
+
+        return $this->hasOne( Option::className(), [ "$optionTable.id" => "$userTable.genderId" ] );
     }
 
     /**
@@ -464,7 +502,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         }
         else {
 
-            throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+            throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
         }
     }
 
@@ -495,14 +533,14 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         // Load User Permissions
         if( isset( $user ) ) {
 
-            if( Yii::$app->cmgCore->isRbac() ) {
+            if( Yii::$app->core->isRbac() ) {
 
                 $user->loadPermissions();
             }
         }
         else {
 
-            throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+            throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
         }
 
         return $user;
@@ -516,7 +554,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
      */
     public static function findIdentityByAccessToken( $token, $type = null ) {
 
-        if( Yii::$app->cmgCore->isApis() ) {
+        if( Yii::$app->core->isApis() ) {
 
             // Find valid User
             $user   = static::findByAccessToken( $token );
@@ -524,20 +562,20 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
             // Load User Permissions
             if( isset( $user ) ) {
 
-                if( Yii::$app->cmgCore->isRbac() ) {
+                if( Yii::$app->core->isRbac() ) {
 
                     $user->loadPermissions();
                 }
             }
             else {
 
-                throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+                throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
             }
 
             return $user;
         }
 
-        throw new NotSupportedException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_APIS_DISABLED ) );
+        throw new NotSupportedException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_APIS_DISABLED ) );
     }
 
 	// Yii parent classes --------------------
@@ -558,23 +596,50 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	// Read - Query -----------
 
+	public static function queryWithAll( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'role', 'locale', 'gender' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithSiteMembers( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithSiteMembersPermissions( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role', 'siteMembers.role.permissions' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithRole( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'avatar', 'role' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithLocale( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'avatar', 'locale' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithGender( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'avatar', 'gender' ];
+
+		return parent::queryWithAll( $config );
+	}
+
 	// Read - Find ------------
-
-    /**
-     * @return ActiveRecord - with site member and role.
-     */
-    public static function findWithSiteMember() {
-
-        return self::find()->joinWith( 'siteMember' )->joinWith( 'siteMember.site' )->joinWith( 'siteMember.role' );
-    }
-
-    /**
-     * @return ActiveRecord - with site member, role and permission. It works by specifying a filter for permission name.
-     */
-    public static function findWithSiteMemberPermission() {
-
-        return self::find()->joinWith( 'siteMember' )->joinWith( 'siteMember.site' )->joinWith( 'siteMember.role' )->joinWith( 'siteMember.role.permissions' );
-    }
 
     /**
      * @param string $token
@@ -582,7 +647,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
      */
     public static function findByAccessToken( $token ) {
 
-        return self::find()->where( 'accessToken=:token', [ ':token' => $token ] )->one();
+        return self::find()->where( 'token=:token', [ ':token' => $token ] )->one();
     }
 
     /**

@@ -10,8 +10,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\User;
 
-use cmsgears\core\common\services\entities\UserService;
-
 use cmsgears\core\common\utilities\MessageUtil;
 use cmsgears\core\common\utilities\DateUtil;
 
@@ -19,7 +17,17 @@ class Login extends \yii\base\Model {
 
 	// Variables ---------------------------------------------------
 
-	// Public Variables --------------------
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
 	public $email;
 	public $password;
@@ -27,30 +35,38 @@ class Login extends \yii\base\Model {
 	public $admin;
     public $redirectUrl;
 
-	// Private Variables -------------------
+	// Protected --------------
 
-    private $_user;
+	// Private ----------------
+
+	private $user;
+
+	private $userService;
+
+	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( $admin = false )  {
+	public function __construct( $admin = false, $config = [] )  {
 
-		$this->admin	= $admin;
-		$this->_user 	= false;
+		$this->admin		= $admin;
+		$this->user 		= null;
+		$this->userService 	= Yii::$app->factory->get( 'userService' );
+
+		parent::__construct( $config );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Model
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
 	public function rules() {
-
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'email', 'password' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
 
 		$rules =  [
 			[ [ 'email', 'password' ], 'required' ],
@@ -62,7 +78,9 @@ class Login extends \yii\base\Model {
 			[ 'password', 'validatePassword' ]
 		];
 
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+		if( Yii::$app->core->trimFieldValue ) {
+
+			$trim[] = [ [ 'email', 'password' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -78,44 +96,32 @@ class Login extends \yii\base\Model {
 		];
 	}
 
-	// LoginForm
+	// CMG interfaces ------------------------
 
-    public function getUser() {
+	// CMG parent classes --------------------
 
-		// Find user having email or username
-        if( empty( $this->_user ) ) {
-
-            $this->_user = UserService::findByEmail( $this->email );
-
-			if( empty( $this->_user ) ) {
-
-				$this->_user = UserService::findByUsername( $this->email );
-			}
-        }
-
-        return $this->_user;
-    }
+	// Validators ----------------------------
 
     public function validateUser( $attribute, $params ) {
 
         if( !$this->hasErrors() ) {
 
-			$user = $this->user;
+			$user = $this->getUser();
 
             if( !isset( $user ) ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
             }
 			else {
 
-				if( !$this->hasErrors() && !$user->isConfirmed() ) {
+				if( !$this->hasErrors() && !$user->isConfirmed( false ) ) {
 
-					$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_VERIFICATION ) );
+					$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USER_VERIFICATION ) );
 				}
 
 				if( !$this->hasErrors() && $user->isBlocked() ) {
 
-					$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_BLOCKED ) );
+					$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_BLOCKED ) );
 				}
 			}
         }
@@ -129,16 +135,34 @@ class Login extends \yii\base\Model {
 
             if( $user && !$user->validatePassword( $this->password ) ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_LOGIN_FAILED ) );
+                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_LOGIN_FAILED ) );
             }
         }
+    }
+
+	// Login ---------------------------------
+
+    public function getUser() {
+
+		// Find user having email or username
+        if( empty( $this->user ) ) {
+
+            $this->user = $this->userService->getByEmail( $this->email );
+
+			if( empty( $this->user ) ) {
+
+				$this->user = $this->userService->getByUsername( $this->email );
+			}
+        }
+
+        return $this->user;
     }
 
     public function login() {
 
         if ( $this->validate() ) {
 
-			$user	= $this->user;
+			$user = $this->getUser();
 
 			if( $this->admin ) {
 
@@ -146,7 +170,7 @@ class Login extends \yii\base\Model {
 
 				if( !$user->isPermitted( CoreGlobal::PERM_ADMIN ) ) {
 
-					$this->addError( "email", Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+					$this->addError( "email", Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 
 					return false;
 				}

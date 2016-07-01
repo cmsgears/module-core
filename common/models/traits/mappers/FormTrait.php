@@ -1,6 +1,12 @@
 <?php
 namespace cmsgears\core\common\models\traits\mappers;
 
+// Yii Import
+use \Yii;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Form;
 use cmsgears\core\common\models\mappers\ModelForm;
@@ -21,7 +27,7 @@ trait FormTrait {
 	 */
 	public function getForms() {
 
-    	return $this->hasMany( Form::className(), [ 'id' => 'formId' ] )
+    	return $this->hasMany( Form::className(), [ 'id' => 'modelId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_FORM, [ 'parentId' => 'id' ], function( $query ) {
 
 						$ModelFormTable	= CoreTables::TABLE_MODEL_FORM;

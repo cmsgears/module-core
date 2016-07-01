@@ -15,7 +15,8 @@ trait ApprovalTrait {
 		IApproval::STATUS_NEW => 'New',
 		IApproval::STATUS_REJECTED => 'Rejected',
 		IApproval::STATUS_RE_SUBMIT => 'Re Submitted',
-		IApproval::STATUS_APPROVED => 'Approved',
+		IApproval::STATUS_CONFIRMED => 'Confirmed',
+		IApproval::STATUS_ACTIVE => 'Active',
 		IApproval::STATUS_FROJEN => 'Frozen',
 		IApproval::STATUS_BLOCKED => 'Blocked',
 		IApproval::STATUS_TERMINATED => 'Terminated'
@@ -26,7 +27,8 @@ trait ApprovalTrait {
 		'new' => IApproval::STATUS_NEW,
 		'rejected' => IApproval::STATUS_REJECTED,
 		're-submitted' => IApproval::STATUS_RE_SUBMIT,
-		'approved' => IApproval::STATUS_APPROVED,
+		'confirmed' => IApproval::STATUS_CONFIRMED,
+		'active' => IApproval::STATUS_ACTIVE,
 		'frozen' => IApproval::STATUS_FROJEN,
 		'blocked' => IApproval::STATUS_BLOCKED
 	];
@@ -76,14 +78,24 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_RE_SUBMIT;
 	}
 
-	public function isApproved(  $strict = true ) {
+	public function isConfirmed(  $strict = true ) {
 
 		if( $strict ) {
 
-			return $this->status == IApproval::STATUS_APPROVED;
+			return $this->status == IApproval::STATUS_CONFIRMED;
 		}
 
-		return $this->status >= IApproval::STATUS_APPROVED;
+		return $this->status >= IApproval::STATUS_CONFIRMED;
+	}
+
+	public function isActive(  $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->status == IApproval::STATUS_ACTIVE;
+		}
+
+		return $this->status >= IApproval::STATUS_ACTIVE;
 	}
 
 	public function isFrojen(  $strict = true ) {

@@ -10,13 +10,13 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\common\models\traits\ParentTypeTrait;
+use cmsgears\core\common\models\traits\MapperTrait;
 
 /**
  * ModelFile Entity
  *
  * @property long $id
- * @property long $fileId
+ * @property long $modelId
  * @property long $parentId
  * @property string $parentType
  * @property short $order
@@ -44,7 +44,7 @@ class ModelFile extends \cmsgears\core\common\models\base\Mapper {
 
 	// Traits ------------------------------------------------------
 
-	use ParentTypeTrait;
+	use MapperTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -64,12 +64,12 @@ class ModelFile extends \cmsgears\core\common\models\base\Mapper {
     public function rules() {
 
         return [
-            [ [ 'fileId', 'parentId', 'parentType' ], 'required' ],
+            [ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
             [ [ 'id' ], 'safe' ],
-            [ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
+            [ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'active' ], 'boolean' ],
-            [ [ 'fileId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+            [ [ 'modelId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
         ];
     }
 
@@ -79,11 +79,11 @@ class ModelFile extends \cmsgears\core\common\models\base\Mapper {
     public function attributeLabels() {
 
         return [
-            'fileId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FILE ),
-            'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-            'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-            'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-            'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
+            'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FILE ),
+            'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+            'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+            'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
         ];
     }
 
@@ -100,7 +100,7 @@ class ModelFile extends \cmsgears\core\common\models\base\Mapper {
      */
     public function getFile() {
 
-        return $this->hasOne( CmgFile::className(), [ 'id' => 'fileId' ] );
+        return $this->hasOne( File::className(), [ 'id' => 'modelId' ] );
     }
 
 	// Static Methods ----------------------------------------------
@@ -123,21 +123,31 @@ class ModelFile extends \cmsgears\core\common\models\base\Mapper {
 
 	// Read - Query -----------
 
+	public static function queryWithAll( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'file' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithModel( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'file' ];
+
+		return parent::queryWithAll( $config );
+	}
+
 	// Read - Find ------------
-
-    public static function findByFileId( $parentId, $parentType, $fileId ) {
-
-        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND fileId=:fid', [ ':pid' => $parentId, ':ptype' => $parentType, ':fid' => $fileId ] )->one();
-    }
 
     public static function findByFileTitle( $parentId, $parentType, $fileTitle ) {
 
-        return self::find()->joinWith( 'file' )->where( 'parentId=:pid AND parentType=:ptype AND title=:title', [ ':pid' => $parentId, ':ptype' => $parentType, ':title' => $fileTitle ] )->one();
+        return self::queryByParent( $parentId, $parentType )->where( 'title=:title', [ ':title' => $fileTitle ] )->one();
     }
 
     public static function findByFileTitleLike( $parentId, $parentType, $likeTitle ) {
 
-        return self::find()->joinWith( 'file' )->where( 'parentId=:pid AND parentType=:ptype AND title LIKE :title', [ ':pid' => $parentId, ':ptype' => $parentType, ':title' => $likeTitle ] )->all();
+        return self::queryByParent( $parentId, $parentType )->where( 'title LIKE :title', [ ':title' => $likeTitle ] )->all();
     }
 
 	// Create -----------------
@@ -146,13 +156,6 @@ class ModelFile extends \cmsgears\core\common\models\base\Mapper {
 
 	// Delete -----------------
 
-    /**
-     * Delete all entries related to a file
-     */
-    public static function deleteByFileId( $fileId ) {
-
-        self::deleteAll( 'fileId=:id', [ ':id' => $fileId ] );
-    }
 }
 
 ?>

@@ -1,6 +1,13 @@
 <?php
 namespace cmsgears\core\common\models\traits\resources;
 
+// Yii Import
+use \Yii;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\File;
 
 /**
@@ -11,20 +18,24 @@ trait VisualTrait {
 
 	public function getAvatar() {
 
-		return $this->hasOne( File::className(), [ 'id' => 'avatarId' ] );
+		$fileTable	= CoreTables::TABLE_FILE;
+
+		return $this->hasOne( File::className(), [ 'id' => 'avatarId' ] )->from( "$fileTable as avatar" );
 	}
 
 	public function getAvatarUrl() {
 
-		$banner			= $this->avatar;
-		$bannerUrl		= isset( $banner ) ? $banner->getFileUrl() : null;
+		$avatar			= $this->avatar;
+		$avatarUrl		= isset( $avatar ) ? $avatar->getFileUrl() : null;
 
-		return $bannerUrl;
+		return $avatarUrl;
 	}
 
 	public function getBanner() {
 
-		return $this->hasOne( File::className(), [ 'id' => 'bannerId' ] );
+		$fileTable	= CoreTables::TABLE_FILE;
+
+		return $this->hasOne( File::className(), [ 'id' => 'bannerId' ] )->from( "$fileTable as banner" );
 	}
 
 	public function getBannerUrl() {
@@ -37,7 +48,9 @@ trait VisualTrait {
 
 	public function getTexture() {
 
-		return $this->hasOne( File::className(), [ 'id' => 'textureId' ] );
+		$fileTable	= CoreTables::TABLE_FILE;
+
+		return $this->hasOne( File::className(), [ 'id' => 'textureId' ] )->from( "$fileTable as texture" );
 	}
 
 	public function getTextureUrl() {
@@ -50,7 +63,9 @@ trait VisualTrait {
 
 	public function getVideo() {
 
-		return $this->hasOne( File::className(), [ 'id' => 'videoId' ] );
+		$fileTable	= CoreTables::TABLE_FILE;
+
+		return $this->hasOne( File::className(), [ 'id' => 'videoId' ] )->from( "$fileTable as video" );
 	}
 
 	public function getVideoUrl() {

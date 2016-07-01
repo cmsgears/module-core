@@ -16,6 +16,8 @@ use cmsgears\core\common\models\entities\Site;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 use cmsgears\core\common\models\traits\NameTypeTrait;
+use cmsgears\core\common\models\traits\SlugTypeTrait;
+use cmsgears\core\common\models\traits\ResourceTrait;
 use cmsgears\core\common\models\traits\resources\AttributeTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
@@ -54,7 +56,7 @@ class Gallery extends \cmsgears\core\common\models\base\Resource {
 
 	// Protected --------------
 
-	protected static $multiSite	= true;
+	public static $multiSite	= true;
 
 	// Variables -----------------------------
 
@@ -73,6 +75,8 @@ class Gallery extends \cmsgears\core\common\models\base\Resource {
 	use DataTrait;
 	use FileTrait;
 	use NameTypeTrait;
+	use ResourceTrait;
+	use SlugTypeTrait;
 	use TemplateTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -98,7 +102,8 @@ class Gallery extends \cmsgears\core\common\models\base\Resource {
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
-                'ensureUnique' => true
+                'ensureUnique' => true,
+                'uniqueValidator' => [ 'targetAttribute' => 'type' ]
             ],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
@@ -120,19 +125,19 @@ class Gallery extends \cmsgears\core\common\models\base\Resource {
         $rules = [
             [ [ 'name' ], 'required' ],
             [ [ 'id', 'content', 'data' ], 'safe' ],
-            [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ [ 'title', 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->xLargeText ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+            [ [ 'title', 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
+            [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+            [ [ 'slug', 'type' ], 'unique', 'targetAttribute' => [ 'slug', 'type' ] ],
             [ 'active', 'boolean' ],
-            [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
         // trim if required
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
             $trim[] = [ [ 'name', 'description', 'title' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -148,13 +153,13 @@ class Gallery extends \cmsgears\core\common\models\base\Resource {
     public function attributeLabels() {
 
         return [
-            'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
-            'templateId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
-            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-            'title' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
-            'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-            'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
+            'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+            'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+            'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+            'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
         ];
     }
 
@@ -219,31 +224,22 @@ class Gallery extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Query -----------
 
+	public static function queryWithAll( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithSite( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'site' ];
+
+		return parent::queryWithAll( $config );
+	}
+
 	// Read - Find ------------
-
-    /**
-     * @return ActiveRecord - with site member and role.
-     */
-    public static function findWithOwner() {
-
-        return self::find()->joinWith( 'creator' );
-    }
-
-    /**
-     * @return Gallery - by slug
-     */
-    public static function findBySlug( $slug ) {
-
-        return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
-    }
-
-    /**
-     * @return Gallery - by name
-     */
-    public static function findByName( $name ) {
-
-        return self::find()->where( 'name=:name', [ ':name' => $name ] )->one();
-    }
 
 	// Create -----------------
 

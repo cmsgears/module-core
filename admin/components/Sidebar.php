@@ -3,25 +3,36 @@ namespace cmsgears\core\admin\components;
 
 // Yii Imports
 use \Yii;
-use yii\base\Component;
 use yii\helpers\ArrayHelper;
 
 /**
- * The component sidebar forms the sidebar for admin by merging the sidebar html for the modules specified in application configuration. This sidebar is specific only for Admin Application. 
+ * The component sidebar forms the sidebar for admin by merging the sidebar html for the modules specified in application configuration. This sidebar is specific only for Admin Application.
  */
-class Sidebar extends Component {
+class Sidebar extends \yii\base\Component {
+
+	// Variables ---------------------------------------------------
+
+	// Global -----------------
+
+	// Public -----------------
 
 	public $modules	= [];
-	
+
 	public $plugins	= [];
 
-	/**
-	 * Initialise the Sidebar.
-	 */
-    public function init() {
+	// Protected --------------
 
-        parent::init();
-    }
+	// Private ----------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG parent classes --------------------
+
+	// Sidebar -------------------------------
 
 	/**
 	 * @return string - the html merged from each module sidebar view.
@@ -32,22 +43,22 @@ class Sidebar extends Component {
 
 		$sidebarHtml	= "";
 		$modules		= $this->modules;
-		
+
 		// Collect sidebar html from all the modules
 		foreach ( $modules as $module ) {
 
 			$module		= Yii::$app->getModule( $module );
 			$html   	= $module->getSidebarHtml();
-			
+
 			ob_start();
-			
+
 			if( file_exists( $html ) ) {
 
 				include( $html );
 			}
-			
+
 			$sidebarHtml .= ob_get_contents();
-			
+
 			ob_get_clean();
 		}
 
@@ -69,7 +80,7 @@ class Sidebar extends Component {
 				$config   = ArrayHelper::merge( $config, $module->config );
 			}
 		}
-		
+
 		$plugins	= $this->plugins;
 
 		// Collect settings from all the plugins

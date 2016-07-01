@@ -6,6 +6,8 @@ use \Yii;
 use \yii\db\Query;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\ModelComment;
 
@@ -16,12 +18,12 @@ trait CommentTrait {
 
 	public function getModelComments() {
 
-		return ModelComment::findByParent( $this->id, $this->parentType, ModelComment::TYPE_COMMENT );
+		return ModelComment::findByParent( $this->id, $this->parentType );
 	}
 
 	public function getModelReviews() {
 
-		return ModelComment::findByParent( $this->id, $this->parentType, ModelComment::TYPE_REVIEW );
+		return ModelComment::findByParent( $this->id, $this->parentType, [ 'type' => ModelComment::TYPE_REVIEW ] );
 	}
 
 	// Average rating for all the reviews

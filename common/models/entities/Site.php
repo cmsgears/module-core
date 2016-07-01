@@ -13,7 +13,7 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\SiteAttribute;
 
 use cmsgears\core\common\models\traits\NameTrait;
-use cmsgears\core\common\models\traits\resources\AttributeTrait;
+use cmsgears\core\common\models\traits\SlugTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
 
 /**
@@ -52,8 +52,8 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 
 	// Traits ------------------------------------------------------
 
-    use AttributeTrait;
 	use NameTrait;
+	use SlugTrait;
 	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -92,17 +92,17 @@ class Site extends \cmsgears\core\common\models\base\Entity {
         $rules = [
             [ [ 'name' ], 'required' ],
             [ [ 'id' ], 'safe' ],
-            [ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+            [ [ 'name' ], 'unique', 'targetAttribute' => [ 'name' ] ],
+            [ [ 'slug' ], 'unique', 'targetAttribute' => [ 'slug' ] ],
             [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
             [ 'active', 'boolean' ],
             [ [ 'avatarId', 'bannerId', 'themeId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
         ];
 
         // trim if required
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
             $trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -112,18 +112,18 @@ class Site extends \cmsgears\core\common\models\base\Entity {
         return $rules;
     }
 
-    /**
+    /**attributes
      * @inheritdoc
      */
     public function attributeLabels() {
 
         return [
-            'avatarId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
-            'bannerId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
-            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
-            'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-            'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
+            'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
+            'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+            'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+            'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
         ];
     }
 
@@ -145,15 +145,15 @@ class Site extends \cmsgears\core\common\models\base\Entity {
      */
     public function getAttributes() {
 
-        return $this->hasMany( SiteAttribute::className(), [ 'siteId' => 'id' ] );
+        return $this->hasMany( SiteAttribute::className(), [ 'modelId' => 'id' ] );
     }
 
     /**
      * @return array - list of site Users
      */
-    public function getUsers() {
+    public function getMembers() {
 
-        return $this->hasMany( User::className(), [ 'id' => 'memberId' ] )
+        return $this->hasMany( User::className(), [ 'id' => 'userId' ] )
                     ->viaTable( CoreTables::TABLE_SITE_MEMBER, [ 'siteId' => 'id' ] );
     }
 
@@ -185,15 +185,38 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Query -----------
 
+	public static function queryWithAll( $config = [] ) {
+
+		$modelTable				= CoreTables::TABLE_SITE;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'theme', 'attributes', 'members' ];
+		$config[ 'relations' ]	= $relations;
+		$config[ 'groups' ]		= [ "$modelTable.id" ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithTheme( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'avatar', 'banner', 'theme' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithAttributes( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'avatar', 'banner', 'attributes' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithMembers( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'avatar', 'banner', 'members' ];
+
+		return parent::queryWithAll( $config );
+	}
+
 	// Read - Find ------------
-
-    /**
-     * @return Site - by slug
-     */
-    public static function findBySlug( $slug ) {
-
-        return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
-    }
 
 	// Create -----------------
 

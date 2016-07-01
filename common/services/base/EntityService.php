@@ -15,10 +15,12 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 
+use cmsgears\core\common\services\interfaces\base\IEntityService;
+
 /**
  * The class EntityService defines several useful methods used for pagination and generating map and list by specifying the columns.
  */
-abstract class EntityService extends \yii\base\Component {
+abstract class EntityService extends \yii\base\Component implements IEntityService {
 
 	// Variables ---------------------------------------------------
 
@@ -79,16 +81,41 @@ abstract class EntityService extends \yii\base\Component {
 
 	// EntityService -------------------------
 
+	public function getModelClass() {
+
+		return static::$modelClass;
+	}
+
+	public function getModelTable() {
+
+		return static::$modelTable;
+	}
+
+	public function getParentType() {
+
+		return static::$parentType;
+	}
+
 	// Data Provider ------
 
 	/**
 	 * @return - DataProvider with applied configuration.
 	 */
-	public function getDataProvider( $config ) {
+	public function getDataProvider( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 
-		return self::findDataProvider( $modelClass, $config );
+		return self::findDataProvider( $config );
+	}
+
+	public function getPage( $config = [] ) {
+
+		return self::findPage( $config );
+	}
+
+	public function getPageForSearch( $config = [] ) {
+
+		return self::findPageForSearch( $config );
 	}
 
 	// Read ---------------
@@ -105,24 +132,57 @@ abstract class EntityService extends \yii\base\Component {
 		return $modelClass::findById( $id );
 	}
 
+	/**
+	 * @return array - of models with given conditions.
+	 */
+	public function getModels( $config = [] ) {
+
+		return self::findModels( $config );
+	}
+
     // Read - Lists ----
+
+	public function getList( $config = [] ) {
+
+		return self::generateList( $config );
+	}
+
+	public function getIdList( $config = [] ) {
+
+		return self::findIdList( $config );
+	}
+
+	public function getNameValueList( $config = [] ) {
+
+		return self::findNameValueList( $config );
+	}
 
 	/**
 	 * @return array of arrays having id and name for given configurations.
 	 */
 	public function getIdNameList( $config = [] ) {
 
-		return self::generateIdNameList( 'id', 'name', static::$modelTable, $config );
+		return self::findIdNameList( $config );
 	}
 
     // Read - Maps -----
+
+	public function getNameValueMap( $config = [] ) {
+
+		return self::findNameValueMap( $config );
+	}
 
 	/**
 	 * @return associated array of arrays having id and name for given configurations.
 	 */
 	public function getIdNameMap( $config = [] ) {
 
-		return self::generateMap( 'id', 'name', static::$modelTable, $config );
+		return self::findIdNameMap( $config );
+	}
+
+	public function getObjectMap( $config = [] ) {
+
+		return self::findObjectMap( $config );
 	}
 
 	// Read - Others ---
@@ -143,9 +203,10 @@ abstract class EntityService extends \yii\base\Component {
 		$selective	= isset( $config[ 'selective' ] ) ? $config[ 'selective' ] : true;
 		$validate	= isset( $config[ 'validate' ] ) ? $config[ 'validate' ] : true;
 
-		if( Yii::$app->cmgCore->isUpdateSelective() && $selective ) {
+		if( Yii::$app->core->isUpdateSelective() && $selective ) {
 
 			$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [];
+
 
 	        $existingModel  = $this->getById( $model->id );
 
@@ -214,11 +275,16 @@ abstract class EntityService extends \yii\base\Component {
 		$this->update( $model, $config );
  	}
 
+	public function updateMultipleByForm( $form, $config = [] ) {
+
+		// Adapter Method - Implement in child classes
+ 	}
+
 	// Delete -------------
 
-	public function delete( $model ) {
+	public function delete( $model, $config = [] ) {
 
-		if( Yii::$app->cmgCore->isUpdateSelective() ) {
+		if( Yii::$app->core->isUpdateSelective() ) {
 
 			$model  = $this->getById( $model->id );
 		}
@@ -239,23 +305,30 @@ abstract class EntityService extends \yii\base\Component {
 	 * @param array $config
 	 * @return ActiveDataProvider
 	 */
-	public static function findDataProvider( $modelClass, $config ) {
+	public static function findDataProvider( $config = [] ) {
 
 		// TODO: Search in multiple columns.
 
-		// params to generate query
+		// model class
+		$modelClass		= static::$modelClass;
+
+		// query generation
 		$query			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
 		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::PAGE_LIMIT;
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
+
+		// search and sort
 		$searchParam	= isset( $config[ 'search-param' ] ) ? $config[ 'search-param' ] : 'keywords';
 		$searchCol		= isset( $config[ 'search-col' ] ) ? $config[ 'search-col' ] : null;
 		$sort			= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
+
+		// url generation
 		$route			= isset( $config[ 'route' ] ) ? $config[ 'route' ] : null;
 
 		$pagination	= array();
 
-		// Filtering -----------
+		// Conditions ----------
 
 		if( isset( $conditions ) ) {
 
@@ -273,7 +346,7 @@ abstract class EntityService extends \yii\base\Component {
 			$query 			= $query->andWhere( $searchQuery );
 		}
 
-		// Additional Filters --
+		// Filters -------------
 
 		if( isset( $filters ) ) {
 
@@ -331,6 +404,25 @@ abstract class EntityService extends \yii\base\Component {
 		    ]);
 		}
 
+		// Default conditions
+		if( !isset( $config[ 'conditions' ] ) ) {
+
+			$config[ 'conditions' ] = [];
+		}
+
+		// Restrict to site
+		if( $modelClass::$multiSite ) {
+
+			$config[ 'conditions' ][ 'siteId' ] = Yii::$app->core->siteId;
+
+			// Get data from all sites irrespective of current site.
+			if( isset( $config[ 'ignoreMultiSite' ] ) && $config[ 'ignoreMultiSite' ] ) {
+
+				unset( $config[ 'conditions' ][ 'siteId' ] );
+			}
+		}
+
+		// Default query
 		if( !isset( $config[ 'query' ] ) ) {
 
 			$modelClass 		= static::$modelClass;
@@ -338,12 +430,13 @@ abstract class EntityService extends \yii\base\Component {
 			$config[ 'query' ] 	= $modelClass::queryWithAll();
 		}
 
+		// Default search column
 		if( !isset( $config[ 'search-col' ] ) ) {
 
 			$config[ 'search-col' ] = 'name';
 		}
 
-		return self::findDataProvider( $modelClass, $config );
+		return self::findDataProvider( $config );
 	}
 
 	/**
@@ -369,33 +462,37 @@ abstract class EntityService extends \yii\base\Component {
 		$keywords 			= Yii::$app->request->getQueryParam( $searchParam );
 
 		// Tag
-		if( isset( $keywords ) || isset( $config[ 'tag' ] ) ) {
+		if( isset( $parentType ) && ( isset( $keywords ) || isset( $config[ 'tag' ] ) ) ) {
 
 			$query->leftJoin( $mtagTable, "$modelTable.id=$mtagTable.parentId AND $mtagTable.parentType='$parentType' AND $mtagTable.active=TRUE" )
 				->leftJoin( $tagTable, "$mtagTable.tagId=$tagTable.id" );
 		}
 
-		if( isset( $config[ 'tag' ] ) ) {
+		if( isset( $parentType ) && isset( $config[ 'tag' ] ) ) {
 
 			$query->andWhere( "$tagTable.id=" . $config[ 'tag' ]->id );
+
+			if( isset( $keywords ) ) {
+
+				$config[ 'search-col' ][]	= "$tagTable.name";
+			}
 		}
 
 		// Category
-		if( isset( $keywords ) || isset( $config[ 'category' ] ) ) {
+		if( isset( $parentType ) && ( isset( $keywords ) || isset( $config[ 'category' ] ) ) ) {
 
 			$query->leftJoin( "$mcategoryTable", "$modelTable.id=$mcategoryTable.parentId AND $mcategoryTable.parentType='$parentType' AND $mcategoryTable.active=TRUE" )
 				->leftJoin( "$categoryTable", "$mcategoryTable.categoryId=$categoryTable.id" );
 		}
 
-		if( isset( $config[ 'category' ] ) ) {
+		if( isset( $parentType ) && isset( $config[ 'category' ] ) ) {
 
 			$query->andWhere( "$categoryTable.id=" . $config[ 'category' ]->id );
-		}
 
-		// Search in category name, tag name by default
-		if( isset( $keywords ) ) {
+			if( isset( $keywords ) ) {
 
-			$config[ 'search-col' ]	= [ "$categoryTable.name", "$tagTable.name" ];
+				$config[ 'search-col' ][]	= "$categoryTable.name";
+			}
 		}
 
 		if( isset( $keywords ) || isset( $config[ 'category' ] ) ) {
@@ -419,45 +516,52 @@ abstract class EntityService extends \yii\base\Component {
 		return $modelClass::findById( $id );
 	}
 
+	/**
+	 * Simple wrapper for findAll from Yii.
+	 */
 	public static function findModels( $config = [] ) {
+
+		$modelClass	= static::$modelClass;
 
 		return $modelClass::findAll( $config );
 	}
 
-    // Read - Lists ----
-
-	public static function findIdNameList( $config = [] ) {
-
-		return self::generateIdNameList( 'id', 'name', static::$modelTable, $config );
-	}
-
 	/**
-	 * The method generateList returns an array of list for given column
-	 * @param string $column
-	 * @param string $tableName
-	 * @param array $conditions
+	 * Advanced of searchModels having more options to search.
 	 */
-	public static function generateList( $column, $tableName, $config = [] ) {
+	public static function searchModels( $config = [] ) {
 
+		// model class
+		$modelClass		= static::$modelClass;
+
+		// query generation
+		$query			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
+		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::PAGE_LIMIT;
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
-		$order			= isset( $config[ 'order' ] ) ? $config[ 'order' ] : null;
 
-		$query			= new Query();
+		// selected columns
+		$columns		= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ 'id' ];
 
-		// Build Query
+		// array result
+		$array 			= isset( $config[ 'array' ] ) ? $config[ 'array' ] : false;
+
+		// Selective columns ---
+
+		if( count( $columns ) > 0 ) {
+
+			$query->select( $columns );
+		}
+
+		// Conditions ----------
+
 		if( isset( $conditions ) ) {
 
-			$query->select( $column )
-			 	  ->from( $tableName )->where( $conditions );
-		}
-		else {
-
-			$query->select( $column )
-				  ->from( $tableName );
+			$query 	= $query->andWhere( $conditions );
 		}
 
-		// Multiple Columns
+		// Filters -------------
+
 		if( isset( $filters ) ) {
 
 			foreach ( $filters as $filter ) {
@@ -466,10 +570,108 @@ abstract class EntityService extends \yii\base\Component {
 			}
 		}
 
+		// Limit ---------------
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
+
+		// Print to Debug -------
+
+		if( isset( $config[ 'pquery' ] ) && $config[ 'pquery' ] ) {
+
+			$command = $query->createCommand();
+
+			var_dump( $command );
+		}
+
+		// Models ---------------
+
+		$models = $query->all()->asArray( $array );
+
+		return $models;
+	}
+
+    // Read - Lists ----
+
+	public static function findList( $config = [] ) {
+
+		return self::generateList( $config );
+	}
+
+	public static function findIdList( $config = [] ) {
+
+		$config[ 'column' ] = 'id';
+
+		return self::generateList( $config );
+	}
+
+	public static function findNameValueList( $config = [] ) {
+
+		return self::generateNameValueList( $config );
+	}
+
+	public static function findIdNameList( $config = [] ) {
+
+		$config[ 'nameColumn' ] 	= 'id';
+		$config[ 'valueColumn' ]	= 'name';
+		$config[ 'nameAlias' ] 		= 'id';
+		$config[ 'valueAlias' ] 	= 'name';
+
+		return self::generateNameValueList( $config );
+	}
+
+	// Generate - Lists
+
+	/**
+	 * The method generateList returns an array of list for given column
+	 * @param array $config
+	 * @return array - array of values.
+	 */
+	public static function generateList( $config = [] ) {
+
+		// table name
+		$tableName		= static::$modelTable;
+
+		// query generation
+		$query			= new Query();
+		$column			= isset( $config[ 'column' ] ) ? $config[ 'column' ] : 'id';
+		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
+
+		// sorting
+		$order			= isset( $config[ 'order' ] ) ? $config[ 'order' ] : null;
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			$query->select( $column )->from( $tableName )->where( $conditions );
+		}
+		else {
+
+			$query->select( $column )->from( $tableName );
+		}
+
+		// Filters -------------
+
+		if( isset( $filters ) ) {
+
+			foreach ( $filters as $filter ) {
+
+				$query 	= $query->andFilterWhere( $filter );
+			}
+		}
+
+		// Sorting -------------
+
 		if( isset( $order ) ) {
 
 			$query->orderBy( $order );
 		}
+
+		// Quering -------------
 
 		// Get column
 		$query->column();
@@ -481,6 +683,8 @@ abstract class EntityService extends \yii\base\Component {
 		$list 		= $command->queryAll();
 		$resultList	= [];
 
+		// Result --------------
+
 		foreach ( $list as $item ) {
 
 			$resultList[] = $item[ $column ];
@@ -491,91 +695,46 @@ abstract class EntityService extends \yii\base\Component {
 
 	/**
 	 * The method generateNameValueList returns an array of associative arrays having name and value as keys for the defined columns.
-	 * @param string $nameColumn
-	 * @param string $valueColumn
-	 * @param string $tableName
-	 * @param array $conditions
+	 * @param array $config
+	 * @return array - associative array of arrays having name and value as keys.
 	 */
-	public static function generateNameValueList( $nameColumn, $valueColumn, $tableName, $config = [] ) {
+	public static function generateNameValueList( $config = [] ) {
 
-		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
-		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
-		$prepend		= isset( $config[ 'prepend' ] ) ? $config[ 'prepend' ] : [];
-		$append			= isset( $config[ 'append' ] ) ? $config[ 'append' ] : [];
+		// table name
+		$tableName		= static::$modelTable;
 
+		// map columns
+		$nameColumn		= isset( $config[ 'nameColumn' ] ) ? $config[ 'nameColumn' ] : 'name';
+		$valueColumn	= isset( $config[ 'valueColumn' ] ) ? $config[ 'valueColumn' ] : 'value';
+
+		// column alias
+		$nameAlias		= isset( $config[ 'nameAlias' ] ) ? $config[ 'nameAlias' ] : 'name';
+		$valueAlias		= isset( $config[ 'valueAlias' ] ) ? $config[ 'valueAlias' ] : 'value';
+
+		// query generation
 		$query 			= new Query();
-
-		// Build Query
-		if( isset( $conditions ) ) {
-
-			$query->select( $nameColumn.' as name,'. $valueColumn .' as value' )
-			 	  ->from( $tableName )->where( $conditions );
-		}
-		else {
-
-			$query->select( $nameColumn.' as name,'. $valueColumn .' as value' )
-				  ->from( $tableName );
-		}
-
-		// Multiple Columns
-		if( isset( $filters ) ) {
-
-			foreach ( $filters as $filter ) {
-
-				$query 	= $query->andFilterWhere( $filter );
-			}
-		}
-
-		// Create command
-		$command = $query->createCommand();
-
-		// Execute the command
-		$arrayList = $command->queryAll();
-
-		// Prepend given list
-		if( count( $prepend ) > 0 ) {
-
-			$arrayList = ArrayHelper::merge( $prepend, $arrayList );
-		}
-
-		// Append given list
-		if( count( $append ) > 0 ) {
-
-			$arrayList = ArrayHelper::merge( $arrayList, $append );
-		}
-
-		return $arrayList;
-	}
-
-	/**
-	 * The method generateIdNameList returns an array of associative arrays having id and name as keys for the defined columns.
-	 * @param string $idColumn
-	 * @param string $nameColumn
-	 * @param string $tableName
-	 * @param array $conditions
-	 */
-	public static function generateIdNameList( $idColumn, $nameColumn, $tableName, $config = [] ) {
-
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
+
+		// additional data
 		$prepend		= isset( $config[ 'prepend' ] ) ? $config[ 'prepend' ] : [];
 		$append			= isset( $config[ 'append' ] ) ? $config[ 'append' ] : [];
 
-		$query 		= new Query();
+		// Conditions ----------
 
-		// Build Query
 		if( isset( $conditions ) ) {
 
-			$query->select( $idColumn.' as id,'. $nameColumn .' as name' )
+			$query->select( [ "$nameColumn as $nameAlias", "$valueColumn as $valueAlias" ] )
 			 	  ->from( $tableName )->where( $conditions );
 		}
 		else {
 
-			$query->select( $idColumn.' as id,'. $nameColumn .' as name' )
+			$query->select( [ "$nameColumn as $nameAlias", "$valueColumn as $valueAlias" ] )
 				  ->from( $tableName );
 		}
 
-		// Multiple Columns
+		// Filters -------------
+
 		if( isset( $filters ) ) {
 
 			foreach ( $filters as $filter ) {
@@ -584,11 +743,15 @@ abstract class EntityService extends \yii\base\Component {
 			}
 		}
 
+		// Quering -------------
+
 		// Create command
 		$command = $query->createCommand();
 
 		// Execute the command
 		$arrayList = $command->queryAll();
+
+		// Result --------------
 
 		// Prepend given list
 		if( count( $prepend ) > 0 ) {
@@ -607,26 +770,44 @@ abstract class EntityService extends \yii\base\Component {
 
     // Read - Maps -----
 
+	public static function findNameValueMap( $config = [] ) {
+
+		return self::generateMap( $config );
+	}
+
 	public static function findIdNameMap( $config = [] ) {
 
-		return self::generateMap( 'id', 'name', static::$modelTable, $config );
+		$config[ 'nameColumn' ] 	= 'id';
+		$config[ 'valueColumn' ]	= 'name';
+		$config[ 'nameAlias' ] 		= 'id';
+		$config[ 'valueAlias' ] 	= 'name';
+
+		return self::generateMap( $config );
 	}
+
+	public static function findObjectMap( $config = [] ) {
+
+		return self::generateObjectMap( $config );
+	}
+
+	// Generate - Maps -
 
 	/**
 	 * The method findMap returns an associative array for the defined table and columns. It also apply the provided conditions.
-	 * @param string $keyColumn
-	 * @param string $valueColumn
-	 * @param string $tableName
-	 * @param array $conditions
+	 * @param array $config
+	 * @return array - associative array of arrays having name as key and value as value.
 	 */
-	public static function generateMap( $keyColumn, $valueColumn, $tableName, $config = [] ) {
+	public static function generateMap( $config = [] ) {
 
-		$arrayList  = self::generateNameValueList( $keyColumn, $valueColumn, $tableName, $config );
-		$map		= [];
+		$nameAlias		= isset( $config[ 'nameAlias' ] ) ? $config[ 'nameAlias' ] : 'name';
+		$valueAlias		= isset( $config[ 'valueAlias' ] ) ? $config[ 'valueAlias' ] : 'value';
+
+		$arrayList  	= self::generateNameValueList( $config );
+		$map			= [];
 
 		foreach ( $arrayList as $item ) {
 
-			$map[ $item['name'] ] = $item['value'];
+			$map[ $item[ $nameAlias ] ] = $item[ $valueAlias ];
 		}
 
 		return $map;
@@ -634,25 +815,28 @@ abstract class EntityService extends \yii\base\Component {
 
 	/**
 	 * The method findObjectMap returns an associative array for the defined table and columns. It also apply the provided conditions.
-	 * @param string $keyColumn
-	 * @param object $entity
-	 * @param string $tableName
-	 * @param array $conditions
+	 * @param array $config
 	 */
-	public static function generateObjectMap( $keyColumn, $entity, $config = [] ) {
+	public static function generateObjectMap( $config = [] ) {
 
-		$query			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $entity::find();
+		// map columns
+		$key			= isset( $config[ 'key' ] ) ? $config[ 'key' ] : 'id';
+		$value			= static::$modelClass;
+
+		// query generation
+		$query			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $value::find();
 		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::PAGE_LIMIT;
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
-		$map			= [];
 
-		// Filtering -----------
+		// Conditions ----------
 
 		if( isset( $conditions ) ) {
 
 			$query 	= $query->andWhere( $conditions );
 		}
+
+		// Filters -------------
 
 		if( isset( $filters ) ) {
 
@@ -662,7 +846,13 @@ abstract class EntityService extends \yii\base\Component {
 			}
 		}
 
+		// Quering -------------
+
 		$objects	= $query->all();
+
+		// Result --------------
+
+		$map		= [];
 
 		foreach ( $objects as $object ) {
 

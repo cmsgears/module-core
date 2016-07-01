@@ -10,6 +10,7 @@ use cmsgears\icons\widgets\IconChooser;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Add Template | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
+$renderers		= Yii::$app->templateManager->renderers;
 
 Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 ?>

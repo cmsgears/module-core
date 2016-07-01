@@ -6,7 +6,29 @@ use \Yii;
 
 class JsonModel extends \yii\base\Model {
 
-	public function __construct( $jsonData = false ) {
+	// Variables ---------------------------------------------------
+
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	public function __construct( $jsonData = false, $config = [] ) {
 
         if( $jsonData ) {
 
@@ -23,7 +45,27 @@ class JsonModel extends \yii\base\Model {
 				$this->setData( json_decode( $jsonData, true ) );
 			}
 		}
+
+		parent::__construct( $config );
     }
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	//JsonModel ------------------------------
 
     private function setData( $data ) {
 

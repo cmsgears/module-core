@@ -3,6 +3,7 @@ namespace cmsgears\core\common\components;
 
 // Yii Imports
 use \Yii;
+use yii\di\Container;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -12,13 +13,17 @@ use cmsgears\core\common\validators\CoreValidator;
 use cmsgears\core\common\services\entities\UserService;
 
 /**
- * The core component for CMSGears based sites. It must be initialised for app bootstrap using the name cmgCore.
+ * The core component for CMSGears based sites. It must be initialised for app bootstrap using the name core.
  * It define the post login and logout path to redirect user to a different path than the default one. Though ajax
  * based login need to specify the path within the javascript code.
  *
  * All the admin sites must set useRbac to true to get the admin functional since the admin controllers use it for almost every action.
  */
 class Core extends \yii\base\Component {
+
+	// Global -----------------
+
+	// Public -----------------
 
     /**
      * @var main site to load configurations in case sub sites are not configured.
@@ -115,14 +120,20 @@ class Core extends \yii\base\Component {
     public $xLargeText     	 	= CoreGlobal::TEXT_XLARGE;
 
 	/**
-	 * @var Switch for notification feature.
+	 * @var Switch for notification feature. If it's set to true, either Notify Module must be installed or eventManager component must be configured.
 	 */
     public $notifications       = false;
 
 	/**
-	 * @var Update selective allows services to updated selected columns.
+	 * @var Update selective allows services to update selected columns.
 	 */
     public $updateSelective		= true;
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Constructor and Initialisation ------------------------------
 
     /**
      * Initialise the CMG Core Component.
@@ -136,7 +147,20 @@ class Core extends \yii\base\Component {
 
         // Set CMSGears alias to be used by all modules, plugins, widgets and themes. It will be located within the vendor directory for composer.
         Yii::setAlias( 'cmsgears', dirname( dirname( dirname( __DIR__ ) ) ) );
+
+		// Register application components and objects i.e. CMG and Project
+		$this->registerComponents();
     }
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG parent classes --------------------
+
+	// Core ----------------------------------
+
+	// Properties
 
     /**
      * The hasModule method check whether a module is available for the app. We can use it for conditional cases.
@@ -201,6 +225,16 @@ class Core extends \yii\base\Component {
     public function getSiteSlug() {
 
         return $this->siteSlug;
+    }
+
+	public function setSite( $site ) {
+
+		$this->site	= $site;
+
+		$this->siteId	= $site->id;
+		$this->siteSlug	= $site->slug;
+
+        return $this->site;
     }
 
     public function getSite() {
@@ -335,6 +369,127 @@ class Core extends \yii\base\Component {
 
         return $this->updateSelective;
     }
+
+	// Components and Objects
+
+	public function registerComponents() {
+
+		// Init system services
+		$this->initSystemServices();
+
+		// Register services
+		$this->registerResourceServices();
+		$this->registerMapperServices();
+		$this->registerEntityServices();
+
+		// Init services
+		$this->initResourceServices();
+		$this->initMapperServices();
+		$this->initEntityServices();
+	}
+
+	public function initSystemServices() {
+
+		$factory = Yii::$app->factory->getContainer();
+
+		//$factory->set( '<name>', '<classpath>' );
+	}
+
+	public function registerResourceServices() {
+
+		$factory = Yii::$app->factory->getContainer();
+
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IAddressService', 'cmsgears\core\common\services\resources\AddressService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\ICategoryService', 'cmsgears\core\common\services\resources\CategoryService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IFileService', 'cmsgears\core\common\services\resources\FileService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IFormFieldService', 'cmsgears\core\common\services\resources\FormFieldService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IFormService', 'cmsgears\core\common\services\resources\FormService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IGalleryService', 'cmsgears\core\common\services\resources\GalleryService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelAttributeService', 'cmsgears\core\common\services\resources\ModelAttributeService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelCommentService', 'cmsgears\core\common\services\resources\ModelCommentService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelHierarchyService', 'cmsgears\core\common\services\resources\ModelHierarchyService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IOptionService', 'cmsgears\core\common\services\resources\OptionService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\ISiteAttributeService', 'cmsgears\core\common\services\resources\SiteAttributeService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\ITagService', 'cmsgears\core\common\services\resources\TagService' );
+	}
+
+	public function registerMapperServices() {
+
+		$factory = Yii::$app->factory->getContainer();
+
+		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelAddressService', 'cmsgears\core\common\services\mappers\ModelAddressService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelCategoryService', 'cmsgears\core\common\services\mappers\ModelCategoryService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelFileService', 'cmsgears\core\common\services\mappers\ModelFileService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelFormService', 'cmsgears\core\common\services\mappers\ModelFormService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelGalleryService', 'cmsgears\core\common\services\mappers\ModelGalleryService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelOptionService', 'cmsgears\core\common\services\mappers\ModelOptionService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelTagService', 'cmsgears\core\common\services\mappers\ModelTagService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\ISiteMemberService', 'cmsgears\core\common\services\mappers\SiteMemberService' );
+	}
+
+	public function registerEntityServices() {
+
+		$factory = Yii::$app->factory->getContainer();
+
+		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ICountryService', 'cmsgears\core\common\services\entities\CountryService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IObjectService', 'cmsgears\core\common\services\entities\ObjectService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IPermissionService', 'cmsgears\core\common\services\entities\PermissionService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IProvinceService', 'cmsgears\core\common\services\entities\ProvinceService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IRoleService', 'cmsgears\core\common\services\entities\RoleService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ISiteService', 'cmsgears\core\common\services\entities\SiteService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ITemplateService', 'cmsgears\core\common\services\entities\TemplateService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IThemeService', 'cmsgears\core\common\services\entities\ThemeService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IUserService', 'cmsgears\core\common\services\entities\UserService' );
+	}
+
+	public function initResourceServices() {
+
+		$factory = Yii::$app->factory->getContainer();
+
+		$factory->set( 'addressService', 'cmsgears\core\common\services\resources\AddressService' );
+		$factory->set( 'categoryService', 'cmsgears\core\common\services\resources\CategoryService' );
+		$factory->set( 'fileService', 'cmsgears\core\common\services\resources\FileService' );
+		$factory->set( 'formFieldService', 'cmsgears\core\common\services\resources\FormFieldService' );
+		$factory->set( 'formService', 'cmsgears\core\common\services\resources\FormService' );
+		$factory->set( 'galleryService', 'cmsgears\core\common\services\resources\GalleryService' );
+		$factory->set( 'modelAttributeService', 'cmsgears\core\common\services\resources\ModelAttributeService' );
+		$factory->set( 'modelCommentService', 'cmsgears\core\common\services\resources\ModelCommentService' );
+		$factory->set( 'modelHierarchyService', 'cmsgears\core\common\services\resources\ModelHierarchyService' );
+		$factory->set( 'optionService', 'cmsgears\core\common\services\resources\OptionService' );
+		$factory->set( 'siteAttributeService', 'cmsgears\core\common\services\resources\SiteAttributeService' );
+		$factory->set( 'tagService', 'cmsgears\core\common\services\resources\TagService' );
+	}
+
+	public function initMapperServices() {
+
+		$factory = Yii::$app->factory->getContainer();
+
+		$factory->set( 'modelAddressService', 'cmsgears\core\common\services\mappers\ModelAddressService' );
+		$factory->set( 'modelCategoryService', 'cmsgears\core\common\services\mappers\ModelCategoryService' );
+		$factory->set( 'modelFileService', 'cmsgears\core\common\services\mappers\ModelFileService' );
+		$factory->set( 'modelFormService', 'cmsgears\core\common\services\mappers\ModelFormService' );
+		$factory->set( 'modelGalleryService', 'cmsgears\core\common\services\mappers\ModelGalleryService' );
+		$factory->set( 'modelOptionService', 'cmsgears\core\common\services\mappers\ModelOptionService' );
+		$factory->set( 'modelTagService', 'cmsgears\core\common\services\mappers\ModelTagService' );
+		$factory->set( 'siteMemberService', 'cmsgears\core\common\services\mappers\SiteMemberService' );
+	}
+
+	public function initEntityServices() {
+
+		$factory = Yii::$app->factory->getContainer();
+
+		$factory->set( 'countryService', 'cmsgears\core\common\services\entities\CountryService' );
+		$factory->set( 'objectService', 'cmsgears\core\common\services\entities\ObjectService' );
+		$factory->set( 'permissionService', 'cmsgears\core\common\services\entities\PermissionService' );
+		$factory->set( 'provinceService', 'cmsgears\core\common\services\entities\ProvinceService' );
+		$factory->set( 'roleService', 'cmsgears\core\common\services\entities\RoleService' );
+		$factory->set( 'siteService', 'cmsgears\core\common\services\entities\SiteService' );
+		$factory->set( 'templateService', 'cmsgears\core\common\services\entities\TemplateService' );
+		$factory->set( 'themeService', 'cmsgears\core\common\services\entities\ThemeService' );
+		$factory->set( 'userService', 'cmsgears\core\common\services\entities\UserService' );
+	}
+
+	// Cookies
 
     /*Set App User */
     public function setAppUser( $user ) {

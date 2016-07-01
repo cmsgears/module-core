@@ -6,79 +6,132 @@ use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Country;
 
-/**
- * The class CountryService is base class to perform database activities for Country Entity.
- */
-class CountryService extends \cmsgears\core\common\services\base\Service {
+use cmsgears\core\common\services\interfaces\entities\ICountryService;
 
-	// Static Methods ----------------------------------------------
+class CountryService extends \cmsgears\core\common\services\base\EntityService implements ICountryService {
 
-	// Read ----------------
+	// Variables ---------------------------------------------------
 
-	/**
-	 * @param integer $id
-	 * @return Country
-	 */
-	public static function findById( $id ) {
+	// Globals -------------------------------
 
-		return Country::findById( $id );
+	// Constants --------------
+
+	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\core\common\models\entities\Country';
+
+	public static $modelTable	= CoreTables::TABLE_COUNTRY;
+
+	public static $parentType	= CoreGlobal::TYPE_COUNTRY;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// CountryService ------------------------
+
+	// Data Provider ------
+
+	public function getPage( $config = [] ) {
+
+	    $sort = new Sort([
+	        'attributes' => [
+	            'name' => [
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'name'
+	            ],
+	            'slug' => [
+	                'asc' => [ 'slug' => SORT_ASC ],
+	                'desc' => ['slug' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'slug'
+	            ]
+	        ]
+	    ]);
+
+		$config[ 'sort' ] = $sort;
+
+		return parent::findPage( $config );
 	}
 
-	public static function findByCode( $code ) {
+	// Read ---------------
+
+    // Read - Models ---
+
+	public function getByCode( $code ) {
 
 		return Country::findByCode( $code );
 	}
 
-	public static function getIdNameList() {
+    // Read - Lists ----
 
-		return self::findMap( 'id', 'name', CoreTables::TABLE_COUNTRY );
-	}
+    // Read - Maps -----
 
-	// Data Provider ----
+	// Read - Others ---
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+	// Create -------------
 
-		return self::getDataProvider( new Country(), $config );
-	}
+	// Update -------------
 
-	// Create ----
+	public function update( $model, $config = [] ) {
 
-	public static function create( $model ) {
+		return parent::update( $model, [
+			'attributes' => [ 'code', 'codeNum', 'name' ]
+		]);
+ 	}
 
-		$model->save();
+	// Delete -------------
 
-		return $model;
-	}
+	// Static Methods ----------------------------------------------
 
-	// Update ----
+	// CMG parent classes --------------------
 
-	public static function update( $model ) {
+	// CountryService ------------------------
 
-		$modelToUpdate	= self::findById( $model->id );
+	// Data Provider ------
 
-		// Copy Attributes
-		$modelToUpdate->copyForUpdateFrom( $model, [ 'code', 'codeNum', 'name' ] );
+	// Read ---------------
 
-		// Update Country
-		$modelToUpdate->update();
+    // Read - Models ---
 
-		// Return updated country
-		return $modelToUpdate;
-	}
+    // Read - Lists ----
 
-	// Delete ----
+    // Read - Maps -----
 
-	public static function delete( $model ) {
+	// Read - Others ---
 
-		$model->delete();
-	}
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

@@ -10,7 +10,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\User;
 
-use cmsgears\core\common\models\traits\ParentTypeTrait;
+use cmsgears\core\common\models\traits\ResourceTrait;
 
 /**
  * ModelActivity Entity
@@ -48,7 +48,7 @@ class ModelActivity extends \cmsgears\core\common\models\base\Resource {
 
 	// Traits ------------------------------------------------------
 
-	use ParentTypeTrait;
+	use ResourceTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -70,8 +70,8 @@ class ModelActivity extends \cmsgears\core\common\models\base\Resource {
         return [
             [ [ 'userId', 'parentId', 'parentType' ], 'required' ],
             [ [ 'id', 'content' ], 'safe' ],
-            [ [ 'parentType', 'type', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ [ 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->xLargeText ],
+            [ [ 'parentType', 'type', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ [ 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
             [ [ 'userId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
@@ -83,12 +83,12 @@ class ModelActivity extends \cmsgears\core\common\models\base\Resource {
     public function attributeLabels() {
 
         return [
-            'userId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USER ),
-            'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-            'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-            'ip' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_IP ),
-            'agent' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AGENT_BROWSER ),
-            'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CONTENT )
+            'userId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
+            'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+            'ip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP ),
+            'agent' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AGENT_BROWSER ),
+            'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT )
         ];
     }
 
@@ -127,6 +127,21 @@ class ModelActivity extends \cmsgears\core\common\models\base\Resource {
 	// ModelActivity -------------------------
 
 	// Read - Query -----------
+
+	public static function queryWithAll( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'user' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithUser( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'user' ];
+
+		return parent::queryWithAll( $config );
+	}
 
 	// Read - Find ------------
 

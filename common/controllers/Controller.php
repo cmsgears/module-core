@@ -13,22 +13,40 @@ use cmsgears\core\common\config\MailProperties;
 
 abstract class Controller extends \yii\web\Controller {
 
-	private $_coreProperties;
-	private $_mailProperties;
-	
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Top level CRUD permission to be applied by default on selected actions. It can be replaced by child classes.
+	public $crudPermission;
+
+	// The model service for primary model if applicable. It can be obtained either via factory component or instantiated within controller constructor or init method.
+	public $modelService;
+
 	// It provide information to display active tab on sidebar.
 	public $sidebar;
 
-	// We need return url in cases where view need to provide links to move back to previous page.
+	// We need return url in cases where view need to provide links to move back to previous page. It's also useful when we need to redirect user to previous page on form success. It's an alternate to breadcrumb, but limited to single action.
 	public $returnUrl;
+
+	// Protected --------------
+
+	/**
+	 * It can be used while adding, updating or deleting the primary module. The child class must override these methods and set the scenario before calling parent class method.
+	 */
+	protected $scenario;
+
+	// Private ----------------
+
+	// Core and Mail properties.
+	private $coreProperties;
+
+	private $mailProperties;
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
-
-        parent::__construct( $id, $module, $config );
-	}
-	
 	// For development purpose only - Publish assets for each request
 	public function beforeAction( $action ) {
 
@@ -40,26 +58,40 @@ abstract class Controller extends \yii\web\Controller {
 	    return parent::beforeAction( $action );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Controller ----------------------------
 
 	public function getCoreProperties() {
 
-		if( !isset( $this->_coreProperties ) ) {
+		if( !isset( $this->coreProperties ) ) {
 
-			$this->_coreProperties	= CoreProperties::getInstance();
+			$this->coreProperties	= CoreProperties::getInstance();
 		}
 
-		return $this->_coreProperties;
+		return $this->coreProperties;
 	}
 
 	public function getMailProperties() {
 
-		if( !isset( $this->_mailProperties ) ) {
+		if( !isset( $this->mailProperties ) ) {
 
-			$this->_mailProperties	= MailProperties::getInstance();
+			$this->mailProperties	= MailProperties::getInstance();
 		}
 
-		return $this->_mailProperties;
+		return $this->mailProperties;
 	}
 
 	/**

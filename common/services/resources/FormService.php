@@ -5,92 +5,113 @@ namespace cmsgears\core\common\services\resources;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Form;
 use cmsgears\core\common\models\mappers\ModelForm;
 
-class FormService extends \cmsgears\core\common\services\base\Service {
+use cmsgears\core\common\services\interfaces\resources\IFormService;
+
+use cmsgears\core\common\services\traits\NameTrait;
+use cmsgears\core\common\services\traits\SlugTrait;
+
+class FormService extends \cmsgears\core\common\services\base\EntityService implements IFormService {
+
+	// Variables ---------------------------------------------------
+
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	use NameTrait;
+	use SlugTrait;
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// FormService ---------------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	public function update( $model, $config = [] ) {
+
+		return parent::update( $model, [
+			'attributes' => [ 'templateId', 'name', 'description', 'successMessage', 'captcha', 'visibility', 'active', 'userMail', 'adminMail', 'htmlOptions', 'data' ]
+		]);
+ 	}
+
+	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete dependencies
+		ModelForm::deleteByModelId( $model->id );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
 
 	// Static Methods ----------------------------------------------
 
-	// Read ----------------
+	// CMG parent classes --------------------
 
-	/**
-	 * @param integer $id
-	 * @return Form
-	 */
-	public static function findById( $id ) {
+	// FormService ---------------------------
 
-		return Form::findById( $id );
-	}
+	// Data Provider ------
 
-	/**
-	 * @param string $name
-	 * @return Form
-	 */
-    public static function findByName( $name ) {
+	// Read ---------------
 
-		return Form::findByName( $name );
-    }
+    // Read - Models ---
 
-	/**
-	 * @param string $slug
-	 * @return Form
-	 */
-    public static function findBySlug( $slug ) {
+    // Read - Lists ----
 
-		return Form::findBySlug( $slug );
-    }
+    // Read - Maps -----
 
-	// Data Provider ----
+	// Read - Others ---
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+	// Create -------------
 
-		return self::getDataProvider( new Form(), $config );
-	}
+	// Update -------------
 
-	// Create -----------
-
-	public static function create( $form ) {
-
-		// Create Form
-		$form->save();
-
-		return $form;
-	}
-
-	// Update -----------
-
-	public static function update( $form ) {
-
-		$formToUpdate	= self::findById( $form->id );
-
-		$formToUpdate->copyForUpdateFrom( $form, [ 'templateId', 'name', 'description', 'successMessage', 'captcha',
-													'visibility', 'active', 'userMail', 'adminMail', 'htmlOptions', 'data' ] );
-
-		$formToUpdate->update();
-
-		return $formToUpdate;
-	}
-
-	// Delete -----------
-
-	public static function delete( $form ) {
-
-		// Find existing form
-		$existingForm	= self::findById( $form->id );
-
-		// Delete dependency
-		ModelForm::deleteByFormId( $form->id );
-
-		// Delete Form
-		$existingForm->delete();
-
-		return true;
-	}
+	// Delete -------------
 }
 
 ?>

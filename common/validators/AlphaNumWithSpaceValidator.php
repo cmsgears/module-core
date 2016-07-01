@@ -15,7 +15,7 @@ class AlphaNumWithSpaceValidator extends \yii\validators\Validator {
 
         if ( !preg_match( self::$regex, $model->$attribute ) ) {
 
-            $this->addError( $model, $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_AN_SPACE ) );
+            $this->addError( $model, $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_AN_SPACE ) );
         }
     }
 }

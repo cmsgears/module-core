@@ -33,7 +33,7 @@ class UserExistFilter extends \yii\base\Behavior {
 			}
 		}
 
-		// Check whether action is permitted
+		// Proceed if requested action exists
         if ( $found ) {
 
 			$user	= Yii::$app->user->identity;
@@ -51,7 +51,7 @@ class UserExistFilter extends \yii\base\Behavior {
 					$errors[ 'userExist' ] 	= false;
 
 					// Trigger Ajax Failure
-			    	$response = AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+			    	$response = AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 
 					echo json_encode( $response );
 

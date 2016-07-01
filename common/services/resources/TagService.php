@@ -6,58 +6,62 @@ use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Tag;
 use cmsgears\core\common\models\mappers\ModelTag;
 
+use cmsgears\core\common\services\interfaces\resources\ITagService;
+
 /**
  * The class TagService is base class to perform database activities for Tag Entity.
  */
-class TagService extends \cmsgears\core\common\services\base\Service {
+class TagService extends \cmsgears\core\common\services\base\EntityService implements ITagService {
 
-	// Static Methods ----------------------------------------------
+	// Variables ---------------------------------------------------
 
-	// Read ----------------
+	// Globals -------------------------------
 
-	/**
-	 * @param integer $id
-	 * @return Tag
-	 */
-	public static function findById( $id ) {
+	// Constants --------------
 
-		return Tag::findById( $id );
-	}
+	// Public -----------------
 
-	public static function findBySlug( $slug ) {
+	public static $modelClass	= '\cmsgears\core\common\models\resources\Tag';
 
-		return Tag::findBySlug( $slug );
-	}
+	public static $modelTable	= CoreTables::TABLE_TAG;
 
-	public static function findByNameType( $name, $type ) {
+	public static $parentType	= CoreGlobal::TYPE_TAG;
 
-		return Tag::findByNameType( $name, $type );
-	}
+	// Protected --------------
 
-	/**
-	 * @return array - an array having id as key and name as value.
-	 */
-	public static function getIdNameMap() {
+	// Variables -----------------------------
 
-		return self::findMap( 'id', 'name', CoreTables::TABLE_TAG );
-	}
+	// Public -----------------
 
-	/**
-	 * @param string $id
-	 * @return array - An array of associative array of tag id and name.
-	 */
-	public static function getIdNameList() {
+	// Protected --------------
 
-		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_TAG );
-	}
+	// Private ----------------
 
-	// Pagination -------
+	// Traits ------------------------------------------------------
 
-	public static function getPagination( $config = [] ) {
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// TagService ----------------------------
+
+	// Data Provider ------
+
+	public function getPage( $config = [] ) {
 
 	    $sort = new Sort([
 	        'attributes' => [
@@ -70,78 +74,91 @@ class TagService extends \cmsgears\core\common\services\base\Service {
 	        ]
 	    ]);
 
-		if( !isset( $config[ 'conditions' ] ) ) {
+		$config[ 'sort' ] = $sort;
 
-			$config[ 'conditions' ] = [];
-		}
-
-		// Restrict to site
-		if( !isset( $config[ 'site' ] ) || !$config[ 'site' ] ) {
-
-			$config[ 'conditions' ][ 'siteId' ] = Yii::$app->cmgCore->siteId;
-
-			unset( $config[ 'site' ] );
-		}
-
-		if( !isset( $config[ 'sort' ] ) ) {
-
-			$config[ 'sort' ] = $sort;
-		}
-
-		if( !isset( $config[ 'search-col' ] ) ) {
-
-			$config[ 'search-col' ] = 'name';
-		}
-
-		return self::getDataProvider( new Tag(), $config );
+		return parent::findPage( $config );
 	}
 
-	public static function getPaginationByType( $type ) {
+	public static function getPageByType( $type ) {
 
-		return self::getPagination( [ 'conditions' => [ 'type' => $type ] ] );
+		return self::getPage( [ 'conditions' => [ 'type' => $type ] ] );
 	}
 
-	// Create ----------------
+	// Read ---------------
 
-	public static function create( $tag ) {
+    // Read - Models ---
 
-		$tag->save();
+	public function getBySlug( $slug ) {
 
-		return $tag;
+		return self::findBySlug( $slug );
 	}
 
-	// Update -----------
+	public function getByNameType( $name, $type ) {
 
-	public static function update( $tag ) {
-
-		// Find existing Tag
-		$tagToUpdate	= self::findById( $tag->id );
-
-		// Copy Attributes
-		$tagToUpdate->copyForUpdateFrom( $tag, [ 'name', 'description' ] );
-
-		// Update Tag
-		$tagToUpdate->update();
-
-		// Return updated Tag
-		return $tagToUpdate;
+		return self::findByNameType( $name, $type );
 	}
 
-	// Delete -----------
+    // Read - Lists ----
 
-	public static function delete( $tag ) {
+    // Read - Maps -----
 
-		// Find existing Tag
-		$tagToDelete	= self::findById( $tag->id );
+	// Read - Others ---
 
-		// Delete dependency
-		ModelTag::deleteByTagId( $tag->id );
+	// Create -------------
 
-		// Delete Tag
-		$tagToDelete->delete();
+	// Update -------------
 
-		return true;
+	public function update( $model, $config = [] ) {
+
+		return parent::update( $model, [
+			'attributes' => [ 'name', 'description' ]
+		]);
+ 	}
+
+	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete dependencies
+		ModelTag::deleteByModelId( $model->id );
+
+		// Delete model
+		return parent::delete( $model, $config );
 	}
+
+	// Static Methods ----------------------------------------------
+
+	// CMG parent classes --------------------
+
+	// TagService ----------------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+	public static function findBySlug( $slug ) {
+
+		return Tag::findBySlug( $slug );
+	}
+
+	public static function findByNameType( $name, $type ) {
+
+		return Tag::findByNameType( $name, $type );
+	}
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

@@ -5,141 +5,91 @@ namespace cmsgears\core\common\services\entities;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Permission;
 use cmsgears\core\common\models\mappers\RolePermission;
 
+use cmsgears\core\common\services\interfaces\entities\IPermissionService;
+
+use cmsgears\core\common\services\traits\NameSlugTrait;
+
 /**
  * The class PermissionService is base class to perform database activities for Permission Entity.
  */
-class PermissionService extends \cmsgears\core\common\services\base\Service {
+class PermissionService extends \cmsgears\core\common\services\base\EntityService implements IPermissionService {
 
-	// Static Methods ----------------------------------------------
+	// Variables ---------------------------------------------------
 
-	// Read ----------------
+	// Globals -------------------------------
 
-	/**
-	 * @param integer $id
-	 * @return Permission
-	 */
-	public static function findById( $id ) {
+	// Constants --------------
 
-		return Permission::findById( $id );
-	}
+	// Public -----------------
 
-	public static function findByParentId( $id ) {
+	public static $modelClass	= '\cmsgears\core\common\models\entities\Permission';
 
-		return Permission::findByParentId( $id );
-	}
+	public static $modelTable	= CoreTables::TABLE_PERMISSION;
 
-	/**
-	 * @param string $slug
-	 * @return Permission
-	 */
-	public static function findBySlug( $slug ) {
+	public static $parentType	= CoreGlobal::TYPE_PERMISSION;
 
-		return Permission::findBySlug( $slug );
-	}
+	// Protected --------------
 
-	// Read - Maps -----
+	// Variables -----------------------------
 
-	/**
-	 * @param array $config
-	 * @return array - an array having id as key and name as value.
-	 */
-	public static function getIdNameMap( $config = [] ) {
+	// Public -----------------
 
-		return self::findMap( 'id', 'name', CoreTables::TABLE_PERMISSION, $config );
-	}
+	// Protected --------------
 
-	/**
-	 * @param array $config
-	 * @return array - an array having id as key and name as value.
-	 */
-	public static function getIdNameMapByType( $type, $config = [] ) {
+	// Private ----------------
 
-		$config[ 'conditions' ][ 'type' ] 	= $type;
+	// Traits ------------------------------------------------------
 
-		return self::getIdNameMap( $config );
-	}
+	use NameSlugTrait;
 
-	// Read - Lists ----
+	// Constructor and Initialisation ------------------------------
 
-	/**
-	 * @param array $config
-	 * @return array - An array of associative array of permission id and name.
-	 */
-	public static function getIdNameList( $config = [] ) {
+	// Instance methods --------------------------------------------
 
-		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_PERMISSION, $config );
-	}
+	// Yii parent classes --------------------
 
-	/**
-	 * @param string $id
-	 * @return array - An array of associative array of permission id and name.
-	 */
-	public static function getIdNameListByType( $type ) {
+	// yii\base\Component -----
 
-		if( isset( $type ) ) {
+	// CMG interfaces ------------------------
 
-			return self::getIdNameList( [ 'conditions' => [ 'type' => $type ] ] );
-		}
+	// CMG parent classes --------------------
 
-		return self::getIdNameList();
-	}
+	// PermissionService ---------------------
 
-	// Data Provider ----
+	// Data Provider ------
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+	// Read ---------------
 
-		return self::getDataProvider( new Permission(), $config );
-	}
+    // Read - Models ---
 
-	// Create -----------
+    // Read - Lists ----
 
-	/**
-	 * @param Permission $permission
-	 * @return Permission
-	 */
-	public static function create( $permission ) {
+    // Read - Maps -----
 
-		// Create Permission
-		$permission->save();
+	// Read - Others ---
 
-		// Return Permission
-		return $permission;
-	}
+	// Create -------------
 
-	// Update -----------
+	// Update -------------
 
-	/**
-	 * @param Permission $permission
-	 * @return Permission
-	 */
-	public static function update( $permission ) {
+	public function update( $model, $config = [] ) {
 
-		// Find existing Permission
-		$permissionToUpdate	= self::findById( $permission->id );
-
-		// Copy and set Attributes
-		$permissionToUpdate->copyForUpdateFrom( $permission, [ 'name', 'description' ] );
-
-		// Update Permission
-		$permissionToUpdate->update();
-
-		// Return updated Permission
-		return $permission;
-	}
+		return parent::update( $model, [
+			'attributes' => [ 'name', 'description' ]
+		]);
+ 	}
 
 	/**
 	 * @param BinderForm $binder
 	 * @return boolean
 	 */
-	public static function bindRoles( $binder ) {
+	public function bindRoles( $binder ) {
 
 		$permissionId	= $binder->binderId;
 		$roles			= $binder->bindedData;
@@ -166,22 +116,31 @@ class PermissionService extends \cmsgears\core\common\services\base\Service {
 		return true;
 	}
 
-	// Delete -----------
+	// Delete -------------
 
-	/**
-	 * @param Permission $permission
-	 * @return boolean
-	 */
-	public static function delete( $permission ) {
+	// Static Methods ----------------------------------------------
 
-		// Find existing Permisison
-		$permisisonToDelete	= self::findById( $permission->id );
+	// CMG parent classes --------------------
 
-		// Delete Permission
-		$permisisonToDelete->delete();
+	// PermissionService ---------------------
 
-		return true;
-	}
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

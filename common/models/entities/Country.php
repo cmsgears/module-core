@@ -65,14 +65,14 @@ class Country extends \cmsgears\core\common\models\base\Entity {
         $rules = [
             [ [ 'name', 'code' ], 'required' ],
             [ 'id', 'safe' ],
-            [ [ 'code', 'codeNum' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->smallText ],
-            [ 'name', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
+            [ [ 'code', 'codeNum' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+            [ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+            [ [ 'code' ], 'unique', 'targetAttribute' => [ 'code' ] ],
+            [ [ 'name' ], 'unique', 'targetAttribute' => [ 'name' ] ]
         ];
 
         // trim if required
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
             $trim[] = [ [ 'name', 'code' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -88,9 +88,9 @@ class Country extends \cmsgears\core\common\models\base\Entity {
     public function attributeLabels() {
 
         return [
-            'code' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE ),
-            'codeNum' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE_NUM ),
-            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
+            'code' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CODE ),
+            'codeNum' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CODE_NUM ),
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME )
         ];
     }
 
@@ -108,6 +108,11 @@ class Country extends \cmsgears\core\common\models\base\Entity {
     public function getProvinces() {
 
         return $this->hasMany( Province::className(), [ 'countryId' => 'id' ] );
+    }
+
+    public function getCities() {
+
+        return $this->hasMany( City::className(), [ 'countryId' => 'id' ] );
     }
 
 	// Static Methods ----------------------------------------------
@@ -129,6 +134,30 @@ class Country extends \cmsgears\core\common\models\base\Entity {
 	// Country -------------------------------
 
 	// Read - Query -----------
+
+	public static function queryWithAll( $config = [] ) {
+
+		$modelTable				= CoreTables::TABLE_COUNTRY;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'provinces', 'cities' ];
+		$config[ 'relations' ]	= $relations;
+		$config[ 'groups' ]		= [ "$modelTable.id" ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithProvinces( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'provinces' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithCities( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'cities' ];
+
+		return parent::queryWithAll( $config );
+	}
 
 	// Read - Find ------------
 

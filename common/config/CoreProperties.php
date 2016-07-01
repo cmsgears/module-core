@@ -13,7 +13,11 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 class CoreProperties extends CmgProperties {
 
+	// Variables ---------------------------------------------------
+
 	//TODO Add code for caching the properties
+
+	// Global -----------------
 
 	const DIR_TEMP					= 'temp/';
 	const DIR_AVATAR				= 'avatar/';
@@ -72,14 +76,25 @@ class CoreProperties extends CmgProperties {
 
 	const PROP_TIMEZONE				= 'timezone';
 
-	// Singleton instance
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	private static $instance;
 
 	// Constructor and Initialisation ------------------------------
 
- 	private function __construct() {
+	// Instance methods --------------------------------------------
 
-	}
+	// Yii parent classes --------------------
+
+	// CMG parent classes --------------------
+
+	// CoreProperties ------------------------
+
+	// Singleton
 
 	/**
 	 * Return Singleton instance.
@@ -95,6 +110,8 @@ class CoreProperties extends CmgProperties {
 
 		return self::$instance;
 	}
+
+	// Properties
 
 	/**
 	 * Returns Temp directory to store temporary files.

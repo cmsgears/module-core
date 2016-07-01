@@ -4,11 +4,24 @@ namespace cmsgears\core\common\base;
 // Yii Imports
 use \Yii;
 
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 abstract class Widget extends \yii\base\Widget {
 
 	// Variables ---------------------------------------------------
 
-	// Public Variables --------------------
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
 	// html options for Yii Widget
 	public $options 		= [];
@@ -28,20 +41,34 @@ abstract class Widget extends \yii\base\Widget {
 	 */
 	public $template		= 'simple';
 
-	// Instance Methods --------------------------------------------
+	// Protected --------------
 
-	// yii\base\Widget ----------------------
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Widget --------
 
 	/**
 	 * The method returns the view path for this widget if set while calling widget.
 	 */
 	public function getViewPath() {
 
+		// Return custom view path
 		if( isset( $this->templateDir ) ) {
 
 			return $this->templateDir;
 		}
 
+		// Return default view path
 		return parent::getViewPath();
 	}
 
@@ -50,13 +77,18 @@ abstract class Widget extends \yii\base\Widget {
 	 */
     public function run() {
 
+		// Render the widget
 		return $this->renderWidget();
     }
 
-	/**
-	 * Render logic to be implemented by child classes. The child classes can override run method to enhance rendering.
-	 */
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
 	abstract public function renderWidget( $config = [] );
+
+	// Widget --------------------------------
+
 }
 
 ?>

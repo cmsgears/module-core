@@ -10,13 +10,13 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Gallery;
 
-use cmsgears\core\common\models\traits\ParentTypeTrait;
+use cmsgears\core\common\models\traits\MapperTrait;
 
 /**
  * ModelGallery Entity
  *
  * @property integer $id
- * @property integer $galleryId
+ * @property integer $modelId
  * @property integer $parentId
  * @property string $parentType
  * @property string $type
@@ -45,7 +45,7 @@ class ModelGallery extends \cmsgears\core\common\models\base\Mapper {
 
 	// Traits ------------------------------------------------------
 
-	use ParentTypeTrait;
+	use MapperTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -65,12 +65,12 @@ class ModelGallery extends \cmsgears\core\common\models\base\Mapper {
 	public function rules() {
 
         return [
-            [ [ 'galleryId', 'parentId', 'parentType' ], 'required' ],
+            [ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
             [ [ 'id' ], 'safe' ],
-            [ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
+            [ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'active' ], 'boolean' ],
-            [ [ 'galleryId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+            [ [ 'modelId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
         ];
     }
 
@@ -80,12 +80,12 @@ class ModelGallery extends \cmsgears\core\common\models\base\Mapper {
 	public function attributeLabels() {
 
 		return [
-			'galleryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_GALLERY ),
-			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
+			'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GALLERY ),
+			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
 		];
 	}
 
@@ -102,7 +102,7 @@ class ModelGallery extends \cmsgears\core\common\models\base\Mapper {
 	 */
 	public function getGallery() {
 
-    	return $this->hasOne( Gallery::className(), [ 'id' => 'galleryId' ] );
+    	return $this->hasOne( Gallery::className(), [ 'id' => 'modelId' ] );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -125,15 +125,20 @@ class ModelGallery extends \cmsgears\core\common\models\base\Mapper {
 
 	// Read - Query -----------
 
-	public static function queryByGalleryId( $parentId, $parentType, $galleryId ) {
+	public static function queryWithAll( $config = [] ) {
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND galleryId=:aid', [ ':pid' => $parentId, ':ptype' => $parentType, ':aid' => $galleryId ] );
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'gallery' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
 	}
 
-    public static function queryByParentId( $parentId ) {
+	public static function queryWithModel( $config = [] ) {
 
-        return self::find()->where( 'parentId=:pid',[ ':pid' => $parentId ] );
-    }
+		$config[ 'relations' ]	= [ 'gallery' ];
+
+		return parent::queryWithAll( $config );
+	}
 
 	// Read - Find ------------
 
@@ -143,10 +148,6 @@ class ModelGallery extends \cmsgears\core\common\models\base\Mapper {
 
 	// Delete -----------------
 
-	public static function deleteByGalleryId( $galleryId ) {
-
-		self::deleteAll( 'galleryId=:id', [ ':id' => $galleryId ] );
-	}
 }
 
 ?>

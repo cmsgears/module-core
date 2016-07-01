@@ -5,120 +5,130 @@ namespace cmsgears\core\common\services\resources;
 use \Yii;
 
 // CMG Imports
-use cmsgears\core\common\models\resources\CmgFile;
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\models\mappers\ModelFile;
 
-// TODO: Delete existing file while replacing the file.
+use cmsgears\core\common\services\interfaces\resources\IFileService;
 
 /**
  * The class FileService is base class to perform database activities for CmgFile Entity.
  */
-class FileService extends \cmsgears\core\common\services\base\Service {
+class FileService extends \cmsgears\core\common\services\base\EntityService implements IFileService {
 
-	// Static Methods ----------------------------------------------
+	// Variables ---------------------------------------------------
 
-	// Read ----------------
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\core\common\models\resources\File';
+
+	public static $modelTable	= CoreTables::TABLE_FILE;
+
+	public static $parentType	= CoreGlobal::TYPE_FILE;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// FileService ---------------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
 
 	/**
-	 * @param integer $id
-	 * @return CmgFile
+	 * It create the file with visibility set to public by default. It also disallow the file to be shared among multiple models.
+	 * If file sharing is set to false, it will be deleted with model and can't be browsed using file browser.
 	 */
-	public static function findById( $id ) {
+ 	public function create( $model, $config = [] ) {
 
-		return CmgFile::findById( $id );
-	}
+		// Default visibility
+		if( !isset( $model->visibility ) ) {
 
-	// Data Provider ----
+			$model->visibility = File::VISIBILITY_PUBLIC;
+		}
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+		// Default sharing
+		if( !isset( $model->shared ) ) {
 
-		return self::getDataProvider( new CmgFile(), $config );
-	}
-
-	// Create -----------
-
-	/**
-	 * @param CmgFile $file
-	 * @return CmgFile
-	 */
-	public static function create( $file ) {
-
-		$user				= Yii::$app->user->getIdentity();
-		$file->createdBy	= $user->id;
-
-		// File Visibility
-		if( !isset( $file->visibility ) ) {
-
-			$file->visibility = CmgFile::VISIBILITY_PUBLIC;
+			$model->shared = false;
 		}
 
 		// Create File
-		$file->save();
+		$model->save();
 
 		// Return File
-		return $file;
-	}
+		return $model;
+ 	}
 
-	// Update -----------
+	// Update -------------
 
-	/**
-	 * The method updates the file information in cases when actual file is not changed.
-	 * @param CmgFile $file
-	 * @return CmgFile
-	 */
-	public static function update( $file ) {
+	public function update( $model, $config = [] ) {
 
-		// Find existing file
-		$fileToUpdate	= self::findById( $file->id );
+		if( $model->changed ) {
 
-		if( isset( $fileToUpdate ) ) {
+			// Find existing file
+			$existingFile	= self::findById( $model->id );
 
-			// Copy and set Attributes
-			$user						= Yii::$app->user->getIdentity();
-			$fileToUpdate->modifiedBy	= $user->id;
-
-			$fileToUpdate->copyForUpdateFrom( $file, [ 'title', 'description', 'altText', 'link', 'visibility', 'type' ] );
-
-			// Update File
-			$fileToUpdate->update();
-
-			// Return updated File
-			return $fileToUpdate;
+			// Delete from disk
+			$existingFile->clearDisk();
 		}
 
-		return false;
+		return parent::update( $model, [
+			'attributes' => [ 'title', 'description', 'altText', 'link', 'visibility', 'type' ]
+		]);
 	}
 
-	/**
-	 * The method updates the file information when actual file is also changed.
-	 * @param CmgFile $file
-	 * @return CmgFile
-	 */
-	public static function updateData( $file ) {
+	public function updateData( $model, $config = [] ) {
 
-		// Find existing file
-		$fileToUpdate	= self::findById( $file->id );
+		if( $model->changed ) {
 
-		if( isset( $fileToUpdate ) ) {
+			// Find existing file
+			$existingFile	= self::findById( $model->id );
 
-			// Copy and set Attributes
-			$user						= Yii::$app->user->getIdentity();
-			$fileToUpdate->modifiedBy	= $user->id;
-
-			$fileToUpdate->copyForUpdateFrom( $file, [ 'title', 'description', 'altText', 'link', 'visibility', 'type', 'name', 'directory', 'extension', 'url', 'thumb' ] );
-
-			// Update File
-			$fileToUpdate->update();
-
-			// Return updated File
-			return $fileToUpdate;
+			// Delete from disk
+			$existingFile->clearDisk();
 		}
 
-		return false;
+		return parent::update( $model, [
+			'attributes' => [ 'title', 'description', 'altText', 'link', 'visibility', 'type', 'name', 'directory', 'extension', 'url', 'medium', 'thumb' ]
+		]);
 	}
 
 	/**
@@ -126,7 +136,7 @@ class FileService extends \cmsgears\core\common\services\base\Service {
 	 * @param CmgFile $file
 	 * @param array $args
 	 */
-	public static function saveImage( $file, $args = [] ) {
+	public function saveImage( $file, $args = [] ) {
 
 		// Save only when filename is provided
 		if( strlen( $file->name ) > 0 ) {
@@ -136,6 +146,8 @@ class FileService extends \cmsgears\core\common\services\base\Service {
 			$attribute		= null;
 			$width 			= null;
 			$height 		= null;
+			$mwidth 		= null;
+			$mheight 		= null;
 			$twidth 		= null;
 			$theight 		= null;
 
@@ -151,6 +163,8 @@ class FileService extends \cmsgears\core\common\services\base\Service {
 				// Image dimensions to crop actual image uploaded by users
 				if( isset( $args[ 'width' ] ) ) 	$width 		= $args[ 'width' ];
 				if( isset( $args[ 'height' ] ) ) 	$height 	= $args[ 'height' ];
+				if( isset( $args[ 'mwidth' ] ) ) 	$twidth 	= $args[ 'mwidth' ];
+				if( isset( $args[ 'mheight' ] ) ) 	$theight 	= $args[ 'mheight' ];
 				if( isset( $args[ 'twidth' ] ) ) 	$twidth 	= $args[ 'twidth' ];
 				if( isset( $args[ 'theight' ] ) ) 	$theight 	= $args[ 'theight' ];
 
@@ -161,6 +175,12 @@ class FileService extends \cmsgears\core\common\services\base\Service {
 					$height		= $file->height;
 				}
 
+				if( isset( $file->mwidth ) && isset( $file->mheight ) ) {
+
+					$mwidth		= $file->mwidth;
+					$mheight	= $file->mheight;
+				}
+
 				if( isset( $file->twidth ) && isset( $file->theight ) ) {
 
 					$twidth		= $file->twidth;
@@ -168,17 +188,17 @@ class FileService extends \cmsgears\core\common\services\base\Service {
 				}
 
 				// Process Image
-				$fileManager->processImage( $file, $width, $height, $twidth, $theight );
+				$fileManager->processImage( $file, $width, $height, $mwidth, $mheight, $twidth, $theight );
 			}
 
 			// New File
-			if( !isset( $fileId ) || strlen( $fileId ) <= 0 ) {
+			if( !isset( $fileId ) || strlen( $fileId ) <= 0 || intval( $fileId ) <= 0 ) {
 
 				// unset id
 				$file->id 		= null;
 
 				// create
-				self::create( $file );
+				$this->create( $file );
 
 				// Update model attribute
 				if( isset( $model ) && isset( $attribute ) ) {
@@ -189,12 +209,12 @@ class FileService extends \cmsgears\core\common\services\base\Service {
 			// Existing File - Image Changed
 			else if( $file->changed ) {
 
-				self::updateData( $file );
+				$this->updateData( $file );
 			}
 			// Existing File - Info Changed
 			else if( isset( $fileId ) && intval( $fileId ) > 0 ) {
 
-				self::update( $file );
+				$this->update( $file );
 			}
 
 			$file->changed	= false;
@@ -208,7 +228,7 @@ class FileService extends \cmsgears\core\common\services\base\Service {
 	 * @param CmgFile $file
 	 * @param array $args
 	 */
-	public static function saveFile( $file, $args = [] ) {
+	public function saveFile( $file, $args = [] ) {
 
 		// Save only when filename is provided
 		if( strlen( $file->name ) > 0 ) {
@@ -236,7 +256,7 @@ class FileService extends \cmsgears\core\common\services\base\Service {
 				$file->id = null;
 
 				// create
-				self::create( $file );
+				$this->create( $file );
 
 				// Update model attribute
 				if( isset( $model ) && isset( $attribute ) ) {
@@ -247,12 +267,12 @@ class FileService extends \cmsgears\core\common\services\base\Service {
 			// Existing File - File Changed
 			else if( $file->changed ) {
 
-				self::updateData( $file );
+				$this->updateData( $file );
 			}
 			// Existing File - Info Changed
 			else if( isset( $fileId ) && intval( $fileId ) > 0 ) {
 
-				self::update( $file );
+				$this->update( $file );
 			}
 
 			$file->changed	= false;
@@ -261,7 +281,7 @@ class FileService extends \cmsgears\core\common\services\base\Service {
 		return $file;
 	}
 
-	public static function saveFiles( $model, $files = [] ) {
+	public function saveFiles( $model, $files = [] ) {
 
 		foreach ( $files as $key => $value ) {
 
@@ -269,45 +289,67 @@ class FileService extends \cmsgears\core\common\services\base\Service {
 
 				if( $value->type == 'image' ) {
 
-					FileService::saveImage( $value, [ 'model' => $model, 'attribute' => $key ] );
+					$this->saveImage( $value, [ 'model' => $model, 'attribute' => $key ] );
 				}
 				else {
 
-					FileService::saveFile( $value, [ 'model' => $model, 'attribute' => $key ] );
+					$this->saveFile( $value, [ 'model' => $model, 'attribute' => $key ] );
 				}
 			}
 		}
 	}
 
-	// Delete -----------
+	// Delete -------------
 
-	public static function delete( $file ) {
+	public function delete( $model, $config = [] ) {
 
-		// Delete dependency
-		ModelFile::deleteByFileId( $file->id );
+		// Delete dependencies
+		ModelFile::deleteByModelId( $model->id );
 
-		// Find existing File
-		$existingFile	= self::findById( $file->id );
+		// Find existing file
+		$existingFile	= self::findById( $model->id );
 
-		if( isset( $existingFile ) ) {
+		// Delete from disk
+		$existingFile->clearDisk();
 
-			// Delete File
-			$existingFile->delete();
-		}
-
-		return true;
+		// Delete model
+		return parent::delete( $model, $config );
 	}
 
-	public static function deleteFiles( $files = [] ) {
+	public function deleteFiles( $files = [] ) {
 
 		foreach ( $files as $file ) {
 
 			if( isset( $file ) ) {
 
-				self::delete( $file );
+				$this->delete( $file );
 			}
 		}
 	}
+
+	// Static Methods ----------------------------------------------
+
+	// CMG parent classes --------------------
+
+	// FileService ---------------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

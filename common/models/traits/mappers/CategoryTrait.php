@@ -1,6 +1,12 @@
 <?php
 namespace cmsgears\core\common\models\traits\mappers;
 
+// Yii Import
+use \Yii;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Category;
 use cmsgears\core\common\models\mappers\ModelCategory;
@@ -28,7 +34,7 @@ trait CategoryTrait {
 
 		$category	= CoreTables::TABLE_CATEGORY;
 
-    	$query = $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
+    	$query = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
 
 						$modelCategory	= CoreTables::TABLE_MODEL_CATEGORY;
@@ -49,7 +55,7 @@ trait CategoryTrait {
 
 		$category	= CoreTables::TABLE_CATEGORY;
 
-    	$query = $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
+    	$query = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
 
 						$modelCategory	= CoreTables::TABLE_MODEL_CATEGORY;
@@ -70,7 +76,7 @@ trait CategoryTrait {
 
 		$category	= CoreTables::TABLE_CATEGORY;
 
-		$categories = $this->hasMany( Category::className(), [ 'id' => 'categoryId' ] )
+		$categories = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
 							->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
 
 								$modelCategory	= CoreTables::TABLE_MODEL_CATEGORY;

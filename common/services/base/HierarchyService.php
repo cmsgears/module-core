@@ -8,12 +8,14 @@ use yii\db\Query;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\services\interfaces\base\IHierarchyService;
+
 // Reference: http://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/, http://we-rc.com/blog/2015/07/19/nested-set-model-practical-examples-part-i
 
 /**
  * Managing hierarchy using Nested Set Model
  */
-class HierarchyService extends EntityService {
+abstract class HierarchyService extends EntityService implements IHierarchyService {
 
 	// Variables ---------------------------------------------------
 
@@ -47,7 +49,7 @@ class HierarchyService extends EntityService {
 
 	// CMG parent classes --------------------
 
-	// <Service> -----------------------------
+	// HierarchyService ----------------------
 
 	// Data Provider ------
 
@@ -55,7 +57,32 @@ class HierarchyService extends EntityService {
 
     // Read - Models ---
 
+	public function getChildNodes( $parentId, $config = [] ) {
+
+		return self::findChildNodes( $parentId, $config );
+	}
+
+	public function getLeafNodes( $rootId, $config = [] ) {
+
+		return self::findLeafNodes( $rootId, $config );
+	}
+
+	public function getParentNodes( $leafId, $config = [] ) {
+
+		return self::findParentNodes( $leafId, $config );
+	}
+
     // Read - Lists ----
+
+	public function getLevelList( $parentId, $rootId, $config = [] ) {
+
+		return self::findLevelList( $parentId, $rootId, $config );
+	}
+
+	public function getSubLevelList( $parentId, $rootId, $config = [] ) {
+
+		return self::findSubLevelList( $parentId, $rootId, $config );
+	}
 
     // Read - Maps -----
 
@@ -63,223 +90,9 @@ class HierarchyService extends EntityService {
 
 	// Create -------------
 
-	// Update -------------
+	public function createInHierarchy( $model ) {
 
-	// Delete -------------
-
-	// Static Methods ----------------------------------------------
-
-	// CMG parent classes --------------------
-
-	// <Service> -----------------------------
-
-	// Data Provider ------
-
-	// Read ---------------
-
-    // Read - Models ---
-
-	/** Return all the possible trees in hierarchical fashion with depth level and given conditions.
-	 * Example Query for category without conditions:
-		select node.id, node.name, node.rootId, ( COUNT( parent.id ) - 1 ) AS depth
-		from cmg_core_category AS node, cmg_core_category AS parent
-		where node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId
-		group by node.id
-		order by node.rootId, node.lValue, depth;
-	 * Example Query for category with condition having specific type:
-		select node.id, node.name, node.rootId, ( COUNT( parent.id ) - 1 ) AS depth
-		from cmg_core_category AS node, cmg_core_category AS parent
-		where node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId AND node.type = '<type value>'
-		group by node.id
-		order by node.rootId, node.lValue, depth;
-	 */
-	public static function findLevelList( $conditions = [] ) {
-
-		$query	= new Query();
-
-		$query->select( 'node.id, node.name, node.rootId, node.lValue, node.rValue, ( COUNT( parent.id ) - 1 ) AS depth' );
-		$query->from( 'cmg_core_category AS node, cmg_core_category AS parent' );
-		$query->where( 'node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId' );
-
-		if( isset( $conditions ) && count( $conditions ) > 0 ) {
-
-			$query->andWhere( $conditions );
-		}
-
-		$query->groupBy( 'node.id' );
-		$query->orderBy( 'node.rootId, node.lValue, depth' );
-
-		// Create command
-		$command 	= $query->createCommand();
-
-		// Execute the command
-		$list 		= $command->queryAll();
-
-		return $list;
-	}
-
-	/** Return all the possible sub trees in hierarchical fashion with depth level for parent id, root id and given conditions.
-	 * We can also enhance the below mentioned query by applying filter on depth value by providing $having. Ex: 'depth <= 1'
-	 * Example Query for category without conditions:
-		select node.id, node.name, node.rootId, (COUNT(parent.id) - (sub_tree.depth + 1)) AS depth
-		from cmg_core_category AS node, cmg_core_category AS parent,
-			cmg_core_category AS sub_parent,
-					(
-							SELECT node.id, node.name, (COUNT(parent.id) - 1) AS depth
-							FROM cmg_core_category AS node,
-							cmg_core_category AS parent
-							WHERE node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId AND node.rootId=<root id>
-							AND node.id = <parent id>
-							GROUP BY node.id
-							ORDER BY node.lValue
-					)AS sub_tree
-		where node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId AND node.rootId=<root id>
-			AND node.lValue BETWEEN sub_parent.lValue AND sub_parent.rValue
-			AND sub_parent.id = sub_tree.id
-		group by node.id
-		order by node.rootId, node.lValue, depth;
-	 */
-	public static function findSubLevelList( $parentId, $rootId, $conditions = [], $having = null ) {
-
-		$query	= new Query();
-
-		$subSelect	= "(
-							SELECT `node`.`id`, `node`.`name`, (COUNT(`parent`.`id`) - 1) AS `depth`
-							FROM `cmg_core_category` AS `node`,
-							`cmg_core_category` AS `parent`
-							WHERE `node`.`lValue` BETWEEN `parent`.`lValue` AND `parent`.`rValue` AND `node`.`rootId`=`parent`.`rootId` AND `node`.`rootId`=$rootId
-							AND `node`.`id` = $parentId
-							GROUP BY `node`.`id`
-							ORDER BY `node`.`lValue`
-						)AS sub_tree";
-
-		$query->select( 'node.id, node.name, node.rootId, node.lValue, node.rValue, (COUNT(parent.id) - (sub_tree.depth + 1)) AS depth' );
-		$query->from( "cmg_core_category AS node, cmg_core_category AS parent, cmg_core_category AS sub_parent, $subSelect" );
-		$query->where( "node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId AND node.rootId=$rootId" );
-		$query->andWhere( "node.lValue BETWEEN sub_parent.lValue AND sub_parent.rValue" );
-		$query->andWhere( "sub_parent.id = sub_tree.id" );
-
-		if( isset( $conditions ) && count( $conditions ) > 0 ) {
-
-			$query->andWhere( $conditions );
-		}
-
-		$query->groupBy( 'node.id' );
-
-		if( isset( $having ) ) {
-
-			$query->having( $having );
-		}
-
-		$query->orderBy( 'node.rootId, node.lValue, depth' );
-
-		// Create command
-		$command 	= $query->createCommand();
-
-		// Execute the command
-		$list 		= $command->queryAll();
-
-		return $list;
-	}
-
-	/** Return all the child nodes for given parent id
-	 * Example query for category without conditions:
-		SELECT node.id, node.name
-		FROM cmg_core_category AS node, cmg_core_category AS parent
-		WHERE node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId AND parent.id=<parent id> order by node.lValue;
-	 */
-	public static function findChildNodes( $table, $parentId, $conditions = [] ) {
-
-		$query	= new Query();
-
-		$query->select( 'node.id, node.name' );
-		$query->from( "$table AS node, $table AS parent" );
-		$query->where( "node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId AND parent.id=$parentId" );
-
-		if( isset( $conditions ) && count( $conditions ) > 0 ) {
-
-			$query->andWhere( $conditions );
-		}
-
-		$query->orderBy( 'node.lValue' );
-
-		// Create command
-		$command 	= $query->createCommand();
-
-		// Execute the command
-		$list 		= $command->queryAll();
-
-		return $list;
-	}
-
-	/** Return all the leaf nodes for given root id
-	 * Example query for category without conditions:
-		SELECT id, name
-		FROM cmg_core_category
-		WHERE rValue = lValue + 1 AND rootId=<root id>;
-	 */
-	public static function findLeafNodes( $table, $rootId, $conditions = [] ) {
-
-		$query	= new Query();
-
-		$query->select( 'id, name' );
-		$query->from( $table );
-		$query->where( "rValue = lValue + 1 AND rootId=$rootId" );
-
-		if( isset( $conditions ) && count( $conditions ) > 0 ) {
-
-			$query->andWhere( $conditions );
-		}
-
-		// Create command
-		$command 	= $query->createCommand();
-
-		// Execute the command
-		$list 		= $command->queryAll();
-
-		return $list;
-	}
-
-	/** Return all the parents for given leaf id
-	 * Example query for category without conditions:
-		SELECT parent.id, parent.name
-		FROM cmg_core_category AS node, cmg_core_category AS parent
-		where node.lValue BETWEEN parent.lValue AND parent.rValue AND parent.rootId = node.rootId AND node.id = <leaf id>
-		ORDER BY node.lValue;
-	 */
-	public static function findParentNodes( $table, $leafId, $conditions = [] ) {
-
-		$query	= new Query();
-
-		$query->select( 'parent.id, parent.name' );
-		$query->from( "$table AS node, $table AS parent" );
-		$query->where( "where node.lValue BETWEEN parent.lValue AND parent.rValue AND parent.rootId = node.rootId AND node.id=$leafId" );
-
-		if( isset( $conditions ) && count( $conditions ) > 0 ) {
-
-			$query->andWhere( $conditions );
-		}
-
-		$query->orderBy( 'node.lValue' );
-
-		// Create command
-		$command 	= $query->createCommand();
-
-		// Execute the command
-		$list 		= $command->queryAll();
-
-		return $list;
-	}
-
-    // Read - Lists ----
-
-    // Read - Maps -----
-
-	// Read - Others ---
-
-	// Create -------------
-
-	public static function createInHierarchy( $table, $model ) {
+		$table		= static::$modelTable;
 
 		// Manage Hierarchy
 
@@ -353,14 +166,16 @@ class HierarchyService extends EntityService {
 
 	// Update -------------
 
-	public static function updateInHierarchy( $table, $model, $modelToUpdate ) {
+	public function updateInHierarchy( $model, $modelToUpdate ) {
+
+		$table		= static::$modelTable;
 
 		$rootId		= $model->rootId;
 		$lValue		= $model->lValue;
 		$rValue		= $model->rValue;
 
 		// Remove from hierarchy
-		self::deleteAllInHierarchy( $table, $modelToUpdate );
+		$this->deleteAllInHierarchy( $modelToUpdate );
 
 		// Parent Unset
 		if( $model->parentId <= 0 && isset( $modelToUpdate->parentId ) && $modelToUpdate->parentId > 0 ) {
@@ -416,7 +231,9 @@ class HierarchyService extends EntityService {
 
 	// Delete -------------
 
-	public static function deleteInHierarchy( $table, $model ) {
+	public function deleteInHierarchy( $model ) {
+
+		$table		= static::$modelTable;
 
 		$parent		= $model->parent;
 		$children 	= $model->children;
@@ -503,7 +320,9 @@ class HierarchyService extends EntityService {
 		return $model;
 	}
 
-	public static function deleteAllInHierarchy( $table, $model ) {
+	public function deleteAllInHierarchy( $model ) {
+
+		$table		= static::$modelTable;
 
 		$parent		= $model->parent;
 		$children 	= $model->children;
@@ -545,6 +364,239 @@ class HierarchyService extends EntityService {
 
 		return $model;
 	}
+
+	// Static Methods ----------------------------------------------
+
+	// CMG parent classes --------------------
+
+	// HierarchyService ----------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+	/** Return all the possible trees in hierarchical fashion with depth level and given conditions.
+	 * Example Query for category without conditions:
+		select node.id, node.name, node.rootId, ( COUNT( parent.id ) - 1 ) AS depth
+		from cmg_core_category AS node, cmg_core_category AS parent
+		where node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId
+		group by node.id
+		order by node.rootId, node.lValue, depth;
+	 * Example Query for category with condition having specific type:
+		select node.id, node.name, node.rootId, ( COUNT( parent.id ) - 1 ) AS depth
+		from cmg_core_category AS node, cmg_core_category AS parent
+		where node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId AND node.type = '<type value>'
+		group by node.id
+		order by node.rootId, node.lValue, depth;
+	 */
+	public static function findLevelList( $config = [] ) {
+
+		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+
+		$modelTable		= static::$modelTable;
+		$query			= new Query();
+
+		$query->select( 'node.id, node.name, node.rootId, node.lValue, node.rValue, ( COUNT( parent.id ) - 1 ) AS depth' );
+		$query->from( "$modelTable AS node, $modelTable AS parent" );
+		$query->where( 'node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId' );
+
+		if( isset( $conditions ) && count( $conditions ) > 0 ) {
+
+			$query->andWhere( $conditions );
+		}
+
+		$query->groupBy( 'node.id' );
+		$query->orderBy( 'node.rootId, node.lValue, depth' );
+
+		// Create command
+		$command 	= $query->createCommand();
+
+		// Execute the command
+		$list 		= $command->queryAll();
+
+		return $list;
+	}
+
+	/** Return all the possible sub trees in hierarchical fashion with depth level for parent id, root id and given conditions.
+	 * We can also enhance the below mentioned query by applying filter on depth value by providing $having. Ex: 'depth <= 1'
+	 * Example Query for category without conditions:
+		select node.id, node.name, node.rootId, (COUNT(parent.id) - (sub_tree.depth + 1)) AS depth
+		from cmg_core_category AS node, cmg_core_category AS parent,
+			cmg_core_category AS sub_parent,
+					(
+							SELECT node.id, node.name, (COUNT(parent.id) - 1) AS depth
+							FROM cmg_core_category AS node,
+							cmg_core_category AS parent
+							WHERE node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId AND node.rootId=<root id>
+							AND node.id = <parent id>
+							GROUP BY node.id
+							ORDER BY node.lValue
+					)AS sub_tree
+		where node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId AND node.rootId=<root id>
+			AND node.lValue BETWEEN sub_parent.lValue AND sub_parent.rValue
+			AND sub_parent.id = sub_tree.id
+		group by node.id
+		order by node.rootId, node.lValue, depth;
+	 */
+	public static function findSubLevelList( $parentId, $rootId, $config = [] ) {
+
+		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+		$having			= isset( $config[ 'having' ] ) ? $config[ 'having' ] : null;
+
+		$modelTable		= static::$modelTable;
+		$query			= new Query();
+
+		$subSelect	= "(
+							SELECT `node`.`id`, `node`.`name`, (COUNT(`parent`.`id`) - 1) AS `depth`
+							FROM `$modelTable` AS `node`,
+							`$modelTable` AS `parent`
+							WHERE `node`.`lValue` BETWEEN `parent`.`lValue` AND `parent`.`rValue` AND `node`.`rootId`=`parent`.`rootId` AND `node`.`rootId`=$rootId
+							AND `node`.`id` = $parentId
+							GROUP BY `node`.`id`
+							ORDER BY `node`.`lValue`
+						)AS sub_tree";
+
+		$query->select( 'node.id, node.name, node.rootId, node.lValue, node.rValue, (COUNT(parent.id) - (sub_tree.depth + 1)) AS depth' );
+		$query->from( "$modelTable AS node, $modelTable AS parent, $modelTable AS sub_parent, $subSelect" );
+		$query->where( "node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId AND node.rootId=$rootId" );
+		$query->andWhere( "node.lValue BETWEEN sub_parent.lValue AND sub_parent.rValue" );
+		$query->andWhere( "sub_parent.id = sub_tree.id" );
+
+		if( isset( $conditions ) && count( $conditions ) > 0 ) {
+
+			$query->andWhere( $conditions );
+		}
+
+		$query->groupBy( 'node.id' );
+
+		if( isset( $having ) ) {
+
+			$query->having( $having );
+		}
+
+		$query->orderBy( 'node.rootId, node.lValue, depth' );
+
+		// Create command
+		$command 	= $query->createCommand();
+
+		// Execute the command
+		$list 		= $command->queryAll();
+
+		return $list;
+	}
+
+	/** Return all the child nodes for given parent id
+	 * Example query for category without conditions:
+		SELECT node.id, node.name
+		FROM cmg_core_category AS node, cmg_core_category AS parent
+		WHERE node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId AND parent.id=<parent id> order by node.lValue;
+	 */
+	public static function findChildNodes( $parentId, $config = [] ) {
+
+		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+
+		$modelTable		= static::$modelTable;
+		$query			= new Query();
+
+		$query->select( 'node.id, node.name' );
+		$query->from( "$modelTable AS node, $modelTable AS parent" );
+		$query->where( "node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId AND parent.id=$parentId" );
+
+		if( isset( $conditions ) && count( $conditions ) > 0 ) {
+
+			$query->andWhere( $conditions );
+		}
+
+		$query->orderBy( 'node.lValue' );
+
+		// Create command
+		$command 	= $query->createCommand();
+
+		// Execute the command
+		$list 		= $command->queryAll();
+
+		return $list;
+	}
+
+	/** Return all the leaf nodes for given root id
+	 * Example query for category without conditions:
+		SELECT id, name
+		FROM cmg_core_category
+		WHERE rValue = lValue + 1 AND rootId=<root id>;
+	 */
+	public static function findLeafNodes( $rootId, $config = [] ) {
+
+		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+
+		$modelTable		= static::$modelTable;
+		$query			= new Query();
+
+		$query->select( 'id, name' );
+		$query->from( $modelTable );
+		$query->where( "rValue = lValue + 1 AND rootId=$rootId" );
+
+		if( isset( $conditions ) && count( $conditions ) > 0 ) {
+
+			$query->andWhere( $conditions );
+		}
+
+		// Create command
+		$command 	= $query->createCommand();
+
+		// Execute the command
+		$list 		= $command->queryAll();
+
+		return $list;
+	}
+
+	/** Return all the parents for given leaf id
+	 * Example query for category without conditions:
+		SELECT parent.id, parent.name
+		FROM cmg_core_category AS node, cmg_core_category AS parent
+		where node.lValue BETWEEN parent.lValue AND parent.rValue AND parent.rootId = node.rootId AND node.id = <leaf id>
+		ORDER BY node.lValue;
+	 */
+	public static function findParentNodes( $leafId, $config = [] ) {
+
+		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+
+		$modelTable		= static::$modelTable;
+		$query			= new Query();
+
+		$query->select( 'parent.id, parent.name' );
+		$query->from( "$modelTable AS node, $modelTable AS parent" );
+		$query->where( "where node.lValue BETWEEN parent.lValue AND parent.rValue AND parent.rootId = node.rootId AND node.id=$leafId" );
+
+		if( isset( $conditions ) && count( $conditions ) > 0 ) {
+
+			$query->andWhere( $conditions );
+		}
+
+		$query->orderBy( 'node.lValue' );
+
+		// Create command
+		$command 	= $query->createCommand();
+
+		// Execute the command
+		$list 		= $command->queryAll();
+
+		return $list;
+	}
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
+
 }
 
 ?>

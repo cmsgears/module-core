@@ -71,8 +71,8 @@ class Option extends \cmsgears\core\common\models\base\Resource {
         $rules = [
             [ [ 'name' ], 'required' ],
             [ [ 'id', 'value', 'htmlOptions', 'content', 'data' ], 'safe' ],
-            [ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
+            [ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
         ];
@@ -94,12 +94,12 @@ class Option extends \cmsgears\core\common\models\base\Resource {
     public function attributeLabels() {
 
         return [
-            'categoryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CATEGORY ),
-            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
-            'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-            'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-            'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
+            'categoryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CATEGORY ),
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
+            'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+            'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+            'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
         ];
     }
 
@@ -118,7 +118,7 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 
             if( self::isExistByNameCategoryId( $this->name, $this->categoryId ) ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
@@ -134,7 +134,7 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 
             if( isset( $existingOption ) && $existingOption->id != $this->id ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
@@ -169,15 +169,22 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Query -----------
 
+	public static function queryWithAll( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'category' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithCategory( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'category' ];
+
+		return parent::queryWithAll( $config );
+	}
+
 	// Read - Find ------------
-
-    /**
-     * @return Option - by category
-     */
-    public static function findByCategory( $category ) {
-
-        return self::find()->where( 'categoryId=:id', [ ':id' => $category->id ] )->all();
-    }
 
     /**
      * @return Option - by category id
@@ -188,25 +195,13 @@ class Option extends \cmsgears\core\common\models\base\Resource {
     }
 
     /**
-     * @return Option - by category name
+     * @return Option - by category slug and type
      */
-    public static function findByCategoryName( $categoryName, $categoryType ) {
+    public static function findByCategorySlugType( $categorySlug, $categoryType ) {
 
         $categoryTable = CoreTables::TABLE_CATEGORY;
 
-        return self::find()->joinWith( 'category' )->where( "$categoryTable.name=:cname AND $categoryTable.type=:ctype" )
-                            ->addParams( [ ':cname' => $categoryName, ':ctype' => $categoryType ] )
-                            ->all();
-    }
-
-    /**
-     * @return Option - by name and category
-     */
-    public static function findByNameCategory( $name, $category ) {
-
-        $optionTable = CoreTables::TABLE_OPTION;
-
-        return self::find()->where( "$optionTable.name=:name AND categoryId=:id", [ ':name' => $name, ':id' => $category->id ] )->one();
+        return self::queryWithCategory( [ 'conditions' => [ "$categoryTable.slug" => $categorySlug, "$categoryTable.type" => $categoryType ] ] )->all();
     }
 
     /**
@@ -227,32 +222,6 @@ class Option extends \cmsgears\core\common\models\base\Resource {
         $option = self::findByNameCategoryId( $name, $categoryId );
 
         return isset( $option );
-    }
-
-    /**
-     * @return Option - by name and category name
-     */
-    public static function findByNameCategoryName( $name, $categoryName, $categoryType ) {
-
-        $categoryTable  = CoreTables::TABLE_CATEGORY;
-        $optionTable    = CoreTables::TABLE_OPTION;
-
-        return self::findWithAlias()->joinWith( 'category' )->where( "$optionTable.name=:name AND $categoryTable.name=:cname AND $categoryTable.type=:ctype" )
-                            ->addParams( [ ':name' => $name, ':cname' => $categoryName, ':ctype' => $categoryType ] )
-                            ->one();
-    }
-
-    /**
-     * @return Option - by value and category id
-     */
-    public static function findByValueCategoryName( $value, $categoryName, $categoryType ) {
-
-        $categoryTable  = CoreTables::TABLE_CATEGORY;
-        $optionTable    = CoreTables::TABLE_OPTION;
-
-        return self::findWithAlias()->joinWith( 'category' )->where( "$optionTable.value=:value AND $categoryTable.name=:cname AND $categoryTable.type=:ctype" )
-                            ->addParams( [ ':value' => $value, ':cname' => $categoryName, ':ctype' => $categoryType ] )
-                            ->one();
     }
 
 	// Create -----------------

@@ -3,11 +3,22 @@ namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
 use \Yii;
+use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class FileController extends \cmsgears\core\common\controllers\apix\FileController {
+class FileController extends \cmsgears\core\admin\controllers\base\Controller {
+
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
@@ -18,18 +29,47 @@ class FileController extends \cmsgears\core\common\controllers\apix\FileControll
 		$this->enableCsrfValidation = false;
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
 	public function behaviors() {
 
-        $behaviors  = parent::behaviors();
-        
-        $behaviors[ 'rbac' ][ 'actions' ]   = [ 'fileHandler' => [ 'permission' => CoreGlobal::PERM_ADMIN ] ];
-        
-        return $behaviors;
+        return [
+            'rbac' => [
+                'class' => Yii::$app->core->getRbacFilterClass(),
+                'actions' => [
+	                'fileHandler'  => [ 'permission' => CoreGlobal::PERM_ADMIN ]
+                ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+	                'fileHandler'  => [ 'post' ]
+                ]
+            ]
+        ];
     }
+
+	// yii\base\Controller ----
+
+    public function actions() {
+
+        return [
+        	'file-handler' => [ 'class' => 'cmsgears\core\common\actions\file\FileHandler' ]
+		];
+    }
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// FileController ------------------------
+
 }
 
 ?>

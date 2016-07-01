@@ -3,107 +3,153 @@ namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
 use \Yii;
+use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Gallery;
+use cmsgears\core\common\models\mappers\ModelGallery;
 use cmsgears\core\common\models\mappers\ModelFile;
 
-use cmsgears\core\common\services\resources\FileService;
+use cmsgears\core\common\services\interfaces\resources\IGalleryService;
+use cmsgears\core\common\services\interfaces\resources\IFileService;
+
+use cmsgears\core\common\services\traits\NameTrait;
+use cmsgears\core\common\services\traits\SlugTrait;
 
 /**
  * The class GalleryService is base class to perform database activities for Gallery Entity.
  */
-class GalleryService extends \cmsgears\core\common\services\base\Service {
+class GalleryService extends \cmsgears\core\common\services\base\EntityService implements IGalleryService {
 
-	// Static Methods ----------------------------------------------
+	// Variables ---------------------------------------------------
 
-	// Read ----------------
+	// Globals -------------------------------
 
-	/**
-	 * @param integer $id
-	 * @return Gallery
-	 */
-	public static function findById( $id ) {
+	// Constants --------------
 
-		return Gallery::findById( $id );
+	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\core\common\models\resources\Gallery';
+
+	public static $modelTable	= CoreTables::TABLE_GALLERY;
+
+	public static $parentType	= CoreGlobal::TYPE_GALLERY;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	private $fileService;
+
+	// Traits ------------------------------------------------------
+
+	use NameTrait;
+	use SlugTrait;
+
+	// Constructor and Initialisation ------------------------------
+
+    public function __construct( IFileService $fileService, $config = [] ) {
+
+		$this->fileService	= $fileService;
+
+        parent::__construct( $config );
+    }
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// GalleryService ------------------------
+
+	// Data Provider ------
+
+	public function getPage( $config = [] ) {
+
+	    $sort = new Sort([
+	        'attributes' => [
+	            'owner' => [
+	                'asc' => [ 'createdBy' => SORT_ASC ],
+	                'desc' => ['createdBy' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'owner'
+	            ],
+	            'name' => [
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'name'
+	            ],
+	            'slug' => [
+	                'asc' => [ 'slug' => SORT_ASC ],
+	                'desc' => ['slug' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'slug'
+	            ],
+	            'title' => [
+	                'asc' => [ 'title' => SORT_ASC ],
+	                'desc' => ['title' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'title'
+	            ]
+	        ]
+	    ]);
+
+		$config[ 'sort' ] = $sort;
+
+		return parent::findPage( $config );
 	}
 
-	/**
-	 * @param string $name
-	 * @return Gallery
-	 */
-	public static function findByName( $name ) {
+	public function getPageByType( $type, $config = [] ) {
 
-		return Gallery::findByName( $name );
+		$modelTable	= self::$modelTable;
+
+		$config[ 'conditions' ][ "$modelTable.type" ] 	= $type;
+
+		return $this->getPage( $config );
 	}
 
-	/**
-	 * @param string $slug
-	 * @return Gallery
-	 */
-	public static function findBySlug( $slug ) {
+	// Read ---------------
 
-		return Gallery::findBySlug( $slug );
-	}
+    // Read - Models ---
 
-	/**
-	 * @param string $id
-	 * @return array - An array of associative array of gallery id and name
-	 */
-	public static function getIdNameList() {
+    // Read - Lists ----
 
-		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_GALLERY );
-	}
+    // Read - Maps -----
 
-	// Data Provider ----
+	// Read - Others ---
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+	// Create -------------
 
-		return self::getDataProvider( new Gallery(), $config );
-	}
-
-	// Create -----------
-
-	/**
-	 * @param Gallery $gallery
-	 * @return Gallery
-	 */
-	public static function create( $gallery ) {
-
-		// Create Gallery
-		$gallery->save();
-
-		// Return Gallery
-		return $gallery;
-	}
-
-	public static function createByNameType( $name, $type ) {
+	public function createByNameType( $name, $type ) {
 
 		$gallery			= new Gallery();
 		$gallery->name		= $name;
 		$gallery->type		= $type;
 
-		return self::create( $gallery );
+		return $this->create( $gallery );
 	}
 
-	/**
-	 * @param Gallery $gallery
-	 * @param CmgFile $item
-	 * @return boolean
-	 */
-	public static function createItem( $gallery, $item ) {
+	public function createItem( $gallery, $item ) {
 
 		$modelFile 	= new ModelFile();
 
 		// Save Gallery Image
-		FileService::saveImage( $item, [ 'model' => $modelFile, 'attribute' => 'fileId' ] );
+		$this->fileService->saveImage( $item, [ 'model' => $modelFile, 'attribute' => 'modelId' ] );
 
 		// Save Gallery Item
 		if( $item->id > 0 ) {
@@ -117,57 +163,74 @@ class GalleryService extends \cmsgears\core\common\services\base\Service {
 		return $item;
 	}
 
-	// Update -----------
+	// Update -------------
 
-	/**
-	 * @param Gallery $gallery
-	 * @return Gallery
-	 */
-	public static function update( $gallery ) {
+	public function update( $model, $config = [] ) {
 
-		// Find existing Gallery
-		$galleryToUpdate	= self::findById( $gallery->id );
+		// Provide activate/deactivate capability to admin
+		if( isset( $config[ 'admin' ] ) && $config[ 'admin' ] ) {
 
-		// Copy and set Attributes
-		$galleryToUpdate->copyForUpdateFrom( $gallery, [ 'templateId', 'name', 'title', 'description' ] );
+			return parent::update( $model, [
+				'attributes' => [ 'templateId', 'name', 'title', 'description', 'active' ]
+			]);
+		}
 
-		// Update Gallery
-		$galleryToUpdate->update();
+		return parent::update( $model, [
+			'attributes' => [ 'templateId', 'name', 'title', 'description' ]
+		]);
+ 	}
 
-		// Return updated Gallery
-		return $galleryToUpdate;
-	}
-
-	/**
-	 * @param CmgFile $item
-	 * @return boolean
-	 */
-	public static function updateItem( $item ) {
+	public function updateItem( $item ) {
 
 		// Save Gallery Item
-		FileService::saveImage( $item );
+		$this->fileService->saveImage( $item );
 
 		return true;
 	}
 
-	// Delete -----------
+	// Delete -------------
 
-	/**
-	 * @param Gallery $gallery
-	 * @return boolean
-	 */
-	public static function delete( $gallery ) {
+	public function delete( $model, $config = [] ) {
 
-		// Find existing Gallery
-		$galleryToDelete	= self::findById( $gallery->id );
+		// Delete dependencies
+		$items	= $model->files;
 
-		// TODO: Delete Gallery Items
+		// Delete mappings
+		ModelFile::deleteByParent( $model->id, CoreGlobal::TYPE_GALLERY );
 
-		// Delete Gallery
-		$galleryToDelete->delete();
+		// Delete Items
+		foreach ( $items as $item ) {
 
-		return true;
+			$this->fileService->delete( $item );
+		}
+
+		// Delete model
+		return parent::delete( $model, $config );
 	}
+
+	// Static Methods ----------------------------------------------
+
+	// CMG parent classes --------------------
+
+	// GalleryService ------------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

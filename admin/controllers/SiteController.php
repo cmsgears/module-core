@@ -10,14 +10,19 @@ use cmsgears\core\admin\config\AdminGlobalCore;
 
 class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
-    /**
-     * @inheritdoc
-     */
- 	public function __construct( $id, $module, $config = [] ) {
-
-        parent::__construct( $id, $module, $config );
+	public function init() {
 
 		// Check Layout for Public and Private pages
         if ( Yii::$app->user->isGuest ) {
@@ -26,9 +31,13 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
         }
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     public function behaviors() {
 
@@ -43,7 +52,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 		return $behaviours;
     }
 
-	// yii\base\Controller ---------------
+	// yii\base\Controller ----
 
     public function actions() {
 
@@ -59,7 +68,11 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
         ];
     }
 
-	// SiteController --------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// SiteController ------------------------
 
 	/**
 	 * The method redirect user to dashboard page.
@@ -81,7 +94,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
     }
 
 	public function actionLogin() {
-		
+
 		return parent::actionLogin( true );
 	}
 }

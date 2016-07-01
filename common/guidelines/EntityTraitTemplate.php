@@ -9,17 +9,18 @@ namespace cmsgears\core\common\guidelines;
  * 		2.2. Yii classes
  * 		2.3. CMG interface implementation
  * 		2.4. CMG classes
- * 		2.5. Trait methods
+ * 		2.5. Validators
+ * 		2.6. Trait methods
  * 3. Static methods
  * 		3.1. Yii classes
  * 		3.2. CMG classes
  * 		3.3. Trait methods
- * 				3.4.1. Read - query<method>
- * 				3.4.2. Read - find<method>
- * 				3.4.3. Create
- * 				3.4.4. Update
- * 				3.4.5. Delete
- * 3. Trait closure
+ * 				3.3.1. Read - query<method>
+ * 				3.3.2. Read - find<method>
+ * 				3.3.3. Create
+ * 				3.3.4. Update
+ * 				3.3.5. Delete
+ * 4. Trait closure
  */
 
 /**
@@ -38,9 +39,9 @@ class EntityTraitTemplate {
 
 	// CMG classes ---------------------------
 
-	// <Trait> -------------------------------
+	// Validators ----------------------------
 
-	// Validators -------------
+	// <Trait> -------------------------------
 
 	// Static Methods ----------------------------------------------
 

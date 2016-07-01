@@ -7,44 +7,95 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\mappers\SiteMember;
 
-use cmsgears\core\common\services\entities\RoleService;
+use cmsgears\core\common\services\interfaces\mappers\ISiteMemberService;
+use cmsgears\core\common\services\interfaces\entities\IRoleService;
 
 /**
  * The class SiteMemberService is base class to perform database activities for SiteMember Entity.
  */
-class SiteMemberService extends \cmsgears\core\common\services\base\Service {
+class SiteMemberService extends \cmsgears\core\common\services\base\EntityService implements ISiteMemberService {
 
-	// Static Methods ----------------------------------------------
+	// Variables ---------------------------------------------------
 
-	// Read ----------------
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\core\common\models\resources\SiteMember';
+
+	public static $modelTable	= CoreTables::TABLE_SITE_MEMBER;
+
+	public static $parentType	= null;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	private $roleService;
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+    public function __construct( IRoleService $roleService, $config = [] ) {
+
+		$this->roleService	= $roleService;
+
+        parent::__construct( $config );
+    }
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// SiteMemberService ---------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
 
 	/**
 	 * @param integer $siteId
 	 * @param integer $userId
 	 * @return SiteMember - for the given site and user
 	 */
-	public static function findBySiteIdUserId( $siteId, $userId ) {
+	public function findBySiteIdUserId( $siteId, $userId ) {
 
 		return SiteMember::findBySiteIdUserId( $siteId, $userId );
     }
 
-	// Data Provider ----
+    // Read - Lists ----
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+    // Read - Maps -----
 
-		return self::getDataProvider( new SiteMember(), $config );
-	}
+	// Read - Others ---
 
-	// Create --------------
+	// Create -------------
 
-	public static function create( $user, $siteMember = null, $roleSlug = null ) {
+ 	public function create( $model, $config = [] ) {
+
+		$siteMember = isset( $config[ 'siteMember' ] ) ? $config[ 'siteMember' ] : null;
+		$roleSlug 	= isset( $config[ 'roleSlug' ] ) ? $config[ 'roleSlug' ] : null;
 
 		if( !isset( $siteMember ) ) {
 
@@ -52,47 +103,56 @@ class SiteMemberService extends \cmsgears\core\common\services\base\Service {
 
 			if( isset( $roleSlug ) ) {
 
-				$role				= RoleService::findBySlug( $roleSlug );
+				$role				= $this->roleService->getBySlug( $roleSlug );
 				$siteMember->roleId	= $role->id;
 			}
 			else {
 
-				$role				= RoleService::findBySlug( CoreGlobal::ROLE_USER );
+				$role				= $this->roleService->getBySlug( CoreGlobal::ROLE_USER );
 				$siteMember->roleId	= $role->id;
 			}
 		}
 
-		$siteMember->siteId = Yii::$app->cmgCore->siteId;
+		$siteMember->siteId = Yii::$app->core->siteId;
 		$siteMember->userId	= $user->id;
 
-		$siteMember->save();
+		return parent::create( $model, $config );
+ 	}
 
-		return $siteMember;
-	}
+	// Update -------------
 
-	// Update --------------
+	public function update( $model, $config = [] ) {
 
-	public static function update( $siteMember ) {
+		return parent::update( $model, [
+			'attributes' => [ 'roleId' ]
+		]);
+ 	}
 
-		$siteMemberToUpdate	= self::findBySiteIdUserId( $siteMember->siteId, $siteMember->userId );
+	// Delete -------------
 
-		$siteMemberToUpdate->copyForUpdateFrom( $siteMember, [ 'roleId' ] );
+	// Static Methods ----------------------------------------------
 
-		$siteMemberToUpdate->update();
+	// CMG parent classes --------------------
 
-		return $siteMemberToUpdate;
-	}
+	// SiteMemberService ---------------------
 
-	// Delete --------------
+	// Data Provider ------
 
-	public static function delete( $siteMember ) {
+	// Read ---------------
 
-		$siteMemberToUpdate	= self::findBySiteIdUserId( $siteMember->siteId, $siteMember->userId );
+    // Read - Models ---
 
-		$siteMemberToUpdate->delete();
+    // Read - Lists ----
 
-		return true;
-	}
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

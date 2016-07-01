@@ -35,7 +35,7 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
 
 	// Public -----------------
 
-	protected static $multiSite	= true;
+	public static $multiSite	= true;
 
 	// Protected --------------
 
@@ -88,9 +88,9 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
         $rules = [
             [ [ 'siteId', 'name' ], 'required' ],
             [ 'id', 'safe' ],
-            [ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ 'description', 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->xLargeText ],
+            [ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+            [ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
@@ -112,11 +112,11 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
     public function attributeLabels() {
 
         return [
-            'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
-            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-            'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-            'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+            'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
         ];
     }
 
@@ -152,6 +152,21 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
 	// Tag -----------------------------------
 
 	// Read - Query -----------
+
+	public static function queryWithAll( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithSite( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'site' ];
+
+		return parent::queryWithAll( $config );
+	}
 
 	// Read - Find ------------
 

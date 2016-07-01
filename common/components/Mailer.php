@@ -4,23 +4,46 @@ namespace cmsgears\core\common\components;
 // Yii Imports
 use \Yii;
 
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 /**
  * The mail component used for sending possible mails by the CMSGears core module. It must be initialised
- * for app using the name cmgCoreMailer. It's used by various controllers to trigger mails.
+ * for app using the name coreMailer. It's used by various controllers to trigger mails.
  */
 class Mailer extends \cmsgears\core\common\base\Mailer {
 
-	const MAIL_ACCOUNT_CREATE		        = "account-create";
-	const MAIL_ACCOUNT_ACTIVATE		        = "account-activate";
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	const MAIL_ACCOUNT_CREATE		        = "account/create";
+	const MAIL_ACCOUNT_ACTIVATE		        = "account/activate";
 	const MAIL_REG					        = "register";
 	const MAIL_REG_CONFIRM			        = "register-confirm";
 	const MAIL_PASSWORD_RESET               = "password-reset";
-    const MAIL_COMMENT_SPAM_REQUEST         = 'comment-spam-request';
-    const MAIL_COMMENT_DELETE_REQUEST       = 'comment-delete-request';
+    const MAIL_COMMENT_SPAM_REQUEST         = 'comment/spam-request';
+    const MAIL_COMMENT_DELETE_REQUEST       = 'comment/delete-request';
+
+	// Public -----------------
 
     public $htmlLayout 			= '@cmsgears/module-core/common/mails/layouts/html';
     public $textLayout 			= '@cmsgears/module-core/common/mails/layouts/text';
     public $viewPath 			= '@cmsgears/module-core/common/mails/views';
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG parent classes --------------------
+
+	// Mailer --------------------------------
 
 	/**
 	 * The method sends mail for accounts created by site admin.

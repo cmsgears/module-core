@@ -12,13 +12,37 @@ class ForgotPassword extends \yii\base\Model {
 
 	// Variables ---------------------------------------------------
 
-	// Public Variables --------------------
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
 	public $email;
 
-	// Instance Methods --------------------------------------------
+	// Protected --------------
 
-	// yii\base\Model
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
 	public function rules() {
 
@@ -27,7 +51,7 @@ class ForgotPassword extends \yii\base\Model {
 			[ 'email', 'email' ],
 		];
 
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'email' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -40,9 +64,18 @@ class ForgotPassword extends \yii\base\Model {
 	public function attributeLabels() {
 
 		return [
-			'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL )
+			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL )
 		];
 	}
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// ForgotPassword ------------------------
+
 }
 
 ?>

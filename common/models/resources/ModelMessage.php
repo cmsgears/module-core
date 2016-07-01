@@ -11,7 +11,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Locale;
 
-use cmsgears\core\common\models\traits\ParentTypeTrait;
+use cmsgears\core\common\models\traits\ResourceTrait;
 
 /**
  * ModelMessage Entity
@@ -45,7 +45,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 
 	// Traits ------------------------------------------------------
 
-	use ParentTypeTrait;
+	use ResourceTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -68,9 +68,9 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
         $rules = [
             [ [ 'localeId', 'parentId', 'parentType', 'name' ], 'required' ],
             [ [ 'id', 'value' ], 'safe' ],
-            [ [ 'localeId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'localeId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'parentType', 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
+            [ [ 'parentType', 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
         ];
@@ -92,11 +92,11 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 	public function attributeLabels() {
 
 		return [
-			'localeId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
-			'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE )
+			'localeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
+			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE )
 		];
 	}
 
@@ -115,7 +115,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 
             if( self::isExistByNameLocaleId( $this->parentId, $this->parentType, $this->name, $this->localeId ) ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
@@ -131,7 +131,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 
 			if( isset( $existingMessage ) && $existingMessage->id != $this->id ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}
         }
     }
@@ -165,6 +165,21 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 	// ModelMessage --------------------------
 
 	// Read - Query -----------
+
+	public static function queryWithAll( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'locale' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithLocale( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'locale' ];
+
+		return parent::queryWithAll( $config );
+	}
 
 	// Read - Find ------------
 

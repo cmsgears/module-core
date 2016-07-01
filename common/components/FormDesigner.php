@@ -6,6 +6,8 @@ use \Yii;
 use yii\helpers\Html;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\resources\FormField;
 
 /**
@@ -14,9 +16,27 @@ use cmsgears\core\common\models\resources\FormField;
  */
 class FormDesigner extends \yii\base\Component {
 
-	public static $yesNoMap	= [ '1' => 'Yes', '0' => 'No' ];
+	// Variables ---------------------------------------------------
 
-	// Yii Flavored Forms --------------------------------------------
+	// Global -----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG parent classes --------------------
+
+	// FormDesigner --------------------------
+
+	// Yii Forms
 
 	/**
 	 * Generate field html using Yii Form Widget.
@@ -226,7 +246,7 @@ class FormDesigner extends \yii\base\Component {
 
 		if( $yesNo ) {
 
-			$itemlist = self::$yesNoMap;
+			$itemlist = CoreGlobal::$yesNoMap;
 		}
 
 		$template	= "<div class='cmt-choice $setInline clearfix'>{label}<div class='radio-group'>{input}</div><div class='help-block'>\n{hint}\n{error}</div></div>";
@@ -287,7 +307,7 @@ class FormDesigner extends \yii\base\Component {
 	}
 
 
-	// Apix Flavored Forms -------------------------------------------
+	// Apix Forms
 
 	/**
 	 * Generate field html for CMGTools JS Library.

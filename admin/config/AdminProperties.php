@@ -11,14 +11,29 @@ use cmsgears\core\common\config\CmgProperties;
 
 class AdminProperties extends CmgProperties {
 
-	// Singleton instance
+	// Variables ---------------------------------------------------
+
+	// Global -----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	private static $instance;
 
 	// Constructor and Initialisation ------------------------------
 
- 	private function __construct() {
+	// Instance methods --------------------------------------------
 
-	}
+	// Yii parent classes --------------------
+
+	// CMG parent classes --------------------
+
+	// AdminProperties -----------------------
+
+	// Singleton
 
 	/**
 	 * Return Singleton instance.
@@ -34,6 +49,9 @@ class AdminProperties extends CmgProperties {
 
 		return self::$instance;
 	}
+
+	// Properties
+
 }
 
 ?>

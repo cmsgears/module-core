@@ -3,141 +3,201 @@ namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
 use \Yii;
+use yii\data\Sort;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\entities\Theme;
 
-use cmsgears\core\common\services\resources\FileService;
+use cmsgears\core\common\services\interfaces\entities\ISiteService;
+use cmsgears\core\common\services\interfaces\resources\IFileService;
+use cmsgears\core\common\services\interfaces\resources\ISiteAttributeService;
+
+use cmsgears\core\common\services\traits\NameTrait;
+use cmsgears\core\common\services\traits\SlugTrait;
 
 /**
  * The class SiteService is base class to perform database activities for Site Entity.
  */
-class SiteService extends \cmsgears\core\common\services\base\Service {
+class SiteService extends \cmsgears\core\common\services\base\EntityService implements ISiteService {
 
-	// Static Methods ----------------------------------------------
+	// Variables ---------------------------------------------------
 
-	// Read ----------------
+	// Globals -------------------------------
 
-	/**
-	 * @param integer $id
-	 * @return Site
-	 */
-	public static function findById( $id ) {
+	// Constants --------------
 
-		return Site::findById( $id );
+	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\core\common\models\entities\Site';
+
+	public static $modelTable	= CoreTables::TABLE_SITE;
+
+	public static $parentType	= CoreGlobal::TYPE_SITE;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	private $fileService;
+	private $siteAttributeService;
+
+	// Traits ------------------------------------------------------
+
+	use NameTrait;
+	use SlugTrait;
+
+	// Constructor and Initialisation ------------------------------
+
+    public function __construct( IFileService $fileService, ISiteAttributeService $siteAttributeService, $config = [] ) {
+
+		$this->fileService 				= $fileService;
+		$this->siteAttributeService 	= $siteAttributeService;
+
+        parent::__construct( $config );
     }
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// SiteService ---------------------------
+
+	// Data Provider ------
+
+	public function getPage( $config = [] ) {
+
+	    $sort = new Sort([
+	        'attributes' => [
+	            'name' => [
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'name'
+	            ],
+	            'slug' => [
+	                'asc' => [ 'slug' => SORT_ASC ],
+	                'desc' => ['slug' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'slug'
+	            ]
+	        ]
+	    ]);
+
+		$config[ 'sort' ] = $sort;
+
+		return parent::findPage( $config );
+	}
+
+	// Read ---------------
+
+    // Read - Models ---
 
 	/**
 	 * @param string $name
-	 * @return Site
+	 * @param string $type
+	 * @return array - An associative array of site attribute for the given site slug and meta type having name as key and value as attribute.
 	 */
-	public static function findByName( $name ) {
+    public function getAttributeMapBySlugType( $slug, $type ) {
 
-		return Site::findByName( $name );
-    }
+		$site = Site::findBySlug( $slug );
 
-	/**
-	 * @param string $name
-	 * @return Site
-	 */
-	public static function findBySlug( $slug ) {
-
-		return Site::findBySlug( $slug );
+		return $this->siteAttributeService->getObjectMapByType( $type );
     }
 
 	/**
 	 * @param string $slug
 	 * @param string $type
-	 * @return array - An array of site attribute for the given site name and meta type.
+	 * @return array - An associative array of site attribute for the given site slug and meta type having name as key and value as value.
 	 */
-    public static function getAttributeBySlugType( $slug, $type ) {
+    public function getAttributeNameValueMapBySlugType( $slug, $type ) {
 
 		$site = Site::findBySlug( $slug );
 
-		return $site->getModelAttributesByType( $type );
+		return $this->siteAttributeService->getNameValueMapByType( $site->id, $type );
     }
 
-	/**
-	 * @param string $name
-	 * @param string $type
-	 * @return array - An associative array of site attribute for the given site name and meta type having name as key and value as attribute.
-	 */
-    public static function getAttributeMapBySlugType( $slug, $type ) {
+    // Read - Lists ----
 
-		$site = Site::findBySlug( $slug );
+    // Read - Maps -----
 
-		return $site->getAttributeMapByType( $type );
-    }
+	// Read - Others ---
 
-	/**
-	 * @param string $name
-	 * @param string $type
-	 * @return array - An associative array of site attribute for the given site name and meta type having name as key and value as value.
-	 */
-    public static function getAttributeNameValueMapBySlugType( $slug, $type ) {
+	// Create -------------
 
-		$site = Site::findBySlug( $slug );
+	public function create( $model, $config = [] ) {
 
-		return $site->getAttributeNameValueMapByType( $type );
-    }
+		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 
-	// Data Provider ----
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
-
-		return self::getDataProvider( new Site(), $config );
+		return parent::create( $model, $config );
 	}
 
-	// Create --------------
+	// Update -------------
 
-	public static function create( $site, $avatar = null, $banner = null ) {
+	public function update( $model, $config = [] ) {
 
-		FileService::saveFiles( $site, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
+		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 
-		$site->save();
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
 
-		return $site;
+		return parent::update( $model, [
+			'attributes' => [ 'avatarId', 'bannerId', 'themeId', 'name', 'order', 'active' ]
+		]);
 	}
 
-	// Update --------------
+	// Delete -------------
 
-	public static function update( $site, $avatar = null, $banner = null ) {
+	public function delete( $model, $config = [] ) {
 
-		$siteToUpdate	= self::findById( $site->id );
+		// Delete dependencies
+		$this->fileService->deleteFiles( [ $model->avatar, $model->banner ] );
 
-		$siteToUpdate->copyForUpdateFrom( $site, [ 'themeId', 'name', 'order', 'active' ] );
-
-		FileService::saveFiles( $siteToUpdate, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
-
-		$siteToUpdate->update();
-
-		return $siteToUpdate;
+		// Delete model
+		return parent::delete( $model, $config );
 	}
 
-	// Delete -----------
+	// Static Methods ----------------------------------------------
 
-	/**
-	 * @param Site $site
-	 * @return boolean
-	 */
-	public static function delete( $site, $avatar = null, $banner = null ) {
+	// CMG parent classes --------------------
 
-		// Find existing Site
-		$siteToDelete	= self::findById( $site->id );
+	// SiteService ---------------------------
 
-		// Delete Site
-		$siteToDelete->delete();
+	// Data Provider ------
 
-		FileService::deleteFiles( [ $avatar, $banner ] );
+	// Read ---------------
 
-		return true;
-	}
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

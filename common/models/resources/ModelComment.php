@@ -13,7 +13,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
-use cmsgears\core\common\models\traits\ParentTypeTrait;
+use cmsgears\core\common\models\traits\ResourceTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
@@ -87,7 +87,7 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
     use CreateModifyTrait;
     use DataTrait;
-	use ParentTypeTrait;
+	use ResourceTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -129,8 +129,8 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
             [ [ 'parentId', 'parentType', 'name', 'email' ], 'required' ],
             [ [ 'id', 'content', 'data' ], 'safe' ],
             [ 'email', 'email' ],
-            [ [ 'parentType', 'name', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ [ 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->xLargeText ],
+            [ [ 'parentType', 'name', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ [ 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
             [ [ 'status', 'rating', 'type' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
             [ 'content', 'required', 'on' => [ 'testimonial' ] ],
@@ -141,7 +141,7 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
         ];
 
         // trim if required
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
             $trim[] = [ [ 'name', 'email', 'avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -157,20 +157,20 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
     public function attributeLabels() {
 
         return [
-            'baseId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-            'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-            'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
-            'avatarUrl' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
-            'websiteUrl' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
-            'ip' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_IP ),
-            'agent' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AGENT_BROWSER ),
-            'status' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
-            'rating' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_RATING ),
-            'featured' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
-            'content' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
-            'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
+            'baseId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+            'avatarUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
+            'websiteUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
+            'ip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP ),
+            'agent' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AGENT_BROWSER ),
+            'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
+            'rating' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RATING ),
+            'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+            'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
+            'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
         ];
     }
 
@@ -224,17 +224,26 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Find ------------
 
-    public static function queryByParent( $parentId, $parentType, $type = self::TYPE_COMMENT, $status = self::STATUS_APPROVED ) {
+    public static function queryByParentConfig( $parentId, $parentType, $config = [] ) {
+
+		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
+		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
 
         return self::find()->where( [ 'parentId' => $parentId, 'parentType' => $parentType, 'type' => $type, 'status' => $status ] );
     }
 
-    public static function queryByParentType( $parentType, $type = self::TYPE_COMMENT, $status = self::STATUS_APPROVED ) {
+    public static function queryByParentTypeConfig( $parentType, $config = [] ) {
+
+		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
+		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
 
         return self::find()->where( [ 'parentType' => $parentType, 'type' => $type, 'status' => $status ] );
     }
 
-    public static function queryByBaseId( $baseId, $type = self::TYPE_COMMENT, $status = self::STATUS_APPROVED ) {
+    public static function queryByBaseId( $baseId, $config = [] ) {
+
+		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
+		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
 
         return self::find()->where( [ 'baseId' => $baseId, 'type' => $type, 'status' => $status ] );
     }

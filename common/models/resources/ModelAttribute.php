@@ -10,6 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 
+use cmsgears\core\common\models\traits\ResourceTrait;
+
 /**
  * ModelAttribute Entity
  *
@@ -44,6 +46,8 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
 
 	// Traits ------------------------------------------------------
 
+	use ResourceTrait;
+
 	// Constructor and Initialisation ------------------------------
 
 	// Instance methods --------------------------------------------
@@ -65,8 +69,8 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
         $rules = [
             [ [ 'parentId', 'parentType', 'name' ], 'required' ],
             [ [ 'id', 'value' ], 'safe' ],
-            [ [ 'parentType', 'name', 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ 'label', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
+            [ [ 'parentType', 'name', 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
@@ -89,13 +93,13 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
     public function attributeLabels() {
 
         return [
-            'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-            'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'label' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
-            'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-            'valueType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE_TYPE ),
-            'value' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALUE )
+            'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
+            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'valueType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE_TYPE ),
+            'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE )
         ];
     }
 
@@ -114,7 +118,7 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
 
             if( self::isExistByTypeName( $this->parentId, $this->parentType, $this->type, $this->name ) ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
@@ -130,7 +134,7 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
 
             if( isset( $existingConfig ) && $existingConfig->id != $this->id ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }

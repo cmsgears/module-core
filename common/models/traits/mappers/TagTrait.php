@@ -1,6 +1,12 @@
 <?php
 namespace cmsgears\core\common\models\traits\mappers;
 
+// Yii Import
+use \Yii;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Tag;
 use cmsgears\core\common\models\mappers\ModelTag;
@@ -21,7 +27,7 @@ trait TagTrait {
 	 */
 	public function getTags() {
 
-    	return $this->hasMany( Tag::className(), [ 'id' => 'tagId' ] )
+    	return $this->hasMany( Tag::className(), [ 'id' => 'modelId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_TAG, [ 'parentId' => 'id' ], function( $query ) {
 
 						$modelTagTable	= CoreTables::TABLE_MODEL_TAG;
@@ -32,7 +38,7 @@ trait TagTrait {
 
 	public function getActiveTags() {
 
-    	return $this->hasMany( Tag::className(), [ 'id' => 'tagId' ] )
+    	return $this->hasMany( Tag::className(), [ 'id' => 'modelId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_TAG, [ 'parentId' => 'id' ], function( $query ) {
 
 						$modelTagTable	= CoreTables::TABLE_MODEL_TAG;

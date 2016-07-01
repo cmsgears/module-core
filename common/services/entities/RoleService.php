@@ -5,158 +5,96 @@ namespace cmsgears\core\common\services\entities;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Role;
 use cmsgears\core\common\models\mappers\RolePermission;
 
+use cmsgears\core\common\services\interfaces\entities\IRoleService;
+
+use cmsgears\core\common\services\traits\NameSlugTrait;
+
 /**
  * The class RoleService is base class to perform database activities for Role Entity.
  */
-class RoleService extends \cmsgears\core\common\services\base\Service {
+class RoleService extends \cmsgears\core\common\services\base\EntityService implements IRoleService {
 
-	// Static Methods ----------------------------------------------
+	// Variables ---------------------------------------------------
 
-	// Read ----------------
+	// Globals -------------------------------
 
-	/**
-	 * @param integer $id
-	 * @return Role
-	 */
-	public static function findById( $id ) {
+	// Constants --------------
 
-		return Role::findById( $id );
+	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\core\common\models\entities\Role';
+
+	public static $modelTable	= CoreTables::TABLE_ROLE;
+
+	public static $parentType	= CoreGlobal::TYPE_ROLE;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	use NameSlugTrait;
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// RoleService ---------------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	public function getIdNameMapByRoles( $roles ) {
+
+		return $this->getIdNameMap( [ 'filters' => [ [ 'in', 'slug', $roles ] ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Role' ] ] ] );
 	}
 
-	public static function findByParentId( $id ) {
+	// Read - Others ---
 
-		return Role::findByParentId( $id );
-	}
+	// Create -------------
 
-	/**
-	 * @param string $name
-	 * @return Role
-	 */
-	public static function findByName( $name ) {
+	// Update -------------
 
-		return Role::findByName( $name );
-	}
+	public function update( $model, $config = [] ) {
 
-	/**
-	 * @param string $slug
-	 * @return Role
-	 */
-	public static function findBySlug( $slug ) {
-
-		return Role::findBySlug( $slug );
-	}
-
-	// Read - Lists ----
-
-	/**
-	 * @param array $config
-	 * @return array - An array of associative array of role id and name.
-	 */
-	public static function getIdNameList( $config = [] ) {
-
-		return self::findIdNameList( 'id', 'name', CoreTables::TABLE_ROLE, $config );
-	}
-
-	/**
-	 * @param string $id
-	 * @return array - An array of associative array of role id and name.
-	 */
-	public static function getIdNameListByType( $type ) {
-
-		if( isset( $type ) ) {
-
-			return self::getIdNameList( [ 'conditions' => [ 'type' => $type ] ] );
-		}
-
-		return self::getIdNameList();
-	}
-
-	// Read - Maps -----
-
-	/**
-	 * @param array $config
-	 * @return array - an array having id as key and name as value.
-	 */
-	public static function getIdNameMap( $config = [] ) {
-
-		return self::findMap( 'id', 'name', CoreTables::TABLE_ROLE, $config );
-	}
-
-	/**
-	 * @param array $config
-	 * @return array - an array having id as key and name as value.
-	 */
-	public static function getIdNameMapByType( $type, $config = [] ) {
-
-		$config[ 'conditions' ][ 'type' ] 	= $type;
-
-		return self::getIdNameMap( $config );
-	}
-
-	/**
-	 * @return array - an array having id as key and name as value.
-	 */
-	public static function getIdNameMapByRoles( $roles ) {
-
-		return self::findMap( 'id', 'name', CoreTables::TABLE_ROLE, [ 'filters' => [ [ 'in', 'slug', $roles ] ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Role' ] ] ] );
-	}
-
-	// Data Provider ----
-
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
-
-		return self::getDataProvider( new Role(), $config );
-	}
-
-	// Create -----------
-
-	/**
-	 * @param Role $role
-	 * @return Role
-	 */
-	public static function create( $role ) {
-
-		// Create Role
-		$role->save();
-
-		// Return Role
-		return $role;
-	}
-
-	// Update -----------
-
-	/**
-	 * @param Role $role
-	 * @return Role
-	 */
-	public static function update( $role ) {
-
-		// Find existing role
-		$roleToUpdate	= self::findById( $role->id );
-
-		// Copy and set Attributes
-		$roleToUpdate->copyForUpdateFrom( $role, [ 'name', 'description', 'homeUrl' ] );
-
-		// Update Role
-		$roleToUpdate->update();
-
-		// Return updated Role
-		return $roleToUpdate;
-	}
+		return parent::update( $model, [
+			'attributes' => [ 'name', 'description', 'homeUrl' ]
+		]);
+ 	}
 
 	/**
 	 * @param BinderForm $binder
 	 * @return boolean
 	 */
-	public static function bindPermissions( $binder ) {
+	public function bindPermissions( $binder ) {
 
 		$roleId			= $binder->binderId;
 		$permissions	= $binder->bindedData;
@@ -183,22 +121,31 @@ class RoleService extends \cmsgears\core\common\services\base\Service {
 		return true;
 	}
 
-	// Delete -----------
+	// Delete -------------
 
-	/**
-	 * @param Role $role
-	 * @return boolean
-	 */
-	public static function delete( $role ) {
+	// Static Methods ----------------------------------------------
 
-		// Find existing Role
-		$roleToDelete	= self::findById( $role->id );
+	// CMG parent classes --------------------
 
-		// Delete Role
-		$roleToDelete->delete();
+	// RoleService ---------------------------
 
-		return true;
-	}
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

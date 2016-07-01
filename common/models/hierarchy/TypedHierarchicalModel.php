@@ -66,7 +66,7 @@ abstract class TypedHierarchicalModel extends HierarchicalModel {
 
             if( self::isExistByNameType( $this->name, $this->type, $this->parentId ) ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
@@ -82,7 +82,7 @@ abstract class TypedHierarchicalModel extends HierarchicalModel {
 
             if( isset( $existingModel ) && $existingModel->id != $this->id ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }

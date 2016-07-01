@@ -12,13 +12,37 @@ class ThemeData extends \yii\base\Model {
 
 	// Variables ---------------------------------------------------
 
-	// Public Variables --------------------
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
 	public $css;
 
-	// Instance Methods --------------------------------------------
+	// Protected --------------
 
-	// yii\base\Model
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
 	public function rules() {
 
@@ -26,7 +50,7 @@ class ThemeData extends \yii\base\Model {
 			[ [ 'css' ], 'safe' ]
 		];
 
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'css' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -39,9 +63,18 @@ class ThemeData extends \yii\base\Model {
 	public function attributeLabels() {
 
 		return [
-			'css' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STYLE )
+			'css' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STYLE )
 		];
 	}
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// ThemeData -----------------------------
+
 }
 
 ?>

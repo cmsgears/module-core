@@ -10,13 +10,13 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Form;
 
-use cmsgears\core\common\models\traits\ParentTypeTrait;
+use cmsgears\core\common\models\traits\MapperTrait;
 
 /**
  * ModelForm Entity
  *
  * @property long $id
- * @property long $formId
+ * @property long $modelId
  * @property long $parentId
  * @property string $parentType
  * @property short $order
@@ -44,7 +44,7 @@ class ModelForm extends \cmsgears\core\common\models\base\Mapper {
 
 	// Traits ------------------------------------------------------
 
-	use ParentTypeTrait;
+	use MapperTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -64,12 +64,12 @@ class ModelForm extends \cmsgears\core\common\models\base\Mapper {
     public function rules() {
 
         return [
-            [ [ 'formId', 'parentId', 'parentType' ], 'required' ],
+            [ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
             [ [ 'id' ], 'safe' ],
-            [ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
+            [ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'active' ], 'boolean' ],
-            [ [ 'formId' ], 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'modelId' ], 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
         ];
     }
@@ -80,11 +80,11 @@ class ModelForm extends \cmsgears\core\common\models\base\Mapper {
     public function attributeLabels() {
 
         return [
-            'formId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FORM ),
-            'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-            'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-            'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-            'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
+            'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FORM ),
+            'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+            'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+            'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
         ];
     }
 
@@ -98,7 +98,7 @@ class ModelForm extends \cmsgears\core\common\models\base\Mapper {
 
     public function getForm() {
 
-        return $this->hasOne( Form::className(), [ 'id' => 'formId' ] );
+        return $this->hasOne( Form::className(), [ 'id' => 'modelId' ] );
     }
 
 	// Static Methods ----------------------------------------------
@@ -121,12 +121,22 @@ class ModelForm extends \cmsgears\core\common\models\base\Mapper {
 
 	// Read - Query -----------
 
+	public static function queryWithAll( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'form' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithModel( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'form' ];
+
+		return parent::queryWithAll( $config );
+	}
+
 	// Read - Find ------------
-
-    public static function findByFormId( $parentId, $parentType, $formId ) {
-
-        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND formId=:fid', [ ':pid' => $parentId, ':ptype' => $parentType, ':fid' => $formId ] )->one();
-    }
 
 	// Create -----------------
 
@@ -134,13 +144,6 @@ class ModelForm extends \cmsgears\core\common\models\base\Mapper {
 
 	// Delete -----------------
 
-    /**
-     * Delete all entries related to a form
-     */
-    public static function deleteByFormId( $formId ) {
-
-        self::deleteAll( 'formId=:fid', [ ':fid' => $formId ] );
-    }
 }
 
 ?>

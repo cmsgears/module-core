@@ -5,44 +5,93 @@ namespace cmsgears\core\common\services\mappers;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Gallery;
 use cmsgears\core\common\models\mappers\ModelGallery;
 
-use cmsgears\core\common\services\resources\GalleryService;
+use cmsgears\core\common\services\interfaces\resources\IGalleryService;
+use cmsgears\core\common\services\interfaces\mappers\IModelGalleryService;
+
+use cmsgears\core\common\services\traits\MapperTrait;
 
 /**
  * The class ModelGalleryService is base class to perform database activities for ModelGallery Entity.
  */
-class ModelGalleryService extends \cmsgears\core\common\services\base\Service {
+class ModelGalleryService extends \cmsgears\core\common\services\base\EntityService implements IModelGalleryService {
 
-	// Static Methods ----------------------------------------------
+	// Variables ---------------------------------------------------
 
-	// Read ----------------
+	// Globals -------------------------------
 
-	public static function getById( $id ) {
+	// Constants --------------
 
-		return ModelGallery::findById( $id );
-	}
+	// Public -----------------
 
-	public static function getByGalleryId( $parentId, $parentType, $galleryId ) {
+	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelGallery';
 
-		return ModelGallery::queryByGalleryId( $parentId, $parentType, $galleryId )->one();
-	}
+	public static $modelTable	= CoreTables::TABLE_MODEL_GALLERY;
 
-	// Data Provider ----
+	public static $parentType	= null;
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+	// Protected --------------
 
-		return self::getDataProvider( new ModelGallery(), $config );
-	}
+	// Variables -----------------------------
 
-	// Create -----------
+	// Public -----------------
 
-	public static function create( $gallery, $parentId, $parentType, $type = null, $order = 0 ) {
+	// Protected --------------
+
+	// Private ----------------
+
+	private $galleryService;
+
+	// Traits ------------------------------------------------------
+
+	use MapperTrait;
+
+	// Constructor and Initialisation ------------------------------
+
+    public function __construct( IGalleryService $galleryService, $config = [] ) {
+
+		$this->galleryService	= $galleryService;
+
+        parent::__construct( $config );
+    }
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// ModelGalleryService -------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	public function create( $gallery, $config = [] ) {
+
+		$parentId 	= $config[ 'parentId' ];
+		$parentType = $config[ 'parentType' ];
+		$type 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+		$order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
 		// Create Gallery
 		$gallery->type	= $parentType;
@@ -60,61 +109,70 @@ class ModelGalleryService extends \cmsgears\core\common\services\base\Service {
 		$modelGallery->active		= true;
 
 		$modelGallery->save();
-
-		// Return Model Gallery
-		return $modelGallery;
 	}
 
-	public static function createOrUpdate( $gallery, $parentId, $parentType, $type = null, $order = 0 ) {
+	public function createOrUpdate( $gallery, $config = [] ) {
+
+		$parentId 	= $config[ 'parentId' ];
+		$parentType = $config[ 'parentType' ];
+		$type 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+		$order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
 		// Update Existing
 		if( isset( $gallery->id ) && !empty( $gallery->id ) ) {
 
-			$existingGallery	= self::getByGalleryId( $parentId, $parentType, $gallery->id );
+			$existingGallery	= $this->getByModelId( $parentId, $parentType, $gallery->id );
 
 			if( isset( $existingGallery ) ) {
 
-				return self::update( $existingGallery, $gallery );
+				return $this->update( $existingGallery, $gallery );
 			}
 		}
 		// Create New
 		else {
 
-			return self::create( $gallery, $parentId, $parentType, $type, $order );
+			return $this->create( $gallery, $config );
 		}
 	}
 
-	// Update -----------
+	// Update -------------
 
-	public static function update( $modelGallery, $gallery ) {
+	public function update( $model, $config = [] ) {
 
-		// Update Gallery
-		GalleryService::update( $gallery );
+		$gallery = $config[ 'gallery' ];;
 
-		// Find existing Model Gallery
-		$galleryToUpdate	= self::getById( $modelGallery->id );
+		$this->galleryService->update( $gallery );
 
-		// Copy Attributes
-		$galleryToUpdate->copyForUpdateFrom( $modelGallery, [ 'type', 'order' ] );
+		return parent::update( $model, [
+			'attributes' => [ 'type', 'order' ]
+		]);
+ 	}
 
-		// Update Model Gallery
-		$galleryToUpdate->update();
+	// Delete -------------
 
-		// Return updated Model Gallery
-		return $galleryToUpdate;
-	}
+	// Static Methods ----------------------------------------------
 
-	// Delete -----------
+	// CMG parent classes --------------------
 
-	public static function deleteByParent( $parentId, $parentType ) {
+	// ModelGalleryService -------------------
 
-		ModelGallery::deleteByParent( $parentId, $parentType );
-	}
+	// Data Provider ------
 
-	public static function delete( $model ) {
+	// Read ---------------
 
-		return $model->delete();
-	}
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

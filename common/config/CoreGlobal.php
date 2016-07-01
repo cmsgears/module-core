@@ -65,6 +65,7 @@ class CoreGlobal {
 	const TYPE_TAG				= 'tag';
 
 	// Additional
+	const TYPE_REVIEW			= 'review';
 	const TYPE_TESTIMONIAL		= 'testimonial';
 	const TYPE_OPTION_GROUP		= 'option-group';
 
@@ -151,8 +152,8 @@ class CoreGlobal {
 	const STATUS_YES		= 1;
 
     public static $yesNoMap = [
-        self::STATUS_NO => 'No',
-        self::STATUS_YES => 'Yes'
+    	self::STATUS_YES => 'Yes',
+        self::STATUS_NO => 'No'
     ];
 
 	// Active/Inactive
@@ -160,8 +161,8 @@ class CoreGlobal {
 	const STATUS_ACTIVE		= 1;
 
     public static $activeMap = [
-        self::STATUS_INACTIVE => 'Inactive',
-        self::STATUS_ACTIVE => 'Active'
+    	self::STATUS_ACTIVE => 'Active',
+        self::STATUS_INACTIVE => 'Inactive'
     ];
 
 	// Messages --------------------------------------------------------

@@ -20,12 +20,12 @@ abstract class Entity extends \yii\db\ActiveRecord {
 
 	// Public -----------------
 
-	// Protected --------------
-
 	/**
-	 * It can be used to differentiate multisite models. The model must have siteId column referring to Site.
+	 * It can be used to differentiate multisite models. The model must have siteId column referring to associated site.
 	 */
-	protected static $multiSite = false;
+	public static $multiSite = false;
+
+	// Protected --------------
 
 	// Variables -----------------------------
 
@@ -134,13 +134,59 @@ abstract class Entity extends \yii\db\ActiveRecord {
 
 	public static function queryWithAll( $config = [] ) {
 
-		$relations	= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [];
-		$query		= self::find();
+		// query generation
+		$query			= self::find();
+		$relations		= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [];
+		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
 
-		// Find with relations
+		$groups			= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : null;
+
+		// Relations -----------
+
+		$eager	= false;
+		$join	= 'LEFT JOIN';
+
 		foreach ( $relations as $relation ) {
 
-			$query->findWith( $relation );
+			if( is_array( $relation ) ) {
+
+				$eager	= isset( $relation[ 'eager' ] ) ? $relation[ 'eager' ] : false;
+				$join	= isset( $relation[ 'join' ] ) ? $relation[ 'join' ] : 'LEFT JOIN';
+
+				$query->joinWith( $relation[ 'relation' ], $eager, $join );
+			}
+			else {
+
+				$query->joinWith( $relation );
+			}
+		}
+
+		// Conditions ----------
+
+		if( isset( $conditions ) ) {
+
+			$query 	= $query->andWhere( $conditions );
+		}
+
+		// Filters -------------
+
+		if( isset( $filters ) ) {
+
+			foreach ( $filters as $filter ) {
+
+				$query 	= $query->andFilterWhere( $filter );
+			}
+		}
+
+		// Grouping -------------
+
+		if( isset( $groups ) ) {
+
+			foreach ( $groups as $group ) {
+
+				$query 	= $query->groupBy( $groups );
+			}
 		}
 
 		return $query;

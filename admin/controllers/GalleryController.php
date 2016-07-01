@@ -10,18 +10,43 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
 
 		$this->sidebar 		= [ 'parent' => 'sidebar-core', 'child' => 'gallery' ];
+
+		$this->returnUrl	= Url::previous( 'galleries' );
+		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/gallery/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// GalleryController -----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// GalleryController ---------------------
 
 	public function actionAll() {
 

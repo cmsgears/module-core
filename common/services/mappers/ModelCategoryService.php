@@ -3,59 +3,82 @@ namespace cmsgears\core\common\services\mappers;
 
 // Yii Imports
 use \Yii;
-use yii\db\Query;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\resources\Category;
 use cmsgears\core\common\models\mappers\ModelCategory;
+
+use cmsgears\core\common\services\interfaces\resources\ICategoryService;
+use cmsgears\core\common\services\interfaces\mappers\IModelCategoryService;
+
+use cmsgears\core\common\services\traits\MapperTrait;
 
 /**
  * The class ModelCategoryService is base class to perform database activities for ModelCategory Entity.
  */
-class ModelCategoryService extends \cmsgears\core\common\services\base\Service {
+class ModelCategoryService extends \cmsgears\core\common\services\base\EntityService implements IModelCategoryService {
 
-	// Static Methods ----------------------------------------------
+	// Variables ---------------------------------------------------
 
-	// Read ----------------
+	// Globals -------------------------------
 
-	// Read - Models ---
+	// Constants --------------
 
-	public static function findByParentType( $parentType ) {
+	// Public -----------------
 
-		return ModelCategory::findByParentType( $parentType );
-	}
+	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelCategory';
 
-	public static function findByParentId( $parentId ) {
+	public static $modelTable	= CoreTables::TABLE_MODEL_CATEGORY;
 
-		return ModelCategory::findByParentId( $parentId );
-	}
+	public static $parentType	= null;
 
-	public static function findActiveByParentId( $parentId ) {
+	// Protected --------------
 
-		return ModelCategory::findActiveByParentId( $parentId );
-	}
+	// Variables -----------------------------
 
-	public static function findByCategoryId( $parentId, $parentType, $categoryId ) {
+	// Public -----------------
 
-		return ModelCategory::findByCategoryId( $parentId, $parentType, $categoryId );
-	}
+	// Protected --------------
 
-	public static function findByParent( $parentId, $parentType ) {
+	// Private ----------------
 
-		return ModelCategory::findByParent( $parentId, $parentType );
-	}
+	private $categoryService;
 
-	public static function findActiveByCategoryIdParentType( $categoryId, $parentType ) {
+	// Traits ------------------------------------------------------
 
-		return ModelCategory::findActiveByCategoryIdParentType( $categoryId, $parentType );
-	}
+	use MapperTrait;
 
-	public static function findActiveByParent( $parentId, $parentType ) {
+	// Constructor and Initialisation ------------------------------
 
-		return ModelCategory::findActiveByParent( $parentId, $parentType );
-	}
+    public function __construct( ICategoryService $categoryService, $config = [] ) {
 
-	public static function getModelCounts( $parentType, $categoryType ) {
+		$this->categoryService	= $categoryService;
+
+        parent::__construct( $config );
+    }
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// ModelCategoryService ------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+	public function getModelCounts( $parentType, $categoryType ) {
 
 		$categoryTable	= CoreTables::TABLE_CATEGORY;
 		$mcategoryTable	= CoreTables::TABLE_MODEL_CATEGORY;
@@ -83,9 +106,9 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\Service {
 		return $returnArr;
 	}
 
-	// Read - Lists ----
+    // Read - Lists ----
 
-	public static function findActiveCategoryIdList( $categoryId, $parentType ) {
+	public function getActiveCategoryIdList( $categoryId, $parentType ) {
 
 		$models = ModelCategory::findActiveByCategoryIdParentType( $categoryId, $parentType );
 		$ids	= [];
@@ -100,7 +123,7 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\Service {
 		return $ids;
 	}
 
-    public static function findActiveCategoryIdListByParent( $parentId, $parentType ) {
+    public function getActiveCategoryIdListByParent( $parentId, $parentType ) {
 
         $models = ModelCategory::findActiveByParent( $parentId, $parentType );
         $ids    = [];
@@ -115,9 +138,13 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\Service {
         return $ids;
     }
 
-	// Create -----------
+    // Read - Maps -----
 
-	public static function create( $categoryId, $parentId, $parentType ) {
+	// Read - Others ---
+
+	// Create -------------
+
+	public function createByParams( $categoryId, $parentId, $parentType ) {
 
 		$modelCategory				= new ModelCategory();
 
@@ -128,30 +155,23 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\Service {
 		$modelCategory->save();
 	}
 
-	// Update -----------
+	// Update -------------
 
-	public static function update( $parentId, $parentType, $categoryId ) {
+	public function updateByParams( $parentId, $parentType, $categoryId ) {
 
-		$existingModelCategory	= self::findByCategoryId( $parentId, $parentType, $categoryId );
+		$existingModelCategory	= $this->getByModelId( $parentId, $parentType, $categoryId );
 
 		if( isset( $existingModelCategory ) ) {
 
-			self::updateActive( $existingModelCategory, 1 );
+			$this->updateActive( $existingModelCategory, true );
 		}
 		else {
 
-			self::create( $categoryId, $parentId, $parentType );
+			$this->createByParams( $categoryId, $parentId, $parentType );
 		}
 	}
 
-	public static function updateActive( $model, $active ) {
-
-		$model->active	= $active;
-
-		$model->update();
-	}
-
-	public static function bindCategories( $binder, $parentType ) {
+	public function bindCategories( $binder, $parentType ) {
 
 		$parentId	= $binder->binderId;
 		$allData	= $binder->allData;
@@ -192,21 +212,31 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\Service {
 		return true;
 	}
 
-	// Delete -----------
+	// Delete -------------
 
-	public static function delete( $model ) {
+	// Static Methods ----------------------------------------------
 
-		$existingModel	= self::findById( $model->id );
+	// CMG parent classes --------------------
 
-		$existingModel->delete();
+	// ModelCategoryService ------------------
 
-		return true;
-	}
+	// Data Provider ------
 
-	public static function deleteByCategoryId( $categoryId ) {
+	// Read ---------------
 
-		return ModelCategory::deleteByCategoryId( $categoryId );
-	}
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

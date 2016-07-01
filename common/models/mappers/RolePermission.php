@@ -67,8 +67,8 @@ class RolePermission extends \cmsgears\core\common\models\base\Mapper {
     public function attributeLabels() {
 
         return [
-            'roleId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ROLE ),
-            'permissionId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PERMISSION )
+            'roleId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ROLE ),
+            'permissionId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PERMISSION )
         ];
     }
 
@@ -115,6 +115,28 @@ class RolePermission extends \cmsgears\core\common\models\base\Mapper {
 	// RolePermission ------------------------
 
 	// Read - Query -----------
+
+	public static function queryWithAll( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'role', 'permission' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithRole( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'role' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithPermission( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'permission' ];
+
+		return parent::queryWithAll( $config );
+	}
 
 	// Read - Find ------------
 

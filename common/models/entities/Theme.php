@@ -15,6 +15,7 @@ use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 use cmsgears\core\common\models\traits\NameTrait;
+use cmsgears\core\common\models\traits\SlugTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
@@ -28,6 +29,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $name
  * @property string $slug
  * @property string $description
+ * @property boolean $default
  * @property string $renderer
  * @property string $basePath
  * @property datetime $createdAt
@@ -60,8 +62,9 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
 	// Traits ------------------------------------------------------
 
     use CreateModifyTrait;
+	use DataTrait;
 	use NameTrait;
-    use DataTrait;
+	use SlugTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -106,17 +109,18 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
         $rules = [
             [ [ 'name' ], 'required' ],
             [ [ 'id', 'content', 'data' ], 'safe' ],
-            [ [ 'name', 'renderer' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ [ 'description', 'basePath' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->xLargeText ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'name', 'renderer' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+            [ [ 'description', 'basePath' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+            [ [ 'name' ], 'unique', 'targetAttribute' => [ 'name' ] ],
+            [ [ 'slug' ], 'unique', 'targetAttribute' => [ 'slug' ] ],
+            [ 'default', 'boolean' ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
         // trim if required
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
             $trim[] = [ [ 'name', 'description', 'basePath', 'renderer' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -132,11 +136,11 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
     public function attributeLabels() {
 
         return [
-            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-            'basePath' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BASE_PATH ),
-            'renderer' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_RENDERER ),
-            'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DATA )
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+            'basePath' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BASE_PATH ),
+            'renderer' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RENDERER ),
+            'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
         ];
     }
 
@@ -147,6 +151,11 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
 	// Validators ----------------------------
 
 	// Theme ---------------------------------
+
+    public function getDefaultStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->default );
+    }
 
 	// Static Methods ----------------------------------------------
 
@@ -170,17 +179,9 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Find ------------
 
-    /**
-     * @return Theme - by slug
-     */
-    public static function findBySlug( $slug ) {
-
-        return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
-    }
-
     public static function findDefault() {
 
-        return self::find()->one();
+        return self::find()->where( 'default=1' )->one();
     }
 
 	// Create -----------------

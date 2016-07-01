@@ -10,23 +10,48 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
-		
+        parent::init();
+
 		$this->sidebar 		= [ 'parent' => 'sidebar-core', 'child' => 'gallery-template' ];
 
 		$this->type			= CoreGlobal::TYPE_GALLERY;
+
+		$this->returnUrl	= Url::previous( 'templates' );
+		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/gallery/template/all' ], true );
 	}
 
-	// Instance Methods ---------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// CategoryController --------------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// TemplateController --------------------
 
 	public function actionAll() {
-		
+
 		Url::remember( [ 'gallery/template/all' ], 'templates' );
 
 		return parent::actionAll();

@@ -105,12 +105,12 @@ class Address extends \cmsgears\core\common\models\base\Resource {
             [ [ 'longitude', 'latitude', 'cityId' ], 'required', 'on' => 'locationWithCityId' ],
             [ [ 'longitude', 'latitude', 'city' ], 'required', 'on' => 'locationWithCityName' ],
             [ [ 'id' ], 'safe' ],
-			[ [ 'zip', 'subZip' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->smallText ],
-			[ [ 'phone', 'fax' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-			[ [ 'title' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ [ 'line1', 'line2', 'line3', 'firstName', 'lastName', 'email', 'website' ], 'string', 'min' => 0, 'max' => Yii::$app->cmgCore->xLargeText ],
+			[ [ 'zip', 'subZip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+			[ [ 'phone', 'fax' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'title' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+            [ [ 'line1', 'line2', 'line3', 'firstName', 'lastName', 'email', 'website' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
             [ [ 'zip', 'zip4' ], 'alphanumhyphenspace' ],
-            [ [ 'countryId', 'provinceId', 'cityId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'countryId', 'provinceId', 'cityId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'longitude', 'latitude', 'zoomLevel' ], 'number' ]
         ];
 
@@ -131,25 +131,25 @@ class Address extends \cmsgears\core\common\models\base\Resource {
     public function attributeLabels() {
 
         return [
-            'countryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
-            'provinceId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PROVINCE ),
-            'cityId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
-            'title' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LINE1 ),
-            'line1' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LINE1 ),
-            'line2' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LINE2 ),
-            'line3' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LINE3 ),
-            'city' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CITY ),
-            'zip' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ZIP ),
-            'zip4' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ZIP4 ),
-            'firstName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
-            'lastName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
-            'phone' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
-            'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
-            'fax' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FAX ),
-            'website' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
-            'longitude' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LONGITUDE ),
-            'latitude' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LATITUDE ),
-            'zoomLevel' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ZOOM )
+            'countryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
+            'provinceId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PROVINCE ),
+            'cityId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+            'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE1 ),
+            'line1' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE1 ),
+            'line2' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE2 ),
+            'line3' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE3 ),
+            'city' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CITY ),
+            'zip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP ),
+            'zip4' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP4 ),
+            'firstName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
+            'lastName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
+            'phone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
+            'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+            'fax' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FAX ),
+            'website' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
+            'longitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LONGITUDE ),
+            'latitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LATITUDE ),
+            'zoomLevel' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZOOM )
         ];
     }
 
@@ -230,6 +230,35 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 	// Address -------------------------------
 
 	// Read - Query -----------
+
+	public static function queryWithAll( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country', 'province', 'city' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithCountry( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'country' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithProvince( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'province' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithCountryProvince( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'country', 'province' ];
+
+		return parent::queryWithAll( $config );
+	}
 
 	// Read - Find ------------
 

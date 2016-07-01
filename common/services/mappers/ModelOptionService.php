@@ -3,30 +3,124 @@ namespace cmsgears\core\common\services\mappers;
 
 // Yii Imports
 use \Yii;
-use yii\db\Query;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\resources\Option;
 use cmsgears\core\common\models\mappers\ModelOption;
+
+use cmsgears\core\common\services\interfaces\resources\IOptionService;
+use cmsgears\core\common\services\interfaces\mappers\IModelOptionService;
+
+use cmsgears\core\common\services\traits\MapperTrait;
 
 /**
  * The class ModelOptionService is base class to perform database activities for ModelCategory Entity.
  */
-class ModelOptionService extends \cmsgears\core\common\services\base\Service {
+class ModelOptionService extends \cmsgears\core\common\services\base\EntityService implements IModelOptionService {
+
+	// Variables ---------------------------------------------------
+
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelOption';
+
+	public static $modelTable	= CoreTables::TABLE_MODEL_OPTION;
+
+	public static $parentType	= null;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	private $optionService;
+
+	// Traits ------------------------------------------------------
+
+	use MapperTrait;
+
+	// Constructor and Initialisation ------------------------------
+
+    public function __construct( IOptionService $optionService, $config = [] ) {
+
+		$this->optionService	= $optionService;
+
+        parent::__construct( $config );
+    }
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// ModelOptionService --------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	public function update( $model, $config = [] ) {
+
+		return parent::update( $model, [
+			'attributes' => [ 'order', 'active' ]
+		]);
+ 	}
+
+	// Delete -------------
+
 
 	// Static Methods ----------------------------------------------
 
-	// Read ----------------
+	// CMG parent classes --------------------
 
-	// Read - Models ---
+	// ModelOptionService --------------------
 
-	// Read - Lists ----
+	// Data Provider ------
 
-	// Create -----------
+	// Read ---------------
 
-	// Update -----------
+    // Read - Models ---
 
-	public static function bindOptions( $binder, $parentType ) {
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	public function bindOptions( $binder, $parentType ) {
 
 		$parentId	= $binder->binderId;
 		$allData	= $binder->allData;
@@ -67,7 +161,7 @@ class ModelOptionService extends \cmsgears\core\common\services\base\Service {
 		return true;
 	}
 
-	// Delete -----------
+	// Delete -------------
 }
 
 ?>

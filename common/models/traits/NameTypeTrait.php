@@ -1,9 +1,15 @@
 <?php
 namespace cmsgears\core\common\models\traits;
 
+// Yii Import
+use \Yii;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+/**
+ * The model using this trait must have name and type columns. It must also support unique name for a particular type.
+ */
 trait NameTypeTrait {
 
 	// Instance methods --------------------------------------------
@@ -29,7 +35,7 @@ trait NameTypeTrait {
 
             if( static::isExistByNameType( $this->name, $this->type ) ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
@@ -45,7 +51,7 @@ trait NameTypeTrait {
 
 			if( isset( $existingEntity ) && $existingEntity->id != $this->id ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
 			}
         }
     }
@@ -60,14 +66,46 @@ trait NameTypeTrait {
 
 	// Read - Query -----------
 
-    public static function queryByType( $type ) {
+    public static function queryByName( $name ) {
 
-        return static::find()->where( 'type=:type', [ ':type' => $type ] );
+		if( static::$multiSite ) {
+
+			$siteId	= Yii::$app->core->siteId;
+
+			return static::find()->where( 'name=:name AND siteId=:siteId', [ ':name' => $name, ':siteId' => $siteId ] );
+		}
+		else {
+
+			return static::find()->where( 'name=:name', [ ':name' => $name ] );
+		}
     }
 
-    public static function queryByTypeName( $type, $name ) {
+    public static function queryByType( $type ) {
 
-        return self::find()->where( 'type=:type AND slug=:name', [ ':type' => $type, ':name' => $name ] );
+		if( static::$multiSite ) {
+
+			$siteId	= Yii::$app->core->siteId;
+
+			return static::find()->where( 'type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] );
+		}
+		else {
+
+			return static::find()->where( 'type=:type', [ ':type' => $type ] );
+		}
+    }
+
+    public static function queryByNameType( $name, $type ) {
+
+		if( static::$multiSite ) {
+
+			$siteId	= Yii::$app->core->siteId;
+
+			return static::find()->where( 'name=:name AND type=:type AND siteId=:siteId', [ ':name' => $name, ':type' => $type, ':siteId' => $siteId ] );
+		}
+		else {
+
+			return static::find()->where( 'name=:name AND type=:type', [ ':name' => $name, ':type' => $type ] );
+		}
     }
 
 	// Read - Find ------------
@@ -75,26 +113,27 @@ trait NameTypeTrait {
     /**
      * @return array - ActiveRecord by type
      */
-    public static function findByType( $type ) {
+    public static function findByType( $type, $first = false ) {
 
-        return static::find()->where( 'type=:type', [ ':type' => $type ] )->all();
+		if( $first ) {
+
+			return self::queryByType( $type )->one();
+		}
+
+        return self::queryByType( $type )->all();
     }
 
 	/**
 	 * @return ActiveRecord - by name
 	 */
-	public static function findByName( $name ) {
+	public static function findByName( $name, $first = false ) {
 
-		if( static::$multiSite ) {
+		if( $first ) {
 
-			$siteId	= Yii::$app->cmgCore->siteId;
-
-			return static::find()->where( 'name=:name AND siteId=:siteId', [ ':name' => $name, ':siteId' => $siteId ] )->one();
+			return self::queryByName( $name )->one();
 		}
-		else {
 
-			return static::find()->where( 'name=:name', [ ':name' => $name ] )->one();
-		}
+		return self::queryByName( $name )->all();
 	}
 
 	/**
@@ -102,16 +141,7 @@ trait NameTypeTrait {
 	 */
 	public static function findByNameType( $name, $type ) {
 
-		if( static::$multiSite ) {
-
-			$siteId	= Yii::$app->cmgCore->siteId;
-
-			return static::find()->where( 'name=:name AND type=:type AND siteId=:siteId', [ ':name' => $name, ':type' => $type, ':siteId' => $siteId ] )->one();
-		}
-		else {
-
-			return static::find()->where( 'name=:name AND type=:type', [ ':name' => $name, ':type' => $type ] )->one();
-		}
+		return self::queryByNameType( $name, $type )->one();
 	}
 
     /**
@@ -119,7 +149,7 @@ trait NameTypeTrait {
      */
 	public static function isExistByNameType( $name, $type ) {
 
-		$model	= static::findByNameType( $name, $type );
+		$model	= self::findByNameType( $name, $type );
 
 		return isset( $model );
 	}

@@ -1,7 +1,27 @@
 <?php
 namespace cmsgears\core\common\models\forms;
 
+// Yii Imports
+use \Yii;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 class GenericForm extends \yii\base\Model {
+
+	// Variables ---------------------------------------------------
+
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
 	public $active;
 
@@ -10,6 +30,14 @@ class GenericForm extends \yii\base\Model {
 	public $attribs;
 
 	public $captcha;
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
 
     public function __construct( $config = [] ) {
 
@@ -36,9 +64,13 @@ class GenericForm extends \yii\base\Model {
 		parent::__construct( $config );
     }
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Object
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Object --------
 
 	public function __set( $name, $value ) {
 
@@ -54,7 +86,9 @@ class GenericForm extends \yii\base\Model {
         }
 	}
 
-	// yii\base\Model
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
  	public function rules() {
 
@@ -119,7 +153,13 @@ class GenericForm extends \yii\base\Model {
         return $labels;
     }
 
-	// Generic Form
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// GenericForm ---------------------------
 
 	/**
 	 * The method collect the list of class members and their values using reflection.

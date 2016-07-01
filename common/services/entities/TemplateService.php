@@ -2,46 +2,107 @@
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
+use \Yii;
+use yii\data\Sort;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Template;
 
-class TemplateService extends \cmsgears\core\common\services\base\Service {
+use cmsgears\core\common\services\interfaces\entities\ITemplateService;
 
-	// Static Methods ----------------------------------------------
+use cmsgears\core\common\services\traits\NameSlugTypeTrait;
 
-	// Read ----------------
+/**
+ * The class TemplateService is base class to perform database activities for Template Entity.
+ */
+class TemplateService extends \cmsgears\core\common\services\base\EntityService implements ITemplateService {
 
-	public static function findById( $id ) {
+	// Variables ---------------------------------------------------
 
-		return Template::findById( $id );
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\core\common\models\entities\Template';
+
+	public static $modelTable	= CoreTables::TABLE_TEMPLATE;
+
+	public static $parentType	= CoreGlobal::TYPE_TEMPLATE;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	use NameSlugTypeTrait;
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// TemplateService -----------------------
+
+	// Data Provider ------
+
+	public function getPage( $config = [] ) {
+
+	    $sort = new Sort([
+	        'attributes' => [
+	            'name' => [
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => [ 'name' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'name',
+	            ]
+	        ]
+	    ]);
+
+		$config[ 'sort' ] = $sort;
+
+		return parent::findPage( $config );
 	}
 
-	public static function findBySlug( $slug ) {
+	public function getPageByType( $type, $config = [] ) {
 
-		return Template::queryBySlug( $slug )->one();
+		$modelTable	= self::$modelTable;
+
+		$config[ 'conditions' ][ "$modelTable.type" ] 	= $type;
+
+		return $this->getPage( $config );
 	}
 
-	public static function findByType( $type ) {
+	// Read ---------------
 
-		return Template::queryByType( $type )->one();
-	}
+    // Read - Models ---
 
-	public static function findByTypeSlug( $type, $slug ) {
+    // Read - Lists ----
 
-		return Template::queryByTypeSlug( $type, $slug )->one();
-	}
+    // Read - Maps -----
 
-	public static function findByTypeName( $type, $name ) {
+	public function getIdNameMap( $options = [] ) {
 
-		return Template::queryByTypeName( $type, $name )->one();
-	}
-
-	public static function getIdNameMap( $options = [] ) {
-
-		$map = self::findMap( 'id', 'name', CoreTables::TABLE_TEMPLATE, $options );
+		$map = parent::getIdNameMap( $options );
 
 		if( isset( $options[ 'default' ] ) && $options[ 'default' ] ) {
 
@@ -53,57 +114,44 @@ class TemplateService extends \cmsgears\core\common\services\base\Service {
 		return $map;
 	}
 
-	public static function getIdNameMapByType( $type, $options = [] ) {
+	// Read - Others ---
 
-		$options[ 'conditions' ][ 'type' ] = $type;
+	// Create -------------
 
-		return self::getIdNameMap( $options );
-	}
+	// Update -------------
 
-	// Data Provider ----
+	public function update( $model, $config = [] ) {
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+		return parent::update( $model, [
+			'attributes' => [ 'name', 'icon', 'description', 'renderer', 'fileRender', 'layout', 'layoutGroup', 'viewPath', 'content' ]
+		]);
+ 	}
 
-		return self::getDataProvider( new Template(), $config );
-	}
+	// Delete -------------
 
-	// Create -----------
+	// Static Methods ----------------------------------------------
 
-	public static function create( $template ) {
+	// CMG parent classes --------------------
 
-		$template->save();
+	// TemplateService -----------------------
 
-		return $template;
-	}
+	// Data Provider ------
 
-	// Update -----------
+	// Read ---------------
 
-	public static function update( $template ) {
+    // Read - Models ---
 
-		$templateToUpdate	= self::findById( $template->id );
+    // Read - Lists ----
 
-		$templateToUpdate->copyForUpdateFrom( $template, [ 'name', 'icon', 'description', 'renderer', 'fileRender', 'layout', 'layoutGroup', 'viewPath', 'content' ] );
+    // Read - Maps -----
 
-		$templateToUpdate->update();
+	// Read - Others ---
 
-		return $templateToUpdate;
-	}
+	// Create -------------
 
-	// Delete -----------
+	// Update -------------
 
-	public static function delete( $template ) {
-
-		$existingTemplate	= self::findById( $template->id );
-
-		// Delete Template
-		$existingTemplate->delete();
-
-		return true;
-	}
+	// Delete -------------
 }
 
 ?>

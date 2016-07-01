@@ -12,9 +12,19 @@ use cmsgears\core\common\services\entities\UserService;
 
 class Register extends \yii\base\Model {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Public Variables --------------------
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
     public $email;
     public $password;
@@ -25,18 +35,25 @@ class Register extends \yii\base\Model {
     public $mobile;
     public $terms;
 
-    // Instance Methods --------------------------------------------
+	// Protected --------------
 
-    // yii\base\Model
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
     public function rules() {
-
-        $trim       = [];
-
-        if( Yii::$app->cmgCore->trimFieldValue ) {
-
-            $trim[] = [ [ 'email', 'password', 'password_repeat', 'username', 'mobile', 'firstName', 'lastName' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-        }
 
         $rules = [
 			[ [ 'email', 'password', 'password_repeat', 'terms' ], 'required' ],
@@ -52,7 +69,9 @@ class Register extends \yii\base\Model {
 			[ 'terms', 'termsValidator' ]
 		];
 
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+		if( Yii::$app->core->trimFieldValue ) {
+
+			$trim[] = [ [ 'email', 'password', 'password_repeat', 'username', 'mobile', 'firstName', 'lastName' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -63,15 +82,21 @@ class Register extends \yii\base\Model {
 	public function attributeLabels() {
 
 		return [
-			'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
-			'password' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PASSWORD ),
-			'password_repeat' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PASSWORD_REPEAT ),
-			'username' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USERNAME ),
-			'firstName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
-			'lastName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
-			'terms' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TERMS )
+			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+			'password' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PASSWORD ),
+			'password_repeat' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PASSWORD_REPEAT ),
+			'username' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USERNAME ),
+			'firstName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
+			'lastName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
+			'terms' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TERMS )
 		];
 	}
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
 
     public function validateEmail( $attribute, $params ) {
 
@@ -79,7 +104,7 @@ class Register extends \yii\base\Model {
 
             if( UserService::isExistByEmail( $this->email ) ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
+                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
             }
         }
     }
@@ -90,7 +115,7 @@ class Register extends \yii\base\Model {
 
             if( UserService::isExistByUsername( $this->username ) ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
+                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
             }
         }
     }
@@ -99,9 +124,12 @@ class Register extends \yii\base\Model {
 
         if( !isset( $this->terms ) || strlen( $this->terms ) <= 0 ) {
 
-            $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_TERMS ) );
+            $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_TERMS ) );
         }
     }
+
+	// Register ------------------------------
+
 }
 
 ?>

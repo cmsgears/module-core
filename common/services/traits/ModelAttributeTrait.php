@@ -1,12 +1,26 @@
 <?php
 namespace cmsgears\core\common\services\traits;
 
+// Yii Imports
+use \Yii;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 /**
  * Used by services with base model having attributes trait.
  */
 trait ModelAttributeTrait {
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// ModelAttributeTrait -------------------
 
 	// Data Provider ------
 
@@ -18,15 +32,34 @@ trait ModelAttributeTrait {
 
     // Read - Maps -----
 
+	public function getAttributeMapByType( $model, $type ) {
+
+		return self::findAttributeMapByType( $model, $type );
+	}
+
 	// Read - Others ---
 
 	// Create -------------
 
 	// Update -------------
 
+	public function updateAttributes( $attributes ) {
+
+		foreach ( $attributes as $attribute ) {
+
+			$this->modelAttributeService->update( $attribute );
+		}
+
+		return true;
+	}
+
 	// Delete -------------
 
 	// Static Methods ----------------------------------------------
+
+	// CMG parent classes --------------------
+
+	// ModelAttributeTrait -------------------
 
 	// Data Provider ------
 
@@ -49,17 +82,8 @@ trait ModelAttributeTrait {
 
 	// Update -------------
 
-	public static function updateAttributes( $model, $attributes ) {
-
-		foreach ( $attributes as $attribute ) {
-
-			ModelAttributeService::update( $attribute );
-		}
-
-		return true;
-	}
-
 	// Delete -------------
+
 }
 
 ?>

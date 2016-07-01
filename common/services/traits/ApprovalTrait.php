@@ -1,6 +1,9 @@
 <?php
 namespace cmsgears\core\common\services\traits;
 
+// Yii Imports
+use \Yii;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
@@ -11,7 +14,33 @@ use cmsgears\core\common\models\interfaces\IApproval;
  */
 trait ApprovalTrait {
 
-	public static function updateStatus( $model, $status ) {
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// ApprovalTrait -------------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	public function updateStatus( $model, $status ) {
 
 		$model->status	= $status;
 
@@ -20,12 +49,17 @@ trait ApprovalTrait {
 		return $model;
 	}
 
-	public static function approve( $model, $public = true ) {
+	public function confirm( $model, $public = true ) {
 
-		return self::updateStatus( $model, IApproval::STATUS_APPROVED );
+		return $this->updateStatus( $model, IApproval::STATUS_CONFIRMED );
 	}
 
-	public static function setRejectMessage( $model, $message = null ) {
+	public function approve( $model, $public = true ) {
+
+		return $this->updateStatus( $model, IApproval::STATUS_ACTIVE );
+	}
+
+	public function setRejectMessage( $model, $message = null ) {
 
 		if( isset( $message ) && strlen( $message ) > 0 ) {
 
@@ -37,26 +71,53 @@ trait ApprovalTrait {
 		}
 	}
 
-	public static function reject( $model, $message = null ) {
+	public function reject( $model, $message = null ) {
 
-		self::setRejectMessage( $model, $message );
+		$this->setRejectMessage( $model, $message );
 
-		return self::updateStatus( $model, IApproval::STATUS_REJECTED );
+		return $this->updateStatus( $model, IApproval::STATUS_REJECTED );
 	}
 
-	public static function freeze( $model, $message = null ) {
+	public function freeze( $model, $message = null ) {
 
-		self::setRejectMessage( $model, $message );
+		$this->setRejectMessage( $model, $message );
 
-		return self::updateStatus( $model, IApproval::STATUS_FROJEN );
+		return $this->updateStatus( $model, IApproval::STATUS_FROJEN );
 	}
 
-	public static function block( $model, $message = null ) {
+	public function block( $model, $message = null ) {
 
-		self::setRejectMessage( $model, $message );
+		$this->setRejectMessage( $model, $message );
 
-		return self::updateStatus( $model, IApproval::STATUS_BLOCKED );
+		return $this->updateStatus( $model, IApproval::STATUS_BLOCKED );
 	}
+
+	// Delete -------------
+
+	// Static Methods ----------------------------------------------
+
+	// CMG parent classes --------------------
+
+	// ApprovalTrait -------------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
+
 }
 
 ?>

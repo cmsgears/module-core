@@ -1,7 +1,23 @@
 <?php
 namespace cmsgears\core\frontend\controllers\apix;
 
-class FileController extends \cmsgears\core\common\controllers\apix\FileController {
+// Yii Imports
+use \Yii;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+class FileController extends \cmsgears\core\frontend\controllers\base\Controller {
+
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
@@ -12,9 +28,47 @@ class FileController extends \cmsgears\core\common\controllers\apix\FileControll
 		$this->enableCsrfValidation = false;
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	public function behaviors() {
+
+        return [
+            'rbac' => [
+                'class' => Yii::$app->core->getRbacFilterClass(),
+                'actions' => [
+	                'fileHandler'  => [ 'permission' => CoreGlobal::PERM_USER ]
+                ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+	                'fileHandler'  => [ 'post' ]
+                ]
+            ]
+        ];
+    }
+
+	// yii\base\Controller ----
+
+    public function actions() {
+
+        return [
+        	'file-handler' => [ 'class' => 'cmsgears\core\common\actions\file\FileHandler' ]
+		];
+    }
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// FileController ------------------------
+
 }
 
 ?>

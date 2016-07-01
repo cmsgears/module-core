@@ -63,15 +63,14 @@ class Province extends \cmsgears\core\common\models\base\Entity {
             [ [ 'countryId', 'code', 'name' ], 'required' ],
             [ [ 'id' ], 'safe' ],
             [ [ 'countryId', 'code' ], 'unique', 'targetAttribute' => [ 'countryId', 'code' ] ],
-            [ 'countryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'code', 'codeNum' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->smallText ],
-            [ 'name', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
+            [ [ 'countryId', 'name' ], 'unique', 'targetAttribute' => [ 'countryId', 'name' ] ],
+            [ 'countryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+            [ [ 'code', 'codeNum' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+            [ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ]
         ];
 
         // trim if required
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
             $trim[] = [ [ 'name', 'code' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -87,10 +86,10 @@ class Province extends \cmsgears\core\common\models\base\Entity {
     public function attributeLabels() {
 
         return [
-            'countryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
-            'code' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE ),
-            'codeNum' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE_NUM ),
-            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
+            'countryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
+            'code' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CODE ),
+            'codeNum' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CODE_NUM ),
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME )
         ];
     }
 
@@ -99,36 +98,6 @@ class Province extends \cmsgears\core\common\models\base\Entity {
 	// CMG parent classes --------------------
 
 	// Validators ----------------------------
-
-    /**
-     * Validates whether a province existing with the same name for same country.
-     */
-    public function validateNameCreate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-            if( self::isExistByNameCountryId( $this->name, $this->countryId ) ) {
-
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-            }
-        }
-    }
-
-    /**
-     * Validates whether a province existing with the same name for same country.
-     */
-    public function validateNameUpdate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-            $existingProvince = self::findByNameCountryId( $this->name, $this->countryId );
-
-            if( isset( $existingProvince ) && $this->id != $existingProvince->id ) {
-
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-            }
-        }
-    }
 
 	// Province ------------------------------
 
@@ -160,6 +129,21 @@ class Province extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Query -----------
 
+	public static function queryWithAll( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithCountry( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'country' ];
+
+		return parent::queryWithAll( $config );
+	}
+
 	// Read - Find ------------
 
     /**
@@ -168,32 +152,6 @@ class Province extends \cmsgears\core\common\models\base\Entity {
     public static function findByCountryId( $countryId ) {
 
         return self::find()->where( 'countryId=:id', [ ':id' => $countryId ] )->all();
-    }
-
-    /**
-     * @return Province - by name and country id
-     */
-    public static function findByNameCountryId( $name, $countryId ) {
-
-        return self::find()->where( 'countryId=:id AND name=:name', [ ':id' => $countryId, ':name' => $name ] )->one();
-    }
-
-    /**
-     * @return Province - check whether a province exist by the provided name and country id
-     */
-    public static function isExistByNameCountryId( $name, $countryId ) {
-
-        $province = self::findByNameCountryId( $name, $countryId );
-
-        return isset( $province );
-    }
-
-    /**
-     * @return Province - by code and country id
-     */
-    public static function findByCodeCountryId( $code, $countryId ) {
-
-        return self::find()->where( 'countryId=:id AND code=:code', [ ':id' => $countryId, ':code' => $code ] )->one();
     }
 
 	// Create -----------------

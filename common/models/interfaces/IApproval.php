@@ -13,7 +13,8 @@ interface IApproval {
 	const STATUS_NEW		= 10000;
 	const STATUS_REJECTED	= 12000;
 	const STATUS_RE_SUBMIT	= 14000;
-	const STATUS_APPROVED	= 16000;
+	const STATUS_CONFIRMED	= 15000;
+	const STATUS_ACTIVE		= 16000;
 	const STATUS_FROJEN		= 18000;
 	const STATUS_BLOCKED	= 19000;
 	const STATUS_TERMINATED	= 20000;
@@ -26,7 +27,9 @@ interface IApproval {
 
 	public function isReSubmit( $strict = true );
 
-	public function isApproved( $strict = true );
+	public function isConfirmed( $strict = true );
+
+	public function isActive( $strict = true );
 
 	public function isFrojen( $strict = true );
 

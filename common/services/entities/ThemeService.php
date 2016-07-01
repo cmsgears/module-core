@@ -3,76 +3,133 @@ namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
 use \Yii;
+use yii\data\Sort;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Theme;
 
-class ThemeService extends \cmsgears\core\common\services\base\Service {
+use cmsgears\core\common\services\interfaces\entities\IThemeService;
+
+use cmsgears\core\common\services\traits\NameTrait;
+use cmsgears\core\common\services\traits\SlugTrait;
+
+/**
+ * The class ThemeService is base class to perform database activities for Theme Entity.
+ */
+class ThemeService extends \cmsgears\core\common\services\base\EntityService implements IThemeService {
+
+	// Variables ---------------------------------------------------
+
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\core\common\models\entities\Theme';
+
+	public static $modelTable	= CoreTables::TABLE_THEME;
+
+	public static $parentType	= CoreGlobal::TYPE_THEME;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	use NameTrait;
+	use SlugTrait;
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// ThemeService --------------------------
+
+	// Data Provider ------
+
+	public function getPage( $config = [] ) {
+
+	    $sort = new Sort([
+	        'attributes' => [
+	            'name' => [
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'name'
+	            ]
+	        ]
+	    ]);
+
+		$config[ 'sort' ] = $sort;
+
+		return parent::findPage( $config );
+	}
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	public function update( $model, $config = [] ) {
+
+		return parent::update( $model, [
+			'attributes' => [ 'name', 'description', 'basePath', 'renderer' ]
+		]);
+ 	}
+
+	// Delete -------------
 
 	// Static Methods ----------------------------------------------
 
-	// Read ----------------
+	// CMG parent classes --------------------
 
-	/**
-	 * @param integer $id
-	 * @return Activity
-	 */
-	public static function findById( $id ) {
+	// ThemeService --------------------------
 
-		return Theme::findById( $id );
-	}
+	// Data Provider ------
 
-	public static function getIdNameMap( $config = [] ) {
+	// Read ---------------
 
-		return self::findMap( 'id', 'name', CoreTables::TABLE_THEME, $config );
-	}
+    // Read - Models ---
 
-	// Data Provider ----
+    // Read - Lists ----
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+    // Read - Maps -----
 
-		return self::getDataProvider( new Theme(), $config );
-	}
+	// Read - Others ---
 
-	// Create -----------
+	// Create -------------
 
-	public static function create( $theme ) {
+	// Update -------------
 
-		// Create Theme
-		$theme->save();
-
-		return $theme;
-	}
-
-	// Update -----------
-
-	public static function update( $theme ) {
-
-		$themeToUpdate	= self::findById( $theme->id );
-
-		$themeToUpdate->copyForUpdateFrom( $theme, [ 'name', 'description', 'basePath', 'renderer' ] );
-
-		$themeToUpdate->update();
-
-		return $themeToUpdate;
-	}
-
-	// Delete -----------
-
-	public static function delete( $theme ) {
-
-		$existingTheme	= self::findById( $theme->id );
-
-		// Delete Theme
-		$existingTheme->delete();
-
-		return true;
-	}
+	// Delete -------------
 }
 
 ?>

@@ -35,13 +35,13 @@ class m160621_014408_core_data extends \yii\db\Migration {
 		$this->prefix		= 'cmg_';
 
 		// Get the values via config
-		$this->siteName		= Yii::$app->cmgMigration->getSiteName();
-		$this->siteTitle	= Yii::$app->cmgMigration->getSiteTitle();
+		$this->siteName		= Yii::$app->migration->getSiteName();
+		$this->siteTitle	= Yii::$app->migration->getSiteTitle();
 
-		$this->primaryDomain	= Yii::$app->cmgMigration->getPrimaryDomain();
+		$this->primaryDomain	= Yii::$app->migration->getPrimaryDomain();
 
-		$this->defaultSite	= Yii::$app->cmgMigration->getDefaultSite();
-		$this->defaultAdmin	= Yii::$app->cmgMigration->getDefaultAdmin();
+		$this->defaultSite	= Yii::$app->migration->getDefaultSite();
+		$this->defaultAdmin	= Yii::$app->migration->getDefaultAdmin();
 	}
 
     public function up() {
@@ -77,6 +77,8 @@ class m160621_014408_core_data extends \yii\db\Migration {
         ]);
 
 		$this->site	= Site::findBySlug( CoreGlobal::SITE_MAIN );
+
+		Yii::$app->core->setSite( $this->site );
 	}
 
 	private function insertLocale() {
@@ -96,9 +98,9 @@ class m160621_014408_core_data extends \yii\db\Migration {
 		$columns = [ 'localeId', 'status', 'email', 'username', 'passwordHash', 'firstName', 'lastName', 'registeredAt', 'lastLoginAt', 'authKey' ];
 
 		$users	= [
-			[ $this->locale->id, User::STATUS_APPROVED, "demomaster@$this->primaryDomain", 'demomaster', '$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W', 'demo', 'master', DateUtil::getDateTime(), DateUtil::getDateTime(), 'JuL37UBqGpjnA7kaPiRnlsiWRwbRvXx7' ],
-			[ $this->locale->id, User::STATUS_APPROVED, "demoadmin@$this->primaryDomain", 'demoadmin','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','admin', DateUtil::getDateTime(), DateUtil::getDateTime(), 'SQ1LLCWEPva4IKuQklILLGDpmUTGzq8E' ],
-			[ $this->locale->id, User::STATUS_APPROVED, "demouser@$this->primaryDomain", 'demouser','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','user', DateUtil::getDateTime(), DateUtil::getDateTime(), '-jG5ExHS0Y39ucSxHhl3PZ4xmPsfvQFC' ]
+			[ $this->locale->id, User::STATUS_ACTIVE, "demomaster@$this->primaryDomain", 'demomaster', '$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W', 'demo', 'master', DateUtil::getDateTime(), DateUtil::getDateTime(), 'JuL37UBqGpjnA7kaPiRnlsiWRwbRvXx7' ],
+			[ $this->locale->id, User::STATUS_ACTIVE, "demoadmin@$this->primaryDomain", 'demoadmin','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','admin', DateUtil::getDateTime(), DateUtil::getDateTime(), 'SQ1LLCWEPva4IKuQklILLGDpmUTGzq8E' ],
+			[ $this->locale->id, User::STATUS_ACTIVE, "demouser@$this->primaryDomain", 'demouser','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','user', DateUtil::getDateTime(), DateUtil::getDateTime(), '-jG5ExHS0Y39ucSxHhl3PZ4xmPsfvQFC' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_user', $columns, $users );
@@ -121,10 +123,10 @@ class m160621_014408_core_data extends \yii\db\Migration {
 
 		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
 
-		$superAdminRole		= Role::findBySlug( 'super-admin' );
-		$adminRole			= Role::findBySlug( 'admin' );
-		$userRole			= Role::findBySlug( 'user' );
-		$userManagerRole	= Role::findBySlug( 'user-manager' );
+		$superAdminRole		= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
+		$adminRole			= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$userRole			= Role::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
+		$userManagerRole	= Role::findBySlugType( 'user-manager', CoreGlobal::TYPE_SYSTEM );
 
 		// Permissions
 
@@ -140,11 +142,11 @@ class m160621_014408_core_data extends \yii\db\Migration {
 
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
 
-		$adminPerm			= Permission::findBySlug( 'admin' );
-		$userPerm			= Permission::findBySlug( 'user' );
-		$corePerm			= Permission::findBySlug( 'core' );
-		$identityPerm		= Permission::findBySlug( 'identity' );
-		$rbacPerm			= Permission::findBySlug( 'rbac' );
+		$adminPerm			= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$userPerm			= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
+		$corePerm			= Permission::findBySlugType( 'core', CoreGlobal::TYPE_SYSTEM );
+		$identityPerm		= Permission::findBySlugType( 'identity', CoreGlobal::TYPE_SYSTEM );
+		$rbacPerm			= Permission::findBySlugType( 'rbac', CoreGlobal::TYPE_SYSTEM );
 
 		// RBAC Mapping
 
@@ -162,9 +164,9 @@ class m160621_014408_core_data extends \yii\db\Migration {
 
 	private function insertSiteMembers() {
 
-		$superAdminRole		= Role::findBySlug( 'super-admin' );
-		$adminRole			= Role::findBySlug( 'admin' );
-		$userRole			= Role::findBySlug( 'user' );
+		$superAdminRole		= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
+		$adminRole			= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$userRole			= Role::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
 
 		$master	= User::findByUsername( 'demomaster' );
 		$admin	= User::findByUsername( 'demoadmin' );
@@ -317,7 +319,7 @@ class m160621_014408_core_data extends \yii\db\Migration {
 
 	private function insertDefaultConfig() {
 
-		$columns = [ 'siteId', 'name', 'label', 'type', 'valueType', 'value' ];
+		$columns = [ 'modelId', 'name', 'label', 'type', 'valueType', 'value' ];
 
 		$attributes	= [
 			[ $this->site->id, 'locale_message', 'Locale Message', 'core', 'flag', '0' ],
@@ -334,7 +336,7 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $this->site->id, 'date_format','Date Format','core','text','yyyy-MM-dd' ],
 			[ $this->site->id, 'time_format','Time Format','core','text','HH:mm:ss' ],
 			[ $this->site->id, 'date_time_format','Date Time Format','core','text','yyyy-MM-dd HH:mm:ss' ],
-			[ $this->site->id, 'timezone','Timezone','core','text','UTC+0' ],
+			[ $this->site->id, 'timezone','Timezone','core','text','UTC' ],
 			[ $this->site->id, 'smtp','SMTP','mail','flag','0' ],
 			[ $this->site->id, 'smtp_username','SMTP Username','mail','text','' ],
 			[ $this->site->id, 'smtp_password','SMTP Password','mail','text','' ],

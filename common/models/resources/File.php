@@ -51,15 +51,7 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	// Constants --------------
 
-    const VISIBILITY_PUBLIC     =  0;
-    const VISIBILITY_PRIVATE    = 10;
-
 	// Public -----------------
-
-    public static $typeMap = [
-        self::VISIBILITY_PUBLIC => 'public',
-        self::VISIBILITY_PRIVATE => 'private'
-    ];
 
 	// Protected --------------
 
@@ -129,9 +121,9 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
         $rules = [
             [ [ 'name', 'extension', 'directory' ], 'required' ],
             [ [ 'id' ], 'safe' ],
-            [ [ 'extension', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ [ 'title', 'directory' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->largeText ],
-            [ [ 'name', 'description', 'altText', 'url', 'medium', 'thumb', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->xLargeText ],
+            [ [ 'extension', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ [ 'title', 'directory' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+            [ [ 'name', 'description', 'altText', 'url', 'medium', 'thumb', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
             [ [ 'visibility', 'width', 'height', 'mwidth', 'mheight', 'twidth', 'theight' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'size' ], 'number', 'min' => 0 ],
             [ [ 'shared', 'changed' ], 'boolean' ],
@@ -140,7 +132,7 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
         ];
 
         // trim if required
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
             $trim[] = [ [ 'name', 'extension', 'directory', 'title', 'description', 'altText', 'url', 'medium', 'thumb', 'link' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -156,17 +148,17 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
     public function attributeLabels() {
 
         return [
-            'createdBy' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
-            'title' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
-            'description' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'extension' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EXTENSION ),
-            'directory' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DIRECTORY ),
-            'size' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SIZE ),
-            'url' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_URL ),
-            'visibility' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
-            'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-            'link' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LINK )
+            'createdBy' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
+            'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+            'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'extension' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EXTENSION ),
+            'directory' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DIRECTORY ),
+            'size' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SIZE ),
+            'url' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_URL ),
+            'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
+            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'link' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINK )
         ];
     }
 
@@ -235,6 +227,62 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
         return "";
     }
+
+    public function getFilePath() {
+
+		if( isset( $this->url ) ) {
+
+			return Yii::$app->fileManager->uploadDir . $this->url;
+		}
+
+		return false;
+    }
+
+    public function getMediumPath() {
+
+		if( isset( $this->medium ) ) {
+
+			return Yii::$app->fileManager->uploadDir . $this->medium;
+		}
+
+		return false;
+    }
+
+    public function getThumbPath() {
+
+		if( isset( $this->thumb ) ) {
+
+			return Yii::$app->fileManager->uploadDir . $this->thumb;
+		}
+
+		return false;
+    }
+
+	/**
+	 * Delete all the associated files from disk. Useful while updating file.
+	 */
+	public function clearDisk() {
+
+		$filePath		= $this->getFilePath();
+    	$mediumPath		= $this->getMediumPath();
+    	$thumbPath		= $this->getThumbPath();
+
+		// Delete from disk
+		if( $filePath ) {
+
+			unlink( $filePath );
+		}
+
+		if( $mediumPath ) {
+
+			unlink( $mediumPath );
+		}
+
+		if( $thumbPath ) {
+
+			unlink( $thumbPath );
+		}
+	}
 
 	// Static Methods ----------------------------------------------
 

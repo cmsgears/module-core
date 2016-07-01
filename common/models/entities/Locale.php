@@ -61,14 +61,14 @@ class Locale extends \cmsgears\core\common\models\base\Entity {
         $rules = [
             [ [ 'code', 'name' ], 'required' ],
             [ 'id', 'safe' ],
-            [ 'code', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->smallText ],
-            [ 'name', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
+            [ 'code', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+            [ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ [ 'code' ], 'unique', 'targetAttribute' => [ 'code' ] ],
+            [ [ 'name' ], 'unique', 'targetAttribute' => [ 'name' ] ]
         ];
 
         // trim if required
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
             $trim[] = [ [ 'name', 'code' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -84,8 +84,8 @@ class Locale extends \cmsgears\core\common\models\base\Entity {
     public function attributeLabels() {
 
         return [
-            'code' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE ),
-            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
+            'code' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CODE ),
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME )
         ];
     }
 

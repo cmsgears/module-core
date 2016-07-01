@@ -107,8 +107,8 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
         $rules = [
             [ [ 'formId', 'name' ], 'required' ],
             [ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
-            [ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
-            [ [ 'label', 'validators' ], 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->extraLargeText ],
+            [ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ [ 'label', 'validators' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
             [ 'name', 'alphanumu' ],
             [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
             [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
@@ -133,16 +133,16 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
     public function attributeLabels() {
 
         return [
-            'formId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FORM ),
-            'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'label' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
-            'type' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-            'compress' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_COMPRESS ),
-            'validators' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_VALIDATORS ),
-            'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-            'icon' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-            'htmlOptions' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-            'data' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_META )
+            'formId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FORM ),
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
+            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'compress' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COMPRESS ),
+            'validators' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALIDATORS ),
+            'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+            'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+            'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+            'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_META )
         ];
     }
 
@@ -161,7 +161,7 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
 
             if( self::isExistByNameFormId( $this->name, $this->formId ) ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
@@ -177,7 +177,7 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
 
             if( isset( $existingField ) && $this->id != $existingField->id ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
+                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
             }
         }
     }
@@ -259,13 +259,26 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Query -----------
 
+	public static function queryWithAll( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'form' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithForm( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'form' ];
+
+		return parent::queryWithAll( $config );
+	}
+
 	// Read - Find ------------
 
     public static function findByFormId( $formId ) {
 
-        $frmTable = CoreTables::TABLE_FORM;
-
-        return FormField::find()->joinWith( 'form' )->where( "$frmTable.id=:id", [ ':id' => $formId ] )->all();
+        return self::find()->where( "formId=:id", [ ':id' => $formId ] )->all();
     }
 
     public static function findByNameFormId( $name, $formId ) {

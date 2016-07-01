@@ -5,69 +5,113 @@ namespace cmsgears\core\common\services\resources;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\FormField;
 
-class FormFieldService extends \cmsgears\core\common\services\base\Service {
+use cmsgears\core\common\services\interfaces\resources\IFormFieldService;
+
+class FormFieldService extends \cmsgears\core\common\services\base\EntityService implements IFormFieldService {
+
+	// Variables ---------------------------------------------------
+
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\core\common\models\resources\FormField';
+
+	public static $modelTable	= CoreTables::TABLE_FORM_FIELD;
+
+	public static $parentType	= CoreGlobal::TYPE_FORM_FIELD;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// FormFieldService ----------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+	public function getByFormId( $formId ) {
+
+		return self::findByFormId( $formId );
+	}
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	public function update( $model, $config = [] ) {
+
+		return parent::update( $model, [
+			'attributes' => [ 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions', 'data' ]
+		]);
+ 	}
+
+	// Delete -------------
 
 	// Static Methods ----------------------------------------------
 
-	// Read ----------------
+	// CMG parent classes --------------------
 
-	public static function findById( $id ) {
+	// FormFieldService ----------------------
 
-		return FormField::findById( $id );
-	}
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
 
 	public static function findByFormId( $formId ) {
 
 		return FormField::findByFormId( $formId );
 	}
 
-	// Data Provider ----
+    // Read - Lists ----
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+    // Read - Maps -----
 
-		return self::getDataProvider( new FormField(), $config );
-	}
+	// Read - Others ---
 
-	// Create -----------
+	// Create -------------
 
-	public static function create( $formField ) {
+	// Update -------------
 
-		// Create Model
-		$formField->save();
-
-		return $formField;
-	}
-
-	// Update -----------
-
-	public static function update( $formField ) {
-
-		$formFieldToUpdate	= self::findById( $formField->id );
-
-		$formFieldToUpdate->copyForUpdateFrom( $formField, [ 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions', 'data' ] );
-
-		$formFieldToUpdate->update();
-
-		return $formFieldToUpdate;
-	}
-
-	// Delete -----------
-
-	public static function delete( $formField ) {
-
-		$existingFormField	= self::findById( $formField->id );
-
-		// Delete Model
-		$existingFormField->delete();
-
-		return true;
-	}
+	// Delete -------------
 }
 
 ?>

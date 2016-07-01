@@ -5,82 +5,116 @@ namespace cmsgears\core\common\services\resources;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Address;
 use cmsgears\core\common\models\mappers\ModelAddress;
+
+use cmsgears\core\common\services\interfaces\resources\IAddressService;
 
 /**
  * The class AddressService is base class to perform database activities for Address Entity.
  */
-class AddressService extends \cmsgears\core\common\services\base\Service {
+class AddressService extends \cmsgears\core\common\services\base\EntityService implements IAddressService {
+
+	// Variables ---------------------------------------------------
+
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\core\common\models\resources\Address';
+
+	public static $modelTable	= CoreTables::TABLE_ADDRESS;
+
+	public static $parentType	= CoreGlobal::TYPE_ADDRESS;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// AddressService ------------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	public function update( $model, $config = [] ) {
+
+		return parent::update( $model, [
+			'attributes' => [ 'countryId', 'provinceId', 'title', 'line1', 'line2', 'line3', 'city', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude', 'zoomLevel' ]
+		]);
+ 	}
+
+	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete dependencies
+		ModelAddress::deleteByModelId( $model->id );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
 
 	// Static Methods ----------------------------------------------
 
-	// Read ----------------
+	// CMG parent classes --------------------
 
-	/**
-	 * @param integer $id
-	 * @return Address
-	 */
-	public static function findById( $id ) {
+	// AddressService ------------------------
 
-		return Address::findById( $id );
-	}
+	// Data Provider ------
 
-	// Data Provider ----
+	// Read ---------------
 
-	/**
-	 * @param array $config to generate query
-	 * @return ActiveDataProvider
-	 */
-	public static function getPagination( $config = [] ) {
+    // Read - Models ---
 
-		return self::getDataProvider( new Address(), $config );
-	}
+    // Read - Lists ----
 
-	// Create -----------
+    // Read - Maps -----
 
-	public static function create( $address ) {
+	// Read - Others ---
 
-		// Create Address
-		$address->save();
+	// Create -------------
 
-		// Return Address
-		return $address;
-	}
+	// Update -------------
 
-	// Update -----------
-
-	public static function update( $address ) {
-
-		// Find existing Address
-		$addressToUpdate	= self::findById( $address->id );
-
-		// Copy Attributes
-		$addressToUpdate->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'title', 'line1', 'line2', 'line3', 'city', 'zip', 'zip4',
-											'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude', 'zoomLevel' ] );
-
-		// Update Category
-		$addressToUpdate->update();
-
-		// Return updated Category
-		return $addressToUpdate;
-	}
-
-	// Delete -----------
-
-	public static function delete( $address ) {
-
-		// Find existing Address
-		$addressToDelete	= self::findById( $address->id );
-
-		// Delete dependency
-		ModelAddress::deleteByAddressId( $address->id );
-
-		// Delete Address
-		$addressToDelete->delete();
-
-		return true;
-	}
+	// Delete -------------
 }
 
 ?>

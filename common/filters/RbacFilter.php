@@ -14,7 +14,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * The class RbacFilter use the roles and permissions defined for the project using the database tables.
  * It identify whether a user is assigned a permission. It trigger ForbiddenException in case a user does not have
  * required permission and try to execute the controller action by indirect means. It only works when
- * useRbac is set for the cmgCore Component within the application config file and action is configured within the
+ * useRbac is set for the core Component within the application config file and action is configured within the
  * controller behaviours.
  */
 class RbacFilter extends \yii\base\Behavior {
@@ -33,7 +33,7 @@ class RbacFilter extends \yii\base\Behavior {
 
     public function validateRbac( $event ) {
 
-		if( Yii::$app->cmgCore->isRbac() ) {
+		if( Yii::$app->core->isRbac() ) {
 
 	        $action = $event->action->id;
 
@@ -46,7 +46,7 @@ class RbacFilter extends \yii\base\Behavior {
 				if( Yii::$app->user->isGuest ) {
 
 					// Redirect to post logout page
-					Yii::$app->response->redirect( Url::toRoute( [ Yii::$app->cmgCore->getLogoutRedirectPage() ], true ) );
+					Yii::$app->response->redirect( Url::toRoute( [ Yii::$app->core->getLogoutRedirectPage() ], true ) );
 
 					// Unset event validity
 					$event->isValid = false;
@@ -62,13 +62,13 @@ class RbacFilter extends \yii\base\Behavior {
 				// Disallow action in case user is not permitted
 				if( !isset( $user ) || !isset( $permission ) || !$user->isPermitted( $permission ) ) {
 
-					throw new ForbiddenHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+					throw new ForbiddenHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 				}
 
-				if( ( $user->isConfirmed( true ) || $user->isBeingApproved( true ) ) && strcmp( $action, 'logout' ) != 0 ) {
+				if( ( $user->isConfirmed( true ) || $user->isSubmitted() ) && strcmp( $action, 'logout' ) != 0 ) {
 
 					// Redirect to post logout page
-					Yii::$app->response->redirect( Url::toRoute( [ Yii::$app->cmgCore->getConfirmRedirectPage() ], true ) );
+					Yii::$app->response->redirect( Url::toRoute( [ Yii::$app->core->getConfirmRedirectPage() ], true ) );
 
 					// Unset event validity
 					$event->isValid = false;
@@ -91,7 +91,7 @@ class RbacFilter extends \yii\base\Behavior {
 						// Permission Filter with filter config params
 						if( is_array( $filters[ $key ] ) ) {
 
-							$filter	= Yii::createObject( Yii::$app->cmgCore->rbacFilters[ $key ] );
+							$filter	= Yii::createObject( Yii::$app->core->rbacFilters[ $key ] );
 
 							// Pass filter config while performing filter
 							$filterResult = $filter->doFilter( $filters[ $key ] );
@@ -99,7 +99,7 @@ class RbacFilter extends \yii\base\Behavior {
 						// Permission Filter without filter config params
 						else {
 
-							$filter	= Yii::createObject( Yii::$app->cmgCore->rbacFilters[ $filters[ $key ] ] );
+							$filter	= Yii::createObject( Yii::$app->core->rbacFilters[ $filters[ $key ] ] );
 
 							// Do filter without any config
 							$filterResult = $filter->doFilter();

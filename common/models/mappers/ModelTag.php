@@ -10,13 +10,13 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Tag;
 
-use cmsgears\core\common\models\traits\ParentTypeTrait;
+use cmsgears\core\common\models\traits\MapperTrait;
 
 /**
  * ModelTag Entity
  *
  * @property long $id
- * @property long $tagId
+ * @property long $modelId
  * @property long $parentId
  * @property string $parentType
  * @property short $order
@@ -44,7 +44,7 @@ class ModelTag extends \cmsgears\core\common\models\base\Mapper {
 
 	// Traits ------------------------------------------------------
 
-	use ParentTypeTrait;
+	use MapperTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -64,12 +64,12 @@ class ModelTag extends \cmsgears\core\common\models\base\Mapper {
     public function rules() {
 
         return [
-            [ [ 'tagId', 'parentId', 'parentType' ], 'required' ],
+            [ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
             [ [ 'id' ], 'safe' ],
-            [ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->cmgCore->mediumText ],
+            [ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'active' ], 'boolean' ],
-            [ [ 'tagId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+            [ [ 'modelId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
         ];
     }
 
@@ -79,14 +79,13 @@ class ModelTag extends \cmsgears\core\common\models\base\Mapper {
     public function attributeLabels() {
 
         return [
-            'tagId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_TAG ),
-            'parentId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-            'parentType' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-            'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-            'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
+            'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TAG ),
+            'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+            'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+            'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
         ];
     }
-
 
 	// CMG interfaces ------------------------
 
@@ -101,7 +100,7 @@ class ModelTag extends \cmsgears\core\common\models\base\Mapper {
 	 */
 	public function getTag() {
 
-    	return $this->hasOne( Tag::className(), [ 'id' => 'tagId' ] );
+    	return $this->hasOne( Tag::className(), [ 'id' => 'modelId' ] );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -124,27 +123,22 @@ class ModelTag extends \cmsgears\core\common\models\base\Mapper {
 
 	// Read - Query -----------
 
+	public static function queryWithAll( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'tag' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithModel( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'tag' ];
+
+		return parent::queryWithAll( $config );
+	}
+
 	// Read - Find ------------
-
-    public static function findByTagId( $parentId, $parentType, $tagId ) {
-
-        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND tagId=:tid', [ ':pid' => $parentId, ':ptype' => $parentType, ':tid' => $tagId ] )->one();
-    }
-
-    public static function findActiveByParentId( $parentId ) {
-
-        return self::find()->where( 'parentId=:pid AND active=1', [ ':pid' => $parentId ] )->all();
-    }
-
-    public static function findActiveByParent( $parentId, $parentType ) {
-
-        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND active=1', [ ':pid' => $parentId, ':ptype' => $parentType ] )->all();
-    }
-
-    public static function findActiveByTagIdParentType( $tagId, $parentType ) {
-
-        return self::find()->where( 'tagId=:tid AND parentType=:ptype AND active=1',  [ ':tid' => $tagId, ':ptype' => $parentType] )->all();
-    }
 
 	// Create -----------------
 
@@ -152,13 +146,6 @@ class ModelTag extends \cmsgears\core\common\models\base\Mapper {
 
 	// Delete -----------------
 
-    /**
-     * Delete all entries related to a tag. It's required while deleting a tag.
-     */
-    public static function deleteByTagId( $tagId ) {
-
-        self::deleteAll( 'tagId=:tid', [ ':tid' => $tagId ] );
-    }
 }
 
 ?>

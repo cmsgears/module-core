@@ -91,9 +91,9 @@ class SiteMember extends \cmsgears\core\common\models\base\Mapper {
     public function attributeLabels() {
 
         return [
-            'siteId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SITE ),
-            'userId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USER ),
-            'roleId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ROLE )
+            'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+            'userId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
+            'roleId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ROLE )
         ];
     }
 
@@ -116,7 +116,7 @@ class SiteMember extends \cmsgears\core\common\models\base\Mapper {
     /**
      * @return User
      */
-    public function getUser() {
+    public function getMember() {
 
         return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
     }
@@ -149,15 +149,29 @@ class SiteMember extends \cmsgears\core\common\models\base\Mapper {
 
 	// Read - Query -----------
 
+	public static function queryWithAll( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'member', 'role' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithSite( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'site' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithMember( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'member', 'role' ];
+
+		return parent::queryWithAll( $config );
+	}
+
 	// Read - Find ------------
-
-    /**
-     * @return ActiveRecord - with site member and role.
-     */
-    public static function findWithUserRole() {
-
-        return self::find()->joinWith( 'user' )->joinWith( 'role' );
-    }
 
     /**
      * @return Site - by id

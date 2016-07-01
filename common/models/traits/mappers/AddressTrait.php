@@ -1,6 +1,12 @@
 <?php
 namespace cmsgears\core\common\models\traits\mappers;
 
+// Yii Import
+use \Yii;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Address;
 use cmsgears\core\common\models\mappers\ModelAddress;
@@ -33,7 +39,7 @@ trait AddressTrait {
 	 */
 	public function getPrimaryAddress() {
 
-    	return $this->hasOne( Address::className(), [ 'id' => 'addressId' ] )
+    	return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query, $type = Address::TYPE_PRIMARY ) {
 
 						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
@@ -47,7 +53,7 @@ trait AddressTrait {
 	 */
 	public function getResidentialAddress() {
 
-    	return $this->hasOne( Address::className(), [ 'id' => 'addressId' ] )
+    	return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query, $type = Address::TYPE_RESIDENTIAL ) {
 
 						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
@@ -61,7 +67,7 @@ trait AddressTrait {
 	 */
 	public function getShippingAddress() {
 
-    	return $this->hasOne( Address::className(), [ 'id' => 'addressId' ] )
+    	return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query, $type = Address::TYPE_SHIPPING ) {
 
 						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
@@ -75,7 +81,7 @@ trait AddressTrait {
 	 */
 	public function getBillingAddress() {
 
-    	return $this->hasOne( Address::className(), [ 'id' => 'addressId' ] )
+    	return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query, $type = Address::TYPE_BILLING ) {
 
 						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
@@ -89,7 +95,7 @@ trait AddressTrait {
 	 */
 	public function getOfficeAddress() {
 
-    	return $this->hasOne( Address::className(), [ 'id' => 'addressId' ] )
+    	return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query, $type = Address::TYPE_OFFICE ) {
 
 						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
@@ -103,7 +109,7 @@ trait AddressTrait {
 	 */
 	public function getMailingAddress() {
 
-    	return $this->hasOne( Address::className(), [ 'id' => 'addressId' ] )
+    	return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query, $type = Address::TYPE_MAILING ) {
 
 						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
@@ -117,7 +123,7 @@ trait AddressTrait {
 	 */
 	public function getBranchAddress() {
 
-    	return $this->hasMany( Address::className(), [ 'id' => 'addressId' ] )
+    	return $this->hasMany( Address::className(), [ 'id' => 'modelId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query, $type = Address::TYPE_BRANCH ) {
 
 						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;

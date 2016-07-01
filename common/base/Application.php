@@ -3,13 +3,46 @@ namespace cmsgears\core\common\base;
 
 // Yii Imports
 use \Yii;
+use yii\base\Component;
 
-// CMSGears Imports
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\config\CoreProperties;
 
 use cmsgears\core\common\services\entities\SiteService;
 
 class Application extends \yii\web\Application {
+
+	// Variables ---------------------------------------------------
+
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Application
 
     public function createController( $route ) {
 
@@ -22,7 +55,7 @@ class Application extends \yii\web\Application {
 		Yii::$app->timeZone						= $coreProperties->getTimezone();
 
 		// find whether multisite is enabled
-		if( Yii::$app->cmgCore->multiSite ) {
+		if( Yii::$app->core->multiSite ) {
 
 	        if( $route === '' ) {
 
@@ -38,7 +71,7 @@ class Application extends \yii\web\Application {
 	        }
 
 			// Sub-Directory
-			if( Yii::$app->cmgCore->subDirectory ) {
+			if( Yii::$app->core->subDirectory ) {
 
 		        if( strpos( $route, '/' ) !== false ) {
 
@@ -51,9 +84,9 @@ class Application extends \yii\web\Application {
 					if( isset( $site ) ) {
 
 						// Configure Current Site
-						Yii::$app->cmgCore->site 		= $site;
-						Yii::$app->cmgCore->siteId		= $site->id;
-						Yii::$app->cmgCore->siteSlug 	= $site->slug;
+						Yii::$app->core->site 		= $site;
+						Yii::$app->core->siteId		= $site->id;
+						Yii::$app->core->siteSlug 	= $site->slug;
 
 						Yii::$app->urlManager->baseUrl	= Yii::$app->urlManager->baseUrl . "/" . $site->name;
 
@@ -78,9 +111,9 @@ class Application extends \yii\web\Application {
 				if( isset( $site ) ) {
 
 					// Configure Current Site
-					Yii::$app->cmgCore->site 		= $site;
-					Yii::$app->cmgCore->siteId		= $site->id;
-					Yii::$app->cmgCore->siteSlug 	= $site->slug;
+					Yii::$app->core->site 		= $site;
+					Yii::$app->core->siteId		= $site->id;
+					Yii::$app->core->siteSlug 	= $site->slug;
 
 					return parent::createController( $route );
 				}
@@ -94,13 +127,28 @@ class Application extends \yii\web\Application {
 			if( isset( $site ) ) {
 
 				// Configure Current Site
-				Yii::$app->cmgCore->site 		= $site;
-				Yii::$app->cmgCore->siteId		= $site->id;
+				Yii::$app->core->site 		= $site;
+				Yii::$app->core->siteId		= $site->id;
 			}
 		}
 
        return parent::createController( $route );
     }
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Application ---------------------------
+
+	// Static Methods ----------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG parent classes --------------------
+
+	// Application ---------------------------
+
 }
 
 ?>

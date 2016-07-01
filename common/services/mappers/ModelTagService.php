@@ -5,68 +5,88 @@ namespace cmsgears\core\common\services\mappers;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Tag;
 use cmsgears\core\common\models\mappers\ModelTag;
 
-use cmsgears\core\common\services\resources\TagService;
+use cmsgears\core\common\services\interfaces\resources\ITagService;
+use cmsgears\core\common\services\interfaces\mappers\IModelTagService;
+
+use cmsgears\core\common\services\traits\MapperTrait;
 
 /**
  * The class ModelTagService is base class to perform database activities for ModelTag Entity.
  */
-class ModelTagService extends \cmsgears\core\common\services\base\Service {
+class ModelTagService extends \cmsgears\core\common\services\base\EntityService implements IModelTagService {
 
-	// Static Methods ----------------------------------------------
+	// Variables ---------------------------------------------------
 
-	// Read ----------------
+	// Globals -------------------------------
 
-	public static function findByParentType( $parentType ) {
+	// Constants --------------
 
-		return ModelTag::findByParentType( $parentType );
-	}
+	// Public -----------------
 
-	public static function findByParentId( $parentId ) {
+	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelTag';
 
-		return ModelTag::findByParentId( $parentId );
-	}
+	public static $modelTable	= CoreTables::TABLE_MODEL_TAG;
 
-	public static function findActiveByParentId( $parentId ) {
+	public static $parentType	= null;
 
-		return ModelTag::findActiveByParentId( $parentId );
-	}
+	// Protected --------------
 
-	public static function findByTagId( $parentId, $parentType, $tagId ) {
+	// Variables -----------------------------
 
-		return ModelTag::findByTagId( $parentId, $parentType, $tagId );
-	}
+	// Public -----------------
 
-	public static function findByParent( $parentId, $parentType ) {
+	// Protected --------------
 
-		return ModelTag::findByParent( $parentId, $parentType );
-	}
+	// Private ----------------
 
-	public static function findActiveByTagIdParentType( $tagId, $parentType ) {
+	private $tagService;
 
-		return ModelTag::findActiveByTagIdParentType( $tagId, $parentType );
-	}
+	// Traits ------------------------------------------------------
 
-	public static function findActiveByParent( $parentId, $parentType ) {
+	use MapperTrait;
 
-		return ModelTag::findActiveByParent( $parentId, $parentType );
-	}
+	// Constructor and Initialisation ------------------------------
 
-	public static function findAllByTagId( $tagId ) {
+    public function __construct( ITagService $tagService, $config = [] ) {
 
-		return ModelTag::findAllByTagId( $tagId );
-	}
+		$this->tagService	= $tagService;
 
-	// Create ----------------
+        parent::__construct( $config );
+    }
 
-	public static function create( $model ) {
+	// Instance methods --------------------------------------------
 
-		$model->save();
-	}
+	// Yii parent classes --------------------
 
-	public static function createFromCsv( $parentId, $parentType, $tags ) {
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// ModelTagService -----------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	public function createFromCsv( $parentId, $parentType, $tags ) {
 
 		$tags	= preg_split( "/,/", $tags );
 
@@ -81,7 +101,7 @@ class ModelTagService extends \cmsgears\core\common\services\base\Service {
 				$tag->siteId	= Yii::$app->cmgCore->siteId;
 				$tag->name		= $tagName;
 				$tag->type		= $parentType;
-				$tag			= TagService::create( $tag );
+				$tag			= $this->tagService->create( $tag );
 			}
 
 			$modelTag	= self::findByTagId( $parentId, $parentType, $tag->id );
@@ -107,61 +127,30 @@ class ModelTagService extends \cmsgears\core\common\services\base\Service {
 		}
 	}
 
-	// Update ---------------
+	// Update -------------
 
-	public static function update( $modelTag ) {
+	public function update( $model, $config = [] ) {
 
-		// Find existing Model Tag
-		$modelTagToUpdate	= self::findById( $modelTag->id );
+		return parent::update( $model, [
+			'attributes' => [ 'order', 'active' ]
+		]);
+ 	}
 
-		// Copy and set Attributes
-		$modelTagToUpdate->copyForUpdateFrom( $modelTag, [ 'order', 'active' ] );
+	// Delete -------------
 
-		// Update Model Tag
-		$modelTagToUpdate->update();
+	public function deleteByTagSlug( $parentId, $parentType, $tagSlug, $delete = false ) {
 
-		// Return updated Model Tag
-		return $modelTagToUpdate;
-	}
-
-	public static function activate( $modelTag ) {
-
-		$modelTag->active	= true;
-
-		$modelTag->update();
-
-		return $modelTag;
-	}
-
-	public static function deActivate( $modelTag ) {
-
-		$modelTag->active	= false;
-
-		$modelTag->update();
-
-		return $modelTag;
-	}
-
-	// Delete ----------------
-
-	public static function delete( $model ) {
-
-		$model->delete();
-
-		return true;
-	}
-
-	public static function deleteByTagSlug( $parentId, $parentType, $tagSlug, $delete = false ) {
-
-		$tag				= TagService::findBySlug( $tagSlug );
-		$modelTagToDelete	= self::findByTagId( $parentId, $parentType, $tag->id );
+		$tag				= $this->tagService->getBySlug( $tagSlug );
+		$modelTagToDelete	= $this->getByModelId( $parentId, $parentType, $tag->id );
 
 		if( isset( $modelTagToDelete ) ) {
 
+			// Hard delete
 			if( $delete ) {
 
 				$modelTagToDelete->delete();
 			}
+			// Soft delete
 			else {
 
 				self::deActivate( $modelTagToDelete );
@@ -170,6 +159,30 @@ class ModelTagService extends \cmsgears\core\common\services\base\Service {
 
 		return true;
 	}
+
+	// Static Methods ----------------------------------------------
+
+	// CMG parent classes --------------------
+
+	// ModelTagService -----------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

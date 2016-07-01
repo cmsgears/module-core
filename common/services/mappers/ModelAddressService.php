@@ -5,74 +5,98 @@ namespace cmsgears\core\common\services\mappers;
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Address;
 use cmsgears\core\common\models\mappers\ModelAddress;
 
-use cmsgears\core\common\services\resources\AddressService;
+use cmsgears\core\common\services\interfaces\resources\IAddressService;
+use cmsgears\core\common\services\interfaces\mappers\IModelAddressService;
+
+use cmsgears\core\common\services\traits\MapperTrait;
 
 /**
  * The class ModelAddressService is base class to perform database activities for ModelAddress Entity.
  */
-class ModelAddressService extends \cmsgears\core\common\services\base\Service {
+class ModelAddressService extends \cmsgears\core\common\services\base\EntityService implements IModelAddressService {
 
-    // Static Methods ----------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Read ----------------
+	// Globals -------------------------------
 
-    /**
-     * @param integer $id
-     * @return Address
-     */
-    public static function findById( $id ) {
+	// Constants --------------
 
-        return ModelAddress::findById( $id );
+	// Public -----------------
+
+	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelAddress';
+
+	public static $modelTable	= CoreTables::TABLE_MODEL_ADDRESS;
+
+	public static $parentType	= null;
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	private $addressService;
+
+	// Traits ------------------------------------------------------
+
+	use MapperTrait;
+
+	// Constructor and Initialisation ------------------------------
+
+    public function __construct( IAddressService $addressService, $config = [] ) {
+
+		$this->addressService	= $addressService;
+
+        parent::__construct( $config );
     }
 
-    public static function findByParentId( $parentId ) {
+	// Instance methods --------------------------------------------
 
-        return ModelAddress::findByParentId( $parentId );
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// ModelFormService ----------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    public function getByType( $parentId, $parentType, $type, $first = false ) {
+
+		return ModelAddress::findByType( $parentId, $parentType, $type, $first );
     }
 
-    /**
-     * Models Supporting Multiple address for same type.
-     */
-    public static function findByType( $parentId, $parentType, $type ) {
+    // Read - Lists ----
 
-        return ModelAddress::findByType( $parentId, $parentType, $type );
-    }
+    // Read - Maps -----
 
-    /**
-     * Model Supporting one address for same type.
-     */
-    public static function findFirstByType( $parentId, $parentType, $type ) {
+	// Read - Others ---
 
-        return ModelAddress::findFirstByType( $parentId, $parentType, $type );
-    }
+	// Create -------------
 
-    public static function findByParent( $parentId, $parentType ) {
+	public function create( $address, $config = [] ) {
 
-        return ModelAddress::findByParent( $parentId, $parentType );
-    }
-
-    public static function findByAddressId( $parentId, $parentType, $addressId ) {
-
-        return ModelAddress::findByAddressId( $parentId, $parentType, $addressId );
-    }
-
-    // Data Provider ----
-
-    /**
-     * @param array $config to generate query
-     * @return ActiveDataProvider
-     */
-    public static function getPagination( $config = [] ) {
-
-        return self::getDataProvider( new ModelAddress(), $config );
-    }
-
-    // Create -----------
-
-    public static function create( $address, $parentId, $parentType, $type, $order = 0 ) {
+		$parentId 	= $config[ 'parentId' ];
+		$parentType = $config[ 'parentType' ];
+		$type 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+		$order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : null;
 
         // Create Address
         $address->save();
@@ -90,28 +114,38 @@ class ModelAddressService extends \cmsgears\core\common\services\base\Service {
 
         // Return Address
         return $modelAddress;
-    }
+	}
 
-    public static function createOrUpdate( $address, $parentId, $parentType, $type ) {
+    public function createOrUpdate( $address, $config = [] ) {
+
+		$parentId 	= $config[ 'parentId' ];
+		$parentType = $config[ 'parentType' ];
+		$type 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+		$order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
         if( isset( $address->id ) && !empty( $address->id ) ) {
 
-            $existingAddress    = self::findByAddressId( $parentId, $parentType, $address->id );
+            $existingAddress    = $this->getByModelId( $parentId, $parentType, $address->id );
 
             if( isset( $existingAddress ) ) {
 
-                self::update( $existingAddress, $address );
+                return $this->update( $existingAddress, [ 'address' => $address ] );
             }
         }
         else {
 
-            self::create( $address, $parentId, $parentType, $type );
+            return $this->create( $address, $config );
         }
     }
 
-    public static function createOrUpdateByType( $address, $parentId, $parentType, $type ) {
+    public function createOrUpdateByType( $address, $config = [] ) {
 
-        $existingAddress    = self::findFirstByType( $parentId, $parentType, $type );
+		$parentId 	= $config[ 'parentId' ];
+		$parentType = $config[ 'parentType' ];
+		$type 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+		$order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
+
+        $existingAddress    = $this->getByType( $parentId, $parentType, $type );
 
         if( isset( $existingAddress ) ) {
 
@@ -126,33 +160,37 @@ class ModelAddressService extends \cmsgears\core\common\services\base\Service {
         }
         else {
 
-            return self::create( $address, $parentId, $parentType, $type );
+            return $this->create( $address, $config );
         }
     }
 
-    public static function createShipping( $address, $parentId, $parentType, $order = 0 ) {
+    public function createShipping( $address, $config = [] ) {
 
-        return self::create( $address, $parentId, $parentType, Address::TYPE_SHIPPING, $order );
+		$config[ 'type' ] = Address::TYPE_SHIPPING;
+
+        return $this->create( $address, $config );
     }
 
-    public static function copyToShipping( $address, $parentId, $parentType, $order = 0 ) {
+    public function copyToShipping( $address, $config = [] ) {
+
+		$config[ 'type' ] 	= Address::TYPE_SHIPPING;
 
         $shippingAddress    = new Address();
 
         $shippingAddress->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'city', 'zip', 'firstName', 'lastName', 'phone', 'email', 'fax' ] );
 
-        return self::create( $shippingAddress, $parentId, $parentType, Address::TYPE_SHIPPING, $order );
+		return $this->create( $address, $config );
     }
 
-    // Create -----------
+	// Update -------------
 
-    public static function update( $modelAddress, $address ) {
+    public static function update( $modelAddress, $config = [] ) {
 
         // Update Address
-        AddressService::update( $address );
+        $this->addressService->update( $config[ 'address' ] );
 
         // Find existing Model Address
-        $addressToUpdate    = self::findById( $modelAddress->id );
+        $addressToUpdate    = $this->getById( $modelAddress->id );
 
         // Copy Attributes
         $addressToUpdate->copyForUpdateFrom( $modelAddress, [ 'type', 'order' ] );
@@ -164,17 +202,31 @@ class ModelAddressService extends \cmsgears\core\common\services\base\Service {
         return $addressToUpdate;
     }
 
-    // Delete -----------
+	// Delete -------------
 
-    public static function deleteByParentIdType( $parentId, $parentType ) {
+	// Static Methods ----------------------------------------------
 
-        ModelAddress::deleteByParentIdType( $parentId, $parentType );
-    }
+	// CMG parent classes --------------------
 
-    public static function delete( $model ) {
+	// ModelFormService ----------------------
 
-        return $model->delete();
-    }
+	// Data Provider ------
+
+	// Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+	// Read - Others ---
+
+	// Create -------------
+
+	// Update -------------
+
+	// Delete -------------
 }
 
 ?>

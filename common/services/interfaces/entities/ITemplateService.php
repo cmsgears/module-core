@@ -11,8 +11,6 @@ interface ITemplateService extends \cmsgears\core\common\services\interfaces\bas
 
 	// Data Provider ------
 
-	public function getPageByType( $type, $config = [] );
-
 	// Read ---------------
 
     // Read - Models ---

@@ -30,6 +30,8 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  */
 class FormField extends \cmsgears\core\common\models\base\Resource {
 
+	// TODO: further analysis is required to remove the alphanumu validator for name field to support html forms.
+
 	// Variables ---------------------------------------------------
 
 	// Globals -------------------------------
@@ -74,7 +76,7 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
 
 	// Public -----------------
 
-	public $parentType	= CoreGlobal::TYPE_FORM_FIELD;
+	public $mParentType	= CoreGlobal::TYPE_FORM_FIELD;
 
 	public $value;
 
@@ -110,8 +112,7 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
             [ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ [ 'label', 'validators' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
             [ 'name', 'alphanumu' ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'formId', 'name' ], 'unique', 'targetAttribute' => [ 'formId', 'name' ] ],
             [ [ 'type', 'order' ], 'number', 'integerOnly' => true ],
             [ 'compress', 'boolean' ]
         ];
@@ -152,36 +153,6 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
 
 	// Validators ----------------------------
 
-    /**
-     * Validates whether a filed exist with the same name for same form.
-     */
-    public function validateNameCreate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-            if( self::isExistByNameFormId( $this->name, $this->formId ) ) {
-
-                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-            }
-        }
-    }
-
-    /**
-     * Validates whether a filed exist with the same name for same form.
-     */
-    public function validateNameUpdate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-            $existingField = self::findByNameFormId( $this->name, $this->formId );
-
-            if( isset( $existingField ) && $this->id != $existingField->id ) {
-
-                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-            }
-        }
-    }
-
 	// FormField -----------------------------
 
     /**
@@ -202,14 +173,59 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
         return Yii::$app->formatter->asBoolean( $this->compress );
     }
 
-    public function isPasswordField() {
+    public function isText() {
 
-        return $this->type == self::TYPE_PASSWORD;
+        return $this->type == self::TYPE_TEXT;
+    }
+
+    public function isTextArea() {
+
+        return $this->type == self::TYPE_TEXTAREA;
+    }
+
+    public function isRadio() {
+
+        return $this->type == self::TYPE_RADIO;
+    }
+
+    public function isRadioGroup() {
+
+        return $this->type == self::TYPE_RADIO_GROUP;
+    }
+
+    public function isSelect() {
+
+        return $this->type == self::TYPE_SELECT;
+    }
+
+    public function isRating() {
+
+        return $this->type == self::TYPE_RATING;
+    }
+
+    public function isIcon() {
+
+        return $this->type == self::TYPE_ICON;
     }
 
     public function isCheckboxGroup() {
 
         return $this->type == self::TYPE_CHECKBOX_GROUP;
+    }
+
+    public function isPassword() {
+
+        return $this->type == self::TYPE_PASSWORD;
+    }
+
+    public function isCheckbox() {
+
+        return $this->type == self::TYPE_CHECKBOX;
+    }
+
+    public function isToggle() {
+
+        return $this->type == self::TYPE_TOGGLE;
     }
 
     public function getFieldValue() {

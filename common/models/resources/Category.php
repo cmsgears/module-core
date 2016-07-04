@@ -35,7 +35,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * @property string $content
  * @property string $data
  */
-class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalModel {
+class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 
 	// Variables ---------------------------------------------------
 
@@ -53,7 +53,7 @@ class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalM
 
 	// Public -----------------
 
-	public $parentType	= CoreGlobal::TYPE_CATEGORY;
+	public $mParentType	= CoreGlobal::TYPE_CATEGORY;
 
 	// Protected --------------
 
@@ -105,8 +105,8 @@ class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalM
             [ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+            [ [ 'slug', 'type' ], 'unique', 'targetAttribute' => [ 'slug', 'type' ] ],
             [ [ 'parentId', 'rootId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ 'featured', 'boolean' ]
         ];
@@ -208,8 +208,10 @@ class Category extends \cmsgears\core\common\models\hierarchy\TypedHierarchicalM
 
 	public static function queryWithAll( $config = [] ) {
 
+		$modelTable				= CoreTables::TABLE_CATEGORY;
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'options' ];
 		$config[ 'relations' ]	= $relations;
+		$config[ 'groups' ]		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : [ "$modelTable.id" ];
 
 		return parent::queryWithAll( $config );
 	}

@@ -33,13 +33,20 @@ trait GalleryTrait {
 	public function getModelGalleries() {
 
     	return $this->hasMany( ModelGallery::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->parentType'" );
+					->where( "parentType='$this->mParentType'" );
 	}
 
-	public function getModelGalleryByType( $type ) {
+	public function getModelGalleryByType( $type, $first = true ) {
 
-    	return $this->hasOne( ModelGallery::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->parentType, ':type' => $type ] )->one();
+		$query = $this->hasOne( ModelGallery::className(), [ 'parentId' => 'id' ] )
+						->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->mParentType, ':type' => $type ] );
+
+		if( $first ) {
+
+	    	return $query->one();
+		}
+
+    	return $query->all();
 	}
 
 	public function getGalleries() {
@@ -48,7 +55,7 @@ trait GalleryTrait {
 
     	return $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
 					->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ], function( $query ) use( &$modelGalleryTable ) {
-                      	$query->onCondition( [ "$modelGalleryTable.parentType" => $this->parentType ] );
+                      	$query->onCondition( [ "$modelGalleryTable.parentType" => $this->mParentType ] );
 					});
 	}
 
@@ -59,24 +66,20 @@ trait GalleryTrait {
     	return $this->getGalleries()->where( [ "$galleryTable.id" => $id ] )->one();
 	}
 
-	public function getGalleryByType( $type ) {
+	public function getGalleryByType( $type, $first = true ) {
 
 		$modelGalleryTable	= CoreTables::TABLE_MODEL_GALLERY;
+		$query				= $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
+									->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ], function( $query ) use( &$modelGalleryTable, &$type ) {
+										$query->onCondition( [ "$modelGalleryTable.parentType" => $this->mParentType, "$modelGalleryTable.type" => $type ] );
+									});
 
-    	return $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
-					->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ], function( $query ) use( &$modelGalleryTable, &$type ) {
-                      	$query->onCondition( [ "$modelGalleryTable.parentType" => $this->parentType, "$modelGalleryTable.type" => $type ] );
-					})->one();
-	}
+		if( $first ) {
 
-	public function getGalleriesByType( $type ) {
+	    	return $query->one();
+		}
 
-		$modelGallery	= CoreTables::TABLE_MODEL_GALLERY;
-
-    	return $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
-					->viaTable( $modelGallery, [ 'modelId' => 'id' ], function( $query ) use( &$modelGallery, &$type ) {
-						$query->onCondition( [ "$modelGallery.parentType" => $this->parentType, "$modelGallery.type" => $type ] );
-					})->all();
+		return $query->all();
 	}
 }
 

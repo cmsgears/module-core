@@ -13,7 +13,7 @@ use cmsgears\core\common\models\resources\Tag;
 use cmsgears\core\common\models\traits\MapperTrait;
 
 /**
- * ModelTag Entity
+ * ModelTag Entity - The mapper to map Tag Model to specific parent model for given parentId and parentType.
  *
  * @property long $id
  * @property long $modelId
@@ -66,10 +66,12 @@ class ModelTag extends \cmsgears\core\common\models\base\Mapper {
         return [
             [ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
             [ [ 'id' ], 'safe' ],
-            [ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
             [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'active' ], 'boolean' ],
-            [ [ 'modelId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+            [ [ 'active' ], 'boolean' ]
         ];
     }
 

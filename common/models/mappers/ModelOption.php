@@ -13,7 +13,7 @@ use cmsgears\core\common\models\resources\Option;
 use cmsgears\core\common\models\traits\MapperTrait;
 
 /**
- * ModelOption Entity
+ * ModelOption Entity - The mapper to map Option Model to specific parent model for given parentId and parentType.
  *
  * @property integer $id
  * @property integer $modelId
@@ -65,12 +65,13 @@ class ModelOption extends \cmsgears\core\common\models\base\Mapper {
 
         return [
             [ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
-            [ [ 'id', 'active' ], 'safe' ],
-            [ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'active' ], 'boolean' ],
+            [ [ 'id' ], 'safe' ],
             [ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
+            [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
+            [ [ 'active' ], 'boolean' ]
         ];
     }
 

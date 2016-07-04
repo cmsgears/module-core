@@ -71,8 +71,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
             [ [ 'localeId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'parentType', 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
+            [ [ 'parentId', 'parentType', 'localeId', 'name' ], 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'localeId', 'name' ] ]
         ];
 
 		// trim if required
@@ -105,36 +104,6 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 	// CMG parent classes --------------------
 
 	// Validators ----------------------------
-
-	/**
-	 * Validates to ensure that only one message exist with one name for a particular locale.
-	 */
-    public function validateNameCreate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-            if( self::isExistByNameLocaleId( $this->parentId, $this->parentType, $this->name, $this->localeId ) ) {
-
-				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-            }
-        }
-    }
-
-	/**
-	 * Validates to ensure that only one message exist with one name.
-	 */
-    public function validateNameUpdate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-			$existingMessage = self::findByNameLocaleId( $this->parentId, $this->parentType, $this->name, $this->localeId );
-
-			if( isset( $existingMessage ) && $existingMessage->id != $this->id ) {
-
-				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-			}
-        }
-    }
 
 	// ModelMessage --------------------------
 

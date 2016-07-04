@@ -13,7 +13,7 @@ use cmsgears\core\common\models\resources\Gallery;
 use cmsgears\core\common\models\traits\MapperTrait;
 
 /**
- * ModelGallery Entity
+ * ModelGallery Entity - The mapper to map Gallery Model to specific parent model for given parentId and parentType.
  *
  * @property integer $id
  * @property integer $modelId
@@ -67,10 +67,12 @@ class ModelGallery extends \cmsgears\core\common\models\base\Mapper {
         return [
             [ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
             [ [ 'id' ], 'safe' ],
-            [ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
             [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'active' ], 'boolean' ],
-            [ [ 'modelId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+            [ [ 'active' ], 'boolean' ]
         ];
     }
 

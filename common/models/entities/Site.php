@@ -44,7 +44,7 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 
 	// Public -----------------
 
-	public $parentType  = CoreGlobal::TYPE_SITE;
+	public $mParentType	= CoreGlobal::TYPE_SITE;
 
 	// Protected --------------
 
@@ -190,7 +190,7 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 		$modelTable				= CoreTables::TABLE_SITE;
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'theme', 'attributes', 'members' ];
 		$config[ 'relations' ]	= $relations;
-		$config[ 'groups' ]		= [ "$modelTable.id" ];
+		$config[ 'groups' ]		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : [ "$modelTable.id" ];
 
 		return parent::queryWithAll( $config );
 	}

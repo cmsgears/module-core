@@ -4,22 +4,26 @@ namespace cmsgears\core\admin\controllers\base;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
 use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\mappers\SiteMember;
-use cmsgears\core\common\models\resources\CmgFile;
+use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\common\services\mappers\SiteMemberService;
-use cmsgears\core\admin\services\entities\UserService;
-use cmsgears\core\admin\services\entities\RoleService;
-use cmsgears\core\admin\services\resources\OptionService;
+abstract class UserController extends CrudController {
 
-abstract class UserController extends Controller {
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
 
 	protected $roleType;
 
@@ -29,72 +33,72 @@ abstract class UserController extends Controller {
 
 	protected $showCreate;
 
+	protected $siteMemberService;
+	protected $roleService;
+	protected $optionService;
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
+
+		$this->setViewPath( '@cmsgears/module-core/admin/views/user' );
+
+		$this->crudPermission 	= CoreGlobal::PERM_IDENTITY;
+		$this->modelService		= Yii::$app->factory->get( 'userService' );
+
+		$this->siteMemberService	= Yii::$app->factory->get( 'siteMemberService' );
+		$this->roleService			= Yii::$app->factory->get( 'roleService' );
+		$this->optionService		= Yii::$app->factory->get( 'optionService' );
 
 		$this->returnUrl	= Url::previous( 'users' );
 
 		$this->showCreate 	= true;
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'index' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'all' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index' => [ 'get' ],
-	                'all' => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// UserController --------------------
+	// yii\base\Controller ----
 
-	public function actionIndex() {
+	// CMG interfaces ------------------------
 
-		return $this->redirect( 'all' );
-	}
+	// CMG parent classes --------------------
+
+	// UserController ------------------------
 
 	public function actionAll() {
 
-		$dataProvider = null;
+		$roleTable 			= CoreTables::TABLE_ROLE;
+		$permissionTable 	= CoreTables::TABLE_PERMISSION;
 
+		$dataProvider 		= null;
+
+		// Role specific users
 		if( isset( $this->roleSlug ) ) {
 
-			$dataProvider = UserService::getPaginationByRoleSlug( $this->roleSlug );
+			$dataProvider = $this->modelService->getPage( [ 'conditions' => [ "$roleTable.slug" => $this->roleSlug, "$roleTable.type" => CoreGlobal::TYPE_SYSTEM ], 'query' => User::queryWithSiteMembers() ] );
 		}
+		// Permission specific users
 		else if( isset( $this->permissionSlug ) ) {
 
-			$dataProvider = UserService::getPaginationByPermissionSlug( $this->permissionSlug );
+			$dataProvider = $this->modelService->getPage( [ 'conditions' => [ "$permissionTable.slug" => $this->permissionSlug, "$permissionTable.type" => CoreGlobal::TYPE_SYSTEM ], 'query' => User::queryWithSiteMembersPermissions() ] );
 		}
+		// All users
 		else {
 
-			$dataProvider = UserService::getPagination();
+			$dataProvider = $this->modelService->getPage();
 		}
 
-	    return $this->render( '@cmsgears/module-core/admin/views/user/all', [
+	    return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
 			'showCreate' => $this->showCreate
 	    ]);
@@ -104,31 +108,31 @@ abstract class UserController extends Controller {
 
 		$model		= new User();
 		$siteMember	= new SiteMember();
-		$avatar 	= CmgFile::loadFile( null, 'Avatar' );
+		$avatar 	= File::loadFile( null, 'Avatar' );
 
 		$model->setScenario( 'create' );
 
 		if( isset( $this->roleSlug ) ) {
 
-			$role 				= RoleService::findBySlug( $this->roleSlug );
+			$role 				= $this->roleService->getBySlugType( $this->roleSlug, CoreGlobal::TYPE_SYSTEM );
 			$siteMember->roleId = $role->id;
 		}
 
 		if( $model->load( Yii::$app->request->post(), 'User' ) && $siteMember->load( Yii::$app->request->post(), 'SiteMember' ) && $model->validate() ) {
 
 			// Create User
-			$user 		= UserService::create( $model, $avatar );
+			$user 		= $this->modelService->create( $model, [ 'avatar' => $avatar ] );
 
 			// Add User to current Site
-			$siteMember	= SiteMemberService::create( $model, $siteMember );
+			$siteMember	= $this->siteMemberService->create( $user, [ 'siteMember' => $siteMember ] );
 
 			if( $user && $siteMember ) {
 
 				// Load User Permissions
-				$model->loadPermissions();
+				$user->loadPermissions();
 
 				// Send Account Mail
-				Yii::$app->cmgCoreMailer->sendCreateUserMail( $model );
+				Yii::$app->coreMailer->sendCreateUserMail( $user );
 
 				return $this->redirect( $this->returnUrl );
 			}
@@ -136,16 +140,16 @@ abstract class UserController extends Controller {
 
 		if( isset( $this->roleSlug ) ) {
 
-			return $this->render( '@cmsgears/module-core/admin/views/user/create', [
+			return $this->render( 'create', [
 				'model' => $model,
 				'siteMember' => $siteMember
 			]);
 		}
 		else {
 
-			$roleMap 	= RoleService::getIdNameMapByType( $this->roleType );
+			$roleMap 	= $this->roleService->getIdNameMapByType( $this->roleType );
 
-			return $this->render( '@cmsgears/module-core/admin/views/user/create', [
+			return $this->render( 'create', [
 				'sidebar' => $this->sidebar,
 				'model' => $model,
 				'siteMember' => $siteMember,
@@ -158,56 +162,57 @@ abstract class UserController extends Controller {
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model		= UserService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$siteMember	= $model->siteMember;
-			$avatar 	= CmgFile::loadFile( $model->avatar, 'Avatar' );
+			$siteMember	= $model->activeSiteMember;
+			$avatar 	= File::loadFile( $model->avatar, 'Avatar' );
 
 			$model->setScenario( 'update' );
 
 			if( $model->load( Yii::$app->request->post(), 'User' ) && $siteMember->load( Yii::$app->request->post(), 'SiteMember' ) && $model->validate() ) {
 
 				// Update User and Site Member
-				if( UserService::update( $model, $avatar ) && SiteMemberService::update( $siteMember ) ) {
+				$this->modelService->update( $model, [ 'avatar' => $avatar ] );
 
-					return $this->redirect( $this->returnUrl );
-				}
+				$this->siteMemberService->update( $siteMember );
+
+				return $this->redirect( $this->returnUrl );
 			}
 
 			if( isset( $this->roleSlug ) ) {
 
-		    	return $this->render( '@cmsgears/module-core/admin/views/user/update', [
+		    	return $this->render( 'update', [
 		    		'model' => $model,
 		    		'siteMember' => $siteMember,
 		    		'avatar' => $avatar,
-		    		'status' => User::$statusMapUpdate
+		    		'status' => User::$statusMap
 		    	]);
 			}
 			else {
 
-				$roleMap 	= RoleService::getIdNameMapByType( $this->roleType );
+				$roleMap 	= $this->roleService->getIdNameMapByType( $this->roleType );
 
-		    	return $this->render( '@cmsgears/module-core/admin/views/user/update', [
+		    	return $this->render( 'update', [
 		    		'model' => $model,
 		    		'siteMember' => $siteMember,
 		    		'avatar' => $avatar,
 		    		'roleMap' => $roleMap,
-		    		'status' => User::$statusMapUpdate
+		    		'status' => User::$statusMap
 		    	]);
 			}
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model		= UserService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
@@ -217,27 +222,26 @@ abstract class UserController extends Controller {
 
 			if( $model->load( Yii::$app->request->post(), 'User' ) ) {
 
-				if( UserService::delete( $model, $avatar ) ) {
+				$this->modelService->delete( $model, $avatar );
 
-					return $this->redirect( $this->returnUrl );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 			else {
 
-				$roleMap 	= RoleService::getIdNameMapByType( $this->roleType );
+				$roleMap 	= $this->roleService->getIdNameMapByType( $this->roleType );
 
-	        	return $this->render( '@cmsgears/module-core/admin/views/user/delete', [
+	        	return $this->render( 'delete', [
 	        		'model' => $model,
 	        		'siteMember' => $siteMember,
 		    		'avatar' => $avatar,
 	        		'roleMap' => $roleMap,
-	        		'status' => User::$statusMapUpdate
+	        		'status' => User::$statusMap
 	        	]);
 			}
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

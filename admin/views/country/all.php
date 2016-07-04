@@ -31,7 +31,7 @@ if( !isset( $sortOrder ) ) {
 		<span class="frm-icon-element element-small">
 			<i class="cmti cmti-plus"></i>
 			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
-		</span>				
+		</span>
 	</div>
 	<div class="header-search col15x5">
 		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
@@ -61,7 +61,7 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
-					</th>		 
+					</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -73,10 +73,10 @@ if( !isset( $sortOrder ) ) {
 						$id = $country->id;
 				?>
 					<tr>
-						<td><?= $country->code ?></td> 
-						<td><?= $country->name ?></td> 
+						<td><?= $country->code ?></td>
+						<td><?= $country->name ?></td>
 						<td class="actions">
-							<span title="Provinces"><?= Html::a( "", [ "country/province/all?id=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
+							<span title="Provinces"><?= Html::a( "", [ "country/province/all?cid=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
 							<span title="Update Country"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete Country"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>

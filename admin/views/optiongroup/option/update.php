@@ -7,12 +7,12 @@ use yii\helpers\Html;
 use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Add Option';
+$this->title 	= 'Update Option | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
 <div class="box box-cud">
 	<div class="box-wrap-header">
-		<div class="header">Add Option</div>
+		<div class="header">Update Option</div>
 	</div>
 	<div class="box-wrap-content frm-split-40-60">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-option' ] );?>
@@ -21,13 +21,12 @@ $returnUrl		= $this->context->returnUrl;
     	<?= $form->field( $model, 'value' ) ?>
     	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
     	<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
-		<?= $form->field( $model, 'categoryId' )->hiddenInput( [ 'value' => $id ] )->label( false )?>
 
 		<div class="clear filler-height"></div>
 
 		<div class="align align-center">
 			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
-			<input class="element-medium" type="submit" value="Create" />
+			<input class="element-medium" type="submit" value="Update" />
 		</div>
 
 		<?php ActiveForm::end(); ?>

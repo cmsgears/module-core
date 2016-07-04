@@ -11,6 +11,12 @@ interface IUserService extends \cmsgears\core\common\services\interfaces\base\IA
 
 	// Data Provider ------
 
+	public function getPageByRoleType( $roleType );
+
+	public function getPageByAdmins();
+
+	public function getPageByUsers();
+
 	// Read ---------------
 
     // Read - Models ---

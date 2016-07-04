@@ -3,6 +3,7 @@ namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
 use \Yii;
+use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -13,7 +14,7 @@ use cmsgears\core\common\models\mappers\RolePermission;
 
 use cmsgears\core\common\services\interfaces\entities\IRoleService;
 
-use cmsgears\core\common\services\traits\NameSlugTrait;
+use cmsgears\core\common\services\traits\NameSlugTypeTrait;
 
 /**
  * The class RoleService is base class to perform database activities for Role Entity.
@@ -46,7 +47,7 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Traits ------------------------------------------------------
 
-	use NameSlugTrait;
+	use NameSlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -63,6 +64,30 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 	// RoleService ---------------------------
 
 	// Data Provider ------
+
+	public function getPage( $config = [] ) {
+
+	    $sort = new Sort([
+	        'attributes' => [
+	            'name' => [
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'name'
+	            ],
+	            'slug' => [
+	                'asc' => [ 'slug' => SORT_ASC ],
+	                'desc' => ['slug' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'slug'
+	            ]
+	        ]
+	    ]);
+
+		$config[ 'sort' ] = $sort;
+
+		return parent::findPage( $config );
+	}
 
 	// Read ---------------
 

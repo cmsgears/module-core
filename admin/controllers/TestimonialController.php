@@ -38,8 +38,6 @@ class TestimonialController extends \cmsgears\core\admin\controllers\base\Commen
         $this->commentType  	= ModelComment::TYPE_TESTIMONIAL;
 
 		$this->parentService	= Yii::$app->factory->get( 'siteService' );
-
-		$this->setViewPath( '@cmsgears/module-core/admin/views/testimonial' );
 	}
 
 	// Instance methods --------------------------------------------

@@ -10,11 +10,7 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\Gallery;
-
-use cmsgears\core\admin\services\entities\TemplateService;
-
-abstract class GalleryController extends Controller {
+abstract class GalleryController extends \cmsgears\core\admin\controllers\base\CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -60,30 +56,13 @@ abstract class GalleryController extends Controller {
 
     public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->core->getRbacFilterClass(),
-                'actions' => [
-	                'index' => [ 'permission' => $this->crudPermission ],
-	                'all' => [ 'permission' => $this->crudPermission ],
-	                'create' => [ 'permission' => $this->crudPermission ],
-	                'update' => [ 'permission' => $this->crudPermission ],
-	                'delete' => [ 'permission' => $this->crudPermission ],
-	                'items' => [ 'permission' => $this->crudPermission ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index' => [ 'get' ],
-	                'all' => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ],
-	                'items'  => [ 'get' ]
-                ]
-            ]
-        ];
+		$behaviors	= parent::behaviors();
+
+		$behaviors[ 'rbac' ][ 'actions' ][ 'items' ] = [ 'permission' => $this->crudPermission ];
+
+		$behaviors[ 'verbs' ][ 'actions' ][ 'items' ] = [ 'get' ];
+
+		return $behaviors;
     }
 
 	// yii\base\Controller ----
@@ -105,11 +84,12 @@ abstract class GalleryController extends Controller {
 
 	public function actionCreate() {
 
-		$model			= new Gallery();
+		$modelClass		= $this->modelService->getModelClass();
+		$model			= new $modelClass;
 		$model->type 	= $this->type;
 		$model->siteId	= Yii::$app->core->siteId;
 
-		if( $model->load( Yii::$app->request->post(), 'Gallery' )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
 
 			$this->modelService->create( $model );
 
@@ -134,7 +114,7 @@ abstract class GalleryController extends Controller {
 
 			$model->type 	= $this->type;
 
-			if( $model->load( Yii::$app->request->post(), 'Gallery' )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
 
 				$this->modelService->update( $model, [ 'admin' => true ] );
 
@@ -163,7 +143,7 @@ abstract class GalleryController extends Controller {
 
 			$model->type 	= $this->type;
 
-			if( $model->load( Yii::$app->request->post(), 'Gallery' ) ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
 				$this->modelService->delete( $model );
 

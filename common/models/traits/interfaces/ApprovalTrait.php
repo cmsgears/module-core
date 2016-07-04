@@ -48,7 +48,7 @@ trait ApprovalTrait {
 		return $this->status < IApproval::STATUS_NEW;
 	}
 
-	public function isNew(  $strict = true ) {
+	public function isNew( $strict = true ) {
 
 		if( $strict ) {
 
@@ -58,7 +58,7 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_NEW;
 	}
 
-	public function isRejected(  $strict = true ) {
+	public function isRejected( $strict = true ) {
 
 		if( $strict ) {
 
@@ -68,7 +68,7 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_REJECTED;
 	}
 
-	public function isReSubmit(  $strict = true ) {
+	public function isReSubmit( $strict = true ) {
 
 		if( $strict ) {
 
@@ -78,7 +78,7 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_RE_SUBMIT;
 	}
 
-	public function isConfirmed(  $strict = true ) {
+	public function isConfirmed( $strict = true ) {
 
 		if( $strict ) {
 
@@ -88,7 +88,7 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_CONFIRMED;
 	}
 
-	public function isActive(  $strict = true ) {
+	public function isActive( $strict = true ) {
 
 		if( $strict ) {
 
@@ -98,7 +98,7 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_ACTIVE;
 	}
 
-	public function isFrojen(  $strict = true ) {
+	public function isFrojen( $strict = true ) {
 
 		if( $strict ) {
 
@@ -108,7 +108,7 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_FROJEN;
 	}
 
-	public function isBlocked(  $strict = true ) {
+	public function isBlocked( $strict = true ) {
 
 		if( $strict ) {
 
@@ -128,19 +128,19 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_TERMINATED;
 	}
 
-	// User can edit model in these situations
+	// User can edit model in these situations i.e. either new or re-submit.
 	public function isEditable() {
 
 		return $this->status != IApproval::STATUS_NEW && $this->status != IApproval::STATUS_RE_SUBMIT;
 	}
 
-	// User can't make any changes in submitted mode
+	// User can't make any changes in submitted mode i.e. submit(new) and re-submit.
 	public function isSubmitted() {
 
 		return $this->status == IApproval::STATUS_NEW || $this->status == IApproval::STATUS_RE_SUBMIT;
 	}
 
-	// User can submit the model for limit removal
+	// User can submit the model for limit removal in selected states i.e. new, rejected, frozen or blocked.
 	public function isSubmittable() {
 
 		return $this->status < IApproval::STATUS_NEW || $this->status == IApproval::STATUS_REJECTED ||

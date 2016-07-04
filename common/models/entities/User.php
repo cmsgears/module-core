@@ -50,7 +50,7 @@ use cmsgears\core\common\models\traits\mappers\FileTrait;
  * @property datetime $lastLoginAt
  * @property datetime $lastActivityAt
  * @property string $authKey
- * @property string $token
+ * @property string $accessToken
  * @property datetime $tokenCreatedAt
  * @property datetime $tokenAccessedAt
  * @property string $content
@@ -66,23 +66,13 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	// Public -----------------
 
-    /**
-     * The status map having string form of status available for admin to make status change.
-     */
-    public static $statusMapUpdate = [
-        self::STATUS_ACTIVE => 'Active',
-        self::STATUS_FROJEN => 'Frozen',
-        self::STATUS_BLOCKED => 'Blocked',
-        self::STATUS_TERMINATED => 'Terminated'
-    ];
-
 	// Protected --------------
 
 	// Variables -----------------------------
 
 	// Public -----------------
 
-    public $parentType  = CoreGlobal::TYPE_USER;
+    public $mParentType	= CoreGlobal::TYPE_USER;
     public $permissions = [];
 
 	// Protected --------------
@@ -158,7 +148,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
             [ [ 'id', 'localeId', 'genderId', 'avatarId', 'status' ], 'number', 'integerOnly' => true ],
             [ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
-            [ [ 'email', 'username', 'passwordHash', 'firstName', 'lastName', 'phone', 'avatarUrl', 'websiteUrl', 'verifyToken', 'resetToken', 'authKey', 'token' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+            [ [ 'email', 'username', 'passwordHash', 'firstName', 'lastName', 'phone', 'avatarUrl', 'websiteUrl', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
             [ 'dob', 'date', 'format' => Yii::$app->formatter->dateFormat ],
             [ [ 'registeredAt', 'lastLoginAt', 'lastActivityAt', 'tokenCreatedAt', 'tokenAccessedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
@@ -332,10 +322,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
      */
     public function getSiteMembers() {
 
-        $userTable	= CoreTables::TABLE_USER;
-        $siteTable	= CoreTables::TABLE_SITE;
-
-        return $this->hasMany( SiteMember::className(), [ "$userTable.userId" => 'id' ] );
+        return $this->hasMany( SiteMember::className(), [ "userId" => 'id' ] );
 	}
 
     /**
@@ -343,11 +330,9 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
      */
     public function getActiveSiteMember() {
 
-        $userTable	= CoreTables::TABLE_USER;
-        $siteTable	= CoreTables::TABLE_SITE;
 		$site		= Yii::$app->core->site;
 
-        return $this->hasOne( SiteMember::className(), [ "$userTable.userId" => 'id' ] )->where( [ "$siteTable.siteId" => $site->id ] );
+        return $this->hasOne( SiteMember::className(), [ "userId" => 'id' ] )->where( [ "siteId" => $site->id ] );
 	}
 
     /**
@@ -647,7 +632,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
      */
     public static function findByAccessToken( $token ) {
 
-        return self::find()->where( 'token=:token', [ ':token' => $token ] )->one();
+        return self::find()->where( 'accessToken=:token', [ ':token' => $token ] )->one();
     }
 
     /**

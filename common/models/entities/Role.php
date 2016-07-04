@@ -52,7 +52,7 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 
 	// Public -----------------
 
-	private $parentType		= CoreGlobal::TYPE_ROLE; // required for traits
+	private $mParentType	= CoreGlobal::TYPE_ROLE; // required for traits
 
 	// Protected --------------
 
@@ -242,8 +242,10 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 
 	public static function queryWithAll( $config = [] ) {
 
+		$modelTable				= CoreTables::TABLE_ROLE;
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'permissions' ];
 		$config[ 'relations' ]	= $relations;
+		$config[ 'groups' ]		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : [ "$modelTable.id" ];
 
 		return parent::queryWithAll( $config );
 	}

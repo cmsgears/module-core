@@ -15,6 +15,9 @@ use cmsgears\core\common\models\resources\ModelHierarchy;
  */
 trait HierarchyTrait {
 
+    /**
+     * @return Object - first immediate parent
+     */
     public function getParent() {
 
     	return $this->hasOne( get_class( $this ), [ 'id' => 'parentId' ] )
@@ -22,10 +25,13 @@ trait HierarchyTrait {
 
 						$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
 
-                      	$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->parentType ] );
+                      	$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->mParentType ] );
 					});
     }
 
+    /**
+     * @return array - list of immediate parents
+     */
     public function getParents() {
 
     	return $this->hasMany( get_class( $this ), [ 'id' => 'parentId' ] )
@@ -33,7 +39,7 @@ trait HierarchyTrait {
 
 						$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
 
-                      	$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->parentType ] );
+                      	$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->mParentType ] );
 					});
     }
 
@@ -47,7 +53,7 @@ trait HierarchyTrait {
 
 						$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
 
-                      	$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->parentType ] );
+                      	$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->mParentType ] );
 					});
     }
 }

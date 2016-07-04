@@ -3,12 +3,14 @@ namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
 use \Yii;
+use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Category;
+use cmsgears\core\common\models\resources\Option;
 use cmsgears\core\common\models\mappers\ModelCategory;
 
 use cmsgears\core\common\services\interfaces\resources\ICategoryService;
@@ -16,7 +18,7 @@ use cmsgears\core\common\services\interfaces\resources\ICategoryService;
 /**
  * The class CategoryService is base class to perform database activities for Category Entity.
  */
-class CategoryService extends \cmsgears\core\common\services\base\HierarchyService implements ICategoryService {
+class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSetService implements ICategoryService {
 
 	// Variables ---------------------------------------------------
 
@@ -59,6 +61,24 @@ class CategoryService extends \cmsgears\core\common\services\base\HierarchyServi
 	// CategoryService -----------------------
 
 	// Data Provider ------
+
+	public function getPage( $config = [] ) {
+
+	    $sort = new Sort([
+	        'attributes' => [
+	            'name' => [
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'name',
+	            ]
+	        ]
+	    ]);
+
+		$config[ 'sort' ] = $sort;
+
+		return parent::findPage( $config );
+	}
 
 	// Read ---------------
 
@@ -157,7 +177,7 @@ class CategoryService extends \cmsgears\core\common\services\base\HierarchyServi
 		$modelToUpdate	= self::findById( $model->id );
 
 		// Update Hierarchy
-		$modelToUpdate 	= self::updateInHierarchy( CoreTables::TABLE_CATEGORY, $model, $modelToUpdate );
+		$modelToUpdate 	= self::updateInHierarchy( $model, $modelToUpdate );
 
 		return parent::update( $model, [
 			'attributes' => [ 'name', 'description', 'type', 'icon', 'featured', 'htmlOptions' ]
@@ -169,7 +189,8 @@ class CategoryService extends \cmsgears\core\common\services\base\HierarchyServi
 	public function delete( $model, $config = [] ) {
 
 		// Delete dependencies
-		ModelCategory::deleteByCategoryId( $model->id );
+		ModelCategory::deleteByModelId( $model->id );
+		Option::deleteByCategoryId( $model->id );
 
 		// Update Hierarchy
 		$model = self::deleteInHierarchy( $model );
@@ -195,7 +216,7 @@ class CategoryService extends \cmsgears\core\common\services\base\HierarchyServi
 		return Category::findByParentId( $id );
 	}
 
-	public static function getFeaturedByType( $type ) {
+	public static function findFeaturedByType( $type ) {
 
 		return Category::getFeaturedByType( $type );
 	}

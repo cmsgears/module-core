@@ -9,7 +9,7 @@ use cmsgears\files\widgets\ImageUploader;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Delete Theme | ' . $coreProperties->getSiteTitle();
-
+$returnUrl		= $this->context->returnUrl;
 $renderers		= Yii::$app->templateManager->renderers;
 ?>
 <div class="box box-cud">
@@ -27,7 +27,7 @@ $renderers		= Yii::$app->templateManager->renderers;
 		<div class="filler-height"></div>
 
 		<div class="align align-center">
-			<?=Html::a( 'Cancel', 'all', [ 'class' => 'btn btn-medium' ] );?>
+			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
 			<input class="element-medium" type="submit" value="Delete" />
 		</div>
 

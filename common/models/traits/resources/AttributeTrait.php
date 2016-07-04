@@ -22,7 +22,7 @@ trait AttributeTrait {
 	public function getModelAttributes() {
 
     	return $this->hasMany( ModelAttribute::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->parentType'" );
+					->where( "parentType='$this->mParentType'" );
 	}
 
 	/**
@@ -31,7 +31,7 @@ trait AttributeTrait {
 	public function getModelAttributesByType( $type ) {
 
     	return $this->hasMany( ModelAttribute::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->parentType, ':type' => $type ] )->all();
+					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->mParentType, ':type' => $type ] )->all();
 	}
 
 	/**
@@ -40,7 +40,7 @@ trait AttributeTrait {
 	public function getModelAttributeByTypeName( $type, $name ) {
 
     	return $this->hasMany( ModelAttribute::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType=:ptype AND type=:type AND name=:name", [ ':ptype' => $this->parentType, ':type' => $type, ':name' => $name ] )->one();
+					->where( "parentType=:ptype AND type=:type AND name=:name", [ ':ptype' => $this->mParentType, ':type' => $type, ':name' => $name ] )->one();
 	}
 
 	/**
@@ -93,11 +93,11 @@ trait AttributeTrait {
 		return $attributesMap;
 	}
 
-	public function updateAttributes( $attributeArray ) {
+	public function updateAttributes( $attributeArray, $type = CoreGlobal::TYPE_CORE ) {
 
 		foreach( $attributeArray as $attributeElement ) {
 
-			$attribute = self::getModelAttributeByTypeName( CoreGlobal::TYPE_CORE, $attributeElement->name );
+			$attribute = self::getModelAttributeByTypeName( $type, $attributeElement->name );
 
 			if( isset( $attribute ) ) {
 

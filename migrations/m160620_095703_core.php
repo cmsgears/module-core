@@ -72,11 +72,11 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->upFormField();
 
 		// Traits - Resources
+		$this->upActivity();
 		$this->upModelMessage();
 		$this->upModelHierarchy();
 		$this->upModelComment();
 		$this->upModelAttribute();
-		$this->upModelActivity();
 
 		// Traits - Mappers
 		$this->upModelObject();
@@ -338,7 +338,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'lastLoginAt' => $this->dateTime(),
 			'lastActivityAt' => $this->dateTime(),
 			'authKey' => $this->string( CoreGlobal::TEXT_XLARGE )->defaultValue( null ),
-			'token' => $this->string( CoreGlobal::TEXT_XLARGE )->defaultValue( null ),
+			'accessToken' => $this->string( CoreGlobal::TEXT_XLARGE )->defaultValue( null ),
 			'tokenCreatedAt' => $this->dateTime(),
 			'tokenAccessedAt' => $this->dateTime(),
 			'content' => $this->text(),
@@ -573,6 +573,25 @@ class m160620_095703_core extends \yii\db\Migration {
         $this->createIndex( 'idx_' . $this->prefix . 'form_field_parent', $this->prefix . 'core_form_field', 'formId' );
 	}
 
+	private function upActivity() {
+
+		$this->createTable( $this->prefix . 'core_activity', [
+			'id' => $this->bigPrimaryKey( 20 ),
+			'userId' => $this->bigInteger( 20 )->notNull(),
+			'parentId' => $this->bigInteger( 20 ),
+			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM ),
+			'type' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull()->defaultValue( 'default' ),
+			'ip' => $this->string( CoreGlobal::TEXT_MEDIUM )->defaultValue( null ),
+			'agent' => $this->string( CoreGlobal::TEXT_XLARGE )->defaultValue( null ),
+			'createdAt' => $this->dateTime()->notNull(),
+			'modifiedAt' => $this->dateTime(),
+			'content' => $this->text()
+        ], $this->options );
+
+        // Index for columns user
+        $this->createIndex( 'idx_' . $this->prefix . 'activity_user', $this->prefix . 'core_activity', 'userId' );
+	}
+
 	private function upModelMessage() {
 
 		$this->createTable( $this->prefix . 'core_model_message', [
@@ -645,25 +664,6 @@ class m160620_095703_core extends \yii\db\Migration {
 			'valueType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull()->defaultValue( 'text' ),
 			'value' => $this->text()
         ], $this->options );
-	}
-
-	private function upModelActivity() {
-
-		$this->createTable( $this->prefix . 'core_model_activity', [
-			'id' => $this->bigPrimaryKey( 20 ),
-			'userId' => $this->bigInteger( 20 )->notNull(),
-			'parentId' => $this->bigInteger( 20 )->notNull(),
-			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
-			'type' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull()->defaultValue( 'default' ),
-			'ip' => $this->string( CoreGlobal::TEXT_MEDIUM )->defaultValue( null ),
-			'agent' => $this->string( CoreGlobal::TEXT_XLARGE )->defaultValue( null ),
-			'createdAt' => $this->dateTime()->notNull(),
-			'modifiedAt' => $this->dateTime(),
-			'content' => $this->text()
-        ], $this->options );
-
-        // Index for columns user
-        $this->createIndex( 'idx_' . $this->prefix . 'model_activity_user', $this->prefix . 'core_model_activity', 'userId' );
 	}
 
 	private function upModelObject() {
@@ -879,6 +879,9 @@ class m160620_095703_core extends \yii\db\Migration {
 		// Form Field
 		$this->addForeignKey( 'fk_' . $this->prefix . 'form_field_parent', $this->prefix . 'core_form_field', 'formId', $this->prefix . 'core_form', 'id', 'RESTRICT' );
 
+		// Activity
+		$this->addForeignKey( 'fk_' . $this->prefix . 'activity_user', $this->prefix . 'core_activity', 'userId', $this->prefix . 'core_user', 'id', 'CASCADE' );
+
 		// Model Message
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_message_locale', $this->prefix . 'core_model_message', 'localeId', $this->prefix . 'core_locale', 'id', 'CASCADE' );
 
@@ -886,9 +889,6 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_comment_base', $this->prefix . 'core_model_comment', 'baseId', $this->prefix . 'core_model_comment', 'id', 'RESTRICT' );
         $this->addForeignKey( 'fk_' . $this->prefix . 'model_comment_creator', $this->prefix . 'core_model_comment', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_comment_modifier', $this->prefix . 'core_model_comment', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
-
-		// Model Activity
-		$this->addForeignKey( 'fk_' . $this->prefix . 'model_activity_user', $this->prefix . 'core_model_activity', 'userId', $this->prefix . 'core_user', 'id', 'CASCADE' );
 
 		// Model Object
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_object_parent', $this->prefix . 'core_model_object', 'modelId', $this->prefix . 'core_object', 'id', 'CASCADE' );
@@ -952,11 +952,11 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->dropTable( $this->prefix . 'core_form' );
 		$this->dropTable( $this->prefix . 'core_form_field' );
 
+		$this->dropTable( $this->prefix . 'core_activity' );
 		$this->dropTable( $this->prefix . 'core_model_message' );
 		$this->dropTable( $this->prefix . 'core_model_hierarchy' );
 		$this->dropTable( $this->prefix . 'core_model_comment' );
 		$this->dropTable( $this->prefix . 'core_model_attribute' );
-		$this->dropTable( $this->prefix . 'core_model_activity' );
 
 		$this->dropTable( $this->prefix . 'core_model_object' );
 		$this->dropTable( $this->prefix . 'core_model_address' );
@@ -1059,6 +1059,9 @@ class m160620_095703_core extends \yii\db\Migration {
 		// Form Field
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'form_field_parent', $this->prefix . 'core_form_field' );
 
+		// Model Activity
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'activity_user', $this->prefix . 'core_activity' );
+
 		// Model Message
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_message_locale', $this->prefix . 'core_model_message' );
 
@@ -1066,9 +1069,6 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_base', $this->prefix . 'core_model_comment' );
         $this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_creator', $this->prefix . 'core_model_comment' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_modifier', $this->prefix . 'core_model_comment' );
-
-		// Model Activity
-		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_activity_user', $this->prefix . 'core_model_activity' );
 
 		// Model Object
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_object_parent', $this->prefix . 'core_model_object' );

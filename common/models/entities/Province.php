@@ -72,7 +72,7 @@ class Province extends \cmsgears\core\common\models\base\Entity {
         // trim if required
         if( Yii::$app->core->trimFieldValue ) {
 
-            $trim[] = [ [ 'name', 'code' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'code', 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
             return ArrayHelper::merge( $trim, $rules );
         }

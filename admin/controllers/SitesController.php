@@ -13,7 +13,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\resources\File;
 
-class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
+class SitesController extends \cmsgears\core\admin\controllers\base\CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -50,32 +50,6 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 	// Yii parent classes --------------------
 
 	// yii\base\Component -----
-
-    public function behaviors() {
-
-        return [
-            'rbac' => [
-                'class' => Yii::$app->core->getRbacFilterClass(),
-                'actions' => [
-	                'index' => [ 'permission' => $this->crudPermission ],
-	                'all' => [ 'permission' => $this->crudPermission ],
-	                'create' => [ 'permission' => $this->crudPermission ],
-	                'update' => [ 'permission' => $this->crudPermission ],
-	                'delete' => [ 'permission' => $this->crudPermission ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index' => [ 'get' ],
-	                'all' => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
 
 	// yii\base\Controller ----
 

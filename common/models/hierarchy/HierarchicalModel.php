@@ -8,13 +8,9 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
- * HierarchicalModel - It can be used by models which need parent child relationship. It supports two way relationship i.e. by parentId and Nested Set(left, right value).
+ * HierarchicalModel - It can be used by models which need simple parent child relationship. It does not support Nested Set(left, right value), but support hierarchy via parentId.
  *
- * @property long $parentId
- * @property long $rootId
- * @property string $name
- * @property integer lValue
- * @property integer rValue
+ * @property integer $parentId
  */
 abstract class HierarchicalModel extends \cmsgears\core\common\models\base\Entity {
 

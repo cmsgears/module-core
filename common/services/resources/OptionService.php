@@ -28,6 +28,12 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 
 	// Public -----------------
 
+	public static $modelClass	= '\cmsgears\core\common\models\resources\Option';
+
+	public static $modelTable	= CoreTables::TABLE_OPTION;
+
+	public static $parentType	= CoreGlobal::TYPE_OPTION;
+
 	// Protected --------------
 
 	// Variables -----------------------------
@@ -128,11 +134,11 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 	 * @param integer $categoryName - category name
 	 * @return array - an array having id as key and name as value for given category name.
 	 */
-	public function getIdNameMapByCategoryName( $categoryName, $config = [], $type = CoreGlobal::TYPE_OPTION_GROUP ) {
+	public function getIdNameMapByCategorySlug( $categorySlug, $config = [], $type = CoreGlobal::TYPE_OPTION_GROUP ) {
 
-		$category	= Category::findByNameType( $categoryName, $type );
+		$category	= Category::findBySlugType( $categorySlug, $type );
 
-		$config[ 'conditions' ][ 'categoryId' ] = $categoryId;
+		$config[ 'conditions' ][ 'categoryId' ] = $category->id;
 
 		return self::findIdNameMap( $config );
 	}

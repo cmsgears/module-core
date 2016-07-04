@@ -13,7 +13,7 @@ use cmsgears\core\common\models\resources\Category;
 use cmsgears\core\common\models\traits\MapperTrait;
 
 /**
- * ModelCategory Entity
+ * ModelCategory Entity - The mapper to map Category Model to specific parent model for given parentId and parentType.
  *
  * @property long $id
  * @property long $modelId
@@ -65,12 +65,13 @@ class ModelCategory extends \cmsgears\core\common\models\base\Mapper {
 
         return [
             [ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
-            [ [ 'id'], 'safe' ],
-            [ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'active' ], 'boolean' ],
+            [ [ 'id' ], 'safe' ],
             [ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
+            [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
+            [ [ 'active' ], 'boolean' ]
         ];
     }
 

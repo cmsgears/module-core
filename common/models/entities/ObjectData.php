@@ -67,7 +67,7 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 
 	// Public -----------------
 
-	public $parentType  		= CoreGlobal::TYPE_OBJECT;
+	public $mParentType  		= CoreGlobal::TYPE_OBJECT;
 
 	// Protected --------------
 

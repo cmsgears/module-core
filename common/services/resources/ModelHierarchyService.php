@@ -69,7 +69,7 @@ class ModelHierarchyService extends \cmsgears\core\common\services\base\EntitySe
 		ModelHierarchy::findRoot( $rootId, $parentType );
 	}
 
-	public function getChildrent( $parentId, $parentType ) {
+	public function getChildren( $parentId, $parentType ) {
 
 		ModelHierarchy::findByParent( $parentId, $parentType );
 	}
@@ -81,18 +81,6 @@ class ModelHierarchyService extends \cmsgears\core\common\services\base\EntitySe
 	// Read - Others ---
 
 	// Create -------------
-
-	public function createByParams( $parentId, $parentType, $rootId, $childId ) {
-
-		$modelHierarchy				= new ModelHierarchy();
-
-		$modelHierarchy->parentId	= $parentId;
-		$modelHierarchy->childId	= $childId;
-		$modelHierarchy->rootId		= $rootId;
-		$modelHierarchy->parentType	= $parentType;
-
-		$modelHierarchy->save();
-	}
 
 	public function createInHierarchy( $parentId, $parentType, $rootId, $childId ) {
 

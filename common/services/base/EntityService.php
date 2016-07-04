@@ -196,6 +196,18 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		return $model;
  	}
 
+ 	public function createByParams( $params = [], $config = [] ) {
+
+		$model	= new static::$modelClass;
+
+		foreach ( $params as $key => $value ) {
+
+			$model->$key	= $value;
+		}
+
+		return $this->create( $model, $config );
+ 	}
+
 	// Update -------------
 
 	public function update( $model, $config = [] ) {

@@ -10,22 +10,47 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class AdminController extends \cmsgears\core\admin\controllers\base\UserController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
-
-		$this->sidebar 		= [ 'parent' => 'sidebar-identity', 'child' => 'admin' ];
+        parent::init();
 
 		$this->roleType			= CoreGlobal::TYPE_SYSTEM;
 		$this->permissionSlug	= CoreGlobal::PERM_ADMIN;
 		$this->showCreate 		= false;
+
+		$this->sidebar			= [ 'parent' => 'sidebar-identity', 'child' => 'admin' ];
+
+		$this->returnUrl		= Url::previous( 'users' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/admin/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// UserController --------------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// UserController ------------------------
 
 	public function actionAll() {
 

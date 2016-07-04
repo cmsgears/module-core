@@ -77,7 +77,7 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
 	// Public -----------------
 
-	public $parentType	= CoreGlobal::TYPE_COMMENT;
+	public $mParentType	= CoreGlobal::TYPE_COMMENT;
 
 	// Protected --------------
 
@@ -222,14 +222,12 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Query -----------
 
-	// Read - Find ------------
-
     public static function queryByParentConfig( $parentId, $parentType, $config = [] ) {
 
 		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
 		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
 
-        return self::find()->where( [ 'parentId' => $parentId, 'parentType' => $parentType, 'type' => $type, 'status' => $status ] );
+        return self::queryByParent( $parentId, $parentType)->andWhere( [ 'type' => $type, 'status' => $status ] );
     }
 
     public static function queryByParentTypeConfig( $parentType, $config = [] ) {
@@ -252,6 +250,13 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
         return self::find()->where( [ 'email' => $email ] );
     }
+
+	public static function queryL0Approved( $parentId, $parentType, $type ) {
+
+		return self::queryByParentConfig( $parentId, $parentType, [ 'type' => $type ] )->andWhere( [ 'baseId' => null ] );
+	}
+
+	// Read - Find ------------
 
 	// Create -----------------
 

@@ -13,7 +13,7 @@ use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\traits\ResourceTrait;
 
 /**
- * ModelActivity Entity
+ * Activity Entity - It can be used to log user activities. A model can be optionally associated with it to identify model specific activities.
  *
  * @property long $id
  * @property long $userId
@@ -26,7 +26,7 @@ use cmsgears\core\common\models\traits\ResourceTrait;
  * @property datetime $modifiedAt
  * @property string $content
  */
-class ModelActivity extends \cmsgears\core\common\models\base\Resource {
+class Activity extends \cmsgears\core\common\models\base\Resource {
 
 	// Variables ---------------------------------------------------
 
@@ -68,7 +68,7 @@ class ModelActivity extends \cmsgears\core\common\models\base\Resource {
     public function rules() {
 
         return [
-            [ [ 'userId', 'parentId', 'parentType' ], 'required' ],
+            [ [ 'userId' ], 'required' ],
             [ [ 'id', 'content' ], 'safe' ],
             [ [ 'parentType', 'type', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ [ 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],

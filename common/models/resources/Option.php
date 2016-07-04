@@ -40,7 +40,7 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 
 	// Public -----------------
 
-	public $parentType = CoreGlobal::TYPE_OPTION;
+	public $mParentType	= CoreGlobal::TYPE_OPTION;
 
 	// Protected --------------
 
@@ -73,12 +73,11 @@ class Option extends \cmsgears\core\common\models\base\Resource {
             [ [ 'id', 'value', 'htmlOptions', 'content', 'data' ], 'safe' ],
             [ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'categoryId', 'name' ], 'unique', 'targetAttribute' => [ 'name' ] ]
         ];
 
         // trim if required
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
             $trim[] = [ [ 'name', 'value', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -108,36 +107,6 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 	// CMG parent classes --------------------
 
 	// Validators ----------------------------
-
-    /**
-     * Validates to ensure that only one option exist for a category with the same name.
-     */
-    public function validateNameCreate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-            if( self::isExistByNameCategoryId( $this->name, $this->categoryId ) ) {
-
-                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-            }
-        }
-    }
-
-    /**
-     * Validates to ensure that only one option exist for a category with the same name.
-     */
-    public function validateNameUpdate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-            $existingOption = self::findByNameCategoryId( $this->name, $this->categoryId );
-
-            if( isset( $existingOption ) && $existingOption->id != $this->id ) {
-
-                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-            }
-        }
-    }
 
     // Option --------------------------------
 

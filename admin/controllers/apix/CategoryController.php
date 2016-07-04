@@ -11,22 +11,37 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\Category;
 
-use \cmsgears\core\common\services\resources\CategoryService;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class CategoryController extends \cmsgears\core\admin\controllers\base\Controller {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
+
+		$this->crudPermission 	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'categoryService' );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     public function behaviors() {
 
@@ -34,36 +49,42 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => CoreGlobal::PERM_CORE ],
+	                'index'  => [ 'permission' => $this->crudPermission ],
 	                'autoSearch' => [ 'permission' => CoreGlobal::PERM_ADMIN ],
-	                'all'   => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_CORE ]
+	                'all'   => [ 'permission' => $this->crudPermission ],
+	                'create' => [ 'permission' => $this->crudPermission ],
+	                'update' => [ 'permission' => $this->crudPermission ],
+	                'delete' => [ 'permission' => $this->crudPermission ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index'  => ['get'],
-	                'autoSearch' => [ 'post'],
-	                'all'   => ['get'],
-	                'create' => ['get', 'post'],
-	                'update' => ['get', 'post'],
-	                'delete' => ['get', 'post']
+	                'index'  => [ 'get' ],
+	                'autoSearch' => [ 'post' ],
+	                'all'   => [ 'get' ],
+	                'create' => [ 'get', 'post' ],
+	                'update' => [ 'get', 'post' ],
+	                'delete' => [ 'get', 'post' ]
                 ]
             ]
         ];
     }
 
-	// CategoryController ----------------
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// CategoryController --------------------
 
 	public function actionAutoSearch() {
 
 		$name	= Yii::$app->request->post( 'name' );
 		$type	= Yii::$app->request->post( 'type' );
 
-		$data	= CategoryService::searchByName( $name );
+		$data	= $this->modelService->searchByName( $name );
 
 		// Trigger Ajax Success
 		return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
@@ -77,11 +98,10 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 
 		if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
-			if( CategoryService::create( $model ) ) {
+			$this->modelService->create( $model );
 
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
-			}
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 		}
 
 		// Generate Errors
@@ -100,11 +120,10 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 
 		if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
 
-			if( CategoryService::update( $model ) ) {
+			$this->modelService->update( $model );
 
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
-			}
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 		}
 
 		// Generate Errors
@@ -121,11 +140,10 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 
 		if( isset( $_POST ) && count( $_POST ) > 0 ) {
 
-			if( CategoryService::delete( $model ) ) {
+			$this->modelService->delete( $model );
 
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
-			}
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 		}
 		else {
 

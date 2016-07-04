@@ -26,38 +26,6 @@ trait NameTrait {
 
 	// Validators -------------
 
-	/**
-	 * Validate name on creation to ensure that name is unique for all rows.
-	 */
-    public function validateNameCreate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-			$entity = static::isExistByName( $this->name );
-
-            if( $entity ) {
-
-				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-            }
-        }
-    }
-
-	/**
-	 * Validate name on creation to ensure that name is unique for all rows.
-	 */
-    public function validateNameUpdate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-			$existingEntity = static::findByName( $this->name );
-
-			if( isset( $existingEntity ) && $existingEntity->id != $this->id ) {
-
-				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-			}
-        }
-    }
-
 	// Static Methods ----------------------------------------------
 
 	// Yii classes ---------------------------

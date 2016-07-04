@@ -8,11 +8,15 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
- * ParentModel - It can be used by models which need simple parent child relationship. It does not support Nested Set(left, right value).
+ * HierarchicalModel - It can be used by models which need parent child relationship. It supports two way relationship i.e. by parentId and Nested Set(left, right value).
  *
- * @property integer $parentId
+ * @property long $parentId
+ * @property long $rootId
+ * @property string $name
+ * @property integer lValue
+ * @property integer rValue
  */
-abstract class ParentModel extends \cmsgears\core\common\models\base\Entity {
+abstract class NestedSetModel extends HierarchicalModel {
 
 	// Variables ---------------------------------------------------
 
@@ -52,23 +56,7 @@ abstract class ParentModel extends \cmsgears\core\common\models\base\Entity {
 
 	// Validators ----------------------------
 
-	// ParentModel ---------------------------
-
-	abstract public function getParent();
-
-	public function hasParent() {
-
-		return isset( $this->parentId ) && $this->parentId > 0;
-	}
-
-	public function getParentName() {
-
-		$parent	= $this->parent;
-
-		return isset( $parent ) ? $parent->name : null;
-	}
-
-	abstract public function getChildren();
+	// NestedSetModel ------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -78,7 +66,7 @@ abstract class ParentModel extends \cmsgears\core\common\models\base\Entity {
 
 	// CMG parent classes --------------------
 
-	// ParentModel ---------------------------
+	// NestedSetModel ------------------------
 
 	// Read - Query -----------
 

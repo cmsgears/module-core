@@ -5,6 +5,8 @@ interface INameSlugTypeService extends IEntityService {
 
 	// Data Provider ------
 
+	public function getPageByType( $type, $config = [] );
+
 	// Read ---------------
 
     // Read - Models ---

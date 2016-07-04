@@ -51,7 +51,7 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
 
 	// Public -----------------
 
-	private $parentType		= CoreGlobal::TYPE_PERMISSION; // required for traits
+	private $mParentType	= CoreGlobal::TYPE_PERMISSION; // required for traits
 
 	// Protected --------------
 
@@ -206,8 +206,10 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
 
 	public static function queryWithAll( $config = [] ) {
 
+		$modelTable				= CoreTables::TABLE_PERMISSION;
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'roles' ];
 		$config[ 'relations' ]	= $relations;
+		$config[ 'groups' ]		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : [ "$modelTable.id" ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -221,7 +223,7 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Find ------------
 
-    public static function getL0Children( $l0Ids = [] ) {
+    public static function findL0Children( $l0Ids = [] ) {
 
 		$permission 	= CoreTables::TABLE_PERMISSION;
 		$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;

@@ -20,7 +20,7 @@ $returnUrl		= $this->context->returnUrl;
 		<div class="clear filler-height"></div>
 
 		<div class="align align-center">
-			<?=Html::a( 'Cancel', [ $returnUrl ], [ 'class' => 'btn btn-medium' ] );?>
+			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
 			<input class="element-medium" type="submit" value="Create" />
 		</div>
 

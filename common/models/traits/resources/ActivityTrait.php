@@ -8,7 +8,7 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\ModelActivity;
+use cmsgears\core\common\models\resources\Activity;
 
 /**
  * ActivityTrait can be used to store model activities.
@@ -16,12 +16,12 @@ use cmsgears\core\common\models\resources\ModelActivity;
 trait ActivityTrait {
 
 	/**
-	 * @return array - ActivityTrait associated with parent
+	 * @return array - Activity associated with parent
 	 */
-	public function getModelActivities() {
+	public function getActivities() {
 
-    	return $this->hasMany( ModelActivity::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->parentType'" );
+    	return $this->hasMany( Activity::className(), [ 'parentId' => 'id' ] )
+					->where( "parentType='$this->mParentType'" );
 	}
 }
 

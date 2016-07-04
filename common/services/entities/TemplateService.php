@@ -83,15 +83,6 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 		return parent::findPage( $config );
 	}
 
-	public function getPageByType( $type, $config = [] ) {
-
-		$modelTable	= self::$modelTable;
-
-		$config[ 'conditions' ][ "$modelTable.type" ] 	= $type;
-
-		return $this->getPage( $config );
-	}
-
 	// Read ---------------
 
     // Read - Models ---

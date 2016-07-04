@@ -15,17 +15,15 @@ interface IModelHierarchyService extends \cmsgears\core\common\services\interfac
 
     // Read - Models ---
 
-	public function findRoot( $rootId, $parentType );
+	public function getRoot( $rootId, $parentType );
 
-	public function findChildrent( $parentId, $parentType );
+	public function getChildren( $parentId, $parentType );
 
     // Read - Lists ----
 
     // Read - Maps -----
 
 	// Create -------------
-
-	public function createByParams( $parentId, $parentType, $rootId, $childId );
 
 	public function createInHierarchy( $parentId, $parentType, $rootId, $childId );
 

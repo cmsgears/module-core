@@ -10,9 +10,7 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\ModelComment;
-
-abstract class CommentController extends Controller {
+abstract class CommentController extends \cmsgears\core\admin\controllers\base\CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -20,9 +18,10 @@ abstract class CommentController extends Controller {
 
 	// Public -----------------
 
+	public $commentUrl;
+
 	// Protected --------------
 
-	protected $commentUrl;
 	protected $parentType;
 	protected $commentType;
 
@@ -52,30 +51,6 @@ abstract class CommentController extends Controller {
 
 	// yii\base\Component -----
 
-    public function behaviors() {
-
-        return [
-            'rbac' => [
-                'class' => Yii::$app->core->getRbacFilterClass(),
-                'actions' => [
-                    'all' => [ 'permission' => $this->crudPermission ],
-                    'create' => [ 'permission' => $this->crudPermission ],
-                    'update' => [ 'permission' => $this->crudPermission ],
-                    'delete' => [ 'permission' => $this->crudPermission ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'all' => [ 'get' ],
-                    'create' => [ 'get', 'post' ],
-                    'update' => [ 'get', 'post' ],
-                    'delete' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
-
 	// yii\base\Controller ----
 
 	// CMG interfaces ------------------------
@@ -84,27 +59,16 @@ abstract class CommentController extends Controller {
 
     // CommentController ---------------------
 
-    public function actionAll( $slug = null ) {
+    public function actionAll( $pid ) {
 
-        Url::remember( [ "$this->commentUrl/all" ], $this->commentUrl );
+        Url::remember( [ "$this->commentUrl/all?pid=$pid" ], $this->commentUrl );
 
         $dataProvider   = null;
-        $model          = null;
+        $model    		= $this->parentService->findById( $pid );
 
-        if( isset( $slug ) ) {
+        if( isset( $model ) ) {
 
-            Url::remember( [ "$this->commentUrl/all?slug=$slug" ], $this->commentUrl );
-
-            $model    = $this->parentService->findBySlug( $slug );
-
-            if( isset( $model ) ) {
-
-                $dataProvider = $this->modelService->getPageByParent( $this->parentType, $model->id, [ 'conditions' => [ 'type' => $this->commentType ] ] );
-            }
-        }
-        else {
-
-            $dataProvider = $this->modelService->getPageByParentType( $this->parentType, [ 'conditions' => [ 'type' => $this->commentType ] ] );
+            $dataProvider = $this->modelService->getPageByParent( $model->id, $this->parentType, [ 'conditions' => [ 'type' => $this->commentType ] ] );
         }
 
         return $this->render( 'all', [
@@ -113,26 +77,21 @@ abstract class CommentController extends Controller {
         ]);
     }
 
-    public function actionCreate( $slug = null ) {
+    public function actionCreate( $pid ) {
 
-        // Find Model
-        $model  = new ModelComment();
-
-        $model->parentId    = Yii::$app->core->siteId;
+		$modelClass			= $this->modelService->getModelClass();
+		$model				= new $modelClass;
+        $model->parentId    = $pid;
         $model->parentType  = $this->parentType;
         $model->type        = $this->commentType;
+		$parentModel    	= $this->parentService->findById( $pid );
 
-        if( isset( $slug ) ) {
+        if( isset( $parentModel ) ) {
 
-            $parentModel    = $this->parentService->findBySlug( $slug );
-
-            if( isset( $parentModel ) ) {
-
-                $model->parentId    = $parentModel->id;
-            }
+            $model->parentId    = $parentModel->id;
         }
 
-        if( $model->load( Yii::$app->request->post(), 'ModelComment' )  && $model->validate() ) {
+        if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
 
             $this->modelService->create( $model );
 
@@ -140,59 +99,8 @@ abstract class CommentController extends Controller {
         }
 
         return $this->render( 'create', [
-            'model' => $model,
-            'statusMap' => ModelComment::$statusMap
+            'model' => $model
         ]);
-    }
-
-    public function actionUpdate( $id ) {
-
-        // Find Model
-        $model  = $this->modelService->getById( $id );
-
-        // Update/Render if exist
-        if( isset( $model ) ) {
-
-            if( $model->load( Yii::$app->request->post(), 'ModelComment' )  && $model->validate() ) {
-
-                $this->modelService->update( $model );
-
-                return $this->redirect( $this->returnUrl );
-            }
-
-            return $this->render( 'update', [
-                'model' => $model,
-                'statusMap' => ModelComment::$statusMap
-            ]);
-        }
-
-        // Model not found
-        throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
-
-    public function actionDelete( $id ) {
-
-        // Find Model
-        $model  = $this->modelService->getById( $id );
-
-        // Update/Render if exist
-        if( isset( $model ) ) {
-
-            if( $model->load( Yii::$app->request->post(), 'ModelComment' )  && $model->validate() ) {
-
-                $this->modelService->delete( $model );
-
-                return $this->redirect( $this->returnUrl );
-            }
-
-            return $this->render( 'delete', [
-                'model' => $model,
-                'statusMap' => ModelComment::$statusMap
-            ]);
-        }
-
-        // Model not found
-        throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
     }
 }
 

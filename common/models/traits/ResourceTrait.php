@@ -38,9 +38,6 @@ trait ResourceTrait {
 
 	// Read - Query -----------
 
-	/**
-	 * @return ActiveRecord - having matching slug.
-	 */
     public static function queryByParent( $parentId, $parentType ) {
 
 		if( static::$multiSite ) {

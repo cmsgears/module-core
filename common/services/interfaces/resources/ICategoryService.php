@@ -7,7 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-interface ICategoryService extends \cmsgears\core\common\services\interfaces\base\IHierarchyService {
+interface ICategoryService extends \cmsgears\core\common\services\interfaces\hierarchy\INestedSetService {
 
 	// Data Provider ------
 

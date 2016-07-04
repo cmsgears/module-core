@@ -7,8 +7,9 @@ use yii\widgets\LinkPager;
 // CMG Imports
 use cmsgears\core\common\utilities\CodeGenUtil;
 
+$title			= ucfirst( $this->context->commentUrl );
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'All Reviews | ' . $coreProperties->getSiteTitle();
+$this->title 	= "All $title | " . $coreProperties->getSiteTitle();
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -27,7 +28,10 @@ if( !isset( $sortOrder ) ) {
 ?>
 <div class="header-content clearfix">
 	<div class="header-actions col15x10">
-		<span class="frm-icon-element element-small"></span>
+		<span class="frm-icon-element element-small">
+			<i class="cmti cmti-plus"></i>
+			<?= Html::a( 'Add', [ "create?pid=$model->id" ], [ 'class' => 'btn' ] ) ?>
+		</span>
 	</div>
 	<div class="header-search col15x5">
 		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
@@ -63,6 +67,7 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-slug' class="icon-sort <?php if( strcmp( $sortOrder, '-slug') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
+					<th>Status</th>
 					<th>Message
 						<span class='box-icon-sort'>
 							<span sort-order='title' class="icon-sort <?php if( strcmp( $sortOrder, 'title') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
@@ -82,10 +87,11 @@ if( !isset( $sortOrder ) ) {
 					<tr>
 						<td><?= $comment->name ?></td>
 						<td><?= $comment->email ?></td>
+						<td><?= $comment->getStatusStr() ?></td>
 						<td><?= $comment->content ?></td>
 						<td class="actions">
-							<span title="Update Review"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete Review"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
+							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
+							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

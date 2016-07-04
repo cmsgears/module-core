@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\common\services\base;
+namespace cmsgears\core\common\services\hierarchy;
 
 // Yii Imports
 use \Yii;
@@ -8,14 +8,14 @@ use yii\db\Query;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\services\interfaces\base\IHierarchyService;
+use cmsgears\core\common\services\interfaces\hierarchy\INestedSetService;
 
 // Reference: http://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/, http://we-rc.com/blog/2015/07/19/nested-set-model-practical-examples-part-i
 
 /**
  * Managing hierarchy using Nested Set Model
  */
-abstract class HierarchyService extends EntityService implements IHierarchyService {
+abstract class NestedSetService extends HierarchyService implements INestedSetService {
 
 	// Variables ---------------------------------------------------
 
@@ -316,6 +316,11 @@ abstract class HierarchyService extends EntityService implements IHierarchyServi
 
 			// Do nothing for top level node and simply delete it
 		}
+
+		// Unlink root id
+		$model->rootId	= null;
+
+		$model->update();
 
 		return $model;
 	}

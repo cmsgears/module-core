@@ -24,6 +24,15 @@ trait NameSlugTypeTrait {
 
 	// Data Provider ------
 
+	public function getPageByType( $type, $config = [] ) {
+
+		$modelTable	= self::$modelTable;
+
+		$config[ 'conditions' ][ "$modelTable.type" ] 	= $type;
+
+		return $this->getPage( $config );
+	}
+
 	// Read ---------------
 
     // Read - Models ---
@@ -32,28 +41,28 @@ trait NameSlugTypeTrait {
 
 		$modelClass = static::$modelClass;
 
-		$modelClass::findByName( $name, $first );
+		return $modelClass::findByName( $name, $first );
 	}
 
 	public function getBySlug( $slug, $first = false ) {
 
 		$modelClass = static::$modelClass;
 
-		$modelClass::findBySlug( $slug, $first );
+		return $modelClass::findBySlug( $slug, $first );
 	}
 
 	public function getByNameType( $name, $type ) {
 
 		$modelClass = static::$modelClass;
 
-		$modelClass::findByNameType( $name, $type );
+		return $modelClass::findByNameType( $name, $type );
 	}
 
 	public function getBySlugType( $slug, $type ) {
 
 		$modelClass = static::$modelClass;
 
-		$modelClass::findBySlugType( $slug, $type );
+		return $modelClass::findBySlugType( $slug, $type );
 	}
 
     // Read - Lists ----

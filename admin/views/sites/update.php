@@ -9,6 +9,7 @@ use cmsgears\files\widgets\ImageUploader;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Site | ' . $coreProperties->getSiteTitle();
+$returnUrl		= $this->context->returnUrl;
 ?>
 <div class="box box-cud">
 	<div class="box-wrap-header">
@@ -17,8 +18,8 @@ $this->title 	= 'Update Site | ' . $coreProperties->getSiteTitle();
 	<div class="box-wrap-content frm-split-40-60">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-site' ] );?>
 
-    	<?= $form->field( $model, 'name' ) ?>  
-    	<?= $form->field( $model, 'order' ) ?> 
+    	<?= $form->field( $model, 'name' ) ?>
+    	<?= $form->field( $model, 'order' ) ?>
 		<?= $form->field( $model, 'themeId' )->dropDownList( $themesMap ) ?>
 
 		<div class="box-content clearfix">
@@ -34,7 +35,7 @@ $this->title 	= 'Update Site | ' . $coreProperties->getSiteTitle();
 		<div class="filler-height"></div>
 
 		<div class="align align-center">
-			<?=Html::a( 'Cancel', 'all', [ 'class' => 'btn btn-medium' ] );?>
+			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
 			<input class="element-medium" type="submit" value="Update" />
 		</div>
 

@@ -4,7 +4,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Delete Province';
+$this->title 	= 'Delete Province | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
 <div class="box box-cud">

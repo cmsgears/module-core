@@ -10,18 +10,43 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class RoleController extends \cmsgears\core\admin\controllers\base\RoleController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
 
-		$this->sidebar 	= [ 'parent' => 'sidebar-identity', 'child' => 'role' ];
+		$this->sidebar 			= [ 'parent' => 'sidebar-identity', 'child' => 'role' ];
+
+		$this->returnUrl		= Url::previous( 'roles' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/role/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// RoleController --------------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// RoleController ------------------------
 
 	public function actionAll() {
 

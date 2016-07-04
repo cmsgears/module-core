@@ -10,18 +10,43 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class PermissionController extends \cmsgears\core\admin\controllers\base\PermissionController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
 
-		$this->sidebar 	= [ 'parent' => 'sidebar-identity', 'child' => 'permission' ];
+		$this->sidebar 			= [ 'parent' => 'sidebar-identity', 'child' => 'permission' ];
+
+		$this->returnUrl		= Url::previous( 'permissions' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/permission/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// RoleController --------------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// PermissionController ------------------
 
 	public function actionAll() {
 

@@ -7,26 +7,26 @@ use yii\helpers\Html;
 use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . " | Update $title";
+$this->title 	= 'Delete Option Group | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
 <div class="box box-cud">
 	<div class="box-wrap-header">
-		<div class="header">Update <?= $title ?></div>
+		<div class="header">Delete Option Group</div>
 	</div>
 	<div class="box-wrap-content frm-split-40-60">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-dropdown' ] );?>
 
-    	<?= $form->field( $model, 'name' ) ?>  
-    	<?= $form->field( $model, 'description' ) ?> 
-    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
-    	<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
+    	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
+    	<?= $form->field( $model, 'description' )->textInput( [ 'readonly' => true ] ) ?>
+    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ], 'disabled' => true ] ) ?>
+    	<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => true ] ) ?>
 
 		<div class="clear filler-height"></div>
 
 		<div class="align align-center">
 			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
-			<input class="element-medium" type="submit" value="Update" />
+			<input class="element-medium" type="submit" value="Delete" />
 		</div>
 
 		<?php ActiveForm::end(); ?>

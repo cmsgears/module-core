@@ -110,29 +110,34 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 		$config[ 'sort' ] = $sort;
 
-		$config[ 'conditions' ][ 'type' ] 	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : ModelComment::TYPE_COMMENT;
-		$config[ 'conditions' ][ 'status' ] = isset( $config[ 'status' ] ) ? $config[ 'status' ] : ModelComment::STATUS_APPROVED;
+		// Set default type
+		$config[ 'conditions' ][ 'type' ] 	= isset( $config[ 'conditions' ][ 'type' ] ) ? $config[ 'conditions' ][ 'type' ] : ModelComment::TYPE_COMMENT;
 
 		return parent::findPage( $config );
 	}
 
 	public function getPageByParent( $parentId, $parentType, $config = [] ) {
 
-		$config[ 'conditions' ] = [ 'baseId' => null, 'parentId' => $parentId, 'parentType' => $parentType ];
+		$config[ 'conditions' ][ 'baseId' ] 	= null;
+		$config[ 'conditions' ][ 'parentId' ] 	= $parentId;
+		$config[ 'conditions' ][ 'parentType' ]	= $parentType;
 
 		return $this->getPage( $config );
 	}
 
 	public function getPageByParentType( $parentType, $config = [] ) {
 
-		$config[ 'conditions' ] = [ 'baseId' => null, 'parentType' => $parentType ];
+		$config[ 'conditions' ][ 'baseId' ] 	= null;
+		$config[ 'conditions' ][ 'parentType' ]	= $parentType;
 
 		return $this->getPage( $config );
 	}
 
 	public function getPageByBaseId( $baseId, $config = [] ) {
 
-		return $this->getPage( [ 'conditions' => [ 'baseId' => $baseId ] ] );
+		$config[ 'conditions' ][ 'baseId' ] 	= null;
+
+		return $this->getPage( $config );
 	}
 
 	// Read ---------------
@@ -150,7 +155,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 	}
 
 	/**
-	 * It can be used to get child comments for given base id.
+	 * It returns child comments for given base id.
 	 */
 	public function getByBaseId( $baseId, $config = [] ) {
 
@@ -203,19 +208,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 		]);
  	}
 
-    public function updateSpamRequest( $model ) {
-
-        $model->setDataAttribute( CoreGlobal::ATTRIBUTE_COMMENT_SPAM_REQUEST, true );
-
-        $model->update();
-    }
-
-    public function updateDeleteRequest( $model ) {
-
-        $model->setDataAttribute( CoreGlobal::ATTRIBUTE_COMMENT_DELETE_REQUEST, true );
-
-        $model->update();
-    }
+	// Various states
 
 	public function updateStatus( $model, $status ) {
 
@@ -245,6 +238,22 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 		$this->updateStatus( $model, ModelComment::STATUS_DELETED );
 	}
+
+	// Attributes
+
+    public function updateSpamRequest( $model ) {
+
+        $model->setDataAttribute( CoreGlobal::ATTRIBUTE_COMMENT_SPAM_REQUEST, true );
+
+        $model->update();
+    }
+
+    public function updateDeleteRequest( $model ) {
+
+        $model->setDataAttribute( CoreGlobal::ATTRIBUTE_COMMENT_DELETE_REQUEST, true );
+
+        $model->update();
+    }
 
 	// Delete -------------
 

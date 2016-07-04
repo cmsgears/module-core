@@ -9,7 +9,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
-use cmsgears\core\common\models\mappers\SiteMember;
+use \cmsgears\core\common\models\mappers\SiteMember;
 
 use cmsgears\core\common\services\interfaces\mappers\ISiteMemberService;
 use cmsgears\core\common\services\interfaces\entities\IRoleService;
@@ -27,7 +27,7 @@ class SiteMemberService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\SiteMember';
+	public static $modelClass	= '\cmsgears\core\common\models\mappers\SiteMember';
 
 	public static $modelTable	= CoreTables::TABLE_SITE_MEMBER;
 
@@ -92,31 +92,30 @@ class SiteMemberService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Create -------------
 
- 	public function create( $model, $config = [] ) {
+ 	public function create( $user, $config = [] ) {
 
 		$siteMember = isset( $config[ 'siteMember' ] ) ? $config[ 'siteMember' ] : null;
-		$roleSlug 	= isset( $config[ 'roleSlug' ] ) ? $config[ 'roleSlug' ] : null;
+		$roleId 	= isset( $config[ 'roleId' ] ) ? $config[ 'roleId' ] : null;
 
 		if( !isset( $siteMember ) ) {
 
 			$siteMember	= new SiteMember();
+		}
 
-			if( isset( $roleSlug ) ) {
+		if( isset( $roleId ) ) {
 
-				$role				= $this->roleService->getBySlug( $roleSlug );
-				$siteMember->roleId	= $role->id;
-			}
-			else {
+			$siteMember->roleId	= $roleId;
+		}
+		else {
 
-				$role				= $this->roleService->getBySlug( CoreGlobal::ROLE_USER );
-				$siteMember->roleId	= $role->id;
-			}
+			$role				= $this->roleService->getBySlugType( CoreGlobal::ROLE_USER, CoreGlobal::TYPE_SYSTEM );
+			$siteMember->roleId	= $role->id;
 		}
 
 		$siteMember->siteId = Yii::$app->core->siteId;
 		$siteMember->userId	= $user->id;
 
-		return parent::create( $model, $config );
+		return parent::create( $siteMember, $config );
  	}
 
 	// Update -------------

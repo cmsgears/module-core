@@ -13,7 +13,7 @@ use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\core\common\models\traits\MapperTrait;
 
 /**
- * ModelObject Entity
+ * ModelObject Entity - The mapper to map Object Model to specific parent model for given parentId and parentType.
  *
  * @property long $id
  * @property long $modelId
@@ -66,10 +66,12 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
         return [
             [ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
             [ [ 'id' ], 'safe' ],
-            [ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
             [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'active' ], 'boolean' ],
-            [ [ 'modelId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+            [ [ 'active' ], 'boolean' ]
         ];
     }
 

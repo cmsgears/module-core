@@ -1,7 +1,7 @@
 <?php
-namespace cmsgears\core\common\services\interfaces\base;
+namespace cmsgears\core\common\services\interfaces\hierarchy;
 
-interface IHierarchyService {
+interface INestedSetService extends IHierarchyService {
 
 	// Data Provider ------
 
@@ -17,7 +17,9 @@ interface IHierarchyService {
 
     // Read - Lists ----
 
-	public function getLevelList( $conditions = [] );
+	public function getLevelList( $parentId, $rootId, $config = [] );
+
+	public function getSubLevelList( $parentId, $rootId, $config = [] );
 
     // Read - Maps -----
 

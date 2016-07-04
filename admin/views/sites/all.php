@@ -30,7 +30,7 @@ if( !isset( $sortOrder ) ) {
 		<span class="frm-icon-element element-small">
 			<i class="cmti cmti-plus"></i>
 			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
-		</span>				
+		</span>
 	</div>
 	<div class="header-search col15x5">
 		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
@@ -61,6 +61,7 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
+					<th>Slug</th>
 					<th>Theme</th>
 					<th>Order
 						<span class='box-icon-sort'>
@@ -82,11 +83,12 @@ if( !isset( $sortOrder ) ) {
 					<tr>
 						<td><?= CodeGenUtil::getImageThumbTag( $site->avatar, [ 'class' => 'avatar', 'image' => 'avatar.png' ] ) ?></td>
 						<td><?= $site->name ?></td>
+						<td><?= $site->slug ?></td>
 						<td><?= $themeName ?></td>
 						<td><?= $site->order ?></td>
 						<td class="actions">
-							<span title="Update Site"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete Site"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
+							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
+							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

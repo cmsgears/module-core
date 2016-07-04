@@ -4,138 +4,83 @@ namespace cmsgears\core\admin\controllers\base\category;
 // Yii Imports
 use \Yii;
 use yii\helpers\Url;
-use yii\filters\VerbFilter;
-use yii\base\Exception;
-use yii\web\HttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\Option;
+class OptionController extends \cmsgears\core\admin\controllers\base\CrudController {
 
-use cmsgears\core\admin\services\resources\OptionService;
-use cmsgears\core\admin\services\resources\CategoryService;
+	// Variables ---------------------------------------------------
 
-class OptionController extends \cmsgears\core\admin\controllers\base\Controller {
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $categoryService;
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
 
-		$this->returnUrl	= Url::previous( 'options' );
+		$this->setViewPath( '@cmsgears/module-core/admin/views/optiongroup/option/' );
+
+		$this->crudPermission 	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'optionService' );
+
+		$this->categoryService	= Yii::$app->factory->get( 'categoryService' );
+
+		// Note: Child must specify sidebar and returnUrl.
 	}
 
-	// Instance Methods ------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'all'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'create'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'update'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'delete'  => [ 'permission' => CoreGlobal::PERM_CORE ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'all'  => [ 'get' ],
-	                'create'  => [ 'get', 'post' ],
-	                'update'  => [ 'get', 'post' ],
-	                'delete'  => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// OptionController --------------------
+	// yii\base\Controller ----
 
-	public function actionAll( $id ) {
+	// CMG interfaces ------------------------
 
-		$dataProvider	= OptionService::getPagination( [ 'conditions' => [ 'categoryId' => $id ]] );
-		$category		= CategoryService::findById( $id );
+	// CMG parent classes --------------------
 
-		return $this->render( '@cmsgears/module-core/admin/views/dropdown/option/all', [
+	// OptionController ----------------------
+
+	public function actionAll( $cid ) {
+
+		$dataProvider	= $this->modelService->getPage( [ 'conditions' => [ 'categoryId' => $cid ]] );
+		$category		= $this->categoryService->getById( $cid );
+
+		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
 			'category' => $category
-		] );
+		]);
 	}
 
-	public function actionCreate( $id ) {
+	public function actionCreate( $cid ) {
 
-		$model	= new Option();
+		$modelClass			= $this->modelService->getModelClass();
+		$model				= new $modelClass;
+		$model->categoryId 	= $cid;
 
-		$model->setScenario( "create" );
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
 
-		if( $model->load( Yii::$app->request->post(), "Option" )  && $model->validate() ) {
+			$this->modelService->create( $model );
 
-			if( OptionService::create( $model ) ) {
-
-				return $this->redirect( $this->returnUrl );
-			}
+			return $this->redirect( $this->returnUrl );
 		}
 
-    	return $this->render('@cmsgears/module-core/admin/views/dropdown/option/create', [
-    		'model' => $model,
-    		'id' => $id
+    	return $this->render( 'create', [
+    		'model' => $model
     	]);
-	}
-
-	public function actionUpdate( $id ) {
-
-		$model	= OptionService::findById( $id );
-
-		if( $model->load( Yii::$app->request->post(), "Option" )  && $model->validate() ) {
-
-			if( OptionService::update( $model ) ) {
-
-				return $this->redirect( $this->returnUrl );
-			}
-		}
-
-    	return $this->render('@cmsgears/module-core/admin/views/dropdown/option/update', [
-    		'model' => $model,
-    		'id' => $id
-    	]);
-	}
-
-	public function actionDelete( $id ) {
-
-		// Find Model
-		$model	= OptionService::findById( $id );
-
-		// Delete/Render if exist
-
-		if( isset( $model ) ) {
-
-			if( $model->load( Yii::$app->request->post(), 'Option' )  && $model->validate() ) {
-
-				try {
-
-			    	OptionService::delete( $model );
-
-					return $this->redirect( $this->returnUrl );
-			    }
-			    catch( Exception $e ) {
-
-				    throw new HttpException( 409,  Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
-				}
-			}
-
-	    	return $this->render( '@cmsgears/module-core/admin/views/dropdown/option/delete', [
-	    		'model' => $model
-	    	]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

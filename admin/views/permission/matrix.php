@@ -29,8 +29,8 @@ if( !isset( $sortOrder ) ) {
 	<div class="header-actions col15x10">
 		<span class="frm-icon-element element-small">
 			<i class="cmti cmti-plus"></i>
-			<?= Html::a( 'Add', [ '/cmgcore/role/create' ], [ 'class' => 'btn' ] ) ?>
-		</span>				
+			<?= Html::a( 'Add', [ '/core/role/create' ], [ 'class' => 'btn' ] ) ?>
+		</span>
 	</div>
 	<div class="header-search col15x5">
 		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
@@ -66,7 +66,7 @@ if( !isset( $sortOrder ) ) {
 
 						$id 		= $permission->id;
 						$roles		= $permission->getRolesIdList();
-						$apixUrl	= 'cmgcore/permission/bind-roles';
+						$apixUrl	= 'core/permission/bind-roles';
 				?>
 					<tr id="perm-matrix-<?=$id?>" class="cmt-request" cmt-controller="permission" cmt-action="matrix" action="<?=$apixUrl?>" cmt-keep>
 						<td><?= $permission->name ?></td>
@@ -76,7 +76,7 @@ if( !isset( $sortOrder ) ) {
 								<?php foreach ( $rolesList as $role ) {
 
 									if( in_array( $role['id'], $roles ) ) {
-								?>		
+								?>
 										<li><input type="checkbox" name="Binder[bindedData][]" value="<?=$role['id']?>" checked /><?=$role['name']?></li>
 								<?php
 									}

@@ -19,7 +19,7 @@ trait FormTrait {
 	public function getModelForms() {
 
 		return $this->hasMany( ModelForm::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->parentType'" );
+					->where( "parentType='$this->mParentType'" );
 	}
 
 	/**
@@ -32,7 +32,7 @@ trait FormTrait {
 
 						$ModelFormTable	= CoreTables::TABLE_MODEL_FORM;
 
-                      	$query->onCondition( [ "$ModelFormTable.parentType" => $this->parentType ] );
+                      	$query->onCondition( [ "$ModelFormTable.parentType" => $this->mParentType ] );
 					});
 	}
 }

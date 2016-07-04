@@ -39,6 +39,8 @@ interface IEntityService {
 
  	public function create( $model, $config = [] );
 
+	public function createByParams( $params = [], $config = [] );
+
 	// Update -------------
 
 	public function update( $model, $config = [] );

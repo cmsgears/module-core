@@ -57,7 +57,7 @@ class Template extends \cmsgears\core\common\models\base\Entity {
 
 	// Public -----------------
 
-	public $parentType  = CoreGlobal::TYPE_TEMPLATE;
+	public $mParentType	= CoreGlobal::TYPE_TEMPLATE;
 
 	// Protected --------------
 

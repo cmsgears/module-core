@@ -13,6 +13,7 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
 
 use cmsgears\core\common\models\traits\NameTypeTrait;
+use cmsgears\core\common\models\traits\SlugTypeTrait;
 
 /**
  * Tag Entity
@@ -50,6 +51,7 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
 	// Traits ------------------------------------------------------
 
 	use NameTypeTrait;
+	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -72,7 +74,8 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
-                'ensureUnique' => true
+                'ensureUnique' => true,
+                'uniqueValidator' => [ 'targetAttribute' => 'type' ]
             ]
         ];
     }
@@ -91,8 +94,8 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
             [ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
+            [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+            [ [ 'slug', 'type' ], 'unique', 'targetAttribute' => [ 'slug', 'type' ] ],
         ];
 
         // trim if required
@@ -169,14 +172,6 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
 	}
 
 	// Read - Find ------------
-
-    /**
-     * @return Tag - by type
-     */
-    public static function findBySlug( $slug ) {
-
-        return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
-    }
 
 	// Create -----------------
 

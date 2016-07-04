@@ -8,7 +8,7 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
- * The model using this trait must have name, slug and type columns. It must also support unique name for a particular type.
+ * The model using this trait must have name, slug and type columns. It must also support unique name and slug for a particular type.
  */
 trait SlugTypeTrait {
 

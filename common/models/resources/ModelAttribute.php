@@ -71,9 +71,8 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
             [ [ 'id', 'value' ], 'safe' ],
             [ [ 'parentType', 'name', 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'parentId', 'parentType', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'name', 'type' ] ]
         ];
 
         // trim if required
@@ -109,36 +108,6 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
 
 	// Validators ----------------------------
 
-    /**
-     * Validates to ensure that only one attribute exist with one name.
-     */
-    public function validateNameCreate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-            if( self::isExistByTypeName( $this->parentId, $this->parentType, $this->type, $this->name ) ) {
-
-                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-            }
-        }
-    }
-
-    /**
-     * Validates to ensure that only one attribute exist with one name.
-     */
-    public function validateNameUpdate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-            $existingConfig = self::findByTypeName( $this->parentId, $this->parentType, $this->type, $this->name );
-
-            if( isset( $existingConfig ) && $existingConfig->id != $this->id ) {
-
-                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-            }
-        }
-    }
-
 	// ModelAttribute ------------------------
 
 	// Static Methods ----------------------------------------------
@@ -157,22 +126,26 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
 
 	// CMG parent classes --------------------
 
-	// <Model> -------------------------------
+	// ModelAttribute ------------------------
 
 	// Read - Query -----------
 
-	// Read - Find ------------
+    public static function queryByName( $parentId, $parentType, $name ) {
 
-    /**
-     * @param integer $parentId
-     * @param string $parentType
-     * @param string $type
-     * @return array - ModelAttribute by type
-     */
-    public static function findByType( $parentId, $parentType, $type ) {
-
-        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] )->all();
+        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name', [ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name ] );
     }
+
+    public static function queryByType( $parentId, $parentType, $type ) {
+
+        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] );
+    }
+
+    public static function queryByNameType( $parentId, $parentType, $name, $type ) {
+
+        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type AND name=:name', [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type, ':name' => $name ] );
+    }
+
+	// Read - Find ------------
 
     /**
      * @param integer $parentId
@@ -182,7 +155,18 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
      */
     public static function findByName( $parentId, $parentType, $name ) {
 
-        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name', [ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name ] )->all();
+        return self::queryByName( $parentId, $parentType, $name )->all();
+    }
+
+    /**
+     * @param integer $parentId
+     * @param string $parentType
+     * @param string $type
+     * @return array - ModelAttribute by type
+     */
+    public static function findByType( $parentId, $parentType, $type ) {
+
+        return self::queryByType( $parentId, $parentType, $type )->all();
     }
 
     /**
@@ -192,10 +176,9 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
      * @param string $name
      * @return ModelAttribute - by type and name
      */
-    public static function findByTypeName( $parentId, $parentType, $type, $name ) {
+    public static function findByNameType( $parentId, $parentType, $name, $type ) {
 
-        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type AND name=:name',
-                [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type, ':name' => $name ] )->one();
+        return self::queryByNameType( $parentId, $parentType, $name, $type )->one();
     }
 
     /**
@@ -205,9 +188,9 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
      * @param string $name
      * @return boolean - Check whether attribute exist by type and name
      */
-    public static function isExistByTypeName( $parentId, $parentType, $type, $name ) {
+    public static function isExistByNameType( $parentId, $parentType, $name, $type ) {
 
-        $config = self::findByTypeName( $parentId, $parentType, $type, $name );
+        $config = self::queryByNameType( $parentId, $parentType, $name, $type )->one();
 
         return isset( $config );
     }

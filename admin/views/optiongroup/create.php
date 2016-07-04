@@ -3,21 +3,24 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
+// CMG Imports
+use cmsgears\icons\widgets\IconChooser;
+
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Add Testimonial | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Add Option Group | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
 <div class="box box-cud">
 	<div class="box-wrap-header">
-		<div class="header">Add Testimonial</div>
+		<div class="header">Add Option Group</div>
 	</div>
 	<div class="box-wrap-content frm-split-40-60">
-		<?php $form = ActiveForm::begin( [ 'id' => 'frm-testimonial' ] ); ?>
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-dropdown' ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>
-    	<?= $form->field( $model, 'email' ) ?>
-    	<?= $form->field( $model, 'content' )->textarea() ?>
-    	<?= $form->field( $model, 'status')->dropDownList( $statusMap ) ?>
+    	<?= $form->field( $model, 'description' ) ?>
+    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
+    	<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 
 		<div class="clear filler-height"></div>
 

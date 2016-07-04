@@ -11,7 +11,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 
 /**
- * ModelAttribute Entity
+ * ModelAttribute Entity - A model can have only one attribute with the same name for particular type.
  *
  * @property long $id
  * @property long $modelId
@@ -66,9 +66,8 @@ abstract class ModelAttribute extends Attribute {
             [ [ 'id', 'value' ], 'safe' ],
             [ [ 'name', 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+            [ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'modelId', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'modelId', 'name', 'type' ] ]
         ];
 
 		// trim if required
@@ -103,36 +102,6 @@ abstract class ModelAttribute extends Attribute {
 
 	// Validators ----------------------------
 
-	/**
-	 * Validates to ensure that only one attribute exist with one name.
-	 */
-    public function validateNameCreate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-            if( self::isExistByTypeName( $this->modelId, $this->type, $this->name ) ) {
-
-				$this->addError( $attribute, Yii::$app->coreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
-            }
-        }
-    }
-
-	/**
-	 * Validates to ensure that only one attribute exist with one name.
-	 */
-    public function validateNameUpdate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-			$existingConfig = self::findByTypeName( $this->modelId, $this->type, $this->name );
-
-			if( isset( $existingConfig ) && $existingConfig->id != $this->id ) {
-
-				$this->addError( $attribute, Yii::$app->coreMessageSource->getMessage( CoreGlobal::ERROR_EXIST ) );
-			}
-        }
-    }
-
 	// ModelAttribute ------------------------
 
 	abstract public function getParent();
@@ -164,7 +133,32 @@ abstract class ModelAttribute extends Attribute {
 		return parent::queryWithAll( $config );
 	}
 
+    public static function queryByName( $modelId, $name ) {
+
+		return static::find()->where( 'modelId=:pid AND name=:name', [ ':pid' => $modelId, ':name' => $name ] );
+    }
+
+    public static function queryByType( $modelId, $type ) {
+
+		return static::find()->where( 'modelId=:pid AND type=:type', [ ':pid' => $modelId, ':type' => $type ] );
+    }
+
+    public static function queryByNameType( $modelId, $name, $type ) {
+
+		return static::find()->where( 'modelId=:pid AND name=:name AND type=:type', [ ':pid' => $modelId, ':name' => $name, ':type' => $type ] );
+    }
+
 	// Read - Find ------------
+
+	/**
+	 * @param integer $modelId
+	 * @param string $name
+	 * @return array - ModelAttribute by name
+	 */
+	public static function findByName( $modelId, $name ) {
+
+		return self::queryByName( $modelId, $name )->all();
+	}
 
 	/**
 	 * @param integer $modelId
@@ -173,17 +167,7 @@ abstract class ModelAttribute extends Attribute {
 	 */
 	public static function findByType( $modelId, $type ) {
 
-		return self::find()->where( 'modelId=:pid AND type=:type', [ ':pid' => $modelId, ':type' => $type ] )->all();
-	}
-
-	/**
-	 * @param integer $modelId
-	 * @param string $name
-	 * @return ModelAttribute - by name
-	 */
-	public static function findByName( $modelId, $name ) {
-
-		return self::find()->where( 'modelId=:pid AND name=:name', [ ':pid' => $modelId, ':name' => $name ] )->all();
+		return self::queryByType( $modelId, $type )->all();
 	}
 
 	/**
@@ -192,9 +176,9 @@ abstract class ModelAttribute extends Attribute {
 	 * @param string $name
 	 * @return ModelAttribute - by type and name
 	 */
-	public static function findByTypeName( $modelId, $type, $name ) {
+	public static function findByNameType( $modelId, $name, $type ) {
 
-		return self::find()->where( 'modelId=:pid AND type=:type AND name=:name', [ ':pid' => $modelId, ':type' => $type, ':name' => $name ] )->one();
+		return self::queryByNameType( $modelId, $type, $name )->one();
 	}
 
 	/**
@@ -203,9 +187,9 @@ abstract class ModelAttribute extends Attribute {
 	 * @param string $name
 	 * @return boolean - Check whether attribute exist by type and name
 	 */
-	public static function isExistByTypeName( $modelId, $type, $name ) {
+	public static function isExistByNameType( $modelId, $name, $type ) {
 
-		$config = self::findByTypeName( $modelId, $type, $name );
+		$config = self::findByNameType( $modelId, $type, $name );
 
 		return isset( $config );
 	}

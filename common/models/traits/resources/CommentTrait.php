@@ -16,14 +16,20 @@ use cmsgears\core\common\models\resources\ModelComment;
  */
 trait CommentTrait {
 
+	/**
+	 * Query top level approved comments.
+	 */
 	public function getModelComments() {
 
-		return ModelComment::findByParent( $this->id, $this->parentType );
+		return ModelComment::queryL0Approved( $this->id, $this->mParentType, ModelComment::TYPE_COMMENT );
 	}
 
+	/**
+	 * Query top level approved reviews.
+	 */
 	public function getModelReviews() {
 
-		return ModelComment::findByParent( $this->id, $this->parentType, [ 'type' => ModelComment::TYPE_REVIEW ] );
+		return ModelComment::queryL0Approved( $this->id, $this->mParentType, ModelComment::TYPE_REVIEW );
 	}
 
 	// Average rating for all the reviews
@@ -34,10 +40,10 @@ trait CommentTrait {
 
     	$query->select( [ 'avg(rating) as average, count(id) as total' ] )
 				->from( $commentTable )
-				->where( [ 'parentId' => $this->id, 'parentType' => $this->parentType, 'type' => $type, 'status' => ModelComment::STATUS_APPROVED ] );
+				->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'type' => $type, 'status' => ModelComment::STATUS_APPROVED ] );
 
-		$command 		= $query->createCommand();
-		$average 		= $command->queryOne();
+		$command = $query->createCommand();
+		$average = $command->queryOne();
 
 		if( isset( $average ) && count( $average ) < 2 ) {
 
@@ -53,16 +59,22 @@ trait CommentTrait {
 		return $average;
 	}
 
-    public function getRatingCounts() {
+    public function getRatingStars( $minStars = 0, $maxStars = 5, $type = ModelComment::TYPE_REVIEW ) {
 
-        $returnArr      = [ 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0 ];
+        $returnArr      = [];
+
+		for( $i = $minStars; $i <= $maxStars; $i++ ) {
+
+			$returnArr[ $i ] = 0;
+		}
 
         $commentTable   = CoreTables::TABLE_MODEL_COMMENT;
         $query          = new Query();
 
         $query->select( [ 'rating', 'count(id) as total' ] )
                 ->from( $commentTable )
-                ->where( [ 'status' => ModelComment::STATUS_APPROVED, 'parentType' => $this->parentType, 'parentId' => $this->id ] )
+                ->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'type' => $type, 'status' => ModelComment::STATUS_APPROVED ] )
+				->andFilterWhere( [ 'between', 'status', [ $minStars, $maxStars ] ] )
                 ->groupBy( 'rating' );
 
         $counts     = $query->all();
@@ -83,16 +95,16 @@ trait CommentTrait {
         return $returnArr;
     }
 
-	public function getReviewCounts() {
+	public function getCommentStatusCounts( $type = ModelComment::TYPE_COMMENT ) {
 
-		$returnArr		= [ 'all' => 0, ModelComment::STATUS_NEW => 0, ModelComment::STATUS_BLOCKED => 0, ModelComment::STATUS_APPROVED => 0 ];
+		$returnArr		= [ ModelComment::STATUS_NEW => 0, ModelComment::STATUS_BLOCKED => 0, ModelComment::STATUS_APPROVED => 0 ];
 
 		$commentTable	= CoreTables::TABLE_MODEL_COMMENT;
 		$query			= new Query();
 
     	$query->select( [ 'status', 'count(id) as total' ] )
 				->from( $commentTable )
-				->where( [ 'parentId' => $this->id, 'parentType' => $this->parentType, 'type' => ModelComment::TYPE_REVIEW ] )
+				->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'type' => $type ] )
 				->groupBy( 'status' );
 
 		$counts 	= $query->all();
@@ -117,7 +129,7 @@ trait CommentTrait {
 
     	$query->select( [ 'count(id) as total' ] )
 				->from( $commentTable )
-				->where( [ 'parentId' => $this->id, 'parentType' => $this->parentType, 'type' => $type, 'status' => ModelComment::STATUS_APPROVED ] )
+				->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'type' => $type, 'status' => ModelComment::STATUS_APPROVED ] )
 				->groupBy( 'status' );
 
 		$count = $query->one();

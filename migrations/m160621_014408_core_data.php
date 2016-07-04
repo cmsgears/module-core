@@ -199,7 +199,7 @@ class m160621_014408_core_data extends \yii\db\Migration {
             'modifiedAt' => DateUtil::getDateTime()
         ]);
 
-		$config	= Form::findBySlug( 'config-core' );
+		$config	= Form::findBySlug( 'config-core', CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -240,7 +240,7 @@ class m160621_014408_core_data extends \yii\db\Migration {
             'modifiedAt' => DateUtil::getDateTime()
         ]);
 
-		$config	= Form::findBySlug( 'config-mail' );
+		$config	= Form::findBySlug( 'config-mail', CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -279,7 +279,7 @@ class m160621_014408_core_data extends \yii\db\Migration {
             'modifiedAt' => DateUtil::getDateTime()
         ]);
 
-		$config	= Form::findBySlug( 'config-backend' );
+		$config	= Form::findBySlug( 'config-backend', CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -306,7 +306,7 @@ class m160621_014408_core_data extends \yii\db\Migration {
             'modifiedAt' => DateUtil::getDateTime()
         ]);
 
-		$config	= Form::findBySlug( 'config-frontend' );
+		$config	= Form::findBySlug( 'config-frontend', CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
 

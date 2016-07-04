@@ -12,7 +12,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\Template;
 
-abstract class TemplateController extends Controller {
+abstract class TemplateController extends CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -48,30 +48,6 @@ abstract class TemplateController extends Controller {
 
 	// yii\base\Component -----
 
-    public function behaviors() {
-
-        return [
-            'rbac' => [
-                'class' => Yii::$app->core->getRbacFilterClass(),
-                'actions' => [
-	                'all'  => [ 'permission' => $this->crudPermission ],
-	                'create' => [ 'permission' => $this->crudPermission ],
-	                'update' => [ 'permission' => $this->crudPermission ],
-	                'delete' => [ 'permission' => $this->crudPermission ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'all'  => [ 'get' ],
-	                'create'  => [ 'get', 'post' ],
-	                'update'  => [ 'get', 'post' ],
-	                'delete'  => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
-
 	// yii\base\Controller ----
 
 	// CMG interfaces ------------------------
@@ -92,12 +68,11 @@ abstract class TemplateController extends Controller {
 
 	public function actionCreate() {
 
-		$model			= new Template();
+		$modelClass		= $this->modelService->getModelClass();
+		$model			= new $modelClass;
 		$model->type 	= $this->type;
 
-		$model->setScenario( 'create' );
-
-		if( $model->load( Yii::$app->request->post(), 'Template' )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
 
 			$this->modelService->create( $model );
 
@@ -107,56 +82,6 @@ abstract class TemplateController extends Controller {
     	return $this->render( 'create', [
     		'model' => $model
     	]);
-	}
-
-	public function actionUpdate( $id ) {
-
-		// Find Model
-		$model		= $this->modelService->getById( $id );
-
-		// Update/Render if exist
-		if( isset( $model ) ) {
-
-			$model->setScenario( 'update' );
-
-			if( $model->load( Yii::$app->request->post(), 'Template' )  && $model->validate() ) {
-
-				$this->modelService->update( $model );
-
-				return $this->redirect( $this->returnUrl );
-			}
-
-	    	return $this->render( 'update', [
-	    		'model' => $model
-	    	]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
-
-	public function actionDelete( $id ) {
-
-		// Find Model
-		$model	= $this->modelService->getById( $id );
-
-		// Delete/Render if exist
-		if( isset( $model ) ) {
-
-			if( $model->load( Yii::$app->request->post(), 'Template' )  && $model->validate() ) {
-
-				$this->modelService->delete( $model );
-
-				return $this->redirect( $this->returnUrl );
-			}
-
-	    	return $this->render( 'delete', [
-	    		'model' => $model
-	    	]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

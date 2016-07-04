@@ -7,31 +7,41 @@ use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\admin\config\AdminGlobalCore;
-
-use cmsgears\core\admin\services\entities\UserService;
-use cmsgears\core\admin\services\resources\OptionService;
 
 class UserController extends \cmsgears\core\admin\controllers\base\UserController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
-
-		$this->layout		= AdminGlobalCore::LAYOUT_PRIVATE;
-
-		$this->sidebar 		= [ 'parent' => 'sidebar-identity', 'child' => 'user' ];
+        parent::init();
 
 		$this->roleType			= CoreGlobal::TYPE_SYSTEM;
 		$this->permissionSlug	= CoreGlobal::PERM_USER;
 		$this->showCreate 		= true;
+		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'user' ];
+
+		$this->returnUrl		= Url::previous( 'users' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/user/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     public function behaviors() {
 
@@ -46,7 +56,13 @@ class UserController extends \cmsgears\core\admin\controllers\base\UserControlle
 		return $behaviours;
     }
 
-	// UserController --------------------
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// UserController ------------------------
 
 	public function actionAll() {
 
@@ -64,7 +80,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\UserControlle
 		// Update/Render if exist
 		if( isset( $user ) ) {
 
-			$genderMap 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER, [ [ 'value' => 'Choose Gender', 'name' => '0' ] ] );
+			$genderMap 	= $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [ [ 'id' => '0', 'name' => 'Choose Gender' ] ] );
 
 	    	return $this->render( 'profile', [
 	    		'user' => $user,
@@ -73,7 +89,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\UserControlle
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
     }
 
 	public function actionSettings() {
@@ -85,9 +101,9 @@ class UserController extends \cmsgears\core\admin\controllers\base\UserControlle
 		// Update/Render if exist
 		if( isset( $user ) ) {
 
-			$privacy		= UserService::findAttributeMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
-			$notification	= UserService::findAttributeMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
-			$reminder		= UserService::findAttributeMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
+			$privacy		= $this->modelService->getAttributeMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
+			$notification	= $this->modelService->getAttributeMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
+			$reminder		= $this->modelService->getAttributeMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
 
 	    	return $this->render( 'settings', [
 	    		'user' => $user,
@@ -98,7 +114,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\UserControlle
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

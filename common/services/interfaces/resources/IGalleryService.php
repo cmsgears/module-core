@@ -11,8 +11,6 @@ interface IGalleryService extends \cmsgears\core\common\services\interfaces\base
 
 	// Data Provider ------
 
-	public function getPageByType( $type, $config = [] );
-
 	// Read ---------------
 
     // Read - Models ---
@@ -22,8 +20,6 @@ interface IGalleryService extends \cmsgears\core\common\services\interfaces\base
     // Read - Maps -----
 
 	// Create -------------
-
-	public function createByNameType( $name, $type );
 
 	public function createItem( $gallery, $item );
 

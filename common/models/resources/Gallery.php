@@ -17,7 +17,6 @@ use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 use cmsgears\core\common\models\traits\NameTypeTrait;
 use cmsgears\core\common\models\traits\SlugTypeTrait;
-use cmsgears\core\common\models\traits\ResourceTrait;
 use cmsgears\core\common\models\traits\resources\AttributeTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
@@ -62,7 +61,7 @@ class Gallery extends \cmsgears\core\common\models\base\Resource {
 
 	// Public -----------------
 
-	public $parentType		= CoreGlobal::TYPE_GALLERY;
+	public $mParentType		= CoreGlobal::TYPE_GALLERY;
 
 	// Protected --------------
 
@@ -75,7 +74,6 @@ class Gallery extends \cmsgears\core\common\models\base\Resource {
 	use DataTrait;
 	use FileTrait;
 	use NameTypeTrait;
-	use ResourceTrait;
 	use SlugTypeTrait;
 	use TemplateTrait;
 

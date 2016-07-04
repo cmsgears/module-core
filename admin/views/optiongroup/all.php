@@ -9,7 +9,7 @@ use yii\widgets\LinkPager;
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . " | All $title";
+$this->title 	= 'All Option Groups | ' . $coreProperties->getSiteTitle();
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -79,14 +79,9 @@ if( !isset( $sortOrder ) ) {
 						<td> <span class="<?= $model->icon ?>" title="<?= $model->name ?>"></span></td>
 						<td><?= $model->description ?></td>
 						<td class="actions">
-							<?php if( $title == 'Dropdown' ) { ?>
-								<span title="View Options"><?= Html::a( "", [ "dropdown/option/all?id=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
-							<?php } ?>
-							<?php if( $title == 'Checkbox Group' ) { ?>
-								<span title="View Options"><?= Html::a( "", [ "checkboxgroup/option/all?id=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
-							<?php } ?>
-							<span title="Update <?= $title ?>"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete <?= $title ?>"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
+							<span title="Options"><?= Html::a( "", [ "optiongroup/option/all?cid=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
+							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
+							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

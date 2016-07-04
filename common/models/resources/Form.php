@@ -17,8 +17,8 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
-use cmsgears\core\common\models\traits\NameTrait;
-use cmsgears\core\common\models\traits\SlugTrait;
+use cmsgears\core\common\models\traits\NameTypeTrait;
+use cmsgears\core\common\models\traits\SlugTypeTrait;
 use cmsgears\core\common\models\traits\interfaces\VisibilityTrait;
 use cmsgears\core\common\models\traits\resources\AttributeTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
@@ -69,7 +69,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	// Public -----------------
 
-	public $parentType  = CoreGlobal::TYPE_FORM;
+	public $mParentType	= CoreGlobal::TYPE_FORM;
 
 	// Protected --------------
 
@@ -80,8 +80,8 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 	use AttributeTrait;
 	use CreateModifyTrait;
 	use DataTrait;
-	use NameTrait;
-	use SlugTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 	use TemplateTrait;
 	use VisibilityTrait;
 
@@ -114,7 +114,8 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
-                'ensureUnique' => true
+                'ensureUnique' => true,
+                'uniqueValidator' => [ 'targetAttribute' => 'type' ]
             ]
         ];
     }
@@ -133,8 +134,8 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
             [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ [ 'description', 'successMessage' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
+            [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+            [ [ 'slug', 'type' ], 'unique', 'targetAttribute' => [ 'slug', 'type' ] ],
             [ [ 'visibility' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'captcha', 'active', 'userMail', 'adminMail' ], 'boolean' ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],

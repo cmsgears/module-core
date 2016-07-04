@@ -9,7 +9,6 @@ use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\admin\config\AdminGlobalCore;
 
 abstract class CrudController extends Controller {
 
@@ -39,6 +38,7 @@ abstract class CrudController extends Controller {
             'rbac' => [
                 'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
+                	'index'  => [ 'permission' => $this->crudPermission ],
 	                'all'  => [ 'permission' => $this->crudPermission ],
 	                'create'  => [ 'permission' => $this->crudPermission ],
 	                'update'  => [ 'permission' => $this->crudPermission ],
@@ -48,6 +48,7 @@ abstract class CrudController extends Controller {
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
+	                'index' => [ 'get' ],
 	                'all'  => [ 'get' ],
 	                'create'  => [ 'get', 'post' ],
 	                'update'  => [ 'get', 'post' ],
@@ -64,6 +65,11 @@ abstract class CrudController extends Controller {
 	// CMG parent classes --------------------
 
 	// CrudController ------------------------
+
+	public function actionIndex() {
+
+		return $this->redirect( 'all' );
+	}
 
 	public function actionAll() {
 

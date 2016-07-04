@@ -32,7 +32,7 @@ abstract class Entity extends \yii\db\ActiveRecord {
 	// Public -----------------
 
 	/**
-	 * It can be used by models to pass variables to trait methods before calling them. This will help us to avoid maintaining object state in traits.
+	 * It can be used by models to pass variables to trait methods before method execution. This will help us to avoid maintaining object state in traits.
 	 */
     public $traitParams = [];
 
@@ -90,12 +90,20 @@ abstract class Entity extends \yii\db\ActiveRecord {
         }
     }
 
-	public function getMediumText( $attribute ) {
+	public function getMediumText( $attribute, $link = false ) {
 
-		if( strlen( $attribute ) > CoreGlobal::DISPLAY_TEXT_MEDIUM ) {
+		if( strlen( $attribute ) > Yii::$app->core->mediumText ) {
 
-			$attribute	= substr( $attribute, 0, CoreGlobal::DISPLAY_TEXT_MEDIUM );
-			$attribute	= "$notes ...";
+			$attribute	= substr( $attribute, 0, Yii::$app->core->mediumText );
+
+			if( $link ) {
+
+				$attribute	= "$attribute ... $link";
+			}
+			else {
+
+				$attribute	= "$attribute ...";
+			}
 		}
 
 		return $attribute;

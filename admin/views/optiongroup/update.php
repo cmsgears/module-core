@@ -7,18 +7,18 @@ use yii\helpers\Html;
 use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Update Option';
+$this->title 	= 'Update Option Group | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
 <div class="box box-cud">
 	<div class="box-wrap-header">
-		<div class="header">Update Option</div>
+		<div class="header">Update Option Group</div>
 	</div>
 	<div class="box-wrap-content frm-split-40-60">
-		<?php $form = ActiveForm::begin( [ 'id' => 'frm-option' ] );?>
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-dropdown' ] );?>
 
     	<?= $form->field( $model, 'name' ) ?>
-    	<?= $form->field( $model, 'value' ) ?>
+    	<?= $form->field( $model, 'description' ) ?>
     	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
     	<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 

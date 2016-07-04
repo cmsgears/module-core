@@ -22,18 +22,18 @@ trait DataTrait {
 		return (object)$obj;
 	}
 
-	public function setDataAttribute( $name, $value ) {
+	public function setDataAttribute( $name, $value, $assoc = false ) {
 
-		$object	= $this->generateObjectFromJson( $assoc = false );
+		$object	= $this->generateObjectFromJson( $assoc );
 
 		$object->$name	= $value;
 
 		$this->generateJsonFromObject( $object );
 	}
 
-	public function getDataAttribute( $name ) {
+	public function getDataAttribute( $name, $assoc = false ) {
 
-		$object	= $this->generateObjectFromJson( $assoc = false );
+		$object	= $this->generateObjectFromJson( $assoc );
 
 		if( isset( $object->$name ) ) {
 
@@ -43,16 +43,16 @@ trait DataTrait {
 		return null;
 	}
 
-	public function updateDataAttribute( $name, $value ) {
+	public function updateDataAttribute( $name, $value, $assoc = false ) {
 
-		$this->setDataAttribute( $name, $value );
+		$this->setDataAttribute( $name, $value, $assoc );
 
 		$this->update();
 	}
 
-	public function removeDataAttribute( $name ) {
+	public function removeDataAttribute( $name, $assoc = false ) {
 
-		$object	= $this->generateObjectFromJson( $assoc = false );
+		$object	= $this->generateObjectFromJson( $assoc );
 
 		unset( $object->$name );
 

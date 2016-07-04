@@ -9,16 +9,33 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class UserController extends \cmsgears\core\common\controllers\apix\UserController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	// Instance methods --------------------------------------------
 
-        parent::__construct( $id, $module, $config );
-	}
+	// Yii interfaces ------------------------
 
-	// Instance Methods --------------------------------------------
+	// Yii parent classes --------------------
 
-	// UserController
+	// yii\base\Component -----
+
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// UserController ------------------------
 }
 
 ?>

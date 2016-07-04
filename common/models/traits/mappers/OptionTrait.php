@@ -19,7 +19,7 @@ trait OptionTrait {
 	public function getModelOptions() {
 
     	return $this->hasMany( ModelOption::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->parentType'" );
+					->where( "parentType='$this->mParentType'" );
 	}
 
 	public function getOptions() {
@@ -31,7 +31,7 @@ trait OptionTrait {
 
 						$modelOptionTable	= CoreTables::TABLE_MODEL_OPTION;
 
-                      	$query->onCondition( [ "$modelOptionTable.parentType" => $this->parentType ] );
+                      	$query->onCondition( [ "$modelOptionTable.parentType" => $this->mParentType ] );
 					});
 
 		return $query;
@@ -46,16 +46,25 @@ trait OptionTrait {
 
 						$modelOptionTable	= CoreTables::TABLE_MODEL_OPTION;
 
-                      	$query->onCondition( [ "$modelOptionTable.parentType" => $this->parentType, "$modelOptionTable.active" => true ] );
+                      	$query->onCondition( [ "$modelOptionTable.parentType" => $this->mParentType, "$modelOptionTable.active" => true ] );
 					});
 
 		return $query;
 	}
 
-	public function getOptionIdListByCategory( $category ) {
+	public function getOptionIdListByCategoryId( $categoryId, $active = true ) {
 
-    	$options 		= $this->getActiveOptions()->where( [ 'categoryId' => $category->id ] )->all();
+    	$options 		= null;
 		$optionsList	= [];
+
+		if( $active ) {
+
+			$options = $this->getActiveOptions()->where( [ 'categoryId' => $categoryId ] )->all();
+		}
+		else {
+
+			$options = $this->getOptions()->where( [ 'categoryId' => $categoryId ] )->all();
+		}
 
 		foreach ( $options as $option ) {
 
@@ -65,12 +74,18 @@ trait OptionTrait {
 		return $optionsList;
 	}
 
-	public function getOptionsByCategorySlug( $slug ) {
+	public function getOptionsByCategorySlug( $categorySlug, $active = true ) {
 
 		$categoryTable	= CoreTables::TABLE_CATEGORY;
-    	$options 		= $this->getActiveOptions()->leftJoin( $categoryTable, "$categoryTable.id=categoryId" )->where( [ "$categoryTable.slug" => $slug ] )->all();
 
-		return $options;
+		if( $active ) {
+
+			return $this->getActiveOptions()->leftJoin( $categoryTable, "$categoryTable.id=categoryId" )->where( [ "$categoryTable.slug" => $categorySlug ] )->all();
+		}
+		else {
+
+			return $this->getOptions()->leftJoin( $categoryTable, "$categoryTable.id=categoryId" )->where( [ "$categoryTable.slug" => $categorySlug ] )->all();
+		}
 	}
 }
 

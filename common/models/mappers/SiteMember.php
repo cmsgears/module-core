@@ -15,7 +15,7 @@ use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Role;
 
 /**
- * SiteMember Entity
+ * SiteMember Entity - A user can have only one role specific to a site, though a role can have multiple permissions.
  *
  * @property long $id
  * @property long $siteId
@@ -81,6 +81,7 @@ class SiteMember extends \cmsgears\core\common\models\base\Mapper {
         return [
             [ [ 'siteId', 'userId', 'roleId' ], 'required' ],
             [ [ 'siteId', 'userId', 'roleId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+            [ [ 'siteId', 'userId', 'roleId' ], 'unique', 'targetAttribute' => [ 'siteId', 'userId', 'roleId' ] ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
     }

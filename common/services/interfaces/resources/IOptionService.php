@@ -31,7 +31,7 @@ interface IOptionService extends \cmsgears\core\common\services\interfaces\base\
 
 	public function getIdNameMapByCategoryId( $categoryId, $config = [] );
 
-	public function getIdNameMapByCategoryName( $categoryName, $config = [], $type = CoreGlobal::TYPE_OPTION_GROUP );
+	public function getIdNameMapByCategorySlug( $categoryName, $config = [], $type = CoreGlobal::TYPE_OPTION_GROUP );
 
 	public function getValueNameMapByCategoryId( $categoryId );
 

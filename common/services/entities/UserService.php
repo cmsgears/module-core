@@ -3,6 +3,7 @@ namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
 use \Yii;
+use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -79,6 +80,78 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Data Provider ------
 
+	public function getPage( $config = [] ) {
+
+		$siteTable 			= CoreTables::TABLE_SITE;
+		$siteMemberTable 	= CoreTables::TABLE_SITE_MEMBER;
+
+	    $sort = new Sort([
+	        'attributes' => [
+	            'name' => [
+	                'asc' => [ 'firstName' => SORT_ASC, 'lastName' => SORT_ASC ],
+	                'desc' => [ 'firstName' => SORT_DESC, 'lastName' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'name',
+	            ],
+	            'username' => [
+	                'asc' => [ 'username' => SORT_ASC ],
+	                'desc' => ['username' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'username',
+	            ],
+	            'role' => [
+	                'asc' => [ "$siteMemberTable.roleId" => SORT_ASC ],
+	                'desc' => [ "$siteMemberTable.roleId" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'role',
+	            ],
+	            'status' => [
+	                'asc' => [ 'status' => SORT_ASC ],
+	                'desc' => ['status' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'status',
+	            ],
+	            'email' => [
+	                'asc' => [ 'email' => SORT_ASC ],
+	                'desc' => ['email' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'email',
+	            ]
+	        ]
+	    ]);
+
+		$config[ 'conditions' ][ "$siteTable.slug" ] 	= Yii::$app->core->getSiteSlug();
+
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		if( !isset( $config[ 'search-col' ] ) ) {
+
+			$config[ 'search-col' ] = 'email';
+		}
+
+		return parent::findPage( $config );
+	}
+
+	public function getPageByRoleType( $roleType ) {
+
+		$roleTable = CoreTables::TABLE_ROLE;
+
+		return $this->getPage( [ 'conditions' => [ "$roleTable.type" => $roleType ], 'query' => User::queryWithSiteMembers() ] );
+	}
+
+	public function getPageByAdmins() {
+
+		return $this->getPageByPermissionName( CoreGlobal::PERM_ADMIN );
+	}
+
+	public function getPageByUsers() {
+
+		return $this->getPageByPermissionName( CoreGlobal::PERM_USER );
+	}
+
 	// Read ---------------
 
     // Read - Models ---
@@ -151,7 +224,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 								->leftJoin( $siteMemberTable, "$siteMemberTable.userId = $userTable.id" )
 								->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
 								->leftJoin( $roleTable, "$roleTable.id = $siteMemberTable.roleId" )
-								->where( "$roleTable.slug=:slug AND $siteTable.name=:name", [ ':slug' => $roleSlug, ':name' => Yii::$app->cmgCore->getSiteName() ] )->all();
+								->where( "$roleTable.slug=:slug AND $siteTable.name=:name", [ ':slug' => $roleSlug, ':name' => Yii::$app->core->getSiteName() ] )->all();
 		$usersMap			= [];
 
 		foreach ( $users as $user ) {

@@ -16,8 +16,7 @@ use cmsgears\core\common\models\mappers\ModelFile;
 use cmsgears\core\common\services\interfaces\resources\IGalleryService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
-use cmsgears\core\common\services\traits\NameTrait;
-use cmsgears\core\common\services\traits\SlugTrait;
+use cmsgears\core\common\services\traits\NameSlugTypeTrait;
 
 /**
  * The class GalleryService is base class to perform database activities for Gallery Entity.
@@ -52,8 +51,7 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 	// Traits ------------------------------------------------------
 
-	use NameTrait;
-	use SlugTrait;
+	use NameSlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -114,15 +112,6 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 		return parent::findPage( $config );
 	}
 
-	public function getPageByType( $type, $config = [] ) {
-
-		$modelTable	= self::$modelTable;
-
-		$config[ 'conditions' ][ "$modelTable.type" ] 	= $type;
-
-		return $this->getPage( $config );
-	}
-
 	// Read ---------------
 
     // Read - Models ---
@@ -134,15 +123,6 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 	// Read - Others ---
 
 	// Create -------------
-
-	public function createByNameType( $name, $type ) {
-
-		$gallery			= new Gallery();
-		$gallery->name		= $name;
-		$gallery->type		= $type;
-
-		return $this->create( $gallery );
-	}
 
 	public function createItem( $gallery, $item ) {
 

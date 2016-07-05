@@ -105,17 +105,17 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		$modelClass	= static::$modelClass;
 
-		return self::findDataProvider( $config );
+		return static::findDataProvider( $config );
 	}
 
 	public function getPage( $config = [] ) {
 
-		return self::findPage( $config );
+		return static::findPage( $config );
 	}
 
 	public function getPageForSearch( $config = [] ) {
 
-		return self::findPageForSearch( $config );
+		return static::findPageForSearch( $config );
 	}
 
 	// Read ---------------
@@ -137,24 +137,24 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	 */
 	public function getModels( $config = [] ) {
 
-		return self::findModels( $config );
+		return static::findModels( $config );
 	}
 
     // Read - Lists ----
 
 	public function getList( $config = [] ) {
 
-		return self::generateList( $config );
+		return static::generateList( $config );
 	}
 
 	public function getIdList( $config = [] ) {
 
-		return self::findIdList( $config );
+		return static::findIdList( $config );
 	}
 
 	public function getNameValueList( $config = [] ) {
 
-		return self::findNameValueList( $config );
+		return static::findNameValueList( $config );
 	}
 
 	/**
@@ -162,14 +162,14 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	 */
 	public function getIdNameList( $config = [] ) {
 
-		return self::findIdNameList( $config );
+		return static::findIdNameList( $config );
 	}
 
     // Read - Maps -----
 
 	public function getNameValueMap( $config = [] ) {
 
-		return self::findNameValueMap( $config );
+		return static::findNameValueMap( $config );
 	}
 
 	/**
@@ -177,12 +177,12 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	 */
 	public function getIdNameMap( $config = [] ) {
 
-		return self::findIdNameMap( $config );
+		return static::findIdNameMap( $config );
 	}
 
 	public function getObjectMap( $config = [] ) {
 
-		return self::findObjectMap( $config );
+		return static::findObjectMap( $config );
 	}
 
 	// Read - Others ---

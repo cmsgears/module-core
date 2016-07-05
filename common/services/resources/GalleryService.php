@@ -45,9 +45,9 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $fileService;
 
-	private $fileService;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

@@ -56,11 +56,11 @@ class AddressController extends \cmsgears\core\admin\controllers\base\Controller
 			$provinceMap	= ProvinceService::getListByCountryId( $countryId );
 
 			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $provinceMap );
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $provinceMap );
 		}
 
 		// Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionProvinceOptions() {
@@ -73,11 +73,11 @@ class AddressController extends \cmsgears\core\admin\controllers\base\Controller
 			$provinceOptions	= CodeGenUtil::generateSelectOptionsIdName( $provinceOptions );
 
 			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $provinceOptions );
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $provinceOptions );
 		}
 
 		// Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

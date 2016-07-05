@@ -70,18 +70,18 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
 				$data	= [ 'id' => $item->id, 'thumbUrl' => $item->getThumbUrl(), 'title' => $item->title, 'description' => $item->description, 'alt' => $item->altText, 'url' => $item->url ];
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 			}
 
 			// Generate Errors
 			$errors = AjaxUtil::generateErrorMessage( $item );
 
 			// Trigger Ajax Failure
-	        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+	        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
 
 		// Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDeleteItem( $slug, $id ) {
@@ -97,13 +97,13 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
 				if ( ModelFileService::delete( $modelFile ) ) {
 
 					// Trigger Ajax Success
-					return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $id );
+					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $id );
 				}
 			}
 		}
 
 		// Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

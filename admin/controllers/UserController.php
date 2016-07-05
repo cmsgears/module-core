@@ -29,7 +29,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\UserControlle
 		$this->roleType			= CoreGlobal::TYPE_SYSTEM;
 		$this->permissionSlug	= CoreGlobal::PERM_USER;
 		$this->showCreate 		= true;
-		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'user' ];
+		$this->sidebar			= [ 'parent' => 'sidebar-identity', 'child' => 'user' ];
 
 		$this->returnUrl		= Url::previous( 'users' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/user/all' ], true );

@@ -31,7 +31,7 @@ if( !isset( $sortOrder ) ) {
 		<span class="frm-icon-element element-small">
 			<i class="cmti cmti-plus"></i>
 			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
-		</span>				
+		</span>
 	</div>
 	<div class="header-search col15x5">
 		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
@@ -103,11 +103,11 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $form->modifiedAt ?></td>
 						<td>
 							<?php if( $submits ) { ?>
-								<span title="Form Submits"><?= Html::a( "", [ "$controllerName/submit/all?formid=$id" ], [ 'class' => 'cmti cmti-checkbox-b-active' ] )  ?></span>
+								<span title="Submits"><?= Html::a( "", [ "$controllerName/submit/all?fid=$id" ], [ 'class' => 'cmti cmti-checkbox-b-active' ] )  ?></span>
 							<?php } ?>
-							<span title="Form Fields"><?= Html::a( "", [ "$controllerName/field/all?formid=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
-							<span title="Update Form"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete Form"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
+							<span title="Fields"><?= Html::a( "", [ "$controllerName/field/all?fid=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
+							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
+							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

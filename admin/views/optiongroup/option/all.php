@@ -74,8 +74,8 @@ if( !isset( $sortOrder ) ) {
 						<td> <span class="<?= $option->icon ?>" title="<?= $option->name ?>"></span></td>
 						<td><?= $option->value ?></td>
 						<td class="actions">
-							<span title="Update Option"><?= Html::a( "", [ "$controllerName/update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete Option"><?= Html::a( "", [ "$controllerName/delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
+							<span title="Update"><?= Html::a( "", [ "$controllerName/update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
+							<span title="Delete"><?= Html::a( "", [ "$controllerName/delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

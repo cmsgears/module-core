@@ -144,7 +144,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
         ];
 
         // trim if configured
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
             $trim[] = [ [ 'name', 'description', 'successMessage', 'htmlOptions' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -274,8 +274,10 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	public static function queryWithAll( $config = [] ) {
 
+		$modelTable				= CoreTables::TABLE_FORM;
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'fields' ];
 		$config[ 'relations' ]	= $relations;
+		$config[ 'groups' ]		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : [ "$modelTable.id" ];
 
 		return parent::queryWithAll( $config );
 	}

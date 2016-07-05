@@ -599,7 +599,8 @@ class m160620_095703_core extends \yii\db\Migration {
 			'localeId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
-			'name' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
+			'type' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
+			'name' => $this->string( CoreGlobal::TEXT_LARGE )->notNull(),
 			'value' => $this->text()
         ], $this->options );
 

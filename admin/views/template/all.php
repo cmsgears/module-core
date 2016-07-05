@@ -30,7 +30,7 @@ if( !isset( $sortOrder ) ) {
 		<span class="frm-icon-element element-small">
 			<i class="cmti cmti-plus"></i>
 			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
-		</span>				
+		</span>
 	</div>
 	<div class="header-search col15x5">
 		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
@@ -61,7 +61,7 @@ if( !isset( $sortOrder ) ) {
 						</span>
 					</th>
 					<th>Icon</th>
-					<th>Description</th> 
+					<th>Description</th>
 					<th>Renderer</th>
 					<th>Layout</th>
 					<th>View Path</th>
@@ -73,8 +73,8 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $template ) {
 
-						$id = $template->id;	 
-						
+						$id = $template->id;
+
 				?>
 					<tr>
 						<td><?= $template->name ?></td>
@@ -84,8 +84,8 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $template->layout ?></td>
 						<td><?= $template->viewPath ?></td>
 						<td class="actions">
-							<span title="Update Template"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete Template"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
+							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
+							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

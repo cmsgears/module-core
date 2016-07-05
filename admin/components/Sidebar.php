@@ -65,6 +65,17 @@ class Sidebar extends \yii\base\Component {
 		return $sidebarHtml;
 	}
 
+	/**
+	 * @return array - of available plugins to generate plugin list.
+	 */
+	public function getPlugins() {
+
+		return $this->plugins;
+	}
+
+	/**
+	 * @return array - of available config options from modules and plugins.
+	 */
 	public function getConfig() {
 
 		$config 	= [];

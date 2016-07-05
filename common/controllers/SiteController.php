@@ -104,19 +104,19 @@ class SiteController extends Controller {
 						Yii::$app->coreMailer->sendActivateUserMail( $user );
 
 						// Set Success Message
-						Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
+						Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->core->message->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
 					}
 				}
 				else {
 
 					// Set Failure Message
-					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
+					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->core->message->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
 				}
 			}
 			else {
 
 				// Set Failure Message
-				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
+				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->core->message->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
 			}
 		}
 
@@ -148,14 +148,14 @@ class SiteController extends Controller {
 				Yii::$app->coreMailer->sendPasswordResetMail( $user );
 
 				// Set Flash Message
-				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_FORGOT_PASSWORD ) );
+				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->core->message->getMessage( CoreGlobal::MESSAGE_FORGOT_PASSWORD ) );
 
 				// Refresh the Page
 				return $this->refresh();
 			}
 			else {
 
-				$model->addError( CoreGlobal::MODEL_EMAIL, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
+				$model->addError( CoreGlobal::MODEL_EMAIL, Yii::$app->core->message->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
 			}
 		}
 
@@ -186,19 +186,19 @@ class SiteController extends Controller {
 					if( $this->userService->resetPassword( $user, $model ) ) {
 
 						// Set Success Message
-						Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_RESET_PASSWORD ) );
+						Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->core->message->getMessage( CoreGlobal::MESSAGE_RESET_PASSWORD ) );
 					}
 				}
 				else {
 
 					// Set Failure Message
-					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_PASSWORD_RESET ) );
+					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->core->message->getMessage( CoreGlobal::ERROR_PASSWORD_RESET ) );
 				}
 			}
 			else {
 
 				// Set Failure Message
-				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
+				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->core->message->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
 			}
 		}
 

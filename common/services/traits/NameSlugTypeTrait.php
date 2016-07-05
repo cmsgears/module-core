@@ -51,6 +51,13 @@ trait NameSlugTypeTrait {
 		return $modelClass::findBySlug( $slug, $first );
 	}
 
+	public function getByType( $type, $first = false ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::findByType( $type, $first );
+	}
+
 	public function getByNameType( $name, $type ) {
 
 		$modelClass = static::$modelClass;

@@ -3,6 +3,7 @@ namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
 use \Yii;
+use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -55,6 +56,35 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 	// FormFieldService ----------------------
 
 	// Data Provider ------
+
+	public function getPage( $config = [] ) {
+
+	    $sort = new Sort([
+	        'attributes' => [
+	            'name' => [
+	                'asc' => [ 'name' => SORT_ASC ],
+	                'desc' => ['name' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'name',
+	            ]
+	        ],
+	        'defaultOrder' => [
+	        	'name' => SORT_DESC
+	        ]
+	    ]);
+
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		return parent::findPage( $config );
+	}
+
+	public function getPageByFormId( $formId ) {
+
+		return $this->getPage( [ 'conditions' => [ 'formId' => $formId ] ] );
+	}
 
 	// Read ---------------
 

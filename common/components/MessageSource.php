@@ -9,6 +9,8 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class MessageSource extends \yii\base\Component {
 
+	// TODO: Use resource files to do php internationalization - gettext could be an option. Also look at zend translate.
+
 	// Variables ---------------------------------------------------
 
 	// Global -----------------

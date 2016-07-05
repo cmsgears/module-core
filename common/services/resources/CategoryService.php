@@ -15,6 +15,8 @@ use cmsgears\core\common\models\mappers\ModelCategory;
 
 use cmsgears\core\common\services\interfaces\resources\ICategoryService;
 
+use cmsgears\core\common\services\traits\NameSlugTypeTrait;
+
 /**
  * The class CategoryService is base class to perform database activities for Category Entity.
  */
@@ -45,6 +47,8 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use NameSlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -94,21 +98,6 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 		return self::getFeaturedByType( $type );
 	}
 
-	public function getByName( $name, $first = false ) {
-
-		return self::findByName( $name, $first );
-	}
-
-	public function getByType( $type ) {
-
-		return self::findByType( $type );
-    }
-
-	public function getBySlugType( $slug, $type ) {
-
-		return self::findBySlugType( $slug, $type );
-	}
-
 	public function searchByName( $name, $config = [] ) {
 
 		$categoryTable				= CoreTables::TABLE_CATEGORY;
@@ -122,13 +111,6 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 	}
 
     // Read - Lists ----
-
-	public function getIdNameListByType( $type, $config = [] ) {
-
-		$config[ 'conditions' ][ 'type' ] = $type;
-
-		return $this->getIdNameList( $config );
-	}
 
 	public function getTopLevelIdNameListByType( $type, $config = [] ) {
 
@@ -150,13 +132,6 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 	}
 
     // Read - Maps -----
-
-	public function getIdNameMapByType( $type, $config = [] ) {
-
-		$config[ 'conditions' ][ 'type' ] 	= $type;
-
-		return $this->getIdNameMap( $config );
-	}
 
 	// Read - Others ---
 
@@ -219,21 +194,6 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 	public static function findFeaturedByType( $type ) {
 
 		return Category::getFeaturedByType( $type );
-	}
-
-	public static function findByName( $name, $first = false ) {
-
-		return Category::findByName( $name, $first );
-	}
-
-	public static function findByType( $type ) {
-
-		return Category::findByType( $type );
-    }
-
-	public static function findBySlugType( $slug, $type ) {
-
-		return Category::findBySlugType( $slug, $type );
 	}
 
     // Read - Lists ----

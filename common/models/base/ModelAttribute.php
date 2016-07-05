@@ -71,7 +71,7 @@ abstract class ModelAttribute extends Attribute {
         ];
 
 		// trim if required
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'name', 'type', 'valueType', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 

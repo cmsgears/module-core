@@ -39,11 +39,11 @@ class DeleteTag extends ModelAction {
 			ModelTagService::deleteByTagSlug( $this->model->id, $this->modelType, $tslug );
 
 			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $tslug );
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $tslug );
 		}
 
 		// Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
 

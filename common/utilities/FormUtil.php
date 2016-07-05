@@ -14,9 +14,9 @@ class FormUtil {
 
 	// Static Methods ----------------------------------------------
 
-	public static function fillFromModelAttribute( $formSlug, $modelAttributes ) {
+	public static function fillFromModelAttribute( $formSlug, $formType, $modelAttributes ) {
 
-		$form 		= FormService::findBySlug( $formSlug );
+		$form 		= Yii::$app->factory->get( 'formService' )->getBySlugType( $formSlug, $formType );
 		$fieldsMap	= [];
 
 		if( isset( $form ) ) {
@@ -32,7 +32,7 @@ class FormUtil {
 				}
 
 				// Ignore passwords
-				if( !$formField->isPasswordField() ) {
+				if( !$formField->isPassword() ) {
 
 					$formField->value	= $modelAttributes[ $key ]->value;
 				}

@@ -30,7 +30,7 @@ if( !isset( $sortOrder ) ) {
 		<span class="frm-icon-element element-small">
 			<i class="cmti cmti-plus"></i>
 			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
-		</span>				
+		</span>
 	</div>
 	<div class="header-search col15x5">
 		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
@@ -95,9 +95,9 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $gallery->slug ?></td>
 						<td><?= $gallery->title ?></td>
 						<td class="actions">
-							<span title="Gallery Items"><?= Html::a( "", [ "items?id=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
-							<span title="Update Gallery"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete Gallery"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
+							<span title="Items"><?= Html::a( "", [ "items?id=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
+							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
+							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

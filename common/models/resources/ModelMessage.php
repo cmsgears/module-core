@@ -14,12 +14,19 @@ use cmsgears\core\common\models\entities\Locale;
 use cmsgears\core\common\models\traits\ResourceTrait;
 
 /**
- * ModelMessage Entity
+ * ModelMessage Entity - To store message in different languages apart from primary language.
+ *
+ * The message can belong either to main or child sites. These messages are ideally warnings, text or errors.
+ *
+ * Other models can also store their messages. These can be either model property or content.
+ *
+ * These messags can be further categorised using the type attribute.
  *
  * @property long $id
  * @property long $localeId
  * @property integer $parentId
  * @property string $parentType
+ * @property string $type
  * @property string $name
  * @property string $value
  */
@@ -70,7 +77,8 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
             [ [ 'id', 'value' ], 'safe' ],
             [ [ 'localeId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'parentType', 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ [ 'parentId', 'parentType', 'localeId', 'name' ], 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'localeId', 'name' ] ]
         ];
 
@@ -94,6 +102,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 			'localeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE )
 		];

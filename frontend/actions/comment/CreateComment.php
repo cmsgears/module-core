@@ -54,14 +54,14 @@ class CreateComment extends \yii\base\Action {
             ModelCommentService::create( $model );
 
             // Trigger Ajax Success
-            return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+            return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
         }
 
         // Generate Errors
         $errors = AjaxUtil::generateErrorMessage( $model );
 
         // Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
     }
 }
 

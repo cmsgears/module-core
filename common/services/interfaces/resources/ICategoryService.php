@@ -7,7 +7,10 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-interface ICategoryService extends \cmsgears\core\common\services\interfaces\hierarchy\INestedSetService {
+use cmsgears\core\common\services\interfaces\hierarchy\INestedSetService;
+use cmsgears\core\common\services\interfaces\base\INameSlugTypeService;
+
+interface ICategoryService extends INestedSetService, INameSlugTypeService {
 
 	// Data Provider ------
 
@@ -19,17 +22,9 @@ interface ICategoryService extends \cmsgears\core\common\services\interfaces\hie
 
 	public function getFeaturedByType( $type );
 
-	public function getByName( $name, $first = false );
-
-	public function getByType( $type );
-
-	public function getBySlugType( $slug, $type );
-
 	public function searchByName( $name, $config = [] );
 
     // Read - Lists ----
-
-	public function getIdNameListByType( $type, $config = [] );
 
 	public function getTopLevelIdNameListByType( $type, $config = [] );
 
@@ -38,8 +33,6 @@ interface ICategoryService extends \cmsgears\core\common\services\interfaces\hie
 	public function getLevelListByType( $type );
 
     // Read - Maps -----
-
-	public function getIdNameMapByType( $type, $config = [] );
 
 	// Create -------------
 

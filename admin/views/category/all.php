@@ -31,7 +31,7 @@ if( !isset( $sortOrder ) ) {
 		<span class="frm-icon-element element-small">
 			<i class="cmti cmti-plus"></i>
 			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
-		</span>				
+		</span>
 	</div>
 	<div class="header-search col15x5">
 		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
@@ -68,7 +68,7 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-parent' class="icon-sort <?php if( strcmp( $sortOrder, '-parent') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
-					<th>Description</th> 
+					<th>Description</th>
 					<th>Featured</th>
 					<th>Actions</th>
 				</tr>
@@ -85,10 +85,10 @@ if( !isset( $sortOrder ) ) {
 						<td> <span class="<?= $category->icon ?>" title="<?= $category->name ?>"></span></td>
 						<td><?= $category->getParentName() ?></td>
 						<td><?= $category->description ?></td>
-						<td><?= $category->getFeaturedStr() ?></td> 
+						<td><?= $category->getFeaturedStr() ?></td>
 						<td class="actions">
-							<span title="Update Category"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete Category"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
+							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
+							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

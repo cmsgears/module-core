@@ -77,8 +77,8 @@ if( !isset( $sortOrder ) ) {
 						<td><?= $country->name ?></td>
 						<td class="actions">
 							<span title="Provinces"><?= Html::a( "", [ "country/province/all?cid=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
-							<span title="Update Country"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete Country"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
+							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
+							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>

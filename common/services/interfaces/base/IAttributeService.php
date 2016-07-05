@@ -21,9 +21,9 @@ interface IAttributeService extends IEntityService {
 
 	public function getByName( $modelId, $name );
 
-	public function getByTypeName( $modelId, $type, $name );
+	public function getByNameType( $modelId, $type, $name );
 
-	public function getOrInitByTypeName( $modelId, $type, $name, $valueType = Attribute::VALUE_TYPE_TEXT );
+	public function getOrInitByNameType( $modelId, $name, $type, $valueType = Attribute::VALUE_TYPE_TEXT );
 
     // Read - Lists ----
 

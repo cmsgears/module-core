@@ -18,6 +18,8 @@ class Dashboard extends \yii\base\Component {
 
 	public $modules	= [];
 
+	public $plugins	= [];
+
 	// Protected --------------
 
 	// Private ----------------
@@ -33,7 +35,7 @@ class Dashboard extends \yii\base\Component {
 	// Dashboard -----------------------------
 
 	/**
-	 * @return string - the html merged from each module sidebar view.
+	 * @return string - the html merged from each module to generate dashboard.
 	 */
 	public function getDashboardHtml() {
 
@@ -61,6 +63,14 @@ class Dashboard extends \yii\base\Component {
 		}
 
 		return $sidebarHtml;
+	}
+
+	/**
+	 * @return string - the html merged from each plugin to generate dashboard.
+	 */
+	public function getPluginsHtml() {
+
+		// TODO: Add options to render plugins on dashboard.
 	}
 }
 

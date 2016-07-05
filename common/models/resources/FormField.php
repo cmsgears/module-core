@@ -118,7 +118,7 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
         ];
 
         // trim if configured
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
             $trim[] = [ [ 'name', 'label', 'validators', 'htmlOptions' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 

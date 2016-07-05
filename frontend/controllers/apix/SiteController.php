@@ -67,10 +67,10 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 				SiteMemberService::create( $user );
 
 				// Send Register Mail
-				Yii::$app->cmgCoreMailer->sendRegisterMail( $user );
+				Yii::$app->core->mailer->sendRegisterMail( $user );
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
 			}
 		}
 
@@ -78,7 +78,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		$errors = AjaxUtil::generateErrorMessage( $model );
 
 		// Trigger Ajax Failure
-    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+    	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
     }
 
 	public function actionLogin() {
@@ -114,14 +114,14 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 			}
 
 			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $homeUrl );
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $homeUrl );
 		}
 
 		// Generate Errors
 		$errors = AjaxUtil::generateErrorMessage( $model );
 
 		// Trigger Ajax Failure
-    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+    	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
     }
 
 	public function actionForgotPassword() {
@@ -143,25 +143,25 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 				$user->loadPermissions();
 
 				// Send Forgot Password Mail
-				Yii::$app->cmgCoreMailer->sendPasswordResetMail( $user );
+				Yii::$app->core->mailer->sendPasswordResetMail( $user );
 
-				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_FORGOT_PASSWORD ) );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_FORGOT_PASSWORD ) );
 			}
 
 			// Generate Errors
-			$model->addError( 'email', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
+			$model->addError( 'email', Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
 
 			$errors = AjaxUtil::generateErrorMessage( $model );
 
 			// Trigger Ajax Failure
-        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+        	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
 
 		// Generate Errors
 		$errors = AjaxUtil::generateErrorMessage( $model );
 
 		// Trigger Ajax Failure
-    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+    	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
     }
 
 	public function actionCheckUser( $redirect = null ) {
@@ -171,7 +171,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		if( isset( $user ) ) {
 
 			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $redirect );
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $redirect );
 		}
 
 		// Remember url for redirect on login
@@ -181,7 +181,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		}
 
 		// Trigger Ajax Failure
-    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+    	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
 }
 

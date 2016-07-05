@@ -78,7 +78,7 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
     public function actionIndex( $type ) {
 
 		$settings 		= $this->modelService->getAttributeMapBySlugType( Yii::$app->core->getSiteSlug(), $type );
-		$fieldsMap		= FormUtil::fillFromModelAttribute( "config-$type", $settings );
+		$fieldsMap		= FormUtil::fillFromModelAttribute( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
 		$model			= new GenericForm( [ 'fields' => $fieldsMap ] );
 
 	    $htmlContent	= $this->renderPartial( '@cmsgears/module-core/admin/views/settings/info', [
@@ -93,7 +93,7 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 	public function actionUpdate( $type ) {
 
 		$settings 		= $this->modelService->getAttributeMapBySlugType( Yii::$app->core->getSiteSlug(), $type );
-		$fieldsMap		= FormUtil::fillFromModelAttribute( "config-$type", $settings );
+		$fieldsMap		= FormUtil::fillFromModelAttribute( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
 		$model			= new GenericForm( [ 'fields' => $fieldsMap ] );
 
 		if( $model->load( Yii::$app->request->post(), "setting$type" ) && $model->validate() ) {

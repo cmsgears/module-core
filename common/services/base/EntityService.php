@@ -3,9 +3,9 @@ namespace cmsgears\core\common\services\base;
 
 // Yii Imports
 use \Yii;
-
 use yii\db\Query;
 use yii\data\ActiveDataProvider;
+use yii\data\Sort;
 
 use yii\helpers\HtmlPurifier;
 use yii\helpers\ArrayHelper;
@@ -868,7 +868,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		foreach ( $objects as $object ) {
 
-			$map[ $object->$keyColumn ] = $object;
+			$map[ $object->$key ] = $object;
 		}
 
 		return $map;

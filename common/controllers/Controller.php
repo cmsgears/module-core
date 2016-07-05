@@ -118,7 +118,7 @@ abstract class Controller extends \yii\web\Controller {
 			// Redirect user to home set by app config
 			else {
 
-				Yii::$app->response->redirect( [ Yii::$app->cmgCore->getLoginRedirectPage() ] )->send();
+				Yii::$app->response->redirect( [ Yii::$app->core->getLoginRedirectPage() ] )->send();
 			}
 	    }
 	}

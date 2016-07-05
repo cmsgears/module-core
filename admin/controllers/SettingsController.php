@@ -10,22 +10,41 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class SettingsController extends \cmsgears\core\admin\controllers\base\Controller {
 
- 	public function __construct( $id, $module, $config = [] ) {
+	// Variables ---------------------------------------------------
 
-        parent::__construct( $id, $module, $config );
+	// Globals ----------------
 
-		$this->sidebar 	= [ 'parent' => 'sidebar-settings', 'child' => 'settings' ];
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Constructor and Initialisation ------------------------------
+
+ 	public function init() {
+
+        parent::init();
+
+		$this->crudPermission 	= CoreGlobal::PERM_CORE;
+		$this->sidebar 			= [ 'parent' => 'sidebar-settings', 'child' => 'settings' ];
 	}
 
-	// yii\base\Component ----------------
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
 	public function behaviors() {
 
         return [
             'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => CoreGlobal::PERM_CORE ]
+	                'index'  => [ 'permission' => $this->crudPermission ]
                 ]
             ],
             'verbs' => [
@@ -37,7 +56,13 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
         ];
     }
 
-	// SettingsController ----------------
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// SettingsController --------------------
 
     public function actionIndex() {
 

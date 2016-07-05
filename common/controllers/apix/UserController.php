@@ -94,12 +94,12 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
 			$response	= [ 'fileUrl' => $avatar->getThumbUrl() ];
 
 			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
+			return AjaxUtil::generateSuccess( Yii::$app->core->message->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
 		}
 		else {
 
 			// Trigger Ajax Failure
-        	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+        	return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ) );
 		}
     }
 
@@ -121,7 +121,7 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
 					$data	= [ 'email' => $user->email, 'username' => $user->username ];
 
 					// Trigger Ajax Success
-					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+					return AjaxUtil::generateSuccess( Yii::$app->core->message->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 				}
 			}
 			else {
@@ -130,12 +130,12 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
 				$errors = AjaxUtil::generateErrorMessage( $model );
 
 				// Trigger Ajax Failure
-	        	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+	        	return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 			}
 		}
 
 		// Model not found
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
+		return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
     }
 
 	public function actionSettings() {
@@ -168,15 +168,15 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
 				}
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+				return AjaxUtil::generateSuccess( Yii::$app->core->message->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 			}
 
 			// Trigger Ajax Failure
-		    return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+		    return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ) );
 		}
 
 		// Model not found
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
+		return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
 	}
 
     public function actionProfile() {
@@ -200,7 +200,7 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
                         ];
 
                 // Trigger Ajax Success
-                return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+                return AjaxUtil::generateSuccess( Yii::$app->core->message->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
             }
             else {
 
@@ -208,12 +208,12 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
                 $errors = AjaxUtil::generateErrorMessage( $user );
 
                 // Trigger Ajax Failure
-                return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+                return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
             }
         }
 
         // Model not found
-        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
+        return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
     }
 
     public function actionAddress( $type ) {
@@ -235,18 +235,18 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
                     ];
 
                 // Trigger Ajax Success
-                return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+                return AjaxUtil::generateSuccess( Yii::$app->core->message->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
             }
 
             // Generate Errors
             $errors = AjaxUtil::generateErrorMessage( $address );
 
             // Trigger Ajax Failure
-            return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+            return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
         }
 
         // Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
+        return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
     }
 }
 

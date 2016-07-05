@@ -54,24 +54,24 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 
     // Read - Models ---
 
-	public function getByType( $modelId, $type ) {
-
-		return self::findByType( $modelId, $type );
-	}
-
 	public function getByName( $modelId, $name ) {
 
 		return self::findByName( $modelId, $name );
 	}
 
-	public function getByTypeName( $modelId, $type, $name ) {
+	public function getByType( $modelId, $type ) {
 
-		return self::findByTypeName( $modelId, $type, $name );
+		return self::findByType( $modelId, $type );
 	}
 
-	public function getOrInitByTypeName( $modelId, $type, $name, $valueType = 'text' ) {
+	public function getByNameType( $modelId, $name, $type ) {
 
-		$attribute	= $this->getByTypeName( $modelId, $type, $name );
+		return self::findByNameType( $modelId, $name, $type );
+	}
+
+	public function getOrInitByNameType( $modelId, $name, $type, $valueType = 'text' ) {
+
+		$attribute	= $this->getByNameType( $modelId, $name, $type );
 
 		if( !isset( $attribute ) ) {
 
@@ -101,6 +101,7 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 
 	public function getObjectMapByType( $modelId, $type ) {
 
+		$config[ 'key' ]						= 'name';
 		$config[ 'conditions' ][ 'modelId' ] 	= $modelId;
 		$config[ 'conditions' ][ 'type' ] 		= $type;
 
@@ -127,7 +128,7 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 
 	public function update( $model, $config = [] ) {
 
-        $existingModel  = self::findByTypeName( $model->listingId, $model->type, $model->name );
+        $existingModel  = self::findByNameType( $model->modelId, $model->name, $model->type );
 
 		// Create if it does not exist
 		if( !isset( $existingModel ) ) {
@@ -151,11 +152,11 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 
 	public function updateMultiple( $models, $config = [] ) {
 
-		$parent	= $config[ 'listing' ];
+		$parent	= $config[ 'parent' ];
 
 		foreach( $models as $model ) {
 
-			if( $model->listingId == $parent->id ) {
+			if( $model->modelId == $parent->id ) {
 
 				self::update( $model );
 			}
@@ -196,13 +197,6 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 
     // Read - Models ---
 
-	public static function findByType( $modelId, $type ) {
-
-		$modelClass	= static::$modelClass;
-
-		return $modelClass::findByType( $modelId, $type );
-	}
-
 	public static function findByName( $modelId, $name ) {
 
 		$modelClass	= static::$modelClass;
@@ -210,11 +204,18 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 		return $modelClass::findByName( $modelId, $name );
 	}
 
-	public static function findByTypeName( $modelId, $type, $name ) {
+	public static function findByType( $modelId, $type ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::findByTypeName( $modelId, $type, $name );
+		return $modelClass::findByType( $modelId, $type );
+	}
+
+	public static function findByNameType( $modelId, $name, $type ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByNameType( $modelId, $name, $type );
 	}
 
     // Read - Lists ----

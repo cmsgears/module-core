@@ -15,6 +15,8 @@ interface INameSlugTypeService extends IEntityService {
 
 	public function getBySlug( $slug, $first = false );
 
+	public function getByType( $type, $first = false );
+
 	public function getByNameType( $name, $type );
 
 	public function getBySlugType( $slug, $type );

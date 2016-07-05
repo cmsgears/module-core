@@ -11,6 +11,8 @@ interface IFormFieldService extends \cmsgears\core\common\services\interfaces\ba
 
 	// Data Provider ------
 
+	public function getPageByFormId( $formId );
+
 	// Read ---------------
 
     // Read - Models ---

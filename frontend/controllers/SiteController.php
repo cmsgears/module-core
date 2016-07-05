@@ -100,10 +100,10 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 				SiteMemberService::create( $user );
 
 				// Send Register Mail
-				Yii::$app->cmgCoreMailer->sendRegisterMail( $user );
+				Yii::$app->coreMailer->sendRegisterMail( $user );
 
 				// Set Flash Message
-				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
+				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
 
 				// Refresh the Page
 				return $this->refresh();
@@ -141,10 +141,10 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 				if( $success ) {
 
 					// Send Verify Mail
-					Yii::$app->cmgCoreMailer->sendVerifyUserMail( $user );
+					Yii::$app->coreMailer->sendVerifyUserMail( $user );
 
 					// Set Success Message
-					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
+					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
 
 					return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM );
 				}
@@ -152,7 +152,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 		}
 
 		// Set Failure Message
-		Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
+		Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
 
         return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM );
     }

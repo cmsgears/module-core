@@ -99,7 +99,7 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
         ];
 
         // trim if required
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
             $trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -179,5 +179,3 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
 
 	// Delete -----------------
 }
-
-?>

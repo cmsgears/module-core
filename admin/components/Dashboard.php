@@ -73,5 +73,3 @@ class Dashboard extends \yii\base\Component {
 		// TODO: Add options to render plugins on dashboard.
 	}
 }
-
-?>

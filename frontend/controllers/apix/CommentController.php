@@ -14,7 +14,7 @@ class CommentController extends \cmsgears\core\admin\controllers\base\Controller
 	public $modelType;
 
 	/**
-	 * Parent Service can be used to find parent to which the model is associated. It can used to check parent ownership for current user using rbac action. 
+	 * Parent Service can be used to find parent to which the model is associated. It can used to check parent ownership for current user using rbac action.
 	 */
 	public $parentService;
 
@@ -70,5 +70,3 @@ class CommentController extends \cmsgears\core\admin\controllers\base\Controller
 	// CommentController -----------------
 
 }
-
-?>

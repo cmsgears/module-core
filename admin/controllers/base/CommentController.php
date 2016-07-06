@@ -103,5 +103,3 @@ abstract class CommentController extends \cmsgears\core\admin\controllers\base\C
         ]);
     }
 }
-
-?>

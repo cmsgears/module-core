@@ -55,5 +55,3 @@ class OptionController extends \cmsgears\core\admin\controllers\base\category\Op
 		return parent::actionAll( $cid );
 	}
 }
-
-?>

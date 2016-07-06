@@ -7,7 +7,10 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-interface IRoleService extends \cmsgears\core\common\services\interfaces\base\INameSlugTypeService {
+use cmsgears\core\common\services\interfaces\base\INameTypeService;
+use cmsgears\core\common\services\interfaces\base\ISlugTypeService;
+
+interface IRoleService extends INameTypeService, ISlugTypeService {
 
 	// Data Provider ------
 
@@ -30,5 +33,3 @@ interface IRoleService extends \cmsgears\core\common\services\interfaces\base\IN
 	// Delete -------------
 
 }
-
-?>

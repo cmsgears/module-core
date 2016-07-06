@@ -754,5 +754,3 @@ class FormDesigner extends \yii\base\Component {
        return $elementHtml;
     }
 }
-
-?>

@@ -151,5 +151,3 @@ class ModelGallery extends \cmsgears\core\common\models\base\Mapper {
 	// Delete -----------------
 
 }
-
-?>

@@ -127,5 +127,3 @@ class RbacFilter extends \yii\base\Behavior {
 		return $event->isValid;
     }
 }
-
-?>

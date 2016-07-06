@@ -228,5 +228,3 @@ class ModelAddressService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Delete -------------
 }
-
-?>

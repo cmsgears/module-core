@@ -9,5 +9,3 @@ class TablesTemplate {
 
 	// Mappers & Traits -----
 }
-
-?>

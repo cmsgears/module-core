@@ -66,5 +66,3 @@ class PermissionController extends \cmsgears\core\admin\controllers\base\Permiss
 		return parent::actionMatrix();
 	}
 }
-
-?>

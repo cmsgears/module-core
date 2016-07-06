@@ -212,5 +212,3 @@ class SiteMember extends \cmsgears\core\common\models\base\Mapper {
         self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
     }
 }
-
-?>

@@ -28,5 +28,3 @@ interface ISiteMemberService extends \cmsgears\core\common\services\interfaces\b
 	// Delete -------------
 
 }
-
-?>

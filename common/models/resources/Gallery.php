@@ -245,5 +245,3 @@ class Gallery extends \cmsgears\core\common\models\base\Resource {
 
 	// Delete -----------------
 }
-
-?>

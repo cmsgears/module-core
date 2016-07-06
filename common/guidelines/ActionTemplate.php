@@ -87,5 +87,3 @@ class ActionTemplate extends \cmsgears\core\common\base\Action {
 	// <Action> ------------------------------
 
 }
-
-?>

@@ -28,5 +28,3 @@ interface IModelOptionService extends \cmsgears\core\common\services\interfaces\
 	// Delete -------------
 
 }
-
-?>

@@ -19,5 +19,3 @@ class AlphaNumWithSpaceUndescoreValidator extends \yii\validators\Validator {
         }
     }
 }
-
-?>

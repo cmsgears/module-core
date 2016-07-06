@@ -249,5 +249,3 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
         return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
     }
 }
-
-?>

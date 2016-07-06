@@ -281,5 +281,3 @@ trait CategoryTrait {
 		return $categoryLinks;
 	}
 }
-
-?>

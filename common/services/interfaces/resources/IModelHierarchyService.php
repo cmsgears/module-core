@@ -34,5 +34,3 @@ interface IModelHierarchyService extends \cmsgears\core\common\services\interfac
 	// Delete -------------
 
 }
-
-?>

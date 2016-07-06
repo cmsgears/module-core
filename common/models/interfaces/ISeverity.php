@@ -13,5 +13,3 @@ interface ISeverity {
 
 	public function isSeverityHigh( $strict = true );
 }
-
-?>

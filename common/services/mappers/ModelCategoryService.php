@@ -144,32 +144,7 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 
 	// Create -------------
 
-	public function createByParams( $categoryId, $parentId, $parentType ) {
-
-		$modelCategory				= new ModelCategory();
-
-		$modelCategory->categoryId	= $categoryId;
-		$modelCategory->parentId	= $parentId;
-		$modelCategory->parentType	= $parentType;
-
-		$modelCategory->save();
-	}
-
 	// Update -------------
-
-	public function updateByParams( $parentId, $parentType, $categoryId ) {
-
-		$existingModelCategory	= $this->getByModelId( $parentId, $parentType, $categoryId );
-
-		if( isset( $existingModelCategory ) ) {
-
-			$this->updateActive( $existingModelCategory, true );
-		}
-		else {
-
-			$this->createByParams( $categoryId, $parentId, $parentType );
-		}
-	}
 
 	public function bindCategories( $binder, $parentType ) {
 
@@ -179,7 +154,7 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 
 		foreach ( $allData as $id ) {
 
-			$toSave		= ModelCategory::findByCategoryId( $parentId, $parentType, $id );
+			$toSave		= ModelCategory::findByModelId( $parentId, $parentType, $id );
 
 			// Existing mapping
 			if( isset( $toSave ) ) {
@@ -202,7 +177,7 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 
 				$toSave->parentId	= $parentId;
 				$toSave->parentType	= $parentType;
-				$toSave->categoryId	= $id;
+				$toSave->modelId	= $id;
 				$toSave->active		= true;
 
 				$toSave->save();
@@ -238,5 +213,3 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 
 	// Delete -------------
 }
-
-?>

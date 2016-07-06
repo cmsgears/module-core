@@ -35,5 +35,3 @@ class WebProperties extends CmgProperties {
 		return self::$instance;
 	}
 }
-
-?>

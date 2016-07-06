@@ -65,5 +65,3 @@ class UserExistFilter extends \yii\base\Behavior {
 		return $event->isValid;
     }
 }
-
-?>

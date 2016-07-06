@@ -112,5 +112,3 @@ class FormTemplate extends \yii\base\Model {
 	// <Model> -------------------------------
 
 }
-
-?>

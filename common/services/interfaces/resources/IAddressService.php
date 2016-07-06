@@ -26,5 +26,3 @@ interface IAddressService extends \cmsgears\core\common\services\interfaces\base
 	// Delete -------------
 
 }
-
-?>

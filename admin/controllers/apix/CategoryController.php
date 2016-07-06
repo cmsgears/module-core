@@ -155,5 +155,3 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 		}
 	}
 }
-
-?>

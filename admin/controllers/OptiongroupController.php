@@ -83,5 +83,3 @@ class OptiongroupController extends \cmsgears\core\admin\controllers\base\CrudCo
     	]);
 	}
 }
-
-?>

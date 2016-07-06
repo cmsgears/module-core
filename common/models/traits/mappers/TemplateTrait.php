@@ -38,5 +38,3 @@ trait TemplateTrait {
 		return parent::queryWithAll( $config );
 	}
 }
-
-?>

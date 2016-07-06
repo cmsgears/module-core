@@ -62,5 +62,3 @@ interface IUserService extends \cmsgears\core\common\services\interfaces\base\IA
 	// Delete -------------
 
 }
-
-?>

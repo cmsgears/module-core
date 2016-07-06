@@ -10,5 +10,3 @@ class AdminGlobalCore {
 
 	const LAYOUT_PRIVATE	= '//private';
 }
-
-?>

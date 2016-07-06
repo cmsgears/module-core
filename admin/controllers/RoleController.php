@@ -56,5 +56,3 @@ class RoleController extends \cmsgears\core\admin\controllers\base\RoleControlle
 		return parent::actionAll();
 	}
 }
-
-?>

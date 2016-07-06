@@ -251,5 +251,3 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 
 	// Delete -----------------
 }
-
-?>

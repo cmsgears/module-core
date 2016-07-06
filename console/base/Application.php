@@ -36,5 +36,3 @@ class Application extends \yii\console\Application {
        return parent::init();
     }
 }
-
-?>

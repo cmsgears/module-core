@@ -296,6 +296,7 @@ class CoreGlobal {
 	const FIELD_HTML_OPTIONS		= 'htmlOptionsField';
 	const FIELD_COMPRESS			= 'compressField';
 	const FIELD_OBJECT				= 'objectField';
+	const FIELD_THEME				= 'themeField';
 
 	// Role Fields
 	const FIELD_HOME_URL			= 'homeUrlField';
@@ -350,6 +351,7 @@ class CoreGlobal {
 	const FIELD_BASE_PATH		= 'basePathField';
 	const FIELD_VIEW_PATH		= 'viewPathField';
 	const FIELD_VIEW_COUNT		= 'viewCountField';
+	const FIELD_REFERRAL_COUNT	= 'referralCountField';
 
 	// Forms
 	const FIELD_FORM			= 'formField';
@@ -367,5 +369,3 @@ class CoreGlobal {
 	const FIELD_PRIORITY		= 'priorityField';
 	const FIELD_SEVERITY		= 'severityField';
 }
-
-?>

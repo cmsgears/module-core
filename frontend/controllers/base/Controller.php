@@ -35,5 +35,3 @@ class Controller extends \cmsgears\core\common\controllers\Controller {
 		return $this->_webProperties;
 	}
 }
-
-?>

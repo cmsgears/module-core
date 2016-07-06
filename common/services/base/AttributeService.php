@@ -230,5 +230,3 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 
 	// Delete -------------
 }
-
-?>

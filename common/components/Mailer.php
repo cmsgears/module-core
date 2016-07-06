@@ -166,5 +166,3 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
             ->send();
     }
 }
-
-?>

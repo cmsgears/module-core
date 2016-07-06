@@ -60,5 +60,3 @@ class Editor extends \cmsgears\core\common\base\Widget {
 	// Editor --------------------------------
 
 }
-
-?>

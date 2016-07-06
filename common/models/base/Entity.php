@@ -223,5 +223,3 @@ abstract class Entity extends \yii\db\ActiveRecord {
 
 	// Delete -----------------
 }
-
-?>

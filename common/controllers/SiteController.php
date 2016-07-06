@@ -242,5 +242,3 @@ class SiteController extends Controller {
     	return $this->redirect( [ Yii::$app->core->getLogoutRedirectPage() ] );
     }
 }
-
-?>

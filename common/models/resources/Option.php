@@ -207,5 +207,3 @@ class Option extends \cmsgears\core\common\models\base\Resource {
         return self::deleteAll( 'categoryId=:id', [ ':id' => $categoryId ] );
     }
 }
-
-?>

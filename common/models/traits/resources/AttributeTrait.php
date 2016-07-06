@@ -112,5 +112,3 @@ trait AttributeTrait {
 		}
 	}
 }
-
-?>

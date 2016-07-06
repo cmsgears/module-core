@@ -66,5 +66,3 @@ class MCustomScrollbar extends \yii\web\AssetBundle {
 	// MCustomScrollbar ----------------------
 
 }
-
-?>

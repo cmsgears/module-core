@@ -14,7 +14,8 @@ use cmsgears\core\common\models\mappers\RolePermission;
 
 use cmsgears\core\common\services\interfaces\entities\IPermissionService;
 
-use cmsgears\core\common\services\traits\NameSlugTypeTrait;
+use cmsgears\core\common\services\traits\NameTypeTrait;
+use cmsgears\core\common\services\traits\SlugTypeTrait;
 
 /**
  * The class PermissionService is base class to perform database activities for Permission Entity.
@@ -47,7 +48,8 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Traits ------------------------------------------------------
 
-	use NameSlugTypeTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -167,5 +169,3 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Delete -------------
 }
-
-?>

@@ -42,12 +42,16 @@ trait MapperTrait {
 
 	public static function queryByModelId( $parentId, $parentType, $modelId ) {
 
-		return self::queryWithModel()->where( 'parentId=:pid AND parentType=:ptype AND modelId=:mid', [ ':pid' => $parentId, ':ptype' => $parentType, ':aid' => $modelId ] );
+		$tableName = self::tableName();
+
+		return self::queryWithModel()->where( "$tableName.parentId=:pid AND $tableName.parentType=:ptype AND $tableName.modelId=:mid", [ ':pid' => $parentId, ':ptype' => $parentType, ':mid' => $modelId ] );
 	}
 
     public static function queryByParent( $parentId, $parentType ) {
 
-        return self::queryWithModel()->where( 'parentId=:pid AND parentType=:ptype',[ ':pid' => $parentId, ':ptype' => $parentType ] );
+		$tableName = self::tableName();
+
+        return self::queryWithModel()->where( "$tableName.parentId=:pid AND $tableName.parentType=:ptype", [ ':pid' => $parentId, ':ptype' => $parentType ] );
     }
 
 	// Read - Find ------------
@@ -137,5 +141,3 @@ trait MapperTrait {
         self::deleteAll( 'modelId=:mid', [ ':mid' => $modelId ] );
     }
 }
-
-?>

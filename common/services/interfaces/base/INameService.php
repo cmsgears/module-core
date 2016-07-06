@@ -1,7 +1,7 @@
 <?php
 namespace cmsgears\core\common\services\interfaces\base;
 
-interface ISluggableService extends IEntityService {
+interface INameService extends IEntityService {
 
 	// Data Provider ------
 
@@ -11,7 +11,7 @@ interface ISluggableService extends IEntityService {
 
 	public function getByName( $name );
 
-	public function getBySlug( $slug );
+	public function searchByName( $name, $config = [] );
 
     // Read - Lists ----
 
@@ -24,5 +24,3 @@ interface ISluggableService extends IEntityService {
 	// Delete -------------
 
 }
-
-?>

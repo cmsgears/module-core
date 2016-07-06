@@ -20,5 +20,3 @@ class AlphaNumWithHyphenValidator extends Validator {
         }
     }
 }
-
-?>

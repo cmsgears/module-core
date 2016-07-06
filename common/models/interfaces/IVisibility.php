@@ -14,5 +14,3 @@ interface IVisibility {
 
 	public function isVisibilityProtected( $strict = true );
 }
-
-?>

@@ -17,7 +17,7 @@ interface INestedSetService extends IHierarchyService {
 
     // Read - Lists ----
 
-	public function getLevelList( $parentId, $rootId, $config = [] );
+	public function getLevelList( $config = [] );
 
 	public function getSubLevelList( $parentId, $rootId, $config = [] );
 
@@ -39,5 +39,3 @@ interface INestedSetService extends IHierarchyService {
 
 	public function deleteAllInHierarchy( $model );
 }
-
-?>

@@ -14,7 +14,8 @@ use cmsgears\core\common\models\mappers\ModelForm;
 
 use cmsgears\core\common\services\interfaces\resources\IFormService;
 
-use cmsgears\core\common\services\traits\NameSlugTypeTrait;
+use cmsgears\core\common\services\traits\NameTypeTrait;
+use cmsgears\core\common\services\traits\SlugTypeTrait;
 
 class FormService extends \cmsgears\core\common\services\base\EntityService implements IFormService {
 
@@ -44,7 +45,8 @@ class FormService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Traits ------------------------------------------------------
 
-	use NameSlugTypeTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -154,5 +156,3 @@ class FormService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Delete -------------
 }
-
-?>

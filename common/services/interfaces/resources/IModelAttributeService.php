@@ -38,5 +38,3 @@ interface IModelAttributeService extends \cmsgears\core\common\services\interfac
 	// Delete -------------
 
 }
-
-?>

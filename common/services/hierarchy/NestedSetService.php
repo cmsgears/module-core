@@ -74,9 +74,9 @@ abstract class NestedSetService extends HierarchyService implements INestedSetSe
 
     // Read - Lists ----
 
-	public function getLevelList( $parentId, $rootId, $config = [] ) {
+	public function getLevelList( $config = [] ) {
 
-		return self::findLevelList( $parentId, $rootId, $config );
+		return self::findLevelList( $config );
 	}
 
 	public function getSubLevelList( $parentId, $rootId, $config = [] ) {
@@ -398,7 +398,7 @@ abstract class NestedSetService extends HierarchyService implements INestedSetSe
 	 */
 	public static function findLevelList( $config = [] ) {
 
-		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : [];
 
 		$modelTable		= static::$modelTable;
 		$query			= new Query();
@@ -407,7 +407,7 @@ abstract class NestedSetService extends HierarchyService implements INestedSetSe
 		$query->from( "$modelTable AS node, $modelTable AS parent" );
 		$query->where( 'node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId' );
 
-		if( isset( $conditions ) && count( $conditions ) > 0 ) {
+		if( count( $conditions ) > 0 ) {
 
 			$query->andWhere( $conditions );
 		}
@@ -603,5 +603,3 @@ abstract class NestedSetService extends HierarchyService implements INestedSetSe
 	// Delete -------------
 
 }
-
-?>

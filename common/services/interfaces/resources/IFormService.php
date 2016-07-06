@@ -7,7 +7,10 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-interface IFormService extends \cmsgears\core\common\services\interfaces\base\INameSlugTypeService {
+use cmsgears\core\common\services\interfaces\base\INameTypeService;
+use cmsgears\core\common\services\interfaces\base\ISlugTypeService;
+
+interface IFormService extends INameTypeService, ISlugTypeService {
 
 	// Data Provider ------
 
@@ -26,5 +29,3 @@ interface IFormService extends \cmsgears\core\common\services\interfaces\base\IN
 	// Delete -------------
 
 }
-
-?>

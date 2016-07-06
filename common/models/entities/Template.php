@@ -188,5 +188,3 @@ class Template extends \cmsgears\core\common\models\base\Entity {
 
 	// Delete -----------------
 }
-
-?>

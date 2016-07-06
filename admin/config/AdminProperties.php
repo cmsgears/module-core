@@ -53,5 +53,3 @@ class AdminProperties extends CmgProperties {
 	// Properties
 
 }
-
-?>

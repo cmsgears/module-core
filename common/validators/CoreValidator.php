@@ -18,13 +18,11 @@ class CoreValidator {
         'password' => 'cmsgears\core\common\validators\PasswordValidator',
         'compareDate' => 'cmsgears\core\common\validators\CompareDateValidator',
         'emptyArray' => 'cmsgears\core\common\validators\EmptyArrayValidator'
-        
+
     ];
 
 	public static function initValidators() {
-		
+
 		Validator::$builtInValidators = array_merge( Validator::$builtInValidators, self::$builtInValidators );
 	}
 }
-
-?>

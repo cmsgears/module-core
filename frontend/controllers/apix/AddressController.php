@@ -80,5 +80,3 @@ class AddressController extends \cmsgears\core\admin\controllers\base\Controller
         return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

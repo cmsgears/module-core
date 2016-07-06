@@ -30,5 +30,3 @@ interface ITagService extends \cmsgears\core\common\services\interfaces\base\IEn
 	// Delete -------------
 
 }
-
-?>

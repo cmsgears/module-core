@@ -131,5 +131,3 @@ trait NameTypeTrait {
 	// Delete -----------------
 
 }
-
-?>

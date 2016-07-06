@@ -13,5 +13,3 @@ interface IPriority {
 
 	public function isPriorityHigh( $strict = true );
 }
-
-?>

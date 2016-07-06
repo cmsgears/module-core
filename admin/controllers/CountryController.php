@@ -57,5 +57,3 @@ class CountryController extends \cmsgears\core\admin\controllers\base\CrudContro
 		return parent::actionAll();
 	}
 }
-
-?>

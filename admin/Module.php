@@ -27,5 +27,3 @@ class Module extends \cmsgears\core\common\base\Module {
 		return $path;
 	}
 }
-
-?>

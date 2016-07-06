@@ -59,4 +59,3 @@ class UpdateTags extends ModelAction {
 	}
 }
 
-?>

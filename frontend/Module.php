@@ -15,5 +15,3 @@ class Module extends \cmsgears\core\common\base\Module {
         $this->setViewPath( '@cmsgears/module-core/frontend/views' );
     }
 }
-
-?>

@@ -14,7 +14,8 @@ use cmsgears\core\common\models\entities\Template;
 
 use cmsgears\core\common\services\interfaces\entities\ITemplateService;
 
-use cmsgears\core\common\services\traits\NameSlugTypeTrait;
+use cmsgears\core\common\services\traits\NameTypeTrait;
+use cmsgears\core\common\services\traits\SlugTypeTrait;
 
 /**
  * The class TemplateService is base class to perform database activities for Template Entity.
@@ -47,7 +48,8 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Traits ------------------------------------------------------
 
-	use NameSlugTypeTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -144,5 +146,3 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Delete -------------
 }
-
-?>

@@ -44,5 +44,3 @@ trait PriorityTrait {
 		return $this->priority >= IPriority::PRIORITY_HIGH;
 	}
 }
-
-?>

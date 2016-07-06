@@ -66,5 +66,3 @@ class ImagesLoaded extends \yii\web\AssetBundle {
 	// ImagesLoaded --------------------------
 
 }
-
-?>

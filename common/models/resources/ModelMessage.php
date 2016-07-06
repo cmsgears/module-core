@@ -201,5 +201,3 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 		self::deleteAll( 'localeId=:id', [ ':id' => $localeId ] );
 	}
 }
-
-?>

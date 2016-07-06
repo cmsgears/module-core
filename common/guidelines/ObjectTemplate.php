@@ -115,5 +115,3 @@ class ObjectTemplate extends \yii\base\Object {
 	// <Object> ------------------------------
 
 }
-
-?>

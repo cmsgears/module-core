@@ -98,5 +98,3 @@ class SiteAttribute extends \cmsgears\core\common\models\base\ModelAttribute {
 
 	// Delete -----------------
 }
-
-?>

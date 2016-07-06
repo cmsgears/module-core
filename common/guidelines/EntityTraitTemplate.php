@@ -61,5 +61,3 @@ class EntityTraitTemplate {
 
 	// Delete -----------------
 }
-
-?>

@@ -57,5 +57,3 @@ trait HierarchyTrait {
 					});
     }
 }
-
-?>

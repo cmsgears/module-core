@@ -33,5 +33,3 @@ class PasswordValidator extends Validator {
         }
     }
 }
-
-?>

@@ -109,5 +109,3 @@ class Mailer extends \yii\base\Component {
 		return $this->mailProperties;
 	}
 }
-
-?>

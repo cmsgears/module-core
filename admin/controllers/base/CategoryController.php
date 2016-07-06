@@ -4,129 +4,125 @@ namespace cmsgears\core\admin\controllers\base;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
 use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\Category;
 
-use cmsgears\core\admin\services\resources\CategoryService;
+abstract class CategoryController extends \cmsgears\core\admin\controllers\base\CrudController {
 
-abstract class CategoryController extends Controller {
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
 
 	protected $type;
+	protected $templateType;
+
+	protected $templateService;
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
 
-		$this->returnUrl	= Url::previous( 'categories' );
+		$this->setViewPath( '@cmsgears/module-core/admin/views/category' );
 
-		$this->type			= CoreGlobal::TYPE_SITE;
+		$this->crudPermission 	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'categoryService' );
 
-        $this->setViewPath( '@cmsgears/module-core/admin/views/category' );
+		$this->type				= CoreGlobal::TYPE_SITE;
+		$this->templateType		= CoreGlobal::TYPE_CATEGORY;
+
+		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+
+		// Notes: Configure sidebar and returnUrl exclusively in child classes. We can also change type and templateType in child classes.
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'index' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'all' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_CORE ],
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index' => [ 'get' ],
-	                'all' => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// CategoryController -----------------
+	// yii\base\Controller ----
 
-	public function actionIndex() {
+	// CMG interfaces ------------------------
 
-		return $this->redirect( 'all' );
-	}
+	// CMG parent classes --------------------
+
+	// CategoryController --------------------
 
 	public function actionAll() {
 
-		$dataProvider = CategoryService::getPaginationByType( $this->type );
+		$dataProvider = $this->modelService->getPageByType( $this->type );
 
 	    return $this->render( 'all', [
-			'dataProvider' => $dataProvider
+	         'dataProvider' => $dataProvider
 	    ]);
 	}
 
 	public function actionCreate() {
 
-		$model			= new Category();
-		$model->siteId	= Yii::$app->cmgCore->siteId;
+		$modelClass		= $this->modelService->getModelClass();
+		$model			= new $modelClass;
 		$model->type 	= $this->type;
+		$model->siteId	= Yii::$app->core->siteId;
 
-		$model->setScenario( 'create' );
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
 
-		if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
-
-			CategoryService::create( $model );
+			$this->modelService->create( $model );
 
 			return $this->redirect( $this->returnUrl );
 		}
 
-		$categoryMap	= CategoryService::getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'value' => 'Choose Category', 'name' => 0 ] ] ] );
+		$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
+		$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
     	return $this->render( 'create', [
     		'model' => $model,
-    		'categoryMap' => $categoryMap
+    		'categoryMap' => $categoryMap,
+    		'templatesMap' => $templatesMap
     	]);
 	}
 
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model	= CategoryService::findById( $id );
+		$model	= $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->type 	= $this->type;
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
 
-			$model->setScenario( 'update' );
-
-			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
-
-				CategoryService::update( $model );
+				$this->modelService->update( $model );
 
 				return $this->redirect( $this->returnUrl );
 			}
 
-			$categoryMap	= CategoryService::getIdNameMapByType( $this->type, [
-									'prepend' => [ [ 'value' => 'Choose Category', 'name' => 0 ] ],
+			$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [
+									'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ],
 									'filters' => [ [ 'not in', 'id', [ $id ] ] ]
 								]);
 
+			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
+
 	    	return $this->render( 'update', [
 	    		'model' => $model,
-	    		'categoryMap' => $categoryMap
+	    		'categoryMap' => $categoryMap,
+	    		'templatesMap' => $templatesMap
 	    	]);
 		}
 
@@ -137,23 +133,25 @@ abstract class CategoryController extends Controller {
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= CategoryService::findById( $id );
+		$model	= $this->modelService->getById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-				CategoryService::delete( $model );
+				$this->modelService->delete( $model );
 
 				return $this->redirect( $this->returnUrl );
 			}
 
-			$categoryMap	= CategoryService::getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'value' => 'Choose Category', 'name' => 0 ] ] ] );
+			$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
+			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
-	    		'categoryMap' => $categoryMap
+	    		'categoryMap' => $categoryMap,
+	    		'templatesMap' => $templatesMap
 	    	]);
 		}
 
@@ -161,5 +159,3 @@ abstract class CategoryController extends Controller {
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

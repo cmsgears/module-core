@@ -250,5 +250,3 @@ class CoreProperties extends CmgProperties {
 		return $this->properties[ self::PROP_SITE_URL ] . \Yii::getAlias( '@web' ) ;
 	}
 }
-
-?>

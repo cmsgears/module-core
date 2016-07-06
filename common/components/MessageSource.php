@@ -157,6 +157,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_HTML_OPTIONS => 'HTML Options',
 		CoreGlobal::FIELD_COMPRESS => 'Store Compressed',
 		CoreGlobal::FIELD_OBJECT => 'Object',
+		CoreGlobal::FIELD_THEME => 'Theme',
 
 		// Role Fields
 		CoreGlobal::FIELD_HOME_URL => 'Home Url',
@@ -210,7 +211,8 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_STYLE => 'Style',
 		CoreGlobal::FIELD_BASE_PATH => 'Base Path',
 		CoreGlobal::FIELD_VIEW_PATH => 'View Path',
-		CoreGlobal::FIELD_VIEW_COUNT => 'View Count',
+		CoreGlobal::FIELD_VIEW_COUNT => 'Views',
+		CoreGlobal::FIELD_REFERRAL_COUNT => 'Referrals',
 
 		// Forms
 		CoreGlobal::FIELD_FORM => 'Form',
@@ -248,5 +250,3 @@ class MessageSource extends \yii\base\Component {
 		return $this->messageDb[ $messageKey ];
 	}
 }
-
-?>

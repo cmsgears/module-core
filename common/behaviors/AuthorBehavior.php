@@ -26,11 +26,11 @@ class AuthorBehavior extends \yii\behaviors\AttributeBehavior {
     }
 
     protected function getValue( $event ) {
-		
+
 		if( Yii::$app->user->getIdentity() != null ) {
-				
+
 			return Yii::$app->user->identity->id;
-		}		
+		}
     }
 
     public function touch( $attribute ) {
@@ -40,5 +40,3 @@ class AuthorBehavior extends \yii\behaviors\AttributeBehavior {
         $owner->updateAttributes( array_fill_keys( ( array ) $attribute, $this->getValue(null)));
     }
 }
-
-?>

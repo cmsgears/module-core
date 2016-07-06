@@ -26,5 +26,3 @@ interface ISiteAttributeService extends \cmsgears\core\common\services\interface
 	// Delete -------------
 
 }
-
-?>

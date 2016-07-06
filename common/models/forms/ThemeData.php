@@ -76,5 +76,3 @@ class ThemeData extends \yii\base\Model {
 	// ThemeData -----------------------------
 
 }
-
-?>

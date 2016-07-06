@@ -7,7 +7,10 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-interface ISiteService extends \cmsgears\core\common\services\interfaces\base\ISluggableService {
+use cmsgears\core\common\services\interfaces\base\INameService;
+use cmsgears\core\common\services\interfaces\base\ISlugService;
+
+interface ISiteService extends INameService, ISlugService {
 
 	// Data Provider ------
 
@@ -30,5 +33,3 @@ interface ISiteService extends \cmsgears\core\common\services\interfaces\base\IS
 	// Delete -------------
 
 }
-
-?>

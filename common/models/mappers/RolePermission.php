@@ -162,5 +162,3 @@ class RolePermission extends \cmsgears\core\common\models\base\Mapper {
         self::deleteAll( 'permissionId=:id', [ ':id' => $permissionId ] );
     }
 }
-
-?>

@@ -137,5 +137,3 @@ class ProvinceService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Delete -------------
 }
-
-?>

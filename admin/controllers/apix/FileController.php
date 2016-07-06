@@ -71,5 +71,3 @@ class FileController extends \cmsgears\core\admin\controllers\base\Controller {
 	// FileController ------------------------
 
 }
-
-?>

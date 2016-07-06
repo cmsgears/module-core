@@ -15,7 +15,8 @@ use cmsgears\core\common\models\mappers\ModelCategory;
 
 use cmsgears\core\common\services\interfaces\resources\ICategoryService;
 
-use cmsgears\core\common\services\traits\NameSlugTypeTrait;
+use cmsgears\core\common\services\traits\NameTypeTrait;
+use cmsgears\core\common\services\traits\SlugTypeTrait;
 
 /**
  * The class CategoryService is base class to perform database activities for Category Entity.
@@ -48,7 +49,8 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 
 	// Traits ------------------------------------------------------
 
-	use NameSlugTypeTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -98,18 +100,6 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 		return self::getFeaturedByType( $type );
 	}
 
-	public function searchByName( $name, $config = [] ) {
-
-		$categoryTable				= CoreTables::TABLE_CATEGORY;
-		$config[ 'query' ] 			= Category::queryWithSite();
-		$config[ 'conditions' ][ "$categoryTable.siteId" ]	= Yii::$app->cmgCore->siteId;
-		$config[ 'filters' ][]		= [ 'like', "$categoryTable.name", $name ];
-		$config[ 'columns' ]		= [ '$categoryTable.id', '$categoryTable.name' ];
-		$config[ 'array' ]			= true;
-
-		return self::searchModels( $config );
-	}
-
     // Read - Lists ----
 
 	public function getTopLevelIdNameListByType( $type, $config = [] ) {
@@ -128,7 +118,7 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 
 	public function getLevelListByType( $type ) {
 
-		return $this->getLevelList( [ 'node.type' => $type ] );
+		return $this->getLevelList( [ 'conditions' => [ 'node.type' => $type ] ] );
 	}
 
     // Read - Maps -----
@@ -208,5 +198,3 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 
 	// Delete -------------
 }
-
-?>

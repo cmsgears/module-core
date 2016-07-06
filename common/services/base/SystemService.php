@@ -87,5 +87,3 @@ abstract class SystemService extends \yii\base\Object implements ISystemService 
 
 	// Delete -------------
 }
-
-?>

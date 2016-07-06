@@ -131,5 +131,3 @@ class Register extends \yii\base\Model {
 	// Register ------------------------------
 
 }
-
-?>

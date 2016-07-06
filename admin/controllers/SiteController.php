@@ -98,5 +98,3 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 		return parent::actionLogin( true );
 	}
 }
-
-?>

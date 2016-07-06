@@ -281,5 +281,3 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Delete -------------
 }
-
-?>

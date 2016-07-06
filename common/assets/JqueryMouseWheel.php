@@ -66,5 +66,3 @@ class JqueryMouseWheel extends \yii\web\AssetBundle {
 	// JqueryMouseWheel ----------------------
 
 }
-
-?>

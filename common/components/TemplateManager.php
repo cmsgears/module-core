@@ -236,5 +236,3 @@ class TemplateManager extends \yii\base\Component {
 		return $this->renderView( $template, $models, $config );
 	}
 }
-
-?>

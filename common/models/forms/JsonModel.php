@@ -98,5 +98,3 @@ class JsonModel extends \yii\base\Model {
 		return json_encode( $this );
 	}
 }
-
-?>

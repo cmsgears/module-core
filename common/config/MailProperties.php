@@ -221,5 +221,3 @@ class MailProperties extends CmgProperties {
 		return $this->properties[ self::PROP_INFO_EMAIL ];
 	}
 }
-
-?>

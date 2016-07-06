@@ -30,5 +30,3 @@ interface IFormFieldService extends \cmsgears\core\common\services\interfaces\ba
 	// Delete -------------
 
 }
-
-?>

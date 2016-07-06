@@ -71,5 +71,3 @@ class CoreTables {
 	const TABLE_MODEL_OPTION		= 'cmg_core_model_option';
 	const TABLE_MODEL_FORM			= 'cmg_core_model_form';
 }
-
-?>

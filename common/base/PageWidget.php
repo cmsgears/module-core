@@ -226,5 +226,3 @@ abstract class PageWidget extends Widget {
 	// PageWidget ----------------------------
 
 }
-
-?>

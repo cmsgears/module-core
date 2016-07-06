@@ -49,5 +49,3 @@ interface IMapperService extends IEntityService {
 
 	public function deleteByModelId( $modelId );
 }
-
-?>

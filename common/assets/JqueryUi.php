@@ -66,5 +66,3 @@ class JqueryUi extends \yii\web\AssetBundle {
 	// JqueryUi ------------------------------
 
 }
-
-?>

@@ -189,5 +189,3 @@ abstract class PermissionController extends CrudController {
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

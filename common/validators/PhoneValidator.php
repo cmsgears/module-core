@@ -20,5 +20,3 @@ class PhoneValidator extends Validator {
         }
     }
 }
-
-?>

@@ -146,5 +146,3 @@ class ModelForm extends \cmsgears\core\common\models\base\Mapper {
 	// Delete -----------------
 
 }
-
-?>

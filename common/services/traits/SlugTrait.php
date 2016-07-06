@@ -77,5 +77,3 @@ trait SlugTrait {
 	// Delete -------------
 
 }
-
-?>

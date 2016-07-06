@@ -84,5 +84,3 @@ abstract class TemplateController extends CrudController {
     	]);
 	}
 }
-
-?>

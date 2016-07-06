@@ -1096,5 +1096,3 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_form_parent', $this->prefix . 'core_model_form' );
 	}
 }
-
-?>

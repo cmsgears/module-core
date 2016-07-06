@@ -46,5 +46,3 @@ class DeleteTag extends ModelAction {
         return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

@@ -185,5 +185,3 @@ class Login extends \yii\base\Model {
 		return false;
     }
 }
-
-?>

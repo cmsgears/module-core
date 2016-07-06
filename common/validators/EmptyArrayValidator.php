@@ -19,5 +19,3 @@ class EmptyArrayValidator extends \yii\validators\Validator {
 		}
     }
 }
-
-?>

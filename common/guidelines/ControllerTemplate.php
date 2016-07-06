@@ -78,5 +78,3 @@ class ControllerTemplate extends \cmsgears\core\common\controllers\Controller {
 	// <Controller> --------------------------
 
 }
-
-?>

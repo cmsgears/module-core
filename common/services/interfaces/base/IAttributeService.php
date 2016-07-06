@@ -40,5 +40,3 @@ interface IAttributeService extends IEntityService {
 	// Delete -------------
 
 }
-
-?>

@@ -157,5 +157,3 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
         return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM );
     }
 }
-
-?>

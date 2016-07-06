@@ -35,5 +35,3 @@ interface IFileService extends \cmsgears\core\common\services\interfaces\base\IE
 
 	public function deleteFiles( $files = [] );
 }
-
-?>

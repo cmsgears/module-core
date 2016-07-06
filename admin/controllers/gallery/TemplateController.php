@@ -57,5 +57,3 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 		return parent::actionAll();
 	}
 }
-
-?>

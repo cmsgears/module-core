@@ -82,5 +82,3 @@ class ResetPassword extends \yii\base\Model {
 	// ResetPassword -------------------------
 
 }
-
-?>

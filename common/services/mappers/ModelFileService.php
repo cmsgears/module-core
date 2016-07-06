@@ -19,7 +19,7 @@ use cmsgears\core\common\services\traits\MapperTrait;
 /**
  * The class ModelFileService is base class to perform database activities for ModelFile Entity.
  */
-class ModelFileService extends \cmsgears\core\common\services\base\EntityService implements IModelFormService {
+class ModelFileService extends \cmsgears\core\common\services\base\EntityService implements IModelFileService {
 
 	// Variables ---------------------------------------------------
 
@@ -166,5 +166,3 @@ class ModelFileService extends \cmsgears\core\common\services\base\EntityService
 
 	// Delete -------------
 }
-
-?>

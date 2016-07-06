@@ -57,5 +57,3 @@ class TestimonialController extends \cmsgears\core\admin\controllers\base\Commen
 	// TestimonialController -----------------
 
 }
-
-?>

@@ -59,5 +59,3 @@ class AdminController extends \cmsgears\core\admin\controllers\base\UserControll
 		return parent::actionAll();
 	}
 }
-
-?>

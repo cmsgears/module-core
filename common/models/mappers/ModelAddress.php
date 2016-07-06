@@ -168,5 +168,3 @@ class ModelAddress extends \cmsgears\core\common\models\base\Mapper {
 	// Delete -----------------
 
 }
-
-?>

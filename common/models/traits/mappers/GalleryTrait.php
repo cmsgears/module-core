@@ -82,5 +82,3 @@ trait GalleryTrait {
 		return $query->all();
 	}
 }
-
-?>

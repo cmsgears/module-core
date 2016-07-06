@@ -20,5 +20,3 @@ class AlphaNumWithPunctuationValidator extends Validator {
         }
     }
 }
-
-?>

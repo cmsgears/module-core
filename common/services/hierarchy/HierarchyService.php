@@ -92,5 +92,3 @@ abstract class HierarchyService extends \cmsgears\core\common\services\base\Enti
 	// Delete -------------
 
 }
-
-?>

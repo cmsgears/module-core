@@ -66,5 +66,3 @@ class CmgToolsJs extends \yii\web\AssetBundle {
 	// CmgToolsJs ----------------------------
 
 }
-
-?>

@@ -66,5 +66,3 @@ class Action extends \yii\base\Action {
 
 	// Action --------------------------------
 }
-
-?>

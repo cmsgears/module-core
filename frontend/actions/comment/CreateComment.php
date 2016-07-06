@@ -64,5 +64,3 @@ class CreateComment extends \yii\base\Action {
         return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
     }
 }
-
-?>

@@ -96,5 +96,3 @@ class SiteAttributeService extends \cmsgears\core\common\services\base\Attribute
 
 	// Delete -------------
 }
-
-?>

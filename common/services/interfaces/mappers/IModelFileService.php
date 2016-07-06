@@ -32,5 +32,3 @@ interface IModelFileService extends \cmsgears\core\common\services\interfaces\ba
 	// Delete -------------
 
 }
-
-?>

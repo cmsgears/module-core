@@ -681,5 +681,3 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	// Delete -----------------
 }
-
-?>

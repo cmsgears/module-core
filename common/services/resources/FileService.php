@@ -303,14 +303,14 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete dependencies
-		ModelFile::deleteByModelId( $model->id );
+		if( isset( $model ) ) {
 
-		// Find existing file
-		$existingFile	= self::findById( $model->id );
+			// Delete from disk
+			$model->clearDisk();
 
-		// Delete from disk
-		$existingFile->clearDisk();
+			// Delete dependencies
+			ModelFile::deleteByModelId( $model->id );
+		}
 
 		// Delete model
 		return parent::delete( $model, $config );
@@ -351,5 +351,3 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Delete -------------
 }
-
-?>

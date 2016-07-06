@@ -49,5 +49,3 @@ interface IApproval {
 	// Reject reason provided by admin for rejection or frozen mode
 	public function getRejectReason();
 }
-
-?>

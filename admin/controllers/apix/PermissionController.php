@@ -86,5 +86,3 @@ class PermissionController extends \cmsgears\core\admin\controllers\base\Control
         return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
 }
-
-?>

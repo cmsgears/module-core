@@ -99,5 +99,3 @@ trait ResourceTrait {
         self::deleteAll( 'parentId=:pid AND parentType=:type', [ ':pid' => $parentId, ':type' => $parentType ] );
     }
 }
-
-?>

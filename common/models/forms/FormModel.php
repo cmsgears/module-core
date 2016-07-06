@@ -65,5 +65,3 @@ abstract class FormModel extends \cmsgears\core\common\models\forms\JsonModel {
 	// FormModel -----------------------------
 
 }
-
-?>

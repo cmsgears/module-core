@@ -147,5 +147,3 @@ trait CommentTrait {
 		return $this->getApprovedCommentCount( ModelComment::TYPE_REVIEW );
 	}
 }
-
-?>

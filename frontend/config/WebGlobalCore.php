@@ -25,5 +25,3 @@ class WebGlobalCore {
 	const PAGE_PROFILE			= 'profile';
 	const PAGE_SETTINGS			= 'settings';
 }
-
-?>

@@ -81,5 +81,3 @@ class ComponentTemplate extends \yii\base\Component {
 
 	// <Component> ---------------------------
 }
-
-?>

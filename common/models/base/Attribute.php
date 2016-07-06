@@ -188,5 +188,3 @@ abstract class Attribute extends Entity {
 
 	// Delete -----------------
 }
-
-?>

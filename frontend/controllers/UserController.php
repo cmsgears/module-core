@@ -108,5 +108,3 @@ class UserController extends base\Controller {
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

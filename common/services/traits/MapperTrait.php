@@ -161,5 +161,3 @@ trait MapperTrait {
 	// Delete -------------
 
 }
-
-?>

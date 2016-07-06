@@ -29,5 +29,3 @@ interface IModelTagService extends \cmsgears\core\common\services\interfaces\bas
 
 	public function deleteByTagSlug( $parentId, $parentType, $tagSlug, $delete = false );
 }
-
-?>

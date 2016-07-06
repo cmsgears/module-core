@@ -77,5 +77,3 @@ class ForgotPassword extends \yii\base\Model {
 	// ForgotPassword ------------------------
 
 }
-
-?>

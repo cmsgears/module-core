@@ -117,5 +117,3 @@ class UserController extends \cmsgears\core\admin\controllers\base\UserControlle
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

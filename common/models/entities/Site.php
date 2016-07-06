@@ -224,5 +224,3 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 
 	// Delete -----------------
 }
-
-?>

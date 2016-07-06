@@ -44,5 +44,3 @@ trait SeverityTrait {
 		return $this->severity >= ISeverity::SEVERITY_HIGH;
 	}
 }
-
-?>

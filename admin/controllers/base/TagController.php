@@ -12,82 +12,71 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\Tag;
 
-use cmsgears\core\common\services\resources\TagService;
+abstract class TagController extends \cmsgears\core\admin\controllers\base\CrudController {
 
-abstract class TagController extends Controller {
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
 
 	protected $type;
 
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
 
-		$this->returnUrl	= Url::previous( 'tags' );
+		$this->setViewPath( '@cmsgears/module-core/admin/views/tag' );
 
-		$this->type			= CoreGlobal::TYPE_SITE;
+		$this->crudPermission 	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'tagService' );
 
-        $this->setViewPath( '@cmsgears/module-core/admin/views/tag' );
+		$this->type				= CoreGlobal::TYPE_SITE;
+
+		$this->returnUrl		= Url::previous( 'tags' );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'index' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'all' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_CORE ],
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'index' => [ 'get' ],
-	                'all' => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// TagController ----------------------
+	// yii\base\Controller ----
 
-	public function actionIndex() {
+	// CMG interfaces ------------------------
 
-		return $this->redirect( 'all' );
-	}
+	// CMG parent classes --------------------
+
+	// TagController -------------------------
 
 	public function actionAll() {
 
-		$dataProvider = TagService::getPaginationByType( $this->type );
+		$dataProvider = $this->modelService->getPageByType( $this->type );
 
 	    return $this->render( 'all', [
-			'dataProvider' => $dataProvider
+	         'dataProvider' => $dataProvider
 	    ]);
 	}
 
 	public function actionCreate() {
 
-		$model			= new Tag();
-		$model->siteId	= Yii::$app->cmgCore->siteId;
+		$modelClass		= $this->modelService->getModelClass();
+		$model			= new $modelClass;
+		$model->siteId	= Yii::$app->core->siteId;
 		$model->type 	= $this->type;
 
-		$model->setScenario( 'create' );
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
 
-		if( $model->load( Yii::$app->request->post(), 'Tag' )  && $model->validate() ) {
-
-			TagService::create( $model );
+			$this->modelService->create( $model );
 
 			return $this->redirect( $this->returnUrl );
 		}
@@ -96,56 +85,4 @@ abstract class TagController extends Controller {
     		'model' => $model
     	]);
 	}
-
-	public function actionUpdate( $id ) {
-
-		// Find Model
-		$model	= TagService::findById( $id );
-
-		// Update/Render if exist
-		if( isset( $model ) ) {
-
-			$model->setScenario( 'update' );
-
-			if( $model->load( Yii::$app->request->post(), 'Tag' )  && $model->validate() ) {
-
-				TagService::update( $model );
-
-				return $this->redirect( $this->returnUrl );
-			}
-
-	    	return $this->render( 'update', [
-	    		'model' => $model
-	    	]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
-
-	public function actionDelete( $id ) {
-
-		// Find Model
-		$model	= TagService::findById( $id );
-
-		// Delete/Render if exist
-		if( isset( $model ) ) {
-
-			if( $model->load( Yii::$app->request->post(), 'Tag' )  && $model->validate() ) {
-
-				TagService::delete( $model );
-
-				return $this->redirect( $this->returnUrl );
-			}
-
-	    	return $this->render( 'delete', [
-	    		'model' => $model
-	    	]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
 }
-
-?>

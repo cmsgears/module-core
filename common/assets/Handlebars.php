@@ -66,5 +66,3 @@ class Handlebars extends \yii\web\AssetBundle {
 	// Handlebars ----------------------------
 
 }
-
-?>

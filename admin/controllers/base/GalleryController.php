@@ -112,8 +112,6 @@ abstract class GalleryController extends \cmsgears\core\admin\controllers\base\C
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->type 	= $this->type;
-
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
 
 				$this->modelService->update( $model, [ 'admin' => true ] );
@@ -140,8 +138,6 @@ abstract class GalleryController extends \cmsgears\core\admin\controllers\base\C
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
-
-			$model->type 	= $this->type;
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
@@ -180,5 +176,3 @@ abstract class GalleryController extends \cmsgears\core\admin\controllers\base\C
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

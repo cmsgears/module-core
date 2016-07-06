@@ -200,5 +200,3 @@ abstract class ModelAttribute extends Attribute {
 
 	// Delete -----------------
 }
-
-?>

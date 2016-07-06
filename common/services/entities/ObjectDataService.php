@@ -10,10 +10,11 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\ObjectData;
 
-use cmsgears\core\common\services\interfaces\entities\ICountryService;
+use cmsgears\core\common\services\interfaces\entities\IObjectService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
-use cmsgears\core\common\services\traits\NameSlugTypeTrait;
+use cmsgears\core\common\services\traits\NameTypeTrait;
+use cmsgears\core\common\services\traits\SlugTypeTrait;
 
 class ObjectDataService extends \cmsgears\core\common\services\base\EntityService implements IObjectService {
 
@@ -45,7 +46,8 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Traits ------------------------------------------------------
 
-	use NameSlugTypeTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -185,5 +187,3 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Delete -------------
 }
-
-?>

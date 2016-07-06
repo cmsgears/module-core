@@ -99,5 +99,3 @@ class Migration extends \yii\base\Component {
         return $this->siteMaster;
     }
 }
-
-?>

@@ -58,5 +58,3 @@ class ObjectFactory extends \yii\base\Component {
         return $this->container->get( $class, $params, $config );
     }
 }
-
-?>

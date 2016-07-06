@@ -115,5 +115,3 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 	    return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
     }
 }
-
-?>

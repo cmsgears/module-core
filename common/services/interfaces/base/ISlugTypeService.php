@@ -1,7 +1,7 @@
 <?php
-namespace cmsgears\core\common\services\interfaces\hierarchy;
+namespace cmsgears\core\common\services\interfaces\base;
 
-interface IHierarchyService {
+interface ISlugTypeService extends IEntityService {
 
 	// Data Provider ------
 
@@ -9,15 +9,18 @@ interface IHierarchyService {
 
     // Read - Models ---
 
+	public function getBySlug( $slug, $first = false );
+
+	public function getBySlugType( $slug, $type );
+
     // Read - Lists ----
 
     // Read - Maps -----
-
-	// Read - Others ---
 
 	// Create -------------
 
 	// Update -------------
 
 	// Delete -------------
+
 }

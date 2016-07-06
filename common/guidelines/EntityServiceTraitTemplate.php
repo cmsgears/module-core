@@ -100,5 +100,3 @@ trait ServiceTraitTemplate {
 
 	// Delete -------------
 }
-
-?>

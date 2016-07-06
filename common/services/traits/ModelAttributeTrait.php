@@ -85,5 +85,3 @@ trait ModelAttributeTrait {
 	// Delete -------------
 
 }
-
-?>

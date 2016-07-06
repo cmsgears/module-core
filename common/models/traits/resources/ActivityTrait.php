@@ -24,5 +24,3 @@ trait ActivityTrait {
 					->where( "parentType='$this->mParentType'" );
 	}
 }
-
-?>

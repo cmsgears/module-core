@@ -164,5 +164,3 @@ class SitesController extends \cmsgears\core\admin\controllers\base\CrudControll
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

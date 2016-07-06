@@ -8,9 +8,9 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
- * Used by services with base model having unique name.
+ * Used by services with base model having name, slug and type columns with sluggable behaviour which allows unique name for a type.
  */
-trait NameTrait {
+trait NameTypeTrait {
 
 	// Instance methods --------------------------------------------
 
@@ -20,18 +20,43 @@ trait NameTrait {
 
 	// CMG parent classes --------------------
 
-	// SlugTrait -----------------------------
+	// NameSlugTrait -------------------------
 
 	// Data Provider ------
+
+	public function getPageByType( $type, $config = [] ) {
+
+		$modelTable	= self::$modelTable;
+
+		$config[ 'conditions' ][ "$modelTable.type" ] 	= $type;
+
+		return $this->getPage( $config );
+	}
 
 	// Read ---------------
 
     // Read - Models ---
 
-	public function getByName( $name ) {
+	public function getByName( $name, $first = false ) {
 
-		return self::findByName( $name )->one();
-    }
+		$modelClass = static::$modelClass;
+
+		return $modelClass::findByName( $name, $first );
+	}
+
+	public function getByType( $type, $first = false ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::findByType( $type, $first );
+	}
+
+	public function getByNameType( $name, $type ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::findByNameType( $name, $type );
+	}
 
 	public function searchByName( $name, $config = [] ) {
 
@@ -52,11 +77,39 @@ trait NameTrait {
 		return self::searchModels( $config );
 	}
 
+	public function searchByNameType( $name, $type, $config = [] ) {
+
+		$modelTable		= self::$modelTable;
+
+		$config[ 'conditions' ][ "$modelTable.type" ]	= $type;
+
+		return $this->searchByName( $name, $config );
+	}
+
     // Read - Lists ----
+
+   	public function getIdListByType( $type, $config = [] ) {
+
+		$config[ 'conditions' ][ 'type' ] = $type;
+
+		return self::findIdList( $config );
+	}
+
+	public function getIdNameListByType( $type, $config = [] ) {
+
+		$config[ 'conditions' ][ 'type' ] = $type;
+
+		return $this->getIdNameList( $config );
+	}
 
     // Read - Maps -----
 
-	// Read - Others ---
+	public function getIdNameMapByType( $type, $config = [] ) {
+
+		$config[ 'conditions' ][ 'type' ] = $type;
+
+		return $this->getIdNameMap( $config );
+	}
 
 	// Create -------------
 
@@ -68,20 +121,13 @@ trait NameTrait {
 
 	// CMG parent classes --------------------
 
-	// SlugTrait -----------------------------
+	// NameSlugTrait -------------------------
 
 	// Data Provider ------
 
 	// Read ---------------
 
     // Read - Models ---
-
-	public static function findByName( $name ) {
-
-		$modelClass	= static::$modelClass;
-
-		return $modelClass::queryByName( $name )->one();
-    }
 
     // Read - Lists ----
 

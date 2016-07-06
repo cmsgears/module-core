@@ -90,5 +90,3 @@ abstract class Widget extends \yii\base\Widget {
 	// Widget --------------------------------
 
 }
-
-?>

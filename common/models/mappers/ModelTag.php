@@ -149,5 +149,3 @@ class ModelTag extends \cmsgears\core\common\models\base\Mapper {
 	// Delete -----------------
 
 }
-
-?>

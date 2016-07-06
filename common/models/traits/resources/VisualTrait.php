@@ -76,5 +76,3 @@ trait VisualTrait {
 		return $videoUrl;
 	}
 }
-
-?>

@@ -83,5 +83,3 @@ class OptionController extends \cmsgears\core\admin\controllers\base\CrudControl
     	]);
 	}
 }
-
-?>

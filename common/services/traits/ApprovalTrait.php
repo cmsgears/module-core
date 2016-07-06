@@ -119,5 +119,3 @@ trait ApprovalTrait {
 	// Delete -------------
 
 }
-
-?>

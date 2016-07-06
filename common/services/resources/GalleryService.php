@@ -16,7 +16,8 @@ use cmsgears\core\common\models\mappers\ModelFile;
 use cmsgears\core\common\services\interfaces\resources\IGalleryService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
-use cmsgears\core\common\services\traits\NameSlugTypeTrait;
+use cmsgears\core\common\services\traits\NameTypeTrait;
+use cmsgears\core\common\services\traits\SlugTypeTrait;
 
 /**
  * The class GalleryService is base class to perform database activities for Gallery Entity.
@@ -51,7 +52,8 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 	// Traits ------------------------------------------------------
 
-	use NameSlugTypeTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -212,5 +214,3 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 	// Delete -------------
 }
-
-?>

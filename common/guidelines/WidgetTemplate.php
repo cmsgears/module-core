@@ -114,5 +114,3 @@ class WidgetTemplate extends \cmsgears\core\common\base\Widget {
 	// <Widget> ------------------------------
 
 }
-
-?>

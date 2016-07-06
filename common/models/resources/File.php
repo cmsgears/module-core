@@ -328,5 +328,3 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	// Delete -----------------
 }
-
-?>

@@ -188,5 +188,3 @@ class GenericForm extends \yii\base\Model {
 		return $attribArr;
 	}
 }
-
-?>

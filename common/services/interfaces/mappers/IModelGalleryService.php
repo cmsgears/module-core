@@ -28,5 +28,3 @@ interface IModelGalleryService extends \cmsgears\core\common\services\interfaces
 	// Delete -------------
 
 }
-
-?>

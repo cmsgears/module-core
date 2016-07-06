@@ -278,5 +278,3 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 
 	// Delete -----------------
 }
-
-?>

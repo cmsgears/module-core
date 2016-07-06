@@ -296,12 +296,19 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 	public function delete( $model, $config = [] ) {
 
-		if( Yii::$app->core->isUpdateSelective() ) {
+		if( isset( $model ) ) {
 
-			$model  = $this->getById( $model->id );
+			if( Yii::$app->core->isUpdateSelective() ) {
+
+				$model  = $this->getById( $model->id );
+			}
+
+			$model->delete();
+
+			return true;
 		}
 
-		$model->delete();
+		return false;
 	}
 
 	// Static Methods ----------------------------------------------
@@ -941,5 +948,3 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 	// Delete -------------
 }
-
-?>

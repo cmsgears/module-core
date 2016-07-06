@@ -149,5 +149,3 @@ class ModelOption extends \cmsgears\core\common\models\base\Mapper {
 	// Delete -----------------
 
 }
-
-?>

@@ -71,5 +71,3 @@ class CmgProperties {
 		return $this->properties[ $findKey ];
 	}
 }
-
-?>

@@ -10,7 +10,7 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * Used by services with base model having name, slug and type columns with sluggable behaviour which allows unique name for a type.
  */
-trait NameSlugTypeTrait {
+trait SlugTypeTrait {
 
 	// Instance methods --------------------------------------------
 
@@ -24,45 +24,15 @@ trait NameSlugTypeTrait {
 
 	// Data Provider ------
 
-	public function getPageByType( $type, $config = [] ) {
-
-		$modelTable	= self::$modelTable;
-
-		$config[ 'conditions' ][ "$modelTable.type" ] 	= $type;
-
-		return $this->getPage( $config );
-	}
-
 	// Read ---------------
 
     // Read - Models ---
-
-	public function getByName( $name, $first = false ) {
-
-		$modelClass = static::$modelClass;
-
-		return $modelClass::findByName( $name, $first );
-	}
 
 	public function getBySlug( $slug, $first = false ) {
 
 		$modelClass = static::$modelClass;
 
 		return $modelClass::findBySlug( $slug, $first );
-	}
-
-	public function getByType( $type, $first = false ) {
-
-		$modelClass = static::$modelClass;
-
-		return $modelClass::findByType( $type, $first );
-	}
-
-	public function getByNameType( $name, $type ) {
-
-		$modelClass = static::$modelClass;
-
-		return $modelClass::findByNameType( $name, $type );
 	}
 
 	public function getBySlugType( $slug, $type ) {
@@ -74,28 +44,7 @@ trait NameSlugTypeTrait {
 
     // Read - Lists ----
 
-   	public function getIdListByType( $type, $config = [] ) {
-
-		$config[ 'conditions' ][ 'type' ] = $type;
-
-		return self::findIdList( $config );
-	}
-
-	public function getIdNameListByType( $type, $options = [] ) {
-
-		$options[ 'conditions' ][ 'type' ] = $type;
-
-		return $this->getIdNameList( $options );
-	}
-
     // Read - Maps -----
-
-	public function getIdNameMapByType( $type, $options = [] ) {
-
-		$options[ 'conditions' ][ 'type' ] = $type;
-
-		return $this->getIdNameMap( $options );
-	}
 
 	// Create -------------
 
@@ -128,5 +77,3 @@ trait NameSlugTypeTrait {
 	// Delete -------------
 
 }
-
-?>

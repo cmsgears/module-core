@@ -59,5 +59,3 @@ class ThemeController extends \cmsgears\core\admin\controllers\base\CrudControll
 		return parent::actionAll();
 	}
 }
-
-?>

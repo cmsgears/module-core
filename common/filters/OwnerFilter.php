@@ -111,5 +111,3 @@ class OwnerFilter {
 		throw new ForbiddenHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 	}
 }
-
-?>

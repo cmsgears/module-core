@@ -49,5 +49,3 @@ trait VisibilityTrait {
 		return $this->visibility >= IVisibility::VISIBILITY_PROTECTED;
 	}
 }
-
-?>

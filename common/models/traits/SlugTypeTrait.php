@@ -110,5 +110,3 @@ trait SlugTypeTrait {
 	// Delete -----------------
 
 }
-
-?>

@@ -106,5 +106,3 @@ class Sidebar extends \yii\base\Component {
 		return $config;
 	}
 }
-
-?>

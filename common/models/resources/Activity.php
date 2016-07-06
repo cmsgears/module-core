@@ -151,5 +151,3 @@ class Activity extends \cmsgears\core\common\models\base\Resource {
 
 	// Delete -----------------
 }
-
-?>

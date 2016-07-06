@@ -69,5 +69,3 @@ class Binder extends \yii\base\Model {
 	// Binder --------------------------------
 
 }
-
-?>

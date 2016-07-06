@@ -8,9 +8,10 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\hierarchy\INestedSetService;
-use cmsgears\core\common\services\interfaces\base\INameSlugTypeService;
+use cmsgears\core\common\services\interfaces\base\INameTypeService;
+use cmsgears\core\common\services\interfaces\base\ISlugTypeService;
 
-interface ICategoryService extends INestedSetService, INameSlugTypeService {
+interface ICategoryService extends INestedSetService, INameTypeService, ISlugTypeService {
 
 	// Data Provider ------
 
@@ -21,8 +22,6 @@ interface ICategoryService extends INestedSetService, INameSlugTypeService {
 	public function getByParentId( $id );
 
 	public function getFeaturedByType( $type );
-
-	public function searchByName( $name, $config = [] );
 
     // Read - Lists ----
 
@@ -41,5 +40,3 @@ interface ICategoryService extends INestedSetService, INameSlugTypeService {
 	// Delete -------------
 
 }
-
-?>

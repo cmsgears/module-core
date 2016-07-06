@@ -132,5 +132,3 @@ trait AddressTrait {
 					});
 	}
 }
-
-?>

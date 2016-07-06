@@ -61,5 +61,3 @@ class FileHandler extends \cmsgears\core\common\base\Action {
         return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $data );
 	}
 }
-
-?>

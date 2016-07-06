@@ -34,5 +34,3 @@ interface IApprovalService extends IEntityService {
 	// Delete -------------
 
 }
-
-?>

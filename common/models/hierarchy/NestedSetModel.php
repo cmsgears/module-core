@@ -78,5 +78,3 @@ abstract class NestedSetModel extends HierarchicalModel {
 
 	// Delete -----------------
 }
-
-?>

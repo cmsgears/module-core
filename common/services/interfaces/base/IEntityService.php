@@ -59,5 +59,3 @@ interface IEntityService {
 
 	public function delete( $model, $config = [] );
 }
-
-?>

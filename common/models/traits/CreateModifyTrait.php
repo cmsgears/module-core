@@ -49,5 +49,3 @@ trait CreateModifyTrait {
 		return parent::queryWithAll( $config );
 	}
 }
-
-?>

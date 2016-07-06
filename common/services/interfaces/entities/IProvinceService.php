@@ -30,5 +30,3 @@ interface IProvinceService extends \cmsgears\core\common\services\interfaces\bas
 	// Delete -------------
 
 }
-
-?>

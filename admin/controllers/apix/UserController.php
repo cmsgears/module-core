@@ -37,5 +37,3 @@ class UserController extends \cmsgears\core\common\controllers\apix\UserControll
 
 	// UserController ------------------------
 }
-
-?>

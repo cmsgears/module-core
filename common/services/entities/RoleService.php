@@ -14,7 +14,8 @@ use cmsgears\core\common\models\mappers\RolePermission;
 
 use cmsgears\core\common\services\interfaces\entities\IRoleService;
 
-use cmsgears\core\common\services\traits\NameSlugTypeTrait;
+use cmsgears\core\common\services\traits\NameTypeTrait;
+use cmsgears\core\common\services\traits\SlugTypeTrait;
 
 /**
  * The class RoleService is base class to perform database activities for Role Entity.
@@ -47,7 +48,8 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Traits ------------------------------------------------------
 
-	use NameSlugTypeTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -172,5 +174,3 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Delete -------------
 }
-
-?>

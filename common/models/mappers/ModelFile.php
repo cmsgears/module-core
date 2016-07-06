@@ -159,5 +159,3 @@ class ModelFile extends \cmsgears\core\common\models\base\Mapper {
 	// Delete -----------------
 
 }
-
-?>

@@ -227,5 +227,3 @@ trait TagTrait {
         return $tagLinks;
     }
 }
-
-?>

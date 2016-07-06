@@ -121,5 +121,3 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
 		}
 	}
 }
-
-?>

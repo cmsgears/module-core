@@ -555,5 +555,3 @@ class Core extends \yii\base\Component {
         }
     }
 }
-
-?>

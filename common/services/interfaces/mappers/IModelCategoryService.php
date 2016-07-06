@@ -27,16 +27,10 @@ interface IModelCategoryService extends \cmsgears\core\common\services\interface
 
 	// Create -------------
 
-	public function createByParams( $categoryId, $parentId, $parentType );
-
 	// Update -------------
-
-	public function updateByParams( $parentId, $parentType, $categoryId );
 
 	public function bindCategories( $binder, $parentType );
 
 	// Delete -------------
 
 }
-
-?>

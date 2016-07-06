@@ -71,5 +71,3 @@ class ModelAction extends \yii\base\Action {
 
 	// ModelAction -----------------------
 }
-
-?>

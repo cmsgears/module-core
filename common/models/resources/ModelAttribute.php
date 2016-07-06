@@ -201,5 +201,3 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
 
 	// Delete -----------------
 }
-
-?>

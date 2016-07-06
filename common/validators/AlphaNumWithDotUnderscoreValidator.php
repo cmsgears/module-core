@@ -20,5 +20,3 @@ class AlphaNumWithDotUnderscoreValidator extends Validator {
         }
     }
 }
-
-?>

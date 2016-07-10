@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\frontend\actions\common;
+namespace cmsgears\core\common\actions\content;
 
 // Yii Imports
 use \Yii;
@@ -7,7 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\CmgFile;
+use cmsgears\core\common\models\resources\File;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
@@ -20,25 +20,52 @@ class UpdateAvatar extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
-	// Constants/Statics --
+	// Globals -------------------------------
 
-	// Public -------------
+	// Constants --------------
 
-	// Private/Protected --
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// UpdateAvatar ----------------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// UpdateAvatar --------------------------
 
 	public function run() {
 
 		if( isset( $this->model ) ) {
 
-			$avatar = CmgFile::loadFile( $this->model->avatar, 'Avatar' );
+			$avatar = $this->model->avatar;
 
-			if( $this->model = Yii::$app->controller->modelService->updateAvatar( $this->model, $avatar ) ) {
+			if( !isset( $avatar ) ) {
+
+				$avatar	= new File();
+			}
+
+			if( $avatar->load( Yii::$app->request->post(), 'Avatar' ) ) {
+
+				$this->modelService->updateAvatar( $this->model, $avatar );
 
 				$avatar		= $this->model->avatar;
 				$response	= [ 'fileUrl' => $avatar->getFileUrl() ];

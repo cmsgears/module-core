@@ -59,7 +59,6 @@ class CoreTables {
 	const TABLE_MODEL_HIERARCHY		= 'cmg_core_model_hierarchy';
 	const TABLE_MODEL_COMMENT		= 'cmg_core_model_comment';
 	const TABLE_MODEL_ATTRIBUTE		= 'cmg_core_model_attribute';
-	const TABLE_MODEL_ACTIVITY		= 'cmg_core_model_activity';
 
 	// Model Mappers
 	const TABLE_MODEL_OBJECT		= 'cmg_core_model_object';

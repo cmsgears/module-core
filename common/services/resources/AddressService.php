@@ -85,7 +85,7 @@ class AddressService extends \cmsgears\core\common\services\base\EntityService i
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete dependencies
+		// Delete mapping
 		ModelAddress::deleteByModelId( $model->id );
 
 		// Delete model

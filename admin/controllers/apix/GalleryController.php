@@ -69,55 +69,17 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
 
 	// yii\base\Controller ----
 
+    public function actions() {
+
+        return [
+        	'create-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\CreateItem' ],
+        	'delete-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\DeleteItem' ]
+		];
+    }
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
 	// GalleryController ---------------------
-
-	public function actionCreateItem( $id ) {
-
-		$gallery = $this->modelService->getById( $id );
-
-		if( isset( $gallery ) ) {
-
-			$item 	= new File();
-
-			if( $item->load( Yii::$app->request->post(), 'File' ) && $this->modelService->createItem( $gallery, $item ) ) {
-
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
-			}
-
-			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $item );
-
-			// Trigger Ajax Success
-	        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-		}
-	}
-
-	public function actionUpdateItem( $id ) {
-
-		// Find Model
-		$item 	= $this->fileService->getById( $id );
-
-		// Update/Render if exist
-		if( isset( $item ) ) {
-
-			if( $item->load( Yii::$app->request->post(), 'File' ) && $this->modelService->updateItem( $item ) ) {
-
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
-			}
-			else {
-
-				// Generate Errors
-				$errors = AjaxUtil::generateErrorMessage( $item );
-
-				// Trigger Ajax Success
-		        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-			}
-		}
-	}
 }

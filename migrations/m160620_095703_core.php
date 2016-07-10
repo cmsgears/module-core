@@ -72,7 +72,6 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->upFormField();
 
 		// Traits - Resources
-		$this->upActivity();
 		$this->upModelMessage();
 		$this->upModelHierarchy();
 		$this->upModelComment();
@@ -573,25 +572,6 @@ class m160620_095703_core extends \yii\db\Migration {
         $this->createIndex( 'idx_' . $this->prefix . 'form_field_parent', $this->prefix . 'core_form_field', 'formId' );
 	}
 
-	private function upActivity() {
-
-		$this->createTable( $this->prefix . 'core_activity', [
-			'id' => $this->bigPrimaryKey( 20 ),
-			'userId' => $this->bigInteger( 20 )->notNull(),
-			'parentId' => $this->bigInteger( 20 ),
-			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM ),
-			'type' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull()->defaultValue( 'default' ),
-			'ip' => $this->string( CoreGlobal::TEXT_MEDIUM )->defaultValue( null ),
-			'agent' => $this->string( CoreGlobal::TEXT_XLARGE )->defaultValue( null ),
-			'createdAt' => $this->dateTime()->notNull(),
-			'modifiedAt' => $this->dateTime(),
-			'content' => $this->text()
-        ], $this->options );
-
-        // Index for columns user
-        $this->createIndex( 'idx_' . $this->prefix . 'activity_user', $this->prefix . 'core_activity', 'userId' );
-	}
-
 	private function upModelMessage() {
 
 		$this->createTable( $this->prefix . 'core_model_message', [
@@ -880,9 +860,6 @@ class m160620_095703_core extends \yii\db\Migration {
 		// Form Field
 		$this->addForeignKey( 'fk_' . $this->prefix . 'form_field_parent', $this->prefix . 'core_form_field', 'formId', $this->prefix . 'core_form', 'id', 'RESTRICT' );
 
-		// Activity
-		$this->addForeignKey( 'fk_' . $this->prefix . 'activity_user', $this->prefix . 'core_activity', 'userId', $this->prefix . 'core_user', 'id', 'CASCADE' );
-
 		// Model Message
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_message_locale', $this->prefix . 'core_model_message', 'localeId', $this->prefix . 'core_locale', 'id', 'CASCADE' );
 
@@ -953,7 +930,6 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->dropTable( $this->prefix . 'core_form' );
 		$this->dropTable( $this->prefix . 'core_form_field' );
 
-		$this->dropTable( $this->prefix . 'core_activity' );
 		$this->dropTable( $this->prefix . 'core_model_message' );
 		$this->dropTable( $this->prefix . 'core_model_hierarchy' );
 		$this->dropTable( $this->prefix . 'core_model_comment' );
@@ -1059,9 +1035,6 @@ class m160620_095703_core extends \yii\db\Migration {
 
 		// Form Field
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'form_field_parent', $this->prefix . 'core_form_field' );
-
-		// Model Activity
-		$this->dropForeignKey( 'fk_' . $this->prefix . 'activity_user', $this->prefix . 'core_activity' );
 
 		// Model Message
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_message_locale', $this->prefix . 'core_model_message' );

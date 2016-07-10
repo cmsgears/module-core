@@ -7,17 +7,16 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-interface ITagService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
+use cmsgears\core\common\services\interfaces\base\INameTypeService;
+use cmsgears\core\common\services\interfaces\base\ISlugTypeService;
+
+interface ITagService extends INameTypeService, ISlugTypeService {
 
 	// Data Provider ------
 
 	// Read ---------------
 
     // Read - Models ---
-
-	public function getBySlug( $slug );
-
-	public function getByNameType( $name, $type );
 
     // Read - Lists ----
 

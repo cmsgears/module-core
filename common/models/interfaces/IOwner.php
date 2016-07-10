@@ -7,5 +7,5 @@ namespace cmsgears\core\common\models\interfaces;
 interface IOwner {
 
 	// The method checks ownership for given user. In case user is not provided, current logged in user can be considered depending on model implementation.
-	public function isOwner( $user = null );
+	public function isOwner( $user = null, $strict = false );
 }

@@ -46,11 +46,20 @@ class Action extends \yii\base\Action {
 
 	// Protected --------------
 
+	protected $modelService;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->modelService	= Yii::$app->controller->modelService;
+	}
 
 	// Instance methods --------------------------------------------
 

@@ -217,7 +217,7 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete dependencies
+		// Delete mapping
 		ModelOption::deleteByModelId( $model->id );
 
 		// Delete model

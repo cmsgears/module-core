@@ -30,7 +30,7 @@ trait SlugTrait {
 
 	public function getBySlug( $slug ) {
 
-		return self::findBySlug( $slug )->one();
+		return self::findBySlug( $slug );
     }
 
     // Read - Lists ----

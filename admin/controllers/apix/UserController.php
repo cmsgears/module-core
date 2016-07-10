@@ -21,6 +21,13 @@ class UserController extends \cmsgears\core\common\controllers\apix\UserControll
 
 	// Constructor and Initialisation ------------------------------
 
+ 	public function init() {
+
+        parent::init();
+
+		$this->crudPermission	= CoreGlobal::PERM_USER;
+	}
+
 	// Instance methods --------------------------------------------
 
 	// Yii interfaces ------------------------

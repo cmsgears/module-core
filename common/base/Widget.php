@@ -41,6 +41,14 @@ abstract class Widget extends \yii\base\Widget {
 	 */
 	public $template		= 'simple';
 
+	/**
+	 * This flag can be utilised by widgets to use fallback options in case application factory having model service is not available or initialised.
+	 *
+	 * The widgets in need of model service can utilise factory to get required service. In case factory is not needed, widget can directly
+	 * use models to query them or service in use must provided static method.
+	 */
+	public $factory			= true;
+
 	// Protected --------------
 
 	// Private ----------------

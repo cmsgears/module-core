@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\common\controllers;
+namespace cmsgears\core\common\controllers\base;
 
 // Yii Imports
 use \Yii;

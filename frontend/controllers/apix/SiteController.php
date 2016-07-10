@@ -13,23 +13,42 @@ use cmsgears\core\common\models\forms\Login;
 use cmsgears\core\common\models\forms\ForgotPassword;
 use cmsgears\core\common\models\forms\Register;
 
-use cmsgears\core\common\services\mappers\SiteMemberService;
-use cmsgears\core\common\services\entities\UserService;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class SiteController extends \cmsgears\core\frontend\controllers\base\Controller {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	private $userService;
+
+	protected $siteMemberService;
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
-	public function _construct( $id, $module, $config = [] )  {
+ 	public function init() {
 
-		parent::_construct( $id, $module, $config );
+        parent::init();
+
+		$this->crudPermission		= CoreGlobal::PERM_USER;
+		$this->userService 			= Yii::$app->factory->get( 'userService' );
+		$this->siteMemberService 	= Yii::$app->factory->get( 'siteMemberService' );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     public function behaviors() {
 
@@ -46,7 +65,13 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
         ];
     }
 
-	// SiteController
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// SiteController ------------------------
 
     public function actionRegister() {
 
@@ -59,15 +84,15 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		if( $coreProperties->isRegistration() && $model->load( Yii::$app->request->post(), 'Register' ) && $model->validate() ) {
 
 			// Register User
-			$user = UserService::register( $model );
+			$user = $this->userService->register( $model );
 
 			if( isset( $user ) ) {
 
 				// Add User to current Site
-				SiteMemberService::create( $user );
+				$this->siteMemberService->create( $user );
 
 				// Send Register Mail
-				Yii::$app->core->mailer->sendRegisterMail( $user );
+				Yii::$app->coreMailer->sendRegisterMail( $user );
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
@@ -110,7 +135,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 			// Redirect user to home set by app config
 			else {
 
-				$homeUrl	= Url::to( [ Yii::$app->cmgCore->getLoginRedirectPage() ], true );
+				$homeUrl	= Url::to( [ Yii::$app->core->getLoginRedirectPage() ], true );
 			}
 
 			// Trigger Ajax Success
@@ -132,18 +157,18 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post(), 'ForgotPassword' ) && $model->validate() ) {
 
-			$user	= UserService::findByEmail( $model->email );
+			$user	= $this->userService->getByEmail( $model->email );
 
 			// Trigger Reset Password
-			if( isset( $user ) && UserService::forgotPassword( $user ) ) {
+			if( isset( $user ) && $this->userService->forgotPassword( $user ) ) {
 
-				$user	= UserService::findByEmail( $model->email );
+				$user	= $this->userService->getByEmail( $model->email );
 
 				// Load User Permissions
 				$user->loadPermissions();
 
 				// Send Forgot Password Mail
-				Yii::$app->core->mailer->sendPasswordResetMail( $user );
+				Yii::$app->coreMailer->sendPasswordResetMail( $user );
 
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_FORGOT_PASSWORD ) );
 			}

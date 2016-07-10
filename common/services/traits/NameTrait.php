@@ -30,13 +30,13 @@ trait NameTrait {
 
 	public function getByName( $name ) {
 
-		return self::findByName( $name )->one();
+		return self::findByName( $name );
     }
 
 	public function searchByName( $name, $config = [] ) {
 
-		$modelClass					= self::$modelClass;
-		$modelTable					= self::$modelTable;
+		$modelClass					= static::$modelClass;
+		$modelTable					= static::$modelTable;
 
 		$config[ 'query' ] 			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelTable::find();
 		$config[ 'columns' ]		= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name" ];
@@ -49,7 +49,7 @@ trait NameTrait {
 			$config[ 'conditions' ][ "$modelTable.siteId" ]	= Yii::$app->core->siteId;
 		}
 
-		return self::searchModels( $config );
+		return static::searchModels( $config );
 	}
 
     // Read - Lists ----

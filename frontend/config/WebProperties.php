@@ -7,22 +7,30 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\config\CmgProperties;
+class WebProperties extends \cmsgears\core\common\config\CmgProperties {
 
-class WebProperties extends CmgProperties {
+	// Variables ---------------------------------------------------
 
-	// Singleton instance
+	// Global -----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	private static $instance;
 
 	// Constructor and Initialisation ------------------------------
 
- 	private function __construct() {
+	// Instance methods --------------------------------------------
 
-	}
+	// Yii parent classes --------------------
 
-	/**
-	 * Return Singleton instance.
-	 */
+	// CMG parent classes --------------------
+
+	// WebProperties -------------------------
+
 	public static function getInstance() {
 
 		if( !isset( self::$instance ) ) {
@@ -34,4 +42,7 @@ class WebProperties extends CmgProperties {
 
 		return self::$instance;
 	}
+
+	// Properties
+
 }

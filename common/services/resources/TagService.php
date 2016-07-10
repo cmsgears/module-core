@@ -14,6 +14,9 @@ use cmsgears\core\common\models\mappers\ModelTag;
 
 use cmsgears\core\common\services\interfaces\resources\ITagService;
 
+use cmsgears\core\common\services\traits\NameTypeTrait;
+use cmsgears\core\common\services\traits\SlugTypeTrait;
+
 /**
  * The class TagService is base class to perform database activities for Tag Entity.
  */
@@ -44,6 +47,9 @@ class TagService extends \cmsgears\core\common\services\base\EntityService imple
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -79,24 +85,9 @@ class TagService extends \cmsgears\core\common\services\base\EntityService imple
 		return parent::findPage( $config );
 	}
 
-	public static function getPageByType( $type ) {
-
-		return self::getPage( [ 'conditions' => [ 'type' => $type ] ] );
-	}
-
 	// Read ---------------
 
     // Read - Models ---
-
-	public function getBySlug( $slug ) {
-
-		return self::findBySlug( $slug );
-	}
-
-	public function getByNameType( $name, $type ) {
-
-		return self::findByNameType( $name, $type );
-	}
 
     // Read - Lists ----
 
@@ -119,7 +110,7 @@ class TagService extends \cmsgears\core\common\services\base\EntityService imple
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete dependencies
+		// Delete mapping
 		ModelTag::deleteByModelId( $model->id );
 
 		// Delete model
@@ -137,16 +128,6 @@ class TagService extends \cmsgears\core\common\services\base\EntityService imple
 	// Read ---------------
 
     // Read - Models ---
-
-	public static function findBySlug( $slug ) {
-
-		return Tag::findBySlug( $slug );
-	}
-
-	public static function findByNameType( $name, $type ) {
-
-		return Tag::findByNameType( $name, $type );
-	}
 
     // Read - Lists ----
 

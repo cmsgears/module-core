@@ -9,6 +9,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\ObjectData;
+use cmsgears\core\common\models\mappers\ModelObject;
 
 use cmsgears\core\common\services\interfaces\entities\IObjectService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
@@ -153,11 +154,11 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete dependencies
-		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
-		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		// Delete files
+		$this->fileService->deleteFiles( [ $model->avatar, $model->banner ] );
 
-		$this->fileService->deleteFiles( [ $avatar, $banner ] );
+		// Delete mapping
+		ModelObject::deleteByModelId( $model->id );
 
 		// Delete model
 		return parent::delete( $model, $config );

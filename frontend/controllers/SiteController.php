@@ -11,26 +11,38 @@ use cmsgears\core\frontend\config\WebGlobalCore;
 use cmsgears\core\common\models\forms\Login;
 use cmsgears\core\common\models\forms\Register;
 
-use cmsgears\core\common\services\mappers\SiteMemberService;
-use cmsgears\core\common\services\entities\UserService;
-
 class SiteController extends \cmsgears\core\common\controllers\SiteController {
+
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $siteMemberService;
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
-    /**
-     * @inheritdoc
-     */
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
 
-		$this->layout	= WebGlobalCore::LAYOUT_PUBLIC;
+		$this->layout				= WebGlobalCore::LAYOUT_PUBLIC;
+
+		$this->siteMemberService 	= Yii::$app->factory->get( 'siteMemberService' );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     public function behaviors() {
 
@@ -43,7 +55,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 		return $behaviours;
     }
 
-	// yii\base\Controller ---------------
+	// yii\base\Controller ----
 
     public function actions() {
 
@@ -63,7 +75,11 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
         ];
     }
 
-	// SiteController --------------------
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// SiteController ------------------------
 
     public function actionIndex() {
 
@@ -92,12 +108,12 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 		if( $coreProperties->isRegistration() && $model->load( Yii::$app->request->post() ) && $model->validate() ) {
 
 			// Register User
-			$user 	= UserService::register( $model );
+			$user 	= $this->userService->register( $model );
 
 			if( isset( $user ) ) {
 
 				// Add User to current Site
-				SiteMemberService::create( $user );
+				$this->siteMemberService->create( $user );
 
 				// Send Register Mail
 				Yii::$app->coreMailer->sendRegisterMail( $user );
@@ -123,17 +139,17 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 		if( isset( $token ) && isset( $email ) ) {
 
-			$user	= UserService::findByEmail( $email );
+			$user	= $this->userService->getByEmail( $email );
 
 			if( isset( $user ) ) {
 
 				$success = false;
 
-				if( Yii::$app->cmgCore->isUserApproval() && UserService::verify( $user, $token, false ) ) {
+				if( Yii::$app->core->isUserApproval() && $this->userService->verify( $user, $token, false ) ) {
 
 					$success = true;
 				}
-				else if( UserService::verify( $user, $token ) ) {
+				else if( $this->userService->verify( $user, $token ) ) {
 
 					$success = true;
 				}

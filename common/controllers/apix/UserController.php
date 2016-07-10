@@ -16,7 +16,7 @@ use cmsgears\core\common\models\mappers\ModelAttribute;
 use cmsgears\core\common\utilities\AjaxUtil;
 use cmsgears\core\common\utilities\CodeGenUtil;
 
-class UserController extends \cmsgears\core\common\controllers\Controller {
+class UserController extends \cmsgears\core\common\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -38,6 +38,7 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
 
         parent::init();
 
+		$this->crudPermission		= CoreGlobal::PERM_USER;
 		$this->userService 			= Yii::$app->factory->get( 'userService' );
 		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
 	}
@@ -56,11 +57,11 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
             'rbac' => [
                 'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
-	                'avatar' => [ 'permission' => CoreGlobal::PERM_USER ],
-	                'account' => [ 'permission' => CoreGlobal::PERM_USER ],
-	                'settings' => [ 'permission' => CoreGlobal::PERM_USER ],
-	                'profile' => [ 'permission' => CoreGlobal::PERM_USER ],
-	                'address' => [ 'permission' => CoreGlobal::PERM_USER ]
+	                'avatar' => [ 'permission' => $this->crudPermission ],
+	                'account' => [ 'permission' => $this->crudPermission ],
+	                'settings' => [ 'permission' => $this->crudPermission ],
+	                'profile' => [ 'permission' => $this->crudPermission ],
+	                'address' => [ 'permission' => $this->crudPermission ]
                 ]
             ],
             'verbs' => [
@@ -78,30 +79,18 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
 
 	// yii\base\Controller ----
 
+    public function actions() {
+
+        return [
+        	'avatar' => [ 'class' => 'cmsgears\core\common\actions\content\UpdateAvatar' ]
+		];
+    }
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
 	// UserController ------------------------
-
-    public function actionAvatar() {
-
-		$user			= Yii::$app->user->getIdentity();
-		$avatar 		= new File();
-
-		if( $avatar->load( Yii::$app->request->post(), 'Avatar' ) && $this->userService->updateAvatar( $user, $avatar ) ) {
-
-			$response	= [ 'fileUrl' => $avatar->getThumbUrl() ];
-
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->core->message->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
-		}
-		else {
-
-			// Trigger Ajax Failure
-        	return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ) );
-		}
-    }
 
     public function actionAccount() {
 
@@ -121,7 +110,7 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
 					$data	= [ 'email' => $user->email, 'username' => $user->username ];
 
 					// Trigger Ajax Success
-					return AjaxUtil::generateSuccess( Yii::$app->core->message->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 				}
 			}
 			else {
@@ -130,12 +119,12 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
 				$errors = AjaxUtil::generateErrorMessage( $model );
 
 				// Trigger Ajax Failure
-	        	return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+	        	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 			}
 		}
 
 		// Model not found
-		return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
     }
 
 	public function actionSettings() {
@@ -168,15 +157,15 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
 				}
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->core->message->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 			}
 
 			// Trigger Ajax Failure
-		    return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ) );
+		    return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 		}
 
 		// Model not found
-		return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
 	}
 
     public function actionProfile() {
@@ -200,7 +189,7 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
                         ];
 
                 // Trigger Ajax Success
-                return AjaxUtil::generateSuccess( Yii::$app->core->message->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+                return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
             }
             else {
 
@@ -208,12 +197,12 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
                 $errors = AjaxUtil::generateErrorMessage( $user );
 
                 // Trigger Ajax Failure
-                return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+                return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
             }
         }
 
         // Model not found
-        return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
+        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
     }
 
     public function actionAddress( $type ) {
@@ -235,17 +224,17 @@ class UserController extends \cmsgears\core\common\controllers\Controller {
                     ];
 
                 // Trigger Ajax Success
-                return AjaxUtil::generateSuccess( Yii::$app->core->message->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+                return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
             }
 
             // Generate Errors
             $errors = AjaxUtil::generateErrorMessage( $address );
 
             // Trigger Ajax Failure
-            return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+            return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
         }
 
         // Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->core->message->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
+        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
     }
 }

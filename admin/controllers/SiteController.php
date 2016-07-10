@@ -24,6 +24,10 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 	public function init() {
 
+		parent::init();
+
+		$this->crudPermission	= CoreGlobal::PERM_ADMIN;
+
 		// Check Layout for Public and Private pages
         if ( Yii::$app->user->isGuest ) {
 
@@ -43,8 +47,8 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
         $behaviours	= parent::behaviors();
 
-		$behaviours[ 'rbac' ][ 'actions' ][ 'index' ]		= [ 'permission' => CoreGlobal::PERM_ADMIN ];
-		$behaviours[ 'rbac' ][ 'actions' ][ 'dashboard' ]	= [ 'permission' => CoreGlobal::PERM_ADMIN ];
+		$behaviours[ 'rbac' ][ 'actions' ][ 'index' ]		= [ 'permission' => $this->crudPermission ];
+		$behaviours[ 'rbac' ][ 'actions' ][ 'dashboard' ]	= [ 'permission' => $this->crudPermission ];
 
 		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ]		= [ 'get' ];
 		$behaviours[ 'verbs' ][ 'actions' ][ 'dashboard' ]	= [ 'get' ];

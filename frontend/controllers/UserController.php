@@ -10,32 +10,55 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 
-use cmsgears\core\common\services\resources\OptionService;
-use cmsgears\core\common\services\entities\UserService;
+class UserController extends \cmsgears\core\frontend\controllers\base\Controller {
 
-class UserController extends base\Controller {
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $userService;
+
+	protected $optionService;
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
+
+		$this->crudPermission	= CoreGlobal::PERM_USER;
+
+		$this->userService 		= Yii::$app->factory->get( 'userService' );
+
+		$this->optionService 	= Yii::$app->factory->get( 'optionService' );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Controller ----
 
     public function behaviors() {
 
         return [
             'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
-	                'index' => [ 'permission' => CoreGlobal::PERM_USER ],
-	                'home' => [ 'permission' => CoreGlobal::PERM_USER ],
-	                'profile' => [ 'permission' => CoreGlobal::PERM_USER ],
-	                'settings' => [ 'permission' => CoreGlobal::PERM_USER ]
+	                'index' => [ 'permission' => $this->crudPermission ],
+	                'home' => [ 'permission' => $this->crudPermission ],
+	                'profile' => [ 'permission' => $this->crudPermission ],
+	                'settings' => [ 'permission' => $this->crudPermission ]
                 ]
             ],
             'verbs' => [
@@ -50,7 +73,11 @@ class UserController extends base\Controller {
         ];
     }
 
-	// UserController
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// UserController ------------------------
 
 	// Redirect user to appropriate home page
     public function actionIndex() {
@@ -72,7 +99,7 @@ class UserController extends base\Controller {
 		// Update/Render if exist
 		if( isset( $user ) ) {
 
-			$genderMap 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER, [ [ 'value' => 'Choose Gender', 'name' => '0' ] ] );
+			$genderMap 	= $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [ [ 'id' => '0', 'name' => 'Choose Gender' ] ] );
 
 	    	return $this->render( WebGlobalCore::PAGE_PROFILE, [
 	    		'user' => $user,
@@ -92,9 +119,13 @@ class UserController extends base\Controller {
 		// Update/Render if exist
 		if( isset( $user ) ) {
 
-			$privacy		= UserService::findAttributeMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
-			$notification	= UserService::findAttributeMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
-			$reminder		= UserService::findAttributeMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
+			$privacy		= $this->userService->getAttributeMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
+			$notification	= $this->userService->getAttributeMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
+			$reminder		= $this->userService->getAttributeMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
+
+			// NOTE: Rest of the attributes can be loaded in view.
+
+			// TODO: Check for options to cache all the user attributes.
 
 	    	return $this->render( WebGlobalCore::PAGE_SETTINGS, [
 	    		'user' => $user,

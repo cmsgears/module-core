@@ -71,7 +71,7 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 
 	// Protected --------------
 
-	protected $checkOwnership	= false;
+	protected $testOwner		= false;
 
 	// Private ----------------
 
@@ -200,11 +200,11 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 
 	// IOwner -----------------
 
-	public function isOwner( $user = null ) {
+	public function isOwner( $user = null, $strict = false ) {
 
-		if( $this->checkOwnership ) {
+		if( $this->testOwner ) {
 
-			if( !isset( $user ) ) {
+			if( !isset( $user ) && !$strict ) {
 
 				$user	= Yii::$app->user->getIdentity();
 			}

@@ -174,11 +174,11 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete dependencies
-		$items	= $model->files;
+		// Delete mapping
+		ModelGallery::deleteByModelId( $model->id );
 
-		// Delete mappings
-		ModelFile::deleteByParent( $model->id, CoreGlobal::TYPE_GALLERY );
+		// Delete items
+		$items	= $model->files;
 
 		// Delete Items
 		foreach ( $items as $item ) {

@@ -131,17 +131,6 @@ class ModelFileService extends \cmsgears\core\common\services\base\EntityService
 
 	// Delete -------------
 
-	public function delete( $model, $config = [] ) {
-
-		// Delete File
-		if( $model->file ) {
-
-			$this->fileService->delete( $model->file );
-		}
-
-		return parent::delete( $model, $config );
-	}
-
 	// Static Methods ----------------------------------------------
 
 	// CMG parent classes --------------------

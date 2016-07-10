@@ -7,6 +7,15 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+/**
+ * MapperTrait is generic trait for model mappers and provide several useful and
+ * commonly used methods by mappers.
+ *
+ * The model mapper must have modelId, parentId and parentType attributes where
+ * modelId is the id of model mapped to parent for given parentId and parentType.
+ *
+ * The mapper might also provide few more common attributes including active, order and type.
+ */
 trait MapperTrait {
 
 	// Instance methods --------------------------------------------
@@ -25,6 +34,10 @@ trait MapperTrait {
 
     // Read - Models ---
 
+	/**
+	 * @param long $modelId of mapped model.
+	 * @return array of model mappings having matching $modelId.
+	 */
     public function getAllByModelId( $modelId ) {
 
 		$modelClass	= self::$modelClass;
@@ -32,6 +45,12 @@ trait MapperTrait {
 		return $modelClass::findAllByModelId( $modelId );
     }
 
+	/**
+	 * @param long $parentId of parent model.
+	 * @param long $parentType assigned to parent model.
+	 * @param long $modelId of mapped model.
+	 * @return Object having matching $parentId, $parentType and $modelId.
+	 */
 	public function getByModelId( $parentId, $parentType, $modelId ) {
 
 		$modelClass	= self::$modelClass;
@@ -39,6 +58,11 @@ trait MapperTrait {
 		return $modelClass::findByModelId( $parentId, $parentType, $modelId );
 	}
 
+	/**
+	 * @param long $parentId of parent model.
+	 * @param long $parentType assigned to parent model.
+	 * @return array of model mappings having matching $parentId and $parentType.
+	 */
 	public function getByParent( $parentId, $parentType ) {
 
 		$modelClass	= self::$modelClass;
@@ -111,13 +135,42 @@ trait MapperTrait {
 		return $model;
 	}
 
-	public function deActivate( $model ) {
+	public function activateByModelId( $parentId, $parentType, $modelId ) {
+
+		$model = $this->getByModelId( $parentId, $parentType, $modelId );
+
+		if( isset( $model ) ) {
+
+			$this->activate( $model );
+		}
+	}
+
+	public function disable( $model ) {
 
 		$model->active	= false;
 
 		$model->update();
 
 		return $model;
+	}
+
+	public function disableByModelId( $parentId, $parentType, $modelId, $delete = false ) {
+
+		$model = $this->getByModelId( $parentId, $parentType, $modelId );
+
+		if( isset( $model ) ) {
+
+			// Hard delete
+			if( $delete ) {
+
+				$model->delete();
+			}
+			// Soft delete
+			else {
+
+				$this->disable( $model );
+			}
+		}
 	}
 
 	// Delete -------------

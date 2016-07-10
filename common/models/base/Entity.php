@@ -157,7 +157,7 @@ abstract class Entity extends \yii\db\ActiveRecord {
 
 		foreach ( $relations as $relation ) {
 
-			if( is_array( $relation ) ) {
+			if( is_array( $relation ) && isset( $relation[ 'relation' ] ) ) {
 
 				$eager	= isset( $relation[ 'eager' ] ) ? $relation[ 'eager' ] : false;
 				$join	= isset( $relation[ 'join' ] ) ? $relation[ 'join' ] : 'LEFT JOIN';
@@ -222,4 +222,9 @@ abstract class Entity extends \yii\db\ActiveRecord {
 	// Update -----------------
 
 	// Delete -----------------
+
+    public static function deleteById( $id ) {
+
+        self::deleteAll( 'id=:id', [ ':id' => $id ] );
+    }
 }

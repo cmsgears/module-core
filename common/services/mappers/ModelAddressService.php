@@ -184,7 +184,7 @@ class ModelAddressService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Update -------------
 
-    public static function update( $modelAddress, $config = [] ) {
+    public function update( $modelAddress, $config = [] ) {
 
         // Update Address
         $this->addressService->update( $config[ 'address' ] );

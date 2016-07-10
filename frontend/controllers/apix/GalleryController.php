@@ -8,30 +8,39 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\CmgFile;
-
-use cmsgears\core\common\services\resources\FileService;
-use cmsgears\core\common\services\mappers\ModelFileService;
-use cmsgears\core\common\services\resources\GalleryService;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class GalleryController extends \cmsgears\core\admin\controllers\base\Controller {
 
-	protected $ownerService;
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $modelService;
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
+		parent::init();
 
-		$this->ownerService	= new GalleryService();
+		$this->crudPermission	= CoreGlobal::PERM_USER;
+		$this->modelService		= Yii::$app->factory->get( 'galleryService' );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
 	public function behaviors() {
 
@@ -39,8 +48,8 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
             'rbac' => [
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
-	                'createItem' => [ 'permission' => CoreGlobal::PERM_USER, 'filters' => [ 'owner' => [ 'slug' => true, 'service' => $this->ownerService ] ] ],
-	                'deleteItem' => [ 'permission' => CoreGlobal::PERM_USER, 'filters' => [ 'owner' => [ 'slug' => true, 'service' => $this->ownerService ] ] ],
+	                'createItem' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true, 'service' => $this->modelService ] ] ],
+	                'deleteItem' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true, 'service' => $this->modelService ] ] ],
                 ]
             ],
             'verbs' => [
@@ -53,56 +62,19 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
         ];
     }
 
-	// GalleryController
+	// yii\base\Controller ----
 
-	public function actionCreateItem( $slug ) {
+    public function actions() {
 
-		$gallery = GalleryService::findBySlug( $slug );
+        return [
+        	'create-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\CreateItem' ],
+        	'delete-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\DeleteItem' ]
+		];
+    }
 
-		if( isset( $gallery ) ) {
+	// CMG interfaces ------------------------
 
-			$item 	= new CmgFile();
+	// CMG parent classes --------------------
 
-			if( $item->load( Yii::$app->request->post(), 'File' ) && $item->validate() ) {
-
-				$item	= GalleryService::createItem( $gallery, $item );
-				$item	= FileService::findById( $item->id );
-				$data	= [ 'id' => $item->id, 'thumbUrl' => $item->getThumbUrl(), 'title' => $item->title, 'description' => $item->description, 'alt' => $item->altText, 'url' => $item->url ];
-
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-			}
-
-			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $item );
-
-			// Trigger Ajax Failure
-	        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-		}
-
-		// Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
-
-	public function actionDeleteItem( $slug, $id ) {
-
-		$gallery = GalleryService::findBySlug( $slug );
-
-		if( isset( $gallery ) ) {
-
-			$modelFile	= ModelFileService::findByFileId( $gallery->id, CoreGlobal::TYPE_GALLERY, $id );
-
-			if( isset( $modelFile ) ) {
-
-				if ( ModelFileService::delete( $modelFile ) ) {
-
-					// Trigger Ajax Success
-					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $id );
-				}
-			}
-		}
-
-		// Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
+	// GalleryController ---------------------
 }

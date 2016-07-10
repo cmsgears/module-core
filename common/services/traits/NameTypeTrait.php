@@ -26,7 +26,7 @@ trait NameTypeTrait {
 
 	public function getPageByType( $type, $config = [] ) {
 
-		$modelTable	= self::$modelTable;
+		$modelTable	= static::$modelTable;
 
 		$config[ 'conditions' ][ "$modelTable.type" ] 	= $type;
 
@@ -37,6 +37,11 @@ trait NameTypeTrait {
 
     // Read - Models ---
 
+	/**
+	 * The method is useful for models having unique name irrespective of their type. In such cases $first must be true.
+	 *
+	 * If model allows unique name for a particular type, we might have multiple models having same name. In such cases $first must be false.
+	 */
 	public function getByName( $name, $first = false ) {
 
 		$modelClass = static::$modelClass;
@@ -44,6 +49,9 @@ trait NameTypeTrait {
 		return $modelClass::findByName( $name, $first );
 	}
 
+	/**
+	 * It can be used to get all the models for given type or first model if $first is set to true.
+	 */
 	public function getByType( $type, $first = false ) {
 
 		$modelClass = static::$modelClass;
@@ -51,6 +59,9 @@ trait NameTypeTrait {
 		return $modelClass::findByType( $type, $first );
 	}
 
+	/**
+	 * It returns single model having given name and type.
+	 */
 	public function getByNameType( $name, $type ) {
 
 		$modelClass = static::$modelClass;
@@ -60,8 +71,8 @@ trait NameTypeTrait {
 
 	public function searchByName( $name, $config = [] ) {
 
-		$modelClass					= self::$modelClass;
-		$modelTable					= self::$modelTable;
+		$modelClass					= static::$modelClass;
+		$modelTable					= static::$modelTable;
 
 		$config[ 'query' ] 			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelTable::find();
 		$config[ 'columns' ]		= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name" ];
@@ -74,12 +85,12 @@ trait NameTypeTrait {
 			$config[ 'conditions' ][ "$modelTable.siteId" ]	= Yii::$app->core->siteId;
 		}
 
-		return self::searchModels( $config );
+		return static::searchModels( $config );
 	}
 
 	public function searchByNameType( $name, $type, $config = [] ) {
 
-		$modelTable		= self::$modelTable;
+		$modelTable		= static::$modelTable;
 
 		$config[ 'conditions' ][ "$modelTable.type" ]	= $type;
 
@@ -92,7 +103,7 @@ trait NameTypeTrait {
 
 		$config[ 'conditions' ][ 'type' ] = $type;
 
-		return self::findIdList( $config );
+		return static::findIdList( $config );
 	}
 
 	public function getIdNameListByType( $type, $config = [] ) {

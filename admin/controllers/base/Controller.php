@@ -9,7 +9,7 @@ use cmsgears\core\admin\config\AdminGlobalCore;
 
 use cmsgears\core\admin\config\AdminProperties;
 
-abstract class Controller extends \cmsgears\core\common\controllers\Controller {
+abstract class Controller extends \cmsgears\core\common\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

@@ -29,7 +29,7 @@ class ModelTagService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelTag';
+	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelTag';
 
 	public static $modelTable	= CoreTables::TABLE_MODEL_TAG;
 
@@ -98,31 +98,23 @@ class ModelTagService extends \cmsgears\core\common\services\base\EntityService 
 			if( !isset( $tag ) ) {
 
 				$tag			= new Tag();
-				$tag->siteId	= Yii::$app->cmgCore->siteId;
+				$tag->siteId	= Yii::$app->core->siteId;
 				$tag->name		= $tagName;
 				$tag->type		= $parentType;
 				$tag			= $this->tagService->create( $tag );
 			}
 
-			$modelTag	= self::findByTagId( $parentId, $parentType, $tag->id );
+			$modelTag	= $this->getByModelId( $parentId, $parentType, $tag->id );
 
 			// Create if does not exist
 			if( !isset( $modelTag ) ) {
 
-				$modelTag	= new ModelTag();
-
-				$modelTag->tagId		= $tag->id;
-				$modelTag->parentId		= $parentId;
-				$modelTag->parentType	= $parentType;
-				$modelTag->order		= 0;
-				$modelTag->active		= true;
-
-				$modelTag->save();
+				$this->createByParams( [ 'modelId' => $tag->id, 'parentId' => $parentId, 'parentType' => $parentType, 'order' => 0, 'active' => true ] );
 			}
 			// Activate if already exist
 			else {
 
-				self::activate( $modelTag, 1 );
+				self::activate( $modelTag );
 			}
 		}
 	}
@@ -138,24 +130,11 @@ class ModelTagService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Delete -------------
 
-	public function deleteByTagSlug( $parentId, $parentType, $tagSlug, $delete = false ) {
+	public function deleteByTagSlug( $parentId, $parentType, $tagSlug, $tagType, $delete = false ) {
 
-		$tag				= $this->tagService->getBySlug( $tagSlug );
-		$modelTagToDelete	= $this->getByModelId( $parentId, $parentType, $tag->id );
+		$tag	= $this->tagService->getBySlugType( $tagSlug, $tagType );
 
-		if( isset( $modelTagToDelete ) ) {
-
-			// Hard delete
-			if( $delete ) {
-
-				$modelTagToDelete->delete();
-			}
-			// Soft delete
-			else {
-
-				self::deActivate( $modelTagToDelete );
-			}
-		}
+		$this->disableByModelId( $parentId, $parentType, $tag->id, $delete = false );
 
 		return true;
 	}

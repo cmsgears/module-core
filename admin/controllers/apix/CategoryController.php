@@ -50,7 +50,7 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
                 'class' => Yii::$app->cmgCore->getRbacFilterClass(),
                 'actions' => [
 	                'index'  => [ 'permission' => $this->crudPermission ],
-	                'autoSearch' => [ 'permission' => CoreGlobal::PERM_ADMIN ],
+	                'autoSearch' => [ 'permission' => CoreGlobal::PERM_ADMIN ], // Available for all admin users
 	                'all'   => [ 'permission' => $this->crudPermission ],
 	                'create' => [ 'permission' => $this->crudPermission ],
 	                'update' => [ 'permission' => $this->crudPermission ],
@@ -114,7 +114,7 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model	= CategoryService::findById( $id );
+		$model	= $this->modelService->getById( $id );
 
 		$model->setScenario( 'update' );
 
@@ -136,7 +136,7 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= CategoryService::findById( $id );
+		$model	= $this->modelService->getById( $id );
 
 		if( isset( $_POST ) && count( $_POST ) > 0 ) {
 

@@ -9,121 +9,69 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\Category;
-
-use cmsgears\core\common\services\resources\CategoryService;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class CategoryController extends \cmsgears\core\admin\controllers\base\Controller {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $categoryService;
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
+		parent::init();
+
+		$this->categoryService	= Yii::$app->factory->get( 'categoryService' );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
     public function behaviors() {
 
         return [
             'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
-	                'autoSearch' => [ 'permission' => CoreGlobal::PERM_ADMIN ]
+	                // 'autoSearch' => [ 'permission' => $this->crudPermission ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'autoSearch' => [ 'post']
+	                'autoSearch' => [ 'post' ]
                 ]
             ]
         ];
     }
 
-	// CategoryController ----------------
+	// yii\base\Controller ----
 
-	public function actionAutoSearch() {
+    public function actions() {
 
-		$name	= Yii::$app->request->post( 'name' );
-		$type	= Yii::$app->request->post( 'type' );
+        return [
+        	'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ]
+		];
+    }
 
-		$data	= CategoryService::searchByName( $name );
+	// CMG interfaces ------------------------
 
-		// Trigger Ajax Success
-		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-	}
+	// CMG parent classes --------------------
 
-	public function actionCreate() {
-
-		$model	= new Category();
-
-		$model->setScenario( 'create' );
-
-		if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
-
-			if( CategoryService::create( $model ) ) {
-
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
-			}
-		}
-
-		// Generate Errors
-		$errors = AjaxUtil::generateErrorMessage( $model );
-
-		// Trigger Ajax Failure
-    	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-	}
-
-	public function actionUpdate( $id ) {
-
-		// Find Model
-		$model	= CategoryService::findById( $id );
-
-		$model->setScenario( 'update' );
-
-		if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
-
-			if( CategoryService::update( $model ) ) {
-
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
-			}
-		}
-
-		// Generate Errors
-		$errors = AjaxUtil::generateErrorMessage( $model );
-
-		// Trigger Ajax Failure
-    	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-	}
-
-	public function actionDelete( $id ) {
-
-		// Find Model
-		$model	= CategoryService::findById( $id );
-
-		if( isset( $_POST ) && count( $_POST ) > 0 ) {
-
-			if( CategoryService::delete( $model ) ) {
-
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
-			}
-		}
-		else {
-
-			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $model );
-
-			// Trigger Ajax Failure
-	    	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-		}
-	}
+	// CategoryController --------------------
 }

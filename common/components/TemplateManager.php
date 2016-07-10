@@ -140,23 +140,6 @@ class TemplateManager extends \yii\base\Component {
 		return $this->renderView( $template, $models, $config );
 	}
 
-	/**
-	 * Render generic message using appropriate template and trigger notification.
-	 */
-	public function triggerNotification( $templateSlug, $models, $config = [] ) {
-
-		$notificationManager	= Yii::$app->notificationManager;
-
-		if( Yii::$app->core->isNotifications() && isset( $notificationManager ) ) {
-
-			$template	= $this->templateService->getBySlug( $templateSlug );
-
-			$message	= $this->renderMessage( $template, $models, $config );
-
-			Yii::$app->notificationManager->triggerNotification( $template, $message, $models, $config );
-		}
-	}
-
 	// Default Page Views
 
 	/**

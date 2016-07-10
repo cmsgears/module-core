@@ -125,7 +125,7 @@ class FormService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete dependencies
+		// Delete mapping
 		ModelForm::deleteByModelId( $model->id );
 
 		// Delete model

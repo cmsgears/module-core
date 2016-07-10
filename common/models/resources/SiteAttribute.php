@@ -3,7 +3,6 @@ namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
 use \Yii;
-use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;

@@ -242,6 +242,11 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		return false;
  	}
 
+ 	public function updateByParams( $params = [], $config = [] ) {
+
+		// Implement in child classes if required in cases where we only have few of the key attributes, but no other information related to model.
+ 	}
+
 	public function updateAll( $model, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
@@ -408,6 +413,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		$modelTable = static::$modelTable;
 
 		$sort		= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
+		$multiSite	= isset( $config[ 'multiSite' ] ) ? $config[ 'multiSite' ] : true;
 
 		if( !$sort ) {
 
@@ -430,7 +436,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		}
 
 		// Restrict to site
-		if( $modelClass::$multiSite ) {
+		if( $modelClass::$multiSite && $multiSite ) {
 
 			$config[ 'conditions' ][ 'siteId' ] = Yii::$app->core->siteId;
 
@@ -607,7 +613,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		// Models ---------------
 
-		$models = $query->all()->asArray( $array );
+		$models = $query->asArray( $array )->all();
 
 		return $models;
 	}

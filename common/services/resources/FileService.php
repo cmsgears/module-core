@@ -308,7 +308,7 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 			// Delete from disk
 			$model->clearDisk();
 
-			// Delete dependencies
+			// Delete mapping
 			ModelFile::deleteByModelId( $model->id );
 		}
 

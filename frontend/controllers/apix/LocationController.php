@@ -8,29 +8,45 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\services\entities\ProvinceService;
-
 use cmsgears\core\common\utilities\CodeGenUtil;
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class AddressController extends \cmsgears\core\admin\controllers\base\Controller {
+class LocationController extends \cmsgears\core\admin\controllers\base\Controller {
+
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $provinceService;
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
+		parent::init();
+
+		$this->provinceService	= Yii::$app->factory->get( 'provinceService' );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
 	public function behaviors() {
 
         return [
             'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
 	                // add actions here
                 ]
@@ -45,7 +61,13 @@ class AddressController extends \cmsgears\core\admin\controllers\base\Controller
         ];
     }
 
-	// AddressController
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// LocationController --------------------
 
 	public function actionProvinceMap() {
 
@@ -53,7 +75,7 @@ class AddressController extends \cmsgears\core\admin\controllers\base\Controller
 
 		if( isset( $countryId ) && $countryId > 0 ) {
 
-			$provinceMap	= ProvinceService::getListByCountryId( $countryId );
+			$provinceMap	= $this->provinceService->getListByCountryId( $countryId );
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $provinceMap );
@@ -69,7 +91,7 @@ class AddressController extends \cmsgears\core\admin\controllers\base\Controller
 
 		if( isset( $countryId ) && $countryId > 0 ) {
 
-			$provinceOptions	= ProvinceService::getListByCountryId( $countryId );
+			$provinceOptions	= $this->provinceService->getListByCountryId( $countryId );
 			$provinceOptions	= CodeGenUtil::generateSelectOptionsIdName( $provinceOptions );
 
 			// Trigger Ajax Success

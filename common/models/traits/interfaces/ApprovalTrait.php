@@ -128,6 +128,30 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_TERMINATED;
 	}
 
+	public function toggleFrojen() {
+
+		if( $this->isFrojen() ) {
+
+			$this->status	= IApproval::STATUS_ACTIVE;
+		}
+		else {
+
+			$this->status	= IApproval::STATUS_FROJEN;
+		}
+	}
+
+	public function toggleBlock() {
+
+		if( $this->isBlocked() ) {
+
+			$this->status	= IApproval::STATUS_ACTIVE;
+		}
+		else {
+
+			$this->status	= IApproval::STATUS_BLOCKED;
+		}
+	}
+
 	// User can edit model in these situations i.e. either new or re-submit.
 	public function isEditable() {
 

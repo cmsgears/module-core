@@ -153,8 +153,10 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete dependencies
+		// Delete mapping
 		ModelCategory::deleteByModelId( $model->id );
+
+		// Delete options and mappings - mappings will be deleted by cascade effect
 		Option::deleteByCategoryId( $model->id );
 
 		// Update Hierarchy

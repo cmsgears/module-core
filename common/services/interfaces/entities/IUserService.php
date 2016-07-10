@@ -41,13 +41,11 @@ interface IUserService extends \cmsgears\core\common\services\interfaces\base\IA
 
 	// Create -------------
 
+	public function register( $registerForm );
+
 	// Update -------------
 
 	public function updateModelAttributes( $user, $attributes );
-
-	public function setForApproval( $user );
-
-	public function setForActivation( $user );
 
     public function activate( $user, $resetForm, $activate = true );
 

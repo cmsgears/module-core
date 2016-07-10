@@ -10,33 +10,42 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\forms\ResetPassword;
 
-use cmsgears\core\common\services\entities\UserService;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class UserController extends \cmsgears\core\common\controllers\apix\UserController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+ 	public function init() {
 
-        parent::__construct( $id, $module, $config );
+        parent::init();
+
+		$this->crudPermission	= CoreGlobal::PERM_USER;
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-		$behaviours	= parent::behaviors();
+	// yii\base\Component -----
 
-		$behaviours[ 'rbac' ][ 'actions' ][ 'profile' ]			= [ 'permission' => CoreGlobal::PERM_USER ];
-		$behaviours[ 'rbac' ][ 'actions' ][ 'updateAddress' ]	= [ 'permission' => CoreGlobal::PERM_USER ];
+	// yii\base\Controller ----
 
-		$behaviours[ 'verbs' ][ 'actions' ][ 'profile' ]		= [ 'post' ];
-		$behaviours[ 'verbs' ][ 'actions' ][ 'updateAddress' ]	= [ 'post' ];
+	// CMG interfaces ------------------------
 
-		return $behaviours;
-    }
+	// CMG parent classes --------------------
+
+	// UserController ------------------------
 }

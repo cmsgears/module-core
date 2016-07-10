@@ -267,17 +267,17 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
     	$thumbPath		= $this->getThumbPath();
 
 		// Delete from disk
-		if( $filePath ) {
+		if( $filePath && file_exists( $filePath ) ) {
 
 			unlink( $filePath );
 		}
 
-		if( $mediumPath ) {
+		if( $mediumPath && file_exists( $mediumPath ) ) {
 
 			unlink( $mediumPath );
 		}
 
-		if( $thumbPath ) {
+		if( $thumbPath && file_exists( $thumbPath ) ) {
 
 			unlink( $thumbPath );
 		}

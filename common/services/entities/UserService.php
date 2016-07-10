@@ -271,6 +271,32 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		return $model;
 	}
 
+	/**
+	 * The method registers website users and set their status to new at start. It also generate verification token.
+	 * @param RegisterForm $registerForm
+	 * @return User
+	 */
+	public function register( $registerForm ) {
+
+		$user 	= new User();
+		$date	= DateUtil::getDateTime();
+
+		$user->email 		= $registerForm->email;
+		$user->username 	= $registerForm->username;
+		$user->firstName	= $registerForm->firstName;
+		$user->lastName		= $registerForm->lastName;
+		$user->registeredAt	= $date;
+		$user->status		= User::STATUS_NEW;
+
+		$user->generatePassword( $registerForm->password );
+		$user->generateVerifyToken();
+		$user->generateAuthKey();
+
+		$user->save();
+
+		return $user;
+	}
+
 	// Update -------------
 
 	/**
@@ -299,20 +325,6 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		}
 
 		return true;
-	}
-
-	public function setForApproval( $user ) {
-
-		$user->status = User::STATUS_SUBMITTED;
-
-		$user->update();
-	}
-
-	public function setForActivation( $user ) {
-
-		$user->status = User::STATUS_ACTIVE;
-
-		$user->update();
 	}
 
     /**

@@ -41,7 +41,11 @@ interface IMapperService extends IEntityService {
 
 	public function activate( $model );
 
-	public function deActivate( $model );
+	public function activateByModelId( $parentId, $parentType, $modelId );
+
+	public function disable( $model );
+
+	public function disableByModelId( $parentId, $parentType, $modelId, $delete = false );
 
 	// Delete -------------
 

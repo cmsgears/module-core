@@ -113,7 +113,7 @@ class Role extends \cmsgears\core\common\models\base\Entity {
             [ [ 'id' ], 'safe' ],
             [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-            [ [ 'description', 'homeUrl' ], 'string', 'min' => 0, 'max' => Yii::$app->core->extraLargeText ],
+            [ [ 'description', 'homeUrl' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
             [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
             [ [ 'slug', 'type' ], 'unique', 'targetAttribute' => [ 'slug', 'type' ] ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],

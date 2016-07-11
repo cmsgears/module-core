@@ -229,4 +229,11 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 	// Update -------------
 
 	// Delete -------------
+
+	public static function deleteByModelId( $modelId ) {
+
+		$modelClass	= static::$modelClass;
+
+		$modelClass::deleteAll( 'modelId=:id', [ ':id' => $modelId ] );
+	}
 }

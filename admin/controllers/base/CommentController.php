@@ -59,17 +59,22 @@ abstract class CommentController extends \cmsgears\core\admin\controllers\base\C
 
     // CommentController ---------------------
 
-    public function actionAll( $pid ) {
+    public function actionAll( $pid = null ) {
 
         Url::remember( [ "$this->commentUrl/all?pid=$pid" ], $this->commentUrl );
 
+		$model			= null;
         $dataProvider   = null;
-        $model    		= $this->parentService->findById( $pid );
 
-        if( isset( $model ) ) {
+        if( isset( $pid ) ) {
 
-            $dataProvider = $this->modelService->getPageByParent( $model->id, $this->parentType, [ 'conditions' => [ 'type' => $this->commentType ] ] );
+			$model			= $this->parentService->findById( $pid );
+            $dataProvider 	= $this->modelService->getPageByParent( $model->id, $this->parentType, [ 'conditions' => [ 'type' => $this->commentType ] ] );
         }
+		else {
+
+			$dataProvider 	= $this->modelService->getPageByParentType( $this->parentType, [ 'conditions' => [ 'type' => $this->commentType ] ] );
+		}
 
         return $this->render( 'all', [
              'dataProvider' => $dataProvider,

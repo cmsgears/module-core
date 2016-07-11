@@ -29,8 +29,10 @@ if( !isset( $sortOrder ) ) {
 <div class="header-content clearfix">
 	<div class="header-actions col15x10">
 		<span class="frm-icon-element element-small">
-			<i class="cmti cmti-plus"></i>
-			<?= Html::a( 'Add', [ "create?pid=$model->id" ], [ 'class' => 'btn' ] ) ?>
+			<?php if( isset( $model ) ) { ?>
+				<i class="cmti cmti-plus"></i>
+				<?= Html::a( 'Add', [ "create?pid=$model->id" ], [ 'class' => 'btn' ] ) ?>
+			<?php } ?>
 		</span>
 	</div>
 	<div class="header-search col15x5">

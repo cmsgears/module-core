@@ -109,13 +109,13 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 			[ [ 'phone', 'fax' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'title' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ [ 'line1', 'line2', 'line3', 'firstName', 'lastName', 'email', 'website' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
-            [ [ 'zip', 'zip4' ], 'alphanumhyphenspace' ],
+            [ [ 'zip', 'subZip' ], 'alphanumhyphenspace' ],
             [ [ 'countryId', 'provinceId', 'cityId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'longitude', 'latitude', 'zoomLevel' ], 'number' ]
         ];
 
         // trim if required
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
             $trim[] = [ [ 'line1', 'line2', 'line3', 'city', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'latitude', 'longitude' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
@@ -140,7 +140,7 @@ class Address extends \cmsgears\core\common\models\base\Resource {
             'line3' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE3 ),
             'city' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CITY ),
             'zip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP ),
-            'zip4' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP4 ),
+            'subZip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP_SUB ),
             'firstName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
             'lastName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
             'phone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PHONE ),

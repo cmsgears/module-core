@@ -193,7 +193,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		$model->save();
 
-		return $model;
+		return $model->id > 0 ? $model : false;
  	}
 
  	public function createByParams( $params = [], $config = [] ) {

@@ -307,7 +307,7 @@ class CoreGlobal {
 	const FIELD_LINE3				= 'line3Field';
 	const FIELD_CITY				= 'cityField';
 	const FIELD_ZIP					= 'zipField';
-	const FIELD_ZIP4				= 'zip4Field';
+	const FIELD_ZIP_SUB				= 'subZipField';
 	const FIELD_PHONE				= 'phoneField';
 	const FIELD_FAX					= 'faxField';
 	const FIELD_LONGITUDE			= 'longitudeField';

@@ -143,18 +143,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 			if( isset( $user ) ) {
 
-				$success = false;
-
-				if( Yii::$app->core->isUserApproval() && $this->userService->verify( $user, $token, false ) ) {
-
-					$success = true;
-				}
-				else if( $this->userService->verify( $user, $token ) ) {
-
-					$success = true;
-				}
-
-				if( $success ) {
+				if( $this->userService->verify( $user, $token ) ) {
 
 					// Send Verify Mail
 					Yii::$app->coreMailer->sendVerifyUserMail( $user );

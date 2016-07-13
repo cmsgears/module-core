@@ -104,7 +104,7 @@ class ModelAddressService extends \cmsgears\core\common\services\base\EntityServ
         // Create Model Address
         $modelAddress               = new ModelAddress();
 
-        $modelAddress->addressId    = $address->id;
+        $modelAddress->modelId	    = $address->id;
         $modelAddress->parentId     = $parentId;
         $modelAddress->parentType   = $parentType;
         $modelAddress->type         = $type;

@@ -13,6 +13,7 @@ trait ApprovalTrait {
 
 	public static $statusMap = [
 		IApproval::STATUS_NEW => 'New',
+		IApproval::STATUS_SUBMITTED => 'Submitted',
 		IApproval::STATUS_REJECTED => 'Rejected',
 		IApproval::STATUS_RE_SUBMIT => 'Re Submitted',
 		IApproval::STATUS_CONFIRMED => 'Confirmed',
@@ -25,6 +26,7 @@ trait ApprovalTrait {
 	// Used for url params
 	public static $revStatusMap = [
 		'new' => IApproval::STATUS_NEW,
+		'submitted' => IApproval::STATUS_SUBMITTED,
 		'rejected' => IApproval::STATUS_REJECTED,
 		're-submitted' => IApproval::STATUS_RE_SUBMIT,
 		'confirmed' => IApproval::STATUS_CONFIRMED,
@@ -43,11 +45,6 @@ trait ApprovalTrait {
 		return 'Registration';
 	}
 
-	public function isRegistration() {
-
-		return $this->status < IApproval::STATUS_NEW;
-	}
-
 	public function isNew( $strict = true ) {
 
 		if( $strict ) {
@@ -56,6 +53,21 @@ trait ApprovalTrait {
 		}
 
 		return $this->status >= IApproval::STATUS_NEW;
+	}
+
+	public function isRegistration() {
+
+		return $this->status >= IApproval::STATUS_NEW && $this->status < IApproval::STATUS_SUBMITTED;
+	}
+
+	public function isSubmitted( $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->status == IApproval::STATUS_SUBMITTED;
+		}
+
+		return $this->status == IApproval::STATUS_SUBMITTED || $this->status == IApproval::STATUS_RE_SUBMIT;
 	}
 
 	public function isRejected( $strict = true ) {
@@ -158,16 +170,10 @@ trait ApprovalTrait {
 		return $this->status != IApproval::STATUS_NEW && $this->status != IApproval::STATUS_RE_SUBMIT;
 	}
 
-	// User can't make any changes in submitted mode i.e. submit(new) and re-submit.
-	public function isSubmitted() {
-
-		return $this->status == IApproval::STATUS_NEW || $this->status == IApproval::STATUS_RE_SUBMIT;
-	}
-
 	// User can submit the model for limit removal in selected states i.e. new, rejected, frozen or blocked.
 	public function isSubmittable() {
 
-		return $this->status < IApproval::STATUS_NEW || $this->status == IApproval::STATUS_REJECTED ||
+		return $this->isRegistration() || $this->status == IApproval::STATUS_REJECTED ||
 				$this->status == IApproval::STATUS_FROJEN || $this->status == IApproval::STATUS_BLOCKED;
 	}
 

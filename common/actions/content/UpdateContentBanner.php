@@ -7,9 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\CmgFile;
-
-use cmsgears\cms\common\services\mappers\ModelContentService;
+use cmsgears\core\common\models\resources\File;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
@@ -18,30 +16,54 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * The controller must provide modelService variable using approprite service class.
  */
-class UpdateContentBanner extends ModelAction {
+class UpdateContentBanner extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
-	// Constants/Statics --
+	// Globals -------------------------------
 
-	// Public -------------
+	// Constants --------------
 
-	// Private/Protected --
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	public $fileName	= 'Banner';
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// UpdateContentBanner ---------------
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// AssignTags ----------------------------
 
 	public function run() {
 
 		if( isset( $this->model ) ) {
 
-			$content	= $this->model->content;
-			$banner	 	= CmgFile::loadFile( $content->banner, 'File' );
+			$modelContentService = Yii::$app->factory->get( 'modelContentService' );
 
-			if( ModelContentService::updateBanner( $content, $banner ) ) {
+			$content	= $this->model->content;
+			$banner	 	= File::loadFile( $content->banner, $this->fileName );
+
+			if( $modelContentService->updateBanner( $content, $banner ) ) {
 
 				$response	= [ 'fileUrl' => $banner->getFileUrl() ];
 

@@ -14,17 +14,45 @@ class CreateReview extends CreateComment {
 
 	// Variables ---------------------------------------------------
 
-	// Constants/Statics --
+	// Globals -------------------------------
 
-	// Public -------------
+	// Constants --------------
 
-	public $scenario	= 'review';
+	// Public -----------------
 
-	// Private/Protected --
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $typed = true;
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
 
-	// Instance Methods --------------------------------------------
+	public function init() {
 
-	// CreateReview ----------------------
+		parent::init();
+
+		$this->scenario	= 'review';
+	}
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// CreateReview --------------------------
+
 }

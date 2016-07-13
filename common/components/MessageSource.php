@@ -168,7 +168,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_LINE3 => 'Line 3',
 		CoreGlobal::FIELD_CITY => 'City',
 		CoreGlobal::FIELD_ZIP => 'Postal Code',
-		CoreGlobal::FIELD_ZIP4 => 'Postal Code Ext',
+		CoreGlobal::FIELD_ZIP_SUB => 'Postal Code Ext',
 		CoreGlobal::FIELD_PHONE => 'Phone',
 		CoreGlobal::FIELD_FAX => 'Fax',
 		CoreGlobal::FIELD_LONGITUDE => 'Longitude',

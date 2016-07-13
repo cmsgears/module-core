@@ -11,15 +11,7 @@ class Module extends \yii\base\Module {
 
 	// Variables ---------------------------------------------------
 
-	// Globals -------------------------------
-
-	// Constants --------------
-
-	// Public -----------------
-
-	// Protected --------------
-
-	// Variables -----------------------------
+	// Globals ----------------
 
 	// Public -----------------
 
@@ -60,13 +52,4 @@ class Module extends \yii\base\Module {
 
 		return '';
 	}
-
-	// Static Methods ----------------------------------------------
-
-	// Yii parent classes --------------------
-
-	// CMG parent classes --------------------
-
-	// Module --------------------------------
-
 }

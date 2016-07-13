@@ -64,6 +64,8 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	// Constants --------------
 
+	const STATUS_VERIFIED	= 100; // Used when user is required to submit registration application for approval process.
+
 	// Public -----------------
 
 	// Protected --------------
@@ -408,13 +410,15 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         return $name;
     }
 
-    /**
-     * @return string representation of status.
-     */
-    public function getStatusStr() {
+	public function isVerified( $strict = true ) {
 
-        return self::$statusMap[ $this->status ];
-    }
+		if( $strict ) {
+
+			return $this->status == self::STATUS_VERIFIED;
+		}
+
+		return $this->status >= self::STATUS_VERIFIED;
+	}
 
     /**
      * Generate and set user password using the yii security mechanism.
@@ -681,3 +685,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	// Delete -----------------
 }
+
+User::$statusMap[ User::STATUS_VERIFIED ] = 'Verified';
+
+User::$revStatusMap[ 'verified' ] = User::STATUS_VERIFIED;

@@ -12,11 +12,11 @@ use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * UpdateAvatar can be used to update avatar for models.
+ * UpdateVideo can be used to update video for models.
  *
  * The controller must provide modelService variable using approprite service class.
  */
-class UpdateAvatar extends \cmsgears\core\common\actions\base\ModelAction {
+class UpdateVideo extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -32,7 +32,7 @@ class UpdateAvatar extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $fileName	= 'Avatar';
+	public $fileName	= 'Video';
 
 	// Protected --------------
 
@@ -52,25 +52,25 @@ class UpdateAvatar extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// UpdateAvatar --------------------------
+	// UpdateVideo ---------------------------
 
 	public function run() {
 
 		if( isset( $this->model ) ) {
 
-			$avatar = $this->model->avatar;
+			$video = $this->model->video;
 
-			if( !isset( $avatar ) ) {
+			if( !isset( $video ) ) {
 
-				$avatar	= new File();
+				$video	= new File();
 			}
 
-			if( $avatar->load( Yii::$app->request->post(), $this->fileName ) ) {
+			if( $video->load( Yii::$app->request->post(), $this->fileName ) ) {
 
-				$this->modelService->updateAvatar( $this->model, $avatar );
+				$this->modelService->updateVideo( $this->model, $video );
 
-				$avatar		= $this->model->avatar;
-				$response	= [ 'fileUrl' => $avatar->getFileUrl() ];
+				$video		= $this->model->video;
+				$response	= [ 'fileUrl' => $video->getFileUrl() ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );

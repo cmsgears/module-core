@@ -10,13 +10,11 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Delete can be used to delete a comment and trigger notification and mail to admin and model owner.
- *
- * Only model owner can delete model in exceptional cases. It must be used with extra care in scenarios where comment dlete is not allowed to model owners.
+ * RequestSpam can be used to mark a comment for user deletion and trigger notification and mail to admin and model owner.
  *
  * The controller must provide modelService variable using approprite service class.
  */
-class Delete extends \cmsgears\core\common\actions\base\ModelAction {
+class RequestSpam extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -52,7 +50,7 @@ class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// Delete --------------------------------
+	// RequestDelete -------------------------
 
 	public function run( $id ) {
 
@@ -64,14 +62,17 @@ class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
 		if( isset( $model ) && $parent->isOwner( $user ) ) {
 
-			if( $modelCommentService->delete( $model ) ) {
+			if( $modelCommentService->updateSpamRequest( $model ) ) {
 
-				// TODO: Trigger notification and mail
+				 Yii::$app->coreMailer->sendCommentSpamRequestMail( $model );
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
 			}
 		}
+
+        // Generate Validation Errors
+        $errors = AjaxUtil::generateErrorMessage( $model );
 
 		// Trigger Ajax Failure
         return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );

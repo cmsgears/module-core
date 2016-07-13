@@ -22,6 +22,12 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 
 	// Public -----------------
 
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
 	public $idParam		= 'id';
 	public $slugParam	= 'slug';
 
@@ -29,14 +35,11 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 
 	// Protected --------------
 
-	// Variables -----------------------------
-
-	// Public -----------------
-
-	// Protected --------------
-
 	// Flag to identify whether type is required to perform action.
-	protected $type = false;
+	protected $typed = false;
+
+	// Model service for active model
+	protected $modelService;
 
 	// Private ----------------
 
@@ -60,6 +63,8 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 
 		parent::init();
 
+		$this->modelService		= $this->controller->modelService;
+
 		// Model is not provided by controller
 		if( !isset( $this->model ) ) {
 
@@ -68,7 +73,7 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 
 			if( isset( $slug ) ) {
 
-				if( $this->type ) {
+				if( $this->typed ) {
 
 					$this->model	= $this->modelService->getBySlugType( $slug, $this->modelService->getParentType() );
 				}

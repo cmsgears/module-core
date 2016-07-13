@@ -327,42 +327,13 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		return true;
 	}
 
-    /**
-     * Activate User created from Admin Panel.
-     * @param User $user
-     * @param ResetPasswordForm $resetForm
-     * @param boolean $activate
-     * @return boolean
-     */
-    public function activate( $user, $resetForm, $activate = true ) {
-
-        // Find existing user
-        $userToUpdate   = User::findById( $user->id );
-
-        // Generate Password
-        $userToUpdate->generatePassword( $resetForm->password );
-
-        // Activate User
-        if( $activate ) {
-
-            $userToUpdate->status = User::STATUS_ACTIVE;
-        }
-
-        $userToUpdate->unsetResetToken();
-
-        $userToUpdate->update();
-
-        return true;
-    }
-
 	/**
 	 * The method verify and confirm user by accepting valid token sent via mail. It also set user status to active.
 	 * @param User $user
 	 * @param string $token
-	 * @param boolean $activate
 	 * @return boolean
 	 */
-	public function verify( $user, $token, $activate = true ) {
+	public function verify( $user, $token ) {
 
 		// Check Token
 		if( $user->isVerifyTokenValid( $token ) ) {
@@ -370,14 +341,15 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 			// Find existing user
 			$userToUpdate	= User::findById( $user->id );
 
-			// Activate User
-			if( $activate ) {
+			// User need admin approval
+			if( Yii::$app->core->isUserApproval() ) {
 
-				$userToUpdate->status = User::STATUS_ACTIVE;
+				$userToUpdate->status = User::STATUS_VERIFIED;
 			}
+			// Direct approval and activation
 			else {
 
-				$userToUpdate->status = User::STATUS_CONFIRMED;
+				$userToUpdate->status = User::STATUS_ACTIVE;
 			}
 
 			$userToUpdate->unsetVerifyToken();
@@ -389,6 +361,45 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 		return false;
 	}
+
+    /**
+     * Activate User created from Admin Panel.
+     * @param User $user
+	 * @param string $token
+     * @param ResetPasswordForm $resetForm
+     * @return boolean
+     */
+    public function activate( $user, $token, $resetForm ) {
+
+		// Check Token
+		if( $user->isVerifyTokenValid( $token ) ) {
+
+	        // Find existing user
+	        $userToUpdate   = User::findById( $user->id );
+
+	        // Generate Password
+	        $userToUpdate->generatePassword( $resetForm->password );
+
+			// User need admin approval
+			if( Yii::$app->core->isUserApproval() ) {
+
+				$userToUpdate->status = User::STATUS_VERIFIED;
+			}
+			// Direct approval and activation
+			else {
+
+				$userToUpdate->status = User::STATUS_ACTIVE;
+			}
+
+	        $userToUpdate->unsetResetToken();
+
+	        $userToUpdate->update();
+
+	        return true;
+		}
+
+		return false;
+    }
 
     /**
      * The method generate a new reset token which can be used later to update user password.
@@ -416,7 +427,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
      * @param boolean $activate
      * @return User
      */
-    public function resetPassword( $user, $resetForm, $activate = true ) {
+    public function resetPassword( $user, $resetForm ) {
 
         // Find existing user
         $userToUpdate   = User::findById( $user->id );
@@ -425,8 +436,8 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
         $userToUpdate->generatePassword( $resetForm->password );
         $userToUpdate->unsetResetToken();
 
-        // Activate User
-        if( $userToUpdate->isNew() && $activate ) {
+        // Direct approval and activation
+        if( $userToUpdate->isNew() && !Yii::$app->core->isUserApproval() ) {
 
             $userToUpdate->status = User::STATUS_ACTIVE;
         }

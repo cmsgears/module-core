@@ -12,11 +12,11 @@ use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * UpdateAvatar can be used to update avatar for models.
+ * UpdateBanner can be used to update banner for models.
  *
  * The controller must provide modelService variable using approprite service class.
  */
-class UpdateAvatar extends \cmsgears\core\common\actions\base\ModelAction {
+class UpdateBanner extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -32,7 +32,7 @@ class UpdateAvatar extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $fileName	= 'Avatar';
+	public $fileName	= 'Banner';
 
 	// Protected --------------
 
@@ -52,25 +52,25 @@ class UpdateAvatar extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// UpdateAvatar --------------------------
+	// UpdateBanner --------------------------
 
 	public function run() {
 
 		if( isset( $this->model ) ) {
 
-			$avatar = $this->model->avatar;
+			$banner = $this->model->banner;
 
-			if( !isset( $avatar ) ) {
+			if( !isset( $banner ) ) {
 
-				$avatar	= new File();
+				$banner	= new File();
 			}
 
-			if( $avatar->load( Yii::$app->request->post(), $this->fileName ) ) {
+			if( $banner->load( Yii::$app->request->post(), $this->fileName ) ) {
 
-				$this->modelService->updateAvatar( $this->model, $avatar );
+				$this->modelService->updateBanner( $this->model, $banner );
 
-				$avatar		= $this->model->avatar;
-				$response	= [ 'fileUrl' => $avatar->getFileUrl() ];
+				$banner		= $this->model->banner;
+				$response	= [ 'fileUrl' => $banner->getFileUrl() ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );

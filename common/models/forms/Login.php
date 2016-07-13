@@ -114,7 +114,7 @@ class Login extends \yii\base\Model {
             }
 			else {
 
-				if( !$this->hasErrors() && !$user->isConfirmed( false ) ) {
+				if( !$this->hasErrors() && !$user->isVerified( false ) ) {
 
 					$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USER_VERIFICATION ) );
 				}

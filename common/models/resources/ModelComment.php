@@ -35,6 +35,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $agent
  * @property short $status
  * @property short $type
+ * @property short $fragment
  * @property short $rating
  * @property boolean $featured
  * @property datetime $createdAt
@@ -78,6 +79,8 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 	// Public -----------------
 
 	public $mParentType	= CoreGlobal::TYPE_COMMENT;
+
+	public $captcha;
 
 	// Protected --------------
 
@@ -131,8 +134,9 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
             [ 'email', 'email' ],
             [ [ 'parentType', 'name', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ [ 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-            [ [ 'status', 'rating', 'type' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+            [ [ 'status', 'rating', 'type', 'fragment' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
+            // Check captcha need for testimonial and review
             [ 'content', 'required', 'on' => [ 'testimonial' ] ],
             [ 'rating', 'required', 'on' => [ 'review' ] ],
             [ 'captcha', 'captcha', 'captchaAction' => '/core/site/captcha', 'on' => 'captcha' ],

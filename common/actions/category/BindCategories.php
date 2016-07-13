@@ -1,16 +1,22 @@
 <?php
-namespace cmsgears\core\common\actions\file;
+namespace cmsgears\core\common\actions\category;
 
 // Yii Imports
 use \Yii;
-use yii\base\InvalidConfigException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\forms\Binder;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class BindCategories extends \cmsgears\core\common\base\Action {
+/**
+ * BindCategories binds categories to a model using Binder form.
+ *
+ * The controller must provide appropriate model service having model class, table and type defined for the base model.
+ */
+class BindCategories extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -52,7 +58,7 @@ class BindCategories extends \cmsgears\core\common\base\Action {
 
 		if( $binder->load( Yii::$app->request->post(), 'Binder' ) ) {
 
-			Yii::$app->controller->modelService->bindCategories( $binder );
+			$this->modelService->bindCategories( $binder );
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );

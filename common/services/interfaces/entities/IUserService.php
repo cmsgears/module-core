@@ -47,13 +47,13 @@ interface IUserService extends \cmsgears\core\common\services\interfaces\base\IA
 
 	public function updateModelAttributes( $user, $attributes );
 
-    public function activate( $user, $resetForm, $activate = true );
+	public function verify( $user, $token );
 
-	public function verify( $user, $token, $activate = true );
+    public function activate( $user, $token, $resetForm );
 
     public function forgotPassword( $user );
 
-    public function resetPassword( $user, $resetForm, $activate = true );
+    public function resetPassword( $user, $resetForm );
 
     public function updateAvatar( $user, $avatar );
 

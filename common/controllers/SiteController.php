@@ -96,17 +96,14 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 			// If valid user found
 			if( isset( $user ) ) {
 
-				if( $user->isVerifyTokenValid( $token ) ) {
+				// Activate User
+				if( $this->userService->activate( $user, $token, $model ) ) {
 
-					// Activate User
-					if( $this->userService->activate( $user, $model ) ) {
+					// Send Register Mail
+					Yii::$app->coreMailer->sendActivateUserMail( $user );
 
-						// Send Register Mail
-						Yii::$app->coreMailer->sendActivateUserMail( $user );
-
-						// Set Success Message
-						Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
-					}
+					// Set Success Message
+					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
 				}
 				else {
 

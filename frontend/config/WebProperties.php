@@ -13,6 +13,8 @@ class WebProperties extends \cmsgears\core\common\config\CmgProperties {
 
 	// Global -----------------
 
+	const PROP_THEME			= 'theme';
+
 	// Public -----------------
 
 	// Protected --------------
@@ -45,4 +47,8 @@ class WebProperties extends \cmsgears\core\common\config\CmgProperties {
 
 	// Properties
 
+	public function getTheme() {
+
+		return $this->properties[ self::PROP_THEME ];
+	}
 }

@@ -29,7 +29,7 @@ class ModelGalleryService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelGallery';
+	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelGallery';
 
 	public static $modelTable	= CoreTables::TABLE_MODEL_GALLERY;
 

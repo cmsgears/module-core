@@ -32,9 +32,18 @@ trait ModelAttributeTrait {
 
     // Read - Maps -----
 
-	public function getAttributeMapByType( $model, $type ) {
+	public function getIdAttributeMapByType( $model, $type ) {
 
-		return self::findAttributeMapByType( $model, $type );
+		$modelAttributeService = Yii::$app->factory->get( 'modelAttributeService' );
+
+		return $modelAttributeService->getIdObjectMapByType( $model->id, static::$parentType, $type );
+	}
+
+	public function getNameAttributeMapByType( $model, $type ) {
+
+		$modelAttributeService = Yii::$app->factory->get( 'modelAttributeService' );
+
+		return $modelAttributeService->getNameObjectMapByType( $model->id, static::$parentType, $type );
 	}
 
 	// Read - Others ---
@@ -43,11 +52,16 @@ trait ModelAttributeTrait {
 
 	// Update -------------
 
-	public function updateAttributes( $attributes ) {
+	public function updateModelAttributes( $model, $attributes ) {
+
+		$modelAttributeService = Yii::$app->factory->get( 'modelAttributeService' );
 
 		foreach ( $attributes as $attribute ) {
 
-			$this->modelAttributeService->update( $attribute );
+			if( $model->id == $attribute->parentId ) {
+
+				$modelAttributeService->update( $attribute );
+			}
 		}
 
 		return true;
@@ -70,11 +84,6 @@ trait ModelAttributeTrait {
     // Read - Lists ----
 
     // Read - Maps -----
-
-	public static function findAttributeMapByType( $model, $type ) {
-
-		return ModelAttributeService::findMapByType( $model->id, static::$modelType, $type );
-	}
 
 	// Read - Others ---
 

@@ -21,8 +21,6 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 
 	// Protected --------------
 
-	protected $categoryService;
-
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -31,7 +29,7 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 
 		parent::init();
 
-		$this->categoryService	= Yii::$app->factory->get( 'categoryService' );
+		$this->modelService	= Yii::$app->factory->get( 'categoryService' );
 	}
 
 	// Instance methods --------------------------------------------

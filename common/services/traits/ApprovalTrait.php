@@ -49,6 +49,11 @@ trait ApprovalTrait {
 		return $model;
 	}
 
+	public function submit( $model, $public = true ) {
+
+		return $this->updateStatus( $model, IApproval::STATUS_SUBMITTED );
+	}
+
 	public function confirm( $model, $public = true ) {
 
 		return $this->updateStatus( $model, IApproval::STATUS_CONFIRMED );

@@ -178,7 +178,7 @@ abstract class ModelAttribute extends Attribute {
 	 */
 	public static function findByNameType( $modelId, $name, $type ) {
 
-		return self::queryByNameType( $modelId, $type, $name )->one();
+		return self::queryByNameType( $modelId, $name, $type )->one();
 	}
 
 	/**

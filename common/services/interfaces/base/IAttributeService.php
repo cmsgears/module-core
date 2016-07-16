@@ -23,7 +23,7 @@ interface IAttributeService extends IEntityService {
 
 	public function getByNameType( $modelId, $type, $name );
 
-	public function getOrInitByNameType( $modelId, $name, $type, $valueType = Attribute::VALUE_TYPE_TEXT );
+	public function initByNameType( $modelId, $name, $type, $valueType = Attribute::VALUE_TYPE_TEXT );
 
     // Read - Lists ----
 
@@ -31,7 +31,9 @@ interface IAttributeService extends IEntityService {
 
 	public function getNameValueMapByType( $modelId, $type );
 
-	public function getObjectMapByType( $modelId, $type );
+	public function getIdObjectMapByType( $modelId, $type );
+
+	public function getNameObjectMapByType( $modelId, $type );
 
 	// Create -------------
 
@@ -39,4 +41,5 @@ interface IAttributeService extends IEntityService {
 
 	// Delete -------------
 
+	public function deleteByModelId( $modelId );
 }

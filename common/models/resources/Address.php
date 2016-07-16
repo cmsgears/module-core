@@ -24,7 +24,9 @@ use cmsgears\core\common\models\entities\City;
  * @property string $line1
  * @property string $line2
  * @property string $line3
- * @property string $city
+ * @property string $countryName
+ * @property string $provinceName
+ * @property string $cityName
  * @property string $zip
  * @property string $subZip
  * @property string $firstName
@@ -100,13 +102,14 @@ class Address extends \cmsgears\core\common\models\base\Resource {
         $rules = [
             [ [ 'provinceId', 'countryId', 'line1', 'zip' ], 'required' ],
             [ [ 'cityId' ], 'required', 'on' => 'cityId' ],
-            [ [ 'city' ], 'required', 'on' => 'cityName' ],
+            [ [ 'cityName' ], 'required', 'on' => 'cityName' ],
             [ [ 'longitude', 'latitude' ], 'required', 'on' => 'location' ],
             [ [ 'longitude', 'latitude', 'cityId' ], 'required', 'on' => 'locationWithCityId' ],
-            [ [ 'longitude', 'latitude', 'city' ], 'required', 'on' => 'locationWithCityName' ],
+            [ [ 'longitude', 'latitude', 'cityName' ], 'required', 'on' => 'locationWithCityName' ],
             [ [ 'id' ], 'safe' ],
 			[ [ 'zip', 'subZip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ [ 'phone', 'fax' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'countryName', 'provinceName', 'cityName' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'title' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ [ 'line1', 'line2', 'line3', 'firstName', 'lastName', 'email', 'website' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
             [ [ 'zip', 'subZip' ], 'alphanumhyphenspace' ],
@@ -117,7 +120,7 @@ class Address extends \cmsgears\core\common\models\base\Resource {
         // trim if required
         if( Yii::$app->core->trimFieldValue ) {
 
-            $trim[] = [ [ 'line1', 'line2', 'line3', 'city', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'latitude', 'longitude' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'line1', 'line2', 'line3', 'cityName', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'latitude', 'longitude' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
             return ArrayHelper::merge( $trim, $rules );
         }
@@ -138,7 +141,7 @@ class Address extends \cmsgears\core\common\models\base\Resource {
             'line1' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE1 ),
             'line2' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE2 ),
             'line3' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE3 ),
-            'city' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CITY ),
+            'cityName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CITY ),
             'zip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP ),
             'subZip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP_SUB ),
             'firstName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
@@ -201,12 +204,13 @@ class Address extends \cmsgears\core\common\models\base\Resource {
             $address .= ", $this->line3";
         }
 
-        if( isset( $this->city ) && strlen( $this->city ) > 0 ) {
+        if( isset( $this->cityName ) && strlen( $this->cityName ) > 0 ) {
 
-            $address .= ", $this->city";
+            $address .= ", $this->cityName";
         }
 
-        $address .= ", $country, $province, $this->zip";
+        //$address .= ", $country, $province, $this->zip";
+        $address .= ", $this->zip";
 
         return $address;
     }

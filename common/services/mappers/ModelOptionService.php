@@ -29,7 +29,7 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelOption';
+	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelOption';
 
 	public static $modelTable	= CoreTables::TABLE_MODEL_OPTION;
 

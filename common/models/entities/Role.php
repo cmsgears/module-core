@@ -209,7 +209,7 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 		// Add L1 slugs to L0 slugs
 		if( $level == 1 ) {
 
-			$permissions	= Permission::getChildrenForL0( $idList );
+			$permissions	= Permission::findL0Children( $idList );
 
 	        foreach ( $permissions as $permission ) {
 

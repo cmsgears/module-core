@@ -14,6 +14,11 @@ trait SeverityTrait {
         ISeverity::SEVERITY_HIGH => 'High'
 	];
 
+	public function getSeverityStr() {
+
+		return self::$severityMap[ $this->severity ];
+	}
+
 	public function isSeverityLow(  $strict = true ) {
 
 		if( $strict ) {

@@ -11,7 +11,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\forms\ResetPassword;
 use cmsgears\core\common\models\resources\Address;
 use cmsgears\core\common\models\resources\File;
-use cmsgears\core\common\models\mappers\ModelAttribute;
+use cmsgears\core\common\models\resources\ModelAttribute;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 use cmsgears\core\common\utilities\CodeGenUtil;
@@ -26,11 +26,11 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 
 	// Protected --------------
 
+	protected $modelAddressService;
+
+	protected $modelAttributeService;
+
 	// Private ----------------
-
-	private $userService;
-
-	private $modelAddressService;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -38,9 +38,10 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 
         parent::init();
 
-		$this->crudPermission		= CoreGlobal::PERM_USER;
-		$this->userService 			= Yii::$app->factory->get( 'userService' );
-		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
+		$this->crudPermission			= CoreGlobal::PERM_USER;
+		$this->modelService 			= Yii::$app->factory->get( 'userService' );
+		$this->modelAddressService		= Yii::$app->factory->get( 'modelAddressService' );
+		$this->modelAttributeService	= Yii::$app->factory->get( 'modelAttributeService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -105,7 +106,7 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 			if( $model->load( Yii::$app->request->post(), 'ResetPassword' ) && $model->validate() ) {
 
 				// Update User and Site Member
-				if( $this->userService->resetPassword( $user, $model, false ) ) {
+				if( $this->modelService->resetPassword( $user, $model, false ) ) {
 
 					$data	= [ 'email' => $user->email, 'username' => $user->username ];
 
@@ -140,14 +141,16 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 
 			for ( $i = 0; $i < $count; $i++ ) {
 
-				$attribute		= new ModelAttribute( [ 'parentId' => $user->id, 'parentType' => CoreGlobal::TYPE_USER ] );
+				$attribute		= $modelAttributes[ $i ];
+				$attribute		= $this->modelAttributeService->initByNameType( $user->id, CoreGlobal::TYPE_USER, $attribute[ 'name' ], $attribute[ 'type' ] );
+
 				$attributes[] 	= $attribute;
 			}
 
 			// Load SchoolItem models
 			if( ModelAttribute::loadMultiple( $attributes, Yii::$app->request->post(), 'ModelAttribute' ) && ModelAttribute::validateMultiple( $attributes ) ) {
 
-				$this->userService->updateAttributes( $user, $attributes );
+				$this->modelService->updateModelAttributes( $user, $attributes );
 
 				$data	= [];
 
@@ -181,7 +184,7 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
             if( $user->load( Yii::$app->request->post(), 'User' ) && $user->validate() ) {
 
                 // Update User and Site Member
-                $this->userService->update( $user );
+                $this->modelService->update( $user );
 
                 $data   = [
                             'email' => $user->email, 'username' => $user->username, 'firstName' => $user->firstName,
@@ -215,11 +218,11 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 
             if( $address->load( Yii::$app->request->post(), 'Address' ) && $address->validate() ) {
 
-            $modelAddress   = $this->modelAddressService->createOrUpdateByType( $address, $user->id, CoreGlobal::TYPE_USER, $type );
+            $modelAddress   = $this->modelAddressService->createOrUpdateByType( $address, [ 'parentId' => $user->id, 'parentType' => CoreGlobal::TYPE_USER, 'type' => $type ] );
             $address        = $modelAddress->address;
 
             $data   = [
-                        'line1' => $address->line1, 'line2' => $address->line2, 'city' => $address->city,
+                        'line1' => $address->line1, 'line2' => $address->line2, 'cityName' => $address->cityName,
                         'country' => $address->country->name, 'province' => $address->province->name, 'phone' => $address->phone, 'zip' => $address->zip
                     ];
 

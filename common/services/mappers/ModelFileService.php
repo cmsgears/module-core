@@ -29,7 +29,7 @@ class ModelFileService extends \cmsgears\core\common\services\base\EntityService
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelFile';
+	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelFile';
 
 	public static $modelTable	= CoreTables::TABLE_MODEL_FILE;
 

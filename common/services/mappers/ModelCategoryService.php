@@ -29,7 +29,7 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelCategory';
+	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelCategory';
 
 	public static $modelTable	= CoreTables::TABLE_MODEL_CATEGORY;
 

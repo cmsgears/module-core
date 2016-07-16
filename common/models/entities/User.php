@@ -357,10 +357,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
      */
     public function getLocale() {
 
-		$localeTable	= CoreTables::TABLE_LOCALE;
-		$userTable		= CoreTables::TABLE_USER;
-
-        return $this->hasOne( Locale::className(), [ "$localeTable.id" => "$userTable.localeId" ] );
+        return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] );
     }
 
     /**
@@ -368,10 +365,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
      */
     public function getGender() {
 
-		$optionTable	= CoreTables::TABLE_OPTION;
-		$userTable		= CoreTables::TABLE_USER;
-
-        return $this->hasOne( Option::className(), [ "$optionTable.id" => "$userTable.genderId" ] );
+        return $this->hasOne( Option::className(), [ 'id' => 'genderId' ] );
     }
 
     /**
@@ -409,6 +403,15 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
         return $name;
     }
+
+	// Verify only if new or verified
+	public function verify() {
+
+		if( $this->status <= User::STATUS_VERIFIED ) {
+
+			$this->status = User::STATUS_VERIFIED;
+		}
+	}
 
 	public function isVerified( $strict = true ) {
 

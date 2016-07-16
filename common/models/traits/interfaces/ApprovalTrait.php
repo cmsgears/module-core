@@ -70,6 +70,16 @@ trait ApprovalTrait {
 		return $this->status == IApproval::STATUS_SUBMITTED || $this->status == IApproval::STATUS_RE_SUBMIT;
 	}
 
+	public function isBelowSubmitted( $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->status < IApproval::STATUS_REJECTED;
+		}
+
+		return $this->status <= IApproval::STATUS_REJECTED;
+	}
+
 	public function isRejected( $strict = true ) {
 
 		if( $strict ) {
@@ -164,10 +174,10 @@ trait ApprovalTrait {
 		}
 	}
 
-	// User can edit model in these situations i.e. either new or re-submit.
+	// User cannot edit model in submitted states.
 	public function isEditable() {
 
-		return $this->status != IApproval::STATUS_NEW && $this->status != IApproval::STATUS_RE_SUBMIT;
+		return $this->status != IApproval::STATUS_SUBMITTED && $this->status != IApproval::STATUS_RE_SUBMIT;
 	}
 
 	// User can submit the model for limit removal in selected states i.e. new, rejected, frozen or blocked.

@@ -69,7 +69,7 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 		return self::findByNameType( $modelId, $name, $type );
 	}
 
-	public function getOrInitByNameType( $modelId, $name, $type, $valueType = 'text' ) {
+	public function initByNameType( $modelId, $name, $type, $valueType = 'text' ) {
 
 		$attribute	= $this->getByNameType( $modelId, $name, $type );
 
@@ -99,7 +99,15 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 		return $this->getNameValueMap( $config );
 	}
 
-	public function getObjectMapByType( $modelId, $type ) {
+	public function getIdObjectMapByType( $modelId, $type ) {
+
+		$config[ 'conditions' ][ 'modelId' ] 	= $modelId;
+		$config[ 'conditions' ][ 'type' ] 		= $type;
+
+		return $this->getObjectMap( $config );
+	}
+
+	public function getNameObjectMapByType( $modelId, $type ) {
 
 		$config[ 'key' ]						= 'name';
 		$config[ 'conditions' ][ 'modelId' ] 	= $modelId;
@@ -128,26 +136,26 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 
 	public function update( $model, $config = [] ) {
 
-        $existingModel  = self::findByNameType( $model->modelId, $model->name, $model->type );
+        $existingModel  = $this->getByNameType( $model->modelId, $model->name, $model->type );
 
 		// Create if it does not exist
 		if( !isset( $existingModel ) ) {
 
-			return self::create( $model );
+			return $this->create( $model );
 		}
 
 		if( isset( $model->valueType ) ) {
 
-			$existingModel->copyForUpdateFrom( $model, [ 'valueType', 'value' ] );
+			return parent::update( $model, [
+				'attributes' => [ 'valueType', 'value' ]
+			]);
 		}
 		else {
 
-			$existingModel->copyForUpdateFrom( $model, [ 'value' ] );
+			return parent::update( $model, [
+				'attributes' => [ 'value' ]
+			]);
 		}
-
-		$existingModel->update();
-
-		return $existingModel;
  	}
 
 	public function updateMultiple( $models, $config = [] ) {
@@ -158,7 +166,7 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 
 			if( $model->modelId == $parent->id ) {
 
-				self::update( $model );
+				$this->update( $model );
 			}
 		}
 	}
@@ -174,16 +182,23 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 				$attribute[ 'valueType' ]	= Attribute::VALUE_TYPE_TEXT;
 			}
 
-			$model			= self::findOrGetByTypeName( $config[ 'modelId' ], $config[ 'type' ], $attribute[ 'name' ], $attribute[ 'valueType' ] );
+			$model			= $this->initByNameType( $config[ 'modelId' ], $attribute[ 'name' ], $config[ 'type' ], $attribute[ 'valueType' ] );
 
 			$model->value	= $attribute[ 'value' ];
 			$model->label	= $form->getAttributeLabel( $attribute[ 'name' ] );
 
-			self::update( $model );
+			$this->update( $model );
 		}
  	}
 
 	// Delete -------------
+
+	public function deleteByModelId( $modelId ) {
+
+		$modelClass	= static::$modelClass;
+
+		$modelClass::deleteAll( 'modelId=:id', [ ':id' => $modelId ] );
+	}
 
 	// Static Methods ----------------------------------------------
 
@@ -229,11 +244,4 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 	// Update -------------
 
 	// Delete -------------
-
-	public static function deleteByModelId( $modelId ) {
-
-		$modelClass	= static::$modelClass;
-
-		$modelClass::deleteAll( 'modelId=:id', [ ':id' => $modelId ] );
-	}
 }

@@ -7,7 +7,10 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-interface IUserService extends \cmsgears\core\common\services\interfaces\base\IApprovalService {
+use cmsgears\core\common\services\interfaces\base\IApprovalService;
+use cmsgears\core\common\services\interfaces\base\IModelAttributeService;
+
+interface IUserService extends IApprovalService, IModelAttributeService {
 
 	// Data Provider ------
 
@@ -37,15 +40,11 @@ interface IUserService extends \cmsgears\core\common\services\interfaces\base\IA
 
 	public function getIdNameMapByRoleSlug( $roleSlug );
 
-	public function getAttributeMapByType( $user, $type );
-
 	// Create -------------
 
 	public function register( $registerForm );
 
 	// Update -------------
-
-	public function updateModelAttributes( $user, $attributes );
 
 	public function verify( $user, $token );
 

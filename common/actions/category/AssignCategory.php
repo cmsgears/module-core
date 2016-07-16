@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\common\actions\tag;
+namespace cmsgears\core\common\actions\category;
 
 // Yii Imports
 use \Yii;
@@ -10,13 +10,11 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * AssignTags map tags for models using ModelTag mapper.
- *
- * In case a tag does not exist for model type, it will be created and than mapping will be done.
+ * AssignCategory maps existing category to model in action using ModelCategory mapper.
  *
  * The controller must provide appropriate model service having model class, model table and parent type defined for the base model.
  */
-class AssignTags extends \cmsgears\core\common\actions\base\ModelAction {
+class AssignCategory extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -34,8 +32,6 @@ class AssignTags extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Protected --------------
 
-	protected $type = true;
-
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
@@ -52,25 +48,24 @@ class AssignTags extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// AssignTags ----------------------------
+	// AssignCategory ------------------------
 
 	public function run() {
 
 		$post	= yii::$app->request->post();
 
-		if( isset( $this->model ) && isset( $post[ 'tags' ] ) ) {
+		if( isset( $this->model ) && isset( $post[ 'categoryId' ] ) ) {
 
-			$tags 				= $post[ 'tags' ];
-			$modelTagService	= Yii::$app->factory->get( 'modelTagService' );
+			$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
 
-			$modelTagService->createFromCsv( $this->model->id, $this->modelService->getParentType(), $tags );
+			$modelCategoryService->activateByModelId( $this->model->id, $this->modelService->getParentType(), $post[ 'categoryId' ] );
 
-			$tags		= $this->model->activeTags;
-			$data		= [];
+			$categories		= $this->model->activeCategories;
+			$data			= [];
 
-			foreach ( $tags as $tag ) {
+			foreach ( $categories as $category ) {
 
-				$data[]	= [ 'name' => $tag->name, 'slug' => $tag->slug ];
+				$data[]	= [ 'name' => $category->name, 'id' => $category->id ];
 			}
 
 			// Trigger Ajax Success

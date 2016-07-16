@@ -38,7 +38,7 @@ trait NameTrait {
 		$modelClass					= static::$modelClass;
 		$modelTable					= static::$modelTable;
 
-		$config[ 'query' ] 			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelTable::find();
+		$config[ 'query' ] 			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
 		$config[ 'columns' ]		= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name" ];
 		$config[ 'array' ]			= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
 

@@ -15,6 +15,8 @@ class AdminProperties extends CmgProperties {
 
 	// Global -----------------
 
+	const PROP_THEME			= 'theme';
+
 	// Public -----------------
 
 	// Protected --------------
@@ -52,4 +54,8 @@ class AdminProperties extends CmgProperties {
 
 	// Properties
 
+	public function getTheme() {
+
+		return $this->properties[ self::PROP_THEME ];
+	}
 }

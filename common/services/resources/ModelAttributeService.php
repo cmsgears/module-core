@@ -68,14 +68,14 @@ class ModelAttributeService extends \cmsgears\core\common\services\base\EntitySe
 		return ModelAttribute::findByType( $parentId, $parentType, $type );
 	}
 
-	public function getByTypeName( $parentId, $parentType, $type, $name ) {
+	public function getByNameType( $parentId, $parentType, $name, $type ) {
 
-		return ModelAttribute::findByTypeName( $parentId, $parentType, $type, $name );
+		return ModelAttribute::findByNameType( $parentId, $parentType, $name, $type );
 	}
 
-	public function getOrInitByTypeName( $parentId, $parentType, $type, $name, $valueType = 'text' ) {
+	public function initByNameType( $parentId, $parentType, $name, $type, $valueType = ModelAttribute::VALUE_TYPE_TEXT ) {
 
-		$attribute	= ModelAttribute::findByTypeName( $parentId, $parentType, $type, $name );
+		$attribute	= ModelAttribute::findByNameType( $parentId, $parentType, $name, $type );
 
 		if( !isset( $attribute ) ) {
 
@@ -103,7 +103,18 @@ class ModelAttributeService extends \cmsgears\core\common\services\base\EntitySe
 		return $this->getNameValueMap( $config );
 	}
 
-	public function getObjectMapByType( $parentId, $parentType, $type ) {
+	public function getIdObjectMapByType( $parentId, $parentType, $type ) {
+
+		$config[ 'conditions' ][ 'parentId' ] 	= $parentId;
+		$config[ 'conditions' ][ 'parentType' ] = $parentType;
+		$config[ 'conditions' ][ 'type' ] 		= $type;
+
+		return $this->getObjectMap( $config );
+	}
+
+	public function getNameObjectMapByType( $parentId, $parentType, $type ) {
+
+		$config[ 'key' ] = 'name';
 
 		$config[ 'conditions' ][ 'parentId' ] 	= $parentId;
 		$config[ 'conditions' ][ 'parentType' ] = $parentType;
@@ -137,12 +148,12 @@ class ModelAttributeService extends \cmsgears\core\common\services\base\EntitySe
 
 	public function update( $model, $config = [] ) {
 
-        $existingModel  = self::findByTypeName( $model->parentId, $model->parentType, $model->type, $model->name );
+        $existingModel  = $this->getByNameType( $model->parentId, $model->parentType, $model->name, $model->type );
 
 		// Create if it does not exist
 		if( !isset( $existingModel ) ) {
 
-			return self::create( $model );
+			return $this->create( $model );
 		}
 
 		if( isset( $model->valueType ) ) {
@@ -167,7 +178,7 @@ class ModelAttributeService extends \cmsgears\core\common\services\base\EntitySe
 
 			if( $model->parentId == $parent->id ) {
 
-				self::update( $model );
+				$this->update( $model );
 			}
 		}
 	}
@@ -183,12 +194,12 @@ class ModelAttributeService extends \cmsgears\core\common\services\base\EntitySe
 				$attribute[ 'valueType' ]	= ModelAttribute::VALUE_TYPE_TEXT;
 			}
 
-			$model			= self::findOrGetByTypeName( $config[ 'parentId' ], $config[ 'parentType' ], $config[ 'type' ], $attribute[ 'name' ], $attribute[ 'valueType' ] );
+			$model			= $this->initByNameType( $config[ 'parentId' ], $config[ 'parentType' ], $attribute[ 'name' ], $config[ 'type' ], $attribute[ 'valueType' ] );
 
 			$model->value	= $attribute[ 'value' ];
 			$model->label	= $form->getAttributeLabel( $attribute[ 'name' ] );
 
-			self::update( $model );
+			$this->update( $model );
 		}
  	}
 

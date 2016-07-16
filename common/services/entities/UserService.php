@@ -14,9 +14,9 @@ use cmsgears\core\common\models\resources\File;
 
 use cmsgears\core\common\services\interfaces\entities\IUserService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
-use cmsgears\core\common\services\interfaces\resources\IModelAttributeService;
 
 use cmsgears\core\common\services\traits\ApprovalTrait;
+use cmsgears\core\common\services\traits\ModelAttributeTrait;
 
 use cmsgears\core\common\utilities\DateUtil;
 
@@ -50,18 +50,17 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	// Private ----------------
 
 	private $fileService;
-	private $modelAttributeService;
 
 	// Traits ------------------------------------------------------
 
 	use ApprovalTrait;
+	use ModelAttributeTrait;
 
 	// Constructor and Initialisation ------------------------------
 
-    public function __construct( IFileService $fileService, IModelAttributeService $modelAttributeService, $config = [] ) {
+    public function __construct( IFileService $fileService, $config = [] ) {
 
-		$this->fileService				= $fileService;
-		$this->modelAttributeService	= $modelAttributeService;
+		$this->fileService	= $fileService;
 
         parent::__construct( $config );
     }
@@ -235,11 +234,6 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		return $usersMap;
 	}
 
-	public function getAttributeMapByType( $user, $type ) {
-
-		return $this->modelAttributeService->getObjectMapByType( $user->id, CoreGlobal::TYPE_USER, $type );
-	}
-
 	// Read - Others ---
 
 	// Create -------------
@@ -317,16 +311,6 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		]);
 	}
 
-	public function updateModelAttributes( $user, $attributes ) {
-
-		foreach ( $attributes as $attribute ) {
-
-			$this->modelAttributeService->update( $attribute );
-		}
-
-		return true;
-	}
-
 	/**
 	 * The method verify and confirm user by accepting valid token sent via mail. It also set user status to active.
 	 * @param User $user
@@ -344,7 +328,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 			// User need admin approval
 			if( Yii::$app->core->isUserApproval() ) {
 
-				$userToUpdate->status = User::STATUS_VERIFIED;
+				$userToUpdate->verify();
 			}
 			// Direct approval and activation
 			else {
@@ -383,7 +367,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 			// User need admin approval
 			if( Yii::$app->core->isUserApproval() ) {
 
-				$userToUpdate->status = User::STATUS_VERIFIED;
+				$userToUpdate->verify();
 			}
 			// Direct approval and activation
 			else {
@@ -450,23 +434,19 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
     /**
      * The method create user avatar if it does not exist or save existing avatar.
-     * @param User $user
+     * @param User $model
      * @param CmgFile $avatar
      * @return User - updated User
      */
-    public function updateAvatar( $user, $avatar ) {
-
-        // Find existing user
-        $userToUpdate   = User::findById( $user->id );
+    public function updateAvatar( $model, $avatar ) {
 
         // Save Avatar
-        $this->fileService->saveImage( $avatar, [ 'model' => $userToUpdate, 'attribute' => 'avatarId' ] );
+        $this->fileService->saveImage( $avatar, [ 'model' => $model, 'attribute' => 'avatarId' ] );
 
-        // Update User
-        $userToUpdate->update();
-
-        // Return updated User
-        return $userToUpdate;
+		// Update Model
+		return parent::update( $model, [
+			'attributes' => [ 'avatarId' ]
+		]);
     }
 
 	// Delete -------------

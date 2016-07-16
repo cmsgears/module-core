@@ -12,7 +12,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
 /**
  * RemoveTag disable a tag for model by de-activating it.
  *
- * The controller must provide appropriate model service having model class, table and type defined for the base model.
+ * The controller must provide appropriate model service having model class, model table and parent type defined for the base model.
  */
 class RemoveTag extends \cmsgears\core\common\actions\base\ModelAction {
 

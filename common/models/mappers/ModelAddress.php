@@ -155,10 +155,10 @@ class ModelAddress extends \cmsgears\core\common\models\base\Mapper {
 
 		if( $first ) {
 
-			return self::queryByParent( $parentId, $parentType )->where( 'type=:type', [ ':type' => $type ] )->one();
+			return self::queryByParent( $parentId, $parentType )->andWhere( 'type=:type', [ ':type' => $type ] )->one();
 		}
 
-        return self::queryByParent( $parentId, $parentType )->where( 'type=:type', [ ':type' => $type ] )->all();
+        return self::queryByParent( $parentId, $parentType )->andWhere( 'type=:type', [ ':type' => $type ] )->all();
     }
 
 	// Create -----------------

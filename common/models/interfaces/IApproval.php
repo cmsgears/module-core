@@ -27,6 +27,8 @@ interface IApproval {
 
 	public function isSubmitted( $strict = true );
 
+	public function isBelowSubmitted( $strict = true );
+
 	public function isRejected( $strict = true );
 
 	public function isReSubmit( $strict = true );

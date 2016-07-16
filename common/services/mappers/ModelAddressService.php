@@ -29,7 +29,7 @@ class ModelAddressService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelAddress';
+	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelAddress';
 
 	public static $modelTable	= CoreTables::TABLE_MODEL_ADDRESS;
 
@@ -96,7 +96,7 @@ class ModelAddressService extends \cmsgears\core\common\services\base\EntityServ
 		$parentId 	= $config[ 'parentId' ];
 		$parentType = $config[ 'parentType' ];
 		$type 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
-		$order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : null;
+		$order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
         // Create Address
         $address->save();
@@ -145,13 +145,13 @@ class ModelAddressService extends \cmsgears\core\common\services\base\EntityServ
 		$type 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
 		$order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
-        $existingAddress    = $this->getByType( $parentId, $parentType, $type );
+        $existingAddress    = $this->getByType( $parentId, $parentType, $type, true );
 
         if( isset( $existingAddress ) ) {
 
             $addressToUpdate    = $existingAddress->address;
 
-            $addressToUpdate->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'city', 'zip',
+            $addressToUpdate->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'cityName', 'zip',
                                             'firstName', 'lastName', 'phone', 'email', 'fax', 'longitude', 'latitude', 'zoomLevel' ] );
 
             $addressToUpdate->update();
@@ -177,7 +177,7 @@ class ModelAddressService extends \cmsgears\core\common\services\base\EntityServ
 
         $shippingAddress    = new Address();
 
-        $shippingAddress->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'city', 'zip', 'firstName', 'lastName', 'phone', 'email', 'fax' ] );
+        $shippingAddress->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'cityName', 'zip', 'firstName', 'lastName', 'phone', 'email', 'fax' ] );
 
 		return $this->create( $address, $config );
     }

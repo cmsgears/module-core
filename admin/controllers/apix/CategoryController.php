@@ -73,22 +73,18 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 
 	// yii\base\Controller ----
 
+    public function actions() {
+
+        return [
+        	'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ]
+		];
+    }
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
 	// CategoryController --------------------
-
-	public function actionAutoSearch() {
-
-		$name	= Yii::$app->request->post( 'name' );
-		$type	= Yii::$app->request->post( 'type' );
-
-		$data	= $this->modelService->searchByName( $name );
-
-		// Trigger Ajax Success
-		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-	}
 
 	public function actionCreate() {
 

@@ -19,9 +19,9 @@ interface IModelAttributeService extends \cmsgears\core\common\services\interfac
 
 	public function getByType( $parentId, $parentType, $type );
 
-	public function getByTypeName( $parentId, $parentType, $type, $name );
+	public function getByNameType( $parentId, $parentType, $name, $type );
 
-	public function getOrInitByTypeName( $parentId, $parentType, $type, $name, $valueType = Attribute::VALUE_TYPE_TEXT );
+	public function initByNameType( $parentId, $parentType, $name, $type, $valueType = Attribute::VALUE_TYPE_TEXT );
 
     // Read - Lists ----
 
@@ -29,7 +29,9 @@ interface IModelAttributeService extends \cmsgears\core\common\services\interfac
 
 	public function getNameValueMapByType( $parentId, $parentType, $type );
 
-	public function getObjectMapByType( $parentId, $parentType, $type );
+	public function getIdObjectMapByType( $parentId, $parentType, $type );
+
+	public function getNameObjectMapByType( $parentId, $parentType, $type );
 
 	// Create -------------
 

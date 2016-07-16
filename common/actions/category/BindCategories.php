@@ -12,7 +12,7 @@ use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * BindCategories binds categories to a model using Binder form.
+ * BindCategories binds multiple categories to a model using Binder form.
  *
  * The controller must provide appropriate model service having model class, table and type defined for the base model.
  */

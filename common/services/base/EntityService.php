@@ -217,8 +217,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		if( Yii::$app->core->isUpdateSelective() && $selective ) {
 
-			$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [];
-
+			$attributes		= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [];
 
 	        $existingModel  = $this->getById( $model->id );
 
@@ -490,7 +489,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		if( isset( $parentType ) && ( isset( $keywords ) || isset( $config[ 'tag' ] ) ) ) {
 
 			$query->leftJoin( $mtagTable, "$modelTable.id=$mtagTable.parentId AND $mtagTable.parentType='$parentType' AND $mtagTable.active=TRUE" )
-				->leftJoin( $tagTable, "$mtagTable.tagId=$tagTable.id" );
+				->leftJoin( $tagTable, "$mtagTable.modelId=$tagTable.id" );
 		}
 
 		if( isset( $parentType ) && isset( $config[ 'tag' ] ) ) {
@@ -507,7 +506,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		if( isset( $parentType ) && ( isset( $keywords ) || isset( $config[ 'category' ] ) ) ) {
 
 			$query->leftJoin( "$mcategoryTable", "$modelTable.id=$mcategoryTable.parentId AND $mcategoryTable.parentType='$parentType' AND $mcategoryTable.active=TRUE" )
-				->leftJoin( "$categoryTable", "$mcategoryTable.categoryId=$categoryTable.id" );
+				->leftJoin( "$categoryTable", "$mcategoryTable.modelId=$categoryTable.id" );
 		}
 
 		if( isset( $parentType ) && isset( $config[ 'category' ] ) ) {

@@ -69,6 +69,12 @@ class OwnerFilter {
 
 			$model	= null;
 
+			// Use default column as id
+			if( !isset( $args[ 'slug' ] ) ) {
+
+				$args[ 'id' ]	= true;
+			}
+
 			// Find model using id
 			if( isset( $args[ 'id' ] ) && $args[ 'id' ] ) {
 
@@ -105,6 +111,8 @@ class OwnerFilter {
 
 				throw new ForbiddenHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 			}
+
+			return true;
 		}
 
 		// Halt action execution in case a valid service is not found

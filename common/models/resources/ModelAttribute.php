@@ -76,7 +76,7 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
         ];
 
         // trim if required
-        if( Yii::$app->cmgCore->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
             $trim[] = [ [ 'name', 'label', 'value', 'valueType', 'type' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 

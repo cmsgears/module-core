@@ -3,6 +3,8 @@
 use \Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\widgets\aform\AjaxForm;
 ?>
 
@@ -29,7 +31,8 @@ use cmsgears\widgets\aform\AjaxForm;
 
 		<?= AjaxForm::widget([
 			'options' => [ 'class' => 'cmt-form', 'id' => "frm-setting-$type", 'cmt-keep' => 1 ],
-			'slug' => "config-$type", 'showLabel' => true, 'model' => $model,
+			'slug' => "config-$type", 'type' => CoreGlobal::TYPE_SYSTEM,
+			'showLabel' => true, 'model' => $model,
 			'ajaxUrl' => "core/settings/update?type=$type",
 			'cmtController' => 'settings', 'cmtAction' => 'update',
 			'modelName' => "setting$type"

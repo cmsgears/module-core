@@ -349,7 +349,9 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $this->site->id, 'contact_name','Contact Name','mail','text','Contact Us' ],
 			[ $this->site->id, 'contact_email','Contact Email','mail','text', "democontact@$this->primaryDomain" ],
 			[ $this->site->id, 'info_name','Info Name','mail','text','Info' ],
-			[ $this->site->id, 'info_email','Info Email','mail','text',"demoinfo@$this->primaryDomain" ]
+			[ $this->site->id, 'info_email','Info Email','mail','text',"demoinfo@$this->primaryDomain" ],
+			[ $this->site->id, 'theme','Theme','backend','text','admin' ],
+			[ $this->site->id, 'theme','Theme','frontend','text','basic' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_site_attribute', $columns, $attributes );

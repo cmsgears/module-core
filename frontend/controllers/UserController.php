@@ -20,8 +20,6 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 
 	// Protected --------------
 
-	protected $userService;
-
 	protected $optionService;
 
 	// Private ----------------
@@ -34,7 +32,7 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 
 		$this->crudPermission	= CoreGlobal::PERM_USER;
 
-		$this->userService 		= Yii::$app->factory->get( 'userService' );
+		$this->modelService 	= Yii::$app->factory->get( 'userService' );
 
 		$this->optionService 	= Yii::$app->factory->get( 'optionService' );
 	}
@@ -119,9 +117,9 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 		// Update/Render if exist
 		if( isset( $user ) ) {
 
-			$privacy		= $this->userService->getAttributeMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
-			$notification	= $this->userService->getAttributeMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
-			$reminder		= $this->userService->getAttributeMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
+			$privacy		= $this->modelService->getNameAttributeMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
+			$notification	= $this->modelService->getNameAttributeMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
+			$reminder		= $this->modelService->getNameAttributeMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
 
 			// NOTE: Rest of the attributes can be loaded in view.
 

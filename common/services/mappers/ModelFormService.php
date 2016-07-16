@@ -29,7 +29,7 @@ class ModelFormService extends \cmsgears\core\common\services\base\EntityService
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelForm';
+	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelForm';
 
 	public static $modelTable	= CoreTables::TABLE_MODEL_FORM;
 

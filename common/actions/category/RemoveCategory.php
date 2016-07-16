@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\common\actions\tag;
+namespace cmsgears\core\common\actions\category;
 
 // Yii Imports
 use \Yii;
@@ -10,13 +10,11 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * AssignTags map tags for models using ModelTag mapper.
- *
- * In case a tag does not exist for model type, it will be created and than mapping will be done.
+ * RemoveCategory disable a category for model by de-activating it.
  *
  * The controller must provide appropriate model service having model class, model table and parent type defined for the base model.
  */
-class AssignTags extends \cmsgears\core\common\actions\base\ModelAction {
+class RemoveCategory extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -34,8 +32,6 @@ class AssignTags extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Protected --------------
 
-	protected $type = true;
-
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
@@ -52,29 +48,25 @@ class AssignTags extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// AssignTags ----------------------------
+	// RemoveCategory ------------------------
 
 	public function run() {
 
 		$post	= yii::$app->request->post();
 
-		if( isset( $this->model ) && isset( $post[ 'tags' ] ) ) {
+		if( isset( $this->model ) && isset( $post[ 'categoryId' ] ) ) {
 
-			$tags 				= $post[ 'tags' ];
-			$modelTagService	= Yii::$app->factory->get( 'modelTagService' );
+			$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
 
-			$modelTagService->createFromCsv( $this->model->id, $this->modelService->getParentType(), $tags );
+			$mapping	= $modelCategoryService->getByModelId( $this->model->id, $this->modelService->getParentType(), $post[ 'categoryId' ] );
 
-			$tags		= $this->model->activeTags;
-			$data		= [];
+			if( isset( $mapping ) ) {
 
-			foreach ( $tags as $tag ) {
+				$modelCategoryService->disable( $mapping );
 
-				$data[]	= [ 'name' => $tag->name, 'slug' => $tag->slug ];
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 			}
-
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 		}
 
 		// Trigger Ajax Failure

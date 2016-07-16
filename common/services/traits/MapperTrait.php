@@ -143,6 +143,10 @@ trait MapperTrait {
 
 			$this->activate( $model );
 		}
+		else {
+
+			$this->createByParams( [ 'parentId' => $parentId, 'parentType' => $parentType, 'modelId' => $modelId, 'active' => true ] );
+		}
 	}
 
 	public function disable( $model ) {

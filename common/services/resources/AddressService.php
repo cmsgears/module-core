@@ -77,7 +77,7 @@ class AddressService extends \cmsgears\core\common\services\base\EntityService i
 	public function update( $model, $config = [] ) {
 
 		return parent::update( $model, [
-			'attributes' => [ 'countryId', 'provinceId', 'title', 'line1', 'line2', 'line3', 'city', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude', 'zoomLevel' ]
+			'attributes' => [ 'countryId', 'provinceId', 'title', 'line1', 'line2', 'line3', 'cityName', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude', 'zoomLevel' ]
 		]);
  	}
 

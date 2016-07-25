@@ -13,18 +13,18 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\traits\ResourceTrait;
 
 /**
- * ModelAttribute Entity
+ * ModelMeta Entity
  *
  * @property long $id
  * @property long $parentId
  * @property string $parentType
- * @property string $name
- * @property string $label
  * @property string $type
  * @property string $valueType
+ * @property string $name
+ * @property string $label
  * @property string $value
  */
-class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
+class ModelMeta extends \cmsgears\core\common\models\base\Meta {
 
 	// Variables ---------------------------------------------------
 
@@ -69,7 +69,7 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
         $rules = [
             [ [ 'parentId', 'parentType', 'name' ], 'required' ],
             [ [ 'id', 'value' ], 'safe' ],
-            [ [ 'parentType', 'name', 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ [ 'parentType', 'type', 'valueType', 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'parentId', 'parentType', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'name', 'type' ] ]
@@ -94,10 +94,10 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
         return [
             'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
             'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
             'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
             'valueType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE_TYPE ),
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
             'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE )
         ];
     }
@@ -108,7 +108,7 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
 
 	// Validators ----------------------------
 
-	// ModelAttribute ------------------------
+	// ModelMeta -----------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -121,12 +121,12 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
      */
     public static function tableName() {
 
-        return CoreTables::TABLE_MODEL_ATTRIBUTE;
+        return CoreTables::TABLE_MODEL_META;
     }
 
 	// CMG parent classes --------------------
 
-	// ModelAttribute ------------------------
+	// ModelMeta -----------------------------
 
 	// Read - Query -----------
 
@@ -151,7 +151,7 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
      * @param integer $parentId
      * @param string $parentType
      * @param string $name
-     * @return ModelAttribute - by name
+     * @return ModelMeta - by name
      */
     public static function findByName( $parentId, $parentType, $name ) {
 
@@ -162,7 +162,7 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
      * @param integer $parentId
      * @param string $parentType
      * @param string $type
-     * @return array - ModelAttribute by type
+     * @return array - ModelMeta by type
      */
     public static function findByType( $parentId, $parentType, $type ) {
 
@@ -174,7 +174,7 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
      * @param string $parentType
      * @param string $type
      * @param string $name
-     * @return ModelAttribute - by type and name
+     * @return ModelMeta - by type and name
      */
     public static function findByNameType( $parentId, $parentType, $name, $type ) {
 
@@ -186,7 +186,7 @@ class ModelAttribute extends \cmsgears\core\common\models\base\Attribute {
      * @param string $parentType
      * @param string $type
      * @param string $name
-     * @return boolean - Check whether attribute exist by type and name
+     * @return boolean - Check whether meta exist by type and name
      */
     public static function isExistByNameType( $parentId, $parentType, $name, $type ) {
 

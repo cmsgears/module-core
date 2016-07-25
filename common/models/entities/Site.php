@@ -10,7 +10,7 @@ use yii\behaviors\SluggableBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\SiteAttribute;
+use cmsgears\core\common\models\resources\SiteMeta;
 
 use cmsgears\core\common\models\traits\NameTrait;
 use cmsgears\core\common\models\traits\SlugTrait;
@@ -94,8 +94,7 @@ class Site extends \cmsgears\core\common\models\base\Entity {
             [ [ 'id' ], 'safe' ],
             [ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-            [ [ 'name' ], 'unique', 'targetAttribute' => [ 'name' ] ],
-            [ [ 'slug' ], 'unique', 'targetAttribute' => [ 'slug' ] ],
+            [ 'name', 'unique' ],
             [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
             [ 'active', 'boolean' ],
             [ [ 'avatarId', 'bannerId', 'themeId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
@@ -141,11 +140,11 @@ class Site extends \cmsgears\core\common\models\base\Entity {
     }
 
     /**
-     * @return array - SiteAttribute
+     * @return array - SiteMeta
      */
-    public function getAttributes() {
+    public function getMetas() {
 
-        return $this->hasMany( SiteAttribute::className(), [ 'modelId' => 'id' ] );
+        return $this->hasMany( SiteMeta::className(), [ 'modelId' => 'id' ] );
     }
 
     /**
@@ -185,10 +184,10 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
 		$modelTable				= CoreTables::TABLE_SITE;
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'theme', 'attributes', 'members' ];
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'theme' ];
 		$config[ 'relations' ]	= $relations;
 		$config[ 'groups' ]		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : [ "$modelTable.id" ];
 
@@ -202,9 +201,9 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 		return parent::queryWithAll( $config );
 	}
 
-	public static function queryWithAttributes( $config = [] ) {
+	public static function queryWithMetas( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'banner', 'attributes' ];
+		$config[ 'relations' ]	= [ 'avatar', 'banner', 'metas' ];
 
 		return parent::queryWithAll( $config );
 	}

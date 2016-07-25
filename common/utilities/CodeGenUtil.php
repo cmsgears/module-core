@@ -278,6 +278,25 @@ class CodeGenUtil {
 		}
 	}
 
+	public static function getMediumUrl( $file, $options = [] ) {
+
+		if( $file == null ) {
+
+			if( isset( $options[ 'image' ] ) ) {
+
+				$image	= $options[ 'image' ];
+
+				return Yii::getAlias( '@images' ) . "/$image";
+			}
+		}
+		else {
+
+			return $file->getMediumUrl();
+		}
+
+		return null;
+	}
+
 	public static function getFileUrl( $file, $options = [] ) {
 
 		if( $file == null ) {

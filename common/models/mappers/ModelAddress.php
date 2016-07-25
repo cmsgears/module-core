@@ -19,7 +19,7 @@ use cmsgears\core\common\models\traits\MapperTrait;
  * @property long $modelId
  * @property long $parentId
  * @property string $parentType
- * @property short $type
+ * @property string $type
  * @property short $order
  * @property boolean $active
  */
@@ -69,9 +69,9 @@ class ModelAddress extends \cmsgears\core\common\models\base\Mapper {
             [ [ 'id' ], 'safe' ],
             [ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
-            [ [ 'order', 'type' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+            [ [ 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'active' ], 'boolean' ]
         ];
     }
@@ -127,7 +127,7 @@ class ModelAddress extends \cmsgears\core\common\models\base\Mapper {
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'address' ];
 		$config[ 'relations' ]	= $relations;

@@ -34,7 +34,7 @@ class AssignTags extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Protected --------------
 
-	protected $type = true;
+	protected $typed = true;
 
 	// Private ----------------
 

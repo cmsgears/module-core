@@ -303,6 +303,14 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	// Read - Query -----------
 
+	public static function queryWithHasOne( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
 	// Read - Find ------------
 
     /**

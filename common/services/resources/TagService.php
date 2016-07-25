@@ -101,8 +101,10 @@ class TagService extends \cmsgears\core\common\services\base\EntityService imple
 
 	public function update( $model, $config = [] ) {
 
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description' ];
+
 		return parent::update( $model, [
-			'attributes' => [ 'name', 'description' ]
+			'attributes' => $attributes
 		]);
  	}
 

@@ -69,6 +69,9 @@ class UpdateAvatar extends \cmsgears\core\common\actions\base\ModelAction {
 
 				$this->modelService->updateAvatar( $this->model, $avatar );
 
+				// refresh model
+				$this->model->refresh();
+
 				$avatar		= $this->model->avatar;
 				$response	= [ 'fileUrl' => $avatar->getFileUrl() ];
 

@@ -37,11 +37,20 @@ class Register extends \yii\base\Model {
 
 	// Protected --------------
 
+	protected $userService;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->userService	= Yii::$app->factory->get( 'userService' );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -102,7 +111,7 @@ class Register extends \yii\base\Model {
 
         if( !$this->hasErrors() ) {
 
-            if( UserService::isExistByEmail( $this->email ) ) {
+            if( $this->userService->isExistByEmail( $this->email ) ) {
 
                 $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
             }
@@ -113,7 +122,7 @@ class Register extends \yii\base\Model {
 
         if( !$this->hasErrors() ) {
 
-            if( UserService::isExistByUsername( $this->username ) ) {
+            if( $this->userService->isExistByUsername( $this->username ) ) {
 
                 $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
             }

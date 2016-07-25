@@ -8,7 +8,7 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class OptionController extends \cmsgears\core\admin\controllers\base\CrudController {
+class OptionController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -81,5 +81,62 @@ class OptionController extends \cmsgears\core\admin\controllers\base\CrudControl
     	return $this->render( 'create', [
     		'model' => $model
     	]);
+	}
+
+	public function actionUpdate( $id ) {
+
+		// Find Model
+		$model	= $this->modelService->getById( $id );
+
+		// Update if exist
+		if( isset( $model ) ) {
+
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+
+				$this->modelService->update( $model );
+
+				return $this->redirect( $this->returnUrl );
+			}
+
+			// Render view
+	    	return $this->render( 'update', [
+	    		'model' => $model
+	    	]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
+	public function actionDelete( $id ) {
+
+		// Find Model
+		$model	= $this->modelService->getById( $id );
+
+		// Delete if exist
+		if( isset( $model ) ) {
+
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+
+				try {
+
+			    	$this->modelService->delete( $model );
+
+					return $this->redirect( $this->returnUrl );
+			    }
+			    catch( Exception $e ) {
+
+				    throw new HttpException( 409,  Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+				}
+			}
+
+			// Render view
+	    	return $this->render( 'delete', [
+	    		'model' => $model
+	    	]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }

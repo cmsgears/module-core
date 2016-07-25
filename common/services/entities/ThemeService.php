@@ -96,12 +96,31 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 
 	// Create -------------
 
+	public function create( $model, $config = [] ) {
+
+		// Uncheck default for all other themes
+		if( $model->default ) {
+
+			Theme::updateAll( [ 'default' => false ], '`default`=1' );
+		}
+
+		return parent::create( $model );
+ 	}
+
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
 
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description', 'default', 'basePath', 'renderer' ];
+
+		// Uncheck default for all other themes
+		if( $model->default ) {
+
+			Theme::updateAll( [ 'default' => false ], '`default`=1' );
+		}
+
 		return parent::update( $model, [
-			'attributes' => [ 'name', 'description', 'basePath', 'renderer' ]
+			'attributes' => $attributes
 		]);
  	}
 

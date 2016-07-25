@@ -142,15 +142,20 @@ class TemplateManager extends \yii\base\Component {
 
 	// Default Page Views
 
+	public function renderViewGeneric( $template, $models, $viewFile, $config = [] ) {
+
+		$config[ 'viewFile' ] 	= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : $viewFile;
+		$config[ 'page' ] 		= isset( $config[ 'page' ] ) ? $config[ 'page' ] : true;
+
+		return $this->renderView( $template, $models, $config );
+	}
+
 	/**
 	 * Admin view to be used for review purpose for data created by site users. The data collected by user will be submitted for admin review as part of approval process.
 	 */
 	public function renderViewAdmin( $template, $models, $config = [] ) {
 
-		$config[ 'viewFile' ] 	= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : CoreGlobal::TEMPLATE_VIEW_ADMIN;
-		$config[ 'page' ] 		= isset( $config[ 'page' ] ) ? $config[ 'page' ] : true;
-
-		return $this->renderView( $template, $models, $config );
+		return $this->renderViewGeneric( $template, $models, CoreGlobal::TEMPLATE_VIEW_ADMIN, $config );
 	}
 
 	/**
@@ -158,10 +163,7 @@ class TemplateManager extends \yii\base\Component {
 	 */
 	public function renderViewPrivate( $template, $models, $config = [] ) {
 
-		$config[ 'viewFile' ] 	= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : CoreGlobal::TEMPLATE_VIEW_PRIVATE;
-		$config[ 'page' ] 		= isset( $config[ 'page' ] ) ? $config[ 'page' ] : true;
-
-		return $this->renderView( $template, $models, $config );
+		return $this->renderViewGeneric( $template, $models, CoreGlobal::TEMPLATE_VIEW_PRIVATE, $config );
 	}
 
 	/**
@@ -169,21 +171,23 @@ class TemplateManager extends \yii\base\Component {
 	 */
 	public function renderViewPublic( $template, $models, $config = [] ) {
 
-		$config[ 'viewFile' ] 	= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : CoreGlobal::TEMPLATE_VIEW_PUBLIC;
-		$config[ 'page' ] 		= isset( $config[ 'page' ] ) ? $config[ 'page' ] : true;
-
-		return $this->renderView( $template, $models, $config );
+		return $this->renderViewGeneric( $template, $models, CoreGlobal::TEMPLATE_VIEW_PUBLIC, $config );
 	}
+
+	/**
+	 * Print page for public/private views.
+	 */
+    public function renderViewPrint( $template, $models, $config = [] ) {
+
+        return $this->renderViewGeneric( $template, $models, CoreGlobal::TEMPLATE_VIEW_PRINT, $config );
+    }
 
 	/**
 	 * Default search page for public/private views.
 	 */
 	public function renderViewSearch( $template, $models, $config = [] ) {
 
-		$config[ 'viewFile' ] 	= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : CoreGlobal::TEMPLATE_VIEW_SEARCH;
-		$config[ 'page' ] 		= isset( $config[ 'page' ] ) ? $config[ 'page' ] : true;
-
-		return $this->renderView( $template, $models, $config );
+		return $this->renderViewGeneric( $template, $models, CoreGlobal::TEMPLATE_VIEW_SEARCH, $config );
 	}
 
 	/**
@@ -191,10 +195,7 @@ class TemplateManager extends \yii\base\Component {
 	 */
 	public function renderViewCategory( $template, $models, $config = [] ) {
 
-		$config[ 'viewFile' ] 	= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : CoreGlobal::TEMPLATE_VIEW_CATEGRY;
-		$config[ 'page' ] 		= isset( $config[ 'page' ] ) ? $config[ 'page' ] : true;
-
-		return $this->renderView( $template, $models, $config );
+		return $this->renderViewGeneric( $template, $models, CoreGlobal::TEMPLATE_VIEW_CATEGRY, $config );
 	}
 
 	/**
@@ -202,10 +203,7 @@ class TemplateManager extends \yii\base\Component {
 	 */
 	public function renderViewTag( $template, $models, $config = [] ) {
 
-		$config[ 'viewFile' ] 	= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : CoreGlobal::TEMPLATE_VIEW_TAG;
-		$config[ 'page' ] 		= isset( $config[ 'page' ] ) ? $config[ 'page' ] : true;
-
-		return $this->renderView( $template, $models, $config );
+		return $this->renderViewGeneric( $template, $models, CoreGlobal::TEMPLATE_VIEW_TAG, $config );
 	}
 
 	/**
@@ -213,9 +211,6 @@ class TemplateManager extends \yii\base\Component {
 	 */
 	public function renderViewAuthor( $template, $models, $config = [] ) {
 
-		$config[ 'viewFile' ] 	= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : CoreGlobal::TEMPLATE_VIEW_AUTHOR;
-		$config[ 'page' ] 		= isset( $config[ 'page' ] ) ? $config[ 'page' ] : true;
-
-		return $this->renderView( $template, $models, $config );
+		return $this->renderViewGeneric( $template, $models, CoreGlobal::TEMPLATE_VIEW_AUTHOR, $config );
 	}
 }

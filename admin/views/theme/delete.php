@@ -21,6 +21,7 @@ $renderers		= Yii::$app->templateManager->renderers;
 
     	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
     	<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => true ] ) ?>
+    	<?= $form->field( $model, 'default' )->checkbox( [ 'disabled' => true ] ) ?>
 		<?= $form->field( $model, 'renderer' )->dropDownList( $renderers, [ 'disabled' => true ] ) ?>
 		<?= $form->field( $model, 'basePath' )->textInput( [ 'readonly' => true ] ) ?>
 

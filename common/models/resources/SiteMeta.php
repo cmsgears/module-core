@@ -12,7 +12,7 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
 
 /**
- * SiteAttribute Entity
+ * SiteMeta Entity
  *
  * @property integer $id
  * @property integer $modelId
@@ -22,7 +22,7 @@ use cmsgears\core\common\models\entities\Site;
  * @property string $valueType
  * @property string $value
  */
-class SiteAttribute extends \cmsgears\core\common\models\base\ModelAttribute {
+class SiteMeta extends \cmsgears\core\common\models\base\ModelMeta {
 
 	// Variables ---------------------------------------------------
 
@@ -62,7 +62,7 @@ class SiteAttribute extends \cmsgears\core\common\models\base\ModelAttribute {
 
 	// Validators ----------------------------
 
-	// SiteAttribute -------------------------
+	// SiteMeta ------------------------------
 
 	public function getParent() {
 
@@ -80,12 +80,12 @@ class SiteAttribute extends \cmsgears\core\common\models\base\ModelAttribute {
      */
 	public static function tableName() {
 
-		return CoreTables::TABLE_SITE_ATTRIBUTE;
+		return CoreTables::TABLE_SITE_META;
 	}
 
 	// CMG parent classes --------------------
 
-	// SiteAttribute -------------------------
+	// SiteMeta ------------------------------
 
 	// Read - Query -----------
 

@@ -12,7 +12,7 @@ use cmsgears\core\common\models\resources\Form;
 use cmsgears\core\common\models\mappers\ModelForm;
 
 /**
- * FormTrait can be used to associate forms to relevant models. The model must also support attributes to save the submitted form values.
+ * FormTrait can be used to associate forms to relevant models. The model must also support metas to save the submitted form values.
  */
 trait FormTrait {
 

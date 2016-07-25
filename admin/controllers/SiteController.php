@@ -97,7 +97,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
         return $this->render( 'index' );
     }
 
-	public function actionLogin() {
+	public function actionLogin( $admin = false ) {
 
 		return parent::actionLogin( true );
 	}

@@ -7,9 +7,9 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\Attribute;
+use cmsgears\core\common\models\base\Meta;
 
-interface IModelAttributeService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
+interface IModelMetaService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
 
 	// Data Provider ------
 
@@ -21,7 +21,7 @@ interface IModelAttributeService extends \cmsgears\core\common\services\interfac
 
 	public function getByNameType( $parentId, $parentType, $name, $type );
 
-	public function initByNameType( $parentId, $parentType, $name, $type, $valueType = Attribute::VALUE_TYPE_TEXT );
+	public function initByNameType( $parentId, $parentType, $name, $type, $valueType = Meta::VALUE_TYPE_TEXT );
 
     // Read - Lists ----
 
@@ -29,9 +29,9 @@ interface IModelAttributeService extends \cmsgears\core\common\services\interfac
 
 	public function getNameValueMapByType( $parentId, $parentType, $type );
 
-	public function getIdObjectMapByType( $parentId, $parentType, $type );
+	public function getIdMetaMapByType( $parentId, $parentType, $type );
 
-	public function getNameObjectMapByType( $parentId, $parentType, $type );
+	public function getNameMetaMapByType( $parentId, $parentType, $type );
 
 	// Create -------------
 

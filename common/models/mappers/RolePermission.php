@@ -116,7 +116,7 @@ class RolePermission extends \cmsgears\core\common\models\base\Mapper {
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'role', 'permission' ];
 		$config[ 'relations' ]	= $relations;

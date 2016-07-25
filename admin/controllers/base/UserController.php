@@ -217,12 +217,12 @@ abstract class UserController extends CrudController {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			$siteMember	= $model->siteMember;
+			$siteMember	= $model->activeSiteMember;
 			$avatar 	= $model->avatar;
 
 			if( $model->load( Yii::$app->request->post(), 'User' ) ) {
 
-				$this->modelService->delete( $model, $avatar );
+				$this->modelService->delete( $model );
 
 				return $this->redirect( $this->returnUrl );
 			}

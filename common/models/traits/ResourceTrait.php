@@ -54,7 +54,12 @@ trait ResourceTrait {
 
 	// Read - Find ------------
 
-    public static function findByParent( $parentId, $parentType ) {
+    public static function findByParent( $parentId, $parentType, $first = false ) {
+
+		if( $first ) {
+
+			return self::queryByParent( $parentId, $parentType )->one();
+		}
 
         return self::queryByParent( $parentId, $parentType )->all();
     }

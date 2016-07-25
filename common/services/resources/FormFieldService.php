@@ -107,8 +107,10 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 
 	public function update( $model, $config = [] ) {
 
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions', 'data' ];
+
 		return parent::update( $model, [
-			'attributes' => [ 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions', 'data' ]
+			'attributes' => $attributes
 		]);
  	}
 

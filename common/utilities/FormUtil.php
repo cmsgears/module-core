@@ -6,7 +6,7 @@ use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\models\resources\FormField;
-use cmsgears\core\common\models\mappers\ModelAttribute;
+use cmsgears\core\common\models\mappers\ModelMeta;
 
 use cmsgears\core\common\services\resources\FormService;
 
@@ -14,7 +14,7 @@ class FormUtil {
 
 	// Static Methods ----------------------------------------------
 
-	public static function fillFromModelAttribute( $formSlug, $formType, $modelAttributes ) {
+	public static function fillFromModelMeta( $formSlug, $formType, $modelMetas ) {
 
 		$form 		= Yii::$app->factory->get( 'formService' )->getBySlugType( $formSlug, $formType );
 		$fieldsMap	= [];
@@ -34,7 +34,7 @@ class FormUtil {
 				// Ignore passwords
 				if( !$formField->isPassword() ) {
 
-					$formField->value	= $modelAttributes[ $key ]->value;
+					$formField->value	= $modelMetas[ $key ]->value;
 				}
 
 				$fieldsMap[ $formField->name ]	= $formField;
@@ -44,10 +44,10 @@ class FormUtil {
 		return $fieldsMap;
 	}
 
-	public static function getModelAttributes( $model, $settings ) {
+	public static function getModelMetas( $model, $settings ) {
 
-		$attributes			= $model->getFormAttributes();
-		$fields				= $attributes[ 'fields' ];
+		$metas		= $model->getFormAttributes();
+		$fields		= $metas[ 'fields' ];
 
 		foreach ( $fields as $field ) {
 

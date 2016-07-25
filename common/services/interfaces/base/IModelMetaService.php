@@ -7,9 +7,9 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\Attribute;
+use cmsgears\core\common\models\base\Meta;
 
-interface IModelAttributeService extends IEntityService {
+interface IModelMetaService extends IEntityService {
 
 	// Data Provider ------
 
@@ -21,15 +21,15 @@ interface IModelAttributeService extends IEntityService {
 
     // Read - Maps -----
 
-    public function getIdAttributeMapByType( $model, $type );
+    public function getIdMetaMapByType( $model, $type );
 
-	public function getNameAttributeMapByType( $model, $type );
+	public function getNameMetaMapByType( $model, $type );
 
 	// Create -------------
 
 	// Update -------------
 
-	public function updateModelAttributes( $model, $attributes );
+	public function updateModelMetas( $model, $metas );
 
 	// Delete -------------
 }

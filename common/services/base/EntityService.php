@@ -132,6 +132,13 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		return $modelClass::findById( $id );
 	}
 
+    public function getByIds( $ids = [] ) {
+
+        $modelClass	= static::$modelClass;
+
+		return $modelClass::findAll( $ids );
+    }
+
 	/**
 	 * @return array - of models with given conditions.
 	 */
@@ -406,6 +413,9 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		return $dataProvider;
 	}
 
+	/**
+	 * The method findPage provide data provider after generating appropriate query. It uses queryWithHasOne as default method to generate base query.
+	 */
 	public static function findPage( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
@@ -451,7 +461,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 			$modelClass 		= static::$modelClass;
 
-			$config[ 'query' ] 	= $modelClass::queryWithAll();
+			$config[ 'query' ] 	= $modelClass::queryWithHasOne();
 		}
 
 		// Default search column

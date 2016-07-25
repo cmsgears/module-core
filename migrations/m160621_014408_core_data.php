@@ -17,18 +17,21 @@ class m160621_014408_core_data extends \yii\db\Migration {
 
 	public $prefix;
 
+	// Entities
+
 	private $site;
 	private $locale;
 
 	private $master;
 
+	// Config
+
 	private $siteName;
 	private $siteTitle;
 
-	private $primaryDomain;
+	private $siteMaster;
 
-	private $defaultSite;
-	private $defaultAdmin;
+	private $primaryDomain;
 
 	public function init() {
 
@@ -38,10 +41,9 @@ class m160621_014408_core_data extends \yii\db\Migration {
 		$this->siteName		= Yii::$app->migration->getSiteName();
 		$this->siteTitle	= Yii::$app->migration->getSiteTitle();
 
-		$this->primaryDomain	= Yii::$app->migration->getPrimaryDomain();
+		$this->siteMaster		= Yii::$app->migration->getSiteMaster();
 
-		$this->defaultSite	= Yii::$app->migration->getDefaultSite();
-		$this->defaultAdmin	= Yii::$app->migration->getDefaultAdmin();
+		$this->primaryDomain	= Yii::$app->migration->getPrimaryDomain();
 	}
 
     public function up() {
@@ -92,20 +94,27 @@ class m160621_014408_core_data extends \yii\db\Migration {
 
 	private function insertDefaultUsers() {
 
+		$primaryDomain	= $this->primaryDomain;
+		$siteMaster		= $this->siteMaster;
+
 		// Default password for all test users is test#123
 		// Super Admin i.e. demomaster must change password on first login and remove other users if required.
 
 		$columns = [ 'localeId', 'status', 'email', 'username', 'passwordHash', 'firstName', 'lastName', 'registeredAt', 'lastLoginAt', 'authKey' ];
 
 		$users	= [
-			[ $this->locale->id, User::STATUS_ACTIVE, "demomaster@$this->primaryDomain", 'demomaster', '$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W', 'demo', 'master', DateUtil::getDateTime(), DateUtil::getDateTime(), 'JuL37UBqGpjnA7kaPiRnlsiWRwbRvXx7' ],
-			[ $this->locale->id, User::STATUS_ACTIVE, "demoadmin@$this->primaryDomain", 'demoadmin','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','admin', DateUtil::getDateTime(), DateUtil::getDateTime(), 'SQ1LLCWEPva4IKuQklILLGDpmUTGzq8E' ],
-			[ $this->locale->id, User::STATUS_ACTIVE, "demouser@$this->primaryDomain", 'demouser','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','user', DateUtil::getDateTime(), DateUtil::getDateTime(), '-jG5ExHS0Y39ucSxHhl3PZ4xmPsfvQFC' ]
+			[ $this->locale->id, User::STATUS_ACTIVE, "$siteMaster@$primaryDomain", 'demomaster', '$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W', 'demo', 'master', DateUtil::getDateTime(), DateUtil::getDateTime(), 'JuL37UBqGpjnA7kaPiRnlsiWRwbRvXx7' ]
 		];
+
+		if( Yii::$app->migration->isTestAccounts() ) {
+
+			$users[]	= [ $this->locale->id, User::STATUS_ACTIVE, "demoadmin@$primaryDomain", 'demoadmin','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','admin', DateUtil::getDateTime(), DateUtil::getDateTime(), 'SQ1LLCWEPva4IKuQklILLGDpmUTGzq8E' ];
+			$users[]	= [ $this->locale->id, User::STATUS_ACTIVE, "demouser@$primaryDomain", 'demouser','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','user', DateUtil::getDateTime(), DateUtil::getDateTime(), '-jG5ExHS0Y39ucSxHhl3PZ4xmPsfvQFC' ];
+		}
 
 		$this->batchInsert( $this->prefix . 'core_user', $columns, $users );
 
-		$this->master	= User::findByUsername( 'demomaster' );
+		$this->master	= User::findByUsername( $this->siteMaster );
 	}
 
 	private function insertRolePermission() {
@@ -168,17 +177,20 @@ class m160621_014408_core_data extends \yii\db\Migration {
 		$adminRole			= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
 		$userRole			= Role::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
 
-		$master	= User::findByUsername( 'demomaster' );
-		$admin	= User::findByUsername( 'demoadmin' );
-		$user	= User::findByUsername( 'demouser' );
-
 		$columns = [ 'siteId', 'userId', 'roleId', 'createdAt', 'modifiedAt' ];
 
 		$roles = [
-			[ $this->site->id, $master->id, $superAdminRole->id, DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->site->id, $admin->id, $adminRole->id, DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->site->id, $user->id, $userRole->id, DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->site->id, $this->master->id, $superAdminRole->id, DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
+
+		if( Yii::$app->migration->isTestAccounts() ) {
+
+			$admin	= User::findByUsername( 'demoadmin' );
+			$user	= User::findByUsername( 'demouser' );
+
+			$roles[] = [ $this->site->id, $admin->id, $adminRole->id, DateUtil::getDateTime(), DateUtil::getDateTime() ];
+			$roles[] = [ $this->site->id, $user->id, $userRole->id, DateUtil::getDateTime(), DateUtil::getDateTime() ];
+		}
 
 		$this->batchInsert( $this->prefix . 'core_site_member', $columns, $roles );
 	}
@@ -319,24 +331,34 @@ class m160621_014408_core_data extends \yii\db\Migration {
 
 	private function insertDefaultConfig() {
 
+		$defaultSite	= Yii::$app->migration->getDefaultSite();
+		$defaultAdmin	= Yii::$app->migration->getDefaultAdmin();
+
+		$primaryDomain	= $this->primaryDomain;
+		$siteMaster		= $this->siteMaster;
+		$siteContact 	= Yii::$app->migration->getSiteContact();
+	    $siteInfo 		= Yii::$app->migration->getSiteInfo();
+
+	    $timezone		= Yii::$app->migration->getTimezone();
+
 		$columns = [ 'modelId', 'name', 'label', 'type', 'valueType', 'value' ];
 
-		$attributes	= [
+		$metas	= [
 			[ $this->site->id, 'locale_message', 'Locale Message', 'core', 'flag', '0' ],
 			[ $this->site->id, 'language', 'Language', 'core', 'text', 'en-US' ],
 			[ $this->site->id, 'locale', 'Locale', 'core', 'text', 'en_US'],
 			[ $this->site->id, 'charset', 'Charset', 'core', 'text', 'UTF-8' ],
 			[ $this->site->id, 'site_title', 'Site Title', 'core', 'text', $this->siteTitle ],
 			[ $this->site->id, 'site_name','Site Name','core', 'text', $this->siteName ],
-			[ $this->site->id, 'site_url', 'Site Url', 'core', 'text', $this->defaultSite ],
-			[ $this->site->id, 'admin_url', 'Admin Url', 'core', 'text', $this->defaultAdmin ],
+			[ $this->site->id, 'site_url', 'Site Url', 'core', 'text', $defaultSite ],
+			[ $this->site->id, 'admin_url', 'Admin Url', 'core', 'text', $defaultAdmin ],
 			[ $this->site->id, 'registration','Registration','core','flag','1' ],
 			[ $this->site->id, 'change_email','Change Email','core','flag','1' ],
 			[ $this->site->id, 'change_username','Change Username','core','flag','1' ],
 			[ $this->site->id, 'date_format','Date Format','core','text','yyyy-MM-dd' ],
 			[ $this->site->id, 'time_format','Time Format','core','text','HH:mm:ss' ],
 			[ $this->site->id, 'date_time_format','Date Time Format','core','text','yyyy-MM-dd HH:mm:ss' ],
-			[ $this->site->id, 'timezone','Timezone','core','text','UTC' ],
+			[ $this->site->id, 'timezone','Timezone','core','text', $timezone ],
 			[ $this->site->id, 'smtp','SMTP','mail','flag','0' ],
 			[ $this->site->id, 'smtp_username','SMTP Username','mail','text','' ],
 			[ $this->site->id, 'smtp_password','SMTP Password','mail','text','' ],
@@ -345,16 +367,16 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $this->site->id, 'smtp_encryption','SMTP Encryption','mail','text','tls' ],
 			[ $this->site->id, 'debug','Debug','mail','flag','1' ],
 			[ $this->site->id, 'sender_name','Sender Name','mail','text','Admin' ],
-			[ $this->site->id, 'sender_email','Sender Email','mail','text', "demoadmin@$this->primaryDomain" ],
+			[ $this->site->id, 'sender_email','Sender Email','mail','text', "$siteMaster@$primaryDomain" ],
 			[ $this->site->id, 'contact_name','Contact Name','mail','text','Contact Us' ],
-			[ $this->site->id, 'contact_email','Contact Email','mail','text', "democontact@$this->primaryDomain" ],
+			[ $this->site->id, 'contact_email','Contact Email','mail','text', "$siteContact@$primaryDomain" ],
 			[ $this->site->id, 'info_name','Info Name','mail','text','Info' ],
-			[ $this->site->id, 'info_email','Info Email','mail','text',"demoinfo@$this->primaryDomain" ],
+			[ $this->site->id, 'info_email','Info Email','mail','text',"$siteInfo@$primaryDomain" ],
 			[ $this->site->id, 'theme','Theme','backend','text','admin' ],
 			[ $this->site->id, 'theme','Theme','frontend','text','basic' ]
 		];
 
-		$this->batchInsert( $this->prefix . 'core_site_attribute', $columns, $attributes );
+		$this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );
 	}
 
 	private function insertCategories() {

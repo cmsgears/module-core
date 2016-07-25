@@ -74,7 +74,7 @@ trait CommentTrait {
         $query->select( [ 'rating', 'count(id) as total' ] )
                 ->from( $commentTable )
                 ->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'type' => $type, 'status' => ModelComment::STATUS_APPROVED ] )
-				->andFilterWhere( [ 'between', 'status', [ $minStars, $maxStars ] ] )
+				->andFilterWhere( [ 'between', 'status', $minStars, $maxStars ] )
                 ->groupBy( 'rating' );
 
         $counts     = $query->all();

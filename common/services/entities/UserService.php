@@ -16,7 +16,7 @@ use cmsgears\core\common\services\interfaces\entities\IUserService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
 use cmsgears\core\common\services\traits\ApprovalTrait;
-use cmsgears\core\common\services\traits\ModelAttributeTrait;
+use cmsgears\core\common\services\traits\ModelMetaTrait;
 
 use cmsgears\core\common\utilities\DateUtil;
 
@@ -54,7 +54,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	// Traits ------------------------------------------------------
 
 	use ApprovalTrait;
-	use ModelAttributeTrait;
+	use ModelMetaTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -301,13 +301,14 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	 */
 	public function update( $model, $config = [] ) {
 
-		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'avatarId', 'genderId', 'email', 'username', 'firstName', 'lastName', 'status', 'phone', 'avatarUrl', 'websiteUrl' ];
+		$avatar 	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 
 		// Save Files
 		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
 
 		return parent::update( $model, [
-			'attributes' => [ 'avatarId', 'genderId', 'email', 'username', 'firstName', 'lastName', 'status', 'phone', 'avatarUrl', 'websiteUrl' ]
+			'attributes' => $attributes
 		]);
 	}
 

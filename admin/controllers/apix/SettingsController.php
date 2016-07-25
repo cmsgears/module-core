@@ -24,7 +24,7 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 
 	// Protected --------------
 
-	protected $attributeService;
+	protected $metaService;
 
 	// Private ----------------
 
@@ -34,9 +34,9 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 
         parent::init();
 
-		$this->crudPermission 		= CoreGlobal::PERM_CORE;
-		$this->modelService			= Yii::$app->factory->get( 'siteService' );
-		$this->attributeService		= Yii::$app->factory->get( 'siteAttributeService' );
+		$this->crudPermission 	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'siteService' );
+		$this->metaService		= Yii::$app->factory->get( 'siteMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -77,8 +77,8 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 
     public function actionIndex( $type ) {
 
-		$settings 		= $this->modelService->getAttributeMapBySlugType( Yii::$app->core->getSiteSlug(), $type );
-		$fieldsMap		= FormUtil::fillFromModelAttribute( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
+		$settings 		= $this->modelService->getMetaMapBySlugType( Yii::$app->core->getSiteSlug(), $type );
+		$fieldsMap		= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
 		$model			= new GenericForm( [ 'fields' => $fieldsMap ] );
 
 	    $htmlContent	= $this->renderPartial( '@cmsgears/module-core/admin/views/settings/info', [
@@ -92,15 +92,15 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 
 	public function actionUpdate( $type ) {
 
-		$settings 		= $this->modelService->getAttributeMapBySlugType( Yii::$app->core->getSiteSlug(), $type );
-		$fieldsMap		= FormUtil::fillFromModelAttribute( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
+		$settings 		= $this->modelService->getMetaMapBySlugType( Yii::$app->core->getSiteSlug(), $type );
+		$fieldsMap		= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
 		$model			= new GenericForm( [ 'fields' => $fieldsMap ] );
 
 		if( $model->load( Yii::$app->request->post(), "setting$type" ) && $model->validate() ) {
 
-			$settings	= FormUtil::getModelAttributes( $model, $settings );
+			$settings	= FormUtil::getModelMetas( $model, $settings );
 
-			$this->attributeService->updateMultiple( $settings, [ 'parent' => Yii::$app->core->site ] );
+			$this->metaService->updateMultiple( $settings, [ 'parent' => Yii::$app->core->site ] );
 
 			$data		= [];
 

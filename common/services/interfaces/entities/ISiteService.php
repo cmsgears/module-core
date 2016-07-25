@@ -18,9 +18,9 @@ interface ISiteService extends INameService, ISlugService {
 
     // Read - Models ---
 
-	public function getAttributeMapBySlugType( $slug, $type );
+	public function getMetaMapBySlugType( $slug, $type );
 
-	public function getAttributeNameValueMapBySlugType( $slug, $type );
+	public function getMetaNameValueMapBySlugType( $slug, $type );
 
     // Read - Lists ----
 

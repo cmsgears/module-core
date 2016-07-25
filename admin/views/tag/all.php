@@ -1,6 +1,5 @@
 <?php
 // Yii Imports
-use \Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
@@ -69,14 +68,14 @@ if( !isset( $sortOrder ) ) {
 			<tbody>
 				<?php
 
-					foreach( $models as $category ) {
+					foreach( $models as $tag ) {
 
-						$id 	= $category->id;
+						$id 	= $tag->id;
 				?>
 					<tr>
-						<td><?= $category->name ?></td>
-						<td> <span class="<?= $category->icon ?>" title="<?= $category->name ?>"></span></td>
-						<td><?= $category->description ?></td>
+						<td><?= $tag->name ?></td>
+						<td> <span class="<?= $tag->icon ?>" title="<?= $tag->name ?>"></span></td>
+						<td><?= $tag->description ?></td>
 						<td class="actions">
 							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>

@@ -10,7 +10,7 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-abstract class CommentController extends \cmsgears\core\admin\controllers\base\CrudController {
+abstract class CommentController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -50,6 +50,33 @@ abstract class CommentController extends \cmsgears\core\admin\controllers\base\C
 	// Yii parent classes --------------------
 
 	// yii\base\Component -----
+
+    public function behaviors() {
+
+        return [
+            'rbac' => [
+                'class' => Yii::$app->core->getRbacFilterClass(),
+                'actions' => [
+                	'index'  => [ 'permission' => $this->crudPermission ],
+	                'all'  => [ 'permission' => $this->crudPermission ],
+	                'create'  => [ 'permission' => $this->crudPermission ],
+	                'update'  => [ 'permission' => $this->crudPermission ],
+	                'delete'  => [ 'permission' => $this->crudPermission ]
+                ]
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+	                'index' => [ 'get' ],
+	                'all'  => [ 'get' ],
+	                'create'  => [ 'get', 'post' ],
+	                'update'  => [ 'get', 'post' ],
+	                'delete'  => [ 'get', 'post' ]
+                ]
+            ]
+        ];
+    }
+
 
 	// yii\base\Controller ----
 
@@ -96,6 +123,11 @@ abstract class CommentController extends \cmsgears\core\admin\controllers\base\C
             $model->parentId    = $parentModel->id;
         }
 
+		if( isset( $this->scenario ) ) {
+
+			call_user_func_array( [ $model, 'setScenario' ], [ $this->scenario ] );
+		}
+
         if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
 
             $this->modelService->create( $model );
@@ -107,4 +139,71 @@ abstract class CommentController extends \cmsgears\core\admin\controllers\base\C
             'model' => $model
         ]);
     }
+
+	public function actionUpdate( $id ) {
+
+		// Find Model
+		$model	= $this->modelService->getById( $id );
+
+		// Update if exist
+		if( isset( $model ) ) {
+
+			if( isset( $this->scenario ) ) {
+
+				call_user_func_array( [ $model, 'setScenario' ], [ $this->scenario ] );
+			}
+
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+
+				$this->modelService->update( $model );
+
+				return $this->redirect( $this->returnUrl );
+			}
+
+			// Render view
+	    	return $this->render( 'update', [
+	    		'model' => $model
+	    	]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
+	public function actionDelete( $id ) {
+
+		// Find Model
+		$model	= $this->modelService->getById( $id );
+
+		// Delete if exist
+		if( isset( $model ) ) {
+
+			if( isset( $this->scenario ) ) {
+
+				call_user_func_array( [ $model, 'setScenario' ], [ $this->scenario ] );
+			}
+
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+
+				try {
+
+			    	$this->modelService->delete( $model );
+
+					return $this->redirect( $this->returnUrl );
+			    }
+			    catch( Exception $e ) {
+
+				    throw new HttpException( 409,  Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+				}
+			}
+
+			// Render view
+	    	return $this->render( 'delete', [
+	    		'model' => $model
+	    	]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 }

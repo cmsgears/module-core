@@ -68,11 +68,11 @@ trait ApprovalTrait {
 
 		if( isset( $message ) && strlen( $message ) > 0 ) {
 
-			$model->setDataAttribute( CoreGlobal::DATA_REJECT_REASON, $message );
+			$model->setDataMeta( CoreGlobal::DATA_REJECT_REASON, $message );
 		}
 		else {
 
-			$model->removeDataAttribute( CoreGlobal::DATA_REJECT_REASON );
+			$model->removeDataMeta( CoreGlobal::DATA_REJECT_REASON );
 		}
 	}
 

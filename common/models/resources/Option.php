@@ -73,7 +73,7 @@ class Option extends \cmsgears\core\common\models\base\Resource {
             [ [ 'id', 'value', 'htmlOptions', 'content', 'data' ], 'safe' ],
             [ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ [ 'categoryId', 'name' ], 'unique', 'targetAttribute' => [ 'name' ] ]
+            [ [ 'categoryId', 'name' ], 'unique', 'targetAttribute' => [ 'categoryId', 'name' ] ]
         ];
 
         // trim if required
@@ -138,7 +138,7 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'category' ];
 		$config[ 'relations' ]	= $relations;

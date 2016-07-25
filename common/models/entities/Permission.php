@@ -87,8 +87,7 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
-                'ensureUnique' => true,
-                'uniqueValidator' => [ 'targetAttribute' => 'type' ]
+                'ensureUnique' => true
             ],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
@@ -114,7 +113,6 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ [ 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
             [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-            [ [ 'slug', 'type' ], 'unique', 'targetAttribute' => [ 'slug', 'type' ] ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
@@ -137,6 +135,7 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
 
         return [
             'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
             'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
             'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
             'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION )
@@ -204,12 +203,10 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-		$modelTable				= CoreTables::TABLE_PERMISSION;
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'roles' ];
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
 		$config[ 'relations' ]	= $relations;
-		$config[ 'groups' ]		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : [ "$modelTable.id" ];
 
 		return parent::queryWithAll( $config );
 	}

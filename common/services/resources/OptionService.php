@@ -208,8 +208,10 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 
 	public function update( $model, $config = [] ) {
 
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'categoryId', 'name', 'value', 'icon', 'htmlOptions' ];
+
 		return parent::update( $model, [
-			'attributes' => [ 'categoryId', 'name', 'value', 'icon', 'htmlOptions' ]
+			'attributes' => $attributes
 		]);
  	}
 

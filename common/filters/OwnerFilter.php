@@ -38,6 +38,8 @@ class OwnerFilter {
 
 	public function doFilter( $args = [] ) {
 
+		$typed	= isset( $args[ 'typed' ] ) ? $args[ 'typed' ] : true;
+
 		$user	= Yii::$app->user->identity;
 		$model	= null;
 
@@ -99,7 +101,15 @@ class OwnerFilter {
 				}
 
 				$slug	= Yii::$app->request->get( $slugParam );
-				$model	= $modelService->getBySlug( $slug );
+
+				if( $typed ) {
+
+					$model	= $modelService->getBySlug( $slug, true );
+				}
+				else {
+
+					$model	= $modelService->getBySlug( $slug );
+				}
 			}
 
 			// Apply owner filter

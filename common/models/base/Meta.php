@@ -8,7 +8,7 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
- * Attribute Entity
+ * Meta Entity
  *
  * @property long $id
  * @property string $name
@@ -17,7 +17,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $valueType
  * @property string $value
  */
-abstract class Attribute extends Entity {
+abstract class Meta extends Entity {
 
 	// Variables ---------------------------------------------------
 
@@ -66,7 +66,7 @@ abstract class Attribute extends Entity {
 
 	// Validators ----------------------------
 
-	// Attribute -----------------------------
+	// Meta ----------------------------------
 
     public function getLabel() {
 
@@ -176,7 +176,7 @@ abstract class Attribute extends Entity {
 
 	// CMG parent classes --------------------
 
-	// Attribute -----------------------------
+	// Meta ----------------------------------
 
 	// Read - Query -----------
 

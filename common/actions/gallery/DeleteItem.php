@@ -46,12 +46,13 @@ class DeleteItem extends \cmsgears\core\common\base\Action {
 
 	// DeleteItem ----------------------------
 
-	public function run( $slug, $id ) {
+	public function run( $slug, $id, $type = null ) {
 
 		$galleryService		= Yii::$app->factory->get( 'galleryService' );
 		$modelFileService	= Yii::$app->factory->get( 'modelFileService' );
+		$type				= isset( $type ) ? $type : CoreGlobal::TYPE_SITE;
 
-		$gallery 			= $galleryService->getBySlug( $slug );
+		$gallery 			= $galleryService->getBySlugType( $slug, $type );
 
 		if( isset( $gallery ) ) {
 

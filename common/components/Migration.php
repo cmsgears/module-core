@@ -31,9 +31,15 @@ class Migration extends \yii\base\Component {
 	public $defaultAdmin	= 'http://www.cmsgears.org/admin/';
 
 	public $uploadsDir		= null;
-	public $uploadsUrl		= 'http://localhost/test/uploads/';
+	public $uploadsUrl		= 'http://www.cmsgears.org/uploads/';
 
+	public $testAccounts	= true;
 	public $siteMaster		= 'demomaster';
+	public $siteContact		= 'democontact';
+	public $siteInfo		= 'demoinfo';
+
+	// Timezone examples: Asia/Kolkata, Asia/Vladivostok, Asia/Bangkok, America/Toronto, America/Chicago, America/Los_Angeles, Europe/London, Australia/Sydney
+	public $timezone		= 'UTC';
 
 	// Protected --------------
 
@@ -94,8 +100,28 @@ class Migration extends \yii\base\Component {
         return $this->uploadsUrl;
     }
 
+    public function isTestAccounts() {
+
+        return $this->testAccounts;
+    }
+
     public function getSiteMaster() {
 
         return $this->siteMaster;
+    }
+
+    public function getSiteContact() {
+
+        return $this->siteContact;
+    }
+
+    public function getSiteInfo() {
+
+        return $this->siteInfo;
+    }
+
+    public function getTimezone() {
+
+        return $this->timezone;
     }
 }

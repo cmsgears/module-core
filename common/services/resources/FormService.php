@@ -116,8 +116,10 @@ class FormService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function update( $model, $config = [] ) {
 
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'templateId', 'name', 'description', 'successMessage', 'captcha', 'visibility', 'active', 'userMail', 'adminMail', 'htmlOptions', 'data' ];
+
 		return parent::update( $model, [
-			'attributes' => [ 'templateId', 'name', 'description', 'successMessage', 'captcha', 'visibility', 'active', 'userMail', 'adminMail', 'htmlOptions', 'data' ]
+			'attributes' => $attributes
 		]);
  	}
 

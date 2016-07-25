@@ -8,11 +8,11 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Attribute;
+use cmsgears\core\common\models\base\Meta;
 
-use cmsgears\core\common\services\interfaces\base\IAttributeService;
+use cmsgears\core\common\services\interfaces\base\IMetaService;
 
-abstract class AttributeService extends EntityService implements IAttributeService {
+abstract class MetaService extends EntityService implements IMetaService {
 
 	// Variables ---------------------------------------------------
 
@@ -46,7 +46,7 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 
 	// CMG parent classes --------------------
 
-	// AttributeService ----------------------
+	// MetaService ---------------------------
 
 	// Data Provider ------
 
@@ -71,20 +71,20 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 
 	public function initByNameType( $modelId, $name, $type, $valueType = 'text' ) {
 
-		$attribute	= $this->getByNameType( $modelId, $name, $type );
+		$meta	= $this->getByNameType( $modelId, $name, $type );
 
-		if( !isset( $attribute ) ) {
+		if( !isset( $meta ) ) {
 
-			$modelClass				= static::$modelClass;
+			$modelClass			= static::$modelClass;
 
-			$attribute				= new $modelClass();
-			$attribute->modelId		= $modelId;
-			$attribute->name		= $name;
-			$attribute->type		= $type;
-			$attribute->valueType	= $valueType;
+			$meta				= new $modelClass();
+			$meta->modelId		= $modelId;
+			$meta->name			= $name;
+			$meta->type			= $type;
+			$meta->valueType	= $valueType;
 		}
 
-		return $attribute;
+		return $meta;
 	}
 
     // Read - Lists ----
@@ -99,7 +99,7 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 		return $this->getNameValueMap( $config );
 	}
 
-	public function getIdObjectMapByType( $modelId, $type ) {
+	public function getIdMetaMapByType( $modelId, $type ) {
 
 		$config[ 'conditions' ][ 'modelId' ] 	= $modelId;
 		$config[ 'conditions' ][ 'type' ] 		= $type;
@@ -107,7 +107,7 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 		return $this->getObjectMap( $config );
 	}
 
-	public function getNameObjectMapByType( $modelId, $type ) {
+	public function getNameMetaMapByType( $modelId, $type ) {
 
 		$config[ 'key' ]						= 'name';
 		$config[ 'conditions' ][ 'modelId' ] 	= $modelId;
@@ -158,6 +158,25 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 		}
  	}
 
+ 	public function updateByParams( $params = [], $config = [] ) {
+
+		$modelId	= $params[ 'modelId' ];
+		$name		= $params[ 'name' ];
+		$type		= $params[ 'type' ];
+
+		$model		= $this->getByNameType( $modelId, $name, $type );
+
+		if( isset( $model ) ) {
+
+			$model->value	= $params[ 'value' ];
+
+			return parent::update( $model, [
+				'selective' => false,
+				'attributes' => [ 'value' ]
+			]);
+		}
+ 	}
+
 	public function updateMultiple( $models, $config = [] ) {
 
 		$parent	= $config[ 'parent' ];
@@ -173,19 +192,19 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 
 	public function updateMultipleByForm( $form, $config = [] ) {
 
-		$attributes = $form->getArrayToStore();
+		$metas = $form->getArrayToStore();
 
-		foreach ( $attributes as $attribute ) {
+		foreach ( $metas as $meta ) {
 
-			if( !isset( $attribute[ 'valueType' ] ) ) {
+			if( !isset( $meta[ 'valueType' ] ) ) {
 
-				$attribute[ 'valueType' ]	= Attribute::VALUE_TYPE_TEXT;
+				$meta[ 'valueType' ]	= Meta::VALUE_TYPE_TEXT;
 			}
 
-			$model			= $this->initByNameType( $config[ 'modelId' ], $attribute[ 'name' ], $config[ 'type' ], $attribute[ 'valueType' ] );
+			$model			= $this->initByNameType( $config[ 'modelId' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ] );
 
-			$model->value	= $attribute[ 'value' ];
-			$model->label	= $form->getAttributeLabel( $attribute[ 'name' ] );
+			$model->value	= $meta[ 'value' ];
+			$model->label	= $form->getAttributeLabel( $meta[ 'name' ] );
 
 			$this->update( $model );
 		}
@@ -204,7 +223,7 @@ abstract class AttributeService extends EntityService implements IAttributeServi
 
 	// CMG parent classes --------------------
 
-	// AttributeService ----------------------
+	// MetaService ---------------------------
 
 	// Data Provider ------
 

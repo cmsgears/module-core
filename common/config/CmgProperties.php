@@ -34,12 +34,12 @@ class CmgProperties {
 	public function init( $configType ) {
 
 		$siteService		= Yii::$app->factory->get( 'siteService' );
-		$this->properties	= $siteService->getAttributeNameValueMapBySlugType( Yii::$app->core->getSiteSlug(), $configType );
+		$this->properties	= $siteService->getMetaNameValueMapBySlugType( Yii::$app->core->getSiteSlug(), $configType );
 
 		// Load main site properties
 		if( Yii::$app->core->multiSite && count( $this->properties ) == 0 ) {
 
-			$this->properties	= $siteService->getAttributeNameValueMapBySlugType( Yii::$app->core->getMainSiteSlug(), $configType );
+			$this->properties	= $siteService->getMetaNameValueMapBySlugType( Yii::$app->core->getMainSiteSlug(), $configType );
 		}
 	}
 

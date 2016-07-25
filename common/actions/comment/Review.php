@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\frontend\actions\comment;
+namespace cmsgears\core\common\actions\comment;
 
 // Yii Imports
 use \Yii;
@@ -7,10 +7,16 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\resources\ModelComment;
+
+use cmsgears\core\common\utilities\AjaxUtil;
+
 /**
- * CreateReview can be used to create a review for a model.
+ * Review adds a review for a model using ModelComment resource.
+ *
+ * The controller must provide appropriate model service having model class, table and type defined for the base model.
  */
-class CreateReview extends CreateComment {
+class Review extends Create {
 
 	// Variables ---------------------------------------------------
 
@@ -26,22 +32,17 @@ class CreateReview extends CreateComment {
 
 	// Public -----------------
 
-	// Protected --------------
+	public $type		= ModelComment::TYPE_REVIEW;
 
-	protected $typed = true;
+	public $scenario	= ModelComment::TYPE_REVIEW;
+
+	// Protected --------------
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
-
-	public function init() {
-
-		parent::init();
-
-		$this->scenario	= 'review';
-	}
 
 	// Instance methods --------------------------------------------
 
@@ -53,6 +54,5 @@ class CreateReview extends CreateComment {
 
 	// CMG parent classes --------------------
 
-	// CreateReview --------------------------
-
+	// Comment -------------------------------
 }

@@ -122,8 +122,10 @@ class SiteMemberService extends \cmsgears\core\common\services\base\EntityServic
 
 	public function update( $model, $config = [] ) {
 
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'roleId' ];
+
 		return parent::update( $model, [
-			'attributes' => [ 'roleId' ]
+			'attributes' => $attributes
 		]);
  	}
 

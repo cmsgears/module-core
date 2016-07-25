@@ -27,6 +27,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property long $createdBy
  * @property long $modifiedBy
  * @property string $parentType
+ * @property string $type
  * @property string $name
  * @property string $email
  * @property string $avatarUrl
@@ -34,7 +35,6 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $ip
  * @property string $agent
  * @property short $status
- * @property short $type
  * @property short $fragment
  * @property short $rating
  * @property boolean $featured
@@ -52,9 +52,9 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
 	// Constants --------------
 
-    const TYPE_COMMENT      =   0;
-    const TYPE_REVIEW       =  10;
-    const TYPE_TESTIMONIAL  =  20;
+    const TYPE_COMMENT      =  'comment';
+    const TYPE_REVIEW       =  'review';
+    const TYPE_TESTIMONIAL  =  'testimonial';
 
     const STATUS_NEW        =  500;
     const STATUS_SPAM       =  600;
@@ -63,6 +63,12 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
     const STATUS_TRASH    	=  900;
 
 	// Public -----------------
+
+    public static $typeMap = [
+        self::TYPE_COMMENT => 'Comment',
+        self::TYPE_REVIEW => 'Review',
+        self::TYPE_TESTIMONIAL => 'Testimonial'
+    ];
 
     public static $statusMap = [
         self::STATUS_NEW => 'New',
@@ -132,17 +138,25 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
             [ [ 'parentId', 'parentType', 'name', 'email' ], 'required' ],
             [ [ 'id', 'content', 'data' ], 'safe' ],
             [ 'email', 'email' ],
-            [ [ 'parentType', 'name', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ [ 'parentType', 'type', 'name', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ [ 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-            [ [ 'status', 'rating', 'type', 'fragment' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+            [ [ 'status', 'rating', 'fragment' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
             // Check captcha need for testimonial and review
-            [ 'content', 'required', 'on' => [ 'testimonial' ] ],
-            [ 'rating', 'required', 'on' => [ 'review' ] ],
+            [ 'content', 'required', 'on' => [ self::TYPE_COMMENT, self::TYPE_TESTIMONIAL ] ],
+            [ [ 'content', 'rating' ], 'required', 'on' => [ self::TYPE_REVIEW ] ],
             [ 'captcha', 'captcha', 'captchaAction' => '/core/site/captcha', 'on' => 'captcha' ],
             [ [ 'parentId', 'baseId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt', 'approvedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
+
+		// Enable captcha for non-logged in users
+		$user = Yii::$app->user->getIdentity();
+
+		if( !isset( $user ) ) {
+
+			$rules[] = [ 'captcha', 'required' ];
+		}
 
         // trim if required
         if( Yii::$app->core->trimFieldValue ) {
@@ -164,6 +178,7 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
             'baseId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
             'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
             'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ADDRESS_TYPE ),
             'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
             'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
             'avatarUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
@@ -226,12 +241,20 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Query -----------
 
+	public static function queryWithHasOne( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
     public static function queryByParentConfig( $parentId, $parentType, $config = [] ) {
 
 		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
 		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
 
-        return self::queryByParent( $parentId, $parentType)->andWhere( [ 'type' => $type, 'status' => $status ] );
+        return self::queryByParent( $parentId, $parentType )->andWhere( [ 'type' => $type, 'status' => $status ] );
     }
 
     public static function queryByParentTypeConfig( $parentType, $config = [] ) {

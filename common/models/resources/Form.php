@@ -12,6 +12,7 @@ use yii\behaviors\SluggableBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\interfaces\IVisibility;
+use cmsgears\core\common\models\interfaces\IOwner;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
@@ -19,8 +20,9 @@ use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 use cmsgears\core\common\models\traits\NameTypeTrait;
 use cmsgears\core\common\models\traits\SlugTypeTrait;
+use cmsgears\core\common\models\traits\interfaces\OwnerTrait;
 use cmsgears\core\common\models\traits\interfaces\VisibilityTrait;
-use cmsgears\core\common\models\traits\resources\AttributeTrait;
+use cmsgears\core\common\models\traits\resources\MetaTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\mappers\TemplateTrait;
 
@@ -77,10 +79,11 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	// Traits ------------------------------------------------------
 
-	use AttributeTrait;
+	use MetaTrait;
 	use CreateModifyTrait;
 	use DataTrait;
 	use NameTypeTrait;
+	use OwnerTrait;
 	use SlugTypeTrait;
 	use TemplateTrait;
 	use VisibilityTrait;
@@ -114,8 +117,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
-                'ensureUnique' => true,
-                'uniqueValidator' => [ 'targetAttribute' => 'type' ]
+                'ensureUnique' => true
             ]
         ];
     }
@@ -135,7 +137,6 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ [ 'description', 'successMessage' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
             [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-            [ [ 'slug', 'type' ], 'unique', 'targetAttribute' => [ 'slug', 'type' ] ],
             [ [ 'visibility' ], 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'captcha', 'active', 'userMail', 'adminMail' ], 'boolean' ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
@@ -163,6 +164,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
             'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
             'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
             'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
             'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
             'successMessage' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE_SUCCESS ),
             'captcha' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CAPTCHA ),
@@ -200,6 +202,11 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 	// Validators ----------------------------
 
 	// Form ----------------------------------
+
+    public function getSite() {
+
+        return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+    }
 
     /**
      * @return array - array of FormField
@@ -272,17 +279,15 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-		$modelTable				= CoreTables::TABLE_FORM;
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'fields' ];
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template', 'creator', 'modifier' ];
 		$config[ 'relations' ]	= $relations;
-		$config[ 'groups' ]		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : [ "$modelTable.id" ];
 
 		return parent::queryWithAll( $config );
 	}
 
-	public static function queryWithForm( $config = [] ) {
+	public static function queryWithFields( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'fields' ];
 

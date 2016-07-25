@@ -17,7 +17,7 @@ use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 use cmsgears\core\common\models\traits\NameTypeTrait;
 use cmsgears\core\common\models\traits\SlugTypeTrait;
-use cmsgears\core\common\models\traits\resources\AttributeTrait;
+use cmsgears\core\common\models\traits\resources\MetaTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
 use cmsgears\core\common\models\traits\mappers\TemplateTrait;
@@ -69,7 +69,7 @@ class Gallery extends \cmsgears\core\common\models\base\Resource {
 
 	// Traits ------------------------------------------------------
 
-	use AttributeTrait;
+	use MetaTrait;
 	use CreateModifyTrait;
 	use DataTrait;
 	use FileTrait;
@@ -100,8 +100,7 @@ class Gallery extends \cmsgears\core\common\models\base\Resource {
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
-                'ensureUnique' => true,
-                'uniqueValidator' => [ 'targetAttribute' => 'type' ]
+                'ensureUnique' => true
             ],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
@@ -127,7 +126,6 @@ class Gallery extends \cmsgears\core\common\models\base\Resource {
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ [ 'title', 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
             [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-            [ [ 'slug', 'type' ], 'unique', 'targetAttribute' => [ 'slug', 'type' ] ],
             [ 'active', 'boolean' ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -154,6 +152,7 @@ class Gallery extends \cmsgears\core\common\models\base\Resource {
             'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
             'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
             'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
             'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
             'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
             'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
@@ -222,9 +221,9 @@ class Gallery extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template' ];
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template', 'creator', 'modifier' ];
 		$config[ 'relations' ]	= $relations;
 
 		return parent::queryWithAll( $config );

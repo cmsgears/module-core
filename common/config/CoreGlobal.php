@@ -35,6 +35,7 @@ class CoreGlobal {
 
 	// Grouping by type ------------------------------------------------
 
+	// Generic
 	const TYPE_DEFAULT			= 'default';
 	const TYPE_CORE				= 'core';
 	const TYPE_SYSTEM			= 'system';
@@ -82,6 +83,7 @@ class CoreGlobal {
 	const TEMPLATE_VIEW_CATEGRY		= 'category';
 	const TEMPLATE_VIEW_TAG			= 'tag';
 	const TEMPLATE_VIEW_AUTHOR		= 'author';
+    const TEMPLATE_VIEW_PRINT		= 'print';
 
 	// Categories Slug -------------------------------------------------
 
@@ -134,16 +136,18 @@ class CoreGlobal {
 	// Model Attributes ------------------------------------------------
 
 	// data attributes
-	const DATA_REJECT_REASON		= 'rejectReason';
 	const DATA_CONFIG				= 'config';
+	const DATA_SOCIAL_LINKS			= 'socialLinks';
+	const DATA_REJECT_REASON		= 'rejectReason';
+	const DATA_APPROVAL_REQUEST		= 'approvalRequest';
 
 	// model attributes
-	const ATTRIBUTE_TYPE_USER		= 'user';
-	const ATTRIBUTE_TYPE_SETTING	= 'setting';
+	const META_TYPE_USER			= 'user';
+	const META_TYPE_SETTING			= 'setting';
 
 	// Comment Attributes
-	const ATTRIBUTE_COMMENT_SPAM_REQUEST    = 'spam-request';
-	const ATTRIBUTE_COMMENT_DELETE_REQUEST  = 'delete-request';
+	const META_COMMENT_SPAM_REQUEST    = 'spamRequest';
+	const META_COMMENT_DELETE_REQUEST  = 'deleteRequest';
 
 	// Default Maps ----------------------------------------------------
 
@@ -230,33 +234,43 @@ class CoreGlobal {
 	// Generic Fields
 	const FIELD_CODE				= 'codeField';
 	const FIELD_CODE_NUM			= 'codeNumField';
+
+	const FIELD_DEFAULT 			= 'Default';
 	const FIELD_NAME				= 'nameField';
+	const FIELD_SLUG				= 'slugField';
 	const FIELD_LABEL				= 'labelField';
 	const FIELD_TITLE				= 'titleField';
-	const FIELD_ACTIVE				= 'activeField';
+	const FIELD_TYPE				= 'typeField';
+	const FIELD_ICON				= 'iconField';
+	const FIELD_VALUE_TYPE			= 'valueTypeField';
 	const FIELD_VALUE				= 'valueField';
+	const FIELD_DESCRIPTION			= 'descField';
+	const FIELD_NOTES				= 'notesField';
+
+	const FIELD_ACTIVE				= 'activeField';
+	const FIELD_STATUS				= 'statusField';
+	const FIELD_CONSUMED			= 'consumedField';
+	const FIELD_VISIBILITY			= 'visibilityField';
+	const FIELD_PRIORITY			= 'priorityField';
+	const FIELD_SEVERITY			= 'severityField';
+	const FIELD_ORDER				= 'orderField';
+	const FIELD_LIMIT				= 'limitField';
+	const FIELD_FEATURED			= 'featuredField';
+
+	const FIELD_DATE_START			= 'startDateField';
+	const FIELD_DATE_END			= 'endDateField';
+	const FIELD_DAY_WEEK 			= 'Week Day';
+	const FIELD_DAY_MONTH			= 'Month Day';
+	const FIELD_TIME				= 'timeField';
+	const FIELD_TIME_START			= 'startTimeField';
+	const FIELD_TIME_END			= 'endTimeField';
+	const FIELD_CREATED_AT			= 'createdAtField';
+	const FIELD_MODIFIED_AT			= 'modifiedAtField';
+
 	const FIELD_MESSAGE				= 'messageField';
 	const FIELD_MESSAGE_SUCCESS		= 'messageSuccessField';
 	const FIELD_MESSAGE_FAILURE		= 'messageFailureField';
-	const FIELD_DESCRIPTION			= 'descField';
-	const FIELD_NOTES				= 'notesField';
-	const FIELD_COMMENT				= 'commentField';
-	const FIELD_SESSION				= 'sessionField';
-	const FIELD_SLUG				= 'slugField';
-	const FIELD_LIMIT				= 'limitField';
-	const FIELD_CREATED_AT			= 'createdAtField';
-	const FIELD_MODIFIED_AT			= 'modifiedAtField';
-	const FIELD_VISIBILITY			= 'visibilityField';
-	const FIELD_STATUS				= 'statusField';
-	const FIELD_TYPE				= 'typeField';
-	const FIELD_VALUE_TYPE			= 'valueTypeField';
-	const FIELD_VALIDATORS 			= 'validatorsField';
-	const FIELD_CONSUMED			= 'consumedField';
-	const FIELD_DEFAULT 			= 'Default';
-	const FIELD_ORDER				= 'orderField';
-	const FIELD_FEATURED			= 'featuredField';
-	const FIELD_TIME				= 'timeField';
-	const FIELD_ICON				= 'iconField';
+
 	const FIELD_ROLE				= 'roleField';
 	const FIELD_PERMISSION			= 'permissionField';
 	const FIELD_GENDER				= 'genderField';
@@ -268,35 +282,36 @@ class CoreGlobal {
 	const FIELD_CATEGORY			= 'categoryField';
 	const FIELD_FILE				= 'fileField';
 	const FIELD_TAG					= 'tagField';
-	const FIELD_AVATAR				= 'avatarField';
-	const FIELD_AVATAR_URL			= 'avatarUrlField';
-	const FIELD_WEBSITE				= 'websiteField';
-	const FIELD_BANNER				= 'bannerField';
-	const FIELD_VIDEO				= 'videoField';
 	const FIELD_GALLERY				= 'galleryField';
+	const FIELD_EVENT				= 'eventField';
+	const FIELD_OBJECT				= 'objectField';
+	const FIELD_THEME				= 'themeField';
+	const FIELD_COMMENT				= 'commentField';
+	const FIELD_TEMPLATE			= 'templateField';
+
 	const FIELD_USER				= 'userField';
 	const FIELD_ADMIN				= 'adminField';
 	const FIELD_AUTHOR				= 'authorField';
 	const FIELD_MEMBER				= 'memberField';
 	const FIELD_OWNER				= 'ownerField';
 	const FIELD_APPROVER			= 'approverField';
-	const FIELD_TEMPLATE			= 'templateField';
+
+	const FIELD_WEBSITE				= 'websiteField';
+	const FIELD_AVATAR				= 'avatarField';
+	const FIELD_AVATAR_URL			= 'avatarUrlField';
+	const FIELD_BANNER				= 'bannerField';
+	const FIELD_VIDEO				= 'videoField';
+
+	const FIELD_GLOBAL				= 'globalField';
+	const FIELD_SESSION				= 'sessionField';
+	const FIELD_VALIDATORS 			= 'validatorsField';
 	const FIELD_RENDERER			= 'rendererField';
-	const FIELD_EVENT				= 'eventField';
 	const FIELD_EVENT_LOG			= 'eventLogField';
-	const FIELD_DATE_START			= 'startDateField';
-	const FIELD_DATE_END			= 'endDateField';
-	const FIELD_TIME_START			= 'startTimeField';
-	const FIELD_TIME_END			= 'endTimeField';
-	const FIELD_DAY_WEEK 			= 'Week Day';
-	const FIELD_DAY_MONTH			= 'Month Day';
 	const FIELD_IP					= 'ipField';
 	const FIELD_AGENT_BROWSER		= 'browserAgentField';
-	const FIELD_DATA				= 'dataField';
 	const FIELD_HTML_OPTIONS		= 'htmlOptionsField';
+	const FIELD_DATA				= 'dataField';
 	const FIELD_COMPRESS			= 'compressField';
-	const FIELD_OBJECT				= 'objectField';
-	const FIELD_THEME				= 'themeField';
 
 	// Role Fields
 	const FIELD_HOME_URL			= 'homeUrlField';
@@ -364,8 +379,4 @@ class CoreGlobal {
 	// Visibility
 	const FIELD_PRIVATE			= 'privateField';
 	const FIELD_PUBLIC			= 'publicField';
-
-	// Orders
-	const FIELD_PRIORITY		= 'priorityField';
-	const FIELD_SEVERITY		= 'severityField';
 }

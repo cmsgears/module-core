@@ -30,13 +30,14 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 
 	public $idParam		= 'id';
 	public $slugParam	= 'slug';
+	public $typeParam	= 'type';
 
 	public $model;
 
 	// Protected --------------
 
 	// Flag to identify whether type is required to perform action.
-	protected $typed = false;
+	protected $typed 	= false;
 
 	// Model service for active model
 	protected $modelService;
@@ -75,7 +76,17 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 
 				if( $this->typed ) {
 
-					$this->model	= $this->modelService->getBySlugType( $slug, $this->modelService->getParentType() );
+					$type	= Yii::$app->request->get( $this->typeParam, null );
+
+					// Override model service parent type to search appropriate models
+					if( isset( $type ) ) {
+
+						$this->model	= $this->modelService->getBySlugType( $slug, $type );
+					}
+					else {
+
+						$this->model	= $this->modelService->getBySlugType( $slug, $this->modelService->getParentType() );
+					}
 				}
 				else {
 

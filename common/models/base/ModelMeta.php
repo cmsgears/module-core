@@ -11,7 +11,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 
 /**
- * ModelAttribute Entity - A model can have only one attribute with the same name for particular type.
+ * ModelMeta Entity - A model can have only one meta with the same name for particular type.
  *
  * @property long $id
  * @property long $modelId
@@ -21,7 +21,7 @@ use cmsgears\core\common\models\base\CoreTables;
  * @property string $valueType
  * @property string $value
  */
-abstract class ModelAttribute extends Attribute {
+abstract class ModelMeta extends Meta {
 
 	// Variables ---------------------------------------------------
 
@@ -102,9 +102,17 @@ abstract class ModelAttribute extends Attribute {
 
 	// Validators ----------------------------
 
-	// ModelAttribute ------------------------
+	// ModelMeta ------------------------
 
 	abstract public function getParent();
+
+	/**
+	 * The method isBelongsTo checks whether the meta belong to given parent model.
+	 */
+	public function isBelongsTo( $model ) {
+
+		return $this->modelId == $model->id;
+	}
 
 	// Static Methods ----------------------------------------------
 
@@ -114,11 +122,11 @@ abstract class ModelAttribute extends Attribute {
 
 	// CMG parent classes --------------------
 
-	// ModelAttribute ------------------------
+	// ModelMeta ------------------------
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'parent' ];
 		$config[ 'relations' ]	= $relations;
@@ -153,7 +161,7 @@ abstract class ModelAttribute extends Attribute {
 	/**
 	 * @param integer $modelId
 	 * @param string $name
-	 * @return array - ModelAttribute by name
+	 * @return array - ModelMeta by name
 	 */
 	public static function findByName( $modelId, $name ) {
 
@@ -163,7 +171,7 @@ abstract class ModelAttribute extends Attribute {
 	/**
 	 * @param integer $modelId
 	 * @param string $type
-	 * @return array - ModelAttribute by type
+	 * @return array - ModelMeta by type
 	 */
 	public static function findByType( $modelId, $type ) {
 
@@ -174,7 +182,7 @@ abstract class ModelAttribute extends Attribute {
 	 * @param integer $modelId
 	 * @param string $type
 	 * @param string $name
-	 * @return ModelAttribute - by type and name
+	 * @return ModelMeta - by type and name
 	 */
 	public static function findByNameType( $modelId, $name, $type ) {
 
@@ -185,7 +193,7 @@ abstract class ModelAttribute extends Attribute {
 	 * @param integer $modelId
 	 * @param string $type
 	 * @param string $name
-	 * @return boolean - Check whether attribute exist by type and name
+	 * @return boolean - Check whether meta exist by type and name
 	 */
 	public static function isExistByNameType( $modelId, $name, $type ) {
 
@@ -197,6 +205,18 @@ abstract class ModelAttribute extends Attribute {
 	// Create -----------------
 
 	// Update -----------------
+
+	public static function updateByNameType( $modelId, $name, $type, $value ) {
+
+		$meta = self::findByNameType( $modelId, $name, $type );
+
+		if( isset( $meta ) ) {
+
+			$meta->value = $value;
+
+			$meta->update();
+		}
+	}
 
 	// Delete -----------------
 }

@@ -140,10 +140,13 @@ abstract class Entity extends \yii\db\ActiveRecord {
 
 	// Read - Query -----------
 
+	/**
+	 * The method queryWithAll generate query with model relations.
+	 */
 	public static function queryWithAll( $config = [] ) {
 
 		// query generation
-		$query			= self::find();
+		$query			= static::find();
 		$relations		= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [];
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
@@ -198,6 +201,11 @@ abstract class Entity extends \yii\db\ActiveRecord {
 		}
 
 		return $query;
+	}
+
+	public static function queryWithHasOne( $config = [] ) {
+
+		return static::queryWithAll( $config );
 	}
 
 	// Read - Find ------------

@@ -11,7 +11,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\forms\ResetPassword;
 use cmsgears\core\common\models\resources\Address;
 use cmsgears\core\common\models\resources\File;
-use cmsgears\core\common\models\resources\ModelAttribute;
+use cmsgears\core\common\models\resources\ModelMeta;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 use cmsgears\core\common\utilities\CodeGenUtil;
@@ -28,7 +28,7 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 
 	protected $modelAddressService;
 
-	protected $modelAttributeService;
+	protected $modelMetaService;
 
 	// Private ----------------
 
@@ -38,10 +38,11 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 
         parent::init();
 
-		$this->crudPermission			= CoreGlobal::PERM_USER;
-		$this->modelService 			= Yii::$app->factory->get( 'userService' );
-		$this->modelAddressService		= Yii::$app->factory->get( 'modelAddressService' );
-		$this->modelAttributeService	= Yii::$app->factory->get( 'modelAttributeService' );
+		$this->crudPermission		= CoreGlobal::PERM_USER;
+
+		$this->modelService 		= Yii::$app->factory->get( 'userService' );
+		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
+		$this->modelMetaService		= Yii::$app->factory->get( 'modelMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -130,33 +131,33 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 
 	public function actionSettings() {
 
-		$user			= Yii::$app->user->getIdentity();
+		$user	= Yii::$app->user->getIdentity();
 
 		// Update/Render if exist
 		if( isset( $user ) ) {
 
-			$modelAttributes	= Yii::$app->request->post( 'ModelAttribute' );
-			$count 				= count( $modelAttributes );
-			$attributes			= [];
+			$modelMetas		= Yii::$app->request->post( 'ModelMeta' );
+			$count 			= count( $modelMetas );
+			$metas			= [];
 
 			for ( $i = 0; $i < $count; $i++ ) {
 
-				$attribute		= $modelAttributes[ $i ];
-				$attribute		= $this->modelAttributeService->initByNameType( $user->id, CoreGlobal::TYPE_USER, $attribute[ 'name' ], $attribute[ 'type' ] );
+				$meta		= $modelMetas[ $i ];
+				$meta		= $this->modelMetaService->initByNameType( $user->id, CoreGlobal::TYPE_USER, $meta[ 'name' ], $meta[ 'type' ] );
 
-				$attributes[] 	= $attribute;
+				$metas[] 	= $meta;
 			}
 
 			// Load SchoolItem models
-			if( ModelAttribute::loadMultiple( $attributes, Yii::$app->request->post(), 'ModelAttribute' ) && ModelAttribute::validateMultiple( $attributes ) ) {
+			if( ModelMeta::loadMultiple( $metas, Yii::$app->request->post(), 'ModelMeta' ) && ModelMeta::validateMultiple( $metas ) ) {
 
-				$this->modelService->updateModelAttributes( $user, $attributes );
+				$this->modelService->updateModelMetas( $user, $metas );
 
 				$data	= [];
 
-				foreach ( $attributes as $attribute ) {
+				foreach ( $metas as $meta ) {
 
-					$data[]	= $attribute->getFieldInfo();
+					$data[]	= $meta->getFieldInfo();
 				}
 
 				// Trigger Ajax Success

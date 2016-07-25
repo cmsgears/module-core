@@ -127,7 +127,7 @@ class ModelGallery extends \cmsgears\core\common\models\base\Mapper {
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'gallery' ];
 		$config[ 'relations' ]	= $relations;

@@ -7,7 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-interface ISiteAttributeService extends \cmsgears\core\common\services\interfaces\base\IAttributeService {
+interface ISiteMetaService extends \cmsgears\core\common\services\interfaces\base\IMetaService {
 
 	// Data Provider ------
 

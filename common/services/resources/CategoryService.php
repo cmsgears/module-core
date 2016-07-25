@@ -77,6 +77,12 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 	                'desc' => ['name' => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'name',
+	            ],
+	            'parent' => [
+	                'asc' => [ 'parentId' => SORT_ASC ],
+	                'desc' => ['parentId' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'parent',
 	            ]
 	        ]
 	    ]);
@@ -92,12 +98,12 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 
 	public function getByParentId( $id ) {
 
-		return self::findByParentId( $id );
+		return Category::findByParentId( $id );
 	}
 
 	public function getFeaturedByType( $type ) {
 
-		return self::getFeaturedByType( $type );
+		return Category::getFeaturedByType( $type );
 	}
 
     // Read - Lists ----
@@ -138,6 +144,8 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 
 	public function update( $model, $config = [] ) {
 
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description', 'type', 'icon', 'featured', 'htmlOptions' ];
+
 		// Find existing model
 		$modelToUpdate	= self::findById( $model->id );
 
@@ -145,7 +153,7 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 		$modelToUpdate 	= self::updateInHierarchy( $model, $modelToUpdate );
 
 		return parent::update( $model, [
-			'attributes' => [ 'name', 'description', 'type', 'icon', 'featured', 'htmlOptions' ]
+			'attributes' => $attributes
 		]);
 	}
 

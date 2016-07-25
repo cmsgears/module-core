@@ -117,7 +117,7 @@ class SiteMember extends \cmsgears\core\common\models\base\Mapper {
     /**
      * @return User
      */
-    public function getMember() {
+    public function getUser() {
 
         return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
     }
@@ -150,9 +150,9 @@ class SiteMember extends \cmsgears\core\common\models\base\Mapper {
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'member', 'role' ];
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'user', 'role' ];
 		$config[ 'relations' ]	= $relations;
 
 		return parent::queryWithAll( $config );
@@ -165,9 +165,9 @@ class SiteMember extends \cmsgears\core\common\models\base\Mapper {
 		return parent::queryWithAll( $config );
 	}
 
-	public static function queryWithMember( $config = [] ) {
+	public static function queryWithUser( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'member', 'role' ];
+		$config[ 'relations' ]	= [ 'user', 'role' ];
 
 		return parent::queryWithAll( $config );
 	}

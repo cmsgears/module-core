@@ -1,7 +1,4 @@
 <?php
-// Yii Imports
-use \Yii;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 

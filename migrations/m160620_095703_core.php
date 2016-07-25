@@ -55,7 +55,7 @@ class m160620_095703_core extends \yii\db\Migration {
 		// User
 		$this->upUser();
 		$this->upSite();
-		$this->upSiteAttribute();
+		$this->upSiteMeta();
 		$this->upSiteMember();
 
 		// Files
@@ -75,7 +75,7 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->upModelMessage();
 		$this->upModelHierarchy();
 		$this->upModelComment();
-		$this->upModelAttribute();
+		$this->upModelMeta();
 
 		// Traits - Mappers
 		$this->upModelObject();
@@ -369,20 +369,20 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'site_theme', $this->prefix . 'core_site', 'themeId' );
 	}
 
-	private function upSiteAttribute() {
+	private function upSiteMeta() {
 
-        $this->createTable( $this->prefix . 'core_site_attribute', [
+        $this->createTable( $this->prefix . 'core_site_meta', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'name' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
 			'label' => $this->string( CoreGlobal::TEXT_LARGE )->notNull(),
-			'type' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull()->defaultValue( 'default' ),
+			'type' => $this->string( CoreGlobal::TEXT_MEDIUM ),
 			'valueType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull()->defaultValue( 'text' ),
 			'value' => $this->text()
         ], $this->options );
 
         // Index for columns site, parent, creator and modifier
-		$this->createIndex( 'idx_' . $this->prefix . 'site_attribute_parent', $this->prefix . 'core_site_attribute', 'modelId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'site_meta_parent', $this->prefix . 'core_site_meta', 'modelId' );
 	}
 
 	private function upSiteMember() {
@@ -579,7 +579,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'localeId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
-			'type' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
+			'type' => $this->string( CoreGlobal::TEXT_MEDIUM ),
 			'name' => $this->string( CoreGlobal::TEXT_LARGE )->notNull(),
 			'value' => $this->text()
         ], $this->options );
@@ -634,16 +634,16 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_modifier', $this->prefix . 'core_model_comment', 'modifiedBy' );
 	}
 
-	private function upModelAttribute() {
+	private function upModelMeta() {
 
-		$this->createTable( $this->prefix . 'core_model_attribute', [
+		$this->createTable( $this->prefix . 'core_model_meta', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
+			'type' => $this->string( CoreGlobal::TEXT_MEDIUM ),
+			'valueType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull()->defaultValue( 'text' ),
 			'name' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
 			'label' => $this->string( CoreGlobal::TEXT_LARGE )->notNull(),
-			'type' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull()->defaultValue( 'default' ),
-			'valueType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull()->defaultValue( 'text' ),
 			'value' => $this->text()
         ], $this->options );
 	}
@@ -655,6 +655,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
+			'type' => $this->string( CoreGlobal::TEXT_MEDIUM ),
 			'order' => $this->smallInteger( 6 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true )
         ], $this->options );
@@ -670,7 +671,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
-			'type' => $this->smallInteger( 6 ),
+			'type' => $this->string( CoreGlobal::TEXT_MEDIUM ),
 			'order' => $this->smallInteger( 6 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true )
         ], $this->options );
@@ -686,6 +687,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
+			'type' => $this->string( CoreGlobal::TEXT_MEDIUM ),
 			'order' => $this->smallInteger( 6 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true )
         ], $this->options );
@@ -701,7 +703,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
-			'type' => $this->string( CoreGlobal::TEXT_MEDIUM )->defaultValue( null ),
+			'type' => $this->string( CoreGlobal::TEXT_MEDIUM ),
 			'order' => $this->smallInteger( 6 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true )
         ], $this->options );
@@ -717,6 +719,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
+			'type' => $this->string( CoreGlobal::TEXT_MEDIUM ),
 			'order' => $this->smallInteger( 6 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true )
         ], $this->options );
@@ -732,6 +735,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
+			'type' => $this->string( CoreGlobal::TEXT_MEDIUM ),
 			'order' => $this->smallInteger( 6 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true )
         ], $this->options );
@@ -747,6 +751,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
+			'type' => $this->string( CoreGlobal::TEXT_MEDIUM ),
 			'order' => $this->smallInteger( 6 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true )
         ], $this->options );
@@ -762,6 +767,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'modelId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( CoreGlobal::TEXT_MEDIUM )->notNull(),
+			'type' => $this->string( CoreGlobal::TEXT_MEDIUM ),
 			'order' => $this->smallInteger( 6 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true )
         ], $this->options );
@@ -823,8 +829,8 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'site_banner', $this->prefix . 'core_site', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'site_theme', $this->prefix . 'core_site', 'themeId', $this->prefix . 'core_theme', 'id', 'SET NULL' );
 
-		// Site Atribute
-        $this->addForeignKey( 'fk_' . $this->prefix . 'site_attribute_parent', $this->prefix . 'core_site_attribute', 'modelId', $this->prefix . 'core_site', 'id', 'CASCADE' );
+		// Site Meta
+        $this->addForeignKey( 'fk_' . $this->prefix . 'site_meta_parent', $this->prefix . 'core_site_meta', 'modelId', $this->prefix . 'core_site', 'id', 'CASCADE' );
 
 		// Site Member
         $this->addForeignKey( 'fk_' . $this->prefix . 'site_member_site', $this->prefix . 'core_site_member', 'siteId', $this->prefix . 'core_site', 'id', 'CASCADE' );
@@ -918,7 +924,7 @@ class m160620_095703_core extends \yii\db\Migration {
 
 		$this->dropTable( $this->prefix . 'core_user' );
 		$this->dropTable( $this->prefix . 'core_site' );
-		$this->dropTable( $this->prefix . 'core_site_attribute' );
+		$this->dropTable( $this->prefix . 'core_site_meta' );
 		$this->dropTable( $this->prefix . 'core_site_member' );
 
 		$this->dropTable( $this->prefix . 'core_file' );
@@ -934,7 +940,7 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->dropTable( $this->prefix . 'core_model_message' );
 		$this->dropTable( $this->prefix . 'core_model_hierarchy' );
 		$this->dropTable( $this->prefix . 'core_model_comment' );
-		$this->dropTable( $this->prefix . 'core_model_attribute' );
+		$this->dropTable( $this->prefix . 'core_model_meta' );
 
 		$this->dropTable( $this->prefix . 'core_model_object' );
 		$this->dropTable( $this->prefix . 'core_model_address' );
@@ -999,8 +1005,8 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_banner', $this->prefix . 'core_site' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_theme', $this->prefix . 'core_site' );
 
-		// Site Atribute
-        $this->dropForeignKey( 'fk_' . $this->prefix . 'site_attribute_parent', $this->prefix . 'core_site_attribute' );
+		// Site Meta
+        $this->dropForeignKey( 'fk_' . $this->prefix . 'site_meta_parent', $this->prefix . 'core_site_meta' );
 
 		// Site Member
         $this->dropForeignKey( 'fk_' . $this->prefix . 'site_member_site', $this->prefix . 'core_site_member' );

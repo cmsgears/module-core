@@ -8,14 +8,14 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\ModelAttribute;
+use cmsgears\core\common\models\resources\ModelMeta;
 
-use cmsgears\core\common\services\interfaces\resources\IModelAttributeService;
+use cmsgears\core\common\services\interfaces\resources\IModelMetaService;
 
 /**
- * The class ModelAttributeService is base class to perform database activities for ModelAttribute Entity.
+ * The class ModelMetaService is base class to perform database activities for ModelMeta Entity.
  */
-class ModelAttributeService extends \cmsgears\core\common\services\base\EntityService implements IModelAttributeService {
+class ModelMetaService extends \cmsgears\core\common\services\base\EntityService implements IModelMetaService {
 
 	// Variables ---------------------------------------------------
 
@@ -25,9 +25,9 @@ class ModelAttributeService extends \cmsgears\core\common\services\base\EntitySe
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelAttribute';
+	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelMeta';
 
-	public static $modelTable	= CoreTables::TABLE_MODEL_ATTRIBUTE;
+	public static $modelTable	= CoreTables::TABLE_MODEL_META;
 
 	public static $parentType	= null;
 
@@ -55,7 +55,7 @@ class ModelAttributeService extends \cmsgears\core\common\services\base\EntitySe
 
 	// CMG parent classes --------------------
 
-	// ModelAttributeService -----------------
+	// ModelMetaService ----------------------
 
 	// Data Provider ------
 
@@ -65,29 +65,29 @@ class ModelAttributeService extends \cmsgears\core\common\services\base\EntitySe
 
 	public function getByType( $parentId, $parentType, $type ) {
 
-		return ModelAttribute::findByType( $parentId, $parentType, $type );
+		return ModelMeta::findByType( $parentId, $parentType, $type );
 	}
 
 	public function getByNameType( $parentId, $parentType, $name, $type ) {
 
-		return ModelAttribute::findByNameType( $parentId, $parentType, $name, $type );
+		return ModelMeta::findByNameType( $parentId, $parentType, $name, $type );
 	}
 
-	public function initByNameType( $parentId, $parentType, $name, $type, $valueType = ModelAttribute::VALUE_TYPE_TEXT ) {
+	public function initByNameType( $parentId, $parentType, $name, $type, $valueType = ModelMeta::VALUE_TYPE_TEXT ) {
 
-		$attribute	= ModelAttribute::findByNameType( $parentId, $parentType, $name, $type );
+		$meta	= ModelMeta::findByNameType( $parentId, $parentType, $name, $type );
 
-		if( !isset( $attribute ) ) {
+		if( !isset( $meta ) ) {
 
-			$attribute				= new ModelAttribute();
-			$attribute->parentId	= $parentId;
-			$attribute->parentType	= $parentType;
-			$attribute->name		= $name;
-			$attribute->type		= $type;
-			$attribute->valueType	= $valueType;
+			$meta				= new ModelMeta();
+			$meta->parentId		= $parentId;
+			$meta->parentType	= $parentType;
+			$meta->name			= $name;
+			$meta->type			= $type;
+			$meta->valueType	= $valueType;
 		}
 
-		return $attribute;
+		return $meta;
 	}
 
     // Read - Lists ----
@@ -103,7 +103,7 @@ class ModelAttributeService extends \cmsgears\core\common\services\base\EntitySe
 		return $this->getNameValueMap( $config );
 	}
 
-	public function getIdObjectMapByType( $parentId, $parentType, $type ) {
+	public function getIdMetaMapByType( $parentId, $parentType, $type ) {
 
 		$config[ 'conditions' ][ 'parentId' ] 	= $parentId;
 		$config[ 'conditions' ][ 'parentType' ] = $parentType;
@@ -112,7 +112,7 @@ class ModelAttributeService extends \cmsgears\core\common\services\base\EntitySe
 		return $this->getObjectMap( $config );
 	}
 
-	public function getNameObjectMapByType( $parentId, $parentType, $type ) {
+	public function getNameMetaMapByType( $parentId, $parentType, $type ) {
 
 		$config[ 'key' ] = 'name';
 
@@ -136,7 +136,7 @@ class ModelAttributeService extends \cmsgears\core\common\services\base\EntitySe
 
 		if( !isset( $model->valueType ) ) {
 
-			$model->valueType = ModelAttribute::VALUE_TYPE_TEXT;
+			$model->valueType = ModelMeta::VALUE_TYPE_TEXT;
 		}
 
 		$model->save();
@@ -185,19 +185,19 @@ class ModelAttributeService extends \cmsgears\core\common\services\base\EntitySe
 
 	public function updateMultipleByForm( $form, $config = [] ) {
 
-		$attributes = $form->getArrayToStore();
+		$metas = $form->getArrayToStore();
 
-		foreach ( $attributes as $attribute ) {
+		foreach ( $metas as $meta ) {
 
-			if( !isset( $attribute[ 'valueType' ] ) ) {
+			if( !isset( $meta[ 'valueType' ] ) ) {
 
-				$attribute[ 'valueType' ]	= ModelAttribute::VALUE_TYPE_TEXT;
+				$meta[ 'valueType' ]	= ModelMeta::VALUE_TYPE_TEXT;
 			}
 
-			$model			= $this->initByNameType( $config[ 'parentId' ], $config[ 'parentType' ], $attribute[ 'name' ], $config[ 'type' ], $attribute[ 'valueType' ] );
+			$model			= $this->initByNameType( $config[ 'parentId' ], $config[ 'parentType' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ] );
 
-			$model->value	= $attribute[ 'value' ];
-			$model->label	= $form->getAttributeLabel( $attribute[ 'name' ] );
+			$model->value	= $meta[ 'value' ];
+			$model->label	= $form->getMetaLabel( $meta[ 'name' ] );
 
 			$this->update( $model );
 		}
@@ -209,7 +209,7 @@ class ModelAttributeService extends \cmsgears\core\common\services\base\EntitySe
 
 	// CMG parent classes --------------------
 
-	// ModelAttributeService -----------------
+	// ModelMetaService ----------------------
 
 	// Data Provider ------
 

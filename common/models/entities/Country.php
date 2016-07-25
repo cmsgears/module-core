@@ -135,16 +135,6 @@ class Country extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
-
-		$modelTable				= CoreTables::TABLE_COUNTRY;
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'provinces', 'cities' ];
-		$config[ 'relations' ]	= $relations;
-		$config[ 'groups' ]		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : [ "$modelTable.id" ];
-
-		return parent::queryWithAll( $config );
-	}
-
 	public static function queryWithProvinces( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'provinces' ];

@@ -47,14 +47,14 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 
 	// Constants --------------
 
-    const TYPE_DEFAULT      =  0;
-    const TYPE_PRIMARY      = 10;
-    const TYPE_RESIDENTIAL  = 20;
-    const TYPE_SHIPPING     = 30;
-    const TYPE_BILLING      = 40;
-    const TYPE_OFFICE       = 50;   // Office/ Registered
-    const TYPE_MAILING      = 60;   // Mailing/ Communication
-    const TYPE_BRANCH       = 70;   // Office having multiple branches
+    const TYPE_DEFAULT      = 'default';
+    const TYPE_PRIMARY      = 'primary';
+    const TYPE_RESIDENTIAL  = 'residential';
+    const TYPE_SHIPPING     = 'shipping';
+    const TYPE_BILLING      = 'billing';
+    const TYPE_OFFICE       = 'office';   // Office/ Registered
+    const TYPE_MAILING      = 'mailing';   // Mailing/ Communication
+    const TYPE_BRANCH       = 'branch';   // Office having multiple branches
 
 	// Public -----------------
 
@@ -100,12 +100,10 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 
         // model rules
         $rules = [
-            [ [ 'provinceId', 'countryId', 'line1', 'zip' ], 'required' ],
+            [ [ 'provinceId', 'countryId', 'line1', 'cityName', 'zip' ], 'required' ],
             [ [ 'cityId' ], 'required', 'on' => 'cityId' ],
-            [ [ 'cityName' ], 'required', 'on' => 'cityName' ],
             [ [ 'longitude', 'latitude' ], 'required', 'on' => 'location' ],
             [ [ 'longitude', 'latitude', 'cityId' ], 'required', 'on' => 'locationWithCityId' ],
-            [ [ 'longitude', 'latitude', 'cityName' ], 'required', 'on' => 'locationWithCityName' ],
             [ [ 'id' ], 'safe' ],
 			[ [ 'zip', 'subZip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ [ 'phone', 'fax' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
@@ -235,7 +233,7 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country', 'province', 'city' ];
 		$config[ 'relations' ]	= $relations;

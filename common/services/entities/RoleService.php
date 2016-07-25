@@ -112,8 +112,10 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function update( $model, $config = [] ) {
 
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description', 'homeUrl' ];
+
 		return parent::update( $model, [
-			'attributes' => [ 'name', 'description', 'homeUrl' ]
+			'attributes' => $attributes
 		]);
  	}
 

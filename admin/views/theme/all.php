@@ -1,6 +1,5 @@
 <?php
 // Yii Imports
-use \Yii;
 use yii\helpers\Html;
 use yii\widgets\LinkPager;
 
@@ -61,6 +60,7 @@ if( !isset( $sortOrder ) ) {
 						</span>
 					</th>
 					<th>Slug</th>
+					<th>Default</th>
 					<th>Renderer</th>
 					<th>Base Path</th>
 					<th>Actions</th>
@@ -76,6 +76,7 @@ if( !isset( $sortOrder ) ) {
 					<tr>
 						<td><?= $theme->name ?></td>
 						<td><?= $theme->slug ?></td>
+						<td><?= $theme->getDefaultStr() ?></td>
 						<td><?= $theme->renderer ?></td>
 						<td><?= $theme->basePath ?></td>
 						<td class="actions">

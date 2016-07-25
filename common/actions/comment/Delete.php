@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\frontend\actions\comment;
+namespace cmsgears\core\common\actions\comment;
 
 // Yii Imports
 use \Yii;

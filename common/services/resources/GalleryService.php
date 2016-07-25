@@ -126,6 +126,24 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 	// Create -------------
 
+	public function createByParams( $params = [], $config = [] ) {
+
+		$autoName	= isset( $config[ 'autoName' ] ) ? $config[ 'autoName' ] : false;
+
+		if( $autoName ) {
+
+			$gallery	= $this->getByNameType( $params[ 'name' ], $params[ 'type' ] );
+
+			// Rare scenario
+			if( isset( $gallery ) ) {
+
+				$params[ 'name' ]	= Yii::$app->security->generateRandomString( 16 );
+			}
+		}
+
+		return parent::createByParams( $params, $config );
+	}
+
 	public function createItem( $gallery, $item ) {
 
 		$modelFile 	= new ModelFile();
@@ -149,16 +167,16 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 	public function update( $model, $config = [] ) {
 
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'templateId', 'name', 'title', 'description' ];
+
 		// Provide activate/deactivate capability to admin
 		if( isset( $config[ 'admin' ] ) && $config[ 'admin' ] ) {
 
-			return parent::update( $model, [
-				'attributes' => [ 'templateId', 'name', 'title', 'description', 'active' ]
-			]);
+			$attributes[] = 'active';
 		}
 
 		return parent::update( $model, [
-			'attributes' => [ 'templateId', 'name', 'title', 'description' ]
+			'attributes' => $attributes
 		]);
  	}
 

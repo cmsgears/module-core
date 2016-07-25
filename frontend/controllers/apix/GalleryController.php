@@ -20,8 +20,6 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
 
 	// Protected --------------
 
-	protected $modelService;
-
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -31,6 +29,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
 		parent::init();
 
 		$this->crudPermission	= CoreGlobal::PERM_USER;
+
 		$this->modelService		= Yii::$app->factory->get( 'galleryService' );
 	}
 
@@ -46,10 +45,10 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
 
         return [
             'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
-	                'createItem' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true, 'service' => $this->modelService ] ] ],
-	                'deleteItem' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true, 'service' => $this->modelService ] ] ],
+	                'createItem' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ],
+	                'deleteItem' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ]
                 ]
             ],
             'verbs' => [

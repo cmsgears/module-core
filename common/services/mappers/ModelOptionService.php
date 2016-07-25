@@ -90,8 +90,10 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 
 	public function update( $model, $config = [] ) {
 
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'order', 'active' ];
+
 		return parent::update( $model, [
-			'attributes' => [ 'order', 'active' ]
+			'attributes' => $attributes
 		]);
  	}
 

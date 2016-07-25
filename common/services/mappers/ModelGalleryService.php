@@ -139,12 +139,14 @@ class ModelGalleryService extends \cmsgears\core\common\services\base\EntityServ
 
 	public function update( $model, $config = [] ) {
 
-		$gallery = $config[ 'gallery' ];;
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'type', 'order' ];
+
+		$gallery 	= $config[ 'gallery' ];
 
 		$this->galleryService->update( $gallery );
 
 		return parent::update( $model, [
-			'attributes' => [ 'type', 'order' ]
+			'attributes' => $attributes
 		]);
  	}
 

@@ -19,6 +19,7 @@ use cmsgears\core\common\models\traits\MapperTrait;
  * @property long $modelId
  * @property long $parentId
  * @property string $parentType
+ * @property string $type
  * @property short $order
  * @property boolean $active
  */
@@ -68,7 +69,7 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
             [ [ 'id' ], 'safe' ],
             [ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
             [ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
             [ [ 'active' ], 'boolean' ]
@@ -84,6 +85,7 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
             'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_OBJECT ),
             'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
             'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
             'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
             'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
         ];
@@ -117,7 +119,7 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'object' ];
 		$config[ 'relations' ]	= $relations;

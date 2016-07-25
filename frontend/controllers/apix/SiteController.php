@@ -2,7 +2,7 @@
 namespace cmsgears\core\frontend\controllers\apix;
 
 // Yii Imports
-use Yii;
+use \Yii;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
 
@@ -25,7 +25,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 
 	// Protected --------------
 
-	private $userService;
+	protected $userService;
 
 	protected $siteMemberService;
 

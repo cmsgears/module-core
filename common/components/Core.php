@@ -405,11 +405,11 @@ class Core extends \yii\base\Component {
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IFormFieldService', 'cmsgears\core\common\services\resources\FormFieldService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IFormService', 'cmsgears\core\common\services\resources\FormService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IGalleryService', 'cmsgears\core\common\services\resources\GalleryService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelAttributeService', 'cmsgears\core\common\services\resources\ModelAttributeService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelMetaService', 'cmsgears\core\common\services\resources\ModelMetaService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelCommentService', 'cmsgears\core\common\services\resources\ModelCommentService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelHierarchyService', 'cmsgears\core\common\services\resources\ModelHierarchyService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IOptionService', 'cmsgears\core\common\services\resources\OptionService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\resources\ISiteAttributeService', 'cmsgears\core\common\services\resources\SiteAttributeService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\ISiteMetaService', 'cmsgears\core\common\services\resources\SiteMetaService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\ITagService', 'cmsgears\core\common\services\resources\TagService' );
 	}
 
@@ -452,11 +452,11 @@ class Core extends \yii\base\Component {
 		$factory->set( 'formFieldService', 'cmsgears\core\common\services\resources\FormFieldService' );
 		$factory->set( 'formService', 'cmsgears\core\common\services\resources\FormService' );
 		$factory->set( 'galleryService', 'cmsgears\core\common\services\resources\GalleryService' );
-		$factory->set( 'modelAttributeService', 'cmsgears\core\common\services\resources\ModelAttributeService' );
+		$factory->set( 'modelMetaService', 'cmsgears\core\common\services\resources\ModelMetaService' );
 		$factory->set( 'modelCommentService', 'cmsgears\core\common\services\resources\ModelCommentService' );
 		$factory->set( 'modelHierarchyService', 'cmsgears\core\common\services\resources\ModelHierarchyService' );
 		$factory->set( 'optionService', 'cmsgears\core\common\services\resources\OptionService' );
-		$factory->set( 'siteAttributeService', 'cmsgears\core\common\services\resources\SiteAttributeService' );
+		$factory->set( 'siteMetaService', 'cmsgears\core\common\services\resources\SiteMetaService' );
 		$factory->set( 'tagService', 'cmsgears\core\common\services\resources\TagService' );
 	}
 

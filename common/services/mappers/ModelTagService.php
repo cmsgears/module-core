@@ -123,8 +123,10 @@ class ModelTagService extends \cmsgears\core\common\services\base\EntityService 
 
 	public function update( $model, $config = [] ) {
 
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'order', 'active' ];
+
 		return parent::update( $model, [
-			'attributes' => [ 'order', 'active' ]
+			'attributes' => $attributes
 		]);
  	}
 

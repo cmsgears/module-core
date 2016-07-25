@@ -144,7 +144,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'locale' ];
 		$config[ 'relations' ]	= $relations;

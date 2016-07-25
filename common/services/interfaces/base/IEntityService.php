@@ -3,6 +3,12 @@ namespace cmsgears\core\common\services\interfaces\base;
 
 interface IEntityService {
 
+	public function getModelClass();
+
+	public function getModelTable();
+
+	public function getParentType();
+
 	// Data Provider ------
 
 	public function getDataProvider( $config = [] );
@@ -16,6 +22,8 @@ interface IEntityService {
     // Read - Models ---
 
 	public function getById( $id );
+
+	public function getByIds( $ids = [] );
 
 	public function getModels( $config = [] );
 

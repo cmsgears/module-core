@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\frontend\actions\comment;
+namespace cmsgears\core\common\actions\comment;
 
 // Yii Imports
 use \Yii;
@@ -10,11 +10,11 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * RequestDelete can be used to mark a comment for user deletion and trigger notification and mail to admin and model owner.
+ * DeleteRequest can be used to mark a comment for user deletion and trigger notification and mail to admin and model owner.
  *
  * The controller must provide modelService variable using approprite service class.
  */
-class RequestDelete extends \cmsgears\core\common\actions\base\ModelAction {
+class DeleteRequest extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 

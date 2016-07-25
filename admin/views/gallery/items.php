@@ -8,7 +8,6 @@ use cmsgears\files\widgets\ImageUploader;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Gallery Items | ' . $coreProperties->getSiteTitle();
-$id				= $gallery->id;
 ?>
 <div class="box box-cud">
 	<div class="box-wrap-header">
@@ -32,7 +31,7 @@ $id				= $gallery->id;
 					'options' => [ 'id' => 'gallery-item', 'class' => 'file-uploader' ],
 					'directory' => 'gallery', 'info' => true,
 					'postAction' => 'true', 'cmtController' => 'gallery', 'cmtAction' => 'updateItem',
-					'postActionUrl' => "core/gallery/create-item?id=$id"
+					'postActionUrl' => "core/gallery/create-item?slug=$gallery->slug"
 			]); ?>
 		</div>
 
@@ -49,7 +48,7 @@ $id				= $gallery->id;
 							'options' => [ 'id' => "item-update-$id", 'class' => 'file-uploader' ],
 							'directory' => 'gallery', 'info' => true, 'model' => $item,
 							'postAction' => 'true', 'postActionId' => "frm-item-update-$id", 'cmtController' => 'gallery', 'cmtAction' => 'updateItem',
-							'postActionVisible' => true, 'postActionUrl' => "core/gallery/update-item?id=$id"
+							'postActionVisible' => true, 'postActionUrl' => "core/gallery/update-item?slug=$gallery->slug&id=$item->id"
 					]); ?>
 				</li>
 			<?php

@@ -23,9 +23,6 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 	// Protected --------------
 
 	protected $type;
-	protected $templateType;
-
-	protected $templateService;
 
 	// Private ----------------
 
@@ -41,11 +38,8 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 		$this->modelService		= Yii::$app->factory->get( 'categoryService' );
 
 		$this->type				= CoreGlobal::TYPE_SITE;
-		$this->templateType		= CoreGlobal::TYPE_CATEGORY;
 
-		$this->templateService	= Yii::$app->factory->get( 'templateService' );
-
-		// Notes: Configure sidebar and returnUrl exclusively in child classes. We can also change type and templateType in child classes.
+		// Notes: Configure sidebar and returnUrl exclusively in child classes. We can also change type in child classes.
 	}
 
 	// Instance methods --------------------------------------------
@@ -88,12 +82,10 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 		}
 
 		$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
-		$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
     	return $this->render( 'create', [
     		'model' => $model,
-    		'categoryMap' => $categoryMap,
-    		'templatesMap' => $templatesMap
+    		'categoryMap' => $categoryMap
     	]);
 	}
 
@@ -117,12 +109,9 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 									'filters' => [ [ 'not in', 'id', [ $id ] ] ]
 								]);
 
-			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
-
 	    	return $this->render( 'update', [
 	    		'model' => $model,
-	    		'categoryMap' => $categoryMap,
-	    		'templatesMap' => $templatesMap
+	    		'categoryMap' => $categoryMap
 	    	]);
 		}
 
@@ -146,12 +135,10 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 			}
 
 			$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
-			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
 	    	return $this->render( 'delete', [
 	    		'model' => $model,
-	    		'categoryMap' => $categoryMap,
-	    		'templatesMap' => $templatesMap
+	    		'categoryMap' => $categoryMap
 	    	]);
 		}
 

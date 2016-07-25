@@ -187,9 +187,15 @@ trait ApprovalTrait {
 				$this->status == IApproval::STATUS_FROJEN || $this->status == IApproval::STATUS_BLOCKED;
 	}
 
+	// Is available for non owners - few of the features can be disabled for frozen state based on model nature.
+	public function isPublic() {
+
+		return $this->status == IApproval::STATUS_ACTIVE || $this->status == IApproval::STATUS_FROJEN;
+	}
+
 	public function getRejectReason() {
 
-		$reason = $this->getDataAttribute( CoreGlobal::DATA_REJECT_REASON );
+		$reason = $this->getDataMeta( CoreGlobal::DATA_REJECT_REASON );
 		$text	= 'rejection';
 
 		if( $this->isFrojen() ) {

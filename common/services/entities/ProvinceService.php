@@ -106,8 +106,10 @@ class ProvinceService extends \cmsgears\core\common\services\base\EntityService 
 
 	public function update( $model, $config = [] ) {
 
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'countryId', 'code', 'codeNum', 'name' ];
+
 		return parent::update( $model, [
-			'attributes' => [ 'countryId', 'code', 'codeNum', 'name' ]
+			'attributes' => $attributes
 		]);
  	}
 

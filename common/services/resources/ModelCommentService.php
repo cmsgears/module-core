@@ -195,16 +195,16 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	public function update( $model, $config = [] ) {
 
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content' ];
+
 		// Allows admin to update status
 		if( isset( $config[ 'admin' ] ) && $config[ 'admin' ] ) {
 
-			return parent::update( $model, [
-				'attributes' => [ 'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content', 'status' ]
-			]);
+			$attributes[] = 'status';
 		}
 
 		return parent::update( $model, [
-			'attributes' => [ 'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content' ]
+			'attributes' => $attributes
 		]);
  	}
 
@@ -243,14 +243,14 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
     public function updateSpamRequest( $model ) {
 
-        $model->setDataAttribute( CoreGlobal::ATTRIBUTE_COMMENT_SPAM_REQUEST, true );
+        $model->setDataMeta( CoreGlobal::META_COMMENT_SPAM_REQUEST, true );
 
         $model->update();
     }
 
     public function updateDeleteRequest( $model ) {
 
-        $model->setDataAttribute( CoreGlobal::ATTRIBUTE_COMMENT_DELETE_REQUEST, true );
+        $model->setDataMeta( CoreGlobal::META_COMMENT_DELETE_REQUEST, true );
 
         $model->update();
     }

@@ -21,7 +21,7 @@ use cmsgears\core\common\models\resources\Option;
 use cmsgears\core\common\models\mappers\SiteMember;
 
 use cmsgears\core\common\models\traits\interfaces\ApprovalTrait;
-use cmsgears\core\common\models\traits\resources\AttributeTrait;
+use cmsgears\core\common\models\traits\resources\MetaTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
 use cmsgears\core\common\models\traits\mappers\AddressTrait;
@@ -85,7 +85,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	use AddressTrait;
 	use ApprovalTrait;
-	use AttributeTrait;
+	use MetaTrait;
 	use DataTrait;
 	use FileTrait;
 	use VisualTrait;
@@ -588,24 +588,10 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'role', 'locale', 'gender' ];
 		$config[ 'relations' ]	= $relations;
-
-		return parent::queryWithAll( $config );
-	}
-
-	public static function queryWithSiteMembers( $config = [] ) {
-
-		$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
-
-		return parent::queryWithAll( $config );
-	}
-
-	public static function queryWithSiteMembersPermissions( $config = [] ) {
-
-		$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role', 'siteMembers.role.permissions' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -627,6 +613,20 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	public static function queryWithGender( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'avatar', 'gender' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithSiteMembers( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithSiteMembersPermissions( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role', 'siteMembers.role.permissions' ];
 
 		return parent::queryWithAll( $config );
 	}

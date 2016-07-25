@@ -91,8 +91,7 @@ class Template extends \cmsgears\core\common\models\base\Entity {
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
-                'ensureUnique' => true,
-                'uniqueValidator' => [ 'targetAttribute' => 'type' ]
+                'ensureUnique' => true
             ],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),
@@ -118,7 +117,6 @@ class Template extends \cmsgears\core\common\models\base\Entity {
             [ [ 'slug' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ [ 'description', 'layout', 'viewPath' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
             [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-            [ [ 'slug', 'type' ], 'unique', 'targetAttribute' => [ 'slug', 'type' ] ],
             [ [ 'fileRender', 'layoutGroup' ], 'boolean' ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -142,8 +140,9 @@ class Template extends \cmsgears\core\common\models\base\Entity {
 
         return [
             'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+            'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
             'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
             'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
             'renderer' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RENDERER ),
             'layout' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LAYOUT ),
@@ -179,6 +178,14 @@ class Template extends \cmsgears\core\common\models\base\Entity {
 	// Template ------------------------------
 
 	// Read - Query -----------
+
+	public static function queryWithHasOne( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
 
 	// Read - Find ------------
 

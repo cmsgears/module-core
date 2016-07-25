@@ -19,12 +19,10 @@ class MessageSource extends \yii\base\Component {
 
 	// Protected --------------
 
-	// Private ----------------
-
 	/**
 	 * The local message DB to be used directly in case file or database is not required.
 	 */
-	private $messageDb = [
+	protected $messageDb = [
 
 		// Messages --------------------------------------------------------
 
@@ -91,33 +89,43 @@ class MessageSource extends \yii\base\Component {
 		// Generic Fields
 		CoreGlobal::FIELD_CODE => 'Code',
 		CoreGlobal::FIELD_CODE_NUM => 'Numeric Code',
+
+		CoreGlobal::FIELD_DEFAULT => 'Default',
 		CoreGlobal::FIELD_NAME => 'Name',
+		CoreGlobal::FIELD_SLUG => 'Slug',
 		CoreGlobal::FIELD_LABEL => 'Label',
 		CoreGlobal::FIELD_TITLE => 'Title',
-		CoreGlobal::FIELD_ACTIVE => 'Active',
+		CoreGlobal::FIELD_TYPE => 'Type',
+		CoreGlobal::FIELD_ICON => 'Icon',
+		CoreGlobal::FIELD_VALUE_TYPE => 'Value Type',
 		CoreGlobal::FIELD_VALUE => 'Value',
+		CoreGlobal::FIELD_DESCRIPTION => 'Description',
+		CoreGlobal::FIELD_NOTES => 'Notes',
+
+		CoreGlobal::FIELD_ACTIVE => 'Active',
+		CoreGlobal::FIELD_STATUS => 'Status',
+		CoreGlobal::FIELD_CONSUMED => 'Consumed',
+		CoreGlobal::FIELD_VISIBILITY => 'Visibility',
+		CoreGlobal::FIELD_PRIORITY => 'Priority',
+		CoreGlobal::FIELD_SEVERITY => 'Severity',
+		CoreGlobal::FIELD_ORDER => 'Order',
+		CoreGlobal::FIELD_LIMIT => 'Limit',
+		CoreGlobal::FIELD_FEATURED => 'Featured',
+
+		CoreGlobal::FIELD_DATE_START => 'Start Date',
+		CoreGlobal::FIELD_DATE_END => 'End Date',
+		CoreGlobal::FIELD_DAY_WEEK => 'Week Day',
+		CoreGlobal::FIELD_DAY_MONTH => 'Month Day',
+		CoreGlobal::FIELD_TIME => 'Time',
+		CoreGlobal::FIELD_TIME_START => 'Start Time',
+		CoreGlobal::FIELD_TIME_END => 'End Time',
+		CoreGlobal::FIELD_CREATED_AT => 'Created At',
+		CoreGlobal::FIELD_MODIFIED_AT => 'Updated At',
+
 		CoreGlobal::FIELD_MESSAGE => 'Message',
 		CoreGlobal::FIELD_MESSAGE_SUCCESS => 'Success Message',
 		CoreGlobal::FIELD_MESSAGE_FAILURE => 'Failure Message',
-		CoreGlobal::FIELD_DESCRIPTION => 'Description',
-		CoreGlobal::FIELD_NOTES => 'Notes',
-		CoreGlobal::FIELD_COMMENT => 'Comment',
-		CoreGlobal::FIELD_SESSION => 'Session',
-		CoreGlobal::FIELD_SLUG => 'Slug',
-		CoreGlobal::FIELD_LIMIT => 'Limit',
-		CoreGlobal::FIELD_CREATED_AT => 'Created At',
-		CoreGlobal::FIELD_MODIFIED_AT => 'Updated At',
-		CoreGlobal::FIELD_VISIBILITY => 'Visibility',
-		CoreGlobal::FIELD_STATUS => 'Status',
-		CoreGlobal::FIELD_TYPE => 'Type',
-		CoreGlobal::FIELD_VALUE_TYPE => 'Value Type',
-		CoreGlobal::FIELD_VALIDATORS => 'Validators',
-		CoreGlobal::FIELD_CONSUMED => 'Consumed',
-		CoreGlobal::FIELD_ORDER => 'Order',
-		CoreGlobal::FIELD_FEATURED => 'Featured',
-		CoreGlobal::FIELD_DEFAULT => 'Default',
-		CoreGlobal::FIELD_TIME => 'Time',
-		CoreGlobal::FIELD_ICON => 'Icon',
+
 		CoreGlobal::FIELD_ROLE => 'Role',
 		CoreGlobal::FIELD_PERMISSION => 'Permission',
 		CoreGlobal::FIELD_GENDER => 'Gender',
@@ -129,35 +137,36 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_CATEGORY => 'category',
 		CoreGlobal::FIELD_FILE => 'File',
 		CoreGlobal::FIELD_TAG => 'Tag',
-		CoreGlobal::FIELD_AVATAR => 'Avatar',
-		CoreGlobal::FIELD_AVATAR_URL => 'Avatar URL',
-		CoreGlobal::FIELD_WEBSITE => 'Website',
-		CoreGlobal::FIELD_BANNER => 'Banner',
-		CoreGlobal::FIELD_VIDEO => 'Video',
 		CoreGlobal::FIELD_GALLERY => 'Gallery',
+		CoreGlobal::FIELD_EVENT => 'Event',
+		CoreGlobal::FIELD_OBJECT => 'Object',
+		CoreGlobal::FIELD_THEME => 'Theme',
+		CoreGlobal::FIELD_COMMENT => 'Comment',
+		CoreGlobal::FIELD_TEMPLATE => 'Template',
+
 		CoreGlobal::FIELD_USER => 'User',
 		CoreGlobal::FIELD_ADMIN => 'Admin',
 		CoreGlobal::FIELD_AUTHOR => 'Author',
 		CoreGlobal::FIELD_MEMBER => 'Member',
 		CoreGlobal::FIELD_OWNER => 'Owner',
 		CoreGlobal::FIELD_APPROVER => 'Approver',
-		CoreGlobal::FIELD_TEMPLATE => 'Template',
+
+		CoreGlobal::FIELD_WEBSITE => 'Website',
+		CoreGlobal::FIELD_AVATAR => 'Avatar',
+		CoreGlobal::FIELD_AVATAR_URL => 'Avatar URL',
+		CoreGlobal::FIELD_BANNER => 'Banner',
+		CoreGlobal::FIELD_VIDEO => 'Video',
+
+		CoreGlobal::FIELD_GLOBAL => 'Global',
+		CoreGlobal::FIELD_SESSION => 'Session',
+		CoreGlobal::FIELD_VALIDATORS => 'Validators',
 		CoreGlobal::FIELD_RENDERER => 'Render Engine',
-		CoreGlobal::FIELD_EVENT => 'Event',
 		CoreGlobal::FIELD_EVENT_LOG => 'Event Log',
-		CoreGlobal::FIELD_DATE_START => 'Start Date',
-		CoreGlobal::FIELD_DATE_END => 'End Date',
-		CoreGlobal::FIELD_TIME_START => 'Start Time',
-		CoreGlobal::FIELD_TIME_END => 'End Time',
-		CoreGlobal::FIELD_DAY_WEEK => 'Week Day',
-		CoreGlobal::FIELD_DAY_MONTH => 'Month Day',
 		CoreGlobal::FIELD_IP => 'IP Address',
 		CoreGlobal::FIELD_AGENT_BROWSER => 'Browser Agent',
-		CoreGlobal::FIELD_DATA => 'Data',
 		CoreGlobal::FIELD_HTML_OPTIONS => 'HTML Options',
+		CoreGlobal::FIELD_DATA => 'Data',
 		CoreGlobal::FIELD_COMPRESS => 'Store Compressed',
-		CoreGlobal::FIELD_OBJECT => 'Object',
-		CoreGlobal::FIELD_THEME => 'Theme',
 
 		// Role Fields
 		CoreGlobal::FIELD_HOME_URL => 'Home Url',
@@ -224,12 +233,10 @@ class MessageSource extends \yii\base\Component {
 
 		// Visibility
 		CoreGlobal::FIELD_PRIVATE => 'Private',
-		CoreGlobal::FIELD_PUBLIC => 'Public',
-
-		// Orders
-		CoreGlobal::FIELD_PRIORITY => 'Priority',
-		CoreGlobal::FIELD_SEVERITY => 'Severity'
+		CoreGlobal::FIELD_PUBLIC => 'Public'
 	];
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 

@@ -2,7 +2,7 @@
 namespace cmsgears\core\frontend\controllers;
 
 // Yii Imports
-use Yii;
+use \Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
@@ -117,9 +117,9 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 		// Update/Render if exist
 		if( isset( $user ) ) {
 
-			$privacy		= $this->modelService->getNameAttributeMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
-			$notification	= $this->modelService->getNameAttributeMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
-			$reminder		= $this->modelService->getNameAttributeMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
+			$privacy		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
+			$notification	= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
+			$reminder		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
 
 			// NOTE: Rest of the attributes can be loaded in view.
 

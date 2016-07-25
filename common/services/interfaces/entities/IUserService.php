@@ -8,9 +8,9 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\base\IApprovalService;
-use cmsgears\core\common\services\interfaces\base\IModelAttributeService;
+use cmsgears\core\common\services\interfaces\base\IModelMetaService;
 
-interface IUserService extends IApprovalService, IModelAttributeService {
+interface IUserService extends IApprovalService, IModelMetaService {
 
 	// Data Provider ------
 

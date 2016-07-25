@@ -107,8 +107,10 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 
 	public function update( $model, $config = [] ) {
 
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description' ];
+
 		return parent::update( $model, [
-			'attributes' => [ 'name', 'description' ]
+			'attributes' => $attributes
 		]);
  	}
 

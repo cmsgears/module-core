@@ -44,6 +44,8 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
 
 	// Public -----------------
 
+	public $mParentType		= CoreGlobal::TYPE_TAG;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -69,13 +71,11 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
     public function behaviors() {
 
         return [
-
             'sluggableBehavior' => [
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
-                'ensureUnique' => true,
-                'uniqueValidator' => [ 'targetAttribute' => 'type' ]
+                'ensureUnique' => true
             ]
         ];
     }
@@ -94,8 +94,7 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
             [ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
-            [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-            [ [ 'slug', 'type' ], 'unique', 'targetAttribute' => [ 'slug', 'type' ] ],
+            [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ]
         ];
 
         // trim if required
@@ -117,8 +116,9 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
         return [
             'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
             'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+            'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
             'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
             'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
         ];
     }
@@ -156,7 +156,7 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site' ];
 		$config[ 'relations' ]	= $relations;

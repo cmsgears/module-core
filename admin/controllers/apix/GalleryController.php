@@ -54,14 +54,16 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
                 'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
 	                'createItem' => [ 'permission' => $this->crudPermission ],
-	                'updateItem' => [ 'permission' => $this->crudPermission ]
+	                'updateItem' => [ 'permission' => $this->crudPermission ],
+	                'deleteItem' => [ 'permission' => $this->crudPermission ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
 	                'createItem' => [ 'post' ],
-	                'updateItem' => [ 'post' ]
+	                'updateItem' => [ 'post' ],
+	                'deleteItem' => [ 'post' ]
                 ]
             ]
         ];
@@ -73,7 +75,8 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
 
         return [
         	'create-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\CreateItem' ],
-        	'delete-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\DeleteItem' ]
+        	'update-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\UpdateItem' ],
+        	'delete-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\UpdateItem' ]
 		];
     }
 

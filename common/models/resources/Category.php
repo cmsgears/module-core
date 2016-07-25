@@ -85,8 +85,7 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
-                'ensureUnique' => true,
-                'uniqueValidator' => [ 'targetAttribute' => 'type' ]
+                'ensureUnique' => true
             ]
         ];
     }
@@ -106,7 +105,6 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
             [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-            [ [ 'slug', 'type' ], 'unique', 'targetAttribute' => [ 'slug', 'type' ] ],
             [ [ 'parentId', 'rootId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ 'featured', 'boolean' ]
         ];
@@ -206,12 +204,10 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-		$modelTable				= CoreTables::TABLE_CATEGORY;
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'options' ];
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site' ];
 		$config[ 'relations' ]	= $relations;
-		$config[ 'groups' ]		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : [ "$modelTable.id" ];
 
 		return parent::queryWithAll( $config );
 	}

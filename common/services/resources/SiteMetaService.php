@@ -8,11 +8,11 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\SiteAttribute;
+use cmsgears\core\common\models\resources\SiteMeta;
 
-use cmsgears\core\common\services\interfaces\resources\ISiteAttributeService;
+use cmsgears\core\common\services\interfaces\resources\ISiteMetaService;
 
-class SiteAttributeService extends \cmsgears\core\common\services\base\AttributeService implements ISiteAttributeService {
+class SiteMetaService extends \cmsgears\core\common\services\base\MetaService implements ISiteMetaService {
 
 	// Variables ---------------------------------------------------
 
@@ -22,9 +22,9 @@ class SiteAttributeService extends \cmsgears\core\common\services\base\Attribute
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\SiteAttribute';
+	public static $modelClass	= '\cmsgears\core\common\models\resources\SiteMeta';
 
-	public static $modelTable	= CoreTables::TABLE_SITE_ATTRIBUTE;
+	public static $modelTable	= CoreTables::TABLE_SITE_META;
 
 	public static $parentType	= null;
 
@@ -52,7 +52,7 @@ class SiteAttributeService extends \cmsgears\core\common\services\base\Attribute
 
 	// CMG parent classes --------------------
 
-	// SiteAttributeService ------------------
+	// SiteMetaService -----------------------
 
 	// Data Provider ------
 
@@ -76,7 +76,7 @@ class SiteAttributeService extends \cmsgears\core\common\services\base\Attribute
 
 	// CMG parent classes --------------------
 
-	// SiteAttributeService ------------------
+	// SiteMetaService -----------------------
 
 	// Data Provider ------
 

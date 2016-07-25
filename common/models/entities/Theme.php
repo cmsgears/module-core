@@ -112,8 +112,7 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
             [ [ 'name', 'renderer' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ [ 'description', 'basePath' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-            [ [ 'name' ], 'unique', 'targetAttribute' => [ 'name' ] ],
-            [ [ 'slug' ], 'unique', 'targetAttribute' => [ 'slug' ] ],
+            [ 'name', 'unique' ],
             [ 'default', 'boolean' ],
             [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -137,6 +136,7 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
 
         return [
             'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
             'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
             'basePath' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BASE_PATH ),
             'renderer' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RENDERER ),
@@ -176,6 +176,14 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
 	// Theme ---------------------------------
 
 	// Read - Query -----------
+
+	public static function queryWithHasOne( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
 
 	// Read - Find ------------
 

@@ -21,6 +21,7 @@ $renderers		= Yii::$app->templateManager->renderers;
 
     	<?= $form->field( $model, 'name' ) ?>
     	<?= $form->field( $model, 'description' )->textarea() ?>
+		<?= $form->field( $model, 'default' )->checkbox() ?>
 		<?= $form->field( $model, 'renderer' )->dropDownList( $renderers ) ?>
 		<?= $form->field( $model, 'basePath' ) ?>
 

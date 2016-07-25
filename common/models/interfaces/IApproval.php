@@ -55,6 +55,9 @@ interface IApproval {
 	// User can submit the model for limit removal in case admin have freezed or blocked the model
 	public function isSubmittable();
 
+	// Is available for non owners - few of the features can be disabled for frozen state based on model nature.
+	public function isPublic();
+
 	// Reject reason provided by admin for rejection or frozen mode
 	public function getRejectReason();
 }

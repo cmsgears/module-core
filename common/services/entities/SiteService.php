@@ -14,7 +14,7 @@ use cmsgears\core\common\models\entities\Theme;
 
 use cmsgears\core\common\services\interfaces\entities\ISiteService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
-use cmsgears\core\common\services\interfaces\resources\ISiteAttributeService;
+use cmsgears\core\common\services\interfaces\resources\ISiteMetaService;
 
 use cmsgears\core\common\services\traits\NameTrait;
 use cmsgears\core\common\services\traits\SlugTrait;
@@ -49,7 +49,7 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 	// Private ----------------
 
 	private $fileService;
-	private $siteAttributeService;
+	private $siteMetaService;
 
 	// Traits ------------------------------------------------------
 
@@ -58,10 +58,10 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Constructor and Initialisation ------------------------------
 
-    public function __construct( IFileService $fileService, ISiteAttributeService $siteAttributeService, $config = [] ) {
+    public function __construct( IFileService $fileService, ISiteMetaService $siteMetaService, $config = [] ) {
 
-		$this->fileService 				= $fileService;
-		$this->siteAttributeService 	= $siteAttributeService;
+		$this->fileService 		= $fileService;
+		$this->siteMetaService 	= $siteMetaService;
 
         parent::__construct( $config );
     }
@@ -111,25 +111,25 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 	/**
 	 * @param string $name
 	 * @param string $type
-	 * @return array - An associative array of site attribute for the given site slug and meta type having name as key and value as attribute.
+	 * @return array - An associative array of site meta for the given site slug and meta type having name as key and value as meta.
 	 */
-    public function getAttributeMapBySlugType( $slug, $type ) {
+    public function getMetaMapBySlugType( $slug, $type ) {
 
 		$site = Site::findBySlug( $slug );
 
-		return $this->siteAttributeService->getObjectMapByType( $site->id, $type );
+		return $this->siteMetaService->getNameObjectMapByType( $site->id, $type );
     }
 
 	/**
 	 * @param string $slug
 	 * @param string $type
-	 * @return array - An associative array of site attribute for the given site slug and meta type having name as key and value as value.
+	 * @return array - An associative array of site meta for the given site slug and meta type having name as key and value as value.
 	 */
-    public function getAttributeNameValueMapBySlugType( $slug, $type ) {
+    public function getMetaNameValueMapBySlugType( $slug, $type ) {
 
 		$site = Site::findBySlug( $slug );
 
-		return $this->siteAttributeService->getNameValueMapByType( $site->id, $type );
+		return $this->siteMetaService->getNameValueMapByType( $site->id, $type );
     }
 
     // Read - Lists ----
@@ -154,13 +154,14 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function update( $model, $config = [] ) {
 
-		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
-		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'avatarId', 'bannerId', 'themeId', 'name', 'order', 'active' ];
+		$avatar 	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 
 		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
 
 		return parent::update( $model, [
-			'attributes' => [ 'avatarId', 'bannerId', 'themeId', 'name', 'order', 'active' ]
+			'attributes' => $attributes
 		]);
 	}
 

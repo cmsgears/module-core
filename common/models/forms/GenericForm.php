@@ -118,7 +118,7 @@ class GenericForm extends \yii\base\Model {
 		}
 
         $rules = [
-            [ 'captcha', 'captcha', 'captchaAction' => '/forms/site/captcha', 'on' => 'captcha' ],
+            [ 'captcha', 'captcha', 'captchaAction' => '/forms/form/captcha', 'on' => 'captcha' ],
             [ $this->attribs, 'safe' ]
         ];
 

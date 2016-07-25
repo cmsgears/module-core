@@ -133,9 +133,10 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	public function update( $model, $config = [] ) {
 
-		$data 	= isset( $config[ 'data' ] ) ? $config[ 'data' ] : null;
-		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
-		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'templateId', 'avatarId', 'name', 'icon', 'description', 'type', 'active', 'htmlOptions', 'data' ];
+		$data 		= isset( $config[ 'data' ] ) ? $config[ 'data' ] : null;
+		$avatar 	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner 	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 
 		// Generate Data
 		if( isset( $data ) ) {
@@ -146,7 +147,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
 
 		return parent::update( $model, [
-			'attributes' => [ 'templateId', 'avatarId', 'name', 'icon', 'description', 'type', 'active', 'htmlOptions', 'data' ]
+			'attributes' => $attributes
 		]);
  	}
 

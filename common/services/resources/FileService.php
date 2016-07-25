@@ -101,6 +101,8 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function update( $model, $config = [] ) {
 
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'altText', 'link', 'visibility', 'type' ];
+
 		if( $model->changed ) {
 
 			// Find existing file
@@ -111,12 +113,14 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 		}
 
 		return parent::update( $model, [
-			'attributes' => [ 'title', 'description', 'altText', 'link', 'visibility', 'type' ]
+			'attributes' => $attributes
 		]);
 	}
 
 	public function updateData( $model, $config = [] ) {
 
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'altText', 'link', 'visibility', 'type', 'name', 'directory', 'extension', 'url', 'medium', 'thumb' ];
+
 		if( $model->changed ) {
 
 			// Find existing file
@@ -127,7 +131,7 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 		}
 
 		return parent::update( $model, [
-			'attributes' => [ 'title', 'description', 'altText', 'link', 'visibility', 'type', 'name', 'directory', 'extension', 'url', 'medium', 'thumb' ]
+			'attributes' => $attributes
 		]);
 	}
 

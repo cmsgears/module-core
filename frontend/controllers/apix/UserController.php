@@ -2,13 +2,10 @@
 namespace cmsgears\core\frontend\controllers\apix;
 
 // Yii Imports
-use Yii;
-use yii\filters\VerbFilter;
+use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\models\forms\ResetPassword;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 

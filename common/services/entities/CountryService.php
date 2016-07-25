@@ -102,8 +102,10 @@ class CountryService extends \cmsgears\core\common\services\base\EntityService i
 
 	public function update( $model, $config = [] ) {
 
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'code', 'codeNum', 'name' ];
+
 		return parent::update( $model, [
-			'attributes' => [ 'code', 'codeNum', 'name' ]
+			'attributes' => $attributes
 		]);
  	}
 

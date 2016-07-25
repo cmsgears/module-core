@@ -8,9 +8,9 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
- * Used by services with base model having attributes trait.
+ * Used by services with base model having metas trait.
  */
-trait ModelAttributeTrait {
+trait ModelMetaTrait {
 
 	// Instance methods --------------------------------------------
 
@@ -20,7 +20,7 @@ trait ModelAttributeTrait {
 
 	// CMG parent classes --------------------
 
-	// ModelAttributeTrait -------------------
+	// ModelMetaTrait ------------------------
 
 	// Data Provider ------
 
@@ -32,18 +32,18 @@ trait ModelAttributeTrait {
 
     // Read - Maps -----
 
-	public function getIdAttributeMapByType( $model, $type ) {
+	public function getIdMetaMapByType( $model, $type ) {
 
-		$modelAttributeService = Yii::$app->factory->get( 'modelAttributeService' );
+		$modelMetaService = Yii::$app->factory->get( 'modelMetaService' );
 
-		return $modelAttributeService->getIdObjectMapByType( $model->id, static::$parentType, $type );
+		return $modelMetaService->getIdMetaMapByType( $model->id, static::$parentType, $type );
 	}
 
-	public function getNameAttributeMapByType( $model, $type ) {
+	public function getNameMetaMapByType( $model, $type ) {
 
-		$modelAttributeService = Yii::$app->factory->get( 'modelAttributeService' );
+		$modelMetaService = Yii::$app->factory->get( 'modelMetaService' );
 
-		return $modelAttributeService->getNameObjectMapByType( $model->id, static::$parentType, $type );
+		return $modelMetaService->getNameMetaMapByType( $model->id, static::$parentType, $type );
 	}
 
 	// Read - Others ---
@@ -52,15 +52,15 @@ trait ModelAttributeTrait {
 
 	// Update -------------
 
-	public function updateModelAttributes( $model, $attributes ) {
+	public function updateModelMetas( $model, $metas ) {
 
-		$modelAttributeService = Yii::$app->factory->get( 'modelAttributeService' );
+		$modelMetaService = Yii::$app->factory->get( 'modelMetaService' );
 
-		foreach ( $attributes as $attribute ) {
+		foreach ( $metas as $meta ) {
 
-			if( $model->id == $attribute->parentId ) {
+			if( $model->id == $meta->parentId ) {
 
-				$modelAttributeService->update( $attribute );
+				$modelMetaService->update( $meta );
 			}
 		}
 
@@ -73,7 +73,7 @@ trait ModelAttributeTrait {
 
 	// CMG parent classes --------------------
 
-	// ModelAttributeTrait -------------------
+	// ModelMetaTrait ------------------------
 
 	// Data Provider ------
 

@@ -100,6 +100,7 @@ class Gallery extends \cmsgears\core\common\models\base\Resource {
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
+                'immutable' => true,
                 'ensureUnique' => true
             ],
             'timestampBehavior' => [

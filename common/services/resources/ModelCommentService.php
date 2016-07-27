@@ -110,9 +110,6 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 		$config[ 'sort' ] = $sort;
 
-		// Set default type
-		$config[ 'conditions' ][ 'type' ] 	= isset( $config[ 'conditions' ][ 'type' ] ) ? $config[ 'conditions' ][ 'type' ] : ModelComment::TYPE_COMMENT;
-
 		return parent::findPage( $config );
 	}
 
@@ -123,6 +120,20 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 		$config[ 'conditions' ][ 'parentType' ]	= $parentType;
 
 		return $this->getPage( $config );
+	}
+
+	public function getCommentPageByParent( $parentId, $parentType, $config = [] ) {
+
+		$config[ 'conditions' ][ 'type' ] = ModelComment::TYPE_COMMENT;
+
+		return $this->getPageByParent( $parentId, $parentType, $config );
+	}
+
+	public function getReviewPageByParent( $parentId, $parentType, $config = [] ) {
+
+		$config[ 'conditions' ][ 'type' ] = ModelComment::TYPE_REVIEW;
+
+		return $this->getPageByParent( $parentId, $parentType, $config );
 	}
 
 	public function getPageByParentType( $parentType, $config = [] ) {
@@ -246,6 +257,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
         $model->setDataMeta( CoreGlobal::META_COMMENT_SPAM_REQUEST, true );
 
         $model->update();
+
+		return $model;
     }
 
     public function updateDeleteRequest( $model ) {
@@ -253,6 +266,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
         $model->setDataMeta( CoreGlobal::META_COMMENT_DELETE_REQUEST, true );
 
         $model->update();
+
+		return $model;
     }
 
 	// Delete -------------

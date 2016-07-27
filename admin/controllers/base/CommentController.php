@@ -88,7 +88,14 @@ abstract class CommentController extends Controller {
 
     public function actionAll( $pid = null ) {
 
-        Url::remember( [ "$this->commentUrl/all?pid=$pid" ], $this->commentUrl );
+		if( isset( $pid ) ) {
+
+			Url::remember( [ "$this->commentUrl/all?pid=$pid" ], $this->commentUrl );
+		}
+		else {
+
+			Url::remember( [ "$this->commentUrl/all" ], $this->commentUrl );
+		}
 
 		$model			= null;
         $dataProvider   = null;
@@ -155,7 +162,7 @@ abstract class CommentController extends Controller {
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->modelService->update( $model );
+				$this->modelService->update( $model, [ 'admin' => true ] );
 
 				return $this->redirect( $this->returnUrl );
 			}

@@ -41,9 +41,9 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $fileService;
 
-	private $fileService;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

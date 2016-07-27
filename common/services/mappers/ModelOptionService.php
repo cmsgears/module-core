@@ -130,7 +130,7 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 
 		foreach ( $allData as $id ) {
 
-			$toSave		= ModelOption::findByOptionId( $parentId, $parentType, $id );
+			$toSave		= ModelOption::findByModelId( $parentId, $parentType, $id );
 
 			// Existing mapping
 			if( isset( $toSave ) ) {
@@ -153,7 +153,7 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 
 				$toSave->parentId	= $parentId;
 				$toSave->parentType	= $parentType;
-				$toSave->optionId	= $id;
+				$toSave->modelId	= $id;
 				$toSave->active		= true;
 
 				$toSave->save();

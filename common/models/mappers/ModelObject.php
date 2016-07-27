@@ -113,6 +113,11 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
 
 	// yii\db\ActiveRecord ----
 
+	public static function tableName() {
+
+		return CoreTables::TABLE_MODEL_OBJECT;
+	}
+
 	// CMG parent classes --------------------
 
 	// ModelObject ---------------------------

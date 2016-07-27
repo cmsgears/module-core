@@ -52,27 +52,29 @@ class SpamRequest extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// RequestDelete -------------------------
 
-	public function run( $id ) {
+	public function run( $cid ) {
 
 		$modelCommentService	= Yii::$app->factory->get( 'modelCommentService' );
 
-		$model		= $modelCommentService->getById( $id );
+		$model		= $modelCommentService->getById( $cid );
 		$user		= Yii::$app->user->getIdentity();
-		$parent		= $this->modelService->getById( $model->parentId );
+		$parent		= $this->model;
 
-		if( isset( $model ) && $parent->isOwner( $user ) ) {
+		if( isset( $model ) && $model->parentId == $parent->id && $parent->isOwner( $user ) ) {
 
 			if( $modelCommentService->updateSpamRequest( $model ) ) {
 
-				 Yii::$app->coreMailer->sendCommentSpamRequestMail( $model );
+				Yii::$app->coreMailer->sendCommentSpamRequestMail( $model );
+
+				$data = [ 'id' => $model->id, 'status' => $model->getStatusStr() ];
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 			}
-		}
 
-        // Generate Validation Errors
-        $errors = AjaxUtil::generateErrorMessage( $model );
+			// Trigger Ajax Failure
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+		}
 
 		// Trigger Ajax Failure
         return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );

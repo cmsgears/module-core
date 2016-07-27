@@ -107,6 +107,7 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
+                'immutable' => true,
                 'ensureUnique' => true
             ],
             'timestampBehavior' => [

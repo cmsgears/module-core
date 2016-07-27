@@ -95,9 +95,9 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 		return self::findByCategoryId( $categoryId );
 	}
 
-	public function getByCategoryName( $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
+	public function getByCategorySlug( $categorySlug, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
 
-		return self::findByCategoryName( $categoryName, $categoryType );
+		return Option::findByCategorySlugType( $categorySlug, $categoryType );
 	}
 
 	public function getByNameCategoryId( $name, $categoryId ) {
@@ -241,11 +241,6 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 	public static function findByCategoryId( $categoryId ) {
 
 		return Option::findByCategoryId( $categoryId );
-	}
-
-	public static function findByCategoryName( $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
-
-		return Option::findByCategoryName( $categoryName, $categoryType );
 	}
 
 	public static function findByNameCategoryId( $name, $categoryId ) {

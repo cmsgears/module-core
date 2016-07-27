@@ -85,6 +85,7 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
+                'immutable' => true,
                 'ensureUnique' => true
             ]
         ];

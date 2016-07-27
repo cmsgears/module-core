@@ -17,7 +17,7 @@ interface IOptionService extends \cmsgears\core\common\services\interfaces\base\
 
 	public function getByCategoryId( $categoryId );
 
-	public function getByCategoryName( $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP );
+	public function getByCategorySlug( $categorySlug, $categoryType = CoreGlobal::TYPE_OPTION_GROUP );
 
 	public function getByNameCategoryId( $name, $categoryId );
 

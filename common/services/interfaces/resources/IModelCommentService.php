@@ -13,6 +13,10 @@ interface IModelCommentService extends \cmsgears\core\common\services\interfaces
 
 	public function getPageByParent( $parentId, $parentType, $config = [] );
 
+	public function getCommentPageByParent( $parentId, $parentType, $config = [] );
+
+	public function getReviewPageByParent( $parentId, $parentType, $config = [] );
+
 	public function getPageByParentType( $parentType, $config = [] );
 
 	public function getPageByBaseId( $baseId, $config = [] );

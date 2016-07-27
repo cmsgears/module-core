@@ -132,11 +132,13 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		return $modelClass::findById( $id );
 	}
 
-    public function getByIds( $ids = [] ) {
+    public function getByIds( $ids = [], $config = [] ) {
 
-        $modelClass	= static::$modelClass;
+		$modelTable		= static::$modelTable;
 
-		return $modelClass::findAll( $ids );
+		$config[ 'filters' ][] 	= [ 'in', "$modelTable.id", $ids ];
+
+		return self::searchModels( $config );
     }
 
 	/**
@@ -145,6 +147,32 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	public function getModels( $config = [] ) {
 
 		return static::findModels( $config );
+	}
+
+	/**
+	 * A simple method to get random ids
+	 */
+	public function getRandomObjects( $config = [] ) {
+
+		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+
+		// model class
+		$modelClass		= static::$modelClass;
+
+		// query generation
+		$results 		= [];
+
+		if( isset( $conditions ) ) {
+
+			$results = $modelClass::find()->where( $conditions )->orderBy( 'RAND()' )->limit( $limit )->all();
+		}
+		else {
+
+			$results = $modelClass::find()->orderBy( 'RAND()' )->limit( $limit )->all();
+		}
+
+		return $results;
 	}
 
     // Read - Lists ----

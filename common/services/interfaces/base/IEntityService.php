@@ -23,7 +23,7 @@ interface IEntityService {
 
 	public function getById( $id );
 
-	public function getByIds( $ids = [] );
+	public function getByIds( $ids = [], $config = [] );
 
 	public function getModels( $config = [] );
 

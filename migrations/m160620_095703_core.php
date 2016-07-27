@@ -617,7 +617,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'ip' => $this->string( CoreGlobal::TEXT_MEDIUM )->defaultValue( null ),
 			'agent' => $this->string( CoreGlobal::TEXT_XLARGE )->defaultValue( null ),
 			'status' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
-			'type' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
+			'type' => $this->string( CoreGlobal::TEXT_MEDIUM )->defaultValue( null ),
 			'fragment' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'rating' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),

@@ -72,11 +72,22 @@ class AddressService extends \cmsgears\core\common\services\base\EntityService i
 
 	// Create -------------
 
+	public function create( $model, $config = [] ) {
+
+		$model->provinceName	= $model->province->name;
+		$model->countryName		= $model->country->name;
+
+		return parent::create( $model, $config );
+ 	}
+
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'countryId', 'provinceId', 'title', 'line1', 'line2', 'line3', 'cityName', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude', 'zoomLevel' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'countryId', 'provinceId', 'title', 'line1', 'line2', 'line3', 'cityName', 'provinceName', 'countryName', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude', 'zoomLevel' ];
+
+		$model->provinceName	= $model->province->name;
+		$model->countryName		= $model->country->name;
 
 		return parent::update( $model, [
 			'attributes' => $attributes

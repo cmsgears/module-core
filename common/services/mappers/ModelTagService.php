@@ -92,6 +92,11 @@ class ModelTagService extends \cmsgears\core\common\services\base\EntityService 
 
 		foreach ( $tags as $tagName ) {
 
+			if( empty( $tagName ) ) {
+
+				continue;
+			}
+
 			$tagName	= trim( $tagName );
 			$tag		= Tag::findByNameType( $tagName, $parentType );
 

@@ -117,6 +117,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
+                'immutable' => true,
                 'ensureUnique' => true
             ]
         ];

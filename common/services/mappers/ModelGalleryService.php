@@ -101,7 +101,7 @@ class ModelGalleryService extends \cmsgears\core\common\services\base\EntityServ
 		// Create Model Gallery
 		$modelGallery				= new ModelGallery();
 
-		$modelGallery->galleryId 	= $gallery->id;
+		$modelGallery->modelId 		= $gallery->id;
 		$modelGallery->parentId 	= $parentId;
 		$modelGallery->parentType 	= $parentType;
 		$modelGallery->type			= $type;

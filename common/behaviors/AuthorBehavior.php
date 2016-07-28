@@ -27,10 +27,15 @@ class AuthorBehavior extends \yii\behaviors\AttributeBehavior {
 
     protected function getValue( $event ) {
 
-		if( Yii::$app->user->getIdentity() != null ) {
+        if( Yii::$app->user->getIdentity() != null ) {
 
-			return Yii::$app->user->identity->id;
-		}
+            return Yii::$app->user->identity->id;
+        }
+
+        if( isset( $this->owner->createdBy ) ) {
+
+            return $this->owner->createdBy;
+        }
     }
 
     public function touch( $attribute ) {

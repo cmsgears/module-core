@@ -280,7 +280,7 @@ class CoreGlobal {
     const FIELD_PROVINCE            = 'provinceField';
     const FIELD_COUNTRY             = 'countryField';
     const FIELD_CATEGORY            = 'categoryField';
-    const FIELD_OPTION              = 'optionField';
+	const FIELD_OPTION              = 'optionField';
     const FIELD_FILE                = 'fileField';
     const FIELD_TAG                 = 'tagField';
     const FIELD_GALLERY             = 'galleryField';

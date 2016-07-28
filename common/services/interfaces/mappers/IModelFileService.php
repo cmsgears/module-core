@@ -25,7 +25,7 @@ interface IModelFileService extends \cmsgears\core\common\services\interfaces\ba
 
 	// Create -------------
 
-	public static function createOrUpdateByTitle( $file, $config = [] );
+	public function createOrUpdateByTitle( $file, $config = [] );
 
 	// Update -------------
 

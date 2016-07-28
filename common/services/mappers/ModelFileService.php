@@ -96,7 +96,7 @@ class ModelFileService extends \cmsgears\core\common\services\base\EntityService
 
 	// Create -------------
 
-	public static function createOrUpdateByTitle( $file, $config = [] ) {
+	public function createOrUpdateByTitle( $file, $config = [] ) {
 
 		$parent 	= $config[ 'parent' ];
 		$parentType = $config[ 'parentType' ];

@@ -117,7 +117,7 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 
 		$site = Site::findBySlug( $slug );
 
-		return $this->siteMetaService->getNameObjectMapByType( $site->id, $type );
+		return $this->siteMetaService->getNameMetaMapByType( $site->id, $type );
     }
 
 	/**

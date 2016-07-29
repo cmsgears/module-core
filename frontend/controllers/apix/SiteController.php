@@ -3,8 +3,8 @@ namespace cmsgears\core\frontend\controllers\apix;
 
 // Yii Imports
 use \Yii;
-use yii\filters\VerbFilter;
 use yii\helpers\Url;
+use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -38,6 +38,8 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
         parent::init();
 
 		$this->crudPermission		= CoreGlobal::PERM_USER;
+
+		$this->modelService 		= Yii::$app->factory->get( 'siteService' );
 		$this->userService 			= Yii::$app->factory->get( 'userService' );
 		$this->siteMemberService 	= Yii::$app->factory->get( 'siteMemberService' );
 	}

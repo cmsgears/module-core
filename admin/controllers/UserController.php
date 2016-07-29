@@ -101,9 +101,9 @@ class UserController extends \cmsgears\core\admin\controllers\base\UserControlle
 		// Update/Render if exist
 		if( isset( $user ) ) {
 
-			$privacy		= $this->modelService->getMetaMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
-			$notification	= $this->modelService->getMetaMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
-			$reminder		= $this->modelService->getMetaMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
+			$privacy		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
+			$notification	= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
+			$reminder		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
 
 	    	return $this->render( 'settings', [
 	    		'user' => $user,

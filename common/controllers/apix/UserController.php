@@ -224,7 +224,7 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 
             $data   = [
                         'line1' => $address->line1, 'line2' => $address->line2, 'cityName' => $address->cityName,
-                        'country' => $address->country->name, 'province' => $address->province->name, 'phone' => $address->phone, 'zip' => $address->zip
+                        'country' => $address->countryName, 'province' => $address->provinceName, 'phone' => $address->phone, 'zip' => $address->zip
                     ];
 
                 // Trigger Ajax Success

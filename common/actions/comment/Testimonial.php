@@ -38,6 +38,8 @@ class Testimonial extends Create {
 
 	// Protected --------------
 
+	protected $typed = false;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------

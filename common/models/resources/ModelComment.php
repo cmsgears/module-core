@@ -52,9 +52,10 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
 	// Constants --------------
 
-    const TYPE_COMMENT      =  'comment';
-    const TYPE_REVIEW       =  'review';
-    const TYPE_TESTIMONIAL  =  'testimonial';
+    const TYPE_COMMENT		=  'comment';
+    const TYPE_REVIEW		=  'review';
+	const TYPE_FEEDBACK		=  'feedback';
+    const TYPE_TESTIMONIAL	=  'testimonial';
 
     const STATUS_NEW        =  500;
     const STATUS_SPAM       =  600;
@@ -67,6 +68,7 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
     public static $typeMap = [
         self::TYPE_COMMENT => 'Comment',
         self::TYPE_REVIEW => 'Review',
+        self::TYPE_FEEDBACK => 'Feedback',
         self::TYPE_TESTIMONIAL => 'Testimonial'
     ];
 

@@ -99,7 +99,7 @@ class ModelAddressService extends \cmsgears\core\common\services\base\EntityServ
 		$order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
         // Create Address
-        $address->save();
+        $address	= $this->addressService->create( $address );
 
         // Create Model Address
         $modelAddress               = new ModelAddress();
@@ -154,7 +154,7 @@ class ModelAddressService extends \cmsgears\core\common\services\base\EntityServ
             $addressToUpdate->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'cityName', 'zip',
                                             'firstName', 'lastName', 'phone', 'email', 'fax', 'longitude', 'latitude', 'zoomLevel' ] );
 
-            $addressToUpdate->update();
+            $this->addressService->update( $addressToUpdate );
 
             return $existingAddress;
         }

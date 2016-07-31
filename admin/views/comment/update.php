@@ -5,7 +5,7 @@ use yii\helpers\Html;
 
 $title			= ucfirst( $this->context->commentUrl );
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= "Add $title | " . $coreProperties->getSiteTitle();
+$this->title 	= "Update $title | " . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 
 $modelClass		= $this->context->modelService->getModelClass();

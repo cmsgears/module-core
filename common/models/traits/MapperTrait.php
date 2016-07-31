@@ -85,7 +85,7 @@ trait MapperTrait {
 
     public static function findActiveByParent( $parentId, $parentType ) {
 
-        return self::queryByParent( $parentId, $parentType )->where( 'active=1' )->all();
+        return self::queryByParent( $parentId, $parentType )->andWhere( 'active=1' )->all();
     }
 
     public static function findActiveByParentId( $parentId ) {

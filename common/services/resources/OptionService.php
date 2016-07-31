@@ -117,6 +117,13 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 
     // Read - Lists ----
 
+	public function getIdListByCategoryId( $categoryId, $config = [] ) {
+
+		$config[ 'conditions' ][ 'categoryId' ] = $categoryId;
+
+		return self::findIdList( $config );
+	}
+
     // Read - Maps -----
 
 	/**

@@ -464,6 +464,8 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		            ]
 		        ]
 		    ]);
+
+			$config[ 'sort' ] = $sort;
 		}
 
 		// Default conditions

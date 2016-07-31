@@ -27,6 +27,8 @@ interface IOptionService extends \cmsgears\core\common\services\interfaces\base\
 
     // Read - Lists ----
 
+	public function getIdListByCategoryId( $categoryId, $config = [] );
+
     // Read - Maps -----
 
 	public function getIdNameMapByCategoryId( $categoryId, $config = [] );

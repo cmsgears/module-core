@@ -13,6 +13,8 @@ interface IModelOptionService extends \cmsgears\core\common\services\interfaces\
 
 	// Read ---------------
 
+	public function getModelCounts( $parentType, $categorySlug );
+
     // Read - Models ---
 
     // Read - Lists ----

@@ -44,7 +44,14 @@ class UserExistFilter extends \yii\base\Behavior {
 				if( Yii::$app->request->isAjax ) {
 
 					// Remember URL for Login
-					Url::remember( Yii::$app->request->post( CoreGlobal::REDIRECT_LOGIN ), CoreGlobal::REDIRECT_LOGIN );
+					$redirectUrl	= Yii::$app->request->get( 'redirect' );
+
+					if( empty( $redirectUrl ) ) {
+
+						$redirectUrl	= Yii::$app->request->post( CoreGlobal::REDIRECT_LOGIN );
+					}
+
+					Url::remember( $redirectUrl, CoreGlobal::REDIRECT_LOGIN );
 
 					// Configure Errors
 					$errors					= [];

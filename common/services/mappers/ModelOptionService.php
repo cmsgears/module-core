@@ -3,6 +3,7 @@ namespace cmsgears\core\common\services\mappers;
 
 // Yii Imports
 use \Yii;
+use yii\db\Query;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -75,6 +76,36 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 	// Data Provider ------
 
 	// Read ---------------
+
+	public function getModelCounts( $parentType, $categorySlug ) {
+
+		$categoryTable	= CoreTables::TABLE_CATEGORY;
+		$optionTable	= CoreTables::TABLE_OPTION;
+		$mOptionTable	= CoreTables::TABLE_MODEL_OPTION;
+		$query			= new Query();
+
+    	$query->select( [ "$optionTable.name", "count($optionTable.id) as total" ] )
+				->from( $optionTable )
+				->leftJoin( $mOptionTable, "$mOptionTable.modelId=$optionTable.id" )
+				->leftJoin( $categoryTable, "$categoryTable.id=$optionTable.categoryId" )
+				->where( "$mOptionTable.parentType='$parentType' AND $categoryTable.slug='$categorySlug'" )
+				->groupBy( "$optionTable.id" );
+
+		$counts 	= $query->all();
+		$returnArr	= [];
+		$counter	= 0;
+
+		foreach ( $counts as $count ) {
+
+			$returnArr[ $count[ 'name' ] ] = $count[ 'total' ];
+
+			$counter	= $counter + $count[ 'total' ];
+		}
+
+		$returnArr[ 'all' ] = $counter;
+
+		return $returnArr;
+	}
 
     // Read - Models ---
 

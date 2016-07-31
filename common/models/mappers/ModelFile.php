@@ -146,12 +146,12 @@ class ModelFile extends \cmsgears\core\common\models\base\Mapper {
 
     public static function findByFileTitle( $parentId, $parentType, $fileTitle ) {
 
-        return self::queryByParent( $parentId, $parentType )->where( 'title=:title', [ ':title' => $fileTitle ] )->one();
+        return self::queryByParent( $parentId, $parentType )->andWhere( 'title=:title', [ ':title' => $fileTitle ] )->one();
     }
 
-    public static function findByFileTitleLike( $parentId, $parentType, $likeTitle ) {
+    public static function findByFileTitleLike( $parentId, $parentType, $title ) {
 
-        return self::queryByParent( $parentId, $parentType )->where( 'title LIKE :title', [ ':title' => $likeTitle ] )->all();
+        return self::queryByParent( $parentId, $parentType )->andFilterWhere( [ 'like', 'title', $title ] )->all();
     }
 
 	// Create -----------------

@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\frontend\actions\common;
+namespace cmsgears\core\common\actions\content;
 
 // Yii Imports
 use \Yii;
@@ -60,7 +60,7 @@ class UpdateContentBanner extends \cmsgears\core\common\actions\base\ModelAction
 
 			$modelContentService = Yii::$app->factory->get( 'modelContentService' );
 
-			$content	= $this->model->content;
+			$content	= $this->model->modelContent;
 			$banner	 	= File::loadFile( $content->banner, $this->fileName );
 
 			if( $modelContentService->updateBanner( $content, $banner ) ) {

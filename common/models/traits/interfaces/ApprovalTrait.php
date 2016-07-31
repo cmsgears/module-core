@@ -19,7 +19,9 @@ trait ApprovalTrait {
 		IApproval::STATUS_CONFIRMED => 'Confirmed',
 		IApproval::STATUS_ACTIVE => 'Active',
 		IApproval::STATUS_FROJEN => 'Frozen',
+		IApproval::STATUS_UPLIFT_FREEZE => 'Uplift Frozen',
 		IApproval::STATUS_BLOCKED => 'Blocked',
+		IApproval::STATUS_UPLIFT_BLOCK => 'Uplift Block',
 		IApproval::STATUS_TERMINATED => 'Terminated'
 	];
 
@@ -32,7 +34,9 @@ trait ApprovalTrait {
 		'confirmed' => IApproval::STATUS_CONFIRMED,
 		'active' => IApproval::STATUS_ACTIVE,
 		'frozen' => IApproval::STATUS_FROJEN,
-		'blocked' => IApproval::STATUS_BLOCKED
+		'uplift-freeze' => IApproval::STATUS_UPLIFT_FREEZE,
+		'blocked' => IApproval::STATUS_BLOCKED,
+		'uplift-block' => IApproval::STATUS_UPLIFT_BLOCK
 	];
 
 	public function getStatusStr() {
@@ -130,6 +134,16 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_FROJEN;
 	}
 
+	public function isUpliftFreeze( $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->status == IApproval::STATUS_UPLIFT_FREEZE;
+		}
+
+		return $this->status >= IApproval::STATUS_UPLIFT_FREEZE;
+	}
+
 	public function isBlocked( $strict = true ) {
 
 		if( $strict ) {
@@ -138,6 +152,16 @@ trait ApprovalTrait {
 		}
 
 		return $this->status >= IApproval::STATUS_BLOCKED;
+	}
+
+	public function isUpliftBlock( $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->status == IApproval::STATUS_UPLIFT_BLOCK;
+		}
+
+		return $this->status >= IApproval::STATUS_UPLIFT_BLOCK;
 	}
 
 	public function isTerminated( $strict = true ) {
@@ -177,7 +201,9 @@ trait ApprovalTrait {
 	// User cannot edit model in submitted states.
 	public function isEditable() {
 
-		return $this->status != IApproval::STATUS_SUBMITTED && $this->status != IApproval::STATUS_RE_SUBMIT;
+		$editable = [ IApproval::STATUS_SUBMITTED, IApproval::STATUS_RE_SUBMIT, IApproval::STATUS_UPLIFT_FREEZE, IApproval::STATUS_UPLIFT_BLOCK ];
+
+		return !in_array( $this->status, $editable );
 	}
 
 	// User can submit the model for limit removal in selected states i.e. new, rejected, frozen or blocked.

@@ -8,13 +8,13 @@ $user	= Yii::$app->user->getIdentity();
 $siteId	= Yii::$app->core->siteId;
 ?>
 
-<?php if( $core->hasModule( 'core' ) && $user->isPermitted( 'core' ) ) { ?>
-	<div id="sidebar-identity" class="collapsible-tab has-children <?php if( strcmp( $parent, 'sidebar-identity' ) == 0 ) echo 'active';?>">
+<?php if( $core->hasModule( 'core' ) && $user->isPermitted( 'identity' ) ) { ?>
+	<div id="sidebar-identity" class="collapsible-tab has-children <?php if( strcmp( $parent, 'sidebar-identity' ) == 0 ) echo 'active'; ?>">
 		<div class="collapsible-tab-header clearfix">
 			<div class="colf colf5 wrap-icon"><span class="cmti cmti-user"></span></div>
 			<div class="colf colf5x4">Identity</div>
 		</div>
-		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-identity' ) == 0 ) echo 'expanded visible';?>">
+		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-identity' ) == 0 ) echo 'expanded visible'; ?>">
 			<ul>
 				<?php if( $user->isPermitted( 'rbac' ) ) { ?>
 					<li class='matrix <?php if( strcmp( $child, 'matrix' ) == 0 ) echo 'active';?>'><?= Html::a( "Roles Matrix", ['/core/permission/matrix'] ) ?></li>
@@ -31,12 +31,12 @@ $siteId	= Yii::$app->core->siteId;
 <?php } ?>
 
 <?php if( $core->hasModule( 'core' ) && $user->isPermitted( 'core' ) ) { ?>
-	<div id="sidebar-core" class="collapsible-tab has-children <?php if( strcmp( $parent, 'sidebar-core' ) == 0 ) echo 'active';?>">
+	<div id="sidebar-core" class="collapsible-tab has-children <?php if( strcmp( $parent, 'sidebar-core' ) == 0 ) echo 'active'; ?>">
 		<div class="collapsible-tab-header clearfix">
 			<div class="colf colf5 wrap-icon"><span class="cmti cmti-check-report"></span></div>
 			<div class="colf colf5x4">Core</div>
 		</div>
-		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-core' ) == 0 ) echo 'expanded visible';?>">
+		<div class="collapsible-tab-content clear <?php if( strcmp( $parent, 'sidebar-core' ) == 0 ) echo 'expanded visible'; ?>">
 			<ul>
 				<li class='site <?php if( strcmp( $child, 'site' ) == 0 ) echo 'active';?>'><?= Html::a( 'Sites', [ '/core/sites/all' ] ) ?></li>
 				<li class='theme <?php if( strcmp( $child, 'theme' ) == 0 ) echo 'active';?>'><?= Html::a( 'Themes', [ '/core/theme/all' ] ) ?></li>

@@ -26,6 +26,9 @@ class DeleteItem extends \cmsgears\core\common\base\Action {
 
 	// Public -----------------
 
+	// It allows unlimited items by default.
+	public $minItems = 0;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -55,6 +58,17 @@ class DeleteItem extends \cmsgears\core\common\base\Action {
 		$gallery 			= $galleryService->getBySlugType( $slug, $type );
 
 		if( isset( $gallery ) ) {
+
+			if( $this->minItems > 0 ) {
+
+				$items	= $gallery->files;
+
+				if( count( $items ) <= $this->minItems ) {
+
+					// Trigger Ajax Failure
+			        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'limit' => "Minimum $this->minItems items are required for a gallery." ] );
+				}
+			}
 
 			$modelFile	= $modelFileService->getByModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $id );
 

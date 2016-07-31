@@ -74,7 +74,9 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 
 			if( isset( $slug ) ) {
 
-				if( $this->typed ) {
+				$typed	= Yii::$app->request->get( 'typed', null );
+
+				if( $this->typed || $typed ) {
 
 					$type	= Yii::$app->request->get( $this->typeParam, null );
 

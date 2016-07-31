@@ -107,7 +107,9 @@ class ModelFileService extends \cmsgears\core\common\services\base\EntityService
 
 			if( isset( $fileModel ) ) {
 
-				$this->fileService->saveFile( $file, [ 'model' => $fileModel, 'attribute' => 'fileId' ] );
+				$file->id	= $fileModel->file->id;
+
+				$this->fileService->saveFile( $file, [ 'model' => $fileModel, 'attribute' => 'modelId' ] );
 
 				$fileModel->update();
 			}
@@ -118,7 +120,7 @@ class ModelFileService extends \cmsgears\core\common\services\base\EntityService
 				$fileModel->parentId	= $parent->id;
 				$fileModel->parentType	= $parentType;
 
-				$this->fileService->saveFile( $file, [ 'model' => $fileModel, 'attribute' => 'fileId' ] );
+				$this->fileService->saveFile( $file, [ 'model' => $fileModel, 'attribute' => 'modelId' ] );
 
 				$fileModel->save();
 			}

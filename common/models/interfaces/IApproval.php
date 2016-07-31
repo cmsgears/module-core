@@ -10,15 +10,17 @@ interface IApproval {
 	// Note: Applications having registration process for a model can allocate registration status till 10000 and than follow these standard status as part of approval process.
 
 	// Pre-Defined Status
-	const STATUS_NEW		=     0;	// Status is set to new for newly added models.
-	const STATUS_SUBMITTED	= 10000;	// Status is set to submitted for models submitted for first time approval. Approver might reject, confirm or activate.
-	const STATUS_REJECTED	= 12000;	// Approver can reject the model in case not satisfied by given info.
-	const STATUS_RE_SUBMIT	= 14000;	// Model can be re-submitted after making appropriate changes.
-	const STATUS_CONFIRMED	= 15000;	// Approver can acknowledge the application and mark it pending for activation.
-	const STATUS_ACTIVE		= 16000;	// Approver activate the model.
-	const STATUS_FROJEN		= 18000;	// Approver can freeze the model for minimal activities.
-	const STATUS_BLOCKED	= 19000;	// Approver can block the model, but data will be used for analysis and other purpose.
-	const STATUS_TERMINATED	= 20000;	// Approver can permanently terminate the model without deleting to preserve data for historical purpose.
+	const STATUS_NEW			=     0;	// Status is set to new for newly added models.
+	const STATUS_SUBMITTED		= 10000;	// Status is set to submitted for models submitted for first time approval. Approver might reject, confirm or activate.
+	const STATUS_REJECTED		= 12000;	// Approver can reject the model in case not satisfied by given info.
+	const STATUS_RE_SUBMIT		= 14000;	// Model can be re-submitted after making appropriate changes.
+	const STATUS_CONFIRMED		= 15000;	// Approver can acknowledge the application and mark it pending for activation.
+	const STATUS_ACTIVE			= 16000;	// Approver activate the model.
+	const STATUS_FROJEN			= 18000;	// Approver can freeze the model for minimal activities.
+	const STATUS_UPLIFT_FREEZE	= 18500;	// Model owner can request admin to uplift frozen status.
+	const STATUS_BLOCKED		= 19000;	// Approver can block the model, but data will be used for analysis and other purpose.
+	const STATUS_UPLIFT_BLOCK	= 19500;	// Model owner can request admin to uplift block status.
+	const STATUS_TERMINATED		= 20000;	// Approver can permanently terminate the model without deleting to preserve data for historical purpose.
 
 	public function isNew(  $strict = true );
 
@@ -39,7 +41,11 @@ interface IApproval {
 
 	public function isFrojen( $strict = true );
 
+	public function isUpliftFreeze( $strict = true );
+
 	public function isBlocked( $strict = true );
+
+	public function isUpliftBlock( $strict = true );
 
 	public function isTerminated( $strict = true );
 

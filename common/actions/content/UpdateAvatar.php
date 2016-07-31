@@ -58,11 +58,11 @@ class UpdateAvatar extends \cmsgears\core\common\actions\base\ModelAction {
 
 		if( isset( $this->model ) ) {
 
-			$avatar = $this->model->avatar;
+			$avatar = new File();
 
-			if( !isset( $avatar ) ) {
+			if( isset( $this->model->avatar ) ) {
 
-				$avatar	= new File();
+				$avatar	= $this->model->avatar;
 			}
 
 			if( $avatar->load( Yii::$app->request->post(), $this->fileName ) ) {

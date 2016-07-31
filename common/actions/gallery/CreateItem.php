@@ -28,6 +28,9 @@ class CreateItem extends \cmsgears\core\common\base\Action {
 
 	// Public -----------------
 
+	// It allows unlimited items by default.
+	public $maxItems = 0;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -57,6 +60,17 @@ class CreateItem extends \cmsgears\core\common\base\Action {
 		$gallery 		= $galleryService->getBySlugType( $slug, $type );
 
 		if( isset( $gallery ) ) {
+
+			if( $this->maxItems > 0 ) {
+
+				$items	= $gallery->files;
+
+				if( count( $items ) >= $this->maxItems ) {
+
+					// Trigger Ajax Failure
+			        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'limit' => "You are not allowed to add more than $this->maxItems items." ] );
+				}
+			}
 
 			$item 	= new File();
 

@@ -124,7 +124,7 @@ abstract class UserController extends CrudController {
 			$user 		= $this->modelService->create( $model, [ 'avatar' => $avatar ] );
 
 			// Add User to current Site
-			$siteMember	= $this->siteMemberService->create( $user, [ 'siteMember' => $siteMember ] );
+			$siteMember	= $this->siteMemberService->create( $user, [ 'siteMember' => $siteMember, 'roleId' => $siteMember->roleId ] );
 
 			if( $user && $siteMember ) {
 

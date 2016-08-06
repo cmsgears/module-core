@@ -61,6 +61,9 @@ interface IApproval {
 	// User can submit the model for limit removal in case admin have freezed or blocked the model
 	public function isSubmittable();
 
+	// Ready for admin approval in case model is frozen or blocked by admin. It also checks whether model owner requested for approval.
+	public function isApprovable();
+
 	// Is available for non owners - few of the features can be disabled for frozen state based on model nature.
 	public function isPublic();
 

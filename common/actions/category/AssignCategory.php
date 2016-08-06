@@ -32,6 +32,8 @@ class AssignCategory extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Protected --------------
 
+	protected $typed 	= true;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------

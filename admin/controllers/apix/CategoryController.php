@@ -47,7 +47,7 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 
         return [
             'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
+                'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
 	                'index'  => [ 'permission' => $this->crudPermission ],
 	                'autoSearch' => [ 'permission' => CoreGlobal::PERM_ADMIN ], // Available for all admin users

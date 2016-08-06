@@ -213,6 +213,12 @@ trait ApprovalTrait {
 				$this->status == IApproval::STATUS_FROJEN || $this->status == IApproval::STATUS_BLOCKED;
 	}
 
+	public function isApprovable() {
+
+		return $this->status == IApproval::STATUS_FROJEN || $this->status == IApproval::STATUS_UPLIFT_FREEZE ||
+				$this->status == IApproval::STATUS_BLOCKED || $this->status == IApproval::STATUS_UPLIFT_BLOCK;
+	}
+
 	// Is available for non owners - few of the features can be disabled for frozen state based on model nature.
 	public function isPublic() {
 

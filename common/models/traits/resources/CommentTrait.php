@@ -59,11 +59,9 @@ trait CommentTrait {
 		return $average;
 	}
 
-    public function getRatingStars( $minStars = 0, $maxStars = 5, $config = [] ) {
+	public function getRatingStars( $minStars = 0, $maxStars = 5, $config = [] ) {
 
         $returnArr      = [];
-
-		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : ModelComment::TYPE_REVIEW;
 
 		for( $i = $minStars; $i <= $maxStars; $i++ ) {
 
@@ -75,10 +73,10 @@ trait CommentTrait {
 
         $query->select( [ 'rating', 'count(id) as total' ] )
                 ->from( $commentTable )
-                ->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'status' => ModelComment::STATUS_APPROVED ] )
+				->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'status' => ModelComment::STATUS_APPROVED ] )
 				->andWhere( $config )
-				->andFilterWhere( [ 'between', 'rating', $minStars, $maxStars ] )
-                ->groupBy( 'rating' );
+ 				->andFilterWhere( [ 'between', 'rating', $minStars, $maxStars ] )
+				->groupBy( 'rating' );
 
         $counts     = $query->all();
         $counter    = 0;

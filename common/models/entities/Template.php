@@ -91,8 +91,8 @@ class Template extends \cmsgears\core\common\models\base\Entity {
                 'class' => SluggableBehavior::className(),
                 'attribute' => 'name',
                 'slugAttribute' => 'slug',
-                'immutable' => true,
-                'ensureUnique' => true
+                'ensureUnique' => true,
+                'uniqueValidator' => [ 'targetAttribute' => 'type' ]
             ],
             'timestampBehavior' => [
                 'class' => TimestampBehavior::className(),

@@ -74,6 +74,29 @@ trait OptionTrait {
 		return $optionsList;
 	}
 
+	public function getOptionsCsvByCategorySlug( $categorySlug, $active = true ) {
+
+		$categoryTable	= CoreTables::TABLE_CATEGORY;
+		$options		= null;
+		$optionsCsv		= [];
+
+		if( $active ) {
+
+			$options	= $this->getActiveOptions()->leftJoin( $categoryTable, "$categoryTable.id=categoryId" )->where( [ "$categoryTable.slug" => $categorySlug ] )->all();
+		}
+		else {
+
+			$options	= $this->getOptions()->leftJoin( $categoryTable, "$categoryTable.id=categoryId" )->where( [ "$categoryTable.slug" => $categorySlug ] )->all();
+		}
+
+		foreach ( $options as $option ) {
+
+			$optionsCsv[] = $option->name;
+		}
+
+		return implode( ", ", $optionsCsv );
+	}
+
 	public function getOptionsByCategorySlug( $categorySlug, $active = true ) {
 
 		$categoryTable	= CoreTables::TABLE_CATEGORY;

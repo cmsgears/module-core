@@ -37,6 +37,8 @@ abstract class UserController extends CrudController {
 	protected $roleService;
 	protected $optionService;
 
+	protected $roleSuperAdmin;
+
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -47,16 +49,19 @@ abstract class UserController extends CrudController {
 
 		$this->setViewPath( '@cmsgears/module-core/admin/views/user' );
 
-		$this->crudPermission 	= CoreGlobal::PERM_IDENTITY;
-		$this->modelService		= Yii::$app->factory->get( 'userService' );
+		$this->crudPermission 		= CoreGlobal::PERM_IDENTITY;
+		$this->modelService			= Yii::$app->factory->get( 'userService' );
 
 		$this->siteMemberService	= Yii::$app->factory->get( 'siteMemberService' );
 		$this->roleService			= Yii::$app->factory->get( 'roleService' );
 		$this->optionService		= Yii::$app->factory->get( 'optionService' );
 
-		$this->returnUrl	= Url::previous( 'users' );
+		$this->returnUrl			= Url::previous( 'users' );
 
-		$this->showCreate 	= true;
+		$this->showCreate 			= true;
+
+		$this->roleSuperAdmin		= $this->roleService->getBySlug( 'super-admin', true );
+		$this->roleSuperAdmin		= isset( $this->roleSuperAdmin ) ? $this->roleSuperAdmin->id : null;
 	}
 
 	// Instance methods --------------------------------------------
@@ -149,6 +154,8 @@ abstract class UserController extends CrudController {
 
 			$roleMap 	= $this->roleService->getIdNameMapByType( $this->roleType );
 
+			unset( $roleMap[ $this->roleSuperAdmin ] );
+
 			return $this->render( 'create', [
 				'sidebar' => $this->sidebar,
 				'model' => $model,
@@ -195,6 +202,8 @@ abstract class UserController extends CrudController {
 
 				$roleMap 	= $this->roleService->getIdNameMapByType( $this->roleType );
 
+				unset( $roleMap[ $this->roleSuperAdmin ] );
+
 		    	return $this->render( 'update', [
 		    		'model' => $model,
 		    		'siteMember' => $siteMember,
@@ -229,6 +238,8 @@ abstract class UserController extends CrudController {
 			else {
 
 				$roleMap 	= $this->roleService->getIdNameMapByType( $this->roleType );
+
+				unset( $roleMap[ $this->roleSuperAdmin ] );
 
 	        	return $this->render( 'delete', [
 	        		'model' => $model,

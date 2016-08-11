@@ -67,7 +67,7 @@ abstract class ModelMeta extends Meta {
             [ [ 'name', 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
             [ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'modelId', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'modelId', 'name', 'type' ] ]
+            [ [ 'modelId', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'modelId', 'name', 'type' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ]
         ];
 
 		// trim if required

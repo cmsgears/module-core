@@ -678,27 +678,13 @@ class FormDesigner extends \yii\base\Component {
  		}
 		else if( is_array( $fields ) ) {
 
-			$first = true;
-
 			foreach( $fields as $field ) {
 
-				if( $first ) {
-
-					$fieldHtml	.= "<div class='clearfix'>
-										<label>$label</label>
-				    		 			<input type='text' placeholder='$placeholder' name='" . $modelName . "[$fieldName][]' value='$field'>
-									</div>";
-				}
-				else {
-
-					$fieldHtml	.= "<div class='frm-field relative clearfix'>
+				$fieldHtml	.= "<div class='frm-field relative clearfix'>
 		    							<i class='cmti cmti-close-c icon-delete delete-field'></i>
 										<label>$label</label>
 										<input type='text' placeholder='$placeholder' name='" . $modelName . "[$fieldName][]' value='$field'>
 									</div>";
-				}
-
-				$first = false;
 			}
 		}
 

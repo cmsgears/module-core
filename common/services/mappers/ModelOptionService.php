@@ -77,7 +77,7 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 
 	// Read ---------------
 
-	public function getModelCounts( $parentType, $categorySlug ) {
+	public function getModelCounts( $parentType, $categorySlug, $active = false ) {
 
 		$categoryTable	= CoreTables::TABLE_CATEGORY;
 		$optionTable	= CoreTables::TABLE_OPTION;
@@ -90,6 +90,11 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 				->leftJoin( $categoryTable, "$categoryTable.id=$optionTable.categoryId" )
 				->where( "$mOptionTable.parentType='$parentType' AND $categoryTable.slug='$categorySlug'" )
 				->groupBy( "$optionTable.id" );
+
+		if( $active ) {
+
+			$query->andWhere( "$mOptionTable.active=$active" );
+		}
 
 		$counts 	= $query->all();
 		$returnArr	= [];
@@ -106,6 +111,7 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 
 		return $returnArr;
 	}
+
 
     // Read - Models ---
 

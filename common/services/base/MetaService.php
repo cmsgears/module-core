@@ -146,17 +146,21 @@ abstract class MetaService extends EntityService implements IMetaService {
 
 		if( isset( $model->valueType ) ) {
 
-			return parent::update( $model, [
-				'attributes' => [ 'valueType', 'value' ]
-			]);
+			$attributes	= [ 'valueType', 'value' ];
 		}
 		else {
 
-			return parent::update( $model, [
-				'attributes' => [ 'value' ]
-			]);
+			$attributes	= [ 'value' ];
 		}
+
+		if( !isset( $config[ 'attributes' ] ) ) {
+
+			$config[ 'attributes' ]	= $attributes;
+		}
+
+		return parent::update( $model, $config );
  	}
+
 
  	public function updateByParams( $params = [], $config = [] ) {
 

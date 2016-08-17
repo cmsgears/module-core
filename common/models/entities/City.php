@@ -204,7 +204,7 @@ class City extends \cmsgears\core\common\models\base\Entity {
 
 		$city = self::findByNameCountryIdProvinceId( $name, $countryId, $provinceId );
 
-		return isset( $city );
+		return $city;
 	}
 
 	// Create -----------------

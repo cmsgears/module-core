@@ -11,12 +11,14 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\IOwner;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 use cmsgears\core\common\models\traits\NameTypeTrait;
 use cmsgears\core\common\models\traits\SlugTypeTrait;
+use cmsgears\core\common\models\traits\interfaces\OwnerTrait;
 use cmsgears\core\common\models\traits\resources\MetaTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
@@ -43,7 +45,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $content
  * @property string $data
  */
-class Gallery extends \cmsgears\core\common\models\base\Resource {
+class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwner {
 
 	// Variables ---------------------------------------------------
 
@@ -69,11 +71,12 @@ class Gallery extends \cmsgears\core\common\models\base\Resource {
 
 	// Traits ------------------------------------------------------
 
-	use MetaTrait;
 	use CreateModifyTrait;
 	use DataTrait;
 	use FileTrait;
+	use MetaTrait;
 	use NameTypeTrait;
+	use OwnerTrait;
 	use SlugTypeTrait;
 	use TemplateTrait;
 

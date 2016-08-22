@@ -47,15 +47,15 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
             'rbac' => [
                 'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
-	                'createItem' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ],
-	                'deleteItem' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ]
+	                'create-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ],
+	                'delete-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'createItem' => [ 'post' ],
-	                'deleteItem' => [ 'post' ]
+	                'create-item' => [ 'post' ],
+	                'delete-item' => [ 'post' ]
                 ]
             ]
         ];

@@ -26,6 +26,73 @@ trait ApprovalTrait {
 
 	// Data Provider ------
 
+	/**
+	 * It expects the model to support either of createdBy or ownerId column. If both exist, ownerId will dominate.
+	 */
+    public function getPageByOwnerId( $ownerId, $config = [] ) {
+
+		$owner 		= isset( $config[ 'owner' ] ) ? $config[ 'owner' ] : false;
+		$modelTable	= static::$modelTable;
+
+		if( $owner ) {
+
+			$config[ 'conditions' ][ "$modelTable.ownerId" ] 	= $ownerId;
+		}
+		else {
+
+			$config[ 'conditions' ][ "$modelTable.createdBy" ] 	= $ownerId;
+		}
+
+        return $this->getPage( $config );
+    }
+
+    public function getPageByOwnerIdStatus( $ownerId, $status, $config = [] ) {
+
+        $modelTable	= static::$modelTable;
+
+        $config[ 'conditions' ][ "$modelTable.status" ]   = $status;
+
+        return $this->getPageByOwnerId( $ownerId, $config );
+    }
+
+	/**
+	 * It expects the model to support either createdBy or createdBy and ownerId columns
+	 */
+	public function getPageByAuthorityId( $id, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= static::$modelTable;
+		$query 		= null;
+
+		$owner 		= isset( $config[ 'owner' ] ) ? $config[ 'owner' ] : false;
+
+		if( $owner ) {
+
+			$query 		= $modelClass::queryWithOwnerAuthor();
+
+			$query->andWhere( "$modelTable.ownerId =:owner OR ($modelTable.ownerId IS NULL AND $modelTable.createdBy =:creator )", [ ':owner' => $id, ':creator' => $id ] );
+		}
+		else {
+
+			$query 		= $modelClass::queryWithAuthor();
+
+			$query->andWhere( "$modelTable.createdBy =:creator", [ ':creator' => $id ] );
+		}
+
+		$config[ 'query' ] = $query;
+
+        return $this->getPage( $config );
+    }
+
+	public function getPageByAuthorityIdStatus( $id, $status, $config = [] ) {
+
+        $modelTable	= static::$modelTable;
+
+        $config[ 'conditions' ][ "$modelTable.status" ]   = $status;
+
+        return $this->getPageByAuthorityId( $id, $config );
+    }
+
 	// Read ---------------
 
     // Read - Models ---

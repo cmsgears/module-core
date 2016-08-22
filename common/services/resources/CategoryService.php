@@ -147,10 +147,10 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description', 'type', 'icon', 'featured', 'htmlOptions' ];
 
 		// Find existing model
-		$modelToUpdate	= self::findById( $model->id );
+		$modelToUpdate	= $this->getById( $model->id );
 
 		// Update Hierarchy
-		$modelToUpdate 	= self::updateInHierarchy( $model, $modelToUpdate );
+		$modelToUpdate 	= $this->updateInHierarchy( $model, $modelToUpdate );
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -168,7 +168,7 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 		Option::deleteByCategoryId( $model->id );
 
 		// Update Hierarchy
-		$model = self::deleteInHierarchy( $model );
+		$model = $this->deleteInHierarchy( $model );
 
 		// Delete model
 		return parent::delete( $model, $config );

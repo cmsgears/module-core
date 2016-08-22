@@ -13,6 +13,8 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\IApproval;
+use cmsgears\core\common\models\interfaces\IVisibility;
 use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\services\interfaces\base\IEntityService;
@@ -113,6 +115,82 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		return static::findPage( $config );
 	}
 
+	public function getPublicPage( $config = [] ) {
+
+		$modelTable	= static::$modelTable;
+
+		$modelClass	= static::$modelClass;
+		$interfaces = class_implements( $modelClass );
+
+		if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\IApproval' ] ) ) {
+
+		    $config[ 'filters' ][]  = [ 'in', "$modelTable.status", [ IApproval::STATUS_ACTIVE, IApproval::STATUS_FROJEN ] ];
+		}
+
+		if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\IVisibility' ] ) ) {
+
+		    $config[ 'conditions' ][ "$modelTable.visibility" ]	= IVisibility::VISIBILITY_PUBLIC;
+		}
+
+		return $this->getPage( $config );
+	}
+
+	public function getPageForChildSites( $config = [] ) {
+
+		$config[ 'filters' ][]	= [ 'not in', 'siteId', [ Yii::$app->core->mainSiteId ] ];
+		$config[ 'multiSite' ]	= false;
+
+		return $this->getPublicPage( $config );
+	}
+
+	public function getPageForSimilar( $config = [] ) {
+
+		// DB Tables
+		$modelClass 		= static::$modelClass;
+		$modelTable 		= static::$modelTable;
+		$parentType			= isset( $config[ 'parentType' ] ) ? $config[ 'parentType' ] : static::$parentType;
+		$mcategoryTable		= CoreTables::TABLE_MODEL_CATEGORY;
+		$categoryTable		= CoreTables::TABLE_CATEGORY;
+		$mtagTable			= CoreTables::TABLE_MODEL_TAG;
+		$tagTable			= CoreTables::TABLE_TAG;
+		$filter				= null;
+
+		// Search Query
+		$query				= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
+		$config[ 'query' ]	= $query;
+
+		// Tags
+		if( isset( $config[ 'tags' ] ) && count( $config[ 'tags' ] ) > 0 ) {
+
+			$query->leftJoin( $mtagTable, "$modelTable.id=$mtagTable.parentId AND $mtagTable.parentType='$parentType' AND $mtagTable.active=TRUE" )
+				->leftJoin( $tagTable, "$mtagTable.modelId=$tagTable.id" );
+
+			$filter	= "$tagTable.id in( " . join( ",", $config[ 'tags' ] ). ")";
+		}
+
+		// Categories
+		if( isset( $config[ 'categories' ] ) && count( $config[ 'categories' ] ) > 0 ) {
+
+			$query->leftJoin( "$mcategoryTable", "$modelTable.id=$mcategoryTable.parentId AND $mcategoryTable.parentType='$parentType' AND $mcategoryTable.active=TRUE" )
+				->leftJoin( "$categoryTable", "$mcategoryTable.modelId=$categoryTable.id" );
+
+			$filter	= "$categoryTable.id in( " . join( ",", $config[ 'categories' ] ). ")";
+		}
+
+		// Mixed
+		if( isset( $config[ 'tags' ] ) && count( $config[ 'tags' ] ) > 0 && isset( $config[ 'categories' ] ) && count( $config[ 'categories' ] ) > 0 ) {
+
+			$filter	= "( $tagTable.id in( " . join( ",", $config[ 'tags' ] ). ") OR $categoryTable.id in( " . join( ",", $config[ 'categories' ] ). ") )";
+		}
+
+		if( isset( $filter ) ) {
+
+			$query->andWhere( $filter );
+		}
+
+		return $this->getPublicPage( $config );
+	}
+
 	public function getPageForSearch( $config = [] ) {
 
 		return static::findPageForSearch( $config );
@@ -138,7 +216,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		$config[ 'filters' ][] 	= [ 'in', "$modelTable.id", $ids ];
 
-		return self::searchModels( $config );
+		return static::searchModels( $config );
     }
 
 	/**
@@ -400,7 +478,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		if( isset( $searchTerms ) && strlen( $searchTerms ) > 0 && isset( $searchCol ) ) {
 
 			$searchTerms	= HtmlPurifier::process( $searchTerms );
-			$searchQuery 	= self::generateSearchQuery( $searchCol, $searchTerms );
+			$searchQuery 	= static::generateSearchQuery( $searchCol, $searchTerms );
 			$query 			= $query->andWhere( $searchQuery );
 		}
 
@@ -500,7 +578,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 			$config[ 'search-col' ] = 'name';
 		}
 
-		return self::findDataProvider( $config );
+		return static::findDataProvider( $config );
 	}
 
 	/**
@@ -508,9 +586,10 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	 */
 	public static function findPageForSearch( $config = [] ) {
 
+		// Model
 		$modelClass			= static::$modelClass;
 		$modelTable 		= static::$modelTable;
-		$parentType			= static::$parentType;
+		$parentType			= isset( $config[ 'parentType' ] ) ? $config[ 'parentType' ] : static::$parentType;
 
 		// DB Tables
 		$mcategoryTable		= CoreTables::TABLE_MODEL_CATEGORY;
@@ -518,51 +597,80 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		$mtagTable			= CoreTables::TABLE_MODEL_TAG;
 		$tagTable			= CoreTables::TABLE_TAG;
 
-		// Search Query
-		$query			 	= $modelClass::queryWithAll();
+		// Sort
+		$sortParam			= Yii::$app->request->get( 'sort' );
+		$sortParam			= preg_replace( '/-/', '', $sortParam );
 
-		// Params
+		// Keywords
 		$searchParam		= isset( $config[ 'search-param' ] ) ? $config[ 'search-param' ] : 'keywords';
 		$keywords 			= Yii::$app->request->getQueryParam( $searchParam );
 
+		// Search Query
+		$query			 	= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::queryWithAll();
+
+		// Public Page
+		$public				= isset( $config[ 'public' ] ) ? $config[ 'public' ] : false;
+
+		if( $public ) {
+
+			$interfaces 	= class_implements( $modelClass );
+
+			if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\IApproval' ] ) ) {
+
+			    $config[ 'filters' ][]  = [ 'in', "$modelTable.status", [ IApproval::STATUS_ACTIVE, IApproval::STATUS_FROJEN ] ];
+			}
+
+			if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\IVisibility' ] ) ) {
+
+			    $config[ 'conditions' ][ "$modelTable.visibility" ]	= IVisibility::VISIBILITY_PUBLIC;
+			}
+		}
+
 		// Tag
-		if( isset( $parentType ) && ( isset( $keywords ) || isset( $config[ 'tag' ] ) ) ) {
+		if( isset( $keywords ) || isset( $config[ 'tag' ] ) || strcmp( $sortParam, 'tag' ) == 0 ) {
 
 			$query->leftJoin( $mtagTable, "$modelTable.id=$mtagTable.parentId AND $mtagTable.parentType='$parentType' AND $mtagTable.active=TRUE" )
 				->leftJoin( $tagTable, "$mtagTable.modelId=$tagTable.id" );
 		}
 
-		if( isset( $parentType ) && isset( $config[ 'tag' ] ) ) {
+		if( isset( $config[ 'tag' ] ) ) {
 
 			$query->andWhere( "$tagTable.id=" . $config[ 'tag' ]->id );
-
-			if( isset( $keywords ) ) {
-
-				$config[ 'search-col' ][]	= "$tagTable.name";
-			}
 		}
 
 		// Category
-		if( isset( $parentType ) && ( isset( $keywords ) || isset( $config[ 'category' ] ) ) ) {
+		if( isset( $keywords ) || isset( $config[ 'category' ] ) || strcmp( $sortParam, 'category' ) == 0 ) {
 
-			$query->leftJoin( "$mcategoryTable", "$modelTable.id=$mcategoryTable.parentId AND $mcategoryTable.parentType='$parentType' AND $mcategoryTable.active=TRUE" )
-				->leftJoin( "$categoryTable", "$mcategoryTable.modelId=$categoryTable.id" );
+			$query->leftJoin( $mcategoryTable, "$modelTable.id=$mcategoryTable.parentId AND $mcategoryTable.parentType='$parentType' AND $mcategoryTable.active=TRUE" )
+				->leftJoin( $categoryTable, "$mcategoryTable.modelId=$categoryTable.id" );
 		}
 
-		if( isset( $parentType ) && isset( $config[ 'category' ] ) ) {
+		if( isset( $config[ 'category' ] ) ) {
 
-			$query->andWhere( "$categoryTable.id=" . $config[ 'category' ]->id );
+			$category			= isset( $config[ 'category' ] ) ? $config[ 'category' ] : null;
+			$categoryService	= Yii::$app->factory->get( 'categoryService' );
 
-			if( isset( $keywords ) ) {
+			if( !isset( $category ) ) {
 
-				$config[ 'search-col' ][]	= "$categoryTable.name";
+				$category	= $categoryService->getBySlug( $sortParam, true );
 			}
+
+			$cids	= $categoryService->getChildIdList( $category );
+			$cids	= join( ',', $cids );
+
+			$query->andWhere( "$categoryTable.id in ($cids)" );
 		}
 
-		if( isset( $keywords ) || isset( $config[ 'category' ] ) ) {
+		// Search
+		if( isset( $keywords ) ) {
 
-			$query->groupBy( "$modelTable.id" );
+			$config[ 'search-col' ][] = $modelTable.name;
+			$config[ 'search-col' ][] = $categoryTable.name;
+			$config[ 'search-col' ][] = $tagTable.name;
 		}
+
+		// Group by model id
+		$query->groupBy( "$modelTable.id" );
 
 		$config[ 'query' ]	= $query;
 
@@ -661,19 +769,19 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 	public static function findList( $config = [] ) {
 
-		return self::generateList( $config );
+		return static::generateList( $config );
 	}
 
 	public static function findIdList( $config = [] ) {
 
 		$config[ 'column' ] = 'id';
 
-		return self::generateList( $config );
+		return static::generateList( $config );
 	}
 
 	public static function findNameValueList( $config = [] ) {
 
-		return self::generateNameValueList( $config );
+		return static::generateNameValueList( $config );
 	}
 
 	public static function findIdNameList( $config = [] ) {
@@ -683,7 +791,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		$config[ 'nameAlias' ] 		= 'id';
 		$config[ 'valueAlias' ] 	= 'name';
 
-		return self::generateNameValueList( $config );
+		return static::generateNameValueList( $config );
 	}
 
 	// Generate - Lists
@@ -836,7 +944,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 	public static function findNameValueMap( $config = [] ) {
 
-		return self::generateMap( $config );
+		return static::generateMap( $config );
 	}
 
 	public static function findIdNameMap( $config = [] ) {
@@ -846,12 +954,12 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		$config[ 'nameAlias' ] 		= 'id';
 		$config[ 'valueAlias' ] 	= 'name';
 
-		return self::generateMap( $config );
+		return static::generateMap( $config );
 	}
 
 	public static function findObjectMap( $config = [] ) {
 
-		return self::generateObjectMap( $config );
+		return static::generateObjectMap( $config );
 	}
 
 	// Generate - Maps -
@@ -866,7 +974,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		$nameAlias		= isset( $config[ 'nameAlias' ] ) ? $config[ 'nameAlias' ] : 'name';
 		$valueAlias		= isset( $config[ 'valueAlias' ] ) ? $config[ 'valueAlias' ] : 'value';
 
-		$arrayList  	= self::generateNameValueList( $config );
+		$arrayList  	= static::generateNameValueList( $config );
 		$map			= [];
 
 		foreach ( $arrayList as $item ) {

@@ -48,4 +48,9 @@ trait CreateModifyTrait {
 
 		return parent::queryWithAll( $config );
 	}
+
+    public static function queryByCreatorId( $userId ) {
+
+		return static::find()->where( 'createdBy=:cid', [ ':cid' => $userId ] );
+    }
 }

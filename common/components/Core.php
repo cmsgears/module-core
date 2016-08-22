@@ -432,7 +432,6 @@ class Core extends \yii\base\Component {
 		$factory = Yii::$app->factory->getContainer();
 
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ICountryService', 'cmsgears\core\common\services\entities\CountryService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ICityService', 'cmsgears\core\common\services\entities\CityService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IObjectService', 'cmsgears\core\common\services\entities\ObjectService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IPermissionService', 'cmsgears\core\common\services\entities\PermissionService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IProvinceService', 'cmsgears\core\common\services\entities\ProvinceService' );
@@ -480,7 +479,6 @@ class Core extends \yii\base\Component {
 		$factory = Yii::$app->factory->getContainer();
 
 		$factory->set( 'countryService', 'cmsgears\core\common\services\entities\CountryService' );
-		$factory->set( 'cityService', 'cmsgears\core\common\services\entities\CityService' );
 		$factory->set( 'objectService', 'cmsgears\core\common\services\entities\ObjectService' );
 		$factory->set( 'permissionService', 'cmsgears\core\common\services\entities\PermissionService' );
 		$factory->set( 'provinceService', 'cmsgears\core\common\services\entities\ProvinceService' );
@@ -556,4 +554,29 @@ class Core extends \yii\base\Component {
             return setcookie( $cookieName, serialize( $data ), time() + ( 10 * 365 * 24 * 60 * 60 ), "/", null );
         }
     }
+
+	/*
+	 * @return $session - Open a session if does not exist in application.
+	 */
+	public function getSession() {
+
+        $session = Yii::$app->session;
+
+        if( !$session->isActive ) {
+
+           $session->open();
+        }
+
+		return $session;
+	}
+
+	/*
+	 * @return $session - Open a session if does not exist in application.
+	 */
+	public function setSessionParam( $param, $value ) {
+
+        $session = $this->getSession();
+
+        $session->set( $param, $value );
+	}
 }

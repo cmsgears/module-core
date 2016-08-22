@@ -84,6 +84,39 @@ abstract class NestedSetService extends HierarchyService implements INestedSetSe
 		return self::findSubLevelList( $parentId, $rootId, $config );
 	}
 
+	public function getSubLevelIdList( $parentId, $rootId, $config = [] ) {
+
+		$parent		= isset( $config[ 'parent' ] ) ? $config[ 'parent' ] : true;
+		$categories = self::findSubLevelList( $parentId, $rootId, $config );
+		$ids		= [];
+
+		foreach ( $categories as $key => $value ) {
+
+			$id	= $value[ 'id' ];
+
+			if( !$parent && $id == $parentId ) {
+
+				continue;
+			}
+
+			$ids[] = $id;
+		}
+
+		return $ids;
+	}
+
+	public function getChildIdListById( $modelId ) {
+
+		$model	= self::findById( $modelId );
+
+		return $this->getChildIdList( $model );
+	}
+
+	public function getChildIdList( $model ) {
+
+		return $this->getSubLevelIdList( $model->id, $model->rootId );
+	}
+
     // Read - Maps -----
 
 	// Read - Others ---
@@ -108,7 +141,7 @@ abstract class NestedSetService extends HierarchyService implements INestedSetSe
 			$model->save();
 
 			// Update Root Id
-			$model			= static::findById( $model->id );
+			$model			= $this->getById( $model->id );
 			$model->rootId	= $model->id;
 
 			$model->update();
@@ -116,7 +149,7 @@ abstract class NestedSetService extends HierarchyService implements INestedSetSe
 		// Child Model
 		else {
 
-			$parentModel	= static::findById( $model->parentId );
+			$parentModel	= $this->getById( $model->parentId );
 
 			// Top Level Parent
 			if( !$parentModel->hasParent() ) {
@@ -192,13 +225,14 @@ abstract class NestedSetService extends HierarchyService implements INestedSetSe
 		else if( $model->parentId > 0 ) {
 
 			// Find Parent
-			$parent			= static::findById( $model->parentId );
+			$parent			= $this->getById( $model->parentId );
 
 			$diff			= $rValue - $lValue + 1;
 			$prValue		= $parent->rValue;
 			$rootId			= $parent->rootId;
-			$parent->rValue	= $parent->rValue + $diff;
 			$cdiff			= $prValue - $lValue;
+
+			$parent->rValue	= $parent->rValue + $diff;
 
 			// Top Level Parent
 			if( !$parent->hasParent() ) {
@@ -216,7 +250,7 @@ abstract class NestedSetService extends HierarchyService implements INestedSetSe
 				Yii::$app->db->createCommand( "UPDATE $table set rValue = rValue + $diff WHERE rootId = $rootId and rValue > $prValue" )->execute();
 
 				// Promote Children
-				Yii::$app->db->createCommand( "UPDATE $table set lValue = lValue + $cdiff, rValue = rValue + $cdiff, rootId = $rootId WHERE rootId = $rootId" )->execute();
+				Yii::$app->db->createCommand( "UPDATE $table set lValue = lValue + $cdiff, rValue = rValue + $cdiff, rootId = $rootId WHERE rootId = $modelToUpdate->id" )->execute();
 
 				// Update Parent Id
 				Yii::$app->db->createCommand( "UPDATE $table set parentId = $parent->id WHERE id = $modelToUpdate->id" )->execute();
@@ -247,7 +281,7 @@ abstract class NestedSetService extends HierarchyService implements INestedSetSe
 			// Not a top level node
 			if( isset( $parent ) ) {
 
-				$children 	= self::getSubLevelList( $model->id, $model->rootId, null, 'depth=1' );
+				$children 	= $this->getSubLevelList( $model->id, $model->rootId, [ 'having' => 'depth=1' ] );
 				$ids		= [];
 
 				foreach ( $children as $child ) {
@@ -267,10 +301,10 @@ abstract class NestedSetService extends HierarchyService implements INestedSetSe
 				Yii::$app->db->createCommand( "UPDATE $table set lValue = lValue - 2 WHERE rootId = $rootId and lValue > $rValue" )->execute();
 				Yii::$app->db->createCommand( "UPDATE $table set rValue = rValue - 2 WHERE rootId = $rootId and rValue > $rValue" )->execute();
 			}
-			// Top level node - rare case
+			// Top level node
 			else {
 
-				$children 	= self::getSubLevelList( $model->id, $model->rootId, null, 'depth=1' );
+				$children 	= $this->getSubLevelList( $model->id, $model->rootId, [ 'having' => 'depth=1' ] );
 
 				// first child and it's children ---------
 
@@ -341,7 +375,7 @@ abstract class NestedSetService extends HierarchyService implements INestedSetSe
 			// Not a top level node
 			if( isset( $parent ) ) {
 
-				$children 	= self::getSubLevelList( $model->id, $model->rootId, null );
+				$children 	= $this->getSubLevelList( $model->id, $model->rootId );
 				$count		= count( $children ) * 2;
 
 				// Update lr values
@@ -476,12 +510,12 @@ abstract class NestedSetService extends HierarchyService implements INestedSetSe
 
 		$query->groupBy( 'node.id' );
 
+		$query->orderBy( 'node.rootId, node.lValue, depth' );
+
 		if( isset( $having ) ) {
 
 			$query->having( $having );
 		}
-
-		$query->orderBy( 'node.rootId, node.lValue, depth' );
 
 		// Create command
 		$command 	= $query->createCommand();

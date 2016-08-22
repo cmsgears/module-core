@@ -77,7 +77,7 @@ class UpdateMeta extends \cmsgears\core\common\base\Action {
 		}
 		else {
 
-			$parent	= $this->modelService->getBySlugType( $slug );
+			$parent	= $this->modelService->getBySlug( $slug );
 		}
 
 		// Delete Meta

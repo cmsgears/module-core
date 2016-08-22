@@ -853,7 +853,6 @@ class m160620_095703_core extends \yii\db\Migration {
 		// Category
 		$this->addForeignKey( 'fk_' . $this->prefix . 'category_site', $this->prefix . 'core_category', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'category_parent', $this->prefix . 'core_category', 'parentId', $this->prefix . 'core_category', 'id', 'RESTRICT' );
-		$this->addForeignKey( 'fk_' . $this->prefix . 'category_root', $this->prefix . 'core_category', 'rootId', $this->prefix . 'core_category', 'id', 'RESTRICT' );
 
 		// Option
 		$this->addForeignKey( 'fk_' . $this->prefix . 'option_category', $this->prefix . 'core_option', 'categoryId', $this->prefix . 'core_category', 'id', 'RESTRICT' );

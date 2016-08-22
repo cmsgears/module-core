@@ -41,6 +41,24 @@ class RbacFilter extends \yii\base\Behavior {
 	        if ( array_key_exists( $action, $this->actions ) ) {
 
 				$actionConfig	= $this->actions[ $action ];
+				$permission		= $actionConfig[ 'permission' ];
+
+				// Allow if guest permission - It expects at least one filter
+				if( strcmp( $permission, CoreGlobal::PERM_GUEST ) == 0 ) {
+
+					$filterResult	= $this->executeFilters( $actionConfig );
+
+					// Filter might throw exception to hault execution or return true/false on successful execution
+					if( !$filterResult ) {
+
+						// Unset event validity
+						$event->isValid = false;
+
+						return $event->isValid;
+					}
+
+					return true;
+				}
 
 				// Redirect to post logout page if user is guest
 				if( Yii::$app->user->isGuest ) {
@@ -56,8 +74,7 @@ class RbacFilter extends \yii\base\Behavior {
 				}
 
 				// find User and Action Permission
-				$user		= Yii::$app->user->getIdentity();
-				$permission	= $actionConfig[ 'permission' ];
+				$user	= Yii::$app->user->getIdentity();
 
 				// Disallow action in case user is not permitted
 				if( !isset( $user ) || !isset( $permission ) || !$user->isPermitted( $permission ) ) {
@@ -80,37 +97,7 @@ class RbacFilter extends \yii\base\Behavior {
 				// Execute filters in the order defined in controller behaviours for rbac behaviour. The filters must be configured in appropriate application config file.
 				if( isset( $actionConfig[ 'filters' ] ) ) {
 
-					$filters		= $actionConfig[ 'filters' ];
-					$filterKeys		= array_keys( $actionConfig[ 'filters' ] );
-					$filterResult	= true;
-
-					foreach ( $filterKeys as $key ) {
-
-						$filterResult	= true;
-
-						// Permission Filter with filter config params
-						if( is_array( $filters[ $key ] ) ) {
-
-							$filter	= Yii::createObject( Yii::$app->core->rbacFilters[ $key ] );
-
-							// Pass filter config while performing filter
-							$filterResult = $filter->doFilter( $filters[ $key ] );
-						}
-						// Permission Filter without filter config params
-						else {
-
-							$filter	= Yii::createObject( Yii::$app->core->rbacFilters[ $filters[ $key ] ] );
-
-							// Do filter without any config
-							$filterResult = $filter->doFilter();
-						}
-
-						// Break the loop in case filter failed and filter didn't throw any exception
-						if( !$filterResult ) {
-
-							break;
-						}
-					}
+					$filterResult	= $this->executeFilters( $actionConfig );
 
 					// Filter might throw exception to hault execution or return true/false on successful execution
 					if( !$filterResult ) {
@@ -126,4 +113,41 @@ class RbacFilter extends \yii\base\Behavior {
 
 		return $event->isValid;
     }
+
+	private function executeFilters( $actionConfig ) {
+
+		$filters		= $actionConfig[ 'filters' ];
+		$filterKeys		= array_keys( $actionConfig[ 'filters' ] );
+		$filterResult	= true;
+
+		foreach ( $filterKeys as $key ) {
+
+			$filterResult	= true;
+
+			// Permission Filter with filter config params
+			if( is_array( $filters[ $key ] ) ) {
+
+				$filter	= Yii::createObject( Yii::$app->core->rbacFilters[ $key ] );
+
+				// Pass filter config while performing filter
+				$filterResult = $filter->doFilter( $filters[ $key ] );
+			}
+			// Permission Filter without filter config params
+			else {
+
+				$filter	= Yii::createObject( Yii::$app->core->rbacFilters[ $filters[ $key ] ] );
+
+				// Do filter without any config
+				$filterResult = $filter->doFilter();
+			}
+
+			// Break the loop in case filter failed and filter didn't throw any exception
+			if( !$filterResult ) {
+
+				break;
+			}
+		}
+
+		return $filterResult;
+	}
 }

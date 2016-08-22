@@ -5,6 +5,14 @@ interface IApprovalService extends IEntityService {
 
 	// Data Provider ------
 
+    public function getPageByOwnerId( $ownerId, $config = [] );
+
+    public function getPageByOwnerIdStatus( $ownerId, $status, $config = [] );
+
+	public function getPageByAuthorityId( $id, $config = [] );
+
+	public function getPageByAuthorityIdStatus( $id, $status, $config = [] );
+
 	// Read ---------------
 
     // Read - Models ---

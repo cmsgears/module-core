@@ -123,6 +123,7 @@ class CoreGlobal {
     // Site
     const PERM_ADMIN                = 'admin';  // Allows to view Admin Site Home
     const PERM_USER                 = 'user';   // Allows to view User Site Home
+	const PERM_GUEST				= 'guest';
 
     // Site specific - Forms, Galleries, Settings, Testimonials, Categories, Geo DB
     const PERM_CORE                 = 'core';

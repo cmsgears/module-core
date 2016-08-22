@@ -21,6 +21,12 @@ interface INestedSetService extends IHierarchyService {
 
 	public function getSubLevelList( $parentId, $rootId, $config = [] );
 
+	public function getSubLevelIdList( $parentId, $rootId, $config = [] );
+
+	public function getChildIdListById( $categoryId );
+
+	public function getChildIdList( $category );
+
     // Read - Maps -----
 
 	// Read - Others ---

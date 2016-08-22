@@ -13,7 +13,19 @@ interface IEntityService {
 
 	public function getDataProvider( $config = [] );
 
+	// Regular Pages
+
 	public function getPage( $config = [] );
+
+	// Public Pages
+
+	public function getPublicPage( $config = [] );
+
+	public function getPageForChildSites( $config = [] );
+
+	public function getPageForSimilar( $config = [] );
+
+	// Searching
 
 	public function getPageForSearch( $config = [] );
 

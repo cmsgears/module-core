@@ -20,7 +20,7 @@ class CmgProperties {
 	// Protected --------------
 
 	/**
-	 * The map stores all the core properties. It can be queried for all the available properties.
+	 * The map stores all the properties. It can be queried for all the available properties.
 	 */
 	protected $properties;
 

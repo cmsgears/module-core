@@ -1028,7 +1028,6 @@ class m160620_095703_core extends \yii\db\Migration {
 		// Category
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'category_site', $this->prefix . 'core_category' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'category_parent', $this->prefix . 'core_category' );
-		$this->dropForeignKey( 'fk_' . $this->prefix . 'category_root', $this->prefix . 'core_category' );
 
 		// Option
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'option_category', $this->prefix . 'core_option' );

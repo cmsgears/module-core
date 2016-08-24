@@ -13,26 +13,33 @@ class Application extends \yii\console\Application {
 
     public function init() {
 
-		// site config
-		$coreProperties	= CoreProperties::getInstance();
+		parent::init();
 
-		Yii::$app->formatter->dateFormat		= $coreProperties->getDateFormat();
-		Yii::$app->formatter->timeFormat		= $coreProperties->getTimeFormat();
-		Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
-		Yii::$app->timeZone						= $coreProperties->getTimezone();
+		try {
 
-		// TODO: Enable multi-site similar to web app
+			// site config
+			$coreProperties	= CoreProperties::getInstance();
 
-		$site 	= SiteService::findBySlug( 'main' );
+			Yii::$app->formatter->dateFormat		= $coreProperties->getDateFormat();
+			Yii::$app->formatter->timeFormat		= $coreProperties->getTimeFormat();
+			Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
+			Yii::$app->timeZone						= $coreProperties->getTimezone();
 
-		// Site Found
-		if( isset( $site ) ) {
+			// TODO: Enable multi-site similar to web app
 
-			// Configure Current Site
-			Yii::$app->cmgCore->site 		= $site;
-			Yii::$app->cmgCore->siteId		= $site->id;
+			$site 	= SiteService::findBySlug( 'main' );
+
+			// Site Found
+			if( isset( $site ) ) {
+
+				// Configure Current Site
+				Yii::$app->core->site 		= $site;
+				Yii::$app->core->siteId		= $site->id;
+			}
 		}
+		catch( \yii\db\Exception $e ) {
 
-       return parent::init();
+			// do nothing for migrations
+		}
     }
 }

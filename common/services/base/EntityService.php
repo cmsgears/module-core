@@ -453,6 +453,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::PAGE_LIMIT;
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
+		$random			= isset( $config[ 'random' ] ) ? $config[ 'random' ] : false;
 
 		// search and sort
 		$searchParam	= isset( $config[ 'search-param' ] ) ? $config[ 'search-param' ] : 'keywords';
@@ -469,6 +470,13 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		if( isset( $conditions ) ) {
 
 			$query 	= $query->andWhere( $conditions );
+		}
+
+		// Random -------------
+
+		if( $random ) {
+
+			$query	= $query->orderBy( new Expression( 'rand()' ) );
 		}
 
 		// Searching ----------

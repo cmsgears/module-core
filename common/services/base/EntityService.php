@@ -4,6 +4,7 @@ namespace cmsgears\core\common\services\base;
 // Yii Imports
 use \Yii;
 use yii\db\Query;
+use yii\db\Expression;
 use yii\data\ActiveDataProvider;
 use yii\data\Sort;
 
@@ -672,9 +673,9 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		// Search
 		if( isset( $keywords ) ) {
 
-			$config[ 'search-col' ][] = $modelTable.name;
-			$config[ 'search-col' ][] = $categoryTable.name;
-			$config[ 'search-col' ][] = $tagTable.name;
+			$config[ 'search-col' ][] = "$modelTable.name";
+			$config[ 'search-col' ][] = "$categoryTable.name";
+			$config[ 'search-col' ][] = "$tagTable.name";
 		}
 
 		// Group by model id

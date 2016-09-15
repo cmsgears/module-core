@@ -9,53 +9,53 @@ use cmsgears\core\common\config\CoreGlobal;
 
 trait DataTrait {
 
-	public function generateJsonFromObject( $dataObject ) {
+    public function generateJsonFromObject( $dataObject ) {
 
-		$data		= json_encode( $dataObject );
-		$this->data	= $data;
-	}
+        $data		= json_encode( $dataObject );
+        $this->data	= $data;
+    }
 
-	public function generateObjectFromJson( $assoc = false ) {
+    public function generateObjectFromJson( $assoc = false ) {
 
-		$obj 	= json_decode( $this->data, $assoc );
+        $obj 	= json_decode( $this->data, $assoc );
 
-		return (object)$obj;
-	}
+        return (object)$obj;
+    }
 
-	public function setDataMeta( $name, $value, $assoc = false ) {
+    public function setDataMeta( $name, $value, $assoc = false ) {
 
-		$object	= $this->generateObjectFromJson( $assoc );
+        $object	= $this->generateObjectFromJson( $assoc );
 
-		$object->$name	= $value;
+        $object->$name	= $value;
 
-		$this->generateJsonFromObject( $object );
-	}
+        $this->generateJsonFromObject( $object );
+    }
 
-	public function getDataMeta( $name, $assoc = false ) {
+    public function getDataMeta( $name, $assoc = false ) {
 
-		$object	= $this->generateObjectFromJson( $assoc );
+        $object	= $this->generateObjectFromJson( $assoc );
 
-		if( isset( $object->$name ) ) {
+        if( isset( $object->$name ) ) {
 
-			return $object->$name;
-		}
+            return $object->$name;
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public function updateDataMeta( $name, $value, $assoc = false ) {
+    public function updateDataMeta( $name, $value, $assoc = false ) {
 
-		$this->setDataMeta( $name, $value, $assoc );
+        $this->setDataMeta( $name, $value, $assoc );
 
-		$this->update();
-	}
+        $this->update();
+    }
 
-	public function removeDataMeta( $name, $assoc = false ) {
+    public function removeDataMeta( $name, $assoc = false ) {
 
-		$object	= $this->generateObjectFromJson( $assoc );
+        $object	= $this->generateObjectFromJson( $assoc );
 
-		unset( $object->$name );
+        unset( $object->$name );
 
-		$this->generateJsonFromObject( $object );
-	}
+        $this->generateJsonFromObject( $object );
+    }
 }

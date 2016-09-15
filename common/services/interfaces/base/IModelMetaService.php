@@ -11,9 +11,9 @@ use cmsgears\core\common\models\base\Meta;
 
 interface IModelMetaService extends IEntityService {
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -23,13 +23,13 @@ interface IModelMetaService extends IEntityService {
 
     public function getIdMetaMapByType( $model, $type );
 
-	public function getNameMetaMapByType( $model, $type );
+    public function getNameMetaMapByType( $model, $type );
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	public function updateModelMetas( $model, $metas );
+    public function updateModelMetas( $model, $metas );
 
-	// Delete -------------
+    // Delete -------------
 }

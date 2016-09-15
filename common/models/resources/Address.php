@@ -41,11 +41,11 @@ use cmsgears\core\common\models\entities\City;
  */
 class Address extends \cmsgears\core\common\models\base\Resource {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
     const TYPE_DEFAULT      = 'default';
     const TYPE_PRIMARY      = 'primary';
@@ -56,7 +56,7 @@ class Address extends \cmsgears\core\common\models\base\Resource {
     const TYPE_MAILING      = 'mailing';   // Mailing/ Communication
     const TYPE_BRANCH       = 'branch';   // Office having multiple branches
 
-	// Public -----------------
+    // Public -----------------
 
     public static $typeMap = [
         self::TYPE_DEFAULT => 'Default',
@@ -69,29 +69,29 @@ class Address extends \cmsgears\core\common\models\base\Resource {
         self::TYPE_BRANCH => 'Branch'
     ];
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -105,10 +105,10 @@ class Address extends \cmsgears\core\common\models\base\Resource {
             [ [ 'longitude', 'latitude' ], 'required', 'on' => 'location' ],
             [ [ 'longitude', 'latitude', 'cityId' ], 'required', 'on' => 'locationWithCityId' ],
             [ [ 'id' ], 'safe' ],
-			[ [ 'zip', 'subZip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
-			[ [ 'phone', 'fax' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'countryName', 'provinceName', 'cityName' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'title' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+            [ [ 'zip', 'subZip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+            [ [ 'phone', 'fax' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ [ 'countryName', 'provinceName', 'cityName' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+            [ [ 'title' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ [ 'line1', 'line2', 'line3', 'firstName', 'lastName', 'email', 'website' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
             [ [ 'zip', 'subZip' ], 'alphanumhyphenspace' ],
             [ [ 'countryId', 'provinceId', 'cityId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
@@ -154,13 +154,13 @@ class Address extends \cmsgears\core\common\models\base\Resource {
         ];
     }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// Address -------------------------------
+    // Address -------------------------------
 
     /**
      * @return Country
@@ -213,11 +213,11 @@ class Address extends \cmsgears\core\common\models\base\Resource {
         return $address;
     }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -227,46 +227,46 @@ class Address extends \cmsgears\core\common\models\base\Resource {
         return CoreTables::TABLE_ADDRESS;
     }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Address -------------------------------
+    // Address -------------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	public static function queryWithHasOne( $config = [] ) {
+    public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country', 'province', 'city' ];
-		$config[ 'relations' ]	= $relations;
+        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country', 'province', 'city' ];
+        $config[ 'relations' ]	= $relations;
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithCountry( $config = [] ) {
+    public static function queryWithCountry( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'country' ];
+        $config[ 'relations' ]	= [ 'country' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithProvince( $config = [] ) {
+    public static function queryWithProvince( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'province' ];
+        $config[ 'relations' ]	= [ 'province' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithCountryProvince( $config = [] ) {
+    public static function queryWithCountryProvince( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'country', 'province' ];
+        $config[ 'relations' ]	= [ 'country', 'province' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 }

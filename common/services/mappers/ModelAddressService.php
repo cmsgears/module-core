@@ -21,82 +21,82 @@ use cmsgears\core\common\services\traits\MapperTrait;
  */
 class ModelAddressService extends \cmsgears\core\common\services\base\EntityService implements IModelAddressService {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelAddress';
+    public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelAddress';
 
-	public static $modelTable	= CoreTables::TABLE_MODEL_ADDRESS;
+    public static $modelTable	= CoreTables::TABLE_MODEL_ADDRESS;
 
-	public static $parentType	= null;
+    public static $parentType	= null;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	private $addressService;
+    private $addressService;
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use MapperTrait;
+    use MapperTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
     public function __construct( IAddressService $addressService, $config = [] ) {
 
-		$this->addressService	= $addressService;
+        $this->addressService	= $addressService;
 
         parent::__construct( $config );
     }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// ModelFormService ----------------------
+    // ModelFormService ----------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
     public function getByType( $parentId, $parentType, $type, $first = false ) {
 
-		return ModelAddress::findByType( $parentId, $parentType, $type, $first );
+        return ModelAddress::findByType( $parentId, $parentType, $type, $first );
     }
 
     // Read - Lists ----
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	public function create( $address, $config = [] ) {
+    public function create( $address, $config = [] ) {
 
-		$parentId 	= $config[ 'parentId' ];
-		$parentType = $config[ 'parentType' ];
-		$type 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
-		$order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
+        $parentId 	= $config[ 'parentId' ];
+        $parentType = $config[ 'parentType' ];
+        $type 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+        $order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
         // Create Address
         $address	= $this->addressService->create( $address );
@@ -114,14 +114,14 @@ class ModelAddressService extends \cmsgears\core\common\services\base\EntityServ
 
         // Return Address
         return $modelAddress;
-	}
+    }
 
     public function createOrUpdate( $address, $config = [] ) {
 
-		$parentId 	= $config[ 'parentId' ];
-		$parentType = $config[ 'parentType' ];
-		$type 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
-		$order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
+        $parentId 	= $config[ 'parentId' ];
+        $parentType = $config[ 'parentType' ];
+        $type 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+        $order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
         if( isset( $address->id ) && !empty( $address->id ) ) {
 
@@ -140,10 +140,10 @@ class ModelAddressService extends \cmsgears\core\common\services\base\EntityServ
 
     public function createOrUpdateByType( $address, $config = [] ) {
 
-		$parentId 	= $config[ 'parentId' ];
-		$parentType = $config[ 'parentType' ];
-		$type 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
-		$order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
+        $parentId 	= $config[ 'parentId' ];
+        $parentType = $config[ 'parentType' ];
+        $type 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+        $order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
         $existingAddress    = $this->getByType( $parentId, $parentType, $type, true );
 
@@ -166,23 +166,23 @@ class ModelAddressService extends \cmsgears\core\common\services\base\EntityServ
 
     public function createShipping( $address, $config = [] ) {
 
-		$config[ 'type' ] = Address::TYPE_SHIPPING;
+        $config[ 'type' ] = Address::TYPE_SHIPPING;
 
         return $this->create( $address, $config );
     }
 
     public function copyToShipping( $address, $config = [] ) {
 
-		$config[ 'type' ] 	= Address::TYPE_SHIPPING;
+        $config[ 'type' ] 	= Address::TYPE_SHIPPING;
 
         $shippingAddress    = new Address();
 
         $shippingAddress->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'cityName', 'zip', 'firstName', 'lastName', 'phone', 'email', 'fax' ] );
 
-		return $this->create( $address, $config );
+        return $this->create( $address, $config );
     }
 
-	// Update -------------
+    // Update -------------
 
     public function update( $modelAddress, $config = [] ) {
 
@@ -202,17 +202,17 @@ class ModelAddressService extends \cmsgears\core\common\services\base\EntityServ
         return $addressToUpdate;
     }
 
-	// Delete -------------
+    // Delete -------------
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// ModelFormService ----------------------
+    // ModelFormService ----------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -220,11 +220,11 @@ class ModelAddressService extends \cmsgears\core\common\services\base\EntityServ
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
 }

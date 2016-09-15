@@ -36,96 +36,96 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 class OwnerFilter {
 
-	public function doFilter( $args = [] ) {
+    public function doFilter( $args = [] ) {
 
-		$typed	= isset( $args[ 'typed' ] ) ? $args[ 'typed' ] : true;
+        $typed	= isset( $args[ 'typed' ] ) ? $args[ 'typed' ] : true;
 
-		$user	= Yii::$app->user->identity;
-		$model	= null;
+        $user	= Yii::$app->user->identity;
+        $model	= null;
 
-		// Find Service
-		$modelService	= null;
+        // Find Service
+        $modelService	= null;
 
-		// Use service provided exclusively for the filter
-		if( isset( $args[ 'service' ] ) ) {
+        // Use service provided exclusively for the filter
+        if( isset( $args[ 'service' ] ) ) {
 
-			// Factory name of service
-			if( is_string( $args[ 'service' ] ) ) {
+            // Factory name of service
+            if( is_string( $args[ 'service' ] ) ) {
 
-				$modelService = Yii::$app->factory->get( $args[ 'service' ] );
-			}
-			// Service object
-			else {
+                $modelService = Yii::$app->factory->get( $args[ 'service' ] );
+            }
+            // Service object
+            else {
 
-				$modelService = $args[ 'service' ];
-			}
-		}
-		// Try to find service in controller member variables
-		else if( Yii::$app->controller->hasProperty( 'modelService' ) ) {
+                $modelService = $args[ 'service' ];
+            }
+        }
+        // Try to find service in controller member variables
+        else if( Yii::$app->controller->hasProperty( 'modelService' ) ) {
 
-			$modelService	= Yii::$app->controller->modelService;
-		}
+            $modelService	= Yii::$app->controller->modelService;
+        }
 
-		// Proceed further if service found
-		if( isset( $modelService ) ) {
+        // Proceed further if service found
+        if( isset( $modelService ) ) {
 
-			$model	= null;
+            $model	= null;
 
-			// Use default column as id
-			if( !isset( $args[ 'slug' ] ) ) {
+            // Use default column as id
+            if( !isset( $args[ 'slug' ] ) ) {
 
-				$args[ 'id' ]	= true;
-			}
+                $args[ 'id' ]	= true;
+            }
 
-			// Find model using id
-			if( isset( $args[ 'id' ] ) && $args[ 'id' ] ) {
+            // Find model using id
+            if( isset( $args[ 'id' ] ) && $args[ 'id' ] ) {
 
-				$idParam		= 'id';
+                $idParam		= 'id';
 
-				if( isset( $args[ 'idParam' ] ) ) {
+                if( isset( $args[ 'idParam' ] ) ) {
 
-					$idParam	= $args[ 'idParam' ];
-				}
+                    $idParam	= $args[ 'idParam' ];
+                }
 
-				$id		= Yii::$app->request->get( $idParam );
-				$model	= $modelService->getById( $id );
-			}
-			// Find model using slug
-			else if( isset( $args[ 'slug' ] ) && $args[ 'slug' ] ) {
+                $id		= Yii::$app->request->get( $idParam );
+                $model	= $modelService->getById( $id );
+            }
+            // Find model using slug
+            else if( isset( $args[ 'slug' ] ) && $args[ 'slug' ] ) {
 
-				$slugParam	= 'slug';
+                $slugParam	= 'slug';
 
-				if( isset( $args[ 'slugParam' ] ) ) {
+                if( isset( $args[ 'slugParam' ] ) ) {
 
-					$slugParam	= $args[ 'slugParam' ];
-				}
+                    $slugParam	= $args[ 'slugParam' ];
+                }
 
-				$slug	= Yii::$app->request->get( $slugParam );
+                $slug	= Yii::$app->request->get( $slugParam );
 
-				if( $typed ) {
+                if( $typed ) {
 
-					$model	= $modelService->getBySlug( $slug, true );
-				}
-				else {
+                    $model	= $modelService->getBySlug( $slug, true );
+                }
+                else {
 
-					$model	= $modelService->getBySlug( $slug );
-				}
-			}
+                    $model	= $modelService->getBySlug( $slug );
+                }
+            }
 
-			// Apply owner filter
-			if( isset( $model ) && $model->hasMethod( 'isOwner' ) && $model->isOwner( $user ) ) {
+            // Apply owner filter
+            if( isset( $model ) && $model->hasMethod( 'isOwner' ) && $model->isOwner( $user ) ) {
 
-				return true;
-			}
-			else {
+                return true;
+            }
+            else {
 
-				throw new ForbiddenHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
-			}
+                throw new ForbiddenHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+            }
 
-			return true;
-		}
+            return true;
+        }
 
-		// Halt action execution in case a valid service is not found
-		throw new ForbiddenHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
-	}
+        // Halt action execution in case a valid service is not found
+        throw new ForbiddenHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+    }
 }

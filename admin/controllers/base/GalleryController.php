@@ -12,167 +12,167 @@ use cmsgears\core\common\config\CoreGlobal;
 
 abstract class GalleryController extends \cmsgears\core\admin\controllers\base\CrudController {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals ----------------
+    // Globals ----------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	protected $type;
-	protected $templateType;
+    protected $type;
+    protected $templateType;
 
-	// Private ----------------
+    // Private ----------------
 
-	private $templateService;
+    private $templateService;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
- 	public function init() {
+    public function init() {
 
         parent::init();
 
-		$this->setViewPath( '@cmsgears/module-core/admin/views/gallery' );
+        $this->setViewPath( '@cmsgears/module-core/admin/views/gallery' );
 
-		$this->crudPermission 	= CoreGlobal::PERM_CORE;
-		$this->modelService		= Yii::$app->factory->get( 'galleryService' );
+        $this->crudPermission 	= CoreGlobal::PERM_CORE;
+        $this->modelService		= Yii::$app->factory->get( 'galleryService' );
 
-		$this->type				= CoreGlobal::TYPE_SITE;
-		$this->templateType		= CoreGlobal::TYPE_GALLERY;
+        $this->type				= CoreGlobal::TYPE_SITE;
+        $this->templateType		= CoreGlobal::TYPE_GALLERY;
 
-		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+        $this->templateService	= Yii::$app->factory->get( 'templateService' );
 
-		// Notes: Configure sidebar and returnUrl exclusively in child classes. We can also change type and templateType in child classes in case gallery is associated with model.
-	}
+        // Notes: Configure sidebar and returnUrl exclusively in child classes. We can also change type and templateType in child classes in case gallery is associated with model.
+    }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
     public function behaviors() {
 
-		$behaviors	= parent::behaviors();
+        $behaviors	= parent::behaviors();
 
-		$behaviors[ 'rbac' ][ 'actions' ][ 'items' ] = [ 'permission' => $this->crudPermission ];
+        $behaviors[ 'rbac' ][ 'actions' ][ 'items' ] = [ 'permission' => $this->crudPermission ];
 
-		$behaviors[ 'verbs' ][ 'actions' ][ 'items' ] = [ 'get' ];
+        $behaviors[ 'verbs' ][ 'actions' ][ 'items' ] = [ 'get' ];
 
-		return $behaviors;
+        return $behaviors;
     }
 
-	// yii\base\Controller ----
+    // yii\base\Controller ----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// GalleryController ---------------------
+    // GalleryController ---------------------
 
-	public function actionAll() {
+    public function actionAll() {
 
-		$dataProvider = $this->modelService->getPageByType( $this->type );
+        $dataProvider = $this->modelService->getPageByType( $this->type );
 
-	    return $this->render( 'all', [
-	         'dataProvider' => $dataProvider
-	    ]);
-	}
+        return $this->render( 'all', [
+             'dataProvider' => $dataProvider
+        ]);
+    }
 
-	public function actionCreate() {
+    public function actionCreate() {
 
-		$modelClass		= $this->modelService->getModelClass();
-		$model			= new $modelClass;
-		$model->type 	= $this->type;
-		$model->siteId	= Yii::$app->core->siteId;
+        $modelClass		= $this->modelService->getModelClass();
+        $model			= new $modelClass;
+        $model->type 	= $this->type;
+        $model->siteId	= Yii::$app->core->siteId;
 
-		if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
+        if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
 
-			$this->modelService->create( $model );
+            $this->modelService->create( $model );
 
-			return $this->redirect( $this->returnUrl );
-		}
+            return $this->redirect( $this->returnUrl );
+        }
 
-		$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
+        $templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-    	return $this->render( 'create', [
-    		'model' => $model,
-    		'templatesMap' => $templatesMap
-    	]);
-	}
+        return $this->render( 'create', [
+            'model' => $model,
+            'templatesMap' => $templatesMap
+        ]);
+    }
 
-	public function actionUpdate( $id ) {
+    public function actionUpdate( $id ) {
 
-		// Find Model
-		$model	= $this->modelService->getById( $id );
+        // Find Model
+        $model	= $this->modelService->getById( $id );
 
-		// Update/Render if exist
-		if( isset( $model ) ) {
+        // Update/Render if exist
+        if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
+            if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
 
-				$this->modelService->update( $model, [ 'admin' => true ] );
+                $this->modelService->update( $model, [ 'admin' => true ] );
 
-				return $this->redirect( $this->returnUrl );
-			}
+                return $this->redirect( $this->returnUrl );
+            }
 
-			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
+            $templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-	    	return $this->render( 'update', [
-	    		'model' => $model,
-	    		'templatesMap' => $templatesMap
-	    	]);
-		}
+            return $this->render( 'update', [
+                'model' => $model,
+                'templatesMap' => $templatesMap
+            ]);
+        }
 
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
+        // Model not found
+        throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+    }
 
-	public function actionDelete( $id ) {
+    public function actionDelete( $id ) {
 
-		// Find Model
-		$model	= $this->modelService->getById( $id );
+        // Find Model
+        $model	= $this->modelService->getById( $id );
 
-		// Delete/Render if exist
-		if( isset( $model ) ) {
+        // Delete/Render if exist
+        if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
+            if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-				$this->modelService->delete( $model );
+                $this->modelService->delete( $model );
 
-				return $this->redirect( $this->returnUrl );
-			}
+                return $this->redirect( $this->returnUrl );
+            }
 
-			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
+            $templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-	    	return $this->render( 'delete', [
-	    		'model' => $model,
-	    		'templatesMap' => $templatesMap
-	    	]);
-		}
+            return $this->render( 'delete', [
+                'model' => $model,
+                'templatesMap' => $templatesMap
+            ]);
+        }
 
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
+        // Model not found
+        throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+    }
 
-	public function actionItems( $id ) {
+    public function actionItems( $id ) {
 
-		// Find Model
-		$gallery 		= $this->modelService->getById( $id );
+        // Find Model
+        $gallery 		= $this->modelService->getById( $id );
 
-		// Update/Render if exist
-		if( isset( $gallery ) ) {
+        // Update/Render if exist
+        if( isset( $gallery ) ) {
 
-	    	return $this->render( 'items', [
-	    		'gallery' => $gallery,
-	    		'items' => $gallery->files
-	    	]);
-		}
+            return $this->render( 'items', [
+                'gallery' => $gallery,
+                'items' => $gallery->files
+            ]);
+        }
 
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
+        // Model not found
+        throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+    }
 }

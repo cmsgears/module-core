@@ -16,68 +16,68 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 class EventManager extends \yii\base\Component {
 
-	// TODO: Add mechanism to cache stats results for specified duration
+    // TODO: Add mechanism to cache stats results for specified duration
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Global -----------------
+    // Global -----------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// EventManager --------------------------
+    // EventManager --------------------------
 
-	// Stats Collection -------
+    // Stats Collection -------
 
-	public function getAdminStats() {
+    public function getAdminStats() {
 
-		return [
-					// Messages
-					'notifications' => [], 'reminders' => [], 'activities' => [],
-					// Counters - New
-					'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0
-				];
-	}
+        return [
+                    // Messages
+                    'notifications' => [], 'reminders' => [], 'activities' => [],
+                    // Counters - New
+                    'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0
+                ];
+    }
 
-	public function getUserStats() {
+    public function getUserStats() {
 
-		return [
-					// Messages
-					'notifications' => [], 'reminders' => [], 'activities' => [],
-					// Counters - New
-					'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0
-				];
-	}
+        return [
+                    // Messages
+                    'notifications' => [], 'reminders' => [], 'activities' => [],
+                    // Counters - New
+                    'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0
+                ];
+    }
 
-	// Notification Trigger ---
+    // Notification Trigger ---
 
-	public function triggerNotification( $template, $message, $config = [] ) {
+    public function triggerNotification( $template, $message, $config = [] ) {
 
-		// Trigger notifications using given template, message and config
-	}
+        // Trigger notifications using given template, message and config
+    }
 
-	// Reminder Trigger -------
+    // Reminder Trigger -------
 
-	public function triggerReminder( $template, $message, $config = [] ) {
+    public function triggerReminder( $template, $message, $config = [] ) {
 
-		// Trigger notifications using given template, message and config
-	}
+        // Trigger notifications using given template, message and config
+    }
 
-	// Activity Logger --------
+    // Activity Logger --------
 
-	public function logActivity( $template, $message, $config = [] ) {
+    public function logActivity( $template, $message, $config = [] ) {
 
-		// Trigger notifications using given template, message and config
-	}
+        // Trigger notifications using given template, message and config
+    }
 }

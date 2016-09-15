@@ -12,52 +12,52 @@ use cmsgears\core\common\utilities\AjaxUtil;
 
 class FileHandler extends \cmsgears\core\common\base\Action {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Action --------------------------------
+    // Action --------------------------------
 
-	public function run( $directory, $type ) {
+    public function run( $directory, $type ) {
 
-		$data	= Yii::$app->fileManager->handleFileUpload( $directory, $type );
-		$keys	= array_keys( $data );
+        $data	= Yii::$app->fileManager->handleFileUpload( $directory, $type );
+        $keys	= array_keys( $data );
 
-		if( !in_array( 'error', array_keys( $data ) ) ) {
+        if( !in_array( 'error', array_keys( $data ) ) ) {
 
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-		}
+            // Trigger Ajax Success
+            return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+        }
 
-		// Trigger Ajax Failure
+        // Trigger Ajax Failure
         return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $data );
-	}
+    }
 }

@@ -14,73 +14,73 @@ use cmsgears\core\common\models\entities\Template;
 
 abstract class TemplateController extends CrudController {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals ----------------
+    // Globals ----------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	protected $type;
+    protected $type;
 
-	// Private ----------------
+    // Private ----------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
- 	public function init() {
+    public function init() {
 
         parent::init();
 
-		$this->setViewPath( '@cmsgears/module-core/admin/views/template' );
+        $this->setViewPath( '@cmsgears/module-core/admin/views/template' );
 
-		$this->crudPermission 	= CoreGlobal::PERM_CORE;
-		$this->modelService		= Yii::$app->factory->get( 'templateService' );
+        $this->crudPermission 	= CoreGlobal::PERM_CORE;
+        $this->modelService		= Yii::$app->factory->get( 'templateService' );
 
-		// Notes: Configure type, sidebar and returnUrl exclusively in child classes.
-	}
+        // Notes: Configure type, sidebar and returnUrl exclusively in child classes.
+    }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Controller ----
+    // yii\base\Controller ----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// TemplateController --------------------
+    // TemplateController --------------------
 
-	public function actionAll() {
+    public function actionAll() {
 
-		$dataProvider = $this->modelService->getPageByType( $this->type );
+        $dataProvider = $this->modelService->getPageByType( $this->type );
 
-	    return $this->render( 'all', [
+        return $this->render( 'all', [
 
-			'dataProvider' => $dataProvider
-	    ]);
-	}
+            'dataProvider' => $dataProvider
+        ]);
+    }
 
-	public function actionCreate() {
+    public function actionCreate() {
 
-		$modelClass		= $this->modelService->getModelClass();
-		$model			= new $modelClass;
-		$model->type 	= $this->type;
+        $modelClass		= $this->modelService->getModelClass();
+        $model			= new $modelClass;
+        $model->type 	= $this->type;
 
-		if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
+        if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
 
-			$this->modelService->create( $model );
+            $this->modelService->create( $model );
 
-			return $this->redirect( $this->returnUrl );
-		}
+            return $this->redirect( $this->returnUrl );
+        }
 
-    	return $this->render( 'create', [
-    		'model' => $model
-    	]);
-	}
+        return $this->render( 'create', [
+            'model' => $model
+        ]);
+    }
 }

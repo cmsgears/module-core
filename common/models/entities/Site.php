@@ -30,41 +30,41 @@ use cmsgears\core\common\models\traits\resources\VisualTrait;
  */
 class Site extends \cmsgears\core\common\models\base\Entity {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public $mParentType	= CoreGlobal::TYPE_SITE;
+    public $mParentType	= CoreGlobal::TYPE_SITE;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use NameTrait;
-	use SlugTrait;
-	use VisualTrait;
+    use NameTrait;
+    use SlugTrait;
+    use VisualTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -82,7 +82,7 @@ class Site extends \cmsgears\core\common\models\base\Entity {
         ];
     }
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -127,13 +127,13 @@ class Site extends \cmsgears\core\common\models\base\Entity {
         ];
     }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// Site ----------------------------------
+    // Site ----------------------------------
 
     public function getTheme() {
 
@@ -165,11 +165,11 @@ class Site extends \cmsgears\core\common\models\base\Entity {
         return Yii::$app->formatter->asBoolean( $this->active );
     }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -179,48 +179,48 @@ class Site extends \cmsgears\core\common\models\base\Entity {
         return CoreTables::TABLE_SITE;
     }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Site ----------------------------------
+    // Site ----------------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	public static function queryWithHasOne( $config = [] ) {
+    public static function queryWithHasOne( $config = [] ) {
 
-		$modelTable				= CoreTables::TABLE_SITE;
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'theme' ];
-		$config[ 'relations' ]	= $relations;
-		$config[ 'groups' ]		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : [ "$modelTable.id" ];
+        $modelTable				= CoreTables::TABLE_SITE;
+        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'theme' ];
+        $config[ 'relations' ]	= $relations;
+        $config[ 'groups' ]		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : [ "$modelTable.id" ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithTheme( $config = [] ) {
+    public static function queryWithTheme( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'banner', 'theme' ];
+        $config[ 'relations' ]	= [ 'avatar', 'banner', 'theme' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithMetas( $config = [] ) {
+    public static function queryWithMetas( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'banner', 'metas' ];
+        $config[ 'relations' ]	= [ 'avatar', 'banner', 'metas' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithMembers( $config = [] ) {
+    public static function queryWithMembers( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'banner', 'members' ];
+        $config[ 'relations' ]	= [ 'avatar', 'banner', 'members' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 }

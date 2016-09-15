@@ -9,11 +9,11 @@ use cmsgears\core\common\config\CoreGlobal;
 
 interface IModelOptionService extends \cmsgears\core\common\services\interfaces\base\IMapperService {
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
-	public function getModelCounts( $parentType, $categorySlug );
+    public function getModelCounts( $parentType, $categorySlug );
 
     // Read - Models ---
 
@@ -21,12 +21,12 @@ interface IModelOptionService extends \cmsgears\core\common\services\interfaces\
 
     // Read - Maps -----
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	public function bindOptions( $binder, $parentType );
+    public function bindOptions( $binder, $parentType );
 
-	// Delete -------------
+    // Delete -------------
 
 }

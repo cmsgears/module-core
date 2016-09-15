@@ -21,120 +21,70 @@ use cmsgears\core\common\services\traits\SlugTrait;
  */
 class ThemeService extends \cmsgears\core\common\services\base\EntityService implements IThemeService {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Theme';
+    public static $modelClass	= '\cmsgears\core\common\models\entities\Theme';
 
-	public static $modelTable	= CoreTables::TABLE_THEME;
+    public static $modelTable	= CoreTables::TABLE_THEME;
 
-	public static $parentType	= CoreGlobal::TYPE_THEME;
+    public static $parentType	= CoreGlobal::TYPE_THEME;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use NameTrait;
-	use SlugTrait;
+    use NameTrait;
+    use SlugTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// ThemeService --------------------------
+    // ThemeService --------------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	public function getPage( $config = [] ) {
+    public function getPage( $config = [] ) {
 
-	    $sort = new Sort([
-	        'attributes' => [
-	            'name' => [
-	                'asc' => [ 'name' => SORT_ASC ],
-	                'desc' => ['name' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'name'
-	            ]
-	        ]
-	    ]);
+        $sort = new Sort([
+            'attributes' => [
+                'name' => [
+                    'asc' => [ 'name' => SORT_ASC ],
+                    'desc' => ['name' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'name'
+                ]
+            ]
+        ]);
 
-		$config[ 'sort' ] = $sort;
+        $config[ 'sort' ] = $sort;
 
-		return parent::findPage( $config );
-	}
+        return parent::findPage( $config );
+    }
 
-	// Read ---------------
-
-    // Read - Models ---
-
-    // Read - Lists ----
-
-    // Read - Maps -----
-
-	// Read - Others ---
-
-	// Create -------------
-
-	public function create( $model, $config = [] ) {
-
-		// Uncheck default for all other themes
-		if( $model->default ) {
-
-			Theme::updateAll( [ 'default' => false ], '`default`=1' );
-		}
-
-		return parent::create( $model );
- 	}
-
-	// Update -------------
-
-	public function update( $model, $config = [] ) {
-
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description', 'default', 'basePath', 'renderer' ];
-
-		// Uncheck default for all other themes
-		if( $model->default ) {
-
-			Theme::updateAll( [ 'default' => false ], '`default`=1' );
-		}
-
-		return parent::update( $model, [
-			'attributes' => $attributes
-		]);
- 	}
-
-	// Delete -------------
-
-	// Static Methods ----------------------------------------------
-
-	// CMG parent classes --------------------
-
-	// ThemeService --------------------------
-
-	// Data Provider ------
-
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -142,11 +92,61 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    public function create( $model, $config = [] ) {
 
-	// Delete -------------
+        // Uncheck default for all other themes
+        if( $model->default ) {
+
+            Theme::updateAll( [ 'default' => false ], '`default`=1' );
+        }
+
+        return parent::create( $model );
+    }
+
+    // Update -------------
+
+    public function update( $model, $config = [] ) {
+
+        $attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description', 'default', 'basePath', 'renderer' ];
+
+        // Uncheck default for all other themes
+        if( $model->default ) {
+
+            Theme::updateAll( [ 'default' => false ], '`default`=1' );
+        }
+
+        return parent::update( $model, [
+            'attributes' => $attributes
+        ]);
+    }
+
+    // Delete -------------
+
+    // Static Methods ----------------------------------------------
+
+    // CMG parent classes --------------------
+
+    // ThemeService --------------------------
+
+    // Data Provider ------
+
+    // Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+    // Read - Others ---
+
+    // Create -------------
+
+    // Update -------------
+
+    // Delete -------------
 }

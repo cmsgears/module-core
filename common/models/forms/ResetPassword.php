@@ -10,75 +10,75 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class ResetPassword extends \yii\base\Model {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public $email;
-	public $password;
-	public $password_repeat;
+    public $email;
+    public $password;
+    public $password_repeat;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
-	public function rules() {
+    public function rules() {
 
         $rules = [
-			[ [ 'email', 'password', 'password_repeat' ], 'required' ],
-			[ 'email', 'email' ],
-			[ 'password', 'compare' ]
-		];
+            [ [ 'email', 'password', 'password_repeat' ], 'required' ],
+            [ 'email', 'email' ],
+            [ 'password', 'compare' ]
+        ];
 
-		if( Yii::$app->core->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'email', 'password', 'password_repeat' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'email', 'password', 'password_repeat' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-			return ArrayHelper::merge( $trim, $rules );
-		}
+            return ArrayHelper::merge( $trim, $rules );
+        }
 
-		return $rules;
-	}
+        return $rules;
+    }
 
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
-			'password' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PASSWORD ),
-			'password_repeat' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PASSWORD_REPEAT )
-		];
-	}
+        return [
+            'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+            'password' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PASSWORD ),
+            'password_repeat' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PASSWORD_REPEAT )
+        ];
+    }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// ResetPassword -------------------------
+    // ResetPassword -------------------------
 
 }

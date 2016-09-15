@@ -46,15 +46,15 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
     const TYPE_COMMENT		=  'comment';
     const TYPE_REVIEW		=  'review';
-	const TYPE_FEEDBACK		=  'feedback';
+    const TYPE_FEEDBACK		=  'feedback';
     const TYPE_TESTIMONIAL	=  'testimonial';
 
     const STATUS_NEW        =  500;
@@ -63,7 +63,7 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
     const STATUS_APPROVED   =  800;
     const STATUS_TRASH    	=  900;
 
-	// Public -----------------
+    // Public -----------------
 
     public static $typeMap = [
         self::TYPE_COMMENT => 'Comment',
@@ -80,35 +80,35 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
         self::STATUS_TRASH => 'Trash'
     ];
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public $mParentType	= CoreGlobal::TYPE_COMMENT;
+    public $mParentType	= CoreGlobal::TYPE_COMMENT;
 
-	public $captcha;
+    public $captcha;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
     use CreateModifyTrait;
     use DataTrait;
-	use ResourceTrait;
+    use ResourceTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -128,7 +128,7 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
         ];
     }
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -152,13 +152,13 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
             [ [ 'createdAt', 'modifiedAt', 'approvedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
         ];
 
-		// Enable captcha for non-logged in users
-		$user = Yii::$app->user->getIdentity();
+        // Enable captcha for non-logged in users
+        $user = Yii::$app->user->getIdentity();
 
-		if( !isset( $user ) ) {
+        if( !isset( $user ) ) {
 
-			$rules[] = [ 'captcha', 'required' ];
-		}
+            $rules[] = [ 'captcha', 'required' ];
+        }
 
         // trim if required
         if( Yii::$app->core->trimFieldValue ) {
@@ -195,11 +195,11 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
         ];
     }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
     // ModelComment --------------------------
 
@@ -223,11 +223,11 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
         return Yii::$app->formatter->asBoolean( $this->featured );
     }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -237,40 +237,40 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
         return CoreTables::TABLE_MODEL_COMMENT;
     }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// ModelComment --------------------------
+    // ModelComment --------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	public static function queryWithHasOne( $config = [] ) {
+    public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
-		$config[ 'relations' ]	= $relations;
+        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+        $config[ 'relations' ]	= $relations;
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
     public static function queryByParentConfig( $parentId, $parentType, $config = [] ) {
 
-		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
-		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
+        $type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
+        $status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
 
         return self::queryByParent( $parentId, $parentType )->andWhere( [ 'type' => $type, 'status' => $status ] );
     }
 
     public static function queryByParentTypeConfig( $parentType, $config = [] ) {
 
-		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
-		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
+        $type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
+        $status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
 
         return self::find()->where( [ 'parentType' => $parentType, 'type' => $type, 'status' => $status ] );
     }
 
     public static function queryByBaseId( $baseId, $config = [] ) {
 
-		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
-		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
+        $type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
+        $status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
 
         return self::find()->where( [ 'baseId' => $baseId, 'type' => $type, 'status' => $status ] );
     }
@@ -280,16 +280,16 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
         return self::find()->where( [ 'email' => $email ] );
     }
 
-	public static function queryL0Approved( $parentId, $parentType, $type ) {
+    public static function queryL0Approved( $parentId, $parentType, $type ) {
 
-		return self::queryByParentConfig( $parentId, $parentType, [ 'type' => $type ] )->andWhere( [ 'baseId' => null ] );
-	}
+        return self::queryByParentConfig( $parentId, $parentType, [ 'type' => $type ] )->andWhere( [ 'baseId' => null ] );
+    }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 }

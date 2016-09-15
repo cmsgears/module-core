@@ -10,110 +10,110 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class UserController extends \cmsgears\core\admin\controllers\base\UserController {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals ----------------
+    // Globals ----------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
- 	public function init() {
+    public function init() {
 
         parent::init();
 
-		$this->roleType			= CoreGlobal::TYPE_SYSTEM;
-		$this->permissionSlug	= CoreGlobal::PERM_USER;
-		$this->showCreate 		= true;
-		$this->sidebar			= [ 'parent' => 'sidebar-identity', 'child' => 'user' ];
+        $this->roleType			= CoreGlobal::TYPE_SYSTEM;
+        $this->permissionSlug	= CoreGlobal::PERM_USER;
+        $this->showCreate 		= true;
+        $this->sidebar			= [ 'parent' => 'sidebar-identity', 'child' => 'user' ];
 
-		$this->returnUrl		= Url::previous( 'users' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/user/all' ], true );
-	}
+        $this->returnUrl		= Url::previous( 'users' );
+        $this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/user/all' ], true );
+    }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
     public function behaviors() {
 
-		$behaviours	= parent::behaviors();
+        $behaviours	= parent::behaviors();
 
-		$behaviours[ 'rbac' ][ 'actions' ][ 'profile'] 		= [ 'permission' => CoreGlobal::PERM_USER ];
-		$behaviours[ 'rbac' ][ 'actions' ][ 'settings'] 	= [ 'permission' => CoreGlobal::PERM_USER ];
+        $behaviours[ 'rbac' ][ 'actions' ][ 'profile'] 		= [ 'permission' => CoreGlobal::PERM_USER ];
+        $behaviours[ 'rbac' ][ 'actions' ][ 'settings'] 	= [ 'permission' => CoreGlobal::PERM_USER ];
 
-		$behaviours[ 'verbs' ][ 'actions' ][ 'profile' ] 	= [ 'get', 'post' ];
-		$behaviours[ 'verbs' ][ 'actions' ][ 'settings' ] 	= [ 'get', 'post' ];
+        $behaviours[ 'verbs' ][ 'actions' ][ 'profile' ] 	= [ 'get', 'post' ];
+        $behaviours[ 'verbs' ][ 'actions' ][ 'settings' ] 	= [ 'get', 'post' ];
 
-		return $behaviours;
+        return $behaviours;
     }
 
-	// yii\base\Controller ----
+    // yii\base\Controller ----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// UserController ------------------------
+    // UserController ------------------------
 
-	public function actionAll() {
+    public function actionAll() {
 
-		Url::remember( [ 'user/all' ], 'users' );
+        Url::remember( [ 'user/all' ], 'users' );
 
-		return parent::actionAll();
-	}
+        return parent::actionAll();
+    }
 
     public function actionProfile() {
 
-		// Find Model
-		$user				= Yii::$app->user->getIdentity();
-		$this->sidebar 		= [];
+        // Find Model
+        $user				= Yii::$app->user->getIdentity();
+        $this->sidebar 		= [];
 
-		// Update/Render if exist
-		if( isset( $user ) ) {
+        // Update/Render if exist
+        if( isset( $user ) ) {
 
-			$genderMap 	= $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [ [ 'id' => '0', 'name' => 'Choose Gender' ] ] );
+            $genderMap 	= $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [ [ 'id' => '0', 'name' => 'Choose Gender' ] ] );
 
-	    	return $this->render( 'profile', [
-	    		'user' => $user,
-	    		'genderMap' => $genderMap
-	    	]);
-		}
+            return $this->render( 'profile', [
+                'user' => $user,
+                'genderMap' => $genderMap
+            ]);
+        }
 
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+        // Model not found
+        throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
     }
 
-	public function actionSettings() {
+    public function actionSettings() {
 
-		// Find Model
-		$user				= Yii::$app->user->getIdentity();
-		$this->sidebar 		= [];
+        // Find Model
+        $user				= Yii::$app->user->getIdentity();
+        $this->sidebar 		= [];
 
-		// Update/Render if exist
-		if( isset( $user ) ) {
+        // Update/Render if exist
+        if( isset( $user ) ) {
 
-			$privacy		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
-			$notification	= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
-			$reminder		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
+            $privacy		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
+            $notification	= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
+            $reminder		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
 
-	    	return $this->render( 'settings', [
-	    		'user' => $user,
-	    		'privacy' => $privacy,
-	    		'notification' => $notification,
-	    		'reminder' => $reminder
-	    	]);
-		}
+            return $this->render( 'settings', [
+                'user' => $user,
+                'privacy' => $privacy,
+                'notification' => $notification,
+                'reminder' => $reminder
+            ]);
+        }
 
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
+        // Model not found
+        throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+    }
 }

@@ -11,46 +11,46 @@ $this->title 	= $coreProperties->getSiteTitle() . ' | Update Permission';
 $returnUrl		= $this->context->returnUrl;
 ?>
 <div class="box box-cud">
-	<div class="box-wrap-header">
-		<div class="header">Update Permission</div>
-	</div>
-	<div class="box-wrap-content frm-split-40-60">
-		<?php $form = ActiveForm::begin( [ 'id' => 'frm-permission' ] );?>
+    <div class="box-wrap-header">
+        <div class="header">Update Permission</div>
+    </div>
+    <div class="box-wrap-content frm-split-40-60">
+        <?php $form = ActiveForm::begin( [ 'id' => 'frm-permission' ] );?>
 
-    	<?= $form->field( $model, 'name' ) ?>
-    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
-    	<?= $form->field( $model, 'description' )->textarea() ?>
+        <?= $form->field( $model, 'name' ) ?>
+        <?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
+        <?= $form->field( $model, 'description' )->textarea() ?>
 
-		<?php if( count( $roles ) > 0 ) { ?>
-		<div class="box-content clearfix">
-			<div class="header">Assign Roles</div>
-			<?php
-				$modelRoles	= $model->getRolesIdList();
+        <?php if( count( $roles ) > 0 ) { ?>
+        <div class="box-content clearfix">
+            <div class="header">Assign Roles</div>
+            <?php
+                $modelRoles	= $model->getRolesIdList();
 
-				foreach ( $roles as $role ) {
+                foreach ( $roles as $role ) {
 
-					if( in_array( $role[ 'id' ], $modelRoles ) ) {
-			?>
-						<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$role['id']?>" checked /><?=$role['name']?></span>
-			<?php
-					}
-					else {
-			?>
-						<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$role['id']?>" /><?=$role['name']?></span>
-			<?php
-					}
-				}
-			?>
-		</div>
-		<?php } ?>
+                    if( in_array( $role[ 'id' ], $modelRoles ) ) {
+            ?>
+                        <span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$role['id']?>" checked /><?=$role['name']?></span>
+            <?php
+                    }
+                    else {
+            ?>
+                        <span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?=$role['id']?>" /><?=$role['name']?></span>
+            <?php
+                    }
+                }
+            ?>
+        </div>
+        <?php } ?>
 
-		<div class="clear filler-height"></div>
+        <div class="clear filler-height"></div>
 
-		<div class="align align-center">
-			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
-			<input class="element-medium" type="submit" value="Update" />
-		</div>
+        <div class="align align-center">
+            <?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+            <input class="element-medium" type="submit" value="Update" />
+        </div>
 
-		<?php ActiveForm::end(); ?>
-	</div>
+        <?php ActiveForm::end(); ?>
+    </div>
 </div>

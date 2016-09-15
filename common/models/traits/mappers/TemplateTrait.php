@@ -14,27 +14,27 @@ use cmsgears\core\common\models\entities\Template;
  */
 trait TemplateTrait {
 
-	public function getTemplate() {
+    public function getTemplate() {
 
-		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
-	}
+        return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
+    }
 
-	public function getTemplateName() {
+    public function getTemplateName() {
 
-		$template = $this->template;
+        $template = $this->template;
 
-		if( isset( $template ) ) {
+        if( isset( $template ) ) {
 
-			return $template->name;
-		}
+            return $template->name;
+        }
 
-		return '';
-	}
+        return '';
+    }
 
-	public static function queryWithTemplate( $config = [] ) {
+    public static function queryWithTemplate( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'template' ];
+        $config[ 'relations' ]	= [ 'template' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 }

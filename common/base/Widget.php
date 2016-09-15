@@ -9,92 +9,92 @@ use cmsgears\core\common\config\CoreGlobal;
 
 abstract class Widget extends \yii\base\Widget {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// html options for Yii Widget
-	public $options 		= [];
+    // html options for Yii Widget
+    public $options 		= [];
 
-	/**
-	 * Flag to check whether assets can be loaded. We can load widget assets seperately in case the bundle is not added as dependency to layout asset bundle.
-	 */
-	public $loadAssets		= false;
+    /**
+     * Flag to check whether assets can be loaded. We can load widget assets seperately in case the bundle is not added as dependency to layout asset bundle.
+     */
+    public $loadAssets		= false;
 
-	/**
-	 * The path at which view template file is located. It can have alias - ex: '@widget/my-view'. By default it's the views folder within widget directory.
-	 */
-	public $templateDir		= null;
+    /**
+     * The path at which view template file is located. It can have alias - ex: '@widget/my-view'. By default it's the views folder within widget directory.
+     */
+    public $templateDir		= null;
 
-	/**
-	 * The template directory/file used to render widget. If it's a directory, the view can be formed using multiple files.
-	 */
-	public $template		= 'simple';
+    /**
+     * The template directory/file used to render widget. If it's a directory, the view can be formed using multiple files.
+     */
+    public $template		= 'simple';
 
-	/**
-	 * This flag can be utilised by widgets to use fallback options in case application factory having model service is not available or initialised.
-	 *
-	 * The widgets in need of model service can utilise factory to get required service. In case factory is not needed, widget can directly
-	 * use models to query them or service in use must provided static method.
-	 */
-	public $factory			= true;
+    /**
+     * This flag can be utilised by widgets to use fallback options in case application factory having model service is not available or initialised.
+     *
+     * The widgets in need of model service can utilise factory to get required service. In case factory is not needed, widget can directly
+     * use models to query them or service in use must provided static method.
+     */
+    public $factory			= true;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Widget --------
+    // yii\base\Widget --------
 
-	/**
-	 * The method returns the view path for this widget if set while calling widget.
-	 */
-	public function getViewPath() {
+    /**
+     * The method returns the view path for this widget if set while calling widget.
+     */
+    public function getViewPath() {
 
-		// Return custom view path
-		if( isset( $this->templateDir ) ) {
+        // Return custom view path
+        if( isset( $this->templateDir ) ) {
 
-			return $this->templateDir;
-		}
+            return $this->templateDir;
+        }
 
-		// Return default view path
-		return parent::getViewPath();
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-    public function run() {
-
-		// Render the widget
-		return $this->renderWidget();
+        // Return default view path
+        return parent::getViewPath();
     }
 
-	// CMG interfaces ------------------------
+    /**
+     * @inheritdoc
+     */
+    public function run() {
 
-	// CMG parent classes --------------------
+        // Render the widget
+        return $this->renderWidget();
+    }
 
-	abstract public function renderWidget( $config = [] );
+    // CMG interfaces ------------------------
 
-	// Widget --------------------------------
+    // CMG parent classes --------------------
+
+    abstract public function renderWidget( $config = [] );
+
+    // Widget --------------------------------
 
 }

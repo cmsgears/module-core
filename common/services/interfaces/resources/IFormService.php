@@ -12,9 +12,9 @@ use cmsgears\core\common\services\interfaces\base\ISlugTypeService;
 
 interface IFormService extends INameTypeService, ISlugTypeService {
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -22,10 +22,10 @@ interface IFormService extends INameTypeService, ISlugTypeService {
 
     // Read - Maps -----
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
 
 }

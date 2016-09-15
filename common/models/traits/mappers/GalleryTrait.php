@@ -16,69 +16,69 @@ use cmsgears\core\common\models\mappers\ModelGallery;
  */
 trait GalleryTrait {
 
-	// Single Gallery ----------------------------
+    // Single Gallery ----------------------------
 
-	public function hasGallery() {
+    public function hasGallery() {
 
-		return $this->galleryId > 0;
-	}
+        return $this->galleryId > 0;
+    }
 
-	public function getGallery() {
+    public function getGallery() {
 
-		return $this->hasOne( Gallery::className(), [ 'id' => 'galleryId' ] );
-	}
+        return $this->hasOne( Gallery::className(), [ 'id' => 'galleryId' ] );
+    }
 
-	// Multiple Galleries ------------------------
+    // Multiple Galleries ------------------------
 
-	public function getModelGalleries() {
+    public function getModelGalleries() {
 
-    	return $this->hasMany( ModelGallery::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->mParentType'" );
-	}
+        return $this->hasMany( ModelGallery::className(), [ 'parentId' => 'id' ] )
+                    ->where( "parentType='$this->mParentType'" );
+    }
 
-	public function getModelGalleryByType( $type, $first = true ) {
+    public function getModelGalleryByType( $type, $first = true ) {
 
-		$query = $this->hasOne( ModelGallery::className(), [ 'parentId' => 'id' ] )
-						->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->mParentType, ':type' => $type ] );
+        $query = $this->hasOne( ModelGallery::className(), [ 'parentId' => 'id' ] )
+                        ->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->mParentType, ':type' => $type ] );
 
-		if( $first ) {
+        if( $first ) {
 
-	    	return $query->one();
-		}
+            return $query->one();
+        }
 
-    	return $query->all();
-	}
+        return $query->all();
+    }
 
-	public function getGalleries() {
+    public function getGalleries() {
 
-		$modelGalleryTable	= CoreTables::TABLE_MODEL_GALLERY;
+        $modelGalleryTable	= CoreTables::TABLE_MODEL_GALLERY;
 
-    	return $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
-					->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ], function( $query ) use( &$modelGalleryTable ) {
-                      	$query->onCondition( [ "$modelGalleryTable.parentType" => $this->mParentType ] );
-					});
-	}
+        return $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
+                    ->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ], function( $query ) use( &$modelGalleryTable ) {
+                        $query->onCondition( [ "$modelGalleryTable.parentType" => $this->mParentType ] );
+                    });
+    }
 
-	public function getGalleryById( $id ) {
+    public function getGalleryById( $id ) {
 
-		$galleryTable	= CoreTables::TABLE_GALLERY;
+        $galleryTable	= CoreTables::TABLE_GALLERY;
 
-    	return $this->getGalleries()->where( [ "$galleryTable.id" => $id ] )->one();
-	}
+        return $this->getGalleries()->where( [ "$galleryTable.id" => $id ] )->one();
+    }
 
-	public function getGalleryByType( $type, $first = true ) {
+    public function getGalleryByType( $type, $first = true ) {
 
-		$modelGalleryTable	= CoreTables::TABLE_MODEL_GALLERY;
-		$query				= $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
-									->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ], function( $query ) use( &$modelGalleryTable, &$type ) {
-										$query->onCondition( [ "$modelGalleryTable.parentType" => $this->mParentType, "$modelGalleryTable.type" => $type ] );
-									});
+        $modelGalleryTable	= CoreTables::TABLE_MODEL_GALLERY;
+        $query				= $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
+                                    ->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ], function( $query ) use( &$modelGalleryTable, &$type ) {
+                                        $query->onCondition( [ "$modelGalleryTable.parentType" => $this->mParentType, "$modelGalleryTable.type" => $type ] );
+                                    });
 
-		if( $first ) {
+        if( $first ) {
 
-	    	return $query->one();
-		}
+            return $query->one();
+        }
 
-		return $query->all();
-	}
+        return $query->all();
+    }
 }

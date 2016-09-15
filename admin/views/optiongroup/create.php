@@ -11,24 +11,24 @@ $this->title 	= 'Add Option Group | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
 <div class="box box-cud">
-	<div class="box-wrap-header">
-		<div class="header">Add Option Group</div>
-	</div>
-	<div class="box-wrap-content frm-split-40-60">
-		<?php $form = ActiveForm::begin( [ 'id' => 'frm-dropdown' ] );?>
+    <div class="box-wrap-header">
+        <div class="header">Add Option Group</div>
+    </div>
+    <div class="box-wrap-content frm-split-40-60">
+        <?php $form = ActiveForm::begin( [ 'id' => 'frm-dropdown' ] );?>
 
-    	<?= $form->field( $model, 'name' ) ?>
-    	<?= $form->field( $model, 'description' ) ?>
-    	<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
-    	<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
+        <?= $form->field( $model, 'name' ) ?>
+        <?= $form->field( $model, 'description' ) ?>
+        <?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
+        <?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 
-		<div class="clear filler-height"></div>
+        <div class="clear filler-height"></div>
 
-		<div class="align align-center">
-			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
-			<input class="element-medium" type="submit" value="Create" />
-		</div>
+        <div class="align align-center">
+            <?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+            <input class="element-medium" type="submit" value="Create" />
+        </div>
 
-		<?php ActiveForm::end(); ?>
-	</div>
+        <?php ActiveForm::end(); ?>
+    </div>
 </div>

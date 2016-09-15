@@ -51,50 +51,50 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOwner {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	public static $multiSite = true;
+    public static $multiSite = true;
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public $mParentType  		= CoreGlobal::TYPE_OBJECT;
+    public $mParentType  		= CoreGlobal::TYPE_OBJECT;
 
-	// Protected --------------
+    // Protected --------------
 
-	protected $testOwner		= false;
+    protected $testOwner		= false;
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
     use MetaTrait;
     use CreateModifyTrait;
     use DataTrait;
-	use FileTrait;
-	use NameTypeTrait;
-	use SlugTypeTrait;
-	use TemplateTrait;
-	use VisualTrait;
+    use FileTrait;
+    use NameTypeTrait;
+    use SlugTypeTrait;
+    use TemplateTrait;
+    use VisualTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -119,7 +119,7 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
         ];
     }
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -134,7 +134,7 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
             [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ [ 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
             [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-			[ [ 'active' ], 'boolean' ],
+            [ [ 'active' ], 'boolean' ],
             [ [ 'themeId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'siteId', 'avatarId', 'bannerId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -174,55 +174,55 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
         ];
     }
 
-	// yii\db\BaseActiveRecord
+    // yii\db\BaseActiveRecord
 
-	public function beforeSave( $insert ) {
+    public function beforeSave( $insert ) {
 
-	    if( parent::beforeSave( $insert ) ) {
+        if( parent::beforeSave( $insert ) ) {
 
-			if( $this->themeId <= 0 ) {
+            if( $this->themeId <= 0 ) {
 
-				$this->themeId = null;
-			}
+                $this->themeId = null;
+            }
 
-			if( $this->templateId <= 0 ) {
+            if( $this->templateId <= 0 ) {
 
-				$this->templateId = null;
-			}
+                $this->templateId = null;
+            }
 
-	        return true;
-	    }
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// IOwner -----------------
+    // IOwner -----------------
 
-	public function isOwner( $user = null, $strict = false ) {
+    public function isOwner( $user = null, $strict = false ) {
 
-		if( $this->testOwner ) {
+        if( $this->testOwner ) {
 
-			if( !isset( $user ) && !$strict ) {
+            if( !isset( $user ) && !$strict ) {
 
-				$user	= Yii::$app->user->getIdentity();
-			}
+                $user	= Yii::$app->user->getIdentity();
+            }
 
-			if( isset( $user ) ) {
+            if( isset( $user ) ) {
 
-				return $this->createdBy == $user->id;
-			}
-		}
+                return $this->createdBy == $user->id;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// ObjectData ----------------------------
+    // ObjectData ----------------------------
 
     public function getSite() {
 
@@ -242,11 +242,11 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
         return Yii::$app->formatter->asBoolean( $this->active );
     }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -256,25 +256,25 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
         return CoreTables::TABLE_OBJECT_DATA;
     }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// ObjectData ----------------------------
+    // ObjectData ----------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	public static function queryWithHasOne( $config = [] ) {
+    public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'site', 'template', 'theme', 'creator', 'modifier' ];
-		$config[ 'relations' ]	= $relations;
+        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'site', 'template', 'theme', 'creator', 'modifier' ];
+        $config[ 'relations' ]	= $relations;
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 }

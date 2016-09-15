@@ -11,32 +11,32 @@ use cmsgears\core\common\models\base\Meta;
 
 interface IModelMetaService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
-	public function getByType( $parentId, $parentType, $type );
+    public function getByType( $parentId, $parentType, $type );
 
-	public function getByNameType( $parentId, $parentType, $name, $type );
+    public function getByNameType( $parentId, $parentType, $name, $type );
 
-	public function initByNameType( $parentId, $parentType, $name, $type, $valueType = Meta::VALUE_TYPE_TEXT );
+    public function initByNameType( $parentId, $parentType, $name, $type, $valueType = Meta::VALUE_TYPE_TEXT );
 
     // Read - Lists ----
 
     // Read - Maps -----
 
-	public function getNameValueMapByType( $parentId, $parentType, $type );
+    public function getNameValueMapByType( $parentId, $parentType, $type );
 
-	public function getIdMetaMapByType( $parentId, $parentType, $type );
+    public function getIdMetaMapByType( $parentId, $parentType, $type );
 
-	public function getNameMetaMapByType( $parentId, $parentType, $type );
+    public function getNameMetaMapByType( $parentId, $parentType, $type );
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
 
 }

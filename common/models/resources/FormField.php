@@ -30,16 +30,16 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  */
 class FormField extends \cmsgears\core\common\models\base\Resource {
 
-	// TODO: further analysis is required to remove the alphanumu validator for name field to support html forms.
+    // TODO: further analysis is required to remove the alphanumu validator for name field to support html forms.
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
     const TYPE_TEXT             =   0;
-	const TYPE_HIDDEN           =   5;
+    const TYPE_HIDDEN           =   5;
     const TYPE_PASSWORD         =  10;
     const TYPE_TEXTAREA         =  20;
     const TYPE_CHECKBOX         =  30;
@@ -52,7 +52,7 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
     const TYPE_ICON             = 100;
     const TYPE_DATE             = 110;
 
-	// Public -----------------
+    // Public -----------------
 
     public static $typeMap = [
         self::TYPE_TEXT => 'Text',
@@ -70,35 +70,35 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
         self::TYPE_DATE => 'Date'
     ];
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public $mParentType	= CoreGlobal::TYPE_FORM_FIELD;
+    public $mParentType	= CoreGlobal::TYPE_FORM_FIELD;
 
-	public $value;
+    public $value;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use DataTrait;
+    use DataTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -147,13 +147,13 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
         ];
     }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// FormField -----------------------------
+    // FormField -----------------------------
 
     /**
      * @return Form
@@ -255,11 +255,11 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
         }
     }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -269,28 +269,28 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
         return CoreTables::TABLE_FORM_FIELD;
     }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// FormField -----------------------------
+    // FormField -----------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	public static function queryWithHasOne( $config = [] ) {
+    public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'form' ];
-		$config[ 'relations' ]	= $relations;
+        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'form' ];
+        $config[ 'relations' ]	= $relations;
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithForm( $config = [] ) {
+    public static function queryWithForm( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'form' ];
+        $config[ 'relations' ]	= [ 'form' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
     public static function findByFormId( $formId ) {
 
@@ -309,9 +309,9 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
         return isset( $field );
     }
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 }

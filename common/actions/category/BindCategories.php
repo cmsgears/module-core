@@ -18,53 +18,53 @@ use cmsgears\core\common\utilities\AjaxUtil;
  */
 class BindCategories extends \cmsgears\core\common\actions\base\ModelAction {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// BindCategories ------------------------
+    // BindCategories ------------------------
 
-	public function run() {
+    public function run() {
 
-		$binder = new Binder();
+        $binder = new Binder();
 
-		if( $binder->load( Yii::$app->request->post(), 'Binder' ) ) {
+        if( $binder->load( Yii::$app->request->post(), 'Binder' ) ) {
 
-			$this->modelService->bindCategories( $binder );
+            $this->modelService->bindCategories( $binder );
 
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
-		}
+            // Trigger Ajax Success
+            return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+        }
 
-		// Trigger Ajax Failure
+        // Trigger Ajax Failure
         return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
-	}
+    }
 }

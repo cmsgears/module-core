@@ -10,99 +10,99 @@ use yii\helpers\ArrayHelper;
  */
 class Sidebar extends \yii\base\Component {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Global -----------------
+    // Global -----------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public $modules	= [];
+    public $modules	= [];
 
-	public $plugins	= [];
+    public $plugins	= [];
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Sidebar -------------------------------
+    // Sidebar -------------------------------
 
-	/**
-	 * @return string - the html merged from each module sidebar view.
-	 */
-	public function getSidebarHtml( $parent, $child ) {
+    /**
+     * @return string - the html merged from each module sidebar view.
+     */
+    public function getSidebarHtml( $parent, $child ) {
 
-		// TODO: Use caching
+        // TODO: Use caching
 
-		$sidebarHtml	= "";
-		$modules		= $this->modules;
+        $sidebarHtml	= "";
+        $modules		= $this->modules;
 
-		// Collect sidebar html from all the modules
-		foreach ( $modules as $module ) {
+        // Collect sidebar html from all the modules
+        foreach ( $modules as $module ) {
 
-			$module		= Yii::$app->getModule( $module );
-			$html   	= $module->getSidebarHtml();
+            $module		= Yii::$app->getModule( $module );
+            $html   	= $module->getSidebarHtml();
 
-			ob_start();
+            ob_start();
 
-			if( file_exists( $html ) ) {
+            if( file_exists( $html ) ) {
 
-				include( $html );
-			}
+                include( $html );
+            }
 
-			$sidebarHtml .= ob_get_contents();
+            $sidebarHtml .= ob_get_contents();
 
-			ob_get_clean();
-		}
+            ob_get_clean();
+        }
 
-		return $sidebarHtml;
-	}
+        return $sidebarHtml;
+    }
 
-	/**
-	 * @return array - of available plugins to generate plugin list.
-	 */
-	public function getPlugins() {
+    /**
+     * @return array - of available plugins to generate plugin list.
+     */
+    public function getPlugins() {
 
-		return $this->plugins;
-	}
+        return $this->plugins;
+    }
 
-	/**
-	 * @return array - of available config options from modules and plugins.
-	 */
-	public function getConfig() {
+    /**
+     * @return array - of available config options from modules and plugins.
+     */
+    public function getConfig() {
 
-		$config 	= [];
-		$modules	= $this->modules;
+        $config 	= [];
+        $modules	= $this->modules;
 
-		// Collect settings from all the modules
-		foreach ( $modules as $module ) {
+        // Collect settings from all the modules
+        foreach ( $modules as $module ) {
 
-			$module		= Yii::$app->getModule( $module );
+            $module		= Yii::$app->getModule( $module );
 
-			if( isset( $module->config  ) ) {
+            if( isset( $module->config  ) ) {
 
-				$config   = ArrayHelper::merge( $config, $module->config );
-			}
-		}
+                $config   = ArrayHelper::merge( $config, $module->config );
+            }
+        }
 
-		$plugins	= $this->plugins;
+        $plugins	= $this->plugins;
 
-		// Collect settings from all the plugins
-		foreach ( $plugins as $plugin ) {
+        // Collect settings from all the plugins
+        foreach ( $plugins as $plugin ) {
 
-			if( isset( $plugin  ) ) {
+            if( isset( $plugin  ) ) {
 
-				$config   = ArrayHelper::merge( $config, $plugin );
-			}
-		}
+                $config   = ArrayHelper::merge( $config, $plugin );
+            }
+        }
 
-		return $config;
-	}
+        return $config;
+    }
 }

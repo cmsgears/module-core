@@ -18,62 +18,62 @@ use cmsgears\core\common\utilities\AjaxUtil;
  */
 class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	protected $typed = true;
+    protected $typed = true;
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Delete --------------------------------
+    // Delete --------------------------------
 
-	public function run( $id ) {
+    public function run( $id ) {
 
-		$modelCommentService	= Yii::$app->factory->get( 'modelCommentService' );
+        $modelCommentService	= Yii::$app->factory->get( 'modelCommentService' );
 
-		$model		= $modelCommentService->getById( $id );
-		$user		= Yii::$app->user->getIdentity();
-		$parent		= $this->modelService->getById( $model->parentId );
+        $model		= $modelCommentService->getById( $id );
+        $user		= Yii::$app->user->getIdentity();
+        $parent		= $this->modelService->getById( $model->parentId );
 
-		if( isset( $model ) && $parent->isOwner( $user ) ) {
+        if( isset( $model ) && $parent->isOwner( $user ) ) {
 
-			if( $modelCommentService->delete( $model ) ) {
+            if( $modelCommentService->delete( $model ) ) {
 
-				// TODO: Trigger notification and mail
+                // TODO: Trigger notification and mail
 
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
-			}
-		}
+                // Trigger Ajax Success
+                return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
+            }
+        }
 
-		// Trigger Ajax Failure
+        // Trigger Ajax Failure
         return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
+    }
 }

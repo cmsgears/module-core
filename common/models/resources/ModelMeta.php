@@ -26,39 +26,39 @@ use cmsgears\core\common\models\traits\ResourceTrait;
  */
 class ModelMeta extends \cmsgears\core\common\models\base\Meta {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use ResourceTrait;
+    use ResourceTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -102,19 +102,19 @@ class ModelMeta extends \cmsgears\core\common\models\base\Meta {
         ];
     }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// ModelMeta -----------------------------
+    // ModelMeta -----------------------------
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -124,11 +124,11 @@ class ModelMeta extends \cmsgears\core\common\models\base\Meta {
         return CoreTables::TABLE_MODEL_META;
     }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// ModelMeta -----------------------------
+    // ModelMeta -----------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
     public static function queryByName( $parentId, $parentType, $name ) {
 
@@ -145,7 +145,7 @@ class ModelMeta extends \cmsgears\core\common\models\base\Meta {
         return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type AND name=:name', [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type, ':name' => $name ] );
     }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
     /**
      * @param integer $parentId
@@ -195,9 +195,9 @@ class ModelMeta extends \cmsgears\core\common\models\base\Meta {
         return isset( $config );
     }
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 }

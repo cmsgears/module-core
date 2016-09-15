@@ -12,9 +12,9 @@ use cmsgears\core\common\services\interfaces\base\ISlugTypeService;
 
 interface IPermissionService extends INameTypeService, ISlugTypeService {
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -22,12 +22,12 @@ interface IPermissionService extends INameTypeService, ISlugTypeService {
 
     // Read - Maps -----
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	public function bindRoles( $binder );
+    public function bindRoles( $binder );
 
-	// Delete -------------
+    // Delete -------------
 
 }

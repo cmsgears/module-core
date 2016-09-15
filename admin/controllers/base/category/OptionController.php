@@ -10,133 +10,133 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class OptionController extends \cmsgears\core\admin\controllers\base\Controller {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals ----------------
+    // Globals ----------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	protected $categoryService;
+    protected $categoryService;
 
-	// Private ----------------
+    // Private ----------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
- 	public function init() {
+    public function init() {
 
         parent::init();
 
-		$this->setViewPath( '@cmsgears/module-core/admin/views/optiongroup/option/' );
+        $this->setViewPath( '@cmsgears/module-core/admin/views/optiongroup/option/' );
 
-		$this->crudPermission 	= CoreGlobal::PERM_CORE;
-		$this->modelService		= Yii::$app->factory->get( 'optionService' );
+        $this->crudPermission 	= CoreGlobal::PERM_CORE;
+        $this->modelService		= Yii::$app->factory->get( 'optionService' );
 
-		$this->categoryService	= Yii::$app->factory->get( 'categoryService' );
+        $this->categoryService	= Yii::$app->factory->get( 'categoryService' );
 
-		// Note: Child must specify sidebar and returnUrl.
-	}
+        // Note: Child must specify sidebar and returnUrl.
+    }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Controller ----
+    // yii\base\Controller ----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// OptionController ----------------------
+    // OptionController ----------------------
 
-	public function actionAll( $cid ) {
+    public function actionAll( $cid ) {
 
-		$dataProvider	= $this->modelService->getPage( [ 'conditions' => [ 'categoryId' => $cid ]] );
-		$category		= $this->categoryService->getById( $cid );
+        $dataProvider	= $this->modelService->getPage( [ 'conditions' => [ 'categoryId' => $cid ]] );
+        $category		= $this->categoryService->getById( $cid );
 
-		return $this->render( 'all', [
-			'dataProvider' => $dataProvider,
-			'category' => $category
-		]);
-	}
+        return $this->render( 'all', [
+            'dataProvider' => $dataProvider,
+            'category' => $category
+        ]);
+    }
 
-	public function actionCreate( $cid ) {
+    public function actionCreate( $cid ) {
 
-		$modelClass			= $this->modelService->getModelClass();
-		$model				= new $modelClass;
-		$model->categoryId 	= $cid;
+        $modelClass			= $this->modelService->getModelClass();
+        $model				= new $modelClass;
+        $model->categoryId 	= $cid;
 
-		if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
+        if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
 
-			$this->modelService->create( $model );
+            $this->modelService->create( $model );
 
-			return $this->redirect( $this->returnUrl );
-		}
+            return $this->redirect( $this->returnUrl );
+        }
 
-    	return $this->render( 'create', [
-    		'model' => $model
-    	]);
-	}
+        return $this->render( 'create', [
+            'model' => $model
+        ]);
+    }
 
-	public function actionUpdate( $id ) {
+    public function actionUpdate( $id ) {
 
-		// Find Model
-		$model	= $this->modelService->getById( $id );
+        // Find Model
+        $model	= $this->modelService->getById( $id );
 
-		// Update if exist
-		if( isset( $model ) ) {
+        // Update if exist
+        if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+            if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->modelService->update( $model );
+                $this->modelService->update( $model );
 
-				return $this->redirect( $this->returnUrl );
-			}
+                return $this->redirect( $this->returnUrl );
+            }
 
-			// Render view
-	    	return $this->render( 'update', [
-	    		'model' => $model
-	    	]);
-		}
+            // Render view
+            return $this->render( 'update', [
+                'model' => $model
+            ]);
+        }
 
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
+        // Model not found
+        throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+    }
 
-	public function actionDelete( $id ) {
+    public function actionDelete( $id ) {
 
-		// Find Model
-		$model	= $this->modelService->getById( $id );
+        // Find Model
+        $model	= $this->modelService->getById( $id );
 
-		// Delete if exist
-		if( isset( $model ) ) {
+        // Delete if exist
+        if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+            if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				try {
+                try {
 
-			    	$this->modelService->delete( $model );
+                    $this->modelService->delete( $model );
 
-					return $this->redirect( $this->returnUrl );
-			    }
-			    catch( Exception $e ) {
+                    return $this->redirect( $this->returnUrl );
+                }
+                catch( Exception $e ) {
 
-				    throw new HttpException( 409,  Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
-				}
-			}
+                    throw new HttpException( 409,  Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+                }
+            }
 
-			// Render view
-	    	return $this->render( 'delete', [
-	    		'model' => $model
-	    	]);
-		}
+            // Render view
+            return $this->render( 'delete', [
+                'model' => $model
+            ]);
+        }
 
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
+        // Model not found
+        throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+    }
 }

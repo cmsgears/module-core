@@ -15,98 +15,98 @@ use cmsgears\core\common\services\interfaces\entities\ICityService;
 
 class CityService extends \cmsgears\core\common\services\base\EntityService implements ICityService {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\City';
+    public static $modelClass	= '\cmsgears\core\common\models\entities\City';
 
-	public static $modelTable	= CoreTables::TABLE_CITY;
+    public static $modelTable	= CoreTables::TABLE_CITY;
 
-	public static $parentType	= CoreGlobal::TYPE_CITY;
+    public static $parentType	= CoreGlobal::TYPE_CITY;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// CountryService ------------------------
+    // CountryService ------------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
     // Read - Lists ----
 
     public function searchLike( $query, $province ) {
 
-		$modelClass	= self::$modelClass;
+        $modelClass	= self::$modelClass;
 
-		return $modelClass::find()->where( [ 'like', 'name', $query ] )
-					->andWhere( 'provinceId=:provinceId' ,[ ":provinceId" =>  $province ] )
-					->limit( 5 )
-					->all();
+        return $modelClass::find()->where( [ 'like', 'name', $query ] )
+                    ->andWhere( 'provinceId=:provinceId' ,[ ":provinceId" =>  $province ] )
+                    ->limit( 5 )
+                    ->all();
     }
 
-	public function getByNameCountryIdProvinceId( $name, $countryId, $provinceId ) {
+    public function getByNameCountryIdProvinceId( $name, $countryId, $provinceId ) {
 
-		$modelClass	= self::$modelClass;
+        $modelClass	= self::$modelClass;
 
-		return $modelClass::isExistByNameCountryIdProvinceId( $name, $countryId, $provinceId );
-	}
+        return $modelClass::isExistByNameCountryIdProvinceId( $name, $countryId, $provinceId );
+    }
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	public function create( $cityName, $config = [] ) {
+    public function create( $cityName, $config = [] ) {
 
-		$model	= new self::$modelClass();
+        $model	= new self::$modelClass();
 
-		$model->name		= $cityName;
-		$model->countryId	= $config[ 'countryId' ];
-		$model->provinceId	= $config[ 'provinceId' ];
-		$model->postal		= $config[ 'postal' ];
+        $model->name		= $cityName;
+        $model->countryId	= $config[ 'countryId' ];
+        $model->provinceId	= $config[ 'provinceId' ];
+        $model->postal		= $config[ 'postal' ];
 
-		return parent::create( $model );
-	}
+        return parent::create( $model );
+    }
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// CountryService ------------------------
+    // CountryService ------------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -114,11 +114,11 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
 }

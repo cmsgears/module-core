@@ -11,67 +11,43 @@ use cmsgears\core\common\services\interfaces\base\ISystemService;
 
 abstract class SystemService extends \yii\base\Object implements ISystemService {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// SystemService -------------------------
+    // SystemService -------------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
-
-    // Read - Models ---
-
-    // Read - Lists ----
-
-    // Read - Maps -----
-
-	// Read - Others ---
-
-	// Create -------------
-
-	// Update -------------
-
-	// Delete -------------
-
-	// Static Methods ----------------------------------------------
-
-	// CMG parent classes --------------------
-
-	// SystemService -------------------------
-
-	// Data Provider ------
-
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -79,11 +55,35 @@ abstract class SystemService extends \yii\base\Object implements ISystemService 
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
+
+    // Static Methods ----------------------------------------------
+
+    // CMG parent classes --------------------
+
+    // SystemService -------------------------
+
+    // Data Provider ------
+
+    // Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+    // Read - Others ---
+
+    // Create -------------
+
+    // Update -------------
+
+    // Delete -------------
 }

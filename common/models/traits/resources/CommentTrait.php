@@ -16,67 +16,67 @@ use cmsgears\core\common\models\resources\ModelComment;
  */
 trait CommentTrait {
 
-	/**
-	 * Query top level approved comments.
-	 */
-	public function getModelComments() {
+    /**
+     * Query top level approved comments.
+     */
+    public function getModelComments() {
 
-		return ModelComment::queryL0Approved( $this->id, $this->mParentType, ModelComment::TYPE_COMMENT );
-	}
+        return ModelComment::queryL0Approved( $this->id, $this->mParentType, ModelComment::TYPE_COMMENT );
+    }
 
-	/**
-	 * Query top level approved reviews.
-	 */
-	public function getModelReviews() {
+    /**
+     * Query top level approved reviews.
+     */
+    public function getModelReviews() {
 
-		return ModelComment::queryL0Approved( $this->id, $this->mParentType, ModelComment::TYPE_REVIEW );
-	}
+        return ModelComment::queryL0Approved( $this->id, $this->mParentType, ModelComment::TYPE_REVIEW );
+    }
 
-	// Average rating for all the reviews
-	public function getAverageRating( $type = ModelComment::TYPE_REVIEW ) {
+    // Average rating for all the reviews
+    public function getAverageRating( $type = ModelComment::TYPE_REVIEW ) {
 
-		$commentTable	= CoreTables::TABLE_MODEL_COMMENT;
-		$query			= new Query();
+        $commentTable	= CoreTables::TABLE_MODEL_COMMENT;
+        $query			= new Query();
 
-    	$query->select( [ 'avg(rating) as average, count(id) as total' ] )
-				->from( $commentTable )
-				->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'type' => $type, 'status' => ModelComment::STATUS_APPROVED ] );
+        $query->select( [ 'avg(rating) as average, count(id) as total' ] )
+                ->from( $commentTable )
+                ->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'type' => $type, 'status' => ModelComment::STATUS_APPROVED ] );
 
-		$command = $query->createCommand();
-		$average = $command->queryOne();
+        $command = $query->createCommand();
+        $average = $command->queryOne();
 
-		if( isset( $average ) && count( $average ) < 2 ) {
+        if( isset( $average ) && count( $average ) < 2 ) {
 
-			$average				= [];
-			$average[ 'average' ]	= 0;
-			$average[ 'total' ]		= 0;
-		}
-		else {
+            $average				= [];
+            $average[ 'average' ]	= 0;
+            $average[ 'total' ]		= 0;
+        }
+        else {
 
-			$average[ 'average' ]	= round( $average[ 'average' ] );
-		}
+            $average[ 'average' ]	= round( $average[ 'average' ] );
+        }
 
-		return $average;
-	}
+        return $average;
+    }
 
-	public function getRatingStars( $minStars = 0, $maxStars = 5, $config = [] ) {
+    public function getRatingStars( $minStars = 0, $maxStars = 5, $config = [] ) {
 
         $returnArr      = [];
 
-		for( $i = $minStars; $i <= $maxStars; $i++ ) {
+        for( $i = $minStars; $i <= $maxStars; $i++ ) {
 
-			$returnArr[ $i ] = 0;
-		}
+            $returnArr[ $i ] = 0;
+        }
 
         $commentTable   = CoreTables::TABLE_MODEL_COMMENT;
         $query          = new Query();
 
         $query->select( [ 'rating', 'count(id) as total' ] )
                 ->from( $commentTable )
-				->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'status' => ModelComment::STATUS_APPROVED ] )
-				->andWhere( $config )
- 				->andFilterWhere( [ 'between', 'rating', $minStars, $maxStars ] )
-				->groupBy( 'rating' );
+                ->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'status' => ModelComment::STATUS_APPROVED ] )
+                ->andWhere( $config )
+                ->andFilterWhere( [ 'between', 'rating', $minStars, $maxStars ] )
+                ->groupBy( 'rating' );
 
         $counts     = $query->all();
         $counter    = 0;
@@ -96,55 +96,55 @@ trait CommentTrait {
         return $returnArr;
     }
 
-	public function getCommentStatusCounts( $type = ModelComment::TYPE_COMMENT ) {
+    public function getCommentStatusCounts( $type = ModelComment::TYPE_COMMENT ) {
 
-		$returnArr		= [ ModelComment::STATUS_NEW => 0, ModelComment::STATUS_BLOCKED => 0, ModelComment::STATUS_APPROVED => 0 ];
+        $returnArr		= [ ModelComment::STATUS_NEW => 0, ModelComment::STATUS_BLOCKED => 0, ModelComment::STATUS_APPROVED => 0 ];
 
-		$commentTable	= CoreTables::TABLE_MODEL_COMMENT;
-		$query			= new Query();
+        $commentTable	= CoreTables::TABLE_MODEL_COMMENT;
+        $query			= new Query();
 
-    	$query->select( [ 'status', 'count(id) as total' ] )
-				->from( $commentTable )
-				->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'type' => $type ] )
-				->groupBy( 'status' );
+        $query->select( [ 'status', 'count(id) as total' ] )
+                ->from( $commentTable )
+                ->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'type' => $type ] )
+                ->groupBy( 'status' );
 
-		$counts 	= $query->all();
-		$counter	= 0;
+        $counts 	= $query->all();
+        $counter	= 0;
 
-		foreach ( $counts as $count ) {
+        foreach ( $counts as $count ) {
 
-			$returnArr[ $count[ 'status' ] ] = $count[ 'total' ];
+            $returnArr[ $count[ 'status' ] ] = $count[ 'total' ];
 
-			$counter	= $counter + $count[ 'total' ];
-		}
+            $counter	= $counter + $count[ 'total' ];
+        }
 
-		$returnArr[ 'all' ] = $counter;
+        $returnArr[ 'all' ] = $counter;
 
-		return $returnArr;
-	}
+        return $returnArr;
+    }
 
-	public function getApprovedCommentCount( $type = ModelComment::TYPE_COMMENT ) {
+    public function getApprovedCommentCount( $type = ModelComment::TYPE_COMMENT ) {
 
-		$commentTable	= CoreTables::TABLE_MODEL_COMMENT;
-		$query			= new Query();
+        $commentTable	= CoreTables::TABLE_MODEL_COMMENT;
+        $query			= new Query();
 
-    	$query->select( [ 'count(id) as total' ] )
-				->from( $commentTable )
-				->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'type' => $type, 'status' => ModelComment::STATUS_APPROVED ] )
-				->groupBy( 'status' );
+        $query->select( [ 'count(id) as total' ] )
+                ->from( $commentTable )
+                ->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'type' => $type, 'status' => ModelComment::STATUS_APPROVED ] )
+                ->groupBy( 'status' );
 
-		$count = $query->one();
+        $count = $query->one();
 
-		if( $count ) {
+        if( $count ) {
 
-			return $count[ 'total' ];
-		}
+            return $count[ 'total' ];
+        }
 
-		return 0;
-	}
+        return 0;
+    }
 
-	public function getApprovedReviewCount() {
+    public function getApprovedReviewCount() {
 
-		return $this->getApprovedCommentCount( ModelComment::TYPE_REVIEW );
-	}
+        return $this->getApprovedCommentCount( ModelComment::TYPE_REVIEW );
+    }
 }

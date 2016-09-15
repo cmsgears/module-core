@@ -11,52 +11,52 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class Editor extends \cmsgears\core\common\base\Widget {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public $selector;
+    public $selector;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Widget --------
+    // yii\base\Widget --------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// cmsgears\core\common\base\Widget
+    // cmsgears\core\common\base\Widget
 
-	public function renderWidget( $config = [] ) {
+    public function renderWidget( $config = [] ) {
 
-		$editorClass	= Yii::$app->core->getEditorClass();
-		$editor			= Yii::createObject( $editorClass );
+        $editorClass	= Yii::$app->core->getEditorClass();
+        $editor			= Yii::createObject( $editorClass );
 
-		$editor->widget( [ 'selector' => $this->selector, 'loadAssets' => $this->loadAssets ] );
-	}
+        $editor->widget( [ 'selector' => $this->selector, 'loadAssets' => $this->loadAssets ] );
+    }
 
-	// Editor --------------------------------
+    // Editor --------------------------------
 
 }

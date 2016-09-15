@@ -26,35 +26,35 @@ use cmsgears\core\common\models\entities\Role;
  */
 class SiteMember extends \cmsgears\core\common\models\base\Mapper {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -71,7 +71,7 @@ class SiteMember extends \cmsgears\core\common\models\base\Mapper {
         ];
     }
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -98,13 +98,13 @@ class SiteMember extends \cmsgears\core\common\models\base\Mapper {
         ];
     }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// SiteMember ----------------------------
+    // SiteMember ----------------------------
 
     /**
      * @return Site
@@ -130,11 +130,11 @@ class SiteMember extends \cmsgears\core\common\models\base\Mapper {
         return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
     }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -144,35 +144,35 @@ class SiteMember extends \cmsgears\core\common\models\base\Mapper {
         return CoreTables::TABLE_SITE_MEMBER;
     }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// SiteMember ----------------------------
+    // SiteMember ----------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	public static function queryWithHasOne( $config = [] ) {
+    public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'user', 'role' ];
-		$config[ 'relations' ]	= $relations;
+        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'user', 'role' ];
+        $config[ 'relations' ]	= $relations;
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithSite( $config = [] ) {
+    public static function queryWithSite( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'site' ];
+        $config[ 'relations' ]	= [ 'site' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithUser( $config = [] ) {
+    public static function queryWithUser( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'user', 'role' ];
+        $config[ 'relations' ]	= [ 'user', 'role' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
     /**
      * @return Site - by id
@@ -182,11 +182,11 @@ class SiteMember extends \cmsgears\core\common\models\base\Mapper {
         return self::find()->where( 'siteId=:sid AND userId=:uid', [ ':sid' => $siteId, ':uid' => $userId ] )->one();
     }
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 
     /**
      * Delete the mappings by given site id.

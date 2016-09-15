@@ -12,71 +12,71 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 trait NameTrait {
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii classes ---------------------------
+    // Yii classes ---------------------------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG classes ---------------------------
+    // CMG classes ---------------------------
 
-	// SlugTypeTrait -------------------------
+    // SlugTypeTrait -------------------------
 
-	// Validators -------------
+    // Validators -------------
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii classes ---------------------------
+    // Yii classes ---------------------------
 
-	// CMG classes ---------------------------
+    // CMG classes ---------------------------
 
-	// SlugTypeTrait -------------------------
+    // SlugTypeTrait -------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	/**
-	 * @return ActiveRecord - having matching name.
-	 */
+    /**
+     * @return ActiveRecord - having matching name.
+     */
     public static function queryByName( $name ) {
 
-		if( static::$multiSite ) {
+        if( static::$multiSite ) {
 
-			$siteId	= Yii::$app->core->siteId;
+            $siteId	= Yii::$app->core->siteId;
 
-			return static::find()->where( 'name=:name AND siteId=:siteId', [ ':name' => $name, ':siteId' => $siteId ] );
-		}
-		else {
+            return static::find()->where( 'name=:name AND siteId=:siteId', [ ':name' => $name, ':siteId' => $siteId ] );
+        }
+        else {
 
-			return static::find()->where( 'name=:name', [ ':name' => $name ] );
-		}
-	}
+            return static::find()->where( 'name=:name', [ ':name' => $name ] );
+        }
+    }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
-	/**
-	 * @return ActiveRecord - by name
-	 */
-	public static function findByName( $name ) {
+    /**
+     * @return ActiveRecord - by name
+     */
+    public static function findByName( $name ) {
 
-		self::queryByName( $name )->one();
-	}
+        self::queryByName( $name )->one();
+    }
 
     /**
      * @return boolean - check whether model exist for given name
      */
-	public static function isExistByName( $name ) {
+    public static function isExistByName( $name ) {
 
-		$model	= static::findByName( $name );
+        $model	= static::findByName( $name );
 
-		return isset( $model );
-	}
+        return isset( $model );
+    }
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 
 }

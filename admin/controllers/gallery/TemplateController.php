@@ -10,50 +10,50 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateController {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals ----------------
+    // Globals ----------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
- 	public function init() {
+    public function init() {
 
         parent::init();
 
-		$this->sidebar 		= [ 'parent' => 'sidebar-core', 'child' => 'gallery-template' ];
+        $this->sidebar 		= [ 'parent' => 'sidebar-core', 'child' => 'gallery-template' ];
 
-		$this->type			= CoreGlobal::TYPE_GALLERY;
+        $this->type			= CoreGlobal::TYPE_GALLERY;
 
-		$this->returnUrl	= Url::previous( 'templates' );
-		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/gallery/template/all' ], true );
-	}
+        $this->returnUrl	= Url::previous( 'templates' );
+        $this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/gallery/template/all' ], true );
+    }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Controller ----
+    // yii\base\Controller ----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// TemplateController --------------------
+    // TemplateController --------------------
 
-	public function actionAll() {
+    public function actionAll() {
 
-		Url::remember( [ 'gallery/template/all' ], 'templates' );
+        Url::remember( [ 'gallery/template/all' ], 'templates' );
 
-		return parent::actionAll();
-	}
+        return parent::actionAll();
+    }
 }

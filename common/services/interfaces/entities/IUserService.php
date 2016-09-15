@@ -12,41 +12,41 @@ use cmsgears\core\common\services\interfaces\base\IModelMetaService;
 
 interface IUserService extends IApprovalService, IModelMetaService {
 
-	// Data Provider ------
+    // Data Provider ------
 
-	public function getPageByRoleType( $roleType );
+    public function getPageByRoleType( $roleType );
 
-	public function getPageByAdmins();
+    public function getPageByAdmins();
 
-	public function getPageByUsers();
+    public function getPageByUsers();
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
-	public function getByAccessToken( $token );
+    public function getByAccessToken( $token );
 
-	public function getByEmail( $email );
+    public function getByEmail( $email );
 
-	public function isExistByEmail( $email );
+    public function isExistByEmail( $email );
 
-	public function getByUsername( $username );
+    public function getByUsername( $username );
 
-	public function isExistByUsername( $username );
+    public function isExistByUsername( $username );
 
     // Read - Lists ----
 
     // Read - Maps -----
 
-	public function getIdNameMapByRoleSlug( $roleSlug );
+    public function getIdNameMapByRoleSlug( $roleSlug );
 
-	// Create -------------
+    // Create -------------
 
-	public function register( $registerForm );
+    public function register( $registerForm );
 
-	// Update -------------
+    // Update -------------
 
-	public function verify( $user, $token );
+    public function verify( $user, $token );
 
     public function activate( $user, $token, $resetForm );
 
@@ -56,6 +56,6 @@ interface IUserService extends IApprovalService, IModelMetaService {
 
     public function updateAvatar( $user, $avatar );
 
-	// Delete -------------
+    // Delete -------------
 
 }

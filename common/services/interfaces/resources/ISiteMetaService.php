@@ -9,9 +9,9 @@ use cmsgears\core\common\config\CoreGlobal;
 
 interface ISiteMetaService extends \cmsgears\core\common\services\interfaces\base\IMetaService {
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -19,10 +19,10 @@ interface ISiteMetaService extends \cmsgears\core\common\services\interfaces\bas
 
     // Read - Maps -----
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
 
 }

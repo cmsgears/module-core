@@ -9,9 +9,9 @@ use cmsgears\core\common\config\CoreGlobal;
 
 interface IModelObjectService extends \cmsgears\core\common\services\interfaces\base\IMapperService {
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -19,10 +19,10 @@ interface IModelObjectService extends \cmsgears\core\common\services\interfaces\
 
     // Read - Maps -----
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
 
 }

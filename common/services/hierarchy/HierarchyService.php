@@ -15,67 +15,43 @@ use cmsgears\core\common\services\interfaces\hierarchy\IHierarchyService;
  */
 abstract class HierarchyService extends \cmsgears\core\common\services\base\EntityService implements IHierarchyService {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// HierarchyService ----------------------
+    // HierarchyService ----------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
-
-    // Read - Models ---
-
-    // Read - Lists ----
-
-    // Read - Maps -----
-
-	// Read - Others ---
-
-	// Create -------------
-
-	// Update -------------
-
-	// Delete -------------
-
-	// Static Methods ----------------------------------------------
-
-	// CMG parent classes --------------------
-
-	// HierarchyService ----------------------
-
-	// Data Provider ------
-
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -83,12 +59,36 @@ abstract class HierarchyService extends \cmsgears\core\common\services\base\Enti
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
+
+    // Static Methods ----------------------------------------------
+
+    // CMG parent classes --------------------
+
+    // HierarchyService ----------------------
+
+    // Data Provider ------
+
+    // Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+    // Read - Others ---
+
+    // Create -------------
+
+    // Update -------------
+
+    // Delete -------------
 
 }

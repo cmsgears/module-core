@@ -23,44 +23,44 @@ use cmsgears\core\common\models\base\CoreTables;
  */
 abstract class ModelMeta extends Meta {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     /**
      * @inheritdoc
      */
-	public function rules() {
+    public function rules() {
 
-		// model rules
+        // model rules
         $rules = [
             [ [ 'modelId', 'name' ], 'required' ],
             [ [ 'id', 'value' ], 'safe' ],
@@ -70,153 +70,153 @@ abstract class ModelMeta extends Meta {
             [ [ 'modelId', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'modelId', 'name', 'type' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ]
         ];
 
-		// trim if required
-		if( Yii::$app->core->trimFieldValue ) {
+        // trim if required
+        if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'type', 'valueType', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'name', 'type', 'valueType', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-			return ArrayHelper::merge( $trim, $rules );
-		}
+            return ArrayHelper::merge( $trim, $rules );
+        }
 
-		return $rules;
+        return $rules;
     }
 
     /**
      * @inheritdoc
      */
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
-			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'valueType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE_TYPE ),
-			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE )
-		];
-	}
+        return [
+            'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
+            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'valueType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE_TYPE ),
+            'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE )
+        ];
+    }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// ModelMeta ------------------------
+    // ModelMeta ------------------------
 
-	abstract public function getParent();
+    abstract public function getParent();
 
-	/**
-	 * The method isBelongsTo checks whether the meta belong to given parent model.
-	 */
-	public function isBelongsTo( $model ) {
+    /**
+     * The method isBelongsTo checks whether the meta belong to given parent model.
+     */
+    public function isBelongsTo( $model ) {
 
-		return $this->modelId == $model->id;
-	}
+        return $this->modelId == $model->id;
+    }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// ModelMeta ------------------------
+    // ModelMeta ------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	public static function queryWithHasOne( $config = [] ) {
+    public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'parent' ];
-		$config[ 'relations' ]	= $relations;
+        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'parent' ];
+        $config[ 'relations' ]	= $relations;
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithParent( $config = [] ) {
+    public static function queryWithParent( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'parent' ];
+        $config[ 'relations' ]	= [ 'parent' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
     public static function queryByName( $modelId, $name ) {
 
-		return static::find()->where( 'modelId=:pid AND name=:name', [ ':pid' => $modelId, ':name' => $name ] );
+        return static::find()->where( 'modelId=:pid AND name=:name', [ ':pid' => $modelId, ':name' => $name ] );
     }
 
     public static function queryByType( $modelId, $type ) {
 
-		return static::find()->where( 'modelId=:pid AND type=:type', [ ':pid' => $modelId, ':type' => $type ] );
+        return static::find()->where( 'modelId=:pid AND type=:type', [ ':pid' => $modelId, ':type' => $type ] );
     }
 
     public static function queryByNameType( $modelId, $name, $type ) {
 
-		return static::find()->where( 'modelId=:pid AND name=:name AND type=:type', [ ':pid' => $modelId, ':name' => $name, ':type' => $type ] );
+        return static::find()->where( 'modelId=:pid AND name=:name AND type=:type', [ ':pid' => $modelId, ':name' => $name, ':type' => $type ] );
     }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
-	/**
-	 * @param integer $modelId
-	 * @param string $name
-	 * @return array - ModelMeta by name
-	 */
-	public static function findByName( $modelId, $name ) {
+    /**
+     * @param integer $modelId
+     * @param string $name
+     * @return array - ModelMeta by name
+     */
+    public static function findByName( $modelId, $name ) {
 
-		return self::queryByName( $modelId, $name )->all();
-	}
+        return self::queryByName( $modelId, $name )->all();
+    }
 
-	/**
-	 * @param integer $modelId
-	 * @param string $type
-	 * @return array - ModelMeta by type
-	 */
-	public static function findByType( $modelId, $type ) {
+    /**
+     * @param integer $modelId
+     * @param string $type
+     * @return array - ModelMeta by type
+     */
+    public static function findByType( $modelId, $type ) {
 
-		return self::queryByType( $modelId, $type )->all();
-	}
+        return self::queryByType( $modelId, $type )->all();
+    }
 
-	/**
-	 * @param integer $modelId
-	 * @param string $type
-	 * @param string $name
-	 * @return ModelMeta - by type and name
-	 */
-	public static function findByNameType( $modelId, $name, $type ) {
+    /**
+     * @param integer $modelId
+     * @param string $type
+     * @param string $name
+     * @return ModelMeta - by type and name
+     */
+    public static function findByNameType( $modelId, $name, $type ) {
 
-		return self::queryByNameType( $modelId, $name, $type )->one();
-	}
+        return self::queryByNameType( $modelId, $name, $type )->one();
+    }
 
-	/**
-	 * @param integer $modelId
-	 * @param string $type
-	 * @param string $name
-	 * @return boolean - Check whether meta exist by type and name
-	 */
-	public static function isExistByNameType( $modelId, $name, $type ) {
+    /**
+     * @param integer $modelId
+     * @param string $type
+     * @param string $name
+     * @return boolean - Check whether meta exist by type and name
+     */
+    public static function isExistByNameType( $modelId, $name, $type ) {
 
-		$config = self::findByNameType( $modelId, $type, $name );
+        $config = self::findByNameType( $modelId, $type, $name );
 
-		return isset( $config );
-	}
+        return isset( $config );
+    }
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	public static function updateByNameType( $modelId, $name, $type, $value ) {
+    public static function updateByNameType( $modelId, $name, $type, $value ) {
 
-		$meta = self::findByNameType( $modelId, $name, $type );
+        $meta = self::findByNameType( $modelId, $name, $type );
 
-		if( isset( $meta ) ) {
+        if( isset( $meta ) ) {
 
-			$meta->value = $value;
+            $meta->value = $value;
 
-			$meta->update();
-		}
-	}
+            $meta->update();
+        }
+    }
 
-	// Delete -----------------
+    // Delete -----------------
 }

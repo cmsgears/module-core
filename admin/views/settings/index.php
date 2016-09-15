@@ -12,15 +12,15 @@ $settings		= Yii::$app->sidebar->getConfig();
 <div class="wrap-settings clearfix">
 <?php foreach ( $settings as $setting ) { ?>
 
-	<div class="box box-collapsible box-settings col12x6">
-		<div class="box-wrap-header">
-			<span id="settings-<?= $setting ?>" class="cmt-request" content="settings-<?= $setting ?>-content" cmt-controller="settings" cmt-action="getContent" action="settings/index?type=<?= $setting ?>">
-				<span class="cmt-click btn-collapse cmti cmti-chevron-down"></span>
-			</span>
-			<span><?= ucfirst( $setting ) ?></span>
-		</div>
-		<div id="settings-<?= $setting ?>-content" class="box-wrap-content clearfix"></div>
-	</div>
+    <div class="box box-collapsible box-settings col12x6">
+        <div class="box-wrap-header">
+            <span id="settings-<?= $setting ?>" class="cmt-request" content="settings-<?= $setting ?>-content" cmt-controller="settings" cmt-action="getContent" action="settings/index?type=<?= $setting ?>">
+                <span class="cmt-click btn-collapse cmti cmti-chevron-down"></span>
+            </span>
+            <span><?= ucfirst( $setting ) ?></span>
+        </div>
+        <div id="settings-<?= $setting ?>-content" class="box-wrap-content clearfix"></div>
+    </div>
 
 <?php } ?>
 </div>

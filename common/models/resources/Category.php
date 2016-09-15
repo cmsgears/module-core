@@ -37,43 +37,43 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  */
 class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	public static $multiSite = true;
+    public static $multiSite = true;
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public $mParentType	= CoreGlobal::TYPE_CATEGORY;
+    public $mParentType	= CoreGlobal::TYPE_CATEGORY;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
     use DataTrait;
-	use NameTypeTrait;
-	use SlugTypeTrait;
+    use NameTypeTrait;
+    use SlugTypeTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -91,7 +91,7 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
         ];
     }
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -140,11 +140,11 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
         ];
     }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
     // Category ------------------------------
 
@@ -185,11 +185,11 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
         return Yii::$app->formatter->asBoolean( $this->featured );
     }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -199,35 +199,35 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
         return CoreTables::TABLE_CATEGORY;
     }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Category ------------------------------
+    // Category ------------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	public static function queryWithHasOne( $config = [] ) {
+    public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site' ];
-		$config[ 'relations' ]	= $relations;
+        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site' ];
+        $config[ 'relations' ]	= $relations;
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithSite( $config = [] ) {
+    public static function queryWithSite( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'site' ];
+        $config[ 'relations' ]	= [ 'site' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithOptions( $config = [] ) {
+    public static function queryWithOptions( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'options' ];
+        $config[ 'relations' ]	= [ 'options' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
     public static function findByParentId( $id ) {
 
@@ -242,9 +242,9 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
         return self::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( [ 'name' => SORT_ASC ] )->all();
     }
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 }

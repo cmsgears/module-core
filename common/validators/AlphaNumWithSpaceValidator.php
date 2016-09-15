@@ -9,7 +9,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class AlphaNumWithSpaceValidator extends \yii\validators\Validator {
 
-	private static $regex	= "/^[a-zA-Z0-9][a-zA-Z0-9 ]+[a-zA-Z0-9]$/";
+    private static $regex	= "/^[a-zA-Z0-9][a-zA-Z0-9 ]+[a-zA-Z0-9]$/";
 
     public function validateAttribute($model, $attribute) {
 

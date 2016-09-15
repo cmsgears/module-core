@@ -16,98 +16,98 @@ use cmsgears\core\common\models\mappers\ModelOption;
  */
 trait OptionTrait {
 
-	public function getModelOptions() {
+    public function getModelOptions() {
 
-    	return $this->hasMany( ModelOption::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->mParentType'" );
-	}
+        return $this->hasMany( ModelOption::className(), [ 'parentId' => 'id' ] )
+                    ->where( "parentType='$this->mParentType'" );
+    }
 
-	public function getOptions() {
+    public function getOptions() {
 
-		$optionTable	= CoreTables::TABLE_OPTION;
+        $optionTable	= CoreTables::TABLE_OPTION;
 
-    	$query = $this->hasMany( Option::className(), [ 'id' => 'modelId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_OPTION, [ 'parentId' => 'id' ], function( $query ) {
+        $query = $this->hasMany( Option::className(), [ 'id' => 'modelId' ] )
+                    ->viaTable( CoreTables::TABLE_MODEL_OPTION, [ 'parentId' => 'id' ], function( $query ) {
 
-						$modelOptionTable	= CoreTables::TABLE_MODEL_OPTION;
+                        $modelOptionTable	= CoreTables::TABLE_MODEL_OPTION;
 
-                      	$query->onCondition( [ "$modelOptionTable.parentType" => $this->mParentType ] );
-					});
+                        $query->onCondition( [ "$modelOptionTable.parentType" => $this->mParentType ] );
+                    });
 
-		return $query;
-	}
+        return $query;
+    }
 
-	public function getActiveOptions() {
+    public function getActiveOptions() {
 
-		$optionTable	= CoreTables::TABLE_OPTION;
+        $optionTable	= CoreTables::TABLE_OPTION;
 
-    	$query = $this->hasMany( Option::className(), [ 'id' => 'modelId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_OPTION, [ 'parentId' => 'id' ], function( $query ) {
+        $query = $this->hasMany( Option::className(), [ 'id' => 'modelId' ] )
+                    ->viaTable( CoreTables::TABLE_MODEL_OPTION, [ 'parentId' => 'id' ], function( $query ) {
 
-						$modelOptionTable	= CoreTables::TABLE_MODEL_OPTION;
+                        $modelOptionTable	= CoreTables::TABLE_MODEL_OPTION;
 
-                      	$query->onCondition( [ "$modelOptionTable.parentType" => $this->mParentType, "$modelOptionTable.active" => true ] );
-					});
+                        $query->onCondition( [ "$modelOptionTable.parentType" => $this->mParentType, "$modelOptionTable.active" => true ] );
+                    });
 
-		return $query;
-	}
+        return $query;
+    }
 
-	public function getOptionIdListByCategoryId( $categoryId, $active = true ) {
+    public function getOptionIdListByCategoryId( $categoryId, $active = true ) {
 
-    	$options 		= null;
-		$optionsList	= [];
+        $options 		= null;
+        $optionsList	= [];
 
-		if( $active ) {
+        if( $active ) {
 
-			$options = $this->getActiveOptions()->where( [ 'categoryId' => $categoryId ] )->all();
-		}
-		else {
+            $options = $this->getActiveOptions()->where( [ 'categoryId' => $categoryId ] )->all();
+        }
+        else {
 
-			$options = $this->getOptions()->where( [ 'categoryId' => $categoryId ] )->all();
-		}
+            $options = $this->getOptions()->where( [ 'categoryId' => $categoryId ] )->all();
+        }
 
-		foreach ( $options as $option ) {
+        foreach ( $options as $option ) {
 
-			array_push( $optionsList, $option->id );
-		}
+            array_push( $optionsList, $option->id );
+        }
 
-		return $optionsList;
-	}
+        return $optionsList;
+    }
 
-	public function getOptionsCsvByCategorySlug( $categorySlug, $active = true ) {
+    public function getOptionsCsvByCategorySlug( $categorySlug, $active = true ) {
 
-		$categoryTable	= CoreTables::TABLE_CATEGORY;
-		$options		= null;
-		$optionsCsv		= [];
+        $categoryTable	= CoreTables::TABLE_CATEGORY;
+        $options		= null;
+        $optionsCsv		= [];
 
-		if( $active ) {
+        if( $active ) {
 
-			$options	= $this->getActiveOptions()->leftJoin( $categoryTable, "$categoryTable.id=categoryId" )->where( [ "$categoryTable.slug" => $categorySlug ] )->all();
-		}
-		else {
+            $options	= $this->getActiveOptions()->leftJoin( $categoryTable, "$categoryTable.id=categoryId" )->where( [ "$categoryTable.slug" => $categorySlug ] )->all();
+        }
+        else {
 
-			$options	= $this->getOptions()->leftJoin( $categoryTable, "$categoryTable.id=categoryId" )->where( [ "$categoryTable.slug" => $categorySlug ] )->all();
-		}
+            $options	= $this->getOptions()->leftJoin( $categoryTable, "$categoryTable.id=categoryId" )->where( [ "$categoryTable.slug" => $categorySlug ] )->all();
+        }
 
-		foreach ( $options as $option ) {
+        foreach ( $options as $option ) {
 
-			$optionsCsv[] = $option->name;
-		}
+            $optionsCsv[] = $option->name;
+        }
 
-		return implode( ", ", $optionsCsv );
-	}
+        return implode( ", ", $optionsCsv );
+    }
 
-	public function getOptionsByCategorySlug( $categorySlug, $active = true ) {
+    public function getOptionsByCategorySlug( $categorySlug, $active = true ) {
 
-		$categoryTable	= CoreTables::TABLE_CATEGORY;
+        $categoryTable	= CoreTables::TABLE_CATEGORY;
 
-		if( $active ) {
+        if( $active ) {
 
-			return $this->getActiveOptions()->leftJoin( $categoryTable, "$categoryTable.id=categoryId" )->where( [ "$categoryTable.slug" => $categorySlug ] )->all();
-		}
-		else {
+            return $this->getActiveOptions()->leftJoin( $categoryTable, "$categoryTable.id=categoryId" )->where( [ "$categoryTable.slug" => $categorySlug ] )->all();
+        }
+        else {
 
-			return $this->getOptions()->leftJoin( $categoryTable, "$categoryTable.id=categoryId" )->where( [ "$categoryTable.slug" => $categorySlug ] )->all();
-		}
-	}
+            return $this->getOptions()->leftJoin( $categoryTable, "$categoryTable.id=categoryId" )->where( [ "$categoryTable.slug" => $categorySlug ] )->all();
+        }
+    }
 }

@@ -22,112 +22,70 @@ use cmsgears\core\common\services\traits\SlugTypeTrait;
  */
 class TagService extends \cmsgears\core\common\services\base\EntityService implements ITagService {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\Tag';
+    public static $modelClass	= '\cmsgears\core\common\models\resources\Tag';
 
-	public static $modelTable	= CoreTables::TABLE_TAG;
+    public static $modelTable	= CoreTables::TABLE_TAG;
 
-	public static $parentType	= CoreGlobal::TYPE_TAG;
+    public static $parentType	= CoreGlobal::TYPE_TAG;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use NameTypeTrait;
-	use SlugTypeTrait;
+    use NameTypeTrait;
+    use SlugTypeTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// TagService ----------------------------
+    // TagService ----------------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	public function getPage( $config = [] ) {
+    public function getPage( $config = [] ) {
 
-	    $sort = new Sort([
-	        'attributes' => [
-	            'name' => [
-	                'asc' => [ 'name' => SORT_ASC ],
-	                'desc' => ['name' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'name',
-	            ]
-	        ]
-	    ]);
+        $sort = new Sort([
+            'attributes' => [
+                'name' => [
+                    'asc' => [ 'name' => SORT_ASC ],
+                    'desc' => ['name' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'name',
+                ]
+            ]
+        ]);
 
-		$config[ 'sort' ] = $sort;
+        $config[ 'sort' ] = $sort;
 
-		return parent::findPage( $config );
-	}
+        return parent::findPage( $config );
+    }
 
-	// Read ---------------
-
-    // Read - Models ---
-
-    // Read - Lists ----
-
-    // Read - Maps -----
-
-	// Read - Others ---
-
-	// Create -------------
-
-	// Update -------------
-
-	public function update( $model, $config = [] ) {
-
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'icon', 'description' ];
-
-		return parent::update( $model, [
-			'attributes' => $attributes
-		]);
- 	}
-
-	// Delete -------------
-
-	public function delete( $model, $config = [] ) {
-
-		// Delete mapping
-		ModelTag::deleteByModelId( $model->id );
-
-		// Delete model
-		return parent::delete( $model, $config );
-	}
-
-	// Static Methods ----------------------------------------------
-
-	// CMG parent classes --------------------
-
-	// TagService ----------------------------
-
-	// Data Provider ------
-
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -135,11 +93,53 @@ class TagService extends \cmsgears\core\common\services\base\EntityService imple
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    public function update( $model, $config = [] ) {
+
+        $attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'icon', 'description' ];
+
+        return parent::update( $model, [
+            'attributes' => $attributes
+        ]);
+    }
+
+    // Delete -------------
+
+    public function delete( $model, $config = [] ) {
+
+        // Delete mapping
+        ModelTag::deleteByModelId( $model->id );
+
+        // Delete model
+        return parent::delete( $model, $config );
+    }
+
+    // Static Methods ----------------------------------------------
+
+    // CMG parent classes --------------------
+
+    // TagService ----------------------------
+
+    // Data Provider ------
+
+    // Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+    // Read - Others ---
+
+    // Create -------------
+
+    // Update -------------
+
+    // Delete -------------
 }

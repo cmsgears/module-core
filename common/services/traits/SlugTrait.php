@@ -12,68 +12,68 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 trait SlugTrait {
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// SlugTrait -----------------------------
+    // SlugTrait -----------------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
-	public function getBySlug( $slug ) {
+    public function getBySlug( $slug ) {
 
-		return self::findBySlug( $slug );
+        return self::findBySlug( $slug );
     }
 
     // Read - Lists ----
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// SlugTrait -----------------------------
+    // SlugTrait -----------------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
-	public static function findBySlug( $slug ) {
+    public static function findBySlug( $slug ) {
 
-		$modelClass	= static::$modelClass;
+        $modelClass	= static::$modelClass;
 
-		return $modelClass::queryBySlug( $slug )->one();
+        return $modelClass::queryBySlug( $slug )->one();
     }
 
     // Read - Lists ----
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
 
 }

@@ -20,13 +20,13 @@ trait HierarchyTrait {
      */
     public function getParent() {
 
-    	return $this->hasOne( get_class( $this ), [ 'id' => 'parentId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_HIERARCHY, [ 'childId' => 'id' ], function( $query ) {
+        return $this->hasOne( get_class( $this ), [ 'id' => 'parentId' ] )
+                    ->viaTable( CoreTables::TABLE_MODEL_HIERARCHY, [ 'childId' => 'id' ], function( $query ) {
 
-						$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
+                        $modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
 
-                      	$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->mParentType ] );
-					});
+                        $query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->mParentType ] );
+                    });
     }
 
     /**
@@ -34,13 +34,13 @@ trait HierarchyTrait {
      */
     public function getParents() {
 
-    	return $this->hasMany( get_class( $this ), [ 'id' => 'parentId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_HIERARCHY, [ 'childId' => 'id' ], function( $query ) {
+        return $this->hasMany( get_class( $this ), [ 'id' => 'parentId' ] )
+                    ->viaTable( CoreTables::TABLE_MODEL_HIERARCHY, [ 'childId' => 'id' ], function( $query ) {
 
-						$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
+                        $modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
 
-                      	$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->mParentType ] );
-					});
+                        $query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->mParentType ] );
+                    });
     }
 
     /**
@@ -48,12 +48,12 @@ trait HierarchyTrait {
      */
     public function getChildren() {
 
-    	return $this->hasMany( get_class( $this ), [ 'id' => 'childId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_HIERARCHY, [ 'parentId' => 'id' ], function( $query ) {
+        return $this->hasMany( get_class( $this ), [ 'id' => 'childId' ] )
+                    ->viaTable( CoreTables::TABLE_MODEL_HIERARCHY, [ 'parentId' => 'id' ], function( $query ) {
 
-						$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
+                        $modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
 
-                      	$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->mParentType ] );
-					});
+                        $query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->mParentType ] );
+                    });
     }
 }

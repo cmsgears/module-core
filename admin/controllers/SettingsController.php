@@ -10,62 +10,62 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class SettingsController extends \cmsgears\core\admin\controllers\base\Controller {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals ----------------
+    // Globals ----------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
- 	public function init() {
+    public function init() {
 
         parent::init();
 
-		$this->crudPermission 	= CoreGlobal::PERM_CORE;
-		$this->sidebar 			= [ 'parent' => 'sidebar-settings', 'child' => 'settings' ];
-	}
+        $this->crudPermission 	= CoreGlobal::PERM_CORE;
+        $this->sidebar 			= [ 'parent' => 'sidebar-settings', 'child' => 'settings' ];
+    }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	public function behaviors() {
+    public function behaviors() {
 
         return [
             'rbac' => [
                 'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
-	                'index'  => [ 'permission' => $this->crudPermission ]
+                    'index'  => [ 'permission' => $this->crudPermission ]
                 ]
             ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-	                'index' => [ 'get' ]
+                    'index' => [ 'get' ]
                 ]
             ]
         ];
     }
 
-	// yii\base\Controller ----
+    // yii\base\Controller ----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// SettingsController --------------------
+    // SettingsController --------------------
 
     public function actionIndex() {
 
-	    return $this->render( 'index' );
+        return $this->render( 'index' );
     }
 }

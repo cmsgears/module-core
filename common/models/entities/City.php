@@ -23,44 +23,44 @@ use cmsgears\core\common\models\base\CoreTables;
  */
 class City extends \cmsgears\core\common\models\base\Entity {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     /**
      * @inheritdoc
      */
-	public function rules() {
+    public function rules() {
 
-		// model rules
+        // model rules
         $rules = [
             [ [ 'countryId', 'name' ], 'required' ],
             [ [ 'id' ], 'safe' ],
@@ -71,63 +71,63 @@ class City extends \cmsgears\core\common\models\base\Entity {
             [ [ 'latitude', 'longitude' ], 'number' ]
         ];
 
-		// trim if required
-		if( Yii::$app->core->trimFieldValue ) {
+        // trim if required
+        if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'postal' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'name', 'postal' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-			return ArrayHelper::merge( $trim, $rules );
-		}
+            return ArrayHelper::merge( $trim, $rules );
+        }
 
-		return $rules;
+        return $rules;
     }
 
     /**
      * @inheritdoc
      */
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'countryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
-			'provinceId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PROVINCE ),
-			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'postal' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP ),
-			'latitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LATITUDE ),
-			'longitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LONGITUDE )
-		];
-	}
+        return [
+            'countryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
+            'provinceId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PROVINCE ),
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'postal' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP ),
+            'latitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LATITUDE ),
+            'longitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LONGITUDE )
+        ];
+    }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// City ----------------------------------
+    // City ----------------------------------
 
-	/**
-	 * @return Country - parent country for province
-	 */
-	public function getCountry() {
+    /**
+     * @return Country - parent country for province
+     */
+    public function getCountry() {
 
-		return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] );
-	}
+        return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] );
+    }
 
-	/**
-	 * @return Province - parent province for city
-	 */
-	public function getProvince() {
+    /**
+     * @return Province - parent province for city
+     */
+    public function getProvince() {
 
-		return $this->hasOne( Province::className(), [ 'id' => 'provinceId' ] );
-	}
+        return $this->hasOne( Province::className(), [ 'id' => 'provinceId' ] );
+    }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
-	/**
+    /**
      * @inheritdoc
      */
     public static function tableName() {
@@ -135,81 +135,81 @@ class City extends \cmsgears\core\common\models\base\Entity {
         return CoreTables::TABLE_CITY;
     }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// City ----------------------------------
+    // City ----------------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	public static function queryWithHasOne( $config = [] ) {
+    public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country', 'province' ];
-		$config[ 'relations' ]	= $relations;
+        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country', 'province' ];
+        $config[ 'relations' ]	= $relations;
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithCountry( $config = [] ) {
+    public static function queryWithCountry( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'country' ];
+        $config[ 'relations' ]	= [ 'country' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithProvince( $config = [] ) {
+    public static function queryWithProvince( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'province' ];
+        $config[ 'relations' ]	= [ 'province' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
-	/**
-	 * @return array - by country id
-	 */
-	public static function findByCountryId( $countryId ) {
+    /**
+     * @return array - by country id
+     */
+    public static function findByCountryId( $countryId ) {
 
-		return self::find()->where( 'countryId=:id', [ ':id' => $countryId ] )->all();
-	}
+        return self::find()->where( 'countryId=:id', [ ':id' => $countryId ] )->all();
+    }
 
-	/**
-	 * @return array - by province id
-	 */
-	public static function findByProvinceId( $provinceId ) {
+    /**
+     * @return array - by province id
+     */
+    public static function findByProvinceId( $provinceId ) {
 
-		return self::find()->where( 'provinceId=:id', [ ':id' => $provinceId ] )->all();
-	}
+        return self::find()->where( 'provinceId=:id', [ ':id' => $provinceId ] )->all();
+    }
 
-	/**
-	 * @return Province - by country id and province id
-	 */
-	public static function findByCountryIdProvinceId( $countryId, $provinceId ) {
+    /**
+     * @return Province - by country id and province id
+     */
+    public static function findByCountryIdProvinceId( $countryId, $provinceId ) {
 
-		return self::find()->where( 'countryId=:cid AND provinceId=:pid', [ ':cid' => $countryId, ':pid' => $provinceId ] )->all();
-	}
+        return self::find()->where( 'countryId=:cid AND provinceId=:pid', [ ':cid' => $countryId, ':pid' => $provinceId ] )->all();
+    }
 
-	/**
-	 * @return Province - by name, country id and province id
-	 */
-	public static function findByNameCountryIdProvinceId( $name, $countryId, $provinceId ) {
+    /**
+     * @return Province - by name, country id and province id
+     */
+    public static function findByNameCountryIdProvinceId( $name, $countryId, $provinceId ) {
 
-		return self::find()->where( 'name=:name AND countryId=:cid AND provinceId=:pid', [ ':name' => $name, ':cid' => $countryId, ':pid' => $provinceId ] )->one();
-	}
+        return self::find()->where( 'name=:name AND countryId=:cid AND provinceId=:pid', [ ':name' => $name, ':cid' => $countryId, ':pid' => $provinceId ] )->one();
+    }
 
-	/**
-	 * @return Province - check whether a province exist by the provided name and country id
-	 */
-	public static function isExistByNameCountryIdProvinceId( $name, $countryId, $provinceId ) {
+    /**
+     * @return Province - check whether a province exist by the provided name and country id
+     */
+    public static function isExistByNameCountryIdProvinceId( $name, $countryId, $provinceId ) {
 
-		$city = self::findByNameCountryIdProvinceId( $name, $countryId, $provinceId );
+        $city = self::findByNameCountryIdProvinceId( $name, $countryId, $provinceId );
 
-		return isset( $city );
-	}
+        return isset( $city );
+    }
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 }

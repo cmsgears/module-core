@@ -32,46 +32,46 @@ use cmsgears\core\common\models\traits\ResourceTrait;
  */
 class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use ResourceTrait;
+    use ResourceTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     /**
      * @inheritdoc
      */
-	public function rules() {
+    public function rules() {
 
-		// model rules
+        // model rules
         $rules = [
             [ [ 'localeId', 'parentId', 'parentType', 'name' ], 'required' ],
             [ [ 'id', 'value' ], 'safe' ],
@@ -82,122 +82,122 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
             [ [ 'parentId', 'parentType', 'localeId', 'name' ], 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'localeId', 'name' ] ]
         ];
 
-		// trim if required
-		if( Yii::$app->core->trimFieldValue ) {
+        // trim if required
+        if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'name', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-			return ArrayHelper::merge( $trim, $rules );
-		}
+            return ArrayHelper::merge( $trim, $rules );
+        }
 
-		return $rules;
+        return $rules;
     }
 
     /**
      * @inheritdoc
      */
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'localeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
-			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE )
-		];
-	}
+        return [
+            'localeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
+            'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+            'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+            'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE )
+        ];
+    }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// ModelMessage --------------------------
+    // ModelMessage --------------------------
 
-	/**
-	 * @return Locale - parent locale.
-	 */
-	public function getLocale() {
+    /**
+     * @return Locale - parent locale.
+     */
+    public function getLocale() {
 
-		return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] );
-	}
+        return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] );
+    }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
      */
-	public static function tableName() {
+    public static function tableName() {
 
-		return CoreTables::TABLE_LOCALE_MESSAGE;
-	}
+        return CoreTables::TABLE_LOCALE_MESSAGE;
+    }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// ModelMessage --------------------------
+    // ModelMessage --------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	public static function queryWithHasOne( $config = [] ) {
+    public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'locale' ];
-		$config[ 'relations' ]	= $relations;
+        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'locale' ];
+        $config[ 'relations' ]	= $relations;
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithLocale( $config = [] ) {
+    public static function queryWithLocale( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'locale' ];
+        $config[ 'relations' ]	= [ 'locale' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
-	/**
-	 * @param integer $parentId
-	 * @param string $parentType
-	 * @param string $name
-	 * @param int $localeId
-	 * @return ModelMessage - by name and locale id
-	 */
-	public static function findByNameLocaleId( $parentId, $parentType, $name, $localeId ) {
+    /**
+     * @param integer $parentId
+     * @param string $parentType
+     * @param string $name
+     * @param int $localeId
+     * @return ModelMessage - by name and locale id
+     */
+    public static function findByNameLocaleId( $parentId, $parentType, $name, $localeId ) {
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name AND localeId=:lid' )
-							->addParams( [ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name, ':lid' => $localeId ] )
-							->one();
-	}
+        return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name AND localeId=:lid' )
+                            ->addParams( [ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name, ':lid' => $localeId ] )
+                            ->one();
+    }
 
-	/**
-	 * @param integer $parentId
-	 * @param string $parentType
-	 * @param string $name
-	 * @param int $localeId
-	 * @return boolean - check whether message exist by name and locale id
-	 */
-	public static function isExistByNameLocaleId( $parentId, $parentType, $name, $localeId ) {
+    /**
+     * @param integer $parentId
+     * @param string $parentType
+     * @param string $name
+     * @param int $localeId
+     * @return boolean - check whether message exist by name and locale id
+     */
+    public static function isExistByNameLocaleId( $parentId, $parentType, $name, $localeId ) {
 
-		return isset( self::findByNameLocaleId( $parentId, $parentType, $name, $localeId ) );
-	}
+        return isset( self::findByNameLocaleId( $parentId, $parentType, $name, $localeId ) );
+    }
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 
-	/**
-	 * Delete all entries related to a locale
-	 */
-	public static function deleteByLocaleId( $localeId ) {
+    /**
+     * Delete all entries related to a locale
+     */
+    public static function deleteByLocaleId( $localeId ) {
 
-		self::deleteAll( 'localeId=:id', [ ':id' => $localeId ] );
-	}
+        self::deleteAll( 'localeId=:id', [ ':id' => $localeId ] );
+    }
 }

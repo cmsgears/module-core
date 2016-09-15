@@ -22,117 +22,70 @@ use cmsgears\core\common\services\traits\SlugTypeTrait;
  */
 class TemplateService extends \cmsgears\core\common\services\base\EntityService implements ITemplateService {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Template';
+    public static $modelClass	= '\cmsgears\core\common\models\entities\Template';
 
-	public static $modelTable	= CoreTables::TABLE_TEMPLATE;
+    public static $modelTable	= CoreTables::TABLE_TEMPLATE;
 
-	public static $parentType	= CoreGlobal::TYPE_TEMPLATE;
+    public static $parentType	= CoreGlobal::TYPE_TEMPLATE;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use NameTypeTrait;
-	use SlugTypeTrait;
+    use NameTypeTrait;
+    use SlugTypeTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// TemplateService -----------------------
+    // TemplateService -----------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	public function getPage( $config = [] ) {
+    public function getPage( $config = [] ) {
 
-	    $sort = new Sort([
-	        'attributes' => [
-	            'name' => [
-	                'asc' => [ 'name' => SORT_ASC ],
-	                'desc' => [ 'name' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'name',
-	            ]
-	        ]
-	    ]);
+        $sort = new Sort([
+            'attributes' => [
+                'name' => [
+                    'asc' => [ 'name' => SORT_ASC ],
+                    'desc' => [ 'name' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'name',
+                ]
+            ]
+        ]);
 
-		$config[ 'sort' ] = $sort;
+        $config[ 'sort' ] = $sort;
 
-		return parent::findPage( $config );
-	}
+        return parent::findPage( $config );
+    }
 
-	// Read ---------------
-
-    // Read - Models ---
-
-    // Read - Lists ----
-
-    // Read - Maps -----
-
-	public function getIdNameMap( $options = [] ) {
-
-		$map = parent::getIdNameMap( $options );
-
-		if( isset( $options[ 'default' ] ) && $options[ 'default' ] ) {
-
-			unset( $options[ 'default' ] );
-
-			$map = ArrayHelper::merge( [ '0' => 'Choose Template' ], $map );
-		}
-
-		return $map;
-	}
-
-	// Read - Others ---
-
-	// Create -------------
-
-	// Update -------------
-
-	public function update( $model, $config = [] ) {
-
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'icon', 'description', 'renderer', 'fileRender', 'layout', 'layoutGroup', 'viewPath', 'content' ];
-
-		return parent::update( $model, [
-			'attributes' => $attributes
-		]);
- 	}
-
-	// Delete -------------
-
-	// Static Methods ----------------------------------------------
-
-	// CMG parent classes --------------------
-
-	// TemplateService -----------------------
-
-	// Data Provider ------
-
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -140,11 +93,58 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
     // Read - Maps -----
 
-	// Read - Others ---
+    public function getIdNameMap( $options = [] ) {
 
-	// Create -------------
+        $map = parent::getIdNameMap( $options );
 
-	// Update -------------
+        if( isset( $options[ 'default' ] ) && $options[ 'default' ] ) {
 
-	// Delete -------------
+            unset( $options[ 'default' ] );
+
+            $map = ArrayHelper::merge( [ '0' => 'Choose Template' ], $map );
+        }
+
+        return $map;
+    }
+
+    // Read - Others ---
+
+    // Create -------------
+
+    // Update -------------
+
+    public function update( $model, $config = [] ) {
+
+        $attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'icon', 'description', 'renderer', 'fileRender', 'layout', 'layoutGroup', 'viewPath', 'content' ];
+
+        return parent::update( $model, [
+            'attributes' => $attributes
+        ]);
+    }
+
+    // Delete -------------
+
+    // Static Methods ----------------------------------------------
+
+    // CMG parent classes --------------------
+
+    // TemplateService -----------------------
+
+    // Data Provider ------
+
+    // Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+    // Read - Others ---
+
+    // Create -------------
+
+    // Update -------------
+
+    // Delete -------------
 }

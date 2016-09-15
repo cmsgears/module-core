@@ -14,128 +14,128 @@ use cmsgears\core\common\services\interfaces\entities\IProvinceService;
 
 class ProvinceService extends \cmsgears\core\common\services\base\EntityService implements IProvinceService {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Province';
+    public static $modelClass	= '\cmsgears\core\common\models\entities\Province';
 
-	public static $modelTable	= CoreTables::TABLE_PROVINCE;
+    public static $modelTable	= CoreTables::TABLE_PROVINCE;
 
-	public static $parentType	= CoreGlobal::TYPE_PROVINCE;
+    public static $parentType	= CoreGlobal::TYPE_PROVINCE;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// ProvinceService -----------------------
+    // ProvinceService -----------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	public function getPage( $config = [] ) {
+    public function getPage( $config = [] ) {
 
-		$sort = new Sort([
-	        'attributes' => [
-	            'name' => [
-	                'asc' => [ 'name' => SORT_ASC ],
-	                'desc' => ['name' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'name'
-	            ],
-	            'slug' => [
-	                'asc' => [ 'slug' => SORT_ASC ],
-	                'desc' => ['slug' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'slug'
-	            ]
-	        ]
-	    ]);
+        $sort = new Sort([
+            'attributes' => [
+                'name' => [
+                    'asc' => [ 'name' => SORT_ASC ],
+                    'desc' => ['name' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'name'
+                ],
+                'slug' => [
+                    'asc' => [ 'slug' => SORT_ASC ],
+                    'desc' => ['slug' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'slug'
+                ]
+            ]
+        ]);
 
-		$config[ 'sort' ] = $sort;
+        $config[ 'sort' ] = $sort;
 
-		return parent::findPage( $config );
-	}
+        return parent::findPage( $config );
+    }
 
-	// Read ---------------
-
-    // Read - Models ---
-
-    // Read - Lists ----
-
-	public function getListByCountryId( $countryId ) {
-
-		return self::findIdNameList( [ 'conditions' => [ 'countryId' => $countryId ] ] );
-	}
-
-    // Read - Maps -----
-
-	public function getMapByCountryId( $countryId ) {
-
-		return self::findIdNameMap( [ 'conditions' => [ 'countryId' => $countryId ] ] );
-	}
-
-	// Read - Others ---
-
-	// Create -------------
-
-	// Update -------------
-
-	public function update( $model, $config = [] ) {
-
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'countryId', 'code', 'codeNum', 'name' ];
-
-		return parent::update( $model, [
-			'attributes' => $attributes
-		]);
- 	}
-
-	// Delete -------------
-
-	// Static Methods ----------------------------------------------
-
-	// CMG parent classes --------------------
-
-	// ProvinceService -----------------------
-
-	// Data Provider ------
-
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
     // Read - Lists ----
 
+    public function getListByCountryId( $countryId ) {
+
+        return self::findIdNameList( [ 'conditions' => [ 'countryId' => $countryId ] ] );
+    }
+
     // Read - Maps -----
 
-	// Read - Others ---
+    public function getMapByCountryId( $countryId ) {
 
-	// Create -------------
+        return self::findIdNameMap( [ 'conditions' => [ 'countryId' => $countryId ] ] );
+    }
 
-	// Update -------------
+    // Read - Others ---
 
-	// Delete -------------
+    // Create -------------
+
+    // Update -------------
+
+    public function update( $model, $config = [] ) {
+
+        $attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'countryId', 'code', 'codeNum', 'name' ];
+
+        return parent::update( $model, [
+            'attributes' => $attributes
+        ]);
+    }
+
+    // Delete -------------
+
+    // Static Methods ----------------------------------------------
+
+    // CMG parent classes --------------------
+
+    // ProvinceService -----------------------
+
+    // Data Provider ------
+
+    // Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+    // Read - Others ---
+
+    // Create -------------
+
+    // Update -------------
+
+    // Delete -------------
 }

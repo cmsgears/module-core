@@ -58,43 +58,43 @@ use cmsgears\core\common\models\traits\mappers\FileTrait;
  */
 class User extends \cmsgears\core\common\models\base\Entity implements IdentityInterface, IApproval {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	const STATUS_VERIFIED	= 100; // Used when user is required to submit registration application for approval process.
+    const STATUS_VERIFIED	= 100; // Used when user is required to submit registration application for approval process.
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
     public $mParentType	= CoreGlobal::TYPE_USER;
     public $permissions = [];
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use AddressTrait;
-	use ApprovalTrait;
-	use MetaTrait;
-	use DataTrait;
-	use FileTrait;
-	use VisualTrait;
+    use AddressTrait;
+    use ApprovalTrait;
+    use MetaTrait;
+    use DataTrait;
+    use FileTrait;
+    use VisualTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
     // yii\web\IdentityInterface
 
@@ -122,11 +122,11 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         return $this->authKey === $authKey;
     }
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -187,28 +187,28 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         ];
     }
 
-	// yii\db\BaseActiveRecord
+    // yii\db\BaseActiveRecord
 
-	public function beforeSave( $insert ) {
+    public function beforeSave( $insert ) {
 
-	    if( parent::beforeSave( $insert ) ) {
+        if( parent::beforeSave( $insert ) ) {
 
-			if( $this->genderId <= 0 ) {
+            if( $this->genderId <= 0 ) {
 
-				$this->genderId = null;
-			}
+                $this->genderId = null;
+            }
 
-	        return true;
-	    }
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
     /**
      * Validates user email to ensure that only one user exist with the given email.
@@ -317,7 +317,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         return false;
     }
 
-	// User ----------------------------------
+    // User ----------------------------------
 
     /**
      * @return array - SiteMember
@@ -325,17 +325,17 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
     public function getSiteMembers() {
 
         return $this->hasMany( SiteMember::className(), [ "userId" => 'id' ] );
-	}
+    }
 
     /**
      * @return SiteMember
      */
     public function getActiveSiteMember() {
 
-		$site		= Yii::$app->core->site;
+        $site		= Yii::$app->core->site;
 
         return $this->hasOne( SiteMember::className(), [ "userId" => 'id' ] )->where( [ "siteId" => $site->id ] );
-	}
+    }
 
     /**
      * @return Role - assigned to User.
@@ -404,24 +404,24 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         return $name;
     }
 
-	// Verify only if new or verified
-	public function verify() {
+    // Verify only if new or verified
+    public function verify() {
 
-		if( $this->status <= User::STATUS_VERIFIED ) {
+        if( $this->status <= User::STATUS_VERIFIED ) {
 
-			$this->status = User::STATUS_VERIFIED;
-		}
-	}
+            $this->status = User::STATUS_VERIFIED;
+        }
+    }
 
-	public function isVerified( $strict = true ) {
+    public function isVerified( $strict = true ) {
 
-		if( $strict ) {
+        if( $strict ) {
 
-			return $this->status == self::STATUS_VERIFIED;
-		}
+            return $this->status == self::STATUS_VERIFIED;
+        }
 
-		return $this->status >= self::STATUS_VERIFIED;
-	}
+        return $this->status >= self::STATUS_VERIFIED;
+    }
 
     /**
      * Generate and set user password using the yii security mechanism.
@@ -506,9 +506,9 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         return in_array( $permission, $this->permissions );
     }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
     // yii\web\IdentityInterface
 
@@ -570,9 +570,9 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         throw new NotSupportedException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_APIS_DISABLED ) );
     }
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
     /**
      * @return string - db table name
@@ -582,56 +582,56 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         return CoreTables::TABLE_USER;
     }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// User ----------------------------------
+    // User ----------------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	public static function queryWithHasOne( $config = [] ) {
+    public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'role', 'locale', 'gender' ];
-		$config[ 'relations' ]	= $relations;
+        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'role', 'locale', 'gender' ];
+        $config[ 'relations' ]	= $relations;
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithRole( $config = [] ) {
+    public static function queryWithRole( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'role' ];
+        $config[ 'relations' ]	= [ 'avatar', 'role' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithLocale( $config = [] ) {
+    public static function queryWithLocale( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'locale' ];
+        $config[ 'relations' ]	= [ 'avatar', 'locale' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithGender( $config = [] ) {
+    public static function queryWithGender( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'gender' ];
+        $config[ 'relations' ]	= [ 'avatar', 'gender' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithSiteMembers( $config = [] ) {
+    public static function queryWithSiteMembers( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
+        $config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithSiteMembersPermissions( $config = [] ) {
+    public static function queryWithSiteMembersPermissions( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role', 'siteMembers.role.permissions' ];
+        $config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role', 'siteMembers.role.permissions' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
     /**
      * @param string $token
@@ -682,11 +682,11 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
         return isset( $user );
     }
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 }
 
 User::$statusMap[ User::STATUS_VERIFIED ] = 'Verified';

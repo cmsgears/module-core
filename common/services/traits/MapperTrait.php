@@ -18,190 +18,190 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 trait MapperTrait {
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// MapperTrait ---------------------------
+    // MapperTrait ---------------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
-	/**
-	 * @param long $modelId of mapped model.
-	 * @return array of model mappings having matching $modelId.
-	 */
+    /**
+     * @param long $modelId of mapped model.
+     * @return array of model mappings having matching $modelId.
+     */
     public function getAllByModelId( $modelId ) {
 
-		$modelClass	= self::$modelClass;
+        $modelClass	= self::$modelClass;
 
-		return $modelClass::findAllByModelId( $modelId );
+        return $modelClass::findAllByModelId( $modelId );
     }
 
-	/**
-	 * @param long $parentId of parent model.
-	 * @param long $parentType assigned to parent model.
-	 * @param long $modelId of mapped model.
-	 * @return Object having matching $parentId, $parentType and $modelId.
-	 */
-	public function getByModelId( $parentId, $parentType, $modelId ) {
+    /**
+     * @param long $parentId of parent model.
+     * @param long $parentType assigned to parent model.
+     * @param long $modelId of mapped model.
+     * @return Object having matching $parentId, $parentType and $modelId.
+     */
+    public function getByModelId( $parentId, $parentType, $modelId ) {
 
-		$modelClass	= self::$modelClass;
+        $modelClass	= self::$modelClass;
 
-		return $modelClass::findByModelId( $parentId, $parentType, $modelId );
-	}
+        return $modelClass::findByModelId( $parentId, $parentType, $modelId );
+    }
 
-	/**
-	 * @param long $parentId of parent model.
-	 * @param long $parentType assigned to parent model.
-	 * @return array of model mappings having matching $parentId and $parentType.
-	 */
-	public function getByParent( $parentId, $parentType ) {
+    /**
+     * @param long $parentId of parent model.
+     * @param long $parentType assigned to parent model.
+     * @return array of model mappings having matching $parentId and $parentType.
+     */
+    public function getByParent( $parentId, $parentType ) {
 
-		$modelClass	= self::$modelClass;
+        $modelClass	= self::$modelClass;
 
-		return $modelClass::findByParent( $parentId, $parentType );
-	}
+        return $modelClass::findByParent( $parentId, $parentType );
+    }
 
-	public function getByParentId( $parentId ) {
+    public function getByParentId( $parentId ) {
 
-		$modelClass	= self::$modelClass;
+        $modelClass	= self::$modelClass;
 
-		return $modelClass::findByParentId( $parentId );
-	}
+        return $modelClass::findByParentId( $parentId );
+    }
 
-	public function getByParentType( $parentType ) {
+    public function getByParentType( $parentType ) {
 
-		$modelClass	= self::$modelClass;
+        $modelClass	= self::$modelClass;
 
-		return $modelClass::findByParentType( $parentType );
-	}
+        return $modelClass::findByParentType( $parentType );
+    }
 
-	// Models having active column
+    // Models having active column
 
-	public function getActiveByParent( $parentId, $parentType ) {
+    public function getActiveByParent( $parentId, $parentType ) {
 
-		$modelClass	= self::$modelClass;
+        $modelClass	= self::$modelClass;
 
-		return $modelClass::findActiveByParent( $parentId, $parentType );
-	}
+        return $modelClass::findActiveByParent( $parentId, $parentType );
+    }
 
-	public function getActiveByParentId( $parentId ) {
+    public function getActiveByParentId( $parentId ) {
 
-		$modelClass	= self::$modelClass;
+        $modelClass	= self::$modelClass;
 
-		return $modelClass::findActiveByParentId( $parentId );
-	}
+        return $modelClass::findActiveByParentId( $parentId );
+    }
 
-	public function getActiveByParentType( $parentType ) {
+    public function getActiveByParentType( $parentType ) {
 
-		$modelClass	= self::$modelClass;
+        $modelClass	= self::$modelClass;
 
-		return $modelClass::findActiveByParentType( $parentType );
-	}
+        return $modelClass::findActiveByParentType( $parentType );
+    }
 
     public function getActiveByModelIdParentType( $modelId, $parentType ) {
 
-		$modelClass	= self::$modelClass;
+        $modelClass	= self::$modelClass;
 
-		return $modelClass::findActiveByModelIdParentType( $modelId, $parentType );
+        return $modelClass::findActiveByModelIdParentType( $modelId, $parentType );
     }
 
     // Read - Lists ----
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Models having active column
+    // Models having active column
 
-	public function activate( $model ) {
+    public function activate( $model ) {
 
-		$model->active	= true;
+        $model->active	= true;
 
-		$model->update();
+        $model->update();
 
-		return $model;
-	}
+        return $model;
+    }
 
-	public function activateByModelId( $parentId, $parentType, $modelId ) {
+    public function activateByModelId( $parentId, $parentType, $modelId ) {
 
-		$model = $this->getByModelId( $parentId, $parentType, $modelId );
+        $model = $this->getByModelId( $parentId, $parentType, $modelId );
 
-		if( isset( $model ) ) {
+        if( isset( $model ) ) {
 
-			$this->activate( $model );
-		}
-		else {
+            $this->activate( $model );
+        }
+        else {
 
-			$this->createByParams( [ 'parentId' => $parentId, 'parentType' => $parentType, 'modelId' => $modelId, 'active' => true ] );
-		}
-	}
+            $this->createByParams( [ 'parentId' => $parentId, 'parentType' => $parentType, 'modelId' => $modelId, 'active' => true ] );
+        }
+    }
 
-	public function disable( $model ) {
+    public function disable( $model ) {
 
-		$model->active	= false;
+        $model->active	= false;
 
-		$model->update();
+        $model->update();
 
-		return $model;
-	}
+        return $model;
+    }
 
-	public function disableByModelId( $parentId, $parentType, $modelId, $delete = false ) {
+    public function disableByModelId( $parentId, $parentType, $modelId, $delete = false ) {
 
-		$model = $this->getByModelId( $parentId, $parentType, $modelId );
+        $model = $this->getByModelId( $parentId, $parentType, $modelId );
 
-		if( isset( $model ) ) {
+        if( isset( $model ) ) {
 
-			// Hard delete
-			if( $delete ) {
+            // Hard delete
+            if( $delete ) {
 
-				$model->delete();
-			}
-			// Soft delete
-			else {
+                $model->delete();
+            }
+            // Soft delete
+            else {
 
-				$this->disable( $model );
-			}
-		}
-	}
+                $this->disable( $model );
+            }
+        }
+    }
 
-	// Delete -------------
+    // Delete -------------
 
-	public function deleteByParent( $parentId, $parentType ) {
+    public function deleteByParent( $parentId, $parentType ) {
 
-		$modelClass	= self::$modelClass;
+        $modelClass	= self::$modelClass;
 
-		return $modelClass::deleteByParent( $parentId, $parentType );
-	}
+        return $modelClass::deleteByParent( $parentId, $parentType );
+    }
 
-	public function deleteByModelId( $modelId ) {
+    public function deleteByModelId( $modelId ) {
 
-		$modelClass	= self::$modelClass;
+        $modelClass	= self::$modelClass;
 
-		return $modelClass::deleteByModelId( $modelId );
-	}
+        return $modelClass::deleteByModelId( $modelId );
+    }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// MapperTrait ---------------------------
+    // MapperTrait ---------------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -209,12 +209,12 @@ trait MapperTrait {
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
 
 }

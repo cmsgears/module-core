@@ -21,8 +21,8 @@ class CoreValidator {
 
     ];
 
-	public static function initValidators() {
+    public static function initValidators() {
 
-		Validator::$builtInValidators = array_merge( Validator::$builtInValidators, self::$builtInValidators );
-	}
+        Validator::$builtInValidators = array_merge( Validator::$builtInValidators, self::$builtInValidators );
+    }
 }

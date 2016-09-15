@@ -37,42 +37,42 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class Permission extends \cmsgears\core\common\models\base\Entity {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	private $mParentType	= CoreGlobal::TYPE_PERMISSION; // required for traits
+    private $mParentType	= CoreGlobal::TYPE_PERMISSION; // required for traits
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
     use CreateModifyTrait;
-	use HierarchyTrait;
-	use NameTypeTrait;
-	use SlugTypeTrait;
+    use HierarchyTrait;
+    use NameTypeTrait;
+    use SlugTypeTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -99,7 +99,7 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
         ];
     }
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -143,13 +143,13 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
         ];
     }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// Permission ----------------------------
+    // Permission ----------------------------
 
     /**
      * @return Role array
@@ -184,11 +184,11 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
         return $rolesList;
     }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -198,42 +198,42 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
         return CoreTables::TABLE_PERMISSION;
     }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Permission ----------------------------
+    // Permission ----------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	public static function queryWithHasOne( $config = [] ) {
+    public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
-		$config[ 'relations' ]	= $relations;
+        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+        $config[ 'relations' ]	= $relations;
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithRoles( $config = [] ) {
+    public static function queryWithRoles( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'roles' ];
+        $config[ 'relations' ]	= [ 'roles' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
     public static function findL0Children( $l0Ids = [] ) {
 
-		$permission 	= CoreTables::TABLE_PERMISSION;
-		$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
-		$l0Ids			= join( ",", $l0Ids );
+        $permission 	= CoreTables::TABLE_PERMISSION;
+        $modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
+        $l0Ids			= join( ",", $l0Ids );
 
-    	return Permission::find()->leftJoin( $modelHierarchy, "`$permission`.`id` = `$modelHierarchy`.`childId`" )
-    					  ->where( "`$modelHierarchy`.`parentType` = 'permission' AND `$modelHierarchy`.`parentId` IN ($l0Ids)" )->all();
+        return Permission::find()->leftJoin( $modelHierarchy, "`$permission`.`id` = `$modelHierarchy`.`childId`" )
+                          ->where( "`$modelHierarchy`.`parentType` = 'permission' AND `$modelHierarchy`.`parentId` IN ($l0Ids)" )->all();
     }
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 }

@@ -6,11 +6,11 @@ use \Yii;
 
 class IpUtil {
 
-	public static function getClientIp( $long = false ) {
+    public static function getClientIp( $long = false ) {
 
-		$clientIp   = null;
+        $clientIp   = null;
 
-		if( getenv( 'HTTP_CLIENT_IP' ) ) {
+        if( getenv( 'HTTP_CLIENT_IP' ) ) {
 
             $clientIp   = getenv( 'HTTP_CLIENT_IP' );
         }
@@ -35,10 +35,10 @@ class IpUtil {
             $clientIp   = getenv( 'REMOTE_ADDR' );
         }
 
-		if( $long ) {
+        if( $long ) {
 
-			return ip2long( $clientIp );
-		}
+            return ip2long( $clientIp );
+        }
 
         return $clientIp;
     }

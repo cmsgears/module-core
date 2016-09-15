@@ -25,365 +25,365 @@ use cmsgears\core\common\utilities\DateUtil;
  */
 class UserService extends \cmsgears\core\common\services\base\EntityService implements IUserService {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\User';
+    public static $modelClass	= '\cmsgears\core\common\models\entities\User';
 
-	public static $modelTable	= CoreTables::TABLE_USER;
+    public static $modelTable	= CoreTables::TABLE_USER;
 
-	public static $parentType	= CoreGlobal::TYPE_USER;
+    public static $parentType	= CoreGlobal::TYPE_USER;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	private $fileService;
+    private $fileService;
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use ApprovalTrait;
-	use ModelMetaTrait;
+    use ApprovalTrait;
+    use ModelMetaTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
     public function __construct( IFileService $fileService, $config = [] ) {
 
-		$this->fileService	= $fileService;
+        $this->fileService	= $fileService;
 
         parent::__construct( $config );
     }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// UserService ---------------------------
+    // UserService ---------------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	public function getPage( $config = [] ) {
+    public function getPage( $config = [] ) {
 
-		$siteTable 			= CoreTables::TABLE_SITE;
-		$siteMemberTable 	= CoreTables::TABLE_SITE_MEMBER;
+        $siteTable 			= CoreTables::TABLE_SITE;
+        $siteMemberTable 	= CoreTables::TABLE_SITE_MEMBER;
 
-	    $sort = new Sort([
-	        'attributes' => [
-	            'name' => [
-	                'asc' => [ 'firstName' => SORT_ASC, 'lastName' => SORT_ASC ],
-	                'desc' => [ 'firstName' => SORT_DESC, 'lastName' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'name',
-	            ],
-	            'username' => [
-	                'asc' => [ 'username' => SORT_ASC ],
-	                'desc' => ['username' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'username',
-	            ],
-	            'role' => [
-	                'asc' => [ "$siteMemberTable.roleId" => SORT_ASC ],
-	                'desc' => [ "$siteMemberTable.roleId" => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'role',
-	            ],
-	            'status' => [
-	                'asc' => [ 'status' => SORT_ASC ],
-	                'desc' => ['status' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'status',
-	            ],
-	            'email' => [
-	                'asc' => [ 'email' => SORT_ASC ],
-	                'desc' => ['email' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'email',
-	            ]
-	        ]
-	    ]);
+        $sort = new Sort([
+            'attributes' => [
+                'name' => [
+                    'asc' => [ 'firstName' => SORT_ASC, 'lastName' => SORT_ASC ],
+                    'desc' => [ 'firstName' => SORT_DESC, 'lastName' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'name',
+                ],
+                'username' => [
+                    'asc' => [ 'username' => SORT_ASC ],
+                    'desc' => ['username' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'username',
+                ],
+                'role' => [
+                    'asc' => [ "$siteMemberTable.roleId" => SORT_ASC ],
+                    'desc' => [ "$siteMemberTable.roleId" => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'role',
+                ],
+                'status' => [
+                    'asc' => [ 'status' => SORT_ASC ],
+                    'desc' => ['status' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'status',
+                ],
+                'email' => [
+                    'asc' => [ 'email' => SORT_ASC ],
+                    'desc' => ['email' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'email',
+                ]
+            ]
+        ]);
 
-		$config[ 'conditions' ][ "$siteTable.slug" ] 	= Yii::$app->core->getSiteSlug();
+        $config[ 'conditions' ][ "$siteTable.slug" ] 	= Yii::$app->core->getSiteSlug();
 
-		if( !isset( $config[ 'sort' ] ) ) {
+        if( !isset( $config[ 'sort' ] ) ) {
 
-			$config[ 'sort' ] = $sort;
-		}
+            $config[ 'sort' ] = $sort;
+        }
 
-		if( !isset( $config[ 'search-col' ] ) ) {
+        if( !isset( $config[ 'search-col' ] ) ) {
 
-			$config[ 'search-col' ] = 'email';
-		}
+            $config[ 'search-col' ] = 'email';
+        }
 
-		return parent::findPage( $config );
-	}
+        return parent::findPage( $config );
+    }
 
-	public function getPageByRoleType( $roleType ) {
+    public function getPageByRoleType( $roleType ) {
 
-		$roleTable = CoreTables::TABLE_ROLE;
+        $roleTable = CoreTables::TABLE_ROLE;
 
-		return $this->getPage( [ 'conditions' => [ "$roleTable.type" => $roleType ], 'query' => User::queryWithSiteMembers() ] );
-	}
+        return $this->getPage( [ 'conditions' => [ "$roleTable.type" => $roleType ], 'query' => User::queryWithSiteMembers() ] );
+    }
 
-	public function getPageByAdmins() {
+    public function getPageByAdmins() {
 
-		return $this->getPageByPermissionName( CoreGlobal::PERM_ADMIN );
-	}
+        return $this->getPageByPermissionName( CoreGlobal::PERM_ADMIN );
+    }
 
-	public function getPageByUsers() {
+    public function getPageByUsers() {
 
-		return $this->getPageByPermissionName( CoreGlobal::PERM_USER );
-	}
+        return $this->getPageByPermissionName( CoreGlobal::PERM_USER );
+    }
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
-	/**
-	 * @param string $token
-	 * @return User
-	 */
-	public function getByAccessToken( $token ) {
+    /**
+     * @param string $token
+     * @return User
+     */
+    public function getByAccessToken( $token ) {
 
-		return User::findByAccessToken( $token );
-	}
+        return User::findByAccessToken( $token );
+    }
 
-	/**
-	 * @param string $email
-	 * @return User
-	 */
-	public function getByEmail( $email ) {
+    /**
+     * @param string $email
+     * @return User
+     */
+    public function getByEmail( $email ) {
 
-		return User::findByEmail( $email );
-	}
+        return User::findByEmail( $email );
+    }
 
-	/**
-	 * @param string $email
-	 * @return boolean
-	 */
-	public function isExistByEmail( $email ) {
+    /**
+     * @param string $email
+     * @return boolean
+     */
+    public function isExistByEmail( $email ) {
 
-		$user = User::findByEmail( $email );
+        $user = User::findByEmail( $email );
 
-		return isset( $user );
-	}
+        return isset( $user );
+    }
 
-	/**
-	 * @param string $email
-	 * @return User
-	 */
-	public function getByUsername( $username ) {
+    /**
+     * @param string $email
+     * @return User
+     */
+    public function getByUsername( $username ) {
 
-		return User::findByUsername( $username );
-	}
+        return User::findByUsername( $username );
+    }
 
-	/**
-	 * @param string $username
-	 * @return boolean
-	 */
-	public function isExistByUsername( $username ) {
+    /**
+     * @param string $username
+     * @return boolean
+     */
+    public function isExistByUsername( $username ) {
 
-		$user = User::findByUsername( $username );
+        $user = User::findByUsername( $username );
 
-		return isset( $user );
-	}
+        return isset( $user );
+    }
 
     // Read - Lists ----
 
     // Read - Maps -----
 
-	/**
-	 * @param string $roleSlug
-	 * @return array
-	 */
-	public function getIdNameMapByRoleSlug( $roleSlug ) {
+    /**
+     * @param string $roleSlug
+     * @return array
+     */
+    public function getIdNameMapByRoleSlug( $roleSlug ) {
 
-		$roleTable			= CoreTables::TABLE_ROLE;
-		$userTable			= CoreTables::TABLE_USER;
-		$siteTable			= CoreTables::TABLE_SITE;
-		$siteMemberTable	= CoreTables::TABLE_SITE_MEMBER;
+        $roleTable			= CoreTables::TABLE_ROLE;
+        $userTable			= CoreTables::TABLE_USER;
+        $siteTable			= CoreTables::TABLE_SITE;
+        $siteMemberTable	= CoreTables::TABLE_SITE_MEMBER;
 
-		$users 				= User::find()
-								->leftJoin( $siteMemberTable, "$siteMemberTable.userId = $userTable.id" )
-								->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
-								->leftJoin( $roleTable, "$roleTable.id = $siteMemberTable.roleId" )
-								->where( "$roleTable.slug=:slug AND $siteTable.name=:name", [ ':slug' => $roleSlug, ':name' => Yii::$app->core->getSiteName() ] )->all();
-		$usersMap			= [];
+        $users 				= User::find()
+                                ->leftJoin( $siteMemberTable, "$siteMemberTable.userId = $userTable.id" )
+                                ->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
+                                ->leftJoin( $roleTable, "$roleTable.id = $siteMemberTable.roleId" )
+                                ->where( "$roleTable.slug=:slug AND $siteTable.name=:name", [ ':slug' => $roleSlug, ':name' => Yii::$app->core->getSiteName() ] )->all();
+        $usersMap			= [];
 
-		foreach ( $users as $user ) {
+        foreach ( $users as $user ) {
 
-			$usersMap[ $user->id ] = $user->getName();
-		}
+            $usersMap[ $user->id ] = $user->getName();
+        }
 
-		return $usersMap;
-	}
+        return $usersMap;
+    }
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	/**
-	 * The method create user.
-	 * @param User $model
-	 * @param array $config
-	 * @return User
-	 */
-	public function create( $model, $config = [] ) {
+    /**
+     * The method create user.
+     * @param User $model
+     * @param array $config
+     * @return User
+     */
+    public function create( $model, $config = [] ) {
 
-		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+        $avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 
-		// Set Attributes
-		$model->registeredAt 	= DateUtil::getDateTime();
-		$model->status			= User::STATUS_NEW;
+        // Set Attributes
+        $model->registeredAt 	= DateUtil::getDateTime();
+        $model->status			= User::STATUS_NEW;
 
-		// Generate Tokens
-		$model->generateVerifyToken();
-		$model->generateAuthKey();
+        // Generate Tokens
+        $model->generateVerifyToken();
+        $model->generateAuthKey();
 
-		// Save Files
-		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
+        // Save Files
+        $this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
 
-		// Create User
-		$model->save();
+        // Create User
+        $model->save();
 
-		return $model;
-	}
+        return $model;
+    }
 
-	/**
-	 * The method registers website users and set their status to new at start. It also generate verification token.
-	 * @param RegisterForm $registerForm
-	 * @return User
-	 */
-	public function register( $registerForm ) {
+    /**
+     * The method registers website users and set their status to new at start. It also generate verification token.
+     * @param RegisterForm $registerForm
+     * @return User
+     */
+    public function register( $registerForm ) {
 
-		$user 	= new User();
-		$date	= DateUtil::getDateTime();
+        $user 	= new User();
+        $date	= DateUtil::getDateTime();
 
-		$user->email 		= $registerForm->email;
-		$user->username 	= $registerForm->username;
-		$user->firstName	= $registerForm->firstName;
-		$user->lastName		= $registerForm->lastName;
-		$user->registeredAt	= $date;
-		$user->status		= User::STATUS_NEW;
+        $user->email 		= $registerForm->email;
+        $user->username 	= $registerForm->username;
+        $user->firstName	= $registerForm->firstName;
+        $user->lastName		= $registerForm->lastName;
+        $user->registeredAt	= $date;
+        $user->status		= User::STATUS_NEW;
 
-		$user->generatePassword( $registerForm->password );
-		$user->generateVerifyToken();
-		$user->generateAuthKey();
+        $user->generatePassword( $registerForm->password );
+        $user->generateVerifyToken();
+        $user->generateAuthKey();
 
-		$user->save();
+        $user->save();
 
-		return $user;
-	}
+        return $user;
+    }
 
-	// Update -------------
+    // Update -------------
 
-	/**
-	 * The method update user including avatar.
-	 * @param User $model
-	 * @param array $config
-	 * @return User
-	 */
-	public function update( $model, $config = [] ) {
+    /**
+     * The method update user including avatar.
+     * @param User $model
+     * @param array $config
+     * @return User
+     */
+    public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'avatarId', 'genderId', 'email', 'username', 'firstName', 'lastName', 'status', 'phone', 'avatarUrl', 'websiteUrl' ];
-		$avatar 	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+        $attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'avatarId', 'genderId', 'email', 'username', 'firstName', 'lastName', 'status', 'phone', 'avatarUrl', 'websiteUrl' ];
+        $avatar 	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 
-		// Save Files
-		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
+        // Save Files
+        $this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
 
-		return parent::update( $model, [
-			'attributes' => $attributes
-		]);
-	}
+        return parent::update( $model, [
+            'attributes' => $attributes
+        ]);
+    }
 
-	/**
-	 * The method verify and confirm user by accepting valid token sent via mail. It also set user status to active.
-	 * @param User $user
-	 * @param string $token
-	 * @return boolean
-	 */
-	public function verify( $user, $token ) {
+    /**
+     * The method verify and confirm user by accepting valid token sent via mail. It also set user status to active.
+     * @param User $user
+     * @param string $token
+     * @return boolean
+     */
+    public function verify( $user, $token ) {
 
-		// Check Token
-		if( $user->isVerifyTokenValid( $token ) ) {
+        // Check Token
+        if( $user->isVerifyTokenValid( $token ) ) {
 
-			// Find existing user
-			$userToUpdate	= User::findById( $user->id );
+            // Find existing user
+            $userToUpdate	= User::findById( $user->id );
 
-			// User need admin approval
-			if( Yii::$app->core->isUserApproval() ) {
+            // User need admin approval
+            if( Yii::$app->core->isUserApproval() ) {
 
-				$userToUpdate->verify();
-			}
-			// Direct approval and activation
-			else {
+                $userToUpdate->verify();
+            }
+            // Direct approval and activation
+            else {
 
-				$userToUpdate->status = User::STATUS_ACTIVE;
-			}
+                $userToUpdate->status = User::STATUS_ACTIVE;
+            }
 
-			$userToUpdate->unsetVerifyToken();
+            $userToUpdate->unsetVerifyToken();
 
-			$userToUpdate->update();
+            $userToUpdate->update();
 
-			return true;
-		}
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
     /**
      * Activate User created from Admin Panel.
      * @param User $user
-	 * @param string $token
+     * @param string $token
      * @param ResetPasswordForm $resetForm
      * @return boolean
      */
     public function activate( $user, $token, $resetForm ) {
 
-		// Check Token
-		if( $user->isVerifyTokenValid( $token ) ) {
+        // Check Token
+        if( $user->isVerifyTokenValid( $token ) ) {
 
-	        // Find existing user
-	        $userToUpdate   = User::findById( $user->id );
+            // Find existing user
+            $userToUpdate   = User::findById( $user->id );
 
-	        // Generate Password
-	        $userToUpdate->generatePassword( $resetForm->password );
+            // Generate Password
+            $userToUpdate->generatePassword( $resetForm->password );
 
-			// User need admin approval
-			if( Yii::$app->core->isUserApproval() ) {
+            // User need admin approval
+            if( Yii::$app->core->isUserApproval() ) {
 
-				$userToUpdate->verify();
-			}
-			// Direct approval and activation
-			else {
+                $userToUpdate->verify();
+            }
+            // Direct approval and activation
+            else {
 
-				$userToUpdate->status = User::STATUS_ACTIVE;
-			}
+                $userToUpdate->status = User::STATUS_ACTIVE;
+            }
 
-	        $userToUpdate->unsetResetToken();
+            $userToUpdate->unsetResetToken();
 
-	        $userToUpdate->update();
+            $userToUpdate->update();
 
-	        return true;
-		}
+            return true;
+        }
 
-		return false;
+        return false;
     }
 
     /**
@@ -444,32 +444,32 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
         // Save Avatar
         $this->fileService->saveImage( $avatar, [ 'model' => $model, 'attribute' => 'avatarId' ] );
 
-		// Update Model
-		return parent::update( $model, [
-			'attributes' => [ 'avatarId' ]
-		]);
+        // Update Model
+        return parent::update( $model, [
+            'attributes' => [ 'avatarId' ]
+        ]);
     }
 
-	// Delete -------------
+    // Delete -------------
 
-	public function delete( $model, $config = [] ) {
+    public function delete( $model, $config = [] ) {
 
-		// Delete dependencies
-		$this->fileService->deleteFiles( [ $model->avatar ] );
+        // Delete dependencies
+        $this->fileService->deleteFiles( [ $model->avatar ] );
 
-		// Delete model
-		return parent::delete( $model, $config );
-	}
+        // Delete model
+        return parent::delete( $model, $config );
+    }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// UserService ---------------------------
+    // UserService ---------------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -477,11 +477,11 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
 }

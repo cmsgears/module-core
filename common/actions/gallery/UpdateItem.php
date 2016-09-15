@@ -12,66 +12,66 @@ use cmsgears\core\common\utilities\AjaxUtil;
 
 class UpdateItem extends \cmsgears\core\common\base\Action {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public $fileName	= 'File';
+    public $fileName	= 'File';
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// DeleteItem ----------------------------
+    // DeleteItem ----------------------------
 
-	public function run( $slug, $id, $type = null ) {
+    public function run( $slug, $id, $type = null ) {
 
-		$galleryService		= Yii::$app->factory->get( 'galleryService' );
-		$modelFileService	= Yii::$app->factory->get( 'modelFileService' );
-		$fileService		= Yii::$app->factory->get( 'fileService' );
-		$type				= isset( $type ) ? $type : CoreGlobal::TYPE_SITE;
+        $galleryService		= Yii::$app->factory->get( 'galleryService' );
+        $modelFileService	= Yii::$app->factory->get( 'modelFileService' );
+        $fileService		= Yii::$app->factory->get( 'fileService' );
+        $type				= isset( $type ) ? $type : CoreGlobal::TYPE_SITE;
 
-		$gallery 			= $galleryService->getBySlugType( $slug, $type );
+        $gallery 			= $galleryService->getBySlugType( $slug, $type );
 
-		if( isset( $gallery ) ) {
+        if( isset( $gallery ) ) {
 
-			$modelFile	= $modelFileService->getByModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $id );
-			$file		= $modelFile->file;
+            $modelFile	= $modelFileService->getByModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $id );
+            $file		= $modelFile->file;
 
-			if( isset( $file ) && $file->load( Yii::$app->request->post(), $this->fileName ) ) {
+            if( isset( $file ) && $file->load( Yii::$app->request->post(), $this->fileName ) ) {
 
-				$fileService->saveImage( $file );
+                $fileService->saveImage( $file );
 
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $id );
-			}
-		}
+                // Trigger Ajax Success
+                return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $id );
+            }
+        }
 
-		// Trigger Ajax Failure
+        // Trigger Ajax Failure
         return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
+    }
 }

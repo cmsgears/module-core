@@ -3,7 +3,7 @@ namespace cmsgears\core\common\validators;
 
 class CompareDateValidator extends \yii\validators\CompareValidator {
 
-	public $enableClientValidation = false;
+    public $enableClientValidation = false;
 
     protected function compareValues( $operator, $type, $value, $compareValue ) {
 
@@ -13,6 +13,6 @@ class CompareDateValidator extends \yii\validators\CompareValidator {
             $compareValue 	= strtotime( $compareValue );
         }
 
-		return parent::compareValues( $operator, 'number', $value, $compareValue );
+        return parent::compareValues( $operator, 'number', $value, $compareValue );
     }
 }

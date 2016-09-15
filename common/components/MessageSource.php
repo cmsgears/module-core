@@ -88,7 +88,7 @@ class MessageSource extends \yii\base\Component {
 
         // Generic Fields
         CoreGlobal::FIELD_CODE => 'Code',
-        CoreGlobal::FIELD_CODE_NUM => 'Numeric Code',
+        CoreGlobal::FIELD_ISO => 'ISO Code',
 
         CoreGlobal::FIELD_DEFAULT => 'Default',
         CoreGlobal::FIELD_NAME => 'Name',

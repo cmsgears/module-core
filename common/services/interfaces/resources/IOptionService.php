@@ -9,42 +9,42 @@ use cmsgears\core\common\config\CoreGlobal;
 
 interface IOptionService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
-	public function getByCategoryId( $categoryId );
+    public function getByCategoryId( $categoryId );
 
-	public function getByCategorySlug( $categorySlug, $categoryType = CoreGlobal::TYPE_OPTION_GROUP );
+    public function getByCategorySlug( $categorySlug, $categoryType = CoreGlobal::TYPE_OPTION_GROUP );
 
-	public function getByNameCategoryId( $name, $categoryId );
+    public function getByNameCategoryId( $name, $categoryId );
 
-	public function getByNameCategoryName( $name, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP );
+    public function getByNameCategoryName( $name, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP );
 
-	public function getByValueCategoryName( $value, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP );
+    public function getByValueCategoryName( $value, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP );
 
     // Read - Lists ----
 
-	public function getIdListByCategoryId( $categoryId, $config = [] );
+    public function getIdListByCategoryId( $categoryId, $config = [] );
 
     // Read - Maps -----
 
-	public function getIdNameMapByCategoryId( $categoryId, $config = [] );
+    public function getIdNameMapByCategoryId( $categoryId, $config = [] );
 
-	public function getIdNameMapByCategorySlug( $categoryName, $config = [], $type = CoreGlobal::TYPE_OPTION_GROUP );
+    public function getIdNameMapByCategorySlug( $categoryName, $config = [], $type = CoreGlobal::TYPE_OPTION_GROUP );
 
-	public function getValueNameMapByCategoryId( $categoryId );
+    public function getValueNameMapByCategoryId( $categoryId );
 
-	public function getValueNameMapByCategoryName( $categoryName, $type = CoreGlobal::TYPE_OPTION_GROUP );
+    public function getValueNameMapByCategoryName( $categoryName, $type = CoreGlobal::TYPE_OPTION_GROUP );
 
-	public function getValueNameMapByCategorySlug( $categorySlug, $type = CoreGlobal::TYPE_OPTION_GROUP );
+    public function getValueNameMapByCategorySlug( $categorySlug, $type = CoreGlobal::TYPE_OPTION_GROUP );
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
 
 }

@@ -19,57 +19,57 @@ use cmsgears\core\common\utilities\AjaxUtil;
  */
 class AutoSearch extends \cmsgears\core\common\actions\base\ModelAction {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// AutoSearch ----------------------------
+    // AutoSearch ----------------------------
 
-	public function run() {
+    public function run() {
 
-		$name	= Yii::$app->request->post( 'name' );
-		$type	= Yii::$app->request->post( 'type' );
-		$data	= [];
+        $name	= Yii::$app->request->post( 'name' );
+        $type	= Yii::$app->request->post( 'type' );
+        $data	= [];
 
-		// For models having type columns
-		if( isset( $type ) ) {
+        // For models having type columns
+        if( isset( $type ) ) {
 
-			$data	= $this->modelService->searchByNameType( $name, $type );
-		}
-		else {
+            $data	= $this->modelService->searchByNameType( $name, $type );
+        }
+        else {
 
-			$data	= $this->modelService->searchByName( $name );
-		}
+            $data	= $this->modelService->searchByName( $name );
+        }
 
-		// Trigger Ajax Success
-		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-	}
+        // Trigger Ajax Success
+        return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+    }
 }

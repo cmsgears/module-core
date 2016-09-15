@@ -21,39 +21,39 @@ use cmsgears\core\common\models\traits\NameTrait;
  */
 class Locale extends \cmsgears\core\common\models\base\Entity {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use NameTrait;
+    use NameTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     public function rules() {
 
@@ -89,19 +89,19 @@ class Locale extends \cmsgears\core\common\models\base\Entity {
         ];
     }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// Locale --------------------------------
+    // Locale --------------------------------
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -111,13 +111,13 @@ class Locale extends \cmsgears\core\common\models\base\Entity {
         return CoreTables::TABLE_LOCALE;
     }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Locale --------------------------------
+    // Locale --------------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	// Read - Find ------------
+    // Read - Find ------------
 
     /**
      * @return Locale - by code
@@ -127,9 +127,9 @@ class Locale extends \cmsgears\core\common\models\base\Entity {
         return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
     }
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 }

@@ -24,199 +24,97 @@ use cmsgears\core\common\services\traits\SlugTypeTrait;
  */
 class GalleryService extends \cmsgears\core\common\services\base\EntityService implements IGalleryService {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\Gallery';
+    public static $modelClass	= '\cmsgears\core\common\models\resources\Gallery';
 
-	public static $modelTable	= CoreTables::TABLE_GALLERY;
+    public static $modelTable	= CoreTables::TABLE_GALLERY;
 
-	public static $parentType	= CoreGlobal::TYPE_GALLERY;
+    public static $parentType	= CoreGlobal::TYPE_GALLERY;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	protected $fileService;
+    protected $fileService;
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use NameTypeTrait;
-	use SlugTypeTrait;
+    use NameTypeTrait;
+    use SlugTypeTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
     public function __construct( IFileService $fileService, $config = [] ) {
 
-		$this->fileService	= $fileService;
+        $this->fileService	= $fileService;
 
         parent::__construct( $config );
     }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// GalleryService ------------------------
+    // GalleryService ------------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	public function getPage( $config = [] ) {
+    public function getPage( $config = [] ) {
 
-	    $sort = new Sort([
-	        'attributes' => [
-	            'owner' => [
-	                'asc' => [ 'createdBy' => SORT_ASC ],
-	                'desc' => ['createdBy' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'owner'
-	            ],
-	            'name' => [
-	                'asc' => [ 'name' => SORT_ASC ],
-	                'desc' => ['name' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'name'
-	            ],
-	            'slug' => [
-	                'asc' => [ 'slug' => SORT_ASC ],
-	                'desc' => ['slug' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'slug'
-	            ],
-	            'title' => [
-	                'asc' => [ 'title' => SORT_ASC ],
-	                'desc' => ['title' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'title'
-	            ]
-	        ]
-	    ]);
+        $sort = new Sort([
+            'attributes' => [
+                'owner' => [
+                    'asc' => [ 'createdBy' => SORT_ASC ],
+                    'desc' => ['createdBy' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'owner'
+                ],
+                'name' => [
+                    'asc' => [ 'name' => SORT_ASC ],
+                    'desc' => ['name' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'name'
+                ],
+                'slug' => [
+                    'asc' => [ 'slug' => SORT_ASC ],
+                    'desc' => ['slug' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'slug'
+                ],
+                'title' => [
+                    'asc' => [ 'title' => SORT_ASC ],
+                    'desc' => ['title' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'title'
+                ]
+            ]
+        ]);
 
-		$config[ 'sort' ] = $sort;
+        $config[ 'sort' ] = $sort;
 
-		return parent::findPage( $config );
-	}
+        return parent::findPage( $config );
+    }
 
-	// Read ---------------
-
-    // Read - Models ---
-
-    // Read - Lists ----
-
-    // Read - Maps -----
-
-	// Read - Others ---
-
-	// Create -------------
-
-	public function createByParams( $params = [], $config = [] ) {
-
-		$autoName	= isset( $config[ 'autoName' ] ) ? $config[ 'autoName' ] : false;
-
-		if( $autoName ) {
-
-			$gallery	= $this->getByNameType( $params[ 'name' ], $params[ 'type' ] );
-
-			// Rare scenario
-			if( isset( $gallery ) ) {
-
-				$params[ 'name' ]	= Yii::$app->security->generateRandomString( 16 );
-			}
-		}
-
-		return parent::createByParams( $params, $config );
-	}
-
-	public function createItem( $gallery, $item ) {
-
-		$modelFile 	= new ModelFile();
-
-		// Save Gallery Image
-		$this->fileService->saveImage( $item, [ 'model' => $modelFile, 'attribute' => 'modelId' ] );
-
-		// Save Gallery Item
-		if( $item->id > 0 ) {
-
-			$modelFile->parentType	= CoreGlobal::TYPE_GALLERY;
-			$modelFile->parentId	= $gallery->id;
-
-			$modelFile->save();
-		}
-
-		return $item;
-	}
-
-	// Update -------------
-
-	public function update( $model, $config = [] ) {
-
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'templateId', 'name', 'title', 'description' ];
-
-		// Provide activate/deactivate capability to admin
-		if( isset( $config[ 'admin' ] ) && $config[ 'admin' ] ) {
-
-			$attributes[] = 'active';
-		}
-
-		return parent::update( $model, [
-			'attributes' => $attributes
-		]);
- 	}
-
-	public function updateItem( $item ) {
-
-		// Save Gallery Item
-		$this->fileService->saveImage( $item );
-
-		return true;
-	}
-
-	// Delete -------------
-
-	public function delete( $model, $config = [] ) {
-
-		// Delete mapping
-		ModelGallery::deleteByModelId( $model->id );
-
-		// Delete items
-		$items	= $model->files;
-
-		// Delete Items
-		foreach ( $items as $item ) {
-
-			$this->fileService->delete( $item );
-		}
-
-		// Delete model
-		return parent::delete( $model, $config );
-	}
-
-	// Static Methods ----------------------------------------------
-
-	// CMG parent classes --------------------
-
-	// GalleryService ------------------------
-
-	// Data Provider ------
-
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -224,11 +122,113 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    public function createByParams( $params = [], $config = [] ) {
 
-	// Delete -------------
+        $autoName	= isset( $config[ 'autoName' ] ) ? $config[ 'autoName' ] : false;
+
+        if( $autoName ) {
+
+            $gallery	= $this->getByNameType( $params[ 'name' ], $params[ 'type' ] );
+
+            // Rare scenario
+            if( isset( $gallery ) ) {
+
+                $params[ 'name' ]	= Yii::$app->security->generateRandomString( 16 );
+            }
+        }
+
+        return parent::createByParams( $params, $config );
+    }
+
+    public function createItem( $gallery, $item ) {
+
+        $modelFile 	= new ModelFile();
+
+        // Save Gallery Image
+        $this->fileService->saveImage( $item, [ 'model' => $modelFile, 'attribute' => 'modelId' ] );
+
+        // Save Gallery Item
+        if( $item->id > 0 ) {
+
+            $modelFile->parentType	= CoreGlobal::TYPE_GALLERY;
+            $modelFile->parentId	= $gallery->id;
+
+            $modelFile->save();
+        }
+
+        return $item;
+    }
+
+    // Update -------------
+
+    public function update( $model, $config = [] ) {
+
+        $attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'templateId', 'name', 'title', 'description' ];
+
+        // Provide activate/deactivate capability to admin
+        if( isset( $config[ 'admin' ] ) && $config[ 'admin' ] ) {
+
+            $attributes[] = 'active';
+        }
+
+        return parent::update( $model, [
+            'attributes' => $attributes
+        ]);
+    }
+
+    public function updateItem( $item ) {
+
+        // Save Gallery Item
+        $this->fileService->saveImage( $item );
+
+        return true;
+    }
+
+    // Delete -------------
+
+    public function delete( $model, $config = [] ) {
+
+        // Delete mapping
+        ModelGallery::deleteByModelId( $model->id );
+
+        // Delete items
+        $items	= $model->files;
+
+        // Delete Items
+        foreach ( $items as $item ) {
+
+            $this->fileService->delete( $item );
+        }
+
+        // Delete model
+        return parent::delete( $model, $config );
+    }
+
+    // Static Methods ----------------------------------------------
+
+    // CMG parent classes --------------------
+
+    // GalleryService ------------------------
+
+    // Data Provider ------
+
+    // Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+    // Read - Others ---
+
+    // Create -------------
+
+    // Update -------------
+
+    // Delete -------------
 }

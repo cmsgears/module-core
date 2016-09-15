@@ -17,19 +17,19 @@ use cmsgears\core\common\utilities\CodeGenUtil;
  */
 abstract class PageWidget extends Widget {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
     /**
      * Used to decorate wrapper. The inherited $options will be used for div wrapping the models wrapper.
@@ -120,13 +120,13 @@ abstract class PageWidget extends Widget {
      */
     public $pageLinks    	= null;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
     public function init() {
 
@@ -159,19 +159,19 @@ abstract class PageWidget extends Widget {
     }
 
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Widget --------
+    // yii\base\Widget --------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// cmsgears\core\common\base\Widget
+    // cmsgears\core\common\base\Widget
 
     public function renderWidget( $config = [] ) {
 
@@ -208,13 +208,13 @@ abstract class PageWidget extends Widget {
             $this->singlePath   = Url::toRoute( [ "/$this->singlePath" ], true );
         }
 
-		$idxCounter	= 0;
+        $idxCounter	= 0;
 
         foreach( $models as $model ) {
 
             $modelsHtml[]   = $this->render( $singleView, [ 'index' => $idxCounter, 'model' => $model, 'widget' => $this ] );
 
-			$idxCounter++;
+            $idxCounter++;
         }
 
         $modelsHtml     = implode( '', $modelsHtml );
@@ -224,6 +224,6 @@ abstract class PageWidget extends Widget {
         return Html::tag( 'div', $content, $this->options );
     }
 
-	// PageWidget ----------------------------
+    // PageWidget ----------------------------
 
 }

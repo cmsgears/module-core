@@ -3,9 +3,9 @@ namespace cmsgears\core\common\guidelines;
 
 class TablesTemplate {
 
-	// Entities -------------
+    // Entities -------------
 
-	// Resources ------------
+    // Resources ------------
 
-	// Mappers & Traits -----
+    // Mappers & Traits -----
 }

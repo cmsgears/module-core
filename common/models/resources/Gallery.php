@@ -47,48 +47,48 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwner {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	public static $multiSite	= true;
+    public static $multiSite	= true;
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public $mParentType		= CoreGlobal::TYPE_GALLERY;
+    public $mParentType		= CoreGlobal::TYPE_GALLERY;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use CreateModifyTrait;
-	use DataTrait;
-	use FileTrait;
-	use MetaTrait;
-	use NameTypeTrait;
-	use OwnerTrait;
-	use SlugTypeTrait;
-	use TemplateTrait;
+    use CreateModifyTrait;
+    use DataTrait;
+    use FileTrait;
+    use MetaTrait;
+    use NameTypeTrait;
+    use OwnerTrait;
+    use SlugTypeTrait;
+    use TemplateTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -115,7 +115,7 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwn
         ];
     }
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -164,30 +164,30 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwn
         ];
     }
 
-	// yii\db\BaseActiveRecord
+    // yii\db\BaseActiveRecord
 
-	public function beforeSave( $insert ) {
+    public function beforeSave( $insert ) {
 
-	    if( parent::beforeSave( $insert ) ) {
+        if( parent::beforeSave( $insert ) ) {
 
-			if( $this->templateId <= 0 ) {
+            if( $this->templateId <= 0 ) {
 
-				$this->templateId = null;
-			}
+                $this->templateId = null;
+            }
 
-	        return true;
-	    }
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// Gallery -------------------------------
+    // Gallery -------------------------------
 
     /**
      * @return Site
@@ -205,11 +205,11 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwn
         return Yii::$app->formatter->asBoolean( $this->active );
     }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -219,32 +219,32 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwn
         return CoreTables::TABLE_GALLERY;
     }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Gallery -------------------------------
+    // Gallery -------------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	public static function queryWithHasOne( $config = [] ) {
+    public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template', 'creator', 'modifier' ];
-		$config[ 'relations' ]	= $relations;
+        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template', 'creator', 'modifier' ];
+        $config[ 'relations' ]	= $relations;
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithSite( $config = [] ) {
+    public static function queryWithSite( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'site' ];
+        $config[ 'relations' ]	= [ 'site' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 }

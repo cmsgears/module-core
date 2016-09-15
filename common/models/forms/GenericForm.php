@@ -9,70 +9,70 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class GenericForm extends \yii\base\Model {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public $active;
+    public $active;
 
-	public $fields;
+    public $fields;
 
-	public $attribs;
+    public $attribs;
 
-	public $captcha;
+    public $captcha;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
     public function __construct( $config = [] ) {
 
-		$this->fields	= $config[ 'fields' ];
-		$this->attribs	= [];
-		$fields			= $this->fields;
+        $this->fields	= $config[ 'fields' ];
+        $this->attribs	= [];
+        $fields			= $this->fields;
 
-		unset( $config[ 'fields' ] );
+        unset( $config[ 'fields' ] );
 
-		foreach ( $fields as $key => $field ) {
+        foreach ( $fields as $key => $field ) {
 
-			if( isset( $field->value ) ) {
+            if( isset( $field->value ) ) {
 
-				$this->__set( $key, $field->value );
-			}
-			else {
+                $this->__set( $key, $field->value );
+            }
+            else {
 
-				$this->__set( $key, null );
-			}
+                $this->__set( $key, null );
+            }
 
-			$this->attribs[]	= $key;
-		}
+            $this->attribs[]	= $key;
+        }
 
-		parent::__construct( $config );
+        parent::__construct( $config );
     }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Object --------
+    // yii\base\Object --------
 
-	public function __set( $name, $value ) {
+    public function __set( $name, $value ) {
 
         $setter 	= 'set' . $name;
 
@@ -84,107 +84,107 @@ class GenericForm extends \yii\base\Model {
 
             $this->$name	= $value;
         }
-	}
+    }
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
- 	public function rules() {
+    public function rules() {
 
-		// Prepare validators list
-		$validators		= [];
-		$fields			= $this->fields;
+        // Prepare validators list
+        $validators		= [];
+        $fields			= $this->fields;
 
-		foreach ( $fields as $key => $field ) {
+        foreach ( $fields as $key => $field ) {
 
-			if( isset( $field->validators ) ) {
+            if( isset( $field->validators ) ) {
 
-				$fieldValidators = preg_split( "/,/", $field->validators );
+                $fieldValidators = preg_split( "/,/", $field->validators );
 
-				foreach ( $fieldValidators as $validator ) {
+                foreach ( $fieldValidators as $validator ) {
 
-					if( !isset( $validators[ $validator ] ) ) {
+                    if( !isset( $validators[ $validator ] ) ) {
 
-						$validators[ $validator ]	= [];
-					}
+                        $validators[ $validator ]	= [];
+                    }
 
-					if( strlen( $validator ) > 0 ) {
+                    if( strlen( $validator ) > 0 ) {
 
-						$validators[ $validator ][]	= $field->name;
-					}
-				}
-			}
-		}
+                        $validators[ $validator ][]	= $field->name;
+                    }
+                }
+            }
+        }
 
         $rules = [
             [ 'captcha', 'captcha', 'captchaAction' => '/forms/form/captcha', 'on' => 'captcha' ],
             [ $this->attribs, 'safe' ]
         ];
 
-		foreach ( $validators as $key => $value ) {
+        foreach ( $validators as $key => $value ) {
 
-			if( count( $value ) > 0 ) {
+            if( count( $value ) > 0 ) {
 
-				$rules[]	= [ $value, $key ];
-			}
-		}
+                $rules[]	= [ $value, $key ];
+            }
+        }
 
-		return $rules;
+        return $rules;
     }
 
     public function attributeLabels() {
 
-		$fields	= $this->fields;
-		$labels	= [];
+        $fields	= $this->fields;
+        $labels	= [];
 
-		foreach ( $fields as $key => $field ) {
+        foreach ( $fields as $key => $field ) {
 
-			if( isset( $field->label ) ) {
+            if( isset( $field->label ) ) {
 
-				$labels[ $key ] = $field->label;
-			}
-			else {
+                $labels[ $key ] = $field->label;
+            }
+            else {
 
-				$labels[ $key ] = $key;
-			}
-		}
+                $labels[ $key ] = $key;
+            }
+        }
 
         return $labels;
     }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// GenericForm ---------------------------
+    // GenericForm ---------------------------
 
-	/**
-	 * The method collect the list of class members and their values using reflection.
-	 * return array - list of class members and their value
-	 */
-	public function getFormAttributes( $classPath = null ) {
+    /**
+     * The method collect the list of class members and their values using reflection.
+     * return array - list of class members and their value
+     */
+    public function getFormAttributes( $classPath = null ) {
 
-		if( !isset( $classPath ) ) {
+        if( !isset( $classPath ) ) {
 
-			$classPath	= 'cmsgears\core\common\models\forms\GenericForm';
-		}
+            $classPath	= 'cmsgears\core\common\models\forms\GenericForm';
+        }
 
-	  	$refclass	= new \ReflectionClass( $classPath );
-		$attribArr	= array();
+        $refclass	= new \ReflectionClass( $classPath );
+        $attribArr	= array();
 
-	  	foreach ( $refclass->getProperties() as $property ) {
+        foreach ( $refclass->getProperties() as $property ) {
 
-			$name = $property->name;
+            $name = $property->name;
 
-	    	if ( $property->class == $refclass->name ) {
+            if ( $property->class == $refclass->name ) {
 
-				$attribArr[ $name ] = $this->$name;
-			}
-	  	}
+                $attribArr[ $name ] = $this->$name;
+            }
+        }
 
-		return $attribArr;
-	}
+        return $attribArr;
+    }
 }

@@ -13,113 +13,113 @@ use cmsgears\core\common\config\MailProperties;
 
 abstract class Controller extends \yii\web\Controller {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals ----------------
+    // Globals ----------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Top level CRUD permission to be applied by default on selected actions. It can be replaced by child classes.
-	public $crudPermission;
+    // Top level CRUD permission to be applied by default on selected actions. It can be replaced by child classes.
+    public $crudPermission;
 
-	// The model service for primary model if applicable. It can be obtained either via factory component or instantiated within controller constructor or init method.
-	public $modelService;
+    // The model service for primary model if applicable. It can be obtained either via factory component or instantiated within controller constructor or init method.
+    public $modelService;
 
-	// It provide information to display active tab on sidebar.
-	public $sidebar;
+    // It provide information to display active tab on sidebar.
+    public $sidebar;
 
-	// We need return url in cases where view need to provide links to move back to previous page. It's also useful when we need to redirect user to previous page on form success. It's an alternate to breadcrumb, but limited to single action.
-	public $returnUrl;
+    // We need return url in cases where view need to provide links to move back to previous page. It's also useful when we need to redirect user to previous page on form success. It's an alternate to breadcrumb, but limited to single action.
+    public $returnUrl;
 
-	// Protected --------------
+    // Protected --------------
 
-	/**
-	 * It can be used while adding, updating or deleting the primary module. The child class must override these methods and set the scenario before calling parent class method.
-	 */
-	protected $scenario;
+    /**
+     * It can be used while adding, updating or deleting the primary module. The child class must override these methods and set the scenario before calling parent class method.
+     */
+    protected $scenario;
 
-	// Private ----------------
+    // Private ----------------
 
-	// Core and Mail properties.
-	private $coreProperties;
+    // Core and Mail properties.
+    private $coreProperties;
 
-	private $mailProperties;
+    private $mailProperties;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// For development purpose only - Publish assets for each request
-	public function beforeAction( $action ) {
+    // For development purpose only - Publish assets for each request
+    public function beforeAction( $action ) {
 
-	    if( defined( 'YII_DEBUG' ) && YII_DEBUG ) {
+        if( defined( 'YII_DEBUG' ) && YII_DEBUG ) {
 
-	        Yii::$app->assetManager->forceCopy = true;
-	    }
+            Yii::$app->assetManager->forceCopy = true;
+        }
 
-	    return parent::beforeAction( $action );
-	}
+        return parent::beforeAction( $action );
+    }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Controller ----
+    // yii\base\Controller ----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Controller ----------------------------
+    // Controller ----------------------------
 
-	public function getCoreProperties() {
+    public function getCoreProperties() {
 
-		if( !isset( $this->coreProperties ) ) {
+        if( !isset( $this->coreProperties ) ) {
 
-			$this->coreProperties	= CoreProperties::getInstance();
-		}
+            $this->coreProperties	= CoreProperties::getInstance();
+        }
 
-		return $this->coreProperties;
-	}
+        return $this->coreProperties;
+    }
 
-	public function getMailProperties() {
+    public function getMailProperties() {
 
-		if( !isset( $this->mailProperties ) ) {
+        if( !isset( $this->mailProperties ) ) {
 
-			$this->mailProperties	= MailProperties::getInstance();
-		}
+            $this->mailProperties	= MailProperties::getInstance();
+        }
 
-		return $this->mailProperties;
-	}
+        return $this->mailProperties;
+    }
 
-	/**
-	 * The method check whether user is logged in and send to respective home page.
-	 */
-	protected function checkHome() {
+    /**
+     * The method check whether user is logged in and send to respective home page.
+     */
+    protected function checkHome() {
 
-		// Send user to home if already logged in
-	    if ( !Yii::$app->user->isGuest ) {
+        // Send user to home if already logged in
+        if ( !Yii::$app->user->isGuest ) {
 
-			$user		= Yii::$app->user->getIdentity();
-			$role		= $user->role;
-			$storedLink	= Url::previous( CoreGlobal::REDIRECT_LOGIN );
+            $user		= Yii::$app->user->getIdentity();
+            $role		= $user->role;
+            $storedLink	= Url::previous( CoreGlobal::REDIRECT_LOGIN );
 
-			// Redirect user to home
-			if( isset( $storedLink ) ) {
+            // Redirect user to home
+            if( isset( $storedLink ) ) {
 
-				Yii::$app->response->redirect( $storedLink )->send();
-			}
-			else if( isset( $role ) && isset( $role->homeUrl ) ) {
+                Yii::$app->response->redirect( $storedLink )->send();
+            }
+            else if( isset( $role ) && isset( $role->homeUrl ) ) {
 
-				Yii::$app->response->redirect( [ "/$role->homeUrl" ] )->send();
-			}
-			// Redirect user to home set by app config
-			else {
+                Yii::$app->response->redirect( [ "/$role->homeUrl" ] )->send();
+            }
+            // Redirect user to home set by app config
+            else {
 
-				Yii::$app->response->redirect( [ Yii::$app->core->getLoginRedirectPage() ] )->send();
-			}
-	    }
-	}
+                Yii::$app->response->redirect( [ Yii::$app->core->getLoginRedirectPage() ] )->send();
+            }
+        }
+    }
 }

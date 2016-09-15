@@ -9,24 +9,24 @@ use cmsgears\core\common\config\CoreGlobal;
 
 interface IFormFieldService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
 
-	// Data Provider ------
+    // Data Provider ------
 
-	public function getPageByFormId( $formId );
+    public function getPageByFormId( $formId );
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
-	public function getByFormId( $formId );
+    public function getByFormId( $formId );
 
     // Read - Lists ----
 
     // Read - Maps -----
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
 
 }

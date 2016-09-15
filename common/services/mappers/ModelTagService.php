@@ -21,140 +21,60 @@ use cmsgears\core\common\services\traits\MapperTrait;
  */
 class ModelTagService extends \cmsgears\core\common\services\base\EntityService implements IModelTagService {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelTag';
+    public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelTag';
 
-	public static $modelTable	= CoreTables::TABLE_MODEL_TAG;
+    public static $modelTable	= CoreTables::TABLE_MODEL_TAG;
 
-	public static $parentType	= null;
+    public static $parentType	= null;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	private $tagService;
+    private $tagService;
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use MapperTrait;
+    use MapperTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
     public function __construct( ITagService $tagService, $config = [] ) {
 
-		$this->tagService	= $tagService;
+        $this->tagService	= $tagService;
 
         parent::__construct( $config );
     }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// ModelTagService -----------------------
+    // ModelTagService -----------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
-
-    // Read - Models ---
-
-    // Read - Lists ----
-
-    // Read - Maps -----
-
-	// Read - Others ---
-
-	// Create -------------
-
-	public function createFromCsv( $parentId, $parentType, $tags ) {
-
-		$tags	= preg_split( "/,/", $tags );
-
-		foreach ( $tags as $tagName ) {
-
-			if( empty( $tagName ) ) {
-
-				continue;
-			}
-
-			$tagName	= trim( $tagName );
-			$tag		= Tag::findByNameType( $tagName, $parentType );
-
-			if( !isset( $tag ) ) {
-
-				$tag			= new Tag();
-				$tag->siteId	= Yii::$app->core->siteId;
-				$tag->name		= $tagName;
-				$tag->type		= $parentType;
-				$tag			= $this->tagService->create( $tag );
-			}
-
-			$modelTag	= $this->getByModelId( $parentId, $parentType, $tag->id );
-
-			// Create if does not exist
-			if( !isset( $modelTag ) ) {
-
-				$this->createByParams( [ 'modelId' => $tag->id, 'parentId' => $parentId, 'parentType' => $parentType, 'order' => 0, 'active' => true ] );
-			}
-			// Activate if already exist
-			else {
-
-				self::activate( $modelTag );
-			}
-		}
-	}
-
-	// Update -------------
-
-	public function update( $model, $config = [] ) {
-
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'order', 'active' ];
-
-		return parent::update( $model, [
-			'attributes' => $attributes
-		]);
- 	}
-
-	// Delete -------------
-
-	public function deleteByTagSlug( $parentId, $parentType, $tagSlug, $tagType, $delete = false ) {
-
-		$tag	= $this->tagService->getBySlugType( $tagSlug, $tagType );
-
-		$this->disableByModelId( $parentId, $parentType, $tag->id, $delete = false );
-
-		return true;
-	}
-
-	// Static Methods ----------------------------------------------
-
-	// CMG parent classes --------------------
-
-	// ModelTagService -----------------------
-
-	// Data Provider ------
-
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -162,11 +82,91 @@ class ModelTagService extends \cmsgears\core\common\services\base\EntityService 
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    public function createFromCsv( $parentId, $parentType, $tags ) {
 
-	// Delete -------------
+        $tags	= preg_split( "/,/", $tags );
+
+        foreach ( $tags as $tagName ) {
+
+            if( empty( $tagName ) ) {
+
+                continue;
+            }
+
+            $tagName	= trim( $tagName );
+            $tag		= Tag::findByNameType( $tagName, $parentType );
+
+            if( !isset( $tag ) ) {
+
+                $tag			= new Tag();
+                $tag->siteId	= Yii::$app->core->siteId;
+                $tag->name		= $tagName;
+                $tag->type		= $parentType;
+                $tag			= $this->tagService->create( $tag );
+            }
+
+            $modelTag	= $this->getByModelId( $parentId, $parentType, $tag->id );
+
+            // Create if does not exist
+            if( !isset( $modelTag ) ) {
+
+                $this->createByParams( [ 'modelId' => $tag->id, 'parentId' => $parentId, 'parentType' => $parentType, 'order' => 0, 'active' => true ] );
+            }
+            // Activate if already exist
+            else {
+
+                self::activate( $modelTag );
+            }
+        }
+    }
+
+    // Update -------------
+
+    public function update( $model, $config = [] ) {
+
+        $attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'order', 'active' ];
+
+        return parent::update( $model, [
+            'attributes' => $attributes
+        ]);
+    }
+
+    // Delete -------------
+
+    public function deleteByTagSlug( $parentId, $parentType, $tagSlug, $tagType, $delete = false ) {
+
+        $tag	= $this->tagService->getBySlugType( $tagSlug, $tagType );
+
+        $this->disableByModelId( $parentId, $parentType, $tag->id, $delete = false );
+
+        return true;
+    }
+
+    // Static Methods ----------------------------------------------
+
+    // CMG parent classes --------------------
+
+    // ModelTagService -----------------------
+
+    // Data Provider ------
+
+    // Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+    // Read - Others ---
+
+    // Create -------------
+
+    // Update -------------
+
+    // Delete -------------
 }

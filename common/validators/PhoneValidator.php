@@ -10,7 +10,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class PhoneValidator extends Validator {
 
-	private static $regex	= "/^(\\+|[0-9 -])([0-9 -]+[0-9])$/";
+    private static $regex	= "/^(\\+|[0-9 -])([0-9 -]+[0-9])$/";
 
     public function validateAttribute($model, $attribute) {
 

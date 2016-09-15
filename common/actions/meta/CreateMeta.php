@@ -16,95 +16,95 @@ use cmsgears\core\common\utilities\AjaxUtil;
  */
 class CreateMeta extends \cmsgears\core\common\base\Action {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	protected $modelService;
+    protected $modelService;
 
-	protected $metaService;
+    protected $metaService;
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
     public function init() {
 
-		parent::init();
+        parent::init();
 
-		$this->modelService		= $this->controller->modelService;
+        $this->modelService		= $this->controller->modelService;
 
-		$this->metaService		= $this->controller->metaService;
+        $this->metaService		= $this->controller->metaService;
     }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// CreateMeta ----------------------------
+    // CreateMeta ----------------------------
 
-	/**
-	 * Create Meta for given parent slug and parent type.
-	 */
-	public function run( $slug, $type = null ) {
+    /**
+     * Create Meta for given parent slug and parent type.
+     */
+    public function run( $slug, $type = null ) {
 
-		// Find Meta parent
-		$parent	= null;
+        // Find Meta parent
+        $parent	= null;
 
-		if( isset( $type ) ) {
+        if( isset( $type ) ) {
 
-			$parent	= $this->modelService->getBySlugType( $slug, $type );
-		}
-		else {
+            $parent	= $this->modelService->getBySlugType( $slug, $type );
+        }
+        else {
 
-			$parent	= $this->modelService->getBySlug( $slug );
-		}
+            $parent	= $this->modelService->getBySlug( $slug );
+        }
 
-		// Delete meta
-		if( isset( $parent ) ) {
+        // Delete meta
+        if( isset( $parent ) ) {
 
-			$metaClass	= $this->metaService->getModelClass();
-			$meta		= new $metaClass;
+            $metaClass	= $this->metaService->getModelClass();
+            $meta		= new $metaClass;
 
-			if( isset( $meta ) && $meta->isBelongsTo( $parent ) ) {
+            if( isset( $meta ) && $meta->isBelongsTo( $parent ) ) {
 
-				if( $meta->load( Yii::$app->request->post(), $meta->getClassName() ) && $meta->validate() ) {
+                if( $meta->load( Yii::$app->request->post(), $meta->getClassName() ) && $meta->validate() ) {
 
-					$this->metaService->create( $meta );
+                    $this->metaService->create( $meta );
 
-					// Trigger Ajax Success
-					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
-				}
+                    // Trigger Ajax Success
+                    return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
+                }
 
-				// Generate Errors
-				$errors = AjaxUtil::generateErrorMessage( $model );
+                // Generate Errors
+                $errors = AjaxUtil::generateErrorMessage( $model );
 
-				// Trigger Ajax Failure
-		    	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-			}
-		}
+                // Trigger Ajax Failure
+                return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+            }
+        }
 
-		// Trigger Ajax Failure
+        // Trigger Ajax Failure
         return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
+    }
 }

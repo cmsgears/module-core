@@ -12,48 +12,48 @@ use cmsgears\core\common\models\resources\ModelComment;
 
 class TestimonialController extends \cmsgears\core\admin\controllers\base\CommentController {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals ----------------
+    // Globals ----------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
- 	public function init() {
+    public function init() {
 
         parent::init();
 
-		$this->sidebar 			= [ 'parent' => 'sidebar-core', 'child' => 'testimonials' ];
+        $this->sidebar 			= [ 'parent' => 'sidebar-core', 'child' => 'testimonials' ];
 
         $this->commentUrl	  	= 'testimonial';
-		$this->returnUrl		= Url::previous( $this->commentUrl );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/testimonial/all' ], true );
+        $this->returnUrl		= Url::previous( $this->commentUrl );
+        $this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/testimonial/all' ], true );
 
         $this->parentType		= CoreGlobal::TYPE_SITE;
         $this->commentType  	= ModelComment::TYPE_TESTIMONIAL;
 
-		$this->parentService	= Yii::$app->factory->get( 'siteService' );
-	}
+        $this->parentService	= Yii::$app->factory->get( 'siteService' );
+    }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Controller ----
+    // yii\base\Controller ----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// TestimonialController -----------------
+    // TestimonialController -----------------
 
 }

@@ -13,25 +13,25 @@ $returnUrl		= $this->context->returnUrl;
 $renderers		= Yii::$app->templateManager->renderers;
 ?>
 <div class="box box-cud">
-	<div class="box-wrap-header">
-		<div class="header">Update Theme</div>
-	</div>
-	<div class="box-wrap-content frm-split-40-60">
-		<?php $form = ActiveForm::begin( [ 'id' => 'frm-site' ] );?>
+    <div class="box-wrap-header">
+        <div class="header">Update Theme</div>
+    </div>
+    <div class="box-wrap-content frm-split-40-60">
+        <?php $form = ActiveForm::begin( [ 'id' => 'frm-site' ] );?>
 
-    	<?= $form->field( $model, 'name' ) ?>
-    	<?= $form->field( $model, 'description' )->textarea() ?>
-    	<?= $form->field( $model, 'default' )->checkbox() ?>
-		<?= $form->field( $model, 'renderer' )->dropDownList( $renderers ) ?>
-		<?= $form->field( $model, 'basePath' ) ?>
+        <?= $form->field( $model, 'name' ) ?>
+        <?= $form->field( $model, 'description' )->textarea() ?>
+        <?= $form->field( $model, 'default' )->checkbox() ?>
+        <?= $form->field( $model, 'renderer' )->dropDownList( $renderers ) ?>
+        <?= $form->field( $model, 'basePath' ) ?>
 
-		<div class="filler-height"></div>
+        <div class="filler-height"></div>
 
-		<div class="align align-center">
-			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
-			<input class="element-medium" type="submit" value="Update" />
-		</div>
+        <div class="align align-center">
+            <?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
+            <input class="element-medium" type="submit" value="Update" />
+        </div>
 
-		<?php ActiveForm::end(); ?>
-	</div>
+        <?php ActiveForm::end(); ?>
+    </div>
 </div>

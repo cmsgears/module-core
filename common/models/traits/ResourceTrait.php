@@ -12,54 +12,54 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 trait ResourceTrait {
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii classes ---------------------------
+    // Yii classes ---------------------------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG classes ---------------------------
+    // CMG classes ---------------------------
 
-	// ParentTypeTrait -----------------------
+    // ParentTypeTrait -----------------------
 
-	// Validators -------------
+    // Validators -------------
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii classes ---------------------------
+    // Yii classes ---------------------------
 
-	// CMG classes ---------------------------
+    // CMG classes ---------------------------
 
-	// ParentTypeTrait -----------------------
+    // ParentTypeTrait -----------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
     public static function queryByParent( $parentId, $parentType ) {
 
-		if( static::$multiSite ) {
+        if( static::$multiSite ) {
 
-			$siteId	= Yii::$app->core->siteId;
+            $siteId	= Yii::$app->core->siteId;
 
-			return static::find()->where( 'parentId=:pid AND parentType=:ptype AND siteId=:siteId', [ ':pid' => $parentId, ':ptype' => $parentType, ':siteId' => $siteId ] );
-		}
-		else {
+            return static::find()->where( 'parentId=:pid AND parentType=:ptype AND siteId=:siteId', [ ':pid' => $parentId, ':ptype' => $parentType, ':siteId' => $siteId ] );
+        }
+        else {
 
-			return static::find()->where( 'parentId=:pid AND parentType=:ptype', [ ':pid' => $parentId, ':ptype' => $parentType ] );
-		}
+            return static::find()->where( 'parentId=:pid AND parentType=:ptype', [ ':pid' => $parentId, ':ptype' => $parentType ] );
+        }
     }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
     public static function findByParent( $parentId, $parentType, $first = false ) {
 
-		if( $first ) {
+        if( $first ) {
 
-			return self::queryByParent( $parentId, $parentType )->one();
-		}
+            return self::queryByParent( $parentId, $parentType )->one();
+        }
 
         return self::queryByParent( $parentId, $parentType )->all();
     }
@@ -74,11 +74,11 @@ trait ResourceTrait {
         return self::find()->where( 'parentType=:ptype', [ ':ptype' => $parentType ] )->all();
     }
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 
     /**
      * Delete all entries related to given parent id

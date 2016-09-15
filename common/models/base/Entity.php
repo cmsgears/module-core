@@ -12,55 +12,55 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 abstract class Entity extends \yii\db\ActiveRecord {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	/**
-	 * It can be used to differentiate multisite models. The model must have siteId column referring to associated site.
-	 */
-	public static $multiSite = false;
+    /**
+     * It can be used to differentiate multisite models. The model must have siteId column referring to associated site.
+     */
+    public static $multiSite = false;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	/**
-	 * It can be used by models to pass variables to trait methods before method execution. This will help us to avoid maintaining object state in traits.
-	 */
+    /**
+     * It can be used by models to pass variables to trait methods before method execution. This will help us to avoid maintaining object state in traits.
+     */
     public $traitParams = [];
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// Entity --------------------------------
+    // Entity --------------------------------
 
     // Check whether model already exist
     public function isExisting() {
@@ -90,125 +90,125 @@ abstract class Entity extends \yii\db\ActiveRecord {
         }
     }
 
-	public function getMediumText( $attribute, $link = false ) {
+    public function getMediumText( $attribute, $link = false ) {
 
-		if( strlen( $attribute ) > Yii::$app->core->mediumText ) {
+        if( strlen( $attribute ) > Yii::$app->core->mediumText ) {
 
-			$attribute	= substr( $attribute, 0, Yii::$app->core->mediumText );
+            $attribute	= substr( $attribute, 0, Yii::$app->core->mediumText );
 
-			if( $link ) {
+            if( $link ) {
 
-				$attribute	= "$attribute ... $link";
-			}
-			else {
+                $attribute	= "$attribute ... $link";
+            }
+            else {
 
-				$attribute	= "$attribute ...";
-			}
-		}
+                $attribute	= "$attribute ...";
+            }
+        }
 
-		return $attribute;
-	}
+        return $attribute;
+    }
 
-	public function getClasspath() {
+    public function getClasspath() {
 
-		return get_class( $this );
-	}
+        return get_class( $this );
+    }
 
-	public function getNamespace() {
+    public function getNamespace() {
 
-		$name	= get_class( $this );
+        $name	= get_class( $this );
 
-		return array_slice(explode('\\', $name), 0, -1);
-	}
+        return array_slice(explode('\\', $name), 0, -1);
+    }
 
-	public function getClassname() {
+    public function getClassname() {
 
-		$name	= get_class( $this );
+        $name	= get_class( $this );
 
-		return join( '', array_slice( explode( '\\', $name ), -1 ) );
-	}
+        return join( '', array_slice( explode( '\\', $name ), -1 ) );
+    }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Entity --------------------------------
+    // Entity --------------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	/**
-	 * The method queryWithAll generate query with model relations.
-	 */
-	public static function queryWithAll( $config = [] ) {
+    /**
+     * The method queryWithAll generate query with model relations.
+     */
+    public static function queryWithAll( $config = [] ) {
 
-		// query generation
-		$query			= static::find();
-		$relations		= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [];
-		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
-		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
+        // query generation
+        $query			= static::find();
+        $relations		= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [];
+        $conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+        $filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
 
-		$groups			= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : null;
+        $groups			= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : null;
 
-		// Relations -----------
+        // Relations -----------
 
-		$eager	= false;
-		$join	= 'LEFT JOIN';
+        $eager	= false;
+        $join	= 'LEFT JOIN';
 
-		foreach ( $relations as $relation ) {
+        foreach ( $relations as $relation ) {
 
-			if( is_array( $relation ) && isset( $relation[ 'relation' ] ) ) {
+            if( is_array( $relation ) && isset( $relation[ 'relation' ] ) ) {
 
-				$eager	= isset( $relation[ 'eager' ] ) ? $relation[ 'eager' ] : false;
-				$join	= isset( $relation[ 'join' ] ) ? $relation[ 'join' ] : 'LEFT JOIN';
+                $eager	= isset( $relation[ 'eager' ] ) ? $relation[ 'eager' ] : false;
+                $join	= isset( $relation[ 'join' ] ) ? $relation[ 'join' ] : 'LEFT JOIN';
 
-				$query->joinWith( $relation[ 'relation' ], $eager, $join );
-			}
-			else {
+                $query->joinWith( $relation[ 'relation' ], $eager, $join );
+            }
+            else {
 
-				$query->joinWith( $relation );
-			}
-		}
+                $query->joinWith( $relation );
+            }
+        }
 
-		// Conditions ----------
+        // Conditions ----------
 
-		if( isset( $conditions ) ) {
+        if( isset( $conditions ) ) {
 
-			$query 	= $query->andWhere( $conditions );
-		}
+            $query 	= $query->andWhere( $conditions );
+        }
 
-		// Filters -------------
+        // Filters -------------
 
-		if( isset( $filters ) ) {
+        if( isset( $filters ) ) {
 
-			foreach ( $filters as $filter ) {
+            foreach ( $filters as $filter ) {
 
-				$query 	= $query->andFilterWhere( $filter );
-			}
-		}
+                $query 	= $query->andFilterWhere( $filter );
+            }
+        }
 
-		// Grouping -------------
+        // Grouping -------------
 
-		if( isset( $groups ) ) {
+        if( isset( $groups ) ) {
 
-			foreach ( $groups as $group ) {
+            foreach ( $groups as $group ) {
 
-				$query 	= $query->groupBy( $groups );
-			}
-		}
+                $query 	= $query->groupBy( $groups );
+            }
+        }
 
-		return $query;
-	}
+        return $query;
+    }
 
-	public static function queryWithHasOne( $config = [] ) {
+    public static function queryWithHasOne( $config = [] ) {
 
-		return static::queryWithAll( $config );
-	}
+        return static::queryWithAll( $config );
+    }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
     /**
      * Returns row count for the model
@@ -225,11 +225,11 @@ abstract class Entity extends \yii\db\ActiveRecord {
         return self::find()->where( 'id=:id', [ ':id' => $id ] )->one();
     }
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 
     public static function deleteById( $id ) {
 

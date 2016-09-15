@@ -16,268 +16,268 @@ use cmsgears\core\common\models\mappers\ModelCategory;
  */
 trait CategoryTrait {
 
-	/**
-	 * @return array - ModelCategory associated with parent
-	 */
-	public function getModelCategories() {
+    /**
+     * @return array - ModelCategory associated with parent
+     */
+    public function getModelCategories() {
 
-    	return $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->mParentType'" );
-	}
+        return $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )
+                    ->where( "parentType='$this->mParentType'" );
+    }
 
-	/**
-	 * @return array - Category associated with parent
-	 */
-	public function getCategories() {
+    /**
+     * @return array - Category associated with parent
+     */
+    public function getCategories() {
 
-		$category	= CoreTables::TABLE_CATEGORY;
+        $category	= CoreTables::TABLE_CATEGORY;
 
-    	$query = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
+        $query = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
+                    ->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
 
-						$modelCategoryTable	= CoreTables::TABLE_MODEL_CATEGORY;
+                        $modelCategoryTable	= CoreTables::TABLE_MODEL_CATEGORY;
 
-                      	$query->onCondition( [ "$modelCategoryTable.parentType" => $this->mParentType ] );
-					})
-					->where( "$category.type='$this->categoryType'" );
+                        $query->onCondition( [ "$modelCategoryTable.parentType" => $this->mParentType ] );
+                    })
+                    ->where( "$category.type='$this->categoryType'" );
 
-		return $query;
-	}
+        return $query;
+    }
 
-	public function getActiveCategories() {
+    public function getActiveCategories() {
 
-		$category	= CoreTables::TABLE_CATEGORY;
+        $category	= CoreTables::TABLE_CATEGORY;
 
-    	$query = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
+        $query = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
+                    ->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
 
-						$modelCategoryTable	= CoreTables::TABLE_MODEL_CATEGORY;
+                        $modelCategoryTable	= CoreTables::TABLE_MODEL_CATEGORY;
 
-                      	$query->onCondition( [ "$modelCategoryTable.parentType" => $this->mParentType, "$modelCategoryTable.active" => true ] );
-					})
-					->where( "$category.type='$this->categoryType'" );
+                        $query->onCondition( [ "$modelCategoryTable.parentType" => $this->mParentType, "$modelCategoryTable.active" => true ] );
+                    })
+                    ->where( "$category.type='$this->categoryType'" );
 
-		return $query;
-	}
+        return $query;
+    }
 
-	public function getCategoriesByType( $type ) {
+    public function getCategoriesByType( $type ) {
 
-		$category	= CoreTables::TABLE_CATEGORY;
+        $category	= CoreTables::TABLE_CATEGORY;
 
-		$categories = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
-							->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
+        $categories = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
+                            ->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
 
-								$modelCategory	= CoreTables::TABLE_MODEL_CATEGORY;
+                                $modelCategory	= CoreTables::TABLE_MODEL_CATEGORY;
 
-                      			$query->onCondition( [ "$modelCategory.parentType" => $this->mParentType, "$modelCategory.active" => true ] );
-							})
-							->where( "$category.type='$type'" )
-							->all();
+                                $query->onCondition( [ "$modelCategory.parentType" => $this->mParentType, "$modelCategory.active" => true ] );
+                            })
+                            ->where( "$category.type='$type'" )
+                            ->all();
 
-		return $categories;
-	}
+        return $categories;
+    }
 
-	/**
-	 * @return array - list of category id associated with parent
-	 */
-	public function getCategoryIdList( $active = false ) {
+    /**
+     * @return array - list of category id associated with parent
+     */
+    public function getCategoryIdList( $active = false ) {
 
-    	$categories 	= null;
-		$categoriesList	= [];
+        $categories 	= null;
+        $categoriesList	= [];
 
-		if( $active ) {
+        if( $active ) {
 
-			$categories = $this->activeCategories;
-		}
-		else {
+            $categories = $this->activeCategories;
+        }
+        else {
 
-			$categories = $this->categories;
-		}
+            $categories = $this->categories;
+        }
 
-		foreach ( $categories as $category ) {
+        foreach ( $categories as $category ) {
 
-			array_push( $categoriesList, $category->id );
-		}
+            array_push( $categoriesList, $category->id );
+        }
 
-		return $categoriesList;
-	}
+        return $categoriesList;
+    }
 
-	public function getCategoryIdListByType( $type ) {
+    public function getCategoryIdListByType( $type ) {
 
-		$categories 		= $this->getCategoriesByType( $type );
-		$categoriesList		= [];
+        $categories 		= $this->getCategoriesByType( $type );
+        $categoriesList		= [];
 
-		foreach ( $categories as $category ) {
+        foreach ( $categories as $category ) {
 
-			array_push( $categoriesList, $category->id );
-		}
+            array_push( $categoriesList, $category->id );
+        }
 
-		return $categoriesList;
-	}
+        return $categoriesList;
+    }
 
-	public function getCategoryNameList( $active = false ) {
+    public function getCategoryNameList( $active = false ) {
 
-    	$categories 		= null;
-		$categoriesList		= [];
+        $categories 		= null;
+        $categoriesList		= [];
 
-		if( $active ) {
+        if( $active ) {
 
-			$categories = $this->activeCategories;
-		}
-		else {
+            $categories = $this->activeCategories;
+        }
+        else {
 
-			$categories = $this->categories;
-		}
+            $categories = $this->categories;
+        }
 
-		foreach ( $categories as $category ) {
+        foreach ( $categories as $category ) {
 
-			array_push( $categoriesList, $category->name );
-		}
+            array_push( $categoriesList, $category->name );
+        }
 
-		return $categoriesList;
-	}
+        return $categoriesList;
+    }
 
-	public function getCategoryNameListByType( $type ) {
+    public function getCategoryNameListByType( $type ) {
 
-		$categories 		= $this->getCategoriesByType( $type );
-		$categoriesList		= [];
+        $categories 		= $this->getCategoriesByType( $type );
+        $categoriesList		= [];
 
-		foreach ( $categories as $category ) {
+        foreach ( $categories as $category ) {
 
-			array_push( $categoriesList, $category->name );
-		}
+            array_push( $categoriesList, $category->name );
+        }
 
-		return $categoriesList;
-	}
+        return $categoriesList;
+    }
 
-	/**
-	 * @return array - list of category id and name associated with parent
-	 */
-	public function getCategoryIdNameList( $active = false ) {
+    /**
+     * @return array - list of category id and name associated with parent
+     */
+    public function getCategoryIdNameList( $active = false ) {
 
-    	$categories 		= null;
-		$categoriesList		= [];
+        $categories 		= null;
+        $categoriesList		= [];
 
-		if( $active ) {
+        if( $active ) {
 
-			$categories = $this->activeCategories;
-		}
-		else {
+            $categories = $this->activeCategories;
+        }
+        else {
 
-			$categories = $this->categories;
-		}
+            $categories = $this->categories;
+        }
 
-		foreach ( $categories as $category ) {
+        foreach ( $categories as $category ) {
 
-			$categoriesList[] = [ 'id' => $category->id, 'name' => $category->name ];
-		}
+            $categoriesList[] = [ 'id' => $category->id, 'name' => $category->name ];
+        }
 
-		return $categoriesList;
-	}
+        return $categoriesList;
+    }
 
-	/**
-	 * @return array - map of category id and name associated with parent
-	 */
-	public function getCategoryIdNameMap( $active = false ) {
+    /**
+     * @return array - map of category id and name associated with parent
+     */
+    public function getCategoryIdNameMap( $active = false ) {
 
-		$categories 	= null;
-		$categoriesMap	= [];
+        $categories 	= null;
+        $categoriesMap	= [];
 
-		if( $active ) {
+        if( $active ) {
 
-			$categories 	= $this->activeCategories;
-		}
-		else {
+            $categories 	= $this->activeCategories;
+        }
+        else {
 
-			$categories 	= $this->categories;
-		}
+            $categories 	= $this->categories;
+        }
 
-		foreach ( $categories as $category ) {
+        foreach ( $categories as $category ) {
 
-			$categoriesMap[ $category->id ] = $category->name;
-		}
+            $categoriesMap[ $category->id ] = $category->name;
+        }
 
-		return $categoriesMap;
-	}
+        return $categoriesMap;
+    }
 
-	public function getCategorySlugNameMap( $active = false ) {
+    public function getCategorySlugNameMap( $active = false ) {
 
-		$categories 	= null;
-		$categoriesMap	= [];
+        $categories 	= null;
+        $categoriesMap	= [];
 
-		if( $active ) {
+        if( $active ) {
 
-			$categories 	= $this->activeCategories;
-		}
-		else {
+            $categories 	= $this->activeCategories;
+        }
+        else {
 
-			$categories 	= $this->categories;
-		}
+            $categories 	= $this->categories;
+        }
 
-		foreach ( $categories as $category ) {
+        foreach ( $categories as $category ) {
 
-			$categoriesMap[ $category->slug ] = $category->name;
-		}
+            $categoriesMap[ $category->slug ] = $category->name;
+        }
 
-		return $categoriesMap;
-	}
+        return $categoriesMap;
+    }
 
-	public function getCategoryCsv( $limit = 0, $active = true ) {
+    public function getCategoryCsv( $limit = 0, $active = true ) {
 
-    	$categories 			= null;
-		$categoriesCsv			= [];
+        $categories 			= null;
+        $categoriesCsv			= [];
 
-		if( $active ) {
+        if( $active ) {
 
-			$categories 	= $this->activeCategories;
-		}
-		else {
+            $categories 	= $this->activeCategories;
+        }
+        else {
 
-			$categories 	= $this->categories;
-		}
+            $categories 	= $this->categories;
+        }
 
-		foreach ( $categories as $category ) {
+        foreach ( $categories as $category ) {
 
-			$categoriesCsv[] = $category->name;
-		}
+            $categoriesCsv[] = $category->name;
+        }
 
-		return implode( ", ", $categoriesCsv );
-	}
+        return implode( ", ", $categoriesCsv );
+    }
 
-	public function getCategoryLinks( $baseUrl, $limit = 0, $wrapper = 'li', $active = true ) {
+    public function getCategoryLinks( $baseUrl, $limit = 0, $wrapper = 'li', $active = true ) {
 
-		$categories 	= null;
-		$categoryLinks	= null;
-		$count			= 1;
+        $categories 	= null;
+        $categoryLinks	= null;
+        $count			= 1;
 
-		if( $active ) {
+        if( $active ) {
 
-			$categories 	= $this->activeCategories;
-		}
-		else {
+            $categories 	= $this->activeCategories;
+        }
+        else {
 
-			$categories 	= $this->categories;
-		}
+            $categories 	= $this->categories;
+        }
 
-		foreach ( $categories as $category ) {
+        foreach ( $categories as $category ) {
 
-			if( isset( $wrapper ) ) {
+            if( isset( $wrapper ) ) {
 
-				$categoryLinks	.= "<$wrapper><a href='$baseUrl/$category->slug'>$category->name</a></$wrapper>";
-			}
-			else {
+                $categoryLinks	.= "<$wrapper><a href='$baseUrl/$category->slug'>$category->name</a></$wrapper>";
+            }
+            else {
 
-				$categoryLinks	.= "<a href='$baseUrl/$category->slug'>$category->name</a>";
-			}
+                $categoryLinks	.= "<a href='$baseUrl/$category->slug'>$category->name</a>";
+            }
 
-			if( $limit > 0 && $count >= $limit ) {
+            if( $limit > 0 && $count >= $limit ) {
 
-				break;
-			}
+                break;
+            }
 
-			$count++;
-		}
+            $count++;
+        }
 
-		return $categoryLinks;
-	}
+        return $categoryLinks;
+    }
 }

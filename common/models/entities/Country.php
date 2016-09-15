@@ -17,44 +17,44 @@ use cmsgears\core\common\models\traits\NameTrait;
  *
  * @property long $id
  * @property string $code
- * @property string $codeNum
+ * @property string $iso
  * @property string $name
  */
 class Country extends \cmsgears\core\common\models\base\Entity {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use NameTrait;
+    use NameTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -65,7 +65,7 @@ class Country extends \cmsgears\core\common\models\base\Entity {
         $rules = [
             [ [ 'name', 'code' ], 'required' ],
             [ 'id', 'safe' ],
-            [ [ 'code', 'codeNum' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+            [ [ 'code', 'iso' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
             [ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
             [ [ 'code' ], 'unique', 'targetAttribute' => [ 'code' ] ],
             [ [ 'name' ], 'unique', 'targetAttribute' => [ 'name' ] ]
@@ -89,18 +89,18 @@ class Country extends \cmsgears\core\common\models\base\Entity {
 
         return [
             'code' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CODE ),
-            'codeNum' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CODE_NUM ),
+            'iso' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ISO ),
             'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME )
         ];
     }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// Country -------------------------------
+    // Country -------------------------------
 
     /**
      * @return array - list of Province having all the provinces belonging to this country
@@ -115,13 +115,13 @@ class Country extends \cmsgears\core\common\models\base\Entity {
         return $this->hasMany( City::className(), [ 'countryId' => 'id' ] );
     }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
-	/**
+    /**
      * @inheritdoc
      */
     public static function tableName() {
@@ -129,27 +129,27 @@ class Country extends \cmsgears\core\common\models\base\Entity {
         return CoreTables::TABLE_COUNTRY;
     }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Country -------------------------------
+    // Country -------------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	public static function queryWithProvinces( $config = [] ) {
+    public static function queryWithProvinces( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'provinces' ];
+        $config[ 'relations' ]	= [ 'provinces' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithCities( $config = [] ) {
+    public static function queryWithCities( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'cities' ];
+        $config[ 'relations' ]	= [ 'cities' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
     /**
      * @return Country by code
@@ -159,9 +159,9 @@ class Country extends \cmsgears\core\common\models\base\Entity {
         return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
     }
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 }

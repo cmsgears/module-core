@@ -61,23 +61,23 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 class ComponentTemplate extends \yii\base\Component {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Global -----------------
+    // Global -----------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// <Component> ---------------------------
+    // <Component> ---------------------------
 }

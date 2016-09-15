@@ -9,21 +9,21 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class Module extends \cmsgears\core\common\base\Module {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals ----------------
+    // Globals ----------------
 
-	// Public -----------------
+    // Public -----------------
 
     public $controllerNamespace = 'cmsgears\core\frontend\controllers';
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
     public function init() {
 
@@ -32,15 +32,15 @@ class Module extends \cmsgears\core\common\base\Module {
         $this->setViewPath( '@cmsgears/module-core/frontend/views' );
     }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Module --------------------------------
+    // Module --------------------------------
 }

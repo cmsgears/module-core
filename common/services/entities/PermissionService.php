@@ -22,140 +22,76 @@ use cmsgears\core\common\services\traits\SlugTypeTrait;
  */
 class PermissionService extends \cmsgears\core\common\services\base\EntityService implements IPermissionService {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Permission';
+    public static $modelClass	= '\cmsgears\core\common\models\entities\Permission';
 
-	public static $modelTable	= CoreTables::TABLE_PERMISSION;
+    public static $modelTable	= CoreTables::TABLE_PERMISSION;
 
-	public static $parentType	= CoreGlobal::TYPE_PERMISSION;
+    public static $parentType	= CoreGlobal::TYPE_PERMISSION;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use NameTypeTrait;
-	use SlugTypeTrait;
+    use NameTypeTrait;
+    use SlugTypeTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// PermissionService ---------------------
+    // PermissionService ---------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	public function getPage( $config = [] ) {
+    public function getPage( $config = [] ) {
 
-	    $sort = new Sort([
-	        'attributes' => [
-	            'name' => [
-	                'asc' => [ 'name' => SORT_ASC ],
-	                'desc' => ['name' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'name'
-	            ],
-	            'slug' => [
-	                'asc' => [ 'slug' => SORT_ASC ],
-	                'desc' => ['slug' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'slug'
-	            ]
-	        ]
-	    ]);
+        $sort = new Sort([
+            'attributes' => [
+                'name' => [
+                    'asc' => [ 'name' => SORT_ASC ],
+                    'desc' => ['name' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'name'
+                ],
+                'slug' => [
+                    'asc' => [ 'slug' => SORT_ASC ],
+                    'desc' => ['slug' => SORT_DESC ],
+                    'default' => SORT_DESC,
+                    'label' => 'slug'
+                ]
+            ]
+        ]);
 
-		$config[ 'sort' ] = $sort;
+        $config[ 'sort' ] = $sort;
 
-		return parent::findPage( $config );
-	}
+        return parent::findPage( $config );
+    }
 
-	// Read ---------------
-
-    // Read - Models ---
-
-    // Read - Lists ----
-
-    // Read - Maps -----
-
-	// Read - Others ---
-
-	// Create -------------
-
-	// Update -------------
-
-	public function update( $model, $config = [] ) {
-
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description' ];
-
-		return parent::update( $model, [
-			'attributes' => $attributes
-		]);
- 	}
-
-	/**
-	 * @param BinderForm $binder
-	 * @return boolean
-	 */
-	public function bindRoles( $binder ) {
-
-		$permissionId	= $binder->binderId;
-		$roles			= $binder->bindedData;
-
-		// Clear all existing mappings
-		RolePermission::deleteByPermissionId( $permissionId );
-
-		// Create updated mappings
-		if( isset( $roles ) && count( $roles ) > 0 ) {
-
-			foreach ( $roles as $key => $value ) {
-
-				if( isset( $value ) && $value > 0 ) {
-
-					$toSave					= new RolePermission();
-					$toSave->permissionId	= $permissionId;
-					$toSave->roleId			= $value;
-
-					$toSave->save();
-				}
-			}
-		}
-
-		return true;
-	}
-
-	// Delete -------------
-
-	// Static Methods ----------------------------------------------
-
-	// CMG parent classes --------------------
-
-	// PermissionService ---------------------
-
-	// Data Provider ------
-
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -163,11 +99,75 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    public function update( $model, $config = [] ) {
+
+        $attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description' ];
+
+        return parent::update( $model, [
+            'attributes' => $attributes
+        ]);
+    }
+
+    /**
+     * @param BinderForm $binder
+     * @return boolean
+     */
+    public function bindRoles( $binder ) {
+
+        $permissionId	= $binder->binderId;
+        $roles			= $binder->bindedData;
+
+        // Clear all existing mappings
+        RolePermission::deleteByPermissionId( $permissionId );
+
+        // Create updated mappings
+        if( isset( $roles ) && count( $roles ) > 0 ) {
+
+            foreach ( $roles as $key => $value ) {
+
+                if( isset( $value ) && $value > 0 ) {
+
+                    $toSave					= new RolePermission();
+                    $toSave->permissionId	= $permissionId;
+                    $toSave->roleId			= $value;
+
+                    $toSave->save();
+                }
+            }
+        }
+
+        return true;
+    }
+
+    // Delete -------------
+
+    // Static Methods ----------------------------------------------
+
+    // CMG parent classes --------------------
+
+    // PermissionService ---------------------
+
+    // Data Provider ------
+
+    // Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+    // Read - Others ---
+
+    // Create -------------
+
+    // Update -------------
+
+    // Delete -------------
 }

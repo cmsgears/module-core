@@ -12,122 +12,122 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 trait NameTypeTrait {
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii classes ---------------------------
+    // Yii classes ---------------------------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG classes ---------------------------
+    // CMG classes ---------------------------
 
-	// NameTypeTrait -------------------------
+    // NameTypeTrait -------------------------
 
-	// Validators -------------
+    // Validators -------------
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii classes ---------------------------
+    // Yii classes ---------------------------
 
-	// CMG classes ---------------------------
+    // CMG classes ---------------------------
 
-	// NameTypeTrait -------------------------
+    // NameTypeTrait -------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
     public static function queryByName( $name ) {
 
-		if( static::$multiSite ) {
+        if( static::$multiSite ) {
 
-			$siteId	= Yii::$app->core->siteId;
+            $siteId	= Yii::$app->core->siteId;
 
-			return static::find()->where( 'name=:name AND siteId=:siteId', [ ':name' => $name, ':siteId' => $siteId ] );
-		}
-		else {
+            return static::find()->where( 'name=:name AND siteId=:siteId', [ ':name' => $name, ':siteId' => $siteId ] );
+        }
+        else {
 
-			return static::find()->where( 'name=:name', [ ':name' => $name ] );
-		}
+            return static::find()->where( 'name=:name', [ ':name' => $name ] );
+        }
     }
 
     public static function queryByType( $type ) {
 
-		if( static::$multiSite ) {
+        if( static::$multiSite ) {
 
-			$siteId	= Yii::$app->core->siteId;
+            $siteId	= Yii::$app->core->siteId;
 
-			return static::find()->where( 'type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] );
-		}
-		else {
+            return static::find()->where( 'type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] );
+        }
+        else {
 
-			return static::find()->where( 'type=:type', [ ':type' => $type ] );
-		}
+            return static::find()->where( 'type=:type', [ ':type' => $type ] );
+        }
     }
 
     public static function queryByNameType( $name, $type ) {
 
-		if( static::$multiSite ) {
+        if( static::$multiSite ) {
 
-			$siteId	= Yii::$app->core->siteId;
+            $siteId	= Yii::$app->core->siteId;
 
-			return static::find()->where( 'name=:name AND type=:type AND siteId=:siteId', [ ':name' => $name, ':type' => $type, ':siteId' => $siteId ] );
-		}
-		else {
+            return static::find()->where( 'name=:name AND type=:type AND siteId=:siteId', [ ':name' => $name, ':type' => $type, ':siteId' => $siteId ] );
+        }
+        else {
 
-			return static::find()->where( 'name=:name AND type=:type', [ ':name' => $name, ':type' => $type ] );
-		}
+            return static::find()->where( 'name=:name AND type=:type', [ ':name' => $name, ':type' => $type ] );
+        }
     }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
     /**
      * @return array - ActiveRecord by type
      */
     public static function findByType( $type, $first = false ) {
 
-		if( $first ) {
+        if( $first ) {
 
-			return self::queryByType( $type )->one();
-		}
+            return self::queryByType( $type )->one();
+        }
 
         return self::queryByType( $type )->all();
     }
 
-	/**
-	 * @return ActiveRecord - by name
-	 */
-	public static function findByName( $name, $first = false ) {
+    /**
+     * @return ActiveRecord - by name
+     */
+    public static function findByName( $name, $first = false ) {
 
-		if( $first ) {
+        if( $first ) {
 
-			return self::queryByName( $name )->one();
-		}
+            return self::queryByName( $name )->one();
+        }
 
-		return self::queryByName( $name )->all();
-	}
+        return self::queryByName( $name )->all();
+    }
 
-	/**
-	 * @return ActiveRecord - by name and type
-	 */
-	public static function findByNameType( $name, $type ) {
+    /**
+     * @return ActiveRecord - by name and type
+     */
+    public static function findByNameType( $name, $type ) {
 
-		return self::queryByNameType( $name, $type )->one();
-	}
+        return self::queryByNameType( $name, $type )->one();
+    }
 
     /**
      * @return boolean - check whether model exist for given name and type
      */
-	public static function isExistByNameType( $name, $type ) {
+    public static function isExistByNameType( $name, $type ) {
 
-		$model	= self::findByNameType( $name, $type );
+        $model	= self::findByNameType( $name, $type );
 
-		return isset( $model );
-	}
+        return isset( $model );
+    }
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 
 }

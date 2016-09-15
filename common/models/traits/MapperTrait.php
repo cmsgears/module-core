@@ -16,45 +16,45 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 trait MapperTrait {
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii classes ---------------------------
+    // Yii classes ---------------------------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG classes ---------------------------
+    // CMG classes ---------------------------
 
-	// ParentTypeTrait -----------------------
+    // ParentTypeTrait -----------------------
 
-	// Validators -------------
+    // Validators -------------
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii classes ---------------------------
+    // Yii classes ---------------------------
 
-	// CMG classes ---------------------------
+    // CMG classes ---------------------------
 
-	// ParentTypeTrait -----------------------
+    // ParentTypeTrait -----------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	public static function queryByModelId( $parentId, $parentType, $modelId ) {
+    public static function queryByModelId( $parentId, $parentType, $modelId ) {
 
-		$tableName = self::tableName();
+        $tableName = self::tableName();
 
-		return self::queryWithModel()->where( "$tableName.parentId=:pid AND $tableName.parentType=:ptype AND $tableName.modelId=:mid", [ ':pid' => $parentId, ':ptype' => $parentType, ':mid' => $modelId ] );
-	}
+        return self::queryWithModel()->where( "$tableName.parentId=:pid AND $tableName.parentType=:ptype AND $tableName.modelId=:mid", [ ':pid' => $parentId, ':ptype' => $parentType, ':mid' => $modelId ] );
+    }
 
     public static function queryByParent( $parentId, $parentType ) {
 
-		$tableName = self::tableName();
+        $tableName = self::tableName();
 
         return self::queryWithModel()->where( "$tableName.parentId=:pid AND $tableName.parentType=:ptype", [ ':pid' => $parentId, ':ptype' => $parentType ] );
     }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
     public static function findAllByModelId( $modelId ) {
 
@@ -81,7 +81,7 @@ trait MapperTrait {
         return self::find()->where( 'parentType=:ptype', [ ':ptype' => $parentType ] )->all();
     }
 
-	// Models having active column
+    // Models having active column
 
     public static function findActiveByParent( $parentId, $parentType ) {
 
@@ -103,11 +103,11 @@ trait MapperTrait {
         return self::find()->where( 'modelId=:mid AND parentType=:ptype AND active=1',  [ ':mid' => $modelId, ':ptype' => $parentType] )->all();
     }
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 
     /**
      * Delete all entries related to given parent id

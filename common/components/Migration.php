@@ -12,48 +12,48 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 class Migration extends \yii\base\Component {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Global -----------------
+    // Global -----------------
 
-	// Public -----------------
+    // Public -----------------
 
     public $fk				= true;
 
     public $tableOptions	= null;
 
-	public $siteName		= 'CMSGears';
-	public $siteTitle		= 'CMSGears Demo';
+    public $siteName		= 'CMSGears';
+    public $siteTitle		= 'CMSGears Demo';
 
-	public $primaryDomain	= 'cmsgears.org';
+    public $primaryDomain	= 'cmsgears.org';
 
-	public $defaultSite		= 'http://www.cmsgears.org';
-	public $defaultAdmin	= 'http://www.cmsgears.org/admin/';
+    public $defaultSite		= 'http://www.cmsgears.org';
+    public $defaultAdmin	= 'http://www.cmsgears.org/admin/';
 
-	public $uploadsDir		= null;
-	public $uploadsUrl		= 'http://www.cmsgears.org/uploads/';
+    public $uploadsDir		= null;
+    public $uploadsUrl		= 'http://www.cmsgears.org/uploads/';
 
-	public $testAccounts	= true;
-	public $siteMaster		= 'demomaster';
-	public $siteContact		= 'democontact';
-	public $siteInfo		= 'demoinfo';
+    public $testAccounts	= true;
+    public $siteMaster		= 'demomaster';
+    public $siteContact		= 'democontact';
+    public $siteInfo		= 'demoinfo';
 
-	// Timezone examples: Asia/Kolkata, Asia/Vladivostok, Asia/Bangkok, America/Toronto, America/Chicago, America/Los_Angeles, Europe/London, Australia/Sydney
-	public $timezone		= 'UTC';
+    // Timezone examples: Asia/Kolkata, Asia/Vladivostok, Asia/Bangkok, America/Toronto, America/Chicago, America/Los_Angeles, Europe/London, Australia/Sydney
+    public $timezone		= 'UTC';
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Migration -----------------------------
+    // Migration -----------------------------
 
     public function isFk() {
 

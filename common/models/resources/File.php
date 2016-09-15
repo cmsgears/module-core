@@ -45,19 +45,19 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class File extends \cmsgears\core\common\models\base\Resource implements IVisibility {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
     /**
      * @property boolean - used to detect whether the file is changed by user.
@@ -72,24 +72,24 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
     public $twidth;
     public $theight;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use CreateModifyTrait;
-	use VisibilityTrait;
+    use CreateModifyTrait;
+    use VisibilityTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -109,7 +109,7 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
         ];
     }
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -161,13 +161,13 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
         ];
     }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// File ----------------------------------
+    // File ----------------------------------
 
     public function getTypeStr() {
 
@@ -229,65 +229,65 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
     public function getFilePath() {
 
-		if( isset( $this->url ) ) {
+        if( isset( $this->url ) ) {
 
-			return Yii::$app->fileManager->uploadDir . $this->url;
-		}
+            return Yii::$app->fileManager->uploadDir . $this->url;
+        }
 
-		return false;
+        return false;
     }
 
     public function getMediumPath() {
 
-		if( isset( $this->medium ) ) {
+        if( isset( $this->medium ) ) {
 
-			return Yii::$app->fileManager->uploadDir . $this->medium;
-		}
+            return Yii::$app->fileManager->uploadDir . $this->medium;
+        }
 
-		return false;
+        return false;
     }
 
     public function getThumbPath() {
 
-		if( isset( $this->thumb ) ) {
+        if( isset( $this->thumb ) ) {
 
-			return Yii::$app->fileManager->uploadDir . $this->thumb;
-		}
+            return Yii::$app->fileManager->uploadDir . $this->thumb;
+        }
 
-		return false;
+        return false;
     }
 
-	/**
-	 * Delete all the associated files from disk. Useful while updating file.
-	 */
-	public function clearDisk() {
+    /**
+     * Delete all the associated files from disk. Useful while updating file.
+     */
+    public function clearDisk() {
 
-		$filePath		= $this->getFilePath();
-    	$mediumPath		= $this->getMediumPath();
-    	$thumbPath		= $this->getThumbPath();
+        $filePath		= $this->getFilePath();
+        $mediumPath		= $this->getMediumPath();
+        $thumbPath		= $this->getThumbPath();
 
-		// Delete from disk
-		if( $filePath && file_exists( $filePath ) && is_file( $filePath ) ) {
+        // Delete from disk
+        if( $filePath && file_exists( $filePath ) && is_file( $filePath ) ) {
 
-			unlink( $filePath );
-		}
+            unlink( $filePath );
+        }
 
-		if( $mediumPath && file_exists( $mediumPath ) && is_file( $mediumPath ) ) {
+        if( $mediumPath && file_exists( $mediumPath ) && is_file( $mediumPath ) ) {
 
-			unlink( $mediumPath );
-		}
+            unlink( $mediumPath );
+        }
 
-		if( $thumbPath && file_exists( $thumbPath ) && is_file( $thumbPath ) ) {
+        if( $thumbPath && file_exists( $thumbPath ) && is_file( $thumbPath ) ) {
 
-			unlink( $thumbPath );
-		}
-	}
+            unlink( $thumbPath );
+        }
+    }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -297,21 +297,21 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
         return CoreTables::TABLE_FILE;
     }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// File ----------------------------------
+    // File ----------------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	public static function queryWithHasOne( $config = [] ) {
+    public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
-		$config[ 'relations' ]	= $relations;
+        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+        $config[ 'relations' ]	= $relations;
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
     /**
      * @param File $file
@@ -330,9 +330,9 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
         return $file;
     }
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 }

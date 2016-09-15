@@ -14,102 +14,102 @@ use \Yii;
  */
 class ModelAction extends \cmsgears\core\common\base\Action {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public $idParam		= 'id';
-	public $slugParam	= 'slug';
-	public $typeParam	= 'type';
+    public $idParam		= 'id';
+    public $slugParam	= 'slug';
+    public $typeParam	= 'type';
 
-	public $model;
+    public $model;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Flag to identify whether type is required to perform action.
-	protected $typed 	= false;
+    // Flag to identify whether type is required to perform action.
+    protected $typed 	= false;
 
-	// Model service for active model
-	protected $modelService;
+    // Model service for active model
+    protected $modelService;
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Action --------------------------------
+    // Action --------------------------------
 
     public function init() {
 
-		parent::init();
+        parent::init();
 
-		$this->modelService		= $this->controller->modelService;
+        $this->modelService		= $this->controller->modelService;
 
-		// Model is not provided by controller
-		if( !isset( $this->model ) ) {
+        // Model is not provided by controller
+        if( !isset( $this->model ) ) {
 
-			// Try to find model using slug
-			$slug	= Yii::$app->request->get( $this->slugParam, null );
+            // Try to find model using slug
+            $slug	= Yii::$app->request->get( $this->slugParam, null );
 
-			if( isset( $slug ) ) {
+            if( isset( $slug ) ) {
 
-				$typed	= Yii::$app->request->get( 'typed', null );
+                $typed	= Yii::$app->request->get( 'typed', null );
 
-				if( !isset( $typed ) ) {
+                if( !isset( $typed ) ) {
 
-					$typed = true;
-				}
+                    $typed = true;
+                }
 
-				if( $this->typed && $typed ) {
+                if( $this->typed && $typed ) {
 
-					$type	= Yii::$app->request->get( $this->typeParam, null );
+                    $type	= Yii::$app->request->get( $this->typeParam, null );
 
-					// Override model service parent type to search appropriate models
-					if( isset( $type ) ) {
+                    // Override model service parent type to search appropriate models
+                    if( isset( $type ) ) {
 
-						$this->model	= $this->modelService->getBySlugType( $slug, $type );
-					}
-					else {
+                        $this->model	= $this->modelService->getBySlugType( $slug, $type );
+                    }
+                    else {
 
-						$this->model	= $this->modelService->getBySlugType( $slug, $this->modelService->getParentType() );
-					}
-				}
-				else {
+                        $this->model	= $this->modelService->getBySlugType( $slug, $this->modelService->getParentType() );
+                    }
+                }
+                else {
 
-					$this->model	= $this->modelService->getBySlug( $slug );
-				}
-			}
-			else {
+                    $this->model	= $this->modelService->getBySlug( $slug );
+                }
+            }
+            else {
 
-				// Try to find model using id
-				$id	= Yii::$app->request->get( $this->idParam, null );
+                // Try to find model using id
+                $id	= Yii::$app->request->get( $this->idParam, null );
 
-				if( isset( $id ) ) {
+                if( isset( $id ) ) {
 
-					$this->model	= $this->modelService->getById( $id );
-				}
-			}
-		}
+                    $this->model	= $this->modelService->getById( $id );
+                }
+            }
+        }
     }
 }

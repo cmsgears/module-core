@@ -70,47 +70,47 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 class WidgetTemplate extends \cmsgears\core\common\base\Widget {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Widget --------
+    // yii\base\Widget --------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// cmsgears\core\common\base\Widget
+    // cmsgears\core\common\base\Widget
 
-	public function renderWidget( $config = [] ) {
+    public function renderWidget( $config = [] ) {
 
-		// Render Views
-	}
+        // Render Views
+    }
 
-	// <Widget> ------------------------------
+    // <Widget> ------------------------------
 
 }

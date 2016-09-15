@@ -9,47 +9,47 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class Module extends \yii\base\Module {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals ----------------
+    // Globals ----------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public $config	= [];
+    public $config	= [];
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Module --------------------------------
+    // Module --------------------------------
 
-	/**
-	 * It can be used to generate the html content for sidebar and specific to a module.
-	 */
-	public function getSidebarHtml() {
+    /**
+     * It can be used to generate the html content for sidebar and specific to a module.
+     */
+    public function getSidebarHtml() {
 
-		return '';
-	}
+        return '';
+    }
 
-	/**
-	 * It can be used to generate the html content for user dashboard and specific to a module.
-	 */
-	public function getDashboardHtml() {
+    /**
+     * It can be used to generate the html content for user dashboard and specific to a module.
+     */
+    public function getDashboardHtml() {
 
-		return '';
-	}
+        return '';
+    }
 }

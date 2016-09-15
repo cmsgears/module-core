@@ -17,51 +17,51 @@ use cmsgears\core\common\models\mappers\ModelFile;
  */
 trait FileTrait {
 
-	/**
-	 * @return array - ModelFile associated with parent
-	 */
-	public function getModelFiles() {
+    /**
+     * @return array - ModelFile associated with parent
+     */
+    public function getModelFiles() {
 
-    	return $this->hasMany( ModelFile::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->mParentType'" );
-	}
+        return $this->hasMany( ModelFile::className(), [ 'parentId' => 'id' ] )
+                    ->where( "parentType='$this->mParentType'" );
+    }
 
-	/**
-	 * @return array - ModelFile associated with parent
-	 */
-	public function getModelFilesByType( $type ) {
+    /**
+     * @return array - ModelFile associated with parent
+     */
+    public function getModelFilesByType( $type ) {
 
-    	return $this->hasMany( ModelFile::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->mParentType, ':type' => $type ] )->all();
-	}
+        return $this->hasMany( ModelFile::className(), [ 'parentId' => 'id' ] )
+                    ->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->mParentType, ':type' => $type ] )->all();
+    }
 
-	/**
-	 * @return Address - associated with parent having type set to residential
-	 */
-	public function getFiles() {
+    /**
+     * @return Address - associated with parent having type set to residential
+     */
+    public function getFiles() {
 
-    	return $this->hasMany( File::className(), [ 'id' => 'modelId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_FILE, [ 'parentId' => 'id' ], function( $query ) {
+        return $this->hasMany( File::className(), [ 'id' => 'modelId' ] )
+                    ->viaTable( CoreTables::TABLE_MODEL_FILE, [ 'parentId' => 'id' ], function( $query ) {
 
-						$modelFile	= CoreTables::TABLE_MODEL_FILE;
+                        $modelFile	= CoreTables::TABLE_MODEL_FILE;
 
-                      	$query->onCondition( "$modelFile.parentType=:type", [ ':type' => $this->mParentType ] );
-					});
-	}
+                        $query->onCondition( "$modelFile.parentType=:type", [ ':type' => $this->mParentType ] );
+                    });
+    }
 
-	public function getFileByTitle( $title ) {
+    public function getFileByTitle( $title ) {
 
-		$fileTable	= CoreTables::TABLE_FILE;
+        $fileTable	= CoreTables::TABLE_FILE;
 
-    	$file 		= $this->hasOne( File::className(), [ 'id' => 'modelId' ] )
-							->where( "$fileTable.title=:title", [ ':title' => $title ] )
-							->viaTable( CoreTables::TABLE_MODEL_FILE, [ 'parentId' => 'id' ], function( $query ) {
+        $file 		= $this->hasOne( File::className(), [ 'id' => 'modelId' ] )
+                            ->where( "$fileTable.title=:title", [ ':title' => $title ] )
+                            ->viaTable( CoreTables::TABLE_MODEL_FILE, [ 'parentId' => 'id' ], function( $query ) {
 
-								$modelFileTable	= CoreTables::TABLE_MODEL_FILE;
+                                $modelFileTable	= CoreTables::TABLE_MODEL_FILE;
 
-                      			$query->onCondition( "$modelFileTable.parentType=:type", [ ':type' => $this->mParentType ] );
-							})->one();
+                                $query->onCondition( "$modelFileTable.parentType=:type", [ ':type' => $this->mParentType ] );
+                            })->one();
 
-		return $file;
-	}
+        return $file;
+    }
 }

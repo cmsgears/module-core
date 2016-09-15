@@ -9,28 +9,28 @@ use cmsgears\core\common\config\CoreGlobal;
 
 interface IModelCategoryService extends \cmsgears\core\common\services\interfaces\base\IMapperService {
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
-	public function getModelCounts( $parentType, $categoryType );
+    public function getModelCounts( $parentType, $categoryType );
 
     // Read - Lists ----
 
-	public function getActiveCategoryIdList( $categoryId, $parentType );
+    public function getActiveCategoryIdList( $categoryId, $parentType );
 
     public function getActiveCategoryIdListByParent( $parentId, $parentType );
 
     // Read - Maps -----
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	public function bindCategories( $binder, $parentType );
+    public function bindCategories( $binder, $parentType );
 
-	// Delete -------------
+    // Delete -------------
 
 }

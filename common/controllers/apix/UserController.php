@@ -18,40 +18,40 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 
 class UserController extends \cmsgears\core\common\controllers\base\Controller {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals ----------------
+    // Globals ----------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	protected $modelAddressService;
+    protected $modelAddressService;
 
-	protected $modelMetaService;
+    protected $modelMetaService;
 
-	// Private ----------------
+    // Private ----------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
- 	public function init() {
+    public function init() {
 
         parent::init();
 
-		$this->crudPermission		= CoreGlobal::PERM_USER;
+        $this->crudPermission		= CoreGlobal::PERM_USER;
 
-		$this->modelService 		= Yii::$app->factory->get( 'userService' );
-		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
-		$this->modelMetaService		= Yii::$app->factory->get( 'modelMetaService' );
-	}
+        $this->modelService 		= Yii::$app->factory->get( 'userService' );
+        $this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
+        $this->modelMetaService		= Yii::$app->factory->get( 'modelMetaService' );
+    }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
     public function behaviors() {
 
@@ -59,11 +59,11 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
             'rbac' => [
                 'class' => Yii::$app->core->getRbacFilterClass(),
                 'actions' => [
-	                'avatar' => [ 'permission' => $this->crudPermission ],
-	                'account' => [ 'permission' => $this->crudPermission ],
-	                'settings' => [ 'permission' => $this->crudPermission ],
-	                'profile' => [ 'permission' => $this->crudPermission ],
-	                'address' => [ 'permission' => $this->crudPermission ]
+                    'avatar' => [ 'permission' => $this->crudPermission ],
+                    'account' => [ 'permission' => $this->crudPermission ],
+                    'settings' => [ 'permission' => $this->crudPermission ],
+                    'profile' => [ 'permission' => $this->crudPermission ],
+                    'address' => [ 'permission' => $this->crudPermission ]
                 ]
             ],
             'verbs' => [
@@ -73,104 +73,104 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
                     'account' => [ 'post' ],
                     'settings' => [ 'post' ],
                     'profile' => [ 'post' ],
-	                'address' => [ 'post' ]
+                    'address' => [ 'post' ]
                 ]
             ]
         ];
     }
 
-	// yii\base\Controller ----
+    // yii\base\Controller ----
 
     public function actions() {
 
         return [
-        	'avatar' => [ 'class' => 'cmsgears\core\common\actions\content\UpdateAvatar' ]
-		];
+            'avatar' => [ 'class' => 'cmsgears\core\common\actions\content\UpdateAvatar' ]
+        ];
     }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// UserController ------------------------
+    // UserController ------------------------
 
     public function actionAccount() {
 
-		// Find Model
-		$user	= Yii::$app->user->getIdentity();
+        // Find Model
+        $user	= Yii::$app->user->getIdentity();
 
-		// Update/Render if exist
-		if( isset( $user ) ) {
+        // Update/Render if exist
+        if( isset( $user ) ) {
 
-			$model 			= new ResetPassword();
+            $model 			= new ResetPassword();
 
-			if( $model->load( Yii::$app->request->post(), 'ResetPassword' ) && $model->validate() ) {
+            if( $model->load( Yii::$app->request->post(), 'ResetPassword' ) && $model->validate() ) {
 
-				// Update User and Site Member
-				if( $this->modelService->resetPassword( $user, $model, false ) ) {
+                // Update User and Site Member
+                if( $this->modelService->resetPassword( $user, $model, false ) ) {
 
-					$data	= [ 'email' => $user->email, 'username' => $user->username ];
+                    $data	= [ 'email' => $user->email, 'username' => $user->username ];
 
-					// Trigger Ajax Success
-					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-				}
-			}
-			else {
+                    // Trigger Ajax Success
+                    return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+                }
+            }
+            else {
 
-				// Generate Errors
-				$errors = AjaxUtil::generateErrorMessage( $model );
+                // Generate Errors
+                $errors = AjaxUtil::generateErrorMessage( $model );
 
-				// Trigger Ajax Failure
-	        	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-			}
-		}
+                // Trigger Ajax Failure
+                return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+            }
+        }
 
-		// Model not found
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
+        // Model not found
+        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
     }
 
-	public function actionSettings() {
+    public function actionSettings() {
 
-		$user	= Yii::$app->user->getIdentity();
+        $user	= Yii::$app->user->getIdentity();
 
-		// Update/Render if exist
-		if( isset( $user ) ) {
+        // Update/Render if exist
+        if( isset( $user ) ) {
 
-			$modelMetas		= Yii::$app->request->post( 'ModelMeta' );
-			$count 			= count( $modelMetas );
-			$metas			= [];
+            $modelMetas		= Yii::$app->request->post( 'ModelMeta' );
+            $count 			= count( $modelMetas );
+            $metas			= [];
 
-			for ( $i = 0; $i < $count; $i++ ) {
+            for ( $i = 0; $i < $count; $i++ ) {
 
-				$meta		= $modelMetas[ $i ];
-				$meta		= $this->modelMetaService->initByNameType( $user->id, CoreGlobal::TYPE_USER, $meta[ 'name' ], $meta[ 'type' ] );
+                $meta		= $modelMetas[ $i ];
+                $meta		= $this->modelMetaService->initByNameType( $user->id, CoreGlobal::TYPE_USER, $meta[ 'name' ], $meta[ 'type' ] );
 
-				$metas[] 	= $meta;
-			}
+                $metas[] 	= $meta;
+            }
 
-			// Load SchoolItem models
-			if( ModelMeta::loadMultiple( $metas, Yii::$app->request->post(), 'ModelMeta' ) && ModelMeta::validateMultiple( $metas ) ) {
+            // Load SchoolItem models
+            if( ModelMeta::loadMultiple( $metas, Yii::$app->request->post(), 'ModelMeta' ) && ModelMeta::validateMultiple( $metas ) ) {
 
-				$this->modelService->updateModelMetas( $user, $metas );
+                $this->modelService->updateModelMetas( $user, $metas );
 
-				$data	= [];
+                $data	= [];
 
-				foreach ( $metas as $meta ) {
+                foreach ( $metas as $meta ) {
 
-					$data[]	= $meta->getFieldInfo();
-				}
+                    $data[]	= $meta->getFieldInfo();
+                }
 
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-			}
+                // Trigger Ajax Success
+                return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+            }
 
-			// Trigger Ajax Failure
-		    return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
-		}
+            // Trigger Ajax Failure
+            return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+        }
 
-		// Model not found
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
-	}
+        // Model not found
+        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
+    }
 
     public function actionProfile() {
 

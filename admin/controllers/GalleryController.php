@@ -10,49 +10,49 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryController {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals ----------------
+    // Globals ----------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
- 	public function init() {
+    public function init() {
 
         parent::init();
 
-		$this->sidebar 		= [ 'parent' => 'sidebar-core', 'child' => 'gallery' ];
+        $this->sidebar 		= [ 'parent' => 'sidebar-core', 'child' => 'gallery' ];
 
-		$this->returnUrl	= Url::previous( 'galleries' );
-		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/gallery/all' ], true );
-	}
+        $this->returnUrl	= Url::previous( 'galleries' );
+        $this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/gallery/all' ], true );
+    }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Controller ----
+    // yii\base\Controller ----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// GalleryController ---------------------
+    // GalleryController ---------------------
 
-	public function actionAll() {
+    public function actionAll() {
 
-		// Remember return url for crud
-		Url::remember( [ 'gallery/all' ], 'galleries' );
+        // Remember return url for crud
+        Url::remember( [ 'gallery/all' ], 'galleries' );
 
-		return parent::actionAll();
-	}
+        return parent::actionAll();
+    }
 }

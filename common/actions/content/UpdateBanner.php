@@ -18,69 +18,69 @@ use cmsgears\core\common\utilities\AjaxUtil;
  */
 class UpdateBanner extends \cmsgears\core\common\actions\base\ModelAction {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public $fileName	= 'Banner';
+    public $fileName	= 'Banner';
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// UpdateBanner --------------------------
+    // UpdateBanner --------------------------
 
-	public function run() {
+    public function run() {
 
-		if( isset( $this->model ) ) {
+        if( isset( $this->model ) ) {
 
-			$banner = $this->model->banner;
+            $banner = $this->model->banner;
 
-			if( !isset( $banner ) ) {
+            if( !isset( $banner ) ) {
 
-				$banner	= new File();
-			}
+                $banner	= new File();
+            }
 
-			if( $banner->load( Yii::$app->request->post(), $this->fileName ) ) {
+            if( $banner->load( Yii::$app->request->post(), $this->fileName ) ) {
 
-				$this->modelService->updateBanner( $this->model, $banner );
+                $this->modelService->updateBanner( $this->model, $banner );
 
-				$banner		= $this->model->banner;
-				$response	= [ 'fileUrl' => $banner->getFileUrl() ];
+                $banner		= $this->model->banner;
+                $response	= [ 'fileUrl' => $banner->getFileUrl() ];
 
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
-			}
+                // Trigger Ajax Success
+                return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
+            }
 
-			// Trigger Ajax Failure
-	    	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
-		}
+            // Trigger Ajax Failure
+            return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+        }
 
-		// Trigger Ajax Failure
-    	return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
+        // Trigger Ajax Failure
+        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+    }
 }

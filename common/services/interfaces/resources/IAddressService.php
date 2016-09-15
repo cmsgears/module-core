@@ -9,9 +9,9 @@ use cmsgears\core\common\config\CoreGlobal;
 
 interface IAddressService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -19,10 +19,10 @@ interface IAddressService extends \cmsgears\core\common\services\interfaces\base
 
     // Read - Maps -----
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
 
 }

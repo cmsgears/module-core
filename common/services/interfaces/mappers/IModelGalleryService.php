@@ -9,9 +9,9 @@ use cmsgears\core\common\config\CoreGlobal;
 
 interface IModelGalleryService extends \cmsgears\core\common\services\interfaces\base\IMapperService {
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -19,12 +19,12 @@ interface IModelGalleryService extends \cmsgears\core\common\services\interfaces
 
     // Read - Maps -----
 
-	// Create -------------
+    // Create -------------
 
-	public function createOrUpdate( $model, $config = [] );
+    public function createOrUpdate( $model, $config = [] );
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
 
 }

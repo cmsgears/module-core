@@ -14,257 +14,257 @@ use cmsgears\core\common\services\interfaces\base\IMetaService;
 
 abstract class MetaService extends EntityService implements IMetaService {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// MetaService ---------------------------
+    // MetaService ---------------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
-	public function getByName( $modelId, $name ) {
+    public function getByName( $modelId, $name ) {
 
-		return self::findByName( $modelId, $name );
-	}
+        return self::findByName( $modelId, $name );
+    }
 
-	public function getByType( $modelId, $type ) {
+    public function getByType( $modelId, $type ) {
 
-		return self::findByType( $modelId, $type );
-	}
+        return self::findByType( $modelId, $type );
+    }
 
-	public function getByNameType( $modelId, $name, $type ) {
+    public function getByNameType( $modelId, $name, $type ) {
 
-		return self::findByNameType( $modelId, $name, $type );
-	}
+        return self::findByNameType( $modelId, $name, $type );
+    }
 
-	public function initByNameType( $modelId, $name, $type, $valueType = 'text' ) {
+    public function initByNameType( $modelId, $name, $type, $valueType = 'text' ) {
 
-		$meta	= $this->getByNameType( $modelId, $name, $type );
+        $meta	= $this->getByNameType( $modelId, $name, $type );
 
-		if( !isset( $meta ) ) {
+        if( !isset( $meta ) ) {
 
-			$modelClass			= static::$modelClass;
+            $modelClass			= static::$modelClass;
 
-			$meta				= new $modelClass();
-			$meta->modelId		= $modelId;
-			$meta->name			= $name;
-			$meta->type			= $type;
-			$meta->valueType	= $valueType;
-		}
+            $meta				= new $modelClass();
+            $meta->modelId		= $modelId;
+            $meta->name			= $name;
+            $meta->type			= $type;
+            $meta->valueType	= $valueType;
+        }
 
-		return $meta;
-	}
+        return $meta;
+    }
 
     // Read - Lists ----
 
     // Read - Maps -----
 
-	public function getNameValueMapByType( $modelId, $type ) {
+    public function getNameValueMapByType( $modelId, $type ) {
 
-		$config[ 'conditions' ][ 'modelId' ] 	= $modelId;
-		$config[ 'conditions' ][ 'type' ] 		= $type;
+        $config[ 'conditions' ][ 'modelId' ] 	= $modelId;
+        $config[ 'conditions' ][ 'type' ] 		= $type;
 
-		return $this->getNameValueMap( $config );
-	}
+        return $this->getNameValueMap( $config );
+    }
 
-	public function getIdMetaMapByType( $modelId, $type ) {
+    public function getIdMetaMapByType( $modelId, $type ) {
 
-		$config[ 'conditions' ][ 'modelId' ] 	= $modelId;
-		$config[ 'conditions' ][ 'type' ] 		= $type;
+        $config[ 'conditions' ][ 'modelId' ] 	= $modelId;
+        $config[ 'conditions' ][ 'type' ] 		= $type;
 
-		return $this->getObjectMap( $config );
-	}
+        return $this->getObjectMap( $config );
+    }
 
-	public function getNameMetaMapByType( $modelId, $type ) {
+    public function getNameMetaMapByType( $modelId, $type ) {
 
-		$config[ 'key' ]						= 'name';
-		$config[ 'conditions' ][ 'modelId' ] 	= $modelId;
-		$config[ 'conditions' ][ 'type' ] 		= $type;
+        $config[ 'key' ]						= 'name';
+        $config[ 'conditions' ][ 'modelId' ] 	= $modelId;
+        $config[ 'conditions' ][ 'type' ] 		= $type;
 
-		return $this->getObjectMap( $config );
-	}
+        return $this->getObjectMap( $config );
+    }
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
- 	public function create( $model, $config = [] ) {
+    public function create( $model, $config = [] ) {
 
-		if( !isset( $model->label ) || strlen( $model->label ) <= 0 ) {
+        if( !isset( $model->label ) || strlen( $model->label ) <= 0 ) {
 
-			$model->label = $model->name;
-		}
+            $model->label = $model->name;
+        }
 
-		$model->save();
+        $model->save();
 
-		return $model;
- 	}
+        return $model;
+    }
 
-	// Update -------------
+    // Update -------------
 
-	public function update( $model, $config = [] ) {
+    public function update( $model, $config = [] ) {
 
         $existingModel  = $this->getByNameType( $model->modelId, $model->name, $model->type );
 
-		// Create if it does not exist
-		if( !isset( $existingModel ) ) {
+        // Create if it does not exist
+        if( !isset( $existingModel ) ) {
 
-			return $this->create( $model );
-		}
+            return $this->create( $model );
+        }
 
-		if( isset( $model->valueType ) ) {
+        if( isset( $model->valueType ) ) {
 
-			$attributes	= [ 'valueType', 'value' ];
-		}
-		else {
+            $attributes	= [ 'valueType', 'value' ];
+        }
+        else {
 
-			$attributes	= [ 'value' ];
-		}
+            $attributes	= [ 'value' ];
+        }
 
-		if( !isset( $config[ 'attributes' ] ) ) {
+        if( !isset( $config[ 'attributes' ] ) ) {
 
-			$config[ 'attributes' ]	= $attributes;
-		}
+            $config[ 'attributes' ]	= $attributes;
+        }
 
-		return parent::update( $model, $config );
- 	}
+        return parent::update( $model, $config );
+    }
 
 
- 	public function updateByParams( $params = [], $config = [] ) {
+    public function updateByParams( $params = [], $config = [] ) {
 
-		$modelId	= $params[ 'modelId' ];
-		$name		= $params[ 'name' ];
-		$type		= $params[ 'type' ];
+        $modelId	= $params[ 'modelId' ];
+        $name		= $params[ 'name' ];
+        $type		= $params[ 'type' ];
 
-		$model		= $this->getByNameType( $modelId, $name, $type );
+        $model		= $this->getByNameType( $modelId, $name, $type );
 
-		if( isset( $model ) ) {
+        if( isset( $model ) ) {
 
-			$model->value	= $params[ 'value' ];
+            $model->value	= $params[ 'value' ];
 
-			return parent::update( $model, [
-				'selective' => false,
-				'attributes' => [ 'value' ]
-			]);
-		}
- 	}
+            return parent::update( $model, [
+                'selective' => false,
+                'attributes' => [ 'value' ]
+            ]);
+        }
+    }
 
-	public function updateMultiple( $models, $config = [] ) {
+    public function updateMultiple( $models, $config = [] ) {
 
-		$parent	= $config[ 'parent' ];
+        $parent	= $config[ 'parent' ];
 
-		foreach( $models as $model ) {
+        foreach( $models as $model ) {
 
-			if( $model->modelId == $parent->id ) {
+            if( $model->modelId == $parent->id ) {
 
-				$this->update( $model );
-			}
-		}
-	}
+                $this->update( $model );
+            }
+        }
+    }
 
-	public function updateMultipleByForm( $form, $config = [] ) {
+    public function updateMultipleByForm( $form, $config = [] ) {
 
-		$metas = $form->getArrayToStore();
+        $metas = $form->getArrayToStore();
 
-		foreach ( $metas as $meta ) {
+        foreach ( $metas as $meta ) {
 
-			if( !isset( $meta[ 'valueType' ] ) ) {
+            if( !isset( $meta[ 'valueType' ] ) ) {
 
-				$meta[ 'valueType' ]	= Meta::VALUE_TYPE_TEXT;
-			}
+                $meta[ 'valueType' ]	= Meta::VALUE_TYPE_TEXT;
+            }
 
-			$model			= $this->initByNameType( $config[ 'modelId' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ] );
+            $model			= $this->initByNameType( $config[ 'modelId' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ] );
 
-			$model->value	= $meta[ 'value' ];
-			$model->label	= $form->getAttributeLabel( $meta[ 'name' ] );
+            $model->value	= $meta[ 'value' ];
+            $model->label	= $form->getAttributeLabel( $meta[ 'name' ] );
 
-			$this->update( $model );
-		}
- 	}
+            $this->update( $model );
+        }
+    }
 
-	// Delete -------------
+    // Delete -------------
 
-	public function deleteByModelId( $modelId ) {
+    public function deleteByModelId( $modelId ) {
 
-		$modelClass	= static::$modelClass;
+        $modelClass	= static::$modelClass;
 
-		$modelClass::deleteAll( 'modelId=:id', [ ':id' => $modelId ] );
-	}
+        $modelClass::deleteAll( 'modelId=:id', [ ':id' => $modelId ] );
+    }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// MetaService ---------------------------
+    // MetaService ---------------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
-	public static function findByName( $modelId, $name ) {
+    public static function findByName( $modelId, $name ) {
 
-		$modelClass	= static::$modelClass;
+        $modelClass	= static::$modelClass;
 
-		return $modelClass::findByName( $modelId, $name );
-	}
+        return $modelClass::findByName( $modelId, $name );
+    }
 
-	public static function findByType( $modelId, $type ) {
+    public static function findByType( $modelId, $type ) {
 
-		$modelClass	= static::$modelClass;
+        $modelClass	= static::$modelClass;
 
-		return $modelClass::findByType( $modelId, $type );
-	}
+        return $modelClass::findByType( $modelId, $type );
+    }
 
-	public static function findByNameType( $modelId, $name, $type ) {
+    public static function findByNameType( $modelId, $name, $type ) {
 
-		$modelClass	= static::$modelClass;
+        $modelClass	= static::$modelClass;
 
-		return $modelClass::findByNameType( $modelId, $name, $type );
-	}
+        return $modelClass::findByNameType( $modelId, $name, $type );
+    }
 
     // Read - Lists ----
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
 }

@@ -12,19 +12,19 @@ use cmsgears\core\common\services\entities\UserService;
 
 class Register extends \yii\base\Model {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
     public $email;
     public $password;
@@ -35,77 +35,77 @@ class Register extends \yii\base\Model {
     public $mobile;
     public $terms;
 
-	// Protected --------------
+    // Protected --------------
 
-	protected $userService;
+    protected $userService;
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	public function init() {
+    public function init() {
 
-		parent::init();
+        parent::init();
 
-		$this->userService	= Yii::$app->factory->get( 'userService' );
-	}
+        $this->userService	= Yii::$app->factory->get( 'userService' );
+    }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     public function rules() {
 
         $rules = [
-			[ [ 'email', 'password', 'password_repeat', 'terms' ], 'required' ],
-			[ [ 'firstName', 'lastName' ], 'required', 'on' => [ 'name' ] ],
-			[ 'email', 'email' ],
-			[ 'password', 'compare' ],
-			[ 'password', 'password' ],
-			[ 'email', 'validateEmail' ],
-			[ 'username', 'validateUsername' ],
-			[ 'username', 'alphanumdotu' ],
-			[ 'mobile', 'phone' ],
-			[ [ 'firstName', 'lastName' ], 'alphanumspace' ],
-			[ 'terms', 'termsValidator' ]
-		];
+            [ [ 'email', 'password', 'password_repeat', 'terms' ], 'required' ],
+            [ [ 'firstName', 'lastName' ], 'required', 'on' => [ 'name' ] ],
+            [ 'email', 'email' ],
+            [ 'password', 'compare' ],
+            [ 'password', 'password' ],
+            [ 'email', 'validateEmail' ],
+            [ 'username', 'validateUsername' ],
+            [ 'username', 'alphanumdotu' ],
+            [ 'mobile', 'phone' ],
+            [ [ 'firstName', 'lastName' ], 'alphanumspace' ],
+            [ 'terms', 'termsValidator' ]
+        ];
 
-		if( Yii::$app->core->trimFieldValue ) {
+        if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'email', 'password', 'password_repeat', 'username', 'mobile', 'firstName', 'lastName' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+            $trim[] = [ [ 'email', 'password', 'password_repeat', 'username', 'mobile', 'firstName', 'lastName' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-			return ArrayHelper::merge( $trim, $rules );
-		}
+            return ArrayHelper::merge( $trim, $rules );
+        }
 
-		return $rules;
-	}
+        return $rules;
+    }
 
-	public function attributeLabels() {
+    public function attributeLabels() {
 
-		return [
-			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
-			'password' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PASSWORD ),
-			'password_repeat' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PASSWORD_REPEAT ),
-			'username' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USERNAME ),
-			'firstName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
-			'lastName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
-			'terms' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TERMS )
-		];
-	}
+        return [
+            'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+            'password' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PASSWORD ),
+            'password_repeat' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PASSWORD_REPEAT ),
+            'username' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USERNAME ),
+            'firstName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
+            'lastName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
+            'terms' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TERMS )
+        ];
+    }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
     public function validateEmail( $attribute, $params ) {
 
@@ -137,6 +137,6 @@ class Register extends \yii\base\Model {
         }
     }
 
-	// Register ------------------------------
+    // Register ------------------------------
 
 }

@@ -9,71 +9,71 @@ use cmsgears\core\common\config\CoreGlobal;
 
 trait ResourceTrait {
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// MapperTrait ---------------------------
+    // MapperTrait ---------------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
-	public function getByParent( $parentId, $parentType ) {
+    public function getByParent( $parentId, $parentType ) {
 
-		$modelClass	= self::$modelClass;
+        $modelClass	= self::$modelClass;
 
-		return $modelClass::findByParent( $parentId, $parentType );
-	}
+        return $modelClass::findByParent( $parentId, $parentType );
+    }
 
-	public function getByParentId( $parentId ) {
+    public function getByParentId( $parentId ) {
 
-		$modelClass	= self::$modelClass;
+        $modelClass	= self::$modelClass;
 
-		return $modelClass::findByParentId( $parentId );
-	}
+        return $modelClass::findByParentId( $parentId );
+    }
 
-	public function getByParentType( $parentType ) {
+    public function getByParentType( $parentType ) {
 
-		$modelClass	= self::$modelClass;
+        $modelClass	= self::$modelClass;
 
-		return $modelClass::findByParentType( $parentType );
-	}
+        return $modelClass::findByParentType( $parentType );
+    }
 
     // Read - Lists ----
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
 
-	public function deleteByParent( $parentId, $parentType ) {
+    public function deleteByParent( $parentId, $parentType ) {
 
-		$modelClass	= self::$modelClass;
+        $modelClass	= self::$modelClass;
 
-		return $modelClass::deleteByParent( $parentId, $parentType );
-	}
+        return $modelClass::deleteByParent( $parentId, $parentType );
+    }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// MapperTrait ---------------------------
+    // MapperTrait ---------------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -81,12 +81,12 @@ trait ResourceTrait {
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	// Delete -------------
+    // Delete -------------
 
 }

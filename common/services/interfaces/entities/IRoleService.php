@@ -12,9 +12,9 @@ use cmsgears\core\common\services\interfaces\base\ISlugTypeService;
 
 interface IRoleService extends INameTypeService, ISlugTypeService {
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -22,14 +22,14 @@ interface IRoleService extends INameTypeService, ISlugTypeService {
 
     // Read - Maps -----
 
-	public function getIdNameMapByRoles( $roles );
+    public function getIdNameMapByRoles( $roles );
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	public function bindPermissions( $binder );
+    public function bindPermissions( $binder );
 
-	// Delete -------------
+    // Delete -------------
 
 }

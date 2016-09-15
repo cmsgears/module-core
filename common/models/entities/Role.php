@@ -38,42 +38,42 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class Role extends \cmsgears\core\common\models\base\Entity {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	private $mParentType	= CoreGlobal::TYPE_ROLE; // required for traits
+    private $mParentType	= CoreGlobal::TYPE_ROLE; // required for traits
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
     use CreateModifyTrait;
-	use HierarchyTrait;
-	use NameTypeTrait;
-	use SlugTypeTrait;
+    use HierarchyTrait;
+    use NameTypeTrait;
+    use SlugTypeTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
     /**
      * @inheritdoc
@@ -100,7 +100,7 @@ class Role extends \cmsgears\core\common\models\base\Entity {
         ];
     }
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -145,13 +145,13 @@ class Role extends \cmsgears\core\common\models\base\Entity {
         ];
     }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// Role ----------------------------------
+    // Role ----------------------------------
 
     /**
      * @return array - Permission
@@ -191,40 +191,40 @@ class Role extends \cmsgears\core\common\models\base\Entity {
      */
     public function getPermissionsSlugList( $level = 0 ) {
 
-		$slugList	= [];
-		$idList		= [];
+        $slugList	= [];
+        $idList		= [];
 
-		// Generate L0 Slugs and Ids List
-		if( $level <= 1 ) {
+        // Generate L0 Slugs and Ids List
+        if( $level <= 1 ) {
 
-			$permissions	= $this->permissions;
+            $permissions	= $this->permissions;
 
-	        foreach ( $permissions as $permission ) {
+            foreach ( $permissions as $permission ) {
 
-	            array_push( $slugList, $permission->slug );
-				array_push( $idList, $permission->id );
-	        }
-		}
+                array_push( $slugList, $permission->slug );
+                array_push( $idList, $permission->id );
+            }
+        }
 
-		// Add L1 slugs to L0 slugs
-		if( $level == 1 ) {
+        // Add L1 slugs to L0 slugs
+        if( $level == 1 ) {
 
-			$permissions	= Permission::findL0Children( $idList );
+            $permissions	= Permission::findL0Children( $idList );
 
-	        foreach ( $permissions as $permission ) {
+            foreach ( $permissions as $permission ) {
 
-	            array_push( $slugList, $permission->slug );
-	        }
-		}
+                array_push( $slugList, $permission->slug );
+            }
+        }
 
         return $slugList;
     }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -234,32 +234,32 @@ class Role extends \cmsgears\core\common\models\base\Entity {
         return CoreTables::TABLE_ROLE;
     }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Role ----------------------------------
+    // Role ----------------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	public static function queryWithHasOne( $config = [] ) {
+    public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
-		$config[ 'relations' ]	= $relations;
+        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+        $config[ 'relations' ]	= $relations;
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithPermissions( $config = [] ) {
+    public static function queryWithPermissions( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'permissions' ];
+        $config[ 'relations' ]	= [ 'permissions' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 }

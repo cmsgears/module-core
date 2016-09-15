@@ -123,7 +123,7 @@ class CoreGlobal {
     // Site
     const PERM_ADMIN                = 'admin';  // Allows to view Admin Site Home
     const PERM_USER                 = 'user';   // Allows to view User Site Home
-	const PERM_GUEST				= 'guest';
+    const PERM_GUEST				= 'guest';
 
     // Site specific - Forms, Galleries, Settings, Testimonials, Categories, Geo DB
     const PERM_CORE                 = 'core';
@@ -234,7 +234,7 @@ class CoreGlobal {
 
     // Generic Fields
     const FIELD_CODE                = 'codeField';
-    const FIELD_CODE_NUM            = 'codeNumField';
+    const FIELD_ISO	            	= 'isoField';
 
     const FIELD_DEFAULT             = 'Default';
     const FIELD_NAME                = 'nameField';
@@ -281,7 +281,7 @@ class CoreGlobal {
     const FIELD_PROVINCE            = 'provinceField';
     const FIELD_COUNTRY             = 'countryField';
     const FIELD_CATEGORY            = 'categoryField';
-	const FIELD_OPTION              = 'optionField';
+    const FIELD_OPTION              = 'optionField';
     const FIELD_FILE                = 'fileField';
     const FIELD_TAG                 = 'tagField';
     const FIELD_GALLERY             = 'galleryField';

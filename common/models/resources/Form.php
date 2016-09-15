@@ -55,48 +55,48 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class Form extends \cmsgears\core\common\models\base\Resource implements IVisibility {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	public static $multiSite	= true;
+    public static $multiSite	= true;
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public $mParentType	= CoreGlobal::TYPE_FORM;
+    public $mParentType	= CoreGlobal::TYPE_FORM;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use MetaTrait;
-	use CreateModifyTrait;
-	use DataTrait;
-	use NameTypeTrait;
-	use OwnerTrait;
-	use SlugTypeTrait;
-	use TemplateTrait;
-	use VisibilityTrait;
+    use MetaTrait;
+    use CreateModifyTrait;
+    use DataTrait;
+    use NameTypeTrait;
+    use OwnerTrait;
+    use SlugTypeTrait;
+    use TemplateTrait;
+    use VisibilityTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii interfaces ------------------------
+    // Yii interfaces ------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
      /**
      * @inheritdoc
@@ -123,7 +123,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
         ];
     }
 
-	// yii\base\Model ---------
+    // yii\base\Model ---------
 
     /**
      * @inheritdoc
@@ -179,30 +179,30 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
         ];
     }
 
-	// yii\db\BaseActiveRecord
+    // yii\db\BaseActiveRecord
 
-	public function beforeSave( $insert ) {
+    public function beforeSave( $insert ) {
 
-	    if( parent::beforeSave( $insert ) ) {
+        if( parent::beforeSave( $insert ) ) {
 
-			if( $this->templateId <= 0 ) {
+            if( $this->templateId <= 0 ) {
 
-				$this->templateId = null;
-			}
+                $this->templateId = null;
+            }
 
-	        return true;
-	    }
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Validators ----------------------------
+    // Validators ----------------------------
 
-	// Form ----------------------------------
+    // Form ----------------------------------
 
     public function getSite() {
 
@@ -260,11 +260,11 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
         return Yii::$app->formatter->asBoolean( $this->adminMail );
     }
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\db\ActiveRecord ----
+    // yii\db\ActiveRecord ----
 
     /**
      * @inheritdoc
@@ -274,32 +274,32 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
         return CoreTables::TABLE_FORM;
     }
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// Form ----------------------------------
+    // Form ----------------------------------
 
-	// Read - Query -----------
+    // Read - Query -----------
 
-	public static function queryWithHasOne( $config = [] ) {
+    public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template', 'creator', 'modifier' ];
-		$config[ 'relations' ]	= $relations;
+        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template', 'creator', 'modifier' ];
+        $config[ 'relations' ]	= $relations;
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	public static function queryWithFields( $config = [] ) {
+    public static function queryWithFields( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'fields' ];
+        $config[ 'relations' ]	= [ 'fields' ];
 
-		return parent::queryWithAll( $config );
-	}
+        return parent::queryWithAll( $config );
+    }
 
-	// Read - Find ------------
+    // Read - Find ------------
 
-	// Create -----------------
+    // Create -----------------
 
-	// Update -----------------
+    // Update -----------------
 
-	// Delete -----------------
+    // Delete -----------------
 }

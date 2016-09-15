@@ -12,72 +12,19 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 trait ModelMetaTrait {
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// ModelMetaTrait ------------------------
+    // ModelMetaTrait ------------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
-
-    // Read - Models ---
-
-    // Read - Lists ----
-
-    // Read - Maps -----
-
-	public function getIdMetaMapByType( $model, $type ) {
-
-		$modelMetaService = Yii::$app->factory->get( 'modelMetaService' );
-
-		return $modelMetaService->getIdMetaMapByType( $model->id, static::$parentType, $type );
-	}
-
-	public function getNameMetaMapByType( $model, $type ) {
-
-		$modelMetaService = Yii::$app->factory->get( 'modelMetaService' );
-
-		return $modelMetaService->getNameMetaMapByType( $model->id, static::$parentType, $type );
-	}
-
-	// Read - Others ---
-
-	// Create -------------
-
-	// Update -------------
-
-	public function updateModelMetas( $model, $metas ) {
-
-		$modelMetaService = Yii::$app->factory->get( 'modelMetaService' );
-
-		foreach ( $metas as $meta ) {
-
-			if( $model->id == $meta->parentId ) {
-
-				$modelMetaService->update( $meta );
-			}
-		}
-
-		return true;
-	}
-
-	// Delete -------------
-
-	// Static Methods ----------------------------------------------
-
-	// CMG parent classes --------------------
-
-	// ModelMetaTrait ------------------------
-
-	// Data Provider ------
-
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -85,12 +32,65 @@ trait ModelMetaTrait {
 
     // Read - Maps -----
 
-	// Read - Others ---
+    public function getIdMetaMapByType( $model, $type ) {
 
-	// Create -------------
+        $modelMetaService = Yii::$app->factory->get( 'modelMetaService' );
 
-	// Update -------------
+        return $modelMetaService->getIdMetaMapByType( $model->id, static::$parentType, $type );
+    }
 
-	// Delete -------------
+    public function getNameMetaMapByType( $model, $type ) {
+
+        $modelMetaService = Yii::$app->factory->get( 'modelMetaService' );
+
+        return $modelMetaService->getNameMetaMapByType( $model->id, static::$parentType, $type );
+    }
+
+    // Read - Others ---
+
+    // Create -------------
+
+    // Update -------------
+
+    public function updateModelMetas( $model, $metas ) {
+
+        $modelMetaService = Yii::$app->factory->get( 'modelMetaService' );
+
+        foreach ( $metas as $meta ) {
+
+            if( $model->id == $meta->parentId ) {
+
+                $modelMetaService->update( $meta );
+            }
+        }
+
+        return true;
+    }
+
+    // Delete -------------
+
+    // Static Methods ----------------------------------------------
+
+    // CMG parent classes --------------------
+
+    // ModelMetaTrait ------------------------
+
+    // Data Provider ------
+
+    // Read ---------------
+
+    // Read - Models ---
+
+    // Read - Lists ----
+
+    // Read - Maps -----
+
+    // Read - Others ---
+
+    // Create -------------
+
+    // Update -------------
+
+    // Delete -------------
 
 }

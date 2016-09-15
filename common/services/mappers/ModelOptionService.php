@@ -22,95 +22,95 @@ use cmsgears\core\common\services\traits\MapperTrait;
  */
 class ModelOptionService extends \cmsgears\core\common\services\base\EntityService implements IModelOptionService {
 
-	// Variables ---------------------------------------------------
+    // Variables ---------------------------------------------------
 
-	// Globals -------------------------------
+    // Globals -------------------------------
 
-	// Constants --------------
+    // Constants --------------
 
-	// Public -----------------
+    // Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelOption';
+    public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelOption';
 
-	public static $modelTable	= CoreTables::TABLE_MODEL_OPTION;
+    public static $modelTable	= CoreTables::TABLE_MODEL_OPTION;
 
-	public static $parentType	= null;
+    public static $parentType	= null;
 
-	// Protected --------------
+    // Protected --------------
 
-	// Variables -----------------------------
+    // Variables -----------------------------
 
-	// Public -----------------
+    // Public -----------------
 
-	// Protected --------------
+    // Protected --------------
 
-	// Private ----------------
+    // Private ----------------
 
-	private $optionService;
+    private $optionService;
 
-	// Traits ------------------------------------------------------
+    // Traits ------------------------------------------------------
 
-	use MapperTrait;
+    use MapperTrait;
 
-	// Constructor and Initialisation ------------------------------
+    // Constructor and Initialisation ------------------------------
 
     public function __construct( IOptionService $optionService, $config = [] ) {
 
-		$this->optionService	= $optionService;
+        $this->optionService	= $optionService;
 
         parent::__construct( $config );
     }
 
-	// Instance methods --------------------------------------------
+    // Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+    // Yii parent classes --------------------
 
-	// yii\base\Component -----
+    // yii\base\Component -----
 
-	// CMG interfaces ------------------------
+    // CMG interfaces ------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// ModelOptionService --------------------
+    // ModelOptionService --------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
-	public function getModelCounts( $parentType, $categorySlug, $active = false ) {
+    public function getModelCounts( $parentType, $categorySlug, $active = false ) {
 
-		$categoryTable	= CoreTables::TABLE_CATEGORY;
-		$optionTable	= CoreTables::TABLE_OPTION;
-		$mOptionTable	= CoreTables::TABLE_MODEL_OPTION;
-		$query			= new Query();
+        $categoryTable	= CoreTables::TABLE_CATEGORY;
+        $optionTable	= CoreTables::TABLE_OPTION;
+        $mOptionTable	= CoreTables::TABLE_MODEL_OPTION;
+        $query			= new Query();
 
-    	$query->select( [ "$optionTable.name", "count($optionTable.id) as total" ] )
-				->from( $optionTable )
-				->leftJoin( $mOptionTable, "$mOptionTable.modelId=$optionTable.id" )
-				->leftJoin( $categoryTable, "$categoryTable.id=$optionTable.categoryId" )
-				->where( "$mOptionTable.parentType='$parentType' AND $categoryTable.slug='$categorySlug'" )
-				->groupBy( "$optionTable.id" );
+        $query->select( [ "$optionTable.name", "count($optionTable.id) as total" ] )
+                ->from( $optionTable )
+                ->leftJoin( $mOptionTable, "$mOptionTable.modelId=$optionTable.id" )
+                ->leftJoin( $categoryTable, "$categoryTable.id=$optionTable.categoryId" )
+                ->where( "$mOptionTable.parentType='$parentType' AND $categoryTable.slug='$categorySlug'" )
+                ->groupBy( "$optionTable.id" );
 
-		if( $active ) {
+        if( $active ) {
 
-			$query->andWhere( "$mOptionTable.active=$active" );
-		}
+            $query->andWhere( "$mOptionTable.active=$active" );
+        }
 
-		$counts 	= $query->all();
-		$returnArr	= [];
-		$counter	= 0;
+        $counts 	= $query->all();
+        $returnArr	= [];
+        $counter	= 0;
 
-		foreach ( $counts as $count ) {
+        foreach ( $counts as $count ) {
 
-			$returnArr[ $count[ 'name' ] ] = $count[ 'total' ];
+            $returnArr[ $count[ 'name' ] ] = $count[ 'total' ];
 
-			$counter	= $counter + $count[ 'total' ];
-		}
+            $counter	= $counter + $count[ 'total' ];
+        }
 
-		$returnArr[ 'all' ] = $counter;
+        $returnArr[ 'all' ] = $counter;
 
-		return $returnArr;
-	}
+        return $returnArr;
+    }
 
 
     // Read - Models ---
@@ -119,33 +119,33 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	public function update( $model, $config = [] ) {
+    public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'order', 'active' ];
+        $attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'order', 'active' ];
 
-		return parent::update( $model, [
-			'attributes' => $attributes
-		]);
- 	}
+        return parent::update( $model, [
+            'attributes' => $attributes
+        ]);
+    }
 
-	// Delete -------------
+    // Delete -------------
 
 
-	// Static Methods ----------------------------------------------
+    // Static Methods ----------------------------------------------
 
-	// CMG parent classes --------------------
+    // CMG parent classes --------------------
 
-	// ModelOptionService --------------------
+    // ModelOptionService --------------------
 
-	// Data Provider ------
+    // Data Provider ------
 
-	// Read ---------------
+    // Read ---------------
 
     // Read - Models ---
 
@@ -153,52 +153,52 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 
     // Read - Maps -----
 
-	// Read - Others ---
+    // Read - Others ---
 
-	// Create -------------
+    // Create -------------
 
-	// Update -------------
+    // Update -------------
 
-	public function bindOptions( $binder, $parentType ) {
+    public function bindOptions( $binder, $parentType ) {
 
-		$parentId	= $binder->binderId;
-		$allData	= $binder->allData;
-		$activeData	= $binder->bindedData;
+        $parentId	= $binder->binderId;
+        $allData	= $binder->allData;
+        $activeData	= $binder->bindedData;
 
-		foreach ( $allData as $id ) {
+        foreach ( $allData as $id ) {
 
-			$toSave		= ModelOption::findByModelId( $parentId, $parentType, $id );
+            $toSave		= ModelOption::findByModelId( $parentId, $parentType, $id );
 
-			// Existing mapping
-			if( isset( $toSave ) ) {
+            // Existing mapping
+            if( isset( $toSave ) ) {
 
-				if( in_array( $id, $activeData ) ) {
+                if( in_array( $id, $activeData ) ) {
 
-					$toSave->active	= true;
-				}
-				else {
+                    $toSave->active	= true;
+                }
+                else {
 
-					$toSave->active	= false;
-				}
+                    $toSave->active	= false;
+                }
 
-				$toSave->update();
-			}
-			// Save only required data
-			else if( in_array( $id, $activeData ) ) {
+                $toSave->update();
+            }
+            // Save only required data
+            else if( in_array( $id, $activeData ) ) {
 
-				$toSave		= new ModelOption();
+                $toSave		= new ModelOption();
 
-				$toSave->parentId	= $parentId;
-				$toSave->parentType	= $parentType;
-				$toSave->modelId	= $id;
-				$toSave->active		= true;
+                $toSave->parentId	= $parentId;
+                $toSave->parentType	= $parentType;
+                $toSave->modelId	= $id;
+                $toSave->active		= true;
 
-				$toSave->save();
-			}
-		}
+                $toSave->save();
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	// Delete -------------
+    // Delete -------------
 }

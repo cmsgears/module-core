@@ -541,7 +541,8 @@ class m160620_095703_core extends \yii\db\Migration {
             'modifiedAt' => $this->dateTime(),
             'htmlOptions' => $this->text(),
             'content' => $this->text(),
-            'data' => $this->text()
+            'data' => $this->text(),
+            'uniqueSubmit' => $this->boolean()->notNull()->defaultValue( false )
         ], $this->options );
 
         // Index for columns creator and modifier

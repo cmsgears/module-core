@@ -52,6 +52,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $htmlOptions
  * @property string $content
  * @property string $data
+ * @property boolean $uniqueSubmit
  */
 class Form extends \cmsgears\core\common\models\base\Resource implements IVisibility {
 
@@ -139,7 +140,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
             [ [ 'description', 'successMessage' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
             [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
             [ [ 'visibility' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'captcha', 'active', 'userMail', 'adminMail' ], 'boolean' ],
+            [ [ 'captcha', 'active', 'userMail', 'adminMail', 'uniqueSubmit' ], 'boolean' ],
             [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
             [ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
             [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]

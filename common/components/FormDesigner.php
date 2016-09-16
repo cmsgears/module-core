@@ -4,6 +4,7 @@ namespace cmsgears\core\common\components;
 // Yii Imports
 use \Yii;
 use yii\helpers\Html;
+use yii\helpers\StringHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -86,6 +87,13 @@ class FormDesigner extends \yii\base\Component {
 
                 return $this->getSelectHtml( $form, $model, $config, $key, $field );
             }
+			case FormField::TYPE_RATING : {
+
+				$config[ 'endVal' ]	= 5;
+				$config[ 'hover' ]	= true;
+
+				return $this->getRatingHtml( $form, $model, $config, $key, $field );
+			}
         }
     }
 
@@ -232,6 +240,42 @@ class FormDesigner extends \yii\base\Component {
 
         return $fieldHtml;
     }
+
+	protected function getRatingHtml( $form, $model, $config, $key, $field ) {
+
+		$selected		= isset( $config[ 'selected' ] ) ? $config[ 'selected' ] : null;
+		$endVal			= $config[ 'endVal' ];
+		$hover			= isset( $config[ 'hover' ] ) ? $config[ 'hover' ] : false;
+		$htmlOptions	= isset( $field->htmlOptions['class'] ) ? $field->htmlOptions['class'] : null;
+
+		$ratingHtml	= "<div class='$htmlOptions'>";
+
+		$ratingHtml	.= "<div class='cmt-rating'>";
+
+        if( $hover ) {
+
+			$ratingHtml	= "<div class='$htmlOptions'>";
+            $ratingHtml	.= "<div class='cmt-rating hover'>";
+        }
+
+        for( $i = 1; $i <= $endVal; $i++ ) {
+
+            $icon   = "<span data='$i'>&#9734;</span>";
+
+            if( isset( $selected ) && $selected == $i ) {
+
+                $icon   = "<span data='$i' class='filled'>&#9733;</span>";
+            }
+
+            $ratingHtml   .= $icon;
+        }
+
+		$ratingHtml	.= '<input type="hidden" id="rating-count" name="'.StringHelper::baseName( get_class( $model ) ).'['.$key.']">';
+
+		$ratingHtml	.= "</div></div>";
+
+        return $ratingHtml;
+	}
 
     // TODO: Check more to make compatible with both dynamic and regular forms
 

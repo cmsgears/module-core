@@ -230,7 +230,8 @@ class m160621_014408_core_data extends \yii\db\Migration {
             [ $config->id, 'date_format','Date Format', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Date format used by the formatter.\",\"placeholder\":\"Date Format\"}' ],
             [ $config->id, 'time_format','Time Format', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Time format used by the formatter.\",\"placeholder\":\"Time Format\"}' ],
             [ $config->id, 'date_time_format','Date Time Format', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Date time format used by the formatter.\",\"placeholder\":\"Time Format\"}' ],
-            [ $config->id, 'timezone','Timezone', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Time format used by the formatter.\",\"placeholder\":\"Time Format\"}' ]
+            [ $config->id, 'timezone','Timezone', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Time format used by the formatter.\",\"placeholder\":\"Time Format\"}' ],
+            [ $config->id, 'autologin','Auto Login', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Auto login on account confirmation and activation.\"}' ]
         ];
 
         $this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -373,7 +374,8 @@ class m160621_014408_core_data extends \yii\db\Migration {
             [ $this->site->id, 'info_name','Info Name','mail','text','Info' ],
             [ $this->site->id, 'info_email','Info Email','mail','text',"$siteInfo@$primaryDomain" ],
             [ $this->site->id, 'theme','Theme','backend','text','admin' ],
-            [ $this->site->id, 'theme','Theme','frontend','text','basic' ]
+            [ $this->site->id, 'theme','Theme','frontend','text','basic' ],
+            [ $this->site->id, 'autologin','Auto Login','core','flag','0' ]
         ];
 
         $this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );

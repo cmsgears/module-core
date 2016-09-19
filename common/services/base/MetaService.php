@@ -54,9 +54,9 @@ abstract class MetaService extends EntityService implements IMetaService {
 
     // Read - Models ---
 
-    public function getByName( $modelId, $name ) {
+    public function getByName( $modelId, $name, $first = false ) {
 
-        return self::findByName( $modelId, $name );
+        return self::findByName( $modelId, $name, $first );
     }
 
     public function getByType( $modelId, $type ) {
@@ -235,11 +235,11 @@ abstract class MetaService extends EntityService implements IMetaService {
 
     // Read - Models ---
 
-    public static function findByName( $modelId, $name ) {
+    public static function findByName( $modelId, $name, $first = false ) {
 
         $modelClass	= static::$modelClass;
 
-        return $modelClass::findByName( $modelId, $name );
+        return $modelClass::findByName( $modelId, $name, $first );
     }
 
     public static function findByType( $modelId, $type ) {

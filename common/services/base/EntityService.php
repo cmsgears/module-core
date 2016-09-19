@@ -522,7 +522,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
         $dataProvider	= new ActiveDataProvider([
             'query' => $query,
             'sort' => $sort,
-            'pagination' => $pagination
+            'pagination' => $pagination,
         ]);
 
         return $dataProvider;

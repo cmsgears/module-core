@@ -7,6 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
+use cmsgears\core\common\config\CoreProperties;
 
 use cmsgears\core\common\models\forms\Login;
 use cmsgears\core\common\models\forms\Register;
@@ -150,6 +151,14 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
                     // Set Success Message
                     Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
+
+					// Autologin
+					$flag	= Yii::$app->factory->get( 'siteMetaService' )->getByName( Yii::$app->core->siteId, CoreProperties::PROP_AUTOLOGIN, true )->value;
+
+					if( $flag ) {
+
+						Yii::$app->user->login( $user, 3600 * 24 * 30 );
+					}
 
                     return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM );
                 }

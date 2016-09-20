@@ -152,13 +152,13 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
                     // Set Success Message
                     Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
 
-					// Autologin
-					$flag	= Yii::$app->factory->get( 'siteMetaService' )->getByName( Yii::$app->core->siteId, CoreProperties::PROP_AUTOLOGIN, true )->value;
+                    // Autologin
+                    $flag	= Yii::$app->factory->get( 'siteMetaService' )->getByName( Yii::$app->core->siteId, CoreProperties::PROP_AUTOLOGIN, true )->value;
 
-					if( $flag ) {
+                    if( $flag ) {
 
-						Yii::$app->user->login( $user, 3600 * 24 * 30 );
-					}
+                        Yii::$app->user->login( $user, 3600 * 24 * 30 );
+                    }
 
                     return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM );
                 }

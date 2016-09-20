@@ -165,14 +165,14 @@ abstract class ModelMeta extends Meta {
      */
     public static function findByName( $modelId, $name, $first = false ) {
 
-		$query	= self::queryByName( $modelId, $name );
+        $query	= self::queryByName( $modelId, $name );
 
         if( $first ) {
 
-			return $query->one();
+            return $query->one();
         }
 
-		return $query->all();
+        return $query->all();
     }
 
     /**

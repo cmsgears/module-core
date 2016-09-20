@@ -87,13 +87,13 @@ class FormDesigner extends \yii\base\Component {
 
                 return $this->getSelectHtml( $form, $model, $config, $key, $field );
             }
-			case FormField::TYPE_RATING : {
+            case FormField::TYPE_RATING : {
 
-				$config[ 'endVal' ]	= 5;
-				$config[ 'hover' ]	= true;
+                $config[ 'endVal' ]	= 5;
+                $config[ 'hover' ]	= true;
 
-				return $this->getRatingHtml( $form, $model, $config, $key, $field );
-			}
+                return $this->getRatingHtml( $form, $model, $config, $key, $field );
+            }
         }
     }
 
@@ -241,20 +241,20 @@ class FormDesigner extends \yii\base\Component {
         return $fieldHtml;
     }
 
-	protected function getRatingHtml( $form, $model, $config, $key, $field ) {
+    protected function getRatingHtml( $form, $model, $config, $key, $field ) {
 
-		$selected		= isset( $config[ 'selected' ] ) ? $config[ 'selected' ] : null;
-		$endVal			= $config[ 'endVal' ];
-		$hover			= isset( $config[ 'hover' ] ) ? $config[ 'hover' ] : false;
-		$htmlOptions	= isset( $field->htmlOptions['class'] ) ? $field->htmlOptions['class'] : null;
+        $selected		= isset( $config[ 'selected' ] ) ? $config[ 'selected' ] : null;
+        $endVal			= $config[ 'endVal' ];
+        $hover			= isset( $config[ 'hover' ] ) ? $config[ 'hover' ] : false;
+        $htmlOptions	= isset( $field->htmlOptions['class'] ) ? $field->htmlOptions['class'] : null;
 
-		$ratingHtml	= "<div class='$htmlOptions'>";
+        $ratingHtml	= "<div class='$htmlOptions'>";
 
-		$ratingHtml	.= "<div class='cmt-rating'>";
+        $ratingHtml	.= "<div class='cmt-rating'>";
 
         if( $hover ) {
 
-			$ratingHtml	= "<div class='$htmlOptions'>";
+            $ratingHtml	= "<div class='$htmlOptions'>";
             $ratingHtml	.= "<div class='cmt-rating hover'>";
         }
 
@@ -270,12 +270,12 @@ class FormDesigner extends \yii\base\Component {
             $ratingHtml   .= $icon;
         }
 
-		$ratingHtml	.= '<input type="hidden" id="rating-count" name="'.StringHelper::baseName( get_class( $model ) ).'['.$key.']">';
+        $ratingHtml	.= '<input type="hidden" id="rating-count" name="'.StringHelper::baseName( get_class( $model ) ).'['.$key.']">';
 
-		$ratingHtml	.= "</div></div>";
+        $ratingHtml	.= "</div></div>";
 
         return $ratingHtml;
-	}
+    }
 
     // TODO: Check more to make compatible with both dynamic and regular forms
 

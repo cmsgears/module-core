@@ -3,45 +3,45 @@ namespace cmsgears\core\common\services\interfaces\hierarchy;
 
 interface INestedSetService extends IHierarchyService {
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getChildNodes( $parentId, $conditions = [] );
+	public function getChildNodes( $parentId, $conditions = [] );
 
-    public function getLeafNodes( $rootId, $conditions = [] );
+	public function getLeafNodes( $rootId, $conditions = [] );
 
-    public function getParentNodes( $leafId, $conditions = [] );
+	public function getParentNodes( $leafId, $conditions = [] );
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    public function getLevelList( $config = [] );
+	public function getLevelList( $config = [] );
 
-    public function getSubLevelList( $parentId, $rootId, $config = [] );
+	public function getSubLevelList( $parentId, $rootId, $config = [] );
 
-    public function getSubLevelIdList( $parentId, $rootId, $config = [] );
+	public function getSubLevelIdList( $parentId, $rootId, $config = [] );
 
-    public function getChildIdListById( $categoryId );
+	public function getChildIdListById( $categoryId );
 
-    public function getChildIdList( $category );
+	public function getChildIdList( $category );
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    public function createInHierarchy( $model );
+	public function createInHierarchy( $model );
 
-    // Update -------------
+	// Update -------------
 
-    public function updateInHierarchy( $model, $modelToUpdate );
+	public function updateInHierarchy( $model, $modelToUpdate );
 
-    // Delete -------------
+	// Delete -------------
 
-    public function deleteInHierarchy( $model );
+	public function deleteInHierarchy( $model );
 
-    public function deleteAllInHierarchy( $model );
+	public function deleteAllInHierarchy( $model );
 }

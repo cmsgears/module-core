@@ -3,7 +3,7 @@ use \Yii;
 use yii\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . " | Profile";
+$this->title	= $coreProperties->getSiteTitle() . " | Profile";
 ?>
 
 <?php $form = ActiveForm::begin( ['id' => 'frm-user-update', 'options' => ['class' => 'frm-split-40-60' ] ] );?>
@@ -12,7 +12,7 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Profile";
 <?= $form->field( $model, 'username' ) ?>
 <?= $form->field( $model, 'firstName' ) ?>
 <?= $form->field( $model, 'lastName' ) ?>
-<?= $form->field( $model, 'genderId' )->dropDownList( $genderMap )  ?>
+<?= $form->field( $model, 'genderId' )->dropDownList( $genderMap )	?>
 <?= $form->field( $model, 'phone' ) ?>
 
 <input type="submit" value="Update" />

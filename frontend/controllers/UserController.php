@@ -12,128 +12,128 @@ use cmsgears\core\frontend\config\WebGlobalCore;
 
 class UserController extends \cmsgears\core\frontend\controllers\base\Controller {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals ----------------
+	// Globals ----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    protected $optionService;
+	protected $optionService;
 
-    // Private ----------------
+	// Private ----------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->crudPermission	= CoreGlobal::PERM_USER;
+		$this->crudPermission	= CoreGlobal::PERM_USER;
 
-        $this->modelService 	= Yii::$app->factory->get( 'userService' );
+		$this->modelService		= Yii::$app->factory->get( 'userService' );
 
-        $this->optionService 	= Yii::$app->factory->get( 'optionService' );
-    }
+		$this->optionService	= Yii::$app->factory->get( 'optionService' );
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Controller ----
+	// yii\base\Controller ----
 
-    public function behaviors() {
+	public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->core->getRbacFilterClass(),
-                'actions' => [
-                    'index' => [ 'permission' => $this->crudPermission ],
-                    'home' => [ 'permission' => $this->crudPermission ],
-                    'profile' => [ 'permission' => $this->crudPermission ],
-                    'settings' => [ 'permission' => $this->crudPermission ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'index' => [ 'get' ],
-                    'home' => [ 'get' ],
-                    'profile' => [ 'get' ],
-                    'settings' => [ 'get' ]
-                ]
-            ]
-        ];
-    }
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
+					'index' => [ 'permission' => $this->crudPermission ],
+					'home' => [ 'permission' => $this->crudPermission ],
+					'profile' => [ 'permission' => $this->crudPermission ],
+					'settings' => [ 'permission' => $this->crudPermission ]
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'index' => [ 'get' ],
+					'home' => [ 'get' ],
+					'profile' => [ 'get' ],
+					'settings' => [ 'get' ]
+				]
+			]
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // UserController ------------------------
+	// UserController ------------------------
 
-    // Redirect user to appropriate home page
-    public function actionIndex() {
+	// Redirect user to appropriate home page
+	public function actionIndex() {
 
-        $this->checkHome();
-    }
+		$this->checkHome();
+	}
 
-    // Default home page for user
-    public function actionHome() {
+	// Default home page for user
+	public function actionHome() {
 
-        return $this->render( WebGlobalCore::PAGE_INDEX );
-    }
+		return $this->render( WebGlobalCore::PAGE_INDEX );
+	}
 
-    public function actionProfile() {
+	public function actionProfile() {
 
-        // Find Model
-        $user	= Yii::$app->user->getIdentity();
+		// Find Model
+		$user	= Yii::$app->user->getIdentity();
 
-        // Update/Render if exist
-        if( isset( $user ) ) {
+		// Update/Render if exist
+		if( isset( $user ) ) {
 
-            $genderMap 	= $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [ [ 'id' => '0', 'name' => 'Choose Gender' ] ] );
+			$genderMap	= $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [ [ 'id' => '0', 'name' => 'Choose Gender' ] ] );
 
-            return $this->render( WebGlobalCore::PAGE_PROFILE, [
-                'user' => $user,
-                'genderMap' => $genderMap
-            ]);
-        }
+			return $this->render( WebGlobalCore::PAGE_PROFILE, [
+				'user' => $user,
+				'genderMap' => $genderMap
+			]);
+		}
 
-        // Model not found
-        throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 
-    public function actionSettings() {
+	public function actionSettings() {
 
-        // Find Model
-        $user		= Yii::$app->user->getIdentity();
+		// Find Model
+		$user		= Yii::$app->user->getIdentity();
 
-        // Update/Render if exist
-        if( isset( $user ) ) {
+		// Update/Render if exist
+		if( isset( $user ) ) {
 
-            $privacy		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
-            $notification	= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
-            $reminder		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
+			$privacy		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
+			$notification	= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
+			$reminder		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
 
-            // NOTE: Rest of the attributes can be loaded in view.
+			// NOTE: Rest of the attributes can be loaded in view.
 
-            // TODO: Check for options to cache all the user attributes.
+			// TODO: Check for options to cache all the user attributes.
 
-            return $this->render( WebGlobalCore::PAGE_SETTINGS, [
-                'user' => $user,
-                'privacy' => $privacy,
-                'notification' => $notification,
-                'reminder' => $reminder
-            ]);
-        }
+			return $this->render( WebGlobalCore::PAGE_SETTINGS, [
+				'user' => $user,
+				'privacy' => $privacy,
+				'notification' => $notification,
+				'reminder' => $reminder
+			]);
+		}
 
-        // Model not found
-        throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 }

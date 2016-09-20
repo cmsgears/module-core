@@ -56,251 +56,251 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class Form extends \cmsgears\core\common\models\base\Resource implements IVisibility {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    public static $multiSite	= true;
+	public static $multiSite	= true;
 
-    // Variables -----------------------------
-
-    // Public -----------------
-
-    public $mParentType	= CoreGlobal::TYPE_FORM;
-
-    // Protected --------------
-
-    // Private ----------------
-
-    // Traits ------------------------------------------------------
-
-    use MetaTrait;
-    use CreateModifyTrait;
-    use DataTrait;
-    use NameTypeTrait;
-    use OwnerTrait;
-    use SlugTypeTrait;
-    use TemplateTrait;
-    use VisibilityTrait;
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	public $mParentType	= CoreGlobal::TYPE_FORM;
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	use MetaTrait;
+	use CreateModifyTrait;
+	use DataTrait;
+	use NameTypeTrait;
+	use OwnerTrait;
+	use SlugTypeTrait;
+	use TemplateTrait;
+	use VisibilityTrait;
 
-    // Constructor and Initialisation ------------------------------
-
-    // Instance methods --------------------------------------------
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-     /**
-     * @inheritdoc
-     */
-    public function behaviors() {
+	 /**
+	 * @inheritdoc
+	 */
+	public function behaviors() {
 
-        return [
-            'authorBehavior' => [
-                'class' => AuthorBehavior::className()
-            ],
-            'timestampBehavior' => [
-                'class' => TimestampBehavior::className(),
-                'createdAtAttribute' => 'createdAt',
-                'updatedAtAttribute' => 'modifiedAt',
-                'value' => new Expression('NOW()')
-            ],
-            'sluggableBehavior' => [
-                'class' => SluggableBehavior::className(),
-                'attribute' => 'name',
-                'slugAttribute' => 'slug',
-                'immutable' => true,
-                'ensureUnique' => true
-            ]
-        ];
-    }
+		return [
+			'authorBehavior' => [
+				'class' => AuthorBehavior::className()
+			],
+			'timestampBehavior' => [
+				'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+				'updatedAtAttribute' => 'modifiedAt',
+				'value' => new Expression('NOW()')
+			],
+			'sluggableBehavior' => [
+				'class' => SluggableBehavior::className(),
+				'attribute' => 'name',
+				'slugAttribute' => 'slug',
+				'immutable' => true,
+				'ensureUnique' => true
+			]
+		];
+	}
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
-    public function rules() {
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
 
-        // model rules
-        $rules = [
-            [ [ 'name', 'siteId', 'captcha', 'visibility', 'active' ], 'required' ],
-            [ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
-            [ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-            [ [ 'description', 'successMessage' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
-            [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-            [ [ 'visibility' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'captcha', 'active', 'userMail', 'adminMail', 'uniqueSubmit' ], 'boolean' ],
-            [ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
-        ];
+		// model rules
+		$rules = [
+			[ [ 'name', 'siteId', 'captcha', 'visibility', 'active' ], 'required' ],
+			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
+			[ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'description', 'successMessage' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			[ [ 'visibility' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'captcha', 'active', 'userMail', 'adminMail', 'uniqueSubmit' ], 'boolean' ],
+			[ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+		];
 
-        // trim if configured
-        if( Yii::$app->core->trimFieldValue ) {
+		// trim if configured
+		if( Yii::$app->core->trimFieldValue ) {
 
-            $trim[] = [ [ 'name', 'description', 'successMessage', 'htmlOptions' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'description', 'successMessage', 'htmlOptions' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
-    }
+		return $rules;
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels() {
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
 
-        return [
-            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
-            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-            'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-            'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-            'successMessage' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE_SUCCESS ),
-            'captcha' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CAPTCHA ),
-            'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
-            'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
-            'userMail' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MAIL_USER ),
-            'adminMail' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MAIL_ADMIN ),
-            'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-            'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
-            'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_META )
-        ];
-    }
+		return [
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'successMessage' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE_SUCCESS ),
+			'captcha' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CAPTCHA ),
+			'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
+			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'userMail' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MAIL_USER ),
+			'adminMail' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MAIL_ADMIN ),
+			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_META )
+		];
+	}
 
-    // yii\db\BaseActiveRecord
+	// yii\db\BaseActiveRecord
 
-    public function beforeSave( $insert ) {
+	public function beforeSave( $insert ) {
 
-        if( parent::beforeSave( $insert ) ) {
+		if( parent::beforeSave( $insert ) ) {
 
-            if( $this->templateId <= 0 ) {
+			if( $this->templateId <= 0 ) {
 
-                $this->templateId = null;
-            }
+				$this->templateId = null;
+			}
 
-            return true;
-        }
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // Form ----------------------------------
+	// Form ----------------------------------
 
-    public function getSite() {
+	public function getSite() {
 
-        return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
-    }
+		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+	}
 
-    /**
-     * @return array - array of FormField
-     */
-    public function getFields() {
+	/**
+	 * @return array - array of FormField
+	 */
+	public function getFields() {
 
-        return $this->hasMany( FormField::className(), [ 'formId' => 'id' ] );
-    }
+		return $this->hasMany( FormField::className(), [ 'formId' => 'id' ] );
+	}
 
-    /**
-     * @return array - map of FormField having field name as key
-     */
-    public function getFieldsMap() {
+	/**
+	 * @return array - map of FormField having field name as key
+	 */
+	public function getFieldsMap() {
 
-        $formFields     = $this->fields;
-        $formFieldsMap  = array();
+		$formFields		= $this->fields;
+		$formFieldsMap	= array();
 
-        foreach ( $formFields as $formField ) {
+		foreach ( $formFields as $formField ) {
 
-            $formFieldsMap[ $formField->name ] = $formField;
-        }
+			$formFieldsMap[ $formField->name ] = $formField;
+		}
 
-        return $formFieldsMap;
-    }
+		return $formFieldsMap;
+	}
 
-    public function getCaptchaStr() {
+	public function getCaptchaStr() {
 
-        return Yii::$app->formatter->asBoolean( $this->captcha );
-    }
+		return Yii::$app->formatter->asBoolean( $this->captcha );
+	}
 
-    public function getVisibilityStr() {
+	public function getVisibilityStr() {
 
-        return self::$visibilityMap[ $this->visibility ];
-    }
+		return self::$visibilityMap[ $this->visibility ];
+	}
 
-    public function getActiveStr() {
+	public function getActiveStr() {
 
-        return Yii::$app->formatter->asBoolean( $this->active );
-    }
+		return Yii::$app->formatter->asBoolean( $this->active );
+	}
 
-    // Send mail to user if set and email field exist
-    public function getUserMailStr() {
+	// Send mail to user if set and email field exist
+	public function getUserMailStr() {
 
-        return Yii::$app->formatter->asBoolean( $this->userMail );
-    }
+		return Yii::$app->formatter->asBoolean( $this->userMail );
+	}
 
-    // Send mail to admin if set
-    public function getAdminMailStr() {
+	// Send mail to admin if set
+	public function getAdminMailStr() {
 
-        return Yii::$app->formatter->asBoolean( $this->adminMail );
-    }
+		return Yii::$app->formatter->asBoolean( $this->adminMail );
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName() {
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName() {
 
-        return CoreTables::TABLE_FORM;
-    }
+		return CoreTables::TABLE_FORM;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Form ----------------------------------
+	// Form ----------------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    public static function queryWithHasOne( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template', 'creator', 'modifier' ];
-        $config[ 'relations' ]	= $relations;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template', 'creator', 'modifier' ];
+		$config[ 'relations' ]	= $relations;
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithFields( $config = [] ) {
+	public static function queryWithFields( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'fields' ];
+		$config[ 'relations' ]	= [ 'fields' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 }

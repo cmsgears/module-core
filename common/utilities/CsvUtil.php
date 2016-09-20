@@ -12,91 +12,91 @@ use cmsgears\core\common\config\CoreProperties;
  */
 class CsvUtil {
 
-    public static function importFile( $fileName, $serviceName, $config = [] ) {
+	public static function importFile( $fileName, $serviceName, $config = [] ) {
 
-        $service	= null;
-        $modelClass	= null;
+		$service	= null;
+		$modelClass	= null;
 
-        if( isset( $serviceName ) ) {
+		if( isset( $serviceName ) ) {
 
-            $service	= Yii::$app->factory->get( $serviceName );
-            $modelClass	= $service->getModelClass();
-        }
-        else {
+			$service	= Yii::$app->factory->get( $serviceName );
+			$modelClass	= $service->getModelClass();
+		}
+		else {
 
-            $modelClass	= isset( $config[ 'modelClass' ] ) ? $config[ 'modelClass' ] : null;
-        }
+			$modelClass	= isset( $config[ 'modelClass' ] ) ? $config[ 'modelClass' ] : null;
+		}
 
-        if( !isset( $modelClass ) ) {
+		if( !isset( $modelClass ) ) {
 
-            return false;
-        }
+			return false;
+		}
 
-        $coreProperties		= CoreProperties::getInstance();
+		$coreProperties		= CoreProperties::getInstance();
 
-        $sourceDir			= isset( $config[ 'sourceDir' ] ) ? $config[ 'sourceDir' ] : $coreProperties->getUploadsDir();
-        $attributes			= $config[ 'attributes' ];
-        $rowsToSkip			= isset( $config[ 'rowsToSkip' ] ) ? $config[ 'rowsToSkip' ] : 0;
-        $rowsLimit			= isset( $config[ 'rowsLimit' ] ) ? $config[ 'rowsLimit' ] : 0;
+		$sourceDir			= isset( $config[ 'sourceDir' ] ) ? $config[ 'sourceDir' ] : $coreProperties->getUploadsDir();
+		$attributes			= $config[ 'attributes' ];
+		$rowsToSkip			= isset( $config[ 'rowsToSkip' ] ) ? $config[ 'rowsToSkip' ] : 0;
+		$rowsLimit			= isset( $config[ 'rowsLimit' ] ) ? $config[ 'rowsLimit' ] : 0;
 
-        $length				= isset( $config[ 'length' ] ) ? $config[ 'length' ] : 0;
-        $delimiter			= isset( $config[ 'delimiter' ] ) ? $config[ 'delimiter' ] : ",";
-        $enclosure			= isset( $config[ 'enclosure' ] ) ? $config[ 'enclosure' ] : '"';
-        $escape				= isset( $config[ 'escape' ] ) ? $config[ 'escape' ] : "\\";
+		$length				= isset( $config[ 'length' ] ) ? $config[ 'length' ] : 0;
+		$delimiter			= isset( $config[ 'delimiter' ] ) ? $config[ 'delimiter' ] : ",";
+		$enclosure			= isset( $config[ 'enclosure' ] ) ? $config[ 'enclosure' ] : '"';
+		$escape				= isset( $config[ 'escape' ] ) ? $config[ 'escape' ] : "\\";
 
-        $file				= $sourceDir . $fileName;
+		$file				= $sourceDir . $fileName;
 
-        // open the csv file
-        $fp         = fopen( $file, "r" );
-        $counter    = 1;
+		// open the csv file
+		$fp			= fopen( $file, "r" );
+		$counter	= 1;
 
-        if( $rowsLimit <= 0 ) {
+		if( $rowsLimit <= 0 ) {
 
-            while( ( $row = fgetcsv( $fp, $length, $delimiter, $enclosure, $escape ) ) ) {
+			while( ( $row = fgetcsv( $fp, $length, $delimiter, $enclosure, $escape ) ) ) {
 
-                if( $counter > $rowsToSkip ) {
+				if( $counter > $rowsToSkip ) {
 
-                    self::insertRow( $service, $modelClass, $attributes, $row );
-                }
+					self::insertRow( $service, $modelClass, $attributes, $row );
+				}
 
-                $counter++;
-            }
-        }
-        else {
+				$counter++;
+			}
+		}
+		else {
 
-            while( ( $row = fgetcsv( $fp, $length, $delimiter, $enclosure, $escape ) ) ) {
+			while( ( $row = fgetcsv( $fp, $length, $delimiter, $enclosure, $escape ) ) ) {
 
-                if( $counter > $rowsToSkip && $counter <= $rowsLimit ) {
+				if( $counter > $rowsToSkip && $counter <= $rowsLimit ) {
 
-                    self::insertRow( $service, $modelClass, $attributes, $row );
-                }
+					self::insertRow( $service, $modelClass, $attributes, $row );
+				}
 
-                $counter++;
-            }
-        }
+				$counter++;
+			}
+		}
 
-        fclose( $fp );
-    }
+		fclose( $fp );
+	}
 
-    protected static function insertRow( $service, $modelClass, $attributes, $row ) {
+	protected static function insertRow( $service, $modelClass, $attributes, $row ) {
 
-        $model = new $modelClass;
+		$model = new $modelClass;
 
-        foreach ( $attributes as $key => $value ) {
+		foreach ( $attributes as $key => $value ) {
 
-            if( !empty( $value ) ) {
+			if( !empty( $value ) ) {
 
-                $model->$value	= $row[ $key ];
-            }
-        }
+				$model->$value	= $row[ $key ];
+			}
+		}
 
-        if( isset( $service ) ) {
+		if( isset( $service ) ) {
 
-            $service->create( $model );
-        }
-        else {
+			$service->create( $model );
+		}
+		else {
 
-            $model->save();
-        }
-    }
+			$model->save();
+		}
+	}
 }

@@ -14,135 +14,135 @@ use cmsgears\core\common\models\resources\Category;
 
 abstract class CategoryController extends \cmsgears\core\admin\controllers\base\CrudController {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals ----------------
+	// Globals ----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    protected $type;
+	protected $type;
 
-    // Private ----------------
+	// Private ----------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->setViewPath( '@cmsgears/module-core/admin/views/category' );
+		$this->setViewPath( '@cmsgears/module-core/admin/views/category' );
 
-        $this->crudPermission 	= CoreGlobal::PERM_CORE;
-        $this->modelService		= Yii::$app->factory->get( 'categoryService' );
+		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'categoryService' );
 
-        $this->type				= CoreGlobal::TYPE_SITE;
+		$this->type				= CoreGlobal::TYPE_SITE;
 
-        // Notes: Configure sidebar and returnUrl exclusively in child classes. We can also change type in child classes.
-    }
+		// Notes: Configure sidebar and returnUrl exclusively in child classes. We can also change type in child classes.
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Controller ----
+	// yii\base\Controller ----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // CategoryController --------------------
+	// CategoryController --------------------
 
-    public function actionAll() {
+	public function actionAll() {
 
-        $dataProvider = $this->modelService->getPageByType( $this->type );
+		$dataProvider = $this->modelService->getPageByType( $this->type );
 
-        return $this->render( 'all', [
-             'dataProvider' => $dataProvider
-        ]);
-    }
+		return $this->render( 'all', [
+			 'dataProvider' => $dataProvider
+		]);
+	}
 
-    public function actionCreate() {
+	public function actionCreate() {
 
-        $modelClass		= $this->modelService->getModelClass();
-        $model			= new $modelClass;
-        $model->type 	= $this->type;
-        $model->siteId	= Yii::$app->core->siteId;
+		$modelClass		= $this->modelService->getModelClass();
+		$model			= new $modelClass;
+		$model->type	= $this->type;
+		$model->siteId	= Yii::$app->core->siteId;
 
-        if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
 
-            $this->modelService->create( $model );
+			$this->modelService->create( $model );
 
-            return $this->redirect( $this->returnUrl );
-        }
+			return $this->redirect( $this->returnUrl );
+		}
 
-        $categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
+		$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
 
-        return $this->render( 'create', [
-            'model' => $model,
-            'categoryMap' => $categoryMap
-        ]);
-    }
+		return $this->render( 'create', [
+			'model' => $model,
+			'categoryMap' => $categoryMap
+		]);
+	}
 
-    public function actionUpdate( $id ) {
+	public function actionUpdate( $id ) {
 
-        // Find Model
-        $model	= $this->modelService->getById( $id );
+		// Find Model
+		$model	= $this->modelService->getById( $id );
 
-        // Update/Render if exist
-        if( isset( $model ) ) {
+		// Update/Render if exist
+		if( isset( $model ) ) {
 
-            if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
 
-                $this->modelService->update( $model );
+				$this->modelService->update( $model );
 
-                return $this->redirect( $this->returnUrl );
-            }
+				return $this->redirect( $this->returnUrl );
+			}
 
-            $categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [
-                                    'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ],
-                                    'filters' => [ [ 'not in', 'id', [ $id ] ] ]
-                                ]);
+			$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [
+									'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ],
+									'filters' => [ [ 'not in', 'id', [ $id ] ] ]
+								]);
 
-            return $this->render( 'update', [
-                'model' => $model,
-                'categoryMap' => $categoryMap
-            ]);
-        }
+			return $this->render( 'update', [
+				'model' => $model,
+				'categoryMap' => $categoryMap
+			]);
+		}
 
-        // Model not found
-        throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 
-    public function actionDelete( $id ) {
+	public function actionDelete( $id ) {
 
-        // Find Model
-        $model	= $this->modelService->getById( $id );
+		// Find Model
+		$model	= $this->modelService->getById( $id );
 
-        // Delete/Render if exist
-        if( isset( $model ) ) {
+		// Delete/Render if exist
+		if( isset( $model ) ) {
 
-            if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-                $this->modelService->delete( $model );
+				$this->modelService->delete( $model );
 
-                return $this->redirect( $this->returnUrl );
-            }
+				return $this->redirect( $this->returnUrl );
+			}
 
-            $categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
+			$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
 
-            return $this->render( 'delete', [
-                'model' => $model,
-                'categoryMap' => $categoryMap
-            ]);
-        }
+			return $this->render( 'delete', [
+				'model' => $model,
+				'categoryMap' => $categoryMap
+			]);
+		}
 
-        // Model not found
-        throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 }

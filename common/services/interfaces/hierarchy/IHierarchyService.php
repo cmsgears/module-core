@@ -3,21 +3,21 @@ namespace cmsgears\core\common\services\interfaces\hierarchy;
 
 interface IHierarchyService {
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 }

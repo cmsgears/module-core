@@ -24,102 +24,102 @@ use cmsgears\core\common\models\traits\ResourceTrait;
  */
 class ModelHierarchy extends \cmsgears\core\common\models\base\Resource {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    use ResourceTrait;
+	use ResourceTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
-    public function rules() {
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
 
-        return [
-            [ [ 'rootId', 'parentType' ], 'required' ],
-            [ [ 'id' ], 'safe' ],
-            [ [ 'parentType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ [ 'parentId', 'childId', 'rootId', 'lValue', 'rValue' ], 'number', 'integerOnly' => true, 'min' => 1 ]
-        ];
-    }
+		return [
+			[ [ 'rootId', 'parentType' ], 'required' ],
+			[ [ 'id' ], 'safe' ],
+			[ [ 'parentType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'parentId', 'childId', 'rootId', 'lValue', 'rValue' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+		];
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels() {
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
 
-        return [
-            'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-            'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE )
-        ];
-    }
+		return [
+			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE )
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // ModelHierarchy ------------------------
+	// ModelHierarchy ------------------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName() {
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName() {
 
-        return CoreTables::TABLE_MODEL_HIERARCHY;
-    }
+		return CoreTables::TABLE_MODEL_HIERARCHY;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelHierarchy ------------------------
+	// ModelHierarchy ------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    public static function findRoot( $rootId, $parentType ) {
+	public static function findRoot( $rootId, $parentType ) {
 
-        return self::find()->where( 'rootId=:rid AND parentId=NULL parentType=:type', [ ':rid' => $rootId, ':type' => $parentType ] )->one();
-    }
+		return self::find()->where( 'rootId=:rid AND parentId=NULL parentType=:type', [ ':rid' => $rootId, ':type' => $parentType ] )->one();
+	}
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 }

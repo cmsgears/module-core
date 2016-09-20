@@ -11,243 +11,259 @@ use cmsgears\core\common\models\interfaces\IApproval;
  */
 trait ApprovalTrait {
 
-    public static $statusMap = [
-        IApproval::STATUS_NEW => 'New',
-        IApproval::STATUS_SUBMITTED => 'Submitted',
-        IApproval::STATUS_REJECTED => 'Rejected',
-        IApproval::STATUS_RE_SUBMIT => 'Re Submitted',
-        IApproval::STATUS_CONFIRMED => 'Confirmed',
-        IApproval::STATUS_ACTIVE => 'Active',
-        IApproval::STATUS_FROJEN => 'Frozen',
-        IApproval::STATUS_UPLIFT_FREEZE => 'Uplift Frozen',
-        IApproval::STATUS_BLOCKED => 'Blocked',
-        IApproval::STATUS_UPLIFT_BLOCK => 'Uplift Block',
-        IApproval::STATUS_TERMINATED => 'Terminated'
-    ];
+	public static $statusMap = [
+		IApproval::STATUS_NEW => 'New',
+		IApproval::STATUS_SUBMITTED => 'Submitted',
+		IApproval::STATUS_REJECTED => 'Rejected',
+		IApproval::STATUS_RE_SUBMIT => 'Re Submitted',
+		IApproval::STATUS_CONFIRMED => 'Confirmed',
+		IApproval::STATUS_ACTIVE => 'Active',
+		IApproval::STATUS_FROJEN => 'Frozen',
+		IApproval::STATUS_UPLIFT_FREEZE => 'Uplift Frozen',
+		IApproval::STATUS_BLOCKED => 'Blocked',
+		IApproval::STATUS_UPLIFT_BLOCK => 'Uplift Block',
+		IApproval::STATUS_TERMINATED => 'Terminated'
+	];
 
-    // Used for url params
-    public static $revStatusMap = [
-        'new' => IApproval::STATUS_NEW,
-        'submitted' => IApproval::STATUS_SUBMITTED,
-        'rejected' => IApproval::STATUS_REJECTED,
-        're-submitted' => IApproval::STATUS_RE_SUBMIT,
-        'confirmed' => IApproval::STATUS_CONFIRMED,
-        'active' => IApproval::STATUS_ACTIVE,
-        'frozen' => IApproval::STATUS_FROJEN,
-        'uplift-freeze' => IApproval::STATUS_UPLIFT_FREEZE,
-        'blocked' => IApproval::STATUS_BLOCKED,
-        'uplift-block' => IApproval::STATUS_UPLIFT_BLOCK
-    ];
+	// Used for url params
+	public static $revStatusMap = [
+		'new' => IApproval::STATUS_NEW,
+		'submitted' => IApproval::STATUS_SUBMITTED,
+		'rejected' => IApproval::STATUS_REJECTED,
+		're-submitted' => IApproval::STATUS_RE_SUBMIT,
+		'confirmed' => IApproval::STATUS_CONFIRMED,
+		'active' => IApproval::STATUS_ACTIVE,
+		'frozen' => IApproval::STATUS_FROJEN,
+		'uplift-freeze' => IApproval::STATUS_UPLIFT_FREEZE,
+		'blocked' => IApproval::STATUS_BLOCKED,
+		'uplift-block' => IApproval::STATUS_UPLIFT_BLOCK,
+		'terminated' => IApproval::STATUS_TERMINATED
+	];
 
-    public function getStatusStr() {
+	// Used for external docs
+	public static $extRevStatusMap = [
+		'New' => IApproval::STATUS_NEW,
+		'Submitted' => IApproval::STATUS_SUBMITTED,
+		'Rejected' => IApproval::STATUS_REJECTED,
+		'Re Submitted' => IApproval::STATUS_RE_SUBMIT,
+		'Confirmed' => IApproval::STATUS_CONFIRMED,
+		'Active' => IApproval::STATUS_ACTIVE,
+		'Frozen' => IApproval::STATUS_FROJEN,
+		'Uplift Frozen' => IApproval::STATUS_UPLIFT_FREEZE,
+		'Blocked' => IApproval::STATUS_BLOCKED,
+		'Uplift Block' => IApproval::STATUS_UPLIFT_BLOCK,
+		'Terminated' => IApproval::STATUS_TERMINATED
+	];
 
-        if( $this->status >= IApproval::STATUS_NEW ) {
+	public function getStatusStr() {
 
-            return self::$statusMap[ $this->status ];
-        }
+		if( $this->status >= IApproval::STATUS_NEW ) {
 
-        return 'Registration';
-    }
+			return self::$statusMap[ $this->status ];
+		}
 
-    public function isNew( $strict = true ) {
+		return 'Registration';
+	}
 
-        if( $strict ) {
+	public function isNew( $strict = true ) {
 
-            return $this->status == IApproval::STATUS_NEW;
-        }
+		if( $strict ) {
 
-        return $this->status >= IApproval::STATUS_NEW;
-    }
+			return $this->status == IApproval::STATUS_NEW;
+		}
 
-    public function isRegistration() {
+		return $this->status >= IApproval::STATUS_NEW;
+	}
 
-        return $this->status >= IApproval::STATUS_NEW && $this->status < IApproval::STATUS_SUBMITTED;
-    }
+	public function isRegistration() {
 
-    public function isSubmitted( $strict = true ) {
+		return $this->status >= IApproval::STATUS_NEW && $this->status < IApproval::STATUS_SUBMITTED;
+	}
 
-        if( $strict ) {
+	public function isSubmitted( $strict = true ) {
 
-            return $this->status == IApproval::STATUS_SUBMITTED;
-        }
+		if( $strict ) {
 
-        return $this->status == IApproval::STATUS_SUBMITTED || $this->status == IApproval::STATUS_RE_SUBMIT;
-    }
+			return $this->status == IApproval::STATUS_SUBMITTED;
+		}
 
-    public function isBelowSubmitted( $strict = true ) {
+		return $this->status == IApproval::STATUS_SUBMITTED || $this->status == IApproval::STATUS_RE_SUBMIT;
+	}
 
-        if( $strict ) {
+	public function isBelowSubmitted( $strict = true ) {
 
-            return $this->status < IApproval::STATUS_REJECTED;
-        }
+		if( $strict ) {
 
-        return $this->status <= IApproval::STATUS_REJECTED;
-    }
+			return $this->status < IApproval::STATUS_REJECTED;
+		}
 
-    public function isRejected( $strict = true ) {
+		return $this->status <= IApproval::STATUS_REJECTED;
+	}
 
-        if( $strict ) {
+	public function isRejected( $strict = true ) {
 
-            return $this->status == IApproval::STATUS_REJECTED;
-        }
+		if( $strict ) {
 
-        return $this->status >= IApproval::STATUS_REJECTED;
-    }
+			return $this->status == IApproval::STATUS_REJECTED;
+		}
 
-    public function isReSubmit( $strict = true ) {
+		return $this->status >= IApproval::STATUS_REJECTED;
+	}
 
-        if( $strict ) {
+	public function isReSubmit( $strict = true ) {
 
-            return $this->status == IApproval::STATUS_RE_SUBMIT;
-        }
+		if( $strict ) {
 
-        return $this->status >= IApproval::STATUS_RE_SUBMIT;
-    }
+			return $this->status == IApproval::STATUS_RE_SUBMIT;
+		}
 
-    public function isConfirmed( $strict = true ) {
+		return $this->status >= IApproval::STATUS_RE_SUBMIT;
+	}
 
-        if( $strict ) {
+	public function isConfirmed( $strict = true ) {
 
-            return $this->status == IApproval::STATUS_CONFIRMED;
-        }
+		if( $strict ) {
 
-        return $this->status >= IApproval::STATUS_CONFIRMED;
-    }
+			return $this->status == IApproval::STATUS_CONFIRMED;
+		}
 
-    public function isActive( $strict = true ) {
+		return $this->status >= IApproval::STATUS_CONFIRMED;
+	}
 
-        if( $strict ) {
+	public function isActive( $strict = true ) {
 
-            return $this->status == IApproval::STATUS_ACTIVE;
-        }
+		if( $strict ) {
 
-        return $this->status >= IApproval::STATUS_ACTIVE;
-    }
+			return $this->status == IApproval::STATUS_ACTIVE;
+		}
 
-    public function isFrojen( $strict = true ) {
+		return $this->status >= IApproval::STATUS_ACTIVE;
+	}
 
-        if( $strict ) {
+	public function isFrojen( $strict = true ) {
 
-            return $this->status == IApproval::STATUS_FROJEN;
-        }
+		if( $strict ) {
 
-        return $this->status >= IApproval::STATUS_FROJEN;
-    }
+			return $this->status == IApproval::STATUS_FROJEN;
+		}
 
-    public function isUpliftFreeze( $strict = true ) {
+		return $this->status >= IApproval::STATUS_FROJEN;
+	}
 
-        if( $strict ) {
+	public function isUpliftFreeze( $strict = true ) {
 
-            return $this->status == IApproval::STATUS_UPLIFT_FREEZE;
-        }
+		if( $strict ) {
 
-        return $this->status >= IApproval::STATUS_UPLIFT_FREEZE;
-    }
+			return $this->status == IApproval::STATUS_UPLIFT_FREEZE;
+		}
 
-    public function isBlocked( $strict = true ) {
+		return $this->status >= IApproval::STATUS_UPLIFT_FREEZE;
+	}
 
-        if( $strict ) {
+	public function isBlocked( $strict = true ) {
 
-            return $this->status == IApproval::STATUS_BLOCKED;
-        }
+		if( $strict ) {
 
-        return $this->status >= IApproval::STATUS_BLOCKED;
-    }
+			return $this->status == IApproval::STATUS_BLOCKED;
+		}
 
-    public function isUpliftBlock( $strict = true ) {
+		return $this->status >= IApproval::STATUS_BLOCKED;
+	}
 
-        if( $strict ) {
+	public function isUpliftBlock( $strict = true ) {
 
-            return $this->status == IApproval::STATUS_UPLIFT_BLOCK;
-        }
+		if( $strict ) {
 
-        return $this->status >= IApproval::STATUS_UPLIFT_BLOCK;
-    }
+			return $this->status == IApproval::STATUS_UPLIFT_BLOCK;
+		}
 
-    public function isTerminated( $strict = true ) {
+		return $this->status >= IApproval::STATUS_UPLIFT_BLOCK;
+	}
 
-        if( $strict ) {
+	public function isTerminated( $strict = true ) {
 
-            return $this->status == IApproval::STATUS_TERMINATED;
-        }
+		if( $strict ) {
 
-        return $this->status >= IApproval::STATUS_TERMINATED;
-    }
+			return $this->status == IApproval::STATUS_TERMINATED;
+		}
 
-    public function toggleFrojen() {
+		return $this->status >= IApproval::STATUS_TERMINATED;
+	}
 
-        if( $this->isFrojen() ) {
+	public function toggleFrojen() {
 
-            $this->status	= IApproval::STATUS_ACTIVE;
-        }
-        else {
+		if( $this->isFrojen() ) {
 
-            $this->status	= IApproval::STATUS_FROJEN;
-        }
-    }
+			$this->status	= IApproval::STATUS_ACTIVE;
+		}
+		else {
 
-    public function toggleBlock() {
+			$this->status	= IApproval::STATUS_FROJEN;
+		}
+	}
 
-        if( $this->isBlocked() ) {
+	public function toggleBlock() {
 
-            $this->status	= IApproval::STATUS_ACTIVE;
-        }
-        else {
+		if( $this->isBlocked() ) {
 
-            $this->status	= IApproval::STATUS_BLOCKED;
-        }
-    }
+			$this->status	= IApproval::STATUS_ACTIVE;
+		}
+		else {
 
-    // User cannot edit model in submitted states.
-    public function isEditable() {
+			$this->status	= IApproval::STATUS_BLOCKED;
+		}
+	}
 
-        $editable = [ IApproval::STATUS_SUBMITTED, IApproval::STATUS_RE_SUBMIT, IApproval::STATUS_UPLIFT_FREEZE, IApproval::STATUS_UPLIFT_BLOCK ];
+	// User cannot edit model in submitted states.
+	public function isEditable() {
 
-        return !in_array( $this->status, $editable );
-    }
+		$editable = [ IApproval::STATUS_SUBMITTED, IApproval::STATUS_RE_SUBMIT, IApproval::STATUS_UPLIFT_FREEZE, IApproval::STATUS_UPLIFT_BLOCK ];
 
-    // User can submit the model for limit removal in selected states i.e. new, rejected, frozen or blocked.
-    public function isSubmittable() {
+		return !in_array( $this->status, $editable );
+	}
 
-        return $this->isRegistration() || $this->status == IApproval::STATUS_REJECTED ||
-                $this->status == IApproval::STATUS_FROJEN || $this->status == IApproval::STATUS_BLOCKED;
-    }
+	// User can submit the model for limit removal in selected states i.e. new, rejected, frozen or blocked.
+	public function isSubmittable() {
 
-    public function isApprovable() {
+		return $this->isRegistration() || $this->status == IApproval::STATUS_REJECTED ||
+				$this->status == IApproval::STATUS_FROJEN || $this->status == IApproval::STATUS_BLOCKED;
+	}
 
-        return $this->status == IApproval::STATUS_FROJEN || $this->status == IApproval::STATUS_UPLIFT_FREEZE ||
-                $this->status == IApproval::STATUS_BLOCKED || $this->status == IApproval::STATUS_UPLIFT_BLOCK;
-    }
+	public function isApprovable() {
 
-    // Is available for non owners - few of the features can be disabled for frozen state based on model nature.
-    public function isPublic() {
+		return $this->status == IApproval::STATUS_FROJEN || $this->status == IApproval::STATUS_UPLIFT_FREEZE ||
+				$this->status == IApproval::STATUS_BLOCKED || $this->status == IApproval::STATUS_UPLIFT_BLOCK;
+	}
 
-        return $this->status == IApproval::STATUS_ACTIVE || $this->status == IApproval::STATUS_FROJEN;
-    }
+	// Is available for non owners - few of the features can be disabled for frozen state based on model nature.
+	public function isPublic() {
 
-    public function getRejectReason() {
+		return $this->status == IApproval::STATUS_ACTIVE || $this->status == IApproval::STATUS_FROJEN;
+	}
 
-        $reason = $this->getDataMeta( CoreGlobal::DATA_REJECT_REASON );
-        $text	= 'rejection';
+	public function getRejectReason() {
 
-        if( $this->isFrojen() ) {
+		$reason = $this->getDataMeta( CoreGlobal::DATA_REJECT_REASON );
+		$text	= 'rejection';
 
-            $text	= 'freeze';
-        }
-        else if( $this->isBlocked() ) {
+		if( $this->isFrojen() ) {
 
-            $text	= 'block';
-        }
+			$text	= 'freeze';
+		}
+		else if( $this->isBlocked() ) {
 
-        if( isset( $reason ) && strlen( $reason ) > 0 ) {
+			$text	= 'block';
+		}
 
-            $reason	= "The reason for $text is - $reason";
-        }
-        else {
+		if( isset( $reason ) && strlen( $reason ) > 0 ) {
 
-            $reason	= "No reason was specified by admin.";
-        }
+			$reason	= "The reason for $text is - $reason";
+		}
+		else {
 
-        return $reason;
-    }
+			$reason	= "No reason was specified by admin.";
+		}
+
+		return $reason;
+	}
 }

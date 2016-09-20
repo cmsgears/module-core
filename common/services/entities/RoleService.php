@@ -22,157 +22,157 @@ use cmsgears\core\common\services\traits\SlugTypeTrait;
  */
 class RoleService extends \cmsgears\core\common\services\base\EntityService implements IRoleService {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public static $modelClass	= '\cmsgears\core\common\models\entities\Role';
+	public static $modelClass	= '\cmsgears\core\common\models\entities\Role';
 
-    public static $modelTable	= CoreTables::TABLE_ROLE;
+	public static $modelTable	= CoreTables::TABLE_ROLE;
 
-    public static $parentType	= CoreGlobal::TYPE_ROLE;
+	public static $parentType	= CoreGlobal::TYPE_ROLE;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    use NameTypeTrait;
-    use SlugTypeTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // RoleService ---------------------------
+	// RoleService ---------------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    public function getPage( $config = [] ) {
+	public function getPage( $config = [] ) {
 
-        $sort = new Sort([
-            'attributes' => [
-                'name' => [
-                    'asc' => [ 'name' => SORT_ASC ],
-                    'desc' => ['name' => SORT_DESC ],
-                    'default' => SORT_DESC,
-                    'label' => 'name'
-                ],
-                'slug' => [
-                    'asc' => [ 'slug' => SORT_ASC ],
-                    'desc' => ['slug' => SORT_DESC ],
-                    'default' => SORT_DESC,
-                    'label' => 'slug'
-                ]
-            ]
-        ]);
+		$sort = new Sort([
+			'attributes' => [
+				'name' => [
+					'asc' => [ 'name' => SORT_ASC ],
+					'desc' => ['name' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'name'
+				],
+				'slug' => [
+					'asc' => [ 'slug' => SORT_ASC ],
+					'desc' => ['slug' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'slug'
+				]
+			]
+		]);
 
-        $config[ 'sort' ] = $sort;
+		$config[ 'sort' ] = $sort;
 
-        return parent::findPage( $config );
-    }
+		return parent::findPage( $config );
+	}
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    public function getIdNameMapByRoles( $roles ) {
+	public function getIdNameMapByRoles( $roles ) {
 
-        return $this->getIdNameMap( [ 'filters' => [ [ 'in', 'slug', $roles ] ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Role' ] ] ] );
-    }
+		return $this->getIdNameMap( [ 'filters' => [ [ 'in', 'slug', $roles ] ], 'prepend' => [ [ 'name' => '0', 'value' => 'Choose Role' ] ] ] );
+	}
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    public function update( $model, $config = [] ) {
+	public function update( $model, $config = [] ) {
 
-        $attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description', 'homeUrl' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description', 'homeUrl' ];
 
-        return parent::update( $model, [
-            'attributes' => $attributes
-        ]);
-    }
+		return parent::update( $model, [
+			'attributes' => $attributes
+		]);
+	}
 
-    /**
-     * @param BinderForm $binder
-     * @return boolean
-     */
-    public function bindPermissions( $binder ) {
+	/**
+	 * @param BinderForm $binder
+	 * @return boolean
+	 */
+	public function bindPermissions( $binder ) {
 
-        $roleId			= $binder->binderId;
-        $permissions	= $binder->bindedData;
+		$roleId			= $binder->binderId;
+		$permissions	= $binder->bindedData;
 
-        // Clear all existing mappings
-        RolePermission::deleteByRoleId( $roleId );
+		// Clear all existing mappings
+		RolePermission::deleteByRoleId( $roleId );
 
-        // Create updated mappings
-        if( isset( $permissions ) && count( $permissions ) > 0 ) {
+		// Create updated mappings
+		if( isset( $permissions ) && count( $permissions ) > 0 ) {
 
-            foreach ( $permissions as $key => $value ) {
+			foreach ( $permissions as $key => $value ) {
 
-                if( isset( $value ) ) {
+				if( isset( $value ) ) {
 
-                    $toSave					= new RolePermission();
-                    $toSave->roleId			= $roleId;
-                    $toSave->permissionId	= $value;
+					$toSave					= new RolePermission();
+					$toSave->roleId			= $roleId;
+					$toSave->permissionId	= $value;
 
-                    $toSave->save();
-                }
-            }
-        }
+					$toSave->save();
+				}
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    // Delete -------------
+	// Delete -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // RoleService ---------------------------
+	// RoleService ---------------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 }

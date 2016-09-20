@@ -21,142 +21,142 @@ use cmsgears\core\common\models\base\CoreTables;
  */
 class Province extends \cmsgears\core\common\models\base\Entity {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
-    public function rules() {
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
 
-        // model rules
-        $rules = [
-            [ [ 'countryId', 'code', 'name' ], 'required' ],
-            [ [ 'id' ], 'safe' ],
-            [ [ 'countryId', 'code' ], 'unique', 'targetAttribute' => [ 'countryId', 'code' ] ],
-            [ [ 'countryId', 'name' ], 'unique', 'targetAttribute' => [ 'countryId', 'name' ] ],
-            [ 'countryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'code', 'iso' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
-            [ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ]
-        ];
+		// model rules
+		$rules = [
+			[ [ 'countryId', 'code', 'name' ], 'required' ],
+			[ [ 'id' ], 'safe' ],
+			[ [ 'countryId', 'code' ], 'unique', 'targetAttribute' => [ 'countryId', 'code' ] ],
+			[ [ 'countryId', 'name' ], 'unique', 'targetAttribute' => [ 'countryId', 'name' ] ],
+			[ 'countryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'code', 'iso' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ]
+		];
 
-        // trim if required
-        if( Yii::$app->core->trimFieldValue ) {
+		// trim if required
+		if( Yii::$app->core->trimFieldValue ) {
 
-            $trim[] = [ [ 'code', 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'code', 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
-    }
+		return $rules;
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels() {
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
 
-        return [
-            'countryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
-            'code' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CODE ),
-            'iso' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ISO ),
-            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME )
-        ];
-    }
+		return [
+			'countryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
+			'code' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CODE ),
+			'iso' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ISO ),
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME )
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // Province ------------------------------
+	// Province ------------------------------
 
-    /**
-     * @return Country - parent country for province
-     */
-    public function getCountry() {
+	/**
+	 * @return Country - parent country for province
+	 */
+	public function getCountry() {
 
-        return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] );
-    }
+		return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] );
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName() {
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName() {
 
-        return CoreTables::TABLE_PROVINCE;
-    }
+		return CoreTables::TABLE_PROVINCE;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Province ------------------------------
+	// Province ------------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    public static function queryWithAll( $config = [] ) {
+	public static function queryWithAll( $config = [] ) {
 
-        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country' ];
-        $config[ 'relations' ]	= $relations;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country' ];
+		$config[ 'relations' ]	= $relations;
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithCountry( $config = [] ) {
+	public static function queryWithCountry( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'country' ];
+		$config[ 'relations' ]	= [ 'country' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    /**
-     * @return array - by country id
-     */
-    public static function findByCountryId( $countryId ) {
+	/**
+	 * @return array - by country id
+	 */
+	public static function findByCountryId( $countryId ) {
 
-        return self::find()->where( 'countryId=:id', [ ':id' => $countryId ] )->all();
-    }
+		return self::find()->where( 'countryId=:id', [ ':id' => $countryId ] )->all();
+	}
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 }

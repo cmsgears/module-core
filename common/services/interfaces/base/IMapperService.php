@@ -3,53 +3,53 @@ namespace cmsgears\core\common\services\interfaces\base;
 
 interface IMapperService extends IEntityService {
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getAllByModelId( $modelId );
+	public function getAllByModelId( $modelId );
 
-    public function getByModelId( $parentId, $parentType, $modelId );
+	public function getByModelId( $parentId, $parentType, $modelId );
 
-    public function getByParent( $parentId, $parentType );
+	public function getByParent( $parentId, $parentType );
 
-    public function getByParentId( $parentId );
+	public function getByParentId( $parentId );
 
-    public function getByParentType( $parentType );
+	public function getByParentType( $parentType );
 
-    // Models having active column
+	// Models having active column
 
-    public function getActiveByParent( $parentId, $parentType );
+	public function getActiveByParent( $parentId, $parentType );
 
-    public function getActiveByParentId( $parentId );
+	public function getActiveByParentId( $parentId );
 
-    public function getActiveByParentType( $parentType );
+	public function getActiveByParentType( $parentType );
 
-    public function getActiveByModelIdParentType( $modelId, $parentType );
+	public function getActiveByModelIdParentType( $modelId, $parentType );
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Models having active column
+	// Models having active column
 
-    public function activate( $model );
+	public function activate( $model );
 
-    public function activateByModelId( $parentId, $parentType, $modelId );
+	public function activateByModelId( $parentId, $parentType, $modelId );
 
-    public function disable( $model );
+	public function disable( $model );
 
-    public function disableByModelId( $parentId, $parentType, $modelId, $delete = false );
+	public function disableByModelId( $parentId, $parentType, $modelId, $delete = false );
 
-    // Delete -------------
+	// Delete -------------
 
-    public function deleteByParent( $parentId, $parentType );
+	public function deleteByParent( $parentId, $parentType );
 
-    public function deleteByModelId( $modelId );
+	public function deleteByModelId( $modelId );
 }

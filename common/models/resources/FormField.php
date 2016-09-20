@@ -30,288 +30,288 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  */
 class FormField extends \cmsgears\core\common\models\base\Resource {
 
-    // TODO: further analysis is required to remove the alphanumu validator for name field to support html forms.
+	// TODO: further analysis is required to remove the alphanumu validator for name field to support html forms.
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    const TYPE_TEXT             =   0;
-    const TYPE_HIDDEN           =   5;
-    const TYPE_PASSWORD         =  10;
-    const TYPE_TEXTAREA         =  20;
-    const TYPE_CHECKBOX         =  30;
-    const TYPE_TOGGLE           =  40;
-    const TYPE_CHECKBOX_GROUP   =  50;
-    const TYPE_RADIO            =  60;
-    const TYPE_RADIO_GROUP      =  70;
-    const TYPE_SELECT           =  80;
-    const TYPE_RATING           =  90;
-    const TYPE_ICON             = 100;
-    const TYPE_DATE             = 110;
+	const TYPE_TEXT				=	0;
+	const TYPE_HIDDEN			=	5;
+	const TYPE_PASSWORD			=  10;
+	const TYPE_TEXTAREA			=  20;
+	const TYPE_CHECKBOX			=  30;
+	const TYPE_TOGGLE			=  40;
+	const TYPE_CHECKBOX_GROUP	=  50;
+	const TYPE_RADIO			=  60;
+	const TYPE_RADIO_GROUP		=  70;
+	const TYPE_SELECT			=  80;
+	const TYPE_RATING			=  90;
+	const TYPE_ICON				= 100;
+	const TYPE_DATE				= 110;
 
-    // Public -----------------
+	// Public -----------------
 
-    public static $typeMap = [
-        self::TYPE_TEXT => 'Text',
-        self::TYPE_HIDDEN => 'Hidden',
-        self::TYPE_PASSWORD => 'Password',
-        self::TYPE_TEXTAREA => 'Textarea',
-        self::TYPE_CHECKBOX => 'Checkbox',
-        self::TYPE_TOGGLE => 'Toggle Button',
-        self::TYPE_CHECKBOX_GROUP => 'Checkbox Group',
-        self::TYPE_RADIO => 'Radio',
-        self::TYPE_RADIO_GROUP => 'Radio Group',
-        self::TYPE_SELECT => 'Select',
-        self::TYPE_RATING => 'Rating',
-        self::TYPE_ICON => 'Icon',
-        self::TYPE_DATE => 'Date'
-    ];
+	public static $typeMap = [
+		self::TYPE_TEXT => 'Text',
+		self::TYPE_HIDDEN => 'Hidden',
+		self::TYPE_PASSWORD => 'Password',
+		self::TYPE_TEXTAREA => 'Textarea',
+		self::TYPE_CHECKBOX => 'Checkbox',
+		self::TYPE_TOGGLE => 'Toggle Button',
+		self::TYPE_CHECKBOX_GROUP => 'Checkbox Group',
+		self::TYPE_RADIO => 'Radio',
+		self::TYPE_RADIO_GROUP => 'Radio Group',
+		self::TYPE_SELECT => 'Select',
+		self::TYPE_RATING => 'Rating',
+		self::TYPE_ICON => 'Icon',
+		self::TYPE_DATE => 'Date'
+	];
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $mParentType	= CoreGlobal::TYPE_FORM_FIELD;
+	public $mParentType	= CoreGlobal::TYPE_FORM_FIELD;
 
-    public $value;
+	public $value;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    use DataTrait;
+	use DataTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
-    public function rules() {
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
 
-        // model rules
-        $rules = [
-            [ [ 'formId', 'name' ], 'required' ],
-            [ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
-            [ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ [ 'label', 'validators' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-            [ 'name', 'alphanumu' ],
-            [ [ 'formId', 'name' ], 'unique', 'targetAttribute' => [ 'formId', 'name' ] ],
-            [ [ 'type', 'order' ], 'number', 'integerOnly' => true ],
-            [ 'compress', 'boolean' ]
-        ];
+		// model rules
+		$rules = [
+			[ [ 'formId', 'name' ], 'required' ],
+			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
+			[ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'label', 'validators' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ 'name', 'alphanumu' ],
+			[ [ 'formId', 'name' ], 'unique', 'targetAttribute' => [ 'formId', 'name' ] ],
+			[ [ 'type', 'order' ], 'number', 'integerOnly' => true ],
+			[ 'compress', 'boolean' ]
+		];
 
-        // trim if configured
-        if( Yii::$app->core->trimFieldValue ) {
+		// trim if configured
+		if( Yii::$app->core->trimFieldValue ) {
 
-            $trim[] = [ [ 'name', 'label', 'validators', 'htmlOptions' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'label', 'validators', 'htmlOptions' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
-    }
+		return $rules;
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels() {
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
 
-        return [
-            'formId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FORM ),
-            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
-            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-            'compress' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COMPRESS ),
-            'validators' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALIDATORS ),
-            'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-            'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-            'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-            'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_META )
-        ];
-    }
+		return [
+			'formId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FORM ),
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'compress' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COMPRESS ),
+			'validators' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALIDATORS ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_META )
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // FormField -----------------------------
+	// FormField -----------------------------
 
-    /**
-     * @return Form
-     */
-    public function getForm() {
+	/**
+	 * @return Form
+	 */
+	public function getForm() {
 
-        return $this->hasOne( Form::className(), [ 'id' => 'formId' ] );
-    }
+		return $this->hasOne( Form::className(), [ 'id' => 'formId' ] );
+	}
 
-    public function getTypeStr() {
+	public function getTypeStr() {
 
-        return self::$typeMap[ $this->type ];
-    }
+		return self::$typeMap[ $this->type ];
+	}
 
-    public function getCompressStr() {
+	public function getCompressStr() {
 
-        return Yii::$app->formatter->asBoolean( $this->compress );
-    }
+		return Yii::$app->formatter->asBoolean( $this->compress );
+	}
 
-    public function isText() {
+	public function isText() {
 
-        return $this->type == self::TYPE_TEXT;
-    }
+		return $this->type == self::TYPE_TEXT;
+	}
 
-    public function isTextArea() {
+	public function isTextArea() {
 
-        return $this->type == self::TYPE_TEXTAREA;
-    }
+		return $this->type == self::TYPE_TEXTAREA;
+	}
 
-    public function isRadio() {
+	public function isRadio() {
 
-        return $this->type == self::TYPE_RADIO;
-    }
+		return $this->type == self::TYPE_RADIO;
+	}
 
-    public function isRadioGroup() {
+	public function isRadioGroup() {
 
-        return $this->type == self::TYPE_RADIO_GROUP;
-    }
+		return $this->type == self::TYPE_RADIO_GROUP;
+	}
 
-    public function isSelect() {
+	public function isSelect() {
 
-        return $this->type == self::TYPE_SELECT;
-    }
+		return $this->type == self::TYPE_SELECT;
+	}
 
-    public function isRating() {
+	public function isRating() {
 
-        return $this->type == self::TYPE_RATING;
-    }
+		return $this->type == self::TYPE_RATING;
+	}
 
-    public function isIcon() {
+	public function isIcon() {
 
-        return $this->type == self::TYPE_ICON;
-    }
+		return $this->type == self::TYPE_ICON;
+	}
 
-    public function isCheckboxGroup() {
+	public function isCheckboxGroup() {
 
-        return $this->type == self::TYPE_CHECKBOX_GROUP;
-    }
+		return $this->type == self::TYPE_CHECKBOX_GROUP;
+	}
 
-    public function isPassword() {
+	public function isPassword() {
 
-        return $this->type == self::TYPE_PASSWORD;
-    }
+		return $this->type == self::TYPE_PASSWORD;
+	}
 
-    public function isCheckbox() {
+	public function isCheckbox() {
 
-        return $this->type == self::TYPE_CHECKBOX;
-    }
+		return $this->type == self::TYPE_CHECKBOX;
+	}
 
-    public function isToggle() {
+	public function isToggle() {
 
-        return $this->type == self::TYPE_TOGGLE;
-    }
+		return $this->type == self::TYPE_TOGGLE;
+	}
 
-    public function getFieldValue() {
+	public function getFieldValue() {
 
-        switch( $this->type ) {
+		switch( $this->type ) {
 
-            case self::TYPE_TEXT:
-            case self::TYPE_TEXTAREA:
-            case self::TYPE_RADIO:
-            case self::TYPE_RADIO_GROUP:
-            case self::TYPE_SELECT:
-            case self::TYPE_RATING:
-            case self::TYPE_ICON:
-            case self::TYPE_CHECKBOX_GROUP: {
+			case self::TYPE_TEXT:
+			case self::TYPE_TEXTAREA:
+			case self::TYPE_RADIO:
+			case self::TYPE_RADIO_GROUP:
+			case self::TYPE_SELECT:
+			case self::TYPE_RATING:
+			case self::TYPE_ICON:
+			case self::TYPE_CHECKBOX_GROUP: {
 
-                return $this->value;
-            }
-            case self::TYPE_PASSWORD: {
+				return $this->value;
+			}
+			case self::TYPE_PASSWORD: {
 
-                return null;
-            }
-            case self::TYPE_CHECKBOX:
-            case self::TYPE_TOGGLE: {
+				return null;
+			}
+			case self::TYPE_CHECKBOX:
+			case self::TYPE_TOGGLE: {
 
-                return Yii::$app->formatter->asBoolean( $this->value );
-            }
-        }
-    }
+				return Yii::$app->formatter->asBoolean( $this->value );
+			}
+		}
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName() {
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName() {
 
-        return CoreTables::TABLE_FORM_FIELD;
-    }
+		return CoreTables::TABLE_FORM_FIELD;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // FormField -----------------------------
+	// FormField -----------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    public static function queryWithHasOne( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'form' ];
-        $config[ 'relations' ]	= $relations;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'form' ];
+		$config[ 'relations' ]	= $relations;
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithForm( $config = [] ) {
+	public static function queryWithForm( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'form' ];
+		$config[ 'relations' ]	= [ 'form' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    public static function findByFormId( $formId ) {
+	public static function findByFormId( $formId ) {
 
-        return self::find()->where( "formId=:id", [ ':id' => $formId ] )->all();
-    }
+		return self::find()->where( "formId=:id", [ ':id' => $formId ] )->all();
+	}
 
-    public static function findByNameFormId( $name, $formId ) {
+	public static function findByNameFormId( $name, $formId ) {
 
-        return self::find()->where( "formId=:id and name=:name", [ ':id' => $formId, ':name' => $name ] )->one();
-    }
+		return self::find()->where( "formId=:id and name=:name", [ ':id' => $formId, ':name' => $name ] )->one();
+	}
 
-    public static function isExistByNameFormId( $name, $formId ) {
+	public static function isExistByNameFormId( $name, $formId ) {
 
-        $field = self::findByNameFormId( $name, $formId );
+		$field = self::findByNameFormId( $name, $formId );
 
-        return isset( $field );
-    }
+		return isset( $field );
+	}
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 }

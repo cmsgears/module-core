@@ -8,13 +8,13 @@ namespace cmsgears\core\common\guidelines;
  * 3. Project imports
  * 4. Trait definition
  * 5. Instance methods
- * 		5.1. Yii parent class overriden methods
- * 		5.2. CMG interface implementation
- * 		5.3. CMG parent class overriden methods
- * 		5.4. Current class methods - Read(DataProvider, Models, Lists, Maps), Create, Update, Delete
+ *		5.1. Yii parent class overriden methods
+ *		5.2. CMG interface implementation
+ *		5.3. CMG parent class overriden methods
+ *		5.4. Current class methods - Read(DataProvider, Models, Lists, Maps), Create, Update, Delete
  * 6. Static methods
- * 		6.1. CMG parent class overriden methods
- * 		6.2. Current class methods - Read(DataProvider, Models, Lists, Maps), Create, Update, Delete
+ *		6.1. CMG parent class overriden methods
+ *		6.2. Current class methods - Read(DataProvider, Models, Lists, Maps), Create, Update, Delete
  * 7. Trait closure
  */
 
@@ -48,55 +48,55 @@ use cmsgears\core\common\config\CoreGlobal;
 
 trait ServiceTraitTemplate {
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // <Trait> -------------------------------
+	// <Trait> -------------------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // <Trait> -------------------------------
+	// <Trait> -------------------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 }

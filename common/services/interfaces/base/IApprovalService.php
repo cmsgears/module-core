@@ -3,42 +3,42 @@ namespace cmsgears\core\common\services\interfaces\base;
 
 interface IApprovalService extends IEntityService {
 
-    // Data Provider ------
+	// Data Provider ------
 
-    public function getPageByOwnerId( $ownerId, $config = [] );
+	public function getPageByOwnerId( $ownerId, $config = [] );
 
-    public function getPageByOwnerIdStatus( $ownerId, $status, $config = [] );
+	public function getPageByOwnerIdStatus( $ownerId, $status, $config = [] );
 
-    public function getPageByAuthorityId( $id, $config = [] );
+	public function getPageByAuthorityId( $id, $config = [] );
 
-    public function getPageByAuthorityIdStatus( $id, $status, $config = [] );
+	public function getPageByAuthorityIdStatus( $id, $status, $config = [] );
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    public function updateStatus( $model, $status );
+	public function updateStatus( $model, $status );
 
-    public function confirm( $model, $public = true );
+	public function confirm( $model, $public = true );
 
-    public function approve( $model, $public = true );
+	public function approve( $model, $public = true );
 
-    public function setRejectMessage( $model, $message = null );
+	public function setRejectMessage( $model, $message = null );
 
-    public function reject( $model, $message = null );
+	public function reject( $model, $message = null );
 
-    public function freeze( $model, $message = null );
+	public function freeze( $model, $message = null );
 
-    public function block( $model, $message = null );
+	public function block( $model, $message = null );
 
-    // Delete -------------
+	// Delete -------------
 
 }

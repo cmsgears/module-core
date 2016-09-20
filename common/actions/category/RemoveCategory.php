@@ -16,60 +16,60 @@ use cmsgears\core\common\utilities\AjaxUtil;
  */
 class RemoveCategory extends \cmsgears\core\common\actions\base\ModelAction {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // RemoveCategory ------------------------
+	// RemoveCategory ------------------------
 
-    public function run() {
+	public function run() {
 
-        $post	= yii::$app->request->post();
+		$post	= yii::$app->request->post();
 
-        if( isset( $this->model ) && isset( $post[ 'categoryId' ] ) ) {
+		if( isset( $this->model ) && isset( $post[ 'categoryId' ] ) ) {
 
-            $modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
+			$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
 
-            $mapping	= $modelCategoryService->getByModelId( $this->model->id, $this->modelService->getParentType(), $post[ 'categoryId' ] );
+			$mapping	= $modelCategoryService->getByModelId( $this->model->id, $this->modelService->getParentType(), $post[ 'categoryId' ] );
 
-            if( isset( $mapping ) ) {
+			if( isset( $mapping ) ) {
 
-                $modelCategoryService->disable( $mapping );
+				$modelCategoryService->disable( $mapping );
 
-                // Trigger Ajax Success
-                return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
-            }
-        }
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+			}
+		}
 
-        // Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Trigger Ajax Failure
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 }

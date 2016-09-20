@@ -28,155 +28,155 @@ use cmsgears\core\common\models\traits\SlugTypeTrait;
  */
 class Tag extends \cmsgears\core\common\models\base\Resource {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public static $multiSite	= true;
+	public static $multiSite	= true;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $mParentType		= CoreGlobal::TYPE_TAG;
+	public $mParentType		= CoreGlobal::TYPE_TAG;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    use NameTypeTrait;
-    use SlugTypeTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors() {
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors() {
 
-        return [
-            'sluggableBehavior' => [
-                'class' => SluggableBehavior::className(),
-                'attribute' => 'name',
-                'slugAttribute' => 'slug',
-                'immutable' => true,
-                'ensureUnique' => true
-            ]
-        ];
-    }
+		return [
+			'sluggableBehavior' => [
+				'class' => SluggableBehavior::className(),
+				'attribute' => 'name',
+				'slugAttribute' => 'slug',
+				'immutable' => true,
+				'ensureUnique' => true
+			]
+		];
+	}
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
-    public function rules() {
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
 
-        // model rules
-        $rules = [
-            [ [ 'siteId', 'name' ], 'required' ],
-            [ 'id', 'safe' ],
-            [ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-            [ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
-            [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ]
-        ];
+		// model rules
+		$rules = [
+			[ [ 'siteId', 'name' ], 'required' ],
+			[ 'id', 'safe' ],
+			[ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ]
+		];
 
-        // trim if required
-        if( Yii::$app->core->trimFieldValue ) {
+		// trim if required
+		if( Yii::$app->core->trimFieldValue ) {
 
-            $trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
-    }
+		return $rules;
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels() {
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
 
-        return [
-            'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
-            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
-            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-            'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-            'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-        ];
-    }
+		return [
+			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // Tag -----------------------------------
+	// Tag -----------------------------------
 
-    public function getSite() {
+	public function getSite() {
 
-        return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
-    }
+		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName() {
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName() {
 
-        return CoreTables::TABLE_TAG;
-    }
+		return CoreTables::TABLE_TAG;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Tag -----------------------------------
+	// Tag -----------------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    public static function queryWithHasOne( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site' ];
-        $config[ 'relations' ]	= $relations;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site' ];
+		$config[ 'relations' ]	= $relations;
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithSite( $config = [] ) {
+	public static function queryWithSite( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'site' ];
+		$config[ 'relations' ]	= [ 'site' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 }

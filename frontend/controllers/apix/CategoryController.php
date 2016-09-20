@@ -13,63 +13,63 @@ use cmsgears\core\common\utilities\AjaxUtil;
 
 class CategoryController extends \cmsgears\core\admin\controllers\base\Controller {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals ----------------
+	// Globals ----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->modelService	= Yii::$app->factory->get( 'categoryService' );
-    }
+		$this->modelService	= Yii::$app->factory->get( 'categoryService' );
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    public function behaviors() {
+	public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->core->getRbacFilterClass(),
-                'actions' => [
-                    // 'autoSearch' => [ 'permission' => $this->crudPermission ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'autoSearch' => [ 'post' ]
-                ]
-            ]
-        ];
-    }
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
+					// 'autoSearch' => [ 'permission' => $this->crudPermission ]
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'autoSearch' => [ 'post' ]
+				]
+			]
+		];
+	}
 
-    // yii\base\Controller ----
+	// yii\base\Controller ----
 
-    public function actions() {
+	public function actions() {
 
-        return [
-            'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ]
-        ];
-    }
+		return [
+			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ]
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // CategoryController --------------------
+	// CategoryController --------------------
 }

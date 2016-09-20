@@ -18,72 +18,72 @@ use cmsgears\core\common\utilities\AjaxUtil;
  */
 class UpdateAvatar extends \cmsgears\core\common\actions\base\ModelAction {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $fileName	= 'Avatar';
+	public $fileName	= 'Avatar';
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // UpdateAvatar --------------------------
+	// UpdateAvatar --------------------------
 
-    public function run() {
+	public function run() {
 
-        if( isset( $this->model ) ) {
+		if( isset( $this->model ) ) {
 
-            $avatar = new File();
+			$avatar = new File();
 
-            if( isset( $this->model->avatar ) ) {
+			if( isset( $this->model->avatar ) ) {
 
-                $avatar	= $this->model->avatar;
-            }
+				$avatar	= $this->model->avatar;
+			}
 
-            if( $avatar->load( Yii::$app->request->post(), $this->fileName ) ) {
+			if( $avatar->load( Yii::$app->request->post(), $this->fileName ) ) {
 
-                $this->modelService->updateAvatar( $this->model, $avatar );
+				$this->modelService->updateAvatar( $this->model, $avatar );
 
-                // refresh model
-                $this->model->refresh();
+				// refresh model
+				$this->model->refresh();
 
-                $avatar		= $this->model->avatar;
-                $response	= [ 'fileUrl' => $avatar->getFileUrl() ];
+				$avatar		= $this->model->avatar;
+				$response	= [ 'fileUrl' => $avatar->getFileUrl() ];
 
-                // Trigger Ajax Success
-                return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
-            }
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
+			}
 
-            // Trigger Ajax Failure
-            return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
-        }
+			// Trigger Ajax Failure
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+		}
 
-        // Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Trigger Ajax Failure
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 }

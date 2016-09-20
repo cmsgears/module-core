@@ -3,24 +3,24 @@ namespace cmsgears\core\common\services\interfaces\base;
 
 interface INameService extends IEntityService {
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getByName( $name );
+	public function getByName( $name );
 
-    public function searchByName( $name, $config = [] );
+	public function searchByName( $name, $config = [] );
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
 }

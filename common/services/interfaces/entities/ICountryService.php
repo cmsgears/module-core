@@ -9,22 +9,22 @@ use cmsgears\core\common\config\CoreGlobal;
 
 interface ICountryService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getByCode( $code );
+	public function getByCode( $code );
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
 }

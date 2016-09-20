@@ -7,54 +7,54 @@ use yii\helpers\Html;
 use cmsgears\files\widgets\ImageUploader;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Gallery Items | ' . $coreProperties->getSiteTitle();
+$this->title	= 'Gallery Items | ' . $coreProperties->getSiteTitle();
 ?>
 <div class="box box-cud">
-    <div class="box-wrap-header">
-        <div class="header">Gallery Items</div>
-    </div>
-    <div class="box-wrap-content clearfix">
+	<div class="box-wrap-header">
+		<div class="header">Gallery Items</div>
+	</div>
+	<div class="box-wrap-content clearfix">
 
-        <div class="box-content">
-            <div class="header">Gallery Details</div>
-            <div class="info">
-                <table>
-                    <tr><td>Name</td><td><?=$gallery->name?></td></tr>
-                    <tr><td>Title</td><td><?=$gallery->title?></td></tr>
-                </table>
-            </div>
-        </div>
+		<div class="box-content">
+			<div class="header">Gallery Details</div>
+			<div class="info">
+				<table>
+					<tr><td>Name</td><td><?=$gallery->name?></td></tr>
+					<tr><td>Title</td><td><?=$gallery->title?></td></tr>
+				</table>
+			</div>
+		</div>
 
-        <div class="box-content frm-split-40-60 clearfix">
-            <div class="header">Create Item</div>
-            <?= ImageUploader::widget([
-                    'options' => [ 'id' => 'gallery-item', 'class' => 'file-uploader' ],
-                    'directory' => 'gallery', 'info' => true,
-                    'postAction' => 'true', 'cmtController' => 'gallery', 'cmtAction' => 'updateItem',
-                    'postActionUrl' => "core/gallery/create-item?slug=$gallery->slug"
-            ]); ?>
-        </div>
+		<div class="box-content frm-split-40-60 clearfix">
+			<div class="header">Create Item</div>
+			<?= ImageUploader::widget([
+					'options' => [ 'id' => 'gallery-item', 'class' => 'file-uploader' ],
+					'directory' => 'gallery', 'info' => true,
+					'postAction' => 'true', 'cmtController' => 'gallery', 'cmtAction' => 'updateItem',
+					'postActionUrl' => "core/gallery/create-item?slug=$gallery->slug"
+			]); ?>
+		</div>
 
-        <div class="box-content frm-split-40-60 clearfix">
-            <div class="header">All Items</div>
-            <ul class="slider-slides clearfix">
-            <?php
-                foreach ( $items as $item ) {
+		<div class="box-content frm-split-40-60 clearfix">
+			<div class="header">All Items</div>
+			<ul class="slider-slides clearfix">
+			<?php
+				foreach ( $items as $item ) {
 
-                    $id	= $item->id;
-            ?>
-                <li>
-                    <?= ImageUploader::widget([
-                            'options' => [ 'id' => "item-update-$id", 'class' => 'file-uploader' ],
-                            'directory' => 'gallery', 'info' => true, 'model' => $item,
-                            'postAction' => 'true', 'postActionId' => "frm-item-update-$id", 'cmtController' => 'gallery', 'cmtAction' => 'updateItem',
-                            'postActionVisible' => true, 'postActionUrl' => "core/gallery/update-item?slug=$gallery->slug&id=$item->id"
-                    ]); ?>
-                </li>
-            <?php
-                }
-            ?>
-            </ul>
-        </div>
-    </div>
+					$id	= $item->id;
+			?>
+				<li>
+					<?= ImageUploader::widget([
+							'options' => [ 'id' => "item-update-$id", 'class' => 'file-uploader' ],
+							'directory' => 'gallery', 'info' => true, 'model' => $item,
+							'postAction' => 'true', 'postActionId' => "frm-item-update-$id", 'cmtController' => 'gallery', 'cmtAction' => 'updateItem',
+							'postActionVisible' => true, 'postActionUrl' => "core/gallery/update-item?slug=$gallery->slug&id=$item->id"
+					]); ?>
+				</li>
+			<?php
+				}
+			?>
+			</ul>
+		</div>
+	</div>
 </div>

@@ -13,59 +13,59 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 class Binder extends \yii\base\Model {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $binderId; // Binder to which binded data need to be binded
+	public $binderId; // Binder to which binded data need to be binded
 
-    public $allData 	= []; // All data
+	public $allData		= []; // All data
 
-    public $bindedData 	= []; // Data to be active and submitted by user
+	public $bindedData	= []; // Data to be active and submitted by user
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    public function rules() {
+	public function rules() {
 
-        return [
-            [ [ 'binderId' ], 'required' ],
-            [ [ 'allData', 'bindedData' ], 'safe' ],
-            [ 'binderId', 'compare', 'compareValue' => 0, 'operator' => '>' ]
-        ];
-    }
+		return [
+			[ [ 'binderId' ], 'required' ],
+			[ [ 'allData', 'bindedData' ], 'safe' ],
+			[ 'binderId', 'compare', 'compareValue' => 0, 'operator' => '>' ]
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // Binder --------------------------------
+	// Binder --------------------------------
 
 }

@@ -46,250 +46,250 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
-
-    const TYPE_COMMENT		=  'comment';
-    const TYPE_REVIEW		=  'review';
-    const TYPE_FEEDBACK		=  'feedback';
-    const TYPE_TESTIMONIAL	=  'testimonial';
+	// Constants --------------
+
+	const TYPE_COMMENT		=  'comment';
+	const TYPE_REVIEW		=  'review';
+	const TYPE_FEEDBACK		=  'feedback';
+	const TYPE_TESTIMONIAL	=  'testimonial';
 
-    const STATUS_NEW        =  500;
-    const STATUS_SPAM       =  600;
-    const STATUS_BLOCKED    =  700;
-    const STATUS_APPROVED   =  800;
-    const STATUS_TRASH    	=  900;
+	const STATUS_NEW		=  500;
+	const STATUS_SPAM		=  600;
+	const STATUS_BLOCKED	=  700;
+	const STATUS_APPROVED	=  800;
+	const STATUS_TRASH		=  900;
 
-    // Public -----------------
+	// Public -----------------
 
-    public static $typeMap = [
-        self::TYPE_COMMENT => 'Comment',
-        self::TYPE_REVIEW => 'Review',
-        self::TYPE_FEEDBACK => 'Feedback',
-        self::TYPE_TESTIMONIAL => 'Testimonial'
-    ];
+	public static $typeMap = [
+		self::TYPE_COMMENT => 'Comment',
+		self::TYPE_REVIEW => 'Review',
+		self::TYPE_FEEDBACK => 'Feedback',
+		self::TYPE_TESTIMONIAL => 'Testimonial'
+	];
 
-    public static $statusMap = [
-        self::STATUS_NEW => 'New',
-        self::STATUS_SPAM => 'Spam',
-        self::STATUS_BLOCKED => 'Blocked',
-        self::STATUS_APPROVED => 'Approved',
-        self::STATUS_TRASH => 'Trash'
-    ];
+	public static $statusMap = [
+		self::STATUS_NEW => 'New',
+		self::STATUS_SPAM => 'Spam',
+		self::STATUS_BLOCKED => 'Blocked',
+		self::STATUS_APPROVED => 'Approved',
+		self::STATUS_TRASH => 'Trash'
+	];
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $mParentType	= CoreGlobal::TYPE_COMMENT;
-
-    public $captcha;
-
-    // Protected --------------
-
-    // Private ----------------
-
-    // Traits ------------------------------------------------------
-
-    use CreateModifyTrait;
-    use DataTrait;
-    use ResourceTrait;
-
-    // Constructor and Initialisation ------------------------------
+	public $mParentType	= CoreGlobal::TYPE_COMMENT;
+
+	public $captcha;
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	use CreateModifyTrait;
+	use DataTrait;
+	use ResourceTrait;
+
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors() {
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors() {
 
-        return [
-            'authorBehavior' => [
-                'class' => AuthorBehavior::className()
-            ],
-            'timestampBehavior' => [
-                'class' => TimestampBehavior::className(),
-                'createdAtAttribute' => 'createdAt',
-                'updatedAtAttribute' => 'modifiedAt',
-                'value' => new Expression('NOW()')
-            ]
-        ];
-    }
+		return [
+			'authorBehavior' => [
+				'class' => AuthorBehavior::className()
+			],
+			'timestampBehavior' => [
+				'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+				'updatedAtAttribute' => 'modifiedAt',
+				'value' => new Expression('NOW()')
+			]
+		];
+	}
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
-    public function rules() {
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
 
-        // model rules
-        $rules = [
-            [ [ 'parentId', 'parentType', 'name', 'email' ], 'required' ],
-            [ [ 'id', 'content', 'data' ], 'safe' ],
-            [ 'email', 'email' ],
-            [ [ 'parentType', 'type', 'name', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ [ 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-            [ [ 'status', 'rating', 'fragment' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
-            // Check captcha need for testimonial and review
-            [ 'content', 'required', 'on' => [ self::TYPE_COMMENT, self::TYPE_TESTIMONIAL ] ],
-            [ [ 'content', 'rating' ], 'required', 'on' => [ self::TYPE_REVIEW ] ],
-            [ 'captcha', 'captcha', 'captchaAction' => '/core/site/captcha', 'on' => 'captcha' ],
-            [ [ 'parentId', 'baseId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'createdAt', 'modifiedAt', 'approvedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
-        ];
+		// model rules
+		$rules = [
+			[ [ 'parentId', 'parentType', 'name', 'email' ], 'required' ],
+			[ [ 'id', 'content', 'data' ], 'safe' ],
+			[ 'email', 'email' ],
+			[ [ 'parentType', 'type', 'name', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'status', 'rating', 'fragment' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
+			// Check captcha need for testimonial and review
+			[ 'content', 'required', 'on' => [ self::TYPE_COMMENT, self::TYPE_TESTIMONIAL ] ],
+			[ [ 'content', 'rating' ], 'required', 'on' => [ self::TYPE_REVIEW ] ],
+			[ 'captcha', 'captcha', 'captchaAction' => '/core/site/captcha', 'on' => 'captcha' ],
+			[ [ 'parentId', 'baseId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'createdAt', 'modifiedAt', 'approvedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+		];
 
-        // Enable captcha for non-logged in users
-        $user = Yii::$app->user->getIdentity();
+		// Enable captcha for non-logged in users
+		$user = Yii::$app->user->getIdentity();
 
-        if( !isset( $user ) ) {
+		if( !isset( $user ) ) {
 
-            $rules[] = [ 'captcha', 'required' ];
-        }
+			$rules[] = [ 'captcha', 'required' ];
+		}
 
-        // trim if required
-        if( Yii::$app->core->trimFieldValue ) {
+		// trim if required
+		if( Yii::$app->core->trimFieldValue ) {
 
-            $trim[] = [ [ 'name', 'email', 'avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'email', 'avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
-    }
+		return $rules;
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels() {
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
 
-        return [
-            'baseId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-            'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-            'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ADDRESS_TYPE ),
-            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
-            'avatarUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
-            'websiteUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
-            'ip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP ),
-            'agent' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AGENT_BROWSER ),
-            'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
-            'rating' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RATING ),
-            'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
-            'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
-            'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
-        ];
-    }
+		return [
+			'baseId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ADDRESS_TYPE ),
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+			'avatarUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
+			'websiteUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
+			'ip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP ),
+			'agent' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AGENT_BROWSER ),
+			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
+			'rating' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RATING ),
+			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // ModelComment --------------------------
+	// ModelComment --------------------------
 
-    public function getBaseComment() {
+	public function getBaseComment() {
 
-        return $this->hasOne( ModelComment::className(), [ 'id' => 'baseId' ] );
-    }
+		return $this->hasOne( ModelComment::className(), [ 'id' => 'baseId' ] );
+	}
 
-    public function getChildComments() {
+	public function getChildComments() {
 
-        return $this->hasMany( ModelComment::className(), [ 'baseId' => 'id' ] );
-    }
+		return $this->hasMany( ModelComment::className(), [ 'baseId' => 'id' ] );
+	}
 
-    public function getStatusStr() {
+	public function getStatusStr() {
 
-        return self::$statusMap[ $this->status ];
-    }
+		return self::$statusMap[ $this->status ];
+	}
 
-    public function getFeaturedStr() {
+	public function getFeaturedStr() {
 
-        return Yii::$app->formatter->asBoolean( $this->featured );
-    }
+		return Yii::$app->formatter->asBoolean( $this->featured );
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName() {
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName() {
 
-        return CoreTables::TABLE_MODEL_COMMENT;
-    }
+		return CoreTables::TABLE_MODEL_COMMENT;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelComment --------------------------
+	// ModelComment --------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    public static function queryWithHasOne( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
-        $config[ 'relations' ]	= $relations;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+		$config[ 'relations' ]	= $relations;
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryByParentConfig( $parentId, $parentType, $config = [] ) {
+	public static function queryByParentConfig( $parentId, $parentType, $config = [] ) {
 
-        $type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
-        $status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
+		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
+		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
 
-        return self::queryByParent( $parentId, $parentType )->andWhere( [ 'type' => $type, 'status' => $status ] );
-    }
+		return self::queryByParent( $parentId, $parentType )->andWhere( [ 'type' => $type, 'status' => $status ] );
+	}
 
-    public static function queryByParentTypeConfig( $parentType, $config = [] ) {
+	public static function queryByParentTypeConfig( $parentType, $config = [] ) {
 
-        $type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
-        $status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
+		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
+		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
 
-        return self::find()->where( [ 'parentType' => $parentType, 'type' => $type, 'status' => $status ] );
-    }
+		return self::find()->where( [ 'parentType' => $parentType, 'type' => $type, 'status' => $status ] );
+	}
 
-    public static function queryByBaseId( $baseId, $config = [] ) {
+	public static function queryByBaseId( $baseId, $config = [] ) {
 
-        $type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
-        $status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
+		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
+		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
 
-        return self::find()->where( [ 'baseId' => $baseId, 'type' => $type, 'status' => $status ] );
-    }
+		return self::find()->where( [ 'baseId' => $baseId, 'type' => $type, 'status' => $status ] );
+	}
 
-    public static function queryByEmail( $email ) {
+	public static function queryByEmail( $email ) {
 
-        return self::find()->where( [ 'email' => $email ] );
-    }
+		return self::find()->where( [ 'email' => $email ] );
+	}
 
-    public static function queryL0Approved( $parentId, $parentType, $type ) {
+	public static function queryL0Approved( $parentId, $parentType, $type ) {
 
-        return self::queryByParentConfig( $parentId, $parentType, [ 'type' => $type ] )->andWhere( [ 'baseId' => null ] );
-    }
+		return self::queryByParentConfig( $parentId, $parentType, [ 'type' => $type ] )->andWhere( [ 'baseId' => null ] );
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 }

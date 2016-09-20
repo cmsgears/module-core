@@ -15,173 +15,173 @@ use cmsgears\core\common\utilities\DateUtil;
 
 class Login extends \yii\base\Model {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $email;
-    public $password;
-    public $rememberMe;
-    public $admin;
-    public $redirectUrl;
+	public $email;
+	public $password;
+	public $rememberMe;
+	public $admin;
+	public $redirectUrl;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    private $user;
+	private $user;
 
-    private $userService;
+	private $userService;
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function __construct( $admin = false, $config = [] )  {
+	public function __construct( $admin = false, $config = [] )	 {
 
-        $this->admin		= $admin;
-        $this->user 		= null;
-        $this->userService 	= Yii::$app->factory->get( 'userService' );
+		$this->admin		= $admin;
+		$this->user			= null;
+		$this->userService	= Yii::$app->factory->get( 'userService' );
 
-        parent::__construct( $config );
-    }
+		parent::__construct( $config );
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    public function rules() {
+	public function rules() {
 
-        $rules =  [
-            [ [ 'email', 'password' ], 'required' ],
-            [ 'rememberMe', 'boolean' ],
-            [ [ 'redirectUrl' ], 'safe' ],
-            // Disabled email validation to allow both email and username for login.
-            //[ 'email', 'email' ],
-            [ 'email', 'validateUser' ],
-            [ 'password', 'validatePassword' ]
-        ];
+		$rules =  [
+			[ [ 'email', 'password' ], 'required' ],
+			[ 'rememberMe', 'boolean' ],
+			[ [ 'redirectUrl' ], 'safe' ],
+			// Disabled email validation to allow both email and username for login.
+			//[ 'email', 'email' ],
+			[ 'email', 'validateUser' ],
+			[ 'password', 'validatePassword' ]
+		];
 
-        if( Yii::$app->core->trimFieldValue ) {
+		if( Yii::$app->core->trimFieldValue ) {
 
-            $trim[] = [ [ 'email', 'password' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'email', 'password' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
-    }
+		return $rules;
+	}
 
-    public function attributeLabels() {
+	public function attributeLabels() {
 
-        return [
-            'email' => 'Email',
-            'password' => 'Password',
-        ];
-    }
+		return [
+			'email' => 'Email',
+			'password' => 'Password',
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    public function validateUser( $attribute, $params ) {
+	public function validateUser( $attribute, $params ) {
 
-        if( !$this->hasErrors() ) {
+		if( !$this->hasErrors() ) {
 
-            $user = $this->getUser();
+			$user = $this->getUser();
 
-            if( !isset( $user ) ) {
+			if( !isset( $user ) ) {
 
-                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
-            }
-            else {
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
+			}
+			else {
 
-                if( !$this->hasErrors() && !$user->isVerified( false ) ) {
+				if( !$this->hasErrors() && !$user->isVerified( false ) ) {
 
-                    $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USER_VERIFICATION ) );
-                }
+					$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USER_VERIFICATION ) );
+				}
 
-                if( !$this->hasErrors() && $user->isBlocked() ) {
+				if( !$this->hasErrors() && $user->isBlocked() ) {
 
-                    $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_BLOCKED ) );
-                }
-            }
-        }
-    }
+					$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_BLOCKED ) );
+				}
+			}
+		}
+	}
 
-    public function validatePassword( $attribute, $params ) {
+	public function validatePassword( $attribute, $params ) {
 
-        if( !$this->hasErrors() ) {
+		if( !$this->hasErrors() ) {
 
-            $user = $this->getUser();
+			$user = $this->getUser();
 
-            if( $user && !$user->validatePassword( $this->password ) ) {
+			if( $user && !$user->validatePassword( $this->password ) ) {
 
-                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_LOGIN_FAILED ) );
-            }
-        }
-    }
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_LOGIN_FAILED ) );
+			}
+		}
+	}
 
-    // Login ---------------------------------
+	// Login ---------------------------------
 
-    public function getUser() {
+	public function getUser() {
 
-        // Find user having email or username
-        if( empty( $this->user ) ) {
+		// Find user having email or username
+		if( empty( $this->user ) ) {
 
-            $this->user = $this->userService->getByEmail( $this->email );
+			$this->user = $this->userService->getByEmail( $this->email );
 
-            if( empty( $this->user ) ) {
+			if( empty( $this->user ) ) {
 
-                $this->user = $this->userService->getByUsername( $this->email );
-            }
-        }
+				$this->user = $this->userService->getByUsername( $this->email );
+			}
+		}
 
-        return $this->user;
-    }
+		return $this->user;
+	}
 
-    public function login() {
+	public function login() {
 
-        if ( $this->validate() ) {
+		if ( $this->validate() ) {
 
-            $user = $this->getUser();
+			$user = $this->getUser();
 
-            if( $this->admin ) {
+			if( $this->admin ) {
 
-                $user->loadPermissions();
+				$user->loadPermissions();
 
-                if( !$user->isPermitted( CoreGlobal::PERM_ADMIN ) ) {
+				if( !$user->isPermitted( CoreGlobal::PERM_ADMIN ) ) {
 
-                    $this->addError( "email", Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+					$this->addError( "email", Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 
-                    return false;
-                }
-            }
+					return false;
+				}
+			}
 
-            $user->lastLoginAt 	= DateUtil::getDateTime();
-            $user->save();
+			$user->lastLoginAt	= DateUtil::getDateTime();
+			$user->save();
 
-            return Yii::$app->user->login( $user, $this->rememberMe ? 3600 * 24 * 30 : 0 );
-        }
+			return Yii::$app->user->login( $user, $this->rememberMe ? 3600 * 24 * 30 : 0 );
+		}
 
-        return false;
-    }
+		return false;
+	}
 }

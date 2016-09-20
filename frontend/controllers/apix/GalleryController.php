@@ -12,68 +12,68 @@ use cmsgears\core\common\utilities\AjaxUtil;
 
 class GalleryController extends \cmsgears\core\admin\controllers\base\Controller {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals ----------------
+	// Globals ----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->crudPermission	= CoreGlobal::PERM_USER;
+		$this->crudPermission	= CoreGlobal::PERM_USER;
 
-        $this->modelService		= Yii::$app->factory->get( 'galleryService' );
-    }
+		$this->modelService		= Yii::$app->factory->get( 'galleryService' );
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    public function behaviors() {
+	public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->core->getRbacFilterClass(),
-                'actions' => [
-                    'create-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ],
-                    'delete-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'create-item' => [ 'post' ],
-                    'delete-item' => [ 'post' ]
-                ]
-            ]
-        ];
-    }
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
+					'create-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ],
+					'delete-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ]
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'create-item' => [ 'post' ],
+					'delete-item' => [ 'post' ]
+				]
+			]
+		];
+	}
 
-    // yii\base\Controller ----
+	// yii\base\Controller ----
 
-    public function actions() {
+	public function actions() {
 
-        return [
-            'create-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\CreateItem' ],
-            'delete-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\DeleteItem' ]
-        ];
-    }
+		return [
+			'create-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\CreateItem' ],
+			'delete-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\DeleteItem' ]
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // GalleryController ---------------------
+	// GalleryController ---------------------
 }

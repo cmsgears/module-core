@@ -12,69 +12,69 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 class Theme extends \yii\base\Theme {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $childs		= [];
+	public $childs		= [];
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        // The path for images directly accessed using the img tag
-        Yii::setAlias( '@images', '@web/images' );
-    }
+		// The path for images directly accessed using the img tag
+		Yii::setAlias( '@images', '@web/images' );
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Theme ---------------------------------
+	// Theme ---------------------------------
 
-    public function registerChildAssets( $view ) {
+	public function registerChildAssets( $view ) {
 
-        // register child theme assets from config
-        $themeChilds	= $this->childs;
+		// register child theme assets from config
+		$themeChilds	= $this->childs;
 
-        foreach ( $themeChilds as $child ) {
+		foreach ( $themeChilds as $child ) {
 
-            $child = Yii::createObject( $child );
+			$child = Yii::createObject( $child );
 
-            $child->registerAssets( $view );
-        }
-    }
+			$child->registerAssets( $view );
+		}
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Theme ---------------------------------
+	// Theme ---------------------------------
 
 }

@@ -15,99 +15,99 @@ use cmsgears\core\common\models\resources\ModelMeta;
  */
 trait MetaTrait {
 
-    /**
-     * @return array - ModelMeta associated with parent
-     */
-    public function getModelMetas() {
+	/**
+	 * @return array - ModelMeta associated with parent
+	 */
+	public function getModelMetas() {
 
-        return $this->hasMany( ModelMeta::className(), [ 'parentId' => 'id' ] )
-                    ->where( "parentType='$this->mParentType'" );
-    }
+		return $this->hasMany( ModelMeta::className(), [ 'parentId' => 'id' ] )
+					->where( "parentType='$this->mParentType'" );
+	}
 
-    /**
-     * @return array - ModelMeta associated with parent
-     */
-    public function getModelMetasByType( $type ) {
+	/**
+	 * @return array - ModelMeta associated with parent
+	 */
+	public function getModelMetasByType( $type ) {
 
-        return $this->hasMany( ModelMeta::className(), [ 'parentId' => 'id' ] )
-                    ->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->mParentType, ':type' => $type ] )->all();
-    }
+		return $this->hasMany( ModelMeta::className(), [ 'parentId' => 'id' ] )
+					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->mParentType, ':type' => $type ] )->all();
+	}
 
-    /**
-     * @return ModelMeta - associated with parent
-     */
-    public function getModelMetaByTypeName( $type, $name ) {
+	/**
+	 * @return ModelMeta - associated with parent
+	 */
+	public function getModelMetaByTypeName( $type, $name ) {
 
-        return $this->hasMany( ModelMeta::className(), [ 'parentId' => 'id' ] )
-                    ->where( "parentType=:ptype AND type=:type AND name=:name", [ ':ptype' => $this->mParentType, ':type' => $type, ':name' => $name ] )->one();
-    }
+		return $this->hasMany( ModelMeta::className(), [ 'parentId' => 'id' ] )
+					->where( "parentType=:ptype AND type=:type AND name=:name", [ ':ptype' => $this->mParentType, ':type' => $type, ':name' => $name ] )->one();
+	}
 
-    /**
-     * @return array - map of meta name and value
-     */
-    public function getMetaNameValueMap() {
+	/**
+	 * @return array - map of meta name and value
+	 */
+	public function getMetaNameValueMap() {
 
-        $metas 		= $this->modelMetas;
-        $metasMap	= array();
+		$metas		= $this->modelMetas;
+		$metasMap	= array();
 
-        foreach ( $metas as $meta ) {
+		foreach ( $metas as $meta ) {
 
-            $metasMap[ $meta->name ] = $meta->value;
-        }
+			$metasMap[ $meta->name ] = $meta->value;
+		}
 
-        return $metasMap;
-    }
+		return $metasMap;
+	}
 
-    /**
-     * @return array - map of meta name and value by type
-     */
-    public function getMetaNameValueMapByType( $type ) {
+	/**
+	 * @return array - map of meta name and value by type
+	 */
+	public function getMetaNameValueMapByType( $type ) {
 
-        $metas		= $this->getModelMetasByType( $type );
+		$metas		= $this->getModelMetasByType( $type );
 
-        $metasMap	= array();
+		$metasMap	= array();
 
-        foreach ( $metas as $meta ) {
+		foreach ( $metas as $meta ) {
 
-            $metasMap[ $meta->name ] = $meta->value;
-        }
+			$metasMap[ $meta->name ] = $meta->value;
+		}
 
-        return $metasMap;
-    }
+		return $metasMap;
+	}
 
-    /**
-     * @return array - map of meta name and meta by type
-     */
-    public function getMetaMapByType( $type ) {
+	/**
+	 * @return array - map of meta name and meta by type
+	 */
+	public function getMetaMapByType( $type ) {
 
-        $metas		= $this->getModelMetasByType( $type );
+		$metas		= $this->getModelMetasByType( $type );
 
-        $metasMap	= array();
+		$metasMap	= array();
 
-        foreach ( $metas as $meta ) {
+		foreach ( $metas as $meta ) {
 
-            $metasMap[ $meta->name ] = $meta;
-        }
+			$metasMap[ $meta->name ] = $meta;
+		}
 
-        return $metasMap;
-    }
+		return $metasMap;
+	}
 
-    public function updateMetas( $metaArray, $type = CoreGlobal::TYPE_CORE ) {
+	public function updateMetas( $metaArray, $type = CoreGlobal::TYPE_CORE ) {
 
-        foreach( $metaArray as $metaElement ) {
+		foreach( $metaArray as $metaElement ) {
 
-            $meta = self::getModelMetaByTypeName( $type, $metaElement->name );
+			$meta = self::getModelMetaByTypeName( $type, $metaElement->name );
 
-            if( isset( $meta ) ) {
+			if( isset( $meta ) ) {
 
-                $meta->value = $metaElement->value;
+				$meta->value = $metaElement->value;
 
-                $meta->update();
-            }
-            else {
+				$meta->update();
+			}
+			else {
 
-                $metaElement->save();
-            }
-        }
-    }
+				$metaElement->save();
+			}
+		}
+	}
 }

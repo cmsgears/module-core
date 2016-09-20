@@ -58,635 +58,635 @@ use cmsgears\core\common\models\traits\mappers\FileTrait;
  */
 class User extends \cmsgears\core\common\models\base\Entity implements IdentityInterface, IApproval {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    const STATUS_VERIFIED	= 100; // Used when user is required to submit registration application for approval process.
+	const STATUS_VERIFIED	= 100; // Used when user is required to submit registration application for approval process.
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $mParentType	= CoreGlobal::TYPE_USER;
-    public $permissions = [];
+	public $mParentType	= CoreGlobal::TYPE_USER;
+	public $permissions = [];
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    use AddressTrait;
-    use ApprovalTrait;
-    use MetaTrait;
-    use DataTrait;
-    use FileTrait;
-    use VisualTrait;
+	use AddressTrait;
+	use ApprovalTrait;
+	use MetaTrait;
+	use DataTrait;
+	use FileTrait;
+	use VisualTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // yii\web\IdentityInterface
+	// yii\web\IdentityInterface
 
-    /**
-     * @inheritdoc
-     */
-    public function getId() {
+	/**
+	 * @inheritdoc
+	 */
+	public function getId() {
 
-        return $this->id;
-    }
+		return $this->id;
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function getAuthKey() {
+	/**
+	 * @inheritdoc
+	 */
+	public function getAuthKey() {
 
-        return $this->authKey;
-    }
+		return $this->authKey;
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function validateAuthKey( $authKey ) {
+	/**
+	 * @inheritdoc
+	 */
+	public function validateAuthKey( $authKey ) {
 
-        return $this->authKey === $authKey;
-    }
+		return $this->authKey === $authKey;
+	}
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
-    public function rules() {
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
 
-        // model rules
-        $rules = [
-            [ [ 'email' ], 'required' ],
-            [ [ 'id', 'phone', 'content', 'data' ], 'safe' ],
+		// model rules
+		$rules = [
+			[ [ 'email' ], 'required' ],
+			[ [ 'id', 'phone', 'content', 'data' ], 'safe' ],
 
-            [ 'email', 'email' ],
-            [ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],
-            [ 'email', 'validateEmailUpdate', 'on' => [ 'update', 'profile' ] ],
-            [ 'email', 'validateEmailChange', 'on' => [ 'profile' ] ],
+			[ 'email', 'email' ],
+			[ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],
+			[ 'email', 'validateEmailUpdate', 'on' => [ 'update', 'profile' ] ],
+			[ 'email', 'validateEmailChange', 'on' => [ 'profile' ] ],
 
-            [ 'username', 'alphanumdotu' ],
-            [ 'username', 'validateUsernameCreate', 'on' => [ 'create' ] ],
-            [ 'username', 'validateUsernameUpdate', 'on' => [ 'update', 'profile' ] ],
-            [ 'username', 'validateUsernameChange', 'on' => [ 'profile' ] ],
+			[ 'username', 'alphanumdotu' ],
+			[ 'username', 'validateUsernameCreate', 'on' => [ 'create' ] ],
+			[ 'username', 'validateUsernameUpdate', 'on' => [ 'update', 'profile' ] ],
+			[ 'username', 'validateUsernameChange', 'on' => [ 'profile' ] ],
 
-            [ [ 'id', 'localeId', 'genderId', 'avatarId', 'status' ], 'number', 'integerOnly' => true ],
-            [ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
-            [ [ 'email', 'username', 'passwordHash', 'firstName', 'lastName', 'phone', 'avatarUrl', 'websiteUrl', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-            [ 'dob', 'date', 'format' => Yii::$app->formatter->dateFormat ],
-            [ [ 'registeredAt', 'lastLoginAt', 'lastActivityAt', 'tokenCreatedAt', 'tokenAccessedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
-        ];
+			[ [ 'id', 'localeId', 'genderId', 'avatarId', 'status' ], 'number', 'integerOnly' => true ],
+			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
+			[ [ 'email', 'username', 'passwordHash', 'firstName', 'lastName', 'phone', 'avatarUrl', 'websiteUrl', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ 'dob', 'date', 'format' => Yii::$app->formatter->dateFormat ],
+			[ [ 'registeredAt', 'lastLoginAt', 'lastActivityAt', 'tokenCreatedAt', 'tokenAccessedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+		];
 
-        // trim if required
-        if( Yii::$app->core->trimFieldValue ) {
+		// trim if required
+		if( Yii::$app->core->trimFieldValue ) {
 
-            $trim[] = [ [ 'email', 'username', 'phone', 'firstName', 'lastName', 'avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'email', 'username', 'phone', 'firstName', 'lastName', 'avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
-    }
+		return $rules;
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels() {
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
 
-        return [
-            'localeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
-            'genderId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GENDER ),
-            'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
-            'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
-            'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
-            'username' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USERNAME ),
-            'firstName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
-            'lastName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
-            'dob' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DOB ),
-            'phone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
-            'avatarUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
-            'websiteUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE )
-        ];
-    }
+		return [
+			'localeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
+			'genderId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GENDER ),
+			'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
+			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
+			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+			'username' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USERNAME ),
+			'firstName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
+			'lastName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
+			'dob' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DOB ),
+			'phone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
+			'avatarUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
+			'websiteUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE )
+		];
+	}
 
-    // yii\db\BaseActiveRecord
+	// yii\db\BaseActiveRecord
 
-    public function beforeSave( $insert ) {
+	public function beforeSave( $insert ) {
 
-        if( parent::beforeSave( $insert ) ) {
+		if( parent::beforeSave( $insert ) ) {
 
-            if( $this->genderId <= 0 ) {
+			if( $this->genderId <= 0 ) {
 
-                $this->genderId = null;
-            }
+				$this->genderId = null;
+			}
 
-            return true;
-        }
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    /**
-     * Validates user email to ensure that only one user exist with the given email.
-     */
-    public function validateEmailCreate( $attribute, $params ) {
+	/**
+	 * Validates user email to ensure that only one user exist with the given email.
+	 */
+	public function validateEmailCreate( $attribute, $params ) {
 
-        if( !$this->hasErrors() ) {
+		if( !$this->hasErrors() ) {
 
-            if( self::isExistByEmail( $this->email ) ) {
+			if( self::isExistByEmail( $this->email ) ) {
 
-                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
-            }
-        }
-    }
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
+			}
+		}
+	}
 
-    /**
-     * Validates user email to ensure that only one user exist with the given email.
-     */
-    public function validateEmailUpdate( $attribute, $params ) {
+	/**
+	 * Validates user email to ensure that only one user exist with the given email.
+	 */
+	public function validateEmailUpdate( $attribute, $params ) {
 
-        if( !$this->hasErrors() ) {
+		if( !$this->hasErrors() ) {
 
-            $existingUser = self::findByEmail( $this->email );
+			$existingUser = self::findByEmail( $this->email );
 
-            if( isset( $existingUser ) && $this->id != $existingUser->id ) {
+			if( isset( $existingUser ) && $this->id != $existingUser->id ) {
 
-                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
-            }
-        }
-    }
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
+			}
+		}
+	}
 
-    /**
-     * Validates user email to ensure that it does not allow to change while changing user profile.
-     */
-    public function validateEmailChange( $attribute, $params ) {
+	/**
+	 * Validates user email to ensure that it does not allow to change while changing user profile.
+	 */
+	public function validateEmailChange( $attribute, $params ) {
 
-        if( !$this->hasErrors() ) {
+		if( !$this->hasErrors() ) {
 
-            $properties     = CoreProperties::getInstance();
-            $existingUser   = self::findById( $this->id );
+			$properties		= CoreProperties::getInstance();
+			$existingUser	= self::findById( $this->id );
 
-            if( isset( $existingUser ) && strcmp( $existingUser->email, $this->email ) != 0 && !$properties->isChangeEmail() ) {
+			if( isset( $existingUser ) && strcmp( $existingUser->email, $this->email ) != 0 && !$properties->isChangeEmail() ) {
 
-                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_CHANGE_EMAIL ) );
-            }
-        }
-    }
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_CHANGE_EMAIL ) );
+			}
+		}
+	}
 
-    /**
-     * Validates user email to ensure that only one user exist with the given username.
-     */
-    public function validateUsernameCreate( $attribute, $params ) {
+	/**
+	 * Validates user email to ensure that only one user exist with the given username.
+	 */
+	public function validateUsernameCreate( $attribute, $params ) {
 
-        if( !$this->hasErrors() ) {
+		if( !$this->hasErrors() ) {
 
-            if( self::isExistByUsername( $this->username ) ) {
+			if( self::isExistByUsername( $this->username ) ) {
 
-                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
-            }
-        }
-    }
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
+			}
+		}
+	}
 
-    /**
-     * Validates user email to ensure that only one user exist with the given username.
-     */
-    public function validateUsernameUpdate( $attribute, $params ) {
+	/**
+	 * Validates user email to ensure that only one user exist with the given username.
+	 */
+	public function validateUsernameUpdate( $attribute, $params ) {
 
-        if( !$this->hasErrors() ) {
+		if( !$this->hasErrors() ) {
 
-            $existingUser = self::findByUsername( $this->username );
+			$existingUser = self::findByUsername( $this->username );
 
-            if( isset( $existingUser ) && $this->id != $existingUser->id ) {
+			if( isset( $existingUser ) && $this->id != $existingUser->id ) {
 
-                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
-            }
-        }
-    }
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
+			}
+		}
+	}
 
-    /**
-     * Validates user email to ensure that it does not allow to change while changing user profile.
-     */
-    public function validateUsernameChange( $attribute, $params ) {
+	/**
+	 * Validates user email to ensure that it does not allow to change while changing user profile.
+	 */
+	public function validateUsernameChange( $attribute, $params ) {
 
-        if( !$this->hasErrors() ) {
+		if( !$this->hasErrors() ) {
 
-            $properties     = CoreProperties::getInstance();
-            $existingUser   = self::findById( $this->id );
+			$properties		= CoreProperties::getInstance();
+			$existingUser	= self::findById( $this->id );
 
-            if( isset( $existingUser ) && strcmp( $existingUser->username, $this->username ) != 0  && !$properties->isChangeUsername() ) {
+			if( isset( $existingUser ) && strcmp( $existingUser->username, $this->username ) != 0  && !$properties->isChangeUsername() ) {
 
-                $this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_CHANGE_USERNAME ) );
-            }
-        }
-    }
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_CHANGE_USERNAME ) );
+			}
+		}
+	}
 
-    /**
-     * Validates user password while login
-     */
-    public function validatePassword( $password ) {
+	/**
+	 * Validates user password while login
+	 */
+	public function validatePassword( $password ) {
 
-        if( isset( $password ) && isset( $this->passwordHash ) ) {
+		if( isset( $password ) && isset( $this->passwordHash ) ) {
 
-            return Yii::$app->getSecurity()->validatePassword( $password, $this->passwordHash );
-        }
+			return Yii::$app->getSecurity()->validatePassword( $password, $this->passwordHash );
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    // User ----------------------------------
+	// User ----------------------------------
 
-    /**
-     * @return array - SiteMember
-     */
-    public function getSiteMembers() {
+	/**
+	 * @return array - SiteMember
+	 */
+	public function getSiteMembers() {
 
-        return $this->hasMany( SiteMember::className(), [ "userId" => 'id' ] );
-    }
+		return $this->hasMany( SiteMember::className(), [ "userId" => 'id' ] );
+	}
 
-    /**
-     * @return SiteMember
-     */
-    public function getActiveSiteMember() {
+	/**
+	 * @return SiteMember
+	 */
+	public function getActiveSiteMember() {
 
-        $site		= Yii::$app->core->site;
+		$site		= Yii::$app->core->site;
 
-        return $this->hasOne( SiteMember::className(), [ "userId" => 'id' ] )->where( [ "siteId" => $site->id ] );
-    }
+		return $this->hasOne( SiteMember::className(), [ "userId" => 'id' ] )->where( [ "siteId" => $site->id ] );
+	}
 
-    /**
-     * @return Role - assigned to User.
-     */
-    public function getRole() {
+	/**
+	 * @return Role - assigned to User.
+	 */
+	public function getRole() {
 
-        $roleTable          = CoreTables::TABLE_ROLE;
-        $siteTable          = CoreTables::TABLE_SITE;
-        $siteMemberTable    = CoreTables::TABLE_SITE_MEMBER;
+		$roleTable			= CoreTables::TABLE_ROLE;
+		$siteTable			= CoreTables::TABLE_SITE;
+		$siteMemberTable	= CoreTables::TABLE_SITE_MEMBER;
 
-        return Role::find()
-                    ->leftJoin( $siteMemberTable, "$siteMemberTable.roleId = $roleTable.id" )
-                    ->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
-                    ->where( "$siteMemberTable.userId=:id AND $siteTable.slug=:slug", [ ':id' => $this->id, ':slug' => Yii::$app->core->getSiteSlug() ] );
-    }
+		return Role::find()
+					->leftJoin( $siteMemberTable, "$siteMemberTable.roleId = $roleTable.id" )
+					->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
+					->where( "$siteMemberTable.userId=:id AND $siteTable.slug=:slug", [ ':id' => $this->id, ':slug' => Yii::$app->core->getSiteSlug() ] );
+	}
 
-    /**
-     * @return Locale - assigned to User.
-     */
-    public function getLocale() {
+	/**
+	 * @return Locale - assigned to User.
+	 */
+	public function getLocale() {
 
-        return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] );
-    }
+		return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] );
+	}
 
-    /**
-     * @return Option - from Category 'gender' assigned to user.
-     */
-    public function getGender() {
+	/**
+	 * @return Option - from Category 'gender' assigned to user.
+	 */
+	public function getGender() {
 
-        return $this->hasOne( Option::className(), [ 'id' => 'genderId' ] );
-    }
+		return $this->hasOne( Option::className(), [ 'id' => 'genderId' ] );
+	}
 
-    /**
-     * @return string representation of gender.
-     */
-    public function getGenderStr() {
+	/**
+	 * @return string representation of gender.
+	 */
+	public function getGenderStr() {
 
-        $option = $this->gender;
+		$option = $this->gender;
 
-        if( isset( $option ) ) {
+		if( isset( $option ) ) {
 
-            return $option->value;
-        }
+			return $option->value;
+		}
 
-        return '';
-    }
+		return '';
+	}
 
-    /**
-     * @return user name from email in case it's not set by user
-     */
-    public function getName() {
+	/**
+	 * @return user name from email in case it's not set by user
+	 */
+	public function getName() {
 
-        $name   = $this->firstName . ' ' . $this->lastName;
+		$name	= $this->firstName . ' ' . $this->lastName;
 
-        if( !isset( $name ) || strlen( $name ) <= 1 ) {
+		if( !isset( $name ) || strlen( $name ) <= 1 ) {
 
-            $name   = $this->username;
+			$name	= $this->username;
 
-            if( !isset( $name ) || strlen( $name ) <= 1 ) {
+			if( !isset( $name ) || strlen( $name ) <= 1 ) {
 
-                $name   = preg_split( '/@/', $this->email );
-                $name   = $name[ 0 ];
-            }
-        }
+				$name	= preg_split( '/@/', $this->email );
+				$name	= $name[ 0 ];
+			}
+		}
 
-        return $name;
-    }
+		return $name;
+	}
 
-    // Verify only if new or verified
-    public function verify() {
+	// Verify only if new or verified
+	public function verify() {
 
-        if( $this->status <= User::STATUS_VERIFIED ) {
+		if( $this->status <= User::STATUS_VERIFIED ) {
 
-            $this->status = User::STATUS_VERIFIED;
-        }
-    }
+			$this->status = User::STATUS_VERIFIED;
+		}
+	}
 
-    public function isVerified( $strict = true ) {
+	public function isVerified( $strict = true ) {
 
-        if( $strict ) {
+		if( $strict ) {
 
-            return $this->status == self::STATUS_VERIFIED;
-        }
+			return $this->status == self::STATUS_VERIFIED;
+		}
 
-        return $this->status >= self::STATUS_VERIFIED;
-    }
+		return $this->status >= self::STATUS_VERIFIED;
+	}
 
-    /**
-     * Generate and set user password using the yii security mechanism.
-     */
-    public function generatePassword( $password ) {
+	/**
+	 * Generate and set user password using the yii security mechanism.
+	 */
+	public function generatePassword( $password ) {
 
-        $this->passwordHash = Yii::$app->security->generatePasswordHash( $password );
-    }
+		$this->passwordHash = Yii::$app->security->generatePasswordHash( $password );
+	}
 
-    /**
-     * Generate and set user verification token using the yii security mechanism.
-     */
-    public function generateVerifyToken() {
+	/**
+	 * Generate and set user verification token using the yii security mechanism.
+	 */
+	public function generateVerifyToken() {
 
-        $this->verifyToken = Yii::$app->security->generateRandomString();
-    }
+		$this->verifyToken = Yii::$app->security->generateRandomString();
+	}
 
-    /**
-     * unset user verification token on user verification.
-     */
-    public function unsetVerifyToken() {
+	/**
+	 * unset user verification token on user verification.
+	 */
+	public function unsetVerifyToken() {
 
-        $this->verifyToken = null;
-    }
+		$this->verifyToken = null;
+	}
 
-    public function isVerifyTokenValid( $token ) {
+	public function isVerifyTokenValid( $token ) {
 
-        return strcmp( $this->verifyToken, $token ) == 0;
-    }
+		return strcmp( $this->verifyToken, $token ) == 0;
+	}
 
-    /**
-     * Generate and set user password reset token using the yii security mechanism.
-     */
-    public function generateResetToken() {
+	/**
+	 * Generate and set user password reset token using the yii security mechanism.
+	 */
+	public function generateResetToken() {
 
-        $this->resetToken = Yii::$app->security->generateRandomString();
-    }
+		$this->resetToken = Yii::$app->security->generateRandomString();
+	}
 
-    /**
-     * unset user reset token on user password change.
-     */
-    public function unsetResetToken() {
+	/**
+	 * unset user reset token on user password change.
+	 */
+	public function unsetResetToken() {
 
-        $this->resetToken = null;
-    }
+		$this->resetToken = null;
+	}
 
-    public function isResetTokenValid( $token ) {
+	public function isResetTokenValid( $token ) {
 
-        return strcmp( $this->resetToken, $token ) == 0;
-    }
+		return strcmp( $this->resetToken, $token ) == 0;
+	}
 
-    /**
-     * Generate and set user auth key using the yii security mechanism.
-     */
-    public function generateAuthKey() {
+	/**
+	 * Generate and set user auth key using the yii security mechanism.
+	 */
+	public function generateAuthKey() {
 
-        $this->authKey = Yii::$app->security->generateRandomString();
-    }
+		$this->authKey = Yii::$app->security->generateRandomString();
+	}
 
-    /**
-     * Load the permissions assigned to user.
-     */
-    public function loadPermissions() {
+	/**
+	 * Load the permissions assigned to user.
+	 */
+	public function loadPermissions() {
 
-        $role = $this->role;
+		$role = $this->role;
 
-        if( isset( $role ) ) {
+		if( isset( $role ) ) {
 
-            $this->permissions  = $role->getPermissionsSlugList();
-        }
-        else {
+			$this->permissions	= $role->getPermissionsSlugList();
+		}
+		else {
 
-            throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
-        }
-    }
+			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+		}
+	}
 
-    /**
-     * @return boolean whether a permission is assigned to the user.
-     */
-    public function isPermitted( $permission ) {
+	/**
+	 * @return boolean whether a permission is assigned to the user.
+	 */
+	public function isPermitted( $permission ) {
 
-        return in_array( $permission, $this->permissions );
-    }
+		return in_array( $permission, $this->permissions );
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // yii\web\IdentityInterface
+	// yii\web\IdentityInterface
 
-    /**
-     * The method finds the user identity using the given id and also loads the available permissions if rbac is enabled for the application.
-     * @param integer $id
-     * @return a valid user based on given id.
-     */
-    public static function findIdentity( $id ) {
+	/**
+	 * The method finds the user identity using the given id and also loads the available permissions if rbac is enabled for the application.
+	 * @param integer $id
+	 * @return a valid user based on given id.
+	 */
+	public static function findIdentity( $id ) {
 
-        // Find valid User
-        $user   = static::findById( $id );
+		// Find valid User
+		$user	= static::findById( $id );
 
-        // Load User Permissions
-        if( isset( $user ) ) {
+		// Load User Permissions
+		if( isset( $user ) ) {
 
-            if( Yii::$app->core->isRbac() ) {
+			if( Yii::$app->core->isRbac() ) {
 
-                $user->loadPermissions();
-            }
-        }
-        else {
+				$user->loadPermissions();
+			}
+		}
+		else {
 
-            throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-        }
+			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		}
 
-        return $user;
-    }
+		return $user;
+	}
 
-    /**
-     * The method finds the user identity using the given access token and also loads the available permissions if rbac is enabled for the application.
-     * @param string $token
-     * @param string $type
-     * @return a valid user based on given token and type
-     */
-    public static function findIdentityByAccessToken( $token, $type = null ) {
+	/**
+	 * The method finds the user identity using the given access token and also loads the available permissions if rbac is enabled for the application.
+	 * @param string $token
+	 * @param string $type
+	 * @return a valid user based on given token and type
+	 */
+	public static function findIdentityByAccessToken( $token, $type = null ) {
 
-        if( Yii::$app->core->isApis() ) {
+		if( Yii::$app->core->isApis() ) {
 
-            // Find valid User
-            $user   = static::findByAccessToken( $token );
+			// Find valid User
+			$user	= static::findByAccessToken( $token );
 
-            // Load User Permissions
-            if( isset( $user ) ) {
+			// Load User Permissions
+			if( isset( $user ) ) {
 
-                if( Yii::$app->core->isRbac() ) {
+				if( Yii::$app->core->isRbac() ) {
 
-                    $user->loadPermissions();
-                }
-            }
-            else {
+					$user->loadPermissions();
+				}
+			}
+			else {
 
-                throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-            }
+				throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+			}
 
-            return $user;
-        }
+			return $user;
+		}
 
-        throw new NotSupportedException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_APIS_DISABLED ) );
-    }
+		throw new NotSupportedException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_APIS_DISABLED ) );
+	}
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    /**
-     * @return string - db table name
-     */
-    public static function tableName() {
+	/**
+	 * @return string - db table name
+	 */
+	public static function tableName() {
 
-        return CoreTables::TABLE_USER;
-    }
+		return CoreTables::TABLE_USER;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // User ----------------------------------
+	// User ----------------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    public static function queryWithHasOne( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'role', 'locale', 'gender' ];
-        $config[ 'relations' ]	= $relations;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'role', 'locale', 'gender' ];
+		$config[ 'relations' ]	= $relations;
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithRole( $config = [] ) {
+	public static function queryWithRole( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'avatar', 'role' ];
+		$config[ 'relations' ]	= [ 'avatar', 'role' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithLocale( $config = [] ) {
+	public static function queryWithLocale( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'avatar', 'locale' ];
+		$config[ 'relations' ]	= [ 'avatar', 'locale' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithGender( $config = [] ) {
+	public static function queryWithGender( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'avatar', 'gender' ];
+		$config[ 'relations' ]	= [ 'avatar', 'gender' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithSiteMembers( $config = [] ) {
+	public static function queryWithSiteMembers( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
+		$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithSiteMembersPermissions( $config = [] ) {
+	public static function queryWithSiteMembersPermissions( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role', 'siteMembers.role.permissions' ];
+		$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role', 'siteMembers.role.permissions' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    /**
-     * @param string $token
-     * @return User - by accessToken
-     */
-    public static function findByAccessToken( $token ) {
+	/**
+	 * @param string $token
+	 * @return User - by accessToken
+	 */
+	public static function findByAccessToken( $token ) {
 
-        return self::find()->where( 'accessToken=:token', [ ':token' => $token ] )->one();
-    }
+		return self::find()->where( 'accessToken=:token', [ ':token' => $token ] )->one();
+	}
 
-    /**
-     * @param string $email
-     * @return User - by email
-     */
-    public static function findByEmail( $email ) {
+	/**
+	 * @param string $email
+	 * @return User - by email
+	 */
+	public static function findByEmail( $email ) {
 
-        return self::find()->where( 'email=:email', [ ':email' => $email ] )->one();
-    }
+		return self::find()->where( 'email=:email', [ ':email' => $email ] )->one();
+	}
 
-    /**
-     * @param string $email
-     * @return User - check whether user exist by email
-     */
-    public static function isExistByEmail( $email ) {
+	/**
+	 * @param string $email
+	 * @return User - check whether user exist by email
+	 */
+	public static function isExistByEmail( $email ) {
 
-        $user = self::find()->where( 'email=:email', [ ':email' => $email ] )->one();
+		$user = self::find()->where( 'email=:email', [ ':email' => $email ] )->one();
 
-        return isset( $user );
-    }
+		return isset( $user );
+	}
 
-    /**
-     * @param string $username
-     * @return User - by username
-     */
-    public static function findByUsername( $username ) {
+	/**
+	 * @param string $username
+	 * @return User - by username
+	 */
+	public static function findByUsername( $username ) {
 
-        return self::find()->where( 'username=:username', [ ':username' => $username ] )->one();
-    }
+		return self::find()->where( 'username=:username', [ ':username' => $username ] )->one();
+	}
 
-    /**
-     * @param string $username
-     * @return User - check whether user exist by username
-     */
-    public static function isExistByUsername( $username ) {
+	/**
+	 * @param string $username
+	 * @return User - check whether user exist by username
+	 */
+	public static function isExistByUsername( $username ) {
 
-        $user = self::find()->where( 'username=:username', [ ':username' => $username ] )->one();
+		$user = self::find()->where( 'username=:username', [ ':username' => $username ] )->one();
 
-        return isset( $user );
-    }
+		return isset( $user );
+	}
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 }
 
 User::$statusMap[ User::STATUS_VERIFIED ] = 'Verified';

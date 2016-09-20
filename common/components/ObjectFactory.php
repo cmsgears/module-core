@@ -15,46 +15,46 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 class ObjectFactory extends \yii\base\Component {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Global -----------------
+	// Global -----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    /**
-     * @var \yii\di\Container - The factory container. It will resolve service dependencies for all the services whether system or model centric.
-     */
-    private $container;
+	/**
+	 * @var \yii\di\Container - The factory container. It will resolve service dependencies for all the services whether system or model centric.
+	 */
+	private $container;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        // Initialise factory container
-        $this->container	= new Container();
-    }
+		// Initialise factory container
+		$this->container	= new Container();
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ObjectFactory -------------------------
+	// ObjectFactory -------------------------
 
-    public function getContainer() {
+	public function getContainer() {
 
-        return $this->container;
-    }
+		return $this->container;
+	}
 
-    public function get( $class, $params = [], $config = [] ) {
+	public function get( $class, $params = [], $config = [] ) {
 
-        return $this->container->get( $class, $params, $config );
-    }
+		return $this->container->get( $class, $params, $config );
+	}
 }

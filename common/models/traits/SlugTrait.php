@@ -12,71 +12,71 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 trait SlugTrait {
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii classes ---------------------------
+	// Yii classes ---------------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG classes ---------------------------
+	// CMG classes ---------------------------
 
-    // SlugTypeTrait -------------------------
+	// SlugTypeTrait -------------------------
 
-    // Validators -------------
+	// Validators -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii classes ---------------------------
+	// Yii classes ---------------------------
 
-    // CMG classes ---------------------------
+	// CMG classes ---------------------------
 
-    // SlugTypeTrait -------------------------
+	// SlugTypeTrait -------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    /**
-     * @return ActiveRecord - having matching slug.
-     */
-    public static function queryBySlug( $slug ) {
+	/**
+	 * @return ActiveRecord - having matching slug.
+	 */
+	public static function queryBySlug( $slug ) {
 
-        if( static::$multiSite ) {
+		if( static::$multiSite ) {
 
-            $siteId	= Yii::$app->core->siteId;
+			$siteId	= Yii::$app->core->siteId;
 
-            return static::find()->where( 'slug=:slug AND siteId=:siteId', [ ':slug' => $slug, ':siteId' => $siteId ] );
-        }
-        else {
+			return static::find()->where( 'slug=:slug AND siteId=:siteId', [ ':slug' => $slug, ':siteId' => $siteId ] );
+		}
+		else {
 
-            return static::find()->where( 'slug=:slug', [ ':slug' => $slug ] );
-        }
-    }
+			return static::find()->where( 'slug=:slug', [ ':slug' => $slug ] );
+		}
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    /**
-     * @return mixed - by slug
-     */
-    public static function findBySlug( $slug ) {
+	/**
+	 * @return mixed - by slug
+	 */
+	public static function findBySlug( $slug ) {
 
-        return static::queryBySlug( $slug )->one();
-    }
+		return static::queryBySlug( $slug )->one();
+	}
 
-    /**
-     * @return boolean - check whether model exist for given slug
-     */
-    public static function isExistBySlug( $slug ) {
+	/**
+	 * @return boolean - check whether model exist for given slug
+	 */
+	public static function isExistBySlug( $slug ) {
 
-        $model	= static::findBySlug( $slug );
+		$model	= static::findBySlug( $slug );
 
-        return isset( $model );
-    }
+		return isset( $model );
+	}
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 
 }

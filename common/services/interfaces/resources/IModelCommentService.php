@@ -9,54 +9,54 @@ use cmsgears\core\common\config\CoreGlobal;
 
 interface IModelCommentService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
 
-    // Data Provider ------
+	// Data Provider ------
 
-    public function getPageByParent( $parentId, $parentType, $config = [] );
+	public function getPageByParent( $parentId, $parentType, $config = [] );
 
-    public function getCommentPageByParent( $parentId, $parentType, $config = [] );
+	public function getCommentPageByParent( $parentId, $parentType, $config = [] );
 
-    public function getReviewPageByParent( $parentId, $parentType, $config = [] );
+	public function getReviewPageByParent( $parentId, $parentType, $config = [] );
 
-    public function getPageByParentType( $parentType, $config = [] );
+	public function getPageByParentType( $parentType, $config = [] );
 
-    public function getPageByBaseId( $baseId, $config = [] );
+	public function getPageByBaseId( $baseId, $config = [] );
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getByParent( $parentId, $parentType, $config = [] );
+	public function getByParent( $parentId, $parentType, $config = [] );
 
-    public function getByParentType( $parentType, $config = [] );
+	public function getByParentType( $parentType, $config = [] );
 
-    public function getByBaseId( $baseId, $config = [] );
+	public function getByBaseId( $baseId, $config = [] );
 
-    public function isExistByEmail( $email );
+	public function isExistByEmail( $email );
 
-    public function getByEmail( $email );
+	public function getByEmail( $email );
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    public function updateSpamRequest( $model );
+	public function updateSpamRequest( $model );
 
-    public function updateDeleteRequest( $model );
+	public function updateDeleteRequest( $model );
 
-    public function updateStatus( $model, $status );
+	public function updateStatus( $model, $status );
 
-    public function approve( $model );
+	public function approve( $model );
 
-    public function block( $model );
+	public function block( $model );
 
-    public function markSpam( $model );
+	public function markSpam( $model );
 
-    public function markDelete( $model );
+	public function markDelete( $model );
 
-    // Delete -------------
+	// Delete -------------
 
 }

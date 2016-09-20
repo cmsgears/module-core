@@ -10,59 +10,59 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class PermissionController extends \cmsgears\core\admin\controllers\base\PermissionController {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals ----------------
+	// Globals ----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->sidebar 			= [ 'parent' => 'sidebar-identity', 'child' => 'permission' ];
+		$this->sidebar			= [ 'parent' => 'sidebar-identity', 'child' => 'permission' ];
 
-        $this->returnUrl		= Url::previous( 'permissions' );
-        $this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/permission/all' ], true );
-    }
+		$this->returnUrl		= Url::previous( 'permissions' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/permission/all' ], true );
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Controller ----
+	// yii\base\Controller ----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // PermissionController ------------------
+	// PermissionController ------------------
 
-    public function actionAll() {
+	public function actionAll() {
 
-        // Remember return url for crud
-        Url::remember( [ 'permission/all' ], 'permissions' );
+		// Remember return url for crud
+		Url::remember( [ 'permission/all' ], 'permissions' );
 
-        return parent::actionAll();
-    }
+		return parent::actionAll();
+	}
 
-    public function actionMatrix() {
+	public function actionMatrix() {
 
-        $this->sidebar 	= [ 'parent' => 'sidebar-identity', 'child' => 'matrix' ];
+		$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'matrix' ];
 
-        // Remember return url for crud
-        Url::remember( [ 'permission/matrix' ], 'roles' );
+		// Remember return url for crud
+		Url::remember( [ 'permission/matrix' ], 'roles' );
 
-        return parent::actionMatrix();
-    }
+		return parent::actionMatrix();
+	}
 }

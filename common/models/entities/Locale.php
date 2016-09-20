@@ -21,115 +21,115 @@ use cmsgears\core\common\models\traits\NameTrait;
  */
 class Locale extends \cmsgears\core\common\models\base\Entity {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    use NameTrait;
+	use NameTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    public function rules() {
+	public function rules() {
 
-        // model rules
-        $rules = [
-            [ [ 'code', 'name' ], 'required' ],
-            [ 'id', 'safe' ],
-            [ 'code', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
-            [ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ [ 'code' ], 'unique', 'targetAttribute' => [ 'code' ] ],
-            [ [ 'name' ], 'unique', 'targetAttribute' => [ 'name' ] ]
-        ];
+		// model rules
+		$rules = [
+			[ [ 'code', 'name' ], 'required' ],
+			[ 'id', 'safe' ],
+			[ 'code', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'code' ], 'unique', 'targetAttribute' => [ 'code' ] ],
+			[ [ 'name' ], 'unique', 'targetAttribute' => [ 'name' ] ]
+		];
 
-        // trim if required
-        if( Yii::$app->core->trimFieldValue ) {
+		// trim if required
+		if( Yii::$app->core->trimFieldValue ) {
 
-            $trim[] = [ [ 'name', 'code' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'code' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
-    }
+		return $rules;
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels() {
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
 
-        return [
-            'code' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CODE ),
-            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME )
-        ];
-    }
+		return [
+			'code' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CODE ),
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME )
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // Locale --------------------------------
+	// Locale --------------------------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName() {
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName() {
 
-        return CoreTables::TABLE_LOCALE;
-    }
+		return CoreTables::TABLE_LOCALE;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Locale --------------------------------
+	// Locale --------------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    /**
-     * @return Locale - by code
-     */
-    public static function findByCode( $code ) {
+	/**
+	 * @return Locale - by code
+	 */
+	public static function findByCode( $code ) {
 
-        return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
-    }
+		return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
+	}
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 }

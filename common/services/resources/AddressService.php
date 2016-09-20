@@ -18,114 +18,114 @@ use cmsgears\core\common\services\interfaces\resources\IAddressService;
  */
 class AddressService extends \cmsgears\core\common\services\base\EntityService implements IAddressService {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public static $modelClass	= '\cmsgears\core\common\models\resources\Address';
+	public static $modelClass	= '\cmsgears\core\common\models\resources\Address';
 
-    public static $modelTable	= CoreTables::TABLE_ADDRESS;
+	public static $modelTable	= CoreTables::TABLE_ADDRESS;
 
-    public static $parentType	= CoreGlobal::TYPE_ADDRESS;
+	public static $parentType	= CoreGlobal::TYPE_ADDRESS;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // AddressService ------------------------
+	// AddressService ------------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    public function create( $model, $config = [] ) {
+	public function create( $model, $config = [] ) {
 
-        $model->provinceName	= $model->province->name;
-        $model->countryName		= $model->country->name;
+		$model->provinceName	= $model->province->name;
+		$model->countryName		= $model->country->name;
 
-        return parent::create( $model, $config );
-    }
+		return parent::create( $model, $config );
+	}
 
-    // Update -------------
+	// Update -------------
 
-    public function update( $model, $config = [] ) {
+	public function update( $model, $config = [] ) {
 
-        $attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'countryId', 'provinceId', 'cityId', 'title', 'line1', 'line2', 'line3', 'cityName', 'provinceName', 'countryName', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude', 'zoomLevel' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'countryId', 'provinceId', 'cityId', 'title', 'line1', 'line2', 'line3', 'cityName', 'provinceName', 'countryName', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude', 'zoomLevel' ];
 
-        $model->provinceName	= $model->province->name;
-        $model->countryName		= $model->country->name;
+		$model->provinceName	= $model->province->name;
+		$model->countryName		= $model->country->name;
 
-        return parent::update( $model, [
-            'attributes' => $attributes
-        ]);
-    }
+		return parent::update( $model, [
+			'attributes' => $attributes
+		]);
+	}
 
-    // Delete -------------
+	// Delete -------------
 
-    public function delete( $model, $config = [] ) {
+	public function delete( $model, $config = [] ) {
 
-        // Delete mapping
-        ModelAddress::deleteByModelId( $model->id );
+		// Delete mapping
+		ModelAddress::deleteByModelId( $model->id );
 
-        // Delete model
-        return parent::delete( $model, $config );
-    }
+		// Delete model
+		return parent::delete( $model, $config );
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // AddressService ------------------------
+	// AddressService ------------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 }

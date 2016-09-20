@@ -38,228 +38,228 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class Role extends \cmsgears\core\common\models\base\Entity {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    private $mParentType	= CoreGlobal::TYPE_ROLE; // required for traits
+	private $mParentType	= CoreGlobal::TYPE_ROLE; // required for traits
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    use CreateModifyTrait;
-    use HierarchyTrait;
-    use NameTypeTrait;
-    use SlugTypeTrait;
+	use CreateModifyTrait;
+	use HierarchyTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors() {
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors() {
 
-        return [
-            'authorBehavior' => [
-                'class' => AuthorBehavior::className()
-            ],
-            'sluggableBehavior' => [
-                'class' => SluggableBehavior::className(),
-                'attribute' => 'name',
-                'slugAttribute' => 'slug',
-                'immutable' => true,
-                'ensureUnique' => true
-            ],
-            'timestampBehavior' => [
-                'class' => TimestampBehavior::className(),
-                'createdAtAttribute' => 'createdAt',
-                'updatedAtAttribute' => 'modifiedAt',
-                'value' => new Expression('NOW()')
-            ]
-        ];
-    }
+		return [
+			'authorBehavior' => [
+				'class' => AuthorBehavior::className()
+			],
+			'sluggableBehavior' => [
+				'class' => SluggableBehavior::className(),
+				'attribute' => 'name',
+				'slugAttribute' => 'slug',
+				'immutable' => true,
+				'ensureUnique' => true
+			],
+			'timestampBehavior' => [
+				'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+				'updatedAtAttribute' => 'modifiedAt',
+				'value' => new Expression('NOW()')
+			]
+		];
+	}
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
-    public function rules() {
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
 
-        // model rules
-        $rules = [
-            [ [ 'name' ], 'required' ],
-            [ [ 'id' ], 'safe' ],
-            [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-            [ [ 'description', 'homeUrl' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
-            [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-            [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
-        ];
+		// model rules
+		$rules = [
+			[ [ 'name' ], 'required' ],
+			[ [ 'id' ], 'safe' ],
+			[ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'description', 'homeUrl' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			[ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+		];
 
-        // trim if required
-        if( Yii::$app->core->trimFieldValue ) {
+		// trim if required
+		if( Yii::$app->core->trimFieldValue ) {
 
-            $trim[] = [ [ 'name', 'homeUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'homeUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
-    }
+		return $rules;
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels() {
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
 
-        return [
-            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
-            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-            'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-            'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-            'homeUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HOME_URL )
-        ];
-    }
+		return [
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'homeUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HOME_URL )
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // Role ----------------------------------
+	// Role ----------------------------------
 
-    /**
-     * @return array - Permission
-     */
-    public function getPermissions() {
+	/**
+	 * @return array - Permission
+	 */
+	public function getPermissions() {
 
-        return $this->hasMany( Permission::className(), [ 'id' => 'permissionId' ] )
-                    ->viaTable( CoreTables::TABLE_ROLE_PERMISSION, [ 'roleId' => 'id' ] );
-    }
+		return $this->hasMany( Permission::className(), [ 'id' => 'permissionId' ] )
+					->viaTable( CoreTables::TABLE_ROLE_PERMISSION, [ 'roleId' => 'id' ] );
+	}
 
-    /**
-     * @return array - having permissions list from the joining table
-     */
-    public function getPermissionMappingList() {
+	/**
+	 * @return array - having permissions list from the joining table
+	 */
+	public function getPermissionMappingList() {
 
-        return $this->hasMany( RolePermission::className(), [ 'roleId' => 'id' ] );
-    }
+		return $this->hasMany( RolePermission::className(), [ 'roleId' => 'id' ] );
+	}
 
-    /**
-     * @return array having permission id element.
-     */
-    public function getPermissionsIdList() {
+	/**
+	 * @return array having permission id element.
+	 */
+	public function getPermissionsIdList() {
 
-        $permissions        = $this->permissionMappingList;
-        $permissionsList    = array();
+		$permissions		= $this->permissionMappingList;
+		$permissionsList	= array();
 
-        foreach ( $permissions as $permission ) {
+		foreach ( $permissions as $permission ) {
 
-            array_push( $permissionsList, $permission->permissionId );
-        }
+			array_push( $permissionsList, $permission->permissionId );
+		}
 
-        return $permissionsList;
-    }
+		return $permissionsList;
+	}
 
-    /**
-     * @return array having permission name element.
-     */
-    public function getPermissionsSlugList( $level = 0 ) {
+	/**
+	 * @return array having permission name element.
+	 */
+	public function getPermissionsSlugList( $level = 0 ) {
 
-        $slugList	= [];
-        $idList		= [];
+		$slugList	= [];
+		$idList		= [];
 
-        // Generate L0 Slugs and Ids List
-        if( $level <= 1 ) {
+		// Generate L0 Slugs and Ids List
+		if( $level <= 1 ) {
 
-            $permissions	= $this->permissions;
+			$permissions	= $this->permissions;
 
-            foreach ( $permissions as $permission ) {
+			foreach ( $permissions as $permission ) {
 
-                array_push( $slugList, $permission->slug );
-                array_push( $idList, $permission->id );
-            }
-        }
+				array_push( $slugList, $permission->slug );
+				array_push( $idList, $permission->id );
+			}
+		}
 
-        // Add L1 slugs to L0 slugs
-        if( $level == 1 ) {
+		// Add L1 slugs to L0 slugs
+		if( $level == 1 ) {
 
-            $permissions	= Permission::findL0Children( $idList );
+			$permissions	= Permission::findL0Children( $idList );
 
-            foreach ( $permissions as $permission ) {
+			foreach ( $permissions as $permission ) {
 
-                array_push( $slugList, $permission->slug );
-            }
-        }
+				array_push( $slugList, $permission->slug );
+			}
+		}
 
-        return $slugList;
-    }
+		return $slugList;
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName() {
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName() {
 
-        return CoreTables::TABLE_ROLE;
-    }
+		return CoreTables::TABLE_ROLE;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Role ----------------------------------
+	// Role ----------------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    public static function queryWithHasOne( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
-        $config[ 'relations' ]	= $relations;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+		$config[ 'relations' ]	= $relations;
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithPermissions( $config = [] ) {
+	public static function queryWithPermissions( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'permissions' ];
+		$config[ 'relations' ]	= [ 'permissions' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 }

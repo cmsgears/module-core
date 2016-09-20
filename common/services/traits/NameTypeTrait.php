@@ -12,144 +12,144 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 trait NameTypeTrait {
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // NameSlugTrait -------------------------
+	// NameSlugTrait -------------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    public function getPageByType( $type, $config = [] ) {
+	public function getPageByType( $type, $config = [] ) {
 
-        $modelTable	= static::$modelTable;
+		$modelTable	= static::$modelTable;
 
-        $config[ 'conditions' ][ "$modelTable.type" ] 	= $type;
+		$config[ 'conditions' ][ "$modelTable.type" ]	= $type;
 
-        return $this->getPage( $config );
-    }
+		return $this->getPage( $config );
+	}
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    /**
-     * The method is useful for models having unique name irrespective of their type. In such cases $first must be true.
-     *
-     * If model allows unique name for a particular type, we might have multiple models having same name. In such cases $first must be false.
-     */
-    public function getByName( $name, $first = false ) {
+	/**
+	 * The method is useful for models having unique name irrespective of their type. In such cases $first must be true.
+	 *
+	 * If model allows unique name for a particular type, we might have multiple models having same name. In such cases $first must be false.
+	 */
+	public function getByName( $name, $first = false ) {
 
-        $modelClass = static::$modelClass;
+		$modelClass = static::$modelClass;
 
-        return $modelClass::findByName( $name, $first );
-    }
+		return $modelClass::findByName( $name, $first );
+	}
 
-    /**
-     * It can be used to get all the models for given type or first model if $first is set to true.
-     */
-    public function getByType( $type, $first = false ) {
+	/**
+	 * It can be used to get all the models for given type or first model if $first is set to true.
+	 */
+	public function getByType( $type, $first = false ) {
 
-        $modelClass = static::$modelClass;
+		$modelClass = static::$modelClass;
 
-        return $modelClass::findByType( $type, $first );
-    }
+		return $modelClass::findByType( $type, $first );
+	}
 
-    /**
-     * It returns single model having given name and type.
-     */
-    public function getByNameType( $name, $type ) {
+	/**
+	 * It returns single model having given name and type.
+	 */
+	public function getByNameType( $name, $type ) {
 
-        $modelClass = static::$modelClass;
+		$modelClass = static::$modelClass;
 
-        return $modelClass::findByNameType( $name, $type );
-    }
+		return $modelClass::findByNameType( $name, $type );
+	}
 
-    public function searchByName( $name, $config = [] ) {
+	public function searchByName( $name, $config = [] ) {
 
-        $modelClass					= static::$modelClass;
-        $modelTable					= static::$modelTable;
+		$modelClass					= static::$modelClass;
+		$modelTable					= static::$modelTable;
 
-        $config[ 'query' ] 			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-        $config[ 'columns' ]		= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name" ];
-        $config[ 'array' ]			= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
+		$config[ 'query' ]			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
+		$config[ 'columns' ]		= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name" ];
+		$config[ 'array' ]			= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
 
-        $config[ 'query' ]->andWhere( "$modelTable.name like '$name%'" );
+		$config[ 'query' ]->andWhere( "$modelTable.name like '$name%'" );
 
-        if( $modelClass::$multiSite ) {
+		if( $modelClass::$multiSite ) {
 
-            $config[ 'conditions' ][ "$modelTable.siteId" ]	= Yii::$app->core->siteId;
-        }
+			$config[ 'conditions' ][ "$modelTable.siteId" ]	= Yii::$app->core->siteId;
+		}
 
-        return static::searchModels( $config );
-    }
+		return static::searchModels( $config );
+	}
 
-    public function searchByNameType( $name, $type, $config = [] ) {
+	public function searchByNameType( $name, $type, $config = [] ) {
 
-        $modelTable		= static::$modelTable;
+		$modelTable		= static::$modelTable;
 
-        $config[ 'conditions' ][ "$modelTable.type" ]	= $type;
+		$config[ 'conditions' ][ "$modelTable.type" ]	= $type;
 
-        return $this->searchByName( $name, $config );
-    }
+		return $this->searchByName( $name, $config );
+	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    public function getIdListByType( $type, $config = [] ) {
+	public function getIdListByType( $type, $config = [] ) {
 
-        $config[ 'conditions' ][ 'type' ] = $type;
+		$config[ 'conditions' ][ 'type' ] = $type;
 
-        return static::findIdList( $config );
-    }
+		return static::findIdList( $config );
+	}
 
-    public function getIdNameListByType( $type, $config = [] ) {
+	public function getIdNameListByType( $type, $config = [] ) {
 
-        $config[ 'conditions' ][ 'type' ] = $type;
+		$config[ 'conditions' ][ 'type' ] = $type;
 
-        return $this->getIdNameList( $config );
-    }
+		return $this->getIdNameList( $config );
+	}
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    public function getIdNameMapByType( $type, $config = [] ) {
+	public function getIdNameMapByType( $type, $config = [] ) {
 
-        $config[ 'conditions' ][ 'type' ] = $type;
+		$config[ 'conditions' ][ 'type' ] = $type;
 
-        return $this->getIdNameMap( $config );
-    }
+		return $this->getIdNameMap( $config );
+	}
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // NameSlugTrait -------------------------
+	// NameSlugTrait -------------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
 }

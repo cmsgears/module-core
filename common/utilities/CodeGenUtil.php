@@ -10,406 +10,406 @@ use yii\helpers\Html;
  */
 class CodeGenUtil {
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    /**
-     * Return pagination info to be displayed on data grid footer or header.
-     * @return string - pagination info
-     */
-    public static function getPaginationDetail( $dataProvider ) {
+	/**
+	 * Return pagination info to be displayed on data grid footer or header.
+	 * @return string - pagination info
+	 */
+	public static function getPaginationDetail( $dataProvider ) {
 
-        $total			= $dataProvider->getTotalCount();
-        $pagination		= $dataProvider->getPagination();
-        $current_page 	= $pagination->getPage();
-        $page_size		= $pagination->getPageSize();
-        $start			= $page_size * $current_page;
-        $end			= $page_size * ( $current_page + 1 ) - 1;
-        $currentSize	= count( $dataProvider->getModels() );
-        $currentDisplay	= $end - $start;
+		$total			= $dataProvider->getTotalCount();
+		$pagination		= $dataProvider->getPagination();
+		$current_page	= $pagination->getPage();
+		$page_size		= $pagination->getPageSize();
+		$start			= $page_size * $current_page;
+		$end			= $page_size * ( $current_page + 1 ) - 1;
+		$currentSize	= count( $dataProvider->getModels() );
+		$currentDisplay	= $end - $start;
 
-        if( $currentSize < $currentDisplay ) {
+		if( $currentSize < $currentDisplay ) {
 
-            $end	= $start + $currentSize;
-        }
+			$end	= $start + $currentSize;
+		}
 
-        if( $end > 0 ) {
+		if( $end > 0 ) {
 
-            $start += 1;
-        }
+			$start += 1;
+		}
 
-        if( $currentSize == $page_size ) {
+		if( $currentSize == $page_size ) {
 
-            $end	+= 1;
-        }
+			$end	+= 1;
+		}
 
-        return "Showing $start to $end out of $total entries";
-    }
+		return "Showing $start to $end out of $total entries";
+	}
 
-    /**
-     * @return string - csv of urls from the given associative array and base url
-     */
-    public static function generateLinksFromMap( $baseUrl, $map, $csv = true ) {
+	/**
+	 * @return string - csv of urls from the given associative array and base url
+	 */
+	public static function generateLinksFromMap( $baseUrl, $map, $csv = true ) {
 
-        $html	= [];
+		$html	= [];
 
-        foreach ( $map as $key => $value ) {
+		foreach ( $map as $key => $value ) {
 
-            $html[]	= Html::a( $value, [ $baseUrl . "$key" ] );
-        }
+			$html[]	= Html::a( $value, [ $baseUrl . "$key" ] );
+		}
 
-        if( $csv ) {
+		if( $csv ) {
 
-            return implode( ",", $html );
-        }
-        else {
+			return implode( ",", $html );
+		}
+		else {
 
-            return $html;
-        }
-    }
+			return $html;
+		}
+	}
 
-    /**
-     * @return string - csv of urls from the given array and base url
-     */
-    public static function generateLinksFromList( $baseUrl, $list, $csv = true ) {
+	/**
+	 * @return string - csv of urls from the given array and base url
+	 */
+	public static function generateLinksFromList( $baseUrl, $list, $csv = true ) {
 
-        $html	= [];
-        $length	= count( $list );
+		$html	= [];
+		$length	= count( $list );
 
-        for ( $i = 0; $i < $length; $i++ ) {
+		for ( $i = 0; $i < $length; $i++ ) {
 
-            $element 	= $list[ $i ];
-            $html[]		= Html::a( $element, [ $baseUrl . "$element" ] );
-        }
+			$element	= $list[ $i ];
+			$html[]		= Html::a( $element, [ $baseUrl . "$element" ] );
+		}
 
-        if( $csv ) {
+		if( $csv ) {
 
-            return implode( ",", $html );
-        }
-        else {
+			return implode( ",", $html );
+		}
+		else {
 
-            return $html;
-        }
-    }
+			return $html;
+		}
+	}
 
-    /**
-     * @return array - associative array from array having id and name keys for each entry
-     */
-    public static function generateIdNameMap( $data ) {
+	/**
+	 * @return array - associative array from array having id and name keys for each entry
+	 */
+	public static function generateIdNameMap( $data ) {
 
-        return self::generateAssociativeArray( $data, 'id', 'name' );
-    }
+		return self::generateAssociativeArray( $data, 'id', 'name' );
+	}
 
-    /**
-     * @return array - associative array from array having key and value keys for each entry
-     */
-    public static function generateNameValueMap( $data ) {
+	/**
+	 * @return array - associative array from array having key and value keys for each entry
+	 */
+	public static function generateNameValueMap( $data ) {
 
-        return self::generateAssociativeArray( $data, 'name', 'value' );
-    }
+		return self::generateAssociativeArray( $data, 'name', 'value' );
+	}
 
-    /**
-     * @return array - associative array from array having $key1 and $key2 keys for each entry
-     */
-    public static function generateAssociativeArray( $data, $key1, $key2 ) {
+	/**
+	 * @return array - associative array from array having $key1 and $key2 keys for each entry
+	 */
+	public static function generateAssociativeArray( $data, $key1, $key2 ) {
 
-        $options	= array();
+		$options	= array();
 
-        if( isset( $data ) ) {
+		if( isset( $data ) ) {
 
-            foreach ( $data as $element ) {
+			foreach ( $data as $element ) {
 
-                $options[ $element[ $key1 ] ] = $element[ $key2 ];
-            }
-        }
+				$options[ $element[ $key1 ] ] = $element[ $key2 ];
+			}
+		}
 
-        return $options;
-    }
+		return $options;
+	}
 
-    // Select for Option Table - By Id and Name
-    public static function generateSelectOptionsIdName( $data, $selected = null ) {
+	// Select for Option Table - By Id and Name
+	public static function generateSelectOptionsIdName( $data, $selected = null ) {
 
-        return self::generateSelectOptions( $data, $selected, "id", "name" );
-    }
+		return self::generateSelectOptions( $data, $selected, "id", "name" );
+	}
 
-    // Select for Option Table - By Name and Value
-    public static function generateSelectOptionsNameValue( $data, $selected = null ) {
+	// Select for Option Table - By Name and Value
+	public static function generateSelectOptionsNameValue( $data, $selected = null ) {
 
-        return self::generateSelectOptions( $data, $selected, "name", "value" );
-    }
+		return self::generateSelectOptions( $data, $selected, "name", "value" );
+	}
 
-    // Generic Select for any table
-    public static function generateSelectOptions( $data, $selected = null, $key1, $key2 ) {
+	// Generic Select for any table
+	public static function generateSelectOptions( $data, $selected = null, $key1, $key2 ) {
 
-        $options	= "";
+		$options	= "";
 
-        if( isset( $data ) ) {
+		if( isset( $data ) ) {
 
-            if( isset($selected) ) {
+			if( isset($selected) ) {
 
-                foreach ( $data as $key => $value ) {
+				foreach ( $data as $key => $value ) {
 
-                    $val 	= $value[ $key1 ];
-                    $option = $value[ $key2 ];
+					$val	= $value[ $key1 ];
+					$option = $value[ $key2 ];
 
-                    if( $selected === $val ) {
+					if( $selected === $val ) {
 
-                        $options .= "<option value='$val' selected>$option</option>";
-                    }
-                    else {
-                        $options .= "<option value='$val'>$option</option>";
-                    }
-                }
-            }
-            else {
+						$options .= "<option value='$val' selected>$option</option>";
+					}
+					else {
+						$options .= "<option value='$val'>$option</option>";
+					}
+				}
+			}
+			else {
 
-                foreach ( $data as $key => $value ) {
+				foreach ( $data as $key => $value ) {
 
-                    $val 	= $value[ $key1 ];
-                    $option = $value[ $key2 ];
+					$val	= $value[ $key1 ];
+					$option = $value[ $key2 ];
 
-                    $options .= "<option value='$val'>$option</option>";
-                }
-            }
-        }
+					$options .= "<option value='$val'>$option</option>";
+				}
+			}
+		}
 
-        return $options;
-    }
+		return $options;
+	}
 
-    // Generic Select for any table
-    public static function generateSelectOptionsFromArray( $data, $selected = null ) {
+	// Generic Select for any table
+	public static function generateSelectOptionsFromArray( $data, $selected = null ) {
 
-        $options	= "";
+		$options	= "";
 
-        if( isset( $data ) ) {
+		if( isset( $data ) ) {
 
-            if( isset($selected) ) {
+			if( isset($selected) ) {
 
-                foreach ( $data as $key => $value ) {
+				foreach ( $data as $key => $value ) {
 
-                    if( $selected === $key ) {
+					if( $selected === $key ) {
 
-                        $options .= "<option value='$key' selected>$value</option>";
-                    }
-                    else {
-                        $options .= "<option value='$key'>$value</option>";
-                    }
-                }
-            }
-            else {
+						$options .= "<option value='$key' selected>$value</option>";
+					}
+					else {
+						$options .= "<option value='$key'>$value</option>";
+					}
+				}
+			}
+			else {
 
-                foreach ( $data as $key => $value ) {
+				foreach ( $data as $key => $value ) {
 
-                    $options .= "<option value='$key'>$value</option>";
-                }
-            }
-        }
+					$options .= "<option value='$key'>$value</option>";
+				}
+			}
+		}
 
-        return $options;
-    }
+		return $options;
+	}
 
-    public static function generateListItemsIdName( $data ) {
+	public static function generateListItemsIdName( $data ) {
 
-        return self::generateListItems( $data, "id", "name" );
-    }
+		return self::generateListItems( $data, "id", "name" );
+	}
 
-    public static function generateListItems( $data, $key1, $key2 ) {
+	public static function generateListItems( $data, $key1, $key2 ) {
 
-        $listItems	= "";
+		$listItems	= "";
 
-        if( isset( $data ) ) {
+		if( isset( $data ) ) {
 
-            foreach ( $data as $key => $value ) {
+			foreach ( $data as $key => $value ) {
 
-                $val 	= $value[ $key1 ];
-                $item 	= $value[ $key2 ];
+				$val	= $value[ $key1 ];
+				$item	= $value[ $key2 ];
 
-                $listItems .= "<li data-value='$val'>$item</li>";
-            }
-        }
+				$listItems .= "<li data-value='$val'>$item</li>";
+			}
+		}
 
-        return $listItems;
-    }
+		return $listItems;
+	}
 
-    // Return Image Tag
-    public static function getImageThumbTag( $image, $options = [] ) {
+	// Return Image Tag
+	public static function getImageThumbTag( $image, $options = [] ) {
 
-        // Use Image from DB
-        if( isset( $image ) ) {
+		// Use Image from DB
+		if( isset( $image ) ) {
 
-            $thumbUrl = $image->getThumbUrl();
+			$thumbUrl = $image->getThumbUrl();
 
-            if( isset( $options[ 'class' ] ) ) {
+			if( isset( $options[ 'class' ] ) ) {
 
-                $class = $options[ 'class' ];
+				$class = $options[ 'class' ];
 
-                return "<img class='$class' src='$thumbUrl'>";
-            }
-            else {
+				return "<img class='$class' src='$thumbUrl'>";
+			}
+			else {
 
-                return "<img src='$thumbUrl'>";
-            }
-        }
-        else {
+				return "<img src='$thumbUrl'>";
+			}
+		}
+		else {
 
-            // Use Image from web root directory
-            if( isset( $options[ 'image' ] ) ) {
+			// Use Image from web root directory
+			if( isset( $options[ 'image' ] ) ) {
 
-                $images = Yii::getAlias( '@images' );
-                $img	= $options[ 'image' ];
+				$images = Yii::getAlias( '@images' );
+				$img	= $options[ 'image' ];
 
-                if( isset( $options[ 'class' ] ) ) {
+				if( isset( $options[ 'class' ] ) ) {
 
-                    $class 	= $options[ 'class' ];
+					$class	= $options[ 'class' ];
 
-                    return "<img class='$class' src='$images/$img'>";
-                }
-                else {
+					return "<img class='$class' src='$images/$img'>";
+				}
+				else {
 
-                    return "<img src='$images/$img'>";
-                }
-            }
-            // Use icon
-            else if( isset( $options[ 'icon' ] ) ) {
+					return "<img src='$images/$img'>";
+				}
+			}
+			// Use icon
+			else if( isset( $options[ 'icon' ] ) ) {
 
-                $icon = $options[ 'icon' ];
+				$icon = $options[ 'icon' ];
 
-                return "<span class='$icon'></span>";
-            }
-        }
-    }
+				return "<span class='$icon'></span>";
+			}
+		}
+	}
 
-    public static function getMediumUrl( $file, $options = [] ) {
+	public static function getMediumUrl( $file, $options = [] ) {
 
-        if( $file == null ) {
+		if( $file == null ) {
 
-            if( isset( $options[ 'image' ] ) ) {
+			if( isset( $options[ 'image' ] ) ) {
 
-                $image	= $options[ 'image' ];
+				$image	= $options[ 'image' ];
 
-                return Yii::getAlias( '@images' ) . "/$image";
-            }
-        }
-        else {
+				return Yii::getAlias( '@images' ) . "/$image";
+			}
+		}
+		else {
 
-            return $file->getMediumUrl();
-        }
+			return $file->getMediumUrl();
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    public static function getFileUrl( $file, $options = [] ) {
+	public static function getFileUrl( $file, $options = [] ) {
 
-        if( $file == null ) {
+		if( $file == null ) {
 
-            if( isset( $options[ 'image' ] ) ) {
+			if( isset( $options[ 'image' ] ) ) {
 
-                $image	= $options[ 'image' ];
+				$image	= $options[ 'image' ];
 
-                return Yii::getAlias( '@images' ) . "/$image";
-            }
-        }
-        else {
+				return Yii::getAlias( '@images' ) . "/$image";
+			}
+		}
+		else {
 
-            return $file->getFileUrl();
-        }
+			return $file->getFileUrl();
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    public static function generateMetaTags( $params ) {
+	public static function generateMetaTags( $params ) {
 
-        $metaContent	= '';
+		$metaContent	= '';
 
-        if( isset( $params[ 'desc' ] ) ) {
+		if( isset( $params[ 'desc' ] ) ) {
 
-            $description	= $params[ 'desc' ];
-            $metaContent 	.= "<meta name='description' content='$description' />";
-        }
+			$description	= $params[ 'desc' ];
+			$metaContent	.= "<meta name='description' content='$description' />";
+		}
 
-        if( isset( $params[ 'meta' ] ) ) {
+		if( isset( $params[ 'meta' ] ) ) {
 
-            $keywords		= $params[ 'keywords' ];
-            $metaContent 	.= "<meta name='keywords' content='$keywords' />";
-        }
+			$keywords		= $params[ 'keywords' ];
+			$metaContent	.= "<meta name='keywords' content='$keywords' />";
+		}
 
-        if( isset( $params[ 'robot' ] ) ) {
+		if( isset( $params[ 'robot' ] ) ) {
 
-            $robot			= $params[ 'robot' ];
-            $metaContent 	.= "<meta name='robots' content='$robot' />";
-        }
+			$robot			= $params[ 'robot' ];
+			$metaContent	.= "<meta name='robots' content='$robot' />";
+		}
 
-        return $metaContent;
-    }
+		return $metaContent;
+	}
 
-    public static function generateSeoH1( $params ) {
+	public static function generateSeoH1( $params ) {
 
-        if( isset( $params[ 'summary' ] ) ) {
+		if( isset( $params[ 'summary' ] ) ) {
 
-            $summary	= $params[ 'summary' ];
-            $seoH1		= "<h1 class='hidden'>$summary</h1>";
+			$summary	= $params[ 'summary' ];
+			$seoH1		= "<h1 class='hidden'>$summary</h1>";
 
-            return $seoH1;
-        }
+			return $seoH1;
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    // Return the username by splitting given email.
-    public static function splitEmail( $email ) {
+	// Return the username by splitting given email.
+	public static function splitEmail( $email ) {
 
-        $parts = explode( '@', $email );
+		$parts = explode( '@', $email );
 
-        return $parts[ 0 ];
-    }
+		return $parts[ 0 ];
+	}
 
-    public static function isEmptyString( $string ) {
+	public static function isEmptyString( $string ) {
 
-        return !( isset( $string ) && ( strlen( trim( $string ) ) > 0 ) );
-    }
+		return !( isset( $string ) && ( strlen( trim( $string ) ) > 0 ) );
+	}
 
-    public static function notEmptyString( $string ) {
+	public static function notEmptyString( $string ) {
 
-        return ( isset( $string ) && ( strlen( trim( $string ) ) > 0 ) );
-    }
+		return ( isset( $string ) && ( strlen( trim( $string ) ) > 0 ) );
+	}
 
-    public static function registerJsFromFile( $view, $position, $filePath ) {
+	public static function registerJsFromFile( $view, $position, $filePath ) {
 
-        ob_start();
+		ob_start();
 
-        include( $filePath );
+		include( $filePath );
 
-        $script	= ob_get_clean();
+		$script	= ob_get_clean();
 
-        $view->registerJs( $script, $position );
-    }
+		$view->registerJs( $script, $position );
+	}
 
-    public static function getFileContent( $filePath ) {
+	public static function getFileContent( $filePath ) {
 
-        ob_start();
+		ob_start();
 
-        include( $filePath );
+		include( $filePath );
 
-        $content	= ob_get_clean();
+		$content	= ob_get_clean();
 
-        return $content;
-    }
+		return $content;
+	}
 
-    public static function getYearOptionsList( $start, $end = null ) {
+	public static function getYearOptionsList( $start, $end = null ) {
 
-        if( !isset( $end ) ) {
+		if( !isset( $end ) ) {
 
-            $end	= date( "Y" );
-        }
+			$end	= date( "Y" );
+		}
 
-        $options	= null;
+		$options	= null;
 
-        for( $i = $end; $i >= $start; $i-- ) {
+		for( $i = $end; $i >= $start; $i-- ) {
 
-            $options	.= "<option value='$i'>$i</option>";
-        }
+			$options	.= "<option value='$i'>$i</option>";
+		}
 
-        return $options;
-    }
+		return $options;
+	}
 }
 
 ?>

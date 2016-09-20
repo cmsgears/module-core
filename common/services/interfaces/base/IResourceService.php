@@ -3,27 +3,27 @@ namespace cmsgears\core\common\services\interfaces\base;
 
 interface IResourceService extends IEntityService {
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getByParent( $parentId, $parentType );
+	public function getByParent( $parentId, $parentType );
 
-    public function getByParentId( $parentId );
+	public function getByParentId( $parentId );
 
-    public function getByParentType( $parentType );
+	public function getByParentType( $parentType );
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
-    public function deleteByParent( $parentId, $parentType );
+	public function deleteByParent( $parentId, $parentType );
 }

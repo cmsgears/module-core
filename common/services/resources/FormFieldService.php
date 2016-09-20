@@ -15,133 +15,133 @@ use cmsgears\core\common\services\interfaces\resources\IFormFieldService;
 
 class FormFieldService extends \cmsgears\core\common\services\base\EntityService implements IFormFieldService {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public static $modelClass	= '\cmsgears\core\common\models\resources\FormField';
+	public static $modelClass	= '\cmsgears\core\common\models\resources\FormField';
 
-    public static $modelTable	= CoreTables::TABLE_FORM_FIELD;
+	public static $modelTable	= CoreTables::TABLE_FORM_FIELD;
 
-    public static $parentType	= CoreGlobal::TYPE_FORM_FIELD;
+	public static $parentType	= CoreGlobal::TYPE_FORM_FIELD;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // FormFieldService ----------------------
+	// FormFieldService ----------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    public function getPage( $config = [] ) {
+	public function getPage( $config = [] ) {
 
-        $sort = new Sort([
-            'attributes' => [
-                'name' => [
-                    'asc' => [ 'name' => SORT_ASC ],
-                    'desc' => ['name' => SORT_DESC ],
-                    'default' => SORT_DESC,
-                    'label' => 'name',
-                ]
-            ],
-            'defaultOrder' => [
-                'name' => SORT_DESC
-            ]
-        ]);
+		$sort = new Sort([
+			'attributes' => [
+				'name' => [
+					'asc' => [ 'name' => SORT_ASC ],
+					'desc' => ['name' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'name',
+				]
+			],
+			'defaultOrder' => [
+				'name' => SORT_DESC
+			]
+		]);
 
-        if( !isset( $config[ 'sort' ] ) ) {
+		if( !isset( $config[ 'sort' ] ) ) {
 
-            $config[ 'sort' ] = $sort;
-        }
+			$config[ 'sort' ] = $sort;
+		}
 
-        return parent::findPage( $config );
-    }
+		return parent::findPage( $config );
+	}
 
-    public function getPageByFormId( $formId ) {
+	public function getPageByFormId( $formId ) {
 
-        return $this->getPage( [ 'conditions' => [ 'formId' => $formId ] ] );
-    }
+		return $this->getPage( [ 'conditions' => [ 'formId' => $formId ] ] );
+	}
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getByFormId( $formId ) {
+	public function getByFormId( $formId ) {
 
-        return self::findByFormId( $formId );
-    }
+		return self::findByFormId( $formId );
+	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    public function update( $model, $config = [] ) {
+	public function update( $model, $config = [] ) {
 
-        $attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions', 'data' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions', 'data' ];
 
-        return parent::update( $model, [
-            'attributes' => $attributes
-        ]);
-    }
+		return parent::update( $model, [
+			'attributes' => $attributes
+		]);
+	}
 
-    // Delete -------------
+	// Delete -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // FormFieldService ----------------------
+	// FormFieldService ----------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public static function findByFormId( $formId ) {
+	public static function findByFormId( $formId ) {
 
-        return FormField::findByFormId( $formId );
-    }
+		return FormField::findByFormId( $formId );
+	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 }

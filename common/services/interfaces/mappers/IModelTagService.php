@@ -9,23 +9,23 @@ use cmsgears\core\common\config\CoreGlobal;
 
 interface IModelTagService extends \cmsgears\core\common\services\interfaces\base\IMapperService {
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Create -------------
+	// Create -------------
 
-    public function createFromCsv( $parentId, $parentType, $tags );
+	public function createFromCsv( $parentId, $parentType, $tags );
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
-    public function deleteByTagSlug( $parentId, $parentType, $tagSlug, $tagType, $delete = false );
+	public function deleteByTagSlug( $parentId, $parentType, $tagSlug, $tagType, $delete = false );
 }

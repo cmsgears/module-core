@@ -18,136 +18,136 @@ use cmsgears\core\common\services\interfaces\resources\IModelHierarchyService;
  */
 class ModelHierarchyService extends \cmsgears\core\common\services\base\EntityService implements IModelHierarchyService {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public static $modelClass	= '\cmsgears\core\common\models\resources\ModelHierarchy';
+	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelHierarchy';
 
-    public static $modelTable	= CoreTables::TABLE_MODEL_HIERARCHY;
+	public static $modelTable	= CoreTables::TABLE_MODEL_HIERARCHY;
 
-    public static $parentType	= null;
+	public static $parentType	= null;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelHierarchyService -----------------
+	// ModelHierarchyService -----------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getRoot( $rootId, $parentType ) {
+	public function getRoot( $rootId, $parentType ) {
 
-        ModelHierarchy::findRoot( $rootId, $parentType );
-    }
+		ModelHierarchy::findRoot( $rootId, $parentType );
+	}
 
-    public function getChildren( $parentId, $parentType ) {
+	public function getChildren( $parentId, $parentType ) {
 
-        ModelHierarchy::findByParent( $parentId, $parentType );
-    }
+		ModelHierarchy::findByParent( $parentId, $parentType );
+	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    public function createInHierarchy( $parentId, $parentType, $rootId, $childId ) {
+	public function createInHierarchy( $parentId, $parentType, $rootId, $childId ) {
 
-        $root	= $this->getRoot( $rootId, $parentType );
+		$root	= $this->getRoot( $rootId, $parentType );
 
-        // Add Root
-        if( !isset( $root ) ) {
+		// Add Root
+		if( !isset( $root ) ) {
 
-            $model				= new ModelHierarchy();
-            $model->rootId		= $rootId;
-            $model->parentType	= $parentType;
-            $model->lValue		= CoreGlobal::HIERARCHY_VALUE_L;
-            $model->rValue		= CoreGlobal::HIERARCHY_VALUE_R;
+			$model				= new ModelHierarchy();
+			$model->rootId		= $rootId;
+			$model->parentType	= $parentType;
+			$model->lValue		= CoreGlobal::HIERARCHY_VALUE_L;
+			$model->rValue		= CoreGlobal::HIERARCHY_VALUE_R;
 
-            // Create Model
-            $model->save();
-        }
+			// Create Model
+			$model->save();
+		}
 
-        $model				= new ModelHierarchy();
-        $model->rootId		= $rootId;
-        $model->parentType	= $parentType;
+		$model				= new ModelHierarchy();
+		$model->rootId		= $rootId;
+		$model->parentType	= $parentType;
 
-        $model->parentId	= $parentId;
-        $model->childId		= $childId;
+		$model->parentId	= $parentId;
+		$model->childId		= $childId;
 
-        // Create Model
-        $model->save();
-    }
+		// Create Model
+		$model->save();
+	}
 
-    public function assignChildren( $parentType, $binder ) {
+	public function assignChildren( $parentType, $binder ) {
 
-        $parentId	= $binder->binderId;
-        $children	= $binder->bindedData;
+		$parentId	= $binder->binderId;
+		$children	= $binder->bindedData;
 
-        // Insert topmost parent with immediate children
+		// Insert topmost parent with immediate children
 
-        foreach ( $children as $childId ) {
+		foreach ( $children as $childId ) {
 
-            $this->createInHierarchy( $parentId, $parentType, $parentId, $childId );
-        }
-    }
+			$this->createInHierarchy( $parentId, $parentType, $parentId, $childId );
+		}
+	}
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelHierarchyService -----------------
+	// ModelHierarchyService -----------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 }

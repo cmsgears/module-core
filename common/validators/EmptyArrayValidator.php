@@ -9,13 +9,13 @@ use \Yii;
  */
 class EmptyArrayValidator extends \yii\validators\Validator {
 
-    public function validateAttribute( $model, $attribute ) {
+	public function validateAttribute( $model, $attribute ) {
 
-        $submittedData = $model->submittedData;
+		$submittedData = $model->submittedData;
 
-        if( !isset( $submittedData[ $attribute ] ) || !is_array( $submittedData[ $attribute ] ) ) {
+		if( !isset( $submittedData[ $attribute ] ) || !is_array( $submittedData[ $attribute ] ) ) {
 
-            $model->$attribute	= [];
-        }
-    }
+			$model->$attribute	= [];
+		}
+	}
 }

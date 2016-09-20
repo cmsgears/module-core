@@ -10,59 +10,59 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class JqueryMouseWheel extends \yii\web\AssetBundle {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Path Configuration
-    public $sourcePath = '@bower/jquery-mousewheel';
+	// Path Configuration
+	public $sourcePath = '@bower/jquery-mousewheel';
 
-    // Load Javascript
-    public $js = [
-        'jquery.mousewheel.min.js'
-    ];
+	// Load Javascript
+	public $js = [
+		'jquery.mousewheel.min.js'
+	];
 
-    // Position to load Javascript
-    public $jsOptions = [
-        'position' => View::POS_END
-    ];
+	// Position to load Javascript
+	public $jsOptions = [
+		'position' => View::POS_END
+	];
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // JqueryMouseWheel ----------------------
+	// JqueryMouseWheel ----------------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // JqueryMouseWheel ----------------------
+	// JqueryMouseWheel ----------------------
 
 }

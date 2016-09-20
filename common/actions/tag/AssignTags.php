@@ -18,66 +18,66 @@ use cmsgears\core\common\utilities\AjaxUtil;
  */
 class AssignTags extends \cmsgears\core\common\actions\base\ModelAction {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    protected $typed = true;
+	protected $typed = true;
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // AssignTags ----------------------------
+	// AssignTags ----------------------------
 
-    public function run() {
+	public function run() {
 
-        $post	= yii::$app->request->post();
+		$post	= yii::$app->request->post();
 
-        if( isset( $this->model ) && isset( $post[ 'tags' ] ) ) {
+		if( isset( $this->model ) && isset( $post[ 'tags' ] ) ) {
 
-            $tags 				= $post[ 'tags' ];
-            $modelTagService	= Yii::$app->factory->get( 'modelTagService' );
+			$tags				= $post[ 'tags' ];
+			$modelTagService	= Yii::$app->factory->get( 'modelTagService' );
 
-            $modelTagService->createFromCsv( $this->model->id, $this->modelService->getParentType(), $tags );
+			$modelTagService->createFromCsv( $this->model->id, $this->modelService->getParentType(), $tags );
 
-            $tags		= $this->model->activeTags;
-            $data		= [];
+			$tags		= $this->model->activeTags;
+			$data		= [];
 
-            foreach ( $tags as $tag ) {
+			foreach ( $tags as $tag ) {
 
-                $data[]	= [ 'name' => $tag->name, 'slug' => $tag->slug ];
-            }
+				$data[]	= [ 'name' => $tag->name, 'slug' => $tag->slug ];
+			}
 
-            // Trigger Ajax Success
-            return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-        }
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+		}
 
-        // Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Trigger Ajax Failure
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 }

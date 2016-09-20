@@ -3,79 +3,79 @@ namespace cmsgears\core\common\services\interfaces\base;
 
 interface IEntityService {
 
-    public function getModelClass();
+	public function getModelClass();
 
-    public function getModelTable();
+	public function getModelTable();
 
-    public function getParentType();
+	public function getParentType();
 
-    // Data Provider ------
+	// Data Provider ------
 
-    public function getDataProvider( $config = [] );
+	public function getDataProvider( $config = [] );
 
-    // Regular Pages
+	// Regular Pages
 
-    public function getPage( $config = [] );
+	public function getPage( $config = [] );
 
-    // Public Pages
+	// Public Pages
 
-    public function getPublicPage( $config = [] );
+	public function getPublicPage( $config = [] );
 
-    public function getPageForChildSites( $config = [] );
+	public function getPageForChildSites( $config = [] );
 
-    public function getPageForSimilar( $config = [] );
+	public function getPageForSimilar( $config = [] );
 
-    // Searching
+	// Searching
 
-    public function getPageForSearch( $config = [] );
+	public function getPageForSearch( $config = [] );
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getById( $id );
+	public function getById( $id );
 
-    public function getByIds( $ids = [], $config = [] );
+	public function getByIds( $ids = [], $config = [] );
 
-    public function getModels( $config = [] );
+	public function getModels( $config = [] );
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    public function getList( $config = [] );
+	public function getList( $config = [] );
 
-    public function getNameValueList( $config = [] );
+	public function getNameValueList( $config = [] );
 
-    public function getIdNameList( $config = [] );
+	public function getIdNameList( $config = [] );
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    public function getNameValueMap( $config = [] );
+	public function getNameValueMap( $config = [] );
 
-    public function getIdNameMap( $config = [] );
+	public function getIdNameMap( $config = [] );
 
-    public function getObjectMap( $config = [] );
+	public function getObjectMap( $config = [] );
 
-    // Create -------------
+	// Create -------------
 
-    public function create( $model, $config = [] );
+	public function create( $model, $config = [] );
 
-    public function createByParams( $params = [], $config = [] );
+	public function createByParams( $params = [], $config = [] );
 
-    // Update -------------
+	// Update -------------
 
-    public function update( $model, $config = [] );
+	public function update( $model, $config = [] );
 
-    public function updateAll( $model, $config = [] );
+	public function updateAll( $model, $config = [] );
 
-    public function updateAttributes( $model, $config = [] );
+	public function updateAttributes( $model, $config = [] );
 
-    public function updateMultiple( $models, $config = [] );
+	public function updateMultiple( $models, $config = [] );
 
-    public function updateByForm( $model, $form, $config = [] );
+	public function updateByForm( $model, $form, $config = [] );
 
-    public function updateMultipleByForm( $form, $config = [] );
+	public function updateMultipleByForm( $form, $config = [] );
 
-    // Delete -------------
+	// Delete -------------
 
-    public function delete( $model, $config = [] );
+	public function delete( $model, $config = [] );
 }

@@ -37,203 +37,203 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class Permission extends \cmsgears\core\common\models\base\Entity {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    private $mParentType	= CoreGlobal::TYPE_PERMISSION; // required for traits
+	private $mParentType	= CoreGlobal::TYPE_PERMISSION; // required for traits
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    use CreateModifyTrait;
-    use HierarchyTrait;
-    use NameTypeTrait;
-    use SlugTypeTrait;
+	use CreateModifyTrait;
+	use HierarchyTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors() {
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors() {
 
-        return [
-            'authorBehavior' => [
-                'class' => AuthorBehavior::className()
-            ],
-            'sluggableBehavior' => [
-                'class' => SluggableBehavior::className(),
-                'attribute' => 'name',
-                'slugAttribute' => 'slug',
-                'immutable' => true,
-                'ensureUnique' => true
-            ],
-            'timestampBehavior' => [
-                'class' => TimestampBehavior::className(),
-                'createdAtAttribute' => 'createdAt',
-                'updatedAtAttribute' => 'modifiedAt',
-                'value' => new Expression('NOW()')
-            ]
-        ];
-    }
+		return [
+			'authorBehavior' => [
+				'class' => AuthorBehavior::className()
+			],
+			'sluggableBehavior' => [
+				'class' => SluggableBehavior::className(),
+				'attribute' => 'name',
+				'slugAttribute' => 'slug',
+				'immutable' => true,
+				'ensureUnique' => true
+			],
+			'timestampBehavior' => [
+				'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+				'updatedAtAttribute' => 'modifiedAt',
+				'value' => new Expression('NOW()')
+			]
+		];
+	}
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
-    public function rules() {
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
 
-        // model rules
-        $rules = [
-            [ [ 'name' ], 'required' ],
-            [ [ 'id' ], 'safe' ],
-            [ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-            [ [ 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
-            [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-            [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
-        ];
+		// model rules
+		$rules = [
+			[ [ 'name' ], 'required' ],
+			[ [ 'id' ], 'safe' ],
+			[ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			[ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+		];
 
-        // trim if required
-        if( Yii::$app->core->trimFieldValue ) {
+		// trim if required
+		if( Yii::$app->core->trimFieldValue ) {
 
-            $trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
-    }
+		return $rules;
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels() {
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
 
-        return [
-            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
-            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-            'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-            'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION )
-        ];
-    }
+		return [
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION )
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // Permission ----------------------------
+	// Permission ----------------------------
 
-    /**
-     * @return Role array
-     */
-    public function getRoles() {
+	/**
+	 * @return Role array
+	 */
+	public function getRoles() {
 
-        return $this->hasMany( Role::className(), [ 'id' => 'roleId' ] )
-                    ->viaTable( CoreTables::TABLE_ROLE_PERMISSION, [ 'permissionId' => 'id' ] );
-    }
+		return $this->hasMany( Role::className(), [ 'id' => 'roleId' ] )
+					->viaTable( CoreTables::TABLE_ROLE_PERMISSION, [ 'permissionId' => 'id' ] );
+	}
 
-    /**
-     * @return array having role element.
-     */
-    public function getRoleMappingList() {
+	/**
+	 * @return array having role element.
+	 */
+	public function getRoleMappingList() {
 
-        return $this->hasMany( RolePermission::className(), [ 'permissionId' => 'id' ] );
-    }
+		return $this->hasMany( RolePermission::className(), [ 'permissionId' => 'id' ] );
+	}
 
-    /**
-     * @return array having role id element.
-     */
-    public function getRolesIdList() {
+	/**
+	 * @return array having role id element.
+	 */
+	public function getRolesIdList() {
 
-        $roles      = $this->roleMappingList;
-        $rolesList  = array();
+		$roles		= $this->roleMappingList;
+		$rolesList	= array();
 
-        foreach ( $roles as $role ) {
+		foreach ( $roles as $role ) {
 
-            array_push( $rolesList, $role->roleId );
-        }
+			array_push( $rolesList, $role->roleId );
+		}
 
-        return $rolesList;
-    }
+		return $rolesList;
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName() {
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName() {
 
-        return CoreTables::TABLE_PERMISSION;
-    }
+		return CoreTables::TABLE_PERMISSION;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Permission ----------------------------
+	// Permission ----------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    public static function queryWithHasOne( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
-        $config[ 'relations' ]	= $relations;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+		$config[ 'relations' ]	= $relations;
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithRoles( $config = [] ) {
+	public static function queryWithRoles( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'roles' ];
+		$config[ 'relations' ]	= [ 'roles' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    public static function findL0Children( $l0Ids = [] ) {
+	public static function findL0Children( $l0Ids = [] ) {
 
-        $permission 	= CoreTables::TABLE_PERMISSION;
-        $modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
-        $l0Ids			= join( ",", $l0Ids );
+		$permission		= CoreTables::TABLE_PERMISSION;
+		$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
+		$l0Ids			= join( ",", $l0Ids );
 
-        return Permission::find()->leftJoin( $modelHierarchy, "`$permission`.`id` = `$modelHierarchy`.`childId`" )
-                          ->where( "`$modelHierarchy`.`parentType` = 'permission' AND `$modelHierarchy`.`parentId` IN ($l0Ids)" )->all();
-    }
+		return Permission::find()->leftJoin( $modelHierarchy, "`$permission`.`id` = `$modelHierarchy`.`childId`" )
+						  ->where( "`$modelHierarchy`.`parentType` = 'permission' AND `$modelHierarchy`.`parentId` IN ($l0Ids)" )->all();
+	}
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 }

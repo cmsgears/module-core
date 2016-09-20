@@ -17,215 +17,215 @@ use cmsgears\core\common\services\interfaces\resources\IModelMetaService;
  */
 class ModelMetaService extends \cmsgears\core\common\services\base\EntityService implements IModelMetaService {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public static $modelClass	= '\cmsgears\core\common\models\resources\ModelMeta';
+	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelMeta';
 
-    public static $modelTable	= CoreTables::TABLE_MODEL_META;
+	public static $modelTable	= CoreTables::TABLE_MODEL_META;
 
-    public static $parentType	= null;
+	public static $parentType	= null;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelMetaService ----------------------
+	// ModelMetaService ----------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getByType( $parentId, $parentType, $type ) {
+	public function getByType( $parentId, $parentType, $type ) {
 
-        return ModelMeta::findByType( $parentId, $parentType, $type );
-    }
+		return ModelMeta::findByType( $parentId, $parentType, $type );
+	}
 
-    public function getByNameType( $parentId, $parentType, $name, $type ) {
+	public function getByNameType( $parentId, $parentType, $name, $type ) {
 
-        return ModelMeta::findByNameType( $parentId, $parentType, $name, $type );
-    }
+		return ModelMeta::findByNameType( $parentId, $parentType, $name, $type );
+	}
 
-    public function initByNameType( $parentId, $parentType, $name, $type, $valueType = ModelMeta::VALUE_TYPE_TEXT ) {
+	public function initByNameType( $parentId, $parentType, $name, $type, $valueType = ModelMeta::VALUE_TYPE_TEXT ) {
 
-        $meta	= ModelMeta::findByNameType( $parentId, $parentType, $name, $type );
+		$meta	= ModelMeta::findByNameType( $parentId, $parentType, $name, $type );
 
-        if( !isset( $meta ) ) {
+		if( !isset( $meta ) ) {
 
-            $meta				= new ModelMeta();
-            $meta->parentId		= $parentId;
-            $meta->parentType	= $parentType;
-            $meta->name			= $name;
-            $meta->type			= $type;
-            $meta->valueType	= $valueType;
-        }
+			$meta				= new ModelMeta();
+			$meta->parentId		= $parentId;
+			$meta->parentType	= $parentType;
+			$meta->name			= $name;
+			$meta->type			= $type;
+			$meta->valueType	= $valueType;
+		}
 
-        return $meta;
-    }
+		return $meta;
+	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    public function getNameValueMapByType( $parentId, $parentType, $type ) {
+	public function getNameValueMapByType( $parentId, $parentType, $type ) {
 
-        $config[ 'conditions' ][ 'parentId' ] 	= $parentId;
-        $config[ 'conditions' ][ 'parentType' ] = $parentType;
-        $config[ 'conditions' ][ 'type' ] 		= $type;
+		$config[ 'conditions' ][ 'parentId' ]	= $parentId;
+		$config[ 'conditions' ][ 'parentType' ] = $parentType;
+		$config[ 'conditions' ][ 'type' ]		= $type;
 
-        return $this->getNameValueMap( $config );
-    }
+		return $this->getNameValueMap( $config );
+	}
 
-    public function getIdMetaMapByType( $parentId, $parentType, $type ) {
+	public function getIdMetaMapByType( $parentId, $parentType, $type ) {
 
-        $config[ 'conditions' ][ 'parentId' ] 	= $parentId;
-        $config[ 'conditions' ][ 'parentType' ] = $parentType;
-        $config[ 'conditions' ][ 'type' ] 		= $type;
+		$config[ 'conditions' ][ 'parentId' ]	= $parentId;
+		$config[ 'conditions' ][ 'parentType' ] = $parentType;
+		$config[ 'conditions' ][ 'type' ]		= $type;
 
-        return $this->getObjectMap( $config );
-    }
+		return $this->getObjectMap( $config );
+	}
 
-    public function getNameMetaMapByType( $parentId, $parentType, $type ) {
+	public function getNameMetaMapByType( $parentId, $parentType, $type ) {
 
-        $config[ 'key' ] = 'name';
+		$config[ 'key' ] = 'name';
 
-        $config[ 'conditions' ][ 'parentId' ] 	= $parentId;
-        $config[ 'conditions' ][ 'parentType' ] = $parentType;
-        $config[ 'conditions' ][ 'type' ] 		= $type;
+		$config[ 'conditions' ][ 'parentId' ]	= $parentId;
+		$config[ 'conditions' ][ 'parentType' ] = $parentType;
+		$config[ 'conditions' ][ 'type' ]		= $type;
 
-        return $this->getObjectMap( $config );
-    }
+		return $this->getObjectMap( $config );
+	}
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    public function create( $model, $config = [] ) {
+	public function create( $model, $config = [] ) {
 
-        if( !isset( $model->label ) || strlen( $model->label ) <= 0 ) {
+		if( !isset( $model->label ) || strlen( $model->label ) <= 0 ) {
 
-            $model->label = $model->name;
-        }
+			$model->label = $model->name;
+		}
 
-        if( !isset( $model->valueType ) ) {
+		if( !isset( $model->valueType ) ) {
 
-            $model->valueType = ModelMeta::VALUE_TYPE_TEXT;
-        }
+			$model->valueType = ModelMeta::VALUE_TYPE_TEXT;
+		}
 
-        $model->save();
+		$model->save();
 
-        return $model;
-    }
+		return $model;
+	}
 
-    // Update -------------
+	// Update -------------
 
-    public function update( $model, $config = [] ) {
+	public function update( $model, $config = [] ) {
 
-        $existingModel  = $this->getByNameType( $model->parentId, $model->parentType, $model->name, $model->type );
+		$existingModel	= $this->getByNameType( $model->parentId, $model->parentType, $model->name, $model->type );
 
-        // Create if it does not exist
-        if( !isset( $existingModel ) ) {
+		// Create if it does not exist
+		if( !isset( $existingModel ) ) {
 
-            return $this->create( $model );
-        }
+			return $this->create( $model );
+		}
 
-        if( isset( $model->valueType ) ) {
+		if( isset( $model->valueType ) ) {
 
-            $existingModel->copyForUpdateFrom( $model, [ 'valueType', 'value' ] );
-        }
-        else {
+			$existingModel->copyForUpdateFrom( $model, [ 'valueType', 'value' ] );
+		}
+		else {
 
-            $existingModel->copyForUpdateFrom( $model, [ 'value' ] );
-        }
+			$existingModel->copyForUpdateFrom( $model, [ 'value' ] );
+		}
 
-        $existingModel->update();
+		$existingModel->update();
 
-        return $existingModel;
-    }
+		return $existingModel;
+	}
 
-    public function updateMultiple( $models, $config = [] ) {
+	public function updateMultiple( $models, $config = [] ) {
 
-        $parent	= $config[ 'parent' ];
+		$parent	= $config[ 'parent' ];
 
-        foreach( $models as $model ) {
+		foreach( $models as $model ) {
 
-            if( $model->parentId == $parent->id ) {
+			if( $model->parentId == $parent->id ) {
 
-                $this->update( $model );
-            }
-        }
-    }
+				$this->update( $model );
+			}
+		}
+	}
 
-    public function updateMultipleByForm( $form, $config = [] ) {
+	public function updateMultipleByForm( $form, $config = [] ) {
 
-        $metas = $form->getArrayToStore();
+		$metas = $form->getArrayToStore();
 
-        foreach ( $metas as $meta ) {
+		foreach ( $metas as $meta ) {
 
-            if( !isset( $meta[ 'valueType' ] ) ) {
+			if( !isset( $meta[ 'valueType' ] ) ) {
 
-                $meta[ 'valueType' ]	= ModelMeta::VALUE_TYPE_TEXT;
-            }
+				$meta[ 'valueType' ]	= ModelMeta::VALUE_TYPE_TEXT;
+			}
 
-            $model			= $this->initByNameType( $config[ 'parentId' ], $config[ 'parentType' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ] );
+			$model			= $this->initByNameType( $config[ 'parentId' ], $config[ 'parentType' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ] );
 
-            $model->value	= $meta[ 'value' ];
-            $model->label	= $form->getMetaLabel( $meta[ 'name' ] );
+			$model->value	= $meta[ 'value' ];
+			$model->label	= $form->getMetaLabel( $meta[ 'name' ] );
 
-            $this->update( $model );
-        }
-    }
+			$this->update( $model );
+		}
+	}
 
-    // Delete -------------
+	// Delete -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelMetaService ----------------------
+	// ModelMetaService ----------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 }

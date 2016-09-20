@@ -12,85 +12,85 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 trait ModelMetaTrait {
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelMetaTrait ------------------------
+	// ModelMetaTrait ------------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    public function getIdMetaMapByType( $model, $type ) {
+	public function getIdMetaMapByType( $model, $type ) {
 
-        $modelMetaService = Yii::$app->factory->get( 'modelMetaService' );
+		$modelMetaService = Yii::$app->factory->get( 'modelMetaService' );
 
-        return $modelMetaService->getIdMetaMapByType( $model->id, static::$parentType, $type );
-    }
+		return $modelMetaService->getIdMetaMapByType( $model->id, static::$parentType, $type );
+	}
 
-    public function getNameMetaMapByType( $model, $type ) {
+	public function getNameMetaMapByType( $model, $type ) {
 
-        $modelMetaService = Yii::$app->factory->get( 'modelMetaService' );
+		$modelMetaService = Yii::$app->factory->get( 'modelMetaService' );
 
-        return $modelMetaService->getNameMetaMapByType( $model->id, static::$parentType, $type );
-    }
+		return $modelMetaService->getNameMetaMapByType( $model->id, static::$parentType, $type );
+	}
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    public function updateModelMetas( $model, $metas ) {
+	public function updateModelMetas( $model, $metas ) {
 
-        $modelMetaService = Yii::$app->factory->get( 'modelMetaService' );
+		$modelMetaService = Yii::$app->factory->get( 'modelMetaService' );
 
-        foreach ( $metas as $meta ) {
+		foreach ( $metas as $meta ) {
 
-            if( $model->id == $meta->parentId ) {
+			if( $model->id == $meta->parentId ) {
 
-                $modelMetaService->update( $meta );
-            }
-        }
+				$modelMetaService->update( $meta );
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    // Delete -------------
+	// Delete -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelMetaTrait ------------------------
+	// ModelMetaTrait ------------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
 }

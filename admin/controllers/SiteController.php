@@ -10,95 +10,95 @@ use cmsgears\core\admin\config\AdminGlobalCore;
 
 class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals ----------------
+	// Globals ----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->crudPermission	= CoreGlobal::PERM_ADMIN;
+		$this->crudPermission	= CoreGlobal::PERM_ADMIN;
 
-        // Check Layout for Public and Private pages
-        if ( Yii::$app->user->isGuest ) {
+		// Check Layout for Public and Private pages
+		if ( Yii::$app->user->isGuest ) {
 
-            $this->layout	= AdminGlobalCore::LAYOUT_PUBLIC;
-        }
-    }
+			$this->layout	= AdminGlobalCore::LAYOUT_PUBLIC;
+		}
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    public function behaviors() {
+	public function behaviors() {
 
-        $behaviours	= parent::behaviors();
+		$behaviours	= parent::behaviors();
 
-        $behaviours[ 'rbac' ][ 'actions' ][ 'index' ]		= [ 'permission' => $this->crudPermission ];
-        $behaviours[ 'rbac' ][ 'actions' ][ 'dashboard' ]	= [ 'permission' => $this->crudPermission ];
+		$behaviours[ 'rbac' ][ 'actions' ][ 'index' ]		= [ 'permission' => $this->crudPermission ];
+		$behaviours[ 'rbac' ][ 'actions' ][ 'dashboard' ]	= [ 'permission' => $this->crudPermission ];
 
-        $behaviours[ 'verbs' ][ 'actions' ][ 'index' ]		= [ 'get' ];
-        $behaviours[ 'verbs' ][ 'actions' ][ 'dashboard' ]	= [ 'get' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ]		= [ 'get' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'dashboard' ]	= [ 'get' ];
 
-        return $behaviours;
-    }
+		return $behaviours;
+	}
 
-    // yii\base\Controller ----
+	// yii\base\Controller ----
 
-    public function actions() {
+	public function actions() {
 
-        if ( !Yii::$app->user->isGuest ) {
+		if ( !Yii::$app->user->isGuest ) {
 
-            $this->layout	= AdminGlobalCore::LAYOUT_PRIVATE;
-        }
+			$this->layout	= AdminGlobalCore::LAYOUT_PRIVATE;
+		}
 
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction'
-            ]
-        ];
-    }
+		return [
+			'error' => [
+				'class' => 'yii\web\ErrorAction'
+			]
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // SiteController ------------------------
+	// SiteController ------------------------
 
-    /**
-     * The method redirect user to dashboard page.
-     */
-    public function actionIndex() {
+	/**
+	 * The method redirect user to dashboard page.
+	 */
+	public function actionIndex() {
 
-        return $this->redirect( [ '/dashboard' ] );
-    }
+		return $this->redirect( [ '/dashboard' ] );
+	}
 
-    /**
-     * The method shows the dashboard page based on user role.
-     */
-    public function actionDashboard() {
+	/**
+	 * The method shows the dashboard page based on user role.
+	 */
+	public function actionDashboard() {
 
-        $this->layout	= AdminGlobalCore::LAYOUT_DASHBOARD;
-        $this->sidebar 	= [ 'parent' => 'sidebar-dashboard', 'child' => 'dasboard' ];
+		$this->layout	= AdminGlobalCore::LAYOUT_DASHBOARD;
+		$this->sidebar	= [ 'parent' => 'sidebar-dashboard', 'child' => 'dasboard' ];
 
-        return $this->render( 'index' );
-    }
+		return $this->render( 'index' );
+	}
 
-    public function actionLogin( $admin = false ) {
+	public function actionLogin( $admin = false ) {
 
-        return parent::actionLogin( true );
-    }
+		return parent::actionLogin( true );
+	}
 }

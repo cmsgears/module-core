@@ -16,67 +16,67 @@ use cmsgears\core\common\utilities\AjaxUtil;
  */
 class SpamRequest extends \cmsgears\core\common\actions\base\ModelAction {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    protected $typed = true;
+	protected $typed = true;
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // RequestDelete -------------------------
+	// RequestDelete -------------------------
 
-    public function run( $cid ) {
+	public function run( $cid ) {
 
-        $modelCommentService	= Yii::$app->factory->get( 'modelCommentService' );
+		$modelCommentService	= Yii::$app->factory->get( 'modelCommentService' );
 
-        $model		= $modelCommentService->getById( $cid );
-        $user		= Yii::$app->user->getIdentity();
-        $parent		= $this->model;
+		$model		= $modelCommentService->getById( $cid );
+		$user		= Yii::$app->user->getIdentity();
+		$parent		= $this->model;
 
-        if( isset( $model ) && $model->parentId == $parent->id && $parent->isOwner( $user ) ) {
+		if( isset( $model ) && $model->parentId == $parent->id && $parent->isOwner( $user ) ) {
 
-            if( $modelCommentService->updateSpamRequest( $model ) ) {
+			if( $modelCommentService->updateSpamRequest( $model ) ) {
 
-                Yii::$app->coreMailer->sendCommentSpamRequestMail( $model );
+				Yii::$app->coreMailer->sendCommentSpamRequestMail( $model );
 
-                $data = [ 'id' => $model->id, 'status' => $model->getStatusStr() ];
+				$data = [ 'id' => $model->id, 'status' => $model->getStatusStr() ];
 
-                // Trigger Ajax Success
-                return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-            }
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+			}
 
-            // Trigger Ajax Failure
-            return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
-        }
+			// Trigger Ajax Failure
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+		}
 
-        // Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Trigger Ajax Failure
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 }

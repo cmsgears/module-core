@@ -12,87 +12,87 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 trait NameTrait {
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // SlugTrait -----------------------------
+	// SlugTrait -----------------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getByName( $name ) {
+	public function getByName( $name ) {
 
-        return self::findByName( $name );
-    }
+		return self::findByName( $name );
+	}
 
-    public function searchByName( $name, $config = [] ) {
+	public function searchByName( $name, $config = [] ) {
 
-        $modelClass					= static::$modelClass;
-        $modelTable					= static::$modelTable;
+		$modelClass					= static::$modelClass;
+		$modelTable					= static::$modelTable;
 
-        $config[ 'query' ] 			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-        $config[ 'columns' ]		= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name" ];
-        $config[ 'array' ]			= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
+		$config[ 'query' ]			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
+		$config[ 'columns' ]		= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name" ];
+		$config[ 'array' ]			= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
 
-        $config[ 'query' ]->andWhere( "$modelTable.name like '$name%'" );
+		$config[ 'query' ]->andWhere( "$modelTable.name like '$name%'" );
 
-        if( $modelClass::$multiSite ) {
+		if( $modelClass::$multiSite ) {
 
-            $config[ 'conditions' ][ "$modelTable.siteId" ]	= Yii::$app->core->siteId;
-        }
+			$config[ 'conditions' ][ "$modelTable.siteId" ]	= Yii::$app->core->siteId;
+		}
 
-        return static::searchModels( $config );
-    }
+		return static::searchModels( $config );
+	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // SlugTrait -----------------------------
+	// SlugTrait -----------------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public static function findByName( $name ) {
+	public static function findByName( $name ) {
 
-        $modelClass	= static::$modelClass;
+		$modelClass	= static::$modelClass;
 
-        return $modelClass::queryByName( $name )->one();
-    }
+		return $modelClass::queryByName( $name )->one();
+	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
 }

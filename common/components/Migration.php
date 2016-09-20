@@ -12,116 +12,116 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 class Migration extends \yii\base\Component {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Global -----------------
+	// Global -----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $fk				= true;
+	public $fk				= true;
 
-    public $tableOptions	= null;
+	public $tableOptions	= null;
 
-    public $siteName		= 'CMSGears';
-    public $siteTitle		= 'CMSGears Demo';
+	public $siteName		= 'CMSGears';
+	public $siteTitle		= 'CMSGears Demo';
 
-    public $primaryDomain	= 'cmsgears.org';
+	public $primaryDomain	= 'cmsgears.org';
 
-    public $defaultSite		= 'http://www.cmsgears.org';
-    public $defaultAdmin	= 'http://www.cmsgears.org/admin/';
+	public $defaultSite		= 'http://www.cmsgears.org';
+	public $defaultAdmin	= 'http://www.cmsgears.org/admin/';
 
-    public $uploadsDir		= null;
-    public $uploadsUrl		= 'http://www.cmsgears.org/uploads/';
+	public $uploadsDir		= null;
+	public $uploadsUrl		= 'http://www.cmsgears.org/uploads/';
 
-    public $testAccounts	= true;
-    public $siteMaster		= 'demomaster';
-    public $siteContact		= 'democontact';
-    public $siteInfo		= 'demoinfo';
+	public $testAccounts	= true;
+	public $siteMaster		= 'demomaster';
+	public $siteContact		= 'democontact';
+	public $siteInfo		= 'demoinfo';
 
-    // Timezone examples: Asia/Kolkata, Asia/Vladivostok, Asia/Bangkok, America/Toronto, America/Chicago, America/Los_Angeles, Europe/London, Australia/Sydney
-    public $timezone		= 'UTC';
+	// Timezone examples: Asia/Kolkata, Asia/Vladivostok, Asia/Bangkok, America/Toronto, America/Chicago, America/Los_Angeles, Europe/London, Australia/Sydney
+	public $timezone		= 'UTC';
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Migration -----------------------------
+	// Migration -----------------------------
 
-    public function isFk() {
+	public function isFk() {
 
-        return $this->fk;
-    }
+		return $this->fk;
+	}
 
-    public function getTableOptions() {
+	public function getTableOptions() {
 
-        return $this->tableOptions;
-    }
+		return $this->tableOptions;
+	}
 
-    public function getSiteName() {
+	public function getSiteName() {
 
-        return $this->siteName;
-    }
+		return $this->siteName;
+	}
 
-    public function getSiteTitle() {
+	public function getSiteTitle() {
 
-        return $this->siteTitle;
-    }
+		return $this->siteTitle;
+	}
 
-    public function getPrimaryDomain() {
+	public function getPrimaryDomain() {
 
-        return $this->primaryDomain;
-    }
+		return $this->primaryDomain;
+	}
 
-    public function getDefaultSite() {
+	public function getDefaultSite() {
 
-        return $this->defaultSite;
-    }
+		return $this->defaultSite;
+	}
 
-    public function getDefaultAdmin() {
+	public function getDefaultAdmin() {
 
-        return $this->defaultAdmin;
-    }
+		return $this->defaultAdmin;
+	}
 
-    public function getUploadsDir() {
+	public function getUploadsDir() {
 
-        return $this->uploadsDir;
-    }
+		return $this->uploadsDir;
+	}
 
-    public function getUploadsUrl() {
+	public function getUploadsUrl() {
 
-        return $this->uploadsUrl;
-    }
+		return $this->uploadsUrl;
+	}
 
-    public function isTestAccounts() {
+	public function isTestAccounts() {
 
-        return $this->testAccounts;
-    }
+		return $this->testAccounts;
+	}
 
-    public function getSiteMaster() {
+	public function getSiteMaster() {
 
-        return $this->siteMaster;
-    }
+		return $this->siteMaster;
+	}
 
-    public function getSiteContact() {
+	public function getSiteContact() {
 
-        return $this->siteContact;
-    }
+		return $this->siteContact;
+	}
 
-    public function getSiteInfo() {
+	public function getSiteInfo() {
 
-        return $this->siteInfo;
-    }
+		return $this->siteInfo;
+	}
 
-    public function getTimezone() {
+	public function getTimezone() {
 
-        return $this->timezone;
-    }
+		return $this->timezone;
+	}
 }

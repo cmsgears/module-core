@@ -23,188 +23,188 @@ use cmsgears\core\common\services\traits\SlugTypeTrait;
  */
 class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSetService implements ICategoryService {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public static $modelClass	= '\cmsgears\core\common\models\resources\Category';
+	public static $modelClass	= '\cmsgears\core\common\models\resources\Category';
 
-    public static $modelTable	= CoreTables::TABLE_CATEGORY;
+	public static $modelTable	= CoreTables::TABLE_CATEGORY;
 
-    public static $parentType	= CoreGlobal::TYPE_CATEGORY;
+	public static $parentType	= CoreGlobal::TYPE_CATEGORY;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    use NameTypeTrait;
-    use SlugTypeTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // CategoryService -----------------------
+	// CategoryService -----------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    public function getPage( $config = [] ) {
+	public function getPage( $config = [] ) {
 
-        $sort = new Sort([
-            'attributes' => [
-                'name' => [
-                    'asc' => [ 'name' => SORT_ASC ],
-                    'desc' => ['name' => SORT_DESC ],
-                    'default' => SORT_DESC,
-                    'label' => 'name',
-                ],
-                'parent' => [
-                    'asc' => [ 'parentId' => SORT_ASC ],
-                    'desc' => ['parentId' => SORT_DESC ],
-                    'default' => SORT_DESC,
-                    'label' => 'parent',
-                ]
-            ]
-        ]);
+		$sort = new Sort([
+			'attributes' => [
+				'name' => [
+					'asc' => [ 'name' => SORT_ASC ],
+					'desc' => ['name' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'name',
+				],
+				'parent' => [
+					'asc' => [ 'parentId' => SORT_ASC ],
+					'desc' => ['parentId' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'parent',
+				]
+			]
+		]);
 
-        $config[ 'sort' ] = $sort;
+		$config[ 'sort' ] = $sort;
 
-        return parent::findPage( $config );
-    }
+		return parent::findPage( $config );
+	}
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getByParentId( $id ) {
+	public function getByParentId( $id ) {
 
-        return Category::findByParentId( $id );
-    }
+		return Category::findByParentId( $id );
+	}
 
-    public function getFeaturedByType( $type ) {
+	public function getFeaturedByType( $type ) {
 
-        return Category::getFeaturedByType( $type );
-    }
+		return Category::getFeaturedByType( $type );
+	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    public function getTopLevelIdNameListByType( $type, $config = [] ) {
+	public function getTopLevelIdNameListByType( $type, $config = [] ) {
 
-        $config[ 'conditions' ][ 'parentId' ] = null;
+		$config[ 'conditions' ][ 'parentId' ] = null;
 
-        return $this->getIdNameListByType( $type, $config );
-    }
+		return $this->getIdNameListByType( $type, $config );
+	}
 
-    public function getTopLevelIdNameListById( $id, $config = [] ) {
+	public function getTopLevelIdNameListById( $id, $config = [] ) {
 
-        $category	= self::findById( $id );
+		$category	= self::findById( $id );
 
-        return $this->getSubLevelList( $category->id, $category->rootId, [ 'having' => 'depth = 1' ] );
-    }
+		return $this->getSubLevelList( $category->id, $category->rootId, [ 'having' => 'depth = 1' ] );
+	}
 
-    public function getLevelListByType( $type ) {
+	public function getLevelListByType( $type ) {
 
-        return $this->getLevelList( [ 'conditions' => [ 'node.type' => $type ] ] );
-    }
+		return $this->getLevelList( [ 'conditions' => [ 'node.type' => $type ] ] );
+	}
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    public function create( $model, $config = [] ) {
+	public function create( $model, $config = [] ) {
 
-        $model	= $this->createInHierarchy( $model );
+		$model	= $this->createInHierarchy( $model );
 
-        return $model;
-    }
+		return $model;
+	}
 
-    // Update -------------
+	// Update -------------
 
-    public function update( $model, $config = [] ) {
+	public function update( $model, $config = [] ) {
 
-        $attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description', 'type', 'icon', 'featured', 'htmlOptions' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description', 'type', 'icon', 'featured', 'htmlOptions' ];
 
-        // Find existing model
-        $modelToUpdate	= $this->getById( $model->id );
+		// Find existing model
+		$modelToUpdate	= $this->getById( $model->id );
 
-        // Update Hierarchy
-        $modelToUpdate 	= $this->updateInHierarchy( $model, $modelToUpdate );
+		// Update Hierarchy
+		$modelToUpdate	= $this->updateInHierarchy( $model, $modelToUpdate );
 
-        return parent::update( $model, [
-            'attributes' => $attributes
-        ]);
-    }
+		return parent::update( $model, [
+			'attributes' => $attributes
+		]);
+	}
 
-    // Delete -------------
+	// Delete -------------
 
-    public function delete( $model, $config = [] ) {
+	public function delete( $model, $config = [] ) {
 
-        // Delete mapping
-        ModelCategory::deleteByModelId( $model->id );
+		// Delete mapping
+		ModelCategory::deleteByModelId( $model->id );
 
-        // Delete options and mappings - mappings will be deleted by cascade effect
-        Option::deleteByCategoryId( $model->id );
+		// Delete options and mappings - mappings will be deleted by cascade effect
+		Option::deleteByCategoryId( $model->id );
 
-        // Update Hierarchy
-        $model = $this->deleteInHierarchy( $model );
+		// Update Hierarchy
+		$model = $this->deleteInHierarchy( $model );
 
-        // Delete model
-        return parent::delete( $model, $config );
-    }
+		// Delete model
+		return parent::delete( $model, $config );
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // CategoryService -----------------------
+	// CategoryService -----------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public static function findByParentId( $id ) {
+	public static function findByParentId( $id ) {
 
-        return Category::findByParentId( $id );
-    }
+		return Category::findByParentId( $id );
+	}
 
-    public static function findFeaturedByType( $type ) {
+	public static function findFeaturedByType( $type ) {
 
-        return Category::getFeaturedByType( $type );
-    }
+		return Category::getFeaturedByType( $type );
+	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 }

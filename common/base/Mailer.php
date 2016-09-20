@@ -15,97 +15,97 @@ use cmsgears\core\common\config\MailProperties;
 
 class Mailer extends \yii\base\Component {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    private $mailer;
+	private $mailer;
 
-    private $coreProperties;
-    private $mailProperties;
+	private $coreProperties;
+	private $mailProperties;
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->mailer = Yii::$app->getMailer();
+		$this->mailer = Yii::$app->getMailer();
 
-        $this->mailer->htmlLayout 	= $this->htmlLayout;
-        $this->mailer->textLayout 	= $this->textLayout;
-        $this->mailer->viewPath 	= $this->viewPath;
-    }
+		$this->mailer->htmlLayout	= $this->htmlLayout;
+		$this->mailer->textLayout	= $this->textLayout;
+		$this->mailer->viewPath		= $this->viewPath;
+	}
 
-    public function initSmtp() {
+	public function initSmtp() {
 
-        $transport		= new Swift_SmtpTransport();
-        $mailProperties	= $this->mailProperties;
+		$transport		= new Swift_SmtpTransport();
+		$mailProperties	= $this->mailProperties;
 
-        $transport->setHost( $mailProperties->getSmtpHost() );
-        $transport->setPort( $mailProperties->getSmtpPort() );
-        $transport->setUsername( $mailProperties->getSmtpUsername() );
-        $transport->setPassword( $mailProperties->getSmtpPassword() );
-        $transport->setEncryption( $mailProperties->getSmtpEncryption() );
+		$transport->setHost( $mailProperties->getSmtpHost() );
+		$transport->setPort( $mailProperties->getSmtpPort() );
+		$transport->setUsername( $mailProperties->getSmtpUsername() );
+		$transport->setPassword( $mailProperties->getSmtpPassword() );
+		$transport->setEncryption( $mailProperties->getSmtpEncryption() );
 
-        $this->mailer->transport	= $transport;
-    }
+		$this->mailer->transport	= $transport;
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Mailer --------------------------------
+	// Mailer --------------------------------
 
-    public function getMailer() {
+	public function getMailer() {
 
-        return $this->mailer;
-    }
+		return $this->mailer;
+	}
 
-    public function getCoreProperties() {
+	public function getCoreProperties() {
 
-        if( !isset( $this->coreProperties ) ) {
+		if( !isset( $this->coreProperties ) ) {
 
-            $this->coreProperties	= CoreProperties::getInstance();
-        }
+			$this->coreProperties	= CoreProperties::getInstance();
+		}
 
-        return $this->coreProperties;
-    }
+		return $this->coreProperties;
+	}
 
-    public function getMailProperties() {
+	public function getMailProperties() {
 
-        if( !isset( $this->mailProperties ) ) {
+		if( !isset( $this->mailProperties ) ) {
 
-            $this->mailProperties	= MailProperties::getInstance();
-        }
+			$this->mailProperties	= MailProperties::getInstance();
+		}
 
-        if( $this->mailProperties->isSmtp() ) {
+		if( $this->mailProperties->isSmtp() ) {
 
-            $this->initSmtp();
-        }
+			$this->initSmtp();
+		}
 
-        return $this->mailProperties;
-    }
+		return $this->mailProperties;
+	}
 }

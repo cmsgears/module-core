@@ -18,69 +18,69 @@ use cmsgears\core\common\utilities\AjaxUtil;
  */
 class UpdateVideo extends \cmsgears\core\common\actions\base\ModelAction {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $fileName	= 'Video';
+	public $fileName	= 'Video';
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // UpdateVideo ---------------------------
+	// UpdateVideo ---------------------------
 
-    public function run() {
+	public function run() {
 
-        if( isset( $this->model ) ) {
+		if( isset( $this->model ) ) {
 
-            $video = $this->model->video;
+			$video = $this->model->video;
 
-            if( !isset( $video ) ) {
+			if( !isset( $video ) ) {
 
-                $video	= new File();
-            }
+				$video	= new File();
+			}
 
-            if( $video->load( Yii::$app->request->post(), $this->fileName ) ) {
+			if( $video->load( Yii::$app->request->post(), $this->fileName ) ) {
 
-                $this->modelService->updateVideo( $this->model, $video );
+				$this->modelService->updateVideo( $this->model, $video );
 
-                $video		= $this->model->video;
-                $response	= [ 'fileUrl' => $video->getFileUrl() ];
+				$video		= $this->model->video;
+				$response	= [ 'fileUrl' => $video->getFileUrl() ];
 
-                // Trigger Ajax Success
-                return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
-            }
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
+			}
 
-            // Trigger Ajax Failure
-            return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
-        }
+			// Trigger Ajax Failure
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+		}
 
-        // Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Trigger Ajax Failure
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 }

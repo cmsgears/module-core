@@ -14,84 +14,84 @@ use cmsgears\core\common\utilities\AjaxUtil;
 
 class CreateItem extends \cmsgears\core\common\base\Action {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // It allows unlimited items by default.
-    public $maxItems = 0;
+	// It allows unlimited items by default.
+	public $maxItems = 0;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // CreateItem ----------------------------
+	// CreateItem ----------------------------
 
-    public function run( $slug, $type = null ) {
+	public function run( $slug, $type = null ) {
 
-        $galleryService	= Yii::$app->factory->get( 'galleryService' );
-        $fileService	= Yii::$app->factory->get( 'fileService' );
-        $type			= isset( $type ) ? $type : CoreGlobal::TYPE_SITE;
+		$galleryService	= Yii::$app->factory->get( 'galleryService' );
+		$fileService	= Yii::$app->factory->get( 'fileService' );
+		$type			= isset( $type ) ? $type : CoreGlobal::TYPE_SITE;
 
-        $gallery 		= $galleryService->getBySlugType( $slug, $type );
+		$gallery		= $galleryService->getBySlugType( $slug, $type );
 
-        if( isset( $gallery ) ) {
+		if( isset( $gallery ) ) {
 
-            if( $this->maxItems > 0 ) {
+			if( $this->maxItems > 0 ) {
 
-                $items	= $gallery->files;
+				$items	= $gallery->files;
 
-                if( count( $items ) >= $this->maxItems ) {
+				if( count( $items ) >= $this->maxItems ) {
 
-                    // Trigger Ajax Failure
-                    return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'limit' => "You are not allowed to add more than $this->maxItems items." ] );
-                }
-            }
+					// Trigger Ajax Failure
+					return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'limit' => "You are not allowed to add more than $this->maxItems items." ] );
+				}
+			}
 
-            $item 	= new File();
+			$item	= new File();
 
-            if( $item->load( Yii::$app->request->post(), 'File' ) && $item->validate() ) {
+			if( $item->load( Yii::$app->request->post(), 'File' ) && $item->validate() ) {
 
-                $item	= $galleryService->createItem( $gallery, $item );
-                $item	= $fileService->getById( $item->id );
-                $data	= [ 'id' => $item->id, 'thumbUrl' => $item->getThumbUrl(), 'title' => $item->title, 'description' => $item->description, 'alt' => $item->altText, 'url' => $item->url ];
+				$item	= $galleryService->createItem( $gallery, $item );
+				$item	= $fileService->getById( $item->id );
+				$data	= [ 'id' => $item->id, 'thumbUrl' => $item->getThumbUrl(), 'title' => $item->title, 'description' => $item->description, 'alt' => $item->altText, 'url' => $item->url ];
 
-                // Trigger Ajax Success
-                return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-            }
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+			}
 
-            // Generate Errors
-            $errors = AjaxUtil::generateErrorMessage( $item );
+			// Generate Errors
+			$errors = AjaxUtil::generateErrorMessage( $item );
 
-            // Trigger Ajax Failure
-            return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-        }
+			// Trigger Ajax Failure
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+		}
 
-        // Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Trigger Ajax Failure
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 }

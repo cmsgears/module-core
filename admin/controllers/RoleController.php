@@ -10,49 +10,49 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class RoleController extends \cmsgears\core\admin\controllers\base\RoleController {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals ----------------
+	// Globals ----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->sidebar 			= [ 'parent' => 'sidebar-identity', 'child' => 'role' ];
+		$this->sidebar			= [ 'parent' => 'sidebar-identity', 'child' => 'role' ];
 
-        $this->returnUrl		= Url::previous( 'roles' );
-        $this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/role/all' ], true );
-    }
+		$this->returnUrl		= Url::previous( 'roles' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/role/all' ], true );
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Controller ----
+	// yii\base\Controller ----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // RoleController ------------------------
+	// RoleController ------------------------
 
-    public function actionAll() {
+	public function actionAll() {
 
-        // Remember return url for crud
-        Url::remember( [ 'role/all' ], 'roles' );
+		// Remember return url for crud
+		Url::remember( [ 'role/all' ], 'roles' );
 
-        return parent::actionAll();
-    }
+		return parent::actionAll();
+	}
 }

@@ -12,24 +12,24 @@ use cmsgears\core\common\services\interfaces\base\ISlugTypeService;
 
 interface IGalleryService extends INameTypeService, ISlugTypeService {
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Create -------------
+	// Create -------------
 
-    public function createItem( $gallery, $item );
+	public function createItem( $gallery, $item );
 
-    // Update -------------
+	// Update -------------
 
-    public function updateItem( $item );
+	public function updateItem( $item );
 
-    // Delete -------------
+	// Delete -------------
 
 }

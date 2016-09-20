@@ -10,70 +10,70 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class ForgotPassword extends \yii\base\Model {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $email;
+	public $email;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    public function rules() {
+	public function rules() {
 
-        $rules = [
-            [ [ 'email' ], 'required' ],
-            [ 'email', 'email' ],
-        ];
+		$rules = [
+			[ [ 'email' ], 'required' ],
+			[ 'email', 'email' ],
+		];
 
-        if( Yii::$app->core->trimFieldValue ) {
+		if( Yii::$app->core->trimFieldValue ) {
 
-            $trim[] = [ [ 'email' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'email' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
-    }
+		return $rules;
+	}
 
-    public function attributeLabels() {
+	public function attributeLabels() {
 
-        return [
-            'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL )
-        ];
-    }
+		return [
+			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL )
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // ForgotPassword ------------------------
+	// ForgotPassword ------------------------
 
 }

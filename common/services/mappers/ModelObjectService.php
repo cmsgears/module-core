@@ -21,96 +21,96 @@ use cmsgears\core\common\services\traits\MapperTrait;
  */
 class ModelObjectService extends \cmsgears\core\common\services\base\EntityService implements IModelObjectService {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelObject';
+	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelObject';
 
-    public static $modelTable	= CoreTables::TABLE_MODEL_OBJECT;
+	public static $modelTable	= CoreTables::TABLE_MODEL_OBJECT;
 
-    public static $parentType	= null;
+	public static $parentType	= null;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    private $objectService;
+	private $objectService;
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    use MapperTrait;
+	use MapperTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function __construct( IObjectService $objectService, $config = [] ) {
+	public function __construct( IObjectService $objectService, $config = [] ) {
 
-        $this->objectService	= $objectService;
+		$this->objectService	= $objectService;
 
-        parent::__construct( $config );
-    }
+		parent::__construct( $config );
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelObjectService --------------------
+	// ModelObjectService --------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelObjectService --------------------
+	// ModelObjectService --------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 }

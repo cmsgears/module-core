@@ -16,102 +16,102 @@ use cmsgears\core\common\utilities\AjaxUtil;
 
 class SettingsController extends \cmsgears\core\admin\controllers\base\Controller {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals ----------------
+	// Globals ----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    protected $metaService;
+	protected $metaService;
 
-    // Private ----------------
+	// Private ----------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->crudPermission 	= CoreGlobal::PERM_CORE;
-        $this->modelService		= Yii::$app->factory->get( 'siteService' );
-        $this->metaService		= Yii::$app->factory->get( 'siteMetaService' );
-    }
+		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'siteService' );
+		$this->metaService		= Yii::$app->factory->get( 'siteMetaService' );
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    public function behaviors() {
+	public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->core->getRbacFilterClass(),
-                'actions' => [
-                    'index'  => [ 'permission' => $this->crudPermission ],
-                    'update'  => [ 'permission' => $this->crudPermission ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'index'  => [ 'post' ],
-                    'update'  => [ 'post' ]
-                ]
-            ]
-        ];
-    }
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
+					'index'	 => [ 'permission' => $this->crudPermission ],
+					'update'  => [ 'permission' => $this->crudPermission ]
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'index'	 => [ 'post' ],
+					'update'  => [ 'post' ]
+				]
+			]
+		];
+	}
 
-    // yii\base\Controller ----
+	// yii\base\Controller ----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // SettingsController --------------------
+	// SettingsController --------------------
 
-    public function actionIndex( $type ) {
+	public function actionIndex( $type ) {
 
-        $settings 		= $this->modelService->getMetaMapBySlugType( Yii::$app->core->getSiteSlug(), $type );
-        $fieldsMap		= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
-        $model			= new GenericForm( [ 'fields' => $fieldsMap ] );
+		$settings		= $this->modelService->getMetaMapBySlugType( Yii::$app->core->getSiteSlug(), $type );
+		$fieldsMap		= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
+		$model			= new GenericForm( [ 'fields' => $fieldsMap ] );
 
-        $htmlContent	= $this->renderPartial( '@cmsgears/module-core/admin/views/settings/info', [
-                                'fieldsMap' => $fieldsMap,
-                                'type' => $type,
-                                'model' => $model
-                            ]);
+		$htmlContent	= $this->renderPartial( '@cmsgears/module-core/admin/views/settings/info', [
+								'fieldsMap' => $fieldsMap,
+								'type' => $type,
+								'model' => $model
+							]);
 
-        return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $htmlContent );
-    }
+		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $htmlContent );
+	}
 
-    public function actionUpdate( $type ) {
+	public function actionUpdate( $type ) {
 
-        $settings 		= $this->modelService->getMetaMapBySlugType( Yii::$app->core->getSiteSlug(), $type );
-        $fieldsMap		= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
-        $model			= new GenericForm( [ 'fields' => $fieldsMap ] );
+		$settings		= $this->modelService->getMetaMapBySlugType( Yii::$app->core->getSiteSlug(), $type );
+		$fieldsMap		= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
+		$model			= new GenericForm( [ 'fields' => $fieldsMap ] );
 
-        if( $model->load( Yii::$app->request->post(), "setting$type" ) && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), "setting$type" ) && $model->validate() ) {
 
-            $settings	= FormUtil::getModelMetas( $model, $settings );
+			$settings	= FormUtil::getModelMetas( $model, $settings );
 
-            $this->metaService->updateMultiple( $settings, [ 'parent' => Yii::$app->core->site ] );
+			$this->metaService->updateMultiple( $settings, [ 'parent' => Yii::$app->core->site ] );
 
-            $data		= [];
+			$data		= [];
 
-            foreach ( $settings as $key => $value ) {
+			foreach ( $settings as $key => $value ) {
 
-                $data[]	= $value->getFieldInfo();
-            }
+				$data[]	= $value->getFieldInfo();
+			}
 
-            return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-        }
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+		}
 
-        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
-    }
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+	}
 }

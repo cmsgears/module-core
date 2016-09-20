@@ -6,95 +6,95 @@ use \Yii;
 
 class JsonModel extends \yii\base\Model {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function __construct( $jsonData = false, $config = [] ) {
+	public function __construct( $jsonData = false, $config = [] ) {
 
-        if( $jsonData ) {
+		if( $jsonData ) {
 
-            if( is_object( $jsonData ) ) {
+			if( is_object( $jsonData ) ) {
 
-                $this->copyFromObject( $jsonData );
-            }
-            else if( is_array( $jsonData ) ) {
+				$this->copyFromObject( $jsonData );
+			}
+			else if( is_array( $jsonData ) ) {
 
-                $this->copyFromArray( $jsonData );
-            }
-            else {
+				$this->copyFromArray( $jsonData );
+			}
+			else {
 
-                $this->setData( json_decode( $jsonData, true ) );
-            }
-        }
+				$this->setData( json_decode( $jsonData, true ) );
+			}
+		}
 
-        parent::__construct( $config );
-    }
+		parent::__construct( $config );
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    //JsonModel ------------------------------
+	//JsonModel ------------------------------
 
-    private function setData( $data ) {
+	private function setData( $data ) {
 
-        foreach( $data as $key => $value ) {
+		foreach( $data as $key => $value ) {
 
-            $this->{ $key } = $value;
-        }
-    }
+			$this->{ $key } = $value;
+		}
+	}
 
-    private function copyFromObject( $object ) {
+	private function copyFromObject( $object ) {
 
-        $attributes	= get_object_vars( $object );
+		$attributes	= get_object_vars( $object );
 
-        foreach ( $attributes as $key => $value ) {
+		foreach ( $attributes as $key => $value ) {
 
-            $this->{ $key } = $value;
-        }
-    }
+			$this->{ $key } = $value;
+		}
+	}
 
-    private function copyFromArray( $arr ) {
+	private function copyFromArray( $arr ) {
 
-        foreach ( $arr as $key => $value ) {
+		foreach ( $arr as $key => $value ) {
 
-            $this->{ $key } = $value;
-        }
-    }
+			$this->{ $key } = $value;
+		}
+	}
 
-    public function getData() {
+	public function getData() {
 
-        return json_encode( $this );
-    }
+		return json_encode( $this );
+	}
 }

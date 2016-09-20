@@ -15,42 +15,42 @@ use cmsgears\core\common\models\entities\User;
  */
 trait CreateModifyTrait {
 
-    /**
-     * @return User - who created the model
-     */
-    public function getCreator() {
+	/**
+	 * @return User - who created the model
+	 */
+	public function getCreator() {
 
-        $userTable = CoreTables::TABLE_USER;
+		$userTable = CoreTables::TABLE_USER;
 
-        return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] )->from( "$userTable as creator" );
-    }
+		return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] )->from( "$userTable as creator" );
+	}
 
-    /**
-     * @return User - who modified the model
-     */
-    public function getModifier() {
+	/**
+	 * @return User - who modified the model
+	 */
+	public function getModifier() {
 
-        $userTable = CoreTables::TABLE_USER;
+		$userTable = CoreTables::TABLE_USER;
 
-        return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] )->from( "$userTable as modifier" );
-    }
+		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] )->from( "$userTable as modifier" );
+	}
 
-    public static function queryWithCreator( $config = [] ) {
+	public static function queryWithCreator( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'creator' ];
+		$config[ 'relations' ]	= [ 'creator' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithModifier( $config = [] ) {
+	public static function queryWithModifier( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'modifier' ];
+		$config[ 'relations' ]	= [ 'modifier' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryByCreatorId( $userId ) {
+	public static function queryByCreatorId( $userId ) {
 
-        return static::find()->where( 'createdBy=:cid', [ ':cid' => $userId ] );
-    }
+		return static::find()->where( 'createdBy=:cid', [ ':cid' => $userId ] );
+	}
 }

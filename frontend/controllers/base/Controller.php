@@ -12,50 +12,50 @@ use cmsgears\core\frontend\config\WebProperties;
 
 class Controller extends \cmsgears\core\common\controllers\base\Controller {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals ----------------
+	// Globals ----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    private $webProperties;
+	private $webProperties;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
-    }
+		$this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Controller ----
+	// yii\base\Controller ----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Controller ----------------------------
+	// Controller ----------------------------
 
-    public function getWebProperties() {
+	public function getWebProperties() {
 
-        if( !isset( $this->webProperties ) ) {
+		if( !isset( $this->webProperties ) ) {
 
-            $this->webProperties	= WebProperties::getInstance();
-        }
+			$this->webProperties	= WebProperties::getInstance();
+		}
 
-        return $this->webProperties;
-    }
+		return $this->webProperties;
+	}
 }

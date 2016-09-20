@@ -9,29 +9,29 @@ use cmsgears\core\common\config\CoreGlobal;
 
 interface IFileService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    public function updateData( $model, $config = [] );
+	public function updateData( $model, $config = [] );
 
-    public function saveImage( $file, $args = [] );
+	public function saveImage( $file, $args = [] );
 
-    public function saveFile( $file, $args = [] );
+	public function saveFile( $file, $args = [] );
 
-    public function saveFiles( $model, $files = [] );
+	public function saveFiles( $model, $files = [] );
 
-    // Delete -------------
+	// Delete -------------
 
-    public function deleteFiles( $files = [] );
+	public function deleteFiles( $files = [] );
 }

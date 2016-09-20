@@ -37,214 +37,214 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  */
 class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    public static $multiSite = true;
+	public static $multiSite = true;
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $mParentType	= CoreGlobal::TYPE_CATEGORY;
+	public $mParentType	= CoreGlobal::TYPE_CATEGORY;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    use DataTrait;
-    use NameTypeTrait;
-    use SlugTypeTrait;
+	use DataTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors() {
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors() {
 
-        return [
-            'sluggableBehavior' => [
-                'class' => SluggableBehavior::className(),
-                'attribute' => 'name',
-                'slugAttribute' => 'slug',
-                'immutable' => true,
-                'ensureUnique' => true
-            ]
-        ];
-    }
+		return [
+			'sluggableBehavior' => [
+				'class' => SluggableBehavior::className(),
+				'attribute' => 'name',
+				'slugAttribute' => 'slug',
+				'immutable' => true,
+				'ensureUnique' => true
+			]
+		];
+	}
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
-    public function rules() {
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
 
-        // model rules
-        $rules = [
-            [ [ 'siteId', 'name' ], 'required' ],
-            [ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
-            [ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-            [ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
-            [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-            [ [ 'parentId', 'rootId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ 'featured', 'boolean' ]
-        ];
+		// model rules
+		$rules = [
+			[ [ 'siteId', 'name' ], 'required' ],
+			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
+			[ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			[ [ 'parentId', 'rootId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ 'featured', 'boolean' ]
+		];
 
-        // trim if required
-        if( Yii::$app->core->trimFieldValue ) {
+		// trim if required
+		if( Yii::$app->core->trimFieldValue ) {
 
-            $trim[] = [ [ 'name', 'description', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'description', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
-    }
+		return $rules;
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels() {
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
 
-        return [
-            'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
-            'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
-            'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-            'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-            'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
-            'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-            'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
-        ];
-    }
+		return [
+			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // Category ------------------------------
+	// Category ------------------------------
 
-    public function getSite() {
+	public function getSite() {
 
-        return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
-    }
+		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+	}
 
-    /**
-     * @return Category - parent category
-     */
-    public function getParent() {
+	/**
+	 * @return Category - parent category
+	 */
+	public function getParent() {
 
-        return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] );
-    }
+		return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] );
+	}
 
-    /**
-     * @return array - list of immediate child categories
-     */
-    public function getChildren() {
+	/**
+	 * @return array - list of immediate child categories
+	 */
+	public function getChildren() {
 
-        return $this->hasMany( Category::className(), [ 'parentId' => 'id' ] );
-    }
+		return $this->hasMany( Category::className(), [ 'parentId' => 'id' ] );
+	}
 
-    /**
-     * @return array - list of Option having all the options belonging to this category
-     */
-    public function getOptions() {
+	/**
+	 * @return array - list of Option having all the options belonging to this category
+	 */
+	public function getOptions() {
 
-        return $this->hasMany( Option::className(), [ 'categoryId' => 'id' ] );
-    }
+		return $this->hasMany( Option::className(), [ 'categoryId' => 'id' ] );
+	}
 
-    /**
-     * @return string representation of flag
-     */
-    public function getFeaturedStr() {
+	/**
+	 * @return string representation of flag
+	 */
+	public function getFeaturedStr() {
 
-        return Yii::$app->formatter->asBoolean( $this->featured );
-    }
+		return Yii::$app->formatter->asBoolean( $this->featured );
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName() {
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName() {
 
-        return CoreTables::TABLE_CATEGORY;
-    }
+		return CoreTables::TABLE_CATEGORY;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Category ------------------------------
+	// Category ------------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    public static function queryWithHasOne( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site' ];
-        $config[ 'relations' ]	= $relations;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site' ];
+		$config[ 'relations' ]	= $relations;
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithSite( $config = [] ) {
+	public static function queryWithSite( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'site' ];
+		$config[ 'relations' ]	= [ 'site' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithOptions( $config = [] ) {
+	public static function queryWithOptions( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'options' ];
+		$config[ 'relations' ]	= [ 'options' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    public static function findByParentId( $id ) {
+	public static function findByParentId( $id ) {
 
-        return self::find()->where( 'parentId=:id', [ ':id' => $id ] )->all();
-    }
+		return self::find()->where( 'parentId=:id', [ ':id' => $id ] )->all();
+	}
 
-    /**
-     * @return Category - by type and featured
-     */
-    public static function getFeaturedByType( $type ) {
+	/**
+	 * @return Category - by type and featured
+	 */
+	public static function getFeaturedByType( $type ) {
 
-        return self::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( [ 'name' => SORT_ASC ] )->all();
-    }
+		return self::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( [ 'name' => SORT_ASC ] )->all();
+	}
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 }

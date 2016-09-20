@@ -21,210 +21,210 @@ use cmsgears\core\common\services\traits\MapperTrait;
  */
 class ModelAddressService extends \cmsgears\core\common\services\base\EntityService implements IModelAddressService {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelAddress';
+	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelAddress';
 
-    public static $modelTable	= CoreTables::TABLE_MODEL_ADDRESS;
+	public static $modelTable	= CoreTables::TABLE_MODEL_ADDRESS;
 
-    public static $parentType	= null;
+	public static $parentType	= null;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    private $addressService;
+	private $addressService;
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    use MapperTrait;
+	use MapperTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function __construct( IAddressService $addressService, $config = [] ) {
+	public function __construct( IAddressService $addressService, $config = [] ) {
 
-        $this->addressService	= $addressService;
+		$this->addressService	= $addressService;
 
-        parent::__construct( $config );
-    }
+		parent::__construct( $config );
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelFormService ----------------------
+	// ModelFormService ----------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getByType( $parentId, $parentType, $type, $first = false ) {
+	public function getByType( $parentId, $parentType, $type, $first = false ) {
 
-        return ModelAddress::findByType( $parentId, $parentType, $type, $first );
-    }
+		return ModelAddress::findByType( $parentId, $parentType, $type, $first );
+	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    public function create( $address, $config = [] ) {
+	public function create( $address, $config = [] ) {
 
-        $parentId 	= $config[ 'parentId' ];
-        $parentType = $config[ 'parentType' ];
-        $type 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
-        $order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
+		$parentId	= $config[ 'parentId' ];
+		$parentType = $config[ 'parentType' ];
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
-        // Create Address
-        $address	= $this->addressService->create( $address );
+		// Create Address
+		$address	= $this->addressService->create( $address );
 
-        // Create Model Address
-        $modelAddress               = new ModelAddress();
+		// Create Model Address
+		$modelAddress				= new ModelAddress();
 
-        $modelAddress->modelId	    = $address->id;
-        $modelAddress->parentId     = $parentId;
-        $modelAddress->parentType   = $parentType;
-        $modelAddress->type         = $type;
-        $modelAddress->order        = $order;
+		$modelAddress->modelId		= $address->id;
+		$modelAddress->parentId		= $parentId;
+		$modelAddress->parentType	= $parentType;
+		$modelAddress->type			= $type;
+		$modelAddress->order		= $order;
 
-        $modelAddress->save();
+		$modelAddress->save();
 
-        // Return Address
-        return $modelAddress;
-    }
+		// Return Address
+		return $modelAddress;
+	}
 
-    public function createOrUpdate( $address, $config = [] ) {
+	public function createOrUpdate( $address, $config = [] ) {
 
-        $parentId 	= $config[ 'parentId' ];
-        $parentType = $config[ 'parentType' ];
-        $type 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
-        $order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
+		$parentId	= $config[ 'parentId' ];
+		$parentType = $config[ 'parentType' ];
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
-        if( isset( $address->id ) && !empty( $address->id ) ) {
+		if( isset( $address->id ) && !empty( $address->id ) ) {
 
-            $existingAddress    = $this->getByModelId( $parentId, $parentType, $address->id );
+			$existingAddress	= $this->getByModelId( $parentId, $parentType, $address->id );
 
-            if( isset( $existingAddress ) ) {
+			if( isset( $existingAddress ) ) {
 
-                return $this->update( $existingAddress, [ 'address' => $address ] );
-            }
-        }
-        else {
+				return $this->update( $existingAddress, [ 'address' => $address ] );
+			}
+		}
+		else {
 
-            return $this->create( $address, $config );
-        }
-    }
+			return $this->create( $address, $config );
+		}
+	}
 
-    public function createOrUpdateByType( $address, $config = [] ) {
+	public function createOrUpdateByType( $address, $config = [] ) {
 
-        $parentId 	= $config[ 'parentId' ];
-        $parentType = $config[ 'parentType' ];
-        $type 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
-        $order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
+		$parentId	= $config[ 'parentId' ];
+		$parentType = $config[ 'parentType' ];
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
-        $existingAddress    = $this->getByType( $parentId, $parentType, $type, true );
+		$existingAddress	= $this->getByType( $parentId, $parentType, $type, true );
 
-        if( isset( $existingAddress ) ) {
+		if( isset( $existingAddress ) ) {
 
-            $addressToUpdate    = $existingAddress->address;
+			$addressToUpdate	= $existingAddress->address;
 
-            $addressToUpdate->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'cityName', 'zip',
-                                            'firstName', 'lastName', 'phone', 'email', 'fax', 'longitude', 'latitude', 'zoomLevel' ] );
+			$addressToUpdate->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'cityName', 'zip',
+											'firstName', 'lastName', 'phone', 'email', 'fax', 'longitude', 'latitude', 'zoomLevel' ] );
 
-            $this->addressService->update( $addressToUpdate );
+			$this->addressService->update( $addressToUpdate );
 
-            return $existingAddress;
-        }
-        else {
+			return $existingAddress;
+		}
+		else {
 
-            return $this->create( $address, $config );
-        }
-    }
+			return $this->create( $address, $config );
+		}
+	}
 
-    public function createShipping( $address, $config = [] ) {
+	public function createShipping( $address, $config = [] ) {
 
-        $config[ 'type' ] = Address::TYPE_SHIPPING;
+		$config[ 'type' ] = Address::TYPE_SHIPPING;
 
-        return $this->create( $address, $config );
-    }
+		return $this->create( $address, $config );
+	}
 
-    public function copyToShipping( $address, $config = [] ) {
+	public function copyToShipping( $address, $config = [] ) {
 
-        $config[ 'type' ] 	= Address::TYPE_SHIPPING;
+		$config[ 'type' ]	= Address::TYPE_SHIPPING;
 
-        $shippingAddress    = new Address();
+		$shippingAddress	= new Address();
 
-        $shippingAddress->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'cityName', 'zip', 'firstName', 'lastName', 'phone', 'email', 'fax' ] );
+		$shippingAddress->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'cityName', 'zip', 'firstName', 'lastName', 'phone', 'email', 'fax' ] );
 
-        return $this->create( $address, $config );
-    }
+		return $this->create( $address, $config );
+	}
 
-    // Update -------------
+	// Update -------------
 
-    public function update( $modelAddress, $config = [] ) {
+	public function update( $modelAddress, $config = [] ) {
 
-        // Update Address
-        $this->addressService->update( $config[ 'address' ] );
+		// Update Address
+		$this->addressService->update( $config[ 'address' ] );
 
-        // Find existing Model Address
-        $addressToUpdate    = $this->getById( $modelAddress->id );
+		// Find existing Model Address
+		$addressToUpdate	= $this->getById( $modelAddress->id );
 
-        // Copy Attributes
-        $addressToUpdate->copyForUpdateFrom( $modelAddress, [ 'type', 'order' ] );
+		// Copy Attributes
+		$addressToUpdate->copyForUpdateFrom( $modelAddress, [ 'type', 'order' ] );
 
-        // Update Model Address
-        $addressToUpdate->update();
+		// Update Model Address
+		$addressToUpdate->update();
 
-        // Return updated Model Address
-        return $addressToUpdate;
-    }
+		// Return updated Model Address
+		return $addressToUpdate;
+	}
 
-    // Delete -------------
+	// Delete -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelFormService ----------------------
+	// ModelFormService ----------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 }

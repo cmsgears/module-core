@@ -14,79 +14,79 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 abstract class HierarchicalModel extends \cmsgears\core\common\models\base\Entity {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // HierarchicalModel ---------------------
+	// HierarchicalModel ---------------------
 
-    abstract public function getParent();
+	abstract public function getParent();
 
-    public function hasParent() {
+	public function hasParent() {
 
-        return isset( $this->parentId ) && $this->parentId > 0;
-    }
+		return isset( $this->parentId ) && $this->parentId > 0;
+	}
 
-    public function getParentName() {
+	public function getParentName() {
 
-        $parent	= $this->parent;
+		$parent	= $this->parent;
 
-        return isset( $parent ) ? $parent->name : null;
-    }
+		return isset( $parent ) ? $parent->name : null;
+	}
 
-    abstract public function getChildren();
+	abstract public function getChildren();
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // HierarchicalModel ---------------------
+	// HierarchicalModel ---------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 }

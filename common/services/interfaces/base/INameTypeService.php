@@ -3,38 +3,38 @@ namespace cmsgears\core\common\services\interfaces\base;
 
 interface INameTypeService extends IEntityService {
 
-    // Data Provider ------
+	// Data Provider ------
 
-    public function getPageByType( $type, $config = [] );
+	public function getPageByType( $type, $config = [] );
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getByName( $name, $first = false );
+	public function getByName( $name, $first = false );
 
-    public function getByType( $type, $first = false );
+	public function getByType( $type, $first = false );
 
-    public function getByNameType( $name, $type );
+	public function getByNameType( $name, $type );
 
-    public function searchByName( $name, $config = [] );
+	public function searchByName( $name, $config = [] );
 
-    public function searchByNameType( $name, $type, $config = [] );
+	public function searchByNameType( $name, $type, $config = [] );
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    public function getIdListByType( $type, $config = [] );
+	public function getIdListByType( $type, $config = [] );
 
-    public function getIdNameListByType( $type, $options = [] );
+	public function getIdNameListByType( $type, $options = [] );
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    public function getIdNameMapByType( $type, $options = [] );
+	public function getIdNameMapByType( $type, $options = [] );
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
 }

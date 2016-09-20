@@ -10,76 +10,76 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class OptiongroupController extends \cmsgears\core\admin\controllers\base\CrudController {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals ----------------
+	// Globals ----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    protected $type;
+	protected $type;
 
-    // Private ----------------
+	// Private ----------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->crudPermission 	= CoreGlobal::PERM_CORE;
-        $this->modelService		= Yii::$app->factory->get( 'categoryService' );
-        $this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'option-group' ];
-        $this->type				= CoreGlobal::TYPE_OPTION_GROUP;
+		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'categoryService' );
+		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'option-group' ];
+		$this->type				= CoreGlobal::TYPE_OPTION_GROUP;
 
-        $this->returnUrl		= Url::previous( 'ogroups' );
-        $this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/optiongroup/all' ], true );
-    }
+		$this->returnUrl		= Url::previous( 'ogroups' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/optiongroup/all' ], true );
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Controller ----
+	// yii\base\Controller ----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // OptionGroupController -----------------
+	// OptionGroupController -----------------
 
-    public function actionAll() {
+	public function actionAll() {
 
-        Url::remember( [ 'optiongroup/all' ], 'ogroups' );
+		Url::remember( [ 'optiongroup/all' ], 'ogroups' );
 
-        $dataProvider = $this->modelService->getPageByType( $this->type );
+		$dataProvider = $this->modelService->getPageByType( $this->type );
 
-        return $this->render( 'all', [
-            'dataProvider' => $dataProvider
-        ]);
-    }
+		return $this->render( 'all', [
+			'dataProvider' => $dataProvider
+		]);
+	}
 
-    public function actionCreate() {
+	public function actionCreate() {
 
-        $modelClass		= $this->modelService->getModelClass();
-        $model			= new $modelClass;
-        $model->type 	= $this->type;
-        $model->siteId	= Yii::$app->core->siteId;
+		$modelClass		= $this->modelService->getModelClass();
+		$model			= new $modelClass;
+		$model->type	= $this->type;
+		$model->siteId	= Yii::$app->core->siteId;
 
-        if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
 
-            $this->modelService->create( $model );
+			$this->modelService->create( $model );
 
-            return $this->redirect( $this->returnUrl );
-        }
+			return $this->redirect( $this->returnUrl );
+		}
 
-        return $this->render( 'create', [
-            'model' => $model
-        ]);
-    }
+		return $this->render( 'create', [
+			'model' => $model
+		]);
+	}
 }

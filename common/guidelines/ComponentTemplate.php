@@ -8,15 +8,15 @@ namespace cmsgears\core\common\guidelines;
  * 3. Project imports
  * 4. Class definition
  * 5. Variables
- * 		5.2.1. Global
- * 		5.2.2. Public
- * 		5.2.3. Protected
- * 		5.2.4. Private
+ *		5.2.1. Global
+ *		5.2.2. Public
+ *		5.2.3. Protected
+ *		5.2.4. Private
  * 6. Constructor and Initialisation
  * 7. Instance methods
- * 		7.1. Yii parent class overriden methods
- * 		7.2. CMG parent class overriden methods
- * 		7.3. Current class methods
+ *		7.1. Yii parent class overriden methods
+ *		7.2. CMG parent class overriden methods
+ *		7.3. Current class methods
  * 8. Class closure
  */
 
@@ -61,23 +61,23 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 class ComponentTemplate extends \yii\base\Component {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Global -----------------
+	// Global -----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // <Component> ---------------------------
+	// <Component> ---------------------------
 }

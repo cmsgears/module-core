@@ -12,95 +12,95 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 trait ResourceTrait {
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii classes ---------------------------
+	// Yii classes ---------------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG classes ---------------------------
+	// CMG classes ---------------------------
 
-    // ParentTypeTrait -----------------------
+	// ParentTypeTrait -----------------------
 
-    // Validators -------------
+	// Validators -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii classes ---------------------------
+	// Yii classes ---------------------------
 
-    // CMG classes ---------------------------
+	// CMG classes ---------------------------
 
-    // ParentTypeTrait -----------------------
+	// ParentTypeTrait -----------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    public static function queryByParent( $parentId, $parentType ) {
+	public static function queryByParent( $parentId, $parentType ) {
 
-        if( static::$multiSite ) {
+		if( static::$multiSite ) {
 
-            $siteId	= Yii::$app->core->siteId;
+			$siteId	= Yii::$app->core->siteId;
 
-            return static::find()->where( 'parentId=:pid AND parentType=:ptype AND siteId=:siteId', [ ':pid' => $parentId, ':ptype' => $parentType, ':siteId' => $siteId ] );
-        }
-        else {
+			return static::find()->where( 'parentId=:pid AND parentType=:ptype AND siteId=:siteId', [ ':pid' => $parentId, ':ptype' => $parentType, ':siteId' => $siteId ] );
+		}
+		else {
 
-            return static::find()->where( 'parentId=:pid AND parentType=:ptype', [ ':pid' => $parentId, ':ptype' => $parentType ] );
-        }
-    }
+			return static::find()->where( 'parentId=:pid AND parentType=:ptype', [ ':pid' => $parentId, ':ptype' => $parentType ] );
+		}
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    public static function findByParent( $parentId, $parentType, $first = false ) {
+	public static function findByParent( $parentId, $parentType, $first = false ) {
 
-        if( $first ) {
+		if( $first ) {
 
-            return self::queryByParent( $parentId, $parentType )->one();
-        }
+			return self::queryByParent( $parentId, $parentType )->one();
+		}
 
-        return self::queryByParent( $parentId, $parentType )->all();
-    }
+		return self::queryByParent( $parentId, $parentType )->all();
+	}
 
-    public static function findByParentId( $parentId ) {
+	public static function findByParentId( $parentId ) {
 
-        return self::find()->where( 'parentId=:id', [ ':id' => $parentId ] )->all();
-    }
+		return self::find()->where( 'parentId=:id', [ ':id' => $parentId ] )->all();
+	}
 
-    public static function findByParentType( $parentType ) {
+	public static function findByParentType( $parentType ) {
 
-        return self::find()->where( 'parentType=:ptype', [ ':ptype' => $parentType ] )->all();
-    }
+		return self::find()->where( 'parentType=:ptype', [ ':ptype' => $parentType ] )->all();
+	}
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 
-    /**
-     * Delete all entries related to given parent id
-     */
-    public static function deleteByParentId( $parentId ) {
+	/**
+	 * Delete all entries related to given parent id
+	 */
+	public static function deleteByParentId( $parentId ) {
 
-        self::deleteAll( 'parentId=:id', [ ':id' => $parentId ] );
-    }
+		self::deleteAll( 'parentId=:id', [ ':id' => $parentId ] );
+	}
 
-    /**
-     * Delete all entries related to given parent type
-     */
-    public static function deleteByParentType( $parentType ) {
+	/**
+	 * Delete all entries related to given parent type
+	 */
+	public static function deleteByParentType( $parentType ) {
 
-        self::deleteAll( 'parentType=:id', [ ':id' => $parentType ] );
-    }
+		self::deleteAll( 'parentType=:id', [ ':id' => $parentType ] );
+	}
 
-    /**
-     * Delete all entries by given parent id and type.
-     */
-    public static function deleteByParent( $parentId, $parentType ) {
+	/**
+	 * Delete all entries by given parent id and type.
+	 */
+	public static function deleteByParent( $parentId, $parentType ) {
 
-        self::deleteAll( 'parentId=:pid AND parentType=:type', [ ':pid' => $parentId, ':type' => $parentType ] );
-    }
+		self::deleteAll( 'parentId=:pid AND parentType=:type', [ ':pid' => $parentId, ':type' => $parentType ] );
+	}
 }

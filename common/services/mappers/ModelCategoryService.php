@@ -21,195 +21,195 @@ use cmsgears\core\common\services\traits\MapperTrait;
  */
 class ModelCategoryService extends \cmsgears\core\common\services\base\EntityService implements IModelCategoryService {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelCategory';
+	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelCategory';
 
-    public static $modelTable	= CoreTables::TABLE_MODEL_CATEGORY;
+	public static $modelTable	= CoreTables::TABLE_MODEL_CATEGORY;
 
-    public static $parentType	= null;
+	public static $parentType	= null;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    private $categoryService;
+	private $categoryService;
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    use MapperTrait;
+	use MapperTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function __construct( ICategoryService $categoryService, $config = [] ) {
+	public function __construct( ICategoryService $categoryService, $config = [] ) {
 
-        $this->categoryService	= $categoryService;
+		$this->categoryService	= $categoryService;
 
-        parent::__construct( $config );
-    }
+		parent::__construct( $config );
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelCategoryService ------------------
+	// ModelCategoryService ------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getModelCounts( $parentType, $categoryType ) {
+	public function getModelCounts( $parentType, $categoryType ) {
 
-        $categoryTable	= CoreTables::TABLE_CATEGORY;
-        $mcategoryTable	= CoreTables::TABLE_MODEL_CATEGORY;
-        $query			= new Query();
+		$categoryTable	= CoreTables::TABLE_CATEGORY;
+		$mcategoryTable	= CoreTables::TABLE_MODEL_CATEGORY;
+		$query			= new Query();
 
-        $query->select( [ 'slug', "count($categoryTable.id) as total" ] )
-                ->from( $categoryTable )
-                ->leftJoin( $mcategoryTable, "$mcategoryTable.categoryId=$categoryTable.id" )
-                ->where( "$mcategoryTable.parentType='$parentType' AND $categoryTable.type='$categoryType'" )
-                ->groupBy( "$categoryTable.id" );
+		$query->select( [ 'slug', "count($categoryTable.id) as total" ] )
+				->from( $categoryTable )
+				->leftJoin( $mcategoryTable, "$mcategoryTable.categoryId=$categoryTable.id" )
+				->where( "$mcategoryTable.parentType='$parentType' AND $categoryTable.type='$categoryType'" )
+				->groupBy( "$categoryTable.id" );
 
-        $counts 	= $query->all();
-        $returnArr	= [];
-        $counter	= 0;
+		$counts		= $query->all();
+		$returnArr	= [];
+		$counter	= 0;
 
-        foreach ( $counts as $count ) {
+		foreach ( $counts as $count ) {
 
-            $returnArr[ $count[ 'slug' ] ] = $count[ 'total' ];
+			$returnArr[ $count[ 'slug' ] ] = $count[ 'total' ];
 
-            $counter	= $counter + $count[ 'total' ];
-        }
+			$counter	= $counter + $count[ 'total' ];
+		}
 
-        $returnArr[ 'all' ] = $counter;
+		$returnArr[ 'all' ] = $counter;
 
-        return $returnArr;
-    }
+		return $returnArr;
+	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    public function getActiveCategoryIdList( $categoryId, $parentType ) {
+	public function getActiveCategoryIdList( $categoryId, $parentType ) {
 
-        $models = ModelCategory::findActiveByCategoryIdParentType( $categoryId, $parentType );
-        $ids	= [];
+		$models = ModelCategory::findActiveByCategoryIdParentType( $categoryId, $parentType );
+		$ids	= [];
 
-        foreach ( $models as $model ) {
+		foreach ( $models as $model ) {
 
-            $category 	= $model->category;
+			$category	= $model->category;
 
-            $ids[]		= $category->id;
-        }
+			$ids[]		= $category->id;
+		}
 
-        return $ids;
-    }
+		return $ids;
+	}
 
-    public function getActiveCategoryIdListByParent( $parentId, $parentType ) {
+	public function getActiveCategoryIdListByParent( $parentId, $parentType ) {
 
-        $models = ModelCategory::findActiveByParent( $parentId, $parentType );
-        $ids    = [];
+		$models = ModelCategory::findActiveByParent( $parentId, $parentType );
+		$ids	= [];
 
-        foreach ( $models as $model ) {
+		foreach ( $models as $model ) {
 
-            $category   = $model->category;
+			$category	= $model->category;
 
-            $ids[]      = $category->id;
-        }
+			$ids[]		= $category->id;
+		}
 
-        return $ids;
-    }
+		return $ids;
+	}
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    public function bindCategories( $binder, $parentType ) {
+	public function bindCategories( $binder, $parentType ) {
 
-        $parentId	= $binder->binderId;
-        $allData	= $binder->allData;
-        $activeData	= $binder->bindedData;
+		$parentId	= $binder->binderId;
+		$allData	= $binder->allData;
+		$activeData	= $binder->bindedData;
 
-        foreach ( $allData as $id ) {
+		foreach ( $allData as $id ) {
 
-            $toSave		= ModelCategory::findByModelId( $parentId, $parentType, $id );
+			$toSave		= ModelCategory::findByModelId( $parentId, $parentType, $id );
 
-            // Existing mapping
-            if( isset( $toSave ) ) {
+			// Existing mapping
+			if( isset( $toSave ) ) {
 
-                if( in_array( $id, $activeData ) ) {
+				if( in_array( $id, $activeData ) ) {
 
-                    $toSave->active	= true;
-                }
-                else {
+					$toSave->active	= true;
+				}
+				else {
 
-                    $toSave->active	= false;
-                }
+					$toSave->active	= false;
+				}
 
-                $toSave->update();
-            }
-            // Save only required data
-            else if( in_array( $id, $activeData ) ) {
+				$toSave->update();
+			}
+			// Save only required data
+			else if( in_array( $id, $activeData ) ) {
 
-                $toSave		= new ModelCategory();
+				$toSave		= new ModelCategory();
 
-                $toSave->parentId	= $parentId;
-                $toSave->parentType	= $parentType;
-                $toSave->modelId	= $id;
-                $toSave->active		= true;
+				$toSave->parentId	= $parentId;
+				$toSave->parentType	= $parentType;
+				$toSave->modelId	= $id;
+				$toSave->active		= true;
 
-                $toSave->save();
-            }
-        }
+				$toSave->save();
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    // Delete -------------
+	// Delete -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelCategoryService ------------------
+	// ModelCategoryService ------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 }

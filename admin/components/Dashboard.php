@@ -10,66 +10,66 @@ use yii\helpers\ArrayHelper;
  */
 class Dashboard extends \yii\base\Component {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Global -----------------
+	// Global -----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $modules	= [];
+	public $modules	= [];
 
-    public $plugins	= [];
+	public $plugins	= [];
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Dashboard -----------------------------
+	// Dashboard -----------------------------
 
-    /**
-     * @return string - the html merged from each module to generate dashboard.
-     */
-    public function getDashboardHtml() {
+	/**
+	 * @return string - the html merged from each module to generate dashboard.
+	 */
+	public function getDashboardHtml() {
 
-        // TODO: Use caching
+		// TODO: Use caching
 
-        $sidebarHtml	= "";
-        $modules		= $this->modules;
+		$sidebarHtml	= "";
+		$modules		= $this->modules;
 
-        // Collect sidebar html from all the modules
-        foreach ( $modules as $module ) {
+		// Collect sidebar html from all the modules
+		foreach ( $modules as $module ) {
 
-            $module		= Yii::$app->getModule( $module );
-            $html   	= $module->getDashboardHtml();
+			$module		= Yii::$app->getModule( $module );
+			$html		= $module->getDashboardHtml();
 
-            ob_start();
+			ob_start();
 
-            if( file_exists( $html ) ) {
+			if( file_exists( $html ) ) {
 
-                include( $html );
-            }
+				include( $html );
+			}
 
-            $sidebarHtml .= ob_get_contents();
+			$sidebarHtml .= ob_get_contents();
 
-            ob_get_clean();
-        }
+			ob_get_clean();
+		}
 
-        return $sidebarHtml;
-    }
+		return $sidebarHtml;
+	}
 
-    /**
-     * @return string - the html merged from each plugin to generate dashboard.
-     */
-    public function getPluginsHtml() {
+	/**
+	 * @return string - the html merged from each plugin to generate dashboard.
+	 */
+	public function getPluginsHtml() {
 
-        // TODO: Add options to render plugins on dashboard.
-    }
+		// TODO: Add options to render plugins on dashboard.
+	}
 }

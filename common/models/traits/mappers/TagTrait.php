@@ -16,214 +16,214 @@ use cmsgears\core\common\models\mappers\ModelTag;
  */
 trait TagTrait {
 
-    public function getModelTags() {
+	public function getModelTags() {
 
-        return $this->hasMany( ModelTag::className(), [ 'parentId' => 'id' ] )
-                    ->where( "parentType='$this->mParentType'" );
-    }
+		return $this->hasMany( ModelTag::className(), [ 'parentId' => 'id' ] )
+					->where( "parentType='$this->mParentType'" );
+	}
 
-    /**
-     * @return array - ModelTag associated with parent
-     */
-    public function getTags() {
+	/**
+	 * @return array - ModelTag associated with parent
+	 */
+	public function getTags() {
 
-        return $this->hasMany( Tag::className(), [ 'id' => 'modelId' ] )
-                    ->viaTable( CoreTables::TABLE_MODEL_TAG, [ 'parentId' => 'id' ], function( $query ) {
+		return $this->hasMany( Tag::className(), [ 'id' => 'modelId' ] )
+					->viaTable( CoreTables::TABLE_MODEL_TAG, [ 'parentId' => 'id' ], function( $query ) {
 
-                        $modelTagTable	= CoreTables::TABLE_MODEL_TAG;
+						$modelTagTable	= CoreTables::TABLE_MODEL_TAG;
 
-                        $query->onCondition( [ "$modelTagTable.parentType" => $this->mParentType ] );
-                    });
-    }
+						$query->onCondition( [ "$modelTagTable.parentType" => $this->mParentType ] );
+					});
+	}
 
-    public function getActiveTags() {
+	public function getActiveTags() {
 
-        return $this->hasMany( Tag::className(), [ 'id' => 'modelId' ] )
-                    ->viaTable( CoreTables::TABLE_MODEL_TAG, [ 'parentId' => 'id' ], function( $query ) {
+		return $this->hasMany( Tag::className(), [ 'id' => 'modelId' ] )
+					->viaTable( CoreTables::TABLE_MODEL_TAG, [ 'parentId' => 'id' ], function( $query ) {
 
-                        $modelTagTable	= CoreTables::TABLE_MODEL_TAG;
+						$modelTagTable	= CoreTables::TABLE_MODEL_TAG;
 
-                        $query->onCondition( [ "$modelTagTable.parentType" => $this->mParentType, "$modelTagTable.active" => true ] );
-                    });
-    }
+						$query->onCondition( [ "$modelTagTable.parentType" => $this->mParentType, "$modelTagTable.active" => true ] );
+					});
+	}
 
-    public function getTagIdList( $active = false ) {
+	public function getTagIdList( $active = false ) {
 
-        $tags 		= null;
-        $tagsList	= [];
+		$tags		= null;
+		$tagsList	= [];
 
-        if( $active ) {
+		if( $active ) {
 
-            $tags = $this->activeTags;
-        }
-        else {
+			$tags = $this->activeTags;
+		}
+		else {
 
-            $tags = $this->tags;
-        }
+			$tags = $this->tags;
+		}
 
-        foreach ( $tags as $tag ) {
+		foreach ( $tags as $tag ) {
 
-            array_push( $tagsList, $tag->id );
-        }
+			array_push( $tagsList, $tag->id );
+		}
 
-        return $tagsList;
-    }
+		return $tagsList;
+	}
 
-    public function getTagNameList( $active = false ) {
+	public function getTagNameList( $active = false ) {
 
-        $tags       = null;
-        $tagsList   = [];
+		$tags		= null;
+		$tagsList	= [];
 
-        if( $active ) {
+		if( $active ) {
 
-            $tags = $this->activeTags;
-        }
-        else {
+			$tags = $this->activeTags;
+		}
+		else {
 
-            $tags = $this->tags;
-        }
+			$tags = $this->tags;
+		}
 
-        foreach ( $tags as $tag ) {
+		foreach ( $tags as $tag ) {
 
-            array_push( $tagsList, $tag->name );
-        }
+			array_push( $tagsList, $tag->name );
+		}
 
-        return $tagsList;
-    }
+		return $tagsList;
+	}
 
-    public function getTagIdNameList( $active = false ) {
+	public function getTagIdNameList( $active = false ) {
 
-        $tags       = null;
-        $tagsList	= [];
+		$tags		= null;
+		$tagsList	= [];
 
-        if( $active ) {
+		if( $active ) {
 
-            $tags = $this->activeTags;
-        }
-        else {
+			$tags = $this->activeTags;
+		}
+		else {
 
-            $tags = $this->tags;
-        }
+			$tags = $this->tags;
+		}
 
-        foreach ( $tags as $tag ) {
+		foreach ( $tags as $tag ) {
 
-            $tagsList[] = [ 'id' => $tag->id, 'name' => $tag->name ];
-        }
+			$tagsList[] = [ 'id' => $tag->id, 'name' => $tag->name ];
+		}
 
-        return $tagsList;
-    }
+		return $tagsList;
+	}
 
-    /**
-     * @return array - map of tag name and description
-     */
-    public function getTagIdNameMap( $active = false ) {
+	/**
+	 * @return array - map of tag name and description
+	 */
+	public function getTagIdNameMap( $active = false ) {
 
-        $tags       = null;
-        $tagsMap	= [];
+		$tags		= null;
+		$tagsMap	= [];
 
-        if( $active ) {
+		if( $active ) {
 
-            $tags = $this->activeTags;
-        }
-        else {
+			$tags = $this->activeTags;
+		}
+		else {
 
-            $tags = $this->tags;
-        }
+			$tags = $this->tags;
+		}
 
-        foreach ( $tags as $tag ) {
+		foreach ( $tags as $tag ) {
 
-            $tagsMap[ $tag->id ] = $tag->name;
-        }
+			$tagsMap[ $tag->id ] = $tag->name;
+		}
 
-        return $tagsMap;
-    }
+		return $tagsMap;
+	}
 
-    public function getTagSlugNameMap( $active = false ) {
+	public function getTagSlugNameMap( $active = false ) {
 
-        $tags       = null;
-        $tagsMap	= [];
+		$tags		= null;
+		$tagsMap	= [];
 
-        if( $active ) {
+		if( $active ) {
 
-            $tags = $this->activeTags;
-        }
-        else {
+			$tags = $this->activeTags;
+		}
+		else {
 
-            $tags = $this->tags;
-        }
+			$tags = $this->tags;
+		}
 
-        foreach ( $tags as $tag ) {
+		foreach ( $tags as $tag ) {
 
-            $tagsMap[ $tag->slug ] = $tag->name;
-        }
+			$tagsMap[ $tag->slug ] = $tag->name;
+		}
 
-        return $tagsMap;
-    }
+		return $tagsMap;
+	}
 
-    public function getTagCsv( $limit = 0, $active = true ) {
+	public function getTagCsv( $limit = 0, $active = true ) {
 
-        $tags       = null;
-        $tagsCsv	= [];
-        $count		= 1;
+		$tags		= null;
+		$tagsCsv	= [];
+		$count		= 1;
 
-        if( $active ) {
+		if( $active ) {
 
-            $tags = $this->activeTags;
-        }
-        else {
+			$tags = $this->activeTags;
+		}
+		else {
 
-            $tags = $this->tags;
-        }
+			$tags = $this->tags;
+		}
 
-        foreach ( $tags as $tag ) {
+		foreach ( $tags as $tag ) {
 
-            $tagsCsv[] = $tag->name;
+			$tagsCsv[] = $tag->name;
 
-            if( $limit > 0 && $count >= $limit ) {
+			if( $limit > 0 && $count >= $limit ) {
 
-                break;
-            }
+				break;
+			}
 
-            $count++;
-        }
+			$count++;
+		}
 
-        return implode( ", ", $tagsCsv );
-    }
+		return implode( ", ", $tagsCsv );
+	}
 
-    public function getTagLinks( $baseUrl, $limit = 0, $wrapper = 'li', $active = true ) {
+	public function getTagLinks( $baseUrl, $limit = 0, $wrapper = 'li', $active = true ) {
 
-        $tags       = null;
-        $tagLinks   = null;
-        $count      = 1;
+		$tags		= null;
+		$tagLinks	= null;
+		$count		= 1;
 
-        if( $active ) {
+		if( $active ) {
 
-            $tags = $this->activeTags;
-        }
-        else {
+			$tags = $this->activeTags;
+		}
+		else {
 
-            $tags = $this->tags;
-        }
+			$tags = $this->tags;
+		}
 
-        foreach ( $tags as $tag ) {
+		foreach ( $tags as $tag ) {
 
-            if( isset( $wrapper ) ) {
+			if( isset( $wrapper ) ) {
 
-                $tagLinks   .= "<$wrapper><a href='$baseUrl/$tag->slug'>$tag->name</a></$wrapper>";
-            }
-            else {
+				$tagLinks	.= "<$wrapper><a href='$baseUrl/$tag->slug'>$tag->name</a></$wrapper>";
+			}
+			else {
 
-                $tagLinks   .= " <a href='$baseUrl/$tag->slug'>$tag->name</a>";
-            }
+				$tagLinks	.= " <a href='$baseUrl/$tag->slug'>$tag->name</a>";
+			}
 
-            if( $limit > 0 && $count >= $limit ) {
+			if( $limit > 0 && $count >= $limit ) {
 
-                break;
-            }
+				break;
+			}
 
-            $count++;
-        }
+			$count++;
+		}
 
-        return $tagLinks;
-    }
+		return $tagLinks;
+	}
 }

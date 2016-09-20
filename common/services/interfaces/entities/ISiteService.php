@@ -12,24 +12,24 @@ use cmsgears\core\common\services\interfaces\base\ISlugService;
 
 interface ISiteService extends INameService, ISlugService {
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getMetaMapBySlugType( $slug, $type );
+	public function getMetaMapBySlugType( $slug, $type );
 
-    public function getMetaNameValueMapBySlugType( $slug, $type );
+	public function getMetaNameValueMapBySlugType( $slug, $type );
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
 }

@@ -15,54 +15,54 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * public function run( $param1, $param2 ... ) {
  *
- * 		// Do common processing
+ *		// Do common processing
  *
- * 		// Do request specific processing
- * 		if( Yii::$app->request->isAjax ) {
+ *		// Do request specific processing
+ *		if( Yii::$app->request->isAjax ) {
  *
- * 			return $this->runAjax( $param1, $param2 ... );
- * 		}
- * 		else {
+ *			return $this->runAjax( $param1, $param2 ... );
+ *		}
+ *		else {
  *
- * 			return $this->runRegular( $param1, $param2 ... );
- * 		}
+ *			return $this->runRegular( $param1, $param2 ... );
+ *		}
  * }
  */
 class Action extends \yii\base\Action {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Action
+	// yii\base\Action
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Action --------------------------------
+	// Action --------------------------------
 }

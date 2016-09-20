@@ -11,18 +11,18 @@ use cmsgears\core\common\models\interfaces\IPriority;
  */
 trait OwnerTrait {
 
-    public function isOwner( $user = null, $strict = false ) {
+	public function isOwner( $user = null, $strict = false ) {
 
-        if( !isset( $user ) && !$strict ) {
+		if( !isset( $user ) && !$strict ) {
 
-            $user	= Yii::$app->user->getIdentity();
-        }
+			$user	= Yii::$app->user->getIdentity();
+		}
 
-        if( isset( $user ) ) {
+		if( isset( $user ) ) {
 
-            return $user->id == $this->createdBy;
-        }
+			return $user->id == $this->createdBy;
+		}
 
-        return false;
-    }
+		return false;
+	}
 }

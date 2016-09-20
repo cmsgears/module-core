@@ -13,92 +13,92 @@ use cmsgears\core\common\utilities\AjaxUtil;
 
 class LocationController extends \cmsgears\core\admin\controllers\base\Controller {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals ----------------
+	// Globals ----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    protected $provinceService;
+	protected $provinceService;
 
-    // Private ----------------
+	// Private ----------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->provinceService	= Yii::$app->factory->get( 'provinceService' );
-    }
+		$this->provinceService	= Yii::$app->factory->get( 'provinceService' );
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    public function behaviors() {
+	public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->core->getRbacFilterClass(),
-                'actions' => [
-                    // add actions here
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'provinceMap' => [ 'post' ],
-                    'provinceOptions' => [ 'post' ]
-                ]
-            ]
-        ];
-    }
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
+					// add actions here
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'provinceMap' => [ 'post' ],
+					'provinceOptions' => [ 'post' ]
+				]
+			]
+		];
+	}
 
-    // yii\base\Controller ----
+	// yii\base\Controller ----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // LocationController --------------------
+	// LocationController --------------------
 
-    public function actionProvinceMap() {
+	public function actionProvinceMap() {
 
-        $countryId	= Yii::$app->request->post( 'countryId' );
+		$countryId	= Yii::$app->request->post( 'countryId' );
 
-        if( isset( $countryId ) && $countryId > 0 ) {
+		if( isset( $countryId ) && $countryId > 0 ) {
 
-            $provinceMap	= $this->provinceService->getListByCountryId( $countryId );
+			$provinceMap	= $this->provinceService->getListByCountryId( $countryId );
 
-            // Trigger Ajax Success
-            return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $provinceMap );
-        }
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $provinceMap );
+		}
 
-        // Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Trigger Ajax Failure
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 
-    public function actionProvinceOptions() {
+	public function actionProvinceOptions() {
 
-        $countryId	= Yii::$app->request->post( 'countryId' );
+		$countryId	= Yii::$app->request->post( 'countryId' );
 
-        if( isset( $countryId ) && $countryId > 0 ) {
+		if( isset( $countryId ) && $countryId > 0 ) {
 
-            $provinceOptions	= $this->provinceService->getListByCountryId( $countryId );
-            $provinceOptions	= CodeGenUtil::generateSelectOptionsIdName( $provinceOptions );
+			$provinceOptions	= $this->provinceService->getListByCountryId( $countryId );
+			$provinceOptions	= CodeGenUtil::generateSelectOptionsIdName( $provinceOptions );
 
-            // Trigger Ajax Success
-            return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $provinceOptions );
-        }
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $provinceOptions );
+		}
 
-        // Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Trigger Ajax Failure
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 }

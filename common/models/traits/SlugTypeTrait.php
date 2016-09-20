@@ -12,101 +12,101 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 trait SlugTypeTrait {
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii classes ---------------------------
+	// Yii classes ---------------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG classes ---------------------------
+	// CMG classes ---------------------------
 
-    // SlugTypeTrait -------------------------
+	// SlugTypeTrait -------------------------
 
-    // Validators -------------
+	// Validators -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii classes ---------------------------
+	// Yii classes ---------------------------
 
-    // CMG classes ---------------------------
+	// CMG classes ---------------------------
 
-    // SlugTypeTrait -------------------------
+	// SlugTypeTrait -------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    /**
-     * @return ActiveRecord - having matching slug.
-     */
-    public static function queryBySlug( $slug ) {
+	/**
+	 * @return ActiveRecord - having matching slug.
+	 */
+	public static function queryBySlug( $slug ) {
 
-        if( static::$multiSite ) {
+		if( static::$multiSite ) {
 
-            $siteId	= Yii::$app->core->siteId;
+			$siteId	= Yii::$app->core->siteId;
 
-            return static::find()->where( 'slug=:slug AND siteId=:siteId', [ ':slug' => $slug, ':siteId' => $siteId ] );
-        }
-        else {
+			return static::find()->where( 'slug=:slug AND siteId=:siteId', [ ':slug' => $slug, ':siteId' => $siteId ] );
+		}
+		else {
 
-            return static::find()->where( 'slug=:slug', [ ':slug' => $slug ] );
-        }
-    }
+			return static::find()->where( 'slug=:slug', [ ':slug' => $slug ] );
+		}
+	}
 
-    /**
-     * @return ActiveRecord - having matching slug for a specific type.
-     */
-    public static function queryBySlugType( $slug, $type ) {
+	/**
+	 * @return ActiveRecord - having matching slug for a specific type.
+	 */
+	public static function queryBySlugType( $slug, $type ) {
 
-        if( static::$multiSite ) {
+		if( static::$multiSite ) {
 
-            $siteId	= Yii::$app->core->siteId;
+			$siteId	= Yii::$app->core->siteId;
 
-            return static::find()->where( 'slug=:slug AND type=:type AND siteId=:siteId', [ ':slug' => $slug, ':type' => $type, ':siteId' => $siteId ] );
-        }
-        else {
+			return static::find()->where( 'slug=:slug AND type=:type AND siteId=:siteId', [ ':slug' => $slug, ':type' => $type, ':siteId' => $siteId ] );
+		}
+		else {
 
-            return static::find()->where( 'slug=:slug AND type=:type', [ ':slug' => $slug, ':type' => $type ] );
-        }
-    }
+			return static::find()->where( 'slug=:slug AND type=:type', [ ':slug' => $slug, ':type' => $type ] );
+		}
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    /**
-     * @return mixed - by slug
-     */
-    public static function findBySlug( $slug, $first = false ) {
+	/**
+	 * @return mixed - by slug
+	 */
+	public static function findBySlug( $slug, $first = false ) {
 
-        if( $first ) {
+		if( $first ) {
 
-            return self::queryBySlug( $slug )->one();
-        }
+			return self::queryBySlug( $slug )->one();
+		}
 
-        return self::queryBySlug( $slug )->all();
-    }
+		return self::queryBySlug( $slug )->all();
+	}
 
-    /**
-     * @return ActiveRecord - by slug and type
-     */
-    public static function findBySlugType( $slug, $type ) {
+	/**
+	 * @return ActiveRecord - by slug and type
+	 */
+	public static function findBySlugType( $slug, $type ) {
 
-        return self::queryBySlugType( $slug, $type )->one();
-    }
+		return self::queryBySlugType( $slug, $type )->one();
+	}
 
-    /**
-     * @return boolean - check whether model exist for given slug and type
-     */
-    public static function isExistBySlugType( $slug, $type ) {
+	/**
+	 * @return boolean - check whether model exist for given slug and type
+	 */
+	public static function isExistBySlugType( $slug, $type ) {
 
-        $model	= static::findBySlugType( $slug, $type );
+		$model	= static::findBySlugType( $slug, $type );
 
-        return isset( $model );
-    }
+		return isset( $model );
+	}
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 
 }

@@ -26,184 +26,184 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  */
 class Option extends \cmsgears\core\common\models\base\Resource {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $mParentType	= CoreGlobal::TYPE_OPTION;
+	public $mParentType	= CoreGlobal::TYPE_OPTION;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    use DataTrait;
+	use DataTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
-    public function rules() {
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
 
-        // model rules
-        $rules = [
-            [ [ 'name' ], 'required' ],
-            [ [ 'id', 'value', 'htmlOptions', 'content', 'data' ], 'safe' ],
-            [ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ [ 'categoryId', 'name' ], 'unique', 'targetAttribute' => [ 'categoryId', 'name' ] ]
-        ];
+		// model rules
+		$rules = [
+			[ [ 'name' ], 'required' ],
+			[ [ 'id', 'value', 'htmlOptions', 'content', 'data' ], 'safe' ],
+			[ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'categoryId', 'name' ], 'unique', 'targetAttribute' => [ 'categoryId', 'name' ] ]
+		];
 
-        // trim if required
-        if( Yii::$app->core->trimFieldValue ) {
+		// trim if required
+		if( Yii::$app->core->trimFieldValue ) {
 
-            $trim[] = [ [ 'name', 'value', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'value', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
-    }
+		return $rules;
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels() {
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
 
-        return [
-            'categoryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CATEGORY ),
-            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
-            'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-            'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-            'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
-        ];
-    }
+		return [
+			'categoryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CATEGORY ),
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // Option --------------------------------
+	// Option --------------------------------
 
-    /**
-     * @return Category - The parent category.
-     */
-    public function getCategory() {
+	/**
+	 * @return Category - The parent category.
+	 */
+	public function getCategory() {
 
-        return $this->hasOne( Category::className(), [ 'id' => 'categoryId' ] );
-    }
+		return $this->hasOne( Category::className(), [ 'id' => 'categoryId' ] );
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName() {
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName() {
 
-        return CoreTables::TABLE_OPTION;
-    }
+		return CoreTables::TABLE_OPTION;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Option --------------------------------
+	// Option --------------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    public static function queryWithHasOne( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'category' ];
-        $config[ 'relations' ]	= $relations;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'category' ];
+		$config[ 'relations' ]	= $relations;
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithCategory( $config = [] ) {
+	public static function queryWithCategory( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'category' ];
+		$config[ 'relations' ]	= [ 'category' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    /**
-     * @return Option - by category id
-     */
-    public static function findByCategoryId( $categoryId ) {
+	/**
+	 * @return Option - by category id
+	 */
+	public static function findByCategoryId( $categoryId ) {
 
-        return self::find()->where( 'categoryId=:id', [ ':id' => $categoryId ] )->all();
-    }
+		return self::find()->where( 'categoryId=:id', [ ':id' => $categoryId ] )->all();
+	}
 
-    /**
-     * @return Option - by category slug and type
-     */
-    public static function findByCategorySlugType( $categorySlug, $categoryType ) {
+	/**
+	 * @return Option - by category slug and type
+	 */
+	public static function findByCategorySlugType( $categorySlug, $categoryType ) {
 
-        $categoryTable = CoreTables::TABLE_CATEGORY;
+		$categoryTable = CoreTables::TABLE_CATEGORY;
 
-        return self::queryWithCategory( [ 'conditions' => [ "$categoryTable.slug" => $categorySlug, "$categoryTable.type" => $categoryType ] ] )->all();
-    }
+		return self::queryWithCategory( [ 'conditions' => [ "$categoryTable.slug" => $categorySlug, "$categoryTable.type" => $categoryType ] ] )->all();
+	}
 
-    /**
-     * @return Option - by name and category id
-     */
-    public static function findByNameCategoryId( $name, $categoryId ) {
+	/**
+	 * @return Option - by name and category id
+	 */
+	public static function findByNameCategoryId( $name, $categoryId ) {
 
-        $optionTable = CoreTables::TABLE_OPTION;
+		$optionTable = CoreTables::TABLE_OPTION;
 
-        return self::find()->where( "$optionTable.name=:name AND categoryId=:id", [ ':name' => $name, ':id' => $categoryId ] )->one();
-    }
+		return self::find()->where( "$optionTable.name=:name AND categoryId=:id", [ ':name' => $name, ':id' => $categoryId ] )->one();
+	}
 
-    /**
-     * @return boolean - check whether option exist by name and category id
-     */
-    public static function isExistByNameCategoryId( $name, $categoryId ) {
+	/**
+	 * @return boolean - check whether option exist by name and category id
+	 */
+	public static function isExistByNameCategoryId( $name, $categoryId ) {
 
-        $option = self::findByNameCategoryId( $name, $categoryId );
+		$option = self::findByNameCategoryId( $name, $categoryId );
 
-        return isset( $option );
-    }
+		return isset( $option );
+	}
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 
-    /**
-     * Delete Option - by category id
-     */
-    public static function deleteByCategoryId( $categoryId ) {
+	/**
+	 * Delete Option - by category id
+	 */
+	public static function deleteByCategoryId( $categoryId ) {
 
-        return self::deleteAll( 'categoryId=:id', [ ':id' => $categoryId ] );
-    }
+		return self::deleteAll( 'categoryId=:id', [ ':id' => $categoryId ] );
+	}
 }

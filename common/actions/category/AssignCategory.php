@@ -16,65 +16,65 @@ use cmsgears\core\common\utilities\AjaxUtil;
  */
 class AssignCategory extends \cmsgears\core\common\actions\base\ModelAction {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    protected $typed 	= true;
+	protected $typed	= true;
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // AssignCategory ------------------------
+	// AssignCategory ------------------------
 
-    public function run() {
+	public function run() {
 
-        $post	= yii::$app->request->post();
+		$post	= yii::$app->request->post();
 
-        if( isset( $this->model ) && isset( $post[ 'categoryId' ] ) ) {
+		if( isset( $this->model ) && isset( $post[ 'categoryId' ] ) ) {
 
-            $modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
+			$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
 
-            $modelCategoryService->activateByModelId( $this->model->id, $this->modelService->getParentType(), $post[ 'categoryId' ] );
+			$modelCategoryService->activateByModelId( $this->model->id, $this->modelService->getParentType(), $post[ 'categoryId' ] );
 
-            $categories		= $this->model->activeCategories;
-            $data			= [];
+			$categories		= $this->model->activeCategories;
+			$data			= [];
 
-            foreach ( $categories as $category ) {
+			foreach ( $categories as $category ) {
 
-                $data[]	= [ 'name' => $category->name, 'id' => $category->id ];
-            }
+				$data[]	= [ 'name' => $category->name, 'id' => $category->id ];
+			}
 
-            // Trigger Ajax Success
-            return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-        }
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+		}
 
-        // Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Trigger Ajax Failure
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 }

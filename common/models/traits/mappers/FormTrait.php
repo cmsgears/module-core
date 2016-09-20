@@ -16,23 +16,23 @@ use cmsgears\core\common\models\mappers\ModelForm;
  */
 trait FormTrait {
 
-    public function getModelForms() {
+	public function getModelForms() {
 
-        return $this->hasMany( ModelForm::className(), [ 'parentId' => 'id' ] )
-                    ->where( "parentType='$this->mParentType'" );
-    }
+		return $this->hasMany( ModelForm::className(), [ 'parentId' => 'id' ] )
+					->where( "parentType='$this->mParentType'" );
+	}
 
-    /**
-     * @return array - ModelForm associated with parent
-     */
-    public function getForms() {
+	/**
+	 * @return array - ModelForm associated with parent
+	 */
+	public function getForms() {
 
-        return $this->hasMany( Form::className(), [ 'id' => 'modelId' ] )
-                    ->viaTable( CoreTables::TABLE_MODEL_FORM, [ 'parentId' => 'id' ], function( $query ) {
+		return $this->hasMany( Form::className(), [ 'id' => 'modelId' ] )
+					->viaTable( CoreTables::TABLE_MODEL_FORM, [ 'parentId' => 'id' ], function( $query ) {
 
-                        $ModelFormTable	= CoreTables::TABLE_MODEL_FORM;
+						$ModelFormTable	= CoreTables::TABLE_MODEL_FORM;
 
-                        $query->onCondition( [ "$ModelFormTable.parentType" => $this->mParentType ] );
-                    });
-    }
+						$query->onCondition( [ "$ModelFormTable.parentType" => $this->mParentType ] );
+					});
+	}
 }

@@ -19,139 +19,139 @@ use cmsgears\core\common\services\interfaces\entities\IRoleService;
  */
 class SiteMemberService extends \cmsgears\core\common\services\base\EntityService implements ISiteMemberService {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public static $modelClass	= '\cmsgears\core\common\models\mappers\SiteMember';
+	public static $modelClass	= '\cmsgears\core\common\models\mappers\SiteMember';
 
-    public static $modelTable	= CoreTables::TABLE_SITE_MEMBER;
+	public static $modelTable	= CoreTables::TABLE_SITE_MEMBER;
 
-    public static $parentType	= null;
+	public static $parentType	= null;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    private $roleService;
+	private $roleService;
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function __construct( IRoleService $roleService, $config = [] ) {
+	public function __construct( IRoleService $roleService, $config = [] ) {
 
-        $this->roleService	= $roleService;
+		$this->roleService	= $roleService;
 
-        parent::__construct( $config );
-    }
+		parent::__construct( $config );
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // SiteMemberService ---------------------
+	// SiteMemberService ---------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    /**
-     * @param integer $siteId
-     * @param integer $userId
-     * @return SiteMember - for the given site and user
-     */
-    public function findBySiteIdUserId( $siteId, $userId ) {
+	/**
+	 * @param integer $siteId
+	 * @param integer $userId
+	 * @return SiteMember - for the given site and user
+	 */
+	public function findBySiteIdUserId( $siteId, $userId ) {
 
-        return SiteMember::findBySiteIdUserId( $siteId, $userId );
-    }
+		return SiteMember::findBySiteIdUserId( $siteId, $userId );
+	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    public function create( $user, $config = [] ) {
+	public function create( $user, $config = [] ) {
 
-        $siteMember = isset( $config[ 'siteMember' ] ) ? $config[ 'siteMember' ] : null;
-        $roleId 	= isset( $config[ 'roleId' ] ) ? $config[ 'roleId' ] : null;
+		$siteMember = isset( $config[ 'siteMember' ] ) ? $config[ 'siteMember' ] : null;
+		$roleId		= isset( $config[ 'roleId' ] ) ? $config[ 'roleId' ] : null;
 
-        if( !isset( $siteMember ) ) {
+		if( !isset( $siteMember ) ) {
 
-            $siteMember	= new SiteMember();
-        }
+			$siteMember	= new SiteMember();
+		}
 
-        if( isset( $roleId ) ) {
+		if( isset( $roleId ) ) {
 
-            $siteMember->roleId	= $roleId;
-        }
-        else {
+			$siteMember->roleId	= $roleId;
+		}
+		else {
 
-            $role				= $this->roleService->getBySlugType( CoreGlobal::ROLE_USER, CoreGlobal::TYPE_SYSTEM );
-            $siteMember->roleId	= $role->id;
-        }
+			$role				= $this->roleService->getBySlugType( CoreGlobal::ROLE_USER, CoreGlobal::TYPE_SYSTEM );
+			$siteMember->roleId	= $role->id;
+		}
 
-        $siteMember->siteId = Yii::$app->core->siteId;
-        $siteMember->userId	= $user->id;
+		$siteMember->siteId = Yii::$app->core->siteId;
+		$siteMember->userId	= $user->id;
 
-        return parent::create( $siteMember, $config );
-    }
+		return parent::create( $siteMember, $config );
+	}
 
-    // Update -------------
+	// Update -------------
 
-    public function update( $model, $config = [] ) {
+	public function update( $model, $config = [] ) {
 
-        $attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'roleId' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'roleId' ];
 
-        return parent::update( $model, [
-            'attributes' => $attributes
-        ]);
-    }
+		return parent::update( $model, [
+			'attributes' => $attributes
+		]);
+	}
 
-    // Delete -------------
+	// Delete -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // SiteMemberService ---------------------
+	// SiteMemberService ---------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 }

@@ -8,55 +8,62 @@ use cmsgears\core\common\models\interfaces\ISeverity;
 
 trait SeverityTrait {
 
-    public static $severityMap = [
-        ISeverity::SEVERITY_DEFAULT => 'Undefined',
-        ISeverity::SEVERITY_LOW => 'Low',
-        ISeverity::SEVERITY_MEDIUM => 'Medium',
-        ISeverity::SEVERITY_HIGH => 'High'
-    ];
+	public static $severityMap = [
+		ISeverity::SEVERITY_DEFAULT => 'Undefined',
+		ISeverity::SEVERITY_LOW => 'Low',
+		ISeverity::SEVERITY_MEDIUM => 'Medium',
+		ISeverity::SEVERITY_HIGH => 'High'
+	];
 
-    public function getSeverityStr() {
+	public static $revSeverityMap = [
+		'Undefined' => ISeverity::SEVERITY_DEFAULT,
+		'Low' => ISeverity::SEVERITY_LOW,
+		'Medium' => ISeverity::SEVERITY_MEDIUM,
+		'High' => ISeverity::SEVERITY_HIGH
+	];
 
-        return self::$severityMap[ $this->severity ];
-    }
+	public function getSeverityStr() {
 
-    public function isSeverityDefault(  $strict = true ) {
+		return self::$severityMap[ $this->severity ];
+	}
 
-        if( $strict ) {
+	public function isSeverityDefault(	$strict = true ) {
 
-            return $this->severity == ISeverity::SEVERITY_DEFAULT;
-        }
+		if( $strict ) {
 
-        return $this->severity >= ISeverity::SEVERITY_DEFAULT;
-    }
+			return $this->severity == ISeverity::SEVERITY_DEFAULT;
+		}
 
-    public function isSeverityLow(  $strict = true ) {
+		return $this->severity >= ISeverity::SEVERITY_DEFAULT;
+	}
 
-        if( $strict ) {
+	public function isSeverityLow(	$strict = true ) {
 
-            return $this->severity == ISeverity::SEVERITY_LOW;
-        }
+		if( $strict ) {
 
-        return $this->severity >= ISeverity::SEVERITY_LOW;
-    }
+			return $this->severity == ISeverity::SEVERITY_LOW;
+		}
 
-    public function isSeverityMedium(  $strict = true ) {
+		return $this->severity >= ISeverity::SEVERITY_LOW;
+	}
 
-        if( $strict ) {
+	public function isSeverityMedium(  $strict = true ) {
 
-            return $this->severity == ISeverity::SEVERITY_MEDIUM;
-        }
+		if( $strict ) {
 
-        return $this->severity >= ISeverity::SEVERITY_MEDIUM;
-    }
+			return $this->severity == ISeverity::SEVERITY_MEDIUM;
+		}
 
-    public function isSeverityHigh(  $strict = true ) {
+		return $this->severity >= ISeverity::SEVERITY_MEDIUM;
+	}
 
-        if( $strict ) {
+	public function isSeverityHigh(	 $strict = true ) {
 
-            return $this->severity == ISeverity::SEVERITY_HIGH;
-        }
+		if( $strict ) {
 
-        return $this->severity >= ISeverity::SEVERITY_HIGH;
-    }
+			return $this->severity == ISeverity::SEVERITY_HIGH;
+		}
+
+		return $this->severity >= ISeverity::SEVERITY_HIGH;
+	}
 }

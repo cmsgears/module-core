@@ -12,56 +12,56 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 abstract class FormModel extends \cmsgears\core\common\models\forms\JsonModel {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $submittedData;
+	public $submittedData;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    public function load( $data, $formName = null ) {
+	public function load( $data, $formName = null ) {
 
-        if( isset( $formName ) && isset( $data[ $formName ] ) ) {
+		if( isset( $formName ) && isset( $data[ $formName ] ) ) {
 
-            $this->submittedData	= $data[ $formName ];
-        }
+			$this->submittedData	= $data[ $formName ];
+		}
 
-        return parent::load( $data, $formName );
-    }
+		return parent::load( $data, $formName );
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // FormModel -----------------------------
+	// FormModel -----------------------------
 
 }

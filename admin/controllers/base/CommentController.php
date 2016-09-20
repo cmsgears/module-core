@@ -12,205 +12,205 @@ use cmsgears\core\common\config\CoreGlobal;
 
 abstract class CommentController extends Controller {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals ----------------
+	// Globals ----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $commentUrl;
+	public $commentUrl;
 
-    // Protected --------------
+	// Protected --------------
 
-    protected $parentType;
-    protected $commentType;
+	protected $parentType;
+	protected $commentType;
 
-    protected $parentService;
+	protected $parentService;
 
-    // Private ----------------
+	// Private ----------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->setViewPath( '@cmsgears/module-core/admin/views/comment' );
+		$this->setViewPath( '@cmsgears/module-core/admin/views/comment' );
 
-        $this->crudPermission 	= CoreGlobal::PERM_CORE;
-        $this->modelService		= Yii::$app->factory->get( 'modelCommentService' );
+		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'modelCommentService' );
 
-        // Notes: Configure sidebar, commentUrl, parentType, commentType, parentService and returnUrl exclusively in child classes
-    }
+		// Notes: Configure sidebar, commentUrl, parentType, commentType, parentService and returnUrl exclusively in child classes
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    public function behaviors() {
+	public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->core->getRbacFilterClass(),
-                'actions' => [
-                    'index'  => [ 'permission' => $this->crudPermission ],
-                    'all'  => [ 'permission' => $this->crudPermission ],
-                    'create'  => [ 'permission' => $this->crudPermission ],
-                    'update'  => [ 'permission' => $this->crudPermission ],
-                    'delete'  => [ 'permission' => $this->crudPermission ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'index' => [ 'get' ],
-                    'all'  => [ 'get' ],
-                    'create'  => [ 'get', 'post' ],
-                    'update'  => [ 'get', 'post' ],
-                    'delete'  => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
+					'index'	 => [ 'permission' => $this->crudPermission ],
+					'all'  => [ 'permission' => $this->crudPermission ],
+					'create'  => [ 'permission' => $this->crudPermission ],
+					'update'  => [ 'permission' => $this->crudPermission ],
+					'delete'  => [ 'permission' => $this->crudPermission ]
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'index' => [ 'get' ],
+					'all'  => [ 'get' ],
+					'create'  => [ 'get', 'post' ],
+					'update'  => [ 'get', 'post' ],
+					'delete'  => [ 'get', 'post' ]
+				]
+			]
+		];
+	}
 
 
-    // yii\base\Controller ----
+	// yii\base\Controller ----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // CommentController ---------------------
+	// CommentController ---------------------
 
-    public function actionAll( $pid = null ) {
+	public function actionAll( $pid = null ) {
 
-        if( isset( $pid ) ) {
+		if( isset( $pid ) ) {
 
-            Url::remember( [ "$this->commentUrl/all?pid=$pid" ], $this->commentUrl );
-        }
-        else {
+			Url::remember( [ "$this->commentUrl/all?pid=$pid" ], $this->commentUrl );
+		}
+		else {
 
-            Url::remember( [ "$this->commentUrl/all" ], $this->commentUrl );
-        }
+			Url::remember( [ "$this->commentUrl/all" ], $this->commentUrl );
+		}
 
-        $model			= null;
-        $dataProvider   = null;
+		$model			= null;
+		$dataProvider	= null;
 
-        if( isset( $pid ) ) {
+		if( isset( $pid ) ) {
 
-            $model			= $this->parentService->findById( $pid );
-            $dataProvider 	= $this->modelService->getPageByParent( $model->id, $this->parentType, [ 'conditions' => [ 'type' => $this->commentType ] ] );
-        }
-        else {
+			$model			= $this->parentService->findById( $pid );
+			$dataProvider	= $this->modelService->getPageByParent( $model->id, $this->parentType, [ 'conditions' => [ 'type' => $this->commentType ] ] );
+		}
+		else {
 
-            $dataProvider 	= $this->modelService->getPageByParentType( $this->parentType, [ 'conditions' => [ 'type' => $this->commentType ] ] );
-        }
+			$dataProvider	= $this->modelService->getPageByParentType( $this->parentType, [ 'conditions' => [ 'type' => $this->commentType ] ] );
+		}
 
-        return $this->render( 'all', [
-             'dataProvider' => $dataProvider,
-             'model' => $model
-        ]);
-    }
+		return $this->render( 'all', [
+			 'dataProvider' => $dataProvider,
+			 'model' => $model
+		]);
+	}
 
-    public function actionCreate( $pid ) {
+	public function actionCreate( $pid ) {
 
-        $modelClass			= $this->modelService->getModelClass();
-        $model				= new $modelClass;
-        $model->parentId    = $pid;
-        $model->parentType  = $this->parentType;
-        $model->type        = $this->commentType;
-        $parentModel    	= $this->parentService->findById( $pid );
+		$modelClass			= $this->modelService->getModelClass();
+		$model				= new $modelClass;
+		$model->parentId	= $pid;
+		$model->parentType	= $this->parentType;
+		$model->type		= $this->commentType;
+		$parentModel		= $this->parentService->findById( $pid );
 
-        if( isset( $parentModel ) ) {
+		if( isset( $parentModel ) ) {
 
-            $model->parentId    = $parentModel->id;
-        }
+			$model->parentId	= $parentModel->id;
+		}
 
-        if( isset( $this->scenario ) ) {
+		if( isset( $this->scenario ) ) {
 
-            call_user_func_array( [ $model, 'setScenario' ], [ $this->scenario ] );
-        }
+			call_user_func_array( [ $model, 'setScenario' ], [ $this->scenario ] );
+		}
 
-        if( $model->load( Yii::$app->request->post(), $model->getClassName() )  && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
 
-            $this->modelService->create( $model );
+			$this->modelService->create( $model );
 
-            return $this->redirect( $this->returnUrl );
-        }
+			return $this->redirect( $this->returnUrl );
+		}
 
-        return $this->render( 'create', [
-            'model' => $model
-        ]);
-    }
+		return $this->render( 'create', [
+			'model' => $model
+		]);
+	}
 
-    public function actionUpdate( $id ) {
+	public function actionUpdate( $id ) {
 
-        // Find Model
-        $model	= $this->modelService->getById( $id );
+		// Find Model
+		$model	= $this->modelService->getById( $id );
 
-        // Update if exist
-        if( isset( $model ) ) {
+		// Update if exist
+		if( isset( $model ) ) {
 
-            if( isset( $this->scenario ) ) {
+			if( isset( $this->scenario ) ) {
 
-                call_user_func_array( [ $model, 'setScenario' ], [ $this->scenario ] );
-            }
+				call_user_func_array( [ $model, 'setScenario' ], [ $this->scenario ] );
+			}
 
-            if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-                $this->modelService->update( $model, [ 'admin' => true ] );
+				$this->modelService->update( $model, [ 'admin' => true ] );
 
-                return $this->redirect( $this->returnUrl );
-            }
+				return $this->redirect( $this->returnUrl );
+			}
 
-            // Render view
-            return $this->render( 'update', [
-                'model' => $model
-            ]);
-        }
+			// Render view
+			return $this->render( 'update', [
+				'model' => $model
+			]);
+		}
 
-        // Model not found
-        throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 
-    public function actionDelete( $id ) {
+	public function actionDelete( $id ) {
 
-        // Find Model
-        $model	= $this->modelService->getById( $id );
+		// Find Model
+		$model	= $this->modelService->getById( $id );
 
-        // Delete if exist
-        if( isset( $model ) ) {
+		// Delete if exist
+		if( isset( $model ) ) {
 
-            if( isset( $this->scenario ) ) {
+			if( isset( $this->scenario ) ) {
 
-                call_user_func_array( [ $model, 'setScenario' ], [ $this->scenario ] );
-            }
+				call_user_func_array( [ $model, 'setScenario' ], [ $this->scenario ] );
+			}
 
-            if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-                try {
+				try {
 
-                    $this->modelService->delete( $model );
+					$this->modelService->delete( $model );
 
-                    return $this->redirect( $this->returnUrl );
-                }
-                catch( Exception $e ) {
+					return $this->redirect( $this->returnUrl );
+				}
+				catch( Exception $e ) {
 
-                    throw new HttpException( 409,  Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
-                }
-            }
+					throw new HttpException( 409,  Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+				}
+			}
 
-            // Render view
-            return $this->render( 'delete', [
-                'model' => $model
-            ]);
-        }
+			// Render view
+			return $this->render( 'delete', [
+				'model' => $model
+			]);
+		}
 
-        // Model not found
-        throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 }

@@ -13,30 +13,30 @@ use cmsgears\core\common\services\interfaces\base\ISlugTypeService;
 
 interface ICategoryService extends INestedSetService, INameTypeService, ISlugTypeService {
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getByParentId( $id );
+	public function getByParentId( $id );
 
-    public function getFeaturedByType( $type );
+	public function getFeaturedByType( $type );
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    public function getTopLevelIdNameListByType( $type, $config = [] );
+	public function getTopLevelIdNameListByType( $type, $config = [] );
 
-    public function getTopLevelIdNameListById( $id, $config = [] );
+	public function getTopLevelIdNameListById( $id, $config = [] );
 
-    public function getLevelListByType( $type );
+	public function getLevelListByType( $type );
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
 }

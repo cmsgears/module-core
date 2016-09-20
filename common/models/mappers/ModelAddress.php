@@ -25,146 +25,146 @@ use cmsgears\core\common\models\traits\MapperTrait;
  */
 class ModelAddress extends \cmsgears\core\common\models\base\Mapper {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    use MapperTrait;
+	use MapperTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-     /**
-     * @inheritdoc
-     */
-    public function rules() {
+	 /**
+	 * @inheritdoc
+	 */
+	public function rules() {
 
-        return [
-            [ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
-            [ [ 'id' ], 'safe' ],
-            [ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
-            [ [ 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'active' ], 'boolean' ]
-        ];
-    }
+		return [
+			[ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
+			[ [ 'id' ], 'safe' ],
+			[ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
+			[ [ 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'active' ], 'boolean' ]
+		];
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels() {
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
 
-        return [
-            'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ADDRESS ),
-            'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-            'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ADDRESS_TYPE ),
-            'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-            'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
-        ];
-    }
+		return [
+			'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ADDRESS ),
+			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ADDRESS_TYPE ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // ModelAddress --------------------------
+	// ModelAddress --------------------------
 
-    /**
-     * @return Address - associated address
-     */
-    public function getAddress() {
+	/**
+	 * @return Address - associated address
+	 */
+	public function getAddress() {
 
-        return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] );
-    }
+		return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] );
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName() {
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName() {
 
-        return CoreTables::TABLE_MODEL_ADDRESS;
-    }
+		return CoreTables::TABLE_MODEL_ADDRESS;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelAddress --------------------------
+	// ModelAddress --------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    public static function queryWithHasOne( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'address' ];
-        $config[ 'relations' ]	= $relations;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'address' ];
+		$config[ 'relations' ]	= $relations;
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithModel( $config = [] ) {
+	public static function queryWithModel( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'address' ];
+		$config[ 'relations' ]	= [ 'address' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    /**
-     * @param int $parentId
-     * @param string $parentType
-     * @param string $type
-     * @param boolean $first
-     * @return ModelAddress by parent id, parent type and type
-     */
-    public static function findByType( $parentId, $parentType, $type, $first = false ) {
+	/**
+	 * @param int $parentId
+	 * @param string $parentType
+	 * @param string $type
+	 * @param boolean $first
+	 * @return ModelAddress by parent id, parent type and type
+	 */
+	public static function findByType( $parentId, $parentType, $type, $first = false ) {
 
-        if( $first ) {
+		if( $first ) {
 
-            return self::queryByParent( $parentId, $parentType )->andWhere( 'type=:type', [ ':type' => $type ] )->one();
-        }
+			return self::queryByParent( $parentId, $parentType )->andWhere( 'type=:type', [ ':type' => $type ] )->one();
+		}
 
-        return self::queryByParent( $parentId, $parentType )->andWhere( 'type=:type', [ ':type' => $type ] )->all();
-    }
+		return self::queryByParent( $parentId, $parentType )->andWhere( 'type=:type', [ ':type' => $type ] )->all();
+	}
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 
 }

@@ -3,24 +3,24 @@ namespace cmsgears\core\common\services\interfaces\base;
 
 interface ISlugTypeService extends IEntityService {
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getBySlug( $slug, $first = false );
+	public function getBySlug( $slug, $first = false );
 
-    public function getBySlugType( $slug, $type );
+	public function getBySlugType( $slug, $type );
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
 }

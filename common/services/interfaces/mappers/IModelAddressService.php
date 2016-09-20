@@ -9,30 +9,30 @@ use cmsgears\core\common\config\CoreGlobal;
 
 interface IModelAddressService extends \cmsgears\core\common\services\interfaces\base\IMapperService {
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getByType( $parentId, $parentType, $type, $first = false );
+	public function getByType( $parentId, $parentType, $type, $first = false );
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Create -------------
+	// Create -------------
 
-    public function createOrUpdate( $address, $config = [] ) ;
+	public function createOrUpdate( $address, $config = [] ) ;
 
-    public function createOrUpdateByType( $address, $config = [] );
+	public function createOrUpdateByType( $address, $config = [] );
 
-    public function createShipping( $address, $config = [] );
+	public function createShipping( $address, $config = [] );
 
-    public function copyToShipping( $address, $config = [] );
+	public function copyToShipping( $address, $config = [] );
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
 }

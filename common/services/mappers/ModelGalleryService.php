@@ -21,158 +21,158 @@ use cmsgears\core\common\services\traits\MapperTrait;
  */
 class ModelGalleryService extends \cmsgears\core\common\services\base\EntityService implements IModelGalleryService {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelGallery';
+	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelGallery';
 
-    public static $modelTable	= CoreTables::TABLE_MODEL_GALLERY;
+	public static $modelTable	= CoreTables::TABLE_MODEL_GALLERY;
 
-    public static $parentType	= null;
+	public static $parentType	= null;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    private $galleryService;
+	private $galleryService;
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    use MapperTrait;
+	use MapperTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function __construct( IGalleryService $galleryService, $config = [] ) {
+	public function __construct( IGalleryService $galleryService, $config = [] ) {
 
-        $this->galleryService	= $galleryService;
+		$this->galleryService	= $galleryService;
 
-        parent::__construct( $config );
-    }
+		parent::__construct( $config );
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelGalleryService -------------------
+	// ModelGalleryService -------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    public function create( $gallery, $config = [] ) {
+	public function create( $gallery, $config = [] ) {
 
-        $parentId 	= $config[ 'parentId' ];
-        $parentType = $config[ 'parentType' ];
-        $type 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
-        $order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
+		$parentId	= $config[ 'parentId' ];
+		$parentType = $config[ 'parentType' ];
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
-        // Create Gallery
-        $gallery->type	= $parentType;
+		// Create Gallery
+		$gallery->type	= $parentType;
 
-        $gallery->save();
+		$gallery->save();
 
-        // Create Model Gallery
-        $modelGallery				= new ModelGallery();
+		// Create Model Gallery
+		$modelGallery				= new ModelGallery();
 
-        $modelGallery->modelId 		= $gallery->id;
-        $modelGallery->parentId 	= $parentId;
-        $modelGallery->parentType 	= $parentType;
-        $modelGallery->type			= $type;
-        $modelGallery->order		= $order;
-        $modelGallery->active		= true;
+		$modelGallery->modelId		= $gallery->id;
+		$modelGallery->parentId		= $parentId;
+		$modelGallery->parentType	= $parentType;
+		$modelGallery->type			= $type;
+		$modelGallery->order		= $order;
+		$modelGallery->active		= true;
 
-        $modelGallery->save();
-    }
+		$modelGallery->save();
+	}
 
-    public function createOrUpdate( $gallery, $config = [] ) {
+	public function createOrUpdate( $gallery, $config = [] ) {
 
-        $parentId 	= $config[ 'parentId' ];
-        $parentType = $config[ 'parentType' ];
-        $type 		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
-        $order 		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
+		$parentId	= $config[ 'parentId' ];
+		$parentType = $config[ 'parentType' ];
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
-        // Update Existing
-        if( isset( $gallery->id ) && !empty( $gallery->id ) ) {
+		// Update Existing
+		if( isset( $gallery->id ) && !empty( $gallery->id ) ) {
 
-            $existingGallery	= $this->getByModelId( $parentId, $parentType, $gallery->id );
+			$existingGallery	= $this->getByModelId( $parentId, $parentType, $gallery->id );
 
-            if( isset( $existingGallery ) ) {
+			if( isset( $existingGallery ) ) {
 
-                return $this->update( $existingGallery, $gallery );
-            }
-        }
-        // Create New
-        else {
+				return $this->update( $existingGallery, $gallery );
+			}
+		}
+		// Create New
+		else {
 
-            return $this->create( $gallery, $config );
-        }
-    }
+			return $this->create( $gallery, $config );
+		}
+	}
 
-    // Update -------------
+	// Update -------------
 
-    public function update( $model, $config = [] ) {
+	public function update( $model, $config = [] ) {
 
-        $attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'type', 'order' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'type', 'order' ];
 
-        $gallery 	= $config[ 'gallery' ];
+		$gallery	= $config[ 'gallery' ];
 
-        $this->galleryService->update( $gallery );
+		$this->galleryService->update( $gallery );
 
-        return parent::update( $model, [
-            'attributes' => $attributes
-        ]);
-    }
+		return parent::update( $model, [
+			'attributes' => $attributes
+		]);
+	}
 
-    // Delete -------------
+	// Delete -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelGalleryService -------------------
+	// ModelGalleryService -------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 }

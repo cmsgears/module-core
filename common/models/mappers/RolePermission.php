@@ -17,148 +17,148 @@ use cmsgears\core\common\models\base\CoreTables;
  */
 class RolePermission extends \cmsgears\core\common\models\base\Mapper {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
-    public function rules() {
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
 
-        return [
-            [ [ 'roleId', 'permissionId' ], 'required' ],
-            [ [ 'roleId', 'permissionId' ], 'unique', 'targetAttribute' => [ 'roleId', 'permissionId' ] ],
-            [ [ 'roleId', 'permissionId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
-        ];
-    }
+		return [
+			[ [ 'roleId', 'permissionId' ], 'required' ],
+			[ [ 'roleId', 'permissionId' ], 'unique', 'targetAttribute' => [ 'roleId', 'permissionId' ] ],
+			[ [ 'roleId', 'permissionId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+		];
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels() {
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
 
-        return [
-            'roleId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ROLE ),
-            'permissionId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PERMISSION )
-        ];
-    }
+		return [
+			'roleId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ROLE ),
+			'permissionId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PERMISSION )
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // RolePermission ------------------------
+	// RolePermission ------------------------
 
-    /**
-     * @return Role - from the mapping.
-     */
-    public function getRole() {
+	/**
+	 * @return Role - from the mapping.
+	 */
+	public function getRole() {
 
-        return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
-    }
+		return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
+	}
 
-    /**
-     * @return Permission - from the mapping.
-     */
-    public function getPermission() {
+	/**
+	 * @return Permission - from the mapping.
+	 */
+	public function getPermission() {
 
-        return $this->hasOne( Permission::className(), [ 'id' => 'permissionId' ] );
-    }
+		return $this->hasOne( Permission::className(), [ 'id' => 'permissionId' ] );
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName() {
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName() {
 
-        return CoreTables::TABLE_ROLE_PERMISSION;
-    }
+		return CoreTables::TABLE_ROLE_PERMISSION;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // RolePermission ------------------------
+	// RolePermission ------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    public static function queryWithHasOne( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'role', 'permission' ];
-        $config[ 'relations' ]	= $relations;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'role', 'permission' ];
+		$config[ 'relations' ]	= $relations;
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithRole( $config = [] ) {
+	public static function queryWithRole( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'role' ];
+		$config[ 'relations' ]	= [ 'role' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithPermission( $config = [] ) {
+	public static function queryWithPermission( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'permission' ];
+		$config[ 'relations' ]	= [ 'permission' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 
-    /**
-     * Delete the mappings by given role id.
-     */
-    public static function deleteByRoleId( $roleId ) {
+	/**
+	 * Delete the mappings by given role id.
+	 */
+	public static function deleteByRoleId( $roleId ) {
 
-        self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
-    }
+		self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
+	}
 
-    /**
-     * Delete the mappings by given permission id.
-     */
-    public static function deleteByPermissionId( $permissionId ) {
+	/**
+	 * Delete the mappings by given permission id.
+	 */
+	public static function deleteByPermissionId( $permissionId ) {
 
-        self::deleteAll( 'permissionId=:id', [ ':id' => $permissionId ] );
-    }
+		self::deleteAll( 'permissionId=:id', [ ':id' => $permissionId ] );
+	}
 }

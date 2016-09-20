@@ -16,85 +16,85 @@ use cmsgears\core\common\utilities\AjaxUtil;
  */
 class DeleteMeta extends \cmsgears\core\common\base\Action {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    protected $modelService;
+	protected $modelService;
 
-    protected $metaService;
+	protected $metaService;
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->modelService		= $this->controller->modelService;
+		$this->modelService		= $this->controller->modelService;
 
-        $this->metaService		= $this->controller->metaService;
-    }
+		$this->metaService		= $this->controller->metaService;
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // DeleteMeta ----------------------------
+	// DeleteMeta ----------------------------
 
-    /**
-     * Delete meta for given meta id, parent slug and parent type.
-     */
-    public function run( $id, $slug, $type = null ) {
+	/**
+	 * Delete meta for given meta id, parent slug and parent type.
+	 */
+	public function run( $id, $slug, $type = null ) {
 
-        // Find meta parent
-        $parent	= null;
+		// Find meta parent
+		$parent	= null;
 
-        if( isset( $type ) ) {
+		if( isset( $type ) ) {
 
-            $parent	= $this->modelService->getBySlugType( $slug, $type );
-        }
-        else {
+			$parent	= $this->modelService->getBySlugType( $slug, $type );
+		}
+		else {
 
-            $parent	= $this->modelService->getBySlug( $slug );
-        }
+			$parent	= $this->modelService->getBySlug( $slug );
+		}
 
-        // Delete meta
-        if( isset( $parent ) ) {
+		// Delete meta
+		if( isset( $parent ) ) {
 
-            $meta	= $this->metaService->getById( $id );
+			$meta	= $this->metaService->getById( $id );
 
-            if( isset( $meta ) && $meta->isBelongsTo( $parent ) ) {
+			if( isset( $meta ) && $meta->isBelongsTo( $parent ) ) {
 
-                $this->metaService->delete( $meta );
+				$this->metaService->delete( $meta );
 
-                // Trigger Ajax Success
-                return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
-            }
-        }
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
+			}
+		}
 
-        // Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Trigger Ajax Failure
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 }

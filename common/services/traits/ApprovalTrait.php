@@ -14,180 +14,180 @@ use cmsgears\core\common\models\interfaces\IApproval;
  */
 trait ApprovalTrait {
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ApprovalTrait -------------------------
+	// ApprovalTrait -------------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    /**
-     * It expects the model to support either of createdBy or ownerId column. If both exist, ownerId will dominate.
-     */
-    public function getPageByOwnerId( $ownerId, $config = [] ) {
+	/**
+	 * It expects the model to support either of createdBy or ownerId column. If both exist, ownerId will dominate.
+	 */
+	public function getPageByOwnerId( $ownerId, $config = [] ) {
 
-        $owner 		= isset( $config[ 'owner' ] ) ? $config[ 'owner' ] : false;
-        $modelTable	= static::$modelTable;
+		$owner		= isset( $config[ 'owner' ] ) ? $config[ 'owner' ] : false;
+		$modelTable	= static::$modelTable;
 
-        if( $owner ) {
+		if( $owner ) {
 
-            $config[ 'conditions' ][ "$modelTable.ownerId" ] 	= $ownerId;
-        }
-        else {
+			$config[ 'conditions' ][ "$modelTable.ownerId" ]	= $ownerId;
+		}
+		else {
 
-            $config[ 'conditions' ][ "$modelTable.createdBy" ] 	= $ownerId;
-        }
+			$config[ 'conditions' ][ "$modelTable.createdBy" ]	= $ownerId;
+		}
 
-        return $this->getPage( $config );
-    }
+		return $this->getPage( $config );
+	}
 
-    public function getPageByOwnerIdStatus( $ownerId, $status, $config = [] ) {
+	public function getPageByOwnerIdStatus( $ownerId, $status, $config = [] ) {
 
-        $modelTable	= static::$modelTable;
+		$modelTable	= static::$modelTable;
 
-        $config[ 'conditions' ][ "$modelTable.status" ]   = $status;
+		$config[ 'conditions' ][ "$modelTable.status" ]	  = $status;
 
-        return $this->getPageByOwnerId( $ownerId, $config );
-    }
+		return $this->getPageByOwnerId( $ownerId, $config );
+	}
 
-    /**
-     * It expects the model to support either createdBy or createdBy and ownerId columns
-     */
-    public function getPageByAuthorityId( $id, $config = [] ) {
+	/**
+	 * It expects the model to support either createdBy or createdBy and ownerId columns
+	 */
+	public function getPageByAuthorityId( $id, $config = [] ) {
 
-        $modelClass	= static::$modelClass;
-        $modelTable	= static::$modelTable;
-        $query 		= null;
+		$modelClass	= static::$modelClass;
+		$modelTable	= static::$modelTable;
+		$query		= null;
 
-        $owner 		= isset( $config[ 'owner' ] ) ? $config[ 'owner' ] : false;
+		$owner		= isset( $config[ 'owner' ] ) ? $config[ 'owner' ] : false;
 
-        if( $owner ) {
+		if( $owner ) {
 
-            $query 		= $modelClass::queryWithOwnerAuthor();
+			$query		= $modelClass::queryWithOwnerAuthor();
 
-            $query->andWhere( "$modelTable.ownerId =:owner OR ($modelTable.ownerId IS NULL AND $modelTable.createdBy =:creator )", [ ':owner' => $id, ':creator' => $id ] );
-        }
-        else {
+			$query->andWhere( "$modelTable.ownerId =:owner OR ($modelTable.ownerId IS NULL AND $modelTable.createdBy =:creator )", [ ':owner' => $id, ':creator' => $id ] );
+		}
+		else {
 
-            $query 		= $modelClass::queryWithAuthor();
+			$query		= $modelClass::queryWithAuthor();
 
-            $query->andWhere( "$modelTable.createdBy =:creator", [ ':creator' => $id ] );
-        }
+			$query->andWhere( "$modelTable.createdBy =:creator", [ ':creator' => $id ] );
+		}
 
-        $config[ 'query' ] = $query;
+		$config[ 'query' ] = $query;
 
-        return $this->getPage( $config );
-    }
+		return $this->getPage( $config );
+	}
 
-    public function getPageByAuthorityIdStatus( $id, $status, $config = [] ) {
+	public function getPageByAuthorityIdStatus( $id, $status, $config = [] ) {
 
-        $modelTable	= static::$modelTable;
+		$modelTable	= static::$modelTable;
 
-        $config[ 'conditions' ][ "$modelTable.status" ]   = $status;
+		$config[ 'conditions' ][ "$modelTable.status" ]	  = $status;
 
-        return $this->getPageByAuthorityId( $id, $config );
-    }
+		return $this->getPageByAuthorityId( $id, $config );
+	}
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    public function updateStatus( $model, $status ) {
+	public function updateStatus( $model, $status ) {
 
-        $model->status	= $status;
+		$model->status	= $status;
 
-        $model->update();
+		$model->update();
 
-        return $model;
-    }
+		return $model;
+	}
 
-    public function submit( $model, $public = true ) {
+	public function submit( $model, $public = true ) {
 
-        return $this->updateStatus( $model, IApproval::STATUS_SUBMITTED );
-    }
+		return $this->updateStatus( $model, IApproval::STATUS_SUBMITTED );
+	}
 
-    public function confirm( $model, $public = true ) {
+	public function confirm( $model, $public = true ) {
 
-        return $this->updateStatus( $model, IApproval::STATUS_CONFIRMED );
-    }
+		return $this->updateStatus( $model, IApproval::STATUS_CONFIRMED );
+	}
 
-    public function approve( $model, $public = true ) {
+	public function approve( $model, $public = true ) {
 
-        return $this->updateStatus( $model, IApproval::STATUS_ACTIVE );
-    }
+		return $this->updateStatus( $model, IApproval::STATUS_ACTIVE );
+	}
 
-    public function setRejectMessage( $model, $message = null ) {
+	public function setRejectMessage( $model, $message = null ) {
 
-        if( isset( $message ) && strlen( $message ) > 0 ) {
+		if( isset( $message ) && strlen( $message ) > 0 ) {
 
-            $model->setDataMeta( CoreGlobal::DATA_REJECT_REASON, $message );
-        }
-        else {
+			$model->setDataMeta( CoreGlobal::DATA_REJECT_REASON, $message );
+		}
+		else {
 
-            $model->removeDataMeta( CoreGlobal::DATA_REJECT_REASON );
-        }
-    }
+			$model->removeDataMeta( CoreGlobal::DATA_REJECT_REASON );
+		}
+	}
 
-    public function reject( $model, $message = null ) {
+	public function reject( $model, $message = null ) {
 
-        $this->setRejectMessage( $model, $message );
+		$this->setRejectMessage( $model, $message );
 
-        return $this->updateStatus( $model, IApproval::STATUS_REJECTED );
-    }
+		return $this->updateStatus( $model, IApproval::STATUS_REJECTED );
+	}
 
-    public function freeze( $model, $message = null ) {
+	public function freeze( $model, $message = null ) {
 
-        $this->setRejectMessage( $model, $message );
+		$this->setRejectMessage( $model, $message );
 
-        return $this->updateStatus( $model, IApproval::STATUS_FROJEN );
-    }
+		return $this->updateStatus( $model, IApproval::STATUS_FROJEN );
+	}
 
-    public function block( $model, $message = null ) {
+	public function block( $model, $message = null ) {
 
-        $this->setRejectMessage( $model, $message );
+		$this->setRejectMessage( $model, $message );
 
-        return $this->updateStatus( $model, IApproval::STATUS_BLOCKED );
-    }
+		return $this->updateStatus( $model, IApproval::STATUS_BLOCKED );
+	}
 
-    // Delete -------------
+	// Delete -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ApprovalTrait -------------------------
+	// ApprovalTrait -------------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
 }

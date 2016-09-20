@@ -20,279 +20,279 @@ use cmsgears\core\common\utilities\DateUtil;
  */
 class ModelCommentService extends \cmsgears\core\common\services\base\EntityService implements IModelCommentService {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public static $modelClass	= '\cmsgears\core\common\models\resources\ModelComment';
+	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelComment';
 
-    public static $modelTable	= CoreTables::TABLE_MODEL_COMMENT;
+	public static $modelTable	= CoreTables::TABLE_MODEL_COMMENT;
 
-    public static $parentType	= CoreGlobal::TYPE_COMMENT;
+	public static $parentType	= CoreGlobal::TYPE_COMMENT;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelCommentService -------------------
+	// ModelCommentService -------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    public function getPage( $config = [] ) {
+	public function getPage( $config = [] ) {
 
-        $sort = new Sort([
-            'attributes' => [
-                'name' => [
-                    'asc' => [ 'name' => SORT_ASC ],
-                    'desc' => ['name' => SORT_DESC ],
-                    'default' => SORT_DESC,
-                    'label' => 'name'
-                ],
-                'email' => [
-                    'asc' => [ 'email' => SORT_ASC ],
-                    'desc' => ['email' => SORT_DESC ],
-                    'default' => SORT_DESC,
-                    'label' => 'email'
-                ],
-                'rating' => [
-                    'asc' => [ 'rating' => SORT_ASC ],
-                    'desc' => ['rating' => SORT_DESC ],
-                    'default' => SORT_DESC,
-                    'label' => 'rating'
-                ],
-                'cdate' => [
-                    'asc' => [ 'createdAt' => SORT_ASC ],
-                    'desc' => ['createdAt' => SORT_DESC ],
-                    'default' => SORT_DESC,
-                    'label' => 'cdate'
-                ],
-                'udate' => [
-                    'asc' => [ 'updatedAt' => SORT_ASC ],
-                    'desc' => ['updatedAt' => SORT_DESC ],
-                    'default' => SORT_DESC,
-                    'label' => 'udate'
-                ],
-                'adate' => [
-                    'asc' => [ 'approvedAt' => SORT_ASC ],
-                    'desc' => ['approvedAt' => SORT_DESC ],
-                    'default' => SORT_DESC,
-                    'label' => 'adate'
-                ]
-            ],
-            'defaultOrder' => [
-                'adate' => SORT_DESC
-            ]
-        ]);
+		$sort = new Sort([
+			'attributes' => [
+				'name' => [
+					'asc' => [ 'name' => SORT_ASC ],
+					'desc' => ['name' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'name'
+				],
+				'email' => [
+					'asc' => [ 'email' => SORT_ASC ],
+					'desc' => ['email' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'email'
+				],
+				'rating' => [
+					'asc' => [ 'rating' => SORT_ASC ],
+					'desc' => ['rating' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'rating'
+				],
+				'cdate' => [
+					'asc' => [ 'createdAt' => SORT_ASC ],
+					'desc' => ['createdAt' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'cdate'
+				],
+				'udate' => [
+					'asc' => [ 'updatedAt' => SORT_ASC ],
+					'desc' => ['updatedAt' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'udate'
+				],
+				'adate' => [
+					'asc' => [ 'approvedAt' => SORT_ASC ],
+					'desc' => ['approvedAt' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'adate'
+				]
+			],
+			'defaultOrder' => [
+				'adate' => SORT_DESC
+			]
+		]);
 
-        $config[ 'sort' ] = $sort;
+		$config[ 'sort' ] = $sort;
 
-        return parent::findPage( $config );
-    }
+		return parent::findPage( $config );
+	}
 
-    public function getPageByParent( $parentId, $parentType, $config = [] ) {
+	public function getPageByParent( $parentId, $parentType, $config = [] ) {
 
-        $config[ 'conditions' ][ 'baseId' ] 	= null;
-        $config[ 'conditions' ][ 'parentId' ] 	= $parentId;
-        $config[ 'conditions' ][ 'parentType' ]	= $parentType;
+		$config[ 'conditions' ][ 'baseId' ]		= null;
+		$config[ 'conditions' ][ 'parentId' ]	= $parentId;
+		$config[ 'conditions' ][ 'parentType' ]	= $parentType;
 
-        return $this->getPage( $config );
-    }
+		return $this->getPage( $config );
+	}
 
-    public function getCommentPageByParent( $parentId, $parentType, $config = [] ) {
+	public function getCommentPageByParent( $parentId, $parentType, $config = [] ) {
 
-        $config[ 'conditions' ][ 'type' ] = ModelComment::TYPE_COMMENT;
+		$config[ 'conditions' ][ 'type' ] = ModelComment::TYPE_COMMENT;
 
-        return $this->getPageByParent( $parentId, $parentType, $config );
-    }
+		return $this->getPageByParent( $parentId, $parentType, $config );
+	}
 
-    public function getReviewPageByParent( $parentId, $parentType, $config = [] ) {
+	public function getReviewPageByParent( $parentId, $parentType, $config = [] ) {
 
-        $config[ 'conditions' ][ 'type' ] = ModelComment::TYPE_REVIEW;
+		$config[ 'conditions' ][ 'type' ] = ModelComment::TYPE_REVIEW;
 
-        return $this->getPageByParent( $parentId, $parentType, $config );
-    }
+		return $this->getPageByParent( $parentId, $parentType, $config );
+	}
 
-    public function getPageByParentType( $parentType, $config = [] ) {
+	public function getPageByParentType( $parentType, $config = [] ) {
 
-        $config[ 'conditions' ][ 'baseId' ] 	= null;
-        $config[ 'conditions' ][ 'parentType' ]	= $parentType;
+		$config[ 'conditions' ][ 'baseId' ]		= null;
+		$config[ 'conditions' ][ 'parentType' ]	= $parentType;
 
-        return $this->getPage( $config );
-    }
+		return $this->getPage( $config );
+	}
 
-    public function getPageByBaseId( $baseId, $config = [] ) {
+	public function getPageByBaseId( $baseId, $config = [] ) {
 
-        $config[ 'conditions' ][ 'baseId' ] 	= null;
+		$config[ 'conditions' ][ 'baseId' ]		= null;
 
-        return $this->getPage( $config );
-    }
+		return $this->getPage( $config );
+	}
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getByParent( $parentId, $parentType, $config = [] ) {
+	public function getByParent( $parentId, $parentType, $config = [] ) {
 
-        return ModelComment::queryByParentConfig( $parentId, $config )->andWhere( [ 'baseId' => null ] )->all();
-    }
+		return ModelComment::queryByParentConfig( $parentId, $config )->andWhere( [ 'baseId' => null ] )->all();
+	}
 
-    public function getByParentType( $parentType, $config = [] ) {
+	public function getByParentType( $parentType, $config = [] ) {
 
-        return ModelComment::queryByParentTypeConfig( $parentType, $config )->andWhere( [ 'baseId' => null ] )->all();
-    }
+		return ModelComment::queryByParentTypeConfig( $parentType, $config )->andWhere( [ 'baseId' => null ] )->all();
+	}
 
-    /**
-     * It returns child comments for given base id.
-     */
-    public function getByBaseId( $baseId, $config = [] ) {
+	/**
+	 * It returns child comments for given base id.
+	 */
+	public function getByBaseId( $baseId, $config = [] ) {
 
-        return ModelComment::queryByBaseId( $baseId, $config )->all();
-    }
+		return ModelComment::queryByBaseId( $baseId, $config )->all();
+	}
 
-    /**
-     * It can be used in cases where only one comment is allowed for an email.
-     */
-    public function isExistByEmail( $email ) {
+	/**
+	 * It can be used in cases where only one comment is allowed for an email.
+	 */
+	public function isExistByEmail( $email ) {
 
-        return null != self::getByEmail( $email );
-    }
+		return null != self::getByEmail( $email );
+	}
 
-    public function getByEmail( $email ) {
+	public function getByEmail( $email ) {
 
-        return ModelComment::queryByEmail( $email )->one();
-    }
+		return ModelComment::queryByEmail( $email )->one();
+	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    public function create( $comment, $config = [] ) {
+	public function create( $comment, $config = [] ) {
 
-        $comment->agent	= Yii::$app->request->userAgent;
-        $comment->ip	= Yii::$app->request->userIP;
+		$comment->agent	= Yii::$app->request->userAgent;
+		$comment->ip	= Yii::$app->request->userIP;
 
-        return parent::create( $comment, $config );
-    }
+		return parent::create( $comment, $config );
+	}
 
-    // Update -------------
+	// Update -------------
 
-    public function update( $model, $config = [] ) {
+	public function update( $model, $config = [] ) {
 
-        $attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content' ];
 
-        // Allows admin to update status
-        if( isset( $config[ 'admin' ] ) && $config[ 'admin' ] ) {
+		// Allows admin to update status
+		if( isset( $config[ 'admin' ] ) && $config[ 'admin' ] ) {
 
-            $attributes[] = 'status';
-        }
+			$attributes[] = 'status';
+		}
 
-        return parent::update( $model, [
-            'attributes' => $attributes
-        ]);
-    }
+		return parent::update( $model, [
+			'attributes' => $attributes
+		]);
+	}
 
-    // Various states
+	// Various states
 
-    public function updateStatus( $model, $status ) {
+	public function updateStatus( $model, $status ) {
 
-        $model->status	= $status;
+		$model->status	= $status;
 
-        $model->update();
-    }
+		$model->update();
+	}
 
-    public function approve( $model ) {
+	public function approve( $model ) {
 
-        $model->approvedAt	= DateUtil::getDateTime();
+		$model->approvedAt	= DateUtil::getDateTime();
 
-        $this->updateStatus( $model, ModelComment::STATUS_APPROVED );
-    }
+		$this->updateStatus( $model, ModelComment::STATUS_APPROVED );
+	}
 
-    public function block( $model ) {
+	public function block( $model ) {
 
-        $this->updateStatus( $model, ModelComment::STATUS_BLOCKED );
-    }
+		$this->updateStatus( $model, ModelComment::STATUS_BLOCKED );
+	}
 
-    public function markSpam( $model ) {
+	public function markSpam( $model ) {
 
-        $this->updateStatus( $model, ModelComment::STATUS_SPAM );
-    }
+		$this->updateStatus( $model, ModelComment::STATUS_SPAM );
+	}
 
-    public function markDelete( $model ) {
+	public function markDelete( $model ) {
 
-        $this->updateStatus( $model, ModelComment::STATUS_DELETED );
-    }
+		$this->updateStatus( $model, ModelComment::STATUS_DELETED );
+	}
 
-    // Attributes
+	// Attributes
 
-    public function updateSpamRequest( $model ) {
+	public function updateSpamRequest( $model ) {
 
-        $model->setDataMeta( CoreGlobal::META_COMMENT_SPAM_REQUEST, true );
+		$model->setDataMeta( CoreGlobal::META_COMMENT_SPAM_REQUEST, true );
 
-        $model->update();
+		$model->update();
 
-        return $model;
-    }
+		return $model;
+	}
 
-    public function updateDeleteRequest( $model ) {
+	public function updateDeleteRequest( $model ) {
 
-        $model->setDataMeta( CoreGlobal::META_COMMENT_DELETE_REQUEST, true );
+		$model->setDataMeta( CoreGlobal::META_COMMENT_DELETE_REQUEST, true );
 
-        $model->update();
+		$model->update();
 
-        return $model;
-    }
+		return $model;
+	}
 
-    // Delete -------------
+	// Delete -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ModelCommentService -------------------
+	// ModelCommentService -------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 }

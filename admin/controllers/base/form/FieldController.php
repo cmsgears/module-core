@@ -14,155 +14,155 @@ use cmsgears\core\common\models\resources\FormField;
 
 class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals ----------------
+	// Globals ----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    protected $formService;
+	protected $formService;
 
-    // Private ----------------
+	// Private ----------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->setViewPath( '@cmsgears/module-core/admin/views/form/field' );
+		$this->setViewPath( '@cmsgears/module-core/admin/views/form/field' );
 
-        $this->crudPermission 		= CoreGlobal::PERM_CORE;
-        $this->modelService			= Yii::$app->factory->get( 'formFieldService' );
+		$this->crudPermission		= CoreGlobal::PERM_CORE;
+		$this->modelService			= Yii::$app->factory->get( 'formFieldService' );
 
-        $this->formService			= Yii::$app->factory->get( 'formService' );
+		$this->formService			= Yii::$app->factory->get( 'formService' );
 
-        // Note: Set returnUrl and sidebar in child classes.
-    }
+		// Note: Set returnUrl and sidebar in child classes.
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    public function behaviors() {
+	public function behaviors() {
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->core->getRbacFilterClass(),
-                'actions' => [
-                    'all'  => [ 'permission' => $this->crudPermission ],
-                    'create'  => [ 'permission' => $this->crudPermission ],
-                    'update'  => [ 'permission' => $this->crudPermission ],
-                    'delete'  => [ 'permission' => $this->crudPermission ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'all'   => [ 'get' ],
-                    'create' => [ 'get', 'post' ],
-                    'update' => [ 'get', 'post' ],
-                    'delete' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
+					'all'  => [ 'permission' => $this->crudPermission ],
+					'create'  => [ 'permission' => $this->crudPermission ],
+					'update'  => [ 'permission' => $this->crudPermission ],
+					'delete'  => [ 'permission' => $this->crudPermission ]
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'all'	=> [ 'get' ],
+					'create' => [ 'get', 'post' ],
+					'update' => [ 'get', 'post' ],
+					'delete' => [ 'get', 'post' ]
+				]
+			]
+		];
+	}
 
-    // yii\base\Controller ----
+	// yii\base\Controller ----
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // FieldController -----------------------
+	// FieldController -----------------------
 
-    public function actionAll( $fid ) {
+	public function actionAll( $fid ) {
 
-        $dataProvider = $this->modelService->getPageByFormId( $fid );
+		$dataProvider = $this->modelService->getPageByFormId( $fid );
 
-        return $this->render( 'all', [
-             'dataProvider' => $dataProvider,
-             'formId' => $fid
-        ]);
-    }
+		return $this->render( 'all', [
+			 'dataProvider' => $dataProvider,
+			 'formId' => $fid
+		]);
+	}
 
-    public function actionCreate( $fid ) {
+	public function actionCreate( $fid ) {
 
-        $modelClass		= $this->modelService->getModelClass();
-        $model			= new $modelClass;
-        $model->formId	= $fid;
+		$modelClass		= $this->modelService->getModelClass();
+		$model			= new $modelClass;
+		$model->formId	= $fid;
 
-        if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-            $this->modelService->create( $model );
+			$this->modelService->create( $model );
 
-            return $this->redirect( [ "all?fid=$fid" ] );
-        }
+			return $this->redirect( [ "all?fid=$fid" ] );
+		}
 
-        return $this->render( 'create', [
-            'model' => $model,
-            'formId' => $fid,
-            'typeMap' => $modelClass::$typeMap
-        ]);
-    }
+		return $this->render( 'create', [
+			'model' => $model,
+			'formId' => $fid,
+			'typeMap' => $modelClass::$typeMap
+		]);
+	}
 
-    public function actionUpdate( $id ) {
+	public function actionUpdate( $id ) {
 
-        // Find Model
-        $modelClass	= $this->modelService->getModelClass();
-        $model		= $this->modelService->getById( $id );
+		// Find Model
+		$modelClass	= $this->modelService->getModelClass();
+		$model		= $this->modelService->getById( $id );
 
-        // Update/Render if exist
-        if( isset( $model ) ) {
+		// Update/Render if exist
+		if( isset( $model ) ) {
 
-            if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-                $this->modelService->update( $model );
+				$this->modelService->update( $model );
 
-                return $this->redirect( [ "all?fid=$model->formId" ] );
-            }
+				return $this->redirect( [ "all?fid=$model->formId" ] );
+			}
 
-            return $this->render( 'update', [
-                'model' => $model,
-                'formId' => $model->formId,
-                'typeMap' => $modelClass::$typeMap
-            ]);
-        }
+			return $this->render( 'update', [
+				'model' => $model,
+				'formId' => $model->formId,
+				'typeMap' => $modelClass::$typeMap
+			]);
+		}
 
-        // Model not found
-        throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 
-    public function actionDelete( $id ) {
+	public function actionDelete( $id ) {
 
-        // Find Model
-        $modelClass	= $this->modelService->getModelClass();
-        $model		= $this->modelService->getById( $id );
+		// Find Model
+		$modelClass	= $this->modelService->getModelClass();
+		$model		= $this->modelService->getById( $id );
 
-        // Delete/Render if exist
-        if( isset( $model ) ) {
+		// Delete/Render if exist
+		if( isset( $model ) ) {
 
-            if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-                $this->modelService->delete( $model );
+				$this->modelService->delete( $model );
 
-                return $this->redirect( [ "all?fid=$model->formId" ] );
-            }
+				return $this->redirect( [ "all?fid=$model->formId" ] );
+			}
 
-            return $this->render( 'delete', [
-                'model' => $model,
-                'formId' => $model->formId,
-                'typeMap' => $modelClass::$typeMap
-            ]);
-        }
+			return $this->render( 'delete', [
+				'model' => $model,
+				'formId' => $model->formId,
+				'typeMap' => $modelClass::$typeMap
+			]);
+		}
 
-        // Model not found
-        throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 }

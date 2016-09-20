@@ -9,47 +9,47 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class Module extends \cmsgears\core\common\base\Module {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals ----------------
+	// Globals ----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $controllerNamespace = 'cmsgears\core\admin\controllers';
+	public $controllerNamespace = 'cmsgears\core\admin\controllers';
 
-    public $config 				= [ CoreGlobal::CONFIG_CORE, CoreGlobal::CONFIG_MAIL, CoreGlobal::CONFIG_ADMIN, CoreGlobal::CONFIG_FRONTEND ];
+	public $config				= [ CoreGlobal::CONFIG_CORE, CoreGlobal::CONFIG_MAIL, CoreGlobal::CONFIG_ADMIN, CoreGlobal::CONFIG_FRONTEND ];
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        $this->setViewPath( '@cmsgears/module-core/admin/views' );
-    }
+		$this->setViewPath( '@cmsgears/module-core/admin/views' );
+	}
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Module --------------------------------
+	// Module --------------------------------
 
-    public function getSidebarHtml() {
+	public function getSidebarHtml() {
 
-        $path	= Yii::getAlias( '@cmsgears' ) . '/module-core/admin/views/sidebar.php';
+		$path	= Yii::getAlias( '@cmsgears' ) . '/module-core/admin/views/sidebar.php';
 
-        return $path;
-    }
+		return $path;
+	}
 }

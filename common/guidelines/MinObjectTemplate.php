@@ -8,18 +8,18 @@ namespace cmsgears\core\common\guidelines;
  * 3. Project imports
  * 4. Class definition
  * 5. Variables
- * 		5.1. Globals
- * 		5.2. Public
- * 		5.3. Protected
- * 		5.4. Private
+ *		5.1. Globals
+ *		5.2. Public
+ *		5.3. Protected
+ *		5.4. Private
  * 6. Traits
  * 7. Constructor and Initialisation
  * 8. Instance methods
- * 		8.1. Yii interface implementation
- * 		8.2. Yii parent class overriden methods
- * 		8.3. CMG interface implementation
- * 		8.4. CMG parent class overriden methods
- * 		8.6. Current class methods
+ *		8.1. Yii interface implementation
+ *		8.2. Yii parent class overriden methods
+ *		8.3. CMG interface implementation
+ *		8.4. CMG parent class overriden methods
+ *		8.6. Current class methods
  * 9. Class closure
  */
 
@@ -64,30 +64,30 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 class MinObjectTemplate extends \yii\base\Object {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals ----------------
+	// Globals ----------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // <Object> ------------------------------
+	// <Object> ------------------------------
 
 }

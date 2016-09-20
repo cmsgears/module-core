@@ -12,68 +12,68 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 trait SlugTypeTrait {
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // NameSlugTrait -------------------------
+	// NameSlugTrait -------------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getBySlug( $slug, $first = false ) {
+	public function getBySlug( $slug, $first = false ) {
 
-        $modelClass = static::$modelClass;
+		$modelClass = static::$modelClass;
 
-        return $modelClass::findBySlug( $slug, $first );
-    }
+		return $modelClass::findBySlug( $slug, $first );
+	}
 
-    public function getBySlugType( $slug, $type ) {
+	public function getBySlugType( $slug, $type ) {
 
-        $modelClass = static::$modelClass;
+		$modelClass = static::$modelClass;
 
-        return $modelClass::findBySlugType( $slug, $type );
-    }
+		return $modelClass::findBySlugType( $slug, $type );
+	}
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // NameSlugTrait -------------------------
+	// NameSlugTrait -------------------------
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Read - Others ---
+	// Read - Others ---
 
-    // Create -------------
+	// Create -------------
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
 }

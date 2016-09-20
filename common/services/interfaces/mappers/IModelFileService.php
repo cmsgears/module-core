@@ -9,26 +9,26 @@ use cmsgears\core\common\config\CoreGlobal;
 
 interface IModelFileService extends \cmsgears\core\common\services\interfaces\base\IMapperService {
 
-    // Data Provider ------
+	// Data Provider ------
 
-    // Read ---------------
+	// Read ---------------
 
-    // Read - Models ---
+	// Read - Models ---
 
-    public function getByFileTitle( $parentId, $parentType, $fileTitle );
+	public function getByFileTitle( $parentId, $parentType, $fileTitle );
 
-    public function getByFileTitleLike( $parentId, $parentType, $likeTitle );
+	public function getByFileTitleLike( $parentId, $parentType, $likeTitle );
 
-    // Read - Lists ----
+	// Read - Lists ----
 
-    // Read - Maps -----
+	// Read - Maps -----
 
-    // Create -------------
+	// Create -------------
 
-    public function createOrUpdateByTitle( $file, $config = [] );
+	public function createOrUpdateByTitle( $file, $config = [] );
 
-    // Update -------------
+	// Update -------------
 
-    // Delete -------------
+	// Delete -------------
 
 }

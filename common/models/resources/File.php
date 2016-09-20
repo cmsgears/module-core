@@ -45,294 +45,294 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class File extends \cmsgears\core\common\models\base\Resource implements IVisibility {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
-
-    /**
-     * @property boolean - used to detect whether the file is changed by user.
-     */
-    public $changed;
+	// Public -----------------
+
+	/**
+	 * @property boolean - used to detect whether the file is changed by user.
+	 */
+	public $changed;
 
-    // optional properties for image processing
-    public $width;
-    public $height;
-    public $mwidth;
-    public $mheight;
-    public $twidth;
-    public $theight;
+	// optional properties for image processing
+	public $width;
+	public $height;
+	public $mwidth;
+	public $mheight;
+	public $twidth;
+	public $theight;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    use CreateModifyTrait;
-    use VisibilityTrait;
+	use CreateModifyTrait;
+	use VisibilityTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors() {
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors() {
 
-        return [
-            'authorBehavior' => [
-                'class' => AuthorBehavior::className()
-            ],
-            'timestampBehavior' => [
-                'class' => TimestampBehavior::className(),
-                'createdAtAttribute' => 'createdAt',
-                'updatedAtAttribute' => 'modifiedAt',
-                'value' => new Expression('NOW()')
-            ]
-        ];
-    }
+		return [
+			'authorBehavior' => [
+				'class' => AuthorBehavior::className()
+			],
+			'timestampBehavior' => [
+				'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+				'updatedAtAttribute' => 'modifiedAt',
+				'value' => new Expression('NOW()')
+			]
+		];
+	}
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
-    public function rules() {
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
 
-        // model rules
-        $rules = [
-            [ [ 'name', 'extension', 'directory' ], 'required' ],
-            [ [ 'id' ], 'safe' ],
-            [ [ 'extension', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ [ 'title', 'directory' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-            [ [ 'name', 'description', 'altText', 'url', 'medium', 'thumb', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-            [ [ 'visibility', 'width', 'height', 'mwidth', 'mheight', 'twidth', 'theight' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-            [ [ 'size' ], 'number', 'min' => 0 ],
-            [ [ 'shared', 'changed' ], 'boolean' ],
-            [ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
-        ];
+		// model rules
+		$rules = [
+			[ [ 'name', 'extension', 'directory' ], 'required' ],
+			[ [ 'id' ], 'safe' ],
+			[ [ 'extension', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'title', 'directory' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'name', 'description', 'altText', 'url', 'medium', 'thumb', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'visibility', 'width', 'height', 'mwidth', 'mheight', 'twidth', 'theight' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'size' ], 'number', 'min' => 0 ],
+			[ [ 'shared', 'changed' ], 'boolean' ],
+			[ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+		];
 
-        // trim if required
-        if( Yii::$app->core->trimFieldValue ) {
+		// trim if required
+		if( Yii::$app->core->trimFieldValue ) {
 
-            $trim[] = [ [ 'name', 'extension', 'directory', 'title', 'description', 'altText', 'url', 'medium', 'thumb', 'link' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'extension', 'directory', 'title', 'description', 'altText', 'url', 'medium', 'thumb', 'link' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
-    }
+		return $rules;
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels() {
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
 
-        return [
-            'createdBy' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
-            'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
-            'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'extension' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EXTENSION ),
-            'directory' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DIRECTORY ),
-            'size' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SIZE ),
-            'url' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_URL ),
-            'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
-            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-            'link' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINK )
-        ];
-    }
+		return [
+			'createdBy' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'extension' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EXTENSION ),
+			'directory' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DIRECTORY ),
+			'size' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SIZE ),
+			'url' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_URL ),
+			'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'link' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINK )
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // File ----------------------------------
+	// File ----------------------------------
 
-    public function getTypeStr() {
+	public function getTypeStr() {
 
-        return self::$typeMap[ $this->type ];
-    }
+		return self::$typeMap[ $this->type ];
+	}
 
-    public function getSharedStr() {
+	public function getSharedStr() {
 
-        return Yii::$app->formatter->asBoolean( $this->shared );
-    }
+		return Yii::$app->formatter->asBoolean( $this->shared );
+	}
 
-    /**
-     * The method returns the file url for the file.
-     */
-    public function getFileUrl() {
+	/**
+	 * The method returns the file url for the file.
+	 */
+	public function getFileUrl() {
 
-        if( $this->changed ) {
+		if( $this->changed ) {
 
-            return Yii::$app->fileManager->uploadUrl . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "." . $this->extension;
-        }
-        else if( $this->id > 0 ) {
+			return Yii::$app->fileManager->uploadUrl . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "." . $this->extension;
+		}
+		else if( $this->id > 0 ) {
 
-            return Yii::$app->fileManager->uploadUrl . $this->url;
-        }
+			return Yii::$app->fileManager->uploadUrl . $this->url;
+		}
 
-        return "";
-    }
+		return "";
+	}
 
-    public function getMediumUrl() {
+	public function getMediumUrl() {
 
-        if( $this->changed ) {
+		if( $this->changed ) {
 
-            return Yii::$app->fileManager->uploadUrl . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "-medium." . $this->extension;
-        }
-        else if( $this->id > 0 ) {
+			return Yii::$app->fileManager->uploadUrl . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "-medium." . $this->extension;
+		}
+		else if( $this->id > 0 ) {
 
-            return Yii::$app->fileManager->uploadUrl . $this->medium;
-        }
+			return Yii::$app->fileManager->uploadUrl . $this->medium;
+		}
 
-        return "";
-    }
+		return "";
+	}
 
-    /**
-     * The method returns the thumb url for the file. It's common usage is for images.
-     */
-    public function getThumbUrl() {
+	/**
+	 * The method returns the thumb url for the file. It's common usage is for images.
+	 */
+	public function getThumbUrl() {
 
-        if( $this->changed ) {
+		if( $this->changed ) {
 
-            return Yii::$app->fileManager->uploadUrl . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "-thumb." . $this->extension;
-        }
-        else if( $this->id > 0 ) {
+			return Yii::$app->fileManager->uploadUrl . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "-thumb." . $this->extension;
+		}
+		else if( $this->id > 0 ) {
 
-            return Yii::$app->fileManager->uploadUrl . $this->thumb;
-        }
+			return Yii::$app->fileManager->uploadUrl . $this->thumb;
+		}
 
-        return "";
-    }
+		return "";
+	}
 
-    public function getFilePath() {
+	public function getFilePath() {
 
-        if( isset( $this->url ) ) {
+		if( isset( $this->url ) ) {
 
-            return Yii::$app->fileManager->uploadDir . $this->url;
-        }
+			return Yii::$app->fileManager->uploadDir . $this->url;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public function getMediumPath() {
+	public function getMediumPath() {
 
-        if( isset( $this->medium ) ) {
+		if( isset( $this->medium ) ) {
 
-            return Yii::$app->fileManager->uploadDir . $this->medium;
-        }
+			return Yii::$app->fileManager->uploadDir . $this->medium;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    public function getThumbPath() {
+	public function getThumbPath() {
 
-        if( isset( $this->thumb ) ) {
+		if( isset( $this->thumb ) ) {
 
-            return Yii::$app->fileManager->uploadDir . $this->thumb;
-        }
+			return Yii::$app->fileManager->uploadDir . $this->thumb;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    /**
-     * Delete all the associated files from disk. Useful while updating file.
-     */
-    public function clearDisk() {
+	/**
+	 * Delete all the associated files from disk. Useful while updating file.
+	 */
+	public function clearDisk() {
 
-        $filePath		= $this->getFilePath();
-        $mediumPath		= $this->getMediumPath();
-        $thumbPath		= $this->getThumbPath();
+		$filePath		= $this->getFilePath();
+		$mediumPath		= $this->getMediumPath();
+		$thumbPath		= $this->getThumbPath();
 
-        // Delete from disk
-        if( $filePath && file_exists( $filePath ) && is_file( $filePath ) ) {
+		// Delete from disk
+		if( $filePath && file_exists( $filePath ) && is_file( $filePath ) ) {
 
-            unlink( $filePath );
-        }
+			unlink( $filePath );
+		}
 
-        if( $mediumPath && file_exists( $mediumPath ) && is_file( $mediumPath ) ) {
+		if( $mediumPath && file_exists( $mediumPath ) && is_file( $mediumPath ) ) {
 
-            unlink( $mediumPath );
-        }
+			unlink( $mediumPath );
+		}
 
-        if( $thumbPath && file_exists( $thumbPath ) && is_file( $thumbPath ) ) {
+		if( $thumbPath && file_exists( $thumbPath ) && is_file( $thumbPath ) ) {
 
-            unlink( $thumbPath );
-        }
-    }
+			unlink( $thumbPath );
+		}
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName() {
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName() {
 
-        return CoreTables::TABLE_FILE;
-    }
+		return CoreTables::TABLE_FILE;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // File ----------------------------------
+	// File ----------------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    public static function queryWithHasOne( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
-        $config[ 'relations' ]	= $relations;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+		$config[ 'relations' ]	= $relations;
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    /**
-     * @param File $file
-     * @param string $name
-     * @return File - after loading from request url
-     */
-    public static function loadFile( $file, $name ) {
+	/**
+	 * @param File $file
+	 * @param string $name
+	 * @return File - after loading from request url
+	 */
+	public static function loadFile( $file, $name ) {
 
-        if( !isset( $file ) ) {
+		if( !isset( $file ) ) {
 
-            $file   = new File();
-        }
+			$file	= new File();
+		}
 
-        $file->load( Yii::$app->request->post(), $name );
+		$file->load( Yii::$app->request->post(), $name );
 
-        return $file;
-    }
+		return $file;
+	}
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 }

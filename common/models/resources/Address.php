@@ -41,232 +41,232 @@ use cmsgears\core\common\models\entities\City;
  */
 class Address extends \cmsgears\core\common\models\base\Resource {
 
-    // Variables ---------------------------------------------------
-
-    // Globals -------------------------------
-
-    // Constants --------------
-
-    const TYPE_DEFAULT      = 'default';
-    const TYPE_PRIMARY      = 'primary';
-    const TYPE_RESIDENTIAL  = 'residential';
-    const TYPE_SHIPPING     = 'shipping';
-    const TYPE_BILLING      = 'billing';
-    const TYPE_OFFICE       = 'office';   // Office/ Registered
-    const TYPE_MAILING      = 'mailing';   // Mailing/ Communication
-    const TYPE_BRANCH       = 'branch';   // Office having multiple branches
-
-    // Public -----------------
-
-    public static $typeMap = [
-        self::TYPE_DEFAULT => 'Default',
-        self::TYPE_PRIMARY => 'Primary',
-        self::TYPE_RESIDENTIAL => 'Residential',
-        self::TYPE_SHIPPING => 'Shipping',
-        self::TYPE_BILLING => 'Billing',
-        self::TYPE_OFFICE => 'Office',
-        self::TYPE_MAILING => 'Mailing',
-        self::TYPE_BRANCH => 'Branch'
-    ];
-
-    // Protected --------------
-
-    // Variables -----------------------------
-
-    // Public -----------------
-
-    // Protected --------------
-
-    // Private ----------------
-
-    // Traits ------------------------------------------------------
-
-    // Constructor and Initialisation ------------------------------
-
-    // Instance methods --------------------------------------------
-
-    // Yii interfaces ------------------------
-
-    // Yii parent classes --------------------
+	// Variables ---------------------------------------------------
+
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	const TYPE_DEFAULT		= 'default';
+	const TYPE_PRIMARY		= 'primary';
+	const TYPE_RESIDENTIAL	= 'residential';
+	const TYPE_SHIPPING		= 'shipping';
+	const TYPE_BILLING		= 'billing';
+	const TYPE_OFFICE		= 'office';	  // Office/ Registered
+	const TYPE_MAILING		= 'mailing';   // Mailing/ Communication
+	const TYPE_BRANCH		= 'branch';	  // Office having multiple branches
+
+	// Public -----------------
+
+	public static $typeMap = [
+		self::TYPE_DEFAULT => 'Default',
+		self::TYPE_PRIMARY => 'Primary',
+		self::TYPE_RESIDENTIAL => 'Residential',
+		self::TYPE_SHIPPING => 'Shipping',
+		self::TYPE_BILLING => 'Billing',
+		self::TYPE_OFFICE => 'Office',
+		self::TYPE_MAILING => 'Mailing',
+		self::TYPE_BRANCH => 'Branch'
+	];
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
-
-    // yii\base\Model ---------
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
-    public function rules() {
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
 
-        // model rules
-        $rules = [
-            [ [ 'provinceId', 'countryId', 'line1', 'cityName', 'zip' ], 'required' ],
-            [ [ 'cityId' ], 'required', 'on' => 'cityId' ],
-            [ [ 'longitude', 'latitude' ], 'required', 'on' => 'location' ],
-            [ [ 'longitude', 'latitude', 'cityId' ], 'required', 'on' => 'locationWithCityId' ],
-            [ [ 'id' ], 'safe' ],
-            [ [ 'zip', 'subZip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
-            [ [ 'phone', 'fax' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ [ 'countryName', 'provinceName', 'cityName' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ [ 'title' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-            [ [ 'line1', 'line2', 'line3', 'firstName', 'lastName', 'email', 'website' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
-            [ [ 'zip', 'subZip' ], 'alphanumhyphenspace' ],
-            [ [ 'countryId', 'provinceId', 'cityId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'longitude', 'latitude', 'zoomLevel' ], 'number' ]
-        ];
+		// model rules
+		$rules = [
+			[ [ 'provinceId', 'countryId', 'line1', 'cityName', 'zip' ], 'required' ],
+			[ [ 'cityId' ], 'required', 'on' => 'cityId' ],
+			[ [ 'longitude', 'latitude' ], 'required', 'on' => 'location' ],
+			[ [ 'longitude', 'latitude', 'cityId' ], 'required', 'on' => 'locationWithCityId' ],
+			[ [ 'id' ], 'safe' ],
+			[ [ 'zip', 'subZip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+			[ [ 'phone', 'fax' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'countryName', 'provinceName', 'cityName' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'title' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'line1', 'line2', 'line3', 'firstName', 'lastName', 'email', 'website' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'zip', 'subZip' ], 'alphanumhyphenspace' ],
+			[ [ 'countryId', 'provinceId', 'cityId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'longitude', 'latitude', 'zoomLevel' ], 'number' ]
+		];
 
-        // trim if required
-        if( Yii::$app->core->trimFieldValue ) {
+		// trim if required
+		if( Yii::$app->core->trimFieldValue ) {
 
-            $trim[] = [ [ 'line1', 'line2', 'line3', 'cityName', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'latitude', 'longitude' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'line1', 'line2', 'line3', 'cityName', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'latitude', 'longitude' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
-    }
+		return $rules;
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels() {
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
 
-        return [
-            'countryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
-            'provinceId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PROVINCE ),
-            'cityId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
-            'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE1 ),
-            'line1' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE1 ),
-            'line2' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE2 ),
-            'line3' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE3 ),
-            'cityName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CITY ),
-            'zip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP ),
-            'subZip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP_SUB ),
-            'firstName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
-            'lastName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
-            'phone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
-            'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
-            'fax' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FAX ),
-            'website' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
-            'longitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LONGITUDE ),
-            'latitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LATITUDE ),
-            'zoomLevel' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZOOM )
-        ];
-    }
+		return [
+			'countryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
+			'provinceId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PROVINCE ),
+			'cityId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE1 ),
+			'line1' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE1 ),
+			'line2' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE2 ),
+			'line3' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE3 ),
+			'cityName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CITY ),
+			'zip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP ),
+			'subZip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP_SUB ),
+			'firstName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
+			'lastName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
+			'phone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
+			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+			'fax' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FAX ),
+			'website' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
+			'longitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LONGITUDE ),
+			'latitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LATITUDE ),
+			'zoomLevel' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZOOM )
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // Address -------------------------------
+	// Address -------------------------------
 
-    /**
-     * @return Country
-     */
-    public function getCountry() {
+	/**
+	 * @return Country
+	 */
+	public function getCountry() {
 
-        return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] );
-    }
+		return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] );
+	}
 
-    /**
-     * @return Province
-     */
-    public function getProvince() {
+	/**
+	 * @return Province
+	 */
+	public function getProvince() {
 
-        return $this->hasOne( Province::className(), [ 'id' => 'provinceId' ] );
-    }
+		return $this->hasOne( Province::className(), [ 'id' => 'provinceId' ] );
+	}
 
-    /**
-     * @return City
-     */
-    public function getCity() {
+	/**
+	 * @return City
+	 */
+	public function getCity() {
 
-        return $this->hasOne( City::className(), [ 'id' => 'cityId' ] );
-    }
+		return $this->hasOne( City::className(), [ 'id' => 'cityId' ] );
+	}
 
-    public function toString() {
+	public function toString() {
 
-        $country    = $this->country->name;
-        $province   = $this->province->name;
-        $address    = $this->line1;
+		$country	= $this->country->name;
+		$province	= $this->province->name;
+		$address	= $this->line1;
 
-        if( isset( $this->line2 ) && strlen( $this->line2 ) > 0 ) {
+		if( isset( $this->line2 ) && strlen( $this->line2 ) > 0 ) {
 
-            $address .= ", $this->line2";
-        }
+			$address .= ", $this->line2";
+		}
 
-        if( isset( $this->line3 ) && strlen( $this->line3 ) > 0 ) {
+		if( isset( $this->line3 ) && strlen( $this->line3 ) > 0 ) {
 
-            $address .= ", $this->line3";
-        }
+			$address .= ", $this->line3";
+		}
 
-        if( isset( $this->cityName ) && strlen( $this->cityName ) > 0 ) {
+		if( isset( $this->cityName ) && strlen( $this->cityName ) > 0 ) {
 
-            $address .= ", $this->cityName";
-        }
+			$address .= ", $this->cityName";
+		}
 
-        //$address .= ", $country, $province, $this->zip";
-        $address .= ", $this->zip";
+		//$address .= ", $country, $province, $this->zip";
+		$address .= ", $this->zip";
 
-        return $address;
-    }
+		return $address;
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName() {
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName() {
 
-        return CoreTables::TABLE_ADDRESS;
-    }
+		return CoreTables::TABLE_ADDRESS;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Address -------------------------------
+	// Address -------------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    public static function queryWithHasOne( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country', 'province', 'city' ];
-        $config[ 'relations' ]	= $relations;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country', 'province', 'city' ];
+		$config[ 'relations' ]	= $relations;
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithCountry( $config = [] ) {
+	public static function queryWithCountry( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'country' ];
+		$config[ 'relations' ]	= [ 'country' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithProvince( $config = [] ) {
+	public static function queryWithProvince( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'province' ];
+		$config[ 'relations' ]	= [ 'province' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithCountryProvince( $config = [] ) {
+	public static function queryWithCountryProvince( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'country', 'province' ];
+		$config[ 'relations' ]	= [ 'country', 'province' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 }

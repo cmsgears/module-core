@@ -26,189 +26,189 @@ use cmsgears\core\common\models\entities\Role;
  */
 class SiteMember extends \cmsgears\core\common\models\base\Mapper {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors() {
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors() {
 
-        return [
-            'timestampBehavior' => [
-                'class' => TimestampBehavior::className(),
-                'createdAtAttribute' => 'createdAt',
-                'updatedAtAttribute' => 'modifiedAt',
-                'value' => new Expression('NOW()')
-            ]
-        ];
-    }
+		return [
+			'timestampBehavior' => [
+				'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+				'updatedAtAttribute' => 'modifiedAt',
+				'value' => new Expression('NOW()')
+			]
+		];
+	}
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
-    public function rules() {
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
 
-        return [
-            [ [ 'siteId', 'userId', 'roleId' ], 'required' ],
-            [ [ 'siteId', 'userId', 'roleId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'siteId', 'userId', 'roleId' ], 'unique', 'targetAttribute' => [ 'siteId', 'userId', 'roleId' ] ],
-            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
-        ];
-    }
+		return [
+			[ [ 'siteId', 'userId', 'roleId' ], 'required' ],
+			[ [ 'siteId', 'userId', 'roleId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'siteId', 'userId', 'roleId' ], 'unique', 'targetAttribute' => [ 'siteId', 'userId', 'roleId' ] ],
+			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+		];
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels() {
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
 
-        return [
-            'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
-            'userId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
-            'roleId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ROLE )
-        ];
-    }
+		return [
+			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'userId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
+			'roleId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ROLE )
+		];
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // SiteMember ----------------------------
+	// SiteMember ----------------------------
 
-    /**
-     * @return Site
-     */
-    public function getSite() {
+	/**
+	 * @return Site
+	 */
+	public function getSite() {
 
-        return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
-    }
+		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+	}
 
-    /**
-     * @return User
-     */
-    public function getUser() {
+	/**
+	 * @return User
+	 */
+	public function getUser() {
 
-        return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
-    }
+		return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
+	}
 
-    /**
-     * @return Role
-     */
-    public function getRole() {
+	/**
+	 * @return Role
+	 */
+	public function getRole() {
 
-        return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
-    }
+		return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName() {
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName() {
 
-        return CoreTables::TABLE_SITE_MEMBER;
-    }
+		return CoreTables::TABLE_SITE_MEMBER;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // SiteMember ----------------------------
+	// SiteMember ----------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    public static function queryWithHasOne( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'user', 'role' ];
-        $config[ 'relations' ]	= $relations;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'user', 'role' ];
+		$config[ 'relations' ]	= $relations;
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithSite( $config = [] ) {
+	public static function queryWithSite( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'site' ];
+		$config[ 'relations' ]	= [ 'site' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    public static function queryWithUser( $config = [] ) {
+	public static function queryWithUser( $config = [] ) {
 
-        $config[ 'relations' ]	= [ 'user', 'role' ];
+		$config[ 'relations' ]	= [ 'user', 'role' ];
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    /**
-     * @return Site - by id
-     */
-    public static function findBySiteIdUserId( $siteId, $userId ) {
+	/**
+	 * @return Site - by id
+	 */
+	public static function findBySiteIdUserId( $siteId, $userId ) {
 
-        return self::find()->where( 'siteId=:sid AND userId=:uid', [ ':sid' => $siteId, ':uid' => $userId ] )->one();
-    }
+		return self::find()->where( 'siteId=:sid AND userId=:uid', [ ':sid' => $siteId, ':uid' => $userId ] )->one();
+	}
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 
-    /**
-     * Delete the mappings by given site id.
-     */
-    public static function deleteBySiteId( $siteId ) {
+	/**
+	 * Delete the mappings by given site id.
+	 */
+	public static function deleteBySiteId( $siteId ) {
 
-        self::deleteAll( 'siteId=:id', [ ':id' => $siteId ] );
-    }
+		self::deleteAll( 'siteId=:id', [ ':id' => $siteId ] );
+	}
 
-    /**
-     * Delete the mappings by given user id.
-     */
-    public static function deleteByUserId( $memberId ) {
+	/**
+	 * Delete the mappings by given user id.
+	 */
+	public static function deleteByUserId( $memberId ) {
 
-        self::deleteAll( 'userId=:id', [ ':id' => $memberId ] );
-    }
+		self::deleteAll( 'userId=:id', [ ':id' => $memberId ] );
+	}
 
-    /**
-     * Delete the mappings by given role id.
-     */
-    public static function deleteByRoleId( $roleId ) {
+	/**
+	 * Delete the mappings by given role id.
+	 */
+	public static function deleteByRoleId( $roleId ) {
 
-        self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
-    }
+		self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
+	}
 }

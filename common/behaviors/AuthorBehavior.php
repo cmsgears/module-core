@@ -6,42 +6,42 @@ use yii\db\BaseActiveRecord;
 
 class AuthorBehavior extends \yii\behaviors\AttributeBehavior {
 
-    public $createdByAttribute = 'createdBy';
+	public $createdByAttribute = 'createdBy';
 
-    public $updatedByAttribute = 'modifiedBy';
+	public $updatedByAttribute = 'modifiedBy';
 
-    public $value;
+	public $value;
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        if( empty( $this->attributes ) ) {
+		if( empty( $this->attributes ) ) {
 
-            $this->attributes = [
-                BaseActiveRecord::EVENT_BEFORE_INSERT => [ $this->createdByAttribute, $this->updatedByAttribute ],
-                BaseActiveRecord::EVENT_BEFORE_UPDATE => $this->updatedByAttribute,
-            ];
-        }
-    }
+			$this->attributes = [
+				BaseActiveRecord::EVENT_BEFORE_INSERT => [ $this->createdByAttribute, $this->updatedByAttribute ],
+				BaseActiveRecord::EVENT_BEFORE_UPDATE => $this->updatedByAttribute,
+			];
+		}
+	}
 
-    protected function getValue( $event ) {
+	protected function getValue( $event ) {
 
-        if( Yii::$app->user->getIdentity() != null ) {
+		if( Yii::$app->user->getIdentity() != null ) {
 
-            return Yii::$app->user->identity->id;
-        }
+			return Yii::$app->user->identity->id;
+		}
 
-        if( isset( $this->owner->createdBy ) ) {
+		if( isset( $this->owner->createdBy ) ) {
 
-            return $this->owner->createdBy;
-        }
-    }
+			return $this->owner->createdBy;
+		}
+	}
 
-    public function touch( $attribute ) {
+	public function touch( $attribute ) {
 
-        $owner = $this->owner;
+		$owner = $this->owner;
 
-        $owner->updateAttributes( array_fill_keys( ( array ) $attribute, $this->getValue(null)));
-    }
+		$owner->updateAttributes( array_fill_keys( ( array ) $attribute, $this->getValue(null)));
+	}
 }

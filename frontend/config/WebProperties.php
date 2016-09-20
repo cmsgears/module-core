@@ -9,46 +9,46 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class WebProperties extends \cmsgears\core\common\config\CmgProperties {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Global -----------------
+	// Global -----------------
 
-    const PROP_THEME			= 'theme';
+	const PROP_THEME			= 'theme';
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    private static $instance;
+	private static $instance;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // WebProperties -------------------------
+	// WebProperties -------------------------
 
-    public static function getInstance() {
+	public static function getInstance() {
 
-        if( !isset( self::$instance ) ) {
+		if( !isset( self::$instance ) ) {
 
-            self::$instance	= new WebProperties();
+			self::$instance	= new WebProperties();
 
-            self::$instance->init( CoreGlobal::CONFIG_FRONTEND );
-        }
+			self::$instance->init( CoreGlobal::CONFIG_FRONTEND );
+		}
 
-        return self::$instance;
-    }
+		return self::$instance;
+	}
 
-    // Properties
+	// Properties
 
-    public function getTheme() {
+	public function getTheme() {
 
-        return $this->properties[ self::PROP_THEME ];
-    }
+		return $this->properties[ self::PROP_THEME ];
+	}
 }

@@ -10,59 +10,59 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class Handlebars extends \yii\web\AssetBundle {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Path Configuration
-    public $sourcePath = '@bower/handlebars';
+	// Path Configuration
+	public $sourcePath = '@bower/handlebars';
 
-    // Load Javascript
-    public $js = [
-        'handlebars.js'
-    ];
+	// Load Javascript
+	public $js = [
+		'handlebars.js'
+	];
 
-    // Position to load Javascript
-    public $jsOptions = [
-        'position' => View::POS_END
-    ];
+	// Position to load Javascript
+	public $jsOptions = [
+		'position' => View::POS_END
+	];
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Handlebars ----------------------------
+	// Handlebars ----------------------------
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Handlebars ----------------------------
+	// Handlebars ----------------------------
 
 }

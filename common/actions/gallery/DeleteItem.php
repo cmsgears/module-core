@@ -12,76 +12,76 @@ use cmsgears\core\common\utilities\AjaxUtil;
 
 class DeleteItem extends \cmsgears\core\common\base\Action {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // It allows unlimited items by default.
-    public $minItems = 0;
+	// It allows unlimited items by default.
+	public $minItems = 0;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // DeleteItem ----------------------------
+	// DeleteItem ----------------------------
 
-    public function run( $slug, $id, $type = null ) {
+	public function run( $slug, $id, $type = null ) {
 
-        $galleryService		= Yii::$app->factory->get( 'galleryService' );
-        $modelFileService	= Yii::$app->factory->get( 'modelFileService' );
-        $type				= isset( $type ) ? $type : CoreGlobal::TYPE_SITE;
+		$galleryService		= Yii::$app->factory->get( 'galleryService' );
+		$modelFileService	= Yii::$app->factory->get( 'modelFileService' );
+		$type				= isset( $type ) ? $type : CoreGlobal::TYPE_SITE;
 
-        $gallery 			= $galleryService->getBySlugType( $slug, $type );
+		$gallery			= $galleryService->getBySlugType( $slug, $type );
 
-        if( isset( $gallery ) ) {
+		if( isset( $gallery ) ) {
 
-            if( $this->minItems > 0 ) {
+			if( $this->minItems > 0 ) {
 
-                $items	= $gallery->files;
+				$items	= $gallery->files;
 
-                if( count( $items ) <= $this->minItems ) {
+				if( count( $items ) <= $this->minItems ) {
 
-                    // Trigger Ajax Failure
-                    return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'limit' => "Minimum $this->minItems items are required for a gallery." ] );
-                }
-            }
+					// Trigger Ajax Failure
+					return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'limit' => "Minimum $this->minItems items are required for a gallery." ] );
+				}
+			}
 
-            $modelFile	= $modelFileService->getByModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $id );
+			$modelFile	= $modelFileService->getByModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $id );
 
-            if( isset( $modelFile ) ) {
+			if( isset( $modelFile ) ) {
 
-                $modelFileService->delete( $modelFile );
+				$modelFileService->delete( $modelFile );
 
-                // Trigger Ajax Success
-                return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $id );
-            }
-        }
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $id );
+			}
+		}
 
-        // Trigger Ajax Failure
-        return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-    }
+		// Trigger Ajax Failure
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 }

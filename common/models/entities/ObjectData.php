@@ -51,230 +51,230 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  */
 class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOwner {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    public static $multiSite = true;
+	public static $multiSite = true;
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $mParentType  		= CoreGlobal::TYPE_OBJECT;
-
-    // Protected --------------
-
-    protected $testOwner		= false;
-
-    // Private ----------------
-
-    // Traits ------------------------------------------------------
-
-    use MetaTrait;
-    use CreateModifyTrait;
-    use DataTrait;
-    use FileTrait;
-    use NameTypeTrait;
-    use SlugTypeTrait;
-    use TemplateTrait;
-    use VisualTrait;
+	public $mParentType			= CoreGlobal::TYPE_OBJECT;
+
+	// Protected --------------
+
+	protected $testOwner		= false;
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	use MetaTrait;
+	use CreateModifyTrait;
+	use DataTrait;
+	use FileTrait;
+	use NameTypeTrait;
+	use SlugTypeTrait;
+	use TemplateTrait;
+	use VisualTrait;
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Component -----
+	// yii\base\Component -----
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors() {
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors() {
 
-        return [
-            AuthorBehavior::className(),
-            'sluggableBehavior' => [
-                'class' => SluggableBehavior::className(),
-                'attribute' => 'name',
-                'slugAttribute' => 'slug',
-                'immutable' => true,
-                'ensureUnique' => true
-            ],
-            'timestampBehavior' => [
-                'class' => TimestampBehavior::className(),
-                'createdAtAttribute' => 'createdAt',
-                'updatedAtAttribute' => 'modifiedAt',
-                'value' => new Expression('NOW()')
-            ]
-        ];
-    }
+		return [
+			AuthorBehavior::className(),
+			'sluggableBehavior' => [
+				'class' => SluggableBehavior::className(),
+				'attribute' => 'name',
+				'slugAttribute' => 'slug',
+				'immutable' => true,
+				'ensureUnique' => true
+			],
+			'timestampBehavior' => [
+				'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+				'updatedAtAttribute' => 'modifiedAt',
+				'value' => new Expression('NOW()')
+			]
+		];
+	}
 
-    // yii\base\Model ---------
+	// yii\base\Model ---------
 
-    /**
-     * @inheritdoc
-     */
-    public function rules() {
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
 
-        // model rules
-        $rules = [
-            [ [ 'siteId', 'name', 'type' ], 'required' ],
-            [ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
-            [ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-            [ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-            [ [ 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
-            [ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-            [ [ 'active' ], 'boolean' ],
-            [ [ 'themeId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ [ 'siteId', 'avatarId', 'bannerId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-            [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
-        ];
+		// model rules
+		$rules = [
+			[ [ 'siteId', 'name', 'type' ], 'required' ],
+			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
+			[ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			[ [ 'active' ], 'boolean' ],
+			[ [ 'themeId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'siteId', 'avatarId', 'bannerId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+		];
 
-        // trim if required
-        if( Yii::$app->core->trimFieldValue ) {
+		// trim if required
+		if( Yii::$app->core->trimFieldValue ) {
 
-            $trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
-            return ArrayHelper::merge( $trim, $rules );
-        }
+			return ArrayHelper::merge( $trim, $rules );
+		}
 
-        return $rules;
-    }
+		return $rules;
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels() {
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
 
-        return [
-            'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
-            'themeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_THEME ),
-            'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
-            'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
-            'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
-            'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-            'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
-            'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-            'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-            'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-            'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
-            'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-            'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
-            'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
-        ];
-    }
+		return [
+			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'themeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_THEME ),
+			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
+			'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
+			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
+		];
+	}
 
-    // yii\db\BaseActiveRecord
+	// yii\db\BaseActiveRecord
 
-    public function beforeSave( $insert ) {
+	public function beforeSave( $insert ) {
 
-        if( parent::beforeSave( $insert ) ) {
+		if( parent::beforeSave( $insert ) ) {
 
-            if( $this->themeId <= 0 ) {
+			if( $this->themeId <= 0 ) {
 
-                $this->themeId = null;
-            }
+				$this->themeId = null;
+			}
 
-            if( $this->templateId <= 0 ) {
+			if( $this->templateId <= 0 ) {
 
-                $this->templateId = null;
-            }
+				$this->templateId = null;
+			}
 
-            return true;
-        }
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // IOwner -----------------
+	// IOwner -----------------
 
-    public function isOwner( $user = null, $strict = false ) {
+	public function isOwner( $user = null, $strict = false ) {
 
-        if( $this->testOwner ) {
+		if( $this->testOwner ) {
 
-            if( !isset( $user ) && !$strict ) {
+			if( !isset( $user ) && !$strict ) {
 
-                $user	= Yii::$app->user->getIdentity();
-            }
+				$user	= Yii::$app->user->getIdentity();
+			}
 
-            if( isset( $user ) ) {
+			if( isset( $user ) ) {
 
-                return $this->createdBy == $user->id;
-            }
-        }
+				return $this->createdBy == $user->id;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Validators ----------------------------
+	// Validators ----------------------------
 
-    // ObjectData ----------------------------
+	// ObjectData ----------------------------
 
-    public function getSite() {
+	public function getSite() {
 
-        return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
-    }
+		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+	}
 
-    public function getTheme() {
+	public function getTheme() {
 
-        return $this->hasOne( Theme::className(), [ 'id' => 'themeId' ] );
-    }
+		return $this->hasOne( Theme::className(), [ 'id' => 'themeId' ] );
+	}
 
-    /**
-     * @return string representation of flag
-     */
-    public function getActiveStr() {
+	/**
+	 * @return string representation of flag
+	 */
+	public function getActiveStr() {
 
-        return Yii::$app->formatter->asBoolean( $this->active );
-    }
+		return Yii::$app->formatter->asBoolean( $this->active );
+	}
 
-    // Static Methods ----------------------------------------------
+	// Static Methods ----------------------------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\db\ActiveRecord ----
+	// yii\db\ActiveRecord ----
 
-    /**
-     * @inheritdoc
-     */
-    public static function tableName() {
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName() {
 
-        return CoreTables::TABLE_OBJECT_DATA;
-    }
+		return CoreTables::TABLE_OBJECT_DATA;
+	}
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // ObjectData ----------------------------
+	// ObjectData ----------------------------
 
-    // Read - Query -----------
+	// Read - Query -----------
 
-    public static function queryWithHasOne( $config = [] ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-        $relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'site', 'template', 'theme', 'creator', 'modifier' ];
-        $config[ 'relations' ]	= $relations;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'site', 'template', 'theme', 'creator', 'modifier' ];
+		$config[ 'relations' ]	= $relations;
 
-        return parent::queryWithAll( $config );
-    }
+		return parent::queryWithAll( $config );
+	}
 
-    // Read - Find ------------
+	// Read - Find ------------
 
-    // Create -----------------
+	// Create -----------------
 
-    // Update -----------------
+	// Update -----------------
 
-    // Delete -----------------
+	// Delete -----------------
 }

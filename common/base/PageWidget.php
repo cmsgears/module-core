@@ -17,213 +17,213 @@ use cmsgears\core\common\utilities\CodeGenUtil;
  */
 abstract class PageWidget extends Widget {
 
-    // Variables ---------------------------------------------------
-
-    // Globals -------------------------------
+	// Variables ---------------------------------------------------
+
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    /**
-     * Used to decorate wrapper. The inherited $options will be used for div wrapping the models wrapper.
-     */
-    public $wrapperOptions  = [ 'class' => 'wrapper-model clearfix' ];
+	/**
+	 * Used to decorate wrapper. The inherited $options will be used for div wrapping the models wrapper.
+	 */
+	public $wrapperOptions	= [ 'class' => 'wrapper-model clearfix' ];
 
-    public $modelOptions    = [ 'class' => 'model clearfix' ];
+	public $modelOptions	= [ 'class' => 'model clearfix' ];
 
-    /*
-     * Base path used for all and single paths.
-     */
-    public $basePath        = null;
+	/*
+	 * Base path used for all and single paths.
+	 */
+	public $basePath		= null;
 
-    /*
-     * Path to be used for View All button or link if applicable.
-     */
-    public $allPath         = 'all';
+	/*
+	 * Path to be used for View All button or link if applicable.
+	 */
+	public $allPath			= 'all';
 
-    /**
-     * It can be used to show link to view all models.
-     */
-    public $showAllPath     = false;
+	/**
+	 * It can be used to show link to view all models.
+	 */
+	public $showAllPath		= false;
 
-    /*
-     * Path to view single model page if applicable.
-     */
-    public $singlePath      = 'single';
+	/*
+	 * Path to view single model page if applicable.
+	 */
+	public $singlePath		= 'single';
 
-    /*
-     * Check whether pagination is required for this widget.
-     */
-    public $pagination      = true;
+	/*
+	 * Check whether pagination is required for this widget.
+	 */
+	public $pagination		= true;
 
-    /*
-     * Paging can be done using standard Yii Widget i.e. LinkPager. If paging is false, scroll/action based paging can be used to show remaining pages instead of clickable page links.
-     */
-    public $paging          = true;
+	/*
+	 * Paging can be done using standard Yii Widget i.e. LinkPager. If paging is false, scroll/action based paging can be used to show remaining pages instead of clickable page links.
+	 */
+	public $paging			= true;
 
-    /**
-     * Ajaxify the paging links in case $paging is set to true. In such cases, URL params will be updated using History API if supported by browser and the page will be loaded via ajax without refreshing full page.
-     */
-    public $ajaxifyLinks    = true;
+	/**
+	 * Ajaxify the paging links in case $paging is set to true. In such cases, URL params will be updated using History API if supported by browser and the page will be loaded via ajax without refreshing full page.
+	 */
+	public $ajaxifyLinks	= true;
 
-    /*
-     * Ajax url used to fetch pages. It must be a relative path for appropriate apix controller.
-     */
-    public $ajaxUrl         = null;
+	/*
+	 * Ajax url used to fetch pages. It must be a relative path for appropriate apix controller.
+	 */
+	public $ajaxUrl			= null;
 
-    /**
-     * Default page limit.
-     */
-    public $limit           = 5;
+	/**
+	 * Default page limit.
+	 */
+	public $limit			= 5;
 
-    /*
-     * Useful in case limited text is displayed for a model irrespective of total length. It will be useful in maintaining same height for all the models.
-     */
-    public $textLimit       = CoreGlobal::DISPLAY_TEXT_SMALL;
+	/*
+	 * Useful in case limited text is displayed for a model irrespective of total length. It will be useful in maintaining same height for all the models.
+	 */
+	public $textLimit		= CoreGlobal::DISPLAY_TEXT_SMALL;
 
-    // Filter Models    - multisite environment
+	// Filter Models	- multisite environment
 
-    /**
-     * Exclude main site models and show models from all other sites.
-     */
-    public $excludeMain     = false;
+	/**
+	 * Exclude main site models and show models from all other sites.
+	 */
+	public $excludeMain		= false;
 
-    /**
-     * Show models only from current site ignoring all other sites.
-     */
-    public $siteModels      = false;
+	/**
+	 * Show models only from current site ignoring all other sites.
+	 */
+	public $siteModels		= false;
 
-    /**
-     * DataProvider to fetch initial page.
-     */
-    public $dataProvider 	= null;
+	/**
+	 * DataProvider to fetch initial page.
+	 */
+	public $dataProvider	= null;
 
-    /**
-     * First page of models.
-     */
-    public $modelPage    	= null;
+	/**
+	 * First page of models.
+	 */
+	public $modelPage		= null;
 
-    /**
-     * Page info having total details.
-     */
-    public $pageInfo     	= null;
+	/**
+	 * Page info having total details.
+	 */
+	public $pageInfo		= null;
 
-    /**
-     * Page links generated by LinkPager.
-     */
-    public $pageLinks    	= null;
+	/**
+	 * Page links generated by LinkPager.
+	 */
+	public $pageLinks		= null;
 
-    // Protected --------------
+	// Protected --------------
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    public function init() {
+	public function init() {
 
-        parent::init();
+		parent::init();
 
-        // Init models
-        $this->initModels();
+		// Init models
+		$this->initModels();
 
-        // Init Pagination
-        $this->initPaging();
-    }
+		// Init Pagination
+		$this->initPaging();
+	}
 
-    /**
-     * Initialise data provider and fetch first page of models.
-     */
-    abstract public function initModels( $config = [] );
+	/**
+	 * Initialise data provider and fetch first page of models.
+	 */
+	abstract public function initModels( $config = [] );
 
-    /**
-     * Initialise paging if applicable.
-     */
-    public function initPaging( $config = [] ) {
+	/**
+	 * Initialise paging if applicable.
+	 */
+	public function initPaging( $config = [] ) {
 
-        // Init Pagination
-        if( $this->pagination && $this->paging && isset( $this->dataProvider ) ) {
+		// Init Pagination
+		if( $this->pagination && $this->paging && isset( $this->dataProvider ) ) {
 
-            $pagination         = $this->dataProvider->getPagination();
-            $this->pageInfo     = CodeGenUtil::getPaginationDetail( $this->dataProvider );
-            $this->pageLinks    = LinkPager::widget( [ 'pagination' => $pagination ] );
-        }
-    }
+			$pagination			= $this->dataProvider->getPagination();
+			$this->pageInfo		= CodeGenUtil::getPaginationDetail( $this->dataProvider );
+			$this->pageLinks	= LinkPager::widget( [ 'pagination' => $pagination ] );
+		}
+	}
 
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // yii\base\Widget --------
+	// yii\base\Widget --------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // cmsgears\core\common\base\Widget
+	// cmsgears\core\common\base\Widget
 
-    public function renderWidget( $config = [] ) {
+	public function renderWidget( $config = [] ) {
 
-        // Models and HTML
-        $models         = $this->modelPage;
-        $modelsHtml     = [];
+		// Models and HTML
+		$models			= $this->modelPage;
+		$modelsHtml		= [];
 
-        // Views
-        $wrapperView    = $this->template . '/wrapper';
-        $singleView     = $this->template . '/single';
+		// Views
+		$wrapperView	= $this->template . '/wrapper';
+		$singleView		= $this->template . '/single';
 
-        if( Yii::$app->core->multiSite && Yii::$app->core->subDirectory ) {
+		if( Yii::$app->core->multiSite && Yii::$app->core->subDirectory ) {
 
-            $siteName	= Yii::$app->core->getSiteName();
+			$siteName	= Yii::$app->core->getSiteName();
 
-            if( isset( $this->basePath ) ) {
+			if( isset( $this->basePath ) ) {
 
-                $this->basePath = Url::toRoute( [ "$siteName/$this->basePath" ] );
-            }
-            else {
+				$this->basePath = Url::toRoute( [ "$siteName/$this->basePath" ] );
+			}
+			else {
 
-                $this->basePath = Url::toRoute( [ "$siteName" ] );
-            }
-        }
+				$this->basePath = Url::toRoute( [ "$siteName" ] );
+			}
+		}
 
-       if( isset( $this->basePath ) ) {
+	   if( isset( $this->basePath ) ) {
 
-            $this->allPath      = Url::toRoute( [ "/$this->basePath/$this->allPath" ], true );
-            $this->singlePath   = Url::toRoute( [ "/$this->basePath/$this->singlePath" ], true );
-        }
-        else {
+			$this->allPath		= Url::toRoute( [ "/$this->basePath/$this->allPath" ], true );
+			$this->singlePath	= Url::toRoute( [ "/$this->basePath/$this->singlePath" ], true );
+		}
+		else {
 
-            $this->allPath      = Url::toRoute( [ "/$this->allPath" ], true );
-            $this->singlePath   = Url::toRoute( [ "/$this->singlePath" ], true );
-        }
+			$this->allPath		= Url::toRoute( [ "/$this->allPath" ], true );
+			$this->singlePath	= Url::toRoute( [ "/$this->singlePath" ], true );
+		}
 
-        $idxCounter	= 0;
+		$idxCounter	= 0;
 
-        foreach( $models as $model ) {
+		foreach( $models as $model ) {
 
-            $modelsHtml[]   = $this->render( $singleView, [ 'index' => $idxCounter, 'model' => $model, 'widget' => $this ] );
+			$modelsHtml[]	= $this->render( $singleView, [ 'index' => $idxCounter, 'model' => $model, 'widget' => $this ] );
 
-            $idxCounter++;
-        }
+			$idxCounter++;
+		}
 
-        $modelsHtml     = implode( '', $modelsHtml );
+		$modelsHtml		= implode( '', $modelsHtml );
 
-        $content        = $this->render( $wrapperView, [ 'modelsHtml' => $modelsHtml, 'widget' => $this ] );
+		$content		= $this->render( $wrapperView, [ 'modelsHtml' => $modelsHtml, 'widget' => $this ] );
 
-        return Html::tag( 'div', $content, $this->options );
-    }
+		return Html::tag( 'div', $content, $this->options );
+	}
 
-    // PageWidget ----------------------------
+	// PageWidget ----------------------------
 
 }

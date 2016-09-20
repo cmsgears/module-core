@@ -18,43 +18,43 @@ use cmsgears\core\common\utilities\AjaxUtil;
  */
 class Testimonial extends Create {
 
-    // Variables ---------------------------------------------------
+	// Variables ---------------------------------------------------
 
-    // Globals -------------------------------
+	// Globals -------------------------------
 
-    // Constants --------------
+	// Constants --------------
 
-    // Public -----------------
+	// Public -----------------
 
-    // Protected --------------
+	// Protected --------------
 
-    // Variables -----------------------------
+	// Variables -----------------------------
 
-    // Public -----------------
+	// Public -----------------
 
-    public $type		= ModelComment::TYPE_TESTIMONIAL;
+	public $type		= ModelComment::TYPE_TESTIMONIAL;
 
-    public $scenario	= ModelComment::TYPE_TESTIMONIAL;
+	public $scenario	= ModelComment::TYPE_TESTIMONIAL;
 
-    // Protected --------------
+	// Protected --------------
 
-    protected $typed = false;
+	protected $typed = false;
 
-    // Private ----------------
+	// Private ----------------
 
-    // Traits ------------------------------------------------------
+	// Traits ------------------------------------------------------
 
-    // Constructor and Initialisation ------------------------------
+	// Constructor and Initialisation ------------------------------
 
-    // Instance methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-    // Yii interfaces ------------------------
+	// Yii interfaces ------------------------
 
-    // Yii parent classes --------------------
+	// Yii parent classes --------------------
 
-    // CMG interfaces ------------------------
+	// CMG interfaces ------------------------
 
-    // CMG parent classes --------------------
+	// CMG parent classes --------------------
 
-    // Testimonial ---------------------------
+	// Testimonial ---------------------------
 }

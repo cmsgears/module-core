@@ -56,9 +56,13 @@ class RemoveCategory extends \cmsgears\core\common\actions\base\ModelAction {
 
 		if( isset( $this->model ) && isset( $post[ 'categoryId' ] ) ) {
 
+			$modelId				= $post[ 'categoryId' ];
+			$parentId				= $this->model->id;
+			$parentType 			= isset( $post[ 'parentType' ] ) ? $post[ 'parentType' ] : $this->modelService->getParentType();
+
 			$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
 
-			$mapping	= $modelCategoryService->getByModelId( $this->model->id, $this->modelService->getParentType(), $post[ 'categoryId' ] );
+			$mapping				= $modelCategoryService->getByModelId( $this->model->id, $this->modelService->getParentType(), $post[ 'categoryId' ] );
 
 			if( isset( $mapping ) ) {
 

@@ -39,6 +39,19 @@ if( !isset( $sortOrder ) ) {
 		</span>
 	</div>
 </div>
+<div class="header-content clearfix">
+	<div class="header-actions col12">
+		<span class="bold">Sort By:</span>
+	</div>
+	<div class="header-actions col12x7">
+		<span class="wrap-sort">
+			<?= $dataProvider->sort->link( 'name', [ 'class' => 'sort btn btn-medium' ] ) ?>
+		</span>
+	</div>
+	<div class="header-actions col12x4 align align-right">
+		<span class="wrap-filters"></span>
+	</div>
+</div>
 
 <div class="data-grid">
 	<div class="grid-header clearfix">
@@ -53,12 +66,7 @@ if( !isset( $sortOrder ) ) {
 		<table>
 			<thead>
 				<tr>
-					<th>Name
-						<span class='box-icon-sort'>
-							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
-							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
-						</span>
-					</th>
+					<th>Name</th>
 					<th>Icon</th>
 					<th>Description</th>
 					<th>Renderer</th>

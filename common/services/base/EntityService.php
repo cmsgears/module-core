@@ -564,12 +564,12 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		// Restrict to site
 		if( $modelClass::$multiSite && $multiSite ) {
 
-			$config[ 'conditions' ][ 'siteId' ] = Yii::$app->core->siteId;
+			$config[ 'conditions' ][ "$modelTable.siteId" ] = Yii::$app->core->siteId;
 
 			// Get data from all sites irrespective of current site.
 			if( isset( $config[ 'ignoreMultiSite' ] ) && $config[ 'ignoreMultiSite' ] ) {
 
-				unset( $config[ 'conditions' ][ 'siteId' ] );
+				unset( $config[ 'conditions' ][ "$modelTable.siteId" ] );
 			}
 		}
 
@@ -584,7 +584,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		// Default search column
 		if( !isset( $config[ 'search-col' ] ) ) {
 
-			$config[ 'search-col' ] = 'name';
+			$config[ 'search-col' ] = "$modelTable.name";
 		}
 
 		return static::findDataProvider( $config );
@@ -980,6 +980,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	 */
 	public static function generateMap( $config = [] ) {
 
+		// column alias
 		$nameAlias		= isset( $config[ 'nameAlias' ] ) ? $config[ 'nameAlias' ] : 'name';
 		$valueAlias		= isset( $config[ 'valueAlias' ] ) ? $config[ 'valueAlias' ] : 'value';
 

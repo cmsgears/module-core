@@ -25,23 +25,8 @@ trait ApprovalTrait {
 		IApproval::STATUS_TERMINATED => 'Terminated'
 	];
 
-	// Used for url params
-	public static $revStatusMap = [
-		'new' => IApproval::STATUS_NEW,
-		'submitted' => IApproval::STATUS_SUBMITTED,
-		'rejected' => IApproval::STATUS_REJECTED,
-		're-submitted' => IApproval::STATUS_RE_SUBMIT,
-		'confirmed' => IApproval::STATUS_CONFIRMED,
-		'active' => IApproval::STATUS_ACTIVE,
-		'frozen' => IApproval::STATUS_FROJEN,
-		'uplift-freeze' => IApproval::STATUS_UPLIFT_FREEZE,
-		'blocked' => IApproval::STATUS_BLOCKED,
-		'uplift-block' => IApproval::STATUS_UPLIFT_BLOCK,
-		'terminated' => IApproval::STATUS_TERMINATED
-	];
-
 	// Used for external docs
-	public static $extRevStatusMap = [
+	public static $revStatusMap = [
 		'New' => IApproval::STATUS_NEW,
 		'Submitted' => IApproval::STATUS_SUBMITTED,
 		'Rejected' => IApproval::STATUS_REJECTED,
@@ -53,6 +38,21 @@ trait ApprovalTrait {
 		'Blocked' => IApproval::STATUS_BLOCKED,
 		'Uplift Block' => IApproval::STATUS_UPLIFT_BLOCK,
 		'Terminated' => IApproval::STATUS_TERMINATED
+	];
+
+	// Used for url params
+	public static $urlRevStatusMap = [
+		'new' => IApproval::STATUS_NEW,
+		'submitted' => IApproval::STATUS_SUBMITTED,
+		'rejected' => IApproval::STATUS_REJECTED,
+		're-submitted' => IApproval::STATUS_RE_SUBMIT,
+		'confirmed' => IApproval::STATUS_CONFIRMED,
+		'active' => IApproval::STATUS_ACTIVE,
+		'frozen' => IApproval::STATUS_FROJEN,
+		'uplift-freeze' => IApproval::STATUS_UPLIFT_FREEZE,
+		'blocked' => IApproval::STATUS_BLOCKED,
+		'uplift-block' => IApproval::STATUS_UPLIFT_BLOCK,
+		'terminated' => IApproval::STATUS_TERMINATED
 	];
 
 	public function getStatusStr() {

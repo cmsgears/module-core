@@ -76,7 +76,7 @@ class CoreProperties extends CmgProperties {
 
 	const PROP_TIMEZONE				= 'timezone';
 
-	const PROP_AUTOLOGIN 			= 'autologin';
+	const PROP_AUTOLOGIN			= 'autologin';
 
 	// Public -----------------
 

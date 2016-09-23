@@ -91,7 +91,8 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post(), 'ResetPassword' ) && $model->validate() ) {
 
-			$user	= $this->userService->getByEmail( $model->email );
+			$coreProperties = $this->getCoreProperties();
+			$user			= $this->userService->getByEmail( $model->email );
 
 			// If valid user found
 			if( isset( $user ) ) {
@@ -106,9 +107,7 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
 
 					// Autologin
-					$flag	= Yii::$app->factory->get( 'siteMetaService' )->getByName( Yii::$app->core->siteId, CoreProperties::PROP_AUTOLOGIN, true )->value;
-
-					if( $flag ) {
+					if( $coreProperties->isAutoLogin() ) {
 
 						Yii::$app->user->login( $user, 3600 * 24 * 30 );
 					}

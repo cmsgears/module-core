@@ -12,7 +12,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
 /**
  * AssignCategory maps existing category to model in action using ModelCategory mapper.
  *
- * The controller must provide appropriate model service having model class, model table and parent type defined for the base model.
+ * The controller must provide appropriate model service having model class and model table defined for the base model. The service might provide parent type.
  */
 class AssignCategory extends \cmsgears\core\common\actions\base\ModelAction {
 
@@ -31,8 +31,6 @@ class AssignCategory extends \cmsgears\core\common\actions\base\ModelAction {
 	// Public -----------------
 
 	// Protected --------------
-
-	protected $typed	= true;
 
 	// Private ----------------
 
@@ -59,8 +57,11 @@ class AssignCategory extends \cmsgears\core\common\actions\base\ModelAction {
 		if( isset( $this->model ) && isset( $post[ 'categoryId' ] ) ) {
 
 			$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
+			$parentId				= $this->model->id;
+			$parentType				= $this->parentType;
+			$modelId				= $post[ 'categoryId' ];
 
-			$modelCategoryService->activateByModelId( $this->model->id, $this->modelService->getParentType(), $post[ 'categoryId' ] );
+			$modelCategoryService->activateByModelId( $parentId, $parentType, $modelId );
 
 			$categories		= $this->model->activeCategories;
 			$data			= [];

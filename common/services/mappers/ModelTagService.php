@@ -104,7 +104,7 @@ class ModelTagService extends \cmsgears\core\common\services\base\EntityService 
 
 				$tag			= new Tag();
 				$tag->siteId	= Yii::$app->core->siteId;
-				$tag->name		= $tagName;
+				$tag->name		= ucfirst( $tagName );
 				$tag->type		= $parentType;
 				$tag			= $this->tagService->create( $tag );
 			}
@@ -137,9 +137,9 @@ class ModelTagService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Delete -------------
 
-	public function deleteByTagSlug( $parentId, $parentType, $tagSlug, $tagType, $delete = false ) {
+	public function deleteByTagSlug( $parentId, $parentType, $tagSlug, $delete = false ) {
 
-		$tag	= $this->tagService->getBySlugType( $tagSlug, $tagType );
+		$tag	= $this->tagService->getBySlugType( $tagSlug, $parentType );
 
 		$this->disableByModelId( $parentId, $parentType, $tag->id, $delete = false );
 

@@ -29,7 +29,7 @@ interface IModelCategoryService extends \cmsgears\core\common\services\interface
 
 	// Update -------------
 
-	public function bindCategories( $binder, $parentType );
+	public function bindCategories( $parentId, $parentType, $binderClass = 'Binder' );
 
 	// Delete -------------
 

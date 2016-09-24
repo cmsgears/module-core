@@ -75,7 +75,7 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 					'asc' => [ 'name' => SORT_ASC ],
 					'desc' => [ 'name' => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'name',
+					'label' => 'Name',
 				]
 			]
 		]);

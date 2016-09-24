@@ -12,7 +12,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
 /**
  * RemoveCategory disable a category for model by de-activating it.
  *
- * The controller must provide appropriate model service having model class, model table and parent type defined for the base model.
+ * The controller must provide appropriate model service having model class and model table defined for the base model. The service might provide parent type.
  */
 class RemoveCategory extends \cmsgears\core\common\actions\base\ModelAction {
 
@@ -56,13 +56,12 @@ class RemoveCategory extends \cmsgears\core\common\actions\base\ModelAction {
 
 		if( isset( $this->model ) && isset( $post[ 'categoryId' ] ) ) {
 
-			$modelId				= $post[ 'categoryId' ];
-			$parentId				= $this->model->id;
-			$parentType 			= isset( $post[ 'parentType' ] ) ? $post[ 'parentType' ] : $this->modelService->getParentType();
-
 			$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
+			$parentId				= $this->model->id;
+			$parentType				= $this->parentType;
+			$modelId				= $post[ 'categoryId' ];
 
-			$mapping				= $modelCategoryService->getByModelId( $this->model->id, $this->modelService->getParentType(), $post[ 'categoryId' ] );
+			$mapping				= $modelCategoryService->getByModelId( $parentId, $parentType, $modelId );
 
 			if( isset( $mapping ) ) {
 

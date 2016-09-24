@@ -76,13 +76,13 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 					'asc' => [ 'name' => SORT_ASC ],
 					'desc' => ['name' => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'name',
+					'label' => 'Name',
 				],
 				'parent' => [
 					'asc' => [ 'parentId' => SORT_ASC ],
 					'desc' => ['parentId' => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'parent',
+					'label' => 'Parent',
 				]
 			]
 		]);

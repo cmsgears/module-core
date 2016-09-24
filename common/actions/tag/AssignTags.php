@@ -14,7 +14,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * In case a tag does not exist for model type, it will be created and than mapping will be done.
  *
- * The controller must provide appropriate model service having model class, model table and parent type defined for the base model.
+ * The controller must provide appropriate model service having model class and model table defined for the base model. The service might provide parent type.
  */
 class AssignTags extends \cmsgears\core\common\actions\base\ModelAction {
 
@@ -33,8 +33,6 @@ class AssignTags extends \cmsgears\core\common\actions\base\ModelAction {
 	// Public -----------------
 
 	// Protected --------------
-
-	protected $typed = true;
 
 	// Private ----------------
 
@@ -60,10 +58,12 @@ class AssignTags extends \cmsgears\core\common\actions\base\ModelAction {
 
 		if( isset( $this->model ) && isset( $post[ 'tags' ] ) ) {
 
-			$tags				= $post[ 'tags' ];
 			$modelTagService	= Yii::$app->factory->get( 'modelTagService' );
+			$parentId			= $this->model->id;
+			$parentType			= $this->parentType;
+			$tags				= $post[ 'tags' ];
 
-			$modelTagService->createFromCsv( $this->model->id, $this->modelService->getParentType(), $tags );
+			$modelTagService->createFromCsv( $parentId, $parentType, $tags );
 
 			$tags		= $this->model->activeTags;
 			$data		= [];

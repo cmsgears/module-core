@@ -12,7 +12,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
 /**
  * RemoveTag disable a tag for model by de-activating it.
  *
- * The controller must provide appropriate model service having model class, model table and parent type defined for the base model.
+ * The controller must provide appropriate model service having model class and model table defined for the base model. The service might provide parent type.
  */
 class RemoveTag extends \cmsgears\core\common\actions\base\ModelAction {
 
@@ -32,8 +32,6 @@ class RemoveTag extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Protected --------------
 
-	protected $typed = true;
-
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
@@ -52,16 +50,21 @@ class RemoveTag extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// RemoveTag -----------------------------
 
-	public function run( $tslug, $mtype ) {
+	public function run() {
 
 		if( isset( $this->model ) ) {
 
-			$modelTagService	= Yii::$app->factory->get( 'modelTagService' );
+			$tagSlug			= Yii::$app->request->get( 'tag-slug' );
 
-			$modelTagService->deleteByTagSlug( $this->model->id, $this->modelService->getParentType(), $tslug, $mtype );
+			$modelTagService	= Yii::$app->factory->get( 'modelTagService' );
+			$parentId			= $this->model->id;
+			$parentType			= $this->parentType;
+
+			// Disable tag mapping
+			$modelTagService->deleteByTagSlug( $parentId, $parentType, $tagSlug );
 
 			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $tslug );
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $tagSlug );
 		}
 
 		// Trigger Ajax Failure

@@ -7,6 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Category;
 use cmsgears\core\common\models\mappers\ModelCategory;
@@ -146,7 +147,13 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 
 	// Update -------------
 
-	public function bindCategories( $binder, $parentType ) {
+	public function bindCategories( $parentId, $parentType, $binderClass = 'Binder' ) {
+
+		// Bind Categories
+		$binder				= new Binder();
+		$binder->binderId	= $parentId;
+
+		$binder->load( Yii::$app->request->post(), $binderClass );
 
 		$parentId	= $binder->binderId;
 		$allData	= $binder->allData;

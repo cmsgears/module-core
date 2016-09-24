@@ -75,7 +75,7 @@ class TagService extends \cmsgears\core\common\services\base\EntityService imple
 					'asc' => [ 'name' => SORT_ASC ],
 					'desc' => ['name' => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'name',
+					'label' => 'Name',
 				]
 			]
 		]);

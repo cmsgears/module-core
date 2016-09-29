@@ -85,7 +85,7 @@ class DateUtil {
 	public static function getTime( $format = null ) {
 
 		if( !isset( $format ) ) {
-			
+
 			$format	= 'H:i:s';
 		}
 
@@ -118,7 +118,7 @@ class DateUtil {
 	public static function getDayFromDate( $date, $format = null ) {
 
 		if( !isset( $format ) ) {
-			
+
 			$format	= 'H:i:s';
 		}
 
@@ -137,9 +137,106 @@ class DateUtil {
 			$format	= 'H:i:s';
 		}
 
-		$date = strtotime( $date );
+		$date 	= is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
 
 		return date( "N", $date ) - 1;
+	}
+
+	public static function getWeekStartDate( $date ) {
+
+		$date 	= is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
+
+		$nbDay 	= date( 'N', strtotime( $date ) );
+
+		$monday = new DateTime();
+
+		$monday->setTimestamp( $date );
+		$monday->modify( '-' . ( $nbDay - 1 ) . ' days' );
+
+		return $monday;
+	}
+
+	public static function getWeekEndDate( $date ) {
+
+		$date 	= is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
+
+		$nbDay 	= date( 'N', strtotime( $date ) );
+
+		$sunday = new DateTime( $date );
+
+		$sunday->modify( '+' . ( 7 - $nbDay ) . ' days' );
+
+		return $sunday;
+	}
+
+	public static function addDays( $date, $days ) {
+
+		$date 	= is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
+
+	    $date 	= strtotime( "+" . $days ." days", $date );
+
+	    return  date( "Y-m-d", $date );
+	}
+
+	public static function lessThan( $sourceDate, $toDate, $equal = false ) {
+
+		$source = is_string( $sourceDate ) ? strtotime( $sourceDate ) : $sourceDate->getTimestamp();
+		$test 	= is_string( $toDate ) ? strtotime( $toDate ) : $toDate->getTimestamp();
+
+		// Test less than
+		if( $equal ) {
+
+			return $test <= $source;
+		}
+
+		return $test < $source;
+	}
+
+	public static function inBetween( $startDate, $endDate, $date ) {
+
+		$start 	= is_string( $startDate ) ? strtotime( $startDate ) : $startDate->getTimestamp();
+		$end 	= is_string( $endDate ) ? strtotime( $endDate ) : $endDate->getTimestamp();
+		$test 	= is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
+
+		// Test in between start and end
+		return ( ( $test >= $start ) && ( $test <= $end ) );
+	}
+
+	public static function greaterThan( $sourceDate, $toDate, $equal = false ) {
+
+		$source = is_string( $sourceDate ) ? strtotime( $sourceDate ) : $sourceDate->getTimestamp();
+		$test 	= is_string( $toDate ) ? strtotime( $toDate ) : $toDate->getTimestamp();
+
+		// Test greater than
+		if( $equal ) {
+
+			return $test >= $source;
+		}
+
+		return $test > $source;
+	}
+
+	/**
+	 * @return array - of week dates for given mon
+	 */
+	public static function getWeekDates( $monday ) {
+
+		$currentDay = is_string( $monday ) ? strtotime( $monday ) : $monday->getTimestamp();
+		$dates		= [];
+
+		if( !isset( $format ) ) {
+
+			$format	= 'Y-m-d';
+		}
+
+		for ( $i = 0 ; $i < 7 ; $i++ ) {
+
+			$dates[]	= date( $format, $currentDay );
+
+			$currentDay += 24 * 3600;
+		}
+
+		return $dates;
 	}
 
 	/**
@@ -151,7 +248,7 @@ class DateUtil {
 		$dates		= [];
 
 		if( !isset( $format ) ) {
-			
+
 			$format	= 'Y-m-d';
 		}
 
@@ -161,7 +258,7 @@ class DateUtil {
 
 			$currentDay += 24 * 3600;
 		}
-		
+
 		return $dates;
 	}
 
@@ -174,7 +271,7 @@ class DateUtil {
 		$dates		= [];
 
 		if( !isset( $format ) ) {
-			
+
 			$format	= 'Y-m-d';
 		}
 
@@ -184,7 +281,7 @@ class DateUtil {
 
 			$currentDay += 24 * 3600;
 		}
-		
+
 		return $dates;
 	}
 
@@ -200,7 +297,7 @@ class DateUtil {
 		$dates		= [];
 
 		if( !isset( $format ) ) {
-			
+
 			$format	= 'Y-m-d';
 		}
 
@@ -210,10 +307,10 @@ class DateUtil {
 
 			$currentDay += 24 * 3600;
 		}
-		
+
 		return $dates;
 	}
-	
+
 	/**
 	 * @return array - of last month dates having specified format
 	 */
@@ -229,7 +326,7 @@ class DateUtil {
 		$dates		= [];
 
 		if( !isset( $format ) ) {
-			
+
 			$format	= 'Y-m-d';
 		}
 
@@ -239,7 +336,7 @@ class DateUtil {
 
 			$currentDay += 24 * 3600;
 		}
-		
+
 		return $dates;
 	}
 
@@ -254,14 +351,14 @@ class DateUtil {
 			$houri	= $hour;
 
 			if( $hour < 10 ) {
-				
+
 				$houri	= "0$hour";
 			}
 
 			$minutei = $minute;
 
 			if( $minute < 10 ) {
-				
+
 				$minutei	= "0$minute";
 			}
 
@@ -282,7 +379,7 @@ class DateUtil {
 
 			if( $slot == 97 ) {
 
-				 $hour		= 0; 
+				 $hour		= 0;
 				 $minute	= 0;
 			}
 		}
@@ -301,14 +398,14 @@ class DateUtil {
 			$houri	= $hour;
 
 			if( $hour < 10 ) {
-				
+
 				$houri	= "0$hour";
 			}
 
 			$minutei = $minute;
 
 			if( $minute < 10 ) {
-				
+
 				$minutei	= "0$minute";
 			}
 
@@ -330,7 +427,7 @@ class DateUtil {
 
 			if( $slot == 97 ) {
 
-				 $hour		= 0; 
+				 $hour		= 0;
 				 $minute	= 0;
 			}
 		}
@@ -338,5 +435,3 @@ class DateUtil {
 		return	$interval;
 	}
 }
-
-?>

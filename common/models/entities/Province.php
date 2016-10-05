@@ -154,6 +154,11 @@ class Province extends \cmsgears\core\common\models\base\Entity {
 		return self::find()->where( 'countryId=:id', [ ':id' => $countryId ] )->all();
 	}
 
+	public static function findByCode( $code ) {
+
+		return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
+	}
+
 	// Create -----------------
 
 	// Update -----------------

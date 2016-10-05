@@ -86,18 +86,17 @@ class ModelTagService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Create -------------
 
-	public function createFromCsv( $parentId, $parentType, $tags ) {
-
-		$tags	= preg_split( "/,/", $tags );
+	public function createFromArray( $parentId, $parentType, $tags ) {
 
 		foreach ( $tags as $tagName ) {
+
+			$tagName	= trim( $tagName );
 
 			if( empty( $tagName ) ) {
 
 				continue;
 			}
 
-			$tagName	= trim( $tagName );
 			$tag		= Tag::findByNameType( $tagName, $parentType );
 
 			if( !isset( $tag ) ) {
@@ -122,6 +121,18 @@ class ModelTagService extends \cmsgears\core\common\services\base\EntityService 
 				self::activate( $modelTag );
 			}
 		}
+	}
+
+	public function createFromCsv( $parentId, $parentType, $tags ) {
+
+		$tags	= preg_split( "/,/", $tags );
+
+		return $this->createFromArray( $parentId, $parentType, $tags );
+	}
+
+	public function createFromJson( $parentId, $parentType, $tags ) {
+
+		return $this->createFromArray( $parentId, $parentType, $tags );
 	}
 
 	// Update -------------

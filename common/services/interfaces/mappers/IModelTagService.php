@@ -21,7 +21,11 @@ interface IModelTagService extends \cmsgears\core\common\services\interfaces\bas
 
 	// Create -------------
 
+	public function createFromArray( $parentId, $parentType, $tags );
+
 	public function createFromCsv( $parentId, $parentType, $tags );
+
+	public function createFromJson( $parentId, $parentType, $tags );
 
 	// Update -------------
 

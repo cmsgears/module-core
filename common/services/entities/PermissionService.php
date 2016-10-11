@@ -75,13 +75,13 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 					'asc' => [ 'name' => SORT_ASC ],
 					'desc' => ['name' => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'name'
+					'label' => 'Name'
 				],
 				'slug' => [
 					'asc' => [ 'slug' => SORT_ASC ],
 					'desc' => ['slug' => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'slug'
+					'label' => 'Slug'
 				]
 			]
 		]);

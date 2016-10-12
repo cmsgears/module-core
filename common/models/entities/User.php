@@ -432,6 +432,14 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	}
 
 	/**
+	 * Generate and set user access token using the yii security mechanism.
+	 */
+	public function generateAccessToken() {
+
+		$this->accessToken = Yii::$app->security->generateRandomString();
+	}
+
+	/**
 	 * Generate and set user verification token using the yii security mechanism.
 	 */
 	public function generateVerifyToken() {

@@ -213,6 +213,11 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 		return $address;
 	}
 
+	public function copyTo( $address ) {
+
+		$this->copyForUpdateTo( $address, [ 'countryId', 'provinceId', 'cityId', 'title', 'line1', 'line2', 'line3', 'cityName', 'provinceName', 'countryName', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude', 'zoomLevel' ] );
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------

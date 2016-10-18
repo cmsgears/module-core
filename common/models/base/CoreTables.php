@@ -47,18 +47,18 @@ class CoreTables {
 	const TABLE_FORM				= 'cmg_core_form';
 	const TABLE_FORM_FIELD			= 'cmg_core_form_field';
 
-	// Mappers & Traits -----
-
-	// Direct Mappers
-	const TABLE_ROLE_PERMISSION		= 'cmg_core_role_permission';
-	const TABLE_SITE_META			= 'cmg_core_site_meta';
-	const TABLE_SITE_MEMBER			= 'cmg_core_site_member';
-
 	// Model Resources
 	const TABLE_MODEL_MESSAGE		= 'cmg_core_model_message';
 	const TABLE_MODEL_HIERARCHY		= 'cmg_core_model_hierarchy';
 	const TABLE_MODEL_COMMENT		= 'cmg_core_model_comment';
 	const TABLE_MODEL_META			= 'cmg_core_model_meta';
+
+	// Mappers --------------
+
+	// Direct Mappers
+	const TABLE_ROLE_PERMISSION		= 'cmg_core_role_permission';
+	const TABLE_SITE_META			= 'cmg_core_site_meta';
+	const TABLE_SITE_MEMBER			= 'cmg_core_site_member';
 
 	// Model Mappers
 	const TABLE_MODEL_OBJECT		= 'cmg_core_model_object';

@@ -139,19 +139,24 @@ class DateUtil {
 
 		$date 	= is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
 
-		return date( "N", $date ) - 1;
+		return date( "N", $date );
 	}
 
 	public static function getWeekStartDate( $date ) {
 
 		$date 	= is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
+		$w 		= date( 'w', $date );
+		$monday = null;
 
-		$nbDay 	= date( 'N', strtotime( $date ) );
+		if( $w > 0 ) {
 
-		$monday = new DateTime();
+			$sunday = date( 'Y-m-d', $date - ( 86400 * $w ) );
+			$monday = date( 'Y-m-d', strtotime( $sunday ) + 86400 );
+		}
+		else {
 
-		$monday->setTimestamp( $date );
-		$monday->modify( '-' . ( $nbDay - 1 ) . ' days' );
+			$monday = date( 'Y-m-d', $date - ( 86400 * 6 ) );
+		}
 
 		return $monday;
 	}
@@ -159,12 +164,17 @@ class DateUtil {
 	public static function getWeekEndDate( $date ) {
 
 		$date 	= is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
+		$w 		= date( 'w', $date );
+		$sunday = null;
 
-		$nbDay 	= date( 'N', strtotime( $date ) );
+		if( $w == 0 ) {
 
-		$sunday = new DateTime( $date );
+			$sunday = $date;
+		}
+		else {
 
-		$sunday->modify( '+' . ( 7 - $nbDay ) . ' days' );
+			$sunday = date( 'Y-m-d', $date + ( 86400 * ( 6 - $w ) ) );
+		}
 
 		return $sunday;
 	}
@@ -176,6 +186,16 @@ class DateUtil {
 	    $date 	= strtotime( "+" . $days ." days", $date );
 
 	    return  date( "Y-m-d", $date );
+	}
+
+	public static function getDayDifference( $startDate, $endDate ) {
+
+		$start 	= is_string( $startDate ) ? strtotime( $startDate ) : $startDate->getTimestamp();
+		$end 	= is_string( $endDate ) ? strtotime( $endDate ) : $endDate->getTimestamp();
+		$diff	= $end - $start;
+		$diff	= floor( $diff / ( 60 * 60 * 24 ) );
+
+		return $diff;
 	}
 
 	public static function lessThan( $sourceDate, $toDate, $equal = false ) {

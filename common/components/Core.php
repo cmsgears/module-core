@@ -491,10 +491,9 @@ class Core extends \yii\base\Component {
 
 	// Cookies
 
-	/*Set App User */
 	public function setAppUser( $user ) {
 
-		$cookieName				= "cmg_app_user";
+		$cookieName				= '_app-user';
 
 		$guestUser[ 'user' ]	= [ 'id' => $user->id, 'firstname' => $user->firstName, 'lastname' => $user->lastName, 'email' => $user->email ];
 
@@ -502,9 +501,10 @@ class Core extends \yii\base\Component {
 
 			$data = unserialize( $_COOKIE[ $cookieName ] );
 
-			$data = $guestUser;
+			if( $data[ 'user' ][ 'id' ] != $user->id ) {
 
-			return setcookie( $cookieName, serialize( $data ), time() + ( 10 * 365 * 24 * 60 * 60 ), "/", null );
+				return setcookie( $cookieName, serialize( $guestUser ), time() + ( 10 * 365 * 24 * 60 * 60 ), "/", null );
+			}
 		}
 		else {
 
@@ -512,19 +512,17 @@ class Core extends \yii\base\Component {
 		}
 	}
 
-	/*Get App User */
+	// Call setAppUser at least once for new user before calling this method.
 	public function getAppUser() {
 
-		$cookieName = "cmg_app_user";
+		$cookieName = '_app-user';
 		$appUser	= [];
-
-		$user	= Yii::$app->user->identity;
+		$user		= Yii::$app->user->identity;
 
 		if( $user != null ) {
 
 			$appUser	= $user;
 		}
-
 		else if( isset( $_COOKIE[ $cookieName ] ) ) {
 
 			$data = unserialize( $_COOKIE[ $cookieName ] );
@@ -533,21 +531,20 @@ class Core extends \yii\base\Component {
 
 				//$appUser	  = (object) $data[ 'user' ]['user'];
 
-				$appUser = UserService::findById( $data[ 'user' ]['id'] );
+				$appUser = UserService::findById( $data[ 'user' ][ 'id' ] );
 			}
 		}
 
 		return $appUser;
 	}
 
-	/*Reset App User */
 	public function resetAppUser() {
 
-		$cookieName = "cmg_app_user";
+		$cookieName = '_app-user';
 
 		if( isset( $_COOKIE[ $cookieName ] ) ) {
 
-			$data = unserialize( $_COOKIE[ $cookieName ] );
+			$data 				= unserialize( $_COOKIE[ $cookieName ] );
 
 			$data[ 'user' ]	   = null;
 

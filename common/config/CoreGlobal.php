@@ -308,6 +308,7 @@ class CoreGlobal {
 
 	const FIELD_GLOBAL				= 'globalField';
 	const FIELD_SESSION				= 'sessionField';
+	const FIELD_FIELD_TOKEN			= 'tokenField';
 	const FIELD_VALIDATORS			= 'validatorsField';
 	const FIELD_RENDERER			= 'rendererField';
 	const FIELD_EVENT_LOG			= 'eventLogField';

@@ -162,6 +162,7 @@ class MessageSource extends \yii\base\Component {
 
 		CoreGlobal::FIELD_GLOBAL => 'Global',
 		CoreGlobal::FIELD_SESSION => 'Session',
+		CoreGlobal::FIELD_FIELD_TOKEN => 'Token',
 		CoreGlobal::FIELD_VALIDATORS => 'Validators',
 		CoreGlobal::FIELD_RENDERER => 'Render Engine',
 		CoreGlobal::FIELD_EVENT_LOG => 'Event Log',

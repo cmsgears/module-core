@@ -100,14 +100,14 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 		$this->checkHome();
 
 		// Create Form Model
-		$model = new Register();
+		$coreProperties = $this->getCoreProperties();
+		$model 			= new Register();
 
 		// Load and Validate Form Model
 		if( $coreProperties->isRegistration() && $model->load( Yii::$app->request->post() ) && $model->validate() ) {
 
 			// Register User
-			$coreProperties = $this->getCoreProperties();
-			$user			= $this->userService->register( $model );
+			$user	= $this->userService->register( $model );
 
 			if( isset( $user ) ) {
 

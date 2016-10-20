@@ -4,6 +4,7 @@ namespace cmsgears\core\common\utilities;
 // Yii Imports
 use \Yii;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 /**
  * The class CodeGenUtil provides utility methods to generate code snippets for commonly used code.
@@ -54,7 +55,7 @@ class CodeGenUtil {
 
 		foreach ( $map as $key => $value ) {
 
-			$html[]	= Html::a( $value, [ $baseUrl . "$key" ] );
+			$html[]	= Html::a( $value, Url::to( $baseUrl . $key, true ) );
 		}
 
 		if( $csv ) {
@@ -78,7 +79,7 @@ class CodeGenUtil {
 		for ( $i = 0; $i < $length; $i++ ) {
 
 			$element	= $list[ $i ];
-			$html[]		= Html::a( $element, [ $baseUrl . "$element" ] );
+			$html[]		= Html::a( $element, Url::to( $baseUrl . $element, true ) );
 		}
 
 		if( $csv ) {

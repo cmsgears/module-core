@@ -39,6 +39,9 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 	// Flag to identify whether model supports type column. It can be configured in controller or via url params.
 	public $typed		= false;
 
+	// Flag to identify whether model supports parent type column. It can be configured in controller or via url params.
+	public $parent		= false;
+
 	/** Model type provided by model service. */
 	public $modelType;
 
@@ -91,12 +94,20 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 		$typed			= Yii::$app->request->get( 'typed', null );
 		$this->typed	= isset( $typed ) ? $typed : $this->typed;
 
-		// Configure model type and parent type for typed models
+		// Configure model type for typed models
 		if( $this->typed ) {
 
 			$modelType			= Yii::$app->request->get( 'model-type', null );
 			$this->modelType	= isset( $modelType ) ? $modelType : $this->modelType;
 			$this->modelType	= isset( $this->modelType ) ? $this->modelType : $this->modelService->getParentType();
+		}
+
+		// Detect whether parent is required for model mapping
+		$parent			= Yii::$app->request->get( 'parent', null );
+		$this->parent	= isset( $parent ) ? $parent : $this->parent;
+
+		// Configure parent type for mapping
+		if( $this->parent ) {
 
 			$parentType			= Yii::$app->request->get( 'parent-type', null );
 			$this->parentType	= isset( $parentType ) ? $parentType : $this->parentType;

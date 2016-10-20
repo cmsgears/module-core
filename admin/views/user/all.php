@@ -14,7 +14,7 @@ $pagination		= $dataProvider->getPagination();
 $models			= $dataProvider->getModels();
 
 // Searching
-$searchTerms	= Yii::$app->request->getQueryParam( 'search' );
+$keywords		= Yii::$app->request->getQueryParam( 'search' );
 
 // Sorting
 $sortOrder		= Yii::$app->request->getQueryParam( 'sort' );

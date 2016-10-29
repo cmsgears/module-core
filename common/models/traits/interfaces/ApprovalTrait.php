@@ -204,7 +204,7 @@ trait ApprovalTrait {
 
 	public function toggleBlock() {
 
-		if( $this->isBlocked() ) {
+		if( $this->isBlocked() || !$this->isActive( false ) ) {
 
 			$this->status	= IApproval::STATUS_ACTIVE;
 		}

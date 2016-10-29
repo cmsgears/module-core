@@ -310,6 +310,14 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		return $model->id > 0 ? $model : false;
 	}
 
+	public function createMultiple( $models, $config = [] ) {
+
+		foreach( $models as $model ) {
+
+			$this->create( $model, $config );
+		}
+	}
+
 	public function createByParams( $params = [], $config = [] ) {
 
 		$model	= new static::$modelClass;

@@ -15,6 +15,7 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 use cmsgears\core\common\models\traits\ResourceTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\community\common\models\traits\mappers\FollowTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -99,6 +100,7 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 	use CreateModifyTrait;
 	use DataTrait;
 	use ResourceTrait;
+	use FollowTrait;
 
 	// Constructor and Initialisation ------------------------------
 

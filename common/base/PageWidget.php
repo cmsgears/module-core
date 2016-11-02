@@ -219,7 +219,7 @@ abstract class PageWidget extends Widget {
 
 		$modelsHtml		= implode( '', $modelsHtml );
 
-		$content		= $this->render( $wrapperView, [ 'modelsHtml' => $modelsHtml, 'widget' => $this ] );
+		$content		= $this->render( $wrapperView, [ 'modelsHtml' => $modelsHtml, 'widget' => $this, 'modelCount' => $idxCounter ] );
 
 		return Html::tag( 'div', $content, $this->options );
 	}

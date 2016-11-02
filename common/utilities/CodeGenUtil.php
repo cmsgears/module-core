@@ -329,7 +329,7 @@ class CodeGenUtil {
 
 		if( isset( $params[ 'meta' ] ) ) {
 
-			$keywords		= $params[ 'keywords' ];
+			$keywords		= $params[ 'meta' ];
 			$metaContent	.= "<meta name='keywords' content='$keywords' />";
 		}
 

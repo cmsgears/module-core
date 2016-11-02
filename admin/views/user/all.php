@@ -34,7 +34,7 @@ if( !isset( $sortOrder ) ) {
 		<?php } ?>
 	</div>
 	<div class="header-search col15x5">
-		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
+		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $keywords ?>">
 		<span class="frm-icon-element element-medium">
 			<i class="cmti cmti-search"></i>
 			<button id="btn-search">Search</button>

@@ -34,6 +34,8 @@ class Migration extends \yii\base\Component {
 	public $uploadsUrl		= 'http://www.cmsgears.org/uploads/';
 
 	public $testAccounts	= true;
+	
+	public $siteSlug		= CoreGlobal::SITE_MAIN;
 	public $siteMaster		= 'demomaster';
 	public $siteContact		= 'democontact';
 	public $siteInfo		= 'demoinfo';
@@ -105,6 +107,11 @@ class Migration extends \yii\base\Component {
 		return $this->testAccounts;
 	}
 
+	public function getSiteSlug() {
+
+		return $this->siteSlug;
+	}
+	
 	public function getSiteMaster() {
 
 		return $this->siteMaster;

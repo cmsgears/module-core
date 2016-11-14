@@ -490,6 +490,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
 			'lValue' => $this->smallInteger( 6 ),
 			'rValue' => $this->smallInteger( 6 ),
+			'order' => $this->bigInteger( 20 ),
 			'htmlOptions' => $this->text(),
 			'content' => $this->text(),
 			'data' => $this->text()

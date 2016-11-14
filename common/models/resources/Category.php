@@ -31,6 +31,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * @property boolean $featured
  * @property short lValue
  * @property short rValue
+ * @property short order
  * @property string $htmlOptions
  * @property string $content
  * @property string $data
@@ -101,7 +102,7 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 		// model rules
 		$rules = [
 			[ [ 'siteId', 'name' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'content', 'data', 'order' ], 'safe' ],
 			[ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
@@ -136,7 +137,8 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER )
 		];
 	}
 

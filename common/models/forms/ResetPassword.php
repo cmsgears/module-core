@@ -27,6 +27,7 @@ class ResetPassword extends \yii\base\Model {
 	public $email;
 	public $password;
 	public $password_repeat;
+	public $old_password;
 
 	// Protected --------------
 
@@ -50,13 +51,14 @@ class ResetPassword extends \yii\base\Model {
 
 		$rules = [
 			[ [ 'email', 'password', 'password_repeat' ], 'required' ],
+			[ 'old_password', 'required', 'on' => [ 'oldPassword' ] ],
 			[ 'email', 'email' ],
 			[ 'password', 'compare' ]
 		];
 
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'email', 'password', 'password_repeat' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'email', 'password', 'password_repeat', 'old_password' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}

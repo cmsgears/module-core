@@ -195,6 +195,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_USERNAME => 'Username',
 		CoreGlobal::FIELD_PASSWORD => 'Password',
 		CoreGlobal::FIELD_PASSWORD_REPEAT => 'Confirm Password',
+		CoreGlobal::FIELD_PASSWORD_OLD => 'Old Password',
 		CoreGlobal::FIELD_FIRSTNAME => 'First Name',
 		CoreGlobal::FIELD_LASTNAME => 'Last Name',
 		CoreGlobal::FIELD_DOB => 'Date of Birth',

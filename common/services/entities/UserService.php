@@ -421,8 +421,13 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$userToUpdate->generatePassword( $resetForm->password );
 		$userToUpdate->unsetResetToken();
 
+		// User need admin approval
+		if( Yii::$app->core->isUserApproval() ) {
+
+			$userToUpdate->verify();
+		}
 		// Direct approval and activation
-		if( $userToUpdate->isNew() && !Yii::$app->core->isUserApproval() ) {
+		else {
 
 			$userToUpdate->status = User::STATUS_ACTIVE;
 		}

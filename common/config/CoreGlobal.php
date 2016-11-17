@@ -341,6 +341,7 @@ class CoreGlobal {
 	const FIELD_USERNAME			= 'usernameField';
 	const FIELD_PASSWORD			= 'passwordField';
 	const FIELD_PASSWORD_REPEAT		= 'passwordRepeatField';
+	const FIELD_PASSWORD_OLD		= 'passwordOldField';
 	const FIELD_FIRSTNAME			= 'firstNameField';
 	const FIELD_LASTNAME			= 'lastNameField';
 	const FIELD_DOB					= 'dobField';

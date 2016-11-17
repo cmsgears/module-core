@@ -27,7 +27,7 @@ class ResetPassword extends \yii\base\Model {
 	public $email;
 	public $password;
 	public $password_repeat;
-	public $old_password;
+	public $oldPassword;
 
 	// Protected --------------
 
@@ -51,14 +51,14 @@ class ResetPassword extends \yii\base\Model {
 
 		$rules = [
 			[ [ 'email', 'password', 'password_repeat' ], 'required' ],
-			[ 'old_password', 'required', 'on' => [ 'oldPassword' ] ],
+			[ 'oldPassword', 'required', 'on' => [ 'oldPassword' ] ],
 			[ 'email', 'email' ],
 			[ 'password', 'compare' ]
 		];
 
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'email', 'password', 'password_repeat', 'old_password' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'email', 'password', 'password_repeat', 'oldPassword' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -71,7 +71,8 @@ class ResetPassword extends \yii\base\Model {
 		return [
 			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
 			'password' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PASSWORD ),
-			'password_repeat' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PASSWORD_REPEAT )
+			'password_repeat' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PASSWORD_REPEAT ),
+			'oldPassword' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PASSWORD_OLD )
 		];
 	}
 

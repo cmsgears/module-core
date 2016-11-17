@@ -29,9 +29,9 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * @property string $icon
  * @property string $description
  * @property boolean $featured
- * @property short lValue
- * @property short rValue
- * @property short order
+ * @property short $lValue
+ * @property short $rValue
+ * @property short $order
  * @property string $htmlOptions
  * @property string $content
  * @property string $data
@@ -102,12 +102,12 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 		// model rules
 		$rules = [
 			[ [ 'siteId', 'name' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'content', 'data', 'order' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
 			[ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
 			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-			[ [ 'parentId', 'rootId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'parentId', 'rootId', 'order' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ 'featured', 'boolean' ]
 		];
 
@@ -136,9 +136,9 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
-			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
-			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER )
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 

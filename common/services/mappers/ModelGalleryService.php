@@ -125,7 +125,7 @@ class ModelGalleryService extends \cmsgears\core\common\services\base\EntityServ
 
 			if( isset( $existingGallery ) ) {
 
-				return $this->update( $existingGallery, $gallery );
+				return $this->update( $existingGallery, [ 'gallery' => $gallery ] );
 			}
 		}
 		// Create New

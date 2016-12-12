@@ -46,7 +46,7 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Protected --------------
 
-	public $typed = true;
+	protected $typed = true;
 
 	// Private ----------------
 

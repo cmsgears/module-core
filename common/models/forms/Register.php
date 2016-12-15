@@ -131,7 +131,7 @@ class Register extends \yii\base\Model {
 
 	public function termsValidator( $attribute, $params ) {
 
-		if( !isset( $this->terms ) || strlen( $this->terms ) <= 0 ) {
+		if( !isset( $this->terms ) || $this->terms <= 0 ) {
 
 			$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_TERMS ) );
 		}

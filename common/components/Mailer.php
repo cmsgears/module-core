@@ -22,6 +22,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 	const MAIL_REG							= "register";
 	const MAIL_REG_CONFIRM					= "register-confirm";
 	const MAIL_PASSWORD_RESET				= "password-reset";
+	const MAIL_PASSWORD_CHANGE				= 'password-change';
 	const MAIL_COMMENT_SPAM_REQUEST			= 'comment/spam-request';
 	const MAIL_COMMENT_DELETE_REQUEST		= 'comment/delete-request';
 
@@ -126,6 +127,23 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 			->setTo( $user->email )
 			->setFrom( [ $fromEmail => $fromName ] )
 			->setSubject( "Password Reset | " . $this->coreProperties->getSiteName() )
+			//->setTextBody( "heroor" )
+			->send();
+	}
+
+	/**
+	 * The method sends mail for password change request by users from website.
+	 */
+	public function sendPasswordChangeMail( $user ) {
+
+		$fromEmail	= $this->mailProperties->getSenderEmail();
+		$fromName	= $this->mailProperties->getSenderName();
+
+		// Send Mail
+		$this->getMailer()->compose( self::MAIL_PASSWORD_CHANGE, [ 'coreProperties' => $this->coreProperties, 'user' => $user ] )
+			->setTo( $user->email )
+			->setFrom( [ $fromEmail => $fromName ] )
+			->setSubject( "Password Change | " . $this->coreProperties->getSiteName() )
 			//->setTextBody( "heroor" )
 			->send();
 	}

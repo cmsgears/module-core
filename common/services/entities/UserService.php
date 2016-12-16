@@ -270,7 +270,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	 * @param RegisterForm $registerForm
 	 * @return User
 	 */
-	public function register( $registerForm, $status = User::STATUS_NEW ) {
+	public function register( $registerForm ) {
 
 		$user	= new User();
 		$date	= DateUtil::getDateTime();
@@ -280,7 +280,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$user->firstName	= $registerForm->firstName;
 		$user->lastName		= $registerForm->lastName;
 		$user->registeredAt	= $date;
-		$user->status		= $status;
+		$user->status		= User::STATUS_NEW;
 
 		$user->generatePassword( $registerForm->password );
 		$user->generateVerifyToken();

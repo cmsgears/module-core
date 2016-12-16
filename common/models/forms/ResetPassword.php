@@ -52,8 +52,11 @@ class ResetPassword extends \yii\base\Model {
 		$rules = [
 			[ [ 'email', 'password', 'password_repeat' ], 'required' ],
 			[ 'oldPassword', 'required', 'on' => [ 'oldPassword' ] ],
+			[ 'password_repeat', 'compare', 'compareAttribute'=>'password', 'message'=> CoreGlobal::ERROR_PASSWORD  ],
 			[ 'email', 'email' ],
-			[ 'password', 'compare' ]
+			[ 'password', 'compare' ],
+			[ 'password', 'password' ],
+			[ 'oldPassword', 'oldPasswordValidator' ]
 		];
 
 		if( Yii::$app->core->trimFieldValue ) {
@@ -81,6 +84,19 @@ class ResetPassword extends \yii\base\Model {
 	// CMG parent classes --------------------
 
 	// Validators ----------------------------
+
+	public function oldPasswordValidator( $attribute, $params ) {
+
+		$user	= Yii::$app->user->getIdentity();
+
+		if( isset( $user ) ) {
+
+			if( !Yii::$app->getSecurity()->validatePassword( $this->oldPassword, $user->passwordHash) ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_PASSWORD_OLD ) );
+			}
+		}
+	}
 
 	// ResetPassword -------------------------
 

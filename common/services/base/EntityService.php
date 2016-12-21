@@ -307,7 +307,17 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		$model->save();
 
-		return $model->id > 0 ? $model : false;
+		if( $model->id > 0 ) {
+
+			return $model;
+		}
+		// Handle cases where proper validation is not applied
+		else if( YII_DEBUG ) {
+
+			var_dump( $model->getErrors() );
+		}
+
+		return false;
 	}
 
 	public function createMultiple( $models, $config = [] ) {
@@ -345,18 +355,32 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 			$existingModel->copyForUpdateFrom( $model, $attributes );
 
-			if( $existingModel->update( $validate ) !== false ) {
+			$update			= $existingModel->update( $validate );
+
+			if( $update ) {
 
 				return $existingModel;
+			}
+			// Handle cases where proper validation is not applied
+			else if( YII_DEBUG ) {
+
+				var_dump( $existingModel->getErrors() );
 			}
 		}
 		else {
 
 			$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : null;
 
-			if( $model->update( $validate, $attributes ) !== false ) {
+			$update		= $model->update( $validate, $attributes );
+
+			if( $update ) {
 
 				return $model;
+			}
+			// Handle cases where proper validation is not applied
+			else if( YII_DEBUG ) {
+
+				var_dump( $model->getErrors() );
 			}
 		}
 

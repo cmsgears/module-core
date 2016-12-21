@@ -57,7 +57,7 @@ trait ApprovalTrait {
 
 	public function getStatusStr() {
 
-		if( $this->status >= IApproval::STATUS_NEW ) {
+		if( $this->status >= IApproval::STATUS_SUBMITTED ) {
 
 			return self::$statusMap[ $this->status ];
 		}
@@ -227,6 +227,8 @@ trait ApprovalTrait {
 
 		return $this->isRegistration() || $this->status == IApproval::STATUS_REJECTED ||
 				$this->status == IApproval::STATUS_FROJEN || $this->status == IApproval::STATUS_BLOCKED;
+
+				return true;
 	}
 
 	public function isApprovable() {

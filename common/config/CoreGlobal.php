@@ -193,6 +193,12 @@ class CoreGlobal {
 	const ERROR_DEPENDENCY			= 'dependencyError';
 	const ERROR_SESSION_OVER		= 'sessionOverError';
 
+	// Errors - Permission
+	const ERROR_PERM_VIEW			= 'viewError';
+	const ERROR_PERM_CREATE			= 'createError';
+	const ERROR_PERM_UPDATE			= 'updateError';
+	const ERROR_PERM_DELETE			= 'deleteError';
+
 	// Errors - Core Validators
 	const ERROR_AN_SPACE			= 'alphaNumSpaceError';
 	const ERROR_AN_SPACE_U			= 'alphaNumSpaceUError';

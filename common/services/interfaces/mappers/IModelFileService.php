@@ -19,6 +19,8 @@ interface IModelFileService extends \cmsgears\core\common\services\interfaces\ba
 
 	public function getByFileTitleLike( $parentId, $parentType, $likeTitle );
 
+	public function getByFileType( $parentId, $parentType, $fileType );
+
 	// Read - Lists ----
 
 	// Read - Maps -----

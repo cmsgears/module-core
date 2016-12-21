@@ -30,9 +30,9 @@ class DeleteRequest extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	// Protected --------------
-
 	public $typed = true;
+
+	// Protected --------------
 
 	// Private ----------------
 

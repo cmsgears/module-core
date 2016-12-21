@@ -88,6 +88,11 @@ class ModelFileService extends \cmsgears\core\common\services\base\EntityService
 		return ModelFile::findByFileTitleLike( $parentId, $parentType, $likeTitle );
 	}
 
+	public function getByFileType( $parentId, $parentType, $fileType ) {
+
+		return ModelFile::findByFileType( $parentId, $parentType, $fileType );
+	}
+
 	// Read - Lists ----
 
 	// Read - Maps -----

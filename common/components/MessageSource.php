@@ -47,6 +47,12 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::ERROR_DEPENDENCY => 'This entry can not be deleted since other rows in other tables are dependent on it.',
 		CoreGlobal::ERROR_SESSION_OVER => 'User related to this account not found. Most probably session is over.',
 
+		// Errors - Permission
+		CoreGlobal::ERROR_PERM_VIEW => 'You are not allowed to view the resources.',
+		CoreGlobal::ERROR_PERM_CREATE => 'You are not allowed to create the resource.',
+		CoreGlobal::ERROR_PERM_UPDATE => 'You are not allowed to update the resource.',
+		CoreGlobal::ERROR_PERM_DELETE => 'You are not allowed to delete the resource.',
+
 		// Errors - Validators
 		CoreGlobal::ERROR_AN_SPACE => 'Please provide a valid value without any special character.',
 		CoreGlobal::ERROR_AN_SPACE_U => 'Please provide a valid value without any special character except underscore(_).',

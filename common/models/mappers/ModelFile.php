@@ -154,6 +154,13 @@ class ModelFile extends \cmsgears\core\common\models\base\Mapper {
 		return self::queryByParent( $parentId, $parentType )->andFilterWhere( [ 'like', 'title', $title ] )->all();
 	}
 
+	public static function findByFileType( $parentId, $parentType, $type ) {
+
+		$fileTable = CoreTables::TABLE_MODEL_FILE;
+
+		return self::queryByParent( $parentId, $parentType )->andFilterWhere( [ 'like', "$fileTable.type", $type ] )->all();
+	}
+
 	// Create -----------------
 
 	// Update -----------------

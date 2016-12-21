@@ -32,6 +32,7 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
+	public $typed 	= true;
 
 	public $status	= ModelComment::STATUS_NEW;
 	public $type	= null;
@@ -45,8 +46,6 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 	public $scenario;
 
 	// Protected --------------
-
-	public $typed = true;
 
 	// Private ----------------
 

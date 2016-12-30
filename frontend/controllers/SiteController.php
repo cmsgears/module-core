@@ -89,7 +89,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 		return $this->render( WebGlobalCore::PAGE_INDEX );
 	}
 
-	public function actionLogin() {
+	public function actionLogin( $admin = false ) {
 
 		return parent::actionLogin( false );
 	}

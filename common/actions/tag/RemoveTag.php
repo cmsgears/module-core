@@ -30,6 +30,8 @@ class RemoveTag extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
+	public $typed	= true;
+
 	// Protected --------------
 
 	// Private ----------------

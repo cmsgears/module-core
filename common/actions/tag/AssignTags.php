@@ -26,6 +26,8 @@ class AssignTags extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
+	public $typed	= true;
+
 	// Protected --------------
 
 	// Variables -----------------------------
@@ -70,7 +72,7 @@ class AssignTags extends \cmsgears\core\common\actions\base\ModelAction {
 
 			foreach ( $tags as $tag ) {
 
-				$data[]	= [ 'name' => $tag->name, 'slug' => $tag->slug ];
+				$data[]	= [ 'name' => $tag->name, 'slug' => $tag->slug, 'modelSlug' => isset( $this->model->slug ) ? $this->model->slug : null ];
 			}
 
 			// Trigger Ajax Success

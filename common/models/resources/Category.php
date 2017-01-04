@@ -241,7 +241,7 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 	 */
 	public static function getFeaturedByType( $type ) {
 
-		return self::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( [ 'name' => SORT_ASC ] )->all();
+		return self::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( [ 'order' => SORT_ASC ] )->all();
 	}
 
 	// Create -----------------

@@ -364,7 +364,12 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 			// Handle cases where proper validation is not applied
 			else if( YII_DEBUG ) {
 
-				var_dump( $existingModel->getErrors() );
+				if( count( $existingModel->getErrors() ) > 0 ) {
+
+					var_dump( $existingModel->getErrors() );
+				}
+
+				return true;
 			}
 		}
 		else {
@@ -380,7 +385,12 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 			// Handle cases where proper validation is not applied
 			else if( YII_DEBUG ) {
 
-				var_dump( $model->getErrors() );
+				if( count( $model->getErrors() ) > 0 ) {
+
+					var_dump( $model->getErrors() );
+				}
+
+				return true;
 			}
 		}
 

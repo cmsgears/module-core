@@ -112,12 +112,17 @@ class Template extends \cmsgears\core\common\models\base\Entity {
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'name', 'type' ], 'required' ],
 			[ [ 'id', 'content', 'data' ], 'safe' ],
-			[ [ 'name', 'icon', 'type', 'renderer' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'slug' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'description', 'layout', 'viewPath' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
+			// Unique
 			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			// Text Limit
+			[ [ 'type', 'renderer' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'slug' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'description', 'layout', 'viewPath' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			// Other
 			[ [ 'fileRender', 'layoutGroup' ], 'boolean' ],
 			[ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]

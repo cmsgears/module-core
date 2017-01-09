@@ -109,12 +109,17 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'name' ], 'required' ],
 			[ [ 'id' ], 'safe' ],
-			[ [ 'name', 'type', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'description', 'homeUrl' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
+			// Unique
 			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			// Text Limit
+			[ [ 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'description', 'homeUrl' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			// Other
 			[ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];

@@ -69,11 +69,16 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'name' ], 'required' ],
-			[ [ 'id', 'value', 'htmlOptions', 'content', 'data' ], 'safe' ],
-			[ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'categoryId', 'name' ], 'unique', 'targetAttribute' => [ 'categoryId', 'name' ] ]
+			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
+			// Unique
+			[ [ 'categoryId', 'name' ], 'unique', 'targetAttribute' => [ 'categoryId', 'name' ] ],
+			// Text Limit
+			[ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ 'value', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			// Other
+			[ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ]
 		];
 
 		// trim if required

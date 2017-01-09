@@ -73,13 +73,17 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'localeId', 'parentId', 'parentType', 'name' ], 'required' ],
 			[ [ 'id', 'value' ], 'safe' ],
-			[ [ 'localeId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			// Unique
+			[ [ 'parentId', 'parentType', 'localeId', 'name' ], 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'localeId', 'name' ] ],
+			// Text Limit
 			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'parentId', 'parentType', 'localeId', 'name' ], 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'localeId', 'name' ] ]
+			// Other
+			[ [ 'localeId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 
 		// trim if required

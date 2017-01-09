@@ -124,12 +124,15 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwn
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'name' ], 'required' ],
 			[ [ 'id', 'content', 'data' ], 'safe' ],
-			[ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'title', 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			// Text Limit
+			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'name', 'title' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'slug', 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			//Other
 			[ 'active', 'boolean' ],
 			[ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],

@@ -133,12 +133,17 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'name', 'siteId', 'captcha', 'visibility', 'active' ], 'required' ],
 			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
-			[ [ 'name', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'description', 'successMessage' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
+			// Unique
 			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			// Text Limit
+			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'slug', 'description', 'successMessage' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			// Other
 			[ [ 'visibility' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'captcha', 'active', 'userMail', 'adminMail', 'uniqueSubmit' ], 'boolean' ],
 			[ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],

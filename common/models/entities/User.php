@@ -135,22 +135,25 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'email' ], 'required' ],
 			[ [ 'id', 'phone', 'content', 'data' ], 'safe' ],
-
+			// Email
 			[ 'email', 'email' ],
 			[ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],
 			[ 'email', 'validateEmailUpdate', 'on' => [ 'update', 'profile' ] ],
 			[ 'email', 'validateEmailChange', 'on' => [ 'profile' ] ],
-
+			// Username
 			[ 'username', 'alphanumdotu' ],
 			[ 'username', 'validateUsernameCreate', 'on' => [ 'create' ] ],
 			[ 'username', 'validateUsernameUpdate', 'on' => [ 'update', 'profile' ] ],
 			[ 'username', 'validateUsernameChange', 'on' => [ 'profile' ] ],
-
+			// Text Limit
+			[ [ 'username', 'passwordHash', 'firstName', 'lastName', 'phone', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'email', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			// Other
 			[ [ 'id', 'localeId', 'genderId', 'avatarId', 'status' ], 'number', 'integerOnly' => true ],
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
-			[ [ 'email', 'username', 'passwordHash', 'firstName', 'lastName', 'phone', 'avatarUrl', 'websiteUrl', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'dob', 'date', 'format' => Yii::$app->formatter->dateFormat ],
 			[ [ 'registeredAt', 'lastLoginAt', 'lastActivityAt', 'tokenCreatedAt', 'tokenAccessedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];

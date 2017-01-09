@@ -67,12 +67,17 @@ class ModelMeta extends \cmsgears\core\common\models\base\Meta {
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'parentId', 'parentType', 'name' ], 'required' ],
 			[ [ 'id', 'value' ], 'safe' ],
-			[ [ 'parentType', 'type', 'valueType', 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ [ 'parentId', 'parentType', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'name', 'type' ] ]
+			// Unique
+			[ [ 'parentId', 'parentType', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'name', 'type' ] ],
+			// Text Limit
+			[ [ 'parentType', 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			// Other
+			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 
 		// trim if required

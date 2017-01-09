@@ -60,13 +60,17 @@ class Province extends \cmsgears\core\common\models\base\Entity {
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'countryId', 'code', 'name' ], 'required' ],
 			[ [ 'id' ], 'safe' ],
+			// Unique
 			[ [ 'countryId', 'code' ], 'unique', 'targetAttribute' => [ 'countryId', 'code' ] ],
 			[ [ 'countryId', 'name' ], 'unique', 'targetAttribute' => [ 'countryId', 'name' ] ],
-			[ 'countryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			// Text Limit
 			[ [ 'code', 'iso' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
-			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ]
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			// Other
+			[ 'countryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ]
 		];
 
 		// trim if required

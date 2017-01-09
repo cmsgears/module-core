@@ -64,9 +64,12 @@ class ModelHierarchy extends \cmsgears\core\common\models\base\Resource {
 	public function rules() {
 
 		return [
+			// Required, Safe
 			[ [ 'rootId', 'parentType' ], 'required' ],
 			[ [ 'id' ], 'safe' ],
-			[ [ 'parentType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			// Text Limit
+			[ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			// Other
 			[ [ 'parentId', 'childId', 'rootId', 'lValue', 'rValue' ], 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 	}

@@ -59,12 +59,15 @@ class Locale extends \cmsgears\core\common\models\base\Entity {
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'code', 'name' ], 'required' ],
 			[ 'id', 'safe' ],
+			// Unique
+			[ [ 'code' ], 'unique' ],
+			[ [ 'name' ], 'unique' ],
+			// Text Limit
 			[ 'code', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
-			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'code' ], 'unique', 'targetAttribute' => [ 'code' ] ],
-			[ [ 'name' ], 'unique', 'targetAttribute' => [ 'name' ] ]
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ]
 		];
 
 		// trim if required

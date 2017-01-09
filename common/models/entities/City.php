@@ -62,12 +62,16 @@ class City extends \cmsgears\core\common\models\base\Entity {
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'countryId', 'name' ], 'required' ],
 			[ [ 'id' ], 'safe' ],
-			[ [ 'countryId', 'provinceId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			// Unique
 			[ [ 'countryId', 'provinceId', 'name' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'name' ] ],
-			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			// Text Limit
 			[ 'postal', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			// Other
+			[ [ 'countryId', 'provinceId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'latitude', 'longitude' ], 'number' ]
 		];
 

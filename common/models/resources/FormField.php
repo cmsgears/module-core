@@ -107,12 +107,16 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'formId', 'name' ], 'required' ],
 			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
-			[ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'label', 'validators' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ 'name', 'alphanumu' ],
+			// Unique
 			[ [ 'formId', 'name' ], 'unique', 'targetAttribute' => [ 'formId', 'name' ] ],
+			// Text Limit
+			[ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'label', 'validators' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			// Other
+			[ 'name', 'alphanumu' ],
 			[ [ 'type', 'order' ], 'number', 'integerOnly' => true ],
 			[ 'compress', 'boolean' ]
 		];

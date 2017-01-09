@@ -91,11 +91,15 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'name' ], 'required' ],
 			[ [ 'id' ], 'safe' ],
-			[ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			// Unique
 			[ 'name', 'unique' ],
+			// Text Limit
+			[ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			// Other
 			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ 'active', 'boolean' ],
 			[ [ 'avatarId', 'bannerId', 'themeId' ], 'number', 'integerOnly' => true, 'min' => 1 ]

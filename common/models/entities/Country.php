@@ -63,12 +63,15 @@ class Country extends \cmsgears\core\common\models\base\Entity {
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'name', 'code' ], 'required' ],
 			[ 'id', 'safe' ],
+			// Unique
+			[ [ 'code' ], 'unique' ],
+			[ [ 'name' ], 'unique'],
+			// Text Limit
 			[ [ 'code', 'iso' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
-			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'code' ], 'unique', 'targetAttribute' => [ 'code' ] ],
-			[ [ 'name' ], 'unique', 'targetAttribute' => [ 'name' ] ]
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ]
 		];
 
 		// trim if required

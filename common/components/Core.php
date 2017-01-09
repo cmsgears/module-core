@@ -118,6 +118,7 @@ class Core extends \yii\base\Component {
 	public $mediumText			= CoreGlobal::TEXT_MEDIUM;
 	public $largeText			= CoreGlobal::TEXT_LARGE;
 	public $xLargeText			= CoreGlobal::TEXT_XLARGE;
+	public $xxLargeText			= CoreGlobal::TEXT_XXLARGE;
 
 	/**
 	 * @var Switch for notification feature. If it's set to true, either Notify Module must be installed or eventManager component must be configured.

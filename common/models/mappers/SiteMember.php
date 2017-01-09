@@ -79,9 +79,12 @@ class SiteMember extends \cmsgears\core\common\models\base\Mapper {
 	public function rules() {
 
 		return [
+			// Required, Safe
 			[ [ 'siteId', 'userId', 'roleId' ], 'required' ],
-			[ [ 'siteId', 'userId', 'roleId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			// Unique
 			[ [ 'siteId', 'userId', 'roleId' ], 'unique', 'targetAttribute' => [ 'siteId', 'userId', 'roleId' ] ],
+			// Other
+			[ [ 'siteId', 'userId', 'roleId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 	}

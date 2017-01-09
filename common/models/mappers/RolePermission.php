@@ -55,8 +55,11 @@ class RolePermission extends \cmsgears\core\common\models\base\Mapper {
 	public function rules() {
 
 		return [
+			// Required, Safe
 			[ [ 'roleId', 'permissionId' ], 'required' ],
+			// Unique
 			[ [ 'roleId', 'permissionId' ], 'unique', 'targetAttribute' => [ 'roleId', 'permissionId' ] ],
+			// Other
 			[ [ 'roleId', 'permissionId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 	}

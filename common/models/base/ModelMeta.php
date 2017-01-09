@@ -62,10 +62,14 @@ abstract class ModelMeta extends Meta {
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'modelId', 'name' ], 'required' ],
 			[ [ 'id', 'value' ], 'safe' ],
-			[ [ 'name', 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			// Text Limit
+			[ [ 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			// Other
 			[ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'modelId', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'modelId', 'name', 'type' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ]
 		];

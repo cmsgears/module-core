@@ -90,12 +90,16 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'siteId', 'name' ], 'required' ],
 			[ 'id', 'safe' ],
-			[ [ 'name', 'icon', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ]
+			// Unique
+			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			// Text Limit
+			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ 'name', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'slug', 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ]
 		];
 
 		// trim if required

@@ -137,17 +137,22 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'parentId', 'parentType', 'name', 'email' ], 'required' ],
 			[ [ 'id', 'content', 'data' ], 'safe' ],
+			// Email
 			[ 'email', 'email' ],
-			[ [ 'parentType', 'type', 'name', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'status', 'rating', 'fragment' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
+			// Text Limit
+			[ [ 'parentType', 'type', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'name', 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'email', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Check captcha need for testimonial and review
 			[ 'content', 'required', 'on' => [ self::TYPE_COMMENT, self::TYPE_TESTIMONIAL ] ],
 			[ [ 'content', 'rating' ], 'required', 'on' => [ self::TYPE_REVIEW ] ],
 			[ 'captcha', 'captcha', 'captchaAction' => '/core/site/captcha', 'on' => 'captcha' ],
+			// Other
+			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
+			[ [ 'status', 'rating', 'fragment' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'parentId', 'baseId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'approvedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];

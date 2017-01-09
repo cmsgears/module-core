@@ -118,11 +118,14 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'name', 'extension', 'directory' ], 'required' ],
 			[ [ 'id' ], 'safe' ],
+			// Text Limit
 			[ [ 'extension', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'title', 'directory' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'name', 'description', 'altText', 'url', 'medium', 'thumb', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'title', 'name', 'directory' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'description', 'url', 'medium', 'thumb', 'altText', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			// Other
 			[ [ 'visibility', 'width', 'height', 'mwidth', 'mheight', 'twidth', 'theight' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'size' ], 'number', 'min' => 0 ],
 			[ [ 'shared', 'changed' ], 'boolean' ],

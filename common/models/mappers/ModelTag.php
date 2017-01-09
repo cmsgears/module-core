@@ -65,12 +65,16 @@ class ModelTag extends \cmsgears\core\common\models\base\Mapper {
 	public function rules() {
 
 		return [
+			// Required, Safe
 			[ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
 			[ [ 'id' ], 'safe' ],
+			// Unique
+			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
+			// Text Limit
+			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			// Other
 			[ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
 			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'active' ], 'boolean' ]
 		];

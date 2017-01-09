@@ -46,6 +46,13 @@ trait SlugTypeTrait {
 
 	// Read - Maps -----
 
+	public function getSlugModelMap() {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::generateObjectMap( [ 'key' => 'slug' ] );
+	}
+
 	// Create -------------
 
 	// Update -------------

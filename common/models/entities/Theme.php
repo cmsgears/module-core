@@ -108,12 +108,17 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
 
 		// model rules
 		$rules = [
+			// Required, Safe
 			[ [ 'name' ], 'required' ],
 			[ [ 'id', 'content', 'data' ], 'safe' ],
-			[ [ 'name', 'renderer' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'description', 'basePath' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			// Unique
 			[ 'name', 'unique' ],
+			// Text Limit
+			[ [ 'renderer' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'description', 'basePath' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			// Other
 			[ 'default', 'boolean' ],
 			[ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]

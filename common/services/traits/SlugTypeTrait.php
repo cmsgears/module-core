@@ -51,6 +51,11 @@ trait SlugTypeTrait {
 		return $this->generateObjectMap( [ 'key' => 'slug' ] );
 	}
 
+	public function getSlugModelMapByType( $type ) {
+
+		return $this->generateObjectMap( [ 'key' => 'slug', 'conditions' => [ 'type' => $type ] ] );
+	}
+
 	// Create -------------
 
 	// Update -------------

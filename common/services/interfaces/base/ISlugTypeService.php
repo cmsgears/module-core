@@ -19,6 +19,8 @@ interface ISlugTypeService extends IEntityService {
 
 	public function getSlugModelMap();
 
+	public function getSlugModelMapByType( $type );
+
 	// Create -------------
 
 	// Update -------------

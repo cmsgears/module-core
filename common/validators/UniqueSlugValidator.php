@@ -14,7 +14,7 @@ class UniqueSlugValidator extends \yii\validators\UniqueValidator {
         $query 		= $targetClass::find();
 		$attribVal	= $model->$attribute;
 
-        $query->andWhere( "$targetAttribute LIKE '$attribVal%'" );
+        $query->andWhere( "$targetAttribute=:val", [ ':val' => $attribVal ] );
 
         if( !$model instanceof ActiveRecordInterface || $model->getIsNewRecord() ) {
 

@@ -105,7 +105,8 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 			[ [ 'siteId', 'name' ], 'required' ],
 			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
 			// Unique
-			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			// Notes: disabled it in order to allow sub categories having same name as parent, but with different slug. It can be enable based on project needs by extending the model and service.
+			//[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

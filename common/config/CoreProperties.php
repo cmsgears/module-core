@@ -78,6 +78,8 @@ class CoreProperties extends CmgProperties {
 
 	const PROP_AUTOLOGIN			= 'autologin';
 
+	const PROP_CACHING				= 'caching';
+
 	// Public -----------------
 
 	// Protected --------------
@@ -242,6 +244,11 @@ class CoreProperties extends CmgProperties {
 	public function isAutoLogin() {
 
 		return $this->properties[ self::PROP_AUTOLOGIN ];
+	}
+
+	public function isCaching() {
+
+		return $this->properties[ self::PROP_CACHING ];
 	}
 
 	/**

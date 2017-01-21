@@ -9,6 +9,7 @@ use yii\widgets\LinkPager;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreProperties;
 
 use cmsgears\core\common\utilities\CodeGenUtil;
 
@@ -120,6 +121,8 @@ abstract class PageWidget extends Widget {
 	 */
 	public $pageLinks		= null;
 
+	public $caching			= false;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -131,6 +134,10 @@ abstract class PageWidget extends Widget {
 	public function init() {
 
 		parent::init();
+
+		$coreProperties		= CoreProperties::getInstance();
+
+		$this->caching		= $coreProperties->isCaching();
 
 		// Init models
 		$this->initModels();

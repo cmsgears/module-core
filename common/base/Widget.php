@@ -49,6 +49,26 @@ abstract class Widget extends \yii\base\Widget {
 	 */
 	public $factory			= true;
 
+	/**
+	 * Flag for data rendering from database based cached data.
+	 */
+	public $cacheDb		= false;
+
+	/**
+	 * Flag for data rendering from file based cached data.
+	 */
+	public $cacheFile	= false;
+
+	/**
+	 * Flag for widget autoloading.
+	 */
+	public $autoload	= false;
+
+	/**
+	 * Url for autoloading.
+	 */
+	public $autoloadUrl	= null;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -85,6 +105,12 @@ abstract class Widget extends \yii\base\Widget {
 	 */
 	public function run() {
 
+		if( $this->autoload ) {
+
+			// Render autoload widget
+			return $this->renderAutoload();
+		}
+
 		// Render the widget
 		return $this->renderWidget();
 	}
@@ -94,6 +120,8 @@ abstract class Widget extends \yii\base\Widget {
 	// CMG parent classes --------------------
 
 	abstract public function renderWidget( $config = [] );
+
+	public function renderAutoload( $config = [] ) {}
 
 	// Widget --------------------------------
 

@@ -266,6 +266,7 @@ class CoreGlobal {
 	const FIELD_ORDER				= 'orderField';
 	const FIELD_LIMIT				= 'limitField';
 	const FIELD_FEATURED			= 'featuredField';
+	const FIELD_USER_MAPPED			= 'userMappedField';
 
 	const FIELD_DATE_START			= 'startDateField';
 	const FIELD_DATE_END			= 'endDateField';

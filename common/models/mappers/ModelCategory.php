@@ -22,6 +22,7 @@ use cmsgears\core\common\models\traits\MapperTrait;
  * @property string $type
  * @property short $order
  * @property boolean $active
+ * @property boolean $userMapped
  */
 class ModelCategory extends \cmsgears\core\common\models\base\Mapper {
 
@@ -76,7 +77,7 @@ class ModelCategory extends \cmsgears\core\common\models\base\Mapper {
 			[ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'active' ], 'boolean' ]
+			[ [ 'active', 'userMapped' ], 'boolean' ]
 		];
 	}
 

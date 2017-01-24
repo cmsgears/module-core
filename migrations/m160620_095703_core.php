@@ -739,7 +739,8 @@ class m160620_095703_core extends \yii\db\Migration {
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
-			'active' => $this->boolean()->notNull()->defaultValue( true )
+			'active' => $this->boolean()->notNull()->defaultValue( true ),
+			'userMapped' => $this->boolean()->notNull()->defaultValue( false )
 		], $this->options );
 
 		// Index for columns user

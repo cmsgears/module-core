@@ -117,6 +117,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_ORDER => 'Order',
 		CoreGlobal::FIELD_LIMIT => 'Limit',
 		CoreGlobal::FIELD_FEATURED => 'Featured',
+		CoreGlobal::FIELD_USER_MAPPED => 'User Mapped',
 
 		CoreGlobal::FIELD_DATE_START => 'Start Date',
 		CoreGlobal::FIELD_DATE_END => 'End Date',

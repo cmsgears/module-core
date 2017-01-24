@@ -230,6 +230,8 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 	/**
 	 * A simple method to get random ids
+	 *
+	 * Notes: This method could bring down performance hence use it wisely on tables having few thousand rows at max.
 	 */
 	public function getRandomObjects( $config = [] ) {
 
@@ -481,6 +483,9 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 	/**
 	 * The method findDataProvider accept the entity class and various parameters to generate the active data provider.
+	 *
+	 * Notes: This method could bring down performance hence use the random option wisely on tables having few thousand rows at max.
+	 *
 	 * @param array $config
 	 * @return ActiveDataProvider
 	 */

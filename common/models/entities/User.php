@@ -3,29 +3,37 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
-use yii\helpers\ArrayHelper;
 use yii\db\Query;
+use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
-use yii\web\NotFoundHttpException;
+
 use yii\base\NotSupportedException;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\config\CoreProperties;
 
-use cmsgears\core\common\models\traits\AttributeTrait;
-use cmsgears\core\common\models\traits\FileTrait;
-use cmsgears\core\common\models\traits\AddressTrait;
+use cmsgears\core\common\models\interfaces\IApproval;
+
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\resources\Option;
+use cmsgears\core\common\models\mappers\SiteMember;
+
+use cmsgears\core\common\models\traits\interfaces\ApprovalTrait;
+use cmsgears\core\common\models\traits\resources\MetaTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\resources\VisualTrait;
+use cmsgears\core\common\models\traits\mappers\AddressTrait;
+use cmsgears\core\common\models\traits\mappers\FileTrait;
 
 /**
  * User Entity - The primary class.
  *
- * @property integer $id
- * @property integer localeId
- * @property integer genderId
- * @property integer avatarId
- * @property integer bannerId
+ * @property long $id
+ * @property long $localeId
+ * @property long $genderId
+ * @property long $avatarId
  * @property short $status
  * @property string $email
  * @property string $username
@@ -34,71 +42,302 @@ use cmsgears\core\common\models\traits\AddressTrait;
  * @property string $lastName
  * @property string $dob
  * @property string $phone
- * @property boolean $newsletter
- * @property string verifyToken
- * @property string resetToken
- * @property string registeredAt
- * @property datetime lastLoginAt
- * @property datetime lastActivityAt
- * @property string authKey 
- * @property string accessToken
- * @property datetime accessTokenCreatedAt
- * @property datetime accessTokenAccessedAt
+ * @property string $avatarUrl
+ * @property string $websiteUrl
+ * @property string $verifyToken
+ * @property string $resetToken
+ * @property string $registeredAt
+ * @property datetime $lastLoginAt
+ * @property datetime $lastActivityAt
+ * @property string $authKey
+ * @property string $accessToken
+ * @property datetime $tokenCreatedAt
+ * @property datetime $tokenAccessedAt
+ * @property string $content
+ * @property string $data
  */
-class User extends CmgEntity implements IdentityInterface {
+class User extends \cmsgears\core\common\models\base\Entity implements IdentityInterface, IApproval {
 
-	/**
-	 * The status types available for a User by default.
-	 *  
-	 * 1. new - assigned for newly registered User.
-	 * 2. active - It will be set when user confirm their account or admin activate the account.
-	 * 3. blocked - It can be set by admin to block a particular user on false behaviour. 
-	 */
-	const STATUS_NEW		=    0;
-	const STATUS_ACTIVE		=  500;
-	const STATUS_BLOCKED	= 1000;
+	// Variables ---------------------------------------------------
 
-	/**
-	 * The status map having string form of status.
-	 */
-	public static $statusMap = [
-		self::STATUS_NEW => "New",
-		self::STATUS_ACTIVE => "Active",
-		self::STATUS_BLOCKED => "Blocked"
-	];
+	// Globals -------------------------------
 
-	/**
-	 * The status map having string form of status available for admin to make status change.
-	 */
-	public static $statusMapUpdate = [
-		self::STATUS_ACTIVE => "Active",
-		self::STATUS_BLOCKED => "Blocked"
-	];
+	// Constants --------------
 
-	use AttributeTrait;
+	const STATUS_VERIFIED	= 100; // Used when user is required to submit registration application for approval process.
 
-	public $attributeType	= CoreGlobal::TYPE_USER;
+	// Public -----------------
 
-	use FileTrait;
+	// Protected --------------
 
-	public $fileType		= CoreGlobal::TYPE_USER;
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	public $mParentType	= CoreGlobal::TYPE_USER;
+	public $permissions = [];
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
 
 	use AddressTrait;
+	use ApprovalTrait;
+	use MetaTrait;
+	use DataTrait;
+	use FileTrait;
+	use VisualTrait;
 
-	public $addressType		= CoreGlobal::TYPE_USER;
+	// Constructor and Initialisation ------------------------------
 
-	public $permissions	= [];
+	// Instance methods --------------------------------------------
 
-	public $newsletter;
+	// Yii interfaces ------------------------
 
-	// Instance Methods --------------------------------------------
+	// yii\web\IdentityInterface
 
 	/**
-	 * @return Site Member - assigned to User.
+	 * @inheritdoc
 	 */
-	public function getSiteMember() {
+	public function getId() {
 
-    	return $this->hasOne( SiteMember::className(), [ 'userId' => 'id' ] );
+		return $this->id;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getAuthKey() {
+
+		return $this->authKey;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function validateAuthKey( $authKey ) {
+
+		return $this->authKey === $authKey;
+	}
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
+
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
+
+		// model rules
+		$rules = [
+			// Required, Safe
+			[ [ 'email' ], 'required' ],
+			[ [ 'id', 'phone', 'content', 'data' ], 'safe' ],
+			// Email
+			[ 'email', 'email' ],
+			[ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],
+			[ 'email', 'validateEmailUpdate', 'on' => [ 'update', 'profile' ] ],
+			[ 'email', 'validateEmailChange', 'on' => [ 'profile' ] ],
+			// Username
+			[ 'username', 'alphanumdotu' ],
+			[ 'username', 'validateUsernameCreate', 'on' => [ 'create' ] ],
+			[ 'username', 'validateUsernameUpdate', 'on' => [ 'update', 'profile' ] ],
+			[ 'username', 'validateUsernameChange', 'on' => [ 'profile' ] ],
+			// Text Limit
+			[ [ 'username', 'passwordHash', 'firstName', 'lastName', 'phone', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'email', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			// Other
+			[ [ 'id', 'localeId', 'genderId', 'avatarId', 'status' ], 'number', 'integerOnly' => true ],
+			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
+			[ 'dob', 'date', 'format' => Yii::$app->formatter->dateFormat ],
+			[ [ 'registeredAt', 'lastLoginAt', 'lastActivityAt', 'tokenCreatedAt', 'tokenAccessedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+		];
+
+		// trim if required
+		if( Yii::$app->core->trimFieldValue ) {
+
+			$trim[] = [ [ 'email', 'username', 'phone', 'firstName', 'lastName', 'avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+
+			return ArrayHelper::merge( $trim, $rules );
+		}
+
+		return $rules;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
+
+		return [
+			'localeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
+			'genderId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GENDER ),
+			'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
+			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
+			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+			'username' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USERNAME ),
+			'firstName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
+			'lastName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
+			'dob' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DOB ),
+			'phone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
+			'avatarUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
+			'websiteUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE )
+		];
+	}
+
+	// yii\db\BaseActiveRecord
+
+	public function beforeSave( $insert ) {
+
+		if( parent::beforeSave( $insert ) ) {
+
+			if( $this->genderId <= 0 ) {
+
+				$this->genderId = null;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	/**
+	 * Validates user email to ensure that only one user exist with the given email.
+	 */
+	public function validateEmailCreate( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			if( self::isExistByEmail( $this->email ) ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
+			}
+		}
+	}
+
+	/**
+	 * Validates user email to ensure that only one user exist with the given email.
+	 */
+	public function validateEmailUpdate( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			$existingUser = self::findByEmail( $this->email );
+
+			if( isset( $existingUser ) && $this->id != $existingUser->id ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
+			}
+		}
+	}
+
+	/**
+	 * Validates user email to ensure that it does not allow to change while changing user profile.
+	 */
+	public function validateEmailChange( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			$properties		= CoreProperties::getInstance();
+			$existingUser	= self::findById( $this->id );
+
+			if( isset( $existingUser ) && strcmp( $existingUser->email, $this->email ) != 0 && !$properties->isChangeEmail() ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_CHANGE_EMAIL ) );
+			}
+		}
+	}
+
+	/**
+	 * Validates user email to ensure that only one user exist with the given username.
+	 */
+	public function validateUsernameCreate( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			if( self::isExistByUsername( $this->username ) ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
+			}
+		}
+	}
+
+	/**
+	 * Validates user email to ensure that only one user exist with the given username.
+	 */
+	public function validateUsernameUpdate( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			$existingUser = self::findByUsername( $this->username );
+
+			if( isset( $existingUser ) && $this->id != $existingUser->id ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
+			}
+		}
+	}
+
+	/**
+	 * Validates user email to ensure that it does not allow to change while changing user profile.
+	 */
+	public function validateUsernameChange( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			$properties		= CoreProperties::getInstance();
+			$existingUser	= self::findById( $this->id );
+
+			if( isset( $existingUser ) && strcmp( $existingUser->username, $this->username ) != 0  && !$properties->isChangeUsername() ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_CHANGE_USERNAME ) );
+			}
+		}
+	}
+
+	/**
+	 * Validates user password while login
+	 */
+	public function validatePassword( $password ) {
+
+		if( isset( $password ) && isset( $this->passwordHash ) ) {
+
+			return Yii::$app->getSecurity()->validatePassword( $password, $this->passwordHash );
+		}
+
+		return false;
+	}
+
+	// User ----------------------------------
+
+	/**
+	 * @return array - SiteMember
+	 */
+	public function getSiteMembers() {
+
+		return $this->hasMany( SiteMember::className(), [ "userId" => 'id' ] );
+	}
+
+	/**
+	 * @return SiteMember
+	 */
+	public function getActiveSiteMember() {
+
+		$site		= Yii::$app->core->site;
+
+		return $this->hasOne( SiteMember::className(), [ "userId" => 'id' ] )->where( [ "siteId" => $site->id ] );
 	}
 
 	/**
@@ -107,29 +346,13 @@ class User extends CmgEntity implements IdentityInterface {
 	public function getRole() {
 
 		$roleTable			= CoreTables::TABLE_ROLE;
-		$siteTable 			= CoreTables::TABLE_SITE;
+		$siteTable			= CoreTables::TABLE_SITE;
 		$siteMemberTable	= CoreTables::TABLE_SITE_MEMBER;
 
 		return Role::find()
 					->leftJoin( $siteMemberTable, "$siteMemberTable.roleId = $roleTable.id" )
 					->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
-					->where( "$siteMemberTable.userId=:id AND $siteTable.name=:name", [ ':id' => $this->id, ':name' => Yii::$app->cmgCore->getSiteName() ] );
-	}
-
-	/**
-	 * @return CmgFile - set for User avatar.
-	 */
-	public function getAvatar() {
-
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'avatarId' ] );
-	}
-
-	/**
-	 * @return CmgFile - set for User banner.
-	 */
-	public function getBanner() {
-
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
+					->where( "$siteMemberTable.userId=:id AND $siteTable.slug=:slug", [ ':id' => $this->id, ':slug' => Yii::$app->core->getSiteSlug() ] );
 	}
 
 	/**
@@ -164,53 +387,43 @@ class User extends CmgEntity implements IdentityInterface {
 	}
 
 	/**
-	 * @return string representation of status.
+	 * @return user name from email in case it's not set by user
 	 */
-	public function getStatusStr() {
+	public function getName() {
 
-		return self::$statusMap[ $this->status ];
-	}
+		$name	= $this->firstName . ' ' . $this->lastName;
 
-	/**
-	 * @return boolean whether user is new.
-	 */
-	public function isNew() {
-		
-		return $this->status == self::STATUS_NEW;		
-	}
+		if( !isset( $name ) || strlen( $name ) <= 1 ) {
 
-	/**
-	 * @return boolean whether user is confirmed.
-	 */
-	public function isConfirmed() {
-		
-		return $this->status > User::STATUS_NEW;	
-	}
+			$name	= $this->username;
 
-	/**
-	 * @return boolean whether user is active.
-	 */
-	public function isActive() {
+			if( !isset( $name ) || strlen( $name ) <= 1 ) {
 
-		return $this->status == self::STATUS_ACTIVE;
-	}
-
-	/**
-	 * @return boolean whether user is blocked by admin.
-	 */
-	public function isBlocked() {
-
-		return $this->status == self::STATUS_BLOCKED;	
-	}
-
-	public function getNewsletterStr() {
-
-		if( $this->newsletter ) {
-			
-			return "Subscribed";
+				$name	= preg_split( '/@/', $this->email );
+				$name	= $name[ 0 ];
+			}
 		}
-		
-		return "Not Subscribed";
+
+		return $name;
+	}
+
+	// Verify only if new or verified
+	public function verify() {
+
+		if( $this->status <= User::STATUS_VERIFIED ) {
+
+			$this->status = User::STATUS_VERIFIED;
+		}
+	}
+
+	public function isVerified( $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->status == self::STATUS_VERIFIED;
+		}
+
+		return $this->status >= self::STATUS_VERIFIED;
 	}
 
 	/**
@@ -222,54 +435,62 @@ class User extends CmgEntity implements IdentityInterface {
 	}
 
 	/**
+	 * Generate and set user access token using the yii security mechanism.
+	 */
+	public function generateAccessToken() {
+
+		$this->accessToken = Yii::$app->security->generateRandomString();
+	}
+
+	/**
 	 * Generate and set user verification token using the yii security mechanism.
 	 */
-    public function generateVerifyToken() {
+	public function generateVerifyToken() {
 
-        $this->verifyToken = Yii::$app->security->generateRandomString();
-    }
+		$this->verifyToken = Yii::$app->security->generateRandomString();
+	}
 
 	/**
 	 * unset user verification token on user verification.
 	 */
-    public function unsetVerifyToken() {
+	public function unsetVerifyToken() {
 
-        $this->verifyToken = null;
-    }
-	
+		$this->verifyToken = null;
+	}
+
 	public function isVerifyTokenValid( $token ) {
-		
+
 		return strcmp( $this->verifyToken, $token ) == 0;
 	}
 
 	/**
 	 * Generate and set user password reset token using the yii security mechanism.
 	 */
-    public function generateResetToken() {
+	public function generateResetToken() {
 
-        $this->resetToken = Yii::$app->security->generateRandomString();
-    }
+		$this->resetToken = Yii::$app->security->generateRandomString();
+	}
 
 	/**
 	 * unset user reset token on user password change.
 	 */
-    public function unsetResetToken() {
+	public function unsetResetToken() {
 
-        $this->resetToken = null;
-    }
+		$this->resetToken = null;
+	}
 
 	public function isResetTokenValid( $token ) {
-		
+
 		return strcmp( $this->resetToken, $token ) == 0;
 	}
 
 	/**
 	 * Generate and set user auth key using the yii security mechanism.
 	 */
-    public function generateAuthKey() {
+	public function generateAuthKey() {
 
-        $this->authKey = Yii::$app->security->generateRandomString();
-    }
+		$this->authKey = Yii::$app->security->generateRandomString();
+	}
 
 	/**
 	 * Load the permissions assigned to user.
@@ -284,7 +505,7 @@ class User extends CmgEntity implements IdentityInterface {
 		}
 		else {
 
-			throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 		}
 	}
 
@@ -296,216 +517,73 @@ class User extends CmgEntity implements IdentityInterface {
 		return in_array( $permission, $this->permissions );
 	}
 
-	// yii\web\IdentityInterface ----------
-
-    /**
-     * @inheritdoc
-     */
-    public function getId() {
-
-        return $this->id;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getAuthKey() {
-
-        return $this->authKey;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function validateAuthKey( $authKey ) {
-
-		return $this->authKey === $authKey;
-    }
-
-	// yii\base\Model ---------------------
-
-    /**
-     * @inheritdoc
-     */
-	public function rules() {
-
-		// model rules
-        $rules = [
-            [ [ 'email' ], 'required' ],
-            [ [ 'id', 'username', 'localeId', 'genderId', 'avatarId', 'bannerId', 'status', 'phone', 'newsletter' ], 'safe' ],
-            [ 'email', 'email' ],
-            [ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],
-            [ 'email', 'validateEmailUpdate', 'on' => [ 'update', 'profile' ] ],
-            [ 'email', 'validateEmailChange', 'on' => [ 'profile' ] ],
-            [ 'username', 'alphanumdotu' ],
-            [ 'username', 'validateUsernameCreate', 'on' => [ 'create' ] ],
-            [ 'username', 'validateUsernameUpdate', 'on' => [ 'update', 'profile' ] ],
-            [ 'username', 'validateUsernameChange', 'on' => [ 'profile' ] ],
-            [ [ 'firstName', 'lastName' ], 'alphanumspace' ],
-            [ [ 'id', 'localeId', 'genderId', 'avatarId', 'status', 'newsletter' ], 'number', 'integerOnly' => true ],
-            [ 'dob', 'date', 'format' => Yii::$app->formatter->dateFormat ],
-            [ [ 'registeredAt', 'lastLoginAt', 'lastActivityAt', 'accessTokenCreatedAt', 'accessTokenAccessedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
-        ];
-		
-		// trim if required
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'email', 'username', 'phone', 'firstName', 'lastName' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-
-			return ArrayHelper::merge( $trim, $rules );
-		}
-
-		return $rules;
-    }
-
-    /**
-     * @inheritdoc
-     */
-	public function attributeLabels() {
-
-		return [
-			'localeId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
-			'genderId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_GENDER ),
-			'avatarId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
-			'status' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
-			'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
-			'username' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_USERNAME ),
-			'firstName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
-			'lastName' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
-			'dob' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_DOB ),
-			'phone' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
-			'newsletter' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NEWSLETTER )
-		];
-	}
-
-	// User -------------------------------
-
-	/**
-	 * Validates user email to ensure that only one user exist with the given email.
-	 */
-    public function validateEmailCreate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-            if( self::isExistByEmail( $this->email ) ) {
-
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
-            }
-        }
-    }
-
-	/**
-	 * Validates user email to ensure that only one user exist with the given email.
-	 */
-    public function validateEmailUpdate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-			$existingUser = self::findByEmail( $this->email );
-
-			if( isset( $existingUser ) && $this->id != $existingUser->id && strcmp( $existingUser->email, $this->email ) == 0 ) {
-
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EMAIL_EXIST ) );
-			}
-        }
-    }
-
-	/**
-	 * Validates user email to ensure that it does not allow to change while changing user profile.
-	 */
-    public function validateEmailChange( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-			$properties		= CoreProperties::getInstance();
-			$existingUser 	= self::findById( $this->id );
-
-			if( isset( $existingUser ) && strcmp( $existingUser->email, $this->email ) != 0  && !$properties->isChangeEmail() ) {
-
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_CHANGE_EMAIL ) );
-			}
-        }
-    }
-
-	/**
-	 * Validates user email to ensure that only one user exist with the given username.
-	 */
-    public function validateUsernameCreate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-            if( self::isExistByUsername( $this->username ) ) {
-
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
-            }
-        }
-    }
-
-	/**
-	 * Validates user email to ensure that only one user exist with the given username.
-	 */
-    public function validateUsernameUpdate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-			$existingUser = self::findByUsername( $this->username );
-
-			if( isset( $existingUser ) && $this->id != $existingUser->id && strcmp( $existingUser->username, $this->username ) == 0 ) {
-
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
-			}
-        }
-    }
-
-	/**
-	 * Validates user email to ensure that it does not allow to change while changing user profile.
-	 */
-    public function validateUsernameChange( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-			$properties		= CoreProperties::getInstance();
-			$existingUser 	= self::findById( $this->id );
-
-			if( isset( $existingUser ) && strcmp( $existingUser->username, $this->username ) != 0  && !$properties->isChangeUsername() ) {
-
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_CHANGE_USERNAME ) );
-			}
-        }
-    }
-
-	/** 
-	 * Validates user password while login
-	 */
-	public function validatePassword( $password ) {
-
-		return Yii::$app->getSecurity()->validatePassword( $password, $this->passwordHash );
-	}
-
-	/**
-	 * @return user name from email in case it's not set by user
-	 */
-    public function getName() {
-
-		$name	= $this->firstName . " " . $this->lastName;
-
-		if( !isset( $name ) || strlen( $name ) <= 2 ) {
-
-			$name	= $this->username;
-
-			if( !isset( $name ) || strlen( $name ) <= 2 ) {
-
-				$name	= preg_split( "/@/", $this->email );
-				$name	= $name[0];
-			}
-		}
-
-		return $name;
-    }
-
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ----------------
+	// Yii interfaces ------------------------
+
+	// yii\web\IdentityInterface
+
+	/**
+	 * The method finds the user identity using the given id and also loads the available permissions if rbac is enabled for the application.
+	 * @param integer $id
+	 * @return a valid user based on given id.
+	 */
+	public static function findIdentity( $id ) {
+
+		// Find valid User
+		$user	= static::findById( $id );
+
+		// Load User Permissions
+		if( isset( $user ) ) {
+
+			if( Yii::$app->core->isRbac() ) {
+
+				$user->loadPermissions();
+			}
+		}
+		else {
+
+			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		}
+
+		return $user;
+	}
+
+	/**
+	 * The method finds the user identity using the given access token and also loads the available permissions if rbac is enabled for the application.
+	 * @param string $token
+	 * @param string $type
+	 * @return a valid user based on given token and type
+	 */
+	public static function findIdentityByAccessToken( $token, $type = null ) {
+
+		if( Yii::$app->core->isApis() ) {
+
+			// Find valid User
+			$user	= static::findByAccessToken( $token );
+
+			// Load User Permissions
+			if( isset( $user ) ) {
+
+				if( Yii::$app->core->isRbac() ) {
+
+					$user->loadPermissions();
+				}
+			}
+			else {
+
+				throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+			}
+
+			return $user;
+		}
+
+		throw new NotSupportedException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_APIS_DISABLED ) );
+	}
+
+	// Yii parent classes --------------------
+
+	// yii\db\ActiveRecord ----
 
 	/**
 	 * @return string - db table name
@@ -515,83 +593,56 @@ class User extends CmgEntity implements IdentityInterface {
 		return CoreTables::TABLE_USER;
 	}
 
-	// yii\web\IdentityInterface ----------
+	// CMG parent classes --------------------
 
-	/**
-	 * The method finds the user identity using the given id and also loads the available permissions if rbac is enabled for the application.
-	 * @param integer $id
-	 * @return a valid user based on given id.
-	 */
-    public static function findIdentity( $id ) {
+	// User ----------------------------------
 
-		// Find valid User
-		$user 	= static::findById( $id );
+	// Read - Query -----------
 
-		// Load User Permissions
-		if( isset( $user ) ) {
+	public static function queryWithHasOne( $config = [] ) {
 
-			if( Yii::$app->cmgCore->isRbac() ) {
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'role', 'locale', 'gender' ];
+		$config[ 'relations' ]	= $relations;
 
-				$user->loadPermissions();
-			}
-		}
-		else {
-
-    		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-		}
-
-        return $user;
-    }
-
-	/**
-	 * The method finds the user identity using the given access token and also loads the available permissions if rbac is enabled for the application.
-	 * @param string $token
-	 * @param string $type
-	 * @return a valid user based on given token and type
-	 */
-    public static function findIdentityByAccessToken( $token, $type = null ) {
-		
-		if( Yii::$app->cmgCore->isApis() ) {
-
-			// Find valid User
-			$user 	= static::findByAccessToken( $token );
-	
-			// Load User Permissions
-			if( isset( $user ) ) {
-				
-				if( Yii::$app->cmgCore->isRbac() ) {
-					
-					$user->loadPermissions();
-				}
-			}
-			else {
-
-        		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-			}
-
-	        return $user;
-		}
-
-        throw new NotSupportedException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_APIS_DISABLED ) );
-    }
-
-	// User -------------------------------
-
-	/**
-	 * @return ActiveRecord - with site member and role.
-	 */
-	public static function findWithSiteMember() {
-
-		return self::find()->joinWith( 'siteMember' )->joinWith( 'siteMember.site' )->joinWith( 'siteMember.role' );
+		return parent::queryWithAll( $config );
 	}
 
-	/**
-	 * @return ActiveRecord - with site member, role and permission. It works by specifying a filter for permission name.
-	 */
-	public static function findWithSiteMemberPermission() {
+	public static function queryWithRole( $config = [] ) {
 
-		return self::find()->joinWith( 'siteMember' )->joinWith( 'siteMember.site' )->joinWith( 'siteMember.role' )->joinWith( 'siteMember.role.permissions' );
+		$config[ 'relations' ]	= [ 'avatar', 'role' ];
+
+		return parent::queryWithAll( $config );
 	}
+
+	public static function queryWithLocale( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'avatar', 'locale' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithGender( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'avatar', 'gender' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithSiteMembers( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithSiteMembersPermissions( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role', 'siteMembers.role.permissions' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	// Read - Find ------------
 
 	/**
 	 * @param string $token
@@ -628,7 +679,7 @@ class User extends CmgEntity implements IdentityInterface {
 	 */
 	public static function findByUsername( $username ) {
 
-		return self::find()->where( 'username=:username', [ ':username' => $username ] )->one();		
+		return self::find()->where( 'username=:username', [ ':username' => $username ] )->one();
 	}
 
 	/**
@@ -641,6 +692,14 @@ class User extends CmgEntity implements IdentityInterface {
 
 		return isset( $user );
 	}
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
 }
 
-?>
+User::$statusMap[ User::STATUS_VERIFIED ] = 'Verified';
+
+User::$revStatusMap[ 'verified' ] = User::STATUS_VERIFIED;

@@ -9,93 +9,80 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile;
-
-use cmsgears\core\admin\services\FileService;
-use cmsgears\core\admin\services\GalleryService;
+use cmsgears\core\common\models\resources\File;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class GalleryController extends \cmsgears\core\admin\controllers\base\Controller {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	private $fileService;
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
+		parent::init();
+
+		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'galleryService' );
+
+		$this->fileService		= Yii::$app->factory->get( 'fileService' );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'createItem' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'updateItem' => [ 'permission' => CoreGlobal::PERM_CORE ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'createItem' => ['post'],
-	                'updateItem' => ['post']
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// GalleryController
+	public function behaviors() {
 
-	public function actionCreateItem( $id ) {
-
-		$gallery = GalleryService::findById( $id );
-
-		if( isset( $gallery ) ) {
-
-			$item 	= new CmgFile();
-
-			if( $item->load( Yii::$app->request->post(), "File" ) && GalleryService::createItem( $gallery, $item ) ) {
-
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
-			}
-
-			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $item );
-	
-			// Trigger Ajax Success
-	        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-		}
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
+					'createItem' => [ 'permission' => $this->crudPermission ],
+					'updateItem' => [ 'permission' => $this->crudPermission ],
+					'deleteItem' => [ 'permission' => $this->crudPermission ]
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'createItem' => [ 'post' ],
+					'updateItem' => [ 'post' ],
+					'deleteItem' => [ 'post' ]
+				]
+			]
+		];
 	}
 
-	public function actionUpdateItem( $id ) {
+	// yii\base\Controller ----
 
-		// Find Model
-		$item 	= FileService::findById( $id );
+	public function actions() {
 
-		// Update/Render if exist
-		if( isset( $item ) ) {
-
-			if( $item->load( Yii::$app->request->post(), "File" ) && GalleryService::updateItem( $item ) ) {
-
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );	
-			}
-			else {
-
-				// Generate Errors
-				$errors = AjaxUtil::generateErrorMessage( $item );
-		
-				// Trigger Ajax Success
-		        return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-			}
-		}
+		return [
+			'create-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\CreateItem' ],
+			'update-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\UpdateItem' ],
+			'delete-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\UpdateItem' ]
+		];
 	}
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// GalleryController ---------------------
 }
-
-?>

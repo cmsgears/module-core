@@ -7,95 +7,113 @@ use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\admin\config\AdminGlobalCore;
-
-use cmsgears\core\admin\services\OptionService;
-use cmsgears\core\admin\services\UserService;
 
 class UserController extends \cmsgears\core\admin\controllers\base\UserController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
+		parent::init();
 
-		$this->layout		= AdminGlobalCore::LAYOUT_PRIVATE;
+		$this->roleType			= CoreGlobal::TYPE_SYSTEM;
+		$this->permissionSlug	= CoreGlobal::PERM_USER;
+		$this->showCreate		= true;
+		$this->sidebar			= [ 'parent' => 'sidebar-identity', 'child' => 'user' ];
 
-		$this->sidebar 		= [ 'parent' => 'sidebar-identity', 'child' => 'user' ];
+		$this->returnUrl		= Url::previous( 'users' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/user/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
-		
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	public function behaviors() {
+
 		$behaviours	= parent::behaviors();
 
-		$behaviours[ 'rbac' ][ 'actions' ][ 'index' ] 	= [ 'permission' => CoreGlobal::PERM_IDENTITY ];
-		$behaviours[ 'rbac' ][ 'actions' ][ 'profile'] 	= [ 'permission' => CoreGlobal::PERM_USER ];
+		$behaviours[ 'rbac' ][ 'actions' ][ 'profile']		= [ 'permission' => CoreGlobal::PERM_USER ];
+		$behaviours[ 'rbac' ][ 'actions' ][ 'settings']		= [ 'permission' => CoreGlobal::PERM_USER ];
 
-		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ] 		= [ 'get' ];
-		$behaviours[ 'verbs' ][ 'actions' ][ 'profile' ] 	= [ 'get', 'post' ];
-		
+		$behaviours[ 'verbs' ][ 'actions' ][ 'profile' ]	= [ 'get', 'post' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'settings' ]	= [ 'get', 'post' ];
+
 		return $behaviours;
-    }
-
-	// UserController --------------------
-
-	public function actionIndex() {
-
-		$this->redirect( 'all' );
 	}
+
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// UserController ------------------------
 
 	public function actionAll() {
 
 		Url::remember( [ 'user/all' ], 'users' );
 
-		return parent::actionAll( null, CoreGlobal::PERM_USER );
-	}
-
-	public function actionCreate() {
-
-		return parent::actionCreate( CoreGlobal::TYPE_SYSTEM );
-	}
-
-	public function actionUpdate( $id ) {
-
-		return parent::actionUpdate( $id, CoreGlobal::TYPE_SYSTEM );
-	}
-
-	public function actionDelete( $id ) {
-
-		return parent::actionDelete( $id, CoreGlobal::TYPE_SYSTEM );
+		return parent::actionAll();
 	}
 
 	public function actionProfile() {
 
-		$model		= Yii::$app->user->getIdentity();
-		$email		= $model->email;
-		$username	= $model->username;
+		// Find Model
+		$user				= Yii::$app->user->getIdentity();
+		$this->sidebar		= [];
 
-		$model->setScenario( 'profile' );
+		// Update/Render if exist
+		if( isset( $user ) ) {
 
-		UserService::checkNewsletterMember( $model );
+			$genderMap	= $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [ [ 'id' => '0', 'name' => 'Choose Gender' ] ] );
 
-		if( $model->load( Yii::$app->request->post(), 'User' ) && $model->validate() ) {
-
-			if( UserService::update( $model ) ) {
-
-				$this->refresh();
-			}
+			return $this->render( 'profile', [
+				'user' => $user,
+				'genderMap' => $genderMap
+			]);
 		}
 
-		$genders 	= OptionService::getIdNameMapByCategoryName( CoreGlobal::CATEGORY_GENDER, [ [ 'name' => null, 'value' => 'Select Gender' ] ] );
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 
-    	return $this->render( 'profile', [
-    		'model' => $model,
-    		'genders' => $genders
-    	]);
-    }
+	public function actionSettings() {
+
+		// Find Model
+		$user				= Yii::$app->user->getIdentity();
+		$this->sidebar		= [];
+
+		// Update/Render if exist
+		if( isset( $user ) ) {
+
+			$privacy		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
+			$notification	= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
+			$reminder		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
+
+			return $this->render( 'settings', [
+				'user' => $user,
+				'privacy' => $privacy,
+				'notification' => $notification,
+				'reminder' => $reminder
+			]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 }
-
-?>

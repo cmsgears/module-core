@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Login';
+$this->title	= $coreProperties->getSiteTitle() . ' | Login';
 ?>
 <h1>Login</h1>
 <?php

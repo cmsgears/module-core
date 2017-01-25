@@ -9,81 +9,96 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class MailProperties extends CmgProperties {
 
+	// Variables ---------------------------------------------------
+
 	//TODO Add code for caching the properties
+
+	// Global -----------------
 
 	/**
 	 * The property to find whether SMTP is required.
 	 */
-	const PROP_SMTP				= "smtp";
-	
+	const PROP_SMTP				= 'smtp';
+
 	/**
 	 * The property defines SMTP username.
 	 */
-	const PROP_SMTP_USERNAME	= "smtp_username";
-	
+	const PROP_SMTP_USERNAME	= 'smtp_username';
+
 	/**
 	 * The property defines SMTP password.
 	 */
-	const PROP_SMTP_PASSWORD	= "smtp_password";
-	
+	const PROP_SMTP_PASSWORD	= 'smtp_password';
+
 	/**
 	 * The property defines SMTP host.
-	 */	
-	const PROP_SMTP_HOST		= "smtp_host";
-	
-	/**
-	 * The property defines SMTP port.
 	 */
-	const PROP_SMTP_PORT		= "smtp_port";
+	const PROP_SMTP_HOST		= 'smtp_host';
 
 	/**
 	 * The property defines SMTP port.
 	 */
-	const PROP_SMTP_ENCRYPTION	= "smtp_encryption";
+	const PROP_SMTP_PORT		= 'smtp_port';
+
+	/**
+	 * The property defines SMTP port.
+	 */
+	const PROP_SMTP_ENCRYPTION	= 'smtp_encryption';
 
 	/**
 	 * The property defines whether mailer need to debug.
 	 */
-	const PROP_DEBUG			= "debug";
+	const PROP_DEBUG			= 'debug';
 
 	/**
 	 * The property defines the default sender name.
 	 */
-	const PROP_SENDER_NAME		= "sender_name";
+	const PROP_SENDER_NAME		= 'sender_name';
 
 	/**
 	 * The property defines the default sender email.
 	 */
-	const PROP_SENDER_EMAIL		= "sender_email";
-	
+	const PROP_SENDER_EMAIL		= 'sender_email';
+
 	/**
 	 * The property defines the default contact name. It will be used by contact form.
 	 */
-	const PROP_CONTACT_NAME		= "contact_name";
-	
+	const PROP_CONTACT_NAME		= 'contact_name';
+
 	/**
 	 * The property defines the default contact email. It will be used by contact form.
 	 */
-	const PROP_CONTACT_EMAIL	= "contact_email";
-	
+	const PROP_CONTACT_EMAIL	= 'contact_email';
+
 	/**
 	 * The property defines the default info name.
 	 */
-	const PROP_INFO_NAME		= "info_name";
+	const PROP_INFO_NAME		= 'info_name';
 
 	/**
 	 * The property defines the default info email. It can be used on contact page.
 	 */
-	const PROP_INFO_EMAIL		= "info_email";
+	const PROP_INFO_EMAIL		= 'info_email';
 
-	// Singleton instance
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	private static $instance;
 
 	// Constructor and Initialisation ------------------------------
 
- 	private function __construct() {
+	// Instance methods --------------------------------------------
 
-	}
+	// Yii parent classes --------------------
+
+	// CMG parent classes --------------------
+
+	// MailProperties ------------------------
+
+	// Singleton
 
 	/**
 	 * Return Singleton instance.
@@ -99,6 +114,8 @@ class MailProperties extends CmgProperties {
 
 		return self::$instance;
 	}
+
+	// Properties
 
 	/**
 	 * Returns whether smtp is required for sending mails.
@@ -195,7 +212,7 @@ class MailProperties extends CmgProperties {
 
 		return $this->properties[ self::PROP_INFO_NAME ];
 	}
-	
+
 	/**
 	 * Returns email for info.
 	 */
@@ -204,5 +221,3 @@ class MailProperties extends CmgProperties {
 		return $this->properties[ self::PROP_INFO_EMAIL ];
 	}
 }
-
-?>

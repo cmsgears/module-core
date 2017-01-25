@@ -1,48 +1,57 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
+// CMG Imports
+use cmsgears\icons\widgets\IconChooser;
+
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Delete Role';
-
-// Sidebar and Return URL
-$sidebar						= $this->context->sidebar;
-$returnUrl						= $this->context->returnUrl;
-$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
-$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
+$this->title	= $coreProperties->getSiteTitle() . ' | Delete Role';
+$returnUrl		= $this->context->returnUrl;
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Delete Role</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-role-delete', 'options' => ['class' => 'frm-split' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Delete Role</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-role' ] );?>
 
-    	<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=>'true' ] ) ?>
-    	<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=>'true' ] ) ?>
-		<?= $form->field( $model, 'homeUrl' )->textInput( [ 'readonly'=>'true' ] ) ?>
+		<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
+		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ], 'disabled' => true ] ) ?>
+		<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
+		<?= $form->field( $model, 'homeUrl' )->textInput( [ 'readonly '=> 'true' ] ) ?>
 
-		<h4>Mapped Permissions</h4>
-		<?php 
+		<?php if( count( $permissions ) > 0 ) { ?>
+		<div class="box-content clearfix">
+			<div class="header">Assign Permissions</div>
+			<?php
+				$modelPermissions	= $model->getPermissionsIdList();
 
-			$rolePermissions	= $model->getPermissionsIdList();
+				foreach ( $permissions as $permission ) {
 
-			foreach ( $permissions as $permission ) { 
-
-				if( in_array( $permission['id'], $rolePermissions ) ) {
-		?>		
-					<span class="box-half"><input type="checkbox" name="permissions" value="<?=$permission['id']?>" checked readonly /><?=$permission['name']?></span>
-		<?php 
+					if( in_array( $permission['id'], $modelPermissions ) ) {
+			?>
+						<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?= $permission[ 'id' ] ?>" checked readonly /><?= $permission[ 'name' ] ?></span>
+			<?php
+					}
+					else {
+			?>
+						<span class="box-half"><input type="checkbox" name="Binder[bindedData][]" value="<?= $permission[ 'id' ] ?>" readonly /><?= $permission[ 'name' ] ?></span>
+			<?php
+					}
 				}
-				else {
-		?>
-					<span class="box-half"><input type="checkbox" name="permissions" value="<?=$permission['id']?>" readonly /><?=$permission['name']?></span>
-		<?php
-				}
-			}
-		?>
-		<div class="box-filler"></div>
-		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
-		<input type="submit" value="Delete" />
+			?>
+		</div>
+		<?php } ?>
+
+		<div class="clear filler-height"></div>
+
+		<div class="align align-center">
+			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+			<input class="element-medium" type="submit" value="Delete" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>

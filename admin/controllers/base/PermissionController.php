@@ -4,179 +4,188 @@ namespace cmsgears\core\admin\controllers\base;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
 use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Permission;
 use cmsgears\core\common\models\forms\Binder;
+use cmsgears\core\common\models\entities\Permission;
 
-use cmsgears\core\admin\services\PermissionService;
-use cmsgears\core\admin\services\RoleService;
+abstract class PermissionController extends CrudController {
 
-abstract class PermissionController extends Controller {
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $type;
+
+	protected $roleService;
+
+	protected $modelHierarchyService;
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
-		
-		$this->returnUrl	= Url::previous( 'permissions' );
+		parent::init();
+
+		$this->setViewPath( '@cmsgears/module-core/admin/views/permission' );
+
+		$this->crudPermission	= CoreGlobal::PERM_RBAC;
+		$this->modelService		= Yii::$app->factory->get( 'permissionService' );
+		$this->type				= CoreGlobal::TYPE_SYSTEM;
+
+		$this->roleService				= Yii::$app->factory->get( 'roleService' );
+		$this->modelHierarchyService	= Yii::$app->factory->get( 'modelHierarchyService' );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'all' => [ 'permission' => CoreGlobal::PERM_RBAC ],
-	                'matrix' => [ 'permission' => CoreGlobal::PERM_RBAC ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_RBAC ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_RBAC ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_RBAC ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'all' => [ 'get' ],
-	                'matrix' => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// BasePermissionController ----------
+	public function behaviors() {
 
-	public function actionAll( $type = null ) {
+		$behaviors	= parent::behaviors();
 
-		$dataProvider = PermissionService::getPaginationByType( $type );
+		$behaviors[ 'rbac' ][ 'actions' ][ 'matrix' ]	= [ 'permission' => CoreGlobal::PERM_RBAC ];
 
-	    return $this->render( 'all', [
-	         'dataProvider' => $dataProvider
-	    ]);
+		$behaviors[ 'verbs' ][ 'actions' ][ 'matrix' ]	= [ 'get' ];
+
+		return $behaviors;
 	}
 
-	public function actionMatrix( $type = null ) {
+	// yii\base\Controller ----
 
-		$dataProvider 	= PermissionService::getPaginationByType( $type );
-		$rolesList		= RoleService::getIdNameListByType( $type );
+	// CMG interfaces ------------------------
 
-	    return $this->render( 'matrix', [
+	// CMG parent classes --------------------
+
+	// PermissionController ------------------
+
+	public function actionAll() {
+
+		$dataProvider = $this->modelService->getPageByType( $this->type );
+
+		return $this->render( 'all', [
+			 'dataProvider' => $dataProvider
+		]);
+	}
+
+	public function actionMatrix() {
+
+		$dataProvider	= $this->modelService->getPageByType( $this->type );
+		$rolesList		= $this->roleService->getIdNameListByType( $this->type );
+
+		return $this->render( 'matrix', [
 			'dataProvider' => $dataProvider,
 			'rolesList' => $rolesList
-	    ]);
+		]);
 	}
 
-	public function actionCreate( $type = null ) {
+	public function actionCreate() {
 
-		$model			= new Permission();
-		$model->type 	= $type;
+		$modelClass		= $this->modelService->getModelClass();
+		$model			= new $modelClass;
+		$model->type	= $this->type;
 
-		$model->setScenario( 'create' );
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-		if( $model->load( Yii::$app->request->post(), 'Permission' )  && $model->validate() ) {
+			$permission			= $this->modelService->create( $model );
 
-			if( PermissionService::create( $model ) ) {
+			$binder				= new Binder();
+			$binder->binderId	= $permission->id;
 
-				$binder 			= new Binder();
-				$binder->binderId	= $model->id;
+			$binder->load( Yii::$app->request->post(), 'Binder' );
 
-				$binder->load( Yii::$app->request->post(), 'Binder' );
+			$this->modelService->bindRoles( $binder );
 
-				PermissionService::bindRoles( $binder );
-
-				$this->redirect( $this->returnUrl );
-			}
+			return $this->redirect( $this->returnUrl );
 		}
 
-		$roles	= RoleService::getIdNameListByType( $type );
+		$permissionMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'id' => 0, 'name' => 'Choose Permission' ] ] ] );
+		$roles			= $this->roleService->getIdNameListByType( $this->type );
 
-    	return $this->render( 'create', [
-    		'model' => $model,
-    		'roles' => $roles
-    	]);
+		return $this->render( 'create', [
+			'model' => $model,
+			'permissionMap' => $permissionMap,
+			'roles' => $roles
+		]);
 	}
 
-	public function actionUpdate( $id, $type = null ) {
+	public function actionUpdate( $id ) {
 
-		// Find Model		
-		$model		= PermissionService::findById( $id );
+		// Find Model
+		$model		= $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
-			
-			$model->type 	= $type;
-
-			$model->setScenario( 'update' );
 
 			if( $model->load( Yii::$app->request->post(), 'Permission' )  && $model->validate() ) {
-	
-				if( PermissionService::update( $model ) ) {
-	
-					$binder 			= new Binder();
-					$binder->binderId	= $model->id;
-	
-					$binder->load( Yii::$app->request->post(), 'Binder' );
-	
-					PermissionService::bindRoles( $binder );
-	
-					$this->redirect( $this->returnUrl );
-				}
+
+				$permission			= $this->modelService->update( $model );
+
+				$binder				= new Binder();
+				$binder->binderId	= $permission->id;
+
+				$binder->load( Yii::$app->request->post(), 'Binder' );
+
+				$this->modelService->bindRoles( $binder );
+
+				return $this->redirect( $this->returnUrl );
 			}
-	
-			$roles	= RoleService::getIdNameListByType( $type );
-	
-	    	return $this->render( 'update', [
-	    		'model' => $model,
-	    		'roles' => $roles
-	    	]);
+
+			$permissionMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'id' => 0, 'name' => 'Choose Permission' ] ] ] );
+			$roles			= $this->roleService->getIdNameListByType( $this->type );
+
+			return $this->render( 'update', [
+				'model' => $model,
+				'permissionMap' => $permissionMap,
+				'roles' => $roles
+			]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $id, $type = null ) {
+	public function actionDelete( $id ) {
 
 		// Find Model
-		$model		= PermissionService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			$model->type 	= $type;
-
 			if( $model->load( Yii::$app->request->post(), 'Permission' ) ) {
 
-				if( PermissionService::delete( $model ) ) {
+				$this->modelService->delete( $model );
 
-					$this->redirect( $this->returnUrl );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 
-			$roles	= RoleService::getIdNameListByType( $type );
-	
-	    	return $this->render( 'delete', [
-	    		'model' => $model,
-	    		'roles' => $roles
-	    	]);
+			$permissionMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'id' => 0, 'name' => 'Choose Permission' ] ] ] );
+			$roles			= $this->roleService->getIdNameListByType( $this->type );
+
+			return $this->render( 'delete', [
+				'model' => $model,
+				'permissionMap' => $permissionMap,
+				'roles' => $roles
+			]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

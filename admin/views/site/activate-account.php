@@ -2,7 +2,7 @@
 use yii\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . " | Activate Account";
+$this->title	= 'Activate Account | ' . $coreProperties->getSiteTitle();
 ?>
 <section class="wrap-content wrap-content-full container clearfix">
 	<div class="cud-box wrap-login-box frm-split">
@@ -17,8 +17,8 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Activate Account";
 		
 				$form = ActiveForm::begin( [ 'id' => 'frm-activate-account' ] );
 		?>
-		    	<?= $form->field( $model, 'password' )->passwordInput() ?>
-		    	<?= $form->field( $model, 'password_repeat' )->passwordInput() ?>
+				<?= $form->field( $model, 'password' )->passwordInput() ?>
+				<?= $form->field( $model, 'password_repeat' )->passwordInput() ?>
 		
 				<div class="box-filler"></div>
 				

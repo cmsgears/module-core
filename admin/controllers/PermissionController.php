@@ -10,69 +10,59 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class PermissionController extends \cmsgears\core\admin\controllers\base\PermissionController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
+		parent::init();
 
-		$this->sidebar 	= [ 'parent' => 'sidebar-identity', 'child' => 'permission' ];
+		$this->sidebar			= [ 'parent' => 'sidebar-identity', 'child' => 'permission' ];
+
+		$this->returnUrl		= Url::previous( 'permissions' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/permission/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-		$behaviours	= parent::behaviors();
+	// yii\base\Component -----
 
-		$behaviours[ 'rbac' ][ 'actions' ][ 'index' ] 	= [ 'permission' => CoreGlobal::PERM_RBAC ];
+	// yii\base\Controller ----
 
-		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ] 	= [ 'get' ];
+	// CMG interfaces ------------------------
 
-		return $behaviours;
-    }
+	// CMG parent classes --------------------
 
-	// RoleController --------------------
-
-	public function actionIndex() {
-
-		$this->redirect( 'all' );
-	}
+	// PermissionController ------------------
 
 	public function actionAll() {
 
 		// Remember return url for crud
 		Url::remember( [ 'permission/all' ], 'permissions' );
 
-		return parent::actionAll( CoreGlobal::TYPE_SYSTEM );
+		return parent::actionAll();
 	}
 
 	public function actionMatrix() {
 
-		$this->sidebar 	= [ 'parent' => 'sidebar-identity', 'child' => 'matrix' ];
+		$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'matrix' ];
 
 		// Remember return url for crud
 		Url::remember( [ 'permission/matrix' ], 'roles' );
 
-		return parent::actionMatrix( CoreGlobal::TYPE_SYSTEM );
-	}
-
-	public function actionCreate() {
-
-		return parent::actionCreate( CoreGlobal::TYPE_SYSTEM );
-	}
-
-	public function actionUpdate( $id ) {
-
-		return parent::actionUpdate( $id, CoreGlobal::TYPE_SYSTEM );
-	}
-
-	public function actionDelete( $id ) {
-
-		return parent::actionDelete( $id, CoreGlobal::TYPE_SYSTEM );
+		return parent::actionMatrix();
 	}
 }
-
-?>

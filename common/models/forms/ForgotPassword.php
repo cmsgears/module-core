@@ -3,40 +3,57 @@ namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
-use yii\base\Model;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class ForgotPassword extends Model {
+class ForgotPassword extends \yii\base\Model {
 
 	// Variables ---------------------------------------------------
 
-	// Public Variables --------------------
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
 	public $email;
 
-	// Instance Methods --------------------------------------------
-	
-	// yii\base\Model
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
 	public function rules() {
-		
-		$trim		= [];
 
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'email' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
-
-        $rules = [
+		$rules = [
 			[ [ 'email' ], 'required' ],
 			[ 'email', 'email' ],
 		];
 
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+		if( Yii::$app->core->trimFieldValue ) {
+
+			$trim[] = [ [ 'email' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -47,9 +64,16 @@ class ForgotPassword extends Model {
 	public function attributeLabels() {
 
 		return [
-			'email' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_EMAIL )
+			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL )
 		];
 	}
-}
 
-?>
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// ForgotPassword ------------------------
+
+}

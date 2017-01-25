@@ -3,65 +3,84 @@ namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
-use yii\base\Model;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\entities\User;
 
-use cmsgears\core\common\services\UserService;
-
 use cmsgears\core\common\utilities\MessageUtil;
 use cmsgears\core\common\utilities\DateUtil;
 
-class Login extends Model {
+class Login extends \yii\base\Model {
 
 	// Variables ---------------------------------------------------
 
-	// Public Variables --------------------
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
 	public $email;
 	public $password;
 	public $rememberMe;
-	public  $admin;
+	public $admin;
+	public $redirectUrl;
 
-	// Private Variables -------------------
+	// Protected --------------
 
-    private $_user;
+	// Private ----------------
+
+	private $user;
+
+	private $userService;
+
+	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( $admin = false )  {
-		
-		$this->admin	= $admin;
-		$this->_user 	= false;
+	public function __construct( $admin = false, $config = [] )	 {
+
+		$this->admin		= $admin;
+		$this->user			= null;
+		$this->userService	= Yii::$app->factory->get( 'userService' );
+
+		parent::__construct( $config );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Model
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
 
 	public function rules() {
-
-		$trim		= [];
-
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'email', 'password' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-		}
 
 		$rules =  [
 			[ [ 'email', 'password' ], 'required' ],
 			[ 'rememberMe', 'boolean' ],
-			[ 'email', 'email' ],
+			[ [ 'redirectUrl' ], 'safe' ],
+			// Disabled email validation to allow both email and username for login.
+			//[ 'email', 'email' ],
 			[ 'email', 'validateUser' ],
 			[ 'password', 'validatePassword' ]
 		];
 
-		if( Yii::$app->cmgCore->trimFieldValue ) {
+		if( Yii::$app->core->trimFieldValue ) {
+
+			$trim[] = [ [ 'email', 'password' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -77,57 +96,73 @@ class Login extends Model {
 		];
 	}
 
-	// LoginForm
+	// CMG interfaces ------------------------
 
-    public function getUser() {
+	// CMG parent classes --------------------
 
-        if( $this->_user === false ) {
+	// Validators ----------------------------
 
-            $this->_user = UserService::findByEmail( $this->email );
-        }
+	public function validateUser( $attribute, $params ) {
 
-        return $this->_user;
-    }
+		if( !$this->hasErrors() ) {
 
-    public function validateUser( $attribute, $params ) {
+			$user = $this->getUser();
 
-        if( !$this->hasErrors() ) {
+			if( !isset( $user ) ) {
 
-            if( !$this->user ) {
-
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
-            }
-
-			if( !$this->hasErrors() && !$this->user->isConfirmed() ) {
-
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_VERIFICATION ) );
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
 			}
+			else {
 
-			if( !$this->hasErrors() && $this->user->isBlocked() ) {
+				if( !$this->hasErrors() && !$user->isVerified( false ) ) {
 
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_BLOCKED ) );
+					$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USER_VERIFICATION ) );
+				}
+
+				if( !$this->hasErrors() && $user->isBlocked() ) {
+
+					$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_BLOCKED ) );
+				}
 			}
-        }
-    }
+		}
+	}
 
-    public function validatePassword( $attribute, $params ) {
+	public function validatePassword( $attribute, $params ) {
 
-        if( !$this->hasErrors() ) {
+		if( !$this->hasErrors() ) {
 
-            $user = $this->getUser();
+			$user = $this->getUser();
 
-            if( $user && !$user->validatePassword( $this->password ) ) {
+			if( $user && !$user->validatePassword( $this->password ) ) {
 
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_LOGIN_FAILED ) );
-            }
-        }
-    }
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_LOGIN_FAILED ) );
+			}
+		}
+	}
 
-    public function login() {
+	// Login ---------------------------------
 
-        if ( $this->validate() ) {
+	public function getUser() {
 
-			$user	= $this->user;
+		// Find user having email or username
+		if( empty( $this->user ) ) {
+
+			$this->user = $this->userService->getByEmail( $this->email );
+
+			if( empty( $this->user ) ) {
+
+				$this->user = $this->userService->getByUsername( $this->email );
+			}
+		}
+
+		return $this->user;
+	}
+
+	public function login() {
+
+		if ( $this->validate() ) {
+
+			$user = $this->getUser();
 
 			if( $this->admin ) {
 
@@ -135,20 +170,18 @@ class Login extends Model {
 
 				if( !$user->isPermitted( CoreGlobal::PERM_ADMIN ) ) {
 
-					$this->addError( "email", Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+					$this->addError( "email", Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
 
 					return false;
 				}
 			}
 
-			$user->lastLoginAt 	= DateUtil::getDateTime();
+			$user->lastLoginAt	= DateUtil::getDateTime();
 			$user->save();
 
-            return Yii::$app->user->login( $user, $this->rememberMe ? 3600 * 24 * 30 : 0 );
-        }
+			return Yii::$app->user->login( $user, $this->rememberMe ? 3600 * 24 * 30 : 0 );
+		}
 
 		return false;
-    }
+	}
 }
-
-?>

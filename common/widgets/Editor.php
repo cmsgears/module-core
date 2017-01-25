@@ -6,34 +6,57 @@ use \Yii;
 use yii\base\Widget;
 use yii\base\InvalidConfigException;
 
-class Editor extends Widget {
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+class Editor extends \cmsgears\core\common\base\Widget {
 
 	// Variables ---------------------------------------------------
 
-	// Public Variables --------------------
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
 	public $selector;
 
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
 	// Constructor and Initialisation ------------------------------
-	
-	// yii\base\Object
 
-    public function init() {
+	// Instance methods --------------------------------------------
 
-        parent::init();
-    }
+	// Yii interfaces ------------------------
 
-	// Instance Methods --------------------------------------------
+	// Yii parent classes --------------------
 
-	// yii\base\Widget
+	// yii\base\Widget --------
 
-    public function run() {
+	// CMG interfaces ------------------------
 
-		$editorClass	= Yii::$app->cmgCore->getEditorClass();
+	// CMG parent classes --------------------
+
+	// cmsgears\core\common\base\Widget
+
+	public function renderWidget( $config = [] ) {
+
+		$editorClass	= Yii::$app->core->getEditorClass();
 		$editor			= Yii::createObject( $editorClass );
-		
-		$editor->widget( [ 'selector' => $this->selector ] );
-    }
-}
 
-?>
+		$editor->widget( [ 'selector' => $this->selector, 'loadAssets' => $this->loadAssets ] );
+	}
+
+	// Editor --------------------------------
+
+}

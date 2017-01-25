@@ -12,13 +12,11 @@ class PhoneValidator extends Validator {
 
 	private static $regex	= "/^(\\+|[0-9 -])([0-9 -]+[0-9])$/";
 
-    public function validateAttribute($model, $attribute) {
+	public function validateAttribute($model, $attribute) {
 
-        if ( !preg_match( self::$regex, $model->$attribute ) ) {
+		if ( !preg_match( self::$regex, $model->$attribute ) ) {
 
-            $this->addError( $model, $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_PHONE ) );
-        }
-    }
+			$this->addError( $model, $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_PHONE ) );
+		}
+	}
 }
-
-?>

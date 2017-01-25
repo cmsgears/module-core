@@ -5,18 +5,18 @@ namespace cmsgears\core\common\utilities;
 use \Yii;
 
 // CMG Imports
-use cmsgears\core\common\models\entities\FormField;
-use cmsgears\core\common\models\entities\ModelAttribute;
+use cmsgears\core\common\models\resources\FormField;
+use cmsgears\core\common\models\mappers\ModelMeta;
 
-use cmsgears\core\admin\services\FormService;
+use cmsgears\core\common\services\resources\FormService;
 
 class FormUtil {
 
 	// Static Methods ----------------------------------------------
 
-	public static function fillFromModelAttribute( $formSlug, $modelAttributes ) {
+	public static function fillFromModelMeta( $formSlug, $formType, $modelMetas ) {
 
-		$form 		= FormService::findBySlug( $formSlug );
+		$form		= Yii::$app->factory->get( 'formService' )->getBySlugType( $formSlug, $formType );
 		$fieldsMap	= [];
 
 		if( isset( $form ) ) {
@@ -32,9 +32,9 @@ class FormUtil {
 				}
 
 				// Ignore passwords
-				if( !$formField->isPasswordField() ) {
+				if( !$formField->isPassword() ) {
 
-					$formField->value	= $modelAttributes[ $key ]->value;
+					$formField->value	= $modelMetas[ $key ]->value;
 				}
 
 				$fieldsMap[ $formField->name ]	= $formField;
@@ -44,10 +44,10 @@ class FormUtil {
 		return $fieldsMap;
 	}
 
-	public static function getModelAttributes( $model, $settings ) {
+	public static function getModelMetas( $model, $settings ) {
 
-		$attributes			= $model->getFormAttributes();
-		$fields				= $attributes[ 'fields' ];
+		$metas		= $model->getFormAttributes();
+		$fields		= $metas[ 'fields' ];
 
 		foreach ( $fields as $field ) {
 
@@ -60,20 +60,20 @@ class FormUtil {
 
 	public static function getFieldsHtml( $form, $model, $config = [] ) {
 
-		$fields 			= $model->fields;
+		$fields				= $model->fields;
 		$fieldsHtml			= '';
 		$config[ 'label' ]	= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
 
 		foreach ( $fields as $key => $field ) {
 
 			// Convert Json to Array
-			if( isset( $field->options ) && strlen( $field->options ) > 0 ) {
+			if( isset( $field->htmlOptions ) && strlen( $field->htmlOptions ) > 0 ) {
 
-				$field->options	= json_decode( $field->options, true );
+				$field->htmlOptions	= json_decode( $field->htmlOptions, true );
 			}
 			else {
 
-				$field->options	= [];
+				$field->htmlOptions	= [];
 			}
 
 			$fieldsHtml .= Yii::$app->formDesigner->getFieldHtml( $form, $model, $config, $key, $field );
@@ -82,26 +82,34 @@ class FormUtil {
 		return $fieldsHtml;
 	}
 
-	public static function getApixFieldsHtml( $form, $config = [] ) {
+	public static function getApixFieldsHtml( $form, $model, $config = [] ) {
 
-		$fields 			= $form->fields;
-		$fieldsHtml			= '';
-		$config[ 'label' ]	= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
-		$config[ 'model' ]	= isset( $config[ 'model' ] ) ? $config[ 'model' ] : 'GenericForm';
+		$fields					= $form->fields;
+		$fieldsHtml				= '';
+		$config[ 'label' ]		= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
+		$config[ 'modelName' ]	= isset( $config[ 'modelName' ] ) ? $config[ 'modelName' ] : 'GenericForm';
 
 		foreach ( $fields as $key => $field ) {
 
 			// Convert Json to Array
-			if( isset( $field->options ) && strlen( $field->options ) > 0 ) {
+			if( isset( $field->htmlOptions ) && strlen( $field->htmlOptions ) > 0 ) {
 
-				$field->options	= json_decode( $field->options, true );
+				$field->htmlOptions	= json_decode( $field->htmlOptions, true );
 			}
 			else {
 
-				$field->options	= [];
+				$field->htmlOptions	= [];
 			}
 
-			$fieldsHtml .= Yii::$app->formDesigner->getApixFieldHtml( $form, $config, $field );
+			if( isset( $model ) ) {
+
+				$value		 = $model->fields[ $field->name ]->value;
+				$fieldsHtml .= Yii::$app->formDesigner->getApixFieldHtml( $config, $field, $value );
+			}
+			else {
+
+				$fieldsHtml .= Yii::$app->formDesigner->getApixFieldHtml( $config, $field );
+			}
 		}
 
 		return $fieldsHtml;

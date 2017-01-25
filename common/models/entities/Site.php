@@ -3,56 +3,161 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\traits\AttributeTrait;
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\resources\SiteMeta;
+
+use cmsgears\core\common\models\traits\NameTrait;
+use cmsgears\core\common\models\traits\SlugTrait;
+use cmsgears\core\common\models\traits\resources\VisualTrait;
 
 /**
  * Site Entity
  *
- * @property integer $id
- * @property integer $avatarId
- * @property integer $bannerId
+ * @property long $id
+ * @property long $avatarId
+ * @property long $bannerId
+ * @property long $themeId
  * @property string $name
  * @property string $slug
  * @property short $order
- * @property short $active
+ * @property boolean $active
  */
-class Site extends NamedCmgEntity {
+class Site extends \cmsgears\core\common\models\base\Entity {
 
-	use AttributeTrait;
+	// Variables ---------------------------------------------------
 
-	public $attributeType	= CoreGlobal::TYPE_SITE;
+	// Globals -------------------------------
 
-	// Instance Methods --------------------------------------------
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	public $mParentType	= CoreGlobal::TYPE_SITE;
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	use NameTrait;
+	use SlugTrait;
+	use VisualTrait;
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
 
 	/**
-	 * @return File - file url
+	 * @inheritdoc
 	 */
-	public function getAvatar() {
+	public function behaviors() {
 
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'avatarId' ] );
+		return [
+			'sluggableBehavior' => [
+				'class' => SluggableBehavior::className(),
+				'attribute' => 'name',
+				'slugAttribute' => 'slug',
+				'immutable' => true,
+				'ensureUnique' => true
+			]
+		];
+	}
+
+	// yii\base\Model ---------
+
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
+
+		// model rules
+		$rules = [
+			// Required, Safe
+			[ [ 'name' ], 'required' ],
+			[ [ 'id' ], 'safe' ],
+			// Unique
+			[ 'name', 'unique' ],
+			// Text Limit
+			[ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			// Other
+			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ 'active', 'boolean' ],
+			[ [ 'avatarId', 'bannerId', 'themeId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+		];
+
+		// trim if required
+		if( Yii::$app->core->trimFieldValue ) {
+
+			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+
+			return ArrayHelper::merge( $trim, $rules );
+		}
+
+		return $rules;
+	}
+
+	/**attributes
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
+
+		return [
+			'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
+			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
+		];
+	}
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Site ----------------------------------
+
+	public function getTheme() {
+
+		return $this->hasOne( Theme::className(), [ 'id' => 'themeId' ] );
 	}
 
 	/**
-	 * @return File - file url
+	 * @return array - SiteMeta
 	 */
-	public function getBanner() {
+	public function getMetas() {
 
-		return $this->hasOne( CmgFile::className(), [ 'id' => 'bannerId' ] );
+		return $this->hasMany( SiteMeta::className(), [ 'modelId' => 'id' ] );
 	}
 
 	/**
 	 * @return array - list of site Users
 	 */
-	public function getUsers() {
+	public function getMembers() {
 
-    	return $this->hasMany( User::className(), [ 'id' => 'memberId' ] )
+		return $this->hasMany( User::className(), [ 'id' => 'userId' ] )
 					->viaTable( CoreTables::TABLE_SITE_MEMBER, [ 'siteId' => 'id' ] );
 	}
 
@@ -61,95 +166,65 @@ class Site extends NamedCmgEntity {
 	 */
 	public function getActiveStr() {
 
-		return Yii::$app->formatter->asBoolean( $this->active ); 
-	}
-
-	// yii\base\Component ----------------
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors() {
-
-        return [
-
-            'sluggableBehavior' => [
-                'class' => SluggableBehavior::className(),
-                'attribute' => 'name',
-                'slugAttribute' => 'slug',
-                'ensureUnique' => true
-            ]
-        ];
-    }
-
-	// yii\base\Model --------------------
-
-    /**
-     * @inheritdoc
-     */
-	public function rules() {
-
-		// model rules
-        $rules = [
-            [ [ 'name' ], 'required' ],
-            [ [ 'id' ], 'safe' ],
-            [ [ 'name' ], 'string', 'min' => 1, 'max' => 100 ],
-            [ 'name', 'alphanumhyphenspace' ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ],
-            [ 'slug', 'string', 'min' => 1, 'max' => 150 ],
-            [ 'order', 'number', 'integerOnly' => true ],
-            [ 'active', 'boolean' ],
-            [ [ 'avatarId', 'bannerId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
-        ];
-
-		// trim if required
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-
-			return ArrayHelper::merge( $trim, $rules );
-		}
-
-		return $rules;
-    }
-
-    /**
-     * @inheritdoc
-     */
-	public function attributeLabels() {
-
-		return [
-			'avatarId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
-			'bannerId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME ),
-			'slug' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
-			'order' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-			'active' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
-		];
+		return Yii::$app->formatter->asBoolean( $this->active );
 	}
 
 	// Static Methods ----------------------------------------------
 
-	// yii\db\ActiveRecord ---------------
+	// Yii parent classes --------------------
 
-    /**
-     * @inheritdoc
-     */
+	// yii\db\ActiveRecord ----
+
+	/**
+	 * @inheritdoc
+	 */
 	public static function tableName() {
 
 		return CoreTables::TABLE_SITE;
 	}
 
-	// Site ------------------------------
+	// CMG parent classes --------------------
 
-	/**
-	 * @return Site - by slug
-	 */
-	public static function findBySlug( $slug ) {
+	// Site ----------------------------------
 
-		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+	// Read - Query -----------
+
+	public static function queryWithHasOne( $config = [] ) {
+
+		$modelTable				= CoreTables::TABLE_SITE;
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'theme' ];
+		$config[ 'relations' ]	= $relations;
+		$config[ 'groups' ]		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : [ "$modelTable.id" ];
+
+		return parent::queryWithAll( $config );
 	}
-}
 
-?>
+	public static function queryWithTheme( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'avatar', 'banner', 'theme' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithMetas( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'avatar', 'banner', 'metas' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithMembers( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'avatar', 'banner', 'members' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
+}

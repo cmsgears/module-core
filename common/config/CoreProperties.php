@@ -13,7 +13,11 @@ use cmsgears\core\common\config\CoreGlobal;
  */
 class CoreProperties extends CmgProperties {
 
+	// Variables ---------------------------------------------------
+
 	//TODO Add code for caching the properties
+
+	// Global -----------------
 
 	const DIR_TEMP					= 'temp/';
 	const DIR_AVATAR				= 'avatar/';
@@ -25,24 +29,24 @@ class CoreProperties extends CmgProperties {
 
 	/**
 	 * The property defines the default language for the site.
-	 */	
+	 */
 	const PROP_LANGUAGE				= 'language';
 
 	/**
 	 * The property defines the default locale for the site.
-	 */	
+	 */
 	const PROP_LOCALE				= 'locale';
 
 	/**
 	 * The property defines the default character set for the site.
-	 */	
+	 */
 	const PROP_CHARSET				= 'charset';
 
 	/**
 	 * The property defines site title to be used on browser title.
 	 */
 	const PROP_SITE_TITLE			= 'site_title';
-	
+
 	/**
 	 * The property defines site name to be used at various places like emails, site footer.
 	 */
@@ -57,21 +61,44 @@ class CoreProperties extends CmgProperties {
 	 * The property defines admin url to be used at various places like emails.
 	 */
 	const PROP_ADMIN_URL			= 'admin_url';
-	
+
 	const PROP_REGISTRATION			= 'registration';
 
 	const PROP_CHANGE_EMAIL			= 'change_email';
 
 	const PROP_CHANGE_USERNAME		= 'change_username';
 
-	// Singleton instance
+	const PROP_FORMAT_DATE			= 'date_format';
+
+	const PROP_FORMAT_TIME			= 'time_format';
+
+	const PROP_FORMAT_DATE_TIME		= 'date_time_format';
+
+	const PROP_TIMEZONE				= 'timezone';
+
+	const PROP_AUTOLOGIN			= 'autologin';
+
+	const PROP_CACHING				= 'caching';
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	private static $instance;
 
 	// Constructor and Initialisation ------------------------------
 
- 	private function __construct() {
+	// Instance methods --------------------------------------------
 
-	}
+	// Yii parent classes --------------------
+
+	// CMG parent classes --------------------
+
+	// CoreProperties ------------------------
+
+	// Singleton
 
 	/**
 	 * Return Singleton instance.
@@ -87,6 +114,8 @@ class CoreProperties extends CmgProperties {
 
 		return self::$instance;
 	}
+
+	// Properties
 
 	/**
 	 * Returns Temp directory to store temporary files.
@@ -116,7 +145,7 @@ class CoreProperties extends CmgProperties {
 	 * Returns Language to be used by Browser.
 	 */
 	public function getLanguage() {
-		
+
 		return $this->properties[ self::PROP_LANGUAGE ];
 	}
 
@@ -124,7 +153,7 @@ class CoreProperties extends CmgProperties {
 	 * Returns Charset to be used by Browser.
 	 */
 	public function getLocale() {
-		
+
 		return $this->properties[ self::PROP_LOCALE ];
 	}
 
@@ -132,7 +161,7 @@ class CoreProperties extends CmgProperties {
 	 * Returns Charset to be used by Browser.
 	 */
 	public function getCharset() {
-		
+
 		return $this->properties[ self::PROP_CHARSET ];
 	}
 
@@ -140,8 +169,8 @@ class CoreProperties extends CmgProperties {
 	 * Returns Site Title to be used for Browser title.
 	 */
 	public function getSiteTitle() {
-		
-		return $this->properties[ self::PROP_SITE_TITLE ]; 
+
+		return $this->properties[ self::PROP_SITE_TITLE ];
 	}
 
 	/**
@@ -149,34 +178,34 @@ class CoreProperties extends CmgProperties {
 	 */
 	public function getSiteName() {
 
-		return $this->properties[ self::PROP_SITE_NAME ]; 
+		return $this->properties[ self::PROP_SITE_NAME ];
 	}
 
-	/** 
+	/**
 	 * Returns the site URL for the app. It can be used by admin app to refer to web app.
 	 */
 	public function getSiteUrl() {
 
-		return $this->properties[ self::PROP_SITE_URL ]; 
+		return $this->properties[ self::PROP_SITE_URL ];
 	}
 
-	/** 
+	/**
 	 * Returns the site URL for the app. It can be used by admin app to refer to web app.
 	 */
 	public function getAdminUrl() {
 
-		return $this->properties[ self::PROP_ADMIN_URL ]; 
+		return $this->properties[ self::PROP_ADMIN_URL ];
 	}
 
-	/** 
+	/**
 	 * Returns whether registration is allowed from site.
 	 */
 	public function isRegistration() {
 
-		return $this->properties[ self::PROP_REGISTRATION ]; 
+		return $this->properties[ self::PROP_REGISTRATION ];
 	}
 
-	/** 
+	/**
 	 * Returns whether email change is allowed fur user profile.
 	 */
 	public function isChangeEmail() {
@@ -184,15 +213,45 @@ class CoreProperties extends CmgProperties {
 		return $this->properties[ self::PROP_CHANGE_EMAIL ];
 	}
 
-	/** 
+	/**
 	 * Returns whether username change is allowed for user profile.
 	 */
 	public function isChangeUsername() {
 
-		return $this->properties[ self::PROP_CHANGE_USERNAME ]; 
+		return $this->properties[ self::PROP_CHANGE_USERNAME ];
 	}
 
-	/** 
+	public function getDateFormat() {
+
+		return $this->properties[ self::PROP_FORMAT_DATE ];
+	}
+
+	public function getTimeFormat() {
+
+		return $this->properties[ self::PROP_FORMAT_TIME ];
+	}
+
+	public function getDateTimeFormat() {
+
+		return $this->properties[ self::PROP_FORMAT_DATE_TIME ];
+	}
+
+	public function getTimezone() {
+
+		return $this->properties[ self::PROP_TIMEZONE ];
+	}
+
+	public function isAutoLogin() {
+
+		return $this->properties[ self::PROP_AUTOLOGIN ];
+	}
+
+	public function isCaching() {
+
+		return $this->properties[ self::PROP_CACHING ];
+	}
+
+	/**
 	 * Returns the root URL for the app
 	 */
 	public function getRootUrl( $admin = false ) {
@@ -202,8 +261,6 @@ class CoreProperties extends CmgProperties {
 			return $this->properties[ self::PROP_ADMIN_URL ] . \Yii::getAlias( '@web' ) ;
 		}
 
-		return $this->properties[ self::PROP_SITE_URL ] . \Yii::getAlias( '@web' ) ; 
+		return $this->properties[ self::PROP_SITE_URL ] . \Yii::getAlias( '@web' ) ;
 	}
 }
-
-?>

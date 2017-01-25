@@ -2,7 +2,7 @@
 use yii\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . " | Forgot Password";
+$this->title	= 'Forgot Password | ' . $coreProperties->getSiteTitle();
 ?>
 <section class="wrap-content wrap-content-full container clearfix">
 	<div class="cud-box wrap-login-box frm-split">
@@ -17,7 +17,7 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Forgot Password";
 		
 				$form = ActiveForm::begin( [ 'id' => 'frm-forgot-password' ] );
 		?>
-		    	<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email*' ] ) ?>
+				<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email*' ] ) ?>
 		
 				<div class="box-filler"></div>
 				

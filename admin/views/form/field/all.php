@@ -1,17 +1,14 @@
 <?php
-use \Yii;
-use yii\helpers\Html; 
+// Yii Imports
+use yii\helpers\Html;
 use yii\widgets\LinkPager;
 
+// CMG Imports
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | All Form Fields';
-$siteUrl		= $coreProperties->getSiteUrl();
-
-// Sidebar
-$this->params[ 'sidebar-parent' ] 	= 'sidebar-form';
-$this->params[ 'sidebar-child' ] 	= 'form';
+$this->title	= 'All Form Fields | ' . $coreProperties->getSiteTitle();
+$controllerName	= Yii::$app->controller->id;
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -28,20 +25,32 @@ if( !isset( $sortOrder ) ) {
 	$sortOrder	= '';
 }
 ?>
-<div class="content-header clearfix">
-	<div class="header-actions"> 
-		<?= Html::a( 'Add Field', [ "/cmgforms/form/field/create?formid=$formId" ], [ 'class' => 'btn' ] ) ?>				
+<div class="header-content clearfix">
+	<div class="header-actions col15x10">
+		<span class="frm-icon-element element-small">
+			<i class="cmti cmti-plus"></i>
+			<?= Html::a( 'Add', [ "$controllerName/create?fid=$formId" ], [ 'class' => 'btn' ] ) ?>
+		</span>
 	</div>
-	<div class="header-search">
-		<input type="text" name="search" id="search-terms" value="<?php if( isset( $searchTerms ) ) echo $searchTerms;?>">
-		<input type="submit" name="submit-search" value="Search" onclick="return searchTable();" />
+	<div class="header-search col15x5">
+		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
+		<span class="frm-icon-element element-medium">
+			<i class="cmti cmti-search"></i>
+			<button id="btn-search">Search</button>
+		</span>
 	</div>
 </div>
+
 <div class="data-grid">
-	<div class="grid-header">
-		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
+	<div class="grid-header clearfix">
+		<div class="col12x6 info">
+			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
+		</div>
+		<div class="col12x6 pagination">
+			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
+		</div>
 	</div>
-	<div class="wrap-grid">
+	<div class="grid-content">
 		<table>
 			<thead>
 				<tr>
@@ -51,6 +60,8 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
+					<th>Label</th>
+					<th>Icon</th>
 					<th>Type</th>
 					<th>Validators</th>
 					<th>Actions</th>
@@ -59,28 +70,32 @@ if( !isset( $sortOrder ) ) {
 			<tbody>
 				<?php
 
-					$slugBase	= $siteUrl;
-
 					foreach( $models as $formField ) {
 
-						$id 		= $formField->id;
-						$editUrl	= Html::a( $formField->name, [ "/cmgforms/form/field/update?id=$id" ] );
+						$id			= $formField->id;
+						$editUrl	= Html::a( $formField->name, [ "$controllerName/update?id=$id" ] );
 				?>
 					<tr>
 						<td><?= $editUrl ?></td>
+						<td><?= $formField->label ?></td>
+						<td> <span class="<?= $formField->icon ?>" title="<?= $formField->name ?>"></span></td>
 						<td><?= $formField->getTypeStr() ?></td>
 						<td><?= $formField->validators ?></td>
-						<td>
-							<span class="wrap-icon-action" title="Update Form"><?= Html::a( "", ["/cmgforms/form/field/update?id=$id"], ['class'=>'icon-action icon-action-edit'] )  ?></span>
-							<span class="wrap-icon-action" title="Delete Form"><?= Html::a( "", ["/cmgforms/form/field/delete?id=$id"], ['class'=>'icon-action icon-action-delete'] )  ?></span>
+						<td class="actions">
+							<span title="Update"><?= Html::a( "", [ "$controllerName/update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
+							<span title="Delete"><?= Html::a( "", [ "$controllerName/delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>
 					</tr>
 				<?php } ?>
 			</tbody>
 		</table>
 	</div>
-	<div class="grid-footer">
-		<div class="text"> <?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?> </div>
-		<?= LinkPager::widget( [ 'pagination' => $pagination ] ); ?>
+	<div class="grid-header clearfix">
+		<div class="col12x6 info">
+			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
+		</div>
+		<div class="col12x6 pagination">
+			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
+		</div>
 	</div>
 </div>

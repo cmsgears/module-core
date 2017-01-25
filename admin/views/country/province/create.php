@@ -1,27 +1,29 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
-use yii\helpers\Html; 
+use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Add Province';
-
-// Sidebar
-$this->params['sidebar-parent'] = 'sidebar-core';
-$this->params['sidebar-child'] 	= 'country';
- 
+$this->title	= 'Add Province | ' . $coreProperties->getSiteTitle();
+$returnUrl		= $this->context->returnUrl;
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Add Province</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-province-create', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Add Province</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-province' ] );?>
 
-    	<?= $form->field( $model, 'code' ) ?>  
-    	<?= $form->field( $model, 'name' ) ?>   
-		<div class="box-filler"></div>
-		
-		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
-		<input type="submit" value="Create" />
+		<?= $form->field( $model, 'code' ) ?>
+		<?= $form->field( $model, 'name' ) ?>
+
+		<div class="clear filler-height"></div>
+
+		<div class="align align-center">
+			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+			<input class="element-medium" type="submit" value="Create" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>

@@ -1,39 +1,51 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
 use cmsgears\core\common\widgets\Editor;
+use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Delete Template';
+$this->title	= 'Delete Template | ' . $coreProperties->getSiteTitle();
+$returnUrl		= $this->context->returnUrl;
+$renderers		= Yii::$app->templateManager->renderers;
 
-// Sidebar and Return URL
-$sidebar						= $this->context->sidebar;
-$returnUrl						= $this->context->returnUrl;
-$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
-$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
-
-Editor::widget( [ 'selector' => '.content-editor' ] );
+Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Delete Template</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-template-delete', 'options' => ['class' => 'frm-split' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Delete Template</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-template' ] );?>
 
-    	<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>  
-    	<?= $form->field( $model, 'description' )->textInput( [ 'readonly' => 'true' ] ) ?> 
-    	<?= $form->field( $model, 'layout' )->textInput( [ 'readonly' => 'true' ] ) ?>  
-		<?= $form->field( $model, 'viewPath' )->textInput( [ 'readonly' => 'true' ] ) ?>
-		<?= $form->field( $model, 'adminView' )->textInput( [ 'readonly' => 'true' ] ) ?>
-		<?= $form->field( $model, 'frontendView' )->textInput( [ 'readonly' => 'true' ] ) ?>
+		<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
+		<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
+		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ], 'disabled' => true ] ) ?>
+		<?= $form->field( $model, 'renderer' )->dropDownList( $renderers, [ 'disabled' => true ] ) ?>
 
-    	<h4>Template Content</h4>
-    	<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+		<?= $form->field( $model, 'fileRender' )->checkbox( [ 'class' => 'template-file', 'disabled' => true ] ) ?>
 
-		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
-		<input type="submit" value="Delete" />
+		<div class="render-file">
+			<?= $form->field( $model, 'layout' )->textInput( [ 'readonly' => 'true' ] ) ?>
+			<?= $form->field( $model, 'layoutGroup' )->checkbox( [ 'disabled' => true ] ) ?>
+			<?= $form->field( $model, 'viewPath' )->textInput( [ 'readonly' => 'true' ] ) ?>
+		</div>
+
+		<div class="render-content box-content clearfix">
+			<div class="header">Template Content</div>
+			<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+		</div>
+
+		<div class="filler-height"></div>
+
+		<div class="align align-center">
+			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+			<input class="element-medium" type="submit" value="Delete" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>

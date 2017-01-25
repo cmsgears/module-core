@@ -3,116 +3,84 @@ namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
 use \Yii;
-use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
 use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Template; 
+use cmsgears\core\common\models\entities\Template;
 
-use cmsgears\core\admin\services\TemplateService;
+abstract class TemplateController extends CrudController {
 
-abstract class TemplateController extends Controller {
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $type;
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
-		
-		$this->returnUrl	= Url::previous( 'templates' );
+		parent::init();
+
+		$this->setViewPath( '@cmsgears/module-core/admin/views/template' );
+
+		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'templateService' );
+
+		// Notes: Configure type, sidebar and returnUrl exclusively in child classes.
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// BaseRoleController -----------------
+	// Yii interfaces ------------------------
 
-	public function actionAll( $type = null ) {
+	// Yii parent classes --------------------
 
-		$dataProvider = TemplateService::getPaginationByType( $type );
+	// yii\base\Component -----
 
-	    return $this->render( '@cmsgears/module-core/admin/views/template/all', [
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// TemplateController --------------------
+
+	public function actionAll() {
+
+		$dataProvider = $this->modelService->getPageByType( $this->type );
+
+		return $this->render( 'all', [
 
 			'dataProvider' => $dataProvider
-	    ]);
+		]);
 	}
 
-	public function actionCreate( $type = null ) {
+	public function actionCreate() {
 
-		$model		= new Template();
+		$modelClass		= $this->modelService->getModelClass();
+		$model			= new $modelClass;
+		$model->type	= $this->type;
 
-		$model->setScenario( 'create' );
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
 
-		if( isset( $type ) ) {
+			$this->modelService->create( $model );
 
-			$model->type = $type;
+			return $this->redirect( $this->returnUrl );
 		}
 
-		if( $model->load( Yii::$app->request->post(), 'Template' )  && $model->validate() ) {
-
-			if( TemplateService::create( $model ) ) { 
-
-				return $this->redirect( $this->returnUrl );
-			}
-		}
-
-    	return $this->render( '@cmsgears/module-core/admin/views/template/create', [
-    		'model' => $model
-    	]);
-	}	
- 	
-	public function actionUpdate( $id, $type = null ) {
-
-		// Find Model
-		$model		= TemplateService::findById( $id );
-
-		// Update/Render if exist
-		if( isset( $model ) ) {
-
-			$model->setScenario( 'update' );
-
-			if( $model->load( Yii::$app->request->post(), 'Template' )  && $model->validate() ) {
-
-				if( TemplateService::update( $model ) ) {
-
-					return $this->redirect( $this->returnUrl );
-				} 
-			}
-
-	    	return $this->render( '@cmsgears/module-core/admin/views/template/update', [
-	    		'model' => $model
-	    	]);
-		}
-		
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
-
-	public function actionDelete( $id, $type = null ) {
-
-		// Find Model
-		$model	= TemplateService::findById( $id );
-
-		// Delete/Render if exist		
-		if( isset( $model ) ) {
-
-			if( $model->load( Yii::$app->request->post(), 'Template' )  && $model->validate() ) {
-
-				if( TemplateService::delete( $model ) ) { 
-
-					return $this->redirect( $this->returnUrl );
-				}
-			}
-
-	    	return $this->render( '@cmsgears/module-core/admin/views/template/delete', [
-	    		'model' => $model
-	    	]);
-		}
-		
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		return $this->render( 'create', [
+			'model' => $model
+		]);
 	}
 }
-
-?>

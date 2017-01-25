@@ -8,57 +8,110 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\ModelMeta;
+use cmsgears\core\common\models\forms\GenericForm;
+use cmsgears\core\common\models\mappers\ModelMeta;
 
-use cmsgears\core\admin\services\SiteService;
-
+use cmsgears\core\common\utilities\FormUtil;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class SettingsController extends \cmsgears\core\admin\controllers\base\Controller {
 
- 	public function __construct( $id, $module, $config = [] ) {
+	// Variables ---------------------------------------------------
 
-        parent::__construct( $id, $module, $config );
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $metaService;
+
+	// Private ----------------
+
+	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'siteService' );
+		$this->metaService		= Yii::$app->factory->get( 'siteMetaService' );
 	}
 
-	// yii\base\Component ----------------
+	// Instance methods --------------------------------------------
 
-    public function behaviors() {
+	// Yii interfaces ------------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'update'  => [ 'permission' => CoreGlobal::PERM_CORE ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'update'  => ['post']
-                ]
-            ]
-        ];
-    }
+	// Yii parent classes --------------------
 
-	// SettingsController ----------------
+	// yii\base\Component -----
 
-	public function actionUpdate() {
+	public function behaviors() {
 
-		$meta	= new ModelMeta();
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
+					'index'	 => [ 'permission' => $this->crudPermission ],
+					'update'  => [ 'permission' => $this->crudPermission ]
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'index'	 => [ 'post' ],
+					'update'  => [ 'post' ]
+				]
+			]
+		];
+	}
 
-		$meta->setScenario( "update" );
+	// yii\base\Controller ----
 
-		if( $meta->load( Yii::$app->request->post(), "ModelMeta" ) ) {
+	// CMG interfaces ------------------------
 
-			if( SiteService::updateMeta( $meta ) ) {
+	// CMG parent classes --------------------
 
-				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
+	// SettingsController --------------------
+
+	public function actionIndex( $type ) {
+
+		$settings		= $this->modelService->getMetaMapBySlugType( Yii::$app->core->getSiteSlug(), $type );
+		$fieldsMap		= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
+		$model			= new GenericForm( [ 'fields' => $fieldsMap ] );
+
+		$htmlContent	= $this->renderPartial( '@cmsgears/module-core/admin/views/settings/info', [
+								'fieldsMap' => $fieldsMap,
+								'type' => $type,
+								'model' => $model
+							]);
+
+		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $htmlContent );
+	}
+
+	public function actionUpdate( $type ) {
+
+		$settings		= $this->modelService->getMetaMapBySlugType( Yii::$app->core->getSiteSlug(), $type );
+		$fieldsMap		= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
+		$model			= new GenericForm( [ 'fields' => $fieldsMap ] );
+
+		if( $model->load( Yii::$app->request->post(), "setting$type" ) && $model->validate() ) {
+
+			$settings	= FormUtil::getModelMetas( $model, $settings );
+
+			$this->metaService->updateMultiple( $settings, [ 'parent' => Yii::$app->core->site ] );
+
+			$data		= [];
+
+			foreach ( $settings as $key => $value ) {
+
+				$data[]	= $value->getFieldInfo();
 			}
+
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 		}
 
-		return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
 }
-
-?>

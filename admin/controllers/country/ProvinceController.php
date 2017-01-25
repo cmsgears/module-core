@@ -2,144 +2,139 @@
 namespace cmsgears\core\admin\controllers\country;
 
 // Yii Imports
-use \Yii;  
+use \Yii;
 use yii\helpers\Url;
-use yii\filters\VerbFilter; 
-use yii\base\Exception;
-use yii\web\HttpException;
 
-// CMG Imports 
+// CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\common\models\entities\Province;
-
-use cmsgears\core\common\services\ProvinceService;
-use cmsgears\core\common\services\CountryService;
 
 class ProvinceController extends \cmsgears\core\admin\controllers\base\Controller {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
+		parent::init();
+
+		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'provinceService' );
+		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'country' ];
+
+		$this->returnUrl		= Url::previous( 'provinces' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/country/province/all' ], true );
 	}
 
-	// Instance Methods ------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'all'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'create'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'update'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'delete'  => [ 'permission' => CoreGlobal::PERM_CORE ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'all'  => ['get'],
-	                'create'  => ['get', 'post'],
-	                'update'  => ['get', 'post'],
-	                'delete'  => ['get', 'post']
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// OptionController --------------------
- 
-	public function actionAll( $id ) {
-		  
-		$dataProvider	= ProvinceService::getPagination( [ 'conditions' => [ 'countryId' => $id ] ] ); 
-		
-		Url::remember( [ 'country/province/all?id='.$id ], 'provinces' );
-		
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// ProvinceController --------------------
+
+	public function actionAll( $cid ) {
+
+		$dataProvider	= $this->modelService->getPage( [ 'conditions' => [ 'countryId' => $cid ] ] );
+
+		Url::remember( [ "country/province/all?cid=$cid" ], 'provinces' );
+
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
-			'countryId' => $id
-		] );
+			'countryId' => $cid
+		]);
 	}
-	
-	public function actionCreate( $id ) { 
 
-		$model		= new Province();		  
-		
-		$model->countryId	= $id;
-		$model->setScenario( "create" );
-		 
-		if( $model->load( Yii::$app->request->post(), "Province" )  && $model->validate() ) {
+	public function actionCreate( $cid ) {
 
-			if( ProvinceService::create( $model ) ) { 
+		$modelClass			= $this->modelService->getModelClass();
+		$model				= new $modelClass;
+		$model->countryId	= $cid;
 
-				$this->redirect( Url::previous( 'provinces' ) );
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
+
+			$this->modelService->create( $model );
+
+			return $this->redirect( $this->returnUrl );
+		}
+
+		return $this->render( 'create', [
+			'model' => $model
+		]);
+	}
+
+	public function actionUpdate( $id ) {
+
+		// Find Model
+		$model	= $this->modelService->getById( $id );
+
+		// Update if exist
+		if( isset( $model ) ) {
+
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+
+				$this->modelService->update( $model );
+
+				return $this->redirect( $this->returnUrl );
 			}
-		} 
-		
-    	return $this->render('create', [ 
-    		'model' => $model,
-    		'returnUrl' => Url::previous( 'provinces' )
-    	]);
+
+			// Render view
+			return $this->render( 'update', [
+				'model' => $model
+			]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
-	
-	public function actionUpdate( $id ) { 
 
-		$model		= ProvinceService::findById( $id );		
-		
-		$model->setScenario( "update" ); 
-		 
-		if( $model->load( Yii::$app->request->post(), "Province" )  && $model->validate() ) {
-
-			if( ProvinceService::update( $model ) ) { 
-
-				$this->redirect( Url::previous( 'provinces' ) );
-				 			 
-			} 
-		} 
-	 
-    	return $this->render('update', [ 
-    		'model' => $model,
-    		'id' => $id,
-    		'returnUrl'	=> Url::previous( "provinces" )
-    	]);
-	} 
-	
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model		= ProvinceService::findById( $id );
+		$model	= $this->modelService->getById( $id );
 
-		// Delete/Render if exist
-		
-		if( isset( $model ) ) {  
+		// Delete if exist
+		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), 'Province' )  && $model->validate() ) { 
-						
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+
 				try {
-					
-			    	ProvinceService::delete( $model );
-					
-					return $this->redirect( Url::previous( 'provinces' ) );
-			    } 
-			    catch( Exception $e) {
-			    	 
-				    throw new HttpException(409,  Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  ); 
-				}					 
+
+					$this->modelService->delete( $model );
+
+					return $this->redirect( $this->returnUrl );
+				}
+				catch( Exception $e ) {
+
+					throw new HttpException( 409,  Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+				}
 			}
- 
-	    	return $this->render( 'delete', [
-	    		'model' => $model, 
-	    		'returnUrl' => Url::previous( "provinces" )
-	    	]);
+
+			// Render view
+			return $this->render( 'delete', [
+				'model' => $model
+			]);
 		}
-		
+
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-?>
+

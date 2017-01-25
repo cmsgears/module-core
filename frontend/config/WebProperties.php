@@ -7,32 +7,32 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\config\CmgProperties;
+class WebProperties extends \cmsgears\core\common\config\CmgProperties {
 
-class WebProperties extends CmgProperties {
+	// Variables ---------------------------------------------------
 
-	/**
-	 * The property defines the active theme for the site.
-	 */	
-	const PROP_THEME				= "theme";
+	// Global -----------------
 
-	/**
-	 * The property defines the active theme version to reload browsers in case theme is upgraded.
-	 */	
-	const PROP_THEME_VERSION		= "theme_version";
+	const PROP_THEME			= 'theme';
 
-	// Singleton instance
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	private static $instance;
 
 	// Constructor and Initialisation ------------------------------
 
- 	private function __construct() {
+	// Instance methods --------------------------------------------
 
-	}
+	// Yii parent classes --------------------
 
-	/**
-	 * Return Singleton instance.
-	 */
+	// CMG parent classes --------------------
+
+	// WebProperties -------------------------
+
 	public static function getInstance() {
 
 		if( !isset( self::$instance ) ) {
@@ -44,22 +44,11 @@ class WebProperties extends CmgProperties {
 
 		return self::$instance;
 	}
-	
-	/**
-	 * Returns current active Theme name.
-	 */
+
+	// Properties
+
 	public function getTheme() {
-		
+
 		return $this->properties[ self::PROP_THEME ];
 	}
-
-	/**
-	 * Returns current active Theme version.
-	 */
-	public function getThemeVersion() {
-		
-		return $this->properties[ self::PROP_THEME_VERSION ];
-	}
 }
-
-?>

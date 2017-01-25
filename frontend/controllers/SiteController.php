@@ -2,114 +2,133 @@
 namespace cmsgears\core\frontend\controllers;
 
 // Yii Imports
-use Yii;
+use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 
 use cmsgears\core\common\models\forms\Login;
-use cmsgears\core\frontend\models\forms\Register;
-
-use cmsgears\core\common\services\SiteMemberService;
-use cmsgears\core\frontend\services\UserService;
+use cmsgears\core\common\models\forms\Register;
 
 class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $siteMemberService;
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
-    /**
-     * @inheritdoc
-     */
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
+		parent::init();
 
-		$this->layout	= WebGlobalCore::LAYOUT_PUBLIC;
+		$this->layout				= WebGlobalCore::LAYOUT_PUBLIC;
+
+		$this->siteMemberService	= Yii::$app->factory->get( 'siteMemberService' );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        $behaviours	= parent::behaviors();
+	// yii\base\Component -----
+
+	public function behaviors() {
+
+		$behaviours	= parent::behaviors();
 
 		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ]			= [ 'get' ];
 		$behaviours[ 'verbs' ][ 'actions' ][ 'register' ]		= [ 'get', 'post' ];
 		$behaviours[ 'verbs' ][ 'actions' ][ 'confirmAccount' ]	= [ 'get', 'post' ];
 
 		return $behaviours;
-    }
+	}
 
-	// yii\base\Controller ---------------
+	// yii\base\Controller ----
 
-    public function actions() {
+	public function actions() {
 
 		if ( !Yii::$app->user->isGuest ) {
 
 			$this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
 		}
 
-        return [
-            'error' => [
-                'class' => 'yii\web\ErrorAction'
-            ]
-        ];
-    }
+		return [
+			'captcha' => [
+				'class' => 'yii\captcha\CaptchaAction',
+				'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
+			],
+			'error' => [
+				'class' => 'yii\web\ErrorAction'
+			]
+		];
+	}
 
-	// SiteController --------------------
+	// CMG interfaces ------------------------
 
-    public function actionIndex() {
+	// CMG parent classes --------------------
+
+	// SiteController ------------------------
+
+	public function actionIndex() {
 
 		$this->layout	= WebGlobalCore::LAYOUT_LANDING;
 
 		// Render Page
-        return $this->render( WebGlobalCore::PAGE_INDEX );
-    }
+		return $this->render( WebGlobalCore::PAGE_INDEX );
+	}
 
-	public function actionLogin() {
-		
+	public function actionLogin( $admin = false ) {
+
 		return parent::actionLogin( false );
 	}
-	
-    public function actionRegister() {
+
+	public function actionRegister() {
 
 		// Send user to home if already logged in
 		$this->checkHome();
 
-		$coreProperties = $this->getCoreProperties();
-
 		// Create Form Model
-		$model = new Register();
+		$coreProperties = $this->getCoreProperties();
+		$model 			= new Register();
 
 		// Load and Validate Form Model
 		if( $coreProperties->isRegistration() && $model->load( Yii::$app->request->post() ) && $model->validate() ) {
 
 			// Register User
-			$user 	= UserService::register( $model );
+			$user	= $this->userService->register( $model );
 
 			if( isset( $user ) ) {
 
-				// Add User to current Site 
-				SiteMemberService::create( $user );
+				// Add User to current Site
+				$this->siteMemberService->create( $user );
 
 				// Send Register Mail
-				Yii::$app->cmgCoreMailer->sendRegisterMail( $user );
+				Yii::$app->coreMailer->sendRegisterMail( $user );
 
 				// Set Flash Message
-				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
+				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
 
 				// Refresh the Page
 				return $this->refresh();
 			}
 		}
 
-        return $this->render( WebGlobalCore::PAGE_REGISTER, [ CoreGlobal::MODEL_GENERIC => $model ] );
-    }
+		return $this->render( WebGlobalCore::PAGE_REGISTER, [ CoreGlobal::MODEL_GENERIC => $model ] );
+	}
 
-    public function actionConfirmAccount( $token, $email ) {
+	public function actionConfirmAccount( $token, $email ) {
 
 		// Send user to home if already logged in
 		$this->checkHome();
@@ -119,30 +138,33 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 		if( isset( $token ) && isset( $email ) ) {
 
-			$user	= UserService::findByEmail( $email );
+			$coreProperties = $this->getCoreProperties();
+			$user			= $this->userService->getByEmail( $email );
 
-			if( isset( $user ) && UserService::verify( $user, $token ) ) {
+			if( isset( $user ) ) {
 
-				// Send Register Mail
-				Yii::$app->cmgCoreMailer->sendVerifyUserMail( $user );
+				if( $this->userService->verify( $user, $token ) ) {
 
-				// Set Success Message
-				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
-			}
-			else {
+					// Send Verify Mail
+					Yii::$app->coreMailer->sendVerifyUserMail( $user );
 
-				// Set Failure Message
-				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
+					// Set Success Message
+					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
+
+					// Autologin
+					if( $coreProperties->isAutoLogin() ) {
+
+						Yii::$app->user->login( $user, 3600 * 24 * 30 );
+					}
+
+					return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM );
+				}
 			}
 		}
-		else {
 
-			// Set Failure Message
-			Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, MYii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
-		}
+		// Set Failure Message
+		Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
 
-        return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM );
-    }
+		return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM );
+	}
 }
-
-?>

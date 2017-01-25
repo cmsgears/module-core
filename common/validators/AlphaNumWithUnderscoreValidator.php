@@ -12,13 +12,11 @@ class AlphaNumWithUnderscoreValidator extends Validator {
 
 	private static $regex	= "/^[a-zA-Z_0-9]+$/";
 
-    public function validateAttribute($model, $attribute) {
+	public function validateAttribute($model, $attribute) {
 
-        if ( !preg_match( self::$regex, $model->$attribute ) ) {
+		if ( !preg_match( self::$regex, $model->$attribute ) ) {
 
-            $this->addError( $model, $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_AN_U ) );
-        }
-    }
+			$this->addError( $model, $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_AN_U ) );
+		}
+	}
 }
-
-?>

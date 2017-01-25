@@ -1,106 +1,83 @@
 <?php
-// Yii Import
-use \Yii;
-use yii\helpers\Url;
+// Yii Imports
 use yii\widgets\ActiveForm;
+use yii\helpers\Html;
 
 // CMG Import
 use cmsgears\files\widgets\AvatarUploader;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . " | Profile";
-
-$this->params['sidebar-parent'] = 'sidebar-profile';
-$this->params['sidebar-child'] 	= 'profile';
-
-$coreProperties = $this->context->getCoreProperties();
+$this->title	= $coreProperties->getSiteTitle() . " | Profile";
 $user			= Yii::$app->user->getIdentity();
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<div class="clear"></div>
-    	<h4>My Profile</h4>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">My Profile</div>
+	</div>
+	<div class="box-wrap-content">
 
-		<div>
+		<div class="box-content clearfix">
+			<div class="header">User Avatar</div>
 			<?= AvatarUploader::widget([
-					'options' => [ 'id' => 'avatar-user', 'class' => 'file-uploader' ], 
-					'model' => $user->avatar, 
-					'postAction' => true,
-					'btnChooserIcon' => 'icon-action icon-action-edit',
-					'postViewIcon' => 'icon-sidebar icon-user'
-			]);?>
+				'options' => [ 'id' => 'avatar-user', 'class' => 'file-uploader' ],
+				'model' => $user->avatar, 'cmtController' => 'user',
+				'postAction' => true, 'postViewIcon' => 'cmti cmti-2x cmti-user'
+			]); ?>
 		</div>
 
-    	<div class="clear row right">
-    		<a class="right icon-action icon-action-edit btn-edit btn-edit-profile"></a>
-    	</div>
+		<div class="box-content clearfix">
+			<div class="header">User Profile</div>
+			<div class="box-form box-form-regular">
+				<span class="cmti cmti-edit btn-edit text text-black"></span>
+				<div class="wrap-info info">
+					<table>
+						<tr><td>Email</td><td><?= $model->email ?></td></tr>
+						<tr><td>Username</td><td><?= $model->username ?></td></tr>
+						<tr><td>Firstname</td><td><?= $model->firstName ?></td></tr>
+						<tr><td>Lastname</td><td><?= $model->lastName ?></td></tr>
+						<tr><td>Gender</td><td><?= $model->getGenderStr() ?></td></tr>
+						<tr><td>Phone</td><td><?= $model->phone ?></td></tr>
+					</table>
+				</div>
+				<div class="wrap-form">
+					<?php $form = ActiveForm::begin( [ 'id' => 'frm-user-profile', 'options' => [ 'class' => 'frm-split-40-60' ] ] );?>
 
-    	<div class="frm-split frm-view-profile">
-		 	<div>
-	    		<label> Email </label>
-	    		<label><?= $model->email ?></label>
+					<?php
+						if( !$coreProperties->isChangeEmail() ) {
+
+							echo $form->field( $model, 'email' )->textInput( [ 'readonly' => true ] );
+						}
+						else {
+
+							echo $form->field( $model, 'email' );
+						}
+					?>
+
+					<?php
+						if( !$coreProperties->isChangeUsername() ) {
+
+							echo $form->field( $model, 'username' )->textInput( [ 'readonly' => true ] );
+						}
+						else {
+
+							echo $form->field( $model, 'username' );
+						}
+					?>
+
+					<?= $form->field( $model, 'firstName' ) ?>
+					<?= $form->field( $model, 'lastName' ) ?>
+					<?= $form->field( $model, 'genderId' )->dropDownList( $genders )  ?>
+					<?= $form->field( $model, 'phone' ) ?>
+
+					<div class="clear"></div>
+
+					<div class="align align-center">
+						<input class="element-medium" type="submit" value="Update" />
+					</div>
+
+					<?php ActiveForm::end(); ?>
+				</div>
 			</div>
-		 	<div>
-	    		<label> Username </label>
-	    		<label> <?= $model->username ?></label>
-			</div>
-			<div>
-	    		<label> Firstname </label>
-	    		<label> <?= $model->firstName ?></label>
-			</div>
-			<div>
-	    		<label> Lastname </label>
-	    		<label> <?= $model->lastName ?></label>
-			</div>
-			<div>
-	    		<label> Gender </label>
-	    		<label> <?= $model->getGenderStr() ?></label>
-			</div>
-			<div>
-	    		<label> Phone </label>
-	    		<label> <?= $model->phone ?></label>
-		 	</div>
-		 	<div>
-	    		<label> Newsletter </label>
-	    		<label> <?= $model->getNewsletterStr() ?> </label>
-		 	</div>
-    	</div>
-
-    	<div class="frm-edit hidden">
-			<?php $form = ActiveForm::begin( ['id' => 'frm-user-profile', 'options' => ['class' => 'frm-split' ] ] );?>
-
-			<?php 
-				if( !$coreProperties->isChangeEmail() ) {
-
-					echo $form->field( $model, 'email' )->textInput( [ 'readonly' => true ] );
-				}
-				else {
-
-					echo $form->field( $model, 'email' );
-				}
-			?>
-
-			<?php 
-				if( !$coreProperties->isChangeUsername() ) {
-
-					echo $form->field( $model, 'username' )->textInput( [ 'readonly' => true ] );
-				}
-				else {
-
-					echo $form->field( $model, 'username' );
-				}
-			?>
-
-			<?= $form->field( $model, 'firstName' ) ?>
-			<?= $form->field( $model, 'lastName' ) ?>
-			<?= $form->field( $model, 'genderId' )->dropDownList( $genders )  ?>
-			<?= $form->field( $model, 'phone' ) ?>
-			<?= $form->field( $model, 'newsletter' )->checkbox() ?>
-	
-			<div class="clear"></div>
-			<div class="align-middle"><input type="submit" class="btn-fancy medium" value="Update" /></div>
-	
-			<?php ActiveForm::end(); ?>
 		</div>
-	</div>	
-</section>
+	</div>
+</div>

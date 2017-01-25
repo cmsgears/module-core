@@ -4,142 +4,165 @@ namespace cmsgears\core\admin\controllers\base\form;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\FormField;
-
-use cmsgears\core\admin\services\FormService;
-use cmsgears\core\admin\services\FormFieldService;
+use cmsgears\core\common\models\resources\FormField;
 
 class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $formService;
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
+		parent::init();
+
+		$this->setViewPath( '@cmsgears/module-core/admin/views/form/field' );
+
+		$this->crudPermission		= CoreGlobal::PERM_CORE;
+		$this->modelService			= Yii::$app->factory->get( 'formFieldService' );
+
+		$this->formService			= Yii::$app->factory->get( 'formService' );
+
+		// Note: Set returnUrl and sidebar in child classes.
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'all'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'create'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'update'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'delete'  => [ 'permission' => CoreGlobal::PERM_CORE ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'all'   => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// PageController --------------------
+	public function behaviors() {
 
-	public function actionAll( $formid ) {
-
-		$dataProvider = FormFieldService::getPaginationByFormId( $formid );
-
-	    return $this->render( '@cmsgears/module-core/admin/views/form/field/all', [
-	         'dataProvider' => $dataProvider,
-	         'formId' => $formid
-	    ]);
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
+					'all'  => [ 'permission' => $this->crudPermission ],
+					'create'  => [ 'permission' => $this->crudPermission ],
+					'update'  => [ 'permission' => $this->crudPermission ],
+					'delete'  => [ 'permission' => $this->crudPermission ]
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'all'	=> [ 'get' ],
+					'create' => [ 'get', 'post' ],
+					'update' => [ 'get', 'post' ],
+					'delete' => [ 'get', 'post' ]
+				]
+			]
+		];
 	}
 
-	public function actionCreate( $formid ) {
+	// yii\base\Controller ----
 
-		$model			= new FormField();
-		$model->formId	= $formid;
+	// CMG interfaces ------------------------
 
-		$model->setScenario( 'create' );
+	// CMG parent classes --------------------
 
-		if( $model->load( Yii::$app->request->post(), 'FormField' ) && $model->validate() ) {
+	// FieldController -----------------------
 
-			if( FormFieldService::create( $model ) ) {
+	public function actionAll( $fid ) {
 
-				$this->redirect( [ "all?formid=$formid" ] );
-			}
+		$dataProvider = $this->modelService->getPageByFormId( $fid );
+
+		return $this->render( 'all', [
+			 'dataProvider' => $dataProvider,
+			 'formId' => $fid
+		]);
+	}
+
+	public function actionCreate( $fid ) {
+
+		$modelClass		= $this->modelService->getModelClass();
+		$model			= new $modelClass;
+		$model->formId	= $fid;
+
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+
+			$this->modelService->create( $model );
+
+			return $this->redirect( [ "all?fid=$fid" ] );
 		}
 
-		return $this->render( '@cmsgears/module-core/admin/views/form/field/create', [
+		return $this->render( 'create', [
 			'model' => $model,
-			'formId' => $formid,
-			'typeMap' => FormField::$typeMap
+			'formId' => $fid,
+			'typeMap' => $modelClass::$typeMap
 		]);
 	}
 
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model		= FormFieldService::findById( $id );
+		$modelClass	= $this->modelService->getModelClass();
+		$model		= $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->setScenario( 'update' );
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			if( $model->load( Yii::$app->request->post(), 'FormField' ) && $model->validate() ) {
+				$this->modelService->update( $model );
 
-				if( FormFieldService::update( $model ) ) {
-
-					$this->redirect( [ "all?formid=$model->formId" ] );
-				}
+				return $this->redirect( [ "all?fid=$model->formId" ] );
 			}
 
-	    	return $this->render( '@cmsgears/module-core/admin/views/form/field/update', [
+			return $this->render( 'update', [
 				'model' => $model,
 				'formId' => $model->formId,
-				'typeMap' => FormField::$typeMap
-	    	]);
+				'typeMap' => $modelClass::$typeMap
+			]);
 		}
-		
+
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= FormFieldService::findById( $id );
+		$modelClass	= $this->modelService->getModelClass();
+		$model		= $this->modelService->getById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			if( $model->load( Yii::$app->request->post(), 'FormField' ) ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-				if( FormFieldService::delete( $model ) ) {
+				$this->modelService->delete( $model );
 
-					$this->redirect( [ "all?formid=$model->formId" ] );
-				}
+				return $this->redirect( [ "all?fid=$model->formId" ] );
 			}
 
-	    	return $this->render( '@cmsgears/module-core/admin/views/form/field/delete', [
+			return $this->render( 'delete', [
 				'model' => $model,
 				'formId' => $model->formId,
-				'typeMap' => FormField::$typeMap
-	    	]);
+				'typeMap' => $modelClass::$typeMap
+			]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

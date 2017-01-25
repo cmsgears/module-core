@@ -10,59 +10,49 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class RoleController extends \cmsgears\core\admin\controllers\base\RoleController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
+		parent::init();
 
-		$this->sidebar 	= [ 'parent' => 'sidebar-identity', 'child' => 'role' ];
+		$this->sidebar			= [ 'parent' => 'sidebar-identity', 'child' => 'role' ];
+
+		$this->returnUrl		= Url::previous( 'roles' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/role/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-		$behaviours	= parent::behaviors();
+	// yii\base\Component -----
 
-		$behaviours[ 'rbac' ][ 'actions' ][ 'index' ] 	= [ 'permission' => CoreGlobal::PERM_RBAC ];
+	// yii\base\Controller ----
 
-		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ] 	= [ 'get' ];
+	// CMG interfaces ------------------------
 
-		return $behaviours;
-    }
+	// CMG parent classes --------------------
 
-	// RoleController --------------------
-
-	public function actionIndex() {
-
-		$this->redirect( 'all' );
-	}
+	// RoleController ------------------------
 
 	public function actionAll() {
 
 		// Remember return url for crud
 		Url::remember( [ 'role/all' ], 'roles' );
 
-		return parent::actionAll( CoreGlobal::TYPE_SYSTEM );
-	}
-
-	public function actionCreate() {
-
-		return parent::actionCreate( CoreGlobal::TYPE_SYSTEM );
-	}
-
-	public function actionUpdate( $id ) {
-
-		return parent::actionUpdate( $id, CoreGlobal::TYPE_SYSTEM );
-	}
-
-	public function actionDelete( $id ) {
-
-		return parent::actionDelete( $id, CoreGlobal::TYPE_SYSTEM );
+		return parent::actionAll();
 	}
 }
-
-?>

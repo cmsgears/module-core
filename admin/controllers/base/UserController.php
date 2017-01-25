@@ -4,222 +4,254 @@ namespace cmsgears\core\admin\controllers\base;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
 use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile;
+use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\User;
-use cmsgears\core\common\models\entities\SiteMember;
+use cmsgears\core\common\models\mappers\SiteMember;
+use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\admin\services\OptionService;
-use cmsgears\core\admin\services\SiteMemberService;
-use cmsgears\core\admin\services\UserService;
-use cmsgears\core\admin\services\RoleService;
+abstract class UserController extends CrudController {
 
-abstract class UserController extends Controller {
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $roleType;
+
+	protected $roleSlug;
+
+	protected $permissionSlug;
+
+	protected $showCreate;
+
+	protected $siteMemberService;
+	protected $roleService;
+	protected $optionService;
+
+	protected $roleSuperAdmin;
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
-		
-		$this->returnUrl	= Url::previous( 'users' );
+		parent::init();
+
+		$this->setViewPath( '@cmsgears/module-core/admin/views/user' );
+
+		$this->crudPermission		= CoreGlobal::PERM_IDENTITY;
+		$this->modelService			= Yii::$app->factory->get( 'userService' );
+
+		$this->siteMemberService	= Yii::$app->factory->get( 'siteMemberService' );
+		$this->roleService			= Yii::$app->factory->get( 'roleService' );
+		$this->optionService		= Yii::$app->factory->get( 'optionService' );
+
+		$this->returnUrl			= Url::previous( 'users' );
+
+		$this->showCreate			= true;
+
+		$this->roleSuperAdmin		= $this->roleService->getBySlug( 'super-admin', true );
+		$this->roleSuperAdmin		= isset( $this->roleSuperAdmin ) ? $this->roleSuperAdmin->id : null;
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'all' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_IDENTITY ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_IDENTITY ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'all' => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// UserController --------------------
+	// yii\base\Controller ----
 
-	public function actionAll( $roleSlug = null, $permissionSlug = null, $showCreate = true ) {
+	// CMG interfaces ------------------------
 
-		$dataProvider = null;
+	// CMG parent classes --------------------
 
-		if( isset( $roleSlug ) ) {
+	// UserController ------------------------
 
-			$dataProvider = UserService::getPaginationByRoleSlug( $roleSlug );
+	public function actionAll() {
+
+		$roleTable			= CoreTables::TABLE_ROLE;
+		$permissionTable	= CoreTables::TABLE_PERMISSION;
+
+		$dataProvider		= null;
+
+		// Role specific users
+		if( isset( $this->roleSlug ) ) {
+
+			$dataProvider = $this->modelService->getPage( [ 'conditions' => [ "$roleTable.slug" => $this->roleSlug, "$roleTable.type" => CoreGlobal::TYPE_SYSTEM ], 'query' => User::queryWithSiteMembers() ] );
 		}
-		else if( isset( $permissionSlug ) ) {
+		// Permission specific users
+		else if( isset( $this->permissionSlug ) ) {
 
-			$dataProvider = UserService::getPaginationByPermissionSlug( $permissionSlug );
+			$dataProvider = $this->modelService->getPage( [ 'conditions' => [ "$permissionTable.slug" => $this->permissionSlug, "$permissionTable.type" => CoreGlobal::TYPE_SYSTEM ], 'query' => User::queryWithSiteMembersPermissions() ] );
 		}
+		// All users
 		else {
 
-			$dataProvider = UserService::getPagination();
+			$dataProvider = $this->modelService->getPage();
 		}
 
-	    return $this->render( '@cmsgears/module-core/admin/views/user/all', [
+		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
-			'showCreate' => $showCreate
-	    ]);
+			'showCreate' => $this->showCreate
+		]);
 	}
 
-	public function actionCreate( $roleType = null, $roleSlug = null ) {
+	public function actionCreate() {
 
 		$model		= new User();
 		$siteMember	= new SiteMember();
+		$avatar		= File::loadFile( null, 'Avatar' );
 
 		$model->setScenario( 'create' );
 
-		if( isset( $roleSlug ) ) {
+		if( isset( $this->roleSlug ) ) {
 
-			$role 				= RoleService::findBySlug( $roleSlug );
+			$role				= $this->roleService->getBySlugType( $this->roleSlug, CoreGlobal::TYPE_SYSTEM );
 			$siteMember->roleId = $role->id;
 		}
 
 		if( $model->load( Yii::$app->request->post(), 'User' ) && $siteMember->load( Yii::$app->request->post(), 'SiteMember' ) && $model->validate() ) {
 
 			// Create User
-			$user 		= UserService::create( $model );
+			$user		= $this->modelService->create( $model, [ 'avatar' => $avatar ] );
 
 			// Add User to current Site
-			$siteMember	= SiteMemberService::create( $model, $siteMember );
+			$siteMember = $this->siteMemberService->create( $user, [ 'siteMember' => $siteMember, 'roleId' => $siteMember->roleId ] );
 
 			if( $user && $siteMember ) {
-				
+
 				// Load User Permissions
-				$model->loadPermissions();
+				$user->loadPermissions();
 
 				// Send Account Mail
-				Yii::$app->cmgCoreMailer->sendCreateUserMail( $model );
+				Yii::$app->coreMailer->sendCreateUserMail( $user );
 
-				$this->redirect( $this->returnUrl );
+				return $this->redirect( $this->returnUrl );
 			}
 		}
 
-		if( isset( $roleSlug ) ) {
+		if( isset( $this->roleSlug ) ) {
 
-			return $this->render( '@cmsgears/module-core/admin/views/user/create', [
+			return $this->render( 'create', [
 				'model' => $model,
 				'siteMember' => $siteMember
 			]);
 		}
 		else {
-			
-			$roleMap 	= RoleService::getIdNameMapByType( $roleType );
 
-			return $this->render( '@cmsgears/module-core/admin/views/user/create', [
+			$roleMap	= $this->roleService->getIdNameMapByType( $this->roleType );
+
+			unset( $roleMap[ $this->roleSuperAdmin ] );
+
+			return $this->render( 'create', [
 				'sidebar' => $this->sidebar,
 				'model' => $model,
 				'siteMember' => $siteMember,
+				'avatar' => $avatar,
 				'roleMap' => $roleMap
-			]);			
+			]);
 		}
 	}
 
-	public function actionUpdate( $id, $roleType = null, $roleSlug = null ) {
+	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model		= UserService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$siteMember	= $model->siteMember;
-			$avatar 	= CmgFile::loadFile( $model->avatar, 'File' );
+			$siteMember	= $model->activeSiteMember;
+			$avatar		= File::loadFile( $model->avatar, 'Avatar' );
 
 			$model->setScenario( 'update' );
-
-			UserService::checkNewsletterMember( $model );
 
 			if( $model->load( Yii::$app->request->post(), 'User' ) && $siteMember->load( Yii::$app->request->post(), 'SiteMember' ) && $model->validate() ) {
 
 				// Update User and Site Member
-				if( UserService::update( $model, $avatar ) && SiteMemberService::update( $siteMember ) ) {
+				$this->modelService->update( $model, [ 'avatar' => $avatar ] );
 
-					$this->redirect( $this->returnUrl );
-				}
+				$this->siteMemberService->update( $siteMember );
+
+				return $this->redirect( $this->returnUrl );
 			}
 
-			if( isset( $roleSlug ) ) {
+			if( isset( $this->roleSlug ) ) {
 
-		    	return $this->render( '@cmsgears/module-core/admin/views/user/update', [
-		    		'model' => $model,
-		    		'siteMember' => $siteMember,
-		    		'avatar' => $avatar,
-		    		'status' => User::$statusMapUpdate
-		    	]);
+				return $this->render( 'update', [
+					'model' => $model,
+					'siteMember' => $siteMember,
+					'avatar' => $avatar,
+					'status' => User::$statusMap
+				]);
 			}
 			else {
 
-				$roleMap 	= RoleService::getIdNameMapByType( $roleType );
+				$roleMap	= $this->roleService->getIdNameMapByType( $this->roleType );
 
-		    	return $this->render( '@cmsgears/module-core/admin/views/user/update', [
-		    		'model' => $model,
-		    		'siteMember' => $siteMember,
-		    		'avatar' => $avatar,
-		    		'roleMap' => $roleMap,
-		    		'status' => User::$statusMapUpdate
-		    	]);
+				unset( $roleMap[ $this->roleSuperAdmin ] );
+
+				return $this->render( 'update', [
+					'model' => $model,
+					'siteMember' => $siteMember,
+					'avatar' => $avatar,
+					'roleMap' => $roleMap,
+					'status' => User::$statusMap
+				]);
 			}
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $id, $roleType = null, $roleSlug = null ) {
+	public function actionDelete( $id ) {
 
 		// Find Model
-		$model		= UserService::findById( $id );
+		$model		= $this->modelService->getById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			$siteMember	= $model->siteMember;
+			$siteMember	= $model->activeSiteMember;
+			$avatar		= $model->avatar;
 
 			if( $model->load( Yii::$app->request->post(), 'User' ) ) {
 
-				if( UserService::delete( $model ) ) {
+				$this->modelService->delete( $model );
 
-					$this->redirect( $this->returnUrl );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 			else {
 
-				$roleMap 	= RoleService::getIdNameMapByType( $roleType );
+				$roleMap	= $this->roleService->getIdNameMapByType( $this->roleType );
 
-	        	return $this->render( '@cmsgears/module-core/admin/views/user/delete', [
-	        		'model' => $model,
-	        		'siteMember' => $siteMember,
-	        		'roleMap' => $roleMap,
-	        		'status' => User::$statusMapUpdate
-	        	]);
+				unset( $roleMap[ $this->roleSuperAdmin ] );
+
+				return $this->render( 'delete', [
+					'model' => $model,
+					'siteMember' => $siteMember,
+					'avatar' => $avatar,
+					'roleMap' => $roleMap,
+					'status' => User::$statusMap
+				]);
 			}
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

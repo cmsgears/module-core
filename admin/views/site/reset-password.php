@@ -2,7 +2,7 @@
 use yii\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . " | Reset Password";
+$this->title	= 'Reset Password | ' . $coreProperties->getSiteTitle();
 ?>
 <section class="wrap-content wrap-content-full container clearfix">
 	<div class="cud-box wrap-login-box frm-split">
@@ -17,13 +17,13 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Reset Password";
 		
 				$form = ActiveForm::begin( [ 'id' => 'frm-reset-password' ] );
 		?>
-		    	<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email*' ] ) ?>
-		    	<?= $form->field( $model, 'password' )->passwordInput( [ 'placeholder' => 'Password*' ] ) ?>
-		    	<?= $form->field( $model, 'password_repeat' )->passwordInput( [ 'placeholder' => 'Repeat Password*' ] ) ?>
+				<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email*' ] ) ?>
+				<?= $form->field( $model, 'password' )->passwordInput( [ 'placeholder' => 'Password*' ] ) ?>
+				<?= $form->field( $model, 'password_repeat' )->passwordInput( [ 'placeholder' => 'Repeat Password*' ] ) ?>
 
 				<div class="box-filler"></div>
 				
-				<input type="submit" value="Submit" />
+				<input class="element" type="submit" value="Submit" />
 		<?php
 				ActiveForm::end();
 			}

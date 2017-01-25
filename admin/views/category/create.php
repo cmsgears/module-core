@@ -1,49 +1,36 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
 
-use cmsgears\widgets\cleditor\ClEditor;
-use cmsgears\files\widgets\AvatarUploader;
-
-if( $dropDown ) {
-	
-	$dropDown = 'Dropdown';
-}
-else {
-	
-	$dropDown = 'Category';
-}
+// CMG Imports
+use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Add ' . $dropDown;
-
-// Sidebar and Return URL
-$sidebar						= $this->context->sidebar;
-$returnUrl						= $this->context->returnUrl;
-$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
-$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
-
-ClEditor::widget( [ 'selector' => '.content-editor' ] );
+$this->title	= $coreProperties->getSiteTitle() . ' | Add Category';
+$returnUrl		= $this->context->returnUrl;
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Add <?=$dropDown?></h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-dropdown-create', 'options' => ['class' => 'frm-split form-with-editor' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Add Category</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-category' ] );?>
 
-    	<?= $form->field( $model, 'name' ) ?>  
-    	<?= $form->field( $model, 'description' ) ?> 
-    	<?= $form->field( $model, 'icon' ) ?>
+		<?= $form->field( $model, 'name' ) ?>  
+		<?= $form->field( $model, 'description' ) ?>
+		<?= $form->field( $model, 'parentId' )->dropDownList( $categoryMap ) ?>
+		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
+		<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 		<?= $form->field( $model, 'featured' )->checkbox() ?>
 
-    	<h4><?=$dropDown?> Avatar</h4>
-		<?=AvatarUploader::widget( [ 'options' => [ 'id' => 'avatar-dropdown', 'class' => 'file-uploader' ], 'model' => $avatar, 'modelClass' => 'Avatar',  'directory' => 'avatar', 'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>
-  
-		<div class="box-filler"></div>
+		<div class="filler-height"></div>
 
-		<?=Html::a( "Cancel", $returnUrl, [ 'class' => 'btn' ] );?>
-		<input type="submit" value="Create" />
+		<div class="align align-center">
+			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+			<input class="element-medium" type="submit" value="Create" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>

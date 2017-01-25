@@ -1,37 +1,44 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
 
+// CMG Imports
 use cmsgears\files\widgets\AvatarUploader;
+use cmsgears\files\widgets\ImageUploader;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Update Site';
-
-// Sidebar
-$sidebar						= $this->context->sidebar;
-$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
-$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
+$this->title	= 'Update Site | ' . $coreProperties->getSiteTitle();
+$returnUrl		= $this->context->returnUrl;
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Update Site</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-site-update', 'options' => [ 'class' => 'frm-split' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Update Site</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-site' ] );?>
 
-    	<?= $form->field( $model, 'name' ) ?>  
-    	<?= $form->field( $model, 'order' ) ?> 
+		<?= $form->field( $model, 'name' ) ?>
+		<?= $form->field( $model, 'order' ) ?>
+		<?= $form->field( $model, 'themeId' )->dropDownList( $themesMap ) ?>
 
-    	<h4>Site Avatar</h4>
-		<?=AvatarUploader::widget( [ 'options' => [ 'id' => 'avatar-site', 'class' => 'file-uploader' ], 'model' => $avatar, 'modelClass' => 'Avatar',  'directory' => 'avatar', 'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>
+		<div class="box-content clearfix">
+			<div class="header">Site Avatar</div>
+			<?= AvatarUploader::widget( [ 'options' => [ 'id' => 'model-avatar', 'class' => 'file-uploader' ], 'model' => $avatar ] );?>
+		</div>
 
-    	<h4>Site Banner</h4>
-		<?=AvatarUploader::widget( [ 'options' => [ 'id' => 'banner-site', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Banner',  'directory' => 'avatar', 'btnChooserIcon' => 'icon-action icon-action-edit' ] );?>
+		<div class="box-content clearfix">
+			<div class="header">Site Banner</div>
+			<?= ImageUploader::widget( [ 'options' => [ 'id' => 'model-banner', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' ] );?>
+		</div>
 
-		<div class="box-filler"></div>
+		<div class="filler-height"></div>
 
-		<?=Html::a( 'Cancel', 'all', [ 'class' => 'btn' ] );?>
-		<input type="submit" value="Update" />
+		<div class="align align-center">
+			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+			<input class="element-medium" type="submit" value="Update" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>

@@ -5,28 +5,53 @@ namespace cmsgears\core\common\config;
 use \Yii;
 
 // CMG Imports
-use cmsgears\core\common\services\SiteService;
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\services\entities\SiteService;
 
 class CmgProperties {
 
+	// Variables ---------------------------------------------------
+
+	// Global -----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
 	/**
-	 * The map stores all the core properties. It can be queried for all the available properties.
+	 * The map stores all the properties. It can be queried for all the available properties.
 	 */
 	protected $properties;
+
+	// Private ----------------
+
+	// Constructor and Initialisation ------------------------------
 
 	/*
 	 * Initialise the properties from database.
 	 */
 	public function init( $configType ) {
 
-		$this->properties	= SiteService::getAttributeNameValueMapBySlugType( Yii::$app->cmgCore->getSiteSlug(), $configType );
+		$siteService		= Yii::$app->factory->get( 'siteService' );
+		$this->properties	= $siteService->getMetaNameValueMapBySlugType( Yii::$app->core->getSiteSlug(), $configType );
 
 		// Load main site properties
-		if( Yii::$app->cmgCore->multiSite && count( $this->properties ) == 0 ) {
+		if( Yii::$app->core->multiSite && count( $this->properties ) == 0 ) {
 
-			$this->properties	= SiteService::getAttributeNameValueMapBySlugType( Yii::$app->cmgCore->getMainSiteSlug(), $configType );
+			$this->properties	= $siteService->getMetaNameValueMapBySlugType( Yii::$app->core->getMainSiteSlug(), $configType );
 		}
 	}
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG parent classes --------------------
+
+	// CmgProperties -------------------------
+
+	// Properties
 
 	/**
 	 * Return all the properties.
@@ -46,5 +71,3 @@ class CmgProperties {
 		return $this->properties[ $findKey ];
 	}
 }
-
-?>

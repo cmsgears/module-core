@@ -3,23 +3,107 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\validators\FilterValidator;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\base\CoreTables;
+
 /**
  * Province Entity
  *
- * @property integer $id
- * @property integer $countryId
+ * @property long $id
+ * @property long $countryId
  * @property string $code
+ * @property string $iso
  * @property string $name
  */
-class Province extends CmgEntity {
+class Province extends \cmsgears\core\common\models\base\Entity {
 
-	// Instance Methods --------------------------------------------
+	// Variables ---------------------------------------------------
+
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
+
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
+
+		// model rules
+		$rules = [
+			// Required, Safe
+			[ [ 'countryId', 'code', 'name' ], 'required' ],
+			[ [ 'id' ], 'safe' ],
+			// Unique
+			[ [ 'countryId', 'code' ], 'unique', 'targetAttribute' => [ 'countryId', 'code' ] ],
+			[ [ 'countryId', 'name' ], 'unique', 'targetAttribute' => [ 'countryId', 'name' ] ],
+			// Text Limit
+			[ [ 'code', 'iso' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			// Other
+			[ 'countryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ]
+		];
+
+		// trim if required
+		if( Yii::$app->core->trimFieldValue ) {
+
+			$trim[] = [ [ 'code', 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+
+			return ArrayHelper::merge( $trim, $rules );
+		}
+
+		return $rules;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
+
+		return [
+			'countryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
+			'code' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CODE ),
+			'iso' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ISO ),
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME )
+		];
+	}
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	// Province ------------------------------
 
 	/**
 	 * @return Country - parent country for province
@@ -29,94 +113,42 @@ class Province extends CmgEntity {
 		return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] );
 	}
 
-	// yii\base\Model --------------------
-
-    /**
-     * @inheritdoc
-     */
-	public function rules() {
-
-		// model rules
-        $rules = [
-            [ [ 'code', 'name' ], 'required' ],
-            [ [ 'id' ], 'safe' ],
-            [ 'countryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-            [ 'code', 'string', 'min' => 1, 'max' => 10 ],
-            [ 'name', 'string', 'min' => 1, 'max' => 150 ],
-            [ 'name', 'alphanumspace' ],
-            [ 'name', 'validateNameCreate', 'on' => [ 'create' ] ],
-            [ 'name', 'validateNameUpdate', 'on' => [ 'update' ] ]
-        ];
-
-		// trim if required
-		if( Yii::$app->cmgCore->trimFieldValue ) {
-
-			$trim[] = [ [ 'name', 'code' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-
-			return ArrayHelper::merge( $trim, $rules );
-		}
-
-		return $rules;
-    }
-
-    /**
-     * @inheritdoc
-     */
-	public function attributeLabels() {
-
-		return [
-			'countryId' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
-			'code' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_CODE ),
-			'name' => Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::FIELD_NAME )
-		];
-	}
-	
-	// Province --------------------------
-
-	/**
-	 * Validates whether a province existing with the same name for same country.
-	 */
-    public function validateNameCreate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-            if( self::isExistByNameCountryId( $this->name, $this->countryId ) ) {
-
-                $this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-            }
-        }
-    }
-
-	/**
-	 * Validates whether a province existing with the same name for same country.
-	 */
-    public function validateNameUpdate( $attribute, $params ) {
-
-        if( !$this->hasErrors() ) {
-
-			$existingProvince = self::findByNameCountryId( $this->name, $this->countryId );
-
-			if( isset( $existingProvince ) && $this->countryId == $existingProvince->countryId && 
-				$this->id != $existingProvince->id && strcmp( $existingProvince->name, $this->name ) == 0 ) {
-
-				$this->addError( $attribute, Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_EXIST ) );
-			}
-        }
-    }
-
 	// Static Methods ----------------------------------------------
 
-	// yii\base\Model --------------------
+	// Yii parent classes --------------------
 
-    /**
-     * @inheritdoc
-     */
+	// yii\db\ActiveRecord ----
+
+	/**
+	 * @inheritdoc
+	 */
 	public static function tableName() {
 
 		return CoreTables::TABLE_PROVINCE;
 	}
 
-	// Province --------------------------
+	// CMG parent classes --------------------
+
+	// Province ------------------------------
+
+	// Read - Query -----------
+
+	public static function queryWithAll( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithCountry( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'country' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	// Read - Find ------------
 
 	/**
 	 * @return array - by country id
@@ -126,31 +158,14 @@ class Province extends CmgEntity {
 		return self::find()->where( 'countryId=:id', [ ':id' => $countryId ] )->all();
 	}
 
-	/**
-	 * @return Province - by name and country id
-	 */
-	public static function findByNameCountryId( $name, $countryId ) {
+	public static function findByCode( $code ) {
 
-		return self::find()->where( 'countryId=:id AND name=:name', [ ':id' => $countryId, ':name' => $name ] )->one();
+		return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
 	}
 
-	/**
-	 * @return Province - check whether a province exist by the provided name and country id
-	 */
-	public static function isExistByNameCountryId( $name, $countryId ) {
+	// Create -----------------
 
-		$province = self::findByNameCountryId( $name, $countryId );
+	// Update -----------------
 
-		return isset( $province );
-	}
-
-	/**
-	 * @return Province - by code and country id
-	 */
-	public static function findByCodeCountryId( $code, $countryId ) {
-
-		return self::find()->where( 'countryId=:id AND code=:code', [ ':id' => $countryId, ':code' => $code ] )->one();
-	}
+	// Delete -----------------
 }
-
-?>

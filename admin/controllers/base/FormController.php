@@ -4,161 +4,158 @@ namespace cmsgears\core\admin\controllers\base;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
-use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Form;
+use cmsgears\core\common\models\resources\Form;
 
-use cmsgears\core\admin\services\FormService;
-use cmsgears\core\admin\services\TemplateService;
+abstract class FormController extends CrudController {
 
-abstract class FormController extends Controller {
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $type;
+	protected $submits;
+	protected $templateType;
+
+	// Private ----------------
+
+	private $templateService;
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
-		
-		$this->returnUrl	= Url::previous( 'forms' );
+		parent::init();
+
+		$this->setViewPath( '@cmsgears/module-core/admin/views/form' );
+
+		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'formService' );
+
+		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+
+		$this->type				= CoreGlobal::TYPE_SYSTEM;
+		$this->submits			= true;
+		$this->templateType		= CoreGlobal::TYPE_FORM;
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'all'    => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_CORE ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'all'   => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// FormController --------------------
+	// yii\base\Controller ----
 
-	public function actionAll( $type = null ) {
+	// CMG interfaces ------------------------
 
-		$dataProvider = FormService::getPaginationByType( $type );
+	// CMG parent classes --------------------
 
-		Url::remember( [ 'form/all' ], 'forms' );
+	// FormController ------------------------
 
-	    return $this->render( '@cmsgears/module-core/admin/views/form/all', [
-	         'dataProvider' => $dataProvider
-	    ]);
+	public function actionAll() {
+
+		$dataProvider = $this->modelService->getPageByType( $this->type );
+
+		return $this->render( 'all', [
+			 'dataProvider' => $dataProvider,
+			 'submits' => $this->submits
+		]);
 	}
 
-	public function actionCreate( $type = null ) {
+	public function actionCreate() {
 
-		$model			= new Form();
-		$model->type 	= $type;
-		$model->siteId	= Yii::$app->cmgCore->siteId;
+		$modelClass		= $this->modelService->getModelClass();
+		$model			= new $modelClass;
+		$model->type	= $this->type;
+		$model->siteId	= Yii::$app->core->siteId;
 
-		$model->setScenario( 'create' );
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-		if( $model->load( Yii::$app->request->post(), 'Form' ) && $model->validate() ) {
+			$this->modelService->create( $model );
 
-			if( FormService::create( $model ) ) {
-
-				$this->redirect( $this->returnUrl );
-			}
+			return $this->redirect( $this->returnUrl );
 		}
 
-		$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_FORM );
-		$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+		$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-    	return $this->render( '@cmsgears/module-core/admin/views/form/create', [
-    		'model' => $model,
-    		'templatesMap' => $templatesMap,
-    		'visibilityMap' => Form::$visibilityMap
-    	]);
+		// Render
+		return $this->render( 'create', [
+			'model' => $model,
+			'templatesMap' => $templatesMap,
+			'visibilityMap' => $modelClass::$visibilityMap
+		]);
 	}
 
-	public function actionUpdate( $id, $type = null ) {
+	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model	= FormService::findById( $id );
+		$modelClass	= $this->modelService->getModelClass();
+		$model		= $this->modelService->getById( $id );
 
-		// Update/Render if exist
+		// Update if exist
 		if( isset( $model ) ) {
-			
-			$model->type = $type;
 
-			$model->setScenario( 'update' );
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			if( $model->load( Yii::$app->request->post(), 'Form' ) && $model->validate() ) {
+				$this->modelService->update( $model );
 
-				if( FormService::update( $model ) ) {
-
-					$this->redirect( $this->returnUrl );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 
-			$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_FORM );
-			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
+			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-	    	return $this->render( '@cmsgears/module-core/admin/views/form/update', [
-	    		'model' => $model,
-	    		'templatesMap' => $templatesMap,
-	    		'visibilityMap' => Form::$visibilityMap
-	    	]);
-		}
-		
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
-
-	public function actionDelete( $id, $type = null ) {
-
-		// Find Model
-		$model	= FormService::findById( $id );
-
-		// Delete/Render if exist
-		if( isset( $model ) ) {
-			
-			$model->type = $type;
-
-			if( $model->load( Yii::$app->request->post(), 'Form' ) ) {
-
-				if( FormService::delete( $model ) ) {
-
-					$this->redirect( $this->returnUrl );
-				}
-			}
-
-			$templatesMap	= TemplateService::getIdNameMapByType( CoreGlobal::TYPE_FORM );
-			$templatesMap	= ArrayHelper::merge( [ '0' => 'Choose Template' ], $templatesMap );
-
-	    	return $this->render( '@cmsgears/module-core/admin/views/form/delete', [
-	    		'model' => $model,
-	    		'templatesMap' => $templatesMap,
-	    		'visibilityMap' => Form::$visibilityMap
-	    	]);
+			// Render
+			return $this->render( 'update', [
+				'model' => $model,
+				'templatesMap' => $templatesMap,
+				'visibilityMap' => $modelClass::$visibilityMap
+			]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
+	public function actionDelete( $id ) {
+
+		// Find Model
+		$modelClass	= $this->modelService->getModelClass();
+		$model		= $this->modelService->getById( $id );
+
+		// Delete if exist
+		if( isset( $model ) ) {
+
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
+
+				$this->modelService->delete( $model );
+
+				return $this->redirect( $this->returnUrl );
+			}
+
+			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
+
+			// Render
+			return $this->render( 'delete', [
+				'model' => $model,
+				'templatesMap' => $templatesMap,
+				'visibilityMap' => $modelClass::$visibilityMap
+			]);
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

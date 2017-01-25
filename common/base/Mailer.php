@@ -3,37 +3,60 @@ namespace cmsgears\core\common\base;
 
 // Yii Imports
 use \Yii;
-use yii\base\Component;
 
 // Mail
 use \Swift_SmtpTransport;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\config\CoreProperties;
 use cmsgears\core\common\config\MailProperties;
 
-class Mailer extends Component {
+class Mailer extends \yii\base\Component {
 
-	private $_mailer;
+	// Variables ---------------------------------------------------
 
-	private $_coreProperties;
-	private $_mailProperties;
+	// Globals -------------------------------
 
-    public function init() {
+	// Constants --------------
 
-        parent::init();
+	// Public -----------------
 
-        $this->_mailer = Yii::$app->getMailer();
+	// Protected --------------
 
-        $this->_mailer->htmlLayout 	= $this->htmlLayout;
-        $this->_mailer->textLayout 	= $this->textLayout;
-        $this->_mailer->viewPath 	= $this->viewPath;
-    }
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	private $mailer;
+
+	private $coreProperties;
+	private $mailProperties;
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->mailer = Yii::$app->getMailer();
+
+		$this->mailer->htmlLayout	= $this->htmlLayout;
+		$this->mailer->textLayout	= $this->textLayout;
+		$this->mailer->viewPath		= $this->viewPath;
+	}
 
 	public function initSmtp() {
 
 		$transport		= new Swift_SmtpTransport();
-		$mailProperties	= $this->_mailProperties;
+		$mailProperties	= $this->mailProperties;
 
 		$transport->setHost( $mailProperties->getSmtpHost() );
 		$transport->setPort( $mailProperties->getSmtpPort() );
@@ -41,38 +64,48 @@ class Mailer extends Component {
 		$transport->setPassword( $mailProperties->getSmtpPassword() );
 		$transport->setEncryption( $mailProperties->getSmtpEncryption() );
 
-		$this->_mailer->transport	= $transport;
+		$this->mailer->transport	= $transport;
 	}
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Mailer --------------------------------
 
 	public function getMailer() {
 
-		return $this->_mailer;
+		return $this->mailer;
 	}
 
 	public function getCoreProperties() {
 
-		if( !isset( $this->_coreProperties ) ) {
+		if( !isset( $this->coreProperties ) ) {
 
-			$this->_coreProperties	= CoreProperties::getInstance();
+			$this->coreProperties	= CoreProperties::getInstance();
 		}
 
-		return $this->_coreProperties;
+		return $this->coreProperties;
 	}
 
 	public function getMailProperties() {
 
-		if( !isset( $this->_mailProperties ) ) {
+		if( !isset( $this->mailProperties ) ) {
 
-			$this->_mailProperties	= MailProperties::getInstance();
+			$this->mailProperties	= MailProperties::getInstance();
 		}
 
-		if( $this->_mailProperties->isSmtp() ) {
+		if( $this->mailProperties->isSmtp() ) {
 
 			$this->initSmtp();
 		}
 
-		return $this->_mailProperties;
+		return $this->mailProperties;
 	}
 }
-
-?>

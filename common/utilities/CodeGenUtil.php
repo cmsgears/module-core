@@ -1,25 +1,27 @@
 <?php
 namespace cmsgears\core\common\utilities;
 
+// Yii Imports
 use \Yii;
-use yii\helpers\Html; 
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 /**
  * The class CodeGenUtil provides utility methods to generate code snippets for commonly used code.
  */
 class CodeGenUtil {
-	
+
 	// Static Methods ----------------------------------------------
 
 	/**
 	 * Return pagination info to be displayed on data grid footer or header.
 	 * @return string - pagination info
-	 */	
+	 */
 	public static function getPaginationDetail( $dataProvider ) {
 
 		$total			= $dataProvider->getTotalCount();
 		$pagination		= $dataProvider->getPagination();
-		$current_page 	= $pagination->getPage();
+		$current_page	= $pagination->getPage();
 		$page_size		= $pagination->getPageSize();
 		$start			= $page_size * $current_page;
 		$end			= $page_size * ( $current_page + 1 ) - 1;
@@ -30,17 +32,17 @@ class CodeGenUtil {
 
 			$end	= $start + $currentSize;
 		}
-		
+
 		if( $end > 0 ) {
 
 			$start += 1;
 		}
-		
+
 		if( $currentSize == $page_size ) {
 
 			$end	+= 1;
 		}
-		
+
 		return "Showing $start to $end out of $total entries";
 	}
 
@@ -53,7 +55,7 @@ class CodeGenUtil {
 
 		foreach ( $map as $key => $value ) {
 
-			$html[]	= Html::a( $value, [ $baseUrl . "$key" ] );
+			$html[]	= Html::a( $value, Url::to( $baseUrl . $key, true ) );
 		}
 
 		if( $csv ) {
@@ -75,11 +77,11 @@ class CodeGenUtil {
 		$length	= count( $list );
 
 		for ( $i = 0; $i < $length; $i++ ) {
-			
-			$element 	= $list[ $i ];
-			$html[]		= Html::a( $element, [ $baseUrl . "$element" ] );
+
+			$element	= $list[ $i ];
+			$html[]		= Html::a( $element, Url::to( $baseUrl . $element, true ) );
 		}
-		
+
 		if( $csv ) {
 
 			return implode( ",", $html );
@@ -91,15 +93,15 @@ class CodeGenUtil {
 	}
 
 	/**
-	 * @return array - associative array from array having id and name keys for each entry 
-	 */ 
+	 * @return array - associative array from array having id and name keys for each entry
+	 */
 	public static function generateIdNameMap( $data ) {
 
 		return self::generateAssociativeArray( $data, 'id', 'name' );
 	}
 
 	/**
-	 * @return array - associative array from array having key and value keys for each entry 
+	 * @return array - associative array from array having key and value keys for each entry
 	 */
 	public static function generateNameValueMap( $data ) {
 
@@ -107,7 +109,7 @@ class CodeGenUtil {
 	}
 
 	/**
-	 * @return array - associative array from array having $key1 and $key2 keys for each entry 
+	 * @return array - associative array from array having $key1 and $key2 keys for each entry
 	 */
 	public static function generateAssociativeArray( $data, $key1, $key2 ) {
 
@@ -129,14 +131,8 @@ class CodeGenUtil {
 
 		return self::generateSelectOptions( $data, $selected, "id", "name" );
 	}
-	
-	public static function generateListItemsIdName( $data ) {
 
-		return self::generateListItems( $data, "id", "name" );
-	}
-	 
-
-	// Select for Option Table - By Name and Value 
+	// Select for Option Table - By Name and Value
 	public static function generateSelectOptionsNameValue( $data, $selected = null ) {
 
 		return self::generateSelectOptions( $data, $selected, "name", "value" );
@@ -144,18 +140,18 @@ class CodeGenUtil {
 
 	// Generic Select for any table
 	public static function generateSelectOptions( $data, $selected = null, $key1, $key2 ) {
-		
+
 		$options	= "";
-		
+
 		if( isset( $data ) ) {
-			
+
 			if( isset($selected) ) {
 
 				foreach ( $data as $key => $value ) {
-					
-					$val 	= $value[ $key1 ];
+
+					$val	= $value[ $key1 ];
 					$option = $value[ $key2 ];
-					
+
 					if( $selected === $val ) {
 
 						$options .= "<option value='$val' selected>$option</option>";
@@ -169,7 +165,7 @@ class CodeGenUtil {
 
 				foreach ( $data as $key => $value ) {
 
-					$val 	= $value[ $key1 ];
+					$val	= $value[ $key1 ];
 					$option = $value[ $key2 ];
 
 					$options .= "<option value='$val'>$option</option>";
@@ -179,14 +175,14 @@ class CodeGenUtil {
 
 		return $options;
 	}
-	
+
 	// Generic Select for any table
 	public static function generateSelectOptionsFromArray( $data, $selected = null ) {
-		
+
 		$options	= "";
-		
+
 		if( isset( $data ) ) {
-			
+
 			if( isset($selected) ) {
 
 				foreach ( $data as $key => $value ) {
@@ -211,19 +207,24 @@ class CodeGenUtil {
 
 		return $options;
 	}
-	
+
+	public static function generateListItemsIdName( $data ) {
+
+		return self::generateListItems( $data, "id", "name" );
+	}
+
 	public static function generateListItems( $data, $key1, $key2 ) {
-		
+
 		$listItems	= "";
-		
-		if( isset( $data ) ) { 
+
+		if( isset( $data ) ) {
 
 			foreach ( $data as $key => $value ) {
-					
-				$val 	= $value[ $key1 ];
-				$item = $value[ $key2 ];				
 
-				$listItems .= "<li data-value='$val'>$item</li>";			 
+				$val	= $value[ $key1 ];
+				$item	= $value[ $key2 ];
+
+				$listItems .= "<li data-value='$val'>$item</li>";
 			}
 		}
 
@@ -233,6 +234,7 @@ class CodeGenUtil {
 	// Return Image Tag
 	public static function getImageThumbTag( $image, $options = [] ) {
 
+		// Use Image from DB
 		if( isset( $image ) ) {
 
 			$thumbUrl = $image->getThumbUrl();
@@ -250,22 +252,24 @@ class CodeGenUtil {
 		}
 		else {
 
+			// Use Image from web root directory
 			if( isset( $options[ 'image' ] ) ) {
 
 				$images = Yii::getAlias( '@images' );
+				$img	= $options[ 'image' ];
 
 				if( isset( $options[ 'class' ] ) ) {
 
-					$class 	= $options[ 'class' ];
-					$img	= $options[ 'image' ];
+					$class	= $options[ 'class' ];
 
-					return "<img class='$class' src='$images/$img.png'>";
+					return "<img class='$class' src='$images/$img'>";
 				}
 				else {
 
-					return "<img src='$images/$image.png'>";
+					return "<img src='$images/$img'>";
 				}
 			}
+			// Use icon
 			else if( isset( $options[ 'icon' ] ) ) {
 
 				$icon = $options[ 'icon' ];
@@ -274,29 +278,67 @@ class CodeGenUtil {
 			}
 		}
 	}
-	
+
+	public static function getMediumUrl( $file, $options = [] ) {
+
+		if( $file == null ) {
+
+			if( isset( $options[ 'image' ] ) ) {
+
+				$image	= $options[ 'image' ];
+
+				return Yii::getAlias( '@images' ) . "/$image";
+			}
+		}
+		else {
+
+			return $file->getMediumUrl();
+		}
+
+		return null;
+	}
+
+	public static function getFileUrl( $file, $options = [] ) {
+
+		if( $file == null ) {
+
+			if( isset( $options[ 'image' ] ) ) {
+
+				$image	= $options[ 'image' ];
+
+				return Yii::getAlias( '@images' ) . "/$image";
+			}
+		}
+		else {
+
+			return $file->getFileUrl();
+		}
+
+		return null;
+	}
+
 	public static function generateMetaTags( $params ) {
-		
+
 		$metaContent	= '';
 
 		if( isset( $params[ 'desc' ] ) ) {
 
 			$description	= $params[ 'desc' ];
-			$metaContent 	.= "<meta name='description' content='$description' />";
+			$metaContent	.= "<meta name='description' content='$description' />";
 		}
 
 		if( isset( $params[ 'meta' ] ) ) {
-			
-			$keywords		= $params[ 'keywords' ];
-			$metaContent 	.= "<meta name='keywords' content='$keywords' />";
+
+			$keywords		= $params[ 'meta' ];
+			$metaContent	.= "<meta name='keywords' content='$keywords' />";
 		}
 
 		if( isset( $params[ 'robot' ] ) ) {
-			
+
 			$robot			= $params[ 'robot' ];
-			$metaContent 	.= "<meta name='robots' content='$robot' />";
+			$metaContent	.= "<meta name='robots' content='$robot' />";
 		}
-		
+
 		return $metaContent;
 	}
 
@@ -306,10 +348,10 @@ class CodeGenUtil {
 
 			$summary	= $params[ 'summary' ];
 			$seoH1		= "<h1 class='hidden'>$summary</h1>";
-			
+
 			return $seoH1;
 		}
-		
+
 		return null;
 	}
 
@@ -318,16 +360,16 @@ class CodeGenUtil {
 
 		$parts = explode( '@', $email );
 
-		return $parts[ 0 ];	 
+		return $parts[ 0 ];
 	}
 
 	public static function isEmptyString( $string ) {
-		
+
 		return !( isset( $string ) && ( strlen( trim( $string ) ) > 0 ) );
 	}
 
 	public static function notEmptyString( $string ) {
-		
+
 		return ( isset( $string ) && ( strlen( trim( $string ) ) > 0 ) );
 	}
 
@@ -339,7 +381,7 @@ class CodeGenUtil {
 
 		$script	= ob_get_clean();
 
-		$view->registerJs( $script, $position ); 
+		$view->registerJs( $script, $position );
 	}
 
 	public static function getFileContent( $filePath ) {
@@ -350,7 +392,24 @@ class CodeGenUtil {
 
 		$content	= ob_get_clean();
 
-		return $content; 
+		return $content;
+	}
+
+	public static function getYearOptionsList( $start, $end = null ) {
+
+		if( !isset( $end ) ) {
+
+			$end	= date( "Y" );
+		}
+
+		$options	= null;
+
+		for( $i = $end; $i >= $start; $i-- ) {
+
+			$options	.= "<option value='$i'>$i</option>";
+		}
+
+		return $options;
 	}
 }
 

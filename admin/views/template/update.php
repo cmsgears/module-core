@@ -1,39 +1,51 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
 use cmsgears\core\common\widgets\Editor;
+use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Update Template';
+$this->title	= 'Update Template | ' . $coreProperties->getSiteTitle();
+$returnUrl		= $this->context->returnUrl;
+$renderers		= Yii::$app->templateManager->renderers;
 
-// Sidebar and Return URL
-$sidebar						= $this->context->sidebar;
-$returnUrl						= $this->context->returnUrl;
-$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
-$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
-
-Editor::widget( [ 'selector' => '.content-editor' ] );
+Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Update Template</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-template-update', 'options' => ['class' => 'frm-split' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Update Template</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-template' ] );?>
 
-    	<?= $form->field( $model, 'name' ) ?>  
-    	<?= $form->field( $model, 'description' ) ?> 
-    	<?= $form->field( $model, 'layout' ) ?>  
-		<?= $form->field( $model, 'viewPath' ) ?>
-		<?= $form->field( $model, 'adminView' ) ?>
-		<?= $form->field( $model, 'frontendView' ) ?>
+		<?= $form->field( $model, 'name' ) ?>
+		<?= $form->field( $model, 'description' )->textarea() ?>
+		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
+		<?= $form->field( $model, 'renderer' )->dropDownList( $renderers ) ?>
 
-    	<h4>Template Content</h4>
-    	<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+		<?= $form->field( $model, 'fileRender' )->checkbox( [ 'class' => 'template-file' ] ) ?>
 
-		<?=Html::a( "Cancel", $returnUrl, ['class' => 'btn' ] );?>
-		<input type="submit" value="Update" />
+		<div class="render-file">
+			<?= $form->field( $model, 'layout' ) ?>
+			<?= $form->field( $model, 'layoutGroup' )->checkbox() ?>
+			<?= $form->field( $model, 'viewPath' ) ?>
+		</div>
+
+		<div class="render-content box-content clearfix">
+			<div class="header">Template Content</div>
+			<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+		</div>
+
+		<div class="filler-height"></div>
+
+		<div class="align align-center">
+			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+			<input class="element-medium" type="submit" value="Update" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>

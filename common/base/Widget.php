@@ -4,15 +4,28 @@ namespace cmsgears\core\common\base;
 // Yii Imports
 use \Yii;
 
-class Widget extends \yii\base\Widget {
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+abstract class Widget extends \yii\base\Widget {
 
 	// Variables ---------------------------------------------------
 
-	// Public Variables --------------------
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
 
 	// html options for Yii Widget
-	public $options 		= [];
-	
+	public $options			= [];
+
 	/**
 	 * Flag to check whether assets can be loaded. We can load widget assets seperately in case the bundle is not added as dependency to layout asset bundle.
 	 */
@@ -28,22 +41,88 @@ class Widget extends \yii\base\Widget {
 	 */
 	public $template		= 'simple';
 
-	// Instance Methods --------------------------------------------
-
-	// yii\base\Widget
+	/**
+	 * This flag can be utilised by widgets to use fallback options in case application factory having model service is not available or initialised.
+	 *
+	 * The widgets in need of model service can utilise factory to get required service. In case factory is not needed, widget can directly
+	 * use models to query them or service in use must provided static method.
+	 */
+	public $factory			= true;
 
 	/**
-	 * The method returns the view path for this widget if set while calling widget. 
+	 * Flag for data rendering from database based cached data.
+	 */
+	public $cacheDb		= false;
+
+	/**
+	 * Flag for data rendering from file based cached data.
+	 */
+	public $cacheFile	= false;
+
+	/**
+	 * Flag for widget autoloading.
+	 */
+	public $autoload	= false;
+
+	/**
+	 * Url for autoloading.
+	 */
+	public $autoloadUrl	= null;
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Widget --------
+
+	/**
+	 * The method returns the view path for this widget if set while calling widget.
 	 */
 	public function getViewPath() {
 
+		// Return custom view path
 		if( isset( $this->templateDir ) ) {
 
 			return $this->templateDir;
 		}
 
+		// Return default view path
 		return parent::getViewPath();
 	}
-}
 
-?>
+	/**
+	 * @inheritdoc
+	 */
+	public function run() {
+
+		if( $this->autoload ) {
+
+			// Render autoload widget
+			return $this->renderAutoload();
+		}
+
+		// Render the widget
+		return $this->renderWidget();
+	}
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	abstract public function renderWidget( $config = [] );
+
+	public function renderAutoload( $config = [] ) {}
+
+	// Widget --------------------------------
+
+}

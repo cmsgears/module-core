@@ -1,7 +1,13 @@
 <?php
 namespace cmsgears\core\common\models\traits;
 
-use cmsgears\core\common\models\entities\CoreTables;
+// Yii Import
+use \Yii;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\User;
 
 /**
@@ -14,7 +20,9 @@ trait CreateModifyTrait {
 	 */
 	public function getCreator() {
 
-		return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] );
+		$userTable = CoreTables::TABLE_USER;
+
+		return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] )->from( "$userTable as creator" );
 	}
 
 	/**
@@ -22,16 +30,27 @@ trait CreateModifyTrait {
 	 */
 	public function getModifier() {
 
-		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] );
+		$userTable = CoreTables::TABLE_USER;
+
+		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] )->from( "$userTable as modifier" );
 	}
 
-	/**
-	 * @return boolean - whether given user is creator. It's useful to apply filter to check model ownership.
-	 */
-	public function checkOwner( $user ) {
+	public static function queryWithCreator( $config = [] ) {
 
-		return $this->createdBy	= $user->id;
+		$config[ 'relations' ]	= [ 'creator' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryWithModifier( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'modifier' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	public static function queryByCreatorId( $userId ) {
+
+		return static::find()->where( 'createdBy=:cid', [ ':cid' => $userId ] );
 	}
 }
-
-?>

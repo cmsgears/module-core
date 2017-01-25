@@ -2,56 +2,81 @@
 namespace cmsgears\core\frontend\controllers\apix;
 
 // Yii Imports
-use Yii;
-use yii\filters\VerbFilter;
+use \Yii;
 use yii\helpers\Url;
+use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\frontend\models\forms\Register;
-use cmsgears\core\frontend\models\forms\Newsletter;
 use cmsgears\core\common\models\forms\Login;
 use cmsgears\core\common\models\forms\ForgotPassword;
-
-use cmsgears\core\common\services\SiteMemberService;
-use cmsgears\core\frontend\services\UserService;
-use cmsgears\core\frontend\services\NewsletterMemberService;
+use cmsgears\core\common\models\forms\Register;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 class SiteController extends \cmsgears\core\frontend\controllers\base\Controller {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $userService;
+
+	protected $siteMemberService;
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
-	public function _construct( $id, $module, $config = [] )  {
-		
-		parent::_construct( $id, $module, $config );
+	public function init() {
+
+		parent::init();
+
+		$this->crudPermission		= CoreGlobal::PERM_USER;
+
+		$this->modelService			= Yii::$app->factory->get( 'siteService' );
+		$this->userService			= Yii::$app->factory->get( 'userService' );
+		$this->siteMemberService	= Yii::$app->factory->get( 'siteMemberService' );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'register' => [ 'post' ],
-                    'login' => [ 'post' ],
-                    'forgotPassword' => [ 'post' ],
-                    'newsletter' => [ 'post' ]
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// SiteController
+	public function behaviors() {
 
-    public function actionRegister() {
-		
+		return [
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'register' => [ 'post' ],
+					'login' => [ 'post' ],
+					'forgot-password' => [ 'post' ],
+					'checkUser' => [ 'get' ]
+				]
+			]
+		];
+	}
+
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// SiteController ------------------------
+
+	public function actionRegister() {
+
 		$coreProperties = $this->getCoreProperties();
 
 		// Create Form Model
@@ -61,18 +86,18 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		if( $coreProperties->isRegistration() && $model->load( Yii::$app->request->post(), 'Register' ) && $model->validate() ) {
 
 			// Register User
-			$user = UserService::register( $model );
+			$user = $this->userService->register( $model );
 
 			if( isset( $user ) ) {
 
-				// Add User to current Site 
-				SiteMemberService::create( $user );
+				// Add User to current Site
+				$this->siteMemberService->create( $user );
 
 				// Send Register Mail
-				Yii::$app->cmgCoreMailer->sendRegisterMail( $user );
+				Yii::$app->coreMailer->sendRegisterMail( $user );
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
 			}
 		}
 
@@ -80,42 +105,52 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		$errors = AjaxUtil::generateErrorMessage( $model );
 
 		// Trigger Ajax Failure
-    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-    }
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+	}
 
 	public function actionLogin() {
 
 		// Create Form Model
-        $model 			= new Login();
+		$model			= new Login();
 
 		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post(), 'Login' )  && $model->login() ) {
+		if( $model->load( Yii::$app->request->post(), 'Login' )	 && $model->login() ) {
 
 			$user		= Yii::$app->user->getIdentity();
 			$role		= $user->role;
+			$storedLink	= Url::previous( CoreGlobal::REDIRECT_LOGIN );
 
+			// Redirect user to home
+			if( isset( $model->redirectUrl ) ) {
+
+				$homeUrl	= $model->redirectUrl;
+			}
+			else if( isset( $storedLink ) ) {
+
+				$homeUrl = $storedLink;
+			}
 			// Redirect user to home set by admin
-			if( isset( $role ) && isset( $role->homeUrl ) ) {
+			else if( isset( $role ) && isset( $role->homeUrl ) ) {
 
 				$homeUrl	= Url::to( [ "/$role->homeUrl" ], true );
 			}
 			// Redirect user to home set by app config
 			else {
 
-				$homeUrl	= Url::to( [ Yii::$app->cmgCore->getLoginRedirectPage() ], true );
+				$homeUrl	= Url::to( [ Yii::$app->core->getLoginRedirectPage() ], true );
 			}
 
 			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $homeUrl );
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $homeUrl );
 		}
 
 		// Generate Errors
 		$errors = AjaxUtil::generateErrorMessage( $model );
 
 		// Trigger Ajax Failure
-    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-    }
-	
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+	}
+
 	public function actionForgotPassword() {
 
 		// Create Form Model
@@ -123,63 +158,56 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post(), 'ForgotPassword' ) && $model->validate() ) {
-			
-			$user	= UserService::findByEmail( $model->email );
-			
-			// Trigger Reset Password
-			if( isset( $user ) && UserService::forgotPassword( $user ) ) {
 
-				$user	= UserService::findByEmail( $model->email );
+			$user	= $this->userService->getByEmail( $model->email );
+
+			// Trigger Reset Password
+			if( isset( $user ) && $this->userService->forgotPassword( $user ) ) {
+
+				$user	= $this->userService->getByEmail( $model->email );
 
 				// Load User Permissions
 				$user->loadPermissions();
 
 				// Send Forgot Password Mail
-				Yii::$app->cmgCoreMailer->sendPasswordResetMail( $user ); 
-				
-				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_FORGOT_PASSWORD ) );
+				Yii::$app->coreMailer->sendPasswordResetMail( $user );
+
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_FORGOT_PASSWORD ) );
 			}
-			else {
 
-				// Generate Errors
+			// Generate Errors
+			$model->addError( 'email', Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
 
-				$model->addError( 'email', Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
+			$errors = AjaxUtil::generateErrorMessage( $model );
 
-				$errors = AjaxUtil::generateErrorMessage( $model );
-
-				// Trigger Ajax Failure
-	        	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-			}
+			// Trigger Ajax Failure
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
 
 		// Generate Errors
 		$errors = AjaxUtil::generateErrorMessage( $model );
 
 		// Trigger Ajax Failure
-    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-    }
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+	}
 
-    public function actionNewsletter() {
+	public function actionCheckUser( $redirect = null ) {
 
-		// Create Form Model
-		$model = new Newsletter();
+		$user		= Yii::$app->user->getIdentity();
 
-		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post(), 'Newsletter' ) && $model->validate() ) {
+		if( isset( $user ) ) {
 
-			if( NewsletterMemberService::signUp( $model ) ) {
-
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::MESSAGE_NEWSLETTER_SIGNUP ) );
-			}
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $redirect );
 		}
 
-		// Generate Errors
-		$errors = AjaxUtil::generateErrorMessage( $model );
+		// Remember url for redirect on login
+		if( isset( $redirect ) ) {
+
+			Url::remember( $redirect, CoreGlobal::REDIRECT_LOGIN );
+		}
 
 		// Trigger Ajax Failure
-    	return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-    }
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+	}
 }
-
-?>

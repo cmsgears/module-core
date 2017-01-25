@@ -6,16 +6,38 @@ use \Yii;
 
 class JsonModel extends \yii\base\Model {
 
-	public function __construct( $jsonData = false ) {
+	// Variables ---------------------------------------------------
 
-        if( $jsonData ) {
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
+	public function __construct( $jsonData = false, $config = [] ) {
+
+		if( $jsonData ) {
 
 			if( is_object( $jsonData ) ) {
 
 				$this->copyFromObject( $jsonData );
 			}
 			else if( is_array( $jsonData ) ) {
-				
+
 				$this->copyFromArray( $jsonData );
 			}
 			else {
@@ -23,33 +45,56 @@ class JsonModel extends \yii\base\Model {
 				$this->setData( json_decode( $jsonData, true ) );
 			}
 		}
-    }
 
-    private function setData( $data ) {
+		parent::__construct( $config );
+	}
 
-        foreach( $data as $key => $value ) {
+	// Instance methods --------------------------------------------
 
-            $this->{ $key } = $value;
-        }
-    }
+	// Yii interfaces ------------------------
 
-    private function copyFromObject( $object ) {
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Model ---------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Validators ----------------------------
+
+	//JsonModel ------------------------------
+
+	private function setData( $data ) {
+
+		foreach( $data as $key => $value ) {
+
+			$this->{ $key } = $value;
+		}
+	}
+
+	private function copyFromObject( $object ) {
 
 		$attributes	= get_object_vars( $object );
 
-        foreach ( $attributes as $key => $value ) {
+		foreach ( $attributes as $key => $value ) {
 
-            $this->{ $key } = $value;
-        }
-    }
+			$this->{ $key } = $value;
+		}
+	}
 
-    private function copyFromArray( $arr ) {
+	private function copyFromArray( $arr ) {
 
-        foreach ( $arr as $key => $value ) {
+		foreach ( $arr as $key => $value ) {
 
-            $this->{ $key } = $value;
-        }
-    }
+			$this->{ $key } = $value;
+		}
+	}
+
+	public function getData() {
+
+		return json_encode( $this );
+	}
 }
-
-?>

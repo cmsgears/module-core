@@ -3,7 +3,7 @@ use \Yii;
 use yii\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . " | Forgot Password";
+$this->title	= $coreProperties->getSiteTitle() . " | Forgot Password";
 ?>
 <h1>Forgot Password</h1>
 <?php
@@ -16,17 +16,17 @@ $this->title 	= $coreProperties->getSiteTitle() . " | Forgot Password";
 
 		$form = ActiveForm::begin( [ 'id' => 'frm-forgot-password' ] ); 
 ?>
-    	<ul>
-    		<li>
-    			Please provide the email address used while signing up.
-    		</li>
-    		<li>
-    			<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email*' ] ) ?>
-    		</li>
-    		<li>
-    			<input type="submit"  value="Submit" />
-    		</li>
-    	</ul>
+		<ul>
+			<li>
+				Please provide the email address used while signing up.
+			</li>
+			<li>
+				<?= $form->field( $model, 'email' )->textInput( [ 'placeholder' => 'Email*' ] ) ?>
+			</li>
+			<li>
+				<input type="submit"  value="Submit" />
+			</li>
+		</ul>
 <?php
 		ActiveForm::end();
 	}

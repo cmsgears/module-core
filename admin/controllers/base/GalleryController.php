@@ -4,166 +4,175 @@ namespace cmsgears\core\admin\controllers\base;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
 use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Gallery;
+abstract class GalleryController extends \cmsgears\core\admin\controllers\base\CrudController {
 
-use cmsgears\core\admin\services\GalleryService;
+	// Variables ---------------------------------------------------
 
-abstract class GalleryController extends Controller {
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $type;
+	protected $templateType;
+
+	// Private ----------------
+
+	private $templateService;
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
-		
-		$this->returnUrl	= Url::previous( 'galleries' );
+		parent::init();
+
+		$this->setViewPath( '@cmsgears/module-core/admin/views/gallery' );
+
+		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'galleryService' );
+
+		$this->type				= CoreGlobal::TYPE_SITE;
+		$this->templateType		= CoreGlobal::TYPE_GALLERY;
+
+		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+
+		// Notes: Configure sidebar and returnUrl exclusively in child classes. We can also change type and templateType in child classes in case gallery is associated with model.
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-	// Default RBAC and Verbs
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'all'   => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'create' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'update' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'delete' => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'items' => [ 'permission' => CoreGlobal::PERM_CORE ]
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'all'   => [ 'get' ],
-	                'create' => [ 'get', 'post' ],
-	                'update' => [ 'get', 'post' ],
-	                'delete' => [ 'get', 'post' ],
-	                'items'  => [ 'get' ]
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// RoleController --------------------
+	public function behaviors() {
 
-	public function actionAll( $type = null ) {
+		$behaviors	= parent::behaviors();
 
-		$dataProvider = GalleryService::getPaginationByType( $type );
+		$behaviors[ 'rbac' ][ 'actions' ][ 'items' ] = [ 'permission' => $this->crudPermission ];
 
-		Url::remember( [ 'gallery/all' ], 'galleries' );
+		$behaviors[ 'verbs' ][ 'actions' ][ 'items' ] = [ 'get' ];
 
-	    return $this->render( '@cmsgears/module-core/admin/views/gallery/all', [
-	         'dataProvider' => $dataProvider
-	    ]);
+		return $behaviors;
 	}
 
-	public function actionCreate( $type = null ) {
+	// yii\base\Controller ----
 
-		$model			= new Gallery();
-		$model->type 	= $type;
+	// CMG interfaces ------------------------
 
-		$model->setScenario( 'create' );
+	// CMG parent classes --------------------
 
-		if( $model->load( Yii::$app->request->post(), 'Gallery' )  && $model->validate() ) {
+	// GalleryController ---------------------
 
-			if( GalleryService::create( $model ) ) {
+	public function actionAll() {
 
-				$this->redirect( $this->returnUrl );
-			}
+		$dataProvider = $this->modelService->getPageByType( $this->type );
+
+		return $this->render( 'all', [
+			 'dataProvider' => $dataProvider
+		]);
+	}
+
+	public function actionCreate() {
+
+		$modelClass		= $this->modelService->getModelClass();
+		$model			= new $modelClass;
+		$model->type	= $this->type;
+		$model->siteId	= Yii::$app->core->siteId;
+
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
+
+			$this->modelService->create( $model );
+
+			return $this->redirect( $this->returnUrl );
 		}
 
-    	return $this->render( '@cmsgears/module-core/admin/views/gallery/create', [
-    		'model' => $model
-    	]);
+		$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
+
+		return $this->render( 'create', [
+			'model' => $model,
+			'templatesMap' => $templatesMap
+		]);
 	}
 
-	public function actionUpdate( $id, $type = null ) {
+	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model	= GalleryService::findById( $id );
+		$model	= $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->type 	= $type;
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
 
-			$model->setScenario( 'update' );
-	
-			if( $model->load( Yii::$app->request->post(), 'Gallery' )  && $model->validate() ) {
-	
-				if( GalleryService::update( $model ) ) {
+				$this->modelService->update( $model, [ 'admin' => true ] );
 
-					$this->redirect( $this->returnUrl );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 
-	    	return $this->render( '@cmsgears/module-core/admin/views/gallery/update', [
-	    		'model' => $model
-	    	]);
+			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
+
+			return $this->render( 'update', [
+				'model' => $model,
+				'templatesMap' => $templatesMap
+			]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $id, $type = null ) {
+	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= GalleryService::findById( $id );
+		$model	= $this->modelService->getById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			$model->type 	= $type;
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-			if( $model->load( Yii::$app->request->post(), 'Gallery' ) ) {
+				$this->modelService->delete( $model );
 
-				if( GalleryService::delete( $model ) ) {
-
-					$this->redirect( $this->returnUrl );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 
-	    	return $this->render( '@cmsgears/module-core/admin/views/gallery/delete', [
-	    		'model' => $model
-	    	]);
+			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
+
+			return $this->render( 'delete', [
+				'model' => $model,
+				'templatesMap' => $templatesMap
+			]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionItems( $id, $type = null ) {
+	public function actionItems( $id ) {
 
 		// Find Model
-		$gallery 		= GalleryService::findById( $id );
+		$gallery		= $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $gallery ) ) {
 
-			$gallery->type 	= $type;
-
-	    	return $this->render( '@cmsgears/module-core/admin/views/gallery/items', [
-	    		'gallery' => $gallery,
-	    		'items' => $gallery->files
-	    	]);
+			return $this->render( 'items', [
+				'gallery' => $gallery,
+				'items' => $gallery->files
+			]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

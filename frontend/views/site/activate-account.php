@@ -3,7 +3,7 @@ use \Yii;
 use yii\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Activate Account';
+$this->title	= $coreProperties->getSiteTitle() . ' | Activate Account';
 ?>
 <h1>Activate Account</h1>
 <?php 

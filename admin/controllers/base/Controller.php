@@ -9,30 +9,52 @@ use cmsgears\core\admin\config\AdminGlobalCore;
 
 use cmsgears\core\admin\config\AdminProperties;
 
-abstract class Controller extends \cmsgears\core\common\controllers\Controller {
+abstract class Controller extends \cmsgears\core\common\controllers\base\Controller {
 
-	private $_adminProperties;
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	private $adminProperties;
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
+		parent::init();
 
 		$this->layout	= AdminGlobalCore::LAYOUT_PRIVATE;
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// yii\base\Component -----
+
+	// yii\base\Controller ----
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Controller ----------------------------
 
 	public function getAdminProperties() {
 
-		if( !isset( $this->_adminProperties ) ) {
+		if( !isset( $this->adminProperties ) ) {
 
-			$this->_adminProperties	= AdminProperties::getInstance();
+			$this->adminProperties	= AdminProperties::getInstance();
 		}
 
-		return $this->_adminProperties;
+		return $this->adminProperties;
 	}
 }
-
-?>

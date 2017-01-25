@@ -1,32 +1,37 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
-use yii\helpers\ArrayHelper;
+
+// CMG Imports
+use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . ' | Update Form Field';
-
-// Sidebar
-$this->params['sidebar-parent'] = 'sidebar-form';
-$this->params['sidebar-child'] 	= 'form';
+$this->title	= 'Update Form Field | ' . $coreProperties->getSiteTitle();
+$returnUrl		= $this->context->returnUrl;
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Update Form Field</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-field-update', 'options' => ['class' => 'frm-split' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Update Form Field</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-form-field' ] );?>
 
 		<?= $form->field( $model, 'name' ) ?>
+		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
 		<?= $form->field( $model, 'label' ) ?>
 		<?= $form->field( $model, 'type' )->dropDownList( $typeMap ) ?>
 		<?= $form->field( $model, 'compress' )->checkbox() ?>
 		<?= $form->field( $model, 'validators' ) ?>
-		<?= $form->field( $model, 'options' )->textarea() ?>
+		<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 
-		<div class="box-filler"></div>
+		<div class="clear filler-height"></div>
 
-		<?=Html::a( 'Cancel', [ "/cmgforms/form/field/all?formid=$formId" ], ['class' => 'btn' ] );?>
-		<input type="submit" value="Update" />
+		<div class="align align-center">
+			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+			<input class="element-medium" type="submit" value="Update" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
 	</div>
-</section>
+</div>

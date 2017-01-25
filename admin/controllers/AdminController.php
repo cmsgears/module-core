@@ -10,58 +10,52 @@ use cmsgears\core\common\config\CoreGlobal;
 
 class AdminController extends \cmsgears\core\admin\controllers\base\UserController {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
+		parent::init();
 
-		$this->sidebar 		= [ 'parent' => 'sidebar-identity', 'child' => 'admin' ];
+		$this->roleType			= CoreGlobal::TYPE_SYSTEM;
+		$this->permissionSlug	= CoreGlobal::PERM_ADMIN;
+		$this->showCreate		= false;
+
+		$this->sidebar			= [ 'parent' => 'sidebar-identity', 'child' => 'admin' ];
+
+		$this->returnUrl		= Url::previous( 'users' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/admin/all' ], true );
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
-		
-		$behaviours	= parent::behaviors();
+	// Yii parent classes --------------------
 
-		$behaviours[ 'rbac' ][ 'actions' ][ 'index' ] 	= [ 'permission' => CoreGlobal::PERM_IDENTITY ];
+	// yii\base\Component -----
 
-		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ] 	= [ 'get' ];
+	// yii\base\Controller ----
 
-		return $behaviours;
-    }
+	// CMG interfaces ------------------------
 
-	// UserController --------------------
+	// CMG parent classes --------------------
 
-	public function actionIndex() {
-
-		$this->redirect( 'all' );
-	}
+	// UserController ------------------------
 
 	public function actionAll() {
 
 		Url::remember( [ 'admin/all' ], 'users' );
 
-		return parent::actionAll( null, CoreGlobal::PERM_ADMIN, false );
-	}
-
-	public function actionCreate() {
-
-		return parent::actionCreate( CoreGlobal::TYPE_SYSTEM );
-	}
-
-	public function actionUpdate( $id ) {
-
-		return parent::actionUpdate( $id, CoreGlobal::TYPE_SYSTEM );
-	}
-
-	public function actionDelete( $id ) {
-
-		return parent::actionDelete( $id, CoreGlobal::TYPE_SYSTEM );
+		return parent::actionAll();
 	}
 }
-
-?>

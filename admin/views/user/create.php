@@ -1,35 +1,37 @@
 <?php
+// Yii Imports
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= $coreProperties->getSiteTitle() . " | Create User";
-
-// Sidebar and Return URL
-$sidebar						= $this->context->sidebar;
-$returnUrl						= $this->context->returnUrl;
-$this->params['sidebar-parent'] = $sidebar[ 'parent' ];
-$this->params['sidebar-child'] 	= $sidebar[ 'child' ];
+$this->title	= $coreProperties->getSiteTitle() . ' | Add User';
+$returnUrl		= $this->context->returnUrl;
 ?>
-<section class="wrap-content container clearfix">
-	<div class="cud-box">
-		<h2>Create User</h2>
-		<?php $form = ActiveForm::begin( ['id' => 'frm-user-create', 'options' => ['class' => 'frm-split' ] ] );?>
+<div class="box box-cud">
+	<div class="box-wrap-header">
+		<div class="header">Add User</div>
+	</div>
+	<div class="box-wrap-content frm-split-40-60">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-user' ] );?>
 
-    	<?= $form->field( $model, 'email' ) ?>
-    	<?= $form->field( $model, 'username' ) ?>
+		<?= $form->field( $model, 'email' ) ?>
+		<?= $form->field( $model, 'username' ) ?>
 		<?= $form->field( $model, 'firstName' ) ?>
 		<?= $form->field( $model, 'lastName' ) ?>
 
-    	<?php if( isset( $roleMap ) ) { ?>
-			<?= $form->field( $siteMember, 'roleId' )->dropDownList( $roleMap )  ?>
+		<?php if( isset( $roleMap ) ) { ?>
+			<?= $form->field( $siteMember, 'roleId' )->dropDownList( $roleMap )	 ?>
 		<?php } else { ?>
 			<?= $form->field( $siteMember, 'roleId' )->hiddenInput()->label( false )  ?>
 		<?php } ?>
 
-		<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn' ] );?>
-		<input type="submit" value="Create" />
+		<div class="clear filler-height"></div>
+
+		<div class="align align-center">
+			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+			<input class="element-medium" type="submit" value="Create" />
+		</div>
 
 		<?php ActiveForm::end(); ?>
-	</div>	
-</section>
+	</div>
+</div>

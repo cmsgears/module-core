@@ -60,7 +60,7 @@ class AjaxUtil {
 	 */
 	public static function generateErrorMessage( $model ) {
 
-		$errors 		= $model->getErrors();
+		$errors			= $model->getErrors();
 		$modelErrors	= array();
 
 		foreach ( $errors as $key => $value ) {

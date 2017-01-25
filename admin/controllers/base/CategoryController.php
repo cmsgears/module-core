@@ -4,185 +4,145 @@ namespace cmsgears\core\admin\controllers\base;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
 use yii\helpers\Url;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\CmgFile; 
+use cmsgears\core\common\models\resources\Category;
 
-use cmsgears\core\common\models\entities\Category; 
+abstract class CategoryController extends \cmsgears\core\admin\controllers\base\CrudController {
 
-use cmsgears\core\admin\services\CategoryService;  
-use cmsgears\core\admin\services\OptionService; 
+	// Variables ---------------------------------------------------
 
-abstract class CategoryController extends Controller {
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	protected $type;
+
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
- 	public function __construct( $id, $module, $config = [] ) {
+	public function init() {
 
-        parent::__construct( $id, $module, $config );
-		
-		$this->returnUrl	= Url::previous( 'categories' );
+		parent::init();
+
+		$this->setViewPath( '@cmsgears/module-core/admin/views/category' );
+
+		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->modelService		= Yii::$app->factory->get( 'categoryService' );
+
+		$this->type				= CoreGlobal::TYPE_SITE;
+
+		// Notes: Configure sidebar and returnUrl exclusively in child classes. We can also change type in child classes.
 	}
 
-	// Instance Methods --------------------------------------------
+	// Instance methods --------------------------------------------
 
-	// yii\base\Component ----------------
+	// Yii interfaces ------------------------
 
-    public function behaviors() {
+	// Yii parent classes --------------------
 
-        return [
-            'rbac' => [
-                'class' => Yii::$app->cmgCore->getRbacFilterClass(),
-                'actions' => [
-	                'all'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'create'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'update'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-	                'delete'  => [ 'permission' => CoreGlobal::PERM_CORE ],
-                ]
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-	                'all'  => [ 'get' ],
-	                'create'  => [ 'get', 'post' ],
-	                'update'  => [ 'get', 'post' ],
-	                'delete'  => [ 'get', 'post' ]
-                ]
-            ]
-        ];
-    }
+	// yii\base\Component -----
 
-	// CategoryController -----------------
+	// yii\base\Controller ----
 
-	public function actionAll( $type = null, $dropDown = false  ) {
+	// CMG interfaces ------------------------
 
-		$dataProvider = null;
+	// CMG parent classes --------------------
 
-		if( isset( $type ) ) {
+	// CategoryController --------------------
 
-			$dataProvider = CategoryService::getPaginationByType( $type );
-		}
-		else {
+	public function actionAll() {
 
-			$dataProvider = CategoryService::getPagination();
-		}
+		$dataProvider = $this->modelService->getPageByType( $this->type );
 
-	    return $this->render( '@cmsgears/module-core/admin/views/category/all', [
-	    
-			'dataProvider' => $dataProvider,
-    		'dropDown' => $dropDown
-	    ]);
+		return $this->render( 'all', [
+			 'dataProvider' => $dataProvider
+		]);
 	}
 
-	public function actionCreate( $type = null, $dropDown = false ) {
+	public function actionCreate() {
 
-		$model			= new Category();
-		$model->type 	= $type;
-		$avatar 		= CmgFile::loadFile( $model->avatar, 'Avatar' ); 
+		$modelClass		= $this->modelService->getModelClass();
+		$model			= new $modelClass;
+		$model->type	= $this->type;
+		$model->siteId	= Yii::$app->core->siteId;
 
-		$model->setScenario( 'create' );
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
 
-		if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
+			$this->modelService->create( $model );
 
-			if( CategoryService::create( $model, $avatar ) ) { 
+			return $this->redirect( $this->returnUrl );
+		}
 
-				return $this->redirect( $this->returnUrl );
-			} 
-		} 
+		$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
 
-    	return $this->render( '@cmsgears/module-core/admin/views/category/create', [
-    		'model' => $model, 
-    		'avatar' => $avatar,
-    		'dropDown' => $dropDown
-    	]);
-	}	
- 	
-	public function actionUpdate( $id, $type = null, $dropDown = false  ) {
-		
+		return $this->render( 'create', [
+			'model' => $model,
+			'categoryMap' => $categoryMap
+		]);
+	}
+
+	public function actionUpdate( $id ) {
+
 		// Find Model
-		$model	= CategoryService::findById( $id );
+		$model	= $this->modelService->getById( $id );
 
 		// Update/Render if exist
 		if( isset( $model ) ) {
 
-			$model->type 	= $type;
-			$avatar 		= CmgFile::loadFile( $model->avatar, 'Avatar' ); 
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
 
-			$model->setScenario( 'update' );
+				$this->modelService->update( $model );
 
-			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
-
-				if( CategoryService::update( $model, $avatar ) ) {
- 
-
-					return $this->redirect( $this->returnUrl );
-				} 
+				return $this->redirect( $this->returnUrl );
 			}
 
-			$avatar			= $model->avatar;
+			$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [
+									'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ],
+									'filters' => [ [ 'not in', 'id', [ $id ] ] ]
+								]);
 
-	    	return $this->render( '@cmsgears/module-core/admin/views/category/update', [
-	    		'model' => $model, 
-	    		'avatar' => $avatar,
-    			'dropDown' => $dropDown
-	    	]);
+			return $this->render( 'update', [
+				'model' => $model,
+				'categoryMap' => $categoryMap
+			]);
 		}
-		
+
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	} 
-	
-	public function actionDelete( $id, $type = null, $dropDown = false  ) {
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
+	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= CategoryService::findById( $id );
+		$model	= $this->modelService->getById( $id );
 
-		// Delete/Render if exist		
+		// Delete/Render if exist
 		if( isset( $model ) ) {
-			
-			$model->type 	= $type;
 
-			if( $model->load( Yii::$app->request->post(), 'Category' )  && $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
-				$categoryOptions	= OptionService::findByCategoryId( $id );
-				
-				if( isset( $categoryOptions ) ) {
-				
-					foreach( $categoryOptions as $option ) { 
-						
-						try {
-							
-					    	OptionService::delete( $option );
-					    } 
-					    catch( Exception $e) {
-					    	 
-						    throw new HttpException( 409,  Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  ); 
-						}
-					}
-				}
+				$this->modelService->delete( $model );
 
-				if( CategoryService::delete( $model, $avatar ) ) { 
-
-					return $this->redirect( $this->returnUrl );
-				}
+				return $this->redirect( $this->returnUrl );
 			}
 
-			$avatar	= $model->avatar;
+			$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
 
-	    	return $this->render( '@cmsgears/module-core/admin/views/category/delete', [
-	    		'model' => $model, 
-	    		'avatar' => $model->avatar,
-    			'dropDown' => $dropDown
-	    	]);
+			return $this->render( 'delete', [
+				'model' => $model,
+				'categoryMap' => $categoryMap
+			]);
 		}
-		
+
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }
-
-?>

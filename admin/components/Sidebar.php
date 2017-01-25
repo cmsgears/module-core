@@ -3,25 +3,36 @@ namespace cmsgears\core\admin\components;
 
 // Yii Imports
 use \Yii;
-use yii\base\Component;
 use yii\helpers\ArrayHelper;
 
 /**
- * The component sidebar forms the sidebar for admin by merging the sidebar html for the modules specified in application configuration. This sidebar is specific only for Admin Application. 
+ * The component sidebar forms the sidebar for admin by merging the sidebar html for the modules specified in application configuration. This sidebar is specific only for Admin Application.
  */
-class Sidebar extends Component {
+class Sidebar extends \yii\base\Component {
+
+	// Variables ---------------------------------------------------
+
+	// Global -----------------
+
+	// Public -----------------
 
 	public $modules	= [];
-	
+
 	public $plugins	= [];
 
-	/**
-	 * Initialise the Sidebar.
-	 */
-    public function init() {
+	// Protected --------------
 
-        parent::init();
-    }
+	// Private ----------------
+
+	// Constructor and Initialisation ------------------------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG parent classes --------------------
+
+	// Sidebar -------------------------------
 
 	/**
 	 * @return string - the html merged from each module sidebar view.
@@ -32,31 +43,42 @@ class Sidebar extends Component {
 
 		$sidebarHtml	= "";
 		$modules		= $this->modules;
-		
+
 		// Collect sidebar html from all the modules
 		foreach ( $modules as $module ) {
 
 			$module		= Yii::$app->getModule( $module );
-			$html   	= $module->getSidebarHtml();
-			
+			$html		= $module->getSidebarHtml();
+
 			ob_start();
-			
+
 			if( file_exists( $html ) ) {
 
 				include( $html );
 			}
-			
+
 			$sidebarHtml .= ob_get_contents();
-			
+
 			ob_get_clean();
 		}
 
 		return $sidebarHtml;
 	}
 
+	/**
+	 * @return array - of available plugins to generate plugin list.
+	 */
+	public function getPlugins() {
+
+		return $this->plugins;
+	}
+
+	/**
+	 * @return array - of available config options from modules and plugins.
+	 */
 	public function getConfig() {
 
-		$config 	= [];
+		$config		= [];
 		$modules	= $this->modules;
 
 		// Collect settings from all the modules
@@ -64,25 +86,23 @@ class Sidebar extends Component {
 
 			$module		= Yii::$app->getModule( $module );
 
-			if( isset( $module->config  ) ) {
+			if( isset( $module->config	) ) {
 
-				$config   = ArrayHelper::merge( $config, $module->config );
+				$config	  = ArrayHelper::merge( $config, $module->config );
 			}
 		}
-		
+
 		$plugins	= $this->plugins;
 
 		// Collect settings from all the plugins
 		foreach ( $plugins as $plugin ) {
 
-			if( isset( $plugin  ) ) {
+			if( isset( $plugin	) ) {
 
-				$config   = ArrayHelper::merge( $config, $plugin );
+				$config	  = ArrayHelper::merge( $config, $plugin );
 			}
 		}
 
 		return $config;
 	}
 }
-
-?>

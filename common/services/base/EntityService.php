@@ -1152,4 +1152,5 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	// Update -------------
 
 	// Delete -------------
+
 }

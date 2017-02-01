@@ -250,4 +250,5 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwn
 	// Update -----------------
 
 	// Delete -----------------
+
 }

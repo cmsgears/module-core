@@ -147,4 +147,5 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 	// Update -------------
 
 	// Delete -------------
+
 }

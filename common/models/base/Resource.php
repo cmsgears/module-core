@@ -73,4 +73,5 @@ abstract class Resource extends Entity {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

@@ -183,4 +183,5 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

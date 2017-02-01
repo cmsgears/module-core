@@ -235,4 +235,5 @@ abstract class Entity extends \yii\db\ActiveRecord {
 
 		self::deleteAll( 'id=:id', [ ':id' => $id ] );
 	}
+
 }

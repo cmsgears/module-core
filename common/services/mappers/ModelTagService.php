@@ -180,4 +180,5 @@ class ModelTagService extends \cmsgears\core\common\services\base\EntityService 
 	// Update -------------
 
 	// Delete -------------
+
 }

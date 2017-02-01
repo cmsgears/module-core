@@ -125,4 +125,5 @@ class ModelHierarchy extends \cmsgears\core\common\models\base\Resource {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

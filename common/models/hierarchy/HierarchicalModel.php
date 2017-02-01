@@ -89,4 +89,5 @@ abstract class HierarchicalModel extends \cmsgears\core\common\models\base\Entit
 	// Update -----------------
 
 	// Delete -----------------
+
 }

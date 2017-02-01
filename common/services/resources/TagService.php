@@ -142,4 +142,5 @@ class TagService extends \cmsgears\core\common\services\base\EntityService imple
 	// Update -------------
 
 	// Delete -------------
+
 }

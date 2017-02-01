@@ -73,4 +73,5 @@ abstract class Mapper extends Entity {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

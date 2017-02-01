@@ -154,4 +154,5 @@ class SiteMemberService extends \cmsgears\core\common\services\base\EntityServic
 	// Update -------------
 
 	// Delete -------------
+
 }

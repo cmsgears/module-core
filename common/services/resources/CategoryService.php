@@ -207,4 +207,5 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 	// Update -------------
 
 	// Delete -------------
+
 }

@@ -489,4 +489,5 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	// Update -------------
 
 	// Delete -------------
+
 }

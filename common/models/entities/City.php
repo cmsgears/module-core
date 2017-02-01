@@ -216,4 +216,5 @@ class City extends \cmsgears\core\common\models\base\Entity {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

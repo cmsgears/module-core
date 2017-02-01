@@ -190,6 +190,9 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 
 					if( $this->userService->resetPassword( $user, $model ) ) {
 
+						// Send Forgot Password Mail
+						Yii::$app->coreMailer->sendPasswordChangeMail( $user );
+
 						// Set Success Message
 						Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_RESET_PASSWORD ) );
 					}

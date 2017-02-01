@@ -144,8 +144,8 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 			[ 'email', 'email' ],
 			// Text Limit
 			[ [ 'parentType', 'type', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'name', 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'email', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'name', 'email', 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Check captcha need for testimonial and review
 			[ 'content', 'required', 'on' => [ self::TYPE_COMMENT, self::TYPE_TESTIMONIAL ] ],
 			[ [ 'content', 'rating' ], 'required', 'on' => [ self::TYPE_REVIEW ] ],

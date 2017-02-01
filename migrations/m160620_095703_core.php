@@ -246,7 +246,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'firstName' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'lastName' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'phone' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
-			'email' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'email' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'fax' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'website' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'latitude' => $this->float( 4 ),
@@ -271,6 +271,8 @@ class m160620_095703_core extends \yii\db\Migration {
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'description' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'group' => $this->boolean()->notNull()->defaultValue( false ),
+			'adminUrl' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'homeUrl' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime()
@@ -292,6 +294,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'description' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'group' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime()
 		], $this->options );
@@ -322,7 +325,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'genderId' => $this->bigInteger( 20 ),
 			'avatarId' => $this->bigInteger( 20 ),
 			'status' => $this->smallInteger( 6 ),
-			'email' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
+			'email' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'username' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'passwordHash' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'firstName' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
@@ -613,7 +616,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'modifiedBy' => $this->bigInteger( 20 ),
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'name' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
-			'email' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'email' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'avatarUrl' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'websiteUrl' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'ip' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),

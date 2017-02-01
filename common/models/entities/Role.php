@@ -32,6 +32,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $type
  * @property string $icon
  * @property string $description
+ * @property boolean $group
+ * @property string $adminUrl
  * @property string $homeUrl
  * @property datetime $createdAt
  * @property datetime $modifiedAt
@@ -117,9 +119,10 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 			// Text Limit
 			[ [ 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'description', 'homeUrl' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'slug', 'adminUrl', 'homeUrl' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
+			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
+			[ 'group', 'boolean' ],
 			[ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
@@ -127,7 +130,7 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 		// trim if required
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'homeUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'adminUrl', 'homeUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -267,4 +270,5 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

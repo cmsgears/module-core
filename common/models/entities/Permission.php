@@ -32,6 +32,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $type
  * @property string $icon
  * @property string $description
+ * @property boolean $group
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
@@ -119,6 +120,7 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
 			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
+			[ 'group', 'boolean' ],
 			[ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
@@ -241,4 +243,5 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

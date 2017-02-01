@@ -144,6 +144,7 @@ class m160621_014612_core_index extends \yii\db\Migration {
 		// Model message
 		$this->createIndex( 'idx_' . $this->prefix . 'model_message_parent_t', $this->prefix . 'core_model_message', 'parentType' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_message_type', $this->prefix . 'core_model_message', 'type' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_message_pipt', $this->prefix . 'core_model_message', [ 'parentId', 'parentType' ] );
 
 		// Model Comment
 		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_name', $this->prefix . 'core_model_comment', 'name' );
@@ -151,43 +152,53 @@ class m160621_014612_core_index extends \yii\db\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_ip', $this->prefix . 'core_model_comment', 'ip' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_agent', $this->prefix . 'core_model_comment', 'agent' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_type', $this->prefix . 'core_model_comment', 'type' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_pipt', $this->prefix . 'core_model_comment', [ 'parentId', 'parentType' ] );
 
 		// Model Meta
 		$this->createIndex( 'idx_' . $this->prefix . 'model_meta_parent_t', $this->prefix . 'core_model_meta', 'parentType' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_meta_type', $this->prefix . 'core_model_meta', 'type' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_meta_type_v', $this->prefix . 'core_model_meta', 'valueType' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_meta_piptt', $this->prefix . 'core_model_meta', [ 'parentId', 'parentType', 'type' ] );
 
 		// Model Object
 		$this->createIndex( 'idx_' . $this->prefix . 'model_object_parent_t', $this->prefix . 'core_model_object', 'parentType' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_object_type', $this->prefix . 'core_model_object', 'type' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_object_pipta', $this->prefix . 'core_model_object', [ 'parentId', 'parentType', 'active' ] );
 
 		// Model Address
 		$this->createIndex( 'idx_' . $this->prefix . 'model_address_parent_t', $this->prefix . 'core_model_address', 'parentType' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_address_type', $this->prefix . 'core_model_address', 'type' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_address_pipta', $this->prefix . 'core_model_address', [ 'parentId', 'parentType', 'active' ] );
 
 		// Model File
 		$this->createIndex( 'idx_' . $this->prefix . 'model_file_parent_t', $this->prefix . 'core_model_file', 'parentType' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_file_type', $this->prefix . 'core_model_file', 'type' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_file_pipta', $this->prefix . 'core_model_file', [ 'parentId', 'parentType', 'active' ] );
 
 		// Model Gallery
 		$this->createIndex( 'idx_' . $this->prefix . 'model_gallery_parent_t', $this->prefix . 'core_model_gallery', 'parentType' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_gallery_type', $this->prefix . 'core_model_gallery', 'type' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_gallery_pipta', $this->prefix . 'core_model_gallery', [ 'parentId', 'parentType', 'active' ] );
 
 		// Model Tag
 		$this->createIndex( 'idx_' . $this->prefix . 'model_tag_parent_t', $this->prefix . 'core_model_tag', 'parentType' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_tag_type', $this->prefix . 'core_model_tag', 'type' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_tag_pipta', $this->prefix . 'core_model_tag', [ 'parentId', 'parentType', 'active' ] );
 
 		// Model Category
 		$this->createIndex( 'idx_' . $this->prefix . 'model_category_parent_t', $this->prefix . 'core_model_category', 'parentType' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_category_type', $this->prefix . 'core_model_category', 'type' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_category_pipta', $this->prefix . 'core_model_category', [ 'parentId', 'parentType', 'active' ] );
 
 		// Model Option
 		$this->createIndex( 'idx_' . $this->prefix . 'model_option_parent_t', $this->prefix . 'core_model_option', 'parentType' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_option_type', $this->prefix . 'core_model_option', 'type' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_option_pipta', $this->prefix . 'core_model_option', [ 'parentId', 'parentType', 'active' ] );
 
 		// Model Form
 		$this->createIndex( 'idx_' . $this->prefix . 'model_form_parent_t', $this->prefix . 'core_model_form', 'parentType' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_form_type', $this->prefix . 'core_model_form', 'type' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_form_pipta', $this->prefix . 'core_model_form', [ 'parentId', 'parentType', 'active' ] );
 	}
 
 	public function down() {
@@ -320,6 +331,7 @@ class m160621_014612_core_index extends \yii\db\Migration {
 		// Model message
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_message_parent_t', $this->prefix . 'core_model_message' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_message_type', $this->prefix . 'core_model_message' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'model_message_pipt', $this->prefix . 'core_model_message' );
 
 		// Model Comment
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_comment_name', $this->prefix . 'core_model_comment' );
@@ -327,42 +339,52 @@ class m160621_014612_core_index extends \yii\db\Migration {
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_comment_ip', $this->prefix . 'core_model_comment' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_comment_agent', $this->prefix . 'core_model_comment' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_comment_type', $this->prefix . 'core_model_comment' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'model_comment_pipt', $this->prefix . 'core_model_comment' );
 
 		// Model Meta
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_meta_parent_t', $this->prefix . 'core_model_meta' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_meta_type', $this->prefix . 'core_model_meta' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_meta_type_v', $this->prefix . 'core_model_meta' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'model_meta_piptt', $this->prefix . 'core_model_meta' );
 
 		// Model Object
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_object_parent_t', $this->prefix . 'core_model_object' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_object_type', $this->prefix . 'core_model_object' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'model_object_pipta', $this->prefix . 'core_model_object' );
 
 		// Model Address
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_address_parent_t', $this->prefix . 'core_model_address' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_address_type', $this->prefix . 'core_model_address' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'model_address_pipta', $this->prefix . 'core_model_address' );
 
 		// Model File
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_file_parent_t', $this->prefix . 'core_model_file' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_file_type', $this->prefix . 'core_model_file' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'model_file_pipta', $this->prefix . 'core_model_file' );
 
 		// Model Gallery
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_gallery_parent_t', $this->prefix . 'core_model_gallery' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_gallery_type', $this->prefix . 'core_model_gallery' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'model_gallery_pipta', $this->prefix . 'core_model_gallery' );
 
 		// Model Tag
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_tag_parent_t', $this->prefix . 'core_model_tag' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_tag_type', $this->prefix . 'core_model_tag' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'model_tag_pipta', $this->prefix . 'core_model_tag' );
 
 		// Model Category
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_category_parent_t', $this->prefix . 'core_model_category' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_category_type', $this->prefix . 'core_model_category' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'model_category_pipta', $this->prefix . 'core_model_category' );
 
 		// Model Option
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_option_parent_t', $this->prefix . 'core_model_option' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_option_type', $this->prefix . 'core_model_option' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'model_option_pipta', $this->prefix . 'core_model_option' );
 
 		// Model Form
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_form_parent_t', $this->prefix . 'core_model_form' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_form_type', $this->prefix . 'core_model_form' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'model_form_pipta', $this->prefix . 'core_model_form' );
 	}
 }

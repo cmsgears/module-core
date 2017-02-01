@@ -30,7 +30,7 @@ trait CategoryTrait {
 	 */
 	public function getCategories() {
 
-		$category	= CoreTables::TABLE_CATEGORY;
+		$categoryTable = CoreTables::TABLE_CATEGORY;
 
 		$query = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
@@ -39,14 +39,14 @@ trait CategoryTrait {
 
 						$query->onCondition( [ "$modelCategoryTable.parentType" => $this->mParentType ] );
 					})
-					->where( "$category.type='$this->categoryType'" );
+					->where( "$categoryTable.type='$this->categoryType'" );
 
 		return $query;
 	}
 
 	public function getActiveCategories() {
 
-		$category	= CoreTables::TABLE_CATEGORY;
+		$categoryTable = CoreTables::TABLE_CATEGORY;
 
 		$query = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
@@ -55,14 +55,14 @@ trait CategoryTrait {
 
 						$query->onCondition( [ "$modelCategoryTable.parentType" => $this->mParentType, "$modelCategoryTable.active" => true ] );
 					})
-					->where( "$category.type='$this->categoryType'" );
+					->where( "$categoryTable.type='$this->categoryType'" );
 
 		return $query;
 	}
 
 	public function getCategoriesByType( $type ) {
 
-		$category	= CoreTables::TABLE_CATEGORY;
+		$categoryTable = CoreTables::TABLE_CATEGORY;
 
 		$categories = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
 							->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
@@ -71,7 +71,7 @@ trait CategoryTrait {
 
 								$query->onCondition( [ "$modelCategory.parentType" => $this->mParentType, "$modelCategory.active" => true ] );
 							})
-							->where( "$category.type='$type'" )
+							->where( "$categoryTable.type='$type'" )
 							->all();
 
 		return $categories;
@@ -224,8 +224,8 @@ trait CategoryTrait {
 
 	public function getCategoryCsv( $limit = 0, $active = true ) {
 
-		$categories				= null;
-		$categoriesCsv			= [];
+		$categories		= null;
+		$categoriesCsv	= [];
 
 		if( $active ) {
 

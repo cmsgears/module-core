@@ -149,8 +149,8 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 			[ 'username', 'validateUsernameUpdate', 'on' => [ 'update', 'profile' ] ],
 			[ 'username', 'validateUsernameChange', 'on' => [ 'profile' ] ],
 			// Text Limit
-			[ [ 'username', 'passwordHash', 'firstName', 'lastName', 'phone', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'email', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'username', 'email', 'passwordHash', 'firstName', 'lastName', 'phone', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
 			[ [ 'id', 'localeId', 'genderId', 'avatarId', 'status' ], 'number', 'integerOnly' => true ],
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
@@ -698,6 +698,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	// Update -----------------
 
 	// Delete -----------------
+
 }
 
 User::$statusMap[ User::STATUS_VERIFIED ] = 'Verified';

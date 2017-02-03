@@ -98,6 +98,8 @@ class m160621_014612_core_index extends \yii\db\Migration {
 		// Site Meta
 		$this->createIndex( 'idx_' . $this->prefix . 'site_meta_name', $this->prefix . 'core_site_meta', 'name' );
 		$this->createIndex( 'idx_' . $this->prefix . 'site_meta_type', $this->prefix . 'core_site_meta', 'type' );
+		$this->createIndex( 'idx_' . $this->prefix . 'site_meta_mit', $this->prefix . 'core_site_meta', [ 'modelId', 'type' ] );
+		$this->createIndex( 'idx_' . $this->prefix . 'site_meta_mitn', $this->prefix . 'core_site_meta', [ 'modelId', 'type', 'name' ] );
 
 		// File
 		$this->createIndex( 'idx_' . $this->prefix . 'file_name', $this->prefix . 'core_file', 'name' );
@@ -159,6 +161,7 @@ class m160621_014612_core_index extends \yii\db\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'model_meta_type', $this->prefix . 'core_model_meta', 'type' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_meta_type_v', $this->prefix . 'core_model_meta', 'valueType' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_meta_piptt', $this->prefix . 'core_model_meta', [ 'parentId', 'parentType', 'type' ] );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_meta_pipttn', $this->prefix . 'core_model_meta', [ 'parentId', 'parentType', 'type', 'name' ] );
 
 		// Model Object
 		$this->createIndex( 'idx_' . $this->prefix . 'model_object_parent_t', $this->prefix . 'core_model_object', 'parentType' );
@@ -285,6 +288,8 @@ class m160621_014612_core_index extends \yii\db\Migration {
 		// Site Meta
 		$this->dropIndex( 'idx_' . $this->prefix . 'site_meta_name', $this->prefix . 'core_site_meta' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'site_meta_type', $this->prefix . 'core_site_meta' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'site_meta_mit', $this->prefix . 'core_site_meta' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'site_meta_mitn', $this->prefix . 'core_site_meta' );
 
 		// File
 		$this->dropIndex( 'idx_' . $this->prefix . 'file_name', $this->prefix . 'core_file' );
@@ -346,6 +351,7 @@ class m160621_014612_core_index extends \yii\db\Migration {
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_meta_type', $this->prefix . 'core_model_meta' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_meta_type_v', $this->prefix . 'core_model_meta' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_meta_piptt', $this->prefix . 'core_model_meta' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'model_meta_pipttn', $this->prefix . 'core_model_meta' );
 
 		// Model Object
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_object_parent_t', $this->prefix . 'core_model_object' );

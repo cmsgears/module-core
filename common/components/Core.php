@@ -60,6 +60,10 @@ class Core extends \yii\base\Component {
 	 */
 	public $subDirectory		= true;
 
+	public $appAdmin			= CoreGlobal::APP_ADMIN;
+	public $appFrontend			= CoreGlobal::APP_FRONTEND;
+	public $appConsole			= CoreGlobal::APP_CONSOLE;
+
 	/**
 	 * It can be used in case user approval from admin is required.
 	 */
@@ -259,6 +263,21 @@ class Core extends \yii\base\Component {
 	public function isSubDirectory() {
 
 		return $this->subDirectory;
+	}
+
+	public function getAppAdmin() {
+
+		return $this->appAdmin;
+	}
+
+	public function getAppFrontend() {
+
+		return $this->appFrontend;
+	}
+
+	public function getAppConsole() {
+
+		return $this->appConsole;
 	}
 
 	public function isUserApproval() {

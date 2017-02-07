@@ -105,6 +105,11 @@ class ProvinceService extends \cmsgears\core\common\services\base\EntityService 
 		return self::findIdNameMap( [ 'conditions' => [ 'countryId' => $countryId ] ] );
 	}
 
+	public function getIsoNameMapByCountryId( $countryId ) {
+
+		return self::findNameValueMap( [ 'nameColumn' => 'iso', 'valueColumn' => 'name', 'conditions' => [ 'countryId' => $countryId ] ] );
+	}
+
 	// Read - Others ---
 
 	// Create -------------
@@ -113,7 +118,7 @@ class ProvinceService extends \cmsgears\core\common\services\base\EntityService 
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'countryId', 'code', 'codeNum', 'name' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'code', 'iso', 'name' ];
 
 		return parent::update( $model, [
 			'attributes' => $attributes

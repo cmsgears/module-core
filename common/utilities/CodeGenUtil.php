@@ -49,13 +49,20 @@ class CodeGenUtil {
 	/**
 	 * @return string - csv of urls from the given associative array and base url
 	 */
-	public static function generateLinksFromMap( $baseUrl, $map, $csv = true ) {
+	public static function generateLinksFromMap( $baseUrl, $map, $csv = true, $absolute = true ) {
 
 		$html	= [];
 
 		foreach ( $map as $key => $value ) {
 
-			$html[]	= Html::a( $value, Url::to( $baseUrl . $key, true ) );
+			if( $absolute ) {
+
+				$html[]	= Html::a( $value, Url::to( $baseUrl . $key, true ) );
+			}
+			else {
+
+				$html[]	= Html::a( $value, Url::toRoute( $baseUrl . $key ) );
+			}
 		}
 
 		if( $csv ) {

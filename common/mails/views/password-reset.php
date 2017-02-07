@@ -34,7 +34,7 @@ $resetLink		= $siteUrl . "reset-password?token=$token&email=$email";
 		</tr>
 		<tr>
 			<td>
-				<div style='margin-top:60px;'>Dear <?=$name?>,</div>
+				<div style='margin-top:60px;'>Dear <?= $name ?>,</div>
 			</td>
 		</tr>
 		<tr>
@@ -43,10 +43,10 @@ $resetLink		= $siteUrl . "reset-password?token=$token&email=$email";
 			</td>
 		</tr>
 		<tr>
-			<td> <br/>Email: <?=$email?></td>
+			<td> <br/>Email: <?= $email ?></td>
 		</tr>
-		<tr> 
-			<td> Reset Link: <a href="<?=$resetLink?>">Reset Password</a> </td>
+		<tr>
+			<td> Reset Link: <a href="<?= $resetLink ?>">Reset Password</a> </td>
 		</tr>
 		<tr>
 			<td>

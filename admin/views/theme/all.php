@@ -71,10 +71,11 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $theme ) {
 
-						$id = $theme->id;
+						$id 		= $theme->id;
+						$editUrl	= Html::a( $theme->name, [ "update?id=$id" ] );
 				?>
 					<tr>
-						<td><?= $theme->name ?></td>
+						<td><?= $editUrl ?></td>
 						<td><?= $theme->slug ?></td>
 						<td><?= $theme->getDefaultStr() ?></td>
 						<td><?= $theme->renderer ?></td>

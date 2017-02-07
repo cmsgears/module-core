@@ -54,13 +54,13 @@ if( !isset( $sortOrder ) ) {
 		<table>
 			<thead>
 				<tr>
-					<th>Code</th>
 					<th>Name
 						<span class='box-icon-sort'>
 							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
+					<th>Code</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -69,11 +69,12 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $country ) {
 
-						$id = $country->id;
+						$id 		= $country->id;
+						$editUrl	= Html::a( $country->name, [ "update?id=$id" ] );
 				?>
 					<tr>
+						<td><?= $editUrl ?></td>
 						<td><?= $country->code ?></td>
-						<td><?= $country->name ?></td>
 						<td class="actions">
 							<span title="Provinces"><?= Html::a( "", [ "country/province/all?cid=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
 							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>

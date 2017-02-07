@@ -121,13 +121,13 @@ class m160621_014408_core_data extends \yii\db\Migration {
 
 		// Roles
 
-		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'homeUrl', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'adminUrl', 'homeUrl', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
 
 		$roles = [
-			[ $this->master->id, $this->master->id, 'Super Admin', 'super-admin', 'dashboard', CoreGlobal::TYPE_SYSTEM, null, 'The Super Admin have all the permisisons to perform operations on the admin site and website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Admin','admin','dashboard', CoreGlobal::TYPE_SYSTEM, null, 'The Admin have all the permisisons to perform operations on the admin site and website except RBAC module.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'User', 'user', null, CoreGlobal::TYPE_SYSTEM, null, 'The role User is limited to website users.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'User Manager', 'user-manager', 'dashboard', CoreGlobal::TYPE_SYSTEM, null, 'The role User Manager is limited to manage site users from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Super Admin', 'super-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The Super Admin have all the permisisons to perform operations on the admin site and website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Admin','admin','dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The Admin have all the permisisons to perform operations on the admin site and website except RBAC module.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'User', 'user', NULL, NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role User is limited to website users.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'User Manager', 'user-manager', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role User Manager is limited to manage site users from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );

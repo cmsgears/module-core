@@ -85,12 +85,13 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $gallery ) {
 
-						$id		= $gallery->id;
-						$owner	= $gallery->creator;
+						$id			= $gallery->id;
+						$editUrl	= Html::a( $gallery->name, [ "update?id=$id" ] );
+						$owner		= $gallery->creator;
 				?>
 					<tr>
 						<td><?= $owner->getName()?></td>
-						<td><?= $gallery->name ?></td>
+						<td><?= $editUrl ?></td>
 						<td><?= $gallery->slug ?></td>
 						<td><?= $gallery->title ?></td>
 						<td class="actions">

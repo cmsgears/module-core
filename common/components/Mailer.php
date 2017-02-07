@@ -51,13 +51,14 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 	 */
 	public function sendCreateUserMail( $user ) {
 
+		$siteName	= $this->coreProperties->getSiteName();
 		$fromEmail	= $this->mailProperties->getSenderEmail();
 		$fromName	= $this->mailProperties->getSenderName();
 
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_ACCOUNT_CREATE, [ 'coreProperties' => $this->coreProperties, 'user' => $user ] )
 			->setTo( $user->email )
-			->setFrom( [ $fromEmail => $fromName ] )
+			->setFrom( [ $fromEmail => "$fromName | $siteName" ] )
 			->setSubject( "Registration | " . $this->coreProperties->getSiteName() )
 			//->setTextBody( "heroor" )
 			->send();
@@ -68,13 +69,14 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 	 */
 	public function sendActivateUserMail( $user ) {
 
+		$siteName	= $this->coreProperties->getSiteName();
 		$fromEmail	= $this->mailProperties->getSenderEmail();
 		$fromName	= $this->mailProperties->getSenderName();
 
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_ACCOUNT_ACTIVATE, [ 'coreProperties' => $this->coreProperties, 'user' => $user ] )
 			->setTo( $user->email )
-			->setFrom( [ $fromEmail => $fromName ] )
+			->setFrom( [ $fromEmail => "$fromName | $siteName" ] )
 			->setSubject( "Registration | " . $this->coreProperties->getSiteName() )
 			//->setTextBody( $contact->contact_message )
 			->send();
@@ -85,13 +87,14 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 	 */
 	public function sendRegisterMail( $user ) {
 
+		$siteName	= $this->coreProperties->getSiteName();
 		$fromEmail	= $this->mailProperties->getSenderEmail();
 		$fromName	= $this->mailProperties->getSenderName();
 
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_REG, [ 'coreProperties' => $this->coreProperties, 'user' => $user ] )
 			->setTo( $user->email )
-			->setFrom( [ $fromEmail => $fromName ] )
+			->setFrom( [ $fromEmail => "$fromName | $siteName" ] )
 			->setSubject( "Registration | " . $this->coreProperties->getSiteName() )
 			//->setTextBody( $contact->contact_message )
 			->send();
@@ -102,13 +105,14 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 	 */
 	public function sendVerifyUserMail( $user ) {
 
+		$siteName	= $this->coreProperties->getSiteName();
 		$fromEmail	= $this->mailProperties->getSenderEmail();
 		$fromName	= $this->mailProperties->getSenderName();
 
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_REG_CONFIRM, [ 'coreProperties' => $this->coreProperties, 'user' => $user ] )
 			->setTo( $user->email )
-			->setFrom( [ $fromEmail => $fromName ] )
+			->setFrom( [ $fromEmail => "$fromName | $siteName" ] )
 			->setSubject( "Registration | " . $this->coreProperties->getSiteName() )
 			//->setTextBody( $contact->contact_message )
 			->send();
@@ -119,13 +123,14 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 	 */
 	public function sendPasswordResetMail( $user ) {
 
+		$siteName	= $this->coreProperties->getSiteName();
 		$fromEmail	= $this->mailProperties->getSenderEmail();
 		$fromName	= $this->mailProperties->getSenderName();
 
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_PASSWORD_RESET, [ 'coreProperties' => $this->coreProperties, 'user' => $user ] )
 			->setTo( $user->email )
-			->setFrom( [ $fromEmail => $fromName ] )
+			->setFrom( [ $fromEmail => "$fromName | $siteName" ] )
 			->setSubject( "Password Reset | " . $this->coreProperties->getSiteName() )
 			//->setTextBody( "heroor" )
 			->send();
@@ -136,13 +141,14 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 	 */
 	public function sendPasswordChangeMail( $user ) {
 
+		$siteName	= $this->coreProperties->getSiteName();
 		$fromEmail	= $this->mailProperties->getSenderEmail();
 		$fromName	= $this->mailProperties->getSenderName();
 
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_PASSWORD_CHANGE, [ 'coreProperties' => $this->coreProperties, 'user' => $user ] )
 			->setTo( $user->email )
-			->setFrom( [ $fromEmail => $fromName ] )
+			->setFrom( [ $fromEmail => "$fromName | $siteName" ] )
 			->setSubject( "Password Change | " . $this->coreProperties->getSiteName() )
 			//->setTextBody( "heroor" )
 			->send();
@@ -153,6 +159,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 	 */
 	public function sendCommentSpamRequestMail( $comment ) {
 
+		$siteName		= $this->coreProperties->getSiteName();
 		$fromEmail		= $this->mailProperties->getSenderEmail();
 		$fromName		= $this->mailProperties->getSenderName();
 		$contactEmail	= $this->mailProperties->getContactEmail();
@@ -160,7 +167,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_COMMENT_SPAM_REQUEST, [ 'coreProperties' => $this->coreProperties, 'comment' => $comment ] )
 			->setTo( $contactEmail )
-			->setFrom( [ $fromEmail => $fromName ] )
+			->setFrom( [ $fromEmail => "$fromName | $siteName" ] )
 			->setSubject( "Spam Request | " . $this->coreProperties->getSiteName() )
 			//->setTextBody( "heroor" )
 			->send();
@@ -171,6 +178,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 	 */
 	public function sendCommentDeleteRequestMail( $comment ) {
 
+		$siteName		= $this->coreProperties->getSiteName();
 		$fromEmail		= $this->mailProperties->getSenderEmail();
 		$fromName		= $this->mailProperties->getSenderName();
 		$contactEmail	= $this->mailProperties->getContactEmail();
@@ -178,7 +186,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		// Send Mail
 		$this->getMailer()->compose( self::MAIL_COMMENT_DELETE_REQUEST, [ 'coreProperties' => $this->coreProperties, 'comment' => $comment ] )
 			->setTo( $contactEmail )
-			->setFrom( [ $fromEmail => $fromName ] )
+			->setFrom( [ $fromEmail => "$fromName | $siteName" ] )
 			->setSubject( "Delete Request | " . $this->coreProperties->getSiteName() )
 			//->setTextBody( "heroor" )
 			->send();

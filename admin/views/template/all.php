@@ -80,11 +80,12 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $template ) {
 
-						$id = $template->id;
+						$id 		= $template->id;
+						$editUrl	= Html::a( $template->name, [ "update?id=$id" ] );
 
 				?>
 					<tr>
-						<td><?= $template->name ?></td>
+						<td><?= $editUrl ?></td>
 						<td> <span class="<?= $template->icon ?>" title="<?= $template->name ?>"></span></td>
 						<td><?= $template->description ?></td>
 						<td><?= $template->renderer ?></td>

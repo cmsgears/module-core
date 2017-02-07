@@ -12,6 +12,10 @@ class CoreGlobal {
 	const SITE_BLOG				= 'blog';
 	const SITE_FORUM			= 'forum';
 
+	const APP_ADMIN				= 'app-admin';
+	const APP_FRONTEND			= 'app-frontend';
+	const APP_CONSOLE			= 'app-console';
+
 	// System Pages ---------------------------------------------------
 
 	const PAGE_ACCOUNT_ACTIVATE = 'activate-account';

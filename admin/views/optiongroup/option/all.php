@@ -66,10 +66,11 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $option ) {
 
-						$id = $option->id;
+						$id 		= $option->id;
+						$editUrl	= Html::a( $option->name, [ "update?id=$id" ] );
 				?>
 					<tr>
-						<td><?= $option->name ?></td>
+						<td><?= $editUrl ?></td>
 						<td> <span class="<?= $option->icon ?>" title="<?= $option->name ?>"></span></td>
 						<td><?= $option->value ?></td>
 						<td class="actions">

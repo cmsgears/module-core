@@ -68,15 +68,16 @@ if( !isset( $sortOrder ) ) {
 			<tbody>
 				<?php
 
-					foreach( $models as $model ) {
+					foreach( $models as $group ) {
 
-						$id = $model->id;
+						$id 		= $group->id;
+						$editUrl	= Html::a( $group->name, [ "update?id=$id" ] );
 
 				?>
 					<tr>
-						<td><?= $model->name ?></td>
-						<td> <span class="<?= $model->icon ?>" title="<?= $model->name ?>"></span></td>
-						<td><?= $model->description ?></td>
+						<td><?= $editUrl ?></td>
+						<td> <span class="<?= $group->icon ?>" title="<?= $group->name ?>"></span></td>
+						<td><?= $group->description ?></td>
 						<td class="actions">
 							<span title="Options"><?= Html::a( "", [ "optiongroup/option/all?cid=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
 							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>

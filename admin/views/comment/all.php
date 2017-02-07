@@ -83,10 +83,11 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $comment ) {
 
-						$id		= $comment->id;
+						$id			= $comment->id;
+						$editUrl	= Html::a( $comment->name, [ "update?id=$id" ] );
 				?>
 					<tr>
-						<td><?= $comment->name ?></td>
+						<td><?= $editUrl ?></td>
 						<td><?= $comment->email ?></td>
 						<td><?= $comment->getStatusStr() ?></td>
 						<td><?= $comment->content ?></td>

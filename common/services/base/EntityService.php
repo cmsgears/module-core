@@ -369,7 +369,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 					var_dump( $existingModel->getErrors() );
 				}
 
-				return true;
+				return false; // Return false on errors in debug mode
 			}
 		}
 		else {
@@ -390,7 +390,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 					var_dump( $model->getErrors() );
 				}
 
-				return true;
+				return false; // Return false on errors in debug mode
 			}
 		}
 

@@ -25,6 +25,8 @@ interface IProvinceService extends \cmsgears\core\common\services\interfaces\bas
 
 	public function getMapByCountryId( $countryId );
 
+	public function getIsoNameMapByCountryId( $countryId );
+
 	// Create -------------
 
 	// Update -------------

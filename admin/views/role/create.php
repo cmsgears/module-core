@@ -20,6 +20,7 @@ $returnUrl		= $this->context->returnUrl;
 		<?= $form->field( $model, 'name' ) ?>
 		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
 		<?= $form->field( $model, 'description' )->textarea() ?>
+		<?= $form->field( $model, 'adminUrl' ) ?>
 		<?= $form->field( $model, 'homeUrl' ) ?>
 
 		<?php if( count( $permissions ) > 0 ) { ?>

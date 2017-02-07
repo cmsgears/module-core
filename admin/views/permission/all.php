@@ -78,10 +78,11 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $permission ) {
 
-						$id = $permission->id;
+						$id 		= $permission->id;
+						$editUrl	= Html::a( $permission->name, [ "update?id=$id" ] );
 				?>
 					<tr>
-						<td><?= $permission->name ?></td>
+						<td><?= $editUrl ?></td>
 						<td> <span class="<?= $permission->icon ?>" title="<?= $permission->name ?>"></span></td>
 						<td><?= $permission->slug ?></td>
 						<td><?= $permission->description ?></td>

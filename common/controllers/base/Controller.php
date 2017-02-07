@@ -113,7 +113,18 @@ abstract class Controller extends \yii\web\Controller {
 			}
 			else if( isset( $role ) && isset( $role->homeUrl ) ) {
 
-				Yii::$app->response->redirect( [ "/$role->homeUrl" ] )->send();
+				// Switch according to app id
+				$appAdmin		= Yii::$app->core->getAppAdmin();
+				$appFrontend	= Yii::$app->core->getAppFrontend();
+
+				if( Yii::$app->id === $appAdmin ) {
+
+					Yii::$app->response->redirect( [ "/$role->adminUrl" ] )->send();
+				}
+				else if( Yii::$app->id === $appFrontend ) {
+
+					Yii::$app->response->redirect( [ "/$role->homeUrl" ] )->send();
+				}
 			}
 			// Redirect user to home set by app config
 			else {

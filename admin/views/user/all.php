@@ -97,12 +97,13 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $user ) {
 
-						$id		= $user->id;
-						$role	= $user->role->name;
+						$id			= $user->id;
+						$editUrl	= Html::a( $user->username, [ "update?id=$id" ] );
+						$role		= $user->role->name;
 				?>
 					<tr>
 						<td><?= CodeGenUtil::getImageThumbTag( $user->avatar, [ 'class' => 'avatar', 'image' => 'avatar.png' ] ) ?></td>
-						<td><?= $user->username ?></td>
+						<td><?= $editUrl ?></td>
 						<td><?= $user->getName() ?></td>
 						<td><?= $user->email ?></td>
 						<td><?= $role ?></td>

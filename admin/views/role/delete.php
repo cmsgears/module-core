@@ -20,6 +20,7 @@ $returnUrl		= $this->context->returnUrl;
 		<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
 		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ], 'disabled' => true ] ) ?>
 		<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
+		<?= $form->field( $model, 'adminUrl' )->textInput( [ 'readonly '=> 'true' ] ) ?>
 		<?= $form->field( $model, 'homeUrl' )->textInput( [ 'readonly '=> 'true' ] ) ?>
 
 		<?php if( count( $permissions ) > 0 ) { ?>

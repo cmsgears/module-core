@@ -77,11 +77,12 @@ if( !isset( $sortOrder ) ) {
 					foreach( $models as $site ) {
 
 						$id			= $site->id;
+						$editUrl	= Html::a( $site->name, [ "update?id=$id" ] );
 						$themeName	= isset( $site->theme ) ? $site->theme->name : null;
 				?>
 					<tr>
 						<td><?= CodeGenUtil::getImageThumbTag( $site->avatar, [ 'class' => 'avatar', 'image' => 'avatar.png' ] ) ?></td>
-						<td><?= $site->name ?></td>
+						<td><?= $editUrl ?></td>
 						<td><?= $site->slug ?></td>
 						<td><?= $themeName ?></td>
 						<td><?= $site->order ?></td>

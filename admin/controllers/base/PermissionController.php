@@ -137,7 +137,7 @@ abstract class PermissionController extends CrudController {
 				$permission			= $this->modelService->update( $model );
 
 				$binder				= new Binder();
-				$binder->binderId	= $permission->id;
+				$binder->binderId	= $model->id;
 
 				$binder->load( Yii::$app->request->post(), 'Binder' );
 

@@ -70,6 +70,7 @@ if( !isset( $sortOrder ) ) {
 					<th>Icon</th>
 					<th>Slug</th>
 					<th>Description</th>
+					<th>Admin URL</th>
 					<th>Home URL</th>
 					<th>Actions</th>
 				</tr>
@@ -79,13 +80,15 @@ if( !isset( $sortOrder ) ) {
 
 					foreach( $models as $role ) {
 
-						$id = $role->id;
+						$id 		= $role->id;
+						$editUrl	= Html::a( $role->name, [ "update?id=$id" ] );
 				?>
 					<tr>
-						<td><?= $role->name ?></td>
+						<td><?= $editUrl ?></td>
 						<td> <span class="<?= $role->icon ?>" title="<?= $role->name ?>"></span></td>
 						<td><?= $role->slug ?></td>
 						<td><?= $role->description ?></td>
+						<td><?= $role->adminUrl ?></td>
 						<td><?= $role->homeUrl ?></td>
 						<td class="actions">
 							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>

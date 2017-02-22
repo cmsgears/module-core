@@ -192,13 +192,17 @@ class CoreGlobal {
 
 	// Errors - Generic
 	const ERROR_REQUEST				= 'requestError';
-	const ERROR_NOT_FOUND			= 'notFoundError';
-	const ERROR_NOT_ALLOWED			= 'notAllowedError';
+	const ERROR_NOT_FOUND			= 'notFoundError'; // 404 - not found
+	const ERROR_NOT_ALLOWED			= 'notAllowedError'; // 500 - not authorized
+	const ERROR_NO_ACCESS			= 'noAccessError'; // 401 - forbidden
 	const ERROR_EXIST				= 'entryExistError';
 	const ERROR_SELECT				= 'selectError';
 	const ERROR_URL_ENTITY			= 'urlEntityError';
 	const ERROR_DEPENDENCY			= 'dependencyError';
 	const ERROR_SESSION_OVER		= 'sessionOverError';
+
+	// Errors - Comments
+	const ERROR_NO_COMMENTS			= 'noCommentsError';
 
 	// Errors - Permission
 	const ERROR_PERM_VIEW			= 'viewError';

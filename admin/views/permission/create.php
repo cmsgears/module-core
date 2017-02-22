@@ -20,6 +20,7 @@ $returnUrl		= $this->context->returnUrl;
 		<?= $form->field( $model, 'name' ) ?>
 		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
 		<?= $form->field( $model, 'description' )->textarea() ?>
+		<?= $form->field( $model, 'group' )->checkbox() ?>
 
 		<?php if( count( $roles ) > 0 ) { ?>
 		<div class="box-content clearfix">

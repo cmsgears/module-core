@@ -21,7 +21,8 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\services\interfaces\base\IEntityService;
 
 /**
- * The class EntityService defines several useful methods used for pagination and generating map and list by specifying the columns.
+ * The class EntityService defines several useful methods used for pagination and generating map
+ * and list by specifying the columns.
  */
 abstract class EntityService extends \yii\base\Component implements IEntityService {
 
@@ -34,7 +35,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	/**
 	 * The default page limit.
 	 */
-	const PAGE_LIMIT	= 10;
+	const PAGE_LIMIT			= 10;
 
 	// Public -----------------
 
@@ -42,6 +43,10 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	 * Page limit for data provider.
 	 */
 	public static $pageLimit	= self::PAGE_LIMIT;
+
+	/**
+	 * ObjectData is configured as default model class since it supports arbitrary models.
+	 */
 
 	/**
 	 * The model class used to call model static methods.
@@ -54,7 +59,8 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	public static $modelTable	= CoreTables::TABLE_OBJECT_DATA;
 
 	/**
-	 * Parent type is required for entities having type column.
+	 * Parent type is required for entities having type column. It will be used by resources and
+	 * mapper models to refer to typed parent entity.
 	 */
 	public static $parentType	= null;
 
@@ -106,49 +112,50 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	 */
 	public function getDataProvider( $config = [] ) {
 
-		$modelClass	= static::$modelClass;
-
 		return static::findDataProvider( $config );
 	}
 
+	/**
+	 * @return - DataProvider with applied configuration.
+	 */
 	public function getPage( $config = [] ) {
 
 		return static::findPage( $config );
 	}
 
+	/**
+	 * @return - DataProvider of publicly accessible models with applied configuration.
+	 */
 	public function getPublicPage( $config = [] ) {
 
-		$modelTable	= static::$modelTable;
-
-		$modelClass	= static::$modelClass;
-		$interfaces = class_implements( $modelClass );
-
-		if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\IApproval' ] ) ) {
-
-			$config[ 'filters' ][]	= [ 'in', "$modelTable.status", [ IApproval::STATUS_ACTIVE, IApproval::STATUS_FROJEN ] ];
-		}
-
-		if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\IVisibility' ] ) ) {
-
-			$config[ 'conditions' ][ "$modelTable.visibility" ]	= IVisibility::VISIBILITY_PUBLIC;
-		}
+		$config[ 'public' ]	= true;
 
 		return $this->getPage( $config );
 	}
 
-	public function getPageForChildSites( $config = [] ) {
+	/**
+	 * @return - DataProvider or array of models with applied configuration.
+	 */
+	public function getPageForSimilar( $config = [] ) {
 
-		$config[ 'filters' ][]	= [ 'not in', 'siteId', [ Yii::$app->core->mainSiteId ] ];
-		$config[ 'multiSite' ]	= false;
+		$query				= $this->generateSimilarQuery( $config );
+		$config[ 'query' ]	= $query;
 
-		return $this->getPublicPage( $config );
+		return $this->getPublicPage( $query );
 	}
 
-	public function getPageForSimilar( $config = [] ) {
+	public function getPageForSearch( $config = [] ) {
+
+		return static::findPageForSearch( $config );
+	}
+
+	// Similar query considering category and tag for similarity
+	protected function generateSimilarQuery( $config = [] ) {
 
 		// DB Tables
 		$modelClass			= static::$modelClass;
 		$modelTable			= static::$modelTable;
+
 		$parentType			= isset( $config[ 'parentType' ] ) ? $config[ 'parentType' ] : static::$parentType;
 		$mcategoryTable		= CoreTables::TABLE_MODEL_CATEGORY;
 		$categoryTable		= CoreTables::TABLE_CATEGORY;
@@ -158,7 +165,13 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		// Search Query
 		$query				= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$config[ 'query' ]	= $query;
+		$hasOne				= isset( $config[ 'hasOne' ] ) ? $config[ 'hasOne' ] : false;
+
+		// Use model joins
+		if( $hasOne ) {
+
+			$query = $modelClass::queryWithHasOne();
+		}
 
 		// Tags
 		if( isset( $config[ 'tags' ] ) && count( $config[ 'tags' ] ) > 0 ) {
@@ -189,12 +202,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 			$query->andWhere( $filter );
 		}
 
-		return $this->getPublicPage( $config );
-	}
-
-	public function getPageForSearch( $config = [] ) {
-
-		return static::findPageForSearch( $config );
+		return $query;
 	}
 
 	// Read ---------------
@@ -220,10 +228,27 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		return static::searchModels( $config );
 	}
 
+	public function getSimilar( $config = [] ) {
+
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 5;
+		$query	= $this->generateSimilarQuery( $config );
+
+		$query->limit( $limit );
+
+        return $query->all();
+	}
+
 	/**
 	 * @return array - of models with given conditions.
 	 */
 	public function getModels( $config = [] ) {
+
+		$advanced	= isset( $config[ 'advanced' ] ) ? $config[ 'advanced' ] : false;
+
+		if( $advanced ) {
+
+			return static::searchModels( $config );
+		}
 
 		return static::findModels( $config );
 	}
@@ -477,6 +502,64 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 	// EntityService -------------------------
 
+	protected static function applyPublicFilters( $config ) {
+
+		// model class
+		$modelClass	= static::$modelClass;
+		$modelTable = static::$modelTable;
+
+		// Public models
+		$public		= isset( $config[ 'public' ] ) ? $config[ 'public' ] : false;
+
+		if( $public ) {
+
+			$interfaces		= class_implements( $modelClass );
+
+			// Select only active and frozen models excluding new, blocked and terminated models.
+			if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\IApproval' ] ) ) {
+
+				$config[ 'filters' ][]	= [ 'in', "$modelTable.status", [ IApproval::STATUS_ACTIVE, IApproval::STATUS_FROJEN ] ];
+			}
+
+			// Select only publicly visible models
+			if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\IVisibility' ] ) ) {
+
+				$config[ 'conditions' ][ "$modelTable.visibility" ]	= IVisibility::VISIBILITY_PUBLIC;
+			}
+		}
+
+		return $config;
+	}
+
+	protected static function applySiteFilters( $config ) {
+
+		// model class
+		$modelClass		= static::$modelClass;
+		$modelTable 	= static::$modelTable;
+
+		// Filter sites
+		$siteOnly		= isset( $config[ 'siteOnly' ] ) ? $config[ 'siteOnly' ] : true;
+		$excludeMain	= isset( $config[ 'excludeMainSite' ] ) ? $config[ 'excludeMainSite' ] : false; // Exclude main site in multisite scenario
+
+		// Site specific models for multi-site applications
+		if( $modelClass::$multiSite ) {
+
+			// Restrict to site only in case model supports multisite i.e. siteId column
+			if( $siteOnly ) {
+
+				$config[ 'conditions' ][ "$modelTable.siteId" ] = Yii::$app->core->siteId;
+			}
+
+			// Exclude main site
+			if( $excludeMain ) {
+
+				$config[ 'filters' ][]	= [ 'not in', 'siteId', [ Yii::$app->core->mainSiteId ] ];
+			}
+		}
+
+		return $config;
+	}
+
 	// Data Provider ------
 
 	/**
@@ -486,8 +569,6 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	 */
 	public static function findDataProvider( $config = [] ) {
 
-		// TODO: Search in multiple columns.
-
 		// model class
 		$modelClass		= static::$modelClass;
 
@@ -496,17 +577,17 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::PAGE_LIMIT;
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
-		$random			= isset( $config[ 'random' ] ) ? $config[ 'random' ] : false;
+		$random			= isset( $config[ 'random' ] ) ? $config[ 'random' ] : false; // Be careful in using random at database level for tables having high row count
 
 		// search and sort
 		$searchParam	= isset( $config[ 'search-param' ] ) ? $config[ 'search-param' ] : 'keywords';
-		$searchCol		= isset( $config[ 'search-col' ] ) ? $config[ 'search-col' ] : null;
+		$searchCol		= isset( $config[ 'search-col' ] ) ? $config[ 'search-col' ] : [];
 		$sort			= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
 
 		// url generation
 		$route			= isset( $config[ 'route' ] ) ? $config[ 'route' ] : null;
 
-		$pagination	= array();
+		$pagination		= [];
 
 		// Conditions ----------
 
@@ -526,7 +607,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		$searchTerms	= Yii::$app->request->getQueryParam( $searchParam );
 
-		if( isset( $searchTerms ) && strlen( $searchTerms ) > 0 && isset( $searchCol ) ) {
+		if( isset( $searchTerms ) && strlen( $searchTerms ) > 0 && count( $searchCol ) > 0 ) {
 
 			$searchTerms	= HtmlPurifier::process( $searchTerms );
 			$searchQuery	= static::generateSearchQuery( $searchCol, $searchTerms );
@@ -545,6 +626,9 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		// Print to Debug -------
 
+		/** Use only in case actual generate query is required. It can also be obtained from Yii's awesome
+		 * debug bar in debug mode.
+		 */
 		if( isset( $config[ 'pquery' ] ) && $config[ 'pquery' ] ) {
 
 			$command = $query->createCommand();
@@ -571,16 +655,17 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	}
 
 	/**
-	 * The method findPage provide data provider after generating appropriate query. It uses queryWithHasOne as default method to generate base query.
+	 * The method findPage provide data provider after generating appropriate query.
+	 * It uses find or queryWithHasOne as default method to generate base query.
 	 */
 	public static function findPage( $config = [] ) {
 
-		$modelClass	= static::$modelClass;
-		$modelTable = static::$modelTable;
+		$modelClass		= static::$modelClass;
+		$modelTable 	= static::$modelTable;
 
-		$sort		= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
-		$multiSite	= isset( $config[ 'multiSite' ] ) ? $config[ 'multiSite' ] : true;
+		$sort			= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
 
+		// Default sort
 		if( !$sort ) {
 
 			$sort = new Sort([
@@ -603,37 +688,33 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 			$config[ 'conditions' ] = [];
 		}
 
-		// Restrict to site
-		if( $modelClass::$multiSite && $multiSite ) {
-
-			$config[ 'conditions' ][ "$modelTable.siteId" ] = Yii::$app->core->siteId;
-
-			// Get data from all sites irrespective of current site.
-			if( isset( $config[ 'ignoreMultiSite' ] ) && $config[ 'ignoreMultiSite' ] ) {
-
-				unset( $config[ 'conditions' ][ "$modelTable.siteId" ] );
-			}
-		}
-
 		// Default query
 		if( !isset( $config[ 'query' ] ) ) {
 
-			$modelClass			= static::$modelClass;
+			$modelClass	= static::$modelClass;
+			$hasOne		= isset( $config[ 'hasOne' ] ) ? $config[ 'hasOne' ] : false;
 
-			$config[ 'query' ]	= $modelClass::queryWithHasOne();
+			if( $hasOne ) {
+
+				$config[ 'query' ]	= $modelClass::queryWithHasOne();
+			}
 		}
+
+		// Filters
+		$config	= static::applyPublicFilters( $config );
+		$config	= static::applySiteFilters( $config );
 
 		// Default search column
 		if( !isset( $config[ 'search-col' ] ) ) {
 
-			$config[ 'search-col' ] = "$modelTable.name";
+			$config[ 'search-col' ][] = "$modelTable.id";
 		}
 
 		return static::findDataProvider( $config );
 	}
 
 	/**
-	 * Generate search query using tag and category tables.
+	 * Generate search query using tag and category tables. The search will be done in model, category and tag names.
 	 */
 	public static function findPageForSearch( $config = [] ) {
 
@@ -641,6 +722,10 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		$modelClass			= static::$modelClass;
 		$modelTable			= static::$modelTable;
 		$parentType			= isset( $config[ 'parentType' ] ) ? $config[ 'parentType' ] : static::$parentType;
+
+		// Search in
+		$searchCategory 	= isset( $config[ 'searchCategory' ] ) ? $config[ 'searchCategory' ] : false; // Search in category name
+		$searchTag		 	= isset( $config[ 'searchTag' ] ) ? $config[ 'searchTag' ] : false; // Search in tag name
 
 		// DB Tables
 		$mcategoryTable		= CoreTables::TABLE_MODEL_CATEGORY;
@@ -657,28 +742,17 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		$keywords			= Yii::$app->request->getQueryParam( $searchParam );
 
 		// Search Query
-		$query				= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::queryWithAll();
+		$query				= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
+		$hasOne				= isset( $config[ 'hasOne' ] ) ? $config[ 'hasOne' ] : false;
 
-		// Public Page
-		$public				= isset( $config[ 'public' ] ) ? $config[ 'public' ] : false;
+		// Use model joins
+		if( $hasOne ) {
 
-		if( $public ) {
-
-			$interfaces		= class_implements( $modelClass );
-
-			if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\IApproval' ] ) ) {
-
-				$config[ 'filters' ][]	= [ 'in', "$modelTable.status", [ IApproval::STATUS_ACTIVE, IApproval::STATUS_FROJEN ] ];
-			}
-
-			if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\IVisibility' ] ) ) {
-
-				$config[ 'conditions' ][ "$modelTable.visibility" ]	= IVisibility::VISIBILITY_PUBLIC;
-			}
+			$query = $modelClass::queryWithHasOne();
 		}
 
 		// Tag
-		if( isset( $keywords ) || isset( $config[ 'tag' ] ) || strcmp( $sortParam, 'tag' ) == 0 ) {
+		if( $searchTag || isset( $config[ 'tag' ] ) || $sortParam === 'tag' ) {
 
 			$query->leftJoin( $mtagTable, "$modelTable.id=$mtagTable.parentId AND $mtagTable.parentType='$parentType' AND $mtagTable.active=TRUE" )
 				->leftJoin( $tagTable, "$mtagTable.modelId=$tagTable.id" );
@@ -690,7 +764,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		}
 
 		// Category
-		if( isset( $keywords ) || isset( $config[ 'category' ] ) || strcmp( $sortParam, 'category' ) == 0 ) {
+		if( $searchCategory || isset( $config[ 'category' ] ) || $sortParam === 'category' ) {
 
 			$query->leftJoin( $mcategoryTable, "$modelTable.id=$mcategoryTable.parentId AND $mcategoryTable.parentType='$parentType' AND $mcategoryTable.active=TRUE" )
 				->leftJoin( $categoryTable, "$mcategoryTable.modelId=$categoryTable.id" );
@@ -698,26 +772,23 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		if( isset( $config[ 'category' ] ) ) {
 
-			$category			= isset( $config[ 'category' ] ) ? $config[ 'category' ] : null;
-			$categoryService	= Yii::$app->factory->get( 'categoryService' );
-
-			if( !isset( $category ) ) {
-
-				$category	= $categoryService->getBySlug( $sortParam, true );
-			}
-
-			$cids	= $categoryService->getChildIdList( $category );
-			$cids	= join( ',', $cids );
-
-			$query->andWhere( "$categoryTable.id in ($cids)" );
+			$query->andWhere( "$categoryTable.id=" . $config[ 'category' ]->id );
 		}
 
 		// Search
 		if( isset( $keywords ) ) {
 
 			$config[ 'search-col' ][] = "$modelTable.name";
-			$config[ 'search-col' ][] = "$categoryTable.name";
-			$config[ 'search-col' ][] = "$tagTable.name";
+
+			if( $searchCategory ) {
+
+				$config[ 'search-col' ][] = "$categoryTable.name";
+			}
+
+			if( $searchTag ) {
+
+				$config[ 'search-col' ][] = "$tagTable.name";
+			}
 		}
 
 		// Group by model id
@@ -750,21 +821,28 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	}
 
 	/**
-	 * Advanced of searchModels having more options to search.
+	 * Advanced findModels having more options to search.
 	 */
 	public static function searchModels( $config = [] ) {
 
 		// model class
 		$modelClass		= static::$modelClass;
 
+		// Filters
+		$config			= static::applyPublicFilters( $config );
+
+		$config			= static::applySiteFilters( $config );
+
 		// query generation
 		$query			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
 		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::PAGE_LIMIT;
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
+		$sort			= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : [ 'id' => SORT_ASC ];
+		$public			= isset( $config[ 'public' ] ) ? $config[ 'public' ] : false;
 
 		// selected columns
-		$columns		= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ 'id' ];
+		$columns		= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [];
 
 		// array result
 		$array			= isset( $config[ 'array' ] ) ? $config[ 'array' ] : false;
@@ -800,6 +878,13 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 			$query->limit( $limit );
 		}
 
+		// Sort -----------------
+
+		if( count( $sort ) > 0 ) {
+
+			$query->orderBy( $sort );
+		}
+
 		// Print to Debug -------
 
 		if( isset( $config[ 'pquery' ] ) && $config[ 'pquery' ] ) {
@@ -811,7 +896,14 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		// Models ---------------
 
-		$models = $query->asArray( $array )->all();
+		if( $array ) {
+
+			$models = $query->asArray( $array )->all();
+		}
+		else {
+
+			$models = $query->all();
+		}
 
 		return $models;
 	}

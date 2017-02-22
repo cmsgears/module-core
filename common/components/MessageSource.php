@@ -41,11 +41,15 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::ERROR_REQUEST => 'Your request was not processed. Please correct the highlighted errors and submit again.',
 		CoreGlobal::ERROR_NOT_FOUND => 'The requested resource does not exist.',
 		CoreGlobal::ERROR_NOT_ALLOWED => 'You are not allowed to perform this action.',
+		CoreGlobal::ERROR_NO_ACCESS => 'You are not allowed to access this resource.',
 		CoreGlobal::ERROR_EXIST => 'An entry with the same name already exist. Please provide a different name.',
 		CoreGlobal::ERROR_SELECT => 'Please choose a valid value.',
 		CoreGlobal::ERROR_URL_ENTITY => 'An entry with the same url already exist.',
 		CoreGlobal::ERROR_DEPENDENCY => 'This entry can not be deleted since other rows in other tables are dependent on it.',
 		CoreGlobal::ERROR_SESSION_OVER => 'User related to this account not found. Most probably session is over.',
+
+		// Errors - Comments
+		CoreGlobal::ERROR_NO_COMMENTS => 'Comments are not allowed.',
 
 		// Errors - Permission
 		CoreGlobal::ERROR_PERM_VIEW => 'You are not allowed to view the resources.',

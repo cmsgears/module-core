@@ -32,12 +32,14 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $typed 	= true;
+	public $typed 		= true;
 
-	public $status	= ModelComment::STATUS_NEW;
-	public $type	= null;
+	public $parent 		= true;
 
-	public $setUser	= true;
+	public $status		= ModelComment::STATUS_NEW;
+	public $modelType	= null;
+
+	public $setUser		= true;
 
 	/**
 	 * A comment can be created with or without scenario. The possible scenarios are - comment, review and testimonial.
@@ -77,10 +79,10 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 			$modelClass			= $modelCommentService->getModelClass();
 			$model				= new $modelClass;
 			$model->status		= $this->status;
-			$model->type		= $this->type;
+			$model->type		= $this->modelType;
 
 			$model->parentId	= $this->model->id;
-			$model->parentType	= $this->modelService->getParentType();
+			$model->parentType	= $this->parentType;
 
 			// To set name and email in case user is logged in. The same details can be fetched from user table using createdBy column.
 			if( isset( $user ) && $this->setUser ) {

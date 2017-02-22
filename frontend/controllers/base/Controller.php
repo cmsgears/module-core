@@ -8,7 +8,7 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 
-use cmsgears\core\frontend\config\WebProperties;
+use cmsgears\core\frontend\config\SiteProperties;
 
 class Controller extends \cmsgears\core\common\controllers\base\Controller {
 
@@ -22,7 +22,7 @@ class Controller extends \cmsgears\core\common\controllers\base\Controller {
 
 	// Private ----------------
 
-	private $webProperties;
+	private $siteProperties;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -49,13 +49,13 @@ class Controller extends \cmsgears\core\common\controllers\base\Controller {
 
 	// Controller ----------------------------
 
-	public function getWebProperties() {
+	public function getSiteProperties() {
 
-		if( !isset( $this->webProperties ) ) {
+		if( !isset( $this->siteProperties ) ) {
 
-			$this->webProperties	= WebProperties::getInstance();
+			$this->siteProperties	= SiteProperties::getInstance();
 		}
 
-		return $this->webProperties;
+		return $this->siteProperties;
 	}
 }

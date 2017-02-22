@@ -11,6 +11,8 @@ use cmsgears\core\common\models\resources\Form;
 use cmsgears\core\common\models\resources\FormField;
 use cmsgears\core\common\models\resources\Category;
 
+use cmsgears\core\common\services\base\EntityService;
+
 use cmsgears\core\common\utilities\DateUtil;
 
 class m160621_014408_core_data extends \yii\db\Migration {
@@ -298,7 +300,7 @@ class m160621_014408_core_data extends \yii\db\Migration {
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
-			[ $config->id, 'theme', 'Theme', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Current theme.\",\"placeholder\":\"Theme\"}' ]
+			[ $config->id, 'cmg_powered', 'CMG Powered', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Show Powered by CMSGears on login screen.\"}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -325,7 +327,15 @@ class m160621_014408_core_data extends \yii\db\Migration {
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
-			[ $config->id, 'theme', 'Theme', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Current theme.\",\"placeholder\":\"Theme\"}' ]
+			[ $config->id, 'avatar_user', 'Avatar User', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Default avatar for user.\"}' ],
+			[ $config->id, 'avatar_site', 'Avatar Site', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Default avatar for site.\"}' ],
+			[ $config->id, 'comments', 'Comments', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Comments allowed.\"}' ],
+			[ $config->id, 'comments_user', 'Comments User', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Comments need logged in user.\"}' ],
+			[ $config->id, 'comments_recent', 'Comments Recent', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Show recent comments on top.\"}' ],
+			[ $config->id, 'comments_limit','Comments Limit', FormField::TYPE_TEXT, false, 'required,number', 0, NULL, '{\"title\":\"Page limit of comments.\",\"placeholder\":\"Comments per page\"}' ],
+			[ $config->id, 'comments_email', 'Comments Email', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Trigger mail for new comment.\"}' ],
+			[ $config->id, 'comments_auto', 'Comments Auto', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Auto approve a comment in case existing approved comment exist for user or email.\"}' ],
+			[ $config->id, 'comments_filter','Comments Filter', FormField::TYPE_TEXTAREA, false, NULL, 0, NULL, '{\"title\":\"Comments filter having comma seperated words to trash in case words match.\",\"placeholder\":\"Comments filter\"}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -361,6 +371,8 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $this->site->id, 'time_format','Time Format','core','text','HH:mm:ss' ],
 			[ $this->site->id, 'date_time_format','Date Time Format','core','text','yyyy-MM-dd HH:mm:ss' ],
 			[ $this->site->id, 'timezone','Timezone','core','text', $timezone ],
+			[ $this->site->id, 'autologin','Auto Login','core','flag','0' ],
+			[ $this->site->id, 'caching','Caching','core','flag','0' ],
 			[ $this->site->id, 'smtp','SMTP','mail','flag','0' ],
 			[ $this->site->id, 'smtp_username','SMTP Username','mail','text','' ],
 			[ $this->site->id, 'smtp_password','SMTP Password','mail','text','' ],
@@ -374,10 +386,16 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $this->site->id, 'contact_email','Contact Email','mail','text', "$siteContact@$primaryDomain" ],
 			[ $this->site->id, 'info_name','Info Name','mail','text','Info' ],
 			[ $this->site->id, 'info_email','Info Email','mail','text',"$siteInfo@$primaryDomain" ],
-			[ $this->site->id, 'theme','Theme','backend','text','admin' ],
-			[ $this->site->id, 'theme','Theme','frontend','text','basic' ],
-			[ $this->site->id, 'autologin','Auto Login','core','flag','0' ],
-			[ $this->site->id, 'caching','Caching','core','flag','0' ]
+			[ $this->site->id, 'cmg_powered','CMG Powered','backend','flag','1' ],
+			[ $this->site->id, 'avatar_user','Avatar User','frontend','text', 'avatar-user.png' ],
+			[ $this->site->id, 'avatar_site','Avatar Site','frontend','text', 'avatar-site.png' ],
+			[ $this->site->id, 'comments','Comments','frontend','flag','1' ],
+			[ $this->site->id, 'comments_user','Comments User','frontend','flag','0' ],
+			[ $this->site->id, 'comments_recent','Comments Recent','frontend','flag','0' ],
+			[ $this->site->id, 'comments_limit','Comments Limit','frontend','text', EntityService::PAGE_LIMIT ],
+			[ $this->site->id, 'comments_email','Comments Email','frontend','flag','1' ],
+			[ $this->site->id, 'comments_auto','Comments Auto','frontend','flag','1' ],
+			[ $this->site->id, 'comments_filter','Comments Filter','frontend','text', NULL ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );

@@ -101,6 +101,11 @@ class m160621_014612_core_index extends \yii\db\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'site_meta_mit', $this->prefix . 'core_site_meta', [ 'modelId', 'type' ] );
 		$this->createIndex( 'idx_' . $this->prefix . 'site_meta_mitn', $this->prefix . 'core_site_meta', [ 'modelId', 'type', 'name' ] );
 
+		// Site Access
+		$this->createIndex( 'idx_' . $this->prefix . 'site_access_ip', $this->prefix . 'core_site_access', 'ip' );
+		$this->createIndex( 'idx_' . $this->prefix . 'site_access_ipn', $this->prefix . 'core_site_access', 'ipNum' );
+		$this->createIndex( 'idx_' . $this->prefix . 'site_access_url', $this->prefix . 'core_site_access', 'url' );
+
 		// File
 		$this->createIndex( 'idx_' . $this->prefix . 'file_name', $this->prefix . 'core_file', 'name' );
 		$this->createIndex( 'idx_' . $this->prefix . 'file_title', $this->prefix . 'core_file', 'title' );
@@ -290,6 +295,11 @@ class m160621_014612_core_index extends \yii\db\Migration {
 		$this->dropIndex( 'idx_' . $this->prefix . 'site_meta_type', $this->prefix . 'core_site_meta' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'site_meta_mit', $this->prefix . 'core_site_meta' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'site_meta_mitn', $this->prefix . 'core_site_meta' );
+
+		// Site Access
+		$this->dropIndex( 'idx_' . $this->prefix . 'site_access_ip', $this->prefix . 'core_site_access' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'site_access_ipn', $this->prefix . 'core_site_access' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'site_access_url', $this->prefix . 'core_site_access' );
 
 		// File
 		$this->dropIndex( 'idx_' . $this->prefix . 'file_name', $this->prefix . 'core_file' );

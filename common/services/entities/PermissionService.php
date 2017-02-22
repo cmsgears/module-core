@@ -99,6 +99,14 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Read - Maps -----
 
+	public function getLeafIdNameListByType( $type, $config = [] ) {
+
+		$config[ 'conditions' ][ 'type' ] 	= $type;
+		$config[ 'conditions' ][ 'group' ] 	= false;
+
+		return $this->getIdNameList( $config );
+	}
+
 	// Read - Others ---
 
 	// Create -------------

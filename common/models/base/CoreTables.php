@@ -53,6 +53,8 @@ class CoreTables {
 	const TABLE_MODEL_COMMENT		= 'cmg_core_model_comment';
 	const TABLE_MODEL_META			= 'cmg_core_model_meta';
 
+	const TABLE_SITE_ACCESS			= 'cmg_core_site_access';
+
 	// Mappers --------------
 
 	// Direct Mappers

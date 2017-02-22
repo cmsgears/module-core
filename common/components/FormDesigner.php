@@ -89,9 +89,6 @@ class FormDesigner extends \yii\base\Component {
 			}
 			case FormField::TYPE_RATING : {
 
-				$config[ 'endVal' ]	= 5;
-				$config[ 'hover' ]	= true;
-
 				return $this->getRatingHtml( $form, $model, $config, $key, $field );
 			}
 		}
@@ -243,36 +240,55 @@ class FormDesigner extends \yii\base\Component {
 
 	protected function getRatingHtml( $form, $model, $config, $key, $field ) {
 
-		$selected		= isset( $config[ 'selected' ] ) ? $config[ 'selected' ] : null;
-		$endVal			= $config[ 'endVal' ];
-		$hover			= isset( $config[ 'hover' ] ) ? $config[ 'hover' ] : false;
-		$htmlOptions	= isset( $field->htmlOptions['class'] ) ? $field->htmlOptions['class'] : null;
+		$class			= isset( $field->htmlOptions[ 'class' ] ) ? $field->htmlOptions[ 'class' ] : 'cmt-rating';
+		$readOnly		= isset( $field->htmlOptions[ 'read-only' ] ) ? $field->htmlOptions[ 'read-only' ] : false;
+		$disabled		= isset( $field->htmlOptions[ 'disabled' ] ) ? $field->htmlOptions[ 'disabled' ] : false;
 
-		$ratingHtml	= "<div class='$htmlOptions'>";
+		// Prefer config on top of default
+		$readOnly		= isset( $config[ 'read-only' ] ) ? $config[ 'read-only' ] : $readOnly;
+		$disabled		= isset( $config[ 'disabled' ] ) ? $config[ 'disabled' ] : $disabled;
 
-		$ratingHtml	.= "<div class='cmt-rating'>";
+		$stars			= isset( $config[ 'stars' ] ) ? $config[ 'stars' ] : 5;
+		$value			= $model->$key;
 
-		if( $hover ) {
+		$fieldName		= StringHelper::baseName( get_class( $model ) ) . '[' . $key . ']';
 
-			$ratingHtml	= "<div class='$htmlOptions'>";
-			$ratingHtml	.= "<div class='cmt-rating hover'>";
+		if( $readOnly ) {
+
+			$class = "$class read-only";
 		}
 
-		for( $i = 1; $i <= $endVal; $i++ ) {
+		if( $disabled ) {
 
-			$icon	= "<span data='$i'>&#9734;</span>";
+			$class = "$class disabled";
+		}
 
-			if( isset( $selected ) && $selected == $i ) {
+		if( $config[ 'label' ] ) {
 
-				$icon	= "<span data='$i' class='filled'>&#9733;</span>";
+			$ratingHtml	= "<label>$field->label</label><div class='element-60 $class'>"; // element-60 will work if form is configured for 40-60 split
+		}
+		else {
+
+			$ratingHtml	= "<div class='$class'>";
+		}
+
+		for( $i = 1; $i <= $stars; $i++ ) {
+
+			if( $value > 0 && $value == $i ) {
+
+				$icon	= "<span star='$i' class='star selected'></span>";
+			}
+			else {
+
+				$icon	= "<span star='$i' class='star'></span>";
 			}
 
 			$ratingHtml	  .= $icon;
 		}
 
-		$ratingHtml	.= '<input type="hidden" id="rating-count" name="'.StringHelper::baseName( get_class( $model ) ).'['.$key.']">';
+		$ratingHtml	.= '<input type="hidden" name="' . $fieldName . '" value="' . $value . '">';
 
-		$ratingHtml	.= "</div></div>";
+		$ratingHtml	.= "</div>";
 
 		return $ratingHtml;
 	}
@@ -295,7 +311,7 @@ class FormDesigner extends \yii\base\Component {
 
 		$template	= "<div class='cmt-choice $setInline clearfix'>{label}<div class='radio-group'>{input}</div><div class='help-block'>\n{hint}\n{error}</div></div>";
 
-		return $form->field( $model, "$field", [ 'template' => $template ]	)
+		return $form->field( $model, $field, [ 'template' => $template ]	)
 					->radioList(
 						$itemlist,
 						[
@@ -400,6 +416,10 @@ class FormDesigner extends \yii\base\Component {
 			case FormField::TYPE_SELECT: {
 
 				return $this->getApixSelectHtml( $config, $field, $value );
+			}
+			case FormField::TYPE_RATING: {
+
+				return $this->getApixRatingHtml( $config, $field, $value );
 			}
 			case FormField::TYPE_DATE: {
 
@@ -675,6 +695,61 @@ class FormDesigner extends \yii\base\Component {
 		return $fieldHtml;
 	}
 
+	protected function getApixRatingHtml( $config, $field, $value ) {
+
+		$class			= isset( $field->htmlOptions[ 'class' ] ) ? $field->htmlOptions[ 'class' ] : 'cmt-rating';
+		$readOnly		= isset( $field->htmlOptions[ 'read-only' ] ) ? $field->htmlOptions[ 'read-only' ] : false;
+		$disabled		= isset( $field->htmlOptions[ 'disabled' ] ) ? $field->htmlOptions[ 'disabled' ] : false;
+
+		// Prefer config on top of default
+		$readOnly		= isset( $config[ 'read-only' ] ) ? $config[ 'read-only' ] : $readOnly;
+		$disabled		= isset( $config[ 'disabled' ] ) ? $config[ 'disabled' ] : $disabled;
+
+		$stars			= isset( $config[ 'stars' ] ) ? $config[ 'stars' ] : 5;
+
+		$modelName		= $config[ 'modelName' ];
+		$fieldName		= $modelName . '[' . $field->name . ']';
+
+		if( $readOnly ) {
+
+			$class = "$class read-only";
+		}
+
+		if( $disabled ) {
+
+			$class = "$class disabled";
+		}
+
+		if( $config[ 'label' ] ) {
+
+			$ratingHtml	= "<label>$field->label</label><div class='element-60 $class'>"; // element-60 will work if form is configured for 40-60 split
+		}
+		else {
+
+			$ratingHtml	= "<div class='$class'>";
+		}
+
+		for( $i = 1; $i <= $stars; $i++ ) {
+
+			if( $value > 0 && $value == $i ) {
+
+				$icon	= "<span star='$i' class='star selected'></span>";
+			}
+			else {
+
+				$icon	= "<span star='$i' class='star'></span>";
+			}
+
+			$ratingHtml	  .= $icon;
+		}
+
+		$ratingHtml	.= '<input type="hidden" name="' . $fieldName . '" value="' . $value . '">';
+
+		$ratingHtml	.= "</div>";
+
+		return $ratingHtml;
+	}
+
 	protected function getApixDateHtml( $config, $field, $value ) {
 
 		$modelName	= $config[ 'modelName' ];
@@ -746,22 +821,24 @@ class FormDesigner extends \yii\base\Component {
 		return $fieldHtml;
 	}
 
-	public function getRatingStars( $selected, $endVal, $hover = false ) {
+	public function getRatingStars( $stars, $selected, $disabled = false, $class = 'cmt-rating' ) {
 
-		$ratingHtml	= "<div class='cmt-rating'>";
+		if( $disabled ) {
 
-		if( $hover ) {
-
-			$ratingHtml	= "<div class='cmt-rating hover'>";
+			$class = "$class disabled";
 		}
 
-		for( $i = 1; $i <= $endVal; $i++ ) {
+		$ratingHtml	= "<div class='$class'>";
 
-			$icon	= "<span data='$i'>&#9734;</span>";
+		for( $i = 1; $i <= $stars; $i++ ) {
 
-			if( isset( $selected ) && $selected == $i ) {
+			if( $selected > 0 && $selected == $i ) {
 
-				$icon	= "<span data='$i' class='filled'>&#9733;</span>";
+				$icon	= "<span star='$i' class='star selected'></span>";
+			}
+			else {
+
+				$icon	= "<span star='$i' class='star'></span>";
 			}
 
 			$ratingHtml	  .= $icon;

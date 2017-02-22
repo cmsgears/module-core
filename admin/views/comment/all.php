@@ -1,6 +1,7 @@
 <?php
 // Yii Imports
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\LinkPager;
 
 // CMG Imports
@@ -9,6 +10,8 @@ use cmsgears\core\common\utilities\CodeGenUtil;
 $title			= ucfirst( $this->context->commentUrl );
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= "All $title | " . $coreProperties->getSiteTitle();
+
+$parentUrl 		= $this->context->parentUrl;
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -69,6 +72,9 @@ if( !isset( $sortOrder ) ) {
 						</span>
 					</th>
 					<th>Status</th>
+					<?php if( $parent ) { ?>
+						<th>Parent</th>
+					<?php } ?>
 					<th>Message
 						<span class='box-icon-sort'>
 							<span sort-order='title' class="icon-sort <?php if( strcmp( $sortOrder, 'title') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
@@ -84,13 +90,18 @@ if( !isset( $sortOrder ) ) {
 					foreach( $models as $comment ) {
 
 						$id			= $comment->id;
+						$parentId	= $comment->parentId;
 						$editUrl	= Html::a( $comment->name, [ "update?id=$id" ] );
+						$content	= CodeGenUtil::getSummary( $comment->content );
 				?>
 					<tr>
 						<td><?= $editUrl ?></td>
 						<td><?= $comment->email ?></td>
 						<td><?= $comment->getStatusStr() ?></td>
-						<td><?= $comment->content ?></td>
+						<?php if( $parent ) { ?>
+							<td><a href="<?= Url::toRoute( [ $parentUrl . $parentId ], true ) ?>">parent</a></td>
+						<?php } ?>
+						<td><?= $content ?></td>
 						<td class="actions">
 							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>

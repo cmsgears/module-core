@@ -6,6 +6,9 @@ use \Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 /**
  * The class CodeGenUtil provides utility methods to generate code snippets for commonly used code.
  */
@@ -418,6 +421,14 @@ class CodeGenUtil {
 
 		return $options;
 	}
-}
 
-?>
+	public static function getSummary( $content, $limit = CoreGlobal::TEXT_LARGE ) {
+
+		if( strlen( $content ) > $limit ) {
+
+			$content	= "$content ...";
+
+			return substr( $content, 0, $limit );
+		}
+	}
+}

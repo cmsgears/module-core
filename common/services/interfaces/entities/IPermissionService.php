@@ -22,6 +22,8 @@ interface IPermissionService extends INameTypeService, ISlugTypeService {
 
 	// Read - Maps -----
 
+	public function getLeafIdNameListByType( $type, $config = [] );
+
 	// Create -------------
 
 	// Update -------------

@@ -6,6 +6,7 @@ use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\frontend\config\SiteProperties;
 use cmsgears\core\frontend\config\WebGlobalCore;
 
 use cmsgears\core\common\models\forms\Login;
@@ -24,6 +25,8 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 	protected $siteMemberService;
 
 	// Private ----------------
+
+	private $siteProperties;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -80,6 +83,16 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 	// CMG parent classes --------------------
 
 	// SiteController ------------------------
+
+	public function getSiteProperties() {
+
+		if( !isset( $this->siteProperties ) ) {
+
+			$this->siteProperties	= SiteProperties::getInstance();
+		}
+
+		return $this->siteProperties;
+	}
 
 	public function actionIndex() {
 

@@ -21,8 +21,6 @@ interface IEntityService {
 
 	public function getPublicPage( $config = [] );
 
-	public function getPageForChildSites( $config = [] );
-
 	public function getPageForSimilar( $config = [] );
 
 	// Searching
@@ -36,6 +34,8 @@ interface IEntityService {
 	public function getById( $id );
 
 	public function getByIds( $ids = [], $config = [] );
+
+	public function getSimilar( $config = [] );
 
 	public function getModels( $config = [] );
 

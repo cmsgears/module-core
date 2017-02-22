@@ -57,6 +57,7 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->upSite();
 		$this->upSiteMeta();
 		$this->upSiteMember();
+		$this->upSiteAccess();
 
 		// Files
 		$this->upFile();
@@ -403,6 +404,28 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'site_member_site', $this->prefix . 'core_site_member', 'siteId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'site_member_user', $this->prefix . 'core_site_member', 'userId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'site_member_role', $this->prefix . 'core_site_member', 'roleId' );
+	}
+
+	private function upSiteAccess() {
+
+		$this->createTable( $this->prefix . 'core_site_access', [
+			'id' => $this->bigPrimaryKey( 20 ),
+			'siteId' => $this->bigInteger( 20 )->notNull(),
+			'userId' => $this->bigInteger( 20 )->notNull(),
+			'roleId' => $this->bigInteger( 20 )->notNull(),
+			'ip' => $this->string( Yii::$app->core->mediumText )->notNull(),
+			'ipNum' => $this->integer( 11 ),
+			'url' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
+			'controller' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
+			'action' => $this->string( Yii::$app->core->largeText )->notNull(),
+			'createdAt' => $this->dateTime()->notNull(),
+			'modifiedAt' => $this->dateTime()
+		], $this->options );
+
+		// Index for columns avatar, banner and theme
+		$this->createIndex( 'idx_' . $this->prefix . 'site_access_site', $this->prefix . 'core_site_access', 'siteId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'site_access_user', $this->prefix . 'core_site_access', 'userId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'site_access_role', $this->prefix . 'core_site_access', 'roleId' );
 	}
 
 	private function upFile() {
@@ -843,6 +866,11 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'site_member_user', $this->prefix . 'core_site_member', 'userId', $this->prefix . 'core_user', 'id', 'CASCADE' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'site_member_role', $this->prefix . 'core_site_member', 'roleId', $this->prefix . 'core_role', 'id', 'CASCADE' );
 
+		// Site Access
+		$this->addForeignKey( 'fk_' . $this->prefix . 'site_access_site', $this->prefix . 'core_site_access', 'siteId', $this->prefix . 'core_site', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'site_access_user', $this->prefix . 'core_site_access', 'userId', $this->prefix . 'core_user', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'site_access_role', $this->prefix . 'core_site_access', 'roleId', $this->prefix . 'core_role', 'id', 'CASCADE' );
+
 		// File
 		$this->addForeignKey( 'fk_' . $this->prefix . 'file_creator', $this->prefix . 'core_file', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'file_modifier', $this->prefix . 'core_file', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
@@ -931,6 +959,7 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->dropTable( $this->prefix . 'core_site' );
 		$this->dropTable( $this->prefix . 'core_site_meta' );
 		$this->dropTable( $this->prefix . 'core_site_member' );
+		$this->dropTable( $this->prefix . 'core_site_access' );
 
 		$this->dropTable( $this->prefix . 'core_file' );
 		$this->dropTable( $this->prefix . 'core_gallery' );
@@ -1017,6 +1046,11 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_member_site', $this->prefix . 'core_site_member' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_member_user', $this->prefix . 'core_site_member' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_member_role', $this->prefix . 'core_site_member' );
+
+		// Site Access
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_access_site', $this->prefix . 'core_site_access' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_access_user', $this->prefix . 'core_site_access' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_access_role', $this->prefix . 'core_site_access' );
 
 		// File
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'file_creator', $this->prefix . 'core_file' );

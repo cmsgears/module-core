@@ -18,6 +18,8 @@ abstract class CommentController extends Controller {
 
 	// Public -----------------
 
+	public $parentUrl;
+
 	public $commentUrl;
 
 	// Protected --------------
@@ -110,9 +112,12 @@ abstract class CommentController extends Controller {
 			$dataProvider	= $this->modelService->getPageByParentType( $this->parentType, [ 'conditions' => [ 'type' => $this->commentType ] ] );
 		}
 
+		$parent	= empty( $pid ) ? true : false;
+
 		return $this->render( 'all', [
 			 'dataProvider' => $dataProvider,
-			 'model' => $model
+			 'model' => $model,
+			 'parent' => $parent
 		]);
 	}
 

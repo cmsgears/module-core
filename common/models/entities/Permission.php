@@ -191,6 +191,28 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
 		return $rolesList;
 	}
 
+	public function getLeafNodes() {
+
+		$permission		= CoreTables::TABLE_PERMISSION;
+		$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
+
+		return Permission::find()->leftJoin( $modelHierarchy, "`$permission`.`id` = `$modelHierarchy`.`childId`" )
+						  ->where( "`$modelHierarchy`.`parentType` = 'permission' AND `$modelHierarchy`.`parentId`=$this->id" )->all();
+	}
+
+	public function getChildrenIdList() {
+
+		$cildren		= $this->getLeafNodes();
+		$cildrenList	= array();
+
+		foreach ( $cildren as $child ) {
+
+			array_push( $cildrenList, $child->id );
+		}
+
+		return $cildrenList;
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------
@@ -228,7 +250,7 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Find ------------
 
-	public static function findL0Children( $l0Ids = [] ) {
+	public static function findLeafNodes( $l0Ids = [] ) {
 
 		$permission		= CoreTables::TABLE_PERMISSION;
 		$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;

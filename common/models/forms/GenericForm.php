@@ -31,6 +31,12 @@ class GenericForm extends \yii\base\Model {
 
 	public $captcha;
 
+	public $ajax = false;	// Is ajax processing required
+
+	public $captchaAction;		// Captcha url to handle regular forms
+
+	public $acaptchaAction;	// Captcha url to handle ajax requests
+
 	// Protected --------------
 
 	// Private ----------------
@@ -118,9 +124,27 @@ class GenericForm extends \yii\base\Model {
 		}
 
 		$rules = [
-			[ 'captcha', 'captcha', 'captchaAction' => '/forms/form/captcha', 'on' => 'captcha' ],
 			[ $this->attribs, 'safe' ]
 		];
+
+		if( $this->ajax ) {
+
+			if( empty( $this->acaptchaAction ) ) {
+
+				$this->acaptchaAction	= '/forms/form/acaptcha';
+			}
+
+			$rules[] = [ 'captcha', 'captcha', 'captchaAction' => $this->acaptchaAction, 'on' => 'captcha' ];
+		}
+		else {
+
+			if( empty( $this->captchaAction ) ) {
+
+				$this->captchaAction	= '/forms/form/captcha';
+			}
+
+			$rules[] = [ 'captcha', 'captcha', 'captchaAction' => $this->captchaAction, 'on' => 'captcha' ];
+		}
 
 		foreach ( $validators as $key => $value ) {
 

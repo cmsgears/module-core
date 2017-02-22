@@ -26,7 +26,7 @@ class PermissionController extends \cmsgears\core\admin\controllers\base\Permiss
 
 		parent::init();
 
-		$this->sidebar			= [ 'parent' => 'sidebar-identity', 'child' => 'permission' ];
+		$this->sidebar			= [ 'parent' => 'sidebar-identity', 'child' => 'perm' ];
 
 		$this->returnUrl		= Url::previous( 'permissions' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/permission/all' ], true );
@@ -48,21 +48,42 @@ class PermissionController extends \cmsgears\core\admin\controllers\base\Permiss
 
 	// PermissionController ------------------
 
+	public function actionMatrix() {
+
+		$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'matrix' ];
+
+		Url::remember( [ 'permission/matrix' ], 'roles' );
+
+		return parent::actionMatrix();
+	}
+
 	public function actionAll() {
 
-		// Remember return url for crud
 		Url::remember( [ 'permission/all' ], 'permissions' );
 
 		return parent::actionAll();
 	}
 
-	public function actionMatrix() {
+	public function actionGroups() {
 
-		$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'matrix' ];
+		$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'perm-group' ];
 
-		// Remember return url for crud
-		Url::remember( [ 'permission/matrix' ], 'roles' );
+		Url::remember( [ 'permission/groups' ], 'permissions' );
 
-		return parent::actionMatrix();
+		return parent::actionGroups();
+	}
+
+	public function actionUpdate( $id ) {
+
+		$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'perm-group' ];
+
+		return parent::actionUpdate( $id );
+	}
+
+	public function actionDelete( $id ) {
+
+		$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'perm-group' ];
+
+		return parent::actionDelete( $id );
 	}
 }

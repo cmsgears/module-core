@@ -121,7 +121,14 @@ abstract class Widget extends \yii\base\Widget {
 
 	abstract public function renderWidget( $config = [] );
 
-	public function renderAutoload( $config = [] ) {}
+	public function renderAutoload( $config = [] ) {
+
+		$autoloadView		= "$this->template/autoload";
+		$autoloadHtml[]		= $this->render( $autoloadView, [ 'widget' => $this ] );
+		$autoloadHtml		= implode( '', $autoloadHtml );
+
+		echo $autoloadHtml;
+	}
 
 	// Widget --------------------------------
 

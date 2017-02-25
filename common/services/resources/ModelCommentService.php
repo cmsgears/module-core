@@ -10,6 +10,9 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\ModelComment;
+use cmsgears\core\common\models\mappers\ModelFile;
+
+use cmsgears\files\components\FileManager;
 
 use cmsgears\core\common\services\interfaces\resources\IModelCommentService;
 
@@ -200,6 +203,36 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 		$comment->ip	= Yii::$app->request->userIP;
 
 		return parent::create( $comment, $config );
+	}
+
+	public function attachMedia( $parent, $file, $mediaType, $type ) {
+
+		$modelFile		= new ModelFile();
+		$fileService	= Yii::$app->factory->get( 'fileService' );
+
+		switch( $mediaType ) {
+
+			case FileManager::FILE_TYPE_IMAGE : {
+
+				$fileService->saveImage( $file );
+
+				break;
+			}
+
+			//TODO:: Update according to other media types.
+		}
+
+		// Create Model File
+		if( $file->id > 0 ) {
+
+			$modelFile->modelId		= $file->id;
+			$modelFile->parentType	= $type;
+			$modelFile->parentId	= $parent->id;
+
+			$modelFile->save();
+		}
+
+		return $file;
 	}
 
 	// Update -------------

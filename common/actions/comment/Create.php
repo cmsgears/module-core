@@ -8,6 +8,7 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\ModelComment;
+use cmsgears\core\common\models\resources\File;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
@@ -32,14 +33,12 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $typed 		= true;
+	public $typed 	= true;
 
-	public $parent 		= true;
+	public $status	= ModelComment::STATUS_NEW;
+	public $type	= null;
 
-	public $status		= ModelComment::STATUS_NEW;
-	public $modelType	= null;
-
-	public $setUser		= true;
+	public $setUser	= true;
 
 	/**
 	 * A comment can be created with or without scenario. The possible scenarios are - comment, review and testimonial.
@@ -79,10 +78,12 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 			$modelClass			= $modelCommentService->getModelClass();
 			$model				= new $modelClass;
 			$model->status		= $this->status;
-			$model->type		= $this->modelType;
+			$model->type		= $this->type;
 
 			$model->parentId	= $this->model->id;
-			$model->parentType	= $this->parentType;
+			$model->parentType	= $this->modelService->getParentType();
+			$mediaParam			= Yii::$app->request->get( 'media' );
+			$media				= isset( $mediaParam ) ? true : false;
 
 			// To set name and email in case user is logged in. The same details can be fetched from user table using createdBy column.
 			if( isset( $user ) && $this->setUser ) {
@@ -100,6 +101,24 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 				if( $modelCommentService->create( $model ) ) {
 
+					if( $media ) {
+
+						$filesCount	= count( Yii::$app->request->post( 'File' ) );
+						$files		= $this->initFiles( $filesCount );
+						$mediaType	= Yii::$app->request->get( 'media-type' );
+
+						//Refresh $model to get updated values
+						$model->refresh();
+
+						if( File::loadMultiple( $files, Yii::$app->request->post(), 'File' ) && File::validateMultiple( $files ) ) {
+
+							foreach( $files as $file ) {
+
+								$modelCommentService->attachMedia( $model, $file, $mediaType, ModelComment::TYPE_COMMENT );
+							}
+						}
+					}
+
 					// Trigger Ajax Success
 					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 				}
@@ -113,5 +132,17 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 		}
 
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
+
+	protected function initFiles( $count ) {
+
+		$files	= [];
+
+		for( $i = 0; $i < $count; $i++ ) {
+
+			$files[]	= new File();
+		}
+
+		return $files;
 	}
 }

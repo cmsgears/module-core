@@ -108,6 +108,28 @@ class RbacFilter extends \yii\base\Behavior {
 						return $event->isValid;
 					}
 				}
+
+				// Execute specific method of controller in action apart from filters. The method will check additional rules for configured actions.
+				if( isset( $actionConfig[ 'dynamic' ] ) ) {
+
+					$dynamic	= $actionConfig[ 'dynamic' ];
+
+					// Invalidate the action if dynamic method returns false
+					if( is_string( $dynamic ) && !$this->owner->$dynamic() ) {
+
+						// Unset event validity
+						$event->isValid = false;
+
+						return $event->isValid;
+					}
+					else if( is_array( $dynamic ) ) {
+
+						$class 	= $dynamic[ 0 ];
+						$method = $dynamic[ 1 ];
+
+						// TODO: Add support to execute static or public method of a class
+					}
+				}
 			}
 		}
 

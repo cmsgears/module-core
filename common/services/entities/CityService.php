@@ -82,18 +82,6 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Create -------------
 
-	public function create( $cityName, $config = [] ) {
-
-		$model	= new self::$modelClass();
-
-		$model->name		= $cityName;
-		$model->countryId	= $config[ 'countryId' ];
-		$model->provinceId	= $config[ 'provinceId' ];
-		$model->postal		= $config[ 'postal' ];
-
-		return parent::create( $model );
-	}
-
 	// Update -------------
 
 	// Delete -------------

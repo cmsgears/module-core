@@ -17,7 +17,11 @@ use cmsgears\core\common\utilities\DateUtil;
 
 class m160621_014408_core_data extends \yii\db\Migration {
 
-	public $prefix;
+	// Public Variables
+
+	// Private Variables
+
+	private $prefix;
 
 	// Entities
 
@@ -37,12 +41,12 @@ class m160621_014408_core_data extends \yii\db\Migration {
 
 	public function init() {
 
-		$this->prefix		= 'cmg_';
+		// Table prefix
+		$this->prefix			= Yii::$app->migration->cmgPrefix;
 
-		// Get the values via config
-		$this->siteName		= Yii::$app->migration->getSiteName();
-		$this->siteTitle	= Yii::$app->migration->getSiteTitle();
-
+		// Site config
+		$this->siteName			= Yii::$app->migration->getSiteName();
+		$this->siteTitle		= Yii::$app->migration->getSiteTitle();
 		$this->siteMaster		= Yii::$app->migration->getSiteMaster();
 
 		$this->primaryDomain	= Yii::$app->migration->getPrimaryDomain();
@@ -57,8 +61,14 @@ class m160621_014408_core_data extends \yii\db\Migration {
 		// Create default users
 		$this->insertDefaultUsers();
 
-		// Create RBAC and Site Members
+		// Create roles and permissions
 		$this->insertRolePermission();
+
+		// Create permissions
+		$this->insertGalleryPermissions();
+		$this->insertFilePermissions();
+
+		// Create Site Members
 		$this->insertSiteMembers();
 
 		// Create various config
@@ -171,6 +181,94 @@ class m160621_014408_core_data extends \yii\db\Migration {
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role_permission', $columns, $mappings );
+	}
+
+	private function insertGalleryPermissions() {
+
+		// Permissions
+
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'type', 'icon', 'group', 'description', 'createdAt', 'modifiedAt' ];
+
+		$permissions = [
+			// Permission Groups
+			[ $this->master->id, $this->master->id, 'Gallery Manager', 'gallery-manager', CoreGlobal::TYPE_SYSTEM, NULL, true, 'The permission Gallery Manager allows user to manage their galleries from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+
+			// System Permissions
+			[ $this->master->id, $this->master->id, 'View Galleries', 'view-galleries', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission view gallery allows users to view their galleries from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Add Gallery', 'add-gallery', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission add gallery allows users to create gallery from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Update Gallery', 'update-gallery', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission update gallery allows users to update gallery from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Delete Gallery', 'delete-gallery', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission delete gallery allows users to delete gallery from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
+
+		// Permission Groups
+		$galleryManagerPerm	= Permission::findBySlugType( 'gallery-manager', CoreGlobal::TYPE_SYSTEM );
+
+		// Permissions
+		$viewPerm			= Permission::findBySlugType( 'view-galleries', CoreGlobal::TYPE_SYSTEM );
+		$addPerm			= Permission::findBySlugType( 'add-gallery', CoreGlobal::TYPE_SYSTEM );
+		$updatePerm			= Permission::findBySlugType( 'update-gallery', CoreGlobal::TYPE_SYSTEM );
+		$deletePerm			= Permission::findBySlugType( 'delete-gallery', CoreGlobal::TYPE_SYSTEM );
+
+		//Hierarchy
+
+		$columns = [ 'parentId', 'childId', 'rootId', 'parentType', 'lValue', 'rValue' ];
+
+		$hierarchy = [
+			// Org Admin Hierarchy
+			[ null, null, $galleryManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 1, 10 ],
+			[ $galleryManagerPerm->id, $viewPerm->id, $galleryManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 9 ],
+			[ $galleryManagerPerm->id, $addPerm->id, $galleryManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 3, 8 ],
+			[ $galleryManagerPerm->id, $updatePerm->id, $galleryManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 4, 7 ],
+			[ $galleryManagerPerm->id, $deletePerm->id, $galleryManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 5, 6 ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_model_hierarchy', $columns, $hierarchy );
+	}
+
+	private function insertFilePermissions() {
+
+		// Permissions
+
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'type', 'icon', 'group', 'description', 'createdAt', 'modifiedAt' ];
+
+		$permissions = [
+			// Permission Groups
+			[ $this->master->id, $this->master->id, 'File Manager', 'file-manager', CoreGlobal::TYPE_SYSTEM, NULL, true, 'The permission File Manager allows user to manage their files from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+
+			// System Permissions
+			[ $this->master->id, $this->master->id, 'View Files', 'view-files', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission view files allows users to view their files from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Add File', 'add-file', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission add file allows users to create file from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Update File', 'update-file', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission update file allows users to update file from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Delete File', 'delete-file', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission delete file allows users to delete file from website.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
+
+		// Permission Groups
+		$fileManagerPerm	= Permission::findBySlugType( 'file-manager', CoreGlobal::TYPE_SYSTEM );
+
+		// Permissions
+		$viewPerm			= Permission::findBySlugType( 'view-files', CoreGlobal::TYPE_SYSTEM );
+		$addPerm			= Permission::findBySlugType( 'add-file', CoreGlobal::TYPE_SYSTEM );
+		$updatePerm			= Permission::findBySlugType( 'update-file', CoreGlobal::TYPE_SYSTEM );
+		$deletePerm			= Permission::findBySlugType( 'delete-file', CoreGlobal::TYPE_SYSTEM );
+
+		//Hierarchy
+
+		$columns = [ 'parentId', 'childId', 'rootId', 'parentType', 'lValue', 'rValue' ];
+
+		$hierarchy = [
+			// Org Admin Hierarchy
+			[ null, null, $fileManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 1, 10 ],
+			[ $fileManagerPerm->id, $viewPerm->id, $fileManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 2, 9 ],
+			[ $fileManagerPerm->id, $addPerm->id, $fileManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 3, 8 ],
+			[ $fileManagerPerm->id, $updatePerm->id, $fileManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 4, 7 ],
+			[ $fileManagerPerm->id, $deletePerm->id, $fileManagerPerm->id, CoreGlobal::TYPE_PERMISSION, 5, 6 ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_model_hierarchy', $columns, $hierarchy );
 	}
 
 	private function insertSiteMembers() {

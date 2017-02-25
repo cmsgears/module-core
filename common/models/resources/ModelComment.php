@@ -99,8 +99,8 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
 	use CreateModifyTrait;
 	use DataTrait;
-	use ResourceTrait;
 	use FileTrait;
+	use ResourceTrait;
 
 	// Constructor and Initialisation ------------------------------
 

@@ -7,7 +7,7 @@ use yii\widgets\LinkPager;
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= $coreProperties->getSiteTitle() . ' | All Provinces';
+$this->title	= 'All Cities |' . $coreProperties->getSiteTitle();
 
 // Data
 $pagination		= $dataProvider->getPagination();
@@ -28,7 +28,7 @@ if( !isset( $sortOrder ) ) {
 	<div class="header-actions col15x10">
 		<span class="frm-icon-element element-small">
 			<i class="cmti cmti-plus"></i>
-			<?= Html::a( 'Add', [ "create?cid=$countryId" ], [ 'class' => 'btn' ] ) ?>
+			<?= Html::a( 'Add', [ "create?pid=$provinceId" ], [ 'class' => 'btn' ] ) ?>
 		</span>
 	</div>
 	<div class="header-search col15x5">
@@ -59,23 +59,24 @@ if( !isset( $sortOrder ) ) {
 							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
 						</span>
 					</th>
-					<th>Code</th>
+					<th>Zone</th>
+					<th>Location</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php
 
-					foreach( $models as $province ) {
+					foreach( $models as $city ) {
 
-						$id 		= $province->id;
-						$editUrl	= Html::a( $province->name, [ "update?id=$id" ] );
+						$id 		= $city->id;
+						$editUrl	= Html::a( $city->name, [ "update?id=$id" ] );
 				?>
 					<tr>
 						<td><?= $editUrl ?></td>
-						<td><?= $province->code ?></td>
+						<td><?= $city->zone ?></td>
+						<td><?= "$city->latitude, $city->longitude" ?></td>
 						<td class="actions">
-							<span title="Cities"><?= Html::a( "", [ "province/city/all?pid=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
 							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
 							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
 						</td>

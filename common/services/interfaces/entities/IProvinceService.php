@@ -17,6 +17,8 @@ interface IProvinceService extends \cmsgears\core\common\services\interfaces\bas
 
 	public function getByCode( $code );
 
+	public function getByCountryIdCode( $countryId, $code );
+
 	// Read - Lists ----
 
 	public function getListByCountryId( $countryId );

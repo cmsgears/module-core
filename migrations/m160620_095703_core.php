@@ -15,8 +15,8 @@ class m160620_095703_core extends \yii\db\Migration {
 
 	public function init() {
 
-		// Fixed
-		$this->prefix		= 'cmg_';
+		// Table prefix
+		$this->prefix		= Yii::$app->migration->cmgPrefix;
 
 		// Get the values via config
 		$this->fk			= Yii::$app->migration->isFk();
@@ -213,12 +213,14 @@ class m160620_095703_core extends \yii\db\Migration {
 
 	private function upCity() {
 
+		// Didn't add any dedicated table for zone(sub division) of a particular province/state, hence storing name directly.
 		$this->createTable( $this->prefix . 'core_city', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'countryId' => $this->bigInteger( 20 )->notNull(),
 			'provinceId' => $this->bigInteger( 20 ),
+			'zone' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ), // It could be County in US, Tehsil in India
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
-			'postal' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
+			'postal' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'latitude' => $this->float( 4 ),
 			'longitude' => $this->float( 4 )
 		], $this->options );

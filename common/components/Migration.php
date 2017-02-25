@@ -18,6 +18,10 @@ class Migration extends \yii\base\Component {
 
 	// Public -----------------
 
+	// Table prefix
+	public $cmgPrefix		= 'cmg_'; // Used for CMSGears tables
+	public $appPrefix		= 'app_'; // Used for app tables
+
 	public $fk				= true;
 
 	public $tableOptions	= null;
@@ -34,7 +38,7 @@ class Migration extends \yii\base\Component {
 	public $uploadsUrl		= 'http://www.cmsgears.org/uploads/';
 
 	public $testAccounts	= true;
-	
+
 	public $siteSlug		= CoreGlobal::SITE_MAIN;
 	public $siteMaster		= 'demomaster';
 	public $siteContact		= 'democontact';
@@ -111,7 +115,7 @@ class Migration extends \yii\base\Component {
 
 		return $this->siteSlug;
 	}
-	
+
 	public function getSiteMaster() {
 
 		return $this->siteMaster;

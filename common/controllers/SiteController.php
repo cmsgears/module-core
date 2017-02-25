@@ -56,9 +56,9 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'activateAccount' => [ 'get', 'post' ],
-					'forgotPassword' => [ 'get', 'post' ],
-					'resetPassword' => [ 'get', 'post' ],
+					'activate-account' => [ 'get', 'post' ],
+					'forgot-password' => [ 'get', 'post' ],
+					'reset-password' => [ 'get', 'post' ],
 					'login' => [ 'get', 'post' ],
 					'logout' => [ 'get' ]
 				]

@@ -16,6 +16,7 @@ use cmsgears\core\common\models\base\CoreTables;
  * @property long $id
  * @property long $countryId
  * @property long $provinceId
+ * @property string $zone
  * @property string $name
  * @property string $postal
  * @property float $latitude
@@ -66,10 +67,10 @@ class City extends \cmsgears\core\common\models\base\Entity {
 			[ [ 'countryId', 'name' ], 'required' ],
 			[ [ 'id' ], 'safe' ],
 			// Unique
-			[ [ 'countryId', 'provinceId', 'name' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'name' ] ],
+			[ [ 'countryId', 'provinceId', 'zone', 'name' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'zone', 'name' ] ],
 			// Text Limit
-			[ 'postal', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
-			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'zone', 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ 'postal', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
 			[ [ 'countryId', 'provinceId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'latitude', 'longitude' ], 'number' ]

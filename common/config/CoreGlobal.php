@@ -108,6 +108,7 @@ class CoreGlobal {
 	const DISPLAY_TEXT_LARGE	= 350;
 	const DISPLAY_TEXT_XLARGE	= 512;
 	const DISPLAY_TEXT_XXLARGE	= 1024;
+	const DISPLAY_TEXT_XXXLARGE	= 2048;
 
 	// Hierarchy -- Nested Set -----------------------------------------
 

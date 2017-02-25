@@ -51,9 +51,9 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 		$behaviours	= parent::behaviors();
 
-		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ]			= [ 'get' ];
-		$behaviours[ 'verbs' ][ 'actions' ][ 'register' ]		= [ 'get', 'post' ];
-		$behaviours[ 'verbs' ][ 'actions' ][ 'confirmAccount' ]	= [ 'get', 'post' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ]				= [ 'get' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'register' ]			= [ 'get', 'post' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'confirm-account' ]	= [ 'get', 'post' ];
 
 		return $behaviours;
 	}

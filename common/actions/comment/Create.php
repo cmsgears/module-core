@@ -8,7 +8,6 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\ModelComment;
-use cmsgears\core\common\models\resources\File;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
@@ -33,12 +32,14 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $typed 	= true;
+	public $typed		= true;
 
-	public $status	= ModelComment::STATUS_NEW;
-	public $type	= null;
+	public $parent 		= true;
 
-	public $setUser	= true;
+	public $status		= ModelComment::STATUS_NEW;
+	public $modelType	= null;
+
+	public $setUser		= true;
 
 	/**
 	 * A comment can be created with or without scenario. The possible scenarios are - comment, review and testimonial.
@@ -78,10 +79,10 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 			$modelClass			= $modelCommentService->getModelClass();
 			$model				= new $modelClass;
 			$model->status		= $this->status;
-			$model->type		= $this->type;
+			$model->type		= $this->modelType;
 
 			$model->parentId	= $this->model->id;
-			$model->parentType	= $this->modelService->getParentType();
+			$model->parentType	= $this->parentType;
 			$mediaParam			= Yii::$app->request->get( 'media' );
 			$media				= isset( $mediaParam ) ? true : false;
 

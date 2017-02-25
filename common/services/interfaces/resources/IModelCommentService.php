@@ -41,6 +41,8 @@ interface IModelCommentService extends \cmsgears\core\common\services\interfaces
 
 	// Create -------------
 
+	public function attachMedia( $parent, $file, $mediaType, $type );
+
 	// Update -------------
 
 	public function updateSpamRequest( $model );

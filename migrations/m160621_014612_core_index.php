@@ -10,8 +10,8 @@ class m160621_014612_core_index extends \yii\db\Migration {
 
 	public function init() {
 
-		// Fixed
-		$this->prefix	= 'cmg_';
+		// Table prefix
+		$this->prefix		= Yii::$app->migration->cmgPrefix;
 	}
 
 	public function up() {

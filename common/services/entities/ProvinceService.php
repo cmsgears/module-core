@@ -91,6 +91,13 @@ class ProvinceService extends \cmsgears\core\common\services\base\EntityService 
 		return $modelClass::findByCode( $code );
 	}
 
+	public function getByCountryIdCode( $countryId, $code ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findByCountryIdCode( $countryId, $code );
+	}
+
 	// Read - Lists ----
 
 	public function getListByCountryId( $countryId ) {

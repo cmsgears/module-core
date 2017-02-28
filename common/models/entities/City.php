@@ -168,46 +168,42 @@ class City extends \cmsgears\core\common\models\base\Entity {
 		return parent::queryWithAll( $config );
 	}
 
+	public static function queryByCountryId( $countryId ) {
+
+		return self::find()->where( 'countryId=:id', [ ':id' => $countryId ] );
+	}
+
+	public static function queryByProvinceId( $provinceId ) {
+
+		return self::find()->where( 'provinceId=:id', [ ':id' => $provinceId ] );
+	}
+
+	public static function queryByCountryIdProvinceId( $countryId, $provinceId ) {
+
+		return self::find()->where( 'countryId=:cid AND provinceId=:pid', [ ':cid' => $countryId, ':pid' => $provinceId ] );
+	}
+
 	// Read - Find ------------
 
 	/**
-	 * @return array - by country id
+	 * @return Province - by name, country id, province id and zone
 	 */
-	public static function findByCountryId( $countryId ) {
+	public static function findUnique( $name, $countryId, $provinceId, $zone = null ) {
 
-		return self::find()->where( 'countryId=:id', [ ':id' => $countryId ] )->all();
-	}
+		if( isset( $zone ) ) {
 
-	/**
-	 * @return array - by province id
-	 */
-	public static function findByProvinceId( $provinceId ) {
-
-		return self::find()->where( 'provinceId=:id', [ ':id' => $provinceId ] )->all();
-	}
-
-	/**
-	 * @return Province - by country id and province id
-	 */
-	public static function findByCountryIdProvinceId( $countryId, $provinceId ) {
-
-		return self::find()->where( 'countryId=:cid AND provinceId=:pid', [ ':cid' => $countryId, ':pid' => $provinceId ] )->all();
-	}
-
-	/**
-	 * @return Province - by name, country id and province id
-	 */
-	public static function findByNameCountryIdProvinceId( $name, $countryId, $provinceId ) {
+			return self::find()->where( 'name=:name AND countryId=:cid AND provinceId=:pid AND zone=:zone', [ ':name' => $name, ':cid' => $countryId, ':pid' => $provinceId, ':zone' => $zone ] )->one();
+		}
 
 		return self::find()->where( 'name=:name AND countryId=:cid AND provinceId=:pid', [ ':name' => $name, ':cid' => $countryId, ':pid' => $provinceId ] )->one();
 	}
 
 	/**
-	 * @return Province - check whether a province exist by the provided name and country id
+	 * @return Province - check whether a city exist by the provided namem country id, province id and zone
 	 */
-	public static function isExistByNameCountryIdProvinceId( $name, $countryId, $provinceId ) {
+	public static function isUniqueExist( $name, $countryId, $provinceId, $zone = null ) {
 
-		$city = self::findByNameCountryIdProvinceId( $name, $countryId, $provinceId );
+		$city = self::findUnique( $name, $countryId, $provinceId, $zone );
 
 		return isset( $city );
 	}

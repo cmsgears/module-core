@@ -13,6 +13,8 @@ use cmsgears\core\common\models\entities\City;
 
 use cmsgears\core\common\services\interfaces\entities\ICityService;
 
+use cmsgears\core\common\services\traits\NameTrait;
+
 class CityService extends \cmsgears\core\common\services\base\EntityService implements ICityService {
 
 	// Variables ---------------------------------------------------
@@ -41,6 +43,8 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Traits ------------------------------------------------------
 
+	use NameTrait;
+
 	// Constructor and Initialisation ------------------------------
 
 	// Instance methods --------------------------------------------
@@ -53,27 +57,24 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// CMG parent classes --------------------
 
-	// CountryService ------------------------
+	// CityService ---------------------------
 
 	// Data Provider ------
 
 	// Read - Lists ----
 
-	public function searchLike( $query, $province ) {
+	public function getUnique( $name, $countryId, $provinceId, $zone = null ) {
 
 		$modelClass	= self::$modelClass;
 
-		return $modelClass::find()->where( [ 'like', 'name', $query ] )
-					->andWhere( 'provinceId=:provinceId' ,[ ":provinceId" =>  $province ] )
-					->limit( 5 )
-					->all();
+		return $modelClass::findUnique( $name, $countryId, $provinceId, $zone );
 	}
 
-	public function getByNameCountryIdProvinceId( $name, $countryId, $provinceId ) {
+	public function isUniqueExist( $name, $countryId, $provinceId, $zone = null ) {
 
 		$modelClass	= self::$modelClass;
 
-		return $modelClass::isExistByNameCountryIdProvinceId( $name, $countryId, $provinceId );
+		return $modelClass::isUniqueExist( $name, $countryId, $provinceId, $zone );
 	}
 
 	// Read - Maps -----
@@ -90,7 +91,7 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// CMG parent classes --------------------
 
-	// CountryService ------------------------
+	// CityService ---------------------------
 
 	// Data Provider ------
 

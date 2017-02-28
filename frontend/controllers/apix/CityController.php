@@ -4,13 +4,14 @@ namespace cmsgears\core\frontend\controllers\apix;
 // Yii Imports
 use \Yii;
 use yii\filters\VerbFilter;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class GalleryController extends \cmsgears\core\frontend\controllers\base\Controller {
+class CityController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -30,7 +31,7 @@ class GalleryController extends \cmsgears\core\frontend\controllers\base\Control
 
 		$this->crudPermission	= CoreGlobal::PERM_USER;
 
-		$this->modelService		= Yii::$app->factory->get( 'galleryService' );
+		$this->modelService		= Yii::$app->factory->get( 'cityService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -47,27 +48,15 @@ class GalleryController extends \cmsgears\core\frontend\controllers\base\Control
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'create-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ],
-					'delete-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ]
+					'auto-search' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'create-item' => [ 'post' ],
-					'delete-item' => [ 'post' ]
+					'auto-search' => [ 'post' ]
 				]
 			]
-		];
-	}
-
-	// yii\base\Controller ----
-
-	public function actions() {
-
-		return [
-			'create-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\CreateItem' ],
-			'delete-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\DeleteItem' ]
 		];
 	}
 
@@ -75,5 +64,20 @@ class GalleryController extends \cmsgears\core\frontend\controllers\base\Control
 
 	// CMG parent classes --------------------
 
-	// GalleryController ---------------------
+	// CityController ------------------------
+
+	public function actionAutoSearch() {
+
+		$provinceId	= Yii::$app->request->post( 'province-id' );
+		$name		= Yii::$app->request->post( 'name' );
+
+		$cities		= $this->modelService->searchByName( $name, [
+							'limit' => 5,
+							'conditions' => [ 'provinceId' => $provinceId ],
+							'columns' => [ 'id', 'name', 'latitude', 'longitude', 'postal' ]
+						]);
+
+		// Trigger Ajax Success
+		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $cities );
+	}
 }

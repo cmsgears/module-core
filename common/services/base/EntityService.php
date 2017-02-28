@@ -1026,6 +1026,9 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		$nameAlias		= isset( $config[ 'nameAlias' ] ) ? $config[ 'nameAlias' ] : 'name';
 		$valueAlias		= isset( $config[ 'valueAlias' ] ) ? $config[ 'valueAlias' ] : 'value';
 
+		// limit
+		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
+
 		// query generation
 		$query			= new Query();
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
@@ -1056,6 +1059,13 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 				$query	= $query->andFilterWhere( $filter );
 			}
+		}
+
+		// Limit ---------------
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
 		}
 
 		// Quering -------------

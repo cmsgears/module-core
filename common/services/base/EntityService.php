@@ -4,7 +4,6 @@ namespace cmsgears\core\common\services\base;
 // Yii Imports
 use \Yii;
 use yii\db\Query;
-use yii\data\ActiveDataProvider;
 use yii\db\Expression;
 use yii\data\Sort;
 
@@ -19,6 +18,8 @@ use cmsgears\core\common\models\interfaces\IVisibility;
 use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\services\interfaces\base\IEntityService;
+
+use cmsgears\core\common\data\ActiveDataProvider;
 
 /**
  * The class EntityService defines several useful methods used for pagination and generating map

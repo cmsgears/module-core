@@ -107,8 +107,9 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_TITLE => 'Title',
 		CoreGlobal::FIELD_TYPE => 'Type',
 		CoreGlobal::FIELD_ICON => 'Icon',
-		CoreGlobal::FIELD_VALUE_TYPE => 'Value Type',
+		CoreGlobal::FIELD_KEY => 'Key',
 		CoreGlobal::FIELD_VALUE => 'Value',
+		CoreGlobal::FIELD_VALUE_TYPE => 'Value Type',
 		CoreGlobal::FIELD_DESCRIPTION => 'Description',
 		CoreGlobal::FIELD_NOTES => 'Notes',
 

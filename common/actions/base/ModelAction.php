@@ -114,7 +114,7 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 			$this->parentType	= isset( $this->parentType ) ? $this->parentType : $this->modelService->getParentType();
 		}
 
-		// In certain situations controller can provided the model directly. In case it's not provided by controller, we discover it using model service and url parameters.
+		// In certain situations controller can provide the model directly. In case it's not provided by controller, we discover it using model service and url parameters.
 		if( !isset( $this->model ) ) {
 
 			// Read slug from url

@@ -16,6 +16,7 @@ use cmsgears\core\common\services\interfaces\entities\IUserService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
 use cmsgears\core\common\services\traits\ApprovalTrait;
+use cmsgears\core\common\services\traits\DataTrait;
 use cmsgears\core\common\services\traits\ModelMetaTrait;
 
 use cmsgears\core\common\utilities\DateUtil;
@@ -54,6 +55,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	// Traits ------------------------------------------------------
 
 	use ApprovalTrait;
+	use DataTrait;
 	use ModelMetaTrait;
 
 	// Constructor and Initialisation ------------------------------

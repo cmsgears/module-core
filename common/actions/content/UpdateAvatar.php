@@ -73,7 +73,7 @@ class UpdateAvatar extends \cmsgears\core\common\actions\base\ModelAction {
 				$this->model->refresh();
 
 				$avatar		= $this->model->avatar;
-				$response	= [ 'fileUrl' => $avatar->getFileUrl() ];
+				$response	= [ 'thumbUrl' => $avatar->getThumbUrl(), 'fileUrl' => $avatar->getFileUrl() ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );

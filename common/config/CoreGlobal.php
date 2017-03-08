@@ -261,8 +261,9 @@ class CoreGlobal {
 	const FIELD_TITLE				= 'titleField';
 	const FIELD_TYPE				= 'typeField';
 	const FIELD_ICON				= 'iconField';
-	const FIELD_VALUE_TYPE			= 'valueTypeField';
+	const FIELD_KEY					= 'keyField';
 	const FIELD_VALUE				= 'valueField';
+	const FIELD_VALUE_TYPE			= 'valueTypeField';
 	const FIELD_DESCRIPTION			= 'descField';
 	const FIELD_NOTES				= 'notesField';
 

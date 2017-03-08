@@ -1,7 +1,7 @@
 <?php
 namespace cmsgears\core\common\data;
 
-class ActiveDataProvider extends yii\data\ActiveDataProvider {
+class ActiveDataProvider extends \yii\data\ActiveDataProvider {
 
     /**
      * @inheritdoc
@@ -12,4 +12,3 @@ class ActiveDataProvider extends yii\data\ActiveDataProvider {
 		return parent::prepareTotalCount();
     }
 }
-

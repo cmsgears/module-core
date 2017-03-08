@@ -47,6 +47,7 @@ trait DataTrait {
 
 		$this->setDataMeta( $name, $value, $assoc );
 
+		// Save model meta state
 		$this->update();
 	}
 
@@ -57,5 +58,8 @@ trait DataTrait {
 		unset( $object->$name );
 
 		$this->generateJsonFromObject( $object );
+
+		// Save model meta state
+		$this->update();
 	}
 }

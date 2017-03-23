@@ -55,9 +55,13 @@ trait ApprovalTrait {
 		'terminated' => IApproval::STATUS_TERMINATED
 	];
 
-	public function getStatusStr() {
+	public function getStatusStr( $strict = false ) {
 
-		if( $this->status >= IApproval::STATUS_SUBMITTED ) {
+		if( $strict ) {
+
+			return self::$statusMap[ $this->status ];
+		}
+		else if( $this->status >= IApproval::STATUS_SUBMITTED ) {
 
 			return self::$statusMap[ $this->status ];
 		}

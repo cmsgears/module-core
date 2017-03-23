@@ -27,6 +27,8 @@ class Editor extends \cmsgears\core\common\base\Widget {
 
 	public $selector;
 
+	public $config = [];
+
 	// Protected --------------
 
 	// Private ----------------
@@ -54,7 +56,7 @@ class Editor extends \cmsgears\core\common\base\Widget {
 		$editorClass	= Yii::$app->core->getEditorClass();
 		$editor			= Yii::createObject( $editorClass );
 
-		$editor->widget( [ 'selector' => $this->selector, 'loadAssets' => $this->loadAssets ] );
+		$editor->widget( [ 'selector' => $this->selector, 'config' => $this->config, 'loadAssets' => $this->loadAssets ] );
 	}
 
 	// Editor --------------------------------

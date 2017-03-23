@@ -61,6 +61,24 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Data Provider ------
 
+	public function getPage( $config = [] ) {
+
+		$sort = new Sort([
+			'attributes' => [
+				'name' => [
+					'asc' => [ 'name' => SORT_ASC ],
+					'desc' => ['name' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
+				]
+			]
+		]);
+
+		$config[ 'sort' ] = $sort;
+
+		return parent::findPage( $config );
+	}
+
 	// Read - Lists ----
 
 	public function getUnique( $name, $countryId, $provinceId, $zone = null ) {

@@ -128,11 +128,12 @@ abstract class PermissionController extends CrudController {
 			return $this->redirect( $this->returnUrl );
 		}
 
-		$roles	= $this->roleService->getIdNameListByType( $this->type );
+		$roles			= $this->roleService->getIdNameListByType( $this->type );
+		//$permissions	= $this->modelService->getLeafIdNameListByType( $this->type );
 
 		return $this->render( 'create', [
 			'model' => $model,
-			'permissionMap' => $permissionMap,
+			//'permissions' => $permissions,
 			'roles' => $roles
 		]);
 	}

@@ -91,8 +91,12 @@ class UpdateMeta extends \cmsgears\core\common\base\Action {
 
 					$this->metaService->update( $meta );
 
+					$meta->refresh();
+
+					$data	= [ 'id' => $meta->id, 'name' => $meta->name, 'value' => $meta->value ];
+
 					// Trigger Ajax Success
-					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
+					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 				}
 
 				// Generate Errors

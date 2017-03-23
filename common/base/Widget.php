@@ -123,11 +123,7 @@ abstract class Widget extends \yii\base\Widget {
 
 	public function renderAutoload( $config = [] ) {
 
-		$autoloadView		= "$this->template/autoload";
-		$autoloadHtml[]		= $this->render( $autoloadView, [ 'widget' => $this ] );
-		$autoloadHtml		= implode( '', $autoloadHtml );
-
-		return $autoloadHtml;
+		return $this->render( "$this->template/autoload", [ 'widget' => $this ] );
 	}
 
 	// Widget --------------------------------

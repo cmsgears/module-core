@@ -148,6 +148,7 @@ class CoreGlobal {
 	const DATA_CONFIG				= 'config';
 	const DATA_SOCIAL_LINKS			= 'socialLinks';
 	const DATA_REJECT_REASON		= 'rejectReason';
+	const DATA_TERMINATE_REASON		= 'terminateReason';
 	const DATA_APPROVAL_REQUEST		= 'approvalRequest';
 
 	// model attributes

@@ -386,6 +386,11 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 		return '';
 	}
 
+	public function getFullName() {
+
+		return $this->firstName . ' ' . $this->lastName;
+	}
+
 	/**
 	 * @return user name from email in case it's not set by user
 	 */

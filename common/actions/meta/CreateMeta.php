@@ -83,28 +83,28 @@ class CreateMeta extends \cmsgears\core\common\base\Action {
 		// Delete meta
 		if( isset( $parent ) ) {
 
-			$metaClass	= $this->metaService->getModelClass();
-			$meta		= new $metaClass;
+			$metaClass		= $this->metaService->getModelClass();
+			$meta			= new $metaClass;
+			$meta->modelId	= $parent->id;
 
-			if( isset( $meta ) && $meta->isBelongsTo( $parent ) ) {
+			if( $meta->load( Yii::$app->request->post(), $meta->getClassName() ) && $meta->validate() ) {
 
-				if( $meta->load( Yii::$app->request->post(), $meta->getClassName() ) && $meta->validate() ) {
+				$this->metaService->create( $meta );
 
-					$this->metaService->create( $meta );
+				$data	= [ 'id' => $meta->id, 'name' => $meta->name, 'value' => $meta->value ];
 
-					// Trigger Ajax Success
-					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
-				}
-
-				// Generate Errors
-				$errors = AjaxUtil::generateErrorMessage( $model );
-
-				// Trigger Ajax Failure
-				return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 			}
+
+			// Generate Errors
+			$errors = AjaxUtil::generateErrorMessage( $meta );
+
+			// Trigger Ajax Failure
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
 
 		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }

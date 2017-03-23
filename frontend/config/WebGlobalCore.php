@@ -23,5 +23,7 @@ class WebGlobalCore {
 
 	// Private
 	const PAGE_PROFILE			= 'profile';
+	const PAGE_ACCOUNT			= 'account';
+	const PAGE_ADDRESS			= 'address';
 	const PAGE_SETTINGS			= 'settings';
 }

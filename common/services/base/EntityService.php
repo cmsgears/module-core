@@ -585,6 +585,9 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		$searchCol		= isset( $config[ 'search-col' ] ) ? $config[ 'search-col' ] : [];
 		$sort			= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
 
+		// report
+		$reportCol		= isset( $config[ 'report-col' ] ) ? $config[ 'report-col' ] : [];
+
 		// url generation
 		$route			= isset( $config[ 'route' ] ) ? $config[ 'route' ] : null;
 
@@ -622,6 +625,83 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 			foreach ( $filters as $filter ) {
 
 				$query	= $query->andFilterWhere( $filter );
+			}
+		}
+
+		// Reporting -----------
+
+		$report	= Yii::$app->request->getQueryParam( 'report' );
+
+		if( isset( $report ) && $report ) {
+
+			$reportColumns	= [];
+
+			foreach ( $reportCol as $key => $column ) {
+
+				if( !is_string( $key ) ) {
+
+					$key = $column;
+				}
+				else {
+
+				}
+
+				$find	= Yii::$app->request->getQueryParam( "$key-find" );
+				$match	= Yii::$app->request->getQueryParam( "$key-match" );
+				$start	= Yii::$app->request->getQueryParam( "$key-start" );
+				$end	= Yii::$app->request->getQueryParam( "$key-end" );
+
+				if( isset( $find ) ) {
+
+					$reportColumns[ $column ][ 'find' ] = $find;
+				}
+
+				if( isset( $match ) ) {
+
+					$reportColumns[ $column ][ 'match' ] = $match;
+				}
+
+				if( isset( $start ) ) {
+
+					$reportColumns[ $column ][ 'start' ] = $start;
+				}
+
+				if( isset( $end ) ) {
+
+					$reportColumns[ $column ][ 'end' ] = $end;
+				}
+			}
+
+			foreach ( $reportColumns as $key => $column ) {
+
+				$find	= isset( $column[ 'find' ] ) ? $column[ 'find' ] : null;
+				$match	= isset( $column[ 'match' ] ) ? $column[ 'match' ] : null;
+				$start	= isset( $column[ 'start' ] ) ? $column[ 'start' ] : null;
+				$end	= isset( $column[ 'end' ] ) ? $column[ 'end' ] : null;
+
+				if( isset( $find ) ) {
+
+					$query->andFilterWhere( [ 'like', $key, $find ] );
+				}
+
+				if( isset( $match ) ) {
+
+					// TODO: Check for numerical and string matches
+					$query->andWhere( "$key=:match", [ ':match' => $match ] );
+				}
+
+				if( isset( $start ) && isset( $end ) ) {
+
+					$query->andWhere( "$key BETWEEN ':start' AND ':end'", [ ':start' => $start, ':end' => $end ] );
+				}
+				else if( isset( $start ) ) {
+
+					$query->andWhere( "$key >= '$start'" );
+				}
+				else if( isset( $end ) ) {
+
+					$query->andWhere( "$key <= '$end'" );
+				}
 			}
 		}
 

@@ -89,8 +89,10 @@ class DeleteMeta extends \cmsgears\core\common\base\Action {
 
 				$this->metaService->delete( $meta );
 
+				$data	= [ 'id' => $meta->id, 'name' => $meta->name, 'value' => $meta->value ];
+
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 			}
 		}
 

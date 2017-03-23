@@ -19,7 +19,7 @@ class JqueryUi extends \yii\web\AssetBundle {
 	// Public -----------------
 
 	// Path Configuration
-	public $sourcePath = '@bower/jquery-ui/ui/minified';
+	public $sourcePath = '@bower/jquery-ui';
 
 	// Load Javascript
 	public $js = [

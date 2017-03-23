@@ -23,7 +23,7 @@ use cmsgears\widgets\aform\AjaxForm;
 		<p>No settings found.</p>
 		<?php } ?>
 	</div>
-	<div class="wrap-form frm-split-40-60">
+	<div class="row row-large wrap-form frm-split-40-60">
 		<?php if( isset( $fieldsMap ) && count( $fieldsMap ) > 0 ) { ?>
 
 		<?= AjaxForm::widget([
@@ -31,7 +31,7 @@ use cmsgears\widgets\aform\AjaxForm;
 			'slug' => "config-$type", 'type' => CoreGlobal::TYPE_SYSTEM,
 			'showLabel' => true, 'model' => $model,
 			'ajaxUrl' => "core/settings/update?type=$type",
-			'cmtController' => 'settings', 'cmtAction' => 'update',
+			'cmtApp' => 'site', 'cmtController' => 'settings', 'cmtAction' => 'update',
 			'modelName' => "setting$type"
 		])?>
 

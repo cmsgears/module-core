@@ -7,22 +7,51 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title	= 'Settings | ' . $coreProperties->getSiteTitle();
 
 $settings		= Yii::$app->sidebar->getConfig();
+
+$total	= count( $settings );
+$first	= ceil( $total / 2 );
+$last	= $total - $first;
+$count	= 0;
+
+$left	= '';
+$right	= '';
 ?>
 
-<div class="wrap-settings clearfix">
-<?php foreach ( $settings as $setting ) { ?>
+<?php
+	foreach ( $settings as $setting ) {
 
-	<div class="box box-collapsible box-settings col12x6">
+		ob_start();
+?>
+	<div class="box box-collapsible box-settings">
 		<div class="box-wrap-header">
-			<span id="settings-<?= $setting ?>" class="cmt-request" content="settings-<?= $setting ?>-content" cmt-controller="settings" cmt-action="getContent" action="settings/index?type=<?= $setting ?>">
-				<span class="cmt-click btn-collapse cmti cmti-chevron-down"></span>
+			<span class="btn-collapse cmti cmti-chevron-down"></span>
+			<span id="settings-<?= $setting ?>" content="settings-<?= $setting ?>-content" cmt-app="site" cmt-controller="settings" cmt-action="getContent" action="settings/index?type=<?= $setting ?>">
+				<span class="cmt-click collapse-trigger"></span>
 			</span>
 			<span><?= ucfirst( $setting ) ?></span>
 		</div>
 		<div id="settings-<?= $setting ?>-content" class="box-wrap-content clearfix"></div>
 	</div>
 
-<?php } ?>
+<?php
+		if( $count < $first ) {
+
+			$left .= ob_get_contents();
+		}
+		else {
+
+			$right .= ob_get_contents();
+		}
+
+		ob_get_clean();
+
+		$count++;
+	}
+?>
+
+<div class="row wrap-settings">
+	<div class="col col12x6"><?= $left ?></div>
+	<div class="col col12x6"><?= $right ?></div>
 </div>
 
 <!-- Templates -->

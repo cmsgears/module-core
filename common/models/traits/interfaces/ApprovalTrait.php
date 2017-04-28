@@ -94,7 +94,7 @@ trait ApprovalTrait {
 		return $this->status == IApproval::STATUS_SUBMITTED || $this->status == IApproval::STATUS_RE_SUBMIT;
 	}
 
-	public function isBelowSubmitted( $strict = true ) {
+	public function isBelowRejected( $strict = true ) {
 
 		if( $strict ) {
 
@@ -122,6 +122,16 @@ trait ApprovalTrait {
 		}
 
 		return $this->status >= IApproval::STATUS_RE_SUBMIT;
+	}
+
+	public function isBelowConfirmed( $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->status < IApproval::STATUS_CONFIRMED;
+		}
+
+		return $this->status <= IApproval::STATUS_CONFIRMED;
 	}
 
 	public function isConfirmed( $strict = true ) {

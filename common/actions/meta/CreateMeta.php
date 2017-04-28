@@ -85,7 +85,16 @@ class CreateMeta extends \cmsgears\core\common\base\Action {
 
 			$metaClass		= $this->metaService->getModelClass();
 			$meta			= new $metaClass;
-			$meta->modelId	= $parent->id;
+
+			if( $meta->hasAttribute( 'modelId' ) ) {
+
+				$meta->modelId	= $parent->id;
+			}
+			else {
+
+				$meta->parentId		= $parent->id;
+				$meta->parentType	= $this->modelService->getParentType();
+			}
 
 			if( $meta->load( Yii::$app->request->post(), $meta->getClassName() ) && $meta->validate() ) {
 

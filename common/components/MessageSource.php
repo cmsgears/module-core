@@ -40,8 +40,8 @@ class MessageSource extends \yii\base\Component {
 		// Errors - Generic
 		CoreGlobal::ERROR_REQUEST => 'Your request was not processed. Please correct the highlighted errors and submit again.',
 		CoreGlobal::ERROR_NOT_FOUND => 'The requested resource does not exist.',
-		CoreGlobal::ERROR_NOT_ALLOWED => 'You are not allowed to perform this action.',
 		CoreGlobal::ERROR_NO_ACCESS => 'You are not allowed to access this resource.',
+		CoreGlobal::ERROR_NOT_ALLOWED => 'You are not allowed to perform this action.',
 		CoreGlobal::ERROR_EXIST => 'An entry with the same name already exist. Please provide a different name.',
 		CoreGlobal::ERROR_SELECT => 'Please choose a valid value.',
 		CoreGlobal::ERROR_URL_ENTITY => 'An entry with the same url already exist.',

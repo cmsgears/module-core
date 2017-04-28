@@ -115,6 +115,11 @@ class ModelMeta extends \cmsgears\core\common\models\base\Meta {
 
 	// ModelMeta -----------------------------
 
+	public function belongsTo( $model, $parentType ) {
+
+		return $this->parentId == $model->id && $this->parentType == $parentType;
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------

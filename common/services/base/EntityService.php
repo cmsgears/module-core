@@ -268,14 +268,24 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		// query generation
 		$results		= [];
 
+		$query			= $modelClass::find();
+
 		if( isset( $conditions ) ) {
 
-			$results = $modelClass::find()->where( $conditions )->orderBy( 'RAND()' )->limit( $limit )->all();
-		}
-		else {
+			foreach ( $conditions as $ckey => $condition ) {
 
-			$results = $modelClass::find()->orderBy( 'RAND()' )->limit( $limit )->all();
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
 		}
+
+		$results = $query->orderBy( 'RAND()' )->limit( $limit )->all();
 
 		return $results;
 	}
@@ -597,7 +607,17 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		if( isset( $conditions ) ) {
 
-			$query	= $query->andWhere( $conditions );
+			foreach ( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
 		}
 
 		// Random -------------
@@ -939,7 +959,17 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		if( isset( $conditions ) ) {
 
-			$query	= $query->andWhere( $conditions );
+			foreach ( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
 		}
 
 		// Filters -------------
@@ -1041,13 +1071,21 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		// Conditions ----------
 
+		$query->select( $column )->from( $tableName );
+
 		if( isset( $conditions ) ) {
 
-			$query->select( $column )->from( $tableName )->where( $conditions );
-		}
-		else {
+			foreach ( $conditions as $ckey => $condition ) {
 
-			$query->select( $column )->from( $tableName );
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
 		}
 
 		// Filters -------------
@@ -1111,7 +1149,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
 
 		// query generation
-		$query			= new Query();
+		$query			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : new Query();
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
 
@@ -1121,15 +1159,22 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		// Conditions ----------
 
+		$query->select( [ "$nameColumn as $nameAlias", "$valueColumn as $valueAlias" ] )
+			  ->from( $tableName );
+
 		if( isset( $conditions ) ) {
 
-			$query->select( [ "$nameColumn as $nameAlias", "$valueColumn as $valueAlias" ] )
-				  ->from( $tableName )->where( $conditions );
-		}
-		else {
+			foreach ( $conditions as $ckey => $condition ) {
 
-			$query->select( [ "$nameColumn as $nameAlias", "$valueColumn as $valueAlias" ] )
-				  ->from( $tableName );
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
 		}
 
 		// Filters -------------
@@ -1240,7 +1285,17 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		if( isset( $conditions ) ) {
 
-			$query	= $query->andWhere( $conditions );
+			foreach ( $conditions as $ckey => $condition ) {
+
+				if( is_numeric( $ckey ) ) {
+
+					$query->andWhere( $condition );
+
+					unset( $conditions[ $ckey ] );
+				}
+			}
+
+			$query->andWhere( $conditions );
 		}
 
 		// Filters -------------

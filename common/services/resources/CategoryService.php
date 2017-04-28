@@ -70,26 +70,67 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 
 	public function getPage( $config = [] ) {
 
+		$modelTable = static::$modelTable;
+		$modelClass	= static::$modelClass;
+
+		// Sorting ----------
+
 		$sort = new Sort([
 			'attributes' => [
 				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Name',
 				],
 				'parent' => [
-					'asc' => [ 'parentId' => SORT_ASC ],
-					'desc' => ['parentId' => SORT_DESC ],
+					'asc' => [ 'parent.name' => SORT_ASC ],
+					'desc' => [ 'parent.name' => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Parent',
 				]
 			]
 		]);
 
-		$config[ 'sort' ] = $sort;
+		$config[ 'sort' ] 	= $sort;
 
-		return parent::findPage( $config );
+		// Query ------------
+
+		$query 	= $modelClass::find()->joinWith( 'parent' );
+
+		// Filters ----------
+
+		// Filter - Level
+		$parent	= Yii::$app->request->getQueryParam( 'parent' );
+
+		if( isset( $parent ) ) {
+
+			if( $parent === 'top' ) {
+
+				$query->andWhere( "$modelTable.parentId IS NULL" );
+			}
+		}
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [ 'name' => "$modelTable.name", 'desc' => "$modelTable.description" ];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [ 'name' => "$modelTable.name", 'desc' => "$modelTable.description", 'pname' => 'parent.name', 'pdesc' => 'parent.description' ];
+
+		// Result -----------
+
+		$config[ 'query' ]	= $query;
+
+		return parent::getPage( $config );
 	}
 
 	// Read ---------------

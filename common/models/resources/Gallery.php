@@ -208,6 +208,15 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwn
 		return Yii::$app->formatter->asBoolean( $this->active );
 	}
 
+	/**
+	 * THe method belongsTo check whether the gallery belongs to given model. The model must have galleryId column.
+	 * @return boolean
+	 */
+	public function belongsTo( $model ) {
+
+		return $this->id == $model->galleryId;
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------

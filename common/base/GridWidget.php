@@ -30,14 +30,21 @@ abstract class GridWidget extends Widget {
 
 	// Public -----------------
 
+	public $template	= 'simple';
+
 	// HTML options used by the widget div
-	public $options	= [ 'class' => 'grid-data' ];
+	public $options		= [ 'class' => 'grid-data' ];
 
 	// Additional data
-	public $data = [];
+	public $data 		= [];
+
+	public $provider 	= true; // Flag to check whether data provider is required
 
 	// Data provider having sort, pagination and query to provide data
 	public $dataProvider;
+
+	// Models - used instead of data provider
+	public $models;
 
 	public $limits = [ 12, 20, 28, 36 ];
 	public $limit = 12;
@@ -50,6 +57,9 @@ abstract class GridWidget extends Widget {
 
 	// Url to add model
 	public $addUrl = 'add';
+
+	// Add using popup
+	public $addPopup = false;
 
 	// Widget Sections
 	public $sort = true;
@@ -114,6 +124,16 @@ abstract class GridWidget extends Widget {
 	public $import = false;
 	public $export = false;
 
+	// Grid having static columns
+	public $fixedColumns	= [];
+
+	public $leftColumns		= [];
+	public $rightColumns	= [];
+
+	public $leftCols	= 1;
+	public $midCols		= 1;
+	public $rightCols	= 1;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -126,7 +146,7 @@ abstract class GridWidget extends Widget {
 
 		parent::init();
 
-        if( empty( $this->dataProvider ) ) {
+        if( $this->provider && !isset( $this->dataProvider ) ) {
 
             throw new InvalidConfigException( 'Data provider is required to generate grid.' );
         }
@@ -156,7 +176,10 @@ abstract class GridWidget extends Widget {
 			$this->limit = $limit;
 		}
 
-		$this->dataProvider->pagination->pageSize = $this->limit;
+		if( isset( $this->dataProvider ) ) {
+
+			$this->dataProvider->pagination->pageSize = $this->limit;
+		}
 
 		// Layout
 		$user			= Yii::$app->user->getIdentity();

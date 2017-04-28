@@ -83,9 +83,10 @@ class UpdateMeta extends \cmsgears\core\common\base\Action {
 		// Delete Meta
 		if( isset( $parent ) ) {
 
-			$meta	= $this->metaService->getById( $id );
+			$meta		= $this->metaService->getById( $id );
+			$belongsTo	= $meta->hasAttribute( 'modelId' ) ? $meta->belongsTo( $parent ) : $meta->belongsTo( $parent, $this->modelService->getParentType() );
 
-			if( isset( $meta ) && $meta->isBelongsTo( $parent ) ) {
+			if( isset( $meta ) && $belongsTo ) {
 
 				if( $meta->load( Yii::$app->request->post(), $meta->getClassName() ) && $meta->validate() ) {
 

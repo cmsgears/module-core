@@ -58,7 +58,7 @@ trait ModelMetaTrait {
 
 		foreach ( $metas as $meta ) {
 
-			if( $model->id == $meta->parentId ) {
+			if( $meta->belongsTo( $model, self::$parentType ) ) {
 
 				$modelMetaService->update( $meta );
 			}

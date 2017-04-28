@@ -166,7 +166,9 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 	 */
 	public function getParent() {
 
-		return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] );
+		$parentTable =  CoreTables::TABLE_CATEGORY;
+
+		return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] )->from( "$parentTable as parent" );
 	}
 
 	/**

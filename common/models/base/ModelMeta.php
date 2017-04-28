@@ -111,9 +111,9 @@ abstract class ModelMeta extends Meta {
 	abstract public function getParent();
 
 	/**
-	 * The method isBelongsTo checks whether the meta belong to given parent model.
+	 * The method belongsTo checks whether the meta belong to given parent model.
 	 */
-	public function isBelongsTo( $model ) {
+	public function belongsTo( $model ) {
 
 		return $this->modelId == $model->id;
 	}

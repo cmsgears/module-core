@@ -195,8 +195,8 @@ class CoreGlobal {
 	// Errors - Generic
 	const ERROR_REQUEST				= 'requestError';
 	const ERROR_NOT_FOUND			= 'notFoundError'; // 404 - not found
+	const ERROR_NO_ACCESS			= 'noAccessError'; // 403 - forbidden
 	const ERROR_NOT_ALLOWED			= 'notAllowedError'; // 500 - not authorized
-	const ERROR_NO_ACCESS			= 'noAccessError'; // 401 - forbidden
 	const ERROR_EXIST				= 'entryExistError';
 	const ERROR_SELECT				= 'selectError';
 	const ERROR_URL_ENTITY			= 'urlEntityError';

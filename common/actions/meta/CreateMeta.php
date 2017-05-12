@@ -66,12 +66,16 @@ class CreateMeta extends \cmsgears\core\common\base\Action {
 	/**
 	 * Create Meta for given parent slug and parent type.
 	 */
-	public function run( $slug, $type = null ) {
+	public function run( $id = null, $slug = null, $type = null ) {
 
 		// Find Meta parent
 		$parent	= null;
 
-		if( isset( $type ) ) {
+		if( isset( $id ) ) {
+
+			$parent	= $this->modelService->getById( $id );
+		}
+		else if( isset( $type ) ) {
 
 			$parent	= $this->modelService->getBySlugType( $slug, $type );
 		}

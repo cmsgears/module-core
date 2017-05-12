@@ -57,7 +57,7 @@ class UpdateItem extends \cmsgears\core\common\base\Action {
 
 		if( isset( $gallery ) ) {
 
-			$modelFile	= $modelFileService->getByModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $id );
+			$modelFile	= $modelFileService->getByModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $iid );
 			$file		= $modelFile->file;
 
 			if( isset( $file ) && $file->load( Yii::$app->request->post(), $this->fileName ) ) {
@@ -65,7 +65,7 @@ class UpdateItem extends \cmsgears\core\common\base\Action {
 				$fileService->saveImage( $file );
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $id );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $iid );
 			}
 		}
 

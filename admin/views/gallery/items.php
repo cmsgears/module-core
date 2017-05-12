@@ -30,9 +30,9 @@ $this->title	= 'Gallery Items | ' . $coreProperties->getSiteTitle();
 			<?= ImageUploader::widget([
 					'options' => [ 'id' => 'gallery-item', 'class' => 'file-uploader' ],
 					'directory' => 'gallery', 'info' => true,
-					'postAction' => 'true', 'cmtController' => 'gallery', 'cmtAction' => 'updateItem',
-					'postActionUrl' => "core/gallery/create-item?slug=$gallery->slug"
-			]); ?>
+					'postAction' => 'true', 'postActionUrl' => "core/gallery/create-item?id=$gallery->id",
+					'cmtApp' => 'main', 'cmtController' => 'gallery', 'cmtAction' => 'updateItem',
+			]) ?>
 		</div>
 
 		<div class="box-content frm-split-40-60 clearfix">
@@ -47,9 +47,10 @@ $this->title	= 'Gallery Items | ' . $coreProperties->getSiteTitle();
 					<?= ImageUploader::widget([
 							'options' => [ 'id' => "item-update-$id", 'class' => 'file-uploader' ],
 							'directory' => 'gallery', 'info' => true, 'model' => $item,
-							'postAction' => 'true', 'postActionId' => "frm-item-update-$id", 'cmtController' => 'gallery', 'cmtAction' => 'updateItem',
-							'postActionVisible' => true, 'postActionUrl' => "core/gallery/update-item?slug=$gallery->slug&id=$item->id"
-					]); ?>
+							'postAction' => 'true', 'postActionVisible' => true,
+							'postActionUrl' => "core/gallery/update-item?id=$gallery->id&iid=$item->id",
+							'cmtApp' => 'main', 'cmtController' => 'gallery', 'cmtAction' => 'updateItem',
+					]) ?>
 				</li>
 			<?php
 				}

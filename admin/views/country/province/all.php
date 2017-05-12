@@ -28,7 +28,7 @@ if( !isset( $sortOrder ) ) {
 	<div class="col-small col15x10 header-actions">
 		<span class="frm-icon-element element-small">
 			<i class="cmti cmti-plus"></i>
-			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
+			<?= Html::a( 'Add', [ "create?cid=$countryId" ], [ 'class' => 'btn' ] ) ?>
 		</span>
 	</div>
 	<div class="col-small col15x5 header-search">

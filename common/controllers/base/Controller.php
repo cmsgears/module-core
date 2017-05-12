@@ -25,6 +25,9 @@ abstract class Controller extends \yii\web\Controller {
 	// The model service for primary model if applicable. It can be obtained either via factory component or instantiated within controller constructor or init method.
 	public $modelService;
 
+	// The primary model in action. It can be discovered while applying a filter and later action can use it directly.
+	public $model;
+
 	// It provide information to display active tab on sidebar.
 	public $sidebar;
 
@@ -34,7 +37,7 @@ abstract class Controller extends \yii\web\Controller {
 	// Protected --------------
 
 	/**
-	 * It can be used while adding, updating or deleting the primary module. The child class must override these methods and set the scenario before calling parent class method.
+	 * It can be used while adding, updating or deleting the primary model. The child class must override these methods and set the scenario before calling parent class method.
 	 */
 	protected $scenario;
 

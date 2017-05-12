@@ -20,9 +20,9 @@ $user			= Yii::$app->user->getIdentity();
 			<div class="header">User Avatar</div>
 			<?= AvatarUploader::widget([
 				'options' => [ 'id' => 'avatar-user', 'class' => 'file-uploader' ],
-				'model' => $user->avatar, 'cmtController' => 'user',
+				'model' => $user->avatar, 'cmtApp' => 'user', 'cmtController' => 'user',
 				'postAction' => true, 'postViewIcon' => 'cmti cmti-2x cmti-user'
-			]); ?>
+			]) ?>
 		</div>
 
 		<div class="box-content clearfix">

@@ -332,7 +332,8 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $config->id, 'date_time_format','Date Time Format', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Date time format used by the formatter.\",\"placeholder\":\"Time Format\"}' ],
 			[ $config->id, 'timezone','Timezone', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Time format used by the formatter.\",\"placeholder\":\"Time Format\"}' ],
 			[ $config->id, 'autologin','Auto Login', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Auto login on account confirmation and activation.\"}' ],
-			[ $config->id, 'caching','Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Enable HTML Caching.\"}' ]
+			[ $config->id, 'caching','Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Enable HTML Caching.\"}' ],
+			[ $config->id, 'html_caching','Enable HTML Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Enable HTML Caching.\"}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -493,7 +494,9 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $this->site->id, 'comments_limit','Comments Limit','frontend','text', EntityService::PAGE_LIMIT ],
 			[ $this->site->id, 'comments_email','Comments Email','frontend','flag','1' ],
 			[ $this->site->id, 'comments_auto','Comments Auto','frontend','flag','1' ],
-			[ $this->site->id, 'comments_filter','Comments Filter','frontend','text', NULL ]
+			[ $this->site->id, 'comments_filter','Comments Filter','frontend','text', NULL ],
+			[ $this->site->id, 'caching','Caching','core','flag','0' ],
+			[ $this->site->id, 'html_caching','Enable HTML Caching','core','flag','0' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );

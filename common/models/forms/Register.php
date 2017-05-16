@@ -67,8 +67,9 @@ class Register extends \yii\base\Model {
 		$rules = [
 			[ [ 'email', 'password', 'password_repeat', 'terms' ], 'required' ],
 			[ [ 'firstName', 'lastName' ], 'required', 'on' => [ 'name' ] ],
+			[ [ 'username'], 'required', 'on' => [ 'username' ] ],
 			[ 'email', 'email' ],
-			[ 'password', 'compare' ],
+			[ 'password_repeat', 'compare', 'compareAttribute'=>'password' ],
 			[ 'password', 'password' ],
 			[ 'email', 'validateEmail' ],
 			[ 'username', 'validateUsername' ],

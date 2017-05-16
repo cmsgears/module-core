@@ -32,13 +32,13 @@ class Testimonial extends Create {
 
 	// Public -----------------
 
-	public $type		= ModelComment::TYPE_TESTIMONIAL;
+	public $modelType	= ModelComment::TYPE_TESTIMONIAL;
 
 	public $scenario	= ModelComment::TYPE_TESTIMONIAL;
 
 	// Protected --------------
 
-	protected $typed = false;
+	public $typed = false;
 
 	// Private ----------------
 

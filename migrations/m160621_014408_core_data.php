@@ -333,7 +333,8 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $config->id, 'timezone','Timezone', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Time format used by the formatter.\",\"placeholder\":\"Time Format\"}' ],
 			[ $config->id, 'autologin','Auto Login', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Auto login on account confirmation and activation.\"}' ],
 			[ $config->id, 'caching','Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Enable HTML Caching.\"}' ],
-			[ $config->id, 'html_caching','Enable HTML Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Enable HTML Caching.\"}' ]
+			[ $config->id, 'html_caching','HTML Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Enable HTML Caching.\"}' ],
+			[ $config->id, 'json_caching','JSON Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Enable JSON Caching.\"}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );

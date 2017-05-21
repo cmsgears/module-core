@@ -80,7 +80,9 @@ class CoreProperties extends CmgProperties {
 
 	const PROP_CACHING				= 'caching';
 
-	const PROP_HTML_CACHING			= 'html_caching';
+	const PROP_CACHING_HTML 		= 'html_caching';
+
+	const PROP_CACHING_JSON 		= 'json_caching';
 
 	// Public -----------------
 
@@ -255,7 +257,12 @@ class CoreProperties extends CmgProperties {
 
 	public function isHtmlCaching() {
 
-		return $this->properties[ self::PROP_HTML_CACHING ];
+		return $this->properties[ self::PROP_CACHING_HTML ];
+	}
+
+	public function isJsonCaching() {
+
+		return $this->properties[ self::PROP_CACHING_JSON ];
 	}
 
 	/**

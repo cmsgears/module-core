@@ -502,7 +502,7 @@ class Core extends \yii\base\Component {
 		$factory->set( 'countryService', 'cmsgears\core\common\services\entities\CountryService' );
 		$factory->set( 'provinceService', 'cmsgears\core\common\services\entities\ProvinceService' );
 		$factory->set( 'cityService', 'cmsgears\core\common\services\entities\CityService' );
-		$factory->set( 'objectService', 'cmsgears\core\common\services\entities\ObjectService' );
+		$factory->set( 'objectService', 'cmsgears\core\common\services\entities\ObjectDataService' );
 		$factory->set( 'permissionService', 'cmsgears\core\common\services\entities\PermissionService' );
 		$factory->set( 'roleService', 'cmsgears\core\common\services\entities\RoleService' );
 		$factory->set( 'siteService', 'cmsgears\core\common\services\entities\SiteService' );

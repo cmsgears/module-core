@@ -4,9 +4,6 @@ namespace cmsgears\core\common\base;
 // Yii Imports
 use \Yii;
 
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 abstract class Widget extends \yii\base\Widget {
 
 	// Variables ---------------------------------------------------

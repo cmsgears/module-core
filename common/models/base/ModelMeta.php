@@ -8,8 +8,6 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-
 /**
  * ModelMeta Entity - A model can have only one meta with the same name for particular type.
  *
@@ -150,6 +148,11 @@ abstract class ModelMeta extends Meta {
 		return static::find()->where( 'modelId=:pid AND name=:name', [ ':pid' => $modelId, ':name' => $name ] );
 	}
 
+	public static function queryByModelId( $modelId ) {
+
+		return static::find()->where( 'modelId=:pid', [ ':pid' => $modelId ] );
+	}
+
 	public static function queryByType( $modelId, $type ) {
 
 		return static::find()->where( 'modelId=:pid AND type=:type', [ ':pid' => $modelId, ':type' => $type ] );
@@ -177,6 +180,11 @@ abstract class ModelMeta extends Meta {
 		}
 
 		return $query->all();
+	}
+
+	public static function findByModelId( $modelId ) {
+
+		return self::queryByModelId( $modelId )->all();
 	}
 
 	/**

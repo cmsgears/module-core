@@ -55,6 +55,8 @@ class CoreTables {
 
 	const TABLE_SITE_ACCESS			= 'cmg_core_site_access';
 
+	const TABLE_STATS				= 'cmg_core_stats';
+
 	// Mappers --------------
 
 	// Direct Mappers

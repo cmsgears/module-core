@@ -10,6 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 
+use cmsgears\core\common\models\traits\NameTrait;
+
 /**
  * City Entity
  *
@@ -43,6 +45,8 @@ class City extends \cmsgears\core\common\models\base\Entity {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use NameTrait;
 
 	// Constructor and Initialisation ------------------------------
 

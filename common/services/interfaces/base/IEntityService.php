@@ -21,6 +21,8 @@ interface IEntityService {
 
 	public function getPublicPage( $config = [] );
 
+	public function getPageForChildSites( $config = [] );
+
 	public function getPageForSimilar( $config = [] );
 
 	// Searching

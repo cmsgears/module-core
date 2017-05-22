@@ -131,6 +131,7 @@ class m160621_014612_core_index extends \yii\db\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'category_slug', $this->prefix . 'core_category', 'slug' );
 		$this->createIndex( 'idx_' . $this->prefix . 'category_type', $this->prefix . 'core_category', 'type' );
 		$this->createIndex( 'idx_' . $this->prefix . 'category_icon', $this->prefix . 'core_category', 'icon' );
+		$this->createIndex( 'idx_' . $this->prefix . 'category_tf', $this->prefix . 'core_category', [ 'type', 'featured' ] );
 
 		// Option
 		$this->createIndex( 'idx_' . $this->prefix . 'option_name', $this->prefix . 'core_option', 'name' );
@@ -326,6 +327,7 @@ class m160621_014612_core_index extends \yii\db\Migration {
 		$this->dropIndex( 'idx_' . $this->prefix . 'category_slug', $this->prefix . 'core_category' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'category_type', $this->prefix . 'core_category' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'category_icon', $this->prefix . 'core_category' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'category_tf', $this->prefix . 'core_category' );
 
 		// Option
 		$this->dropIndex( 'idx_' . $this->prefix . 'option_name', $this->prefix . 'core_option' );

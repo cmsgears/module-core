@@ -2,7 +2,6 @@
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
-use \Yii;
 use yii\data\Sort;
 
 // CMG Imports

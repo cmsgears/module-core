@@ -1,13 +1,9 @@
 <?php
 namespace cmsgears\core\common\services\base;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
+
 use cmsgears\core\common\models\base\Meta;
 
 use cmsgears\core\common\services\interfaces\base\IMetaService;
@@ -59,6 +55,11 @@ abstract class MetaService extends EntityService implements IMetaService {
 		return self::findByName( $modelId, $name, $first );
 	}
 
+	public function getByModelId( $modelId ) {
+
+		return self::findByModelId( $modelId );
+	}
+
 	public function getByType( $modelId, $type ) {
 
 		return self::findByType( $modelId, $type );
@@ -91,12 +92,26 @@ abstract class MetaService extends EntityService implements IMetaService {
 
 	// Read - Maps -----
 
+	public function getNameValueMapByModelId( $modelId ) {
+
+		$config[ 'conditions' ][ 'modelId' ]	= $modelId;
+
+		return $this->getNameValueMap( $config );
+	}
+
 	public function getNameValueMapByType( $modelId, $type ) {
 
 		$config[ 'conditions' ][ 'modelId' ]	= $modelId;
 		$config[ 'conditions' ][ 'type' ]		= $type;
 
 		return $this->getNameValueMap( $config );
+	}
+
+	public function getIdMetaMapByModelId( $modelId ) {
+
+		$config[ 'conditions' ][ 'modelId' ]	= $modelId;
+
+		return $this->getObjectMap( $config );
 	}
 
 	public function getIdMetaMapByType( $modelId, $type ) {
@@ -240,6 +255,13 @@ abstract class MetaService extends EntityService implements IMetaService {
 		$modelClass	= static::$modelClass;
 
 		return $modelClass::findByName( $modelId, $name, $first );
+	}
+
+	public static function findByModelId( $modelId ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByModelId( $modelId );
 	}
 
 	public static function findByType( $modelId, $type ) {

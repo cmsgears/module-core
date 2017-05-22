@@ -2,7 +2,6 @@
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
-use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -10,6 +9,8 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Country;
+
+use cmsgears\core\common\services\traits\NameTrait;
 
 use cmsgears\core\common\services\interfaces\entities\ICountryService;
 
@@ -40,6 +41,8 @@ class CountryService extends \cmsgears\core\common\services\base\EntityService i
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use NameTrait;
 
 	// Constructor and Initialisation ------------------------------
 

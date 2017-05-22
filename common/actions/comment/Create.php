@@ -8,6 +8,7 @@ use \Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\ModelComment;
+use cmsgears\core\common\models\resources\File;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 

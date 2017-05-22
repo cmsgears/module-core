@@ -10,6 +10,9 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\ModelComment;
+use cmsgears\core\common\models\mappers\ModelFile;
+
+use cmsgears\files\components\FileManager;
 
 use cmsgears\core\common\services\interfaces\resources\IModelCommentService;
 

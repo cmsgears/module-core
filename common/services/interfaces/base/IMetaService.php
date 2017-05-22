@@ -1,12 +1,6 @@
 <?php
 namespace cmsgears\core\common\services\interfaces\base;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\Meta;
 
 interface IMetaService extends IEntityService {
@@ -29,7 +23,11 @@ interface IMetaService extends IEntityService {
 
 	// Read - Maps -----
 
+	public function getNameValueMapByModelId( $modelId );
+
 	public function getNameValueMapByType( $modelId, $type );
+
+	public function getIdMetaMapByModelId( $modelId );
 
 	public function getIdMetaMapByType( $modelId, $type );
 

@@ -73,6 +73,7 @@ class m160621_014408_core_data extends \yii\db\Migration {
 
 		// Create various config
 		$this->insertCoreConfig();
+		$this->insertCacheConfig();
 		$this->insertMailConfig();
 		$this->insertBackendConfig();
 		$this->insertFrontendConfig();
@@ -325,16 +326,45 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $config->id, 'site_url','Frontend URL', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Frontend URL\",\"placeholder\":\"Frontend URL\"}' ],
 			[ $config->id, 'admin_url','Backend URL', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Backend URL\",\"placeholder\":\"Backend URL\"}' ],
 			[ $config->id, 'registration','Registration', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Check whether site registration is allowed.\"}' ],
+			[ $config->id, 'login','Login', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Check whether site login is allowed.\"}' ],
 			[ $config->id, 'change_email','Change Email', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Check whether email change is allowed for user profile.\"}' ],
 			[ $config->id, 'change_username','Change Username', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Check whether username change is allowed for user profile.\"}' ],
 			[ $config->id, 'date_format','Date Format', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Date format used by the formatter.\",\"placeholder\":\"Date Format\"}' ],
 			[ $config->id, 'time_format','Time Format', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Time format used by the formatter.\",\"placeholder\":\"Time Format\"}' ],
 			[ $config->id, 'date_time_format','Date Time Format', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Date time format used by the formatter.\",\"placeholder\":\"Time Format\"}' ],
 			[ $config->id, 'timezone','Timezone', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Time format used by the formatter.\",\"placeholder\":\"Time Format\"}' ],
-			[ $config->id, 'autologin','Auto Login', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Auto login on account confirmation and activation.\"}' ],
-			[ $config->id, 'caching','Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Enable HTML Caching.\"}' ],
-			[ $config->id, 'html_caching','HTML Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Enable HTML Caching.\"}' ],
-			[ $config->id, 'json_caching','JSON Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Enable JSON Caching.\"}' ]
+			[ $config->id, 'autologin','Auto Login', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Auto login on account confirmation and activation.\"}' ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
+	}
+
+	private function insertCacheConfig() {
+
+		$this->insert( $this->prefix . 'core_form', [
+				'siteId' => $this->site->id,
+				'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
+				'name' => 'Config Cache', 'slug' => 'config-cache',
+				'type' => CoreGlobal::TYPE_SYSTEM,
+				'description' => 'Cache configuration form.',
+				'successMessage' => 'All configurations saved successfully.',
+				'captcha' => false,
+				'visibility' => Form::VISIBILITY_PROTECTED,
+				'active' => true, 'userMail' => false,'adminMail' => false,
+				'createdAt' => DateUtil::getDateTime(),
+				'modifiedAt' => DateUtil::getDateTime()
+		]);
+
+		$config	= Form::findBySlug( 'config-cache', CoreGlobal::TYPE_SYSTEM );
+
+		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
+
+		$fields	= [
+				[ $config->id, 'caching','Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Enable HTML Caching.\"}' ],
+				[ $config->id, 'cache_type','Cache Type', FormField::TYPE_SELECT, false, NULL, 0, NULL, '{"title":"Cache types","items":["file","database","apc","mem","redis","win","x","dummy"]}' ],
+				[ $config->id, 'cache_duration','Cache Duration', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Cache Duration in seconds.\",\"placeholder\":\"Cache Duration\"}' ],
+				[ $config->id, 'html_caching','HTML Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Enable HTML Caching.\"}' ],
+				[ $config->id, 'json_caching','JSON Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Enable JSON Caching.\"}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -465,6 +495,7 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $this->site->id, 'site_url', 'Site Url', 'core', 'text', $defaultSite ],
 			[ $this->site->id, 'admin_url', 'Admin Url', 'core', 'text', $defaultAdmin ],
 			[ $this->site->id, 'registration','Registration','core','flag','1' ],
+			[ $this->site->id, 'login','Login','core','flag','1' ],
 			[ $this->site->id, 'change_email','Change Email','core','flag','1' ],
 			[ $this->site->id, 'change_username','Change Username','core','flag','1' ],
 			[ $this->site->id, 'date_format','Date Format','core','text','yyyy-MM-dd' ],
@@ -472,7 +503,11 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $this->site->id, 'date_time_format','Date Time Format','core','text','yyyy-MM-dd HH:mm:ss' ],
 			[ $this->site->id, 'timezone','Timezone','core','text', $timezone ],
 			[ $this->site->id, 'autologin','Auto Login','core','flag','0' ],
-			[ $this->site->id, 'caching','Caching','core','flag','0' ],
+			[ $this->site->id, 'caching','Caching','cache','flag','0' ],
+			[ $this->site->id, 'cache_type','Cache Type','cache','text',NULL ],
+			[ $this->site->id, 'cache_duration','Cache Type','cache','text',NULL ],
+			[ $this->site->id, 'html_caching','HTML Caching','cache','flag','0' ],
+			[ $this->site->id, 'json_caching','JSON Caching','cache','flag','0' ],
 			[ $this->site->id, 'smtp','SMTP','mail','flag','0' ],
 			[ $this->site->id, 'smtp_username','SMTP Username','mail','text','' ],
 			[ $this->site->id, 'smtp_password','SMTP Password','mail','text','' ],

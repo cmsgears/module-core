@@ -4,9 +4,6 @@ namespace cmsgears\core\common\models\traits;
 // Yii Import
 use \Yii;
 
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 /**
  * The model using this trait must have name column. It must also support unique name.
  */

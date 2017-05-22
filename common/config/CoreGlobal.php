@@ -118,6 +118,7 @@ class CoreGlobal {
 	// Config ----------------------------------------------------------
 
 	const CONFIG_CORE			= 'core';		// Core Config defining site configuration
+	const CONFIG_CACHE			= 'cache';
 	const CONFIG_MAIL			= 'mail';		// Mail Config defining mail configurations and useful in case SMTP is required
 	const CONFIG_ADMIN			= 'backend';
 	const CONFIG_FRONTEND		= 'frontend';

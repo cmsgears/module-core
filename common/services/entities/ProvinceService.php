@@ -1,7 +1,7 @@
 <?php
 namespace cmsgears\core\common\services\entities;
 
-use \Yii;
+// Yii Imports
 use yii\data\Sort;
 
 // CMG Imports
@@ -9,6 +9,8 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Province;
+
+use cmsgears\core\common\services\traits\NameTrait;
 
 use cmsgears\core\common\services\interfaces\entities\IProvinceService;
 
@@ -39,6 +41,8 @@ class ProvinceService extends \cmsgears\core\common\services\base\EntityService 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use NameTrait;
 
 	// Constructor and Initialisation ------------------------------
 

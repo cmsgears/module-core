@@ -3,7 +3,6 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
@@ -17,15 +16,15 @@ use cmsgears\core\common\config\CoreProperties;
 use cmsgears\core\common\models\interfaces\IApproval;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\Option;
 use cmsgears\core\common\models\mappers\SiteMember;
+use cmsgears\core\common\models\resources\Option;
 
 use cmsgears\core\common\models\traits\interfaces\ApprovalTrait;
-use cmsgears\core\common\models\traits\resources\MetaTrait;
-use cmsgears\core\common\models\traits\resources\DataTrait;
-use cmsgears\core\common\models\traits\resources\VisualTrait;
 use cmsgears\core\common\models\traits\mappers\AddressTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\resources\MetaTrait;
+use cmsgears\core\common\models\traits\resources\VisualTrait;
 
 /**
  * User Entity - The primary class.
@@ -65,6 +64,9 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	// Constants --------------
 
 	const STATUS_VERIFIED	= 100; // Used when user is required to submit registration application for approval process.
+
+	const REG_TYPE_DEFAULT	= 0;
+	const REG_TYPE_SNS 		= 1;
 
 	// Public -----------------
 

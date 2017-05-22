@@ -2,7 +2,6 @@
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
-use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -10,7 +9,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
-use cmsgears\core\common\models\entities\Theme;
 
 use cmsgears\core\common\services\interfaces\entities\ISiteService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
@@ -107,6 +105,17 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 	// Read ---------------
 
 	// Read - Models ---
+
+	/**
+	 * @param string $slug
+	 * @return array - An associative array of site meta for the given site slug having id as key and model as value.
+	 */
+	public function getIdMetaMapBySlug( $slug ) {
+
+		$site = Site::findBySlug( $slug );
+
+		return $this->siteMetaService->getIdMetaMapByModelId( $site->id );
+	}
 
 	/**
 	 * @param string $name

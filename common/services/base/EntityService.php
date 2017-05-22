@@ -3,19 +3,17 @@ namespace cmsgears\core\common\services\base;
 
 // Yii Imports
 use \Yii;
-use yii\db\Query;
-use yii\db\Expression;
 use yii\data\Sort;
+use yii\db\Expression;
+use yii\db\Query;
 
-use yii\helpers\HtmlPurifier;
 use yii\helpers\ArrayHelper;
+use yii\helpers\HtmlPurifier;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
+use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\interfaces\IApproval;
 use cmsgears\core\common\models\interfaces\IVisibility;
-use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\services\interfaces\base\IEntityService;
 
@@ -132,6 +130,14 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		$config[ 'public' ]	= true;
 
 		return $this->getPage( $config );
+	}
+
+	public function getPageForChildSites( $config = [] ) {
+
+		$config[ 'filters' ][]	= [ 'not in', 'siteId', [ Yii::$app->core->mainSiteId ] ];
+		$config[ 'multiSite' ]	= false;
+
+		return $this->getPublicPage( $config );
 	}
 
 	/**
@@ -586,6 +592,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		// query generation
 		$query			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
 		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::PAGE_LIMIT;
+		$page			= Yii::$app->request->get( 'page' ) != null ? Yii::$app->request->get( 'page' ) - 1 : null;
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
 		$random			= isset( $config[ 'random' ] ) ? $config[ 'random' ] : false; // Be careful in using random at database level for tables having high row count
@@ -740,6 +747,11 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		// Data Provider --------
 
 		$pagination	= [ 'pageSize' => $limit ];
+
+		if( !empty( $page ) ) {
+
+			$pagination[ 'page' ] = $page;
+		}
 
 		if( isset( $route ) ) {
 

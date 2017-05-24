@@ -17,7 +17,7 @@ class Module extends \cmsgears\core\common\base\Module {
 
 	public $controllerNamespace = 'cmsgears\core\admin\controllers';
 
-	public $config				= [ CoreGlobal::CONFIG_CORE, CoreGlobal::CONFIG_MAIL, CoreGlobal::CONFIG_ADMIN, CoreGlobal::CONFIG_FRONTEND ];
+	public $config				= [ CoreGlobal::CONFIG_CORE, CoreGlobal::CONFIG_CACHE, CoreGlobal::CONFIG_MAIL, CoreGlobal::CONFIG_ADMIN, CoreGlobal::CONFIG_FRONTEND ];
 
 	// Protected --------------
 

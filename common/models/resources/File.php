@@ -189,11 +189,11 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 		if( $this->changed ) {
 
-			return Yii::$app->fileManager->uploadUrl . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "." . $this->extension;
+			return Yii::$app->fileManager->uploadUrl . '/' . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "." . $this->extension;
 		}
 		else if( $this->id > 0 ) {
 
-			return Yii::$app->fileManager->uploadUrl . $this->url;
+			return Yii::$app->fileManager->uploadUrl . '/' . $this->url;
 		}
 
 		return "";
@@ -203,11 +203,11 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 		if( $this->changed ) {
 
-			return Yii::$app->fileManager->uploadUrl . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "-medium." . $this->extension;
+			return Yii::$app->fileManager->uploadUrl . '/' . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "-medium." . $this->extension;
 		}
 		else if( $this->id > 0 ) {
 
-			return Yii::$app->fileManager->uploadUrl . $this->medium;
+			return Yii::$app->fileManager->uploadUrl . '/' . $this->medium;
 		}
 
 		return "";
@@ -220,11 +220,11 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 		if( $this->changed ) {
 
-			return Yii::$app->fileManager->uploadUrl . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "-thumb." . $this->extension;
+			return Yii::$app->fileManager->uploadUrl . '/' . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "-thumb." . $this->extension;
 		}
 		else if( $this->id > 0 ) {
 
-			return Yii::$app->fileManager->uploadUrl . $this->thumb;
+			return Yii::$app->fileManager->uploadUrl . '/' . $this->thumb;
 		}
 
 		return "";
@@ -234,7 +234,7 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 		if( isset( $this->url ) ) {
 
-			return Yii::$app->fileManager->uploadDir . $this->url;
+			return Yii::$app->fileManager->uploadDir . '/' . $this->url;
 		}
 
 		return false;
@@ -244,7 +244,7 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 		if( isset( $this->medium ) ) {
 
-			return Yii::$app->fileManager->uploadDir . $this->medium;
+			return Yii::$app->fileManager->uploadDir . '/' . $this->medium;
 		}
 
 		return false;
@@ -254,7 +254,7 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 		if( isset( $this->thumb ) ) {
 
-			return Yii::$app->fileManager->uploadDir . $this->thumb;
+			return Yii::$app->fileManager->uploadDir . '/' . $this->thumb;
 		}
 
 		return false;

@@ -78,7 +78,7 @@ if( !isset( $sortOrder ) ) {
 						$roles		= $permission->getRolesIdList();
 						$apixUrl	= 'core/permission/bind-roles';
 				?>
-					<tr id="perm-matrix-<?=$id?>" class="cmt-request" cmt-controller="permission" cmt-action="matrix" action="<?=$apixUrl?>" cmt-keep>
+					<tr id="perm-matrix-<?=$id?>" cmt-app="main" cmt-controller="permission" cmt-action="matrix" action="<?=$apixUrl?>" cmt-keep>
 						<td><?= $permission->name ?></td>
 						<td>
 							<input type="hidden" name="Binder[binderId]" value="<?=$id?>" />

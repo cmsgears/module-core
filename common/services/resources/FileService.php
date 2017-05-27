@@ -3,6 +3,7 @@ namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
 use \Yii;
+use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -59,6 +60,61 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 	// FileService ---------------------------
 
 	// Data Provider ------
+
+	public function getPage( $config = [] ) {
+
+		$sort = new Sort([
+			'attributes' => [
+				'name' => [
+					'asc' => [ 'name' => SORT_ASC ],
+					'desc' => ['name' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
+				],
+				'title' => [
+						'asc' => [ 'title' => SORT_ASC ],
+						'desc' => [ 'title' => SORT_DESC ],
+						'default' => SORT_DESC,
+						'label' => 'Title'
+				],
+				'directory' => [
+					'asc' => [ 'directory' => SORT_ASC ],
+					'desc' => [ 'directory' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Directory'
+				],
+				'url' => [
+						'asc' => [ 'url' => SORT_ASC ],
+						'desc' => [ 'url' => SORT_DESC ],
+						'default' => SORT_DESC,
+						'label' => 'Path'
+				],
+				'cdate' => [
+						'asc' => [ 'createdAt' => SORT_ASC ],
+						'desc' => [ 'createdAt' => SORT_DESC ],
+						'default' => SORT_DESC,
+						'label' => 'cdate',
+				],
+				'udate' => [
+						'asc' => [ 'updatedAt' => SORT_ASC ],
+						'desc' => [ 'updatedAt' => SORT_DESC ],
+						'default' => SORT_DESC,
+						'label' => 'udate',
+				]
+			]
+		]);
+
+		$config[ 'sort' ] = $sort;
+
+		return parent::findPage( $config );
+	}
+
+	public function getSharedPage( $config = [] ) {
+
+		$config[ 'conditions' ][ 'shared' ] = true;
+
+		return $this->getPage( $config );
+	}
 
 	// Read ---------------
 

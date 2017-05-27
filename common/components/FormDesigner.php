@@ -676,11 +676,11 @@ class FormDesigner extends \yii\base\Component {
 
 			unset( $fieldhtmlOptions[ 'items' ] );
 
-			$fieldHtml	= Html::dropDownList( $modelName . "[$field->name]", $value, $items, $field->htmlOptions );
+			$fieldHtml	= Html::dropDownList( $modelName . "[$field->name]", $value, $items, $fieldhtmlOptions );
 		}
 		else {
 
-			$fieldHtml	= Html::dropDownList( $modelName . "[$field->name]", null, [ "Choose Option" ], $field->htmlOptions );
+			$fieldHtml	= Html::dropDownList( $modelName . "[$field->name]", null, [ "Choose Option" ], $fieldhtmlOptions );
 		}
 
 		if( $config[ 'label' ] ) {

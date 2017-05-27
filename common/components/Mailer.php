@@ -157,7 +157,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 	/**
 	 * The method sends mail for spam comment request by users from website.
 	 */
-	public function sendCommentSpamRequestMail( $comment ) {
+	public function sendCommentSpamRequestMail( $comment, $updatePath ) {
 
 		$siteName		= $this->coreProperties->getSiteName();
 		$fromEmail		= $this->mailProperties->getSenderEmail();
@@ -165,7 +165,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$contactEmail	= $this->mailProperties->getContactEmail();
 
 		// Send Mail
-		$this->getMailer()->compose( self::MAIL_COMMENT_SPAM_REQUEST, [ 'coreProperties' => $this->coreProperties, 'comment' => $comment ] )
+		$this->getMailer()->compose( self::MAIL_COMMENT_SPAM_REQUEST, [ 'coreProperties' => $this->coreProperties, 'comment' => $comment, 'updatePath' => $updatePath ] )
 			->setTo( $contactEmail )
 			->setFrom( [ $fromEmail => "$fromName | $siteName" ] )
 			->setSubject( "Spam Request | " . $this->coreProperties->getSiteName() )
@@ -176,7 +176,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 	/**
 	 * The method sends mail for spam comment request by users from website.
 	 */
-	public function sendCommentDeleteRequestMail( $comment ) {
+	public function sendCommentDeleteRequestMail( $comment, $updatePath ) {
 
 		$siteName		= $this->coreProperties->getSiteName();
 		$fromEmail		= $this->mailProperties->getSenderEmail();
@@ -184,7 +184,7 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 		$contactEmail	= $this->mailProperties->getContactEmail();
 
 		// Send Mail
-		$this->getMailer()->compose( self::MAIL_COMMENT_DELETE_REQUEST, [ 'coreProperties' => $this->coreProperties, 'comment' => $comment ] )
+		$this->getMailer()->compose( self::MAIL_COMMENT_DELETE_REQUEST, [ 'coreProperties' => $this->coreProperties, 'comment' => $comment, 'updatePath' => $updatePath ] )
 			->setTo( $contactEmail )
 			->setFrom( [ $fromEmail => "$fromName | $siteName" ] )
 			->setSubject( "Delete Request | " . $this->coreProperties->getSiteName() )

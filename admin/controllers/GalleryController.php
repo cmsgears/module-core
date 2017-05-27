@@ -26,7 +26,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryCon
 
 		parent::init();
 
-		$this->sidebar		= [ 'parent' => 'sidebar-core', 'child' => 'gallery' ];
+		$this->sidebar		= [ 'parent' => 'sidebar-gallery', 'child' => 'gallery' ];
 
 		$this->returnUrl	= Url::previous( 'galleries' );
 		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/gallery/all' ], true );

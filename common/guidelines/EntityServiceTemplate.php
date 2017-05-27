@@ -112,6 +112,8 @@ class ServiceTemplate extends \cmsgears\core\common\services\base\EntityService 
 
 	// Delete -------------
 
+	// Notifications ------
+
 	// Static Methods ----------------------------------------------
 
 	// CMG parent classes --------------------

@@ -20,6 +20,8 @@ $right	= '';
 <?php
 	foreach ( $settings as $setting ) {
 
+		$settingTitle	= str_replace( "-", " ", $setting );
+
 		ob_start();
 ?>
 	<div class="box box-collapsible box-settings">
@@ -28,7 +30,7 @@ $right	= '';
 			<span id="settings-<?= $setting ?>" content="settings-<?= $setting ?>-content" cmt-app="site" cmt-controller="settings" cmt-action="getContent" action="settings/index?type=<?= $setting ?>">
 				<span class="cmt-click collapse-trigger"></span>
 			</span>
-			<span><?= ucfirst( $setting ) ?></span>
+			<span><?= ucwords( $settingTitle ) ?></span>
 		</div>
 		<div id="settings-<?= $setting ?>-content" class="box-wrap-content clearfix"></div>
 	</div>

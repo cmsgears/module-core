@@ -40,6 +40,7 @@ abstract class CommentController extends Controller {
 		$this->setViewPath( '@cmsgears/module-core/admin/views/comment' );
 
 		$this->crudPermission	= CoreGlobal::PERM_CORE;
+
 		$this->modelService		= Yii::$app->factory->get( 'modelCommentService' );
 
 		// Notes: Configure sidebar, commentUrl, parentType, commentType, parentService and returnUrl exclusively in child classes
@@ -142,7 +143,7 @@ abstract class CommentController extends Controller {
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
 
-			$this->modelService->create( $model );
+			$this->model = $this->modelService->create( $model );
 
 			return $this->redirect( $this->returnUrl );
 		}
@@ -167,7 +168,7 @@ abstract class CommentController extends Controller {
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->modelService->update( $model, [ 'admin' => true ] );
+				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
 
 				return $this->redirect( $this->returnUrl );
 			}

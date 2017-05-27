@@ -35,7 +35,7 @@ abstract class GalleryController extends \cmsgears\core\admin\controllers\base\C
 
 		$this->setViewPath( '@cmsgears/module-core/admin/views/gallery' );
 
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->crudPermission	= CoreGlobal::PERM_GALLERY_ADMIN;
 		$this->modelService		= Yii::$app->factory->get( 'galleryService' );
 
 		$this->type				= CoreGlobal::TYPE_SITE;

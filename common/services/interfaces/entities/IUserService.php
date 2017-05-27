@@ -42,8 +42,6 @@ interface IUserService extends IApprovalService, IModelMetaService {
 
 	// Create -------------
 
-	public function register( $registerForm );
-
 	// Update -------------
 
 	public function verify( $user, $token );

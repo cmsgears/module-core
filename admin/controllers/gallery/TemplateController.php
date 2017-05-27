@@ -26,9 +26,9 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		parent::init();
 
-		$this->sidebar		= [ 'parent' => 'sidebar-core', 'child' => 'gallery-template' ];
+		$this->sidebar		= [ 'parent' => 'sidebar-gallery', 'child' => 'template' ];
 
-		$this->type			= CoreGlobal::TYPE_GALLERY;
+		$this->type			= CoreGlobal::PERM_GALLERY_ADMIN;
 
 		$this->returnUrl	= Url::previous( 'templates' );
 		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/gallery/template/all' ], true );

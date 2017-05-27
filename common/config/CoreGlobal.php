@@ -120,6 +120,7 @@ class CoreGlobal {
 	const CONFIG_CORE			= 'core';		// Core Config defining site configuration
 	const CONFIG_CACHE			= 'cache';
 	const CONFIG_MAIL			= 'mail';		// Mail Config defining mail configurations and useful in case SMTP is required
+	const CONFIG_COMMENT		= 'comment';
 	const CONFIG_ADMIN			= 'backend';
 	const CONFIG_FRONTEND		= 'frontend';
 
@@ -134,12 +135,18 @@ class CoreGlobal {
 	const PERM_USER					= 'user';	// Allows to view User Site Home
 	const PERM_GUEST				= 'guest';
 
-	// Site specific - Forms, Galleries, Settings, Testimonials, Categories, Geo DB
+	// Site specific - Settings, Testimonials, Categories, Geo DB
 	const PERM_CORE					= 'core';
 
 	// User
 	const PERM_IDENTITY				= 'identity';	// Allows admin to manage site users
 	const PERM_RBAC					= 'rbac';		// Allows admin to manage roles and permissions
+
+	// Gallery
+	const PERM_GALLERY_ADMIN		= 'admin-galleries';
+
+	// File
+	const PERM_FILE_ADMIN			= 'admin-files';
 
 	// TODO: Implement I18N for Messages, Errors and Field Labels
 

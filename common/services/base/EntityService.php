@@ -132,14 +132,6 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		return $this->getPage( $config );
 	}
 
-	public function getPageForChildSites( $config = [] ) {
-
-		$config[ 'filters' ][]	= [ 'not in', 'siteId', [ Yii::$app->core->mainSiteId ] ];
-		$config[ 'multiSite' ]	= false;
-
-		return $this->getPublicPage( $config );
-	}
-
 	/**
 	 * @return - DataProvider or array of models with applied configuration.
 	 */
@@ -261,10 +253,15 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	}
 
 	/**
-	 * A simple method to get random ids
+	 * A simple method to get random ids.
+	 * It's not efficient for tables having large number of rows.
+	 *
+	 * TODO: We can make this method efficient by using random offset and limit instead of going for full table scan.
+	 *       Avoid using count() to get total rows. Use Stats Table to get estimated count.
 	 */
 	public function getRandomObjects( $config = [] ) {
 
+		$offset			= isset( $config[ 'offset' ] ) ? $config[ 'offset' ] : 0;
 		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 
@@ -291,7 +288,25 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 			$query->andWhere( $conditions );
 		}
 
-		$results = $query->orderBy( 'RAND()' )->limit( $limit )->all();
+		// Randomise -----------
+
+		$query = $query->orderBy( 'RAND()' );
+
+		// Offset --------------
+
+		if( $offset > 0 ) {
+
+			$query->offset( $offset );
+		}
+
+		// Limit ---------------
+
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
+
+		$results = $query->all();
 
 		return $results;
 	}
@@ -364,10 +379,19 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 	public function createMultiple( $models, $config = [] ) {
 
+		$result = true;
+
 		foreach( $models as $model ) {
 
-			$this->create( $model, $config );
+			$created = $this->create( $model, $config );
+
+			if( !$created ) {
+
+				$result = false;
+			}
 		}
+
+		return $result;
 	}
 
 	public function createByParams( $params = [], $config = [] ) {
@@ -376,11 +400,15 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		foreach ( $params as $key => $value ) {
 
-			$model->$key	= $value;
+			$model->$key = $value;
 		}
 
 		return $this->create( $model, $config );
 	}
+
+	public function add( $model, $config = [] ) { } // Adapter
+
+	public function register( $model, $config = [] ) { } // Adapter
 
 	// Update -------------
 
@@ -447,6 +475,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	public function updateAll( $model, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
+
 		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [];
 		$condition	= isset( $config[ 'condition' ] ) ? $config[ 'condition' ] : null;
 
@@ -482,7 +511,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 			if ( property_exists( $classpath, $key ) ) {
 
-				$model->$key	= $value;
+				$model->$key = $value;
 			}
 		}
 
@@ -570,7 +599,8 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 			// Exclude main site
 			if( $excludeMain ) {
 
-				$config[ 'filters' ][]	= [ 'not in', 'siteId', [ Yii::$app->core->mainSiteId ] ];
+				$mainSiteId					= Yii::$app->core->mainSiteId;
+				$config[ 'conditions' ][] 	= "siteId!=$mainSiteId";
 			}
 		}
 
@@ -669,30 +699,31 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 					$key = $column;
 				}
-				else {
-
-				}
 
 				$find	= Yii::$app->request->getQueryParam( "$key-find" );
 				$match	= Yii::$app->request->getQueryParam( "$key-match" );
 				$start	= Yii::$app->request->getQueryParam( "$key-start" );
 				$end	= Yii::$app->request->getQueryParam( "$key-end" );
 
+				// String search
 				if( isset( $find ) ) {
 
 					$reportColumns[ $column ][ 'find' ] = $find;
 				}
 
+				// Numeric
 				if( isset( $match ) ) {
 
 					$reportColumns[ $column ][ 'match' ] = $match;
 				}
 
+				// Numeric - Range - Start
 				if( isset( $start ) ) {
 
 					$reportColumns[ $column ][ 'start' ] = $start;
 				}
 
+				// Numeric - Range - End
 				if( isset( $end ) ) {
 
 					$reportColumns[ $column ][ 'end' ] = $end;
@@ -706,25 +737,30 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 				$start	= isset( $column[ 'start' ] ) ? $column[ 'start' ] : null;
 				$end	= isset( $column[ 'end' ] ) ? $column[ 'end' ] : null;
 
+				// String search
 				if( isset( $find ) ) {
 
 					$query->andFilterWhere( [ 'like', $key, $find ] );
 				}
 
+				// Numeric
 				if( isset( $match ) ) {
 
 					// TODO: Check for numerical and string matches
 					$query->andWhere( "$key=:match", [ ':match' => $match ] );
 				}
 
+				// Numeric - Range - Start & End
 				if( isset( $start ) && isset( $end ) ) {
 
 					$query->andWhere( "$key BETWEEN ':start' AND ':end'", [ ':start' => $start, ':end' => $end ] );
 				}
+				// Numeric - Range - Start
 				else if( isset( $start ) ) {
 
 					$query->andWhere( "$key >= '$start'" );
 				}
+				// Numeric - Range - End
 				else if( isset( $end ) ) {
 
 					$query->andWhere( "$key <= '$end'" );
@@ -815,6 +851,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		// Filters
 		$config	= static::applyPublicFilters( $config );
+
 		$config	= static::applySiteFilters( $config );
 
 		// Default search column
@@ -837,6 +874,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		$parentType			= isset( $config[ 'parentType' ] ) ? $config[ 'parentType' ] : static::$parentType;
 
 		// Search in
+		$searchModel	 	= isset( $config[ 'searchModel' ] ) ? $config[ 'searchModel' ] : true; // Search in model name
 		$searchCategory 	= isset( $config[ 'searchCategory' ] ) ? $config[ 'searchCategory' ] : false; // Search in category name
 		$searchTag		 	= isset( $config[ 'searchTag' ] ) ? $config[ 'searchTag' ] : false; // Search in tag name
 
@@ -891,7 +929,10 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		// Search
 		if( isset( $keywords ) ) {
 
-			$config[ 'search-col' ][] = "$modelTable.name";
+			if( $searchModel ) {
+
+				$config[ 'search-col' ][] = "$modelTable.name";
+			}
 
 			if( $searchCategory ) {
 
@@ -948,6 +989,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		// query generation
 		$query			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
+		$offset			= isset( $config[ 'offset' ] ) ? $config[ 'offset' ] : 0;
 		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::PAGE_LIMIT;
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
@@ -992,6 +1034,13 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 				$query	= $query->andFilterWhere( $filter );
 			}
+		}
+
+		// Offset --------------
+
+		if( $offset > 0 ) {
+
+			$query->offset( $offset );
 		}
 
 		// Limit ---------------
@@ -1346,6 +1395,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		$searchTerms	= preg_split( '/,/', $searchTerms );
 		$searchQuery	= "";
 
+		// Multiple columns
 		if( is_array( $columns ) ) {
 
 			foreach ( $columns as $ckey => $column ) {
@@ -1377,6 +1427,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 				}
 			}
 		}
+		// Single column
 		else {
 
 			foreach ( $searchTerms as $key => $value ) {

@@ -7,7 +7,7 @@ use yii\helpers\Url;
 use cmsgears\core\common\config\CoreGlobal;
 
 $logoUrl		= Yii::getAlias( "@web" );
-$logoUrl		= Url::to( $logoUrl. "/images/logo-mail.png", true );
+$logoUrl		= Url::to( "$logoUrl/images/logo-mail.png", true );
 
 $logo			= "<img class='logo' style='margin:10px;' src='$logoUrl'>";
 $siteName		= $coreProperties->getSiteName();

@@ -40,7 +40,7 @@ trait CategoryTrait {
 		$config[ 'limit' ]	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
 		$config[ 'active' ]	= isset( $config[ 'active' ] ) ? $config[ 'active' ] : true;
 
-		if( $active ) {
+		if( $config[ 'active' ] ) {
 
 			$config[ 'query' ]->joinWith( 'activeCategories' )->where( [ 'modelId' => $categoryId ] );
 		}
@@ -69,7 +69,7 @@ trait CategoryTrait {
 		$config[ 'limit' ]	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
 		$config[ 'active' ]	= isset( $config[ 'active' ] ) ? $config[ 'active' ] : true;
 
-		if( $active ) {
+		if( $config[ 'active' ] ) {
 
 			$config[ 'query' ]->joinWith( 'activeCategories' )->filterWhere( [ 'in', 'modelId', $ids ] );
 		}
@@ -99,7 +99,7 @@ trait CategoryTrait {
 		$config[ 'limit' ]	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
 		$config[ 'active' ]	= isset( $config[ 'active' ] ) ? $config[ 'active' ] : true;
 
-		if( $active ) {
+		if( $config[ 'active' ] ) {
 
 			$config[ 'query' ]->joinWith( 'activeCategories' )->where( [ 'modelId' => $categoryId, "$modelTable.featured" => true ] );
 		}

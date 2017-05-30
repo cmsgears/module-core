@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\common\models\interfaces;
+namespace cmsgears\core\common\services\interfaces\cache;
 
 interface IDbCacheable extends ICacheable {
 

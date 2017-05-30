@@ -40,7 +40,7 @@ $siteId	= Yii::$app->core->siteId;
 	<div id="sidebar-core" class="collapsible-tab has-children <?= $parent === 'sidebar-core' ? 'active' : null ?>">
 		<span class="marker"></span>
 		<div class="tab-header">
-			<div class="tab-icon"><span class="cmti cmti-check-report"></span></div>
+			<div class="tab-icon"><span class="cmti cmti-core"></span></div>
 			<div class="tab-title">Core</div>
 		</div>
 		<div class="tab-content clear <?= $parent === 'sidebar-core' ? 'expanded visible' : null ?>">

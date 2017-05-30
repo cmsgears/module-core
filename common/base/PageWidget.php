@@ -8,8 +8,8 @@ use yii\helpers\Url;
 use yii\widgets\LinkPager;
 
 // CMG Imports
+use cmsgears\core\common\config\CacheProperties;
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\common\config\CoreProperties;
 
 use cmsgears\core\common\utilities\CodeGenUtil;
 
@@ -135,9 +135,9 @@ abstract class PageWidget extends Widget {
 
 		parent::init();
 
-		$coreProperties		= CoreProperties::getInstance();
+		$cacheProperties	= CacheProperties::getInstance();
 
-		$this->caching		= $coreProperties->isCaching();
+		$this->caching		= $cacheProperties->isCaching();
 
 		// Init models
 		$this->initModels();

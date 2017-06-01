@@ -101,7 +101,7 @@ if( !isset( $sortOrder ) ) {
 						</td>
 						<td>
 							<span class="cmt-click" title="Assign Roles">
-								<span class="cmti cmti-save"</span>
+								<span class="cmti cmti-save"></span>
 							</span>
 						</td>
 					</tr>

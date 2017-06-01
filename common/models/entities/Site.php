@@ -14,6 +14,7 @@ use cmsgears\core\common\models\resources\SiteMeta;
 
 use cmsgears\core\common\models\traits\NameTrait;
 use cmsgears\core\common\models\traits\SlugTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
 
 /**
@@ -27,6 +28,7 @@ use cmsgears\core\common\models\traits\resources\VisualTrait;
  * @property string $slug
  * @property short $order
  * @property boolean $active
+ * @property string $data
  */
 class Site extends \cmsgears\core\common\models\base\Entity {
 
@@ -52,6 +54,7 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
 	use NameTrait;
 	use SlugTrait;
 	use VisualTrait;
@@ -93,7 +96,7 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 		$rules = [
 			// Required, Safe
 			[ [ 'name' ], 'required' ],
-			[ [ 'id' ], 'safe' ],
+			[ [ 'id', 'data' ], 'safe' ],
 			// Unique
 			[ 'name', 'unique' ],
 			// Text Limit
@@ -127,7 +130,8 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
+			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 

@@ -1,6 +1,4 @@
 <?php
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 
 class m160620_095703_core extends \yii\db\Migration {
 
@@ -366,7 +364,8 @@ class m160620_095703_core extends \yii\db\Migration {
 			'name' => $this->string( Yii::$app->core->largeText )->notNull(),
 			'slug' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
-			'active' => $this->boolean()->notNull()->defaultValue( false )
+			'active' => $this->boolean()->notNull()->defaultValue( false ),
+			'data' => $this->text()
 		], $this->options );
 
 		// Index for columns avatar, banner and theme

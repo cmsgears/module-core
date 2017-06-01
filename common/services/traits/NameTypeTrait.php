@@ -4,9 +4,6 @@ namespace cmsgears\core\common\services\traits;
 // Yii Imports
 use \Yii;
 
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 /**
  * Used by services with base model having name, slug and type columns with sluggable behaviour which allows unique name for a type.
  */

@@ -2,7 +2,6 @@
 namespace cmsgears\core\common\services\traits;
 
 // Yii Imports
-use \Yii;
 use yii\base\UnknownMethodException;
 
 // CMG Imports

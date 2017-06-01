@@ -1,12 +1,7 @@
 <?php
 namespace cmsgears\core\common\services\traits;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\interfaces\IVisibility;
 
 /**

@@ -1,13 +1,9 @@
 <?php
 namespace cmsgears\core\common\models\traits\resources;
 
-// Yii Import
-use \Yii;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\ModelMeta;
 
 /**

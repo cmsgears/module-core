@@ -1,14 +1,6 @@
 <?php
 namespace cmsgears\core\common\services\traits;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\models\forms\Meta;
-
 /**
  * Used by services with base model having ModelCategory trait.
  */

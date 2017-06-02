@@ -334,7 +334,8 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $config->id, 'time_format','Time Format', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Time format used by the formatter.","placeholder":"Time Format"}' ],
 			[ $config->id, 'date_time_format','Date Time Format', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Date time format used by the formatter.","placeholder":"Time Format"}' ],
 			[ $config->id, 'timezone','Timezone', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Time format used by the formatter.","placeholder":"Time Format"}' ],
-			[ $config->id, 'autologin','Auto Login', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Auto login on account confirmation and activation."}' ]
+			[ $config->id, 'auto_login','Auto Login', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Auto login on account confirmation and activation."}' ],
+			[ $config->id, 'auto_load','Auto Load', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Auto load widgets etc using ajax."}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -533,7 +534,8 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $this->site->id, 'time_format','Time Format','core','text','HH:mm:ss' ],
 			[ $this->site->id, 'date_time_format','Date Time Format','core','text','yyyy-MM-dd HH:mm:ss' ],
 			[ $this->site->id, 'timezone','Timezone','core','text', $timezone ],
-			[ $this->site->id, 'autologin','Auto Login','core','flag','0' ],
+			[ $this->site->id, 'auto_login','Auto Login','core','flag','0' ],
+			[ $this->site->id, 'auto_load','Auto Load','core','flag','0' ],
 			[ $this->site->id, 'caching','Caching','cache','flag','0' ],
 			[ $this->site->id, 'cache_type','Cache Type','cache','text',NULL ],
 			[ $this->site->id, 'cache_duration','Cache Type','cache','text',NULL ],

@@ -170,8 +170,13 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 						Yii::$app->user->login( $user, 3600 * 24 * 30 );
 					}
 
-					return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM );
+					return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM, [ 'confirmed' => true ] );
 				}
+
+				// Set Failure Message
+				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
+
+				return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM, [ 'confirmed' => false ] );
 			}
 		}
 

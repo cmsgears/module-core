@@ -47,6 +47,11 @@ abstract class Widget extends \yii\base\Widget {
 	public $factory			= true;
 
 	/**
+	 * Flag to render data from cache.
+	 */
+	public $cache		= false;
+
+	/**
 	 * Flag for data rendering from database based cached data.
 	 */
 	public $cacheDb		= false;

@@ -111,12 +111,14 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 
 						Yii::$app->user->login( $user, 3600 * 24 * 30 );
 					}
-				}
-				else {
 
-					// Set Failure Message
-					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
+					return $this->render( CoreGlobal::PAGE_ACCOUNT_ACTIVATE, [ CoreGlobal::MODEL_GENERIC => $model, 'activated' => true ] );
 				}
+
+				// Set Failure Message
+				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
+
+				return $this->render( CoreGlobal::PAGE_ACCOUNT_ACTIVATE, [ CoreGlobal::MODEL_GENERIC => $model, 'activated' => false ] );
 			}
 			else {
 
@@ -195,6 +197,8 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 
 						// Set Success Message
 						Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_RESET_PASSWORD ) );
+
+						return $this->render( CoreGlobal::PAGE_PASSWORD_RESET, [ CoreGlobal::MODEL_GENERIC => $model, 'updated' => true ] );
 					}
 				}
 				else {

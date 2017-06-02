@@ -78,7 +78,9 @@ class CoreProperties extends CmgProperties {
 
 	const PROP_TIMEZONE				= 'timezone';
 
-	const PROP_AUTOLOGIN			= 'autologin';
+	const PROP_AUTO_LOGIN			= 'auto_login';
+
+	const PROP_AUTO_LOAD			= 'auto_load';
 
 	// Public -----------------
 
@@ -251,7 +253,12 @@ class CoreProperties extends CmgProperties {
 
 	public function isAutoLogin() {
 
-		return $this->properties[ self::PROP_AUTOLOGIN ];
+		return $this->properties[ self::PROP_AUTO_LOGIN ];
+	}
+
+	public function isAutoLoad() {
+
+		return $this->properties[ self::PROP_AUTO_LOAD ];
 	}
 
 	/**

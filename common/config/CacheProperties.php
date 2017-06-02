@@ -55,7 +55,7 @@ class CacheProperties extends CmgProperties {
 
 			self::$instance	= new CacheProperties();
 
-			self::$instance->init( CoreGlobal::CONFIG_CACHE);
+			self::$instance->init( CoreGlobal::CONFIG_CACHE );
 		}
 
 		return self::$instance;

@@ -2,11 +2,9 @@
 namespace cmsgears\core\common\services\mappers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Tag;
 use cmsgears\core\common\models\mappers\ModelTag;

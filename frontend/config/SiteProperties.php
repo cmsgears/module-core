@@ -13,8 +13,11 @@ class SiteProperties extends \cmsgears\core\common\config\CmgProperties {
 
 	// Global -----------------
 
-	const PROP_AVATAR_USER		= 'avatar_user';
-	const PROP_AVATAR_SITE		= 'avatar_site';
+	const PROP_AVATAR_USER		= 'user_avatar';
+
+	const PROP_AVATAR_DEFAULT	= 'default_avatar';
+
+	const PROP_BANNER_DEFAULT	= 'default_banner';
 
 	// Public -----------------
 
@@ -53,8 +56,13 @@ class SiteProperties extends \cmsgears\core\common\config\CmgProperties {
 		return $this->properties[ self::PROP_AVATAR_USER ];
 	}
 
-	public function getSiteAvatar() {
+	public function getDefaultAvatar() {
 
-		return $this->properties[ self::PROP_AVATAR_SITE ];
+		return $this->properties[ self::PROP_AVATAR_DEFAULT ];
+	}
+
+	public function getDefaultBanner() {
+
+		return $this->properties[ self::PROP_BANNER_DEFAULT];
 	}
 }

@@ -125,15 +125,15 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 
 				if( $this->typed ) {
 
-					// Search model using model service and model type
-					if( isset( $this->modelType ) ) {
-
-						$this->model	= $this->modelService->getBySlugType( $slug, $this->modelType );
-					}
 					// Search model using model service and parent type
-					else if( $this->parent && isset( $this->parentType ) ) {
+					if( $this->parent && isset( $this->parentType ) ) {
 
 						$this->model	= $this->modelService->getBySlugType( $slug, $this->parentType );
+					}
+					// Search model using model service and model type
+					else if( isset( $this->modelType ) ) {
+
+						$this->model	= $this->modelService->getBySlugType( $slug, $this->modelType );
 					}
 				}
 				else {

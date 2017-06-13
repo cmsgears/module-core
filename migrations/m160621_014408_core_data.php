@@ -469,7 +469,8 @@ class m160621_014408_core_data extends \yii\db\Migration {
 		$fields	= [
 			[ $config->id, 'cmg_powered', 'CMG Powered', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Show Powered by CMSGears on login screen."}' ],
 			[ $config->id, 'default_avatar', 'Default Avatar', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default avatar for site elements."}' ],
-			[ $config->id, 'user_avatar', 'User Avatar', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default avatar for user."}' ]
+			[ $config->id, 'user_avatar', 'User Avatar', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default avatar for user."}' ],
+			[ $config->id, 'default_banner', 'Default Banner', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default banner for site elements."}' ],
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -497,7 +498,8 @@ class m160621_014408_core_data extends \yii\db\Migration {
 
 		$fields	= [
 			[ $config->id, 'default_avatar', 'Default Avatar', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default avatar for site elements."}' ],
-			[ $config->id, 'user_avatar', 'User Avatar', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default avatar for user."}' ]
+			[ $config->id, 'user_avatar', 'User Avatar', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default avatar for user."}' ],
+			[ $config->id, 'default_banner', 'Default Banner', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default banner for site elements."}' ],
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -566,8 +568,10 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $this->site->id, 'cmg_powered','CMG Powered','backend','flag','1' ],
 			[ $this->site->id, 'default_avatar', 'Default Avatar','backend','text', 'avatar-site.png' ],
 			[ $this->site->id, 'user_avatar','User Avatar','backend','text', 'avatar-user.png' ],
+			[ $this->site->id, 'default_banner','Default Banner','backend','text', 'banner-site.jpg' ],
 			[ $this->site->id, 'default_avatar', 'Default Avatar','frontend','text', 'avatar-site.png' ],
-			[ $this->site->id, 'user_avatar','User Avatar','frontend','text', 'avatar-user.png' ]
+			[ $this->site->id, 'user_avatar','User Avatar','frontend','text', 'avatar-user.png' ],
+			[ $this->site->id, 'default_banner','Default Banner','frontend','text', 'banner-site.jpg' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );

@@ -35,6 +35,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	 * The default page limit.
 	 */
 	const PAGE_LIMIT			= 10;
+	const PAGE_LIMIT_MAX		= 50;
 
 	// Public -----------------
 
@@ -42,6 +43,8 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	 * Page limit for data provider.
 	 */
 	public static $pageLimit	= self::PAGE_LIMIT;
+
+	public static $maxPageLimit	= self::PAGE_LIMIT_MAX;
 
 	/**
 	 * ObjectData is configured as default model class since it supports arbitrary models.
@@ -623,6 +626,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		$query			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
 		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::PAGE_LIMIT;
 		$page			= Yii::$app->request->get( 'page' ) != null ? Yii::$app->request->get( 'page' ) - 1 : null;
+		$pageLimit		= Yii::$app->request->get( 'per-page' );
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
 		$random			= isset( $config[ 'random' ] ) ? $config[ 'random' ] : false; // Be careful in using random at database level for tables having high row count
@@ -784,9 +788,14 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		$pagination	= [ 'pageSize' => $limit ];
 
-		if( !empty( $page ) ) {
+		if( isset( $page ) ) {
 
 			$pagination[ 'page' ] = $page;
+		}
+
+		if( isset( $pageLimit ) && $pageLimit < static::$maxPageLimit ) {
+
+			$pagination[ 'pageSize' ] = $pageLimit;
 		}
 
 		if( isset( $route ) ) {

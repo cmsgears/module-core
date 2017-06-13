@@ -248,7 +248,9 @@ class FormDesigner extends \yii\base\Component {
 		$readOnly		= isset( $config[ 'read-only' ] ) ? $config[ 'read-only' ] : $readOnly;
 		$disabled		= isset( $config[ 'disabled' ] ) ? $config[ 'disabled' ] : $disabled;
 
+		// TODO: Get stars and starMessage from field options.
 		$stars			= isset( $config[ 'stars' ] ) ? $config[ 'stars' ] : 5;
+		$starMessage	= isset( $config[ 'starMessage' ] ) ? $config[ 'starMessage' ] : [ "Poor", "Good", "Very Good", "Perfect", "Excellent" ];
 		$value			= $model->$key;
 
 		$fieldName		= StringHelper::baseName( get_class( $model ) ) . '[' . $key . ']';
@@ -265,26 +267,50 @@ class FormDesigner extends \yii\base\Component {
 
 		if( $config[ 'label' ] ) {
 
-			$ratingHtml	= "<label>$field->label</label><div class='element-60 $class'>"; // element-60 will work if form is configured for 40-60 split
+			$ratingHtml	= "<label>$field->label</label><div class=\"element-60 $class\">"; // element-60 will work if form is configured for 40-60 split
 		}
 		else {
 
-			$ratingHtml	= "<div class='$class'>";
+			$ratingHtml	= "<div class=\"$class\">";
 		}
+
+		$ratingHtml .= '<span class="wrap-stars">';
 
 		for( $i = 1; $i <= $stars; $i++ ) {
 
 			if( $value > 0 && $value == $i ) {
 
-				$icon	= "<span star='$i' class='star selected'></span>";
+				$icon	= "<span star=\"$i\" class=\"star selected\"></span>";
 			}
 			else {
 
-				$icon	= "<span star='$i' class='star'></span>";
+				$icon	= "<span star=\"$i\" class=\"star\"></span>";
 			}
 
 			$ratingHtml	  .= $icon;
 		}
+
+		$ratingHtml .= '</span>';
+
+		$ratingHtml .= '<span class="wrap-messages">';
+
+		for( $i = 1; $i <= $stars; $i++ ) {
+
+			$message = $starMessage[ $i - 1 ];
+
+			if( $value > 0 && $value == $i ) {
+
+				$icon	= "<span star-message=\"$i\" class=\"star-message selected\">$message</span>";
+			}
+			else {
+
+				$icon	= "<span star-message=\"$i\" class=\"star-message\">$message</span>";
+			}
+
+			$ratingHtml	  .= $icon;
+		}
+
+		$ratingHtml .= '</span>';
 
 		$ratingHtml	.= '<input type="hidden" name="' . $fieldName . '" value="' . $value . '">';
 

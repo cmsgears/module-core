@@ -20,7 +20,19 @@ abstract class Widget extends \yii\base\Widget {
 
 	// Public -----------------
 
-	// html options for Yii Widget
+	/**
+	 * Flag to check whether the widget html need wrapper.
+	 */
+	public $wrap			= false;
+
+	/**
+	 * The wrapper tag to be used for widget html wrapping.
+	 */
+	public $wrapper			= 'div';
+
+	/**
+	 * Html options to be used for wrapper.
+	 */
 	public $options			= [];
 
 	/**

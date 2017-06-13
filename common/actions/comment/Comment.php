@@ -6,7 +6,7 @@ use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\frontend\config\SiteProperties;
+use cmsgears\core\common\config\CommentProperties;
 
 use cmsgears\core\common\models\resources\ModelComment;
 
@@ -59,10 +59,10 @@ class Comment extends Create {
 
 	public function run() {
 
-		$siteProperties		= SiteProperties::getInstance();
+		$commProperties		= CommentProperties::getInstance();
 
 		// Comments are disabled
-		if( !$siteProperties->isComments() ) {
+		if( !$commProperties->isComments() ) {
 
 			// Trigger Ajax Failure
 			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_COMMENTS ) );

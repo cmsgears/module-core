@@ -32,12 +32,29 @@ abstract class PageWidget extends Widget {
 
 	// Public -----------------
 
-	/**
-	 * Used to decorate wrapper. The inherited $options will be used for div wrapping the models wrapper.
-	 */
-	public $wrapperOptions	= [ 'class' => 'wrapper-model clearfix' ];
+	public $wrap			= true;
 
-	public $modelOptions	= [ 'class' => 'model clearfix' ];
+	public $options			= [ ];
+
+	/**
+	 * Html options to be used for all models wrapper.
+	 */
+	public $wrapperOptions	= [ 'class' => 'row' ];
+
+	/**
+	 * Flag to check whether the single model html need wrapper.
+	 */
+	public $wrapSingle		= true;
+
+	/**
+	 * The wrapper tag to be used for single model html wrapping.
+	 */
+	public $singleWrapper	= 'div';
+
+	/**
+	 * Html options to be used for single model wrapper.
+	 */
+	public $singleOptions	= [ 'class' => 'col' ];
 
 	/*
 	 * Base path used for all and single paths.
@@ -69,10 +86,18 @@ abstract class PageWidget extends Widget {
 	 */
 	public $paging			= true;
 
+    public $nextLabel		= '&raquo;';
+
+    public $prevLabel		= '&laquo;';
+
+	public $route			= null;
+
+	public $excludeParams	= [];
+
 	/**
 	 * Ajaxify the paging links in case $paging is set to true. In such cases, URL params will be updated using History API if supported by browser and the page will be loaded via ajax without refreshing full page.
 	 */
-	public $ajaxifyLinks	= true;
+	public $ajaxifyLinks	= false;
 
 	/*
 	 * Ajax url used to fetch pages. It must be a relative path for appropriate apix controller.
@@ -160,11 +185,25 @@ abstract class PageWidget extends Widget {
 		if( $this->pagination && $this->paging && isset( $this->dataProvider ) ) {
 
 			$pagination			= $this->dataProvider->getPagination();
+
 			$this->pageInfo		= CodeGenUtil::getPaginationDetail( $this->dataProvider );
-			$this->pageLinks	= LinkPager::widget( [ 'pagination' => $pagination ] );
+
+			if( isset( $this->route ) ) {
+
+				$pagination->route = $this->route;
+			}
+
+			if( count( $this->excludeParams ) > 0 ) {
+
+				$pagination->excludeParams	= $this->excludeParams;
+			}
+
+			$this->pageLinks	= LinkPager::widget([
+										'pagination' => $pagination,
+										'nextPageLabel' => $this->nextLabel, 'prevPageLabel' => $this->prevLabel
+									]);
 		}
 	}
-
 
 	// Instance methods --------------------------------------------
 
@@ -219,7 +258,16 @@ abstract class PageWidget extends Widget {
 
 		foreach( $models as $model ) {
 
-			$modelsHtml[]	= $this->render( $singleView, [ 'index' => $idxCounter, 'model' => $model, 'widget' => $this ] );
+			$content = $this->render( $singleView, [ 'index' => $idxCounter, 'model' => $model, 'widget' => $this ] );
+
+			if( $this->wrapSingle ) {
+
+				$modelsHtml[] = Html::tag( $this->singleWrapper, $content, $this->singleOptions );
+			}
+			else {
+
+				$modelsHtml[] = $this->render( $singleView, [ 'index' => $idxCounter, 'model' => $model, 'widget' => $this ] );
+			}
 
 			$idxCounter++;
 		}
@@ -228,9 +276,27 @@ abstract class PageWidget extends Widget {
 
 		$content		= $this->render( $wrapperView, [ 'modelsHtml' => $modelsHtml, 'widget' => $this, 'modelCount' => $idxCounter ] );
 
-		return Html::tag( 'div', $content, $this->options );
+		if( $this->wrap ) {
+
+			return Html::tag( $this->wrapper, $content, $this->options );
+		}
+		else {
+
+			return $content;
+		}
 	}
 
 	// PageWidget ----------------------------
 
+	public function getPaginationOptions() {
+
+		$pageLimits		= [ '5' => 5, '10' => 10, '15' => 15, '20' => 20 ];
+		$pageLimit		= Yii::$app->request->get( 'per-page' );
+		$pageLimit		= isset( $pageLimit ) && in_array( $pageLimit, $pageLimits ) ? $pageLimit : $this->limit;
+		$pageLimitIdx	= array_search( $pageLimit, $pageLimits );
+
+		$options		= CodeGenUtil::generateSelectOptionsFromArray( $pageLimits, $pageLimitIdx );
+
+		return $options;
+	}
 }

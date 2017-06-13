@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use yii\widgets\LinkPager;
 
 // CMG Imports
+use cmsgears\core\admin\config\AdminProperties;
+
 use cmsgears\core\common\utilities\CodeGenUtil;
 
 $coreProperties = $this->context->getCoreProperties();
@@ -100,9 +102,11 @@ if( !isset( $sortOrder ) ) {
 						$id			= $user->id;
 						$editUrl	= Html::a( $user->username, [ "update?id=$id" ] );
 						$role		= $user->role->name;
+						$avatar		= AdminProperties::getInstance()->getUserAvatar();
+						$avatar		= CodeGenUtil::getImageThumbTag( $user->avatar, [ 'class' => 'avatar', 'image' => $avatar ] );
 				?>
 					<tr>
-						<td><?= CodeGenUtil::getImageThumbTag( $user->avatar, [ 'class' => 'avatar', 'image' => 'avatar.png' ] ) ?></td>
+						<td><?= $avatar ?></td>
 						<td><?= $editUrl ?></td>
 						<td><?= $user->getName() ?></td>
 						<td><?= $user->email ?></td>

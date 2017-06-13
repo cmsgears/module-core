@@ -146,8 +146,6 @@ abstract class PageWidget extends Widget {
 	 */
 	public $pageLinks		= null;
 
-	public $caching			= false;
-
 	// Protected --------------
 
 	// Private ----------------
@@ -162,7 +160,7 @@ abstract class PageWidget extends Widget {
 
 		$cacheProperties	= CacheProperties::getInstance();
 
-		$this->caching		= $cacheProperties->isCaching();
+		$this->cache		= $cacheProperties->isCaching();
 
 		// Init models
 		$this->initModels();

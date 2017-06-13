@@ -147,6 +147,13 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 		return Category::getFeaturedByType( $type );
 	}
 
+	public function getL1ByType( $type ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::find()->where( [ 'type' => $type, 'lValue' => 1 ] )->all();
+	}
+
 	// Read - Lists ----
 
 	public function getTopLevelIdNameListByType( $type, $config = [] ) {

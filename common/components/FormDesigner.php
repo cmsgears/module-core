@@ -2,7 +2,6 @@
 namespace cmsgears\core\common\components;
 
 // Yii Imports
-use \Yii;
 use yii\helpers\Html;
 use yii\helpers\StringHelper;
 
@@ -854,17 +853,17 @@ class FormDesigner extends \yii\base\Component {
 			$class = "$class disabled";
 		}
 
-		$ratingHtml	= "<div class='$class'>";
+		$ratingHtml	= "<div class=\"$class\">";
 
 		for( $i = 1; $i <= $stars; $i++ ) {
 
 			if( $selected > 0 && $selected == $i ) {
 
-				$icon	= "<span star='$i' class='star selected'></span>";
+				$icon	= "<span star=\"$i\" class=\"star selected\"></span>";
 			}
 			else {
 
-				$icon	= "<span star='$i' class='star'></span>";
+				$icon	= "<span star=\"$i\" class=\"star\"></span>";
 			}
 
 			$ratingHtml	  .= $icon;

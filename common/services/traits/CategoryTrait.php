@@ -48,7 +48,7 @@ trait CategoryTrait {
 			return $page->getModels();
 		}
 
-		return $config[ 'query' ]->all();
+		return $config[ 'query' ]->limit( $config[ 'limit' ] )->all();
 	}
 
 	public function getByCategoryIds( $ids, $config = [] ) {
@@ -77,7 +77,7 @@ trait CategoryTrait {
 			return $page->getModels();
 		}
 
-		return $config[ 'query' ]->all();
+		return $config[ 'query' ]->limit( $config[ 'limit' ] )->all();
 	}
 
 	// Works only with models having featured column
@@ -107,7 +107,7 @@ trait CategoryTrait {
 			return $page->getModels();
 		}
 
-		return $config[ 'query' ]->all();
+		return $config[ 'query' ]->limit( $config[ 'limit' ] )->all();
 	}
 
 	// Read - Lists ----

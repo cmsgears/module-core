@@ -1,8 +1,9 @@
 <?php
 namespace cmsgears\core\common\base;
 
-// Yii Imports
-use \Yii;
+// CMG Imports
+use cmsgears\core\common\config\CoreProperties;
+use cmsgears\core\common\config\CacheProperties;
 
 abstract class Widget extends \yii\base\Widget {
 
@@ -36,7 +37,7 @@ abstract class Widget extends \yii\base\Widget {
 	public $options			= [];
 
 	/**
-	 * Flag to check whether assets can be loaded. We can load widget assets seperately in case the bundle is not added as dependency to layout asset bundle.
+	 * Flag to check whether assets can be loaded. We can load widget assets separately in case the bundle is not added as dependency to layout asset bundle.
 	 */
 	public $loadAssets		= false;
 
@@ -56,7 +57,7 @@ abstract class Widget extends \yii\base\Widget {
 	 * The widgets in need of model service can utilise factory to get required service. In case factory is not needed, widget can directly
 	 * use models to query them or service in use must provided static method.
 	 */
-	public $factory			= true;
+	public $factory		= true;
 
 	/**
 	 * Flag to render data from cache.
@@ -76,12 +77,16 @@ abstract class Widget extends \yii\base\Widget {
 	/**
 	 * Flag for widget autoloading.
 	 */
-	public $autoload	= false;
+	public $autoload			= false;
+
+	public $autoloadApp			= 'autoload';
+	public $autoloadController	= 'autoload';
+	public $autoloadAction		= 'autoload';
 
 	/**
 	 * Url for autoloading.
 	 */
-	public $autoloadUrl	= null;
+	public $autoloadUrl			= null;
 
 	// Protected --------------
 
@@ -90,6 +95,15 @@ abstract class Widget extends \yii\base\Widget {
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+    public function init() {
+
+        parent::init();
+
+        $this->autoload	= ( isset( $this->autoloadUrl ) && CoreProperties::getInstance()->isAutoLoad() ) ? true : false;
+
+		$this->cache	= $this->cache ? $this->cache : CacheProperties::getInstance()->isCaching();
+    }
 
 	// Instance methods --------------------------------------------
 

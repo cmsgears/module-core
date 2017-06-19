@@ -2,14 +2,13 @@
 namespace cmsgears\core\frontend\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\SiteProperties;
 use cmsgears\core\frontend\config\WebGlobalCore;
 
-use cmsgears\core\common\models\forms\Login;
 use cmsgears\core\common\models\forms\Register;
 
 class SiteController extends \cmsgears\core\common\controllers\SiteController {
@@ -51,9 +50,9 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 		$behaviours	= parent::behaviors();
 
-		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ]				= [ 'get' ];
-		$behaviours[ 'verbs' ][ 'actions' ][ 'register' ]			= [ 'get', 'post' ];
-		$behaviours[ 'verbs' ][ 'actions' ][ 'confirm-account' ]	= [ 'get', 'post' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ] = [ 'get' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'register' ] = [ 'get', 'post' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'confirm-account' ] = [ 'get', 'post' ];
 
 		return $behaviours;
 	}
@@ -62,7 +61,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 	public function actions() {
 
-		if ( !Yii::$app->user->isGuest ) {
+		if( !Yii::$app->user->isGuest ) {
 
 			$this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
 		}

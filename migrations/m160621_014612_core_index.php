@@ -72,6 +72,8 @@ class m160621_014612_core_index extends \yii\db\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'address_phone', $this->prefix . 'core_address', 'phone' );
 		$this->createIndex( 'idx_' . $this->prefix . 'address_email', $this->prefix . 'core_address', 'email' );
 		$this->createIndex( 'idx_' . $this->prefix . 'address_fax', $this->prefix . 'core_address', 'fax' );
+		$this->createIndex( 'idx_' . $this->prefix . 'address_lat', $this->prefix . 'core_address', 'latitude' );
+		$this->createIndex( 'idx_' . $this->prefix . 'address_lon', $this->prefix . 'core_address', 'longitude' );
 
 		// Role
 		$this->createIndex( 'idx_' . $this->prefix . 'role_name', $this->prefix . 'core_role', 'name' );
@@ -268,6 +270,8 @@ class m160621_014612_core_index extends \yii\db\Migration {
 		$this->dropIndex( 'idx_' . $this->prefix . 'address_phone', $this->prefix . 'core_address' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'address_email', $this->prefix . 'core_address' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'address_fax', $this->prefix . 'core_address' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'address_lat', $this->prefix . 'core_address' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'address_lon', $this->prefix . 'core_address' );
 
 		// Role
 		$this->dropIndex( 'idx_' . $this->prefix . 'role_name', $this->prefix . 'core_role' );

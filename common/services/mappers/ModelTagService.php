@@ -7,17 +7,16 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Tag;
-use cmsgears\core\common\models\mappers\ModelTag;
 
-use cmsgears\core\common\services\interfaces\resources\ITagService;
+use cmsgears\core\common\services\base\EntityService;
 use cmsgears\core\common\services\interfaces\mappers\IModelTagService;
-
+use cmsgears\core\common\services\interfaces\resources\ITagService;
 use cmsgears\core\common\services\traits\MapperTrait;
 
 /**
  * The class ModelTagService is base class to perform database activities for ModelTag Entity.
  */
-class ModelTagService extends \cmsgears\core\common\services\base\EntityService implements IModelTagService {
+class ModelTagService extends EntityService implements IModelTagService {
 
 	// Variables ---------------------------------------------------
 

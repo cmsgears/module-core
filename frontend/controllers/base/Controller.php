@@ -1,11 +1,7 @@
 <?php
 namespace cmsgears\core\frontend\controllers\base;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 
 use cmsgears\core\frontend\config\SiteProperties;

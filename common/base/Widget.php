@@ -1,6 +1,9 @@
 <?php
 namespace cmsgears\core\common\base;
 
+// Yii Imports
+use yii\helpers\Html;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreProperties;
 use cmsgears\core\common\config\CacheProperties;
@@ -151,7 +154,14 @@ abstract class Widget extends \yii\base\Widget {
 
 	public function renderAutoload( $config = [] ) {
 
-		return $this->render( "$this->template/autoload", [ 'widget' => $this ] );
+		$widgetHtml	= $this->render( "$this->template/autoload", [ 'widget' => $this ] );
+
+		if( $this->wrap ) {
+
+			return Html::tag( $this->wrapper, $widgetHtml, $this->options );
+		}
+
+		return $widgetHtml;
 	}
 
 	// Widget --------------------------------

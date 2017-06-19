@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\controllers\base;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 
 // CMG Imports
@@ -25,7 +25,7 @@ abstract class Controller extends \yii\web\Controller {
 	// The model service for primary model if applicable. It can be obtained either via factory component or instantiated within controller constructor or init method.
 	public $modelService;
 
-	// The primary model in action. It can be discovered while applying a filter and later action can use it directly.
+	// The primary model in action. It can be discovered while applying a filter and other filters and action can use it directly.
 	public $model;
 
 	// It provide information to display active tab on sidebar.
@@ -109,24 +109,32 @@ abstract class Controller extends \yii\web\Controller {
 			$role		= $user->role;
 			$storedLink	= Url::previous( CoreGlobal::REDIRECT_LOGIN );
 
-			// Redirect user to home
+			// Redirect user to stored link on login
 			if( isset( $storedLink ) ) {
 
 				Yii::$app->response->redirect( $storedLink )->send();
 			}
-			else if( isset( $role ) && isset( $role->homeUrl ) ) {
+			// Redirect user having role to home
+			else if( isset( $role ) ) {
 
 				// Switch according to app id
 				$appAdmin		= Yii::$app->core->getAppAdmin();
 				$appFrontend	= Yii::$app->core->getAppFrontend();
 
-				if( Yii::$app->id === $appAdmin ) {
+				// User is on admin app
+				if( Yii::$app->id === $appAdmin && isset( $role->adminUrl ) ) {
 
 					Yii::$app->response->redirect( [ "/$role->adminUrl" ] )->send();
 				}
-				else if( Yii::$app->id === $appFrontend ) {
+				// User is on frontend app
+				else if( Yii::$app->id === $appFrontend && isset( $role->homeUrl ) ) {
 
 					Yii::$app->response->redirect( [ "/$role->homeUrl" ] )->send();
+				}
+				// Redirect user to home set by app config
+				else {
+
+					Yii::$app->response->redirect( [ Yii::$app->core->getLoginRedirectPage() ] )->send();
 				}
 			}
 			// Redirect user to home set by app config

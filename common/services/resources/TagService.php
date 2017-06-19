@@ -8,18 +8,17 @@ use yii\data\Sort;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\Tag;
 use cmsgears\core\common\models\mappers\ModelTag;
 
+use cmsgears\core\common\services\base\EntityService;
 use cmsgears\core\common\services\interfaces\resources\ITagService;
-
 use cmsgears\core\common\services\traits\NameTypeTrait;
 use cmsgears\core\common\services\traits\SlugTypeTrait;
 
 /**
  * The class TagService is base class to perform database activities for Tag Entity.
  */
-class TagService extends \cmsgears\core\common\services\base\EntityService implements ITagService {
+class TagService extends EntityService implements ITagService {
 
 	// Variables ---------------------------------------------------
 

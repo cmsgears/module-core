@@ -1,12 +1,7 @@
 <?php
 namespace cmsgears\core\common\models\traits\mappers;
 
-// Yii Import
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Category;
 use cmsgears\core\common\models\mappers\ModelCategory;
@@ -115,7 +110,7 @@ trait CategoryTrait {
 		return $categoriesList;
 	}
 
-	public function getCategoryNameList( $active = false ) {
+	public function getCategoryNameList( $active = false, $l1 = false ) {
 
 		$categories			= null;
 		$categoriesList		= [];
@@ -131,7 +126,17 @@ trait CategoryTrait {
 
 		foreach ( $categories as $category ) {
 
-			array_push( $categoriesList, $category->name );
+			if( $l1 ) {
+
+				if( $category->lValue == 1 ) {
+
+					array_push( $categoriesList, $category->name );
+				}
+			}
+			else {
+
+				array_push( $categoriesList, $category->name );
+			}
 		}
 
 		return $categoriesList;
@@ -222,7 +227,7 @@ trait CategoryTrait {
 		return $categoriesMap;
 	}
 
-	public function getCategoryCsv( $limit = 0, $active = true ) {
+	public function getCategoryCsv( $limit = 0, $active = true, $l1 = false ) {
 
 		$categories		= null;
 		$categoriesCsv	= [];
@@ -238,7 +243,17 @@ trait CategoryTrait {
 
 		foreach ( $categories as $category ) {
 
-			$categoriesCsv[] = $category->name;
+			if( $l1 ) {
+
+				if( $category->lValue == 1 ) {
+
+					$categoriesCsv[] = $category->name;
+				}
+			}
+			else {
+
+				$categoriesCsv[] = $category->name;
+			}
 		}
 
 		return implode( ", ", $categoriesCsv );

@@ -2,9 +2,8 @@
 namespace cmsgears\core\frontend\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -110,6 +109,11 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 		return $this->render( WebGlobalCore::PAGE_INDEX );
 	}
 
+	/**
+	 * The action profile allows users to update their profile.
+	 *
+	 * @return string
+	 */
 	public function actionProfile() {
 
 		$user	= Yii::$app->user->getIdentity();
@@ -130,6 +134,11 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 		]);
 	}
 
+	/**
+	 * The account action allows user to change password.
+	 *
+	 * @return string
+	 */
 	public function actionAccount() {
 
 		$user			= Yii::$app->user->getIdentity();
@@ -148,6 +157,13 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 		]);
 	}
 
+	/**
+	 * The address action allows user to update primary address using form submit.
+	 *
+	 * In case we need multiple address, this action can be overridden by child classes to load multiple address.
+	 *
+	 * @return string
+	 */
 	public function actionAddress() {
 
 		$user		= Yii::$app->user->getIdentity();
@@ -176,6 +192,12 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 		]);
 	}
 
+	/**
+	 * The settings action pre-load the privacy, notification and reminder settings and send them to view.
+	 * In case more settings are required, we can either override this action or use the model service to access additional settings.
+	 *
+	 * @return string
+	 */
 	public function actionSettings() {
 
 		$user	= Yii::$app->user->getIdentity();

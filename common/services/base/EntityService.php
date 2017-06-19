@@ -624,9 +624,10 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		// query generation
 		$query			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::PAGE_LIMIT;
-		$page			= Yii::$app->request->get( 'page' ) != null ? Yii::$app->request->get( 'page' ) - 1 : null;
-		$pageLimit		= Yii::$app->request->get( 'per-page' );
+		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::PAGE_LIMIT; // Page Limit from config
+		$page			= isset( $config[ 'page' ] ) ? $config[ 'page' ] : 0; // Current Page from config
+		$page			= Yii::$app->request->get( 'page' ) != null ? Yii::$app->request->get( 'page' ) - 1 : $page; // Current Page from params
+		$pageLimit		= Yii::$app->request->get( 'per-page' ); // Page Limit from params
 		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
 		$random			= isset( $config[ 'random' ] ) ? $config[ 'random' ] : false; // Be careful in using random at database level for tables having high row count

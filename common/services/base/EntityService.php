@@ -794,7 +794,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 			$pagination[ 'page' ] = $page;
 		}
 
-		if( isset( $pageLimit ) && $pageLimit < static::$maxPageLimit ) {
+		if( isset( $pageLimit ) && $pageLimit <= static::$maxPageLimit ) {
 
 			$pagination[ 'pageSize' ] = $pageLimit;
 		}

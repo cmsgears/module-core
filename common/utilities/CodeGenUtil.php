@@ -49,6 +49,20 @@ class CodeGenUtil {
 		return "Showing $start to $end out of $total entries";
 	}
 
+	public static function getPaginationOptions( $limits = [], $pageLimit = null ) {
+
+		$pageLimits		= count( $limits ) > 0 ? $limits : [ '5' => 5, '10' => 10, '15' => 15, '20' => 20 ];
+
+		$pageLimit		= Yii::$app->request->get( 'per-page' );
+		$pageLimit		= isset( $pageLimit ) && in_array( $pageLimit, $pageLimits ) ? $pageLimit : $pageLimit;
+
+		$pageLimitIdx	= array_search( $pageLimit, $pageLimits );
+
+		$options		= self::generateSelectOptionsFromArray( $pageLimits, $pageLimitIdx );
+
+		return $options;
+	}
+
 	/**
 	 * @return string - csv of urls from the given associative array and base url
 	 */

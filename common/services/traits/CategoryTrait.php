@@ -34,11 +34,11 @@ trait CategoryTrait {
 
 		if( $config[ 'active' ] ) {
 
-			$config[ 'query' ]->joinWith( 'activeCategories' )->where( [ 'modelId' => $categoryId ] );
+			$config[ 'query' ]->joinWith( 'activeCategories' )->andWhere( [ 'modelId' => $categoryId ] );
 		}
 		else {
 
-			$config[ 'query' ]->joinWith( 'categories' )->where( [ 'modelId' => $categoryId ] );
+			$config[ 'query' ]->joinWith( 'categories' )->andWhere( [ 'modelId' => $categoryId ] );
 		}
 
 		if( $config[ 'page' ] ) {
@@ -63,11 +63,11 @@ trait CategoryTrait {
 
 		if( $config[ 'active' ] ) {
 
-			$config[ 'query' ]->joinWith( 'activeCategories' )->filterWhere( [ 'in', 'modelId', $ids ] );
+			$config[ 'query' ]->joinWith( 'activeCategories' )->andFilterWhere( [ 'in', 'modelId', $ids ] );
 		}
 		else {
 
-			$config[ 'query' ]->joinWith( 'categories' )->filterWhere( [ 'in', 'modelId', $ids ] );
+			$config[ 'query' ]->joinWith( 'categories' )->andFilterWhere( [ 'in', 'modelId', $ids ] );
 		}
 
 		if( $config[ 'page' ] ) {
@@ -93,11 +93,11 @@ trait CategoryTrait {
 
 		if( $config[ 'active' ] ) {
 
-			$config[ 'query' ]->joinWith( 'activeCategories' )->where( [ 'modelId' => $categoryId, "$modelTable.featured" => true ] );
+			$config[ 'query' ]->joinWith( 'activeCategories' )->andWhere( [ 'modelId' => $categoryId, "$modelTable.featured" => true ] );
 		}
 		else {
 
-			$config[ 'query' ]->joinWith( 'categories' )->where( [ 'modelId' => $categoryId, "$modelTable.featured" => true ] );
+			$config[ 'query' ]->joinWith( 'categories' )->andWhere( [ 'modelId' => $categoryId, "$modelTable.featured" => true ] );
 		}
 
 		if( $config[ 'page' ] ) {

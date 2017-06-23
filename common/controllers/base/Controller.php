@@ -9,6 +9,7 @@ use yii\helpers\Url;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\config\CoreProperties;
+use cmsgears\core\common\config\CacheProperties;
 use cmsgears\core\common\config\MailProperties;
 
 abstract class Controller extends \yii\web\Controller {
@@ -45,6 +46,8 @@ abstract class Controller extends \yii\web\Controller {
 
 	// Core and Mail properties.
 	private $coreProperties;
+
+	private $cacheProperties;
 
 	private $mailProperties;
 
@@ -85,6 +88,16 @@ abstract class Controller extends \yii\web\Controller {
 		}
 
 		return $this->coreProperties;
+	}
+
+	public function getCacheProperties() {
+
+		if( !isset( $this->cacheProperties ) ) {
+
+			$this->cacheProperties	= CacheProperties::getInstance();
+		}
+
+		return $this->cacheProperties;
 	}
 
 	public function getMailProperties() {

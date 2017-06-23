@@ -81,6 +81,8 @@ abstract class Widget extends \yii\base\Widget {
 	 * Flag for widget autoloading.
 	 */
 	public $autoload			= false;
+	public $autoloadTemplate	= 'autoload';
+
 
 	public $autoloadApp			= 'autoload';
 	public $autoloadController	= 'autoload';
@@ -154,7 +156,7 @@ abstract class Widget extends \yii\base\Widget {
 
 	public function renderAutoload( $config = [] ) {
 
-		$widgetHtml	= $this->render( "$this->template/autoload", [ 'widget' => $this ] );
+		$widgetHtml	= $this->render( "$this->template/$this->autoloadTemplate", [ 'widget' => $this ] );
 
 		if( $this->wrap ) {
 

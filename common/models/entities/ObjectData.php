@@ -43,6 +43,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $icon
  * @property string $description
  * @property boolean $active
+ * @property short $order
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $htmlOptions
@@ -130,7 +131,7 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 		$rules = [
 			// Required, Safe
 			[ [ 'siteId', 'name', 'type' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'content', 'data', 'order' ], 'safe' ],
 			// Unique
 			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
 			// Text Limit
@@ -276,6 +277,20 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 	}
 
 	// Read - Find ------------
+
+	public static function findByType( $type ) {
+
+		if( static::$multiSite ) {
+
+			$siteId	= Yii::$app->core->siteId;
+
+			return static::find()->where( 'type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( 'order ASC' )->all();
+		}
+		else {
+
+			return static::find()->where( 'type=:type AND ORDER BY DESC', [ ':type' => $type ] )->orderBy( 'order ASC' )->all();
+		}
+	}
 
 	// Create -----------------
 

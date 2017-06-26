@@ -143,7 +143,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		$query				= $this->generateSimilarQuery( $config );
 		$config[ 'query' ]	= $query;
 
-		return $this->getPublicPage( $query );
+		return $this->getPublicPage( $config);
 	}
 
 	public function getPageForSearch( $config = [] ) {
@@ -159,6 +159,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		$modelTable			= static::$modelTable;
 
 		$parentType			= isset( $config[ 'parentType' ] ) ? $config[ 'parentType' ] : static::$parentType;
+		$modelId			= isset( $config[ 'modelId' ] ) ? $config[ 'modelId' ] : null;
 		$mcategoryTable		= CoreTables::TABLE_MODEL_CATEGORY;
 		$categoryTable		= CoreTables::TABLE_CATEGORY;
 		$mtagTable			= CoreTables::TABLE_MODEL_TAG;
@@ -179,7 +180,13 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		if( isset( $config[ 'tags' ] ) && count( $config[ 'tags' ] ) > 0 ) {
 
 			$query->leftJoin( $mtagTable, "$modelTable.id=$mtagTable.parentId AND $mtagTable.parentType='$parentType' AND $mtagTable.active=TRUE" )
-				->leftJoin( $tagTable, "$mtagTable.modelId=$tagTable.id" );
+			->leftJoin( $tagTable, "$mtagTable.modelId=$tagTable.id" );
+
+			// Exclude current model
+			if( $modelId != null ) {
+
+				$query->andWhere( "$mtagTable.parentId != :modelId", [ ':modelId' => $modelId ] );
+			}
 
 			$filter	= "$tagTable.id in( " . join( ",", $config[ 'tags' ] ). ")";
 		}
@@ -188,7 +195,20 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		if( isset( $config[ 'categories' ] ) && count( $config[ 'categories' ] ) > 0 ) {
 
 			$query->leftJoin( "$mcategoryTable", "$modelTable.id=$mcategoryTable.parentId AND $mcategoryTable.parentType='$parentType' AND $mcategoryTable.active=TRUE" )
-				->leftJoin( "$categoryTable", "$mcategoryTable.modelId=$categoryTable.id" );
+			->leftJoin( "$categoryTable", "$mcategoryTable.modelId=$categoryTable.id" );
+
+			// Exclude current model
+			if( $modelId != null ) {
+
+				if( count( $config[ 'tags' ] ) > 0 ) {
+
+					$query->orWhere( "$mcategoryTable.parentId != :modelId", [ ':modelId' => $modelId ] );
+				}
+				else {
+
+					$query->andWhere( "$mcategoryTable.parentId != :modelId", [ ':modelId' => $modelId ] );
+				}
+			}
 
 			$filter	= "$categoryTable.id in( " . join( ",", $config[ 'categories' ] ). ")";
 		}

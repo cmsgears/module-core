@@ -95,7 +95,14 @@ class FormDesigner extends \yii\base\Component {
 
 	protected function getTextHtml( $form, $model, $config, $key, $field ) {
 
-		$fieldHtml = $form->field( $model, $key )->textInput( $field->htmlOptions );
+		$htmlOptions	= null;
+
+		foreach( $field->htmlOptions as $attribute=> $value) {
+
+			$htmlOptions	.= $attribute.'='."'".$value."'";
+		}
+
+		$fieldHtml = $form->field( $model, $key, [ 'template' => "<div $htmlOptions> {label}{input}{error} </div>" ] )->textInput();
 
 		if( $config[ 'label' ] ) {
 
@@ -136,7 +143,14 @@ class FormDesigner extends \yii\base\Component {
 
 	protected function getTextareaHtml( $form, $model, $config, $key, $field ) {
 
-		$fieldHtml = $form->field( $model, $key )->textArea( $field->htmlOptions );
+		$htmlOptions	= null;
+
+		foreach( $field->htmlOptions as $attribute=> $value) {
+
+			$htmlOptions	.= $attribute.'='."'".$value."'";
+		}
+
+		$fieldHtml = $form->field( $model, $key, [ 'template' => "<div $htmlOptions> {label}{input}{error} </div>" ] )->textArea();
 
 		if( $config[ 'label' ] ) {
 

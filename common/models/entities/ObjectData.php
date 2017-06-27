@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
@@ -131,7 +131,7 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 		$rules = [
 			// Required, Safe
 			[ [ 'siteId', 'name', 'type' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'content', 'data', 'order' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
 			// Unique
 			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
 			// Text Limit
@@ -141,6 +141,7 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 			[ [ 'slug', 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
 			[ [ 'active' ], 'boolean' ],
+			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'themeId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'siteId', 'avatarId', 'bannerId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]

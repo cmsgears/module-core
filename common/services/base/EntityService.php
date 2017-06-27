@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\services\base;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 use yii\db\Expression;
 use yii\db\Query;
@@ -140,10 +140,9 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	 */
 	public function getPageForSimilar( $config = [] ) {
 
-		$query				= $this->generateSimilarQuery( $config );
-		$config[ 'query' ]	= $query;
+		$config[ 'query' ]	= !isset( $config[ 'query' ] ) ? $this->generateSimilarQuery( $config ) : $config[ 'query' ];
 
-		return $this->getPublicPage( $config);
+		return $this->getPublicPage( $config );
 	}
 
 	public function getPageForSearch( $config = [] ) {

@@ -303,6 +303,25 @@ class CodeGenUtil {
 		}
 	}
 
+	public static function getThumbUrl( $file, $options = [] ) {
+
+		if( $file == null ) {
+
+			if( isset( $options[ 'image' ] ) ) {
+
+				$image	= $options[ 'image' ];
+
+				return Yii::getAlias( '@images' ) . "/$image";
+			}
+		}
+		else {
+
+			return $file->getThumbUrl();
+		}
+
+		return null;
+	}
+
 	public static function getMediumUrl( $file, $options = [] ) {
 
 		if( $file == null ) {

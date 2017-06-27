@@ -2,8 +2,7 @@
 namespace cmsgears\core\common\behaviors;
 
 // Yii Imports
-use \Yii;
-use yii\db\BaseActiveRecord;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\validators\UniqueSlugValidator;
@@ -28,7 +27,8 @@ class UniqueSluggableBehavior extends \yii\behaviors\SluggableBehavior {
         $model->clearErrors();
         $model->{$this->slugAttribute} = $slug;
 
-        $validator->validateAttribute($model, $this->slugAttribute);
+        $validator->validateAttribute( $model, $this->slugAttribute );
+
         return !$model->hasErrors();
     }
 }

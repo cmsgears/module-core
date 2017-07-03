@@ -360,19 +360,40 @@ class CodeGenUtil {
 		return null;
 	}
 
-	public static function generateMetaTags( $params ) {
+	public static function generateMetaTags( $params, $config = [] ) {
+
+		$descLimit		= isset( $config[ 'descLimit' ] ) ? $config[ 'descLimit' ] : 160;
+		$keywordsLimit	= isset( $config[ 'keywordsLimit' ] ) ? $config[ 'keywordsLimit' ] : 10;
 
 		$metaContent	= '';
 
 		if( isset( $params[ 'desc' ] ) ) {
 
 			$description	= $params[ 'desc' ];
+
+			$description	= filter_var( $description, FILTER_SANITIZE_STRING );
+
+			// SEO Limit - 160
+			if( strlen( $description ) > $descLimit ) {
+
+				$description = substr( $description, 0, $descLimit );
+			}
+
 			$metaContent	.= "<meta name='description' content='$description' />";
 		}
 
 		if( isset( $params[ 'meta' ] ) ) {
 
 			$keywords		= $params[ 'meta' ];
+			$keywords		= preg_split( "/,/", $keywords );
+
+			if( count( $keywords ) > $keywordsLimit ) {
+
+				$keywords	= array_slice( $keywords, 0, $keywordsLimit );
+			}
+
+			$keywords		= join( ',', $keywords );
+
 			$metaContent	.= "<meta name='keywords' content='$keywords' />";
 		}
 

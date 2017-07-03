@@ -10,6 +10,12 @@ class DateUtil {
 
 	// Week Days ---------------------------------------------------
 
+	// PHP Week Days : 0 - Sunday, 1 - Monday, 2 - Tuesday, 3 - Wednesday, 4 - Thursday, 5 - Friday, 6 - Saturday
+	// $w = date( 'w', strtotime( '2017-06-28' ) );
+
+	// MySQL Week Days : 0 - Monday, 1 - Tuesday, 2 - Wednesday, 3 - Thursday, 4 - Friday, 5 - Saturday, 6 - Sunday
+	// select weekday('2017-06-28');
+
 	const WEEK_DAY_SUN		=  0;
 	const WEEK_DAY_MON		=  1;
 	const WEEK_DAY_TUE		=  2;
@@ -17,6 +23,7 @@ class DateUtil {
 	const WEEK_DAY_THU		=  4;
 	const WEEK_DAY_FRI		=  5;
 	const WEEK_DAY_SAT		=  6;
+
 	const WEEK_DAY_ALL		= 10;
 
 	public static $weekDaysMap = [
@@ -360,6 +367,7 @@ class DateUtil {
 		return $dates;
 	}
 
+	// Return whole day Hour and Minutes slots
 	public static function getHrMinSlots( $startHr = 9, $minInterval = 15 ) {
 
 		$interval	= [];
@@ -407,6 +415,7 @@ class DateUtil {
 		return	$interval;
 	}
 
+	// Return whole day Hour and Minutes slots
 	public static function getHrMinSlotsForSelect( $startHr = 9, $minInterval = 15 ) {
 
 		$interval	= [];
@@ -462,5 +471,54 @@ class DateUtil {
 	    $hours		= ( $millis / ( 1000 * 60 * 60 ) ) % 24;
 
 	    return "$hours::$minutes::$seconds";
+	}
+
+	// Reference: https://stackoverflow.com/questions/1727077/generating-a-drop-down-list-of-timezones-with-php/17355238#17355238
+	function getTimezoneList() {
+
+		$regions = [
+			DateTimeZone::AFRICA,
+			DateTimeZone::AMERICA,
+			DateTimeZone::ANTARCTICA,
+			DateTimeZone::ASIA,
+			DateTimeZone::ATLANTIC,
+			DateTimeZone::AUSTRALIA,
+			DateTimeZone::EUROPE,
+			DateTimeZone::INDIAN,
+			DateTimeZone::PACIFIC,
+		];
+
+		$timezones = array();
+
+		foreach( $regions as $region ) {
+
+			$timezones = array_merge( $timezones, DateTimeZone::listIdentifiers( $region ) );
+		}
+
+		$timezone_offsets = array();
+
+		foreach( $timezones as $timezone ) {
+
+			$tz = new DateTimeZone( $timezone );
+
+			$timezone_offsets[$timezone] = $tz->getOffset( new DateTime );
+		}
+
+		// sort timezone by offset
+		asort( $timezone_offsets );
+
+		$timezone_list = array();
+
+		foreach( $timezone_offsets as $timezone => $offset ) {
+
+			$offset_prefix		= $offset < 0 ? '-' : '+';
+			$offset_formatted 	= gmdate( 'H:i', abs($offset) );
+
+			$pretty_offset 		= "UTC${offset_prefix}${offset_formatted}";
+
+			$timezone_list[$timezone] = "(${pretty_offset}) $timezone";
+		}
+
+		return $timezone_list;
 	}
 }

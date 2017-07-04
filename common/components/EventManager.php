@@ -1,12 +1,6 @@
 <?php
 namespace cmsgears\core\common\components;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 /**
  * The Event Manager component in CMSGears must be capable of providing messages and counts for notifications, reminders and activities.
  *

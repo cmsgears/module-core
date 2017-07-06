@@ -140,7 +140,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	 */
 	public function getPageForSimilar( $config = [] ) {
 
-		$config[ 'query' ]	= !isset( $config[ 'query' ] ) ? $this->generateSimilarQuery( $config ) : $config[ 'query' ];
+		$config[ 'query' ]	= $this->generateSimilarQuery( $config );
 
 		return $this->getPublicPage( $config );
 	}

@@ -36,7 +36,9 @@ class FormDesigner extends \yii\base\Component {
 
 	// FormDesigner --------------------------
 
-	// Yii Forms
+	// == Yii Forms ============
+
+	// TODO: Add icon support for regular fields
 
 	/**
 	 * Generate field html using Yii Form Widget.
@@ -318,7 +320,9 @@ class FormDesigner extends \yii\base\Component {
 		return $ratingHtml;
 	}
 
-	// Apix Forms
+	// == Apix Forms ===========
+
+	// TODO: Add icon support for apix fields
 
 	/**
 	 * Generate field html for CMGTools JS Library.
@@ -763,7 +767,75 @@ class FormDesigner extends \yii\base\Component {
 		return $fieldHtml;
 	}
 
-	// HTML Generator
+	// == HTML Generators ======
+
+	public function getIconInput( $form, $model, $field, $options, $icon, $label = null ) {
+
+		$template	= "{label}
+						<span class=\"frm-icon-element\">
+							<i class=\"icon $icon\"></i>{input}
+						</span>
+						<div class=\"help-block\">{hint}{error}</div>";
+
+		$field		= $form->field( $model, $field, [ 'template' => $template ] )->textInput( $options );
+
+		if( isset( $label ) ) {
+
+			$field->label( $label );
+		}
+
+		return $field;
+	}
+
+	public function getIconPassword( $form, $model, $field, $options, $icon, $label = null ) {
+
+		$template	= "{label}
+						<span class=\"frm-icon-element\">
+							<i class=\"icon $icon\"></i>{input}
+						</span>
+						<div class=\"help-block\">{hint}{error}</div>";
+
+		$field		= $form->field( $model, $field, [ 'template' => $template ] )->passwordInput( $options );
+
+		if( isset( $label ) ) {
+
+			$field->label( $label );
+		}
+
+		return $field;
+	}
+
+	public function getIconCheckbox( $form, $model, $field, $options, $icon, $label = null ) {
+
+		$classPath	= get_class( $model );
+		$className	= join( '', array_slice( explode( '\\', $classPath ), -1 ) );
+		$fieldName	= $className . "[$field]";
+		$options	= isset( $options ) ? $options : [ 'class' => 'cmt-choice' ];
+		$optionsStr	= '';
+
+		foreach ( $options as $key => $value ) {
+
+			$optionsStr .= "$key=\"$value\"";
+		}
+
+		$template	= "<div $optionsStr>
+			      			<label>
+			            		<input type=\"checkbox\" value=\"1\" name=\"$fieldName\">
+			            		<span class=\"label $icon\"></span>
+			            		<em>$label</em>
+			      			</label>
+			      			<div class=\"help-block\">{hint}{error}</div>
+						</div>";
+
+		$field		= $form->field( $model, $field, [ 'template' => $template ] )->checkbox();
+
+		if( isset( $label ) ) {
+
+			$field->label( $label );
+		}
+
+		return $field;
+	}
 
 	// TODO: Check more to make compatible with both dynamic and regular forms
 
@@ -783,7 +855,7 @@ class FormDesigner extends \yii\base\Component {
 
 		$template	= "<div class='cmt-choice $setInline clearfix'>{label}<div class='radio-group'>{input}</div><div class='help-block'>\n{hint}\n{error}</div></div>";
 
-		return $form->field( $model, $field, [ 'template' => $template ]	)
+		return $form->field( $model, $field, [ 'template' => $template ] )
 					->radioList(
 						$itemlist,
 						[

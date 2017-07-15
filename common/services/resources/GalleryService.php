@@ -192,9 +192,6 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete mapping
-		ModelGallery::deleteByModelId( $model->id );
-
 		// Delete items
 		$items	= $model->files;
 
@@ -203,6 +200,9 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 			$this->fileService->delete( $item );
 		}
+
+		// Delete mappings
+		ModelGallery::deleteByModelId( $model->id );
 
 		// Delete model
 		return parent::delete( $model, $config );

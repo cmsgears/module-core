@@ -1,12 +1,7 @@
 <?php
 namespace cmsgears\core\common\models\traits\mappers;
 
-// Yii Import
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Address;
 use cmsgears\core\common\models\mappers\ModelAddress;
@@ -23,6 +18,20 @@ trait AddressTrait {
 
 		return $this->hasMany( ModelAddress::className(), [ 'parentId' => 'id' ] )
 					->where( "parentType='$this->mParentType'" );
+	}
+
+	/**
+	 * @return array - files associated with parent
+	 */
+	public function getAddresses() {
+
+		return $this->hasMany( Address::className(), [ 'id' => 'modelId' ] )
+					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query ) {
+
+						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
+
+						$query->onCondition( "$modelAddress.parentType=:type", [ ':type' => $this->mParentType ] );
+					});
 	}
 
 	/**

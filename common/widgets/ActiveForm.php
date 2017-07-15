@@ -1,10 +1,13 @@
 <?php
-namespace cmsgears\core\common\assets;
+namespace cmsgears\core\common\widgets;
 
 // Yii Imports
-use yii\web\View;
+use yii\helpers\Json;
 
-class Jquery extends \yii\web\AssetBundle {
+// CMG Imports
+use cmsgears\core\common\assets\ActiveFormAsset;
+
+class ActiveForm extends \yii\widgets\ActiveForm {
 
 	// Variables ---------------------------------------------------
 
@@ -13,19 +16,6 @@ class Jquery extends \yii\web\AssetBundle {
 	// Constants --------------
 
 	// Public -----------------
-
-	// Path Configuration
-	public $sourcePath = '@bower/jquery/dist';
-
-	// Load Javascript
-	public $js = [
-		'jquery.min.js'
-	];
-
-	// Position to load Javascript
-	public $jsOptions = [
-		'position' => View::POS_END
-	];
 
 	// Protected --------------
 
@@ -47,10 +37,26 @@ class Jquery extends \yii\web\AssetBundle {
 
 	// Yii parent classes --------------------
 
+	// yii\base\Widget --------
+
+	// yii\widgets\ActiveForm -
+
+    public function registerClientScript() {
+
+        $id			= $this->options[ 'id' ];
+        $options	= Json::htmlEncode( $this->getClientOptions() );
+        $attributes = Json::htmlEncode( $this->attributes );
+        $view		= $this->getView();
+
+        ActiveFormAsset::register( $view );
+
+        $view->registerJs( "jQuery('#$id').yiiActiveForm($attributes, $options);" );
+    }
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
-	// Jquery --------------------------------
+	// ActiveForm ----------------------------
 
 }

@@ -19,6 +19,8 @@ class SiteProperties extends \cmsgears\core\common\config\CmgProperties {
 
 	const PROP_BANNER_DEFAULT	= 'default_banner';
 
+	const PROP_FONTS			= 'fonts';
+
 	// Public -----------------
 
 	// Protected --------------
@@ -63,6 +65,11 @@ class SiteProperties extends \cmsgears\core\common\config\CmgProperties {
 
 	public function getDefaultBanner() {
 
-		return $this->properties[ self::PROP_BANNER_DEFAULT];
+		return $this->properties[ self::PROP_BANNER_DEFAULT ];
+	}
+
+	public function getFonts() {
+
+		return $this->properties[ self::PROP_FONTS ];
 	}
 }

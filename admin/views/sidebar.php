@@ -1,7 +1,6 @@
 <?php
 // Yii Imports
 use yii\helpers\Html;
-use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;

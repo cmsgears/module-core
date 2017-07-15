@@ -123,4 +123,6 @@ interface IEntityService {
 	// Delete -------------
 
 	public function delete( $model, $config = [] );
+
+	public function deleteMultiple( $models, $config = [] );
 }

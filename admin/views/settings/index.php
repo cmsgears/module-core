@@ -1,10 +1,9 @@
 <?php
-// Yii Imports
-use yii\helpers\Html;
-use yii\helpers\Url;
-
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= 'Settings | ' . $coreProperties->getSiteTitle();
+
+// Breadcrumbs
+$this->params[ 'breadcrumbs' ]		= [ 'label' => 'Settings' ];
 
 $settings		= Yii::$app->sidebar->getConfig();
 
@@ -25,14 +24,18 @@ $right	= '';
 		ob_start();
 ?>
 	<div class="box box-collapsible box-settings">
-		<div class="box-wrap-header">
-			<span class="btn-collapse cmti cmti-chevron-down"></span>
+		<div class="box-header">
+			<div class="box-header-title">
+				<?= ucwords( $settingTitle ) ?>
+			</div>
+			<span class="box-btn-collapse cmti cmti-chevron-down"></span>
 			<span id="settings-<?= $setting ?>" content="settings-<?= $setting ?>-content" cmt-app="site" cmt-controller="settings" cmt-action="getContent" action="settings/index?type=<?= $setting ?>">
 				<span class="cmt-click collapse-trigger"></span>
 			</span>
-			<span><?= ucwords( $settingTitle ) ?></span>
 		</div>
-		<div id="settings-<?= $setting ?>-content" class="box-wrap-content clearfix"></div>
+		<div id="settings-<?= $setting ?>-content" class="box-content-wrap clearfix">
+			<div class="box-content"></div>
+		</div>
 	</div>
 
 <?php

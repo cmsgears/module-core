@@ -14,7 +14,9 @@ use cmsgears\core\common\models\mappers\ModelFile;
 
 use cmsgears\files\components\FileManager;
 
+use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\core\common\services\interfaces\resources\IModelCommentService;
+use cmsgears\core\common\services\traits\ResourceTrait;
 
 use cmsgears\core\common\utilities\DateUtil;
 
@@ -45,11 +47,22 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Protected --------------
 
+	protected $fileService;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
+	use ResourceTrait;
+
 	// Constructor and Initialisation ------------------------------
+
+	public function __construct( IFileService $fileService, $config = [] ) {
+
+		$this->fileService	= $fileService;
+
+		parent::__construct( $config );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -158,12 +171,12 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Read - Models ---
 
-	public function getByParent( $parentId, $parentType, $config = [] ) {
+	public function getByParentConfig( $parentId, $config = [] ) {
 
 		return ModelComment::queryByParentConfig( $parentId, $config )->andWhere( [ 'baseId' => null ] )->all();
 	}
 
-	public function getByParentType( $parentType, $config = [] ) {
+	public function getByParentTypeConfig( $parentType, $config = [] ) {
 
 		return ModelComment::queryByParentTypeConfig( $parentType, $config )->andWhere( [ 'baseId' => null ] )->all();
 	}
@@ -304,6 +317,25 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 	}
 
 	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete files
+		$this->fileService->deleteFiles( $model->files );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
+
+	public function deleteByParent( $parentId, $parentType ) {
+
+		$models	= self::getByParent( $parentId, $parentType );
+
+		foreach ( $models as $model ) {
+
+			$this->delete( $model );
+		}
+	}
 
 	// Static Methods ----------------------------------------------
 

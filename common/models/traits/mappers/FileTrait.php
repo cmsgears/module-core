@@ -36,7 +36,7 @@ trait FileTrait {
 	}
 
 	/**
-	 * @return Address - associated with parent having type set to residential
+	 * @return array - files associated with parent
 	 */
 	public function getFiles() {
 

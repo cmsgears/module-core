@@ -25,9 +25,9 @@ interface IModelCommentService extends \cmsgears\core\common\services\interfaces
 
 	// Read - Models ---
 
-	public function getByParent( $parentId, $parentType, $config = [] );
+	public function getByParentConfig( $parentId, $config = [] );
 
-	public function getByParentType( $parentType, $config = [] );
+	public function getByParentTypeConfig( $parentType, $config = [] );
 
 	public function getByBaseId( $baseId, $config = [] );
 

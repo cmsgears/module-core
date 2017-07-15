@@ -564,6 +564,14 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		return false;
 	}
 
+	public function deleteMultiple( $models, $config = [] ) {
+
+		foreach( $models as $model ) {
+
+			$this->delete( $model, $config );
+		}
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// CMG parent classes --------------------

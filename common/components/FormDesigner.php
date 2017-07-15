@@ -775,13 +775,20 @@ class FormDesigner extends \yii\base\Component {
 						<span class=\"frm-icon-element\">
 							<i class=\"icon $icon\"></i>{input}
 						</span>
-						<div class=\"help-block\">{hint}{error}</div>";
+						{hint}{error}";
 
 		$field		= $form->field( $model, $field, [ 'template' => $template ] )->textInput( $options );
 
 		if( isset( $label ) ) {
 
-			$field->label( $label );
+			if( !$label ) {
+
+				$field->label( false );
+			}
+			else {
+
+				$field->label( $label );
+			}
 		}
 
 		return $field;
@@ -793,13 +800,20 @@ class FormDesigner extends \yii\base\Component {
 						<span class=\"frm-icon-element\">
 							<i class=\"icon $icon\"></i>{input}
 						</span>
-						<div class=\"help-block\">{hint}{error}</div>";
+						{hint}{error}";
 
 		$field		= $form->field( $model, $field, [ 'template' => $template ] )->passwordInput( $options );
 
 		if( isset( $label ) ) {
 
-			$field->label( $label );
+			if( !$label ) {
+
+				$field->label( false );
+			}
+			else {
+
+				$field->label( $label );
+			}
 		}
 
 		return $field;
@@ -810,29 +824,32 @@ class FormDesigner extends \yii\base\Component {
 		$classPath	= get_class( $model );
 		$className	= join( '', array_slice( explode( '\\', $classPath ), -1 ) );
 		$fieldName	= $className . "[$field]";
-		$options	= isset( $options ) ? $options : [ 'class' => 'cmt-choice' ];
+
+		$options[ 'class' ]	= isset( $options[ 'class' ] ) ? $options[ 'class' ] : 'cmt-checkbox cmt-choice';
+
 		$optionsStr	= '';
+		$value		= !empty( $model->$field ) ? $model->$field : 0;
+		$checked	= $value ? 'checked' : null;
+		$disabled	= isset( $options[ 'disabled' ] ) ? 'disabled' : null;
 
-		foreach ( $options as $key => $value ) {
+		foreach ( $options as $key => $option ) {
 
-			$optionsStr .= "$key=\"$value\"";
+			$optionsStr .= "$key=\"$option\"";
 		}
+
+		$label		= $label == null ? $model->getAttributeLabel( $field ) : null;
 
 		$template	= "<div $optionsStr>
 			      			<label>
-			            		<input type=\"checkbox\" value=\"1\" name=\"$fieldName\">
+			            		<input type=\"hidden\" value=\"$value\" name=\"$fieldName\">
+								<input type=\"checkbox\" value=\"$value\" name=\"$field\" $checked $disabled>
 			            		<span class=\"label $icon\"></span>
-			            		<em>$label</em>
+			            		<span>$label</span>
 			      			</label>
-			      			<div class=\"help-block\">{hint}{error}</div>
+			      			{hint}\n{error}
 						</div>";
 
-		$field		= $form->field( $model, $field, [ 'template' => $template ] )->checkbox();
-
-		if( isset( $label ) ) {
-
-			$field->label( $label );
-		}
+		$field		= $form->field( $model, $field, [ 'template' => $template, 'options' => [ 'class' => 'align align-left' ] ] )->checkbox();
 
 		return $field;
 	}

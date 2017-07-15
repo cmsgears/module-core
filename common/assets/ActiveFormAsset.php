@@ -4,7 +4,7 @@ namespace cmsgears\core\common\assets;
 // Yii Imports
 use yii\web\View;
 
-class Jquery extends \yii\web\AssetBundle {
+class ActiveFormAsset extends \yii\web\AssetBundle {
 
 	// Variables ---------------------------------------------------
 
@@ -15,17 +15,22 @@ class Jquery extends \yii\web\AssetBundle {
 	// Public -----------------
 
 	// Path Configuration
-	public $sourcePath = '@bower/jquery/dist';
+    public $sourcePath = '@yii/assets';
 
 	// Load Javascript
-	public $js = [
-		'jquery.min.js'
-	];
+    public $js = [
+        'yii.activeForm.js',
+    ];
 
 	// Position to load Javascript
 	public $jsOptions = [
 		'position' => View::POS_END
 	];
+
+	// Dependency
+    public $depends = [
+        'cmsgears\core\common\assets\YiiAsset'
+    ];
 
 	// Protected --------------
 
@@ -51,6 +56,6 @@ class Jquery extends \yii\web\AssetBundle {
 
 	// CMG parent classes --------------------
 
-	// Jquery --------------------------------
+	// ActiveFormAsset -----------------------
 
 }

@@ -2,14 +2,7 @@
 namespace cmsgears\core\common\base;
 
 // Yii Imports
-use \Yii;
-use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\base\InvalidConfigException;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\common\config\CoreProperties;
 
 /**
  * The class TableWidget can be used by widgets showing data tables.
@@ -32,14 +25,18 @@ abstract class TableWidget extends GridWidget {
 
 	public $template	= 'table';
 
-	public $provider 	= false; // Model will be used instead of data provider
+	public $provider 	= false; // Models will be used instead of data provider
 
 	// Widget Sections - Disabled by default
 
 	public $sort 	= false;
+	public $search 	= false;
 	public $filter 	= false;
+	public $bulk 	= false;
 	public $report 	= false;
+
 	public $option 	= false;
+
 	public $header 	= false;
 	public $footer 	= false;
 

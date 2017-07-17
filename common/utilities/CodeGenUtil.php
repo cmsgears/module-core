@@ -485,4 +485,11 @@ class CodeGenUtil {
 			return substr( $content, 0, $limit );
 		}
 	}
+
+	public static function isAbsolutePath( $path ) {
+
+		$absolute = $path[1] === ':' || $path[0] === '/';
+
+		return $absolute;
+	}
 }

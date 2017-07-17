@@ -159,6 +159,9 @@ class CoreGlobal {
 	const DATA_TERMINATE_REASON		= 'terminateReason';
 	const DATA_APPROVAL_REQUEST		= 'approvalRequest';
 
+	const DATA_GRID_LAYOUT			= 'gridLayout';		// Used to determine grid view among grid or table.
+	const DATA_SIDEBAR_MICRO		= 'microSidebar';	// Used to show micro or full view of sidebar.
+
 	// model attributes
 	const META_TYPE_USER			= 'user';
 	const META_TYPE_SETTING			= 'setting';

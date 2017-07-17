@@ -1,9 +1,6 @@
 <?php
 namespace cmsgears\core\admin\controllers\base;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
 use cmsgears\core\admin\config\AdminGlobalCore;
 

@@ -428,65 +428,35 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		return $this->create( $model, $config );
 	}
 
-	public function add( $model, $config = [] ) { } // Adapter
+	/**
+	 * Add method can be used to register resources from admin.
+	 *
+	 * @param \cmsgears\core\common\models\base\Entity $model
+	 * @param array $config
+	 * @return \cmsgears\core\common\models\base\Entity | boolean
+	 */
+	public function add( $model, $config = [] ) {
 
-	public function register( $model, $config = [] ) { } // Adapter
+		return $this->create( $model, $config );
+	}
+
+	/**
+	 * Register method can be used to register resources from frontend.
+	 *
+	 * @param \cmsgears\core\common\models\base\Entity $model
+	 * @param array $config
+	 * @return \cmsgears\core\common\models\base\Entity | boolean
+	 */
+	public function register( $model, $config = [] ) {
+
+		return $this->create( $model, $config );
+	}
 
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
 
-		$selective	= isset( $config[ 'selective' ] ) ? $config[ 'selective' ] : true;
-		$validate	= isset( $config[ 'validate' ] ) ? $config[ 'validate' ] : true;
-
-		if( Yii::$app->core->isUpdateSelective() && $selective ) {
-
-			$attributes		= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [];
-
-			$existingModel	= $this->getById( $model->id );
-
-			$existingModel->copyForUpdateFrom( $model, $attributes );
-
-			$update			= $existingModel->update( $validate );
-
-			if( $update ) {
-
-				return $existingModel;
-			}
-			// Handle cases where proper validation is not applied
-			else if( YII_DEBUG ) {
-
-				if( count( $existingModel->getErrors() ) > 0 ) {
-
-					var_dump( $existingModel->getErrors() );
-				}
-
-				return false; // Return false on errors in debug mode
-			}
-		}
-		else {
-
-			$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : null;
-
-			$update		= $model->update( $validate, $attributes );
-
-			if( $update ) {
-
-				return $model;
-			}
-			// Handle cases where proper validation is not applied
-			else if( YII_DEBUG ) {
-
-				if( count( $model->getErrors() ) > 0 ) {
-
-					var_dump( $model->getErrors() );
-				}
-
-				return false; // Return false on errors in debug mode
-			}
-		}
-
-		return false;
+		return self::updateSelective( $model, $config );
 	}
 
 	public function updateByParams( $params = [], $config = [] ) {
@@ -651,7 +621,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 		// query generation
 		$query			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::PAGE_LIMIT; // Page Limit from config
+		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::$pageLimit; // Page Limit from config
 		$page			= isset( $config[ 'page' ] ) ? $config[ 'page' ] : 0; // Current Page from config
 		$page			= Yii::$app->request->get( 'page' ) != null ? Yii::$app->request->get( 'page' ) - 1 : $page; // Current Page from params
 		$pageLimit		= Yii::$app->request->get( 'per-page' ); // Page Limit from params
@@ -733,6 +703,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 				}
 
 				$find	= Yii::$app->request->getQueryParam( "$key-find" );
+				$flag	= Yii::$app->request->getQueryParam( "$key-flag" );
 				$match	= Yii::$app->request->getQueryParam( "$key-match" );
 				$start	= Yii::$app->request->getQueryParam( "$key-start" );
 				$end	= Yii::$app->request->getQueryParam( "$key-end" );
@@ -744,7 +715,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 				}
 
 				// Numeric
-				if( isset( $match ) ) {
+				if( isset( $flag ) || isset( $match ) ) {
 
 					$reportColumns[ $column ][ 'match' ] = $match;
 				}
@@ -1488,6 +1459,61 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	// Create -------------
 
 	// Update -------------
+
+	public static function updateSelective( $model, $config = [] ) {
+
+		$selective	= isset( $config[ 'selective' ] ) ? $config[ 'selective' ] : true;
+		$validate	= isset( $config[ 'validate' ] ) ? $config[ 'validate' ] : true;
+
+		if( Yii::$app->core->isUpdateSelective() && $selective ) {
+
+			$attributes		= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [];
+
+			$existingModel	= self::findById( $model->id );
+
+			$existingModel->copyForUpdateFrom( $model, $attributes );
+
+			$update			= $existingModel->update( $validate );
+
+			if( $update ) {
+
+				return $existingModel;
+			}
+			// Handle cases where proper validation is not applied
+			else if( YII_DEBUG ) {
+
+				if( count( $existingModel->getErrors() ) > 0 ) {
+
+					var_dump( $existingModel->getErrors() );
+				}
+
+				return false; // Return false on errors in debug mode
+			}
+		}
+		else {
+
+			$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : null;
+
+			$update		= $model->update( $validate, $attributes );
+
+			if( $update ) {
+
+				return $model;
+			}
+			// Handle cases where proper validation is not applied
+			else if( YII_DEBUG ) {
+
+				if( count( $model->getErrors() ) > 0 ) {
+
+					var_dump( $model->getErrors() );
+				}
+
+				return false; // Return false on errors in debug mode
+			}
+		}
+
+		return false;
+	}
 
 	// Delete -------------
 

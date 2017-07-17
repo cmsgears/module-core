@@ -35,6 +35,9 @@ abstract class Controller extends \yii\web\Controller {
 	// We need return url in cases where view need to provide links to move back to previous page. It's also useful when we need to redirect user to previous page on form success. It's an alternate to breadcrumb, but limited to single action.
 	public $returnUrl;
 
+	// It store the breadcrumbs for actions
+	public $breadcrumbs;
+
 	// Protected --------------
 
 	/**

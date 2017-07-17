@@ -8,6 +8,8 @@ use yii\helpers\Html;
 use cmsgears\core\common\config\CoreProperties;
 use cmsgears\core\common\config\CacheProperties;
 
+use cmsgears\core\common\utilities\CodeGenUtil;
+
 abstract class Widget extends \yii\base\Widget {
 
 	// Variables ---------------------------------------------------
@@ -156,7 +158,9 @@ abstract class Widget extends \yii\base\Widget {
 
 	public function renderAutoload( $config = [] ) {
 
-		$widgetHtml	= $this->render( "$this->template/$this->autoloadTemplate", [ 'widget' => $this ] );
+		$autoloadView	= CodeGenUtil::isAbsolutePath( $this->autoloadTemplate ) ? $this->autoloadTemplate : "$this->template/$this->autoloadTemplate";
+
+		$widgetHtml		= $this->render( $autoloadView, [ 'widget' => $this ] );
 
 		if( $this->wrap ) {
 

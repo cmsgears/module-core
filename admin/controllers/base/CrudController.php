@@ -94,7 +94,7 @@ abstract class CrudController extends Controller {
 
 			$this->modelService->create( $model );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		return $this->render( 'create', [
@@ -119,7 +119,7 @@ abstract class CrudController extends Controller {
 
 				$this->modelService->update( $model );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->refresh();
 			}
 
 			// Render view

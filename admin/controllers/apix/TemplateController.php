@@ -8,7 +8,7 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class FileController extends \cmsgears\core\admin\controllers\base\Controller {
+class TemplateController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -22,22 +22,15 @@ class FileController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( $id, $module, $config = [] ) {
-
-		parent::__construct( $id, $module, $config );
-
-		$this->enableCsrfValidation = false;
-	}
-
 	public function init() {
 
 		parent::init();
 
 		// Permissions
-		$this->crudPermission 	= CoreGlobal::PERM_ADMIN;
+		$this->crudPermission 	= CoreGlobal::PERM_CORE;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'fileService' );
+		$this->modelService		= Yii::$app->factory->get( 'templateService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -54,7 +47,7 @@ class FileController extends \cmsgears\core\admin\controllers\base\Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'file-handler'  => [ 'permission' => $this->crudPermission ],
+					'auto-search' => [ 'permission' => $this->crudPermission ],
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
@@ -62,7 +55,7 @@ class FileController extends \cmsgears\core\admin\controllers\base\Controller {
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'file-handler'  => [ 'post' ],
+					'auto-search' => [ 'post' ],
 					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
@@ -75,7 +68,7 @@ class FileController extends \cmsgears\core\admin\controllers\base\Controller {
 	public function actions() {
 
 		return [
-			'file-handler' => [ 'class' => 'cmsgears\core\common\actions\file\FileHandler' ],
+			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
@@ -85,6 +78,6 @@ class FileController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// CMG parent classes --------------------
 
-	// FileController ------------------------
+	// TemplateController --------------------
 
 }

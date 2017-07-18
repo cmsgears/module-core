@@ -2,13 +2,11 @@
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\models\entities\Theme;
 
 class FileController extends \cmsgears\core\admin\controllers\base\CrudController {
 
@@ -28,12 +26,26 @@ class FileController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		parent::init();
 
+		// Permissions
 		$this->crudPermission	= CoreGlobal::PERM_CORE;
+
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'fileService' );
+
+		// Sidebar
 		$this->sidebar			= [ 'parent' => 'sidebar-file', 'child' => 'file' ];
 
+		// Return Url
 		$this->returnUrl		= Url::previous( 'files' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/file/all' ], true );
+
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Files' ] ],
+			'create' => [ [ 'label' => 'Files', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Files', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Files', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -71,7 +83,7 @@ class FileController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 			$this->modelService->saveFile( $model );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		return $this->render( 'create', [
@@ -87,7 +99,7 @@ class FileController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 			$this->modelService->saveFile( $model );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->refresh();
 		}
 
 		return $this->render( 'update', [

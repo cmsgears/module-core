@@ -2,15 +2,10 @@
 namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
-use \Yii;
-use yii\filters\VerbFilter;
-use yii\helpers\Url;
-use yii\web\NotFoundHttpException;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\models\entities\Template;
 
 abstract class TemplateController extends CrudController {
 
@@ -32,9 +27,13 @@ abstract class TemplateController extends CrudController {
 
 		parent::init();
 
+		// Views
 		$this->setViewPath( '@cmsgears/module-core/admin/views/template' );
 
+		// Permissions
 		$this->crudPermission	= CoreGlobal::PERM_CORE;
+
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'templateService' );
 
 		// Notes: Configure type, sidebar and returnUrl exclusively in child classes.
@@ -74,9 +73,9 @@ abstract class TemplateController extends CrudController {
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
 
-			$this->modelService->create( $model );
+			$this->modelService->add( $model );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		return $this->render( 'create', [

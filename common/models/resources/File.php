@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
@@ -258,6 +258,19 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 		}
 
 		return false;
+	}
+
+	public function resetSize() {
+
+		$filePath	= $this->getFilePath();
+
+		if( $filePath && file_exists( $filePath ) && is_file( $filePath ) ) {
+
+			$size		= filesize( $filePath ); // bytes
+			$sizeInMb	= $size / pow( 1024, 2 );
+
+			$this->size = round( $sizeInMb, 4 ); // Round upto 4 precision, expected size at least in kb
+		}
 	}
 
 	/**

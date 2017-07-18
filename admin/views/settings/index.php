@@ -2,9 +2,6 @@
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= 'Settings | ' . $coreProperties->getSiteTitle();
 
-// Breadcrumbs
-$this->params[ 'breadcrumbs' ]		= [ 'label' => 'Settings' ];
-
 $settings		= Yii::$app->sidebar->getConfig();
 
 $total	= count( $settings );

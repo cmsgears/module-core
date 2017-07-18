@@ -2,9 +2,7 @@
 namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
-use \Yii;
-use yii\filters\VerbFilter;
-use yii\helpers\Url;
+use Yii;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
@@ -93,7 +91,7 @@ abstract class GalleryController extends \cmsgears\core\admin\controllers\base\C
 
 			$this->modelService->create( $model );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
@@ -116,7 +114,7 @@ abstract class GalleryController extends \cmsgears\core\admin\controllers\base\C
 
 				$this->modelService->update( $model, [ 'admin' => true ] );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->refresh();
 			}
 
 			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );

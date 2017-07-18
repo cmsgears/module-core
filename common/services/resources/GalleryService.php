@@ -2,14 +2,13 @@
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\Gallery;
 use cmsgears\core\common\models\mappers\ModelGallery;
 use cmsgears\core\common\models\mappers\ModelFile;
 
@@ -80,14 +79,20 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 	public function getPage( $config = [] ) {
 
+		$modelClass		= static::$modelClass;
+		$modelTable		= static::$modelTable;
+		$templateTable	= CoreTables::TABLE_TEMPLATE;
+
+		// Sorting ----------
+
 		$sort = new Sort([
 			'attributes' => [
-				'owner' => [
-					'asc' => [ 'createdBy' => SORT_ASC ],
-					'desc' => ['createdBy' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'owner'
-				],
+	            'template' => [
+	                'asc' => [ "`$templateTable`.`name`" => SORT_ASC ],
+	                'desc' => [ "`$templateTable`.`name`" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Template'
+	            ],
 				'name' => [
 					'asc' => [ 'name' => SORT_ASC ],
 					'desc' => ['name' => SORT_DESC ],
@@ -100,18 +105,90 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 					'default' => SORT_DESC,
 					'label' => 'slug'
 				],
+	            'type' => [
+	                'asc' => [ 'type' => SORT_ASC ],
+	                'desc' => ['type' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Type'
+	            ],
 				'title' => [
 					'asc' => [ 'title' => SORT_ASC ],
 					'desc' => ['title' => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'title'
-				]
+				],
+	            'active' => [
+	                'asc' => [ 'active' => SORT_ASC ],
+	                'desc' => ['active' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Active'
+	            ],
+	            'cdate' => [
+	                'asc' => [ 'createdAt' => SORT_ASC ],
+	                'desc' => ['createdAt' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Created At'
+	            ],
+	            'udate' => [
+	                'asc' => [ 'modifiedAt' => SORT_ASC ],
+	                'desc' => ['modifiedAt' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Updated At'
+	            ]
 			]
 		]);
 
-		$config[ 'sort' ] = $sort;
+		if( !isset( $config[ 'sort' ] ) ) {
 
-		return parent::findPage( $config );
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Filter - Status
+		$status	= Yii::$app->request->getQueryParam( 'status' );
+
+		if( isset( $status ) ) {
+
+			switch( $status ) {
+
+				case 'active': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ]	= true;
+
+					break;
+				}
+			}
+		}
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [ 'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'title' => "$modelTable.title", 'desc' => "$modelTable.description" ];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'title' => "$modelTable.title", 'desc' => "$modelTable.description",
+			'content' => "$modelTable.content", 'active' => "$modelTable.active"
+		];
+
+		// Result -----------
+
+		return parent::getPage( $config );
 	}
 
 	// Read ---------------
@@ -186,6 +263,47 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 		$this->fileService->saveImage( $item );
 
 		return true;
+	}
+
+	public function switchActive( $model, $config = [] ) {
+
+		$global			= $model->global ? false : true;
+		$model->global	= $global;
+
+		return parent::updateSelective( $model, [
+			'attributes' => [ 'global' ]
+		]);
+ 	}
+
+	protected function applyBulk( $model, $column, $action, $target ) {
+
+		switch( $column ) {
+
+			case 'status': {
+
+				switch( $action ) {
+
+					case 'active': {
+
+						$model->active = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'block': {
+
+						$model->active = false;
+
+						$model->update();
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
 	}
 
 	// Delete -------------

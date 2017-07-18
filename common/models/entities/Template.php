@@ -165,6 +165,16 @@ class Template extends \cmsgears\core\common\models\base\Entity {
 
 	// Template ------------------------------
 
+    public function getFileRenderStr() {
+
+        return Yii::$app->formatter->asBoolean( $this->fileRender );
+    }
+
+    public function getGroupLayoutStr() {
+
+        return Yii::$app->formatter->asBoolean( $this->layoutGroup );
+    }
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------

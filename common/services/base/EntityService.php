@@ -515,6 +515,32 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		// Adapter Method - Implement in child classes
 	}
 
+	/**
+	 * Default method for bulk actions.
+	 *
+	 * @param string $column
+	 * @param string $action
+	 * @param string $target
+	 */
+	public function applyBulkByTargetId( $column, $action, $target ) {
+
+		foreach ( $target as $id ) {
+
+			$model = $this->getById( $id );
+
+			// Bulk Conditions
+			if( isset( $model ) ) {
+
+				$this->applyBulk( $model, $column, $action, $target );
+			}
+		}
+	}
+
+	protected function applyBulk( $model, $column, $action, $target ) {
+
+		// adapter method for bulk actions
+	}
+
 	// Delete -------------
 
 	public function delete( $model, $config = [] ) {

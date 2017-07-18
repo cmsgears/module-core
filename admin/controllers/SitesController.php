@@ -2,15 +2,13 @@
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
-use \Yii;
-use yii\filters\VerbFilter;
+use Yii;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\resources\File;
 
 class SitesController extends \cmsgears\core\admin\controllers\base\CrudController {

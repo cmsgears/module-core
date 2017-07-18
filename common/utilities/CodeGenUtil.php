@@ -486,10 +486,13 @@ class CodeGenUtil {
 		}
 	}
 
-	public static function isAbsolutePath( $path ) {
+	public static function isAbsolutePath( $path, $alias = true ) {
 
-		$absolute = $path[1] === ':' || $path[0] === '/';
+		if( $alias ) {
 
-		return $absolute;
+			return $path[0] === '@';
+		}
+
+		return $path[1] === ':' || $path[0] === '/';
 	}
 }

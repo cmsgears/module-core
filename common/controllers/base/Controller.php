@@ -4,6 +4,7 @@ namespace cmsgears\core\common\controllers\base;
 // Yii Imports
 use Yii;
 use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -111,6 +112,20 @@ abstract class Controller extends \yii\web\Controller {
 		}
 
 		return $this->mailProperties;
+	}
+
+	public function getBreadcrumbs() {
+
+		$action	= Yii::$app->controller->action->id;
+
+		if( isset( $this->breadcrumbs[ 'base' ] ) ) {
+
+			return ArrayHelper::merge( [ $this->breadcrumbs[ 'base' ] ], $this->breadcrumbs[ $action ] );
+		}
+		else {
+
+			return $this->breadcrumbs[ $action ];
+		}
 	}
 
 	/**

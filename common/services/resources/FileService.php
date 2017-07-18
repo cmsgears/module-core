@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -63,6 +63,11 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function getPage( $config = [] ) {
 
+		$modelClass		= static::$modelClass;
+		$modelTable		= static::$modelTable;
+
+		// Sorting ----------
+
 		$sort = new Sort([
 			'attributes' => [
 				'name' => [
@@ -72,10 +77,16 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 					'label' => 'Name'
 				],
 				'title' => [
-						'asc' => [ 'title' => SORT_ASC ],
-						'desc' => [ 'title' => SORT_DESC ],
-						'default' => SORT_DESC,
-						'label' => 'Title'
+					'asc' => [ 'title' => SORT_ASC ],
+					'desc' => [ 'title' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Title'
+				],
+				'extension' => [
+					'asc' => [ 'extension' => SORT_ASC ],
+					'desc' => [ 'extension' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Extension'
 				],
 				'directory' => [
 					'asc' => [ 'directory' => SORT_ASC ],
@@ -83,30 +94,88 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 					'default' => SORT_DESC,
 					'label' => 'Directory'
 				],
+				'size' => [
+					'asc' => [ 'size' => SORT_ASC ],
+					'desc' => [ 'size' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Size'
+				],
 				'url' => [
-						'asc' => [ 'url' => SORT_ASC ],
-						'desc' => [ 'url' => SORT_DESC ],
-						'default' => SORT_DESC,
-						'label' => 'Path'
+					'asc' => [ 'url' => SORT_ASC ],
+					'desc' => [ 'url' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Path'
 				],
-				'cdate' => [
-						'asc' => [ 'createdAt' => SORT_ASC ],
-						'desc' => [ 'createdAt' => SORT_DESC ],
-						'default' => SORT_DESC,
-						'label' => 'cdate',
+				'visibility' => [
+					'asc' => [ 'visibility' => SORT_ASC ],
+					'desc' => [ 'visibility' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Visibility'
 				],
-				'udate' => [
-						'asc' => [ 'updatedAt' => SORT_ASC ],
-						'desc' => [ 'updatedAt' => SORT_DESC ],
-						'default' => SORT_DESC,
-						'label' => 'udate',
-				]
+				'shared' => [
+					'asc' => [ 'shared' => SORT_ASC ],
+					'desc' => [ 'shared' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Shared'
+				],
+	            'cdate' => [
+	                'asc' => [ 'createdAt' => SORT_ASC ],
+	                'desc' => ['createdAt' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Created At'
+	            ],
+	            'udate' => [
+	                'asc' => [ 'modifiedAt' => SORT_ASC ],
+	                'desc' => ['modifiedAt' => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Updated At'
+	            ]
 			]
 		]);
 
-		$config[ 'sort' ] = $sort;
+		if( !isset( $config[ 'sort' ] ) ) {
 
-		return parent::findPage( $config );
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Filter - Visibility
+		$visibility	= Yii::$app->request->getQueryParam( 'visibility' );
+
+		if( isset( $visibility ) && isset( $modelClass::$urlRevVisibilityMap[ $visibility ] ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.visibility" ]	= $modelClass::$urlRevVisibilityMap[ $visibility ];
+		}
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [ 'title' => "$modelTable.title", 'extension' => "$modelTable.extension", 'directory' => "$modelTable.directory" ];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'title' => "$modelTable.title", 'extension' => "$modelTable.extension", 'directory' => "$modelTable.directory",
+			'visibility' => "$modelTable.visibility"
+		];
+
+		// Result -----------
+
+		return parent::getPage( $config );
 	}
 
 	public function getSharedPage( $config = [] ) {
@@ -157,7 +226,7 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'altText', 'link', 'visibility', 'type' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'altText', 'link', 'visibility', 'type', 'size' ];
 
 		if( $model->changed ) {
 
@@ -175,7 +244,7 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function updateData( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'altText', 'link', 'visibility', 'type', 'name', 'directory', 'extension', 'url', 'medium', 'thumb' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'altText', 'link', 'visibility', 'type', 'size', 'name', 'directory', 'extension', 'url', 'medium', 'thumb' ];
 
 		if( $model->changed ) {
 
@@ -254,10 +323,13 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 			// New File
 			if( !isset( $fileId ) || strlen( $fileId ) <= 0 || intval( $fileId ) <= 0 ) {
 
-				// unset id
-				$file->id		= null;
+				// Unset Id
+				$file->id = null;
 
-				// create
+				// Update File Size
+				$file->resetSize();
+
+				// Create
 				$this->create( $file );
 
 				// Update model attribute
@@ -269,10 +341,16 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 			// Existing File - Image Changed
 			else if( $file->changed ) {
 
+				// Update File Size
+				$file->resetSize();
+
 				$this->updateData( $file );
 			}
 			// Existing File - Info Changed
 			else if( isset( $fileId ) && intval( $fileId ) > 0 ) {
+
+				// Update File Size
+				$file->resetSize();
 
 				$this->update( $file );
 			}
@@ -312,10 +390,13 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 			// New File
 			if( !isset( $fileId ) || strlen( $fileId ) <= 0 ) {
 
-				// unset id
+				// Unset Id
 				$file->id = null;
 
-				// create
+				// Update File Size
+				$file->resetSize();
+
+				// Create
 				$this->create( $file );
 
 				// Update model attribute
@@ -327,10 +408,16 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 			// Existing File - File Changed
 			else if( $file->changed ) {
 
+				// Update File Size
+				$file->resetSize();
+
 				$this->updateData( $file );
 			}
 			// Existing File - Info Changed
 			else if( isset( $fileId ) && intval( $fileId ) > 0 ) {
+
+				// Update File Size
+				$file->resetSize();
 
 				$this->update( $file );
 			}
@@ -355,6 +442,45 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 					$this->saveFile( $value, [ 'model' => $model, 'attribute' => $key ] );
 				}
+			}
+		}
+	}
+
+	protected function applyBulk( $model, $column, $action, $target ) {
+
+		switch( $column ) {
+
+			case 'visibility': {
+
+				switch( $action ) {
+
+					case 'public': {
+
+						$model->visibility = File::VISIBILITY_PUBLIC;
+
+						$model->update();
+
+						break;
+					}
+					case 'protected': {
+
+						$model->visibility = File::VISIBILITY_PROTECTED;
+
+						$model->update();
+
+						break;
+					}
+					case 'private': {
+
+						$model->visibility = File::VISIBILITY_PRIVATE;
+
+						$model->update();
+
+						break;
+					}
+				}
+
+				break;
 			}
 		}
 	}

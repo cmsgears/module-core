@@ -2,7 +2,7 @@
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -26,6 +26,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 		parent::init();
 
+		// Permissions
 		$this->crudPermission	= CoreGlobal::PERM_ADMIN;
 
 		// Check Layout for Public and Private pages
@@ -33,6 +34,12 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 			$this->layout	= AdminGlobalCore::LAYOUT_PUBLIC;
 		}
+
+		// Breadcrumbs
+		$this->breadcrumbs	= [
+			'index' => [ [ 'label' => 'Dashboard' ] ],
+			'dashboard' => [ [ 'label' => 'Dashboard' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------

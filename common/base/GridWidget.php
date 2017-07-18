@@ -129,8 +129,9 @@ abstract class GridWidget extends Widget {
 	// 2. If both grid and card are true, a toggle button will be displayed to toggle between grid and card view
 
 	// Grid Columns
-	public $gridColumns = []; // Required only for grid layout
-	public $columns		= [];
+	public $columns		= []; // Required only for grid layout to configure responsive grid
+	public $gridColumns	= []; // Grid columns
+	public $cardColumns	= []; // Card columns if different from grid columns
 
 	// Grid Cards
 	public $gridCards	= [];

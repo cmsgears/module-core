@@ -1,111 +1,61 @@
 <?php
-// Yii Imports
-use yii\helpers\Html;
-use yii\widgets\LinkPager;
-
 // CMG Imports
-use cmsgears\core\common\utilities\CodeGenUtil;
+use cmsgears\widgets\popup\Popup;
+
+use cmsgears\widgets\grid\DataGrid;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= 'All Templates | ' . $coreProperties->getSiteTitle();
+$this->title	= 'Templates | ' . $coreProperties->getSiteTitle();
 
-// Data
-$pagination		= $dataProvider->getPagination();
-$models			= $dataProvider->getModels();
-
-// Searching
-$keywords		= Yii::$app->request->getQueryParam( 'keywords' );
-
-// Sorting
-$sortOrder		= Yii::$app->request->getQueryParam( 'sort' );
-
-if( !isset( $sortOrder ) ) {
-
-	$sortOrder	= '';
-}
+// Templates
+$moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 ?>
-<div class="row header-content">
-	<div class="col-small col15x10 header-actions">
-		<span class="frm-icon-element element-small">
-			<i class="cmti cmti-plus"></i>
-			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
-		</span>
-	</div>
-	<div class="col-small col15x5 header-search">
-		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $keywords ?>">
-		<span class="frm-icon-element element-medium">
-			<i class="cmti cmti-search"></i>
-			<button id="btn-search">Search</button>
-		</span>
-	</div>
-</div>
-<div class="row header-content">
-	<div class="col col12 header-actions">
-		<span class="bold">Sort By:</span>
-	</div>
-	<div class="col col12x7 header-actions">
-		<span class="wrap-sort">
-			<?= $dataProvider->sort->link( 'name', [ 'class' => 'sort btn btn-medium' ] ) ?>
-		</span>
-	</div>
-	<div class="col col12x4 header-actions align align-right">
-		<span class="wrap-filters"></span>
-	</div>
-</div>
+<?= DataGrid::widget([
+	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
+	'title' => 'Templates', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
+	'searchColumns' => [ 'name' => 'Name', 'desc' => 'Description', 'content' => 'Content' ],
+	'sortColumns' => [
+		'name' => 'Name', 'slug' => 'Slug', 'renderer' => 'Renderer', 'frender' => 'File Render',
+		'layout' => 'Layout', 'lgroup' => 'Layout Group', 'vpath' => 'View Path',
+		'cdate' => 'Created At', 'udate' => 'Updated At', 'ldate' => 'Sent At'
+	],
+	'filters' => [ 'status' => [ 'file' => 'File Render', 'layout' => 'Group Layout' ] ],
+	'reportColumns' => [
+		'name' => [ 'title' => 'Name', 'type' => 'text' ],
+		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
+		'content' => [ 'title' => 'Content', 'type' => 'text' ],
+		'file' => [ 'title' => 'File Render', 'type' => 'flag' ],
+		'layout' => [ 'title' => 'Layout Group', 'type' => 'flag' ]
+	],
+	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [ 'status' => [ 'file' => 'File Render', 'cache' => 'Cache Render', 'group' => 'Layout Group', 'single' => 'Single Layout' ] ],
+	'header' => false, 'footer' => true,
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x2', null, null, 'x4', null, 'x2', 'x2', null ] ],
+	'gridColumns' => [
+		'bulk' => 'Action',
+		'name' => 'Name',
+		'file' => [ 'title' => 'File Render', 'generate' => function( $model ) { return $model->getFileRenderStr(); } ],
+		'glayout' => [ 'title' => 'Layout Group', 'generate' => function( $model ) { return $model->getGroupLayoutStr(); } ],
+		'description' => 'Description',
+		'renderer' => 'Renderer',
+		'layout' => 'Layout',
+		'viewPath' => 'View Path',
+		'actions' => 'Actions'
+	],
+	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
+	'templateDir' => '@themes/admin/views/templates/widget/grid',
+	//'dataView' => "$moduleTemplates/grid/data/template",
+	//'cardView' => "$moduleTemplates/grid/cards/template",
+	//'actionView' => "$moduleTemplates/grid/actions/template"
+]) ?>
 
-<div class="data-grid">
-	<div class="row grid-header">
-		<div class="col col12x6 info">
-			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
-		</div>
-		<div class="col col12x6 pagination">
-			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
-		</div>
-	</div>
-	<div class="grid-content">
-		<table>
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th>Icon</th>
-					<th>Description</th>
-					<th>Renderer</th>
-					<th>Layout</th>
-					<th>View Path</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php
+<?= Popup::widget([
+	'title' => 'Update Templates', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'bulk',
+	'data' => [ 'model' => 'Template', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "core/template/bulk" ]
+]) ?>
 
-					foreach( $models as $template ) {
-
-						$id 		= $template->id;
-						$editUrl	= Html::a( $template->name, [ "update?id=$id" ] );
-
-				?>
-					<tr>
-						<td><?= $editUrl ?></td>
-						<td> <span class="<?= $template->icon ?>" title="<?= $template->name ?>"></span></td>
-						<td><?= $template->description ?></td>
-						<td><?= $template->renderer ?></td>
-						<td><?= $template->layout ?></td>
-						<td><?= $template->viewPath ?></td>
-						<td class="actions">
-							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
-						</td>
-					</tr>
-				<?php } ?>
-			</tbody>
-		</table>
-	</div>
-	<div class="row grid-header">
-		<div class="col col12x6 info">
-			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
-		</div>
-		<div class="col col12x6 pagination">
-			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
-		</div>
-	</div>
-</div>
+<?= Popup::widget([
+	'title' => 'Delete Template', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'delete',
+	'data' => [ 'model' => 'Template', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "core/template/delete?id=" ]
+]) ?>

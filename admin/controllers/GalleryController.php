@@ -2,6 +2,7 @@
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
+use Yii;
 use yii\helpers\Url;
 
 class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryController {
@@ -58,7 +59,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryCon
 	public function actionAll() {
 
 		// Remember return url for crud
-		Url::remember( [ 'gallery/all' ], 'galleries' );
+		Url::remember( Yii::$app->request->getUrl(), 'galleries' );
 
 		return parent::actionAll();
 	}

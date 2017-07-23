@@ -2,8 +2,6 @@
 namespace cmsgears\core\common\services\base;
 
 // CMG Imports
-
-
 use cmsgears\core\common\models\base\Meta;
 
 use cmsgears\core\common\services\interfaces\base\IMetaService;

@@ -2,10 +2,7 @@
 namespace cmsgears\core\common\base;
 
 // Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use Yii;
 
 /**
  * @var array $childs is a map of child themes. We can use child theme to override parent theme assets using it's assets bundles.

@@ -299,6 +299,20 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 				break;
 			}
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
 		}
 	}
 

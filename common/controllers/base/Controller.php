@@ -120,7 +120,7 @@ abstract class Controller extends \yii\web\Controller {
 
 		if( isset( $this->breadcrumbs[ 'base' ] ) ) {
 
-			return ArrayHelper::merge( [ $this->breadcrumbs[ 'base' ] ], $this->breadcrumbs[ $action ] );
+			return ArrayHelper::merge( $this->breadcrumbs[ 'base' ], $this->breadcrumbs[ $action ] );
 		}
 		else {
 

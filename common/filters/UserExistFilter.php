@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\filters;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\web\Controller;
 use yii\helpers\Url;
 

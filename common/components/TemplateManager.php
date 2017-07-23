@@ -128,6 +128,28 @@ class TemplateManager extends \yii\base\Component {
 				return "<p>Theme or appropriate renderer is not found for this resource. Please configure appropriate theme.</p>";
 			}
 		}
+		else {
+
+			switch( $renderEngine ) {
+
+				case 'twig': {
+
+					$twig		= new \Twig_Environment( new \Twig_Loader_String() );
+
+					$content	= $twig->render( $template->content, $models );
+
+					return $content;
+
+					break;
+				}
+				case 'smarty': {
+
+					// TODO: Add smarty support
+
+					break;
+				}
+			}
+		}
 	}
 
 	// Message / Notifications

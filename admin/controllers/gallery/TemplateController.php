@@ -40,7 +40,7 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		// Breadcrumbs
 		$this->breadcrumbs	= [
-			'base' => [ 'label' => 'Galleries', 'url' =>  [ '/core/gallery/all' ] ],
+			'base' => [ [ 'label' => 'Galleries', 'url' =>  [ '/core/gallery/all' ] ] ],
 			'all' => [ [ 'label' => 'Templates' ] ],
 			'create' => [ [ 'label' => 'Templates', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Templates', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],

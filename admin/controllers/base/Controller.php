@@ -2,6 +2,7 @@
 namespace cmsgears\core\admin\controllers\base;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\admin\config\AdminGlobalCore;
 
 use cmsgears\core\admin\config\AdminProperties;
@@ -26,7 +27,11 @@ abstract class Controller extends \cmsgears\core\common\controllers\base\Control
 
 		parent::init();
 
-		$this->layout	= AdminGlobalCore::LAYOUT_PRIVATE;
+		// Default Layout
+		$this->layout			= AdminGlobalCore::LAYOUT_PRIVATE;
+
+		// Default Permission
+		$this->crudPermission	= CoreGlobal::PERM_CORE;
 	}
 
 	// Instance methods --------------------------------------------

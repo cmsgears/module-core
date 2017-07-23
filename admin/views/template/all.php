@@ -27,7 +27,11 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 		'file' => [ 'title' => 'File Render', 'type' => 'flag' ],
 		'layout' => [ 'title' => 'Layout Group', 'type' => 'flag' ]
 	],
-	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [ 'status' => [ 'file' => 'File Render', 'cache' => 'Cache Render', 'group' => 'Layout Group', 'single' => 'Single Layout' ] ],
+	'bulkPopup' => 'popup-grid-bulk',
+	'bulkActions' => [
+		'status' => [ 'file' => 'File Render', 'cache' => 'Cache Render', 'group' => 'Layout Group', 'single' => 'Single Layout' ],
+		'model' => [ 'delete' => 'Delete' ]
+	],
 	'header' => false, 'footer' => true,
 	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x2', null, null, 'x4', null, 'x2', 'x2', null ] ],
 	'gridColumns' => [

@@ -66,6 +66,9 @@ class FileController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 	public function actionAll() {
 
+		// Remember return url for crud
+		Url::remember( Yii::$app->request->getUrl(), 'files' );
+
 		$dataProvider = $this->modelService->getSharedPage();
 
 		return $this->render( 'all', [

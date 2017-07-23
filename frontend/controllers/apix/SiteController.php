@@ -61,7 +61,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 					'register' => [ 'post' ],
 					'login' => [ 'post' ],
 					'forgot-password' => [ 'post' ],
-					'checkUser' => [ 'get' ]
+					'check-user' => [ 'get' ]
 				]
 			]
 		];

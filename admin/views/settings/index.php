@@ -25,7 +25,7 @@ $right	= '';
 			<div class="box-header-title">
 				<?= ucwords( $settingTitle ) ?>
 			</div>
-			<span class="box-btn-collapse cmti cmti-chevron-down"></span>
+			<span class="box-collapse-trigger cmti cmti-chevron-down"></span>
 			<span id="settings-<?= $setting ?>" content="settings-<?= $setting ?>-content" cmt-app="site" cmt-controller="settings" cmt-action="getContent" action="settings/index?type=<?= $setting ?>">
 				<span class="cmt-click collapse-trigger"></span>
 			</span>

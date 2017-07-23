@@ -1,12 +1,6 @@
 <?php
 namespace cmsgears\core\common\models\forms;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 class GenericForm extends \yii\base\Model {
 
 	// Variables ---------------------------------------------------

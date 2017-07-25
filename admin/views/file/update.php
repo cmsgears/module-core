@@ -22,10 +22,7 @@ $returnUrl		= $this->context->returnUrl;
 					<div class="row">
 						<div class="col col2">
 							<label>File</label>
-							<?= SharedUploader::widget([
-									'options' => [ 'id' => 'model-file', 'class' => 'file-uploader' ],
-									'model' => $model
-							]) ?>
+							<?= SharedUploader::widget( [ 'model' => $model ] ) ?>
 						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'description' )->textarea() ?>

@@ -9,6 +9,7 @@ use yii\data\Sort;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\models\mappers\ModelGallery;
 use cmsgears\core\common\models\mappers\ModelFile;
 
@@ -265,6 +266,29 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 		return true;
 	}
 
+	public function refreshItems( $gallery, $config = [] ) {
+
+		$name	= isset( $config[ 'name' ] ) ? $config[ 'name' ] : 'File';
+		$items	= isset( $config[ 'items' ] ) ? $config[ 'items' ] : [];
+
+		if( count( $items ) == 0 && isset( $name ) ) {
+
+			$items	= File::loadFiles( $name );
+		}
+
+		foreach( $items as $item ) {
+
+			if( isset( $item->id ) && $item->id > 0 ) {
+
+				$this->updateItem( $item );
+			}
+			else {
+
+				$this->createItem( $gallery, $item );
+			}
+		}
+	}
+
 	public function switchActive( $model, $config = [] ) {
 
 		$global			= $model->global ? false : true;
@@ -275,7 +299,7 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 		]);
  	}
 
-	protected function applyBulk( $model, $column, $action, $target ) {
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
 

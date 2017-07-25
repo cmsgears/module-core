@@ -26,7 +26,7 @@ class FileController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 		parent::init();
 
-		// Permissions
+		// Permission
 		$this->crudPermission	= CoreGlobal::PERM_CORE;
 
 		// Services

@@ -6,9 +6,9 @@ use yii\helpers\Html;
 use yii\helpers\StringHelper;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\resources\FormField;
+
+// TODO: Use php templates to render the html.
 
 /**
  * Default form designer component to generate html for form elements using form and form fields.
@@ -516,7 +516,7 @@ class FormDesigner extends \yii\base\Component {
 
 		$modelName				= $config[ 'modelName' ];
 		$id						= $modelName . "_$field->name";
-		$htmlOptions[ 'id' ]	= $id;
+		$fieldOptions[ 'id' ]	= $id;
 		$fieldHtml				= Html::hiddenInput( $modelName . "[$field->name]", $value );
 		$checkboxHtml			= Html::checkbox( "$field->name", $value, $fieldOptions );
 
@@ -852,6 +852,91 @@ class FormDesigner extends \yii\base\Component {
 		$field		= $form->field( $model, $field, [ 'template' => $template, 'options' => [ 'class' => 'align align-left' ] ] )->checkbox();
 
 		return $field;
+	}
+
+	public function getAutoFill( $form, $model, $field, $options, $icon, $label = null ) {
+
+		$options			= isset( $options ) ? $options : [];
+		$options[ 'class' ]	= isset( $options[ 'class' ] ) ? $options[ 'class' ] : 'cmt-key-up auto-fill-text';
+
+		$template	= "{label}
+						<div class=\"relative\">
+							<div class=\"auto-fill-search\">
+								<div class=\"frm-icon-element icon-right\">
+									<span class=\"$icon\"></span>
+									{input}
+								</div>
+							</div>
+							<div class=\"auto-fill-items-wrap\">
+								<ul class=\"auto-fill-items vnav\"></ul>
+							</div>
+						</div>
+						{hint}\n{error}";
+
+		$field		= $form->field( $model, $field, [ 'template' => $template ] )->textInput( $options );
+
+		if( isset( $label ) ) {
+
+			if( !$label ) {
+
+				$field->label( false );
+			}
+			else {
+
+				$field->label( $label );
+			}
+		}
+
+		return $field;
+	}
+
+	public function getAutoSuggest( $form, $model, $field, $config = [] ) {
+
+		$placeholder	= isset( $config[ 'placeholder' ] ) ? $config[ 'placeholder' ] : null;
+		$icon			= isset( $config[ 'icon' ] ) ? $config[ 'icon' ] : null;
+		$value			= isset( $config[ 'value' ] ) ? $config[ 'value' ] : null;
+
+		$app			= isset( $config[ 'app' ] ) ? $config[ 'app' ] : 'site';
+		$controller		= isset( $config[ 'controller' ] ) ? $config[ 'controller' ] : 'auto';
+		$action			= isset( $config[ 'action' ] ) ? $config[ 'action' ] : 'autoSearch';
+		$type			= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+		$url			= isset( $config[ 'url' ] ) ? $config[ 'url' ] : null;
+
+		if( !isset( $url ) ) {
+
+			throw \yii\base\InvalidConfigException( 'Url is required to trigger request.' );
+		}
+
+		if( isset( $type ) ) {
+
+			$type = "<input type=\"hidden\" class=\"search-type\" name=\"type\" value=\"$type\" />";
+		}
+
+		$label		= $model->getAttributeLabel( $field );
+		$hidden		= $form->field( $model, $field )->hiddenInput( [ 'class' => 'target' ] )->label( false );
+
+		$autoFill	= "<div class=\"auto-fill auto-fill-basic\">
+							<div class=\"auto-fill-source\" cmt-app=\"$app\" cmt-controller=\"$controller\" cmt-action=\"$action\" action=\"$url\" cmt-keep cmt-custom>
+								<div class=\"relative\">
+									<div class=\"auto-fill-search clearfix\">
+										<label>$label</label>
+										<div class=\"frm-icon-element icon-right\">
+											<span class=\"$icon\"></span>
+											<input class=\"cmt-key-up auto-fill-text search-name\" type=\"text\" name=\"name\" value=\"$value\" placeholder=\"$placeholder\" autocomplete=\"off\" />
+										</div>
+										$type
+									</div>
+									<div class=\"auto-fill-items-wrap\">
+										<ul class=\"auto-fill-items vnav\"></ul>
+									</div>
+								</div>
+							</div>
+							<div class=\"auto-fill-target\">
+								$hidden
+							</div>
+						</div>";
+
+		return $autoFill;
 	}
 
 	// TODO: Check more to make compatible with both dynamic and regular forms

@@ -27,6 +27,8 @@ class Delete extends \cmsgears\core\common\base\Action {
 
 	public $modelService;
 
+	public $config = [];
+
 	// Protected --------------
 
 	// Private ----------------
@@ -61,7 +63,7 @@ class Delete extends \cmsgears\core\common\base\Action {
 		if( isset( $model ) ) {
 
 			// Trigger Ajax Success
-			if( $this->modelService->delete( $model ) ) {
+			if( $this->modelService->delete( $model, $this->config ) ) {
 
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 			}

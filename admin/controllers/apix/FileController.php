@@ -77,7 +77,10 @@ class FileController extends \cmsgears\core\admin\controllers\base\Controller {
 		return [
 			'file-handler' => [ 'class' => 'cmsgears\core\common\actions\file\FileHandler' ],
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
-			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
+			'delete' => [
+				'class' => 'cmsgears\core\common\actions\grid\Delete',
+				'config' => [ 'admin' => true ]
+			]
 		];
 	}
 

@@ -522,7 +522,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	 * @param string $action
 	 * @param string $target
 	 */
-	public function applyBulkByTargetId( $column, $action, $target ) {
+	public function applyBulkByTargetId( $column, $action, $target, $config = [] ) {
 
 		foreach ( $target as $id ) {
 
@@ -531,12 +531,12 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 			// Bulk Conditions
 			if( isset( $model ) ) {
 
-				$this->applyBulk( $model, $column, $action, $target );
+				$this->applyBulk( $model, $column, $action, $target, $config );
 			}
 		}
 	}
 
-	protected function applyBulk( $model, $column, $action, $target ) {
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		// adapter method for bulk actions
 	}

@@ -25,6 +25,8 @@ interface IGalleryService extends INameTypeService, ISlugTypeService {
 
 	public function updateItem( $item );
 
+	public function refreshItems( $gallery, $config = [] );
+
 	public function switchActive( $model, $config = [] );
 
 	// Delete -------------

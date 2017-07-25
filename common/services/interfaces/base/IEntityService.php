@@ -120,7 +120,7 @@ interface IEntityService {
 
 	public function updateMultipleByForm( $form, $config = [] );
 
-	public function applyBulkByTargetId( $column, $action, $target );
+	public function applyBulkByTargetId( $column, $action, $target, $config = [] );
 
 	// Delete -------------
 

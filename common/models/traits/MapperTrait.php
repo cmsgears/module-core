@@ -107,6 +107,17 @@ trait MapperTrait {
 
 	// Update -----------------
 
+	public static function disableByParent( $parentId, $parentType ) {
+
+		$tableName = self::tableName();
+
+		// Disable all mappings
+		$query		= "UPDATE $tableName SET `active`=0 WHERE `parentType`='$parentType' AND `parentId`=$parentId";
+		$command	= Yii::$app->db->createCommand( $query );
+
+		$command->execute();
+	}
+
 	// Delete -----------------
 
 	/**

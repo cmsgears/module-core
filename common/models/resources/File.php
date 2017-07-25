@@ -346,6 +346,28 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 		return $file;
 	}
 
+	public function loadFiles( $name, $files = [] ) {
+
+		$filesToLoad	= Yii::$app->request->post( $name );
+		$count			= count( $filesToLoad );
+
+		if ( $count > 0 ) {
+
+			$filesToLoad  = [];
+
+			for( $i = 0; $i < $count; $i++ ) {
+
+				$filesToLoad[] = new File();
+			}
+
+			File::loadMultiple( $filesToLoad, Yii::$app->request->post(), $name );
+
+			return $filesToLoad;
+		}
+
+		return $files;
+	}
+
 	// Create -----------------
 
 	// Update -----------------

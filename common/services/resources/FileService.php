@@ -14,6 +14,8 @@ use cmsgears\core\common\models\mappers\ModelFile;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
+use cmsgears\core\common\services\traits\VisibilityTrait;
+
 /**
  * The class FileService is base class to perform database activities for CmgFile Entity.
  */
@@ -44,6 +46,8 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use VisibilityTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -226,7 +230,7 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'altText', 'link', 'visibility', 'type', 'size' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'altText', 'link', 'type' ];
 
 		if( $model->changed ) {
 
@@ -235,6 +239,8 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 			// Delete from disk
 			$existingFile->clearDisk();
+
+			$attributes[]	= 'size';
 		}
 
 		return parent::update( $model, [
@@ -244,7 +250,7 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function updateData( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'altText', 'link', 'visibility', 'type', 'size', 'name', 'directory', 'extension', 'url', 'medium', 'thumb' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'altText', 'link', 'type', 'name', 'directory', 'extension', 'url', 'medium', 'thumb' ];
 
 		if( $model->changed ) {
 
@@ -253,6 +259,8 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 			// Delete from disk
 			$existingFile->clearDisk();
+
+			$attributes[]	= 'size';
 		}
 
 		return parent::update( $model, [
@@ -349,9 +357,6 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 			// Existing File - Info Changed
 			else if( isset( $fileId ) && intval( $fileId ) > 0 ) {
 
-				// Update File Size
-				$file->resetSize();
-
 				$this->update( $file );
 			}
 
@@ -416,9 +421,6 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 			// Existing File - Info Changed
 			else if( isset( $fileId ) && intval( $fileId ) > 0 ) {
 
-				// Update File Size
-				$file->resetSize();
-
 				$this->update( $file );
 			}
 
@@ -446,7 +448,7 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 		}
 	}
 
-	protected function applyBulk( $model, $column, $action, $target ) {
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
 
@@ -489,17 +491,27 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function delete( $model, $config = [] ) {
 
-		if( isset( $model ) ) {
+		$admin	= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-			// Delete from disk
-			$model->clearDisk();
+		if( isset( $model ) ) {
 
 			// Delete mapping
 			ModelFile::deleteByModelId( $model->id );
+
+			// Only admin is authorised to delete a shared file
+			if( $admin || $model->type !== 'shared' ) {
+
+				// Delete from disk
+				$model->clearDisk();
+
+				// Delete model
+				return parent::delete( $model, $config );
+			}
+
+			return true;
 		}
 
-		// Delete model
-		return parent::delete( $model, $config );
+		return false;
 	}
 
 	public function deleteFiles( $files = [] ) {

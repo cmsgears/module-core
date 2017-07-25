@@ -94,15 +94,11 @@ class ModelTagService extends EntityService implements IModelTagService {
 				continue;
 			}
 
-			$tag		= Tag::findByNameType( $tagName, $parentType );
+			$tag	= Tag::findByNameType( $tagName, $parentType );
 
 			if( !isset( $tag ) ) {
 
-				$tag			= new Tag();
-				$tag->siteId	= Yii::$app->core->siteId;
-				$tag->name		= ucfirst( $tagName );
-				$tag->type		= $parentType;
-				$tag			= $this->tagService->create( $tag );
+				$this->tagService->createByParams( [ 'siteId' => Yii::$app->core->siteId, 'name' => ucfirst( $tagName ), 'type' => $parentType ] );
 			}
 
 			$modelTag	= $this->getByModelId( $parentId, $parentType, $tag->id );
@@ -115,7 +111,7 @@ class ModelTagService extends EntityService implements IModelTagService {
 			// Activate if already exist
 			else {
 
-				self::activate( $modelTag );
+				$this->activate( $modelTag );
 			}
 		}
 	}
@@ -141,6 +137,37 @@ class ModelTagService extends EntityService implements IModelTagService {
 		return parent::update( $model, [
 			'attributes' => $attributes
 		]);
+	}
+
+	public function bindTags( $parentId, $parentType, $config = [] ) {
+
+		$binderName	= isset( $config[ 'binder' ] ) ? $config[ 'binder' ] : 'Binder';
+		$binder		= new Binder();
+
+		$binder->load( Yii::$app->request->post(), $binderName );
+
+		$all		= $binder->all;
+		$binded		= $binder->binded;
+		$process	= [];
+
+		// Check for All
+		if( count( $all ) > 0 ) {
+
+			$process = $all;
+
+			// TODO: Handle the situation where all check is required. Refer bindCategories of ModelCategoryService
+		}
+		// Check for Active
+		else {
+
+			$process = $binded;
+
+			ModelTag::disableByParent( $parentId, $parentType );
+
+			$this->createFromArray( $parentId, $parentType, $process );
+		}
+
+		return true;
 	}
 
 	// Delete -------------

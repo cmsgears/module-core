@@ -2,14 +2,11 @@
 namespace cmsgears\core\common\services\mappers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\Category;
 use cmsgears\core\common\models\mappers\ModelCategory;
 
 use cmsgears\core\common\services\interfaces\resources\ICategoryService;
@@ -147,47 +144,53 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 
 	// Update -------------
 
-	public function bindCategories( $parentId, $parentType, $binderClass = 'Binder' ) {
+	public function bindCategories( $parentId, $parentType, $config = [] ) {
 
-		// Bind Categories
-		$binder				= new Binder();
-		$binder->binderId	= $parentId;
+		$binderName	= isset( $config[ 'binder' ] ) ? $config[ 'binder' ] : 'Binder';
+		$binder		= new Binder();
 
-		$binder->load( Yii::$app->request->post(), $binderClass );
+		$binder->load( Yii::$app->request->post(), $binderName );
 
-		$parentId	= $binder->binderId;
-		$allData	= $binder->allData;
-		$activeData	= $binder->bindedData;
+		$all		= $binder->all;
+		$binded		= $binder->binded;
+		$process	= [];
 
-		foreach ( $allData as $id ) {
+		// Check for All
+		if( count( $all ) > 0 ) {
 
-			$toSave		= ModelCategory::findByModelId( $parentId, $parentType, $id );
+			$process = $all;
+		}
+		// Check for Active
+		else {
+
+			$process = $binded;
+
+			ModelCategory::disableByParent( $parentId, $parentType );
+		}
+
+		// Process the List
+		foreach ( $process as $id ) {
+
+			$existingMapping	= ModelCategory::findByModelId( $parentId, $parentType, $id );
 
 			// Existing mapping
-			if( isset( $toSave ) ) {
+			if( isset( $existingMapping ) ) {
 
-				if( in_array( $id, $activeData ) ) {
+				if( in_array( $id, $binded ) ) {
 
-					$toSave->active	= true;
+					$existingMapping->active	= true;
 				}
 				else {
 
-					$toSave->active	= false;
+					$existingMapping->active	= false;
 				}
 
-				$toSave->update();
+				$existingMapping->update();
 			}
-			// Save only required data
-			else if( in_array( $id, $activeData ) ) {
+			// Create Mapping
+			else if( in_array( $id, $binded ) ) {
 
-				$toSave		= new ModelCategory();
-
-				$toSave->parentId	= $parentId;
-				$toSave->parentType	= $parentType;
-				$toSave->modelId	= $id;
-				$toSave->active		= true;
-
-				$toSave->save();
+				$this->createByParams( [ 'modelId' => $id, 'parentId' => $parentId, 'parentType' => $parentType, 'order' => 0, 'active' => true ] );
 			}
 		}
 

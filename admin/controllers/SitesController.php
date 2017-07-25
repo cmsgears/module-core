@@ -31,14 +31,28 @@ class SitesController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 		parent::init();
 
+		// Permission
 		$this->crudPermission	= CoreGlobal::PERM_CORE;
+
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'siteService' );
+
+		$this->themeService		= Yii::$app->factory->get( 'themeService' );
+
+		// Sidebar
 		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'site' ];
 
+		// Return Url
 		$this->returnUrl		= Url::previous( 'sites' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/sites/all' ], true );
 
-		$this->themeService		= Yii::$app->factory->get( 'themeService' );
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Sites' ] ],
+			'create' => [ [ 'label' => 'Sites', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Sites', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Sites', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -79,7 +93,7 @@ class SitesController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 			$this->modelService->create( $model, [ 'avatar' => $avatar, 'banner' => $banner ] );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		$themesMap = $this->themeService->getIdNameMap();
@@ -107,7 +121,7 @@ class SitesController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 				$this->modelService->update( $model, [ 'avatar' => $avatar, 'banner' => $banner ] );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->refresh();
 			}
 
 			$themesMap = $this->themeService->getIdNameMap();

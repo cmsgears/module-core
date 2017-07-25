@@ -27,6 +27,8 @@ class Bulk extends \cmsgears\core\common\base\Action {
 
 	public $modelService;
 
+	public $config = [];
+
 	// Protected --------------
 
 	// Private ----------------
@@ -64,7 +66,7 @@ class Bulk extends \cmsgears\core\common\base\Action {
 
 			$target	= preg_split( '/,/', $target );
 
-			$this->modelService->applyBulkByTargetId( $column, $action, $target );
+			$this->modelService->applyBulkByTargetId( $column, $action, $target, $this->config );
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );

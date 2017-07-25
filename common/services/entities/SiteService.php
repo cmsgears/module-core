@@ -80,26 +80,83 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function getPage( $config = [] ) {
 
+		$modelClass		= static::$modelClass;
+		$modelTable		= static::$modelTable;
+
+		// Sorting ----------
+
 		$sort = new Sort([
 			'attributes' => [
 				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'name'
 				],
 				'slug' => [
-					'asc' => [ 'slug' => SORT_ASC ],
-					'desc' => ['slug' => SORT_DESC ],
+					'asc' => [ "$modelTable.slug" => SORT_ASC ],
+					'desc' => [ "$modelTable.slug" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'slug'
+				],
+				'order' => [
+					'asc' => [ 'order' => SORT_ASC ],
+					'desc' => ['order' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Order'
+				],
+				'active' => [
+					'asc' => [ 'active' => SORT_ASC ],
+					'desc' => ['active' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Active'
 				]
 			]
 		]);
 
-		$config[ 'sort' ] = $sort;
+		if( !isset( $config[ 'sort' ] ) ) {
 
-		return parent::findPage( $config );
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Filter - Status
+		$status	= Yii::$app->request->getQueryParam( 'status' );
+
+		if( isset( $status ) && $status === 'active' ) {
+
+			$config[ 'conditions' ][ "$modelTable.active" ]	= true;
+		}
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [ 'name' => "$modelTable.name" ];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name",
+			'active' => "$modelTable.active"
+		];
+
+		// Result -----------
+
+		return parent::getPage( $config );
 	}
 
 	// Read ---------------
@@ -172,6 +229,51 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 		return parent::update( $model, [
 			'attributes' => $attributes
 		]);
+	}
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'status': {
+
+				switch( $action ) {
+
+					case 'active': {
+
+						$model->active = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'block': {
+
+						$model->active = false;
+
+						$model->update();
+
+						break;
+					}
+				}
+
+				break;
+			}
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
 	}
 
 	// Delete -------------

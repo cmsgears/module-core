@@ -1,12 +1,6 @@
 <?php
 namespace cmsgears\core\common\services\interfaces\mappers;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 interface IModelTagService extends \cmsgears\core\common\services\interfaces\base\IMapperService {
 
 	// Data Provider ------
@@ -28,6 +22,8 @@ interface IModelTagService extends \cmsgears\core\common\services\interfaces\bas
 	public function createFromJson( $parentId, $parentType, $tags );
 
 	// Update -------------
+
+	public function bindTags( $parentId, $parentType, $config = [] );
 
 	// Delete -------------
 

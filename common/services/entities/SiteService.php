@@ -2,6 +2,7 @@
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -100,14 +101,14 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 					'label' => 'slug'
 				],
 				'order' => [
-					'asc' => [ 'order' => SORT_ASC ],
-					'desc' => ['order' => SORT_DESC ],
+					'asc' => [ "$modelTable.order" => SORT_ASC ],
+					'desc' => [ "$modelTable.order" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Order'
 				],
 				'active' => [
-					'asc' => [ 'active' => SORT_ASC ],
-					'desc' => ['active' => SORT_DESC ],
+					'asc' => [ "$modelTable.active" => SORT_ASC ],
+					'desc' => [ "$modelTable.active" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Active'
 				]

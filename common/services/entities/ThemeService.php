@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -68,20 +68,89 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 
 	public function getPage( $config = [] ) {
 
+		$modelClass		= static::$modelClass;
+		$modelTable		= static::$modelTable;
+
+		// Sorting ----------
+
 		$sort = new Sort([
 			'attributes' => [
-				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'name'
-				]
+	            'name' => [
+	                'asc' => [ "$modelTable.name" => SORT_ASC ],
+	                'desc' => [ "$modelTable.name" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Name'
+	            ],
+	            'slug' => [
+	                'asc' => [ "$modelTable.slug" => SORT_ASC ],
+	                'desc' => [ "$modelTable.slug" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => "Slug"
+	            ],
+	            'default' => [
+	                'asc' => [ "$modelTable.default" => SORT_ASC ],
+	                'desc' => [ "$modelTable.default" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => "Default"
+	            ],
+	            'renderer' => [
+	                'asc' => [ "$modelTable.renderer" => SORT_ASC ],
+	                'desc' => [ "$modelTable.renderer" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => "Renderer"
+	            ],
+	            'base' => [
+	                'asc' => [ "$modelTable.basePath" => SORT_ASC ],
+	                'desc' => [ "$modelTable.basePath" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => "Base Path"
+	            ]
 			]
 		]);
 
-		$config[ 'sort' ] = $sort;
+		if( !isset( $config[ 'sort' ] ) ) {
 
-		return parent::findPage( $config );
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Filter - Status
+		$status	= Yii::$app->request->getQueryParam( 'status' );
+
+		if( isset( $status ) && $status === 'default' ) {
+
+			$config[ 'conditions' ][ "$modelTable.default" ]	= true;
+		}
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [ 'name' => "$modelTable.name", 'desc' => "$modelTable.description", 'content' => "$modelTable.content" ];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name", 'desc' => "$modelTable.description", 'content' => "$modelTable.content",
+			'default' => "$modelTable.default", 'renderer' => "$modelTable.renderer"
+		];
+
+		// Result -----------
+
+		return parent::getPage( $config );
 	}
 
 	// Read ---------------
@@ -122,6 +191,41 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 		return parent::update( $model, [
 			'attributes' => $attributes
 		]);
+	}
+
+	public function makeDefault( $model, $config = [] ) {
+
+		// Disable All
+		Theme::updateAll( [ 'default' => false ], '`default`=1' );
+
+		// Make Default
+		$model->default = true;
+
+		// Update
+		return parent::update( $model, [
+			'attributes' => [ 'default' ]
+		]);
+	}
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
 	}
 
 	// Delete -------------

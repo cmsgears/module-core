@@ -73,7 +73,7 @@ class SitesController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 	public function actionAll() {
 
-		Url::remember( [ 'sites/all' ], 'sites' );
+		Url::remember( Yii::$app->request->getUrl(), 'sites' );
 
 		$dataProvider = $this->modelService->getPage();
 

@@ -1,120 +1,56 @@
 <?php
-// Yii Imports
-use yii\helpers\Html;
-use yii\widgets\LinkPager;
-
 // CMG Imports
-use cmsgears\core\admin\config\AdminProperties;
-use cmsgears\core\common\utilities\CodeGenUtil;
+use cmsgears\widgets\popup\Popup;
+
+use cmsgears\widgets\grid\DataGrid;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= 'All Sites | ' . $coreProperties->getSiteTitle();
+$this->title	= 'Sites | ' . $coreProperties->getSiteTitle();
 
-// Data
-$pagination		= $dataProvider->getPagination();
-$models			= $dataProvider->getModels();
-
-// Searching
-$keywords		= Yii::$app->request->getQueryParam( 'keywords' );
-
-// Sorting
-$sortOrder		= Yii::$app->request->getQueryParam( 'sort' );
-
-if( !isset( $sortOrder ) ) {
-
-	$sortOrder	= '';
-}
+// Templates
+$moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 ?>
-<div class="row header-content">
-	<div class="col-small col15x10 header-actions">
-		<span class="frm-icon-element element-small">
-			<i class="cmti cmti-plus"></i>
-			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
-		</span>
-	</div>
-	<div class="col-small col15x5 header-search">
-		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $keywords ?>">
-		<span class="frm-icon-element element-medium">
-			<i class="cmti cmti-search"></i>
-			<button id="btn-search">Search</button>
-		</span>
-	</div>
-</div>
-<div class="row header-content">
-	<div class="col col12x8 header-actions">
-		<span class="bold">Sort By:</span>
-		<span class="wrap-sort">
-			<?= $dataProvider->sort->link( 'name', [ 'class' => 'sort btn btn-medium' ] ) ?>
-		</span>
-	</div>
-	<div class="col col12x4 header-actions align align-right">
-		<span class="wrap-filters"></span>
-	</div>
-</div>
+<?= DataGrid::widget([
+	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
+	'title' => 'Sites', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
+	'searchColumns' => [ 'name' => 'Name' ],
+	'sortColumns' => [
+		'name' => 'Name', 'slug' => 'Slug', 'order' => 'Order', 'active' => 'Active'
+	],
+	'filters' => [ 'status' => [ 'file' => 'File Render', 'layout' => 'Group Layout' ] ],
+	'reportColumns' => [
+		'status' => [ 'title' => 'Active', 'type' => 'flag' ]
+	],
+	'bulkPopup' => 'popup-grid-bulk',
+	'bulkActions' => [
+		'status' => [ 'active' => 'Activate', 'block' => 'Blocked' ],
+		'model' => [ 'delete' => 'Delete' ]
+	],
+	'header' => false, 'footer' => true,
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x6', null, null, 'x5', null ] ],
+	'gridColumns' => [
+		'bulk' => 'Action',
+		'name' => 'Name',
+		'order' => 'Order',
+		'active' => [ 'title' => 'Active', 'generate' => function( $model ) { return $model->getActiveStr(); } ],
+		'theme' => [ 'title' => 'Theme', 'generate' => function( $model ) { return $model->theme->name; } ],
+		'actions' => 'Actions'
+	],
+	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
+	'templateDir' => '@themes/admin/views/templates/widget/grid',
+	//'dataView' => "$moduleTemplates/grid/data/site",
+	//'cardView' => "$moduleTemplates/grid/cards/site",
+	//'actionView' => "$moduleTemplates/grid/actions/site"
+]) ?>
 
-<div class="data-grid">
-	<div class="row grid-header">
-		<div class="col col12x6 info">
-			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
-		</div>
-		<div class="col col12x6 pagination">
-			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
-		</div>
-	</div>
-	<div class="grid-content">
-		<table>
-			<thead>
-				<tr>
-					<th>Avatar</th>
-					<th>Name
-						<span class='box-icon-sort'>
-							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
-							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
-						</span>
-					</th>
-					<th>Slug</th>
-					<th>Theme</th>
-					<th>Order
-						<span class='box-icon-sort'>
-							<span sort-order='order' class="icon-sort <?php if( strcmp( $sortOrder, 'order') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
-							<span sort-order='-order' class="icon-sort <?php if( strcmp( $sortOrder, '-order') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
-						</span>
-					</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php
+<?= Popup::widget([
+	'title' => 'Update Sites', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'bulk',
+	'data' => [ 'model' => 'Site', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "core/sites/bulk" ]
+]) ?>
 
-					foreach( $models as $site ) {
-
-						$id			= $site->id;
-						$editUrl	= Html::a( $site->name, [ "update?id=$id" ] );
-						$themeName	= isset( $site->theme ) ? $site->theme->name : null;
-						$avatar		= AdminProperties::getInstance()->getDefaultAvatar();
-						$avatar		= CodeGenUtil::getImageThumbTag( $site->avatar, [ 'class' => 'avatar', 'image' => $avatar ] );
-				?>
-					<tr>
-						<td><?= $avatar ?></td>
-						<td><?= $editUrl ?></td>
-						<td><?= $site->slug ?></td>
-						<td><?= $themeName ?></td>
-						<td><?= $site->order ?></td>
-						<td class="actions">
-							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
-						</td>
-					</tr>
-				<?php } ?>
-			</tbody>
-		</table>
-	</div>
-	<div class="row grid-header">
-		<div class="col col12x6 info">
-			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
-		</div>
-		<div class="col col12x6 pagination">
-			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
-		</div>
-	</div>
-</div>
+<?= Popup::widget([
+	'title' => 'Delete Site', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'delete',
+	'data' => [ 'model' => 'Site', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "core/sites/delete?id=" ]
+]) ?>

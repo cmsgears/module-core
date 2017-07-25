@@ -26,6 +26,8 @@ interface IThemeService extends INameService, ISlugService {
 
 	// Update -------------
 
+	public function makeDefault( $model, $config = [] );
+
 	// Delete -------------
 
 }

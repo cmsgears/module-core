@@ -27,7 +27,10 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 		'content' => [ 'title' => 'Content', 'type' => 'text' ],
 		'active' => [ 'title' => 'Active', 'type' => 'flag' ]
 	],
-	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [ 'status' => [ 'block' => 'Block', 'active' => 'Activate' ] ],
+	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
+		'status' => [ 'block' => 'Block', 'active' => 'Activate' ],
+		'model' => [ 'delete' => 'Delete' ]
+	],
 	'header' => false, 'footer' => true,
 	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x2', 'x2', null, 'x8', null ] ],
 	'gridColumns' => [

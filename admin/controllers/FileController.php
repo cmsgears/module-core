@@ -102,7 +102,7 @@ class FileController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 			$this->modelService->saveFile( $model );
 
-			return $this->refresh();
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		return $this->render( 'update', [

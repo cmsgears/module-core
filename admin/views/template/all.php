@@ -33,7 +33,7 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 		'model' => [ 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x2', null, null, 'x4', null, 'x2', 'x2', null ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x2', null, 'x2', 'x3', null, 'x2', 'x2', null ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'name' => 'Name',

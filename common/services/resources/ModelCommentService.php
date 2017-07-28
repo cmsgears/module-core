@@ -78,8 +78,16 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Data Provider ------
 
-	public function getPage( $config = [] ) {
 
+	
+		public function getPage( $config = [] ) {
+
+		$modelClass		= static::$modelClass;
+		$modelTable		= static::$modelTable;
+
+		// Sorting ----------
+
+		
 		$sort = new Sort([
 			'attributes' => [
 				'name' => [
@@ -124,10 +132,42 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 			]
 		]);
 
-		$config[ 'sort' ] = $sort;
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [ 'name' => "$modelTable.name",  'title' =>  "$modelTable.title", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template" ];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template",  'active' => "$modelTable.active"
+		];
+
+		// Result -----------
 
 		return parent::findPage( $config );
 	}
+
 
 	public function getPageByParent( $parentId, $parentType, $config = [] ) {
 
@@ -334,6 +374,28 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 		foreach ( $models as $model ) {
 
 			$this->delete( $model );
+		}
+	}
+	
+	
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
 		}
 	}
 

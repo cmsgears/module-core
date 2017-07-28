@@ -64,7 +64,13 @@ class FormService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Data Provider ------
 
+
 	public function getPage( $config = [] ) {
+
+		$modelClass		= static::$modelClass;
+		$modelTable		= static::$modelTable;
+
+		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
@@ -97,9 +103,37 @@ class FormService extends \cmsgears\core\common\services\base\EntityService impl
 			$config[ 'sort' ] = $sort;
 		}
 
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [ 'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template" ];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template",  'active' => "$modelTable.active"
+		];
+
+		// Result -----------
+
 		return parent::findPage( $config );
 	}
-
+	
 	// Read ---------------
 
 	// Read - Models ---
@@ -134,6 +168,28 @@ class FormService extends \cmsgears\core\common\services\base\EntityService impl
 		return parent::delete( $model, $config );
 	}
 
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
+
+	
 	// Static Methods ----------------------------------------------
 
 	// CMG parent classes --------------------

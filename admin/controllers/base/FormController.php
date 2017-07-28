@@ -39,9 +39,11 @@ abstract class FormController extends CrudController {
 
 		$this->setViewPath( '@cmsgears/module-core/admin/views/form' );
 
+		// Permissions
 		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'formService' );
-
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
 
 		$this->type				= CoreGlobal::TYPE_SYSTEM;

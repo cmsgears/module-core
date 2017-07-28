@@ -2,6 +2,7 @@
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -62,6 +63,11 @@ class CountryService extends \cmsgears\core\common\services\base\EntityService i
 
 	public function getPage( $config = [] ) {
 
+		$modelClass		= static::$modelClass;
+		$modelTable		= static::$modelTable;
+
+		// Sorting ----------
+
 		$sort = new Sort([
 			'attributes' => [
 				'name' => [
@@ -70,18 +76,55 @@ class CountryService extends \cmsgears\core\common\services\base\EntityService i
 					'default' => SORT_DESC,
 					'label' => 'name'
 				],
-				'slug' => [
-					'asc' => [ 'slug' => SORT_ASC ],
-					'desc' => ['slug' => SORT_DESC ],
+				'code' => [
+					'asc' => [ 'code' => SORT_ASC ],
+					'desc' => [ 'code' => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'slug'
+					'label' => 'Code'
+				],
+				'iso' => [
+					'asc' => [ 'iso' => SORT_ASC ],
+					'desc' => [ 'iso' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'ISO'
 				]
 			]
 		]);
 
-		$config[ 'sort' ] = $sort;
+		if( !isset( $config[ 'sort' ] ) ) {
 
-		return parent::findPage( $config );
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [ 'name' => "$modelTable.name", 'code' => "$modelTable.code" ];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name", 'code' => "$modelTable.code", 'iso' => "$modelTable.iso"
+		];
+
+		// Result -----------
+
+		return parent::getPage( $config );
 	}
 
 	// Read ---------------
@@ -110,6 +153,27 @@ class CountryService extends \cmsgears\core\common\services\base\EntityService i
 		return parent::update( $model, [
 			'attributes' => $attributes
 		]);
+	}
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
 	}
 
 	// Delete -------------

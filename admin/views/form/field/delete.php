@@ -4,34 +4,72 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
+use cmsgears\core\common\widgets\Editor;
+use cmsgears\files\widgets\ImageUploader;
+use cmsgears\files\widgets\VideoUploader;
 use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= 'Delete Form Field | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Delete Form | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
-<div class="box box-cud">
-	<div class="box-wrap-header">
-		<div class="header">Delete Form Field</div>
-	</div>
-	<div class="box-wrap-content frm-split-40-60">
-		<?php $form = ActiveForm::begin( [ 'id' => 'frm-form-field' ] );?>
+<div class="box-crud-wrap row">
+	<div class="box-crud-wrap-main colf colf3x2">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-block', 'options' => [ 'class' => 'form' ] ] ); ?>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Basic Details</div>
+			</div>
+			<div class="box-content-wrap frm-split-40-60">
+				<div class="box-content">
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'name' ) ?>
+						</div>
+						
+						<div class="col col2">
+							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap clearfix' ] ] ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'label' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'type' )->dropDownList( $typeMap ) ?>
+						</div>		
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'compress' )->checkbox() ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'validators' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
+						</div>
+						<div class="col col2">
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
 
-		<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
-		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ], 'disabled' => true ] ) ?>
-		<?= $form->field( $model, 'label' )->textInput( [ 'readonly' => true ] ) ?>
-		<?= $form->field( $model, 'type' )->dropDownList( $typeMap, [ 'disabled' => true ] ) ?>
-		<?= $form->field( $model, 'compress' )->checkbox( [ 'disabled' => true ] ) ?>
-		<?= $form->field( $model, 'validators' )->textInput( [ 'readonly' => true ] ) ?>
-		<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => true ] ) ?>
+		<div class="filler-height filler-height-medium"></div>
 
-		<div class="clear filler-height"></div>
-
-		<div class="align align-center">
-			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+		<div class="align align-right">
+			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
 			<input class="element-medium" type="submit" value="Delete" />
 		</div>
 
+		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
+	</div>
+	<div class="box-crud-wrap-sidebar colf colf3">
+
 	</div>
 </div>

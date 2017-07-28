@@ -1,107 +1,53 @@
 <?php
-// Yii Imports
-use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\widgets\LinkPager;
-
 // CMG Imports
-use cmsgears\core\common\utilities\CodeGenUtil;
+use cmsgears\widgets\popup\Popup;
+
+use cmsgears\widgets\grid\DataGrid;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= 'All Countries | ' . $coreProperties->getSiteTitle();
+$this->title	= 'Countries | ' . $coreProperties->getSiteTitle();
 
-// Data
-$pagination		= $dataProvider->getPagination();
-$models			= $dataProvider->getModels();
-
-// Searching
-$keywords		= Yii::$app->request->getQueryParam( 'keywords' );
-
-// Sorting
-$sortOrder		= Yii::$app->request->getQueryParam( 'sort' );
-
-if( !isset( $sortOrder ) ) {
-
-	$sortOrder	= '';
-}
+// Templates
+$moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 ?>
-<div class="row header-content">
-	<div class="col-small col15x10 header-actions">
-		<span class="frm-icon-element element-small">
-			<i class="cmti cmti-plus"></i>
-			<?= Html::a( 'Add', [ 'create' ], [ 'class' => 'btn' ] ) ?>
-		</span>
-	</div>
-	<div class="col-small col15x5 header-search">
-		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $keywords ?>">
-		<span class="frm-icon-element element-medium">
-			<i class="cmti cmti-search"></i>
-			<button id="btn-search">Search</button>
-		</span>
-	</div>
-</div>
-<div class="row header-content">
-	<div class="col col12x8 header-actions">
-		<span class="bold">Sort By:</span>
-		<span class="wrap-sort">
-			<?= $dataProvider->sort->link( 'name', [ 'class' => 'sort btn btn-medium' ] ) ?>
-		</span>
-	</div>
-	<div class="col col12x4 header-actions align align-right">
-		<span class="wrap-filters"></span>
-	</div>
-</div>
+<?= DataGrid::widget([
+	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
+	'title' => 'Countries', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
+	'searchColumns' => [ 'name' => 'Name', 'code' => 'Code' ],
+	'sortColumns' => [
+		'name' => 'Name', 'code' => 'Code', 'iso' => 'ISO'
+	],
+	'filters' => [],
+	'reportColumns' => [
+		'name' => [ 'title' => 'Name', 'type' => 'text' ],
+		'code' => [ 'title' => 'Code', 'type' => 'text' ],
+		'iso' => [ 'title' => 'ISO', 'type' => 'text' ]
+	],
+	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [ 'model' => [ 'delete' => 'Delete' ] ],
+	'header' => false, 'footer' => true,
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x9', 'x2', 'x2', null ] ],
+	'gridColumns' => [
+		'bulk' => 'Action',
+		'name' => 'Name',
+		'code' => 'Code',
+		'iso' => 'ISO',
+		'actions' => 'Actions'
+	],
+	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
+	'templateDir' => '@themes/admin/views/templates/widget/grid',
+	//'dataView' => "$moduleTemplates/grid/data/country",
+	//'cardView' => "$moduleTemplates/grid/cards/country",
+	'actionView' => "$moduleTemplates/grid/actions/country"
+]) ?>
 
-<div class="data-grid">
-	<div class="row grid-header">
-		<div class="col col12x6 info">
-			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
-		</div>
-		<div class="col col12x6 pagination">
-			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
-		</div>
-	</div>
-	<div class="grid-content">
-		<table>
-			<thead>
-				<tr>
-					<th>Name
-						<span class='box-icon-sort'>
-							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
-							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
-						</span>
-					</th>
-					<th>Code</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php
+<?= Popup::widget([
+	'title' => 'Update Countries', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'bulk',
+	'data' => [ 'model' => 'Country', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "core/country/bulk" ]
+]) ?>
 
-					foreach( $models as $country ) {
-
-						$id 		= $country->id;
-						$editUrl	= Html::a( $country->name, [ "update?id=$id" ] );
-				?>
-					<tr>
-						<td><?= $editUrl ?></td>
-						<td><?= $country->code ?></td>
-						<td class="actions">
-							<span title="Provinces"><?= Html::a( "", [ "country/province/all?cid=$id" ], [ 'class' => 'cmti cmti-list-small' ] )  ?></span>
-							<span title="Update"><?= Html::a( "", [ "update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete"><?= Html::a( "", [ "delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
-						</td>
-					</tr>
-				<?php } ?>
-			</tbody>
-		</table>
-	</div>
-	<div class="row grid-header">
-		<div class="col col12x6 info">
-			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
-		</div>
-		<div class="col col12x6 pagination">
-			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
-		</div>
-	</div>
-</div>
+<?= Popup::widget([
+	'title' => 'Delete Country', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'delete',
+	'data' => [ 'model' => 'Country', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "core/country/delete?id=" ]
+]) ?>

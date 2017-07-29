@@ -2,12 +2,9 @@
 namespace cmsgears\core\common\base;
 
 // Yii Imports
-use \Yii;
-use yii\base\Component;
+use Yii;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\config\CoreProperties;
 
 use cmsgears\core\common\services\entities\SiteService;

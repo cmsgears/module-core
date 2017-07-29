@@ -5,8 +5,10 @@ namespace cmsgears\core\common\services\mappers;
 use Yii;
 
 // CMG Imports
+use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Tag;
+use cmsgears\core\common\models\mappers\ModelTag;
 
 use cmsgears\core\common\services\base\EntityService;
 use cmsgears\core\common\services\interfaces\mappers\IModelTagService;
@@ -94,14 +96,14 @@ class ModelTagService extends EntityService implements IModelTagService {
 				continue;
 			}
 
-			$tag	= Tag::findByNameType( $tagName, $parentType );
+			$tag = Tag::findByNameType( $tagName, $parentType );
 
 			if( !isset( $tag ) ) {
 
-				$this->tagService->createByParams( [ 'siteId' => Yii::$app->core->siteId, 'name' => ucfirst( $tagName ), 'type' => $parentType ] );
+				$tag = $this->tagService->createByParams( [ 'siteId' => Yii::$app->core->siteId, 'name' => ucfirst( $tagName ), 'type' => $parentType ] );
 			}
 
-			$modelTag	= $this->getByModelId( $parentId, $parentType, $tag->id );
+			$modelTag = $this->getByModelId( $parentId, $parentType, $tag->id );
 
 			// Create if does not exist
 			if( !isset( $modelTag ) ) {

@@ -2,7 +2,7 @@
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 
 // CMG Imports

@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -63,7 +63,6 @@ class FormService extends \cmsgears\core\common\services\base\EntityService impl
 	// FormService ---------------------------
 
 	// Data Provider ------
-
 
 	public function getPage( $config = [] ) {
 
@@ -133,7 +132,7 @@ class FormService extends \cmsgears\core\common\services\base\EntityService impl
 
 		return parent::findPage( $config );
 	}
-	
+
 	// Read ---------------
 
 	// Read - Models ---
@@ -157,17 +156,6 @@ class FormService extends \cmsgears\core\common\services\base\EntityService impl
 		]);
 	}
 
-	// Delete -------------
-
-	public function delete( $model, $config = [] ) {
-
-		// Delete mapping
-		ModelForm::deleteByModelId( $model->id );
-
-		// Delete model
-		return parent::delete( $model, $config );
-	}
-
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
@@ -189,7 +177,17 @@ class FormService extends \cmsgears\core\common\services\base\EntityService impl
 		}
 	}
 
-	
+	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete mapping
+		ModelForm::deleteByModelId( $model->id );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// CMG parent classes --------------------

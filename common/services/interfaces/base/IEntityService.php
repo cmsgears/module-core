@@ -1,7 +1,6 @@
 <?php
 namespace cmsgears\core\common\services\interfaces\base;
 
-use yii\db\ActiveRecordInterface;
 use yii\db\ActiveRecord;
 
 interface IEntityService {

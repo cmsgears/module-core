@@ -2,7 +2,7 @@
 namespace cmsgears\core\admin\controllers\province;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 
 // CMG Imports
@@ -28,14 +28,40 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		parent::init();
 
+		// Permission
 		$this->crudPermission	= CoreGlobal::PERM_CORE;
+
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'cityService' );
 
 		$this->provinceService	= Yii::$app->factory->get( 'provinceService' );
+
+		// Sidebar
 		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'country' ];
 
+		// Return Url
 		$this->returnUrl		= Url::previous( 'cities' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/province/city/all' ], true );
+
+		// Country Url
+		$countryUrl		= Url::previous( 'countries' );
+		$countryUrl		= isset( $countryUrl ) ? $countryUrl : Url::toRoute( [ '/core/country/all' ], true );
+
+		// Province Url
+		$provinceUrl	= Url::previous( 'provinces' );
+		$provinceUrl	= isset( $provinceUrl ) ? $provinceUrl : Url::toRoute( [ '/core/country/province/all' ], true );
+
+		// Breadcrumbs
+		$this->breadcrumbs	= [
+			'base' => [
+				[ 'label' => 'Countries', 'url' =>  $countryUrl ],
+				[ 'label' => 'Provinces', 'url' =>  $provinceUrl ],
+			],
+			'all' => [ [ 'label' => 'Cities' ] ],
+			'create' => [ [ 'label' => 'Cities', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Cities', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Cities', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------

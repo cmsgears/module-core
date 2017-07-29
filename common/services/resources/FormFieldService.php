@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -57,7 +57,6 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 
 	// Data Provider ------
 
-	
 	public function getPage( $config = [] ) {
 
 		$modelClass		= static::$modelClass;
@@ -148,25 +147,6 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 		]);
 	}
 
-	// Delete -------------
-
-	// Static Methods ----------------------------------------------
-
-	// CMG parent classes --------------------
-
-	// FormFieldService ----------------------
-
-	// Data Provider ------
-
-	// Read ---------------
-
-	// Read - Models ---
-
-	public static function findByFormId( $formId ) {
-
-		return FormField::findByFormId( $formId );
-	}
-	
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
@@ -186,6 +166,25 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 				break;
 			}
 		}
+	}
+
+	// Delete -------------
+
+	// Static Methods ----------------------------------------------
+
+	// CMG parent classes --------------------
+
+	// FormFieldService ----------------------
+
+	// Data Provider ------
+
+	// Read ---------------
+
+	// Read - Models ---
+
+	public static function findByFormId( $formId ) {
+
+		return FormField::findByFormId( $formId );
 	}
 
 	// Read - Lists ----

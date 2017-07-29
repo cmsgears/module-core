@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -78,16 +78,13 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Data Provider ------
 
-
-	
-		public function getPage( $config = [] ) {
+	public function getPage( $config = [] ) {
 
 		$modelClass		= static::$modelClass;
 		$modelTable		= static::$modelTable;
 
 		// Sorting ----------
 
-		
 		$sort = new Sort([
 			'attributes' => [
 				'name' => [
@@ -167,7 +164,6 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 		return parent::findPage( $config );
 	}
-
 
 	public function getPageByParent( $parentId, $parentType, $config = [] ) {
 
@@ -356,28 +352,6 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 		return $model;
 	}
 
-	// Delete -------------
-
-	public function delete( $model, $config = [] ) {
-
-		// Delete files
-		$this->fileService->deleteFiles( $model->files );
-
-		// Delete model
-		return parent::delete( $model, $config );
-	}
-
-	public function deleteByParent( $parentId, $parentType ) {
-
-		$models	= self::getByParent( $parentId, $parentType );
-
-		foreach ( $models as $model ) {
-
-			$this->delete( $model );
-		}
-	}
-	
-	
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
@@ -396,6 +370,27 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 				break;
 			}
+		}
+	}
+
+	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete files
+		$this->fileService->deleteFiles( $model->files );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
+
+	public function deleteByParent( $parentId, $parentType ) {
+
+		$models	= self::getByParent( $parentId, $parentType );
+
+		foreach ( $models as $model ) {
+
+			$this->delete( $model );
 		}
 	}
 

@@ -1,6 +1,9 @@
 <?php
 namespace cmsgears\core\common\models\forms;
 
+// Yii Imports
+use yii\helpers\ArrayHelper;
+
 /**
  * It's useful to bind multiple models to a model using checkbox group.
  */
@@ -26,6 +29,8 @@ class Binder extends \yii\base\Model {
 
 	public $binded	= []; // Data to be active and submitted by user
 
+	public $value	= []; // Additional data required in some cases
+
 	// Protected --------------
 
 	// Private ----------------
@@ -48,7 +53,7 @@ class Binder extends \yii\base\Model {
 
 		return [
 			[ [ 'binderId' ], 'required' ],
-			[ [ 'all', 'binded' ], 'safe' ],
+			[ [ 'all', 'binded', 'value' ], 'safe' ],
 			[ 'binderId', 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 	}
@@ -61,4 +66,38 @@ class Binder extends \yii\base\Model {
 
 	// Binder --------------------------------
 
+	public function mergeWithBinded( $merge, $csv = false ) {
+
+		if( $csv ) {
+
+			$merge = preg_split( '/,/',  $merge );
+		}
+
+		$this->binded = ArrayHelper::merge( $this->binded, $merge );
+	}
+
+	public function getValueMap() {
+
+		$count	= count( $this->binded );
+		$map	= [];
+
+		for( $i = 0; $i < $count; $i++ ) {
+
+			$map[ $this->binded[ $i ] ] = $this->value[ $i ];
+		}
+
+		return $map;
+	}
+
+	public function mergeMapWithBinded( $map ) {
+
+		foreach ( $map as $key => $value ) {
+
+			if( !in_array( $key, $this->binded ) ) {
+
+				$this->binded[] = $key;
+				$this->value[]	= $value;
+			}
+		}
+	}
 }

@@ -1,12 +1,7 @@
 <?php
 namespace cmsgears\core\common\models\traits\mappers;
 
-// Yii Import
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\entities\Template;
 
 /**

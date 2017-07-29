@@ -36,7 +36,7 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 	public static $modelTable	= CoreTables::TABLE_GALLERY;
 
-	public static $parentType		= CoreGlobal::TYPE_GALLERY;
+	public static $parentType	= CoreGlobal::TYPE_GALLERY;
 
 	// Protected --------------
 

@@ -2,14 +2,11 @@
 namespace cmsgears\core\frontend\controllers\apix;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\utilities\AjaxUtil;
 
 class CategoryController extends \cmsgears\core\frontend\controllers\base\Controller {
 

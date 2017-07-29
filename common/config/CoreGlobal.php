@@ -95,20 +95,23 @@ class CoreGlobal {
 
 	// Text Limits - Ideal for string validators -----------------------
 
-	const TEXT_SMALL			=  64;
-	const TEXT_MEDIUM			= 160; // Meta Description Limit
-	const TEXT_LARGE			= 255;
-	const TEXT_XLARGE			= 512;
-	const TEXT_XXLARGE			= 1024;
+	const TEXT_SMALL		=  64;
+	const TEXT_MEDIUM		= 160; // Meta Description Limit
+	const TEXT_LARGE		= 255;
+	const TEXT_XLARGE		= 512;
+	const TEXT_XXLARGE		= 1024;
+	const TEXT_XXXLARGE		= 2048;
+	const TEXT_XTRALARGE	= 4096;
 
 	// Text limit for display ------------------------------------------
 
-	const DISPLAY_TEXT_SMALL	= 160; // Meta Description Limit ... Truncate description
-	const DISPLAY_TEXT_MEDIUM	= 255;
-	const DISPLAY_TEXT_LARGE	= 350;
-	const DISPLAY_TEXT_XLARGE	= 512;
-	const DISPLAY_TEXT_XXLARGE	= 1024;
-	const DISPLAY_TEXT_XXXLARGE	= 2048;
+	const DISPLAY_TEXT_SMALL		= 160; // Meta Description Limit ... Truncate description
+	const DISPLAY_TEXT_MEDIUM		= 255;
+	const DISPLAY_TEXT_LARGE		= 350;
+	const DISPLAY_TEXT_XLARGE		= 512;
+	const DISPLAY_TEXT_XXLARGE		= 1024;
+	const DISPLAY_TEXT_XXXLARGE		= 2048;
+	const DISPLAY_TEXT_XTRALARGE	= 4096;
 
 	// Hierarchy -- Nested Set -----------------------------------------
 

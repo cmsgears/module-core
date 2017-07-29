@@ -66,8 +66,13 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 	// PermissionService ---------------------
 
 	// Data Provider ------
-
+	
 	public function getPage( $config = [] ) {
+
+		$modelClass		= static::$modelClass;
+		$modelTable		= static::$modelTable;
+
+		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
@@ -86,10 +91,42 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 			]
 		]);
 
-		$config[ 'sort' ] = $sort;
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [ 'name' => "$modelTable.name",  'title' =>  "$modelTable.title", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template" ];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template",  'active' => "$modelTable.active"
+		];
+
+		// Result -----------
 
 		return parent::findPage( $config );
 	}
+	
 
 	// Read ---------------
 
@@ -151,6 +188,27 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 		}
 
 		return true;
+	}
+	
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
 	}
 
 	// Delete -------------

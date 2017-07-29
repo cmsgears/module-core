@@ -37,6 +37,10 @@ abstract class FormController extends CrudController {
 
 		parent::init();
 
+		$this->type				= CoreGlobal::TYPE_SYSTEM;
+		$this->submits			= true;
+		$this->templateType		= CoreGlobal::TYPE_FORM;
+		
 		$this->setViewPath( '@cmsgears/module-core/admin/views/form' );
 
 		// Permissions
@@ -45,10 +49,7 @@ abstract class FormController extends CrudController {
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'formService' );
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
-
-		$this->type				= CoreGlobal::TYPE_SYSTEM;
-		$this->submits			= true;
-		$this->templateType		= CoreGlobal::TYPE_FORM;
+		
 	}
 
 	// Instance methods --------------------------------------------
@@ -88,7 +89,7 @@ abstract class FormController extends CrudController {
 
 			$this->modelService->create( $model );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );

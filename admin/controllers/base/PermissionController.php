@@ -39,7 +39,10 @@ abstract class PermissionController extends CrudController {
 
 		$this->setViewPath( '@cmsgears/module-core/admin/views/permission' );
 
+		// Permissions
 		$this->crudPermission	= CoreGlobal::PERM_RBAC;
+		
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'permissionService' );
 		$this->type				= CoreGlobal::TYPE_SYSTEM;
 
@@ -125,7 +128,7 @@ abstract class PermissionController extends CrudController {
 				return $this->redirect( [ 'groups' ] );
 			}
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		$roles			= $this->roleService->getIdNameListByType( $this->type );
@@ -167,7 +170,7 @@ abstract class PermissionController extends CrudController {
 					return $this->redirect( [ 'groups' ] );
 				}
 
-				return $this->redirect( $this->returnUrl );
+				return $this->redirect( "update?id=$model->id" );
 			}
 
 			$roles			= $this->roleService->getIdNameListByType( $this->type );

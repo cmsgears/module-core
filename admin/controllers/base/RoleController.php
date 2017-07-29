@@ -95,7 +95,7 @@ abstract class RoleController extends CrudController {
 			$this->modelHierarchyService->assignChildren( CoreGlobal::TYPE_ROLE, $binder );
 			*/
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		$roleMap		= $this->modelService->getIdNameMapByType( $this->type );
@@ -127,7 +127,7 @@ abstract class RoleController extends CrudController {
 
 				$this->modelService->bindPermissions( $binder );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->redirect( "update?id=$model->id" );
 			}
 
 			$roleMap		= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'id' => 0, 'name' => 'Choose Role' ] ] ] );

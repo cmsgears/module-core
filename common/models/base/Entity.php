@@ -2,10 +2,7 @@
 namespace cmsgears\core\common\models\base;
 
 // Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use Yii;
 
 /**
  * Entity - It's the parent entity for all the entities.
@@ -126,6 +123,18 @@ abstract class Entity extends \yii\db\ActiveRecord {
 		$name	= get_class( $this );
 
 		return join( '', array_slice( explode( '\\', $name ), -1 ) );
+	}
+
+	public function getAttributeArray( $attributes ) {
+
+		$data = [];
+
+		foreach ( $attributes as $attribute ) {
+
+			$data[ $attribute ] = $this->$attribute;
+		}
+
+		return $data;
 	}
 
 	// Static Methods ----------------------------------------------

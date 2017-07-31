@@ -76,11 +76,30 @@ abstract class MetaService extends EntityService implements IMetaService {
 
 			$modelClass			= static::$modelClass;
 
+			// Initialise
 			$meta				= new $modelClass();
 			$meta->modelId		= $modelId;
 			$meta->name			= $name;
+			$meta->label		= $name;
 			$meta->type			= $type;
 			$meta->valueType	= $valueType;
+
+			switch( $valueType ) {
+
+				case Meta::VALUE_TYPE_FLAG: {
+
+					$meta->value = false;
+				}
+				default: {
+
+					$meta->value = null;
+				}
+			}
+
+			// Create & Refresh
+			$meta->save();
+
+			$meta->refresh();
 		}
 
 		return $meta;
@@ -173,7 +192,6 @@ abstract class MetaService extends EntityService implements IMetaService {
 
 		return parent::update( $model, $config );
 	}
-
 
 	public function updateByParams( $params = [], $config = [] ) {
 

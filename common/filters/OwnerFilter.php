@@ -41,7 +41,7 @@ class OwnerFilter {
 		$typed	= isset( $args[ 'typed' ] ) ? $args[ 'typed' ] : true;
 
 		$user	= Yii::$app->user->identity;
-		$model	= null;
+		$model	= Yii::$app->controller->model; // Check whether model is already discoverd
 
 		// Find Service
 		$modelService	= null;
@@ -69,46 +69,54 @@ class OwnerFilter {
 		// Proceed further if service found
 		if( isset( $modelService ) ) {
 
-			$model	= null;
+			// Discover model using service if not done yet
+			if( empty( $model ) ) {
 
-			// Use default column as id
-			if( !isset( $args[ 'slug' ] ) ) {
+				// Use default column as id
+				if( !isset( $args[ 'slug' ] ) ) {
 
-				$args[ 'id' ]	= true;
-			}
-
-			// Find model using id
-			if( isset( $args[ 'id' ] ) && $args[ 'id' ] ) {
-
-				$idParam		= 'id';
-
-				if( isset( $args[ 'idParam' ] ) ) {
-
-					$idParam	= $args[ 'idParam' ];
+					$args[ 'id' ]	= true;
 				}
 
-				$id		= Yii::$app->request->get( $idParam );
-				$model	= $modelService->getById( $id );
-			}
-			// Find model using slug
-			else if( isset( $args[ 'slug' ] ) && $args[ 'slug' ] ) {
+				// Find model using id
+				if( isset( $args[ 'id' ] ) && $args[ 'id' ] ) {
 
-				$slugParam	= 'slug';
+					$idParam		= 'id';
 
-				if( isset( $args[ 'slugParam' ] ) ) {
+					if( isset( $args[ 'idParam' ] ) ) {
 
-					$slugParam	= $args[ 'slugParam' ];
+						$idParam	= $args[ 'idParam' ];
+					}
+
+					$id		= Yii::$app->request->get( $idParam );
+					$model	= $modelService->getById( $id );
+				}
+				// Find model using slug
+				else if( isset( $args[ 'slug' ] ) && $args[ 'slug' ] ) {
+
+					$slugParam	= 'slug';
+
+					if( isset( $args[ 'slugParam' ] ) ) {
+
+						$slugParam	= $args[ 'slugParam' ];
+					}
+
+					$slug	= Yii::$app->request->get( $slugParam );
+
+					if( $typed ) {
+
+						$model	= $modelService->getBySlug( $slug, true );
+					}
+					else {
+
+						$model	= $modelService->getBySlug( $slug );
+					}
 				}
 
-				$slug	= Yii::$app->request->get( $slugParam );
+				if( isset( $model ) ) {
 
-				if( $typed ) {
-
-					$model	= $modelService->getBySlug( $slug, true );
-				}
-				else {
-
-					$model	= $modelService->getBySlug( $slug );
+					// Set controller primary model
+					Yii::$app->controller->model = $model;
 				}
 			}
 

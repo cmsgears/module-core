@@ -12,7 +12,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 /**
  * Discover Filter finds and set the primary model using primary service of controller. In all other cases, it ignore the action and
- * throws ForbiddenHttpException exception.
+ * throws ForbiddenHttpException exception. It must be the first filter in case an action is configured for multiple filters.
  *
  * Ex:
  *	public function behaviors() {
@@ -112,6 +112,8 @@ class DiscoverFilter {
 
 				if( $typed ) {
 
+					$type	= null != Yii::$app->request->get( 'type' ) ? Yii::$app->request->get( 'type' ) : $type;
+
 					if( isset( $type ) ) {
 
 						$model	= $modelService->getBySlugType( $slug, $type );
@@ -129,6 +131,9 @@ class DiscoverFilter {
 
 			// Apply Discover Filter
 			if( isset( $model ) ) {
+
+				// Set controller primary model
+				Yii::$app->controller->model = $model;
 
 				return true;
 			}

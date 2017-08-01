@@ -72,7 +72,7 @@ class AssignTags extends \cmsgears\core\common\actions\base\ModelAction {
 
 			foreach ( $tags as $tag ) {
 
-				$data[]	= [ 'name' => $tag->name, 'slug' => $tag->slug, 'modelSlug' => isset( $this->model->slug ) ? $this->model->slug : null ];
+				$data[]	= [ 'id' => $tag->id, 'name' => $tag->name ];
 			}
 
 			// Trigger Ajax Success

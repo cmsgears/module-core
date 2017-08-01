@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\actions\category;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -56,6 +56,7 @@ class AssignCategory extends \cmsgears\core\common\actions\base\ModelAction {
 
 		if( isset( $this->model ) && isset( $post[ 'categoryId' ] ) ) {
 
+			$categoryService		= Yii::$app->factory->get( 'categoryService' );
 			$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
 			$parentId				= $this->model->id;
 			$parentType				= $this->parentType;
@@ -63,13 +64,9 @@ class AssignCategory extends \cmsgears\core\common\actions\base\ModelAction {
 
 			$modelCategoryService->activateByModelId( $parentId, $parentType, $modelId );
 
-			$categories		= $this->model->activeCategories;
-			$data			= [];
+			$category	= $categoryService->getById( $modelId );
 
-			foreach ( $categories as $category ) {
-
-				$data[]	= [ 'name' => $category->name, 'id' => $category->id ];
-			}
+			$data		= [ 'id' => $category->id, 'name' => $category->name ];
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

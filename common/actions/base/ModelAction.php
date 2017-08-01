@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\actions\base;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 /**
  * ModelAction is the base action for model centric actions. It find the model in action using id or slug param.

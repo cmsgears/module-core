@@ -117,6 +117,8 @@ interface IEntityService {
 
 	public function updateByForm( $model, $form, $config = [] );
 
+	public function createOrUpdate( $model, $config = [] );
+
 	public function updateMultipleByForm( $form, $config = [] );
 
 	public function applyBulkByTargetId( $column, $action, $target, $config = [] );

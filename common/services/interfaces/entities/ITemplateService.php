@@ -13,6 +13,8 @@ interface ITemplateService extends INameTypeService, ISlugTypeService {
 
 	// Read - Models ---
 
+	public function getActiveByType( $type );
+
 	// Read - Lists ----
 
 	// Read - Maps -----

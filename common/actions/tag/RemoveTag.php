@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\actions\tag;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -54,19 +54,24 @@ class RemoveTag extends \cmsgears\core\common\actions\base\ModelAction {
 
 	public function run() {
 
-		if( isset( $this->model ) ) {
+		$post	= yii::$app->request->post();
 
-			$tagSlug			= Yii::$app->request->get( 'tag-slug' );
+		if( isset( $this->model ) && isset( $post[ 'tagId' ] ) ) {
 
 			$modelTagService	= Yii::$app->factory->get( 'modelTagService' );
 			$parentId			= $this->model->id;
 			$parentType			= $this->parentType;
+			$modelId			= $post[ 'tagId' ];
 
-			// Disable tag mapping
-			$modelTagService->deleteByTagSlug( $parentId, $parentType, $tagSlug );
+			$mapping			= $modelTagService->getByModelId( $parentId, $parentType, $modelId );
 
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $tagSlug );
+			if( isset( $mapping ) ) {
+
+				$modelTagService->disable( $mapping );
+
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+			}
 		}
 
 		// Trigger Ajax Failure

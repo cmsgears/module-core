@@ -1,7 +1,3 @@
-
-
-
-
 <?php
 // CMG Imports
 use cmsgears\widgets\popup\Popup;
@@ -22,12 +18,12 @@ $moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 	'searchColumns' => [ 'name' => 'Name',  ],
 	'sortColumns' => [
 		'name' => 'Name', 'slug' => 'Slug', 'active' => 'Active'
-		
+
 	],
 	'filters' => [ 'status' => [ 'active' => 'Active' ] ],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
-		
+
 		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
 		'active' => [ 'title' => 'Active', 'type' => 'flag' ]
 	],
@@ -36,14 +32,14 @@ $moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 		'model' => [ 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null , 'x3', null, 'x2', 'x2', 'x2', null, null, null , null ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null , 'x3', null, 'x2', 'x2', 'x5', null ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'name' => 'Name',
 		'email' => 'Email',
 		'status' => [ 'title' => 'Status', 'generate' => function( $model ) { return $model->getStatusStr(); } ],
 		'parent' => [ 'title' => 'Parent', 'generate' => function( $model ) { $parent = "<a href='". Url::toRoute( [ $parentUrl . $parentId ], true ). "'>parent</a>";  return $parent; } ],
-		'message' => [ 'title' => 'Message', 'generate' => function( $model ) { return CodeGenUtil::getSummary( $model->content );; } ],
+		'message' => [ 'title' => 'Message', 'generate' => function( $model ) { return $model->content; } ],
 		'actions' => 'Actions'
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],

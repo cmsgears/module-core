@@ -31,6 +31,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $type
  * @property string $icon
  * @property string $description
+ * @property boolean $active
  * @property string $renderer
  * @property boolean $fileRender
  * @property string $layout
@@ -123,7 +124,7 @@ class Template extends \cmsgears\core\common\models\base\Entity {
 			[ [ 'slug' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ [ 'description', 'layout', 'viewPath' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
-			[ [ 'fileRender', 'layoutGroup' ], 'boolean' ],
+			[ [ 'active', 'fileRender', 'layoutGroup' ], 'boolean' ],
 			[ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
@@ -150,6 +151,7 @@ class Template extends \cmsgears\core\common\models\base\Entity {
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'renderer' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RENDERER ),
 			'layout' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LAYOUT ),
 			'viewPath' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_PATH ),
@@ -164,6 +166,11 @@ class Template extends \cmsgears\core\common\models\base\Entity {
 	// Validators ----------------------------
 
 	// Template ------------------------------
+
+    public function getActiveStr() {
+
+        return Yii::$app->formatter->asBoolean( $this->active );
+    }
 
     public function getFileRenderStr() {
 
@@ -204,6 +211,11 @@ class Template extends \cmsgears\core\common\models\base\Entity {
 	}
 
 	// Read - Find ------------
+
+	public static function findActiveByType( $type ) {
+
+		return self::queryByType( $type )->andWhere( 'active=:active', [ ':active' => true ] )->all();
+	}
 
 	// Create -----------------
 

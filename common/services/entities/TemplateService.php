@@ -202,6 +202,13 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Read - Models ---
 
+	public function getActiveByType( $type ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::findActiveByType( $type );
+	}
+
 	// Read - Lists ----
 
 	// Read - Maps -----

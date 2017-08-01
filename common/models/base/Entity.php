@@ -83,7 +83,14 @@ abstract class Entity extends \yii\db\ActiveRecord {
 
 		foreach ( $attributes as $attribute ) {
 
-			$this->setAttribute( $attribute, $fromModel->getAttribute( $attribute ) );
+			if( $this->hasAttribute( $attribute ) ) {
+
+				$this->setAttribute( $attribute, $fromModel->getAttribute( $attribute ) );
+			}
+			else {
+
+				$this->$attribute = $fromModel->$attribute;
+			}
 		}
 	}
 

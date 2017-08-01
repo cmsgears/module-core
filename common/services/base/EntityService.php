@@ -515,6 +515,18 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		// Adapter Method - Implement in child classes
 	}
 
+	public function createOrUpdate( $model, $config = [] ) {
+
+		$existing = isset( $model->id ) ? $this->getById( $model->id ) : null;
+
+		if( isset( $existing ) ) {
+
+			return $this->udpate( $existing, $config );
+		}
+
+		return $this->create( $model, $config );
+	}
+
 	/**
 	 * Default method for bulk actions.
 	 *

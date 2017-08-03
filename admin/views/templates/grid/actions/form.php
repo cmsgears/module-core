@@ -1,7 +1,9 @@
 <?php
 // Yii Imports
 use yii\helpers\Html;
+
 $controllerName	= Yii::$app->controller->id;
+$submits		= $widget->data[ 'submits' ];
 ?>
 
 <?php if( $submits ) { ?>

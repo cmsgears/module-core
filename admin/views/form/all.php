@@ -12,7 +12,7 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 ?>
 
 <?= DataGrid::widget([
-	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
+	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ 'submits' => $submits ],
 	'title' => 'Blocks', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title' ],
 	'sortColumns' => [
@@ -35,7 +35,7 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'name' => 'Name',
-		'template' => [ 'title' => 'Template', 'generate' => function( $model ) { return $model->getTemplateName(); } ], 
+		'template' => [ 'title' => 'Template', 'generate' => function( $model ) { return $model->getTemplateName(); } ],
 		'captcha' => [ 'title' => 'Captcha', 'generate' => function( $model ) { return $model->getCaptchaStr(); } ],
 		'visibility' => [ 'title' => 'Visibility', 'generate' => function( $model ) { return $model->getVisibilityStr(); } ],
 		'userMail' => [ 'title' => 'User Mail', 'generate' => function( $model ) { return $model->getUserMailStr(); } ],

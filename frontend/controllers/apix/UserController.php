@@ -1,13 +1,8 @@
 <?php
 namespace cmsgears\core\frontend\controllers\apix;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\utilities\AjaxUtil;
 
 class UserController extends \cmsgears\core\common\controllers\apix\UserController {
 

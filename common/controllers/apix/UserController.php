@@ -10,11 +10,9 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\forms\ResetPassword;
 use cmsgears\core\common\models\resources\Address;
-use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\models\resources\ModelMeta;
 
 use cmsgears\core\common\utilities\AjaxUtil;
-use cmsgears\core\common\utilities\CodeGenUtil;
 
 class UserController extends \cmsgears\core\common\controllers\base\Controller {
 

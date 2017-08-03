@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
@@ -52,7 +52,6 @@ class ResetPassword extends \yii\base\Model {
 		$rules = [
 			[ [ 'email', 'password', 'password_repeat' ], 'required' ],
 			[ 'oldPassword', 'required', 'on' => [ 'oldPassword' ] ],
-			[ [ 'password', 'password_repeat' ], 'required', 'on' => [ 'setPassword' ] ],
 			[ 'password_repeat', 'compare', 'compareAttribute'=>'password', 'message'=> CoreGlobal::ERROR_PASSWORD  ],
 			[ 'email', 'email' ],
 			[ 'password', 'compare' ],

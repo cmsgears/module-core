@@ -1,13 +1,15 @@
 <?php
+// Yii Imports
+use yii\helpers\Url;
+
 // CMG Imports
 use cmsgears\widgets\popup\Popup;
-use yii\helpers\Url;
 use cmsgears\widgets\grid\DataGrid;
-// CMG Imports
-use cmsgears\core\common\utilities\CodeGenUtil;
+
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= 'Post | ' . $coreProperties->getSiteTitle();
 $parentUrl 		= $this->context->parentUrl;
+
 // Templates
 $moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 ?>
@@ -38,7 +40,11 @@ $moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
 		'name' => 'Name',
 		'email' => 'Email',
 		'status' => [ 'title' => 'Status', 'generate' => function( $model ) { return $model->getStatusStr(); } ],
-		'parent' => [ 'title' => 'Parent', 'generate' => function( $model ) { $parent = "<a href='". Url::toRoute( [ $parentUrl . $parentId ], true ). "'>parent</a>";  return $parent; } ],
+		'parent' => [ 'title' => 'Parent', 'generate' => function( $model ) use( &$parent, &$parentUrl ) {
+			if( $parent ) {
+				return "<a href='". Url::toRoute( [ $parentUrl . $model->parentId ], true ). "'>parent</a>";
+			}
+		}],
 		'message' => [ 'title' => 'Message', 'generate' => function( $model ) { return $model->content; } ],
 		'actions' => 'Actions'
 	],

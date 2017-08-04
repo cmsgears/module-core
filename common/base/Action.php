@@ -1,13 +1,6 @@
 <?php
 namespace cmsgears\core\common\base;
 
-// Yii Imports
-use \Yii;
-use yii\base\InvalidConfigException;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 /**
  * The parent Action class to handle action requests for both regular and ajax requests.
  *

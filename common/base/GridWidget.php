@@ -131,7 +131,7 @@ abstract class GridWidget extends Widget {
 	// Grid Columns
 	public $columns		= []; // Required only for grid layout to configure responsive grid
 	public $gridColumns	= []; // Grid columns
-	public $cardColumns	= []; // Card columns if different from grid columns
+	public $cardColumns	= []; // Configure only if specific columns are required for card view
 
 	// Grid Cards
 	public $gridCards	= [];
@@ -224,9 +224,9 @@ abstract class GridWidget extends Widget {
 
 		$headerHtml		= $this->header ? $this->renderHeader( $config ) : null;
 
-		$dataHtml		= $this->renderData( $config );
+		$dataHtml		= $this->grid ? $this->renderData( $config ) : null;
 
-		$cardHtml		= $this->renderCards( $config );
+		$cardHtml		= $this->card ? $this->renderCards( $config ) : null;
 
 		$footerHtml		= $this->footer ? $this->renderFooter( $config ) : null;
 

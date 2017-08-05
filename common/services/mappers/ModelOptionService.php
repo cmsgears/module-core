@@ -162,8 +162,8 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 	public function bindOptions( $binder, $parentType ) {
 
 		$parentId	= $binder->binderId;
-		$allData	= $binder->allData;
-		$activeData	= $binder->bindedData;
+		$allData	= $binder->all;
+		$activeData	= $binder->binded;
 
 		foreach ( $allData as $id ) {
 

@@ -941,9 +941,10 @@ class FormDesigner extends \yii\base\Component {
 
 	// TODO: Check more to make compatible with both dynamic and regular forms
 
-	public function getRadioList( $form, $model, $field, $itemlist, $inline = true, $yesNo = false ) {
+	public function getRadioList( $form, $model, $field, $itemlist, $inline = true, $yesNo = false, $config = [] ) {
 
-		$setInline	= null;
+		$setInline		= null;
+		$wrapClass		= isset( $config[ 'wrapClass' ] ) ? $config[ 'wrapClass' ] : null;
 
 		if( $inline ) {
 
@@ -955,28 +956,28 @@ class FormDesigner extends \yii\base\Component {
 			$itemlist = CoreGlobal::$yesNoMap;
 		}
 
-		$template	= "<div class='cmt-choice $setInline clearfix'>{label}<div class='radio-group'>{input}</div><div class='help-block'>\n{hint}\n{error}</div></div>";
+		$template	= "<div class='cmt-choice $setInline clearfix'>{label}<div class='radio-group $wrapClass'>{input}</div><div class='help-block'>\n{hint}\n{error}</div></div>";
 
-		return $form->field( $model, $field, [ 'template' => $template ] )
-					->radioList(
-						$itemlist,
-						[
-							'item' => function( $index, $label, $name, $checked, $value ) {
+		return $form->field( $model, $field, [ 'template' => $template ]	)
+		->radioList(
+				$itemlist,
+				[
+						'item' => function( $index, $label, $name, $checked, $value	) {
 
-								$slabel = strtolower( $label );
-								$html = "<label class='$slabel'><input ";
+						$slabel = strtolower( $label );
+						$html = "<label class='$slabel'><input ";
 
-								if( $checked ) {
+						if( $checked ) {
 
-									$html .= 'checked';
-								}
+							$html .= 'checked';
+						}
 
-								$html .= " type='radio' name='$name' value='$value'><span class='label pad-label'>$label</span></label>";
+						$html .= " type='radio' name='$name' value='$value'><span class='label pad-label'>$label</span></label>";
 
-								return $html;
-							}
+						return $html;
+						}
 						]
-					);
+				);
 	}
 
 	public function getCheckboxList( $form, $model, $field, $itemlist, $inline = true ) {

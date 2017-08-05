@@ -473,6 +473,29 @@ class DateUtil {
 	    return "$hours::$minutes::$seconds";
 	}
 
+	public static function getYearsList( $start = null, $config = [] ) {
+
+		$years	= [];
+
+		// Get Current year if year is not set
+		$currentyear	= date( "Y" );
+		$start			= $start != null ? $start : $currentyear;
+
+		$endYear		= isset( $config[ 'endYear' ] ) ? $config[ 'endYear' ] : $currentyear;
+		$increment		= isset( $config[ 'increment' ] ) ? $config[ 'increment' ] : 1;
+		$end			= $endYear != null ? $endYear : $limit;
+		$i				= $start;
+
+		while( $i <= $end ) {
+
+			$years[ $i ]	= $i;
+
+			$i = $i + $increment;
+		}
+
+		return $years;
+	}
+
 	// Reference: https://stackoverflow.com/questions/1727077/generating-a-drop-down-list-of-timezones-with-php/17355238#17355238
 	function getTimezoneList() {
 

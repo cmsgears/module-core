@@ -6,6 +6,8 @@ use yii\helpers\Html;
 use yii\helpers\StringHelper;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\resources\FormField;
 
 // TODO: Use php templates to render the html.

@@ -42,25 +42,29 @@ abstract class Widget extends \yii\base\Widget {
 	public $options			= [];
 
 	/**
-	 * Flag to check whether assets can be loaded. We can load widget assets separately in case the bundle is not added as dependency to layout asset bundle.
+	 * Flag to check whether assets can be loaded. We can load widget assets separately in case the
+	 * bundle is not added as dependency to layout asset bundle.
 	 */
 	public $loadAssets		= false;
 
 	/**
-	 * The path at which view template file is located. It can have alias - ex: '@widget/my-view'. By default it's the views folder within widget directory.
+	 * The path at which view template file is located. It can have alias - ex: '@widget/my-view'.
+	 * By default it's the views folder within widget directory.
 	 */
 	public $templateDir		= null;
 
 	/**
-	 * The template directory/file used to render widget. If it's a directory, the view can be formed using multiple files.
+	 * The template directory/file used to render widget. If it's a directory, the view can be formed
+	 * using multiple files. It can be absolute path to directly access the view.
 	 */
 	public $template		= 'simple';
 
 	/**
-	 * This flag can be utilised by widgets to use fallback options in case application factory having model service is not available or initialised.
+	 * This flag can be utilised by widgets to use fallback options in case application factory having
+	 * model service is not available or initialised.
 	 *
-	 * The widgets in need of model service can utilise factory to get required service. In case factory is not needed, widget can directly
-	 * use models to query them or service in use must provided static method.
+	 * The widgets in need of model service can utilise factory to get required service. In case factory
+	 * is not needed, widget can directly use models to query them or service in use must provided static method.
 	 */
 	public $factory		= true;
 
@@ -85,7 +89,9 @@ abstract class Widget extends \yii\base\Widget {
 	public $autoload			= false;
 	public $autoloadTemplate	= 'autoload';
 
-
+	/**
+	 * Auto Loading using CMT-JS Framework.
+	 */
 	public $autoloadApp			= 'autoload';
 	public $autoloadController	= 'autoload';
 	public $autoloadAction		= 'autoload';

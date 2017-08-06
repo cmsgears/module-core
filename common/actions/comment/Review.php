@@ -1,15 +1,8 @@
 <?php
 namespace cmsgears\core\common\actions\comment;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\resources\ModelComment;
-
-use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
  * Review adds a review for a model using ModelComment resource.
@@ -54,5 +47,6 @@ class Review extends Create {
 
 	// CMG parent classes --------------------
 
-	// Comment -------------------------------
+	// Review --------------------------------
+
 }

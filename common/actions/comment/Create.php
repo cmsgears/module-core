@@ -2,13 +2,15 @@
 namespace cmsgears\core\common\actions\comment;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\ModelComment;
 use cmsgears\core\common\models\resources\File;
+
+use cmsgears\files\components\FileManager;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
@@ -41,6 +43,12 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 	public $modelType	= null;
 
 	public $setUser		= true;
+
+	public $media		= false;
+
+	public $mediaType	= FileManager::FILE_TYPE_DOCUMENT;
+
+	public $mediaModel	= 'File';
 
 	/**
 	 * A comment can be created with or without scenario. The possible scenarios are - comment, review and testimonial.
@@ -75,7 +83,6 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 			$modelCommentService	= Yii::$app->factory->get( 'modelCommentService' );
 
 			$user				= Yii::$app->user->getIdentity();
-			$parent				= $this->model;
 
 			$modelClass			= $modelCommentService->getModelClass();
 			$model				= new $modelClass;
@@ -84,8 +91,6 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 			$model->parentId	= $this->model->id;
 			$model->parentType	= $this->parentType;
-			$mediaParam			= Yii::$app->request->get( 'media' );
-			$media				= isset( $mediaParam ) ? true : false;
 
 			// To set name and email in case user is logged in. The same details can be fetched from user table using createdBy column.
 			if( isset( $user ) && $this->setUser ) {
@@ -98,25 +103,36 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 				$model->scenario	= $this->scenario;
 			}
-
+echo "hi 1";
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				if( $modelCommentService->create( $model ) ) {
+				$modelComment	= $modelCommentService->create( $model );
 
-					if( $media ) {
+				if( $modelComment ) {
+echo "hi 2";
+					// Refresh model for further processing
+					$modelComment->refresh();
 
-						$filesCount	= count( Yii::$app->request->post( 'File' ) );
+					// Set controller model for post processing
+					if( Yii::$app->controller->hasProperty( 'modelComment' ) ) {
+echo "hi 3";
+						Yii::$app->controller->modelComment = $modelComment;
+					}
+
+					// Attach media to comment if allowed and available
+					if( $this->media ) {
+
+						$filesCount	= count( Yii::$app->request->post( $this->mediaModel ) );
 						$files		= $this->initFiles( $filesCount );
-						$mediaType	= Yii::$app->request->get( 'media-type' );
 
 						//Refresh $model to get updated values
 						$model->refresh();
 
-						if( File::loadMultiple( $files, Yii::$app->request->post(), 'File' ) && File::validateMultiple( $files ) ) {
+						if( File::loadMultiple( $files, Yii::$app->request->post(), $this->mediaModel ) && File::validateMultiple( $files ) ) {
 
 							foreach( $files as $file ) {
 
-								$modelCommentService->attachMedia( $model, $file, $mediaType, ModelComment::TYPE_COMMENT );
+								$modelCommentService->attachMedia( $model, $file, $this->mediaType, ModelComment::TYPE_COMMENT );
 							}
 						}
 					}

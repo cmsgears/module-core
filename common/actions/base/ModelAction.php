@@ -28,7 +28,7 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 
 	// Public -----------------
 
-	// Primary Model
+	// ==== Parent Discovery ============= //
 
 	/** The id param to identify model in action using model service provided by controller. It works in all scenarios since we support primary id for all tables. */
 	public $idParam		= 'id';
@@ -36,22 +36,37 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 	/**	 The slug param to identify model in action using model service provided by controller. It works in cases where slug is supported by model in action and given preference over id. */
 	public $slugParam	= 'slug';
 
-	// Flag to identify whether model supports type column. It can be configured in controller or via url params.
+	/**	 The type param to identify model in action using model service provided by controller. It works in cases where type column is used by model in action. */
+	public $typeParam	= 'type';
+
+	// Flag to identify whether parent model supports type column. It can be configured in controller or via url params.
 	public $typed		= false;
+
+	// The type to be used to discover parent model. It can be configured in controller or via url params.
+	public $type;
+
+	// Turn it off if model discovery will be taken care by controller using filters.
+	public $discover	= true;
+
+	// ==== Mapper/Resource ============== //
+
+	public $cidParam	= 'cid';
+
+	public $cslugParam	= 'cslug';
+
+	public $ctypeParam	= 'ctype';
 
 	// Flag to identify whether model supports parent type column. It can be configured in controller or via url params.
 	public $parent		= false;
+
+	/** Parent type will be used by mappers or resources to identiy parent. */
+	public $parentType;
 
 	/** Model type provided by model service. */
 	public $modelType;
 
 	/**	 The model in action. */
 	public $model;
-
-	// Typed Parent and Mapped Model
-
-	/** Parent type can be either type supported by model service or generic type for similar models. It will be used by mappers. */
-	public $parentType;
 
 	// Protected --------------
 

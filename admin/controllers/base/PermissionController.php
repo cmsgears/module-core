@@ -2,16 +2,13 @@
 namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
-use \Yii;
-use yii\filters\VerbFilter;
-use yii\helpers\Url;
+use Yii;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\forms\Binder;
-use cmsgears\core\common\models\entities\Permission;
 
 abstract class PermissionController extends CrudController {
 
@@ -27,7 +24,7 @@ abstract class PermissionController extends CrudController {
 
 	protected $roleService;
 
-	protected $modelHierarchyService;
+	protected $hierarchyService;
 
 	// Private ----------------
 
@@ -41,13 +38,15 @@ abstract class PermissionController extends CrudController {
 
 		// Permissions
 		$this->crudPermission	= CoreGlobal::PERM_RBAC;
-		
+
+		// Config
+		$this->type = CoreGlobal::TYPE_SYSTEM;
+
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'permissionService' );
-		$this->type				= CoreGlobal::TYPE_SYSTEM;
 
-		$this->roleService				= Yii::$app->factory->get( 'roleService' );
-		$this->modelHierarchyService	= Yii::$app->factory->get( 'modelHierarchyService' );
+		$this->roleService		= Yii::$app->factory->get( 'roleService' );
+		$this->hierarchyService	= Yii::$app->factory->get( 'modelHierarchyService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -62,9 +61,9 @@ abstract class PermissionController extends CrudController {
 
 		$behaviors	= parent::behaviors();
 
-		$behaviors[ 'rbac' ][ 'actions' ][ 'matrix' ]	= [ 'permission' => CoreGlobal::PERM_RBAC ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'groups' ]	= [ 'permission' => $this->crudPermission ];
 
-		$behaviors[ 'verbs' ][ 'actions' ][ 'matrix' ]	= [ 'get' ];
+		$behaviors[ 'verbs' ][ 'actions' ][ 'groups' ]	= [ 'get' ];
 
 		return $behaviors;
 	}
@@ -76,17 +75,6 @@ abstract class PermissionController extends CrudController {
 	// CMG parent classes --------------------
 
 	// PermissionController ------------------
-
-	public function actionMatrix() {
-
-		$dataProvider	= $this->modelService->getPageByType( $this->type );
-		$rolesList		= $this->roleService->getIdNameListByType( $this->type );
-
-		return $this->render( 'matrix', [
-			'dataProvider' => $dataProvider,
-			'rolesList' => $rolesList
-		]);
-	}
 
 	public function actionAll() {
 
@@ -123,11 +111,6 @@ abstract class PermissionController extends CrudController {
 
 			$this->modelService->bindRoles( $binder );
 
-			if( $model->group ) {
-
-				return $this->redirect( [ 'groups' ] );
-			}
-
 			return $this->redirect( "update?id=$model->id" );
 		}
 
@@ -162,15 +145,10 @@ abstract class PermissionController extends CrudController {
 				if( $model->group ) {
 
 					$binder->load( Yii::$app->request->post(), 'Children' );
-					$this->modelHierarchyService->assignRootChildren( CoreGlobal::TYPE_PERMISSION, $binder );
+					$this->hierarchyService->assignRootChildren( CoreGlobal::TYPE_PERMISSION, $binder );
 				}
 
-				if( $model->group ) {
-
-					return $this->redirect( [ 'groups' ] );
-				}
-
-				return $this->redirect( "update?id=$model->id" );
+				return $this->refresh();
 			}
 
 			$roles			= $this->roleService->getIdNameListByType( $this->type );
@@ -199,7 +177,7 @@ abstract class PermissionController extends CrudController {
 
 				if( $model->group ) {
 
-					$this->modelHierarchyService->deleteByRootId( $model->id, CoreGlobal::TYPE_PERMISSION );
+					$this->hierarchyService->deleteByRootId( $model->id, CoreGlobal::TYPE_PERMISSION );
 
 					return $this->redirect( [ 'groups' ] );
 				}
@@ -209,11 +187,13 @@ abstract class PermissionController extends CrudController {
 				return $this->redirect( $this->returnUrl );
 			}
 
-			$roles	= $this->roleService->getIdNameListByType( $this->type );
+			$roles			= $this->roleService->getIdNameListByType( $this->type );
+			$permissions	= $this->modelService->getLeafIdNameListByType( $this->type );
 
 			return $this->render( 'delete', [
 				'model' => $model,
-				'roles' => $roles
+				'roles' => $roles,
+				'permissions' => $permissions
 			]);
 		}
 

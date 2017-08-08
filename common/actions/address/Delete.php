@@ -9,10 +9,11 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
+// TODO: We might need an additional parameter to confirm whether model address must be deleted or address and associated model addresses.
+
 /**
- * Delete Address
- *
- * The controller must provide appropriate model service.
+ * The Delete action find model address for the given id and delete the address. The service
+ * also deletes all the model addresses associated with the address.
  */
 class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
@@ -29,6 +30,8 @@ class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 	// Variables -----------------------------
 
 	// Public -----------------
+
+	public $parent 	= true;
 
 	// Protected --------------
 
@@ -61,20 +64,15 @@ class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// CreateMeta ----------------------------
+	// Delete --------------------------------
 
-	/**
-	 * Create Meta for given parent slug and parent type.
-	 */
-	public function run( $id, $cid ) {
+	public function run( $cid ) {
 
 		if( isset( $this->model ) ) {
 
-			$parent			= $this->model;
-			$parentType		= $this->parentType;
-			$modelAddress	= $this->modelAddressService->getByModelId( $parent->id, $parentType, $cid );
+			$modelAddress	= $this->modelAddressService->getById( $cid );
 
-			if( isset( $modelAddress ) ) {
+			if( isset( $modelAddress ) && $modelAddress->checkParent( $this->model->id, $this->parentType ) ) {
 
 				$address = $modelAddress->address;
 

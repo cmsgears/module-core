@@ -33,6 +33,8 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	public static $modelTable	= CoreTables::TABLE_TEMPLATE;
 
+	public static $typed		= true;
+
 	public static $parentType	= CoreGlobal::TYPE_TEMPLATE;
 
 	// Protected --------------

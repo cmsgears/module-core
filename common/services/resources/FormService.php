@@ -9,7 +9,6 @@ use yii\data\Sort;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\Form;
 use cmsgears\core\common\models\mappers\ModelForm;
 
 use cmsgears\core\common\services\interfaces\resources\IFormService;
@@ -30,6 +29,8 @@ class FormService extends \cmsgears\core\common\services\base\EntityService impl
 	public static $modelClass	= '\cmsgears\core\common\models\resources\Form';
 
 	public static $modelTable	= CoreTables::TABLE_FORM;
+
+	public static $typed		= true;
 
 	public static $parentType	= CoreGlobal::TYPE_FORM;
 

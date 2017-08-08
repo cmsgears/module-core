@@ -1,12 +1,7 @@
 <?php
 namespace cmsgears\core\common\models\traits\mappers;
 
-// Yii Import
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Option;
 use cmsgears\core\common\models\mappers\ModelOption;
@@ -19,7 +14,15 @@ trait OptionTrait {
 	public function getModelOptions() {
 
 		return $this->hasMany( ModelOption::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->mParentType'" );
+					->where( "parentType='$this->modelType'" );
+	}
+
+	public function getActiveModelOptions() {
+
+		$modelOptionTable	= CoreTables::TABLE_MODEL_OPTION;
+
+		return $this->hasMany( ModelOption::className(), [ 'parentId' => 'id' ] )
+					->where( "parentType='$this->modelType' AND $modelOptionTable.active=1" );
 	}
 
 	public function getOptions() {
@@ -31,7 +34,7 @@ trait OptionTrait {
 
 						$modelOptionTable	= CoreTables::TABLE_MODEL_OPTION;
 
-						$query->onCondition( [ "$modelOptionTable.parentType" => $this->mParentType ] );
+						$query->onCondition( [ "$modelOptionTable.parentType" => $this->modelType ] );
 					});
 
 		return $query;
@@ -46,7 +49,7 @@ trait OptionTrait {
 
 						$modelOptionTable	= CoreTables::TABLE_MODEL_OPTION;
 
-						$query->onCondition( [ "$modelOptionTable.parentType" => $this->mParentType, "$modelOptionTable.active" => true ] );
+						$query->onCondition( [ "$modelOptionTable.parentType" => $this->modelType, "$modelOptionTable.active" => true ] );
 					});
 
 		return $query;

@@ -38,12 +38,10 @@ $returnUrl		= $this->context->returnUrl;
 				</div>
 			</div>
 		</div>
-
 		<div class="filler-height filler-height-medium"></div>
-
 		<div class="box box-crud">
 			<div class="box-header">
-				<div class="box-header-title">Images</div>
+				<div class="box-header-title">Files</div>
 			</div>
 			<div class="box-content">
 				<div class="box-content">

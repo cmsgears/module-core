@@ -2,17 +2,19 @@
 namespace cmsgears\core\common\models\traits;
 
 // Yii Import
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use Yii;
 
 /**
  * It provide methods to map parent and model resource.
  *
- * The model using this trait must have modelId, parentId and parentType columns. It must allow a single model mapping for same parentId and parentType combination.
+ * The model using this trait must have modelId, parentId and parentType columns. These columns
+ * map the source i.e. parent to the target using modelId column via mapper table. It must allow only
+ * one model mapping for same parentId and parentType combination.
  *
- * It also provide few additional methods for models having active column to mark the mapping as deleted to avoid allocating a new row each time a mapping is created.
+ * It also provide few additional methods for models having active column to mark the mapping as
+ * deleted to avoid allocating a new row each time a mapping is created.
+ *
+ * Examples: ModelCategory, ModelTag, ModelFile
  */
 trait MapperTrait {
 
@@ -29,6 +31,11 @@ trait MapperTrait {
 	// ParentTypeTrait -----------------------
 
 	// Validators -------------
+
+	public function checkParent( $parentId, $parentType ) {
+
+		return $this->parentId == $parentId && $this->parentType == $parentType;
+	}
 
 	// Static Methods ----------------------------------------------
 

@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -10,7 +10,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\User;
-use cmsgears\core\common\models\resources\File;
 
 use cmsgears\core\common\services\interfaces\entities\IUserService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
@@ -83,57 +82,133 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function getPage( $config = [] ) {
 
+		$modelClass	= static::$modelClass;
+		$modelTable	= static::$modelTable;
+
 		$siteTable			= CoreTables::TABLE_SITE;
 		$siteMemberTable	= CoreTables::TABLE_SITE_MEMBER;
 
+		// Sorting ----------
+
 		$sort = new Sort([
 			'attributes' => [
-				'name' => [
-					'asc' => [ 'firstName' => SORT_ASC, 'lastName' => SORT_ASC ],
-					'desc' => [ 'firstName' => SORT_DESC, 'lastName' => SORT_DESC ],
+				'gender' => [
+					'asc' => [ "$modelTable.genderId" => SORT_ASC ],
+					'desc' => [ "$modelTable.genderId" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'name',
-				],
-				'username' => [
-					'asc' => [ 'username' => SORT_ASC ],
-					'desc' => ['username' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'username',
+					'label' => 'Gender'
 				],
 				'role' => [
 					'asc' => [ "$siteMemberTable.roleId" => SORT_ASC ],
 					'desc' => [ "$siteMemberTable.roleId" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'role',
+					'label' => 'Role'
+				],
+				'name' => [
+					'asc' => [ "$modelTable.firstName" => SORT_ASC, "$modelTable.lastName" => SORT_ASC ],
+					'desc' => [ "$modelTable.firstName" => SORT_DESC, "$modelTable.lastName" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
+				],
+				'username' => [
+					'asc' => [ "$modelTable.username" => SORT_ASC ],
+					'desc' => [ "$modelTable.username" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Username'
 				],
 				'status' => [
-					'asc' => [ 'status' => SORT_ASC ],
-					'desc' => ['status' => SORT_DESC ],
+					'asc' => [ "$modelTable.status" => SORT_ASC ],
+					'desc' => [ "$modelTable.status" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'status',
+					'label' => 'Status'
 				],
 				'email' => [
-					'asc' => [ 'email' => SORT_ASC ],
-					'desc' => ['email' => SORT_DESC ],
+					'asc' => [ "$modelTable.email" => SORT_ASC ],
+					'desc' => [ "$modelTable.email" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'email',
-				]
+					'label' => 'Email'
+				],
+				'dob' => [
+					'asc' => [ "$modelTable.dob" => SORT_ASC ],
+					'desc' => [ "$modelTable.dob" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Birth Date'
+				],
+				'phone' => [
+					'asc' => [ "$modelTable.phone" => SORT_ASC ],
+					'desc' => [ "$modelTable.phone" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Phone'
+				],
+	            'cdate' => [
+	                'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Created At'
+	            ],
+	            'udate' => [
+	                'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Updated At'
+	            ],
+	            'ldate' => [
+	                'asc' => [ "$modelTable.lastLoginAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.lastLoginAt" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Last Login'
+	            ]
 			]
 		]);
-
-		$config[ 'conditions' ][ "$siteTable.slug" ]	= Yii::$app->core->getSiteSlug();
 
 		if( !isset( $config[ 'sort' ] ) ) {
 
 			$config[ 'sort' ] = $sort;
 		}
 
-		if( !isset( $config[ 'search-col' ] ) ) {
+		// Query ------------
 
-			$config[ 'search-col' ] = 'email';
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
 		}
 
-		return parent::findPage( $config );
+		$config[ 'conditions' ][ "$siteTable.slug" ] = Yii::$app->core->getSiteSlug();
+
+		// Filters ----------
+
+		// Filter - Status
+		$status	= Yii::$app->request->getQueryParam( 'status' );
+
+		if( isset( $status ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.status" ]	= $modelClass::$urlRevStatusMap[ $status ];
+		}
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [
+				'name' => "concat($modelTable.firstName,$modelTable.lastName)", 'username' => "$modelTable.username",
+				'email' => "$modelTable.email", 'phone' => "$modelTable.phone"
+			];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "concat($modelTable.firstName,$modelTable.lastName)", 'username' => "$modelTable.username",
+			'email' => "$modelTable.email", 'phone' => "$modelTable.phone"
+		];
+
+		// Result -----------
+
+		return parent::getPage( $config );
 	}
 
 	public function getPageByRoleType( $roleType ) {
@@ -209,6 +284,20 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	// Read - Lists ----
 
 	// Read - Maps -----
+
+	public function searchByName( $name, $config = [] ) {
+
+		$modelClass					= static::$modelClass;
+		$modelTable					= static::$modelTable;
+
+		$config[ 'query' ]			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
+		$config[ 'columns' ]		= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "concat($modelTable.firstName, ' ', $modelTable.lastName) AS name" ];
+		$config[ 'array' ]			= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
+
+		$config[ 'query' ]->andWhere( "concat($modelTable.firstName, $modelTable.lastName) like '$name%'" );
+
+		return static::searchModels( $config );
+	}
 
 	/**
 	 * @param string $roleSlug
@@ -457,6 +546,51 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		return parent::update( $model, [
 			'attributes' => [ 'avatarId' ]
 		]);
+	}
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'status': {
+
+				switch( $action ) {
+
+					case 'active': {
+
+						$this->approve( $model );
+
+						// TODO: Trigger activate email
+
+						break;
+					}
+					case 'block': {
+
+						$this->block( $model );
+
+						// TODO: Trigger block email
+
+						break;
+					}
+				}
+
+				break;
+			}
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
 	}
 
 	// Delete -------------

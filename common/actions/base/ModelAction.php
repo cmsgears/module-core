@@ -5,12 +5,14 @@ namespace cmsgears\core\common\actions\base;
 use Yii;
 
 /**
- * ModelAction is the base action for model centric actions. It find the model in action using id or slug param.
+ * ModelAction is the base action for model centric actions. It find the model in action using
+ * id or slug parameter to perform mapper or resource specific actions.
  *
- * The controllers using children of this action class must provide appropriate model service having model class and table.
- * The model service can optionally provide type. If mappers are required in child clases, the type forms the parent type for them.
+ * The controllers using children of this action class must define model service having model class
+ * and table. The model service must also provide type to be used as parent type in case mapper or
+ * resource supports parentId and parentType columns.
  *
- * It primarily uses slug to find the model, but it can also use id as fallback option based on the url params.
+ * It primarily uses slug to discover the model, but it can also use id as fallback option.
  */
 class ModelAction extends \cmsgears\core\common\base\Action {
 
@@ -30,23 +32,27 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 
 	// ==== Parent Discovery ============= //
 
-	/** The id param to identify model in action using model service provided by controller. It works in all scenarios since we support primary id for all tables. */
+	/**
+	 * The id parameter identifies model in action using model service provided by controller.
+	 * It works in all scenarios since we support primary id for all tables.
+	 */
 	public $idParam		= 'id';
 
-	/**	 The slug param to identify model in action using model service provided by controller. It works in cases where slug is supported by model in action and given preference over id. */
+	/**	 The slug parameter identifies model in action using model service provided by controller.
+	 * It works in cases where slug is supported by model in action and given preference over id.
+	 */
 	public $slugParam	= 'slug';
 
-	/**	 The type param to identify model in action using model service provided by controller. It works in cases where type column is used by model in action. */
+	/**	 The type parameter identifies model in action using model service provided by controller.
+	 * It works in cases where type column is used by model in action.
+	 */
 	public $typeParam	= 'type';
 
-	// Flag to identify whether parent model supports type column. It can be configured in controller or via url params.
+	// Flag to identify whether parent model supports type column.
 	public $typed		= false;
 
-	// The type to be used to discover parent model. It can be configured in controller or via url params.
+	// The type to be used to discover parent model.
 	public $type;
-
-	// Turn it off if model discovery will be taken care by controller using filters.
-	public $discover	= true;
 
 	// ==== Mapper/Resource ============== //
 
@@ -56,28 +62,67 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 
 	public $ctypeParam	= 'ctype';
 
-	// Flag to identify whether model supports parent type column. It can be configured in controller or via url params.
+	/**
+	 * Flag to identify whether model supports parentId and parentType columns. In all other cases
+	 * modelId column will be used to map mapper or resource.
+	 */
 	public $parent		= false;
 
-	/** Parent type will be used by mappers or resources to identiy parent. */
+	/**
+	 * Parent type to be used by mapper or resource having parentId and parentType columns.
+	 */
 	public $parentType;
 
-	/** Model type provided by model service. */
+	// Type of Mapper or Resource. It's different from $parentType and $type.
 	public $modelType;
-
-	/**	 The model in action. */
-	public $model;
 
 	// Protected --------------
 
-	// Model service to identify model in action. The controller implementing this action must specify model service.
+	// Model service to identify model in action. The controller must define model service.
 	protected $modelService;
+
+	// The model discovered either by controller(filters - discover or owner) or ModelAction's init method.
+	protected $model;
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	/**
+	 * The method init do the below listed tasks:
+	 * 1. Configure $modelService of parent model to be discovered
+	 * 2. Configure $parentType
+	 * 3. Configure $typed and $type of parent model to be discovered
+	 * 4. Configure $modelType
+	 */
+	public function init() {
+
+		parent::init();
+
+		// Model service provided by controller
+		$this->modelService	= $this->controller->modelService;
+
+		// Configure parentType
+		if( $this->parent ) {
+
+			$this->parentType = $this->modelService->getParentType();
+		}
+
+		$this->typed = $this->modelService->isTyped();
+
+		// Configure type
+		if( $this->typed ) {
+
+			$type		= Yii::$app->request->get( $this->typeParam, null );
+			$this->type	= isset( $type ) ? $type : $this->type;
+		}
+
+		// Mapper or Resource Type
+		$modelType			= Yii::$app->request->get( 'model-type', null );
+		$this->modelType	= isset( $modelType ) ? $modelType : $this->modelType;
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -91,45 +136,12 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 
 	// Action --------------------------------
 
-	/**
-	 * The method init do the below listed tasks:
-	 * 1. Configure modelService from controller
-	 * 2. Detect whether action is for typed models
-	 * 2. Configure parentType for model mappers
-	 * 3. Configure model from controller or discover it based on either slug or id
-	 */
-	public function init() {
+    protected function beforeRun() {
 
-		parent::init();
+		// Get model from controller
+		$this->model = $this->controller->model;
 
-		// Model service provided by controller
-		$this->modelService	= $this->controller->modelService;
-
-		// Detect whether type is required for model discovery
-		$typed			= Yii::$app->request->get( 'typed', null );
-		$this->typed	= isset( $typed ) ? $typed : $this->typed;
-
-		// Configure model type for typed models
-		if( $this->typed ) {
-
-			$modelType			= Yii::$app->request->get( 'model-type', null );
-			$this->modelType	= isset( $modelType ) ? $modelType : $this->modelType;
-			$this->modelType	= isset( $this->modelType ) ? $this->modelType : $this->modelService->getParentType();
-		}
-
-		// Detect whether parent is required for model mapping
-		$parent			= Yii::$app->request->get( 'parent', null );
-		$this->parent	= isset( $parent ) ? $parent : $this->parent;
-
-		// Configure parent type for mapping
-		if( $this->parent ) {
-
-			$parentType			= Yii::$app->request->get( 'parent-type', null );
-			$this->parentType	= isset( $parentType ) ? $parentType : $this->parentType;
-			$this->parentType	= isset( $this->parentType ) ? $this->parentType : $this->modelService->getParentType();
-		}
-
-		// In certain situations controller can provide the model directly. In case it's not provided by controller, we discover it using model service and url parameters.
+		// Proceed only if model is not discovered yet
 		if( !isset( $this->model ) ) {
 
 			// Read slug from url
@@ -140,20 +152,20 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 
 				if( $this->typed ) {
 
-					// Search model using model service and parent type
-					if( $this->parent && isset( $this->parentType ) ) {
+					// Search model using slug and type ... It works well for tables having unique slug and type
+					if( isset( $this->type ) ) {
 
-						$this->model	= $this->modelService->getBySlugType( $slug, $this->parentType );
+						$this->model	= $this->modelService->getBySlugType( $slug, $this->type );
 					}
-					// Search model using model service and model type
-					else if( isset( $this->modelType ) ) {
+					// Get first model of matched slug ... It works well for tables having unique slug
+					else {
 
-						$this->model	= $this->modelService->getBySlugType( $slug, $this->modelType );
+						$this->model	= $this->modelService->getBySlug( $slug, true );
 					}
 				}
 				else {
 
-					$this->model	= $this->modelService->getBySlug( $slug );
+					$this->model = $this->modelService->getBySlug( $slug );
 				}
 			}
 			// Try to find model using id
@@ -163,9 +175,16 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 
 				if( isset( $id ) ) {
 
-					$this->model	= $this->modelService->getById( $id );
+					$this->model = $this->modelService->getById( $id );
 				}
 			}
 		}
-	}
+
+		if( !isset( $this->model ) ) {
+
+			return false;
+		}
+
+        return true;
+    }
 }

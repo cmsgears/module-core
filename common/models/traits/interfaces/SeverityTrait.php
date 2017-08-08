@@ -2,8 +2,6 @@
 namespace cmsgears\core\common\models\traits\interfaces;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\interfaces\ISeverity;
 
 trait SeverityTrait {

@@ -10,11 +10,9 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * AssignCategory maps existing category to model in action using ModelCategory mapper.
- *
- * The controller must provide appropriate model service having model class and model table defined for the base model. The service might provide parent type.
+ * Remove action disable the category mapping for model by de-activating it.
  */
-class AssignCategory extends \cmsgears\core\common\actions\base\ModelAction {
+class Remove extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -29,6 +27,8 @@ class AssignCategory extends \cmsgears\core\common\actions\base\ModelAction {
 	// Variables -----------------------------
 
 	// Public -----------------
+
+	public $parent 	= true;
 
 	// Protected --------------
 
@@ -48,28 +48,23 @@ class AssignCategory extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// AssignCategory ------------------------
+	// Remove --------------------------------
 
-	public function run() {
+	public function run( $cid ) {
 
-		$post	= yii::$app->request->post();
+		if( isset( $this->model ) && isset( $cid ) ) {
 
-		if( isset( $this->model ) && isset( $post[ 'categoryId' ] ) ) {
-
-			$categoryService		= Yii::$app->factory->get( 'categoryService' );
 			$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
-			$parentId				= $this->model->id;
-			$parentType				= $this->parentType;
-			$modelId				= $post[ 'categoryId' ];
 
-			$modelCategoryService->activateByModelId( $parentId, $parentType, $modelId );
+			$modelCategory	= $modelCategoryService->getById( $cid );
 
-			$category	= $categoryService->getById( $modelId );
+			if( isset( $modelCategory ) && $modelCategory->checkParent( $this->model->id, $this->parentType ) ) {
 
-			$data		= [ 'id' => $category->id, 'name' => $category->name ];
+				$modelCategoryService->disable( $modelCategory );
 
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+			}
 		}
 
 		// Trigger Ajax Failure

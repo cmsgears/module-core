@@ -2,8 +2,7 @@
 namespace cmsgears\core\admin\controllers\base\category;
 
 // Yii Imports
-use \Yii;
-use yii\helpers\Url;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -28,9 +27,10 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 
 		parent::init();
 
+		// Views
 		$this->setViewPath( '@cmsgears/module-core/admin/views/optiongroup/option/' );
 
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'optionService' );
 
 		$this->categoryService	= Yii::$app->factory->get( 'categoryService' );
@@ -75,7 +75,7 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 
 			$this->modelService->create( $model );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		return $this->render( 'create', [
@@ -95,7 +95,7 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 
 				$this->modelService->update( $model );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->refresh();
 			}
 
 			// Render view

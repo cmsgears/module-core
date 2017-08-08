@@ -1,12 +1,7 @@
 <?php
 namespace cmsgears\core\common\models\resources;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\entities\Site;

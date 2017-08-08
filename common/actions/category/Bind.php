@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\actions\category;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -12,11 +12,9 @@ use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * BindCategories binds multiple categories to a model using Binder form.
- *
- * The controller must provide appropriate model service having model class, table and type defined for the base model.
+ * Bind action binds multiple categories to a model using Binder form.
  */
-class BindCategories extends \cmsgears\core\common\actions\base\ModelAction {
+class Bind extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -31,6 +29,8 @@ class BindCategories extends \cmsgears\core\common\actions\base\ModelAction {
 	// Variables -----------------------------
 
 	// Public -----------------
+
+	public $parent 	= true;
 
 	// Protected --------------
 
@@ -50,21 +50,27 @@ class BindCategories extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// BindCategories ------------------------
+	// Bind ----------------------------------
 
 	public function run() {
 
 		$binder = new Binder();
 
-		if( $binder->load( Yii::$app->request->post(), 'Binder' ) ) {
+		if( isset( $this->model ) ) {
 
-			$this->modelService->bindCategories( $binder );
+			if( $binder->load( Yii::$app->request->post(), 'Binder' ) ) {
 
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+				$this->modelService->bindCategories( $binder );
+
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+			}
+
+			// Trigger Ajax Failure
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 		}
 
 		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 }

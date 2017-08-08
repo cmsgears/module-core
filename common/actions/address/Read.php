@@ -10,9 +10,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Read Address
- *
- * The controller must provide appropriate model service.
+ * The Read action find model address for the given id and return the address.
  */
 class Read extends \cmsgears\core\common\actions\base\ModelAction {
 
@@ -29,6 +27,8 @@ class Read extends \cmsgears\core\common\actions\base\ModelAction {
 	// Variables -----------------------------
 
 	// Public -----------------
+
+	public $parent 	= true;
 
 	// Protected --------------
 
@@ -57,20 +57,15 @@ class Read extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// CreateMeta ----------------------------
+	// Read ----------------------------------
 
-	/**
-	 * Create Meta for given parent slug and parent type.
-	 */
-	public function run( $id, $cid ) {
+	public function run( $cid ) {
 
 		if( isset( $this->model ) ) {
 
-			$parent			= $this->model;
-			$parentType		= $this->parentType;
-			$modelAddress	= $this->modelAddressService->getByModelId( $parent->id, $parentType, $cid );
+			$modelAddress	= $this->modelAddressService->getById( $cid );
 
-			if( isset( $modelAddress ) ) {
+			if( isset( $modelAddress ) && $modelAddress->checkParent( $this->model->id, $this->parentType ) ) {
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $modelAddress->address );

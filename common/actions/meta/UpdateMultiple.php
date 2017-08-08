@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\actions\meta;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -12,11 +12,9 @@ use cmsgears\core\common\models\resources\ModelMeta;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * SetMultiMeta add/update multiple data meta for given model supporting data trait.
- *
- * The controller must provide appropriate model service.
+ * UpdateMultiple add/update multiple data meta for given model supporting data trait.
  */
-class SetMultiMeta extends \cmsgears\core\common\actions\base\ModelAction {
+class UpdateMultiple extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -50,7 +48,7 @@ class SetMultiMeta extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// SetMultiMeta --------------------------
+	// MultiUpdate ---------------------------
 
 	public function run( $id ) {
 

@@ -903,8 +903,9 @@ class FormDesigner extends \yii\base\Component {
 		$action			= isset( $config[ 'action' ] ) ? $config[ 'action' ] : 'autoSearch';
 		$type			= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
 		$url			= isset( $config[ 'url' ] ) ? $config[ 'url' ] : null;
+		$disabled		= isset( $config[ 'disabled' ] ) ? $config[ 'disabled' ] : false;
 
-		if( !isset( $url ) ) {
+		if( !$disabled && !isset( $url ) ) {
 
 			throw \yii\base\InvalidConfigException( 'Url is required to trigger request.' );
 		}
@@ -916,27 +917,39 @@ class FormDesigner extends \yii\base\Component {
 
 		$label		= $model->getAttributeLabel( $field );
 		$hidden		= $form->field( $model, $field )->hiddenInput( [ 'class' => 'target' ] )->label( false );
+		$autoFill	= '';
 
-		$autoFill	= "<div class=\"auto-fill auto-fill-basic\">
-							<div class=\"auto-fill-source\" cmt-app=\"$app\" cmt-controller=\"$controller\" cmt-action=\"$action\" action=\"$url\" cmt-keep cmt-custom>
-								<div class=\"relative\">
-									<div class=\"auto-fill-search clearfix\">
-										<label>$label</label>
-										<div class=\"frm-icon-element icon-right\">
-											<span class=\"$icon\"></span>
-											<input class=\"cmt-key-up auto-fill-text search-name\" type=\"text\" name=\"name\" value=\"$value\" placeholder=\"$placeholder\" autocomplete=\"off\" />
+		if( $disabled ) {
+
+			$autoFill	= "<label>$label</label>
+							<div class=\"frm-icon-element icon-right\">
+								<span class=\"$icon\"></span>
+								<input type=\"text\" name=\"name\" value=\"$value\" placeholder=\"$placeholder\" autocomplete=\"off\" readonly />
+							</div>";
+		}
+		else {
+
+			$autoFill	= "<div class=\"auto-fill auto-fill-basic\">
+								<div class=\"auto-fill-source\" cmt-app=\"$app\" cmt-controller=\"$controller\" cmt-action=\"$action\" action=\"$url\" cmt-keep cmt-custom>
+									<div class=\"relative\">
+										<div class=\"auto-fill-search clearfix\">
+											<label>$label</label>
+											<div class=\"frm-icon-element icon-right\">
+												<span class=\"$icon\"></span>
+												<input class=\"cmt-key-up auto-fill-text search-name\" type=\"text\" name=\"name\" value=\"$value\" placeholder=\"$placeholder\" autocomplete=\"off\" />
+											</div>
+											$type
 										</div>
-										$type
-									</div>
-									<div class=\"auto-fill-items-wrap\">
-										<ul class=\"auto-fill-items vnav\"></ul>
+										<div class=\"auto-fill-items-wrap\">
+											<ul class=\"auto-fill-items vnav\"></ul>
+										</div>
 									</div>
 								</div>
-							</div>
-							<div class=\"auto-fill-target\">
-								$hidden
-							</div>
-						</div>";
+								<div class=\"auto-fill-target\">
+									$hidden
+								</div>
+							</div>";
+		}
 
 		return $autoFill;
 	}

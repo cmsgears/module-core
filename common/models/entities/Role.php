@@ -54,7 +54,7 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 
 	// Public -----------------
 
-	private $mParentType	= CoreGlobal::TYPE_ROLE; // required for traits
+	private $modelType	= CoreGlobal::TYPE_ROLE; // required for traits
 
 	// Protected --------------
 

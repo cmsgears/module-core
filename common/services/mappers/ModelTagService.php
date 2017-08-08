@@ -96,7 +96,7 @@ class ModelTagService extends EntityService implements IModelTagService {
 				continue;
 			}
 
-			$tag = Tag::findByNameType( $tagName, $parentType );
+			$tag = Tag::findByNameType( $tagName, $parentType, true );
 
 			if( !isset( $tag ) ) {
 

@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\actions\tag;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -10,13 +10,11 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * AssignTags map tags for models using ModelTag mapper.
+ * Assign action map tags for models using ModelTag mapper.
  *
  * In case a tag does not exist for model type, it will be created and than mapping will be done.
- *
- * The controller must provide appropriate model service having model class and model table defined for the base model. The service might provide parent type.
  */
-class AssignTags extends \cmsgears\core\common\actions\base\ModelAction {
+class Assign extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -26,13 +24,13 @@ class AssignTags extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $typed	= true;
-
 	// Protected --------------
 
 	// Variables -----------------------------
 
 	// Public -----------------
+
+	public $parent 	= true;
 
 	// Protected --------------
 
@@ -52,7 +50,7 @@ class AssignTags extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// AssignTags ----------------------------
+	// Assign --------------------------------
 
 	public function run() {
 
@@ -67,12 +65,12 @@ class AssignTags extends \cmsgears\core\common\actions\base\ModelAction {
 
 			$modelTagService->createFromCsv( $parentId, $parentType, $tags );
 
-			$tags		= $this->model->activeTags;
+			$modelTags	= $this->model->activeModelTags;
 			$data		= [];
 
-			foreach ( $tags as $tag ) {
+			foreach ( $modelTags as $modelTag ) {
 
-				$data[]	= [ 'id' => $tag->id, 'name' => $tag->name ];
+				$data[]	= [ 'cid' => $modelTag->id, 'name' => $modelTag->tag->name ];
 			}
 
 			// Trigger Ajax Success

@@ -1,10 +1,6 @@
 <?php
 namespace cmsgears\core\common\services\resources;
 
-// Yii Imports
-use \Yii;
-use yii\db\Query;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
@@ -112,17 +108,17 @@ class ModelHierarchyService extends \cmsgears\core\common\services\base\EntitySe
 
 	public function assignRootChildren( $parentType, $binder ) {
 
-		$parentId		= $binder->binderId;
-		$childrenIdList	= $binder->bindedData;
+		$parentId	= $binder->binderId;
+		$binded		= $binder->binded;
 
 		// Add root children if not exist in hierarchy
-		foreach ( $childrenIdList as $childId ) {
+		foreach ( $binded as $id ) {
 
-			$child	= ModelHierarchy::findChild( $parentId, $parentType, $childId );
+			$child	= ModelHierarchy::findChild( $parentId, $parentType, $id );
 
 			if( !isset( $child ) ) {
 
-				$this->createInHierarchy( $parentId, $parentType, $parentId, $childId );
+				$this->createInHierarchy( $parentId, $parentType, $parentId, $id );
 			}
 		}
 
@@ -132,7 +128,7 @@ class ModelHierarchyService extends \cmsgears\core\common\services\base\EntitySe
 		foreach ( $existingChildren as $child ) {
 
 			// Remove unmapped child
-			if( !in_array( $child->childId, $childrenIdList ) ) {
+			if( !in_array( $child->childId, $binded ) ) {
 
 				// TODO: Use delete in hierarchy method to maintain the parent child hierarchy
 				$child->delete();

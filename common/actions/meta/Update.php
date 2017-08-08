@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\actions\meta;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -10,11 +10,9 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * UpdateMeta update existing meta for given parent model.
- *
- * The controller must provide appropriate model service and meta service.
+ * Update update existing meta for given parent model.
  */
-class UpdateMeta extends \cmsgears\core\common\base\Action {
+class Update extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 
@@ -61,7 +59,7 @@ class UpdateMeta extends \cmsgears\core\common\base\Action {
 
 	// CMG parent classes --------------------
 
-	// UpdateMeta -----------------------
+	// Update --------------------------------
 
 	/**
 	 * Update Meta for given Meta id, parent slug and parent type.

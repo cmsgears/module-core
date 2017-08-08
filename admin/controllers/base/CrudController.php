@@ -48,7 +48,7 @@ abstract class CrudController extends Controller {
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'index' => [ 'get' ],
+					'index' => [ 'get', 'post' ],
 					'all'  => [ 'get' ],
 					'create'  => [ 'get', 'post' ],
 					'update'  => [ 'get', 'post' ],

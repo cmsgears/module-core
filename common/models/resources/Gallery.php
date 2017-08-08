@@ -63,7 +63,7 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwn
 
 	// Public -----------------
 
-	public $mParentType		= CoreGlobal::TYPE_GALLERY;
+	public $modelType	= CoreGlobal::TYPE_GALLERY;
 
 	// Protected --------------
 

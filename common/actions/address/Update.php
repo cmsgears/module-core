@@ -10,9 +10,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Update Address
- *
- * The controller must provide appropriate model service.
+ * The Update action find model address for the given id and update the corresponding address.
  */
 class Update extends \cmsgears\core\common\actions\base\ModelAction {
 
@@ -30,7 +28,9 @@ class Update extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $scenario = 'location';
+	public $parent		= true;
+
+	public $scenario	= 'location';
 
 	// Protected --------------
 
@@ -63,20 +63,15 @@ class Update extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// CreateMeta ----------------------------
+	// Update --------------------------------
 
-	/**
-	 * Create Meta for given parent slug and parent type.
-	 */
-	public function run( $id, $cid ) {
+	public function run( $cid ) {
 
 		if( isset( $this->model ) ) {
 
-			$parent			= $this->model;
-			$parentType		= $this->parentType;
-			$modelAddress	= $this->modelAddressService->getByModelId( $parent->id, $parentType, $cid );
+			$modelAddress	= $this->modelAddressService->getById( $cid );
 
-			if( isset( $modelAddress ) ) {
+			if( isset( $modelAddress ) && $modelAddress->checkParent( $this->model->id, $this->parentType ) ) {
 
 				$address = $modelAddress->address;
 
@@ -91,7 +86,7 @@ class Update extends \cmsgears\core\common\actions\base\ModelAction {
 
 					$address->refresh();
 
-					$data	= [ 'id' => $address->id, 'title' => $address->title, 'value' => $address->toString() ];
+					$data	= [ 'cid' => $modelAddress->id, 'title' => $address->title, 'value' => $address->toString() ];
 
 					// Trigger Ajax Success
 					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

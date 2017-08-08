@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\actions\meta;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -10,11 +10,9 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * CreateMeta add meta for given parent model.
- *
- * The controller must provide appropriate model service and meta service.
+ * Delete delete existing meta for given parent model.
  */
-class CreateMeta extends \cmsgears\core\common\base\Action {
+class Delete extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 
@@ -61,21 +59,17 @@ class CreateMeta extends \cmsgears\core\common\base\Action {
 
 	// CMG parent classes --------------------
 
-	// CreateMeta ----------------------------
+	// Delete --------------------------------
 
 	/**
-	 * Create Meta for given parent slug and parent type.
+	 * Delete meta for given meta id, parent slug and parent type.
 	 */
-	public function run( $id = null, $slug = null, $type = null ) {
+	public function run( $id, $slug, $type = null ) {
 
-		// Find Meta parent
+		// Find meta parent
 		$parent	= null;
 
-		if( isset( $id ) ) {
-
-			$parent	= $this->modelService->getById( $id );
-		}
-		else if( isset( $type ) ) {
+		if( isset( $type ) ) {
 
 			$parent	= $this->modelService->getBySlugType( $slug, $type );
 		}
@@ -87,34 +81,18 @@ class CreateMeta extends \cmsgears\core\common\base\Action {
 		// Delete meta
 		if( isset( $parent ) ) {
 
-			$metaClass		= $this->metaService->getModelClass();
-			$meta			= new $metaClass;
+			$meta		= $this->metaService->getById( $id );
+			$belongsTo	= $meta->hasAttribute( 'modelId' ) ? $meta->belongsTo( $parent ) : $meta->belongsTo( $parent, $this->modelService->getParentType() );
 
-			if( $meta->hasAttribute( 'modelId' ) ) {
+			if( isset( $meta ) && $belongsTo ) {
 
-				$meta->modelId	= $parent->id;
-			}
-			else {
-
-				$meta->parentId		= $parent->id;
-				$meta->parentType	= $this->modelService->getParentType();
-			}
-
-			if( $meta->load( Yii::$app->request->post(), $meta->getClassName() ) && $meta->validate() ) {
-
-				$this->metaService->create( $meta );
+				$this->metaService->delete( $meta );
 
 				$data	= [ 'id' => $meta->id, 'name' => $meta->name, 'value' => $meta->value ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 			}
-
-			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $meta );
-
-			// Trigger Ajax Failure
-			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
 
 		// Trigger Ajax Failure

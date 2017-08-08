@@ -76,7 +76,8 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	// Public -----------------
 
-	public $mParentType	= CoreGlobal::TYPE_USER;
+	public $modelType	= CoreGlobal::TYPE_USER;
+
 	public $permissions = [];
 
 	// Protected --------------

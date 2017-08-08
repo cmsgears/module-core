@@ -1,14 +1,12 @@
 <?php
 namespace cmsgears\core\common\services\entities;
 
-use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\core\common\models\mappers\ModelObject;
 
 use cmsgears\core\common\services\interfaces\entities\IObjectService;
@@ -30,6 +28,8 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 	public static $modelClass	= '\cmsgears\core\common\models\entities\ObjectData';
 
 	public static $modelTable	= CoreTables::TABLE_OBJECT_DATA;
+
+	public static $typed		= true;
 
 	public static $parentType	= CoreGlobal::TYPE_OBJECT;
 

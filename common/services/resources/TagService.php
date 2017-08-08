@@ -33,6 +33,8 @@ class TagService extends EntityService implements ITagService {
 
 	public static $modelTable	= CoreTables::TABLE_TAG;
 
+	public static $typed		= true;
+
 	public static $parentType	= CoreGlobal::TYPE_TAG;
 
 	// Protected --------------
@@ -141,6 +143,27 @@ class TagService extends EntityService implements ITagService {
 		return parent::update( $model, [
 			'attributes' => $attributes
 		]);
+	}
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
 	}
 
 	// Delete -------------

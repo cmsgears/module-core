@@ -44,7 +44,7 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
 
 	// Public -----------------
 
-	public $mParentType		= CoreGlobal::TYPE_TAG;
+	public $modelType	= CoreGlobal::TYPE_TAG;
 
 	// Protected --------------
 

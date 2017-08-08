@@ -2,13 +2,11 @@
 namespace cmsgears\core\common\models\traits;
 
 // Yii Import
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use Yii;
 
 /**
- * The model using this trait must have name, slug and type columns. It must also support unique name and slug for a particular type.
+ * The model using this trait must have name, slug and type columns. The model using this
+ * trait must have unique slug for a particular type. Use NameTypeTrait for lenient options.
  */
 trait SlugTypeTrait {
 

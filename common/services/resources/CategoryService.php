@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -34,6 +34,8 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 	public static $modelClass	= '\cmsgears\core\common\models\resources\Category';
 
 	public static $modelTable	= CoreTables::TABLE_CATEGORY;
+
+	public static $typed		= true;
 
 	public static $parentType	= CoreGlobal::TYPE_CATEGORY;
 
@@ -77,18 +79,48 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 
 		$sort = new Sort([
 			'attributes' => [
-				'name' => [
-					'asc' => [ "$modelTable.name" => SORT_ASC ],
-					'desc' => [ "$modelTable.name" => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'Name',
-				],
 				'parent' => [
 					'asc' => [ 'parent.name' => SORT_ASC ],
 					'desc' => [ 'parent.name' => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Parent',
-				]
+				],
+				'name' => [
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
+				],
+				'slug' => [
+					'asc' => [ "$modelTable.slug" => SORT_ASC ],
+					'desc' => [ "$modelTable.slug" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Slug'
+				],
+	            'type' => [
+	                'asc' => [ "$modelTable.type" => SORT_ASC ],
+	                'desc' => [ "$modelTable.type" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Type'
+	            ],
+	            'icon' => [
+	                'asc' => [ "$modelTable.icon" => SORT_ASC ],
+	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Icon'
+	            ],
+	            'featured' => [
+	                'asc' => [ "$modelTable.featured" => SORT_ASC ],
+	                'desc' => [ "$modelTable.featured" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Featured'
+	            ],
+	            'order' => [
+	                'asc' => [ "$modelTable.`order`" => SORT_ASC ],
+	                'desc' => [ "$modelTable.`order`" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Order'
+	            ]
 			]
 		]);
 
@@ -99,6 +131,22 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 		$query 	= $modelClass::find()->joinWith( 'parent' );
 
 		// Filters ----------
+
+		// Filter - Status
+		$status	= Yii::$app->request->getQueryParam( 'status' );
+
+		if( isset( $status ) ) {
+
+			switch( $status ) {
+
+				case 'featured': {
+
+					$config[ 'conditions' ][ "$modelTable.featured" ]	= true;
+
+					break;
+				}
+			}
+		}
 
 		// Filter - Level
 		$parent	= Yii::$app->request->getQueryParam( 'parent' );
@@ -124,7 +172,10 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 
 		// Reporting --------
 
-		$config[ 'report-col' ]	= [ 'name' => "$modelTable.name", 'desc' => "$modelTable.description", 'pname' => 'parent.name', 'pdesc' => 'parent.description' ];
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'desc' => "$modelTable.description",
+			'pname' => 'parent.name', 'pdesc' => 'parent.description'
+		];
 
 		// Result -----------
 
@@ -203,6 +254,65 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 		return parent::update( $model, [
 			'attributes' => $attributes
 		]);
+	}
+
+	public function markFeatured( $model ) {
+
+		$model->featured = true;
+
+		return parent::update( $model, [
+			'attributes' => [ 'featured' ]
+		]);
+	}
+
+	public function markRegular( $model ) {
+
+		$model->featured = false;
+
+		return parent::update( $model, [
+			'attributes' => [ 'featured' ]
+		]);
+	}
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'status': {
+
+				switch( $action ) {
+
+					case 'featured': {
+
+						$this->markFeatured( $model );
+
+						break;
+					}
+					case 'regular': {
+
+						$this->markRegular( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
 	}
 
 	// Delete -------------

@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\actions\comment;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -10,11 +10,10 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Delete can be used to delete a comment and trigger notification and mail to admin and model owner.
+ * Delete action deletes a model comment.
  *
- * Only model owner can delete model in exceptional cases. It must be used with extra care in scenarios where comment dlete is not allowed to model owners.
- *
- * The controller must provide modelService variable using approprite service class.
+ * Only model owner can delete comment in exceptional cases. It must be used with extra
+ * care in scenarios where comment delete by model owners is not allowed.
  */
 class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
@@ -32,9 +31,9 @@ class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	// Protected --------------
+	public $parent 	= true;
 
-	protected $typed = true;
+	// Protected --------------
 
 	// Private ----------------
 
@@ -54,22 +53,21 @@ class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Delete --------------------------------
 
-	public function run( $id ) {
+	public function run( $cid ) {
 
-		$modelCommentService	= Yii::$app->factory->get( 'modelCommentService' );
+		if( isset( $this->model ) ) {
 
-		$model		= $modelCommentService->getById( $id );
-		$user		= Yii::$app->user->getIdentity();
-		$parent		= $this->modelService->getById( $model->parentId );
+			$modelCommentService = Yii::$app->factory->get( 'modelCommentService' );
 
-		if( isset( $model ) && $parent->isOwner( $user ) ) {
+			$modelComment	= $modelCommentService->getById( $cid );
 
-			if( $modelCommentService->delete( $model ) ) {
+			if( isset( $modelComment ) && $modelComment->checkParent( $this->model->id, $this->parentType ) ) {
 
-				// TODO: Trigger notification and mail
+				if( $modelCommentService->delete( $modelComment ) ) {
 
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
+					// Trigger Ajax Success
+					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+				}
 			}
 		}
 

@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\actions\category;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -10,11 +10,9 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * RemoveCategory disable a category for model by de-activating it.
- *
- * The controller must provide appropriate model service having model class and model table defined for the base model. The service might provide parent type.
+ * Assign action maps existing category to model in action using ModelCategory mapper.
  */
-class RemoveCategory extends \cmsgears\core\common\actions\base\ModelAction {
+class Assign extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -29,6 +27,8 @@ class RemoveCategory extends \cmsgears\core\common\actions\base\ModelAction {
 	// Variables -----------------------------
 
 	// Public -----------------
+
+	public $parent 	= true;
 
 	// Protected --------------
 
@@ -48,7 +48,7 @@ class RemoveCategory extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// RemoveCategory ------------------------
+	// Assign --------------------------------
 
 	public function run() {
 
@@ -57,19 +57,13 @@ class RemoveCategory extends \cmsgears\core\common\actions\base\ModelAction {
 		if( isset( $this->model ) && isset( $post[ 'categoryId' ] ) ) {
 
 			$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
-			$parentId				= $this->model->id;
-			$parentType				= $this->parentType;
-			$modelId				= $post[ 'categoryId' ];
 
-			$mapping				= $modelCategoryService->getByModelId( $parentId, $parentType, $modelId );
+			$modelCategory = $modelCategoryService->activateByModelId( $this->model->id, $this->parentType, $post[ 'categoryId' ] );
 
-			if( isset( $mapping ) ) {
+			$data	= [ 'cid' => $modelCategory->id, 'name' => $modelCategory->category->name ];
 
-				$modelCategoryService->disable( $mapping );
-
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
-			}
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 		}
 
 		// Trigger Ajax Failure

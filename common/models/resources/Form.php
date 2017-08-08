@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
@@ -12,7 +12,6 @@ use yii\behaviors\SluggableBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\interfaces\IVisibility;
-use cmsgears\core\common\models\interfaces\IOwner;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
@@ -72,7 +71,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	// Public -----------------
 
-	public $mParentType	= CoreGlobal::TYPE_FORM;
+	public $modelType	= CoreGlobal::TYPE_FORM;
 
 	// Protected --------------
 

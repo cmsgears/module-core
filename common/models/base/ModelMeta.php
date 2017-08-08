@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\base;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports

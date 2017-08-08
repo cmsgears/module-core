@@ -38,6 +38,8 @@ interface IUserService extends IApprovalService, IModelMetaService {
 
 	// Read - Maps -----
 
+	public function searchByName( $name, $config = [] );
+
 	public function getIdNameMapByRoleSlug( $roleSlug );
 
 	// Create -------------

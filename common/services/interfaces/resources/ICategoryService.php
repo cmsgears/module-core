@@ -34,6 +34,10 @@ interface ICategoryService extends INestedSetService, INameTypeService, ISlugTyp
 
 	// Update -------------
 
+	public function markFeatured( $model );
+
+	public function markRegular( $model );
+
 	// Delete -------------
 
 }

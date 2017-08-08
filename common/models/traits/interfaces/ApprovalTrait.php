@@ -7,7 +7,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\interfaces\IApproval;
 
 /**
- * Useful for models required registration process with admin approval. The model using this trait must use status column for tracking state.
+ * Useful for models required registration process with admin approval. The model using this
+ * trait must use status column to track current state.
  */
 trait ApprovalTrait {
 

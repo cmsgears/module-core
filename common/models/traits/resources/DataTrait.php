@@ -18,10 +18,13 @@ trait DataTrait {
 
 	public function setDataMeta( $name, $value, $assoc = false ) {
 
+		// Convert data to object
 		$object	= $this->generateObjectFromJson( $assoc );
 
+		// Add/Update meta
 		$object->$name	= $value;
 
+		// Convert object back to data
 		$this->generateJsonFromObject( $object );
 	}
 
@@ -47,10 +50,13 @@ trait DataTrait {
 
 	public function removeDataMeta( $name, $assoc = false ) {
 
+		// Convert data to object
 		$object	= $this->generateObjectFromJson( $assoc );
 
+		// Remove meta
 		unset( $object->$name );
 
+		// Convert object back to data
 		$this->generateJsonFromObject( $object );
 
 		// Save model meta state

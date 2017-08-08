@@ -8,8 +8,6 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-// TODO: It can be further enhanced by adding support to discover using unique column name.
-
 /**
  * Discover Filter finds and set the primary model using primary service of controller. In all other cases, it ignore the action and
  * throws ForbiddenHttpException exception. It must be the first filter in case an action is configured for multiple filters.
@@ -24,8 +22,6 @@ use cmsgears\core\common\config\CoreGlobal;
  *				<permissions>,
  *				'filters' => [
  *					'discover' => [
- *						// We need to provided column name either as slug or id to discover primary model.
- *						'slug' or 'id' => '<slug>' or '<id>',
  *						// It's optional and required in case controller does not provide primary model service or a different service is required to discover primary model.
  *						'service' => '<factory name> or <service object>',
  *						// Optional and required in case slug param is different than slug
@@ -43,10 +39,6 @@ use cmsgears\core\common\config\CoreGlobal;
 class DiscoverFilter {
 
 	public function doFilter( $args = [] ) {
-
-		// Check whether model is typed
-		$typed			= isset( $args[ 'typed' ] ) ? $args[ 'typed' ] : false;
-		$type			= isset( $args[ 'type' ] ) ? $args[ 'type' ] : null;
 
 		// Model to be discovered
 		$model			= null;
@@ -77,42 +69,42 @@ class DiscoverFilter {
 		// Proceed further if service found
 		if( isset( $modelService ) ) {
 
-			$model	= null;
+			$slugParam	= 'slug';
+
+			if( isset( $args[ 'slugParam' ] ) ) {
+
+				$slugParam	= $args[ 'slugParam' ];
+			}
+
+			$slug	= Yii::$app->request->get( $slugParam );
 
 			// Use default column as id
-			if( !isset( $args[ 'slug' ] ) || !$args[ 'slug' ] ) {
+			if( empty( $slug ) ) {
 
-				$args[ 'id' ]	= true;
+				$args[ 'id' ] = true;
 			}
 
 			// Find model using id
 			if( isset( $args[ 'id' ] ) && $args[ 'id' ] ) {
 
-				$idParam	= 'id';
+				$idParam = 'id';
 
 				if( isset( $args[ 'idParam' ] ) ) {
 
-					$idParam	= $args[ 'idParam' ];
+					$idParam = $args[ 'idParam' ];
 				}
 
 				$id		= Yii::$app->request->get( $idParam );
 				$model	= $modelService->getById( $id );
 			}
 			// Find model using slug
-			else if( isset( $args[ 'slug' ] ) && $args[ 'slug' ] ) {
+			else if( isset( $slug ) ) {
 
-				$slugParam	= 'slug';
-
-				if( isset( $args[ 'slugParam' ] ) ) {
-
-					$slugParam	= $args[ 'slugParam' ];
-				}
-
-				$slug	= Yii::$app->request->get( $slugParam );
+				// Flag to check typed models
+				$typed	= $this->modelService->isTyped();
+				$type	= $typed ? Yii::$app->request->get( 'type', null ) : null;
 
 				if( $typed ) {
-
-					$type	= null != Yii::$app->request->get( 'type' ) ? Yii::$app->request->get( 'type' ) : $type;
 
 					if( isset( $type ) ) {
 

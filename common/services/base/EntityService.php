@@ -58,11 +58,19 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	/**
 	 * The model table used for advanced model operations.
 	 */
-	public static $modelTable	= CoreTables::TABLE_OBJECT_DATA;
+	public static $modelTable	= null;
 
 	/**
-	 * Parent type is required for entities having type column. It will be used by resources and
-	 * mapper models to refer to typed parent entity.
+	 * The service must specify whether it's corresponding model supports type for classification
+	 * of the model.
+	 */
+	public static $typed		= false;
+
+	/**
+	 * Parent type is required to associate multiple mapper or resources to the corresponding model.
+	 * It will be used by resources and mapper models to be stored in their parentType column. There
+	 * is no relation between $typed and $parentType. The variable $typed is specific for service model
+	 * whereas $parentType is required for mapper and resources.
 	 */
 	public static $parentType	= null;
 
@@ -100,6 +108,11 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	public function getModelTable() {
 
 		return static::$modelTable;
+	}
+
+	public function isTyped() {
+
+		return static::$typed;
 	}
 
 	public function getParentType() {

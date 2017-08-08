@@ -87,42 +87,66 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 		$sort = new Sort([
 			'attributes' => [
-				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+				'user' => [
+					'asc' => [ "creator.firstName" => SORT_ASC, "creator.lastName" => SORT_ASC ],
+					'desc' => [ "creator.firstName" => SORT_DESC, "creator.lastName" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'name'
+					'label' => 'User'
+				],
+				'name' => [
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
 				],
 				'email' => [
-					'asc' => [ 'email' => SORT_ASC ],
-					'desc' => ['email' => SORT_DESC ],
+					'asc' => [ "$modelTable.email" => SORT_ASC ],
+					'desc' => [ "$modelTable.email" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'email'
+					'label' => 'Email'
+				],
+				'status' => [
+					'asc' => [ "$modelTable.status" => SORT_ASC ],
+					'desc' => [ "$modelTable.status" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Status'
+				],
+				'type' => [
+					'asc' => [ "$modelTable.type" => SORT_ASC ],
+					'desc' => [ "$modelTable.type" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Type'
 				],
 				'rating' => [
-					'asc' => [ 'rating' => SORT_ASC ],
-					'desc' => ['rating' => SORT_DESC ],
+					'asc' => [ "$modelTable.rating" => SORT_ASC ],
+					'desc' => [ "$modelTable.rating" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'rating'
+					'label' => 'Rating'
 				],
-				'cdate' => [
-					'asc' => [ 'createdAt' => SORT_ASC ],
-					'desc' => ['createdAt' => SORT_DESC ],
+				'featured' => [
+					'asc' => [ "$modelTable.featured" => SORT_ASC ],
+					'desc' => [ "$modelTable.featured" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'cdate'
+					'label' => 'Featured'
 				],
-				'udate' => [
-					'asc' => [ 'updatedAt' => SORT_ASC ],
-					'desc' => ['updatedAt' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'udate'
-				],
-				'adate' => [
-					'asc' => [ 'approvedAt' => SORT_ASC ],
-					'desc' => ['approvedAt' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'adate'
-				]
+	            'cdate' => [
+	                'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Created At'
+	            ],
+	            'udate' => [
+	                'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Updated At'
+	            ],
+	            'adate' => [
+	                'asc' => [ "$modelTable.approvedAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.approvedAt" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Approved At'
+	            ]
 			],
 			'defaultOrder' => [
 				'adate' => SORT_DESC
@@ -149,7 +173,10 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name",  'title' =>  "$modelTable.title", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template" ];
+			$search = [
+				'user' => "concat(creator.firstName,creator.lastName)", 'name' => "$modelTable.name",
+				'email' =>  "$modelTable.email", 'content' => "$modelTable.content"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -157,7 +184,9 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template",  'active' => "$modelTable.active"
+			'user' => "concat(creator.firstName,creator.lastName)", 'name' => "$modelTable.name",
+			'email' =>  "$modelTable.email", 'content' => "$modelTable.content",
+			'status' => "$modelTable.status", 'rating' => "$modelTable.rating", 'featured' => "$modelTable.featured"
 		];
 
 		// Result -----------
@@ -254,7 +283,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 		return parent::create( $comment, $config );
 	}
 
-	public function attachMedia( $parent, $file, $mediaType, $type ) {
+	public function attachMedia( $model, $file, $mediaType, $type ) {
 
 		$modelFile		= new ModelFile();
 		$fileService	= Yii::$app->factory->get( 'fileService' );
@@ -276,7 +305,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 			$modelFile->modelId		= $file->id;
 			$modelFile->parentType	= $type;
-			$modelFile->parentId	= $parent->id;
+			$modelFile->parentId	= $model->id;
 
 			$modelFile->save();
 		}
@@ -327,9 +356,9 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 		$this->updateStatus( $model, ModelComment::STATUS_SPAM );
 	}
 
-	public function markDelete( $model ) {
+	public function markTrash( $model ) {
 
-		$this->updateStatus( $model, ModelComment::STATUS_DELETED );
+		$this->updateStatus( $model, ModelComment::STATUS_TRASH );
 	}
 
 	// Attributes
@@ -356,6 +385,38 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 		switch( $column ) {
 
+			case 'status': {
+
+				switch( $action ) {
+
+					case 'approve': {
+
+						$this->approve( $model );
+
+						break;
+					}
+					case 'block': {
+
+						$this->block( $model );
+
+						break;
+					}
+					case 'spam': {
+
+						$this->markSpam( $model );
+
+						break;
+					}
+					case 'trash': {
+
+						$this->markTrash( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
 			case 'model': {
 
 				switch( $action ) {

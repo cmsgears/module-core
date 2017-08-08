@@ -2,10 +2,7 @@
 namespace cmsgears\core\common\models\traits;
 
 // Yii Import
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use Yii;
 
 /**
  * The tabs to show data in tabs. It reads the controller action and find the active, next and previous tabs.

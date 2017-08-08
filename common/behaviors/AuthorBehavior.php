@@ -27,7 +27,8 @@ class AuthorBehavior extends \yii\behaviors\AttributeBehavior {
 
 	protected function getValue( $event ) {
 
-		if( Yii::$app->user->getIdentity() != null ) {
+		// User current user in case createdBy is not set
+		if( !isset( $this->owner->createdBy ) && Yii::$app->user->getIdentity() != null ) {
 
 			return Yii::$app->user->identity->id;
 		}

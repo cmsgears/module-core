@@ -60,7 +60,6 @@ abstract class TemplateController extends CrudController {
 		$dataProvider = $this->modelService->getPageByType( $this->type );
 
 		return $this->render( 'all', [
-
 			'dataProvider' => $dataProvider
 		]);
 	}

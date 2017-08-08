@@ -2,7 +2,7 @@
 namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
@@ -22,10 +22,11 @@ abstract class CommentController extends Controller {
 
 	public $commentUrl;
 
+	public $commentType;
+
 	// Protected --------------
 
 	protected $parentType;
-	protected $commentType;
 
 	protected $parentService;
 
@@ -37,10 +38,13 @@ abstract class CommentController extends Controller {
 
 		parent::init();
 
+		// Views
 		$this->setViewPath( '@cmsgears/module-core/admin/views/comment' );
 
+		// Permission
 		$this->crudPermission	= CoreGlobal::PERM_CORE;
 
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'modelCommentService' );
 
 		// Notes: Configure sidebar, commentUrl, parentType, commentType, parentService and returnUrl exclusively in child classes
@@ -80,7 +84,6 @@ abstract class CommentController extends Controller {
 		];
 	}
 
-
 	// yii\base\Controller ----
 
 	// CMG interfaces ------------------------
@@ -91,14 +94,7 @@ abstract class CommentController extends Controller {
 
 	public function actionAll( $pid = null ) {
 
-		if( isset( $pid ) ) {
-
-			Url::remember( [ "$this->commentUrl/all?pid=$pid" ], $this->commentUrl );
-		}
-		else {
-
-			Url::remember( [ "$this->commentUrl/all" ], $this->commentUrl );
-		}
+		Url::remember( Yii::$app->request->getUrl(), $this->commentUrl );
 
 		$model			= null;
 		$dataProvider	= null;
@@ -113,7 +109,7 @@ abstract class CommentController extends Controller {
 			$dataProvider	= $this->modelService->getPageByParentType( $this->parentType, [ 'conditions' => [ 'type' => $this->commentType ] ] );
 		}
 
-		$parent	= empty( $pid ) ? true : false;
+		$parent	= isset( $pid ) ? true : false;
 
 		return $this->render( 'all', [
 			 'dataProvider' => $dataProvider,
@@ -145,7 +141,7 @@ abstract class CommentController extends Controller {
 
 			$this->model = $this->modelService->create( $model );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		return $this->render( 'create', [
@@ -170,7 +166,7 @@ abstract class CommentController extends Controller {
 
 				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->refresh();
 			}
 
 			// Render view

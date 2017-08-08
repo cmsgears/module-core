@@ -1,20 +1,11 @@
 <?php
 namespace cmsgears\core\common\actions\comment;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\resources\ModelComment;
 
-use cmsgears\core\common\utilities\AjaxUtil;
-
 /**
- * Testimonial adds a review for a model using ModelComment resource.
- *
- * The controller must provide appropriate model service having model class, table and type defined for the base model.
+ * Testimonial action creates a testimonial for discovered model using ModelComment resource.
  */
 class Testimonial extends Create {
 
@@ -38,8 +29,6 @@ class Testimonial extends Create {
 
 	// Protected --------------
 
-	public $typed = false;
-
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
@@ -57,4 +46,5 @@ class Testimonial extends Create {
 	// CMG parent classes --------------------
 
 	// Testimonial ---------------------------
+
 }

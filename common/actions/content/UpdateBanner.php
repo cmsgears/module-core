@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\actions\content;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -12,9 +12,7 @@ use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * UpdateBanner can be used to update banner for models.
- *
- * The controller must provide modelService variable using approprite service class.
+ * UpdateBanner can be used to update banner of discovered model.
  */
 class UpdateBanner extends \cmsgears\core\common\actions\base\ModelAction {
 
@@ -69,6 +67,8 @@ class UpdateBanner extends \cmsgears\core\common\actions\base\ModelAction {
 
 				$this->modelService->updateBanner( $this->model, $banner );
 
+				$this->model->refresh();
+
 				$banner		= $this->model->banner;
 				$response	= [ 'fileUrl' => $banner->getFileUrl() ];
 
@@ -76,8 +76,11 @@ class UpdateBanner extends \cmsgears\core\common\actions\base\ModelAction {
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
 			}
 
+			// Generate Errors
+			$errors = AjaxUtil::generateErrorMessage( $banner );
+
 			// Trigger Ajax Failure
-			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
 
 		// Trigger Ajax Failure

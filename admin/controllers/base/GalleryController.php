@@ -21,9 +21,9 @@ abstract class GalleryController extends \cmsgears\core\admin\controllers\base\C
 	protected $type;
 	protected $templateType;
 
-	// Private ----------------
+	protected $templateService;
 
-	private $templateService;
+	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
 
@@ -31,13 +31,18 @@ abstract class GalleryController extends \cmsgears\core\admin\controllers\base\C
 
 		parent::init();
 
+		// Views
 		$this->setViewPath( '@cmsgears/module-core/admin/views/gallery' );
 
-		$this->crudPermission	= CoreGlobal::PERM_GALLERY_ADMIN;
-		$this->modelService		= Yii::$app->factory->get( 'galleryService' );
-
+		// Config
 		$this->type				= CoreGlobal::TYPE_SITE;
 		$this->templateType		= CoreGlobal::TYPE_GALLERY;
+
+		// Permission
+		$this->crudPermission	= CoreGlobal::PERM_GALLERY_ADMIN;
+
+		// Services
+		$this->modelService		= Yii::$app->factory->get( 'galleryService' );
 
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
 

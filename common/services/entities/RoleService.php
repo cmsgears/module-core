@@ -2,14 +2,13 @@
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\Role;
 use cmsgears\core\common\models\mappers\RolePermission;
 
 use cmsgears\core\common\services\interfaces\entities\IRoleService;
@@ -33,6 +32,8 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 	public static $modelClass	= '\cmsgears\core\common\models\entities\Role';
 
 	public static $modelTable	= CoreTables::TABLE_ROLE;
+
+	public static $typed		= true;
 
 	public static $parentType	= CoreGlobal::TYPE_ROLE;
 
@@ -69,25 +70,67 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= static::$modelTable;
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
 				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Name'
 				],
 				'slug' => [
-					'asc' => [ 'slug' => SORT_ASC ],
-					'desc' => ['slug' => SORT_DESC ],
+					'asc' => [ "$modelTable.slug" => SORT_ASC ],
+					'desc' => [ "$modelTable.slug" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Slug'
-				]
+				],
+	            'type' => [
+	                'asc' => [ "$modelTable.type" => SORT_ASC ],
+	                'desc' => [ "$modelTable.type" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Type'
+	            ],
+	            'icon' => [
+	                'asc' => [ "$modelTable.icon" => SORT_ASC ],
+	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Icon'
+	            ],
+	            'group' => [
+	                'asc' => [ "$modelTable.group" => SORT_ASC ],
+	                'desc' => [ "$modelTable.group" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Group'
+	            ],
+	            'admin' => [
+	                'asc' => [ "$modelTable.adminUrl" => SORT_ASC ],
+	                'desc' => [ "$modelTable.adminUrl" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Admin Url'
+	            ],
+	            'home' => [
+	                'asc' => [ "$modelTable.homeUrl" => SORT_ASC ],
+	                'desc' => [ "$modelTable.homeUrl" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Home Url'
+	            ],
+	            'cdate' => [
+	                'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Created At'
+	            ],
+	            'udate' => [
+	                'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Updated At'
+	            ]
 			]
 		]);
 
@@ -105,13 +148,29 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 
 		// Filters ----------
 
+		// Filter - Status
+		$status	= Yii::$app->request->getQueryParam( 'status' );
+
+		if( isset( $status ) ) {
+
+			switch( $status ) {
+
+				case 'group': {
+
+					$config[ 'conditions' ][ "$modelTable.group" ]	= true;
+
+					break;
+				}
+			}
+		}
+
 		// Searching --------
 
 		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name",  'slug' => "$modelTable.slug" ];
+			$search = [ 'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'desc' => "$modelTable.description" ];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -119,12 +178,12 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'slug' => "$modelTable.slug"
+			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'desc' => "$modelTable.description"
 		];
 
 		// Result -----------
 
-		return parent::findPage( $config );
+		return parent::getPage( $config );
 	}
 
 	// Read ---------------
@@ -148,7 +207,7 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description', 'homeUrl' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description', 'adminUrl', 'homeUrl' ];
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -161,31 +220,28 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 	 */
 	public function bindPermissions( $binder ) {
 
-		$roleId			= $binder->binderId;
-		$permissions	= $binder->bindedData;
+		$roleId	= $binder->binderId;
+		$binded	= $binder->binded;
 
 		// Clear all existing mappings
 		RolePermission::deleteByRoleId( $roleId );
 
 		// Create updated mappings
-		if( isset( $permissions ) && count( $permissions ) > 0 ) {
+		if( count( $binded ) > 0 ) {
 
-			foreach ( $permissions as $key => $value ) {
+			foreach ( $binded as $id ) {
 
-				if( isset( $value ) ) {
+				$toSave					= new RolePermission();
+				$toSave->roleId			= $roleId;
+				$toSave->permissionId	= $id;
 
-					$toSave					= new RolePermission();
-					$toSave->roleId			= $roleId;
-					$toSave->permissionId	= $value;
-
-					$toSave->save();
-				}
+				$toSave->save();
 			}
 		}
 
 		return true;
 	}
-	
+
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {

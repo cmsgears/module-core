@@ -15,9 +15,7 @@ use cmsgears\files\components\FileManager;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Create adds a comment, review or testimonial for a model using ModelComment resource.
- *
- * The controller must provide appropriate model service having model class, table and type defined for the base model.
+ * Create action creates comment, review or testimonial for discovered model using ModelComment resource.
  */
 class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
@@ -35,12 +33,11 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $typed		= true;
-
 	public $parent 		= true;
 
-	public $status		= ModelComment::STATUS_NEW;
 	public $modelType	= null;
+
+	public $status		= ModelComment::STATUS_NEW;
 
 	public $setUser		= true;
 
@@ -82,40 +79,40 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 			$modelCommentService	= Yii::$app->factory->get( 'modelCommentService' );
 
-			$user				= Yii::$app->user->getIdentity();
+			$user			= Yii::$app->user->getIdentity();
+			$modelClass		= $modelCommentService->getModelClass();
+			$modelComment	= new $modelClass;
 
-			$modelClass			= $modelCommentService->getModelClass();
-			$model				= new $modelClass;
-			$model->status		= $this->status;
-			$model->type		= $this->modelType;
+			$modelComment->parentId		= $this->model->id;
+			$modelComment->parentType	= $this->parentType;
 
-			$model->parentId	= $this->model->id;
-			$model->parentType	= $this->parentType;
+			$modelComment->status	= $this->status;
+			$modelComment->type		= $this->modelType;
 
 			// To set name and email in case user is logged in. The same details can be fetched from user table using createdBy column.
-			if( isset( $user ) && $this->setUser ) {
+			if( $this->setUser && isset( $user ) ) {
 
-				$model->name	= $user->getName();
-				$model->email	= $user->email;
+				$modelComment->name		= $user->getName();
+				$modelComment->email	= $user->email;
 			}
 
 			if( isset( $this->scenario ) ) {
 
-				$model->scenario	= $this->scenario;
+				$modelComment->scenario = $this->scenario;
 			}
-echo "hi 1";
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$modelComment	= $modelCommentService->create( $model );
+			if( $modelComment->load( Yii::$app->request->post(), $modelComment->getClassName() ) && $modelComment->validate() ) {
 
-				if( $modelComment ) {
-echo "hi 2";
+				$modelComment	= $modelCommentService->create( $modelComment );
+
+				if( isset( $modelComment ) ) {
+
 					// Refresh model for further processing
 					$modelComment->refresh();
 
 					// Set controller model for post processing
 					if( Yii::$app->controller->hasProperty( 'modelComment' ) ) {
-echo "hi 3";
+
 						Yii::$app->controller->modelComment = $modelComment;
 					}
 
@@ -125,14 +122,11 @@ echo "hi 3";
 						$filesCount	= count( Yii::$app->request->post( $this->mediaModel ) );
 						$files		= $this->initFiles( $filesCount );
 
-						//Refresh $model to get updated values
-						$model->refresh();
-
 						if( File::loadMultiple( $files, Yii::$app->request->post(), $this->mediaModel ) && File::validateMultiple( $files ) ) {
 
 							foreach( $files as $file ) {
 
-								$modelCommentService->attachMedia( $model, $file, $this->mediaType, ModelComment::TYPE_COMMENT );
+								$modelCommentService->attachMedia( $modelComment, $file, $this->mediaType, ModelComment::TYPE_COMMENT );
 							}
 						}
 					}
@@ -143,7 +137,7 @@ echo "hi 3";
 			}
 
 			// Generate Validation Errors
-			$errors = AjaxUtil::generateErrorMessage( $model );
+			$errors = AjaxUtil::generateErrorMessage( $modelComment );
 
 			// Trigger Ajax Failure
 			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );

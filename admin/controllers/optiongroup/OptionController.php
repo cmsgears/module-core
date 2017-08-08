@@ -2,11 +2,8 @@
 namespace cmsgears\core\admin\controllers\optiongroup;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 
 class OptionController extends \cmsgears\core\admin\controllers\base\category\OptionController {
 
@@ -26,10 +23,21 @@ class OptionController extends \cmsgears\core\admin\controllers\base\category\Op
 
 		parent::init();
 
+		// Sidebar
 		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'option-group' ];
 
+		// Return Url
 		$this->returnUrl		= Url::previous( 'options' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/optiongroup/option/all' ], true );
+
+		// Breadcrumbs
+		$this->breadcrumbs	= [
+			'base' => [ [ 'label' => 'Option Groups', 'url' =>  [ '/core/optiongroup/all' ] ] ],
+			'all' => [ [ 'label' => 'Options' ] ],
+			'create' => [ [ 'label' => 'Options', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Options', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Options', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -50,7 +58,7 @@ class OptionController extends \cmsgears\core\admin\controllers\base\category\Op
 
 	public function actionAll( $cid ) {
 
-		Url::remember( [ "optiongroup/option/all?cid=$cid" ], 'options' );
+		Url::remember( Yii::$app->request->getUrl(), 'options' );
 
 		return parent::actionAll( $cid );
 	}

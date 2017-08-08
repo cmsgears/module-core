@@ -1,12 +1,7 @@
 <?php
 namespace cmsgears\core\common\models\traits\mappers;
 
-// Yii Import
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Tag;
 use cmsgears\core\common\models\mappers\ModelTag;
@@ -19,7 +14,15 @@ trait TagTrait {
 	public function getModelTags() {
 
 		return $this->hasMany( ModelTag::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->mParentType'" );
+					->where( "parentType='$this->modelType'" );
+	}
+
+	public function getActiveModelTags() {
+
+		$modelTagTable	= CoreTables::TABLE_MODEL_TAG;
+
+		return $this->hasMany( ModelTag::className(), [ 'parentId' => 'id' ] )
+					->where( "parentType='$this->modelType' AND $modelTagTable.active=1" );
 	}
 
 	/**
@@ -32,7 +35,7 @@ trait TagTrait {
 
 						$modelTagTable	= CoreTables::TABLE_MODEL_TAG;
 
-						$query->onCondition( [ "$modelTagTable.parentType" => $this->mParentType ] );
+						$query->onCondition( [ "$modelTagTable.parentType" => $this->modelType ] );
 					});
 	}
 
@@ -43,11 +46,11 @@ trait TagTrait {
 
 						$modelTagTable	= CoreTables::TABLE_MODEL_TAG;
 
-						$query->onCondition( [ "$modelTagTable.parentType" => $this->mParentType, "$modelTagTable.active" => true ] );
+						$query->onCondition( [ "$modelTagTable.parentType" => $this->modelType, "$modelTagTable.active" => true ] );
 					});
 	}
 
-	public function getTagIdList( $active = false ) {
+	public function getTagIdList( $active = true ) {
 
 		$tags		= null;
 		$tagsList	= [];
@@ -69,7 +72,7 @@ trait TagTrait {
 		return $tagsList;
 	}
 
-	public function getTagNameList( $active = false ) {
+	public function getTagNameList( $active = true ) {
 
 		$tags		= null;
 		$tagsList	= [];
@@ -91,7 +94,7 @@ trait TagTrait {
 		return $tagsList;
 	}
 
-	public function getTagIdNameList( $active = false ) {
+	public function getTagIdNameList( $active = true ) {
 
 		$tags		= null;
 		$tagsList	= [];
@@ -116,7 +119,7 @@ trait TagTrait {
 	/**
 	 * @return array - map of tag name and description
 	 */
-	public function getTagIdNameMap( $active = false ) {
+	public function getTagIdNameMap( $active = true ) {
 
 		$tags		= null;
 		$tagsMap	= [];
@@ -138,7 +141,7 @@ trait TagTrait {
 		return $tagsMap;
 	}
 
-	public function getTagSlugNameMap( $active = false ) {
+	public function getTagSlugNameMap( $active = true ) {
 
 		$tags		= null;
 		$tagsMap	= [];

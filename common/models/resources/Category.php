@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
 
@@ -54,7 +54,7 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 
 	// Public -----------------
 
-	public $mParentType	= CoreGlobal::TYPE_CATEGORY;
+	public $modelType	= CoreGlobal::TYPE_CATEGORY;
 
 	// Protected --------------
 

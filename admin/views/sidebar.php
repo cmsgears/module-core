@@ -20,11 +20,9 @@ $siteId	= Yii::$app->core->siteId;
 		<div class="tab-content clear <?= $parent === 'sidebar-identity' ? 'expanded visible' : null ?>">
 			<ul>
 				<?php if( $user->isPermitted( CoreGlobal::PERM_RBAC ) ) { ?>
-					<li class='matrix <?= $child === 'matrix' ? 'active' : null ?>'><?= Html::a( "Roles Matrix", ['/core/permission/matrix'] ) ?></li>
 					<li class='role <?= $child === 'role' ? 'active' : null ?>'><?= Html::a( "Roles", ['/core/role/all'] ) ?></li>
-					<li class='role-level <?= $child === 'role-level' ? 'active' : null ?>'><?= Html::a( "Role Hierarchy", ['/core/role/hierarchy'] ) ?></li>
 					<li class='perm <?= $child === 'perm' ? 'active' : null ?>'><?= Html::a( "Permissions", ['/core/permission/all'] ) ?></li>
-					<li class='perm-group <?= $child === 'perm-group' ? 'active' : null ?>'><?= Html::a( "Permissions Groups", ['/core/permission/groups'] ) ?></li>
+					<li class='perm-group <?= $child === 'perm-group' ? 'active' : null ?>'><?= Html::a( "Permission Groups", ['/core/permission/groups'] ) ?></li>
 				<?php } ?>
 				<?php if( $user->isPermitted( CoreGlobal::PERM_IDENTITY ) ) { ?>
 					<li class='admin <?= $child === 'admin' ? 'active' : null ?>'><?= Html::a( "Admins", ['/core/admin/all'] ) ?></li>

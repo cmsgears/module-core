@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\actions\comment;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -12,7 +12,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
 /**
  * DeleteRequest can be used to mark a comment for user deletion and trigger notification and mail to admin and model owner.
  *
- * The controller must provide modelService variable using approprite service class.
+ * The controller must provide modelService variable using appropriate service class.
  */
 class DeleteRequest extends \cmsgears\core\common\actions\base\ModelAction {
 
@@ -30,7 +30,7 @@ class DeleteRequest extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $typed = true;
+	public $parent 	= true;
 
 	// Protected --------------
 
@@ -56,17 +56,15 @@ class DeleteRequest extends \cmsgears\core\common\actions\base\ModelAction {
 
 		$modelCommentService	= Yii::$app->factory->get( 'modelCommentService' );
 
-		$model		= $modelCommentService->getById( $cid );
-		$user		= Yii::$app->user->getIdentity();
-		$parent		= $this->model;
+		$modelComment	= $modelCommentService->getById( $cid );
 
-		if( isset( $model ) && $model->parentId == $parent->id && $parent->isOwner( $user ) ) {
+		if( isset( $modelComment ) && $modelComment->checkParent( $this->model->id, $this->parentType ) ) {
 
-			if( $modelCommentService->updateDeleteRequest( $model ) ) {
+			if( $modelCommentService->updateDeleteRequest( $modelComment ) ) {
 
-				Yii::$app->coreMailer->sendCommentDeleteRequestMail( $model );
+				Yii::$app->coreMailer->sendCommentDeleteRequestMail( $modelComment );
 
-				$data = [ 'id' => $model->id, 'status' => $model->getStatusStr() ];
+				$data = [ 'cid' => $modelComment->id, 'status' => $modelComment->getStatusStr() ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
@@ -87,7 +87,7 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
 	// Public -----------------
 
-	public $mParentType	= CoreGlobal::TYPE_COMMENT;
+	public $modelType	= CoreGlobal::TYPE_COMMENT;
 
 	public $captcha;
 

@@ -2,7 +2,7 @@
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 
 // CMG Imports
@@ -28,13 +28,27 @@ class OptiongroupController extends \cmsgears\core\admin\controllers\base\CrudCo
 
 		parent::init();
 
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
-		$this->modelService		= Yii::$app->factory->get( 'categoryService' );
-		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'option-group' ];
+		// Type
 		$this->type				= CoreGlobal::TYPE_OPTION_GROUP;
 
+		// Services
+		$this->modelService		= Yii::$app->factory->get( 'categoryService' );
+
+		// Sidebar
+		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'option-group' ];
+
+		// Return Url
 		$this->returnUrl		= Url::previous( 'ogroups' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/optiongroup/all' ], true );
+
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Option Groups' ] ],
+			'create' => [ [ 'label' => 'Option Groups', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Option Groups', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Option Groups', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'items' => [ [ 'label' => 'Option Groups', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -55,7 +69,7 @@ class OptiongroupController extends \cmsgears\core\admin\controllers\base\CrudCo
 
 	public function actionAll() {
 
-		Url::remember( [ 'optiongroup/all' ], 'ogroups' );
+		Url::remember( Yii::$app->request->getUrl(), 'ogroups' );
 
 		$dataProvider = $this->modelService->getPageByType( $this->type );
 
@@ -75,7 +89,7 @@ class OptiongroupController extends \cmsgears\core\admin\controllers\base\CrudCo
 
 			$this->modelService->create( $model );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		return $this->render( 'create', [

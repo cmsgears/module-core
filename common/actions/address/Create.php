@@ -13,9 +13,7 @@ use cmsgears\core\common\models\resources\Address;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Create Address
- *
- * The controller must provide appropriate model service.
+ * The Create action creates model address, address and associate the model address to parent.
  */
 class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
@@ -33,7 +31,9 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $scenario = 'location';
+	public $parent		= true;
+
+	public $scenario	= 'location';
 
 	// Protected --------------
 
@@ -62,11 +62,8 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// CreateMeta ----------------------------
+	// Create --------------------------------
 
-	/**
-	 * Create Meta for given parent slug and parent type.
-	 */
 	public function run() {
 
 		if( isset( $this->model ) ) {
@@ -83,19 +80,15 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 				}
 			}
 
-			$parent		= $this->model;
-			$parentType	= $this->parentType;
-
 			if( $address->load( Yii::$app->request->post(), 'Address' ) && $address->validate() ) {
 
-				$type		= Yii::$app->request->post( 'addressType' );
-				$type		= isset( $type ) ? $type : Address::TYPE_DEFAULT;
+				$type	= isset( $this->modelType ) ? $this->modelType : Address::TYPE_DEFAULT;
 
 				// Address - Create
-				$address	= $this->modelAddressService->create( $address, [ 'parentId' => $parent->id, 'parentType' => $parentType, 'type' => $type ] );
-				$address	= $address->address;
+				$modelAddress	= $this->modelAddressService->create( $address, [ 'parentId' => $this->model->id, 'parentType' => $this->parentType, 'type' => $type ] );
+				$address		= $modelAddress->address;
 
-				$data		= [ 'id' => $address->id, 'title' => $address->title, 'value' => $address->toString() ];
+				$data	= [ 'cid' => $modelAddress->id, 'title' => $address->title, 'value' => $address->toString() ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

@@ -135,11 +135,11 @@ trait MapperTrait {
 
 		if( isset( $model ) ) {
 
-			$this->activate( $model );
+			return $this->activate( $model );
 		}
 		else {
 
-			$this->createByParams( [ 'parentId' => $parentId, 'parentType' => $parentType, 'modelId' => $modelId, 'active' => true ] );
+			return $this->createByParams( [ 'parentId' => $parentId, 'parentType' => $parentType, 'modelId' => $modelId, 'active' => true ] );
 		}
 	}
 

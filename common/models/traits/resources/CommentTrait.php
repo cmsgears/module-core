@@ -2,14 +2,14 @@
 namespace cmsgears\core\common\models\traits\resources;
 
 // Yii Imports
-use \yii\db\Query;
+use yii\db\Query;
 
 // CMG Imports
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\ModelComment;
 
 /**
- * CommentTrait can be used to add comment feature to relevant models. The model must define the member variable $commentType which is unique for the model.
+ * CommentTrait can be used to add comment feature to relevant models.
  */
 trait CommentTrait {
 
@@ -18,7 +18,7 @@ trait CommentTrait {
 	 */
 	public function getModelComments() {
 
-		return ModelComment::queryL0Approved( $this->id, $this->mParentType, ModelComment::TYPE_COMMENT );
+		return ModelComment::queryL0Approved( $this->id, $this->modelType, ModelComment::TYPE_COMMENT );
 	}
 
 	/**
@@ -26,7 +26,23 @@ trait CommentTrait {
 	 */
 	public function getModelReviews() {
 
-		return ModelComment::queryL0Approved( $this->id, $this->mParentType, ModelComment::TYPE_REVIEW );
+		return ModelComment::queryL0Approved( $this->id, $this->modelType, ModelComment::TYPE_REVIEW );
+	}
+
+	/**
+	 * Query top level approved feedbacks.
+	 */
+	public function getModelFeedbacks() {
+
+		return ModelComment::queryL0Approved( $this->id, $this->modelType, ModelComment::TYPE_FEEDBACK );
+	}
+
+	/**
+	 * Query top level approved testimonials.
+	 */
+	public function getModelTestimonials() {
+
+		return ModelComment::queryL0Approved( $this->id, $this->modelType, ModelComment::TYPE_TESTIMONIAL );
 	}
 
 	// Average rating for all the reviews
@@ -37,7 +53,7 @@ trait CommentTrait {
 
 		$query->select( [ 'avg(rating) as average, count(id) as total' ] )
 				->from( $commentTable )
-				->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'type' => $type, 'status' => ModelComment::STATUS_APPROVED ] );
+				->where( [ 'parentId' => $this->id, 'parentType' => $this->modelType, 'type' => $type, 'status' => ModelComment::STATUS_APPROVED ] );
 
 		$command = $query->createCommand();
 		$average = $command->queryOne();
@@ -70,7 +86,7 @@ trait CommentTrait {
 
 		$query->select( [ 'rating', 'count(id) as total' ] )
 				->from( $commentTable )
-				->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'status' => ModelComment::STATUS_APPROVED ] )
+				->where( [ 'parentId' => $this->id, 'parentType' => $this->modelType, 'status' => ModelComment::STATUS_APPROVED ] )
 				->andWhere( $config )
 				->andFilterWhere( [ 'between', 'rating', $minStars, $maxStars ] )
 				->groupBy( 'rating' );
@@ -102,7 +118,7 @@ trait CommentTrait {
 
 		$query->select( [ 'status', 'count(id) as total' ] )
 				->from( $commentTable )
-				->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'type' => $type ] )
+				->where( [ 'parentId' => $this->id, 'parentType' => $this->modelType, 'type' => $type ] )
 				->groupBy( 'status' );
 
 		$counts		= $query->all();
@@ -127,7 +143,7 @@ trait CommentTrait {
 
 		$query->select( [ 'count(id) as total' ] )
 				->from( $commentTable )
-				->where( [ 'parentId' => $this->id, 'parentType' => $this->mParentType, 'type' => $type, 'status' => ModelComment::STATUS_APPROVED ] )
+				->where( [ 'parentId' => $this->id, 'parentType' => $this->modelType, 'type' => $type, 'status' => ModelComment::STATUS_APPROVED ] )
 				->groupBy( 'status' );
 
 		$count = $query->one();

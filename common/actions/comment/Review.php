@@ -5,9 +5,7 @@ namespace cmsgears\core\common\actions\comment;
 use cmsgears\core\common\models\resources\ModelComment;
 
 /**
- * Review adds a review for a model using ModelComment resource.
- *
- * The controller must provide appropriate model service having model class, table and type defined for the base model.
+ * Review action creates a review for discovered model using ModelComment resource.
  */
 class Review extends Create {
 
@@ -25,7 +23,7 @@ class Review extends Create {
 
 	// Public -----------------
 
-	public $type		= ModelComment::TYPE_REVIEW;
+	public $modelType	= ModelComment::TYPE_REVIEW;
 
 	public $scenario	= ModelComment::TYPE_REVIEW;
 

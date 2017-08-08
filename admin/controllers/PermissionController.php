@@ -2,11 +2,8 @@
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 
 class PermissionController extends \cmsgears\core\admin\controllers\base\PermissionController {
 
@@ -26,10 +23,19 @@ class PermissionController extends \cmsgears\core\admin\controllers\base\Permiss
 
 		parent::init();
 
-		$this->sidebar			= [ 'parent' => 'sidebar-identity', 'child' => 'perm' ];
+		$this->sidebar		= [ 'parent' => 'sidebar-identity', 'child' => 'perm' ];
 
-		$this->returnUrl		= Url::previous( 'permissions' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/permission/all' ], true );
+		$this->returnUrl	= Url::previous( 'permissions' );
+		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/permission/all' ], true );
+
+		// Breadcrumbs
+		$this->breadcrumbs	= [
+			'all' => [ [ 'label' => 'Permissions' ] ],
+			'groups' => [ [ 'label' => 'Permissions', 'url' => $this->returnUrl ], [ 'label' => 'Groups' ] ],
+			'create' => [ [ 'label' => 'Permissions', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Permissions', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Permissions', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -48,18 +54,9 @@ class PermissionController extends \cmsgears\core\admin\controllers\base\Permiss
 
 	// PermissionController ------------------
 
-	public function actionMatrix() {
-
-		$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'matrix' ];
-
-		Url::remember( [ 'permission/matrix' ], 'roles' );
-
-		return parent::actionMatrix();
-	}
-
 	public function actionAll() {
 
-		Url::remember( [ 'permission/all' ], 'permissions' );
+		Url::remember( Yii::$app->request->getUrl(), 'permissions' );
 
 		return parent::actionAll();
 	}
@@ -68,21 +65,31 @@ class PermissionController extends \cmsgears\core\admin\controllers\base\Permiss
 
 		$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'perm-group' ];
 
-		Url::remember( [ 'permission/groups' ], 'permissions' );
+		Url::remember( Yii::$app->request->getUrl(), 'permissions' );
 
 		return parent::actionGroups();
 	}
 
 	public function actionUpdate( $id ) {
 
-		$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'perm-group' ];
+		$model	= $this->modelService->getById( $id );
+
+		if( $model->group ) {
+
+			$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'perm-group' ];
+		}
 
 		return parent::actionUpdate( $id );
 	}
 
 	public function actionDelete( $id ) {
 
-		$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'perm-group' ];
+		$model	= $this->modelService->getById( $id );
+
+		if( $model->group ) {
+
+			$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'perm-group' ];
+		}
 
 		return parent::actionDelete( $id );
 	}

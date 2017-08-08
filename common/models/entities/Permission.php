@@ -52,7 +52,7 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
 
 	// Public -----------------
 
-	private $mParentType	= CoreGlobal::TYPE_PERMISSION; // required for traits
+	private $modelType	= CoreGlobal::TYPE_PERMISSION; // required for traits
 
 	// Protected --------------
 

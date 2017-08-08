@@ -53,7 +53,7 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
 
 	// Public -----------------
 
-	public $mParentType	= CoreGlobal::TYPE_THEME;
+	public $modelType	= CoreGlobal::TYPE_THEME;
 
 	// Protected --------------
 

@@ -17,7 +17,7 @@ trait MetaTrait {
 	public function getModelMetas() {
 
 		return $this->hasMany( ModelMeta::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->mParentType'" );
+					->where( "parentType='$this->modelType'" );
 	}
 
 	/**
@@ -26,7 +26,7 @@ trait MetaTrait {
 	public function getModelMetasByType( $type ) {
 
 		return $this->hasMany( ModelMeta::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->mParentType, ':type' => $type ] )->all();
+					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] )->all();
 	}
 
 	/**
@@ -35,7 +35,7 @@ trait MetaTrait {
 	public function getModelMetaByTypeName( $type, $name ) {
 
 		return $this->hasMany( ModelMeta::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType=:ptype AND type=:type AND name=:name", [ ':ptype' => $this->mParentType, ':type' => $type, ':name' => $name ] )->one();
+					->where( "parentType=:ptype AND type=:type AND name=:name", [ ':ptype' => $this->modelType, ':type' => $type, ':name' => $name ] )->one();
 	}
 
 	/**
@@ -88,21 +88,21 @@ trait MetaTrait {
 		return $metasMap;
 	}
 
-	public function updateMetas( $metaArray, $type = CoreGlobal::TYPE_CORE ) {
+	public function updateMetas( $metas, $type = CoreGlobal::TYPE_CORE ) {
 
-		foreach( $metaArray as $metaElement ) {
+		foreach( $metas as $meta ) {
 
-			$meta = self::getModelMetaByTypeName( $type, $metaElement->name );
+			$modelMeta = self::getModelMetaByTypeName( $type, $meta->name );
 
-			if( isset( $meta ) ) {
+			if( isset( $modelMeta ) ) {
 
-				$meta->value = $metaElement->value;
+				$modelMeta->value = $meta->value;
 
-				$meta->update();
+				$modelMeta->update();
 			}
 			else {
 
-				$metaElement->save();
+				$modelMeta->save();
 			}
 		}
 	}

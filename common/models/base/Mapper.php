@@ -1,12 +1,6 @@
 <?php
 namespace cmsgears\core\common\models\base;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 /**
  * Mapper Entity
  *
@@ -53,6 +47,8 @@ abstract class Mapper extends Entity {
 	// Validators ----------------------------
 
 	// Mapper --------------------------------
+
+	abstract public function getModel();
 
 	// Static Methods ----------------------------------------------
 

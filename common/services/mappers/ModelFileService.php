@@ -132,6 +132,20 @@ class ModelFileService extends \cmsgears\core\common\services\base\EntityService
 
 	// Delete -------------
 
+	public function deleteMultiple( $models, $config = [] ) {
+
+		$files = [];
+
+		foreach( $models as $model ) {
+
+			$files[] = $model->model;
+
+			$this->delete( $model, $config );
+		}
+
+		$this->fileService->deleteMultiple( $files );
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// CMG parent classes --------------------

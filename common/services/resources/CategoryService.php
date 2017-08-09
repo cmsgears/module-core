@@ -79,6 +79,12 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ 'id' => SORT_ASC ],
+					'desc' => [ 'id' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 				'parent' => [
 					'asc' => [ 'parent.name' => SORT_ASC ],
 					'desc' => [ 'parent.name' => SORT_DESC ],
@@ -121,6 +127,9 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 	                'default' => SORT_DESC,
 	                'label' => 'Order'
 	            ]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 

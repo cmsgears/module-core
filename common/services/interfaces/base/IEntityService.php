@@ -9,6 +9,8 @@ interface IEntityService {
 
 	public function getModelTable();
 
+	public function isTyped();
+
 	public function getParentType();
 
 	// Data Provider ------
@@ -41,7 +43,7 @@ interface IEntityService {
 
 	public function getModels( $config = [] );
 
-	public function getRandomObjects( $config = [] );
+	public function getRandom( $config = [] );
 
 	// Read - Lists ----
 
@@ -72,20 +74,20 @@ interface IEntityService {
 	public function create( $model, $config = [] );
 
 	/**
-	 * The method createMultiple itertate the given array and add the models.
-	 *
-	 * @param array $models
-	 * @param array $config
-	 */
-	public function createMultiple( $models, $config = [] );
-
-	/**
 	 * The method createByParams add a model using the params and also use config while adding the model.
 	 *
 	 * @param array $models
 	 * @param array $config
 	 */
 	public function createByParams( $params = [], $config = [] );
+
+	/**
+	 * The method createMultiple itertate the given array and add the models.
+	 *
+	 * @param array $models
+	 * @param array $config
+	 */
+	public function createMultiple( $models, $config = [] );
 
 	/**
 	 * The method add will be used by site admin to add the model and all it's dependent models using transaction.
@@ -109,17 +111,17 @@ interface IEntityService {
 
 	public function updateByParams( $params = [], $config = [] );
 
-	public function updateAll( $model, $config = [] );
-
 	public function updateAttributes( $model, $config = [] );
+
+	public function updateAll( $model, $config = [] );
 
 	public function updateMultiple( $models, $config = [] );
 
 	public function updateByForm( $model, $form, $config = [] );
 
-	public function createOrUpdate( $model, $config = [] );
-
 	public function updateMultipleByForm( $form, $config = [] );
+
+	public function createOrUpdate( $model, $config = [] );
 
 	public function applyBulkByTargetId( $column, $action, $target, $config = [] );
 

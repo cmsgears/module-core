@@ -13,6 +13,7 @@ $type			= ucfirst( $this->context->commentType );
 $types			= $type . 's';
 $this->title	= "$types | " . $coreProperties->getSiteTitle();
 $parentUrl 		= $this->context->parentUrl;
+$apixBase		= $this->context->apixBase;
 
 // Templates
 $moduleTemplates	= '@cmsgears/module-cms/admin/views/templates';
@@ -21,7 +22,7 @@ $pid	= $parent ? $model->id : null;
 ?>
 
 <?= DataGrid::widget([
-	'dataProvider' => $dataProvider, 'add' => $parent, 'addUrl' => "create?pid=$pid", 'data' => [ ],
+	'dataProvider' => $dataProvider, 'add' => $parent, 'addUrl' => "create?pid=$pid", 'data' => [ 'apixBase' => $apixBase ],
 	'title' => $types, 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [ 'user' => 'User', 'name' => 'Name', 'email' => 'Email', 'content' => 'Content' ],
 	'sortColumns' => [
@@ -68,11 +69,11 @@ $pid	= $parent ? $model->id : null;
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'bulk',
-	'data' => [ 'model' => $type, 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "core/comment/bulk" ]
+	'data' => [ 'model' => $type, 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
 ]) ?>
 
 <?= Popup::widget([
 	'title' => "Delete $type", 'size' => 'medium',
 	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'delete',
-	'data' => [ 'model' => $type, 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "core/comment/delete?id=" ]
+	'data' => [ 'model' => $type, 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
 ]) ?>

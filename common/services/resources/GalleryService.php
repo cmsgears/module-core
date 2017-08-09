@@ -90,6 +90,12 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ 'id' => SORT_ASC ],
+					'desc' => [ 'id' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 	            'template' => [
 	                'asc' => [ "`$templateTable`.`name`" => SORT_ASC ],
 	                'desc' => [ "`$templateTable`.`name`" => SORT_DESC ],
@@ -138,6 +144,9 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 	                'default' => SORT_DESC,
 	                'label' => 'Updated At'
 	            ]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 

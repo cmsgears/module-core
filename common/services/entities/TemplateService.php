@@ -77,6 +77,12 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ 'id' => SORT_ASC ],
+					'desc' => [ 'id' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 	            'name' => [
 	                'asc' => [ 'name' => SORT_ASC ],
 	                'desc' => ['name' => SORT_DESC ],
@@ -143,6 +149,9 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 	                'default' => SORT_DESC,
 	                'label' => 'Updated At'
 	            ]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 

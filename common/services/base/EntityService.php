@@ -294,7 +294,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	 * TODO: We can make this method efficient by using random offset and limit instead of going for full table scan.
 	 *       Avoid using count() to get total rows. Use Stats Table to get estimated count.
 	 */
-	public function getRandomObjects( $config = [] ) {
+	public function getRandom( $config = [] ) {
 
 		$offset			= isset( $config[ 'offset' ] ) ? $config[ 'offset' ] : 0;
 		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
@@ -412,6 +412,19 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		return false;
 	}
 
+	public function createByParams( $params = [], $config = [] ) {
+
+		$model	= new static::$modelClass;
+
+		foreach ( $params as $key => $value ) {
+
+			$model->$key = $value;
+		}
+
+		return $this->create( $model, $config );
+	}
+
+
 	public function createMultiple( $models, $config = [] ) {
 
 		$result = true;
@@ -427,18 +440,6 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		}
 
 		return $result;
-	}
-
-	public function createByParams( $params = [], $config = [] ) {
-
-		$model	= new static::$modelClass;
-
-		foreach ( $params as $key => $value ) {
-
-			$model->$key = $value;
-		}
-
-		return $this->create( $model, $config );
 	}
 
 	/**
@@ -477,16 +478,6 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		// Implement in child classes if required in cases where we only have few of the key attributes, but no other information related to model.
 	}
 
-	public function updateAll( $model, $config = [] ) {
-
-		$modelClass	= static::$modelClass;
-
-		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [];
-		$condition	= isset( $config[ 'condition' ] ) ? $config[ 'condition' ] : null;
-
-		return $modelClass::updateAll( $attributes, $condition );
-	}
-
 	public function updateAttributes( $model, $config = [] ) {
 
 		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [];
@@ -497,6 +488,16 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		}
 
 		return false;
+	}
+
+	public function updateAll( $model, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+
+		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [];
+		$condition	= isset( $config[ 'condition' ] ) ? $config[ 'condition' ] : null;
+
+		return $modelClass::updateAll( $attributes, $condition );
 	}
 
 	public function updateMultiple( $models, $config = [] ) {

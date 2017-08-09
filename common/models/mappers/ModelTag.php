@@ -106,7 +106,7 @@ class ModelTag extends \cmsgears\core\common\models\base\Mapper {
 	/**
 	 * @return Tag - associated tag
 	 */
-	public function getTag() {
+	public function getModel() {
 
 		return $this->hasOne( Tag::className(), [ 'id' => 'modelId' ] );
 	}

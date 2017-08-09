@@ -103,7 +103,7 @@ class ModelForm extends \cmsgears\core\common\models\base\Mapper {
 
 	// ModelForm -----------------------------
 
-	public function getForm() {
+	public function getModel() {
 
 		return $this->hasOne( Form::className(), [ 'id' => 'modelId' ] );
 	}

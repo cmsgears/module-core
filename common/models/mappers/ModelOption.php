@@ -106,7 +106,7 @@ class ModelOption extends \cmsgears\core\common\models\base\Mapper {
 	/**
 	 * @return Option - associated option
 	 */
-	public function getOption() {
+	public function getModel() {
 
 		return $this->hasOne( Option::className(), [ 'id' => 'modelId' ] );
 	}

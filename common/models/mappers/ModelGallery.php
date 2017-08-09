@@ -106,7 +106,7 @@ class ModelGallery extends \cmsgears\core\common\models\base\Mapper {
 	/**
 	 * @return Gallery - associated address
 	 */
-	public function getGallery() {
+	public function getModel() {
 
 		return $this->hasOne( Gallery::className(), [ 'id' => 'modelId' ] );
 	}

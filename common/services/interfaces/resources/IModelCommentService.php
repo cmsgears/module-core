@@ -1,12 +1,6 @@
 <?php
 namespace cmsgears\core\common\services\interfaces\resources;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 interface IModelCommentService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
 
 	// Data Provider ------
@@ -24,6 +18,10 @@ interface IModelCommentService extends \cmsgears\core\common\services\interfaces
 	// Read ---------------
 
 	// Read - Models ---
+
+	public function getByUser( $parentId, $parentType );
+
+	public function isExistByUser( $parentId, $parentType );
 
 	public function getByParentConfig( $parentId, $config = [] );
 

@@ -107,7 +107,7 @@ class ModelCategory extends \cmsgears\core\common\models\base\Mapper {
 	/**
 	 * @return Category - associated category
 	 */
-	public function getCategory() {
+	public function getModel() {
 
 		return $this->hasOne( Category::className(), [ 'id' => 'modelId' ] );
 	}

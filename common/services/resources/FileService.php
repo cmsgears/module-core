@@ -74,6 +74,12 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ 'id' => SORT_ASC ],
+					'desc' => [ 'id' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 				'name' => [
 					'asc' => [ 'name' => SORT_ASC ],
 					'desc' => ['name' => SORT_DESC ],
@@ -134,6 +140,9 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 	                'default' => SORT_DESC,
 	                'label' => 'Updated At'
 	            ]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 
@@ -495,11 +504,11 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 		if( isset( $model ) ) {
 
-			// Delete mapping
-			ModelFile::deleteByModelId( $model->id );
-
 			// Only admin is authorised to delete a shared file
 			if( $admin || $model->type !== 'shared' ) {
+
+				// Delete mapping
+				ModelFile::deleteByModelId( $model->id );
 
 				// Delete from disk
 				$model->clearDisk();

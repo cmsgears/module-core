@@ -294,6 +294,20 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Find ------------
 
+	public static function findByUser( $parentId, $parentType, $userId ) {
+
+		return static::find()->where( 'parentId=:pid AND parentType=:ptype AND createdBy=:uid', [ ':pid' => $parentId, ':ptype' => $parentType, ':uid' => $userId ] )->one();
+	}
+
+	public static function isExistByUser( $parentId, $parentType, $userId ) {
+
+		$comment	= static::findByUser( $parentId, $parentType, $userId );
+
+		$isExist	= isset( $comment );
+
+		return $isExist;
+	}
+
 	// Create -----------------
 
 	// Update -----------------

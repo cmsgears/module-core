@@ -106,7 +106,7 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
 	/**
 	 * @return ObjectData - associated object
 	 */
-	public function getObject() {
+	public function getModel() {
 
 		return $this->hasOne( ObjectData::className(), [ 'id' => 'modelId' ] );
 	}

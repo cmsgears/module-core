@@ -41,7 +41,13 @@ class DiscoverFilter {
 	public function doFilter( $args = [] ) {
 
 		// Model to be discovered
-		$model			= null;
+		$model	= Yii::$app->controller->model;
+
+		// Model is already discovered
+		if( isset( $model ) ) {
+
+			return true;
+		}
 
 		// Find Service
 		$modelService	= null;
@@ -101,7 +107,7 @@ class DiscoverFilter {
 			else if( isset( $slug ) ) {
 
 				// Flag to check typed models
-				$typed	= $this->modelService->isTyped();
+				$typed	= $modelService->isTyped();
 				$type	= $typed ? Yii::$app->request->get( 'type', null ) : null;
 
 				if( $typed ) {

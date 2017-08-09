@@ -106,7 +106,7 @@ class ModelAddress extends \cmsgears\core\common\models\base\Mapper {
 	/**
 	 * @return Address - associated address
 	 */
-	public function getAddress() {
+	public function getModel() {
 
 		return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] );
 	}

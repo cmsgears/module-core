@@ -687,7 +687,7 @@ class FormDesigner extends \yii\base\Component {
 			$class = "$class disabled";
 		}
 
-		if( $config[ 'label' ] ) {
+		if( isset( $config[ 'label' ] ) && $config[ 'label' ] ) {
 
 			// element-60 will work if form is configured for 40-60 split, else it will behave as normal field
 			$ratingHtml	= "<label>$field->label</label><div class=\"element-60 $class\">";
@@ -735,7 +735,7 @@ class FormDesigner extends \yii\base\Component {
 
 		$ratingHtml .= '</span>';
 
-		$ratingHtml	.= '<input type="hidden" name="' . $fieldName . '" value="' . $value . '">';
+		$ratingHtml	.= '<input class="star-selected" type="hidden" name="' . $fieldName . '" value="' . $value . '">';
 
 		$ratingHtml	.= "</div>";
 
@@ -1080,7 +1080,7 @@ class FormDesigner extends \yii\base\Component {
 			$class = "$class disabled";
 		}
 
-		$ratingHtml	= "<div class=\"$class\">";
+		$ratingHtml	= "<div class=\"$class\"><div class=\"wrap-stars\">";
 
 		for( $i = 1; $i <= $stars; $i++ ) {
 
@@ -1096,7 +1096,7 @@ class FormDesigner extends \yii\base\Component {
 			$ratingHtml	  .= $icon;
 		}
 
-		$ratingHtml	.= "</div>";
+		$ratingHtml	.= "</div></div>";
 
 		return $ratingHtml;
 	}

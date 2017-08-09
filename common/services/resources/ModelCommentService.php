@@ -10,11 +10,9 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\ModelComment;
-use cmsgears\core\common\models\mappers\ModelFile;
 
 use cmsgears\files\components\FileManager;
 
-use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\core\common\services\interfaces\resources\IModelCommentService;
 use cmsgears\core\common\services\traits\ResourceTrait;
 
@@ -48,6 +46,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 	// Protected --------------
 
 	protected $fileService;
+	protected $modelFileService;
 
 	// Private ----------------
 
@@ -57,11 +56,12 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( IFileService $fileService, $config = [] ) {
+	public function init() {
 
-		$this->fileService	= $fileService;
+		parent::init();
 
-		parent::__construct( $config );
+		$this->fileService		= Yii::$app->factory->get( 'fileService' );
+		$this->modelFileService	= Yii::$app->factory->get( 'modelFileService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -87,6 +87,12 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ 'id' => SORT_ASC ],
+					'desc' => [ 'id' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 				'user' => [
 					'asc' => [ "creator.firstName" => SORT_ASC, "creator.lastName" => SORT_ASC ],
 					'desc' => [ "creator.firstName" => SORT_DESC, "creator.lastName" => SORT_DESC ],
@@ -149,7 +155,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 	            ]
 			],
 			'defaultOrder' => [
-				'adate' => SORT_DESC
+				'id' => SORT_DESC
 			]
 		]);
 
@@ -236,6 +242,22 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Read - Models ---
 
+	public function getByUser( $parentId, $parentType ) {
+
+		$modelClass	= self::$modelClass;
+		$user		= Yii::$app->user->getIdentity();
+
+		return $modelClass::findByUser( $parentId, $parentType, $user->id );
+	}
+
+	public function isExistByUser( $parentId, $parentType ) {
+
+		$modelClass	= self::$modelClass;
+		$user		= Yii::$app->user->getIdentity();
+
+		return $modelClass::isExistByUser( $parentId, $parentType, $user->id );
+	}
+
 	public function getByParentConfig( $parentId, $config = [] ) {
 
 		return ModelComment::queryByParentConfig( $parentId, $config )->andWhere( [ 'baseId' => null ] )->all();
@@ -285,29 +307,20 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	public function attachMedia( $model, $file, $mediaType, $type ) {
 
-		$modelFile		= new ModelFile();
-		$fileService	= Yii::$app->factory->get( 'fileService' );
-
 		switch( $mediaType ) {
 
 			case FileManager::FILE_TYPE_IMAGE : {
 
-				$fileService->saveImage( $file );
+				$this->fileService->saveImage( $file );
 
 				break;
 			}
-
-			//TODO:: Update according to other media types.
 		}
 
 		// Create Model File
 		if( $file->id > 0 ) {
 
-			$modelFile->modelId		= $file->id;
-			$modelFile->parentType	= $type;
-			$modelFile->parentId	= $model->id;
-
-			$modelFile->save();
+			$this->modelFileService->createByParams( [ 'modelId' => $file->id, 'parentId' => $model->id, 'parentType' => $type ] );
 		}
 
 		return $file;
@@ -439,20 +452,10 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 	public function delete( $model, $config = [] ) {
 
 		// Delete files
-		$this->fileService->deleteFiles( $model->files );
+		$this->modelFileService->deleteMultiple( $model->modelFiles );
 
 		// Delete model
 		return parent::delete( $model, $config );
-	}
-
-	public function deleteByParent( $parentId, $parentType ) {
-
-		$models	= self::getByParent( $parentId, $parentType );
-
-		foreach ( $models as $model ) {
-
-			$this->delete( $model );
-		}
 	}
 
 	// Static Methods ----------------------------------------------

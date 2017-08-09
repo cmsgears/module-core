@@ -30,6 +30,9 @@ abstract class Controller extends \yii\web\Controller {
 	// The primary model in action. It can be discovered while applying a filter and other filters and action can use it directly.
 	public $model;
 
+	// The base path for apix.
+	public $apixBase;
+
 	// It provide information to display active tab on sidebar.
 	public $sidebar;
 

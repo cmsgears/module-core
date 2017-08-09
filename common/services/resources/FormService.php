@@ -74,6 +74,12 @@ class FormService extends \cmsgears\core\common\services\base\EntityService impl
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ 'id' => SORT_ASC ],
+					'desc' => [ 'id' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 				'name' => [
 					'asc' => [ 'name' => SORT_ASC ],
 					'desc' => ['name' => SORT_DESC ],
@@ -94,7 +100,7 @@ class FormService extends \cmsgears\core\common\services\base\EntityService impl
 				]
 			],
 			'defaultOrder' => [
-				'cdate' => SORT_DESC
+				'id' => SORT_DESC
 			]
 		]);
 

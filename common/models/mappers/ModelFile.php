@@ -104,9 +104,9 @@ class ModelFile extends \cmsgears\core\common\models\base\Mapper {
 	// ModelFile -----------------------------
 
 	/**
-	 * @return CmgFile - associated file
+	 * @return Gallery - associated files
 	 */
-	public function getFile() {
+	public function getModel() {
 
 		return $this->hasOne( File::className(), [ 'id' => 'modelId' ] );
 	}

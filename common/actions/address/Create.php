@@ -86,7 +86,7 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 				// Address - Create
 				$modelAddress	= $this->modelAddressService->create( $address, [ 'parentId' => $this->model->id, 'parentType' => $this->parentType, 'type' => $type ] );
-				$address		= $modelAddress->address;
+				$address		= $modelAddress->model;
 
 				$data	= [ 'cid' => $modelAddress->id, 'title' => $address->title, 'value' => $address->toString() ];
 

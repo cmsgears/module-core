@@ -60,7 +60,7 @@ class Assign extends \cmsgears\core\common\actions\base\ModelAction {
 
 			$modelCategory = $modelCategoryService->activateByModelId( $this->model->id, $this->parentType, $post[ 'categoryId' ] );
 
-			$data	= [ 'cid' => $modelCategory->id, 'name' => $modelCategory->category->name ];
+			$data	= [ 'cid' => $modelCategory->id, 'name' => $modelCategory->model->name ];
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

@@ -70,7 +70,7 @@ class Assign extends \cmsgears\core\common\actions\base\ModelAction {
 
 			foreach ( $modelTags as $modelTag ) {
 
-				$data[]	= [ 'cid' => $modelTag->id, 'name' => $modelTag->tag->name ];
+				$data[]	= [ 'cid' => $modelTag->id, 'name' => $modelTag->model->name ];
 			}
 
 			// Trigger Ajax Success

@@ -166,7 +166,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'slug' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
-			'title' => $this->string( Yii::$app->core->xxxLargeText )->notNull(),
+			'title' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'active' => $this->boolean()->notNull()->defaultValue( false ),

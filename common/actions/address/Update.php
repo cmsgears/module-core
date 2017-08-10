@@ -73,7 +73,7 @@ class Update extends \cmsgears\core\common\actions\base\ModelAction {
 
 			if( isset( $modelAddress ) && $modelAddress->checkParent( $this->model->id, $this->parentType ) ) {
 
-				$address = $modelAddress->address;
+				$address = $modelAddress->model;
 
 				if( isset( $this->scenario ) ) {
 

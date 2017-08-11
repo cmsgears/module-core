@@ -180,11 +180,15 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 			}
 		}
 
-		if( !isset( $this->model ) ) {
+		if( isset( $this->model ) ) {
+
+			$this->controller->model = $this->model;
+
+			return true;
+		}
+		else {
 
 			return false;
 		}
-
-        return true;
     }
 }

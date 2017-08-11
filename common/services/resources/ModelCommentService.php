@@ -255,7 +255,12 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 		$modelClass	= self::$modelClass;
 		$user		= Yii::$app->user->getIdentity();
 
-		return $modelClass::isExistByUser( $parentId, $parentType, $user->id );
+		if( isset( $user ) ) {
+
+			return $modelClass::isExistByUser( $parentId, $parentType, $user->id );
+		}
+
+		return false;
 	}
 
 	public function getByParentConfig( $parentId, $config = [] ) {

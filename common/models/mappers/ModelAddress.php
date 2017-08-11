@@ -133,15 +133,8 @@ class ModelAddress extends \cmsgears\core\common\models\base\Mapper {
 
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'address' ];
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'model' ];
 		$config[ 'relations' ]	= $relations;
-
-		return parent::queryWithAll( $config );
-	}
-
-	public static function queryWithModel( $config = [] ) {
-
-		$config[ 'relations' ]	= [ 'address' ];
 
 		return parent::queryWithAll( $config );
 	}

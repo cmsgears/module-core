@@ -23,6 +23,10 @@ abstract class GalleryController extends \cmsgears\core\admin\controllers\base\C
 
 	protected $templateService;
 
+	// For Parent with direct attachment
+	protected $parentUrl;
+	protected $parentService;
+
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -83,6 +87,50 @@ abstract class GalleryController extends \cmsgears\core\admin\controllers\base\C
 		return $this->render( 'all', [
 			 'dataProvider' => $dataProvider
 		]);
+	}
+
+	public function actionIndex( $pid = null ) {
+
+		if( isset( $pid ) && isset( $this->parentService ) ) {
+
+			$parent = $this->parentService->getById( $pid );
+
+			Url::remember( [ $this->parentUrl ], 'galleries' );
+
+			$gallery = $parent->gallery;
+
+			if( isset( $gallery ) ) {
+
+		    	return $this->redirect( [ 'items', 'id' => $gallery->id ] );
+			}
+			else {
+
+				$gallery 			= new Gallery();
+				$gallery->name		= $parent->name;
+				$gallery->type		= $this->type;
+				$gallery->siteId	= Yii::$app->core->siteId;
+
+				if( $gallery->load( Yii::$app->request->post(), 'Gallery' )  && $gallery->validate() ) {
+
+					$this->modelService->create( $gallery );
+
+					if( $this->parentService->linkGallery( $parent, $gallery ) ) {
+
+						$this->redirect( [ "index?pid=$parent->id" ] );
+					}
+				}
+
+				$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
+
+				return $this->render( 'create', [
+					'model' => $gallery,
+					'templatesMap' => $templatesMap
+				]);
+			}
+		}
+
+		// Model not found
+		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	public function actionCreate() {

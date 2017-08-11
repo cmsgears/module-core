@@ -61,6 +61,13 @@ trait MapperTrait {
 		return self::queryWithModel()->where( "$tableName.parentId=:pid AND $tableName.parentType=:ptype", [ ':pid' => $parentId, ':ptype' => $parentType ] );
 	}
 
+	public static function queryWithModel( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'model' ];
+
+		return parent::queryWithAll( $config );
+	}
+
 	// Read - Find ------------
 
 	public static function findAllByModelId( $modelId ) {

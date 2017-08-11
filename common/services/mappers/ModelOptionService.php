@@ -130,8 +130,32 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 		]);
 	}
 
-	// Delete -------------
+	public function toggle( $parentId, $parentType, $modelId ) {
 
+		$toSave		= ModelOption::findByModelId( $parentId, $parentType, $modelId );
+
+		// Existing mapping
+		if( isset( $toSave ) ) {
+
+			if( $toSave->active ) {
+
+				$toSave->active	= false;
+			}
+			else {
+
+				$toSave->active	= true;
+			}
+
+			$toSave->update();
+		}
+		// New Mapping
+		else {
+
+			$this->createByParams( [ 'modelId' => $modelId, 'parentId' => $parentId, 'parentType' => $parentType, 'active' => true ] );
+		}
+	}
+
+	// Delete -------------
 
 	// Static Methods ----------------------------------------------
 
@@ -182,14 +206,7 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 			// Save only required data
 			else if( in_array( $id, $activeData ) ) {
 
-				$toSave		= new ModelOption();
-
-				$toSave->parentId	= $parentId;
-				$toSave->parentType	= $parentType;
-				$toSave->modelId	= $id;
-				$toSave->active		= true;
-
-				$toSave->save();
+				$this->createByParams( [ 'modelId' => $id, 'parentId' => $parentId, 'parentType' => $parentType, 'active' => true ] );
 			}
 		}
 

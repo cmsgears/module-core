@@ -37,6 +37,8 @@ interface IMetaService extends IEntityService {
 
 	// Update -------------
 
+	public function toggle( $modelId, $type, $name, $label );
+
 	// Delete -------------
 
 	public function deleteByModelId( $modelId );

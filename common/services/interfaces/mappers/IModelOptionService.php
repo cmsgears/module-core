@@ -1,12 +1,6 @@
 <?php
 namespace cmsgears\core\common\services\interfaces\mappers;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 interface IModelOptionService extends \cmsgears\core\common\services\interfaces\base\IMapperService {
 
 	// Data Provider ------
@@ -24,6 +18,8 @@ interface IModelOptionService extends \cmsgears\core\common\services\interfaces\
 	// Create -------------
 
 	// Update -------------
+
+	public function toggle( $parentId, $parentType, $modelId );
 
 	public function bindOptions( $binder, $parentType );
 

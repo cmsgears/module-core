@@ -233,15 +233,42 @@ abstract class MetaService extends EntityService implements IMetaService {
 
 			if( !isset( $meta[ 'valueType' ] ) ) {
 
-				$meta[ 'valueType' ]	= Meta::VALUE_TYPE_TEXT;
+				$meta[ 'valueType' ] = Meta::VALUE_TYPE_TEXT;
 			}
 
-			$model			= $this->initByNameType( $config[ 'modelId' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ] );
+			$model = $this->initByNameType( $config[ 'modelId' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ] );
 
 			$model->value	= $meta[ 'value' ];
 			$model->label	= $form->getAttributeLabel( $meta[ 'name' ] );
 
 			$this->update( $model );
+		}
+	}
+
+	public function toggle( $modelId, $type, $name, $label ) {
+
+		$model	= $this->getByNameType( $modelId, $name, $type );
+
+		// Create if it does not exist
+		if( !isset( $model ) ) {
+
+			$this->createByParams([
+				'modelId' => $modelId, 'name' => $name, 'label' => $label, 'type' => $type,
+				'valueType' => Meta::VALUE_TYPE_FLAG, 'value' => true
+			]);
+		}
+		else {
+
+			if( $model->value ) {
+
+				$model->value = false;
+			}
+			else {
+
+				$model->value = true;
+			}
+
+			$model->update();
 		}
 	}
 

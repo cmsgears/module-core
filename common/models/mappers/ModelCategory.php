@@ -134,15 +134,8 @@ class ModelCategory extends \cmsgears\core\common\models\base\Mapper {
 
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'category' ];
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'model' ];
 		$config[ 'relations' ]	= $relations;
-
-		return parent::queryWithAll( $config );
-	}
-
-	public static function queryWithModel( $config = [] ) {
-
-		$config[ 'relations' ]	= [ 'category' ];
 
 		return parent::queryWithAll( $config );
 	}

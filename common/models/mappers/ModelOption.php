@@ -133,15 +133,8 @@ class ModelOption extends \cmsgears\core\common\models\base\Mapper {
 
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'option' ];
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'model' ];
 		$config[ 'relations' ]	= $relations;
-
-		return parent::queryWithAll( $config );
-	}
-
-	public static function queryWithModel( $config = [] ) {
-
-		$config[ 'relations' ]	= [ 'option' ];
 
 		return parent::queryWithAll( $config );
 	}

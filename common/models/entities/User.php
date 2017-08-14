@@ -565,6 +565,8 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	 */
 	public static function findIdentityByAccessToken( $token, $type = null ) {
 
+		// TODO: Also check access token validity using apiValidDays config
+
 		if( Yii::$app->core->isApis() ) {
 
 			// Find valid User

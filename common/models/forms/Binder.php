@@ -68,7 +68,7 @@ class Binder extends \yii\base\Model {
 
 	public function mergeWithBinded( $merge, $csv = false ) {
 
-		if( $csv && strlen( $csv ) > 1 ) {
+		if( $csv && strlen( $merge ) > 1 ) {
 
 			$merge = preg_split( '/,/',  $merge );
 		}

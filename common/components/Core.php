@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\components;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -122,9 +122,24 @@ class Core extends \yii\base\Component {
 	public $rbacFilters			= [];
 
 	/**
-	 * @var It can be used to check whether apis are available for the app. Most probably apis are provided using OAuth 2.0 for mobile applications. It's used by User class to load permissions when accessed using auth token.
+	 * It can be used to check whether APIS are enabled for the application. APIS are provided
+	 * using the access token for the same user base i.e. the web application is also supported by
+	 * mobile applications having same users. It's used by user class to load permissions when accessed
+	 * using access token.
+	 *
+	 * OAuth 2.0 can be used to provide APIS to 3rd party web and mobile applications.
+	 *
+	 * @var boolean
 	 */
 	public $apis				= false;
+
+	/**
+	 * APIS validity in days will be used to check whether the date when access token is generated is
+	 * older and user must be forced to login. A new access token must be generated on login.
+	 *
+	 * @var int
+	 */
+	public $apisValidity		= 7;
 
 	/**
 	 * @var The WYSIWYG editor widget class. It will be used by Core Module to edit newsletter content. The dependent modules can also use it to edit the html content.
@@ -362,6 +377,11 @@ class Core extends \yii\base\Component {
 	public function isApis() {
 
 		return $this->apis;
+	}
+
+	public function getApisValidity() {
+
+		return $this->apisValidity;
 	}
 
 	/**

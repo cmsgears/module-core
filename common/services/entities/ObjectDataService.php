@@ -142,7 +142,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'templateId', 'avatarId', 'name', 'icon', 'description', 'type', 'active', 'htmlOptions', 'data' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'templateId', 'avatarId', 'name', 'icon', 'description', 'type', 'active', 'htmlOptions', 'content', 'data' ];
 		$data		= isset( $config[ 'data' ] ) ? $config[ 'data' ] : null;
 		$avatar		= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;

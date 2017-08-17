@@ -3,10 +3,13 @@ namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
 use Yii;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\resources\Gallery;
 
 abstract class GalleryController extends \cmsgears\core\admin\controllers\base\CrudController {
 

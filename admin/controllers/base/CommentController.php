@@ -30,6 +30,9 @@ abstract class CommentController extends Controller {
 
 	protected $parentService;
 
+	// TODO: Remove it after fixing the object issue
+	protected $approved = false;
+
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
@@ -168,6 +171,11 @@ abstract class CommentController extends Controller {
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
 				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
+
+				if( $this->model->isAttributeChanged( 'status' ) && $this->model->isApproved() ) {
+
+					$this->approved = true;
+				}
 
 				return $this->refresh();
 			}

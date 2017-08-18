@@ -191,7 +191,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 		$config[ 'report-col' ]	= [
 			'user' => "concat(creator.firstName,creator.lastName)", 'name' => "$modelTable.name",
-			'email' =>  "$modelTable.email", 'content' => "$modelTable.content",
+			'email' => "$modelTable.email", 'content' => "$modelTable.content",
 			'status' => "$modelTable.status", 'rating' => "$modelTable.rating", 'featured' => "$modelTable.featured"
 		];
 
@@ -202,7 +202,13 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	public function getPageByParent( $parentId, $parentType, $config = [] ) {
 
-		$config[ 'conditions' ][ 'baseId' ]		= null;
+		$topLevel = isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
+
+		if( $topLevel ) {
+
+			$config[ 'conditions' ][ 'baseId' ] = null;
+		}
+
 		$config[ 'conditions' ][ 'parentId' ]	= $parentId;
 		$config[ 'conditions' ][ 'parentType' ]	= $parentType;
 
@@ -225,7 +231,13 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	public function getPageByParentType( $parentType, $config = [] ) {
 
-		$config[ 'conditions' ][ 'baseId' ]		= null;
+		$topLevel = isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
+
+		if( $topLevel ) {
+
+			$config[ 'conditions' ][ 'baseId' ] = null;
+		}
+
 		$config[ 'conditions' ][ 'parentType' ]	= $parentType;
 
 		return $this->getPage( $config );
@@ -233,7 +245,25 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	public function getPageByBaseId( $baseId, $config = [] ) {
 
-		$config[ 'conditions' ][ 'baseId' ]		= null;
+		$config[ 'conditions' ][ 'baseId' ] = $baseId;
+
+		return $this->getPage( $config );
+	}
+
+	/**
+	 * We can pass parentType as condition to utilize the classification.
+	 */
+	public function getPageForApproved( $config = [] ) {
+
+		$modelTable = self::$modelTable;
+		$topLevel	= isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
+
+		if( $topLevel ) {
+
+			$config[ 'conditions' ][ 'baseId' ] = null;
+		}
+
+		$config[ 'conditions' ][ "$modelTable.status" ]	= ModelComment::STATUS_APPROVED;
 
 		return $this->getPage( $config );
 	}
@@ -310,7 +340,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 		return parent::create( $comment, $config );
 	}
 
-	public function attachMedia( $model, $file, $mediaType, $type ) {
+	public function attachMedia( $model, $file, $mediaType, $parentType ) {
 
 		switch( $mediaType ) {
 
@@ -320,12 +350,18 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 				break;
 			}
+			default: {
+
+				$this->fileService->saveFile( $file );
+
+				break;
+			}
 		}
 
 		// Create Model File
 		if( $file->id > 0 ) {
 
-			$this->modelFileService->createByParams( [ 'modelId' => $file->id, 'parentId' => $model->id, 'parentType' => $type ] );
+			$this->modelFileService->createByParams( [ 'modelId' => $file->id, 'parentId' => $model->id, 'parentType' => $parentType ] );
 		}
 
 		return $file;

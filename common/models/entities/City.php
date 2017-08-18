@@ -73,8 +73,8 @@ class City extends \cmsgears\core\common\models\base\Entity {
 			// Unique
 			[ [ 'countryId', 'provinceId', 'zone', 'name' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'zone', 'name' ] ],
 			// Text Limit
-			[ [ 'zone', 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ 'postal', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'zone', 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'postal', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ [ 'countryId', 'provinceId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'latitude', 'longitude' ], 'number' ]

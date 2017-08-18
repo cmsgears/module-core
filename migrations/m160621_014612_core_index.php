@@ -55,7 +55,7 @@ class m160621_014612_core_index extends \yii\db\Migration {
 
 		// City
 		$this->createIndex( 'idx_' . $this->prefix . 'city_name', $this->prefix . 'core_city', 'name' );
-		$this->createIndex( 'idx_' . $this->prefix . 'city_postal', $this->prefix . 'core_city', 'postal' );
+		//$this->createIndex( 'idx_' . $this->prefix . 'city_postal', $this->prefix . 'core_city', 'postal' );
 
 		// Address
 		$this->createIndex( 'idx_' . $this->prefix . 'address_title', $this->prefix . 'core_address', 'title' );
@@ -253,7 +253,7 @@ class m160621_014612_core_index extends \yii\db\Migration {
 
 		// City
 		$this->dropIndex( 'idx_' . $this->prefix . 'city_name', $this->prefix . 'core_city' );
-		$this->dropIndex( 'idx_' . $this->prefix . 'city_postal', $this->prefix . 'core_city' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'city_postal', $this->prefix . 'core_city' );
 
 		// Address
 		$this->dropIndex( 'idx_' . $this->prefix . 'address_title', $this->prefix . 'core_address' );

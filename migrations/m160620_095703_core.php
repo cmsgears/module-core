@@ -219,9 +219,9 @@ class m160620_095703_core extends \yii\db\Migration {
 			'id' => $this->bigPrimaryKey( 20 ),
 			'countryId' => $this->bigInteger( 20 )->notNull(),
 			'provinceId' => $this->bigInteger( 20 ),
-			'zone' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ), // It could be County in US, Tehsil in India
-			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
-			'postal' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'zone' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ), // It could be County in US, Tehsil in India
+			'name' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
+			'postal' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'latitude' => $this->float( 4 ),
 			'longitude' => $this->float( 4 )
 		], $this->options );

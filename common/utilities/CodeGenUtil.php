@@ -255,6 +255,24 @@ class CodeGenUtil {
 		return $listItems;
 	}
 
+	public static function getRangeOptions( $start, $end, $selected = null ) {
+
+		$options = '';
+
+		for( $i = $start; $i <= $end; $i++ ) {
+
+			if( $selected === $i ) {
+
+				$options .= "<option value='$i' selected>$i</option>";
+			}
+			else {
+				$options .= "<option value='$i'>$i</option>";
+			}
+		}
+
+		return $options;
+	}
+
 	// Return Image Tag
 	public static function getImageThumbTag( $image, $options = [] ) {
 

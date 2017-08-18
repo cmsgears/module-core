@@ -839,7 +839,7 @@ class FormDesigner extends \yii\base\Component {
 			$optionsStr .= "$key=\"$option\"";
 		}
 
-		$label		= $label == null ? $model->getAttributeLabel( $field ) : null;
+		$label		= $label == null ? $model->getAttributeLabel( $field ) : $label;
 
 		$template	= "<div $optionsStr>
 			      			<label>

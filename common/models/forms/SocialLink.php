@@ -75,7 +75,8 @@ class SocialLink extends \cmsgears\core\common\models\forms\JsonModel {
 	public function rules() {
 
 		$rules = [
-			[ [ 'sns', 'icon', 'address' ], 'required' ]
+			[ [ 'sns', 'icon', 'address' ], 'required' ],
+			[ 'address', 'url' ]
 		];
 
 		if( Yii::$app->core->trimFieldValue ) {

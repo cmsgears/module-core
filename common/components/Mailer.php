@@ -1,12 +1,6 @@
 <?php
 namespace cmsgears\core\common\components;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 /**
  * The mail component used for sending possible mails by the CMSGears core module. It must be initialised
  * for app using the name coreMailer. It's used by various controllers to trigger mails.

@@ -15,6 +15,8 @@ interface IModelCommentService extends \cmsgears\core\common\services\interfaces
 
 	public function getPageByBaseId( $baseId, $config = [] );
 
+	public function getPageForApproved( $config = [] );
+
 	// Read ---------------
 
 	// Read - Models ---
@@ -39,13 +41,9 @@ interface IModelCommentService extends \cmsgears\core\common\services\interfaces
 
 	// Create -------------
 
-	public function attachMedia( $model, $file, $mediaType, $type );
+	public function attachMedia( $model, $file, $mediaType, $parentType );
 
 	// Update -------------
-
-	public function updateSpamRequest( $model );
-
-	public function updateDeleteRequest( $model );
 
 	public function updateStatus( $model, $status );
 
@@ -56,6 +54,10 @@ interface IModelCommentService extends \cmsgears\core\common\services\interfaces
 	public function markSpam( $model );
 
 	public function markTrash( $model );
+
+	public function updateSpamRequest( $model );
+
+	public function updateDeleteRequest( $model );
 
 	// Delete -------------
 

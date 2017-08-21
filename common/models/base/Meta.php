@@ -33,6 +33,17 @@ abstract class Meta extends Entity {
 
 	// Public -----------------
 
+	public static $typeMap	= [
+			self::VALUE_TYPE_TEXT => 'Text',
+			self::VALUE_TYPE_FLAG => 'Flag',
+			self::VALUE_TYPE_LIST => 'List',
+			self::VALUE_TYPE_MAP => 'Map',
+			self::VALUE_TYPE_CSV => 'Csv',
+			self::VALUE_TYPE_OBJECT => 'Object',
+			self::VALUE_TYPE_HTML => 'Html',
+			self::VALUE_TYPE_MARKDOWN => 'Markdown'
+	];
+
 	// Protected --------------
 
 	// Variables -----------------------------

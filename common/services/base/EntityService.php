@@ -293,6 +293,8 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 	 *
 	 * TODO: We can make this method efficient by using random offset and limit instead of going for full table scan.
 	 *       Avoid using count() to get total rows. Use Stats Table to get estimated count.
+	 *
+	 * Notes: Using offset is much slower as compared to start index with limit.
 	 */
 	public function getRandom( $config = [] ) {
 

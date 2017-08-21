@@ -18,7 +18,7 @@ interface ICategoryService extends INestedSetService, INameTypeService, ISlugTyp
 
 	public function getFeaturedByType( $type );
 
-	public function getL1ByType( $type );
+	public function getL0ByType( $type );
 
 	// Read - Lists ----
 

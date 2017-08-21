@@ -207,7 +207,7 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 		return Category::getFeaturedByType( $type );
 	}
 
-	public function getL1ByType( $type ) {
+	public function getL0ByType( $type ) {
 
 		$modelClass	= static::$modelClass;
 

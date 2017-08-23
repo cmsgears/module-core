@@ -351,6 +351,7 @@ class CoreGlobal {
 	const FIELD_AGENT_BROWSER		= 'browserAgentField';
 	const FIELD_HTML_OPTIONS		= 'htmlOptionsField';
 	const FIELD_DATA				= 'dataField';
+	const FIELD_DATA_WIDGET			= 'widgetDataField';
 	const FIELD_COMPRESS			= 'compressField';
 
 	// Role Fields

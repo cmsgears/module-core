@@ -182,6 +182,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_AGENT_BROWSER => 'Browser Agent',
 		CoreGlobal::FIELD_HTML_OPTIONS => 'HTML Options',
 		CoreGlobal::FIELD_DATA => 'Data',
+		CoreGlobal::FIELD_DATA_WIDGET => 'Widget Data',
 		CoreGlobal::FIELD_COMPRESS => 'Store Compressed',
 
 		// Role Fields

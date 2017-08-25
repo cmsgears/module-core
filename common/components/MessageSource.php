@@ -1,9 +1,6 @@
 <?php
 namespace cmsgears\core\common\components;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
@@ -119,6 +116,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_VISIBILITY => 'Visibility',
 		CoreGlobal::FIELD_PRIORITY => 'Priority',
 		CoreGlobal::FIELD_SEVERITY => 'Severity',
+		CoreGlobal::FIELD_SCOPE => 'Scope',
 		CoreGlobal::FIELD_ORDER => 'Order',
 		CoreGlobal::FIELD_LIMIT => 'Limit',
 		CoreGlobal::FIELD_FEATURED => 'Featured',

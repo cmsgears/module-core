@@ -288,6 +288,7 @@ class CoreGlobal {
 	const FIELD_VISIBILITY			= 'visibilityField';
 	const FIELD_PRIORITY			= 'priorityField';
 	const FIELD_SEVERITY			= 'severityField';
+	const FIELD_SCOPE				= 'scopeField';
 	const FIELD_ORDER				= 'orderField';
 	const FIELD_LIMIT				= 'limitField';
 	const FIELD_FEATURED			= 'featuredField';

@@ -103,7 +103,7 @@ trait OptionTrait {
 	public function getOptionsByCategorySlug( $categorySlug, $active = true ) {
 
 		$categoryTable	= CoreTables::TABLE_CATEGORY;
-
+		
 		if( $active ) {
 
 			return $this->getActiveOptions()->leftJoin( $categoryTable, "$categoryTable.id=categoryId" )->where( [ "$categoryTable.slug" => $categorySlug ] )->all();

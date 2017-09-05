@@ -51,6 +51,7 @@ class DeleteItem extends \cmsgears\core\common\base\Action {
 
 	public function run( $id, $iid ) {
 
+		
 		$galleryService		= Yii::$app->factory->get( 'galleryService' );
 		$modelFileService	= Yii::$app->factory->get( 'modelFileService' );
 		$gallery			= $galleryService->getById( $id );

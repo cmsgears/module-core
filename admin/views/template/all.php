@@ -33,12 +33,13 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 		'model' => [ 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x2', null, 'x2', 'x3', null, 'x2', 'x2', null ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x2', null, null, null, 'x3', null, 'x2', 'x2', null ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'name' => 'Name',
 		'file' => [ 'title' => 'File Render', 'generate' => function( $model ) { return $model->getFileRenderStr(); } ],
 		'glayout' => [ 'title' => 'Layout Group', 'generate' => function( $model ) { return $model->getGroupLayoutStr(); } ],
+		'active' => [ 'title' => 'Active', 'generate' => function( $model ) { return $model->getActiveStr(); } ],
 		'description' => 'Description',
 		'renderer' => 'Renderer',
 		'layout' => 'Layout',

@@ -304,6 +304,8 @@ class CoreGlobal {
 	const FIELD_CREATED_AT			= 'createdAtField';
 	const FIELD_MODIFIED_AT			= 'modifiedAtField';
 
+	const FIELD_SERVICE				= 'serviceField';
+
 	const FIELD_MESSAGE				= 'messageField';
 	const FIELD_MESSAGE_SUCCESS		= 'messageSuccessField';
 	const FIELD_MESSAGE_FAILURE		= 'messageFailureField';

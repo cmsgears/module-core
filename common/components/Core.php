@@ -435,25 +435,17 @@ class Core extends \yii\base\Component {
 
 	public function registerComponents() {
 
-		// Init system services
-		$this->initSystemServices();
-
 		// Register services
 		$this->registerResourceServices();
 		$this->registerMapperServices();
 		$this->registerEntityServices();
+		$this->registerSystemServices();
 
 		// Init services
 		$this->initResourceServices();
 		$this->initMapperServices();
 		$this->initEntityServices();
-	}
-
-	public function initSystemServices() {
-
-		$factory = Yii::$app->factory->getContainer();
-
-		//$factory->set( '<name>', '<classpath>' );
+		$this->initSystemServices();
 	}
 
 	public function registerResourceServices() {
@@ -504,6 +496,13 @@ class Core extends \yii\base\Component {
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IUserService', 'cmsgears\core\common\services\entities\UserService' );
 	}
 
+	public function registerSystemServices() {
+
+		$factory = Yii::$app->factory->getContainer();
+
+		//$factory->set( '<interface path>', '<classpath>' );
+	}
+
 	public function initResourceServices() {
 
 		$factory = Yii::$app->factory->getContainer();
@@ -552,7 +551,14 @@ class Core extends \yii\base\Component {
 		$factory->set( 'userService', 'cmsgears\core\common\services\entities\UserService' );
 	}
 
-	// Cookies
+	public function initSystemServices() {
+
+		$factory = Yii::$app->factory->getContainer();
+
+		//$factory->set( '<name>', '<classpath>' );
+	}
+
+	// Cookies & Session
 
 	public function setAppUser( $user ) {
 
@@ -579,12 +585,12 @@ class Core extends \yii\base\Component {
 	public function getAppUser() {
 
 		$cookieName = '_app-user';
-		$appUser	= [];
+		$appUser	= null;
 		$user		= Yii::$app->user->identity;
 
 		if( $user != null ) {
 
-			$appUser	= $user;
+			$appUser = $user;
 		}
 		else if( isset( $_COOKIE[ $cookieName ] ) ) {
 
@@ -607,9 +613,9 @@ class Core extends \yii\base\Component {
 
 		if( isset( $_COOKIE[ $cookieName ] ) ) {
 
-			$data 				= unserialize( $_COOKIE[ $cookieName ] );
+			$data			= unserialize( $_COOKIE[ $cookieName ] );
 
-			$data[ 'user' ]	   = null;
+			$data[ 'user' ]	= null;
 
 			return setcookie( $cookieName, serialize( $data ), time() + ( 10 * 365 * 24 * 60 * 60 ), "/", null );
 		}

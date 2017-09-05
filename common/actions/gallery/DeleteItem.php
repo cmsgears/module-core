@@ -2,8 +2,7 @@
 namespace cmsgears\core\common\actions\gallery;
 
 // Yii Imports
-use \Yii;
-use yii\base\InvalidConfigException;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -51,7 +50,6 @@ class DeleteItem extends \cmsgears\core\common\base\Action {
 
 	public function run( $id, $iid ) {
 
-		
 		$galleryService		= Yii::$app->factory->get( 'galleryService' );
 		$modelFileService	= Yii::$app->factory->get( 'modelFileService' );
 		$gallery			= $galleryService->getById( $id );

@@ -167,6 +167,11 @@ class Template extends \cmsgears\core\common\models\base\Entity {
 
 	// Template ------------------------------
 
+	public function isActive() {
+
+		return $this->active;
+	}
+
     public function getActiveStr() {
 
         return Yii::$app->formatter->asBoolean( $this->active );

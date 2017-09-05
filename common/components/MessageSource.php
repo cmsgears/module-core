@@ -132,6 +132,8 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_CREATED_AT => 'Created At',
 		CoreGlobal::FIELD_MODIFIED_AT => 'Updated At',
 
+		CoreGlobal::FIELD_SERVICE => 'Service',
+
 		CoreGlobal::FIELD_MESSAGE => 'Message',
 		CoreGlobal::FIELD_MESSAGE_SUCCESS => 'Success Message',
 		CoreGlobal::FIELD_MESSAGE_FAILURE => 'Failure Message',

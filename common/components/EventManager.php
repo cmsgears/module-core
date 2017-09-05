@@ -2,11 +2,14 @@
 namespace cmsgears\core\common\components;
 
 /**
- * The Event Manager component in CMSGears must be capable of providing messages and counts for notifications, reminders and activities.
+ * The Event Manager component in CMSGears must be capable of providing messages and
+ * counts for notifications, reminders and activities.
  *
- * It must also be capable to trigger notifications and reminders(for active events marked on calendar)
+ * It must also be capable to trigger notifications and reminders(for active events marked
+ * on calendar) and log activities.
  *
- * The actual implementation of event manager is not done in core module and appropriate plugin or module must extend this component in order to use notifications, reminders and activities.
+ * The actual implementation of event manager is not done in core module and appropriate plugin
+ * or module must extend this component in order to use notifications, reminders and activities.
  */
 class EventManager extends \yii\base\Component {
 

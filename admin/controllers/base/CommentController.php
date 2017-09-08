@@ -10,6 +10,8 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\base\CoreTables;
+
 abstract class CommentController extends Controller {
 
 	// Variables ---------------------------------------------------
@@ -104,15 +106,16 @@ abstract class CommentController extends Controller {
 
 		$model			= null;
 		$dataProvider	= null;
+        $mCommentTable	= CoreTables::TABLE_MODEL_COMMENT;
 
 		if( isset( $pid ) ) {
 
 			$model			= $this->parentService->findById( $pid );
-			$dataProvider	= $this->modelService->getPageByParent( $model->id, $this->parentType, [ 'conditions' => [ 'type' => $this->commentType ] ] );
+			$dataProvider	= $this->modelService->getPageByParent( $model->id, $this->parentType, [ 'conditions' => [ "$mCommentTable.type" => $this->commentType ] ] );
 		}
 		else {
 
-			$dataProvider	= $this->modelService->getPageByParentType( $this->parentType, [ 'conditions' => [ 'type' => $this->commentType ] ] );
+			$dataProvider	= $this->modelService->getPageByParentType( $this->parentType, [ 'conditions' => [ "$mCommentTable.type" => $this->commentType ] ] );
 		}
 
 		$parent	= isset( $pid ) ? true : false;

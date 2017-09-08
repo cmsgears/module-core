@@ -112,9 +112,11 @@ class ServiceTemplate extends \cmsgears\core\common\services\base\EntityService 
 
 	// Delete -------------
 
-	// Cache --------------
+	// Bulk ---------------
 
 	// Notifications ------
+
+	// Cache --------------
 
 	// Static Methods ----------------------------------------------
 

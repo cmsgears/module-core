@@ -291,6 +291,7 @@ class CoreGlobal {
 	const FIELD_SCOPE				= 'scopeField';
 	const FIELD_ORDER				= 'orderField';
 	const FIELD_LIMIT				= 'limitField';
+	const FIELD_COUNT				= 'countField';
 	const FIELD_FEATURED			= 'featuredField';
 	const FIELD_USER_MAPPED			= 'userMappedField';
 
@@ -346,7 +347,7 @@ class CoreGlobal {
 
 	const FIELD_GLOBAL				= 'globalField';
 	const FIELD_SESSION				= 'sessionField';
-	const FIELD_FIELD_TOKEN			= 'tokenField';
+	const FIELD_TOKEN				= 'tokenField';
 	const FIELD_VALIDATORS			= 'validatorsField';
 	const FIELD_RENDERER			= 'rendererField';
 	const FIELD_EVENT_LOG			= 'eventLogField';

@@ -216,6 +216,8 @@ class CoreGlobal {
 	const ERROR_URL_ENTITY			= 'urlEntityError';
 	const ERROR_DEPENDENCY			= 'dependencyError';
 	const ERROR_SESSION_OVER		= 'sessionOverError';
+	const ERROR_SESSION_EXPIRED		= 'sessionExpiredError';
+	const ERROR_TOKEN_EXPIRED		= 'tokenExpiredError';
 
 	// Errors - Comments
 	const ERROR_NO_COMMENTS			= 'noCommentsError';
@@ -292,6 +294,7 @@ class CoreGlobal {
 	const FIELD_ORDER				= 'orderField';
 	const FIELD_LIMIT				= 'limitField';
 	const FIELD_COUNT				= 'countField';
+	const FIELD_EXPIRED				= 'expiredField';
 	const FIELD_FEATURED			= 'featuredField';
 	const FIELD_USER_MAPPED			= 'userMappedField';
 

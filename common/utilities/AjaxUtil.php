@@ -10,14 +10,14 @@ use \Yii;
 class AjaxUtil {
 
 	// Static Methods ----------------------------------------------
-	
+
 	/**
 	 * The method generate success response array having 3 elements as listed below:
 	 * 1. result - 1 (It indicates that the request is processed successfully)
 	 * 2. message - <message value> (The message to be displayed for success)
 	 * 3. data - <response data array> (The response data to be displayed for success)
 	 * @param message
-	 * @param data 
+	 * @param data
 	 */
 	public static function generateSuccess( $message, $data = null ) {
 
@@ -40,13 +40,14 @@ class AjaxUtil {
 	 * @param message
 	 * @param errors
 	 */
-	public static function generateFailure( $message, $errors = null ) {
+	public static function generateFailure( $message, $errors = null, $data = null ) {
 
 		$response				= array();
 
 		$response[ 'result' ]	= 0;
 		$response[ 'message' ]	= $message;
 		$response[ 'errors' ]	= $errors;
+		$response[ 'data' ]		= $data;
 
 		Yii::$app->response->format = 'json';
 

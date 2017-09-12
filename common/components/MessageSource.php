@@ -44,6 +44,8 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::ERROR_URL_ENTITY => 'An entry with the same url already exist.',
 		CoreGlobal::ERROR_DEPENDENCY => 'This entry can not be deleted since other rows in other tables are dependent on it.',
 		CoreGlobal::ERROR_SESSION_OVER => 'User related to this account not found. Most probably session is over.',
+		CoreGlobal::ERROR_SESSION_EXPIRED => 'Your session expired.',
+		CoreGlobal::ERROR_TOKEN_EXPIRED => 'Your token expired.',
 
 		// Errors - Comments
 		CoreGlobal::ERROR_NO_COMMENTS => 'Comments are not allowed.',
@@ -120,6 +122,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_ORDER => 'Order',
 		CoreGlobal::FIELD_LIMIT => 'Limit',
 		CoreGlobal::FIELD_COUNT => 'Count',
+		CoreGlobal::FIELD_EXPIRED => 'Expired',
 		CoreGlobal::FIELD_FEATURED => 'Featured',
 		CoreGlobal::FIELD_USER_MAPPED => 'User Mapped',
 

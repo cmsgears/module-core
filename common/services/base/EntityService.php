@@ -533,11 +533,11 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 
 	public function createOrUpdate( $model, $config = [] ) {
 
-		$existing = isset( $model->id ) ? $this->getById( $model->id ) : null;
+		$existing = isset( $model->id ) ? $model : null;
 
 		if( isset( $existing ) ) {
 
-			return $this->udpate( $existing, $config );
+			return $this->update( $existing, $config );
 		}
 
 		return $this->create( $model, $config );

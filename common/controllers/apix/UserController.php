@@ -159,7 +159,7 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 		if( $address->load( Yii::$app->request->post(), 'Address' ) && $address->validate() ) {
 
 		$modelAddress	= $this->modelAddressService->createOrUpdateByType( $address, [ 'parentId' => $user->id, 'parentType' => CoreGlobal::TYPE_USER, 'type' => $type ] );
-		$address		= $modelAddress->model;
+		$address		= $modelAddress->address;
 
 		$data	= [
 					'line1' => $address->line1, 'line2' => $address->line2, 'cityName' => $address->cityName,

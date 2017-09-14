@@ -152,7 +152,8 @@ abstract class UserController extends CrudController {
 
 			return $this->render( 'create', [
 				'model' => $model,
-				'siteMember' => $siteMember
+				'siteMember' => $siteMember,
+				'status' => User::$statusMap
 			]);
 		}
 		else {
@@ -166,7 +167,8 @@ abstract class UserController extends CrudController {
 				'model' => $model,
 				'siteMember' => $siteMember,
 				'avatar' => $avatar,
-				'roleMap' => $roleMap
+				'roleMap' => $roleMap,
+				'status' => User::$statusMap
 			]);
 		}
 	}

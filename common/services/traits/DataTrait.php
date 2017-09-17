@@ -60,6 +60,16 @@ trait DataTrait {
 		return $model;
 	}
 
+	public function updateDataByParams( $model, $params = [], $config = [] ) {
+
+		foreach ( $params as $key => $value ) {
+
+			$model->setDataMeta( $key, $value );
+		}
+
+		$model->update();
+    }
+
 	public function updateDataMetaObj( $model, $meta ) {
 
 		$model->updateDataMeta( $meta->key, $meta->value );

@@ -30,6 +30,13 @@ class Read extends \cmsgears\core\common\actions\base\ModelAction {
 
 	public $parent 	= true;
 
+	// Attributes having UTF-8 Encoding
+	public $returnAttributes = [
+		'id', 'countryId', 'provinceId', 'cityId', 'title', 'line1', 'line2', 'line3',
+		'countryName', 'provinceName', 'cityName', 'zip', 'subZip',
+		'firstName', 'lastName', 'phone', 'email', 'fax', 'website',
+		'latitude', 'longitude', 'zoomLevel' ];
+
 	// Protected --------------
 
 	protected $modelAddressService;
@@ -67,8 +74,11 @@ class Read extends \cmsgears\core\common\actions\base\ModelAction {
 
 			if( isset( $modelAddress ) && $modelAddress->checkParent( $this->model->id, $this->parentType ) ) {
 
+				$address	= $modelAddress->model;
+				$data		= $address->getAttributeArray( $this->returnAttributes );
+
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $modelAddress->address );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 			}
 		}
 

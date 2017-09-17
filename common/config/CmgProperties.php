@@ -2,9 +2,7 @@
 namespace cmsgears\core\common\config;
 
 // Yii Imports
-use \Yii;
-
-use cmsgears\core\common\services\entities\SiteService;
+use Yii;
 
 class CmgProperties {
 

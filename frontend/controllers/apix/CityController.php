@@ -48,7 +48,7 @@ class CityController extends \cmsgears\core\frontend\controllers\base\Controller
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'auto-search' => [ 'permission' => $this->crudPermission ]
+					// 'auto-search' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [

@@ -641,8 +641,41 @@ class Core extends \yii\base\Component {
 	 */
 	public function setSessionParam( $param, $value ) {
 
-		$session = $this->getSession();
+		Yii::$app->session->set( $param, $value );
+	}
 
-		$session->set( $param, $value );
+	/*
+	 * @return $session - return session param
+	 */
+	public function getSessionParam( $param ) {
+
+		return Yii::$app->session->get( $param );
+	}
+
+	/*
+	 * @return $session - Open a session if does not exist in application.
+	 */
+	public function setSessionObject( $param, $object ) {
+
+		$data = base64_encode( serialize( $object ) );
+
+		Yii::$app->session->set( $param, $data );
+	}
+
+	/*
+	 * @return $session - return session param
+	 */
+	public function getSessionObject( $param ) {
+
+		$data = Yii::$app->session->get( $param );
+
+		if( isset( $data ) ) {
+
+			$object = unserialize( base64_decode( $data ) );
+
+			return $object;
+		}
+
+		return null;
 	}
 }

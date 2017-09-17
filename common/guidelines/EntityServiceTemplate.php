@@ -118,6 +118,8 @@ class ServiceTemplate extends \cmsgears\core\common\services\base\EntityService 
 
 	// Cache --------------
 
+	// Additional ---------
+
 	// Static Methods ----------------------------------------------
 
 	// CMG parent classes --------------------

@@ -153,7 +153,7 @@ abstract class UserController extends CrudController {
 			return $this->render( 'create', [
 				'model' => $model,
 				'siteMember' => $siteMember,
-				'status' => User::$statusMap
+				'statusMap' => User::$statusMap
 			]);
 		}
 		else {
@@ -168,7 +168,7 @@ abstract class UserController extends CrudController {
 				'siteMember' => $siteMember,
 				'avatar' => $avatar,
 				'roleMap' => $roleMap,
-				'status' => User::$statusMap
+				'statusMap' => User::$statusMap
 			]);
 		}
 	}
@@ -202,7 +202,7 @@ abstract class UserController extends CrudController {
 					'model' => $model,
 					'siteMember' => $siteMember,
 					'avatar' => $avatar,
-					'status' => User::$statusMap
+					'statusMap' => User::$statusMap
 				]);
 			}
 			else {
@@ -216,7 +216,7 @@ abstract class UserController extends CrudController {
 					'siteMember' => $siteMember,
 					'avatar' => $avatar,
 					'roleMap' => $roleMap,
-					'status' => User::$statusMap
+					'statusMap' => User::$statusMap
 				]);
 			}
 		}
@@ -253,7 +253,7 @@ abstract class UserController extends CrudController {
 					'siteMember' => $siteMember,
 					'avatar' => $avatar,
 					'roleMap' => $roleMap,
-					'status' => User::$statusMap
+					'statusMap' => User::$statusMap
 				]);
 			}
 		}

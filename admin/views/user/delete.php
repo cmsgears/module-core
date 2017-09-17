@@ -44,7 +44,7 @@ $returnUrl		= $this->context->returnUrl;
 						<?php } ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'status' )->dropDownList( $status, [ 'class' => 'cmt-select' ] ) ?>
+							<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
 					</div>
 				</div>

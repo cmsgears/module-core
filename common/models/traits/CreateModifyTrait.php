@@ -1,6 +1,9 @@
 <?php
 namespace cmsgears\core\common\models\traits;
 
+// Yii Imports
+use Yii;
+
 // CMG Imports
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\User;
@@ -28,6 +31,28 @@ trait CreateModifyTrait {
 		$userTable = CoreTables::TABLE_USER;
 
 		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] )->from( "$userTable as modifier" );
+	}
+
+	public function isCreator( $user = null, $strict = false ) {
+
+		if( !isset( $user ) && !$strict ) {
+
+			$user	= Yii::$app->user->getIdentity();
+		}
+
+		if( isset( $user ) ) {
+
+			if( isset( $this->createdBy ) ) {
+
+				return $this->createdBy == $user->id;
+			}
+			else {
+
+				return $this->createdBy == $user->id;
+			}
+		}
+
+		return false;
 	}
 
 	public static function queryWithCreator( $config = [] ) {

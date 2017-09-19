@@ -243,6 +243,20 @@ class DateUtil {
 		return $test > $source;
 	}
 
+	public static function isPast( $date, $format = null ) {
+
+		$today = self::getDateTime( $format );
+
+		return self::lessThan( $today, $date, true );
+	}
+
+	public static function isFuture( $date, $format = null ) {
+
+		$today = self::getDateTime( $format );
+
+		return self::greaterThan( $today, $date, true );
+	}
+
 	/**
 	 * @return array - of week dates for given mon
 	 */

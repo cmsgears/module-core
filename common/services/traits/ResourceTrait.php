@@ -54,16 +54,18 @@ trait ResourceTrait {
 
 	public function deleteByParent( $parentId, $parentType ) {
 
-		//$modelClass	= self::$modelClass;
+		$modelClass	= self::$modelClass;
 
-		//return $modelClass::deleteByParent( $parentId, $parentType );
+		return $modelClass::deleteByParent( $parentId, $parentType );
 
+		/*
 		$models	= $this->getByParent( $parentId, $parentType );
 
 		foreach ( $models as $model ) {
 
 			$this->delete( $model );
 		}
+		 */
 	}
 
 	// Static Methods ----------------------------------------------

@@ -601,7 +601,8 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$this->fileService->deleteFiles( [ $model->avatar ] );
 
 		// Delete Notifications
-		Yii::$app->eventManager->deleteNotifications( $model->id, static::$parentType, true );
+		//Yii::$app->eventManager->deleteNotifications( $model->id, static::$parentType, true );
+		Yii::$app->eventManager->deleteNotifications( $model->id, static::$parentType );
 
 		// Delete model
 		return parent::delete( $model, $config );

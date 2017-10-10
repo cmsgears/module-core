@@ -17,14 +17,14 @@ use cmsgears\core\common\config\CoreGlobal;
 // Project Imports
 
 /**
- * EntityServiceTraitTemplate can be used as template for entity service traits.
+ * DefaultTemplate can be used as template for classes without any special categorization.
  *
- * Entity Service traits can be further divided into below mentioned sections:
+ * Classes using default template can be further divided into below mentioned sections:
  * <ol>
  *	<li>Yii imports</li>
  *	<li>CMG imports</li>
  *	<li>Project imports</li>
- *	<li>Trait definition</li>
+ *	<li>Class definition</li>
  *	<li>Variables
  *		<ol>
  *			<li>Globals</li>
@@ -33,27 +33,31 @@ use cmsgears\core\common\config\CoreGlobal;
  *			<li>Private</li>
  *		</ol>
  *	</li>
+ *  <li>Traits</li>
+ *	<li>Constructor and Initialisation</li>
  *	<li>Instance methods
  *		<ol>
+ *			<li>Yii interface implementation</li>
  *			<li>Yii parent class overridden methods</li>
  *			<li>CMG interface implementation</li>
  *			<li>CMG parent class overridden methods</li>
- *			<li>Current class methods - Read(DataProvider, Models, Lists, Maps, Other), Create, Update, Delete, Bulk, Notifications, Cache, Additional</li>
+ *			<li>Current class methods</li>
  *		</ol>
  *	</li>
  *	<li>Static methods
  *		<ol>
+ *			<li>Yii parent class overridden methods</li>
  *			<li>CMG parent class overridden methods</li>
- *			<li>Current class methods - Read(DataProvider, Models, Lists, Maps, Other), Create, Update, Delete</li>
+ *			<li>Current class methods</li>
  *		</ol>
  *	</li>
- *	<li>Trait closure</li>
+ *	<li>Class closure</li>
  * </ol>
  *
  * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
-trait EntityServiceTraitTemplate {
+class DefaultTemplate extends \yii\base\Object {
 
 	// Variables ---------------------------------------------------
 
@@ -65,7 +69,13 @@ trait EntityServiceTraitTemplate {
 
 	// Private ----------------
 
+	// Traits ------------------------------------------------------
+
+	// Constructor and Initialisation ------------------------------
+
 	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
 
 	// Yii parent classes --------------------
 
@@ -73,56 +83,14 @@ trait EntityServiceTraitTemplate {
 
 	// CMG parent classes --------------------
 
-	// <Trait> -------------------------------
-
-	// Data Provider ------
-
-	// Read ---------------
-
-	// Read - Models ---
-
-	// Read - Lists ----
-
-	// Read - Maps -----
-
-	// Read - Others ---
-
-	// Create -------------
-
-	// Update -------------
-
-	// Delete -------------
-
-	// Bulk ---------------
-
-	// Notifications ------
-
-	// Cache --------------
-
-	// Additional ---------
+	// <Class> -------------------------------
 
 	// Static Methods ----------------------------------------------
 
+	// Yii parent classes --------------------
+
 	// CMG parent classes --------------------
 
-	// <Trait> -------------------------------
-
-	// Data Provider ------
-
-	// Read ---------------
-
-	// Read - Models ---
-
-	// Read - Lists ----
-
-	// Read - Maps -----
-
-	// Read - Others ---
-
-	// Create -------------
-
-	// Update -------------
-
-	// Delete -------------
+	// <Class> -------------------------------
 
 }

@@ -17,9 +17,9 @@ use cmsgears\core\common\config\CoreGlobal;
 // Project Imports
 
 /**
- * AssetTemplate can be used as template for asset bundles.
+ * MinTemplate can be used as template for classes without any special categorization and static methods.
  *
- * Asset Bundles extending \yii\web\AssetBundle can be further divided into below mentioned sections:
+ * Classes using default template can be further divided into below mentioned sections:
  * <ol>
  *	<li>Yii imports</li>
  *	<li>CMG imports</li>
@@ -33,6 +33,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *			<li>Private</li>
  *		</ol>
  *	</li>
+ *  <li>Traits</li>
  *	<li>Constructor and Initialisation</li>
  *	<li>Instance methods
  *		<ol>
@@ -49,7 +50,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
-class AssetTemplate extends \yii\web\AssetBundle {
+class MinTemplate extends \yii\base\Object {
 
 	// Variables ---------------------------------------------------
 
@@ -60,6 +61,8 @@ class AssetTemplate extends \yii\web\AssetBundle {
 	// Protected --------------
 
 	// Private ----------------
+
+	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
 
@@ -73,6 +76,6 @@ class AssetTemplate extends \yii\web\AssetBundle {
 
 	// CMG parent classes --------------------
 
-	// <Asset Bundle> ------------------------
+	// <Class> -------------------------------
 
 }

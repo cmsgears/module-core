@@ -40,8 +40,8 @@ class CoreValidator {
 		'phone' => 'cmsgears\core\common\validators\PhoneValidator',
 		'password' => 'cmsgears\core\common\validators\PasswordValidator',
 		'compareDate' => 'cmsgears\core\common\validators\CompareDateValidator',
-		'emptyArray' => 'cmsgears\core\common\validators\EmptyArrayValidator'
-
+		'emptyArray' => 'cmsgears\core\common\validators\EmptyArrayValidator',
+		'sanitize' => 'cmsgears\core\common\validators\SanitizeFilter'
 	];
 
 	public static function initValidators() {

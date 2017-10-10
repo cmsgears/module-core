@@ -1,42 +1,55 @@
 <?php
-namespace cmsgears\core\common\assets;
+/**
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ * @license https://www.cmsgears.org/license/
+ * @package module
+ * @subpackage core
+ */
+namespace cmsgears\core\common\guidelines;
 
 // Yii Imports
 use yii\web\View;
 
+/**
+ * CaptchaAsset can be used to load yii.captcha.js from yii assets directory.
+ *
+ * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
+ * @since 1.0.0
+ */
 class CaptchaAsset extends \yii\web\AssetBundle {
 
 	// Variables ---------------------------------------------------
 
-	// Globals -------------------------------
-
-	// Constants --------------
+	// Globals ----------------
 
 	// Public -----------------
 
-	// Path Configuration
+	/**
+	 * @inheritdoc
+	 */
     public $sourcePath = '@yii/assets';
 
-	// Load Javascript
+	/**
+	 * @inheritdoc
+	 */
     public $js = [
         'yii.captcha.js',
     ];
 
-	// Position to load Javascript
+	/**
+	 * @inheritdoc
+	 */
 	public $jsOptions = [
 		'position' => View::POS_END
 	];
 
-	// Dependency
+	/**
+	 * @inheritdoc
+	 */
     public $depends = [
         'cmsgears\core\common\assets\YiiAsset'
     ];
-
-	// Protected --------------
-
-	// Variables -----------------------------
-
-	// Public -----------------
 
 	// Protected --------------
 

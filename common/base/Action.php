@@ -1,4 +1,11 @@
 <?php
+/**
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ * @license https://www.cmsgears.org/license/
+ * @package module
+ * @subpackage core
+ */
 namespace cmsgears\core\common\base;
 
 /**
@@ -13,13 +20,24 @@ namespace cmsgears\core\common\base;
  *		// Do request specific processing
  *		if( Yii::$app->request->isAjax ) {
  *
+ *			// Do ajax processing and return result
+ *
+ *			// OR
+ *
  *			return $this->runAjax( $param1, $param2 ... );
  *		}
  *		else {
  *
+ *			// Do regular processing and return result
+ *
+ *			// OR
+ *
  *			return $this->runRegular( $param1, $param2 ... );
  *		}
  * }
+ *
+ * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
+ * @since 1.0.0
  */
 class Action extends \yii\base\Action {
 
@@ -58,4 +76,5 @@ class Action extends \yii\base\Action {
 	// CMG parent classes --------------------
 
 	// Action --------------------------------
+
 }

@@ -1,4 +1,11 @@
 <?php
+/**
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ * @license https://www.cmsgears.org/license/
+ * @package module
+ * @subpackage core
+ */
 namespace cmsgears\core\common\components;
 
 // Yii Imports
@@ -15,6 +22,9 @@ use cmsgears\core\common\models\resources\FormField;
 /**
  * Default form designer component to generate html for form elements using form and form fields.
  * It supports CMGTools UI, JS and IconLib by default, but can be overriden to support other ui libraries.
+ *
+ * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
+ * @since 1.0.0
  */
 class FormDesigner extends \yii\base\Component {
 
@@ -32,7 +42,11 @@ class FormDesigner extends \yii\base\Component {
 
 	// Instance methods --------------------------------------------
 
+	// Yii interfaces ------------------------
+
 	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 

@@ -1,69 +1,59 @@
 <?php
+/**
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ * @license https://www.cmsgears.org/license/
+ * @package module
+ * @subpackage core
+ */
 namespace cmsgears\core\common\guidelines;
 
-/**
- * A component extending Component can be further divided into below mentioned sections:
- * 1. Yii imports
- * 2. CMG imports
- * 3. Project imports
- * 4. Class definition
- * 5. Variables
- *		5.2.1. Global
- *		5.2.2. Public
- *		5.2.3. Protected
- *		5.2.4. Private
- * 6. Constructor and Initialisation
- * 7. Instance methods
- *		7.1. Yii parent class overriden methods
- *		7.2. CMG parent class overriden methods
- *		7.3. Current class methods
- * 8. Class closure
- */
-
 // Yii Imports
-/**
- * Imports following below mentioned order:
- * 1. \Yii
- * 2. base
- * 3. data
- * 4. db
- * 5. helpers
- * 6. Behaviours
- * 7. Exceptions
- */
-use \Yii;
+use Yii;
 
 // CMG Imports
-/**
- * Imports following below mentioned order:
- * 1. Globals
- * 2. Interfaces
- * 3. Models
- * 4. Traits
- * 5. Behaviours
- * 6. Services
- * 7. Utilities
- */
 use cmsgears\core\common\config\CoreGlobal;
 
 // Project Imports
 
 /**
- * ComponentTemplate Entity
+ * ComponentTemplate can be used as template for components.
  *
- * @property short $<integer member>
- * @property integer $<integer member>
- * @property long $<integer member>
- * @property float $<float member>
- * @property double $<float member>
- * @property string $<string member>
- * @property boolean $<boolean member>
+ * Components extending \yii\base\Component can be further divided into below mentioned sections:
+ * <ol>
+ *	<li>Yii imports</li>
+ *	<li>CMG imports</li>
+ *	<li>Project imports</li>
+ *	<li>Class definition</li>
+ *	<li>Variables
+ *		<ol>
+ *			<li>Globals</li>
+ *			<li>Public</li>
+ *			<li>Protected</li>
+ *			<li>Private</li>
+ *		</ol>
+ *	</li>
+ *	<li>Constructor and Initialisation</li>
+ *	<li>Instance methods
+ *		<ol>
+ *			<li>Yii interface implementation</li>
+ *			<li>Yii parent class overridden methods</li>
+ *			<li>CMG interface implementation</li>
+ *			<li>CMG parent class overridden methods</li>
+ *			<li>Current class methods</li>
+ *		</ol>
+ *	</li>
+ *	<li>Class closure</li>
+ * </ol>
+ *
+ * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
+ * @since 1.0.0
  */
-class ComponentTemplate extends \yii\base\Component {
+class ComponentTemplate extends \cmsgears\core\common\base\Component {
 
 	// Variables ---------------------------------------------------
 
-	// Global -----------------
+	// Globals ----------------
 
 	// Public -----------------
 
@@ -75,9 +65,14 @@ class ComponentTemplate extends \yii\base\Component {
 
 	// Instance methods --------------------------------------------
 
+	// Yii interfaces ------------------------
+
 	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
 	// <Component> ---------------------------
+
 }

@@ -1,33 +1,80 @@
 <?php
+/**
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ * @license https://www.cmsgears.org/license/
+ * @package module
+ * @subpackage core
+ */
 namespace cmsgears\core\common\guidelines;
 
-/**
- * Entity trait can be further divided into below mentioned sections:
- * 1. Trait definition
- * 2. Instance methods
- *		2.1. Yii interface implementation
- *		2.2. Yii classes
- *		2.3. CMG interface implementation
- *		2.4. CMG classes
- *		2.5. Validators
- *		2.6. Trait methods
- * 3. Static methods
- *		3.1. Yii classes
- *		3.2. CMG classes
- *		3.3. Trait methods
- *				3.3.1. Read - query<method>
- *				3.3.2. Read - find<method>
- *				3.3.3. Create
- *				3.3.4. Update
- *				3.3.5. Delete
- * 4. Trait closure
- */
+// Yii Imports
+use Yii;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+// Project Imports
 
 /**
- * Note: Declare model properties in model class.
+ * EntityTraitTemplate can be used as template for traits specific for model classes associated with database table.
+ *
+ * Entity traits can be further divided into below mentioned sections:
+ * <ol>
+ *	<li>Yii imports</li>
+ *	<li>CMG imports</li>
+ *	<li>Project imports</li>
+ *	<li>Trait definition</li>
+ *	<li>Variables
+ *		<ol>
+ *			<li>Globals</li>
+ *			<li>Public</li>
+ *			<li>Protected</li>
+ *			<li>Private</li>
+ *		</ol>
+ *	</li>
+ *	<li>Instance methods
+ *		<ol>
+ *			<li>Yii interface implementation</li>
+ *			<li>Yii parent class overridden methods</li>
+ *			<li>CMG interface implementation</li>
+ *			<li>CMG parent class overridden methods</li>
+ *			<li>Validators</li>
+ *			<li>Trait methods - hasOne, hasMany following other methods</li>
+ *		</ol>
+ *	</li>
+ *	<li>Static methods
+ *		<ol>
+ *			<li>Yii parent class overridden methods</li>
+ *			<li>CMG parent class overridden methods</li>
+ *			<li>Current class methods
+ *				<ol>
+ *					<li>Read - query<method></li>
+ *					<li>Read - find<method></li>
+ *					<li>Create</li>
+ *					<li>Update</li>
+ *					<li>Delete</li>
+ *				</ol>
+ *			</li>
+ *		</ol>
+ *	</li>
+ *	<li>Trait closure</li>
+ * </ol>
+ *
+ * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
+ * @since 1.0.0
  */
+trait EntityTraitTemplate {
 
-class EntityTraitTemplate {
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Instance methods --------------------------------------------
 

@@ -1,43 +1,55 @@
 <?php
-namespace cmsgears\core\common\assets;
+/**
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ * @license https://www.cmsgears.org/license/
+ * @package module
+ * @subpackage core
+ */
+namespace cmsgears\core\common\guidelines;
 
 // Yii Imports
 use yii\web\View;
 
+/**
+ * YiiAsset can be used to load yii.js from yii assets directory.
+ *
+ * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
+ * @since 1.0.0
+ */
 class YiiAsset extends \yii\web\AssetBundle {
 
 	// Variables ---------------------------------------------------
 
-	// Globals -------------------------------
-
-	// Constants --------------
+	// Globals ----------------
 
 	// Public -----------------
 
-	// Path Configuration
-    public $sourcePath = '@yii/assets';
+	/**
+	 * @inheritdoc
+	 */
+	public $sourcePath = '@yii/assets';
 
+	/**
+	 * @inheritdoc
+	 */
+	public $js = [
+		'yii.js'
+	];
 
-	// Load Javascript
-    public $js = [
-        'yii.js'
-    ];
-
-	// Position to load Javascript
+	/**
+	 * @inheritdoc
+	 */
 	public $jsOptions = [
 		'position' => View::POS_END
 	];
 
-	// Dependency
-    public $depends = [
-        'cmsgears\core\common\assets\Jquery'
-    ];
-
-	// Protected --------------
-
-	// Variables -----------------------------
-
-	// Public -----------------
+	/**
+	 * @inheritdoc
+	 */
+	public $depends = [
+		'cmsgears\core\common\assets\Jquery'
+	];
 
 	// Protected --------------
 

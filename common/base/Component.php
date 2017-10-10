@@ -6,18 +6,15 @@
  * @package module
  * @subpackage core
  */
-namespace cmsgears\core\common\guidelines;
-
-// Yii Imports
-use yii\web\View;
+namespace cmsgears\core\common\base;
 
 /**
- * Handlebars can be used to load handlebar assets.
+ * The parent class for all the CMSGears based components.
  *
  * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
-class Handlebars extends \yii\web\AssetBundle {
+class Component extends \yii\base\Component {
 
 	// Variables ---------------------------------------------------
 
@@ -25,43 +22,11 @@ class Handlebars extends \yii\web\AssetBundle {
 
 	// Public -----------------
 
-	/**
-	 * @inheritdoc
-	 */
-	public $sourcePath = '@bower/handlebars';
-
-	/**
-	 * @inheritdoc
-	 */
-	public $js = [
-		'handlebars.min.js'
-	];
-
-	/**
-	 * @inheritdoc
-	 */
-	public $jsOptions = [
-		'position' => View::POS_END
-	];
-
 	// Protected --------------
 
 	// Private ----------------
 
-	// Traits ------------------------------------------------------
-
 	// Constructor and Initialisation ------------------------------
-
-	/**
-	 * @inheritdoc
-	 */
-    public function init() {
-
-		if( YII_DEBUG ) {
-
-			$this->js = [ 'handlebars.js' ];
-		}
-    }
 
 	// Instance methods --------------------------------------------
 
@@ -73,6 +38,6 @@ class Handlebars extends \yii\web\AssetBundle {
 
 	// CMG parent classes --------------------
 
-	// Handlebars ----------------------------
+	// Component -----------------------------
 
 }

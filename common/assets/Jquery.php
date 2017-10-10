@@ -1,37 +1,48 @@
 <?php
-namespace cmsgears\core\common\assets;
+/**
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ * @license https://www.cmsgears.org/license/
+ * @package module
+ * @subpackage core
+ */
+namespace cmsgears\core\common\guidelines;
 
 // Yii Imports
 use yii\web\View;
 
+/**
+ * Jquery can be used to load jQuery asset.
+ *
+ * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
+ * @since 1.0.0
+ */
 class Jquery extends \yii\web\AssetBundle {
 
 	// Variables ---------------------------------------------------
 
-	// Globals -------------------------------
-
-	// Constants --------------
+	// Globals ----------------
 
 	// Public -----------------
 
-	// Path Configuration
+	/**
+	 * @inheritdoc
+	 */
 	public $sourcePath = '@bower/jquery/dist';
 
-	// Load Javascript
+	/**
+	 * @inheritdoc
+	 */
 	public $js = [
 		'jquery.min.js'
 	];
 
-	// Position to load Javascript
+	/**
+	 * @inheritdoc
+	 */
 	public $jsOptions = [
 		'position' => View::POS_END
 	];
-
-	// Protected --------------
-
-	// Variables -----------------------------
-
-	// Public -----------------
 
 	// Protected --------------
 
@@ -40,6 +51,17 @@ class Jquery extends \yii\web\AssetBundle {
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	/**
+	 * @inheritdoc
+	 */
+    public function init() {
+
+		if( YII_DEBUG ) {
+
+			$this->js = [ 'jquery.js' ];
+		}
+    }
 
 	// Instance methods --------------------------------------------
 

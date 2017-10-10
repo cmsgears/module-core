@@ -1,4 +1,11 @@
 <?php
+/**
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ * @license https://www.cmsgears.org/license/
+ * @package module
+ * @subpackage core
+ */
 namespace cmsgears\core\common\components;
 
 // Yii Imports
@@ -12,15 +19,23 @@ use cmsgears\core\common\validators\CoreValidator;
 use cmsgears\core\common\services\entities\UserService;
 
 /**
- * The core component for CMSGears based sites. It must be initialised for app bootstrap using the name core.
- * It define the post login and logout path to redirect user to a different path than the default one. Though ajax
- * based login need to specify the path within the javascript code.
+ * The core component for CMSGears based sites. It must be initialised for app bootstrap
+ * using the name core.
  *
- * All the admin sites must set useRbac to true to get the admin functional since the admin controllers use it for almost every action.
+ * It define the post login and logout path to redirect user to a different path than the
+ * default one. Though ajax based login need to specify the path within the javascript code.
+ *
+ * All the admin sites must set useRbac to true to get the admin functional since the admin
+ * controllers use it for almost every action.
+ *
+ * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
+ * @since 1.0.0
  */
-class Core extends \yii\base\Component {
+class Core extends \cmsgears\core\common\base\Component {
 
-	// Global -----------------
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
 
 	// Public -----------------
 
@@ -195,11 +210,13 @@ class Core extends \yii\base\Component {
 
 	// Instance methods --------------------------------------------
 
+	// Yii interfaces ------------------------
+
 	// Yii parent classes --------------------
 
-	// CMG parent classes --------------------
+	// CMG interfaces ------------------------
 
-	// Core ----------------------------------
+	// CMG parent classes --------------------
 
 	// Properties
 

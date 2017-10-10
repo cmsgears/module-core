@@ -1,4 +1,11 @@
 <?php
+/**
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ * @license https://www.cmsgears.org/license/
+ * @package module
+ * @subpackage core
+ */
 namespace cmsgears\core\common\base;
 
 // Yii Imports
@@ -9,19 +16,21 @@ use cmsgears\core\common\config\CoreProperties;
 
 use cmsgears\core\common\services\entities\SiteService;
 
+/**
+ * The Application extends yii web Application and adds multi-site routing support.
+ *
+ * It read core properties and configure application's date, time format and initialise time-zone.
+ *
+ * It alter the request and read child site name in case application supports multi-site either at sub-domain or sub-directory level.
+ *
+ * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
+ * @since 1.0.0
+ */
 class Application extends \yii\web\Application {
 
 	// Variables ---------------------------------------------------
 
-	// Globals -------------------------------
-
-	// Constants --------------
-
-	// Public -----------------
-
-	// Protected --------------
-
-	// Variables -----------------------------
+	// Globals ----------------
 
 	// Public -----------------
 
@@ -41,6 +50,15 @@ class Application extends \yii\web\Application {
 
 	// yii\base\Application
 
+	/**
+	 * This method extends the controller instance creation and add additional functionality
+	 * to initialise application properties by reading core properties.
+	 *
+	 * It also detect whether multi-site is enable and change route accordingly after reading
+	 * the site name from current route. The identified site properties will be used where applicable.
+	 *
+	 * @see \yii\base\Module#createController()
+	 */
 	public function createController( $route ) {
 
 		// site config
@@ -133,14 +151,6 @@ class Application extends \yii\web\Application {
 	}
 
 	// CMG interfaces ------------------------
-
-	// CMG parent classes --------------------
-
-	// Application ---------------------------
-
-	// Static Methods ----------------------------------------------
-
-	// Yii parent classes --------------------
 
 	// CMG parent classes --------------------
 

@@ -17,28 +17,24 @@ use cmsgears\core\common\config\CoreGlobal;
 // Project Imports
 
 /**
- * AssetTemplate can be used as template for asset bundles.
+ * StaticTemplate can be used as template for classes having static methods without any special categorization.
  *
- * Asset Bundles extending \yii\web\AssetBundle can be further divided into below mentioned sections:
+ * Classes using static template can be further divided into below mentioned sections:
  * <ol>
  *	<li>Yii imports</li>
  *	<li>CMG imports</li>
  *	<li>Project imports</li>
  *	<li>Class definition</li>
- *	<li>Variables
+ *	<li>Global Variables
  *		<ol>
- *			<li>Globals</li>
+ *			<li>Constants</li>
  *			<li>Public</li>
  *			<li>Protected</li>
- *			<li>Private</li>
  *		</ol>
  *	</li>
- *	<li>Constructor and Initialisation</li>
- *	<li>Instance methods
+ *	<li>Static methods
  *		<ol>
- *			<li>Yii interface implementation</li>
  *			<li>Yii parent class overridden methods</li>
- *			<li>CMG interface implementation</li>
  *			<li>CMG parent class overridden methods</li>
  *			<li>Current class methods</li>
  *		</ol>
@@ -49,30 +45,22 @@ use cmsgears\core\common\config\CoreGlobal;
  * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
-class AssetTemplate extends \yii\web\AssetBundle {
+class DefaultTemplate extends \yii\base\Object {
 
-	// Variables ---------------------------------------------------
+	// Global Variables --------------------------------------------
 
-	// Globals ----------------
+	// Constants --------------
 
 	// Public -----------------
 
 	// Protected --------------
 
-	// Private ----------------
-
-	// Constructor and Initialisation ------------------------------
-
-	// Instance methods --------------------------------------------
-
-	// Yii interfaces ------------------------
+	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------
 
-	// CMG interfaces ------------------------
-
 	// CMG parent classes --------------------
 
-	// <Asset Bundle> ------------------------
+	// <Class> -------------------------------
 
 }

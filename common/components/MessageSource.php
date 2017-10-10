@@ -1,12 +1,31 @@
 <?php
+/**
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ * @license https://www.cmsgears.org/license/
+ * @package module
+ * @subpackage core
+ */
 namespace cmsgears\core\common\components;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+/**
+ * The MessageSource class provide default messages for pre-defined message keys.
+ *
+ * It can also read messages stored in db or utilize I18N(internationalization) for these keys.
+ *
+ * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
+ * @since 1.0.0
+ */
 class MessageSource extends \yii\base\Component {
 
 	// TODO: Use resource files to do php internationalization - gettext could be an option. Also look at zend translate.
+
+	// TODO: Read messages from DB based on application locale.
+
+	// TODO: Read messages from DB based on user locale.
 
 	// Variables ---------------------------------------------------
 
@@ -264,7 +283,11 @@ class MessageSource extends \yii\base\Component {
 
 	// Instance methods --------------------------------------------
 
+	// Yii interfaces ------------------------
+
 	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 

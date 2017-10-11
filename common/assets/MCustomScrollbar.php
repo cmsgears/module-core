@@ -6,7 +6,7 @@
  * @package module
  * @subpackage core
  */
-namespace cmsgears\core\common\guidelines;
+namespace cmsgears\core\common\assets;
 
 // Yii Imports
 use yii\web\View;

@@ -10,7 +10,6 @@ namespace cmsgears\core\common\components;
 
 // Yii Imports
 use Yii;
-use yii\helpers\FileHelper;
 
 /**
  * The mail component used for sending possible mails by the CMSGears core module. It must be initialised
@@ -35,21 +34,16 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 	const MAIL_COMMENT_DELETE_REQUEST		= 'comment/delete-request';
 
 	// Public -----------------
+        
+        public $htmlLayout      = '@cmsgears/module-core/common/mails/layouts/html';
+        public $textLayout      = '@cmsgears/module-core/common/mails/layouts/text';
+        public $viewPath        = '@cmsgears/module-core/common/mails/views';
 
 	// Protected --------------
 
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
-        
-        public function init() {
-            
-            parent::init();
-            
-            $this->htmlLayout   = FileHelper::normalizePath( '@cmsgears/module-core/common/mails/layouts/html' );
-            $this->textLayout   = FileHelper::normalizePath( '@cmsgears/module-core/common/mails/layouts/text' );
-            $this->viewPath     = FileHelper::normalizePath( '@cmsgears/module-core/common/mails/views' );
-        }
 
 	// Instance methods --------------------------------------------
 

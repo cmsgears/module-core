@@ -8,6 +8,10 @@
  */
 namespace cmsgears\core\common\components;
 
+// Yii Imports
+use Yii;
+use yii\helpers\FileHelper;
+
 /**
  * The mail component used for sending possible mails by the CMSGears core module. It must be initialised
  * for app using the name coreMailer. It's used by various controllers to trigger mails.
@@ -32,15 +36,20 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 
 	// Public -----------------
 
-	public $htmlLayout			= '@cmsgears/module-core/common/mails/layouts/html';
-	public $textLayout			= '@cmsgears/module-core/common/mails/layouts/text';
-	public $viewPath			= '@cmsgears/module-core/common/mails/views';
-
 	// Protected --------------
 
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
+        
+        public function init() {
+            
+            parent::init();
+            
+            $this->htmlLayout   = FileHelper::normalizePath( '@cmsgears/module-core/common/mails/layouts/html' );
+            $this->textLayout   = FileHelper::normalizePath( '@cmsgears/module-core/common/mails/layouts/text' );
+            $this->viewPath     = FileHelper::normalizePath( '@cmsgears/module-core/common/mails/views' );
+        }
 
 	// Instance methods --------------------------------------------
 

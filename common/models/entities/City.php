@@ -70,8 +70,8 @@ class City extends \cmsgears\core\common\models\base\Entity {
 			// Required, Safe
 			[ [ 'countryId', 'name' ], 'required' ],
 			[ [ 'id' ], 'safe' ],
-			// Unique
-			[ [ 'countryId', 'provinceId', 'zone', 'name' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'zone', 'name' ] ],
+			// Unique - Disabled to allow city/village with same name within a zone
+			// [ [ 'countryId', 'provinceId', 'zone', 'name' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'zone', 'name' ] ],
 			// Text Limit
 			[ [ 'zone', 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			[ 'postal', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],

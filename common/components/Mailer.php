@@ -26,15 +26,15 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 
 	const MAIL_ACCOUNT_CREATE			= "account/create";
 	const MAIL_ACCOUNT_ACTIVATE			= "account/activate";
-	const MAIL_REG					= "register";
+	const MAIL_REG						= "register";
 	const MAIL_REG_CONFIRM				= "register-confirm";
 	const MAIL_PASSWORD_RESET			= "password-reset";
 	const MAIL_PASSWORD_CHANGE			= 'password-change';
-	const MAIL_COMMENT_SPAM_REQUEST			= 'comment/spam-request';
-	const MAIL_COMMENT_DELETE_REQUEST		= 'comment/delete-request';
+	const MAIL_COMMENT_SPAM_REQUEST		= 'comment/spam-request';
+	const MAIL_COMMENT_DELETE_REQUEST	= 'comment/delete-request';
 
 	// Public -----------------
-        
+
         public $htmlLayout      = '@cmsgears/module-core/common/mails/layouts/html';
         public $textLayout      = '@cmsgears/module-core/common/mails/layouts/text';
         public $viewPath        = '@cmsgears/module-core/common/mails/views';

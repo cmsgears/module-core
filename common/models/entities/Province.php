@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
@@ -162,12 +162,12 @@ class Province extends \cmsgears\core\common\models\base\Entity {
 		return self::find()->where( 'countryId=:id', [ ':id' => $countryId ] )->all();
 	}
 
-	public static function findByCode( $code, $first = true ) {
+	public static function findByCode( $code ) {
 
-		if( $first ) {
+		return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
+	}
 
-			return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
-		}
+	public static function findAllByCode( $code ) {
 
 		return self::find()->where( 'code=:code', [ ':code' => $code ] )->all();
 	}

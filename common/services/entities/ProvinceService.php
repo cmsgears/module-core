@@ -13,8 +13,9 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\services\traits\NameTrait;
 
 use cmsgears\core\common\services\interfaces\entities\IProvinceService;
+use cmsgears\core\common\services\base\EntityService;
 
-class ProvinceService extends \cmsgears\core\common\services\base\EntityService implements IProvinceService {
+class ProvinceService extends EntityService implements IProvinceService {
 
 	// Variables ---------------------------------------------------
 
@@ -142,6 +143,13 @@ class ProvinceService extends \cmsgears\core\common\services\base\EntityService 
 		$modelClass	= self::$modelClass;
 
 		return $modelClass::findByCode( $code );
+	}
+
+	public function getAllByCode( $code ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findAllByCode( $code );
 	}
 
 	public function getByCountryIdCode( $countryId, $code ) {

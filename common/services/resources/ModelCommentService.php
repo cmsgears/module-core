@@ -216,15 +216,19 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 	}
 
 	public function getCommentPageByParent( $parentId, $parentType, $config = [] ) {
+        
+        $modelTable  = self::$modelTable;
 
-		$config[ 'conditions' ][ 'type' ] = ModelComment::TYPE_COMMENT;
+		$config[ 'conditions' ][ "$modelTable.type" ] = ModelComment::TYPE_COMMENT;
 
 		return $this->getPageByParent( $parentId, $parentType, $config );
 	}
 
 	public function getReviewPageByParent( $parentId, $parentType, $config = [] ) {
+        
+        $modelTable  = self::$modelTable;
 
-		$config[ 'conditions' ][ 'type' ] = ModelComment::TYPE_REVIEW;
+		$config[ 'conditions' ][ "$modelTable.type" ] = ModelComment::TYPE_REVIEW;
 
 		return $this->getPageByParent( $parentId, $parentType, $config );
 	}

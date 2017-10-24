@@ -136,8 +136,8 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 		return [
 			'countryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
 			'provinceId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PROVINCE ),
-			'cityId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
-			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE1 ),
+			'cityId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CITY ),
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'line1' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE1 ),
 			'line2' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE2 ),
 			'line3' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE3 ),

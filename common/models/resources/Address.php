@@ -278,3 +278,4 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 	// Delete -----------------
 
 }
+

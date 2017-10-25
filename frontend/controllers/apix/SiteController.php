@@ -108,7 +108,13 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 	}
 
-	public function actionLogin() {
+	public function actionLogin( $redirect = null ) {
+
+		// Remember url for redirect on login
+		if( isset( $redirect ) ) {
+
+			Url::remember( $redirect, CoreGlobal::REDIRECT_LOGIN );
+		}
 
 		// Create Form Model
 		$model			= new Login();

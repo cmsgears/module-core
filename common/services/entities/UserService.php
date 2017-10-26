@@ -593,6 +593,20 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		}
 	}
 
+	// Log last activity ----
+
+	public function logLastActivity() {
+
+		$user	= Yii::$app->user->getIdentity();
+
+		if( isset( $user ) ) {
+
+			$user->lastActivityAt	= Date( 'Y-m-d h:i:s' );
+
+			$this->update( $user, [ 'attributes' => [ 'lastActivityAt' ] ] );
+		}
+	}
+
 	// Delete -------------
 
 	public function delete( $model, $config = [] ) {

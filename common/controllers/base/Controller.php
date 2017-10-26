@@ -68,6 +68,9 @@ abstract class Controller extends \yii\web\Controller {
 			Yii::$app->assetManager->forceCopy = true;
 		}
 
+		// Log user's last activity if any.
+		Yii::$app->factory->get( 'userService' )->logLastActivity();
+
 		return parent::beforeAction( $action );
 	}
 

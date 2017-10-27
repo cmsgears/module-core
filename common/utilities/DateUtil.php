@@ -100,6 +100,22 @@ class DateUtil {
 	}
 
 	/**
+	 * @return time - current time having specified format in UTC
+	 */
+	public static function getTimeUtc( $format = null ) {
+
+		$UTC	= new \DateTimeZone("UTC");
+		$date	= new \DateTime( "now", $UTC );
+
+		if( !isset( $format ) ) {
+
+			$format	= 'H:i:s';
+		}
+
+		return $date->format( $format );
+	}
+
+	/**
 	 * @return date - from datetime
 	 */
 	public static function getDateFromDateTime( $date ) {

@@ -530,29 +530,29 @@ class DateUtil {
 	function getTimezoneList() {
 
 		$regions = [
-			DateTimeZone::AFRICA,
-			DateTimeZone::AMERICA,
-			DateTimeZone::ANTARCTICA,
-			DateTimeZone::ASIA,
-			DateTimeZone::ATLANTIC,
-			DateTimeZone::AUSTRALIA,
-			DateTimeZone::EUROPE,
-			DateTimeZone::INDIAN,
-			DateTimeZone::PACIFIC,
+			\DateTimeZone::AFRICA,
+			\DateTimeZone::AMERICA,
+			\DateTimeZone::ANTARCTICA,
+			\DateTimeZone::ASIA,
+			\DateTimeZone::ATLANTIC,
+			\DateTimeZone::AUSTRALIA,
+			\DateTimeZone::EUROPE,
+			\DateTimeZone::INDIAN,
+			\DateTimeZone::PACIFIC,
 		];
 
 		$timezones = array();
 
 		foreach( $regions as $region ) {
 
-			$timezones = array_merge( $timezones, DateTimeZone::listIdentifiers( $region ) );
+			$timezones = array_merge( $timezones, \DateTimeZone::listIdentifiers( $region ) );
 		}
 
 		$timezone_offsets = array();
 
 		foreach( $timezones as $timezone ) {
 
-			$tz = new DateTimeZone( $timezone );
+			$tz = new \DateTimeZone( $timezone );
 
 			$timezone_offsets[$timezone] = $tz->getOffset( new DateTime );
 		}

@@ -43,7 +43,7 @@ class BillingAddress extends Address {
 
 	// Validators ----------------------------
 
-	// ShippingAddress -----------------------
+	// BillingAddress ------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -53,7 +53,7 @@ class BillingAddress extends Address {
 
 	// CMG parent classes --------------------
 
-	// ShippingAddress -----------------------
+	// BillingAddress ------------------------
 
 	// Read - Query -----------
 

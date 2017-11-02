@@ -102,17 +102,33 @@ class DateUtil {
 	/**
 	 * @return time - current time having specified format in UTC
 	 */
-	public static function getTimeUtc( $format = null ) {
+	public static function getTimeUtc( $format = null, $timezone = 'UTC', $date = "now"  ) {
 
-		$UTC	= new \DateTimeZone("UTC");
-		$date	= new \DateTime( "now", $UTC );
+		$UTC		= new \DateTimeZone( $timezone );
+		$dateUTC	= new \DateTime( $date, $UTC );
 
 		if( !isset( $format ) ) {
 
 			$format	= 'H:i:s';
 		}
 
-		return $date->format( $format );
+		return $dateUTC->format( $format );
+	}
+	
+	/**
+	 * @return time - current time having specified format in UTC
+	 */
+	public static function getDateUtc( $format = null, $timezone = 'UTC', $date = "now"  ) {
+
+		$UTC		= new \DateTimeZone( $timezone );
+		$dateUTC	= new \DateTime( $date, $UTC );
+
+		if( !isset( $format ) ) {
+
+			$format	= 'Y-m-d';
+		}
+
+		return $dateUTC->format( $format );
 	}
 
 	/**

@@ -181,6 +181,11 @@ class Core extends \cmsgears\core\common\base\Component {
 	public $notifications		= false;
 
 	/**
+	 * @var Switch for activities feature. If it's set to true, either Notify Module must be installed or eventManager component must be configured.
+	 */
+	public $activities			= false;
+
+	/**
 	 * @var Update selective allows services to update selected columns.
 	 */
 	public $updateSelective		= true;
@@ -441,6 +446,14 @@ class Core extends \cmsgears\core\common\base\Component {
 	public function isNotifications() {
 
 		return $this->notifications;
+	}
+
+	/**
+	 * To test whether notifications are enabled.
+	 */
+	public function isActivities() {
+
+		return $this->activities;
 	}
 
 	public function isUpdateSelective() {

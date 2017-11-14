@@ -74,7 +74,11 @@ abstract class TemplateController extends CrudController {
 
 			$this->modelService->add( $model );
 
-			return $this->redirect( "update?id=$model->id" );
+			$model->refresh();
+			
+			$this->model = $model;
+			
+			return $this->redirect( "all" );
 		}
 
 		return $this->render( 'create', [

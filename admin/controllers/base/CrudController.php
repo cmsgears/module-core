@@ -159,6 +159,8 @@ abstract class CrudController extends Controller {
 
 					$this->modelService->delete( $model );
 
+					$this->model = $model;
+					
 					return $this->redirect( $this->returnUrl );
 				}
 				catch( Exception $e ) {

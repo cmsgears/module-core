@@ -1,12 +1,14 @@
 <?php
 namespace cmsgears\core\common\services\mappers;
 
+//Yii Imports
+use Yii;
+
 // CMG Imports
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Address;
 use cmsgears\core\common\models\mappers\ModelAddress;
 
-use cmsgears\core\common\services\interfaces\resources\IAddressService;
 use cmsgears\core\common\services\interfaces\mappers\IModelAddressService;
 
 use cmsgears\core\common\services\traits\MapperTrait;
@@ -48,11 +50,11 @@ class ModelAddressService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( IAddressService $addressService, $config = [] ) {
+	public function init() {
 
-		$this->addressService	= $addressService;
+		parent::init();
 
-		parent::__construct( $config );
+		$this->addressService	= Yii::$app->factory->get( 'addressService' );
 	}
 
 	// Instance methods --------------------------------------------

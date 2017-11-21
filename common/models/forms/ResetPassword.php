@@ -52,9 +52,8 @@ class ResetPassword extends \yii\base\Model {
 		$rules = [
 			[ [ 'email', 'password', 'password_repeat' ], 'required' ],
 			[ 'oldPassword', 'required', 'on' => [ 'oldPassword' ] ],
-			[ 'password_repeat', 'compare', 'compareAttribute'=>'password', 'message'=> CoreGlobal::ERROR_PASSWORD  ],
+			[ 'password_repeat', 'compare', 'compareAttribute'=>'password' ],
 			[ 'email', 'email' ],
-			[ 'password', 'compare' ],
 			[ 'password', 'password' ],
 			[ 'oldPassword', 'oldPasswordValidator' ]
 		];

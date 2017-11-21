@@ -141,7 +141,7 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 		$rules = [
 			// Required, Safe
 			[ [ 'parentId', 'parentType', 'name', 'email' ], 'required' ],
-			[ [ 'id', 'content', 'data' ], 'safe' ],
+			[ [ 'id', 'content', 'data', 'type' ], 'safe' ],
 			// Email
 			[ 'email', 'email' ],
 			// Text Limit
@@ -154,7 +154,7 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 			[ 'captcha', 'captcha', 'captchaAction' => '/core/site/captcha', 'on' => 'captcha' ],
 			// Other
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
-			[ [ 'status', 'rating', 'fragment' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'status', 'fragment' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'parentId', 'baseId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'approvedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];

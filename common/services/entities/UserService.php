@@ -394,7 +394,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	 */
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'avatarId', 'genderId', 'email', 'username', 'firstName', 'lastName', 'status', 'phone', 'avatarUrl', 'websiteUrl' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'avatarId', 'genderId', 'email', 'username', 'firstName', 'lastName', 'status', 'phone', 'avatarUrl', 'websiteUrl', 'dob' ];
 		$avatar		= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 
 		// Save Files

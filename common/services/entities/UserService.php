@@ -238,7 +238,9 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	 */
 	public function getByAccessToken( $token ) {
 
-		return User::findByAccessToken( $token );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByAccessToken( $token );
 	}
 
 	/**
@@ -247,7 +249,9 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	 */
 	public function getByEmail( $email ) {
 
-		return User::findByEmail( $email );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByEmail( $email );
 	}
 
 	/**
@@ -256,7 +260,9 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	 */
 	public function isExistByEmail( $email ) {
 
-		$user = User::findByEmail( $email );
+		$modelClass	= static::$modelClass;
+
+		$user = $modelClass::findByEmail( $email );
 
 		return isset( $user );
 	}
@@ -267,7 +273,9 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	 */
 	public function getByUsername( $username ) {
 
-		return User::findByUsername( $username );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByUsername( $username );
 	}
 
 	/**
@@ -276,7 +284,9 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	 */
 	public function isExistByUsername( $username ) {
 
-		$user = User::findByUsername( $username );
+		$modelClass	= static::$modelClass;
+
+		$user = $modelClass::findByUsername( $username );
 
 		return isset( $user );
 	}

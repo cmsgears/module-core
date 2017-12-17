@@ -400,9 +400,9 @@ class CodeGenUtil {
 			$metaContent	.= "<meta name='description' content='$description' />";
 		}
 
-		if( isset( $params[ 'meta' ] ) ) {
+		if( isset( $params[ 'keywords' ] ) ) {
 
-			$keywords		= $params[ 'meta' ];
+			$keywords		= $params[ 'keywords' ];
 			$keywords		= preg_split( "/,/", $keywords );
 
 			if( count( $keywords ) > $keywordsLimit ) {

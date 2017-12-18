@@ -1,4 +1,6 @@
 <?php
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 
 class m160620_095703_core extends \yii\db\Migration {
 
@@ -109,6 +111,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'modifiedBy' => $this->bigInteger( 20 ),
 			'name' => $this->string( Yii::$app->core->largeText )->notNull(),
 			'slug' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'type' => $this->string( Yii::$app->core->mediumText )->notNull()->defaultValue( CoreGlobal::TYPE_SITE ),
 			'description' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'default' => $this->boolean()->notNull()->defaultValue( false ),
 			'renderer' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),

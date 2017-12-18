@@ -53,6 +53,7 @@ class CoreGlobal {
 	const TYPE_PROVINCE			= 'province';
 	const TYPE_ROLE				= 'role';
 	const TYPE_SITE				= 'site';
+	const TYPE_APP				= 'app';
 	const TYPE_TEMPLATE			= 'template';
 	const TYPE_THEME			= 'theme';
 	const TYPE_USER				= 'user';

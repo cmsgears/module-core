@@ -87,6 +87,12 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 	                'default' => SORT_DESC,
 	                'label' => "Slug"
 	            ],
+	            'type' => [
+	                'asc' => [ "$modelTable.type" => SORT_ASC ],
+	                'desc' => [ "$modelTable.type" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => "Type"
+	            ],
 	            'default' => [
 	                'asc' => [ "$modelTable.default" => SORT_ASC ],
 	                'desc' => [ "$modelTable.default" => SORT_DESC ],
@@ -193,10 +199,24 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 		]);
 	}
 
-	public function makeDefault( $model, $config = [] ) {
+	/**
+	 * Make the default theme available for all sites in case no theme is selected.
+	 *
+	 * @param type $model
+	 * @param type $config
+	 * @return type
+	 */
+	public function makeDefault( Theme $model, $config = [] ) {
+
+		$type = CoreGlobal::TYPE_SITE;
+
+		if( $model->type !== $type ) {
+
+			return false;
+		}
 
 		// Disable All
-		Theme::updateAll( [ 'default' => false ], '`default`=1' );
+		Theme::updateAll( [ 'default' => false ], "`default`=1 AND `type`='$type'" );
 
 		// Make Default
 		$model->default = true;

@@ -25,7 +25,7 @@ trait CategoryTrait {
 		$modelCategoryTable	= CoreTables::TABLE_MODEL_CATEGORY;
 
 		return $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->modelType' AND $modelCategoryTable.active=1" );
+					->where( "$modelCategoryTable.parentType='$this->modelType' AND $modelCategoryTable.active=1" );
 	}
 
 	/**

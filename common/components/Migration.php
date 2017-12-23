@@ -29,7 +29,7 @@ class Migration extends \yii\base\Component {
 
 	// Table prefix
 	public $cmgPrefix		= 'cmg_'; // Used for CMSGears tables
-	public $appPrefix		= 'app_'; // Used for app tables
+	public $sitePrefix		= 'site_'; // Used for project tables
 
 	public $fk				= true;
 

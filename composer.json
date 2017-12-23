@@ -14,7 +14,7 @@
 		}
 	},
     "require": {
-		"php": ">=7.0.0",
+		"php": ">=5.4.0",
 		"yiisoft/yii2": "2.0.13",
 		"yiisoft/yii2-swiftmailer": "2.1.*"
     }

@@ -75,6 +75,20 @@ class SiteMemberService extends \cmsgears\core\common\services\base\EntityServic
 
 	/**
 	 * @param integer $siteId
+	 * @return SiteMembers - for the given site
+	 */
+	public function getSiteMemberBySiteId( $siteId ) {
+
+		$modelTable	= static::$modelTable;
+
+		$config = [];
+		$config[ 'conditions' ][ "$modelTable.siteId" ]	= $siteId;
+
+		return $this->getPage( $config );
+	}
+
+	/**
+	 * @param integer $siteId
 	 * @param integer $userId
 	 * @return SiteMember - for the given site and user
 	 */
@@ -111,7 +125,7 @@ class SiteMemberService extends \cmsgears\core\common\services\base\EntityServic
 			$siteMember->roleId	= $role->id;
 		}
 
-		$siteMember->siteId = Yii::$app->core->siteId;
+		$siteMember->siteId = isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 		$siteMember->userId	= $user->id;
 
 		return parent::create( $siteMember, $config );

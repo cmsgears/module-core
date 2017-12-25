@@ -17,6 +17,8 @@ interface ISiteMemberService extends \cmsgears\core\common\services\interfaces\b
 
 	public function findBySiteIdUserId( $siteId, $userId );
 
+	public function getSiteMemberBySiteId( $siteId );
+
 	// Read - Lists ----
 
 	// Read - Maps -----

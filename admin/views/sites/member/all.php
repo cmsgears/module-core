@@ -11,11 +11,10 @@ $this->title	= 'Sites | ' . $coreProperties->getSiteTitle();
 $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 ?>
 <?= DataGrid::widget([
-	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
+	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create?siteId='.$siteId, 'data' => [ ],
 	'title' => 'Sites', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name' ],
+	'searchColumns' => [  ],
 	'sortColumns' => [
-		'name' => 'Name', 'slug' => 'Slug', 'order' => 'Order', 'active' => 'Active'
 	],
 	'filters' => [ 'status' => [ 'file' => 'File Render', 'layout' => 'Group Layout' ] ],
 	'reportColumns' => [
@@ -27,20 +26,19 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 		'model' => [ 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x6', null, null, 'x5', null ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x5', 'x2', 'x3', 'x4' ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
-		'name' => 'Name',
-		'order' => 'Order',
-		'active' => [ 'title' => 'Active', 'generate' => function( $model ) { return $model->getActiveStr(); } ],
-		'theme' => [ 'title' => 'Theme', 'generate' => function( $model ) { return $model->theme->name; } ],
+		'userId' => [ 'title' => 'Name', 'generate' => function( $model ) { $user = $model->getUser()->one(); return $user->firstName; } ],
+		'siteId' => 'siteId',
+		'roleId' => [ 'title' => 'Role', 'generate' => function( $model ) { $role = $model->getRole()->one(); return $role->name; } ],
 		'actions' => 'Actions'
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
 	'templateDir' => '@themes/admin/views/templates/widget/grid',
 	//'dataView' => "$moduleTemplates/grid/data/site",
 	//'cardView' => "$moduleTemplates/grid/cards/site",
-	'actionView' => "$moduleTemplates/grid/actions/site"
+	//'actionView' => "$moduleTemplates/grid/actions/site"
 ]) ?>
 
 <?= Popup::widget([
@@ -52,5 +50,5 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 <?= Popup::widget([
 	'title' => 'Delete Site', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'delete',
-	'data' => [ 'model' => 'Site', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "core/sites/delete?id=" ]
+	'data' => [ 'model' => 'Site', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "core/sites/member/delete?id=" ]
 ]) ?>

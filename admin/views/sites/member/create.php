@@ -18,13 +18,12 @@ $actionUrl	= "core/sites/member/member?siteId=". $siteId ;
 			<div class="box-header">
 				<div class="box-header-title">Member Details</div>
 			</div>
-			<div class="box-content-wrap frm-split-40-60">
+			<div class="box-content-wrap ">
 				<div class="box-content">
 					<div class="row row-inline">
-						<div class="col col2" cmt-app="" cmt-controller="" cmt-action=""  >
-							<div class="mapper mapper-auto mapper-auto-categories">
+						<div class="col col2">
+							<div class="mapper mapper-auto ">
 								<div class="auto-fill auto-fill-basic">
-									
 									<div class="auto-fill-source" cmt-app="<?= $app ?>" cmt-controller="<?= $controller ?>" cmt-action="<?= $action ?>" action="<?= $actionUrl ?>" cmt-keep cmt-custom>
 										<div class="relative">
 											<div class="auto-fill-search clearfix">
@@ -38,8 +37,8 @@ $actionUrl	= "core/sites/member/member?siteId=". $siteId ;
 											</div>
 										</div>
 									</div>
-									<div class="filler-height"></div>
-									<div class="site-member hidden-easy" >
+									<div class="filler-height filler-height-large"></div>
+									<div class="site-member hidden-easy frm-split-40-60" >
 										<label> Username </label>
 										<input id="username" type="text" name="username" readonly>
 										<?= $form->field( $model, 'siteId' )->hiddenInput( ['value'=> $siteId])->label( false )  ?>
@@ -70,3 +69,4 @@ $actionUrl	= "core/sites/member/member?siteId=". $siteId ;
 
 	</div>
 </div>
+

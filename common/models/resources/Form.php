@@ -118,7 +118,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 				'attribute' => 'name',
 				'slugAttribute' => 'slug',
 				'immutable' => true,
-				'ensureUnique' => true
+				'ensureUnique' => false
 			]
 		];
 	}
@@ -136,7 +136,8 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 			[ [ 'name', 'siteId', 'captcha', 'visibility', 'active' ], 'required' ],
 			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
 			// Unique
-			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			[ [ 'siteId', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'siteId', 'name', 'type' ] ],
+			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

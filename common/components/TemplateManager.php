@@ -151,9 +151,10 @@ class TemplateManager extends \yii\base\Component {
 
 				case 'twig': {
 
-					$twig		= new \Twig_Environment( new \Twig_Loader_String() );
+					$tplName	= uniqid( 'string_template_', true );
+					$twig		= new \Twig_Environment( new \Twig_Loader_Array( [ $tplName => $template->content ] ) );
 
-					$content	= $twig->render( $template->content, $models );
+					$content	= $twig->render( $tplName, $models );
 
 					return $content;
 

@@ -109,7 +109,7 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 				'attribute' => 'name',
 				'slugAttribute' => 'slug',
 				'immutable' => true,
-				'ensureUnique' => true
+				'ensureUnique' => false
 			],
 			'timestampBehavior' => [
 				'class' => TimestampBehavior::className(),
@@ -133,7 +133,8 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 			[ [ 'siteId', 'name', 'type' ], 'required' ],
 			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
 			// Unique
-			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			[ [ 'siteId', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'siteId', 'name', 'type' ] ],
+			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
 			// Text Limit
 			[ [ 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

@@ -87,7 +87,7 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 				'attribute' => 'name',
 				'slugAttribute' => 'slug',
 				'immutable' => true,
-				'ensureUnique' => true
+				'ensureUnique' => false
 			]
 		];
 	}
@@ -107,6 +107,7 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 			// Unique
 			// Notes: disabled it in order to allow sub categories having same name as parent, but with different slug. It can be enable based on project needs by extending the model and service.
 			//[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

@@ -7,6 +7,36 @@ use \DateTime;
  * DateUtil provide several utility methods related to date and time.
  */
 class DateUtil {
+    
+    // Months ------------------------------------------------------
+    const MONTH_JAN     = 1;
+    const MONTH_FEB     = 2;
+    const MONTH_MAR     = 3;
+    const MONTH_APR     = 4;
+    const MONTH_MAY     = 5;
+    const MONTH_JUN     = 6;
+    const MONTH_JUL     = 7;
+    const MONTH_AUG     = 8;
+    const MONTH_SEP     = 9;
+    const MONTH_OCT     = 10;
+    const MONTH_NOV     = 11;
+    const MONTH_DEC     = 12;
+    
+    public static $monthsMap = [
+        self::MONTH_JAN => 'January',  
+        self::MONTH_FEB => 'February', 
+        self::MONTH_MAR => 'March', 
+        self::MONTH_APR => 'April', 
+        self::MONTH_MAY => 'May', 
+        self::MONTH_JUN => 'June', 
+        self::MONTH_JUL => 'July', 
+        self::MONTH_AUG => 'August', 
+        self::MONTH_SEP => 'September', 
+        self::MONTH_OCT => 'October', 
+        self::MONTH_NOV => 'November', 
+        self::MONTH_DEC =>'December' 
+    ];
+    
 
 	// Week Days ---------------------------------------------------
 
@@ -590,4 +620,17 @@ class DateUtil {
 
 		return $timezone_list;
 	}
+    
+    // Dates list from 1 to 31
+    public static function getDatesList() {
+        
+        $list   = [];
+        
+        for( $i = 1; $i <= 31; $i++ ) {
+            
+            $list[ $i ] = $i;
+        }
+        
+        return $list;
+    }
 }

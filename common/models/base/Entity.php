@@ -212,7 +212,7 @@ abstract class Entity extends \yii\db\ActiveRecord {
 
 			foreach ( $groups as $group ) {
 
-				$query	= $query->groupBy( $groups );
+				$query	= $query->groupBy( $group );
 			}
 		}
 

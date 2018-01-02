@@ -37,11 +37,11 @@ trait SlugTypeTrait {
 	/**
 	 * @return ActiveRecord - having matching slug.
 	 */
-	public static function queryBySlug( $slug ) {
+	public static function queryBySlug( $slug, $config = [] ) {
 
 		if( static::$multiSite ) {
 
-			$siteId	= Yii::$app->core->siteId;
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : (static::$multiSite ? Yii::$app->core->siteId : null );
 
 			return static::find()->where( 'slug=:slug AND siteId=:siteId', [ ':slug' => $slug, ':siteId' => $siteId ] );
 		}
@@ -54,11 +54,11 @@ trait SlugTypeTrait {
 	/**
 	 * @return ActiveRecord - having matching slug for a specific type.
 	 */
-	public static function queryBySlugType( $slug, $type ) {
+	public static function queryBySlugType( $slug, $type, $config = [] ) {
 
 		if( static::$multiSite ) {
 
-			$siteId	= Yii::$app->core->siteId;
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : (static::$multiSite ? Yii::$app->core->siteId : null );
 
 			return static::find()->where( 'slug=:slug AND type=:type AND siteId=:siteId', [ ':slug' => $slug, ':type' => $type, ':siteId' => $siteId ] );
 		}
@@ -73,30 +73,30 @@ trait SlugTypeTrait {
 	/**
 	 * @return mixed - by slug
 	 */
-	public static function findBySlug( $slug, $first = false ) {
+	public static function findBySlug( $slug, $first = false, $config = [] ) {
 
 		if( $first ) {
 
-			return self::queryBySlug( $slug )->one();
+			return self::queryBySlug( $slug, $config )->one();
 		}
 
-		return self::queryBySlug( $slug )->all();
+		return self::queryBySlug( $slug, $config )->all();
 	}
 
 	/**
 	 * @return ActiveRecord - by slug and type
 	 */
-	public static function findBySlugType( $slug, $type ) {
+	public static function findBySlugType( $slug, $type, $config = [] ) {
 
-		return self::queryBySlugType( $slug, $type )->one();
+		return self::queryBySlugType( $slug, $type, $config )->one();
 	}
 
 	/**
 	 * @return boolean - check whether model exist for given slug and type
 	 */
-	public static function isExistBySlugType( $slug, $type ) {
+	public static function isExistBySlugType( $slug, $type, $config = [] ) {
 
-		$model	= static::findBySlugType( $slug, $type );
+		$model	= static::findBySlugType( $slug, $type, $config );
 
 		return isset( $model );
 	}

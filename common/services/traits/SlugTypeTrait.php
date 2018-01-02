@@ -22,18 +22,18 @@ trait SlugTypeTrait {
 
 	// Read - Models ---
 
-	public function getBySlug( $slug, $first = false ) {
+	public function getBySlug( $slug, $first = false, $config = [] ) {
 
 		$modelClass = static::$modelClass;
 
-		return $modelClass::findBySlug( $slug, $first );
+		return $modelClass::findBySlug( $slug, $first, $config );
 	}
 
-	public function getBySlugType( $slug, $type ) {
+	public function getBySlugType( $slug, $type, $config = [] ) {
 
 		$modelClass = static::$modelClass;
 
-		return $modelClass::findBySlugType( $slug, $type );
+		return $modelClass::findBySlugType( $slug, $type, $config );
 	}
 
 	// Read - Lists ----

@@ -151,7 +151,7 @@ class ModelAddressService extends \cmsgears\core\common\services\base\EntityServ
 			$addressToUpdate->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'cityName', 'zip',
 											'firstName', 'lastName', 'phone', 'email', 'fax', 'longitude', 'latitude', 'zoomLevel' ] );
 
-			$this->addressService->update( $addressToUpdate );
+			$this->addressService->update( $addressToUpdate, $config );
 
 			return $existingAddress;
 		}

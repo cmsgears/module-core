@@ -84,10 +84,10 @@ class AddressService extends \cmsgears\core\common\services\base\EntityService i
 
 		$model->provinceName	= $model->province->name;
 		$model->countryName		= $model->country->name;
+        
+        $config[ 'attributes' ] = $attributes;
 
-		return parent::update( $model, [
-			'attributes' => $attributes
-		]);
+		return parent::update( $model, $config );
 	}
 
 	// Delete -------------

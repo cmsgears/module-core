@@ -44,6 +44,20 @@ trait AddressTrait {
 		return $this->hasOne( ModelAddress::className(), [ 'parentId' => 'id' ] )
 					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] )->one();
 	}
+    
+    /**
+	 * @return Address - associated with parent having type set to default
+	 */
+	public function getDefaultAddress() {
+
+		return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] )
+					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query, $type = Address::TYPE_DEFAULT ) {
+
+						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
+
+						$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] );
+					});
+	}
 
 	/**
 	 * @return Address - associated with parent having type set to primary

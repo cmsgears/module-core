@@ -49,6 +49,18 @@ abstract class FormController extends CrudController {
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'formService' );
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+
+		// Return Url
+		$this->returnUrl		= Url::previous( 'form' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/config/all' ], true );
+		
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Forms' ] ],
+			'create' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+		];
 		
 	}
 
@@ -70,6 +82,8 @@ abstract class FormController extends CrudController {
 
 	public function actionAll() {
 
+		Url::remember( Yii::$app->request->getUrl(), 'form' );
+
 		$dataProvider = $this->modelService->getPageByType( $this->type );
 
 		return $this->render( 'all', [
@@ -89,7 +103,7 @@ abstract class FormController extends CrudController {
 
 			$this->modelService->create( $model );
 
-			return $this->redirect( "update?id=$model->id" );
+			return $this->redirect( $this->returnUrl );
 		}
 
 		$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );

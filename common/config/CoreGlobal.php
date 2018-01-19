@@ -21,7 +21,8 @@ class CoreGlobal {
 	const PAGE_ACCOUNT_ACTIVATE = 'activate-account';
 	const PAGE_PASSWORD_FORGOT	= 'forgot-password';
 	const PAGE_PASSWORD_RESET	= 'reset-password';
-	const PAGE_LOGIN			= 'login';
+	const PAGE_LOGIN				= 'login';
+	const PAGE_SITEMEMBER		= 'site-member';
 
 	const FLASH_GENERIC			= 'message';
 	const MODEL_GENERIC			= 'model';

@@ -11,6 +11,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\forms\Login;
 use cmsgears\core\common\models\forms\ForgotPassword;
 use cmsgears\core\common\models\forms\ResetPassword;
+use cmsgears\core\common\models\mappers\SiteMember;
 
 class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 
@@ -23,6 +24,7 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 	// Protected --------------
 
 	protected $userService;
+	protected $siteMemberService;
 
 	// Private ----------------
 
@@ -34,6 +36,7 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 
 		$this->crudPermission	= CoreGlobal::PERM_USER;
 		$this->userService		= Yii::$app->factory->get( 'userService' );
+		$this->siteMemberService		= Yii::$app->factory->get( 'siteMemberService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -60,7 +63,8 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 					'forgot-password' => [ 'get', 'post' ],
 					'reset-password' => [ 'get', 'post' ],
 					'login' => [ 'get', 'post' ],
-					'logout' => [ 'get' ]
+					'logout' => [ 'get' ],
+					'site-member' => [ 'get', 'post' ]
 				]
 			]
 		];
@@ -232,13 +236,46 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post(), 'Login' ) && $model->login() ) {
 
-			// Redirect user to home
-			$this->checkHome();
+			$siteId = Yii::$app->core->getSiteId();
+			$user	= $model->getUser();
+			
+			$siteMember = $this->siteMemberService->findBySiteIdUserId(  $siteId, $user->id );
+
+			if( isset( $siteMember ) ) {
+
+				// Redirect user to home
+				$this->checkHome();
+			}
+			
+			return Yii::$app->response->redirect( [ CoreGlobal::PAGE_SITEMEMBER ] )->send();
 		}
 
 		return $this->render( CoreGlobal::PAGE_LOGIN, [ CoreGlobal::MODEL_GENERIC => $model ] );
 	}
 
+	public function actionSiteMember() {
+
+			$model = new SiteMember();
+
+			$user = Yii::$app->user->getIdentity();
+
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) &&  $model->validate() ) {
+
+				$siteId = Yii::$app->core->getSiteId();
+
+				$siteMember = $this->siteMemberService->findBySiteIdUserId( $siteId, $user->id );
+
+				if( !isset( $siteMember ) ) {
+
+					$this->siteMemberService->create( $user );
+	
+					$this->checkHome();
+				}
+			}
+			
+			return $this->render( CoreGlobal::PAGE_SITEMEMBER, [ 'user' => $user, 'model' => $model ] );
+	}
+	
 	/**
 	 * The method clears user session and cookies and redirect user to login.
 	 */

@@ -61,14 +61,6 @@ class Application extends \yii\web\Application {
 	 */
 	public function createController( $route ) {
 
-		// site config
-		$coreProperties	= CoreProperties::getInstance();
-
-		Yii::$app->formatter->dateFormat		= $coreProperties->getDateFormat();
-		Yii::$app->formatter->timeFormat		= $coreProperties->getTimeFormat();
-		Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
-		Yii::$app->timeZone						= $coreProperties->getTimezone();
-
 		// find whether multisite is enabled
 		if( Yii::$app->core->multiSite ) {
 
@@ -105,6 +97,15 @@ class Application extends \yii\web\Application {
 
 						Yii::$app->urlManager->baseUrl	= Yii::$app->urlManager->baseUrl . "/" . $site->name;
 
+						// site config
+						$coreProperties	= CoreProperties::getInstance();
+
+						Yii::$app->formatter->dateFormat	= $coreProperties->getDateFormat();
+						Yii::$app->formatter->timeFormat	= $coreProperties->getTimeFormat();
+						Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
+						Yii::$app->timeZone			= $coreProperties->getTimezone();
+
+
 						return parent::createController( $siteRoute );
 					}
 				}
@@ -130,6 +131,14 @@ class Application extends \yii\web\Application {
 					Yii::$app->core->siteId		= $site->id;
 					Yii::$app->core->siteSlug	= $site->slug;
 
+					// site config
+					$coreProperties	= CoreProperties::getInstance();
+
+					Yii::$app->formatter->dateFormat	= $coreProperties->getDateFormat();
+					Yii::$app->formatter->timeFormat	= $coreProperties->getTimeFormat();
+					Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
+					Yii::$app->timeZone			= $coreProperties->getTimezone();
+
 					return parent::createController( $route );
 				}
 			}
@@ -145,6 +154,14 @@ class Application extends \yii\web\Application {
 				Yii::$app->core->site		= $site;
 				Yii::$app->core->siteId		= $site->id;
 			}
+
+			// site config
+			$coreProperties	= CoreProperties::getInstance();
+
+			Yii::$app->formatter->dateFormat	= $coreProperties->getDateFormat();
+			Yii::$app->formatter->timeFormat	= $coreProperties->getTimeFormat();
+			Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
+			Yii::$app->timeZone			= $coreProperties->getTimezone();
 		}
 
 	   return parent::createController( $route );

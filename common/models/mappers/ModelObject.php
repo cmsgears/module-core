@@ -106,7 +106,7 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
 	/**
 	 * @return ObjectData - associated object
 	 */
-	public function getObject() {
+	public function getModel() {
 
 		return $this->hasOne( ObjectData::className(), [ 'id' => 'modelId' ] );
 	}
@@ -130,15 +130,8 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
 
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'object' ];
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'model' ];
 		$config[ 'relations' ]	= $relations;
-
-		return parent::queryWithAll( $config );
-	}
-
-	public static function queryWithModel( $config = [] ) {
-
-		$config[ 'relations' ]	= [ 'object' ];
 
 		return parent::queryWithAll( $config );
 	}

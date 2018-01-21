@@ -2,13 +2,15 @@
 namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\base\CoreTables;
 
 abstract class CommentController extends Controller {
 
@@ -18,14 +20,20 @@ abstract class CommentController extends Controller {
 
 	// Public -----------------
 
+	public $parentUrl;
+
 	public $commentUrl;
+
+	public $commentType;
 
 	// Protected --------------
 
 	protected $parentType;
-	protected $commentType;
 
 	protected $parentService;
+
+	// TODO: Remove it after fixing the object issue
+	protected $approved = false;
 
 	// Private ----------------
 
@@ -35,9 +43,16 @@ abstract class CommentController extends Controller {
 
 		parent::init();
 
+		// Views
 		$this->setViewPath( '@cmsgears/module-core/admin/views/comment' );
 
+		// Permission
 		$this->crudPermission	= CoreGlobal::PERM_CORE;
+
+		// Apix Base
+		$this->apixBase			= "core/comment";
+
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'modelCommentService' );
 
 		// Notes: Configure sidebar, commentUrl, parentType, commentType, parentService and returnUrl exclusively in child classes
@@ -77,7 +92,6 @@ abstract class CommentController extends Controller {
 		];
 	}
 
-
 	// yii\base\Controller ----
 
 	// CMG interfaces ------------------------
@@ -88,31 +102,28 @@ abstract class CommentController extends Controller {
 
 	public function actionAll( $pid = null ) {
 
-		if( isset( $pid ) ) {
-
-			Url::remember( [ "$this->commentUrl/all?pid=$pid" ], $this->commentUrl );
-		}
-		else {
-
-			Url::remember( [ "$this->commentUrl/all" ], $this->commentUrl );
-		}
+		Url::remember( Yii::$app->request->getUrl(), $this->commentUrl );
 
 		$model			= null;
 		$dataProvider	= null;
+        $mCommentTable	= CoreTables::TABLE_MODEL_COMMENT;
 
 		if( isset( $pid ) ) {
 
 			$model			= $this->parentService->findById( $pid );
-			$dataProvider	= $this->modelService->getPageByParent( $model->id, $this->parentType, [ 'conditions' => [ 'type' => $this->commentType ] ] );
+			$dataProvider	= $this->modelService->getPageByParent( $model->id, $this->parentType, [ 'conditions' => [ "$mCommentTable.type" => $this->commentType ] ] );
 		}
 		else {
 
-			$dataProvider	= $this->modelService->getPageByParentType( $this->parentType, [ 'conditions' => [ 'type' => $this->commentType ] ] );
+			$dataProvider	= $this->modelService->getPageByParentType( $this->parentType, [ 'conditions' => [ "$mCommentTable.type" => $this->commentType ] ] );
 		}
+
+		$parent	= isset( $pid ) ? true : false;
 
 		return $this->render( 'all', [
 			 'dataProvider' => $dataProvider,
-			 'model' => $model
+			 'model' => $model,
+			 'parent' => $parent
 		]);
 	}
 
@@ -137,9 +148,9 @@ abstract class CommentController extends Controller {
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
 
-			$this->modelService->create( $model );
+			$this->model = $this->modelService->create( $model );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		return $this->render( 'create', [
@@ -162,9 +173,14 @@ abstract class CommentController extends Controller {
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->modelService->update( $model, [ 'admin' => true ] );
+				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
 
-				return $this->redirect( $this->returnUrl );
+				if( $this->model->isAttributeChanged( 'status' ) && $this->model->isApproved() ) {
+
+					$this->approved = true;
+				}
+
+				return $this->refresh();
 			}
 
 			// Render view

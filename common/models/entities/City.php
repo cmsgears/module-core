@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
@@ -10,12 +10,15 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 
+use cmsgears\core\common\models\traits\NameTrait;
+
 /**
  * City Entity
  *
  * @property long $id
  * @property long $countryId
  * @property long $provinceId
+ * @property string $zone
  * @property string $name
  * @property string $postal
  * @property float $latitude
@@ -43,6 +46,8 @@ class City extends \cmsgears\core\common\models\base\Entity {
 
 	// Traits ------------------------------------------------------
 
+	use NameTrait;
+
 	// Constructor and Initialisation ------------------------------
 
 	// Instance methods --------------------------------------------
@@ -65,11 +70,11 @@ class City extends \cmsgears\core\common\models\base\Entity {
 			// Required, Safe
 			[ [ 'countryId', 'name' ], 'required' ],
 			[ [ 'id' ], 'safe' ],
-			// Unique
-			[ [ 'countryId', 'provinceId', 'name' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'name' ] ],
+			// Unique - Disabled to allow city/village with same name within a zone
+			// [ [ 'countryId', 'provinceId', 'zone', 'name' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'zone', 'name' ] ],
 			// Text Limit
-			[ 'postal', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
-			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'zone', 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'postal', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ [ 'countryId', 'provinceId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'latitude', 'longitude' ], 'number' ]
@@ -167,46 +172,42 @@ class City extends \cmsgears\core\common\models\base\Entity {
 		return parent::queryWithAll( $config );
 	}
 
+	public static function queryByCountryId( $countryId ) {
+
+		return self::find()->where( 'countryId=:id', [ ':id' => $countryId ] );
+	}
+
+	public static function queryByProvinceId( $provinceId ) {
+
+		return self::find()->where( 'provinceId=:id', [ ':id' => $provinceId ] );
+	}
+
+	public static function queryByCountryIdProvinceId( $countryId, $provinceId ) {
+
+		return self::find()->where( 'countryId=:cid AND provinceId=:pid', [ ':cid' => $countryId, ':pid' => $provinceId ] );
+	}
+
 	// Read - Find ------------
 
 	/**
-	 * @return array - by country id
+	 * @return Province - by name, country id, province id and zone
 	 */
-	public static function findByCountryId( $countryId ) {
+	public static function findUnique( $name, $countryId, $provinceId, $zone = null ) {
 
-		return self::find()->where( 'countryId=:id', [ ':id' => $countryId ] )->all();
-	}
+		if( isset( $zone ) ) {
 
-	/**
-	 * @return array - by province id
-	 */
-	public static function findByProvinceId( $provinceId ) {
-
-		return self::find()->where( 'provinceId=:id', [ ':id' => $provinceId ] )->all();
-	}
-
-	/**
-	 * @return Province - by country id and province id
-	 */
-	public static function findByCountryIdProvinceId( $countryId, $provinceId ) {
-
-		return self::find()->where( 'countryId=:cid AND provinceId=:pid', [ ':cid' => $countryId, ':pid' => $provinceId ] )->all();
-	}
-
-	/**
-	 * @return Province - by name, country id and province id
-	 */
-	public static function findByNameCountryIdProvinceId( $name, $countryId, $provinceId ) {
+			return self::find()->where( 'name=:name AND countryId=:cid AND provinceId=:pid AND zone=:zone', [ ':name' => $name, ':cid' => $countryId, ':pid' => $provinceId, ':zone' => $zone ] )->one();
+		}
 
 		return self::find()->where( 'name=:name AND countryId=:cid AND provinceId=:pid', [ ':name' => $name, ':cid' => $countryId, ':pid' => $provinceId ] )->one();
 	}
 
 	/**
-	 * @return Province - check whether a province exist by the provided name and country id
+	 * @return Province - check whether a city exist by the provided namem country id, province id and zone
 	 */
-	public static function isExistByNameCountryIdProvinceId( $name, $countryId, $provinceId ) {
+	public static function isUniqueExist( $name, $countryId, $provinceId, $zone = null ) {
 
-		$city = self::findByNameCountryIdProvinceId( $name, $countryId, $provinceId );
+		$city = self::findUnique( $name, $countryId, $provinceId, $zone );
 
 		return isset( $city );
 	}
@@ -216,4 +217,5 @@ class City extends \cmsgears\core\common\models\base\Entity {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

@@ -2,7 +2,7 @@
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 
 // CMG Imports
@@ -28,16 +28,30 @@ class TestimonialController extends \cmsgears\core\admin\controllers\base\Commen
 
 		parent::init();
 
-		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'testimonials' ];
-
-		$this->commentUrl		= 'testimonial';
-		$this->returnUrl		= Url::previous( $this->commentUrl );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/testimonial/all' ], true );
-
+		// Config
 		$this->parentType		= CoreGlobal::TYPE_SITE;
 		$this->commentType		= ModelComment::TYPE_TESTIMONIAL;
 
+		// Services
 		$this->parentService	= Yii::$app->factory->get( 'siteService' );
+
+		// Comment Url
+		$this->commentUrl		= 'testimonial';
+
+		// Sidebar
+		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'testimonials' ];
+
+		// Return Url
+		$this->returnUrl		= Url::previous( $this->commentUrl );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/testimonial/all' ], true );
+
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Testimonials' ] ],
+			'create' => [ [ 'label' => 'Testimonials', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Testimonials', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Testimonials', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------

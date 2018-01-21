@@ -64,6 +64,8 @@ class CoreProperties extends CmgProperties {
 
 	const PROP_REGISTRATION			= 'registration';
 
+	const PROP_LOGIN				= 'login';
+
 	const PROP_CHANGE_EMAIL			= 'change_email';
 
 	const PROP_CHANGE_USERNAME		= 'change_username';
@@ -76,9 +78,9 @@ class CoreProperties extends CmgProperties {
 
 	const PROP_TIMEZONE				= 'timezone';
 
-	const PROP_AUTOLOGIN			= 'autologin';
+	const PROP_AUTO_LOGIN			= 'auto_login';
 
-	const PROP_CACHING				= 'caching';
+	const PROP_AUTO_LOAD			= 'auto_load';
 
 	// Public -----------------
 
@@ -206,6 +208,14 @@ class CoreProperties extends CmgProperties {
 	}
 
 	/**
+	 * Returns whether login is allowed from site.
+	 */
+	public function isLogin() {
+
+		return $this->properties[ self::PROP_LOGIN ];
+	}
+
+	/**
 	 * Returns whether email change is allowed fur user profile.
 	 */
 	public function isChangeEmail() {
@@ -243,12 +253,12 @@ class CoreProperties extends CmgProperties {
 
 	public function isAutoLogin() {
 
-		return $this->properties[ self::PROP_AUTOLOGIN ];
+		return $this->properties[ self::PROP_AUTO_LOGIN ];
 	}
 
-	public function isCaching() {
+	public function isAutoLoad() {
 
-		return $this->properties[ self::PROP_CACHING ];
+		return $this->properties[ self::PROP_AUTO_LOAD ];
 	}
 
 	/**

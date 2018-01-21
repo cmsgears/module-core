@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
@@ -189,11 +189,11 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 		if( $this->changed ) {
 
-			return Yii::$app->fileManager->uploadUrl . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "." . $this->extension;
+			return Yii::$app->fileManager->uploadUrl . '/' . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "." . $this->extension;
 		}
 		else if( $this->id > 0 ) {
 
-			return Yii::$app->fileManager->uploadUrl . $this->url;
+			return Yii::$app->fileManager->uploadUrl . '/' . $this->url;
 		}
 
 		return "";
@@ -203,11 +203,11 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 		if( $this->changed ) {
 
-			return Yii::$app->fileManager->uploadUrl . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "-medium." . $this->extension;
+			return Yii::$app->fileManager->uploadUrl . '/' . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "-medium." . $this->extension;
 		}
 		else if( $this->id > 0 ) {
 
-			return Yii::$app->fileManager->uploadUrl . $this->medium;
+			return Yii::$app->fileManager->uploadUrl . '/' . $this->medium;
 		}
 
 		return "";
@@ -220,11 +220,11 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 		if( $this->changed ) {
 
-			return Yii::$app->fileManager->uploadUrl . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "-thumb." . $this->extension;
+			return Yii::$app->fileManager->uploadUrl . '/' . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "-thumb." . $this->extension;
 		}
 		else if( $this->id > 0 ) {
 
-			return Yii::$app->fileManager->uploadUrl . $this->thumb;
+			return Yii::$app->fileManager->uploadUrl . '/' . $this->thumb;
 		}
 
 		return "";
@@ -234,7 +234,7 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 		if( isset( $this->url ) ) {
 
-			return Yii::$app->fileManager->uploadDir . $this->url;
+			return Yii::$app->fileManager->uploadDir . '/' . $this->url;
 		}
 
 		return false;
@@ -244,7 +244,7 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 		if( isset( $this->medium ) ) {
 
-			return Yii::$app->fileManager->uploadDir . $this->medium;
+			return Yii::$app->fileManager->uploadDir . '/' . $this->medium;
 		}
 
 		return false;
@@ -254,10 +254,23 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 		if( isset( $this->thumb ) ) {
 
-			return Yii::$app->fileManager->uploadDir . $this->thumb;
+			return Yii::$app->fileManager->uploadDir . '/' . $this->thumb;
 		}
 
 		return false;
+	}
+
+	public function resetSize() {
+
+		$filePath	= $this->getFilePath();
+
+		if( $filePath && file_exists( $filePath ) && is_file( $filePath ) ) {
+
+			$size		= filesize( $filePath ); // bytes
+			$sizeInMb	= $size / pow( 1024, 2 );
+
+			$this->size = round( $sizeInMb, 4 ); // Round upto 4 precision, expected size at least in kb
+		}
 	}
 
 	/**
@@ -333,9 +346,32 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 		return $file;
 	}
 
+	public function loadFiles( $name, $files = [] ) {
+
+		$filesToLoad	= Yii::$app->request->post( $name );
+		$count			= count( $filesToLoad );
+
+		if ( $count > 0 ) {
+
+			$filesToLoad  = [];
+
+			for( $i = 0; $i < $count; $i++ ) {
+
+				$filesToLoad[] = new File();
+			}
+
+			File::loadMultiple( $filesToLoad, Yii::$app->request->post(), $name );
+
+			return $filesToLoad;
+		}
+
+		return $files;
+	}
+
 	// Create -----------------
 
 	// Update -----------------
 
 	// Delete -----------------
+
 }

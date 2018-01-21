@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
@@ -40,7 +40,7 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 
 	// Public -----------------
 
-	public $mParentType	= CoreGlobal::TYPE_OPTION;
+	public $modelType	= CoreGlobal::TYPE_OPTION;
 
 	// Protected --------------
 

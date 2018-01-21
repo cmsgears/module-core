@@ -1,12 +1,6 @@
 <?php
 namespace cmsgears\core\common\services\traits;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 trait ResourceTrait {
 
 	// Instance methods --------------------------------------------
@@ -63,6 +57,15 @@ trait ResourceTrait {
 		$modelClass	= self::$modelClass;
 
 		return $modelClass::deleteByParent( $parentId, $parentType );
+
+		/*
+		$models	= $this->getByParent( $parentId, $parentType );
+
+		foreach ( $models as $model ) {
+
+			$this->delete( $model );
+		}
+		 */
 	}
 
 	// Static Methods ----------------------------------------------

@@ -1,14 +1,8 @@
 <?php
 namespace cmsgears\core\common\models\traits\resources;
 
-// Yii Import
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\ModelHierarchy;
 
 /**
  * HierarchyTrait can be used to access parent child relationship.
@@ -25,7 +19,7 @@ trait HierarchyTrait {
 
 						$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
 
-						$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->mParentType ] );
+						$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->modelType ] );
 					});
 	}
 
@@ -39,7 +33,7 @@ trait HierarchyTrait {
 
 						$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
 
-						$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->mParentType ] );
+						$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->modelType ] );
 					});
 	}
 
@@ -53,7 +47,7 @@ trait HierarchyTrait {
 
 						$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
 
-						$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->mParentType ] );
+						$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->modelType ] );
 					});
 	}
 }

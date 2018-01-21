@@ -2,7 +2,7 @@
 namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
@@ -29,6 +29,17 @@ class FileController extends \cmsgears\core\admin\controllers\base\Controller {
 		$this->enableCsrfValidation = false;
 	}
 
+	public function init() {
+
+		parent::init();
+
+		// Permissions
+		$this->crudPermission 	= CoreGlobal::PERM_ADMIN;
+
+		// Services
+		$this->modelService		= Yii::$app->factory->get( 'fileService' );
+	}
+
 	// Instance methods --------------------------------------------
 
 	// Yii interfaces ------------------------
@@ -43,13 +54,17 @@ class FileController extends \cmsgears\core\admin\controllers\base\Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'fileHandler'  => [ 'permission' => CoreGlobal::PERM_ADMIN ]
+					'file-handler'  => [ 'permission' => $this->crudPermission ],
+					'bulk' => [ 'permission' => $this->crudPermission ],
+					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'fileHandler'  => [ 'post' ]
+					'file-handler'  => [ 'post' ],
+					'bulk' => [ 'post' ],
+					'delete' => [ 'post' ]
 				]
 			]
 		];
@@ -60,7 +75,12 @@ class FileController extends \cmsgears\core\admin\controllers\base\Controller {
 	public function actions() {
 
 		return [
-			'file-handler' => [ 'class' => 'cmsgears\core\common\actions\file\FileHandler' ]
+			'file-handler' => [ 'class' => 'cmsgears\core\common\actions\file\FileHandler' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'delete' => [
+				'class' => 'cmsgears\core\common\actions\grid\Delete',
+				'config' => [ 'admin' => true ]
+			]
 		];
 	}
 

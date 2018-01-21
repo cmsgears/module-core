@@ -1,18 +1,15 @@
 <?php
 namespace cmsgears\core\common\models\traits\resources;
 
-// Yii Import
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\File;
 
 /**
- * VisualTrait can be used to assist models supporting avatar, banner, texture and video. It might be possible that few models support only one or two among these four.
- * CodeGenUtil got few utility methods to provide placeholder graphics in case a model does not have Avatar or Banner.
+ * VisualTrait can be used to assist models supporting avatar, banner, texture or video.
+ * It might be possible that few models support only one or two among these four.
+ * CodeGenUtil provides utility methods to generate placeholder graphics in case a model
+ * does not have Avatar or Banner.
  */
 trait VisualTrait {
 

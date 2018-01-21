@@ -1,30 +1,36 @@
 <?php
+/**
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ * @license https://www.cmsgears.org/license/
+ * @package module
+ * @subpackage core
+ */
 namespace cmsgears\core\common\base;
 
 // Yii Imports
-use \Yii;
-use yii\base\Component;
+use Yii;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\config\CoreProperties;
 
 use cmsgears\core\common\services\entities\SiteService;
 
+/**
+ * The Application extends yii web Application and adds multi-site routing support.
+ *
+ * It read core properties and configure application's date, time format and initialise time-zone.
+ *
+ * It alter the request and read child site name in case application supports multi-site either at sub-domain or sub-directory level.
+ *
+ * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
+ * @since 1.0.0
+ */
 class Application extends \yii\web\Application {
 
 	// Variables ---------------------------------------------------
 
-	// Globals -------------------------------
-
-	// Constants --------------
-
-	// Public -----------------
-
-	// Protected --------------
-
-	// Variables -----------------------------
+	// Globals ----------------
 
 	// Public -----------------
 
@@ -44,15 +50,16 @@ class Application extends \yii\web\Application {
 
 	// yii\base\Application
 
+	/**
+	 * This method extends the controller instance creation and add additional functionality
+	 * to initialise application properties by reading core properties.
+	 *
+	 * It also detect whether multi-site is enable and change route accordingly after reading
+	 * the site name from current route. The identified site properties will be used where applicable.
+	 *
+	 * @see \yii\base\Module#createController()
+	 */
 	public function createController( $route ) {
-
-		// site config
-		$coreProperties	= CoreProperties::getInstance();
-
-		Yii::$app->formatter->dateFormat		= $coreProperties->getDateFormat();
-		Yii::$app->formatter->timeFormat		= $coreProperties->getTimeFormat();
-		Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
-		Yii::$app->timeZone						= $coreProperties->getTimezone();
 
 		// find whether multisite is enabled
 		if( Yii::$app->core->multiSite ) {
@@ -90,6 +97,14 @@ class Application extends \yii\web\Application {
 
 						Yii::$app->urlManager->baseUrl	= Yii::$app->urlManager->baseUrl . "/" . $site->name;
 
+						// site config
+						$coreProperties	= CoreProperties::getInstance();
+
+						Yii::$app->formatter->dateFormat		= $coreProperties->getDateFormat();
+						Yii::$app->formatter->timeFormat		= $coreProperties->getTimeFormat();
+						Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
+						Yii::$app->timeZone						= $coreProperties->getTimezone();
+						
 						return parent::createController( $siteRoute );
 					}
 				}
@@ -100,9 +115,9 @@ class Application extends \yii\web\Application {
 				// Find Site
 				$siteName		= array_shift( ( explode( ".", $_SERVER[ 'HTTP_HOST' ] ) ) );
 
-				if( !isset( $siteName ) || strcmp( $siteName, 'www' ) == 0 ) {
+				if( !isset( $siteName ) || strcmp( $siteName, 'www' ) == 0  || strcmp( $siteName, 'localhost' ) == 0 ) {
 
-					$siteName	= 'main';
+					$siteName	= 'merchant';
 				}
 
 				$site			= SiteService::findBySlug( $siteName );
@@ -115,6 +130,14 @@ class Application extends \yii\web\Application {
 					Yii::$app->core->siteId		= $site->id;
 					Yii::$app->core->siteSlug	= $site->slug;
 
+					// site config
+					$coreProperties	= CoreProperties::getInstance();
+
+					Yii::$app->formatter->dateFormat		= $coreProperties->getDateFormat();
+					Yii::$app->formatter->timeFormat		= $coreProperties->getTimeFormat();
+					Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
+					Yii::$app->timeZone						= $coreProperties->getTimezone();
+					
 					return parent::createController( $route );
 				}
 			}
@@ -129,6 +152,14 @@ class Application extends \yii\web\Application {
 				// Configure Current Site
 				Yii::$app->core->site		= $site;
 				Yii::$app->core->siteId		= $site->id;
+				
+				// site config
+				$coreProperties	= CoreProperties::getInstance();
+
+				Yii::$app->formatter->dateFormat		= $coreProperties->getDateFormat();
+				Yii::$app->formatter->timeFormat		= $coreProperties->getTimeFormat();
+				Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
+				Yii::$app->timeZone						= $coreProperties->getTimezone();
 			}
 		}
 
@@ -136,14 +167,6 @@ class Application extends \yii\web\Application {
 	}
 
 	// CMG interfaces ------------------------
-
-	// CMG parent classes --------------------
-
-	// Application ---------------------------
-
-	// Static Methods ----------------------------------------------
-
-	// Yii parent classes --------------------
 
 	// CMG parent classes --------------------
 

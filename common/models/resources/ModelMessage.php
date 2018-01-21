@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
@@ -20,7 +20,7 @@ use cmsgears\core\common\models\traits\ResourceTrait;
  *
  * Other models can also store their messages. These can be either model property or content.
  *
- * These messags can be further categorised using the type attribute.
+ * These messages can be further categorised using the type attribute.
  *
  * @property long $id
  * @property long $localeId

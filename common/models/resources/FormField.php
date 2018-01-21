@@ -76,7 +76,7 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
 
 	// Public -----------------
 
-	public $mParentType	= CoreGlobal::TYPE_FORM_FIELD;
+	public $modelType	= CoreGlobal::TYPE_FORM_FIELD;
 
 	public $value;
 
@@ -318,4 +318,5 @@ class FormField extends \cmsgears\core\common\models\base\Resource {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

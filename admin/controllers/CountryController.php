@@ -2,7 +2,7 @@
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 
 // CMG Imports
@@ -26,12 +26,27 @@ class CountryController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 		parent::init();
 
+		// Permission
 		$this->crudPermission	= CoreGlobal::PERM_CORE;
+
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'countryService' );
+
+		// Sidebar
 		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'country' ];
 
+		// Return Url
 		$this->returnUrl		= Url::previous( 'countries' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/country/all' ], true );
+
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Countries' ] ],
+			'create' => [ [ 'label' => 'Countries', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Countries', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Countries', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'items' => [ [ 'label' => 'Countries', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -52,7 +67,7 @@ class CountryController extends \cmsgears\core\admin\controllers\base\CrudContro
 
 	public function actionAll() {
 
-		Url::remember( [ 'country/all' ], 'countries' );
+		Url::remember( Yii::$app->request->getUrl(), 'countries' );
 
 		return parent::actionAll();
 	}

@@ -1,14 +1,11 @@
 <?php
 namespace cmsgears\core\frontend\controllers\base;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\WebGlobalCore;
 
-use cmsgears\core\frontend\config\WebProperties;
+use cmsgears\core\frontend\config\SiteProperties;
 
 class Controller extends \cmsgears\core\common\controllers\base\Controller {
 
@@ -22,7 +19,7 @@ class Controller extends \cmsgears\core\common\controllers\base\Controller {
 
 	// Private ----------------
 
-	private $webProperties;
+	private $siteProperties;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -30,7 +27,11 @@ class Controller extends \cmsgears\core\common\controllers\base\Controller {
 
 		parent::init();
 
-		$this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
+		// Default Layout
+		$this->layout			= WebGlobalCore::LAYOUT_PRIVATE;
+
+		// Default Permission
+		$this->crudPermission	= CoreGlobal::PERM_USER;
 	}
 
 	// Instance methods --------------------------------------------
@@ -49,13 +50,13 @@ class Controller extends \cmsgears\core\common\controllers\base\Controller {
 
 	// Controller ----------------------------
 
-	public function getWebProperties() {
+	public function getSiteProperties() {
 
-		if( !isset( $this->webProperties ) ) {
+		if( !isset( $this->siteProperties ) ) {
 
-			$this->webProperties	= WebProperties::getInstance();
+			$this->siteProperties	= SiteProperties::getInstance();
 		}
 
-		return $this->webProperties;
+		return $this->siteProperties;
 	}
 }

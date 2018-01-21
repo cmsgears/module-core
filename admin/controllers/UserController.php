@@ -2,7 +2,7 @@
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 
 // CMG Imports
@@ -26,13 +26,25 @@ class UserController extends \cmsgears\core\admin\controllers\base\UserControlle
 
 		parent::init();
 
+		// Config
 		$this->roleType			= CoreGlobal::TYPE_SYSTEM;
 		$this->permissionSlug	= CoreGlobal::PERM_USER;
 		$this->showCreate		= true;
-		$this->sidebar			= [ 'parent' => 'sidebar-identity', 'child' => 'user' ];
 
-		$this->returnUrl		= Url::previous( 'users' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/user/all' ], true );
+		// Sidebar
+		$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'user' ];
+
+		// Return Url
+		$this->returnUrl	= Url::previous( 'users' );
+		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/user/all' ], true );
+
+		// Breadcrumbs
+		$this->breadcrumbs	= [
+			'all' => [ [ 'label' => 'Users' ] ],
+			'create' => [ [ 'label' => 'Users', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Users', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Users', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------

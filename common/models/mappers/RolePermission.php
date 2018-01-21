@@ -15,7 +15,7 @@ use cmsgears\core\common\models\base\CoreTables;
  * @property long $roleId
  * @property long $permissionId
  */
-class RolePermission extends \cmsgears\core\common\models\base\Mapper {
+class RolePermission extends \cmsgears\core\common\models\base\Entity {
 
 	// Variables ---------------------------------------------------
 

@@ -2,10 +2,7 @@
 namespace cmsgears\core\common\models\base;
 
 // Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use Yii;
 
 /**
  * Entity - It's the parent entity for all the entities.
@@ -86,7 +83,14 @@ abstract class Entity extends \yii\db\ActiveRecord {
 
 		foreach ( $attributes as $attribute ) {
 
-			$this->setAttribute( $attribute, $fromModel->getAttribute( $attribute ) );
+			if( $this->hasAttribute( $attribute ) ) {
+
+				$this->setAttribute( $attribute, $fromModel->getAttribute( $attribute ) );
+			}
+			else {
+
+				$this->$attribute = $fromModel->$attribute;
+			}
 		}
 	}
 
@@ -126,6 +130,18 @@ abstract class Entity extends \yii\db\ActiveRecord {
 		$name	= get_class( $this );
 
 		return join( '', array_slice( explode( '\\', $name ), -1 ) );
+	}
+
+	public function getAttributeArray( $attributes ) {
+
+		$data = [];
+
+		foreach ( $attributes as $attribute ) {
+
+			$data[ $attribute ] = $this->$attribute;
+		}
+
+		return $data;
 	}
 
 	// Static Methods ----------------------------------------------
@@ -196,7 +212,7 @@ abstract class Entity extends \yii\db\ActiveRecord {
 
 			foreach ( $groups as $group ) {
 
-				$query	= $query->groupBy( $groups );
+				$query	= $query->groupBy( $group );
 			}
 		}
 
@@ -235,4 +251,5 @@ abstract class Entity extends \yii\db\ActiveRecord {
 
 		self::deleteAll( 'id=:id', [ ':id' => $id ] );
 	}
+
 }

@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -34,6 +34,8 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 	public static $modelClass	= '\cmsgears\core\common\models\resources\Category';
 
 	public static $modelTable	= CoreTables::TABLE_CATEGORY;
+
+	public static $typed		= true;
 
 	public static $parentType	= CoreGlobal::TYPE_CATEGORY;
 
@@ -70,26 +72,125 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 
 	public function getPage( $config = [] ) {
 
+		$modelTable = static::$modelTable;
+		$modelClass	= static::$modelClass;
+
+		// Sorting ----------
+
 		$sort = new Sort([
 			'attributes' => [
-				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+				'id' => [
+					'asc' => [ 'id' => SORT_ASC ],
+					'desc' => [ 'id' => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'Name',
+					'label' => 'Id'
 				],
 				'parent' => [
-					'asc' => [ 'parentId' => SORT_ASC ],
-					'desc' => ['parentId' => SORT_DESC ],
+					'asc' => [ 'parent.name' => SORT_ASC ],
+					'desc' => [ 'parent.name' => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Parent',
-				]
+				],
+				'name' => [
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
+				],
+				'slug' => [
+					'asc' => [ "$modelTable.slug" => SORT_ASC ],
+					'desc' => [ "$modelTable.slug" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Slug'
+				],
+	            'type' => [
+	                'asc' => [ "$modelTable.type" => SORT_ASC ],
+	                'desc' => [ "$modelTable.type" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Type'
+	            ],
+	            'icon' => [
+	                'asc' => [ "$modelTable.icon" => SORT_ASC ],
+	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Icon'
+	            ],
+	            'featured' => [
+	                'asc' => [ "$modelTable.featured" => SORT_ASC ],
+	                'desc' => [ "$modelTable.featured" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Featured'
+	            ],
+	            'order' => [
+	                'asc' => [ "$modelTable.`order`" => SORT_ASC ],
+	                'desc' => [ "$modelTable.`order`" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Order'
+	            ]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 
-		$config[ 'sort' ] = $sort;
+		$config[ 'sort' ] 	= $sort;
 
-		return parent::findPage( $config );
+		// Query ------------
+
+		$query 	= $modelClass::find()->joinWith( 'parent' );
+
+		// Filters ----------
+
+		// Filter - Status
+		$status	= Yii::$app->request->getQueryParam( 'status' );
+
+		if( isset( $status ) ) {
+
+			switch( $status ) {
+
+				case 'featured': {
+
+					$config[ 'conditions' ][ "$modelTable.featured" ]	= true;
+
+					break;
+				}
+			}
+		}
+
+		// Filter - Level
+		$parent	= Yii::$app->request->getQueryParam( 'parent' );
+
+		if( isset( $parent ) ) {
+
+			if( $parent === 'top' ) {
+
+				$query->andWhere( "$modelTable.parentId IS NULL" );
+			}
+		}
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [ 'name' => "$modelTable.name", 'desc' => "$modelTable.description" ];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'desc' => "$modelTable.description",
+			'pname' => 'parent.name', 'pdesc' => 'parent.description'
+		];
+
+		// Result -----------
+
+		$config[ 'query' ]	= $query;
+
+		return parent::getPage( $config );
 	}
 
 	// Read ---------------
@@ -104,6 +205,13 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 	public function getFeaturedByType( $type ) {
 
 		return Category::getFeaturedByType( $type );
+	}
+
+	public function getL0ByType( $type ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::find()->where( [ 'type' => $type, 'lValue' => 1 ] )->all();
 	}
 
 	// Read - Lists ----
@@ -157,6 +265,65 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 		]);
 	}
 
+	public function markFeatured( $model ) {
+
+		$model->featured = true;
+
+		return parent::update( $model, [
+			'attributes' => [ 'featured' ]
+		]);
+	}
+
+	public function markRegular( $model ) {
+
+		$model->featured = false;
+
+		return parent::update( $model, [
+			'attributes' => [ 'featured' ]
+		]);
+	}
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'status': {
+
+				switch( $action ) {
+
+					case 'featured': {
+
+						$this->markFeatured( $model );
+
+						break;
+					}
+					case 'regular': {
+
+						$this->markRegular( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
+
 	// Delete -------------
 
 	public function delete( $model, $config = [] ) {
@@ -207,4 +374,5 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 	// Update -------------
 
 	// Delete -------------
+
 }

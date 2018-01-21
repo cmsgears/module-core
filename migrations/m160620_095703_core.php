@@ -15,8 +15,8 @@ class m160620_095703_core extends \yii\db\Migration {
 
 	public function init() {
 
-		// Fixed
-		$this->prefix		= 'cmg_';
+		// Table prefix
+		$this->prefix		= Yii::$app->migration->cmgPrefix;
 
 		// Get the values via config
 		$this->fk			= Yii::$app->migration->isFk();
@@ -57,6 +57,7 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->upSite();
 		$this->upSiteMeta();
 		$this->upSiteMember();
+		$this->upSiteAccess();
 
 		// Files
 		$this->upFile();
@@ -110,6 +111,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'modifiedBy' => $this->bigInteger( 20 ),
 			'name' => $this->string( Yii::$app->core->largeText )->notNull(),
 			'slug' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'type' => $this->string( Yii::$app->core->mediumText )->notNull()->defaultValue( CoreGlobal::TYPE_SITE ),
 			'description' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'default' => $this->boolean()->notNull()->defaultValue( false ),
 			'renderer' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
@@ -136,6 +138,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'description' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'active' => $this->boolean()->notNull()->defaultValue( false ),
 			'renderer' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'fileRender' => $this->boolean()->notNull()->defaultValue( false ),
 			'layout' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
@@ -166,9 +169,11 @@ class m160620_095703_core extends \yii\db\Migration {
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'slug' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
+			'title' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
-			'description' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'active' => $this->boolean()->notNull()->defaultValue( false ),
+			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'htmlOptions' => $this->text(),
@@ -212,12 +217,14 @@ class m160620_095703_core extends \yii\db\Migration {
 
 	private function upCity() {
 
+		// Didn't add any dedicated table for zone(sub division) of a particular province/state, hence storing name directly.
 		$this->createTable( $this->prefix . 'core_city', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'countryId' => $this->bigInteger( 20 )->notNull(),
 			'provinceId' => $this->bigInteger( 20 ),
-			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
-			'postal' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
+			'zone' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ), // It could be County in US, Tehsil in India
+			'name' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
+			'postal' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'latitude' => $this->float( 4 ),
 			'longitude' => $this->float( 4 )
 		], $this->options );
@@ -246,7 +253,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'firstName' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'lastName' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'phone' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
-			'email' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'email' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'fax' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'website' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'latitude' => $this->float( 4 ),
@@ -271,6 +278,8 @@ class m160620_095703_core extends \yii\db\Migration {
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'description' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'group' => $this->boolean()->notNull()->defaultValue( false ),
+			'adminUrl' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'homeUrl' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime()
@@ -292,6 +301,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'description' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'group' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime()
 		], $this->options );
@@ -322,7 +332,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'genderId' => $this->bigInteger( 20 ),
 			'avatarId' => $this->bigInteger( 20 ),
 			'status' => $this->smallInteger( 6 ),
-			'email' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
+			'email' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'username' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'passwordHash' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'firstName' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
@@ -360,7 +370,8 @@ class m160620_095703_core extends \yii\db\Migration {
 			'name' => $this->string( Yii::$app->core->largeText )->notNull(),
 			'slug' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
-			'active' => $this->boolean()->notNull()->defaultValue( false )
+			'active' => $this->boolean()->notNull()->defaultValue( false ),
+			'data' => $this->text()
 		], $this->options );
 
 		// Index for columns avatar, banner and theme
@@ -400,6 +411,28 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'site_member_site', $this->prefix . 'core_site_member', 'siteId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'site_member_user', $this->prefix . 'core_site_member', 'userId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'site_member_role', $this->prefix . 'core_site_member', 'roleId' );
+	}
+
+	private function upSiteAccess() {
+
+		$this->createTable( $this->prefix . 'core_site_access', [
+			'id' => $this->bigPrimaryKey( 20 ),
+			'siteId' => $this->bigInteger( 20 )->notNull(),
+			'userId' => $this->bigInteger( 20 )->notNull(),
+			'roleId' => $this->bigInteger( 20 )->notNull(),
+			'ip' => $this->string( Yii::$app->core->mediumText )->notNull(),
+			'ipNum' => $this->integer( 11 ),
+			'url' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
+			'controller' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
+			'action' => $this->string( Yii::$app->core->largeText )->notNull(),
+			'createdAt' => $this->dateTime()->notNull(),
+			'modifiedAt' => $this->dateTime()
+		], $this->options );
+
+		// Index for columns avatar, banner and theme
+		$this->createIndex( 'idx_' . $this->prefix . 'site_access_site', $this->prefix . 'core_site_access', 'siteId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'site_access_user', $this->prefix . 'core_site_access', 'userId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'site_access_role', $this->prefix . 'core_site_access', 'roleId' );
 	}
 
 	private function upFile() {
@@ -613,7 +646,7 @@ class m160620_095703_core extends \yii\db\Migration {
 			'modifiedBy' => $this->bigInteger( 20 ),
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'name' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
-			'email' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'email' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'avatarUrl' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'websiteUrl' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'ip' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
@@ -840,6 +873,11 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'site_member_user', $this->prefix . 'core_site_member', 'userId', $this->prefix . 'core_user', 'id', 'CASCADE' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'site_member_role', $this->prefix . 'core_site_member', 'roleId', $this->prefix . 'core_role', 'id', 'CASCADE' );
 
+		// Site Access
+		$this->addForeignKey( 'fk_' . $this->prefix . 'site_access_site', $this->prefix . 'core_site_access', 'siteId', $this->prefix . 'core_site', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'site_access_user', $this->prefix . 'core_site_access', 'userId', $this->prefix . 'core_user', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'site_access_role', $this->prefix . 'core_site_access', 'roleId', $this->prefix . 'core_role', 'id', 'CASCADE' );
+
 		// File
 		$this->addForeignKey( 'fk_' . $this->prefix . 'file_creator', $this->prefix . 'core_file', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'file_modifier', $this->prefix . 'core_file', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
@@ -928,6 +966,7 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->dropTable( $this->prefix . 'core_site' );
 		$this->dropTable( $this->prefix . 'core_site_meta' );
 		$this->dropTable( $this->prefix . 'core_site_member' );
+		$this->dropTable( $this->prefix . 'core_site_access' );
 
 		$this->dropTable( $this->prefix . 'core_file' );
 		$this->dropTable( $this->prefix . 'core_gallery' );
@@ -1014,6 +1053,11 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_member_site', $this->prefix . 'core_site_member' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_member_user', $this->prefix . 'core_site_member' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_member_role', $this->prefix . 'core_site_member' );
+
+		// Site Access
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_access_site', $this->prefix . 'core_site_access' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_access_user', $this->prefix . 'core_site_access' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_access_role', $this->prefix . 'core_site_access' );
 
 		// File
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'file_creator', $this->prefix . 'core_file' );

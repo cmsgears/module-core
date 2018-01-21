@@ -1,12 +1,6 @@
 <?php
 namespace cmsgears\core\common\services\traits;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 /**
  * MapperTrait is generic trait for model mappers and provide several useful and
  * commonly used methods by mappers.
@@ -141,11 +135,11 @@ trait MapperTrait {
 
 		if( isset( $model ) ) {
 
-			$this->activate( $model );
+			return $this->activate( $model );
 		}
 		else {
 
-			$this->createByParams( [ 'parentId' => $parentId, 'parentType' => $parentType, 'modelId' => $modelId, 'active' => true ] );
+			return $this->createByParams( [ 'parentId' => $parentId, 'parentType' => $parentType, 'modelId' => $modelId, 'active' => true ] );
 		}
 	}
 

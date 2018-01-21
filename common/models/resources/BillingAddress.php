@@ -1,12 +1,6 @@
 <?php
 namespace cmsgears\core\common\models\resources;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 class BillingAddress extends Address {
 
 	// Variables ---------------------------------------------------
@@ -49,7 +43,7 @@ class BillingAddress extends Address {
 
 	// Validators ----------------------------
 
-	// ShippingAddress -----------------------
+	// BillingAddress ------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -59,7 +53,7 @@ class BillingAddress extends Address {
 
 	// CMG parent classes --------------------
 
-	// ShippingAddress -----------------------
+	// BillingAddress ------------------------
 
 	// Read - Query -----------
 
@@ -70,4 +64,5 @@ class BillingAddress extends Address {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

@@ -2,16 +2,8 @@
 namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\models\forms\Binder;
-use cmsgears\core\common\models\entities\Permission;
-
-use cmsgears\core\common\utilities\AjaxUtil;
 
 class PermissionController extends \cmsgears\core\admin\controllers\base\Controller {
 
@@ -31,8 +23,8 @@ class PermissionController extends \cmsgears\core\admin\controllers\base\Control
 
 		parent::init();
 
-		$this->crudPermission	= CoreGlobal::PERM_RBAC;
-		$this->modelService		= Yii::$app->factory->get( 'permissionService' );
+		// Services
+		$this->modelService = Yii::$app->factory->get( 'permissionService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -49,13 +41,15 @@ class PermissionController extends \cmsgears\core\admin\controllers\base\Control
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'bindRoles'	 => [ 'permission' => $this->crudPermission ]
+					'bulk' => [ 'permission' => $this->crudPermission ],
+					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'bindRoles'	 => [ 'post' ]
+					'bulk' => [ 'post' ],
+					'delete' => [ 'post' ]
 				]
 			]
 		];
@@ -63,26 +57,18 @@ class PermissionController extends \cmsgears\core\admin\controllers\base\Control
 
 	// yii\base\Controller ----
 
+	public function actions() {
+
+		return [
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
+		];
+	}
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
 	// PermissionController ------------------
 
-	public function actionBindRoles() {
-
-		$binder = new Binder();
-
-		if( $binder->load( Yii::$app->request->post(), 'Binder' ) ) {
-
-			if( $this->modelService->bindRoles( $binder ) ) {
-
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
-			}
-		}
-
-		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
-	}
 }

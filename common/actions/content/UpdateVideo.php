@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\actions\content;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -12,9 +12,7 @@ use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * UpdateVideo can be used to update video for models.
- *
- * The controller must provide modelService variable using approprite service class.
+ * UpdateVideo can be used to update video of discovered model.
  */
 class UpdateVideo extends \cmsgears\core\common\actions\base\ModelAction {
 
@@ -76,8 +74,11 @@ class UpdateVideo extends \cmsgears\core\common\actions\base\ModelAction {
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
 			}
 
+			// Generate Errors
+			$errors = AjaxUtil::generateErrorMessage( $banner );
+
 			// Trigger Ajax Failure
-			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
 
 		// Trigger Ajax Failure

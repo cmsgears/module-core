@@ -48,7 +48,7 @@ abstract class CrudController extends Controller {
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'index' => [ 'get' ],
+					'index' => [ 'get', 'post' ],
 					'all'  => [ 'get' ],
 					'create'  => [ 'get', 'post' ],
 					'update'  => [ 'get', 'post' ],
@@ -94,7 +94,11 @@ abstract class CrudController extends Controller {
 
 			$this->modelService->create( $model );
 
-			return $this->redirect( $this->returnUrl );
+			$model->refresh();
+			
+			$this->model = $model;
+			
+			return $this->redirect( 'all' );
 		}
 
 		return $this->render( 'create', [
@@ -119,7 +123,11 @@ abstract class CrudController extends Controller {
 
 				$this->modelService->update( $model );
 
-				return $this->redirect( $this->returnUrl );
+				$model->refresh();
+			
+				$this->model = $model;
+
+				return $this->redirect( 'all' );
 			}
 
 			// Render view
@@ -151,6 +159,8 @@ abstract class CrudController extends Controller {
 
 					$this->modelService->delete( $model );
 
+					$this->model = $model;
+					
 					return $this->redirect( $this->returnUrl );
 				}
 				catch( Exception $e ) {

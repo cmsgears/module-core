@@ -1,12 +1,6 @@
 <?php
 namespace cmsgears\core\common\services\interfaces\resources;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 interface IModelCommentService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
 
 	// Data Provider ------
@@ -21,13 +15,19 @@ interface IModelCommentService extends \cmsgears\core\common\services\interfaces
 
 	public function getPageByBaseId( $baseId, $config = [] );
 
+	public function getPageForApproved( $config = [] );
+
 	// Read ---------------
 
 	// Read - Models ---
 
-	public function getByParent( $parentId, $parentType, $config = [] );
+	public function getByUser( $parentId, $parentType );
 
-	public function getByParentType( $parentType, $config = [] );
+	public function isExistByUser( $parentId, $parentType );
+
+	public function getByParentConfig( $parentId, $config = [] );
+
+	public function getByParentTypeConfig( $parentType, $config = [] );
 
 	public function getByBaseId( $baseId, $config = [] );
 
@@ -41,11 +41,9 @@ interface IModelCommentService extends \cmsgears\core\common\services\interfaces
 
 	// Create -------------
 
+	public function attachMedia( $model, $file, $mediaType, $parentType );
+
 	// Update -------------
-
-	public function updateSpamRequest( $model );
-
-	public function updateDeleteRequest( $model );
 
 	public function updateStatus( $model, $status );
 
@@ -55,7 +53,11 @@ interface IModelCommentService extends \cmsgears\core\common\services\interfaces
 
 	public function markSpam( $model );
 
-	public function markDelete( $model );
+	public function markTrash( $model );
+
+	public function updateSpamRequest( $model );
+
+	public function updateDeleteRequest( $model );
 
 	// Delete -------------
 

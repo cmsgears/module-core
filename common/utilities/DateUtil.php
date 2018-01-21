@@ -7,8 +7,44 @@ use \DateTime;
  * DateUtil provide several utility methods related to date and time.
  */
 class DateUtil {
+    
+    // Months ------------------------------------------------------
+    const MONTH_JAN     = 1;
+    const MONTH_FEB     = 2;
+    const MONTH_MAR     = 3;
+    const MONTH_APR     = 4;
+    const MONTH_MAY     = 5;
+    const MONTH_JUN     = 6;
+    const MONTH_JUL     = 7;
+    const MONTH_AUG     = 8;
+    const MONTH_SEP     = 9;
+    const MONTH_OCT     = 10;
+    const MONTH_NOV     = 11;
+    const MONTH_DEC     = 12;
+    
+    public static $monthsMap = [
+        self::MONTH_JAN => 'January',  
+        self::MONTH_FEB => 'February', 
+        self::MONTH_MAR => 'March', 
+        self::MONTH_APR => 'April', 
+        self::MONTH_MAY => 'May', 
+        self::MONTH_JUN => 'June', 
+        self::MONTH_JUL => 'July', 
+        self::MONTH_AUG => 'August', 
+        self::MONTH_SEP => 'September', 
+        self::MONTH_OCT => 'October', 
+        self::MONTH_NOV => 'November', 
+        self::MONTH_DEC =>'December' 
+    ];
+    
 
 	// Week Days ---------------------------------------------------
+
+	// PHP Week Days : 0 - Sunday, 1 - Monday, 2 - Tuesday, 3 - Wednesday, 4 - Thursday, 5 - Friday, 6 - Saturday
+	// $w = date( 'w', strtotime( '2017-06-28' ) );
+
+	// MySQL Week Days : 0 - Monday, 1 - Tuesday, 2 - Wednesday, 3 - Thursday, 4 - Friday, 5 - Saturday, 6 - Sunday
+	// select weekday('2017-06-28');
 
 	const WEEK_DAY_SUN		=  0;
 	const WEEK_DAY_MON		=  1;
@@ -17,6 +53,7 @@ class DateUtil {
 	const WEEK_DAY_THU		=  4;
 	const WEEK_DAY_FRI		=  5;
 	const WEEK_DAY_SAT		=  6;
+
 	const WEEK_DAY_ALL		= 10;
 
 	public static $weekDaysMap = [
@@ -44,7 +81,7 @@ class DateUtil {
 
 	// hours in 12 and 24 hours format
 	public static $hrs12	= [ '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12' ];
-	public static $hrs24	= [ '00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24' ];
+	public static $hrs24	= [ '00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23' ];
 
 	// minutes with different interval
 	public static $mins15	= [ '00', '15', '30', '45' ];
@@ -90,6 +127,38 @@ class DateUtil {
 		}
 
 		return date( $format );
+	}
+
+	/**
+	 * @return time - current time having specified format in UTC
+	 */
+	public static function getTimeUtc( $format = null, $timezone = 'UTC', $date = "now"  ) {
+
+		$UTC		= new \DateTimeZone( $timezone );
+		$dateUTC	= new \DateTime( $date, $UTC );
+
+		if( !isset( $format ) ) {
+
+			$format	= 'H:i:s';
+		}
+
+		return $dateUTC->format( $format );
+	}
+	
+	/**
+	 * @return time - current time having specified format in UTC
+	 */
+	public static function getDateUtc( $format = null, $timezone = 'UTC', $date = "now"  ) {
+
+		$UTC		= new \DateTimeZone( $timezone );
+		$dateUTC	= new \DateTime( $date, $UTC );
+
+		if( !isset( $format ) ) {
+
+			$format	= 'Y-m-d';
+		}
+
+		return $dateUTC->format( $format );
 	}
 
 	/**
@@ -236,6 +305,20 @@ class DateUtil {
 		return $test > $source;
 	}
 
+	public static function isPast( $date, $format = null ) {
+
+		$today = self::getDateTime( $format );
+
+		return self::lessThan( $today, $date, true );
+	}
+
+	public static function isFuture( $date, $format = null ) {
+
+		$today = self::getDateTime( $format );
+
+		return self::greaterThan( $today, $date, true );
+	}
+
 	/**
 	 * @return array - of week dates for given mon
 	 */
@@ -360,6 +443,7 @@ class DateUtil {
 		return $dates;
 	}
 
+	// Return whole day Hour and Minutes slots
 	public static function getHrMinSlots( $startHr = 9, $minInterval = 15 ) {
 
 		$interval	= [];
@@ -407,6 +491,7 @@ class DateUtil {
 		return	$interval;
 	}
 
+	// Return whole day Hour and Minutes slots
 	public static function getHrMinSlotsForSelect( $startHr = 9, $minInterval = 15 ) {
 
 		$interval	= [];
@@ -463,4 +548,89 @@ class DateUtil {
 
 	    return "$hours::$minutes::$seconds";
 	}
+
+	public static function getYearsList( $start = null, $config = [] ) {
+
+		$years	= [];
+
+		// Get Current year if year is not set
+		$currentyear	= date( "Y" );
+		$start			= $start != null ? $start : $currentyear;
+
+		$endYear		= isset( $config[ 'endYear' ] ) ? $config[ 'endYear' ] : $currentyear;
+		$increment		= isset( $config[ 'increment' ] ) ? $config[ 'increment' ] : 1;
+		$end			= $endYear != null ? $endYear : $limit;
+		$i				= $start;
+
+		while( $i <= $end ) {
+
+			$years[ $i ]	= $i;
+
+			$i = $i + $increment;
+		}
+
+		return $years;
+	}
+
+	// Reference: https://stackoverflow.com/questions/1727077/generating-a-drop-down-list-of-timezones-with-php/17355238#17355238
+	function getTimezoneList() {
+
+		$regions = [
+			\DateTimeZone::AFRICA,
+			\DateTimeZone::AMERICA,
+			\DateTimeZone::ANTARCTICA,
+			\DateTimeZone::ASIA,
+			\DateTimeZone::ATLANTIC,
+			\DateTimeZone::AUSTRALIA,
+			\DateTimeZone::EUROPE,
+			\DateTimeZone::INDIAN,
+			\DateTimeZone::PACIFIC,
+		];
+
+		$timezones = array();
+
+		foreach( $regions as $region ) {
+
+			$timezones = array_merge( $timezones, \DateTimeZone::listIdentifiers( $region ) );
+		}
+
+		$timezone_offsets = array();
+
+		foreach( $timezones as $timezone ) {
+
+			$tz = new \DateTimeZone( $timezone );
+
+			$timezone_offsets[$timezone] = $tz->getOffset( new DateTime );
+		}
+
+		// sort timezone by offset
+		asort( $timezone_offsets );
+
+		$timezone_list = array();
+
+		foreach( $timezone_offsets as $timezone => $offset ) {
+
+			$offset_prefix		= $offset < 0 ? '-' : '+';
+			$offset_formatted 	= gmdate( 'H:i', abs($offset) );
+
+			$pretty_offset 		= "UTC${offset_prefix}${offset_formatted}";
+
+			$timezone_list[$timezone] = "(${pretty_offset}) $timezone";
+		}
+
+		return $timezone_list;
+	}
+    
+    // Dates list from 1 to 31
+    public static function getDatesList() {
+        
+        $list   = [];
+        
+        for( $i = 1; $i <= 31; $i++ ) {
+            
+            $list[ $i ] = $i;
+        }
+        
+        return $list;
+    }
 }

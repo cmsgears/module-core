@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
@@ -167,4 +167,5 @@ class Country extends \cmsgears\core\common\models\base\Entity {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

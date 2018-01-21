@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
@@ -15,6 +15,7 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 use cmsgears\core\common\models\traits\ResourceTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\mappers\FileTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -86,7 +87,7 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
 	// Public -----------------
 
-	public $mParentType	= CoreGlobal::TYPE_COMMENT;
+	public $modelType	= CoreGlobal::TYPE_COMMENT;
 
 	public $captcha;
 
@@ -98,6 +99,7 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
 	use CreateModifyTrait;
 	use DataTrait;
+	use FileTrait;
 	use ResourceTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -139,20 +141,20 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 		$rules = [
 			// Required, Safe
 			[ [ 'parentId', 'parentType', 'name', 'email' ], 'required' ],
-			[ [ 'id', 'content', 'data' ], 'safe' ],
+			[ [ 'id', 'content', 'data', 'type' ], 'safe' ],
 			// Email
 			[ 'email', 'email' ],
 			// Text Limit
 			[ [ 'parentType', 'type', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'name', 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'email', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'name', 'email', 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Check captcha need for testimonial and review
 			[ 'content', 'required', 'on' => [ self::TYPE_COMMENT, self::TYPE_TESTIMONIAL ] ],
 			[ [ 'content', 'rating' ], 'required', 'on' => [ self::TYPE_REVIEW ] ],
 			[ 'captcha', 'captcha', 'captchaAction' => '/core/site/captcha', 'on' => 'captcha' ],
 			// Other
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
-			[ [ 'status', 'rating', 'fragment' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'status', 'fragment' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'parentId', 'baseId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'approvedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
@@ -292,9 +294,24 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Find ------------
 
+	public static function findByUser( $parentId, $parentType, $userId ) {
+
+		return static::find()->where( 'parentId=:pid AND parentType=:ptype AND createdBy=:uid', [ ':pid' => $parentId, ':ptype' => $parentType, ':uid' => $userId ] )->one();
+	}
+
+	public static function isExistByUser( $parentId, $parentType, $userId ) {
+
+		$comment	= static::findByUser( $parentId, $parentType, $userId );
+
+		$isExist	= isset( $comment );
+
+		return $isExist;
+	}
+
 	// Create -----------------
 
 	// Update -----------------
 
 	// Delete -----------------
+
 }

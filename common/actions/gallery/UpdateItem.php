@@ -48,18 +48,16 @@ class UpdateItem extends \cmsgears\core\common\base\Action {
 
 	// DeleteItem ----------------------------
 
-	public function run( $slug, $id, $type = null ) {
+	public function run( $id, $iid ) {
 
 		$galleryService		= Yii::$app->factory->get( 'galleryService' );
-		$modelFileService	= Yii::$app->factory->get( 'modelFileService' );
 		$fileService		= Yii::$app->factory->get( 'fileService' );
-		$type				= isset( $type ) ? $type : CoreGlobal::TYPE_SITE;
-
-		$gallery			= $galleryService->getBySlugType( $slug, $type );
+		$modelFileService	= Yii::$app->factory->get( 'modelFileService' );
+		$gallery			= $galleryService->getById( $id );
 
 		if( isset( $gallery ) ) {
 
-			$modelFile	= $modelFileService->getByModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $id );
+			$modelFile	= $modelFileService->getByModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $iid );
 			$file		= $modelFile->file;
 
 			if( isset( $file ) && $file->load( Yii::$app->request->post(), $this->fileName ) ) {
@@ -67,7 +65,7 @@ class UpdateItem extends \cmsgears\core\common\base\Action {
 				$fileService->saveImage( $file );
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $id );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $iid );
 			}
 		}
 

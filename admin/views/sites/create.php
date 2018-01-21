@@ -8,37 +8,68 @@ use cmsgears\files\widgets\AvatarUploader;
 use cmsgears\files\widgets\ImageUploader;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= 'Add Site | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Add Site | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
-<div class="box box-cud">
-	<div class="box-wrap-header">
-		<div class="header">Add Site</div>
-	</div>
-	<div class="box-wrap-content frm-split-40-60">
-		<?php $form = ActiveForm::begin( [ 'id' => 'frm-site' ] );?>
-
-		<?= $form->field( $model, 'name' ) ?>
-		<?= $form->field( $model, 'order' ) ?>
-		<?= $form->field( $model, 'themeId' )->dropDownList( $themesMap ) ?>
-
-		<div class="box-content clearfix">
-			<div class="header">Site Avatar</div>
-			<?= AvatarUploader::widget( [ 'options' => [ 'id' => 'model-avatar', 'class' => 'file-uploader' ], 'model' => $avatar ] );?>
+<div class="box-crud-wrap row">
+	<div class="box-crud-wrap-main colf colf3x2">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-site', 'options' => [ 'class' => 'form' ] ] ); ?>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Basic Details</div>
+			</div>
+			<div class="box-content-wrap frm-split-40-60">
+				<div class="box-content">
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'name' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'order' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'themeId' )->dropDownList( $themesMap, [ 'class' => 'cmt-select' ] ) ?>
+						</div>
+						<div class="col col2">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium"></div>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Files</div>
+			</div>
+			<div class="box-content">
+				<div class="box-content">
+					<div class="row padding padding-small-v">
+						<div class="col col2">
+							<label>Avatar</label>
+							<?= AvatarUploader::widget( [ 'model' => $avatar ] ) ?>
+						</div>
+						<div class="col col2">
+							<label>Banner</label>
+							<?= ImageUploader::widget( [ 'model' => $banner ] ) ?>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 
-		<div class="box-content clearfix">
-			<div class="header">Site Banner</div>
-			<?= ImageUploader::widget( [ 'options' => [ 'id' => 'model-banner', 'class' => 'file-uploader' ], 'model' => $banner, 'modelClass' => 'Banner', 'directory' => 'banner' ] );?>
-		</div>
+		<div class="filler-height filler-height-medium"></div>
 
-		<div class="filler-height"></div>
-
-		<div class="align align-center">
+		<div class="align align-right">
 			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
 			<input class="element-medium" type="submit" value="Create" />
 		</div>
 
+		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
+	</div>
+	<div class="box-crud-wrap-sidebar colf colf3">
+
 	</div>
 </div>

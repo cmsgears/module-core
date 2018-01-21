@@ -4,9 +4,6 @@ namespace cmsgears\core\common\services\traits;
 // Yii Imports
 use \Yii;
 
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 /**
  * Used by services with base model having metas trait.
  */
@@ -58,7 +55,7 @@ trait ModelMetaTrait {
 
 		foreach ( $metas as $meta ) {
 
-			if( $model->id == $meta->parentId ) {
+			if( $meta->belongsTo( $model, self::$parentType ) ) {
 
 				$modelMetaService->update( $meta );
 			}

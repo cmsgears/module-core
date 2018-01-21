@@ -27,10 +27,12 @@ interface IModelHierarchyService extends \cmsgears\core\common\services\interfac
 
 	public function createInHierarchy( $parentId, $parentType, $rootId, $childId );
 
-	public function assignChildren( $parentType, $binder );
+	public function assignRootChildren( $parentType, $binder );
 
 	// Update -------------
 
 	// Delete -------------
+
+	public function deleteByRootId( $rootId, $parentType );
 
 }

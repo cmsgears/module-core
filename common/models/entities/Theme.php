@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
@@ -53,7 +53,7 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
 
 	// Public -----------------
 
-	public $mParentType	= CoreGlobal::TYPE_THEME;
+	public $modelType	= CoreGlobal::TYPE_THEME;
 
 	// Protected --------------
 
@@ -203,4 +203,5 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

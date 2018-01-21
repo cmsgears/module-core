@@ -10,7 +10,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class GalleryController extends \cmsgears\core\admin\controllers\base\Controller {
+class GalleryController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

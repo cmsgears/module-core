@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
@@ -43,6 +43,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $icon
  * @property string $description
  * @property boolean $active
+ * @property short $order
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $htmlOptions
@@ -67,11 +68,11 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 
 	// Public -----------------
 
-	public $mParentType			= CoreGlobal::TYPE_OBJECT;
+	public $modelType		= CoreGlobal::TYPE_OBJECT;
 
 	// Protected --------------
 
-	protected $testOwner		= false;
+	protected $testOwner	= false;
 
 	// Private ----------------
 
@@ -108,7 +109,7 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 				'attribute' => 'name',
 				'slugAttribute' => 'slug',
 				'immutable' => true,
-				'ensureUnique' => true
+				'ensureUnique' => false
 			],
 			'timestampBehavior' => [
 				'class' => TimestampBehavior::className(),
@@ -132,7 +133,8 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 			[ [ 'siteId', 'name', 'type' ], 'required' ],
 			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
 			// Unique
-			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			[ [ 'siteId', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'siteId', 'name', 'type' ] ],
+			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
 			// Text Limit
 			[ [ 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
@@ -140,6 +142,7 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 			[ [ 'slug', 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
 			[ [ 'active' ], 'boolean' ],
+			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'themeId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'siteId', 'avatarId', 'bannerId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -277,9 +280,24 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 
 	// Read - Find ------------
 
+	public static function findByType( $type ) {
+
+		if( static::$multiSite ) {
+
+			$siteId	= Yii::$app->core->siteId;
+
+			return static::find()->where( 'type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( 'order ASC' )->all();
+		}
+		else {
+
+			return static::find()->where( 'type=:type AND ORDER BY DESC', [ ':type' => $type ] )->orderBy( 'order ASC' )->all();
+		}
+	}
+
 	// Create -----------------
 
 	// Update -----------------
 
 	// Delete -----------------
+
 }

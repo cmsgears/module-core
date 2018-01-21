@@ -1,18 +1,13 @@
 <?php
 namespace cmsgears\core\common\models\traits\mappers;
 
-// Yii Import
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Address;
 use cmsgears\core\common\models\mappers\ModelAddress;
 
 /**
- * AddressTrait can be used to add address feature to relevant models. The model must define the member variable $addressType which is unique for the model.
+ * AddressTrait can be used to add address feature to relevant models.
  */
 trait AddressTrait {
 
@@ -22,8 +17,24 @@ trait AddressTrait {
 	public function getModelAddresses() {
 
 		return $this->hasMany( ModelAddress::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->mParentType'" );
+					->where( "parentType='$this->modelType'" );
 	}
+
+	/**
+	 * @return array - files associated with parent
+	 */
+	public function getAddresses() {
+
+		return $this->hasMany( Address::className(), [ 'id' => 'modelId' ] )
+					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query ) {
+
+						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
+
+						$query->onCondition( "$modelAddress.parentType=:type", [ ':type' => $this->modelType ] );
+					});
+	}
+
+	// == Some useful methods in case model allows only one address for specific address type
 
 	/**
 	 * @return ModelAddress associated with parent
@@ -31,7 +42,21 @@ trait AddressTrait {
 	public function getModelAddressByType( $type ) {
 
 		return $this->hasOne( ModelAddress::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->mParentType, ':type' => $type ] )->one();
+					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] )->one();
+	}
+    
+    /**
+	 * @return Address - associated with parent having type set to default
+	 */
+	public function getDefaultAddress() {
+
+		return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] )
+					->viaTable( CoreTables::TABLE_MODEL_ADDRESS, [ 'parentId' => 'id' ], function( $query, $type = Address::TYPE_DEFAULT ) {
+
+						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
+
+						$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] );
+					});
 	}
 
 	/**
@@ -44,7 +69,7 @@ trait AddressTrait {
 
 						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
 
-						$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->mParentType, ':type' => $type ] );
+						$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] );
 					});
 	}
 
@@ -58,7 +83,7 @@ trait AddressTrait {
 
 						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
 
-						$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->mParentType, ':type' => $type ] );
+						$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] );
 					});
 	}
 
@@ -72,7 +97,7 @@ trait AddressTrait {
 
 						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
 
-						$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->mParentType, ':type' => $type ] );
+						$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] );
 					});
 	}
 
@@ -86,7 +111,7 @@ trait AddressTrait {
 
 						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
 
-						$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->mParentType, ':type' => $type ] );
+						$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] );
 					});
 	}
 
@@ -100,7 +125,7 @@ trait AddressTrait {
 
 						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
 
-						$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->mParentType, ':type' => $type ] );
+						$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] );
 					});
 	}
 
@@ -114,7 +139,7 @@ trait AddressTrait {
 
 						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
 
-						$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->mParentType, ':type' => $type ] );
+						$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] );
 					});
 	}
 
@@ -128,7 +153,7 @@ trait AddressTrait {
 
 						$modelAddress	= CoreTables::TABLE_MODEL_ADDRESS;
 
-						$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->mParentType, ':type' => $type ] );
+						$query->onCondition( "$modelAddress.parentType=:ptype AND $modelAddress.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] );
 					});
 	}
 }

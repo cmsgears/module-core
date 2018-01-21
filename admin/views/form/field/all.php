@@ -1,101 +1,62 @@
-<?php
-// Yii Imports
-use yii\helpers\Html;
-use yii\widgets\LinkPager;
 
+<?php
 // CMG Imports
-use cmsgears\core\common\utilities\CodeGenUtil;
+use cmsgears\widgets\popup\Popup;
+
+use cmsgears\widgets\grid\DataGrid;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= 'All Form Fields | ' . $coreProperties->getSiteTitle();
-$controllerName	= Yii::$app->controller->id;
-
-// Data
-$pagination		= $dataProvider->getPagination();
-$models			= $dataProvider->getModels();
-
-// Searching
-$searchTerms	= Yii::$app->request->getQueryParam( 'search' );
-
-// Sorting
-$sortOrder		= Yii::$app->request->getQueryParam( 'sort' );
-
-if( !isset( $sortOrder ) ) {
-
-	$sortOrder	= '';
-}
+$this->title	= 'Form | ' . $coreProperties->getSiteTitle();
+$fid = Yii::$app->request->get('fid'); 
+// Templates
+$moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 ?>
-<div class="header-content clearfix">
-	<div class="header-actions col15x10">
-		<span class="frm-icon-element element-small">
-			<i class="cmti cmti-plus"></i>
-			<?= Html::a( 'Add', [ "$controllerName/create?fid=$formId" ], [ 'class' => 'btn' ] ) ?>
-		</span>
-	</div>
-	<div class="header-search col15x5">
-		<input id="search-terms" class="element-large" type="text" name="search" value="<?= $searchTerms ?>">
-		<span class="frm-icon-element element-medium">
-			<i class="cmti cmti-search"></i>
-			<button id="btn-search">Search</button>
-		</span>
-	</div>
-</div>
 
-<div class="data-grid">
-	<div class="grid-header clearfix">
-		<div class="col12x6 info">
-			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
-		</div>
-		<div class="col12x6 pagination">
-			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
-		</div>
-	</div>
-	<div class="grid-content">
-		<table>
-			<thead>
-				<tr>
-					<th>Name
-						<span class='box-icon-sort'>
-							<span sort-order='name' class="icon-sort <?php if( strcmp( $sortOrder, 'name') == 0 ) echo 'icon-up-active'; else echo 'icon-up';?>"></span>
-							<span sort-order='-name' class="icon-sort <?php if( strcmp( $sortOrder, '-name') == 0 ) echo 'icon-down-active'; else echo 'icon-down';?>"></span>
-						</span>
-					</th>
-					<th>Label</th>
-					<th>Icon</th>
-					<th>Type</th>
-					<th>Validators</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php
+<?= DataGrid::widget([
+	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => "create?fid=$fid", 'data' => [ ],
+	'title' => 'Blocks', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
+	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title' ],
+	'sortColumns' => [
+		'name' => 'Name', 'slug' => 'Slug', 'title' => 'Title', 'active' => 'Active',
+		'cdate' => 'Created At', 'udate' => 'Updated At'
+	],
+	'filters' => [ 'status' => [ 'active' => 'Active' ] ],
+	'reportColumns' => [
+		'name' => [ 'title' => 'Name', 'type' => 'text' ],
+		'title' => [ 'title' => 'Title', 'type' => 'text' ],
+		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
+		'active' => [ 'title' => 'Active', 'type' => 'flag' ]
+	],
+	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
+		'status' => [ 'block' => 'Block', 'active' => 'Activate' ],
+		'model' => [ 'delete' => 'Delete' ]
+	],
+	'header' => false, 'footer' => true,
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null , 'x4', 'x2', 'x2', 'x2', 'x2', 'x2'  ] ],
+	'gridColumns' => [
+		'bulk' => 'Action',
+		'name' => 'Name',
+		'label' => 'Label',
+		'icon' => [ 'title' => 'Icon', 'generate' => function( $model ) { $icon = "<div class='align align-center'><i class='fa-2x " . $model->icon ."'></i></div>" ; return $icon;  } ],
+		'type' => [ 'title' => 'Type', 'generate' => function( $model ) { return $model->getTypeStr();  } ],
+		'validators' => 'Validator',	
+		'actions' => 'Actions'
+	],
+	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
+	'templateDir' => '@themes/admin/views/templates/widget/grid',
+	//'dataView' => "$moduleTemplates/grid/data/gallery",
+	//'cardView' => "$moduleTemplates/grid/cards/gallery",
+	//'actionView' => "$moduleTemplates/grid/actions/Block"
+]) ?>
 
-					foreach( $models as $formField ) {
+<?= Popup::widget([
+	'title' => 'Update Block', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'bulk',
+	'data' => [ 'model' => 'Block', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "core/field/bulk" ]
+]) ?>
 
-						$id			= $formField->id;
-						$editUrl	= Html::a( $formField->name, [ "$controllerName/update?id=$id" ] );
-				?>
-					<tr>
-						<td><?= $editUrl ?></td>
-						<td><?= $formField->label ?></td>
-						<td> <span class="<?= $formField->icon ?>" title="<?= $formField->name ?>"></span></td>
-						<td><?= $formField->getTypeStr() ?></td>
-						<td><?= $formField->validators ?></td>
-						<td class="actions">
-							<span title="Update"><?= Html::a( "", [ "$controllerName/update?id=$id" ], [ 'class' => 'cmti cmti-edit' ] )  ?></span>
-							<span title="Delete"><?= Html::a( "", [ "$controllerName/delete?id=$id" ], [ 'class' => 'cmti cmti-close-c-o' ] )  ?></span>
-						</td>
-					</tr>
-				<?php } ?>
-			</tbody>
-		</table>
-	</div>
-	<div class="grid-header clearfix">
-		<div class="col12x6 info">
-			<?=CodeGenUtil::getPaginationDetail( $dataProvider ) ?>
-		</div>
-		<div class="col12x6 pagination">
-			<?= LinkPager::widget( [ 'pagination' => $pagination, 'options' => [ 'class' => 'pagination-basic' ] ] ); ?>
-		</div>
-	</div>
-</div>
+<?= Popup::widget([
+	'title' => 'Delete Block', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'delete',
+	'data' => [ 'model' => 'Block', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "core/field/delete?id=" ]
+]) ?>

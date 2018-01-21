@@ -1,12 +1,6 @@
 <?php
 namespace cmsgears\core\common\models\traits\resources;
 
-// Yii Import
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 trait DataTrait {
 
 	public function generateJsonFromObject( $dataObject ) {
@@ -24,10 +18,13 @@ trait DataTrait {
 
 	public function setDataMeta( $name, $value, $assoc = false ) {
 
+		// Convert data to object
 		$object	= $this->generateObjectFromJson( $assoc );
 
+		// Add/Update meta
 		$object->$name	= $value;
 
+		// Convert object back to data
 		$this->generateJsonFromObject( $object );
 	}
 
@@ -47,15 +44,22 @@ trait DataTrait {
 
 		$this->setDataMeta( $name, $value, $assoc );
 
+		// Save model meta state
 		$this->update();
 	}
 
 	public function removeDataMeta( $name, $assoc = false ) {
 
+		// Convert data to object
 		$object	= $this->generateObjectFromJson( $assoc );
 
+		// Remove meta
 		unset( $object->$name );
 
+		// Convert object back to data
 		$this->generateJsonFromObject( $object );
+
+		// Save model meta state
+		$this->update();
 	}
 }

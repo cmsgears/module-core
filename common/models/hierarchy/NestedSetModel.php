@@ -77,4 +77,5 @@ abstract class NestedSetModel extends HierarchicalModel {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

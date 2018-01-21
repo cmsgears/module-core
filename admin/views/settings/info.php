@@ -5,9 +5,9 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\widgets\aform\AjaxForm;
 ?>
 
-<div class="box-form box-form-regular">
-	<span class="cmti cmti-edit btn-edit"></span>
-	<div class="wrap-info">
+<div class="box-form box-form-basic box-form-regular">
+	<span class="box-form-trigger cmti cmti-edit"></span>
+	<div class="box-form-info-wrap row row-large">
 		<?php
 			if( isset( $fieldsMap ) && count( $fieldsMap ) > 0 ) {
 
@@ -23,7 +23,7 @@ use cmsgears\widgets\aform\AjaxForm;
 		<p>No settings found.</p>
 		<?php } ?>
 	</div>
-	<div class="wrap-form frm-split-40-60">
+	<div class="box-form-content-wrap row row-large form frm-split-40-60">
 		<?php if( isset( $fieldsMap ) && count( $fieldsMap ) > 0 ) { ?>
 
 		<?= AjaxForm::widget([
@@ -31,7 +31,7 @@ use cmsgears\widgets\aform\AjaxForm;
 			'slug' => "config-$type", 'type' => CoreGlobal::TYPE_SYSTEM,
 			'showLabel' => true, 'model' => $model,
 			'ajaxUrl' => "core/settings/update?type=$type",
-			'cmtController' => 'settings', 'cmtAction' => 'update',
+			'cmtApp' => 'site', 'cmtController' => 'settings', 'cmtAction' => 'update',
 			'modelName' => "setting$type"
 		])?>
 

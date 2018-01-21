@@ -4,34 +4,61 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= $coreProperties->getSiteTitle() . ' | Add User';
+$this->title 	= 'Add User | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
-<div class="box box-cud">
-	<div class="box-wrap-header">
-		<div class="header">Add User</div>
-	</div>
-	<div class="box-wrap-content frm-split-40-60">
-		<?php $form = ActiveForm::begin( [ 'id' => 'frm-user' ] );?>
+<div class="box-crud-wrap row">
+	<div class="box-crud-wrap-main colf colf3x2">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-user', 'options' => [ 'class' => 'form' ] ] ); ?>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Basic Details</div>
+			</div>
+			<div class="box-content-wrap frm-split-40-60">
+				<div class="box-content">
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'email' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'username' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'firstName' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'lastName' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+						<?php if( isset( $roleMap ) ) { ?>
+							<?= $form->field( $siteMember, 'roleId' )->dropDownList( $roleMap, [ 'class' => 'cmt-select' ] ) ?>
+						<?php } else { ?>
+							<?= $form->field( $siteMember, 'roleId' )->hiddenInput()->label( false )  ?>
+						<?php } ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'class' => 'cmt-select' ] ) ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-		<?= $form->field( $model, 'email' ) ?>
-		<?= $form->field( $model, 'username' ) ?>
-		<?= $form->field( $model, 'firstName' ) ?>
-		<?= $form->field( $model, 'lastName' ) ?>
+		<div class="filler-height filler-height-medium"></div>
 
-		<?php if( isset( $roleMap ) ) { ?>
-			<?= $form->field( $siteMember, 'roleId' )->dropDownList( $roleMap )	 ?>
-		<?php } else { ?>
-			<?= $form->field( $siteMember, 'roleId' )->hiddenInput()->label( false )  ?>
-		<?php } ?>
-
-		<div class="clear filler-height"></div>
-
-		<div class="align align-center">
-			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+		<div class="align align-right">
+			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
 			<input class="element-medium" type="submit" value="Create" />
 		</div>
 
+		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
+	</div>
+	<div class="box-crud-wrap-sidebar colf colf3">
+
 	</div>
 </div>

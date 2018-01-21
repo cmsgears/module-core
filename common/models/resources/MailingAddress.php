@@ -1,12 +1,6 @@
 <?php
 namespace cmsgears\core\common\models\resources;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 class MailingAddress extends Address {
 
 	// Variables ---------------------------------------------------
@@ -70,4 +64,5 @@ class MailingAddress extends Address {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -11,7 +11,10 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\ModelComment;
 
+use cmsgears\files\components\FileManager;
+
 use cmsgears\core\common\services\interfaces\resources\IModelCommentService;
+use cmsgears\core\common\services\traits\ResourceTrait;
 
 use cmsgears\core\common\utilities\DateUtil;
 
@@ -42,11 +45,24 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Protected --------------
 
+	protected $fileService;
+	protected $modelFileService;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
+	use ResourceTrait;
+
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->fileService		= Yii::$app->factory->get( 'fileService' );
+		$this->modelFileService	= Yii::$app->factory->get( 'modelFileService' );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -64,58 +80,135 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	public function getPage( $config = [] ) {
 
+		$modelClass		= static::$modelClass;
+		$modelTable		= static::$modelTable;
+
+		// Sorting ----------
+
 		$sort = new Sort([
 			'attributes' => [
-				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+				'id' => [
+					'asc' => [ 'id' => SORT_ASC ],
+					'desc' => [ 'id' => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'name'
+					'label' => 'Id'
+				],
+				'user' => [
+					'asc' => [ "creator.firstName" => SORT_ASC, "creator.lastName" => SORT_ASC ],
+					'desc' => [ "creator.firstName" => SORT_DESC, "creator.lastName" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'User'
+				],
+				'name' => [
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
 				],
 				'email' => [
-					'asc' => [ 'email' => SORT_ASC ],
-					'desc' => ['email' => SORT_DESC ],
+					'asc' => [ "$modelTable.email" => SORT_ASC ],
+					'desc' => [ "$modelTable.email" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'email'
+					'label' => 'Email'
+				],
+				'status' => [
+					'asc' => [ "$modelTable.status" => SORT_ASC ],
+					'desc' => [ "$modelTable.status" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Status'
+				],
+				'type' => [
+					'asc' => [ "$modelTable.type" => SORT_ASC ],
+					'desc' => [ "$modelTable.type" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Type'
 				],
 				'rating' => [
-					'asc' => [ 'rating' => SORT_ASC ],
-					'desc' => ['rating' => SORT_DESC ],
+					'asc' => [ "$modelTable.rating" => SORT_ASC ],
+					'desc' => [ "$modelTable.rating" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'rating'
+					'label' => 'Rating'
 				],
-				'cdate' => [
-					'asc' => [ 'createdAt' => SORT_ASC ],
-					'desc' => ['createdAt' => SORT_DESC ],
+				'featured' => [
+					'asc' => [ "$modelTable.featured" => SORT_ASC ],
+					'desc' => [ "$modelTable.featured" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'cdate'
+					'label' => 'Featured'
 				],
-				'udate' => [
-					'asc' => [ 'updatedAt' => SORT_ASC ],
-					'desc' => ['updatedAt' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'udate'
-				],
-				'adate' => [
-					'asc' => [ 'approvedAt' => SORT_ASC ],
-					'desc' => ['approvedAt' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'adate'
-				]
+	            'cdate' => [
+	                'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Created At'
+	            ],
+	            'udate' => [
+	                'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Updated At'
+	            ],
+	            'adate' => [
+	                'asc' => [ "$modelTable.approvedAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.approvedAt" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Approved At'
+	            ]
 			],
 			'defaultOrder' => [
-				'adate' => SORT_DESC
+				'id' => SORT_DESC
 			]
 		]);
 
-		$config[ 'sort' ] = $sort;
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [
+				'user' => "concat(creator.firstName,creator.lastName)", 'name' => "$modelTable.name",
+				'email' =>  "$modelTable.email", 'content' => "$modelTable.content"
+			];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'user' => "concat(creator.firstName,creator.lastName)", 'name' => "$modelTable.name",
+			'email' => "$modelTable.email", 'content' => "$modelTable.content",
+			'status' => "$modelTable.status", 'rating' => "$modelTable.rating", 'featured' => "$modelTable.featured"
+		];
+
+		// Result -----------
 
 		return parent::findPage( $config );
 	}
 
 	public function getPageByParent( $parentId, $parentType, $config = [] ) {
 
-		$config[ 'conditions' ][ 'baseId' ]		= null;
+		$topLevel = isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
+
+		if( $topLevel ) {
+
+			$config[ 'conditions' ][ 'baseId' ] = null;
+		}
+
 		$config[ 'conditions' ][ 'parentId' ]	= $parentId;
 		$config[ 'conditions' ][ 'parentType' ]	= $parentType;
 
@@ -123,22 +216,32 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 	}
 
 	public function getCommentPageByParent( $parentId, $parentType, $config = [] ) {
+        
+        $modelTable  = self::$modelTable;
 
-		$config[ 'conditions' ][ 'type' ] = ModelComment::TYPE_COMMENT;
+		$config[ 'conditions' ][ "$modelTable.type" ] = ModelComment::TYPE_COMMENT;
 
 		return $this->getPageByParent( $parentId, $parentType, $config );
 	}
 
 	public function getReviewPageByParent( $parentId, $parentType, $config = [] ) {
+        
+        $modelTable  = self::$modelTable;
 
-		$config[ 'conditions' ][ 'type' ] = ModelComment::TYPE_REVIEW;
+		$config[ 'conditions' ][ "$modelTable.type" ] = ModelComment::TYPE_REVIEW;
 
 		return $this->getPageByParent( $parentId, $parentType, $config );
 	}
 
 	public function getPageByParentType( $parentType, $config = [] ) {
 
-		$config[ 'conditions' ][ 'baseId' ]		= null;
+		$topLevel = isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
+
+		if( $topLevel ) {
+
+			$config[ 'conditions' ][ 'baseId' ] = null;
+		}
+
 		$config[ 'conditions' ][ 'parentType' ]	= $parentType;
 
 		return $this->getPage( $config );
@@ -146,7 +249,25 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	public function getPageByBaseId( $baseId, $config = [] ) {
 
-		$config[ 'conditions' ][ 'baseId' ]		= null;
+		$config[ 'conditions' ][ 'baseId' ] = $baseId;
+
+		return $this->getPage( $config );
+	}
+
+	/**
+	 * We can pass parentType as condition to utilize the classification.
+	 */
+	public function getPageForApproved( $config = [] ) {
+
+		$modelTable = self::$modelTable;
+		$topLevel	= isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
+
+		if( $topLevel ) {
+
+			$config[ 'conditions' ][ 'baseId' ] = null;
+		}
+
+		$config[ 'conditions' ][ "$modelTable.status" ]	= ModelComment::STATUS_APPROVED;
 
 		return $this->getPage( $config );
 	}
@@ -155,12 +276,33 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Read - Models ---
 
-	public function getByParent( $parentId, $parentType, $config = [] ) {
+	public function getByUser( $parentId, $parentType ) {
+
+		$modelClass	= self::$modelClass;
+		$user		= Yii::$app->user->getIdentity();
+
+		return $modelClass::findByUser( $parentId, $parentType, $user->id );
+	}
+
+	public function isExistByUser( $parentId, $parentType ) {
+
+		$modelClass	= self::$modelClass;
+		$user		= Yii::$app->user->getIdentity();
+
+		if( isset( $user ) ) {
+
+			return $modelClass::isExistByUser( $parentId, $parentType, $user->id );
+		}
+
+		return false;
+	}
+
+	public function getByParentConfig( $parentId, $config = [] ) {
 
 		return ModelComment::queryByParentConfig( $parentId, $config )->andWhere( [ 'baseId' => null ] )->all();
 	}
 
-	public function getByParentType( $parentType, $config = [] ) {
+	public function getByParentTypeConfig( $parentType, $config = [] ) {
 
 		return ModelComment::queryByParentTypeConfig( $parentType, $config )->andWhere( [ 'baseId' => null ] )->all();
 	}
@@ -200,6 +342,33 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 		$comment->ip	= Yii::$app->request->userIP;
 
 		return parent::create( $comment, $config );
+	}
+
+	public function attachMedia( $model, $file, $mediaType, $parentType ) {
+
+		switch( $mediaType ) {
+
+			case FileManager::FILE_TYPE_IMAGE : {
+
+				$this->fileService->saveImage( $file );
+
+				break;
+			}
+			default: {
+
+				$this->fileService->saveFile( $file );
+
+				break;
+			}
+		}
+
+		// Create Model File
+		if( $file->id > 0 ) {
+
+			$this->modelFileService->createByParams( [ 'modelId' => $file->id, 'parentId' => $model->id, 'parentType' => $parentType ] );
+		}
+
+		return $file;
 	}
 
 	// Update -------------
@@ -245,9 +414,9 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 		$this->updateStatus( $model, ModelComment::STATUS_SPAM );
 	}
 
-	public function markDelete( $model ) {
+	public function markTrash( $model ) {
 
-		$this->updateStatus( $model, ModelComment::STATUS_DELETED );
+		$this->updateStatus( $model, ModelComment::STATUS_TRASH );
 	}
 
 	// Attributes
@@ -270,7 +439,69 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 		return $model;
 	}
 
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'status': {
+
+				switch( $action ) {
+
+					case 'approve': {
+
+						$this->approve( $model );
+
+						break;
+					}
+					case 'block': {
+
+						$this->block( $model );
+
+						break;
+					}
+					case 'spam': {
+
+						$this->markSpam( $model );
+
+						break;
+					}
+					case 'trash': {
+
+						$this->markTrash( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
+
 	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete files
+		$this->modelFileService->deleteMultiple( $model->modelFiles );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
 
 	// Static Methods ----------------------------------------------
 
@@ -295,4 +526,5 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 	// Update -------------
 
 	// Delete -------------
+
 }

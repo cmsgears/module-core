@@ -2,13 +2,11 @@
 namespace cmsgears\core\common\models\traits;
 
 // Yii Import
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use Yii;
 
 /**
- * The model using this trait must have name column. It must also support unique name.
+ * The model using this trait must have name column. The model can also support unique
+ * name. Use SlugTrait for more strict options.
  */
 trait NameTrait {
 
@@ -58,9 +56,14 @@ trait NameTrait {
 	/**
 	 * @return ActiveRecord - by name
 	 */
-	public static function findByName( $name ) {
+	public static function findByName( $name, $first = false ) {
 
-		self::queryByName( $name )->one();
+		if( $first ) {
+
+			return self::queryByName( $name )->one();
+		}
+
+		return self::queryByName( $name )->all();
 	}
 
 	/**

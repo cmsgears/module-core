@@ -2,11 +2,7 @@
 namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
-use \Yii;
 use yii\helpers\ArrayHelper;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 
 /**
  * It's useful to bind multiple models to a model using checkbox group.
@@ -29,9 +25,11 @@ class Binder extends \yii\base\Model {
 
 	public $binderId; // Binder to which binded data need to be binded
 
-	public $allData		= []; // All data
+	public $all		= []; // All data
 
-	public $bindedData	= []; // Data to be active and submitted by user
+	public $binded	= []; // Data to be active and submitted by user
+
+	public $value	= []; // Additional data required in some cases
 
 	// Protected --------------
 
@@ -55,8 +53,8 @@ class Binder extends \yii\base\Model {
 
 		return [
 			[ [ 'binderId' ], 'required' ],
-			[ [ 'allData', 'bindedData' ], 'safe' ],
-			[ 'binderId', 'compare', 'compareValue' => 0, 'operator' => '>' ]
+			[ [ 'all', 'binded', 'value' ], 'safe' ],
+			[ 'binderId', 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 	}
 
@@ -68,4 +66,42 @@ class Binder extends \yii\base\Model {
 
 	// Binder --------------------------------
 
+	public function mergeWithBinded( $merge, $csv = false ) {
+
+		if( $csv && strlen( $merge ) > 1 ) {
+
+			$merge = preg_split( '/,/',  $merge );
+		}
+		else {
+
+			$merge = [];
+		}
+
+		$this->binded = ArrayHelper::merge( $this->binded, $merge );
+	}
+
+	public function getValueMap() {
+
+		$count	= count( $this->binded );
+		$map	= [];
+
+		for( $i = 0; $i < $count; $i++ ) {
+
+			$map[ $this->binded[ $i ] ] = $this->value[ $i ];
+		}
+
+		return $map;
+	}
+
+	public function mergeMapWithBinded( $map ) {
+
+		foreach ( $map as $key => $value ) {
+
+			if( !in_array( $key, $this->binded ) ) {
+
+				$this->binded[] = $key;
+				$this->value[]	= $value;
+			}
+		}
+	}
 }

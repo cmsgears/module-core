@@ -2,11 +2,8 @@
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 
 class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryController {
 
@@ -26,10 +23,21 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryCon
 
 		parent::init();
 
-		$this->sidebar		= [ 'parent' => 'sidebar-core', 'child' => 'gallery' ];
+		// Sidebar
+		$this->sidebar		= [ 'parent' => 'sidebar-gallery', 'child' => 'gallery' ];
 
+		// Return Url
 		$this->returnUrl	= Url::previous( 'galleries' );
 		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/gallery/all' ], true );
+
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Galleries' ] ],
+			'create' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'items' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Items' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -51,7 +59,7 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryCon
 	public function actionAll() {
 
 		// Remember return url for crud
-		Url::remember( [ 'gallery/all' ], 'galleries' );
+		Url::remember( Yii::$app->request->getUrl(), 'galleries' );
 
 		return parent::actionAll();
 	}

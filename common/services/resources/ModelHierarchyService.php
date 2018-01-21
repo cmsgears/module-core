@@ -1,10 +1,6 @@
 <?php
 namespace cmsgears\core\common\services\resources;
 
-// Yii Imports
-use \Yii;
-use yii\db\Query;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
@@ -66,12 +62,12 @@ class ModelHierarchyService extends \cmsgears\core\common\services\base\EntitySe
 
 	public function getRoot( $rootId, $parentType ) {
 
-		ModelHierarchy::findRoot( $rootId, $parentType );
+		return ModelHierarchy::findRoot( $rootId, $parentType );
 	}
 
 	public function getChildren( $parentId, $parentType ) {
 
-		ModelHierarchy::findByParent( $parentId, $parentType );
+		return ModelHierarchy::findByParent( $parentId, $parentType );
 	}
 
 	// Read - Lists ----
@@ -110,22 +106,44 @@ class ModelHierarchyService extends \cmsgears\core\common\services\base\EntitySe
 		$model->save();
 	}
 
-	public function assignChildren( $parentType, $binder ) {
+	public function assignRootChildren( $parentType, $binder ) {
 
 		$parentId	= $binder->binderId;
-		$children	= $binder->bindedData;
+		$binded		= $binder->binded;
 
-		// Insert topmost parent with immediate children
+		// Add root children if not exist in hierarchy
+		foreach ( $binded as $id ) {
 
-		foreach ( $children as $childId ) {
+			$child	= ModelHierarchy::findChild( $parentId, $parentType, $id );
 
-			$this->createInHierarchy( $parentId, $parentType, $parentId, $childId );
+			if( !isset( $child ) ) {
+
+				$this->createInHierarchy( $parentId, $parentType, $parentId, $id );
+			}
+		}
+
+		// Remove unmapped children
+		$existingChildren	= $this->getChildren( $parentId, $parentType );
+
+		foreach ( $existingChildren as $child ) {
+
+			// Remove unmapped child
+			if( !in_array( $child->childId, $binded ) ) {
+
+				// TODO: Use delete in hierarchy method to maintain the parent child hierarchy
+				$child->delete();
+			}
 		}
 	}
 
 	// Update -------------
 
 	// Delete -------------
+
+	public function deleteByRootId( $rootId, $parentType ) {
+
+		ModelHierarchy::deleteByRootId( $rootId, $parentType );
+	}
 
 	// Static Methods ----------------------------------------------
 
@@ -150,4 +168,5 @@ class ModelHierarchyService extends \cmsgears\core\common\services\base\EntitySe
 	// Update -------------
 
 	// Delete -------------
+
 }

@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -10,6 +10,8 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Country;
+
+use cmsgears\core\common\services\traits\NameTrait;
 
 use cmsgears\core\common\services\interfaces\entities\ICountryService;
 
@@ -41,6 +43,8 @@ class CountryService extends \cmsgears\core\common\services\base\EntityService i
 
 	// Traits ------------------------------------------------------
 
+	use NameTrait;
+
 	// Constructor and Initialisation ------------------------------
 
 	// Instance methods --------------------------------------------
@@ -59,6 +63,11 @@ class CountryService extends \cmsgears\core\common\services\base\EntityService i
 
 	public function getPage( $config = [] ) {
 
+		$modelClass		= static::$modelClass;
+		$modelTable		= static::$modelTable;
+
+		// Sorting ----------
+
 		$sort = new Sort([
 			'attributes' => [
 				'name' => [
@@ -67,18 +76,55 @@ class CountryService extends \cmsgears\core\common\services\base\EntityService i
 					'default' => SORT_DESC,
 					'label' => 'name'
 				],
-				'slug' => [
-					'asc' => [ 'slug' => SORT_ASC ],
-					'desc' => ['slug' => SORT_DESC ],
+				'code' => [
+					'asc' => [ 'code' => SORT_ASC ],
+					'desc' => [ 'code' => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'slug'
+					'label' => 'Code'
+				],
+				'iso' => [
+					'asc' => [ 'iso' => SORT_ASC ],
+					'desc' => [ 'iso' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'ISO'
 				]
 			]
 		]);
 
-		$config[ 'sort' ] = $sort;
+		if( !isset( $config[ 'sort' ] ) ) {
 
-		return parent::findPage( $config );
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [ 'name' => "$modelTable.name", 'code' => "$modelTable.code" ];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name", 'code' => "$modelTable.code", 'iso' => "$modelTable.iso"
+		];
+
+		// Result -----------
+
+		return parent::getPage( $config );
 	}
 
 	// Read ---------------
@@ -102,11 +148,32 @@ class CountryService extends \cmsgears\core\common\services\base\EntityService i
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'code', 'codeNum', 'name' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'code', 'iso', 'name' ];
 
 		return parent::update( $model, [
 			'attributes' => $attributes
 		]);
+	}
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
 	}
 
 	// Delete -------------
@@ -134,4 +201,5 @@ class CountryService extends \cmsgears\core\common\services\base\EntityService i
 	// Update -------------
 
 	// Delete -------------
+
 }

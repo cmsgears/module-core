@@ -32,6 +32,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $type
  * @property string $icon
  * @property string $description
+ * @property boolean $group
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  */
@@ -51,7 +52,7 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
 
 	// Public -----------------
 
-	private $mParentType	= CoreGlobal::TYPE_PERMISSION; // required for traits
+	private $modelType	= CoreGlobal::TYPE_PERMISSION; // required for traits
 
 	// Protected --------------
 
@@ -119,6 +120,7 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
 			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
+			[ 'group', 'boolean' ],
 			[ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
@@ -189,6 +191,28 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
 		return $rolesList;
 	}
 
+	public function getLeafNodes() {
+
+		$permission		= CoreTables::TABLE_PERMISSION;
+		$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
+
+		return Permission::find()->leftJoin( $modelHierarchy, "`$permission`.`id` = `$modelHierarchy`.`childId`" )
+						  ->where( "`$modelHierarchy`.`parentType` = 'permission' AND `$modelHierarchy`.`parentId`=$this->id" )->all();
+	}
+
+	public function getChildrenIdList() {
+
+		$cildren		= $this->getLeafNodes();
+		$cildrenList	= array();
+
+		foreach ( $cildren as $child ) {
+
+			array_push( $cildrenList, $child->id );
+		}
+
+		return $cildrenList;
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------
@@ -226,7 +250,7 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Find ------------
 
-	public static function findL0Children( $l0Ids = [] ) {
+	public static function findLeafNodes( $l0Ids = [] ) {
 
 		$permission		= CoreTables::TABLE_PERMISSION;
 		$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
@@ -241,4 +265,5 @@ class Permission extends \cmsgears\core\common\models\base\Entity {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

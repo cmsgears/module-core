@@ -1,14 +1,8 @@
 <?php
 namespace cmsgears\core\common\services\mappers;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\Gallery;
 use cmsgears\core\common\models\mappers\ModelGallery;
 
 use cmsgears\core\common\services\interfaces\resources\IGalleryService;
@@ -175,4 +169,5 @@ class ModelGalleryService extends \cmsgears\core\common\services\base\EntityServ
 	// Update -------------
 
 	// Delete -------------
+
 }

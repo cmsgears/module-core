@@ -2,24 +2,23 @@
 namespace cmsgears\core\common\services\mappers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
+use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Tag;
 use cmsgears\core\common\models\mappers\ModelTag;
 
-use cmsgears\core\common\services\interfaces\resources\ITagService;
+use cmsgears\core\common\services\base\EntityService;
 use cmsgears\core\common\services\interfaces\mappers\IModelTagService;
-
+use cmsgears\core\common\services\interfaces\resources\ITagService;
 use cmsgears\core\common\services\traits\MapperTrait;
 
 /**
  * The class ModelTagService is base class to perform database activities for ModelTag Entity.
  */
-class ModelTagService extends \cmsgears\core\common\services\base\EntityService implements IModelTagService {
+class ModelTagService extends EntityService implements IModelTagService {
 
 	// Variables ---------------------------------------------------
 
@@ -97,18 +96,14 @@ class ModelTagService extends \cmsgears\core\common\services\base\EntityService 
 				continue;
 			}
 
-			$tag		= Tag::findByNameType( $tagName, $parentType );
+			$tag = Tag::findByNameType( $tagName, $parentType, true );
 
 			if( !isset( $tag ) ) {
 
-				$tag			= new Tag();
-				$tag->siteId	= Yii::$app->core->siteId;
-				$tag->name		= ucfirst( $tagName );
-				$tag->type		= $parentType;
-				$tag			= $this->tagService->create( $tag );
+				$tag = $this->tagService->createByParams( [ 'siteId' => Yii::$app->core->siteId, 'name' => ucfirst( $tagName ), 'type' => $parentType ] );
 			}
 
-			$modelTag	= $this->getByModelId( $parentId, $parentType, $tag->id );
+			$modelTag = $this->getByModelId( $parentId, $parentType, $tag->id );
 
 			// Create if does not exist
 			if( !isset( $modelTag ) ) {
@@ -118,7 +113,7 @@ class ModelTagService extends \cmsgears\core\common\services\base\EntityService 
 			// Activate if already exist
 			else {
 
-				self::activate( $modelTag );
+				$this->activate( $modelTag );
 			}
 		}
 	}
@@ -144,6 +139,37 @@ class ModelTagService extends \cmsgears\core\common\services\base\EntityService 
 		return parent::update( $model, [
 			'attributes' => $attributes
 		]);
+	}
+
+	public function bindTags( $parentId, $parentType, $config = [] ) {
+
+		$binderName	= isset( $config[ 'binder' ] ) ? $config[ 'binder' ] : 'Binder';
+		$binder		= new Binder();
+
+		$binder->load( Yii::$app->request->post(), $binderName );
+
+		$all		= $binder->all;
+		$binded		= $binder->binded;
+		$process	= [];
+
+		// Check for All
+		if( count( $all ) > 0 ) {
+
+			$process = $all;
+
+			// TODO: Handle the situation where all check is required. Refer bindCategories of ModelCategoryService
+		}
+		// Check for Active
+		else {
+
+			$process = $binded;
+
+			ModelTag::disableByParent( $parentId, $parentType );
+
+			$this->createFromArray( $parentId, $parentType, $process );
+		}
+
+		return true;
 	}
 
 	// Delete -------------
@@ -180,4 +206,5 @@ class ModelTagService extends \cmsgears\core\common\services\base\EntityService 
 	// Update -------------
 
 	// Delete -------------
+
 }

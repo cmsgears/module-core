@@ -2,13 +2,13 @@
 namespace cmsgears\core\frontend\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\frontend\config\SiteProperties;
 use cmsgears\core\frontend\config\WebGlobalCore;
 
-use cmsgears\core\common\models\forms\Login;
 use cmsgears\core\common\models\forms\Register;
 
 class SiteController extends \cmsgears\core\common\controllers\SiteController {
@@ -24,6 +24,8 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 	protected $siteMemberService;
 
 	// Private ----------------
+
+	private $siteProperties;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -48,9 +50,9 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 		$behaviours	= parent::behaviors();
 
-		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ]			= [ 'get' ];
-		$behaviours[ 'verbs' ][ 'actions' ][ 'register' ]		= [ 'get', 'post' ];
-		$behaviours[ 'verbs' ][ 'actions' ][ 'confirmAccount' ]	= [ 'get', 'post' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ] = [ 'get' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'register' ] = [ 'get', 'post' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'confirm-account' ] = [ 'get', 'post' ];
 
 		return $behaviours;
 	}
@@ -59,7 +61,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 	public function actions() {
 
-		if ( !Yii::$app->user->isGuest ) {
+		if( !Yii::$app->user->isGuest ) {
 
 			$this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
 		}
@@ -80,6 +82,16 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 	// CMG parent classes --------------------
 
 	// SiteController ------------------------
+
+	public function getSiteProperties() {
+
+		if( !isset( $this->siteProperties ) ) {
+
+			$this->siteProperties	= SiteProperties::getInstance();
+		}
+
+		return $this->siteProperties;
+	}
 
 	public function actionIndex() {
 
@@ -157,8 +169,13 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 						Yii::$app->user->login( $user, 3600 * 24 * 30 );
 					}
 
-					return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM );
+					return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM, [ 'confirmed' => true ] );
 				}
+
+				// Set Failure Message
+				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
+
+				return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM, [ 'confirmed' => false ] );
 			}
 		}
 

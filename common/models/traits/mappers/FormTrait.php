@@ -1,25 +1,21 @@
 <?php
 namespace cmsgears\core\common\models\traits\mappers;
 
-// Yii Import
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Form;
 use cmsgears\core\common\models\mappers\ModelForm;
 
 /**
- * FormTrait can be used to associate forms to relevant models. The model must also support metas to save the submitted form values.
+ * FormTrait can be used to associate forms to relevant models. The model must also
+ * support meta trait to save the submitted form values.
  */
 trait FormTrait {
 
 	public function getModelForms() {
 
 		return $this->hasMany( ModelForm::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->mParentType'" );
+					->where( "parentType='$this->modelType'" );
 	}
 
 	/**
@@ -32,7 +28,7 @@ trait FormTrait {
 
 						$ModelFormTable	= CoreTables::TABLE_MODEL_FORM;
 
-						$query->onCondition( [ "$ModelFormTable.parentType" => $this->mParentType ] );
+						$query->onCondition( [ "$ModelFormTable.parentType" => $this->modelType ] );
 					});
 	}
 }

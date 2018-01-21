@@ -1,14 +1,8 @@
 <?php
 namespace cmsgears\core\common\services\resources;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\SiteMeta;
 
 use cmsgears\core\common\services\interfaces\resources\ISiteMetaService;
 
@@ -95,4 +89,5 @@ class SiteMetaService extends \cmsgears\core\common\services\base\MetaService im
 	// Update -------------
 
 	// Delete -------------
+
 }

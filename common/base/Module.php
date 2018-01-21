@@ -1,12 +1,6 @@
 <?php
 namespace cmsgears\core\common\base;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 class Module extends \yii\base\Module {
 
 	// Variables ---------------------------------------------------

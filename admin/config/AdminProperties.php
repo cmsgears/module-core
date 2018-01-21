@@ -15,7 +15,13 @@ class AdminProperties extends CmgProperties {
 
 	// Global -----------------
 
-	const PROP_THEME			= 'theme';
+	const PROP_CMG_POWERED		= 'cmg_powered';
+
+	const PROP_AVATAR_USER		= 'user_avatar';
+
+	const PROP_AVATAR_DEFAULT	= 'default_avatar';
+
+	const PROP_BANNER_DEFAULT	= 'default_banner';
 
 	// Public -----------------
 
@@ -54,8 +60,23 @@ class AdminProperties extends CmgProperties {
 
 	// Properties
 
-	public function getTheme() {
+	public function isCmgPowered() {
 
-		return $this->properties[ self::PROP_THEME ];
+		return $this->properties[ self::PROP_CMG_POWERED ];
+	}
+
+	public function getUserAvatar() {
+
+		return $this->properties[ self::PROP_AVATAR_USER ];
+	}
+
+	public function getDefaultAvatar() {
+
+		return $this->properties[ self::PROP_AVATAR_DEFAULT ];
+	}
+
+	public function getDefaultBanner() {
+
+		return $this->properties[ self::PROP_BANNER_DEFAULT];
 	}
 }

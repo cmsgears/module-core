@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\services\traits;
 
 // Yii Imports
-use \Yii;
+use yii\base\UnknownMethodException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -107,6 +107,8 @@ trait ApprovalTrait {
 
 	// Update -------------
 
+	// Model status
+
 	public function updateStatus( $model, $status ) {
 
 		$model->status	= $status;
@@ -131,18 +133,6 @@ trait ApprovalTrait {
 		return $this->updateStatus( $model, IApproval::STATUS_ACTIVE );
 	}
 
-	public function setRejectMessage( $model, $message = null ) {
-
-		if( isset( $message ) && strlen( $message ) > 0 ) {
-
-			$model->setDataMeta( CoreGlobal::DATA_REJECT_REASON, $message );
-		}
-		else {
-
-			$model->removeDataMeta( CoreGlobal::DATA_REJECT_REASON );
-		}
-	}
-
 	public function reject( $model, $message = null ) {
 
 		$this->setRejectMessage( $model, $message );
@@ -162,6 +152,58 @@ trait ApprovalTrait {
 		$this->setRejectMessage( $model, $message );
 
 		return $this->updateStatus( $model, IApproval::STATUS_BLOCKED );
+	}
+
+	public function terminate( $model, $message = null ) {
+
+		if( !$model->isTerminated() ) {
+
+			$this->setTerminateMessage( $model, $message );
+
+			return $this->updateStatus( $model, IApproval::STATUS_TERMINATED );
+		}
+
+		return $model;
+	}
+
+	// Model messages
+
+	public function setRejectMessage( $model, $message = null ) {
+
+		try {
+
+			if( isset( $message ) && strlen( $message ) > 0 ) {
+
+				$model->setDataMeta( CoreGlobal::DATA_REJECT_REASON, $message );
+			}
+			else {
+
+				$model->removeDataMeta( CoreGlobal::DATA_REJECT_REASON );
+			}
+		}
+		catch( UnknownMethodException $e ) {
+
+			// Do nothing
+		}
+	}
+
+	public function setTerminateMessage( $model, $message = null ) {
+
+		try {
+
+			if( isset( $message ) && strlen( $message ) > 0 ) {
+
+				$model->setDataMeta( CoreGlobal::DATA_TERMINATE_REASON, $message );
+			}
+			else {
+
+				$model->removeDataMeta( CoreGlobal::DATA_TERMINATE_REASON );
+			}
+		}
+		catch( UnknownMethodException $e ) {
+
+			// Do nothing
+		}
 	}
 
 	// Delete -------------

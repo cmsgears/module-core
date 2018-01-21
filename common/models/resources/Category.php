@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
 
@@ -54,7 +54,7 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 
 	// Public -----------------
 
-	public $mParentType	= CoreGlobal::TYPE_CATEGORY;
+	public $modelType	= CoreGlobal::TYPE_CATEGORY;
 
 	// Protected --------------
 
@@ -87,7 +87,7 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 				'attribute' => 'name',
 				'slugAttribute' => 'slug',
 				'immutable' => true,
-				'ensureUnique' => true
+				'ensureUnique' => false
 			]
 		];
 	}
@@ -107,6 +107,7 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 			// Unique
 			// Notes: disabled it in order to allow sub categories having same name as parent, but with different slug. It can be enable based on project needs by extending the model and service.
 			//[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
@@ -166,7 +167,9 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 	 */
 	public function getParent() {
 
-		return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] );
+		$parentTable =  CoreTables::TABLE_CATEGORY;
+
+		return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] )->from( "$parentTable as parent" );
 	}
 
 	/**
@@ -255,4 +258,5 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

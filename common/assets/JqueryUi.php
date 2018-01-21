@@ -1,41 +1,55 @@
 <?php
+/**
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ * @license https://www.cmsgears.org/license/
+ * @package module
+ * @subpackage core
+ */
 namespace cmsgears\core\common\assets;
 
 // Yii Imports
-use \Yii;
 use yii\web\View;
 
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
+/**
+ * JqueryUi can be used to load jQuery UI JS.
+ *
+ * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
+ * @since 1.0.0
+ */
 class JqueryUi extends \yii\web\AssetBundle {
 
 	// Variables ---------------------------------------------------
 
-	// Globals -------------------------------
-
-	// Constants --------------
+	// Globals ----------------
 
 	// Public -----------------
 
-	// Path Configuration
-	public $sourcePath = '@bower/jquery-ui/ui/minified';
+	/**
+	 * @inheritdoc
+	 */
+	public $sourcePath = '@bower/jquery-ui';
 
-	// Load Javascript
+	/**
+	 * @inheritdoc
+	 */
 	public $js = [
 		'jquery-ui.min.js'
 	];
 
-	// Position to load Javascript
+	/**
+	 * @inheritdoc
+	 */
 	public $jsOptions = [
 		'position' => View::POS_END
 	];
 
-	// Protected --------------
-
-	// Variables -----------------------------
-
-	// Public -----------------
+	/**
+	 * @inheritdoc
+	 */
+	public $depends = [
+		'cmsgears\core\common\assets\Jquery'
+	];
 
 	// Protected --------------
 
@@ -45,6 +59,17 @@ class JqueryUi extends \yii\web\AssetBundle {
 
 	// Constructor and Initialisation ------------------------------
 
+	/**
+	 * @inheritdoc
+	 */
+    public function init() {
+
+		if( YII_DEBUG ) {
+
+			$this->js = [ 'jquery-ui.js' ];
+		}
+    }
+
 	// Instance methods --------------------------------------------
 
 	// Yii interfaces ------------------------
@@ -52,14 +77,6 @@ class JqueryUi extends \yii\web\AssetBundle {
 	// Yii parent classes --------------------
 
 	// CMG interfaces ------------------------
-
-	// CMG parent classes --------------------
-
-	// JqueryUi ------------------------------
-
-	// Static Methods ----------------------------------------------
-
-	// Yii parent classes --------------------
 
 	// CMG parent classes --------------------
 

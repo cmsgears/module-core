@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\TimestampBehavior;
@@ -12,7 +12,6 @@ use yii\behaviors\SluggableBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\interfaces\IVisibility;
-use cmsgears\core\common\models\interfaces\IOwner;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
@@ -72,7 +71,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	// Public -----------------
 
-	public $mParentType	= CoreGlobal::TYPE_FORM;
+	public $modelType	= CoreGlobal::TYPE_FORM;
 
 	// Protected --------------
 
@@ -119,7 +118,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 				'attribute' => 'name',
 				'slugAttribute' => 'slug',
 				'immutable' => true,
-				'ensureUnique' => true
+				'ensureUnique' => false
 			]
 		];
 	}
@@ -137,7 +136,8 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 			[ [ 'name', 'siteId', 'captcha', 'visibility', 'active' ], 'required' ],
 			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
 			// Unique
-			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			[ [ 'siteId', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'siteId', 'name', 'type' ] ],
+			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
@@ -308,4 +308,5 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 	// Update -----------------
 
 	// Delete -----------------
+
 }

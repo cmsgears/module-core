@@ -2,13 +2,15 @@
 namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
+
+use cmsgears\core\common\models\traits\NameTrait;
 
 /**
  * Province Entity
@@ -40,6 +42,8 @@ class Province extends \cmsgears\core\common\models\base\Entity {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use NameTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -163,9 +167,20 @@ class Province extends \cmsgears\core\common\models\base\Entity {
 		return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
 	}
 
+	public static function findAllByCode( $code ) {
+
+		return self::find()->where( 'code=:code', [ ':code' => $code ] )->all();
+	}
+
+	public static function findByCountryIdCode( $countryId, $code ) {
+
+		return self::find()->where( 'countryId=:id AND code=:code', [ ':id' => $countryId, ':code' => $code ] )->one();
+	}
+
 	// Create -----------------
 
 	// Update -----------------
 
 	// Delete -----------------
+
 }

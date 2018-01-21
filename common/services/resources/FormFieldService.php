@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -59,6 +59,11 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 
 	public function getPage( $config = [] ) {
 
+		$modelClass		= static::$modelClass;
+		$modelTable		= static::$modelTable;
+
+		// Sorting ----------
+
 		$sort = new Sort([
 			'attributes' => [
 				'name' => [
@@ -77,6 +82,34 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 
 			$config[ 'sort' ] = $sort;
 		}
+
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [ 'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template" ];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template",  'active' => "$modelTable.active"
+		];
+
+		// Result -----------
 
 		return parent::findPage( $config );
 	}
@@ -114,6 +147,27 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 		]);
 	}
 
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
+
 	// Delete -------------
 
 	// Static Methods ----------------------------------------------
@@ -144,4 +198,5 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 	// Update -------------
 
 	// Delete -------------
+
 }

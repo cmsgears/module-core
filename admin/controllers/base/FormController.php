@@ -37,16 +37,31 @@ abstract class FormController extends CrudController {
 
 		parent::init();
 
-		$this->setViewPath( '@cmsgears/module-core/admin/views/form' );
-
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
-		$this->modelService		= Yii::$app->factory->get( 'formService' );
-
-		$this->templateService	= Yii::$app->factory->get( 'templateService' );
-
 		$this->type				= CoreGlobal::TYPE_SYSTEM;
 		$this->submits			= true;
 		$this->templateType		= CoreGlobal::TYPE_FORM;
+		
+		$this->setViewPath( '@cmsgears/module-core/admin/views/form' );
+
+		// Permissions
+		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		
+		// Services
+		$this->modelService		= Yii::$app->factory->get( 'formService' );
+		$this->templateService	= Yii::$app->factory->get( 'templateService' );
+
+		// Return Url
+		$this->returnUrl		= Url::previous( 'form' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/config/all' ], true );
+		
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Forms' ] ],
+			'create' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+		];
+		
 	}
 
 	// Instance methods --------------------------------------------
@@ -66,6 +81,8 @@ abstract class FormController extends CrudController {
 	// FormController ------------------------
 
 	public function actionAll() {
+
+		Url::remember( Yii::$app->request->getUrl(), 'form' );
 
 		$dataProvider = $this->modelService->getPageByType( $this->type );
 

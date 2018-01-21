@@ -32,6 +32,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $type
  * @property string $icon
  * @property string $description
+ * @property boolean $group
+ * @property string $adminUrl
  * @property string $homeUrl
  * @property datetime $createdAt
  * @property datetime $modifiedAt
@@ -52,7 +54,7 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 
 	// Public -----------------
 
-	private $mParentType	= CoreGlobal::TYPE_ROLE; // required for traits
+	private $modelType	= CoreGlobal::TYPE_ROLE; // required for traits
 
 	// Protected --------------
 
@@ -117,9 +119,10 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 			// Text Limit
 			[ [ 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'description', 'homeUrl' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'slug', 'adminUrl', 'homeUrl' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
+			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
+			[ 'group', 'boolean' ],
 			[ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
@@ -127,7 +130,7 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 		// trim if required
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'homeUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'adminUrl', 'homeUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -199,6 +202,10 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 		$slugList	= [];
 		$idList		= [];
 
+		// TODO: get roles hierarchy
+
+		// TODO: get permission slugs from role cache
+
 		// Generate L0 Slugs and Ids List
 		if( $level <= 1 ) {
 
@@ -206,7 +213,11 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 
 			foreach ( $permissions as $permission ) {
 
-				array_push( $slugList, $permission->slug );
+				if( !in_array( $permission->slug, $slugList ) ) {
+
+					array_push( $slugList, $permission->slug );
+				}
+
 				array_push( $idList, $permission->id );
 			}
 		}
@@ -214,11 +225,14 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 		// Add L1 slugs to L0 slugs
 		if( $level == 1 ) {
 
-			$permissions	= Permission::findL0Children( $idList );
+			$permissions	= Permission::findLeafNodes( $idList );
 
 			foreach ( $permissions as $permission ) {
 
-				array_push( $slugList, $permission->slug );
+				if( !in_array( $permission->slug, $slugList ) ) {
+
+					array_push( $slugList, $permission->slug );
+				}
 			}
 		}
 
@@ -267,4 +281,5 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

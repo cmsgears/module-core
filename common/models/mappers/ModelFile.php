@@ -104,9 +104,9 @@ class ModelFile extends \cmsgears\core\common\models\base\Mapper {
 	// ModelFile -----------------------------
 
 	/**
-	 * @return CmgFile - associated file
+	 * @return Gallery - associated files
 	 */
-	public function getFile() {
+	public function getModel() {
 
 		return $this->hasOne( File::className(), [ 'id' => 'modelId' ] );
 	}
@@ -133,15 +133,8 @@ class ModelFile extends \cmsgears\core\common\models\base\Mapper {
 
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'file' ];
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'model' ];
 		$config[ 'relations' ]	= $relations;
-
-		return parent::queryWithAll( $config );
-	}
-
-	public static function queryWithModel( $config = [] ) {
-
-		$config[ 'relations' ]	= [ 'file' ];
 
 		return parent::queryWithAll( $config );
 	}

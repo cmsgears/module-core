@@ -1,14 +1,8 @@
 <?php
 namespace cmsgears\core\common\services\mappers;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\models\mappers\ModelFile;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
@@ -138,6 +132,20 @@ class ModelFileService extends \cmsgears\core\common\services\base\EntityService
 
 	// Delete -------------
 
+	public function deleteMultiple( $models, $config = [] ) {
+
+		$files = [];
+
+		foreach( $models as $model ) {
+
+			$files[] = $model->model;
+
+			$this->delete( $model, $config );
+		}
+
+		$this->fileService->deleteMultiple( $files );
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// CMG parent classes --------------------
@@ -161,4 +169,5 @@ class ModelFileService extends \cmsgears\core\common\services\base\EntityService
 	// Update -------------
 
 	// Delete -------------
+
 }

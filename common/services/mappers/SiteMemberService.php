@@ -2,13 +2,12 @@
 namespace cmsgears\core\common\services\mappers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\Site;
 use \cmsgears\core\common\models\mappers\SiteMember;
 
 use cmsgears\core\common\services\interfaces\mappers\ISiteMemberService;
@@ -76,6 +75,20 @@ class SiteMemberService extends \cmsgears\core\common\services\base\EntityServic
 
 	/**
 	 * @param integer $siteId
+	 * @return SiteMembers - for the given site
+	 */
+	public function getSiteMemberBySiteId( $siteId ) {
+
+		$modelTable	= static::$modelTable;
+
+		$config = [];
+		$config[ 'conditions' ][ "$modelTable.siteId" ]	= $siteId;
+
+		return $this->getPage( $config );
+	}
+
+	/**
+	 * @param integer $siteId
 	 * @param integer $userId
 	 * @return SiteMember - for the given site and user
 	 */
@@ -112,7 +125,7 @@ class SiteMemberService extends \cmsgears\core\common\services\base\EntityServic
 			$siteMember->roleId	= $role->id;
 		}
 
-		$siteMember->siteId = Yii::$app->core->siteId;
+		$siteMember->siteId = isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 		$siteMember->userId	= $user->id;
 
 		return parent::create( $siteMember, $config );
@@ -154,4 +167,5 @@ class SiteMemberService extends \cmsgears\core\common\services\base\EntityServic
 	// Update -------------
 
 	// Delete -------------
+
 }

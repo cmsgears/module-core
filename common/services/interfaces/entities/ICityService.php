@@ -15,7 +15,9 @@ interface ICityService extends \cmsgears\core\common\services\interfaces\base\IE
 
 	// Read - Models ---
 
-	public function searchLike( $query, $province );
+	public function getUnique( $name, $countryId, $provinceId, $zone = null );
+
+	public function isUniqueExist( $name, $countryId, $provinceId, $zone = null );
 
 	// Read - Lists ----
 

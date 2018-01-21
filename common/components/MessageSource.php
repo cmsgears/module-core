@@ -1,15 +1,31 @@
 <?php
+/**
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ * @license https://www.cmsgears.org/license/
+ * @package module
+ * @subpackage core
+ */
 namespace cmsgears\core\common\components;
-
-// Yii Imports
-use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+/**
+ * The MessageSource class provide default messages for pre-defined message keys.
+ *
+ * It can also read messages stored in db or utilize I18N(internationalization) for these keys.
+ *
+ * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
+ * @since 1.0.0
+ */
 class MessageSource extends \yii\base\Component {
 
 	// TODO: Use resource files to do php internationalization - gettext could be an option. Also look at zend translate.
+
+	// TODO: Read messages from DB based on application locale.
+
+	// TODO: Read messages from DB based on user locale.
 
 	// Variables ---------------------------------------------------
 
@@ -40,12 +56,18 @@ class MessageSource extends \yii\base\Component {
 		// Errors - Generic
 		CoreGlobal::ERROR_REQUEST => 'Your request was not processed. Please correct the highlighted errors and submit again.',
 		CoreGlobal::ERROR_NOT_FOUND => 'The requested resource does not exist.',
+		CoreGlobal::ERROR_NO_ACCESS => 'You are not allowed to access this resource.',
 		CoreGlobal::ERROR_NOT_ALLOWED => 'You are not allowed to perform this action.',
 		CoreGlobal::ERROR_EXIST => 'An entry with the same name already exist. Please provide a different name.',
 		CoreGlobal::ERROR_SELECT => 'Please choose a valid value.',
 		CoreGlobal::ERROR_URL_ENTITY => 'An entry with the same url already exist.',
 		CoreGlobal::ERROR_DEPENDENCY => 'This entry can not be deleted since other rows in other tables are dependent on it.',
 		CoreGlobal::ERROR_SESSION_OVER => 'User related to this account not found. Most probably session is over.',
+		CoreGlobal::ERROR_SESSION_EXPIRED => 'Your session expired.',
+		CoreGlobal::ERROR_TOKEN_EXPIRED => 'Your token expired.',
+
+		// Errors - Comments
+		CoreGlobal::ERROR_NO_COMMENTS => 'Comments are not allowed.',
 
 		// Errors - Permission
 		CoreGlobal::ERROR_PERM_VIEW => 'You are not allowed to view the resources.',
@@ -103,8 +125,9 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_TITLE => 'Title',
 		CoreGlobal::FIELD_TYPE => 'Type',
 		CoreGlobal::FIELD_ICON => 'Icon',
-		CoreGlobal::FIELD_VALUE_TYPE => 'Value Type',
+		CoreGlobal::FIELD_KEY => 'Key',
 		CoreGlobal::FIELD_VALUE => 'Value',
+		CoreGlobal::FIELD_VALUE_TYPE => 'Value Type',
 		CoreGlobal::FIELD_DESCRIPTION => 'Description',
 		CoreGlobal::FIELD_NOTES => 'Notes',
 
@@ -114,8 +137,11 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_VISIBILITY => 'Visibility',
 		CoreGlobal::FIELD_PRIORITY => 'Priority',
 		CoreGlobal::FIELD_SEVERITY => 'Severity',
+		CoreGlobal::FIELD_SCOPE => 'Scope',
 		CoreGlobal::FIELD_ORDER => 'Order',
 		CoreGlobal::FIELD_LIMIT => 'Limit',
+		CoreGlobal::FIELD_COUNT => 'Count',
+		CoreGlobal::FIELD_EXPIRED => 'Expired',
 		CoreGlobal::FIELD_FEATURED => 'Featured',
 		CoreGlobal::FIELD_USER_MAPPED => 'User Mapped',
 
@@ -128,6 +154,8 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_TIME_END => 'End Time',
 		CoreGlobal::FIELD_CREATED_AT => 'Created At',
 		CoreGlobal::FIELD_MODIFIED_AT => 'Updated At',
+
+		CoreGlobal::FIELD_SERVICE => 'Service',
 
 		CoreGlobal::FIELD_MESSAGE => 'Message',
 		CoreGlobal::FIELD_MESSAGE_SUCCESS => 'Success Message',
@@ -169,7 +197,7 @@ class MessageSource extends \yii\base\Component {
 
 		CoreGlobal::FIELD_GLOBAL => 'Global',
 		CoreGlobal::FIELD_SESSION => 'Session',
-		CoreGlobal::FIELD_FIELD_TOKEN => 'Token',
+		CoreGlobal::FIELD_TOKEN => 'Token',
 		CoreGlobal::FIELD_VALIDATORS => 'Validators',
 		CoreGlobal::FIELD_RENDERER => 'Render Engine',
 		CoreGlobal::FIELD_EVENT_LOG => 'Event Log',
@@ -177,6 +205,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_AGENT_BROWSER => 'Browser Agent',
 		CoreGlobal::FIELD_HTML_OPTIONS => 'HTML Options',
 		CoreGlobal::FIELD_DATA => 'Data',
+		CoreGlobal::FIELD_DATA_WIDGET => 'Widget Data',
 		CoreGlobal::FIELD_COMPRESS => 'Store Compressed',
 
 		// Role Fields
@@ -254,7 +283,11 @@ class MessageSource extends \yii\base\Component {
 
 	// Instance methods --------------------------------------------
 
+	// Yii interfaces ------------------------
+
 	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 

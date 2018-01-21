@@ -3,7 +3,6 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use \Yii;
-use yii\db\Query;
 use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
@@ -17,15 +16,15 @@ use cmsgears\core\common\config\CoreProperties;
 use cmsgears\core\common\models\interfaces\IApproval;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\Option;
 use cmsgears\core\common\models\mappers\SiteMember;
+use cmsgears\core\common\models\resources\Option;
 
 use cmsgears\core\common\models\traits\interfaces\ApprovalTrait;
-use cmsgears\core\common\models\traits\resources\MetaTrait;
-use cmsgears\core\common\models\traits\resources\DataTrait;
-use cmsgears\core\common\models\traits\resources\VisualTrait;
 use cmsgears\core\common\models\traits\mappers\AddressTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\resources\MetaTrait;
+use cmsgears\core\common\models\traits\resources\VisualTrait;
 
 /**
  * User Entity - The primary class.
@@ -66,6 +65,9 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	const STATUS_VERIFIED	= 100; // Used when user is required to submit registration application for approval process.
 
+	const REG_TYPE_DEFAULT	= 0;
+	const REG_TYPE_SNS 		= 1;
+
 	// Public -----------------
 
 	// Protected --------------
@@ -74,7 +76,8 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	// Public -----------------
 
-	public $mParentType	= CoreGlobal::TYPE_USER;
+	public $modelType	= CoreGlobal::TYPE_USER;
+
 	public $permissions = [];
 
 	// Protected --------------
@@ -137,7 +140,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 		$rules = [
 			// Required, Safe
 			[ [ 'email' ], 'required' ],
-			[ [ 'id', 'phone', 'content', 'data' ], 'safe' ],
+			[ [ 'id', 'content', 'data' ], 'safe' ],
 			// Email
 			[ 'email', 'email' ],
 			[ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],
@@ -149,8 +152,8 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 			[ 'username', 'validateUsernameUpdate', 'on' => [ 'update', 'profile' ] ],
 			[ 'username', 'validateUsernameChange', 'on' => [ 'profile' ] ],
 			// Text Limit
-			[ [ 'username', 'passwordHash', 'firstName', 'lastName', 'phone', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'email', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'username', 'email', 'passwordHash', 'firstName', 'lastName', 'phone', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
 			[ [ 'id', 'localeId', 'genderId', 'avatarId', 'status' ], 'number', 'integerOnly' => true ],
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
@@ -386,6 +389,11 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 		return '';
 	}
 
+	public function getFullName() {
+
+		return $this->firstName . ' ' . $this->lastName;
+	}
+
 	/**
 	 * @return user name from email in case it's not set by user
 	 */
@@ -557,6 +565,8 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	 */
 	public static function findIdentityByAccessToken( $token, $type = null ) {
 
+		// TODO: Also check access token validity using apiValidDays config
+
 		if( Yii::$app->core->isApis() ) {
 
 			// Find valid User
@@ -698,6 +708,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	// Update -----------------
 
 	// Delete -----------------
+
 }
 
 User::$statusMap[ User::STATUS_VERIFIED ] = 'Verified';

@@ -1,12 +1,7 @@
 <?php
 namespace cmsgears\core\common\services\interfaces\resources;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\services\interfaces\hierarchy\INestedSetService;
 use cmsgears\core\common\services\interfaces\base\INameTypeService;
 use cmsgears\core\common\services\interfaces\base\ISlugTypeService;
@@ -23,6 +18,8 @@ interface ICategoryService extends INestedSetService, INameTypeService, ISlugTyp
 
 	public function getFeaturedByType( $type );
 
+	public function getL0ByType( $type );
+
 	// Read - Lists ----
 
 	public function getTopLevelIdNameListByType( $type, $config = [] );
@@ -36,6 +33,10 @@ interface ICategoryService extends INestedSetService, INameTypeService, ISlugTyp
 	// Create -------------
 
 	// Update -------------
+
+	public function markFeatured( $model );
+
+	public function markRegular( $model );
 
 	// Delete -------------
 

@@ -2,11 +2,8 @@
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 
 class PermissionController extends \cmsgears\core\admin\controllers\base\PermissionController {
 
@@ -26,10 +23,19 @@ class PermissionController extends \cmsgears\core\admin\controllers\base\Permiss
 
 		parent::init();
 
-		$this->sidebar			= [ 'parent' => 'sidebar-identity', 'child' => 'permission' ];
+		$this->sidebar		= [ 'parent' => 'sidebar-identity', 'child' => 'perm' ];
 
-		$this->returnUrl		= Url::previous( 'permissions' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/permission/all' ], true );
+		$this->returnUrl	= Url::previous( 'permissions' );
+		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/permission/all' ], true );
+
+		// Breadcrumbs
+		$this->breadcrumbs	= [
+			'all' => [ [ 'label' => 'Permissions' ] ],
+			'groups' => [ [ 'label' => 'Permissions', 'url' => $this->returnUrl ], [ 'label' => 'Groups' ] ],
+			'create' => [ [ 'label' => 'Permissions', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Permissions', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Permissions', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------
@@ -50,19 +56,41 @@ class PermissionController extends \cmsgears\core\admin\controllers\base\Permiss
 
 	public function actionAll() {
 
-		// Remember return url for crud
-		Url::remember( [ 'permission/all' ], 'permissions' );
+		Url::remember( Yii::$app->request->getUrl(), 'permissions' );
 
 		return parent::actionAll();
 	}
 
-	public function actionMatrix() {
+	public function actionGroups() {
 
-		$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'matrix' ];
+		$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'perm-group' ];
 
-		// Remember return url for crud
-		Url::remember( [ 'permission/matrix' ], 'roles' );
+		Url::remember( Yii::$app->request->getUrl(), 'permissions' );
 
-		return parent::actionMatrix();
+		return parent::actionGroups();
+	}
+
+	public function actionUpdate( $id ) {
+
+		$model	= $this->modelService->getById( $id );
+
+		if( $model->group ) {
+
+			$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'perm-group' ];
+		}
+
+		return parent::actionUpdate( $id );
+	}
+
+	public function actionDelete( $id ) {
+
+		$model	= $this->modelService->getById( $id );
+
+		if( $model->group ) {
+
+			$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'perm-group' ];
+		}
+
+		return parent::actionDelete( $id );
 	}
 }

@@ -1,12 +1,6 @@
 <?php
 namespace cmsgears\core\common\services\traits;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 /**
  * Used by services with base model having sluggable behaviour.
  */

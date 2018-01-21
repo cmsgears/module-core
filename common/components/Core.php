@@ -1,9 +1,15 @@
 <?php
+/**
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ * @license https://www.cmsgears.org/license/
+ * @package module
+ * @subpackage core
+ */
 namespace cmsgears\core\common\components;
 
 // Yii Imports
-use \Yii;
-use yii\di\Container;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -13,17 +19,40 @@ use cmsgears\core\common\validators\CoreValidator;
 use cmsgears\core\common\services\entities\UserService;
 
 /**
- * The core component for CMSGears based sites. It must be initialised for app bootstrap using the name core.
- * It define the post login and logout path to redirect user to a different path than the default one. Though ajax
- * based login need to specify the path within the javascript code.
+ * The core component for CMSGears based sites. It must be initialised for app bootstrap
+ * using the name core.
  *
- * All the admin sites must set useRbac to true to get the admin functional since the admin controllers use it for almost every action.
+ * It define the post login and logout path to redirect user to a different path than the
+ * default one. Though ajax based login need to specify the path within the javascript code.
+ *
+ * All the admin sites must set useRbac to true to get the admin functional since the admin
+ * controllers use it for almost every action.
+ *
+ * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
+ * @since 1.0.0
  */
-class Core extends \yii\base\Component {
+class Core extends \cmsgears\core\common\base\Component {
 
-	// Global -----------------
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
 
 	// Public -----------------
+
+	/**
+	 * @var Stats will be used to store table row count to solve pagination link issue to generate links for large tables without any joins or where conditions specially for InnoDB engine.
+	 * It provides the following features to an application:
+	 * # Create stats table when enabled.
+	 * # Stats Triggers can be enabled to update row count on addition and deletion.
+	 * # CRON job or MySQL event can be added to update row count in case triggers are not used.
+	 * # The stats table storing row counts can be avoided if pages are scrolled using previous and next buttons without having page links.
+	 */
+	public $stats				= false;
+
+	/**
+	 * @var It will add triggers while running migrations on row addition and deletion if stats is enabled. In case triggers are skipped, project specific migration can be created in order to add the relevant triggers.
+	 */
+	public $statsTriggers		= false;
 
 	/**
 	 * @var main site to load configurations in case sub sites are not configured.
@@ -51,6 +80,11 @@ class Core extends \yii\base\Component {
 	public $site				= null;
 
 	/**
+	 * @var It identify whether all the site config need to be loaded at once or by type i.e. module or plugin.
+	 */
+	public $siteConfigAll 		= false;
+
+	/**
 	 * @var test whether the web app is multi-site.
 	 */
 	public $multiSite			= false;
@@ -59,6 +93,10 @@ class Core extends \yii\base\Component {
 	 * @var test whether the web app is sub domain or sub directory based in case $multiSite is set to true.
 	 */
 	public $subDirectory		= true;
+
+	public $appAdmin			= CoreGlobal::APP_ADMIN;
+	public $appFrontend			= CoreGlobal::APP_FRONTEND;
+	public $appConsole			= CoreGlobal::APP_CONSOLE;
 
 	/**
 	 * It can be used in case user approval from admin is required.
@@ -99,9 +137,24 @@ class Core extends \yii\base\Component {
 	public $rbacFilters			= [];
 
 	/**
-	 * @var It can be used to check whether apis are available for the app. Most probably apis are provided using OAuth 2.0 for mobile applications. It's used by User class to load permissions when accessed using auth token.
+	 * It can be used to check whether APIS are enabled for the application. APIS are provided
+	 * using the access token for the same user base i.e. the web application is also supported by
+	 * mobile applications having same users. It's used by user class to load permissions when accessed
+	 * using access token.
+	 *
+	 * OAuth 2.0 can be used to provide APIS to 3rd party web and mobile applications.
+	 *
+	 * @var boolean
 	 */
 	public $apis				= false;
+
+	/**
+	 * APIS validity in days will be used to check whether the date when access token is generated is
+	 * older and user must be forced to login. A new access token must be generated on login.
+	 *
+	 * @var int
+	 */
+	public $apisValidity		= 7;
 
 	/**
 	 * @var The WYSIWYG editor widget class. It will be used by Core Module to edit newsletter content. The dependent modules can also use it to edit the html content.
@@ -119,11 +172,18 @@ class Core extends \yii\base\Component {
 	public $largeText			= CoreGlobal::TEXT_LARGE;
 	public $xLargeText			= CoreGlobal::TEXT_XLARGE;
 	public $xxLargeText			= CoreGlobal::TEXT_XXLARGE;
+	public $xxxLargeText		= CoreGlobal::TEXT_XXXLARGE;
+	public $xtraLargeText		= CoreGlobal::TEXT_XTRALARGE;
 
 	/**
 	 * @var Switch for notification feature. If it's set to true, either Notify Module must be installed or eventManager component must be configured.
 	 */
 	public $notifications		= false;
+
+	/**
+	 * @var Switch for activities feature. If it's set to true, either Notify Module must be installed or eventManager component must be configured.
+	 */
+	public $activities			= false;
 
 	/**
 	 * @var Update selective allows services to update selected columns.
@@ -155,11 +215,13 @@ class Core extends \yii\base\Component {
 
 	// Instance methods --------------------------------------------
 
+	// Yii interfaces ------------------------
+
 	// Yii parent classes --------------------
 
-	// CMG parent classes --------------------
+	// CMG interfaces ------------------------
 
-	// Core ----------------------------------
+	// CMG parent classes --------------------
 
 	// Properties
 
@@ -261,6 +323,21 @@ class Core extends \yii\base\Component {
 		return $this->subDirectory;
 	}
 
+	public function getAppAdmin() {
+
+		return $this->appAdmin;
+	}
+
+	public function getAppFrontend() {
+
+		return $this->appFrontend;
+	}
+
+	public function getAppConsole() {
+
+		return $this->appConsole;
+	}
+
 	public function isUserApproval() {
 
 		return $this->userApproval;
@@ -324,6 +401,11 @@ class Core extends \yii\base\Component {
 		return $this->apis;
 	}
 
+	public function getApisValidity() {
+
+		return $this->apisValidity;
+	}
+
 	/**
 	 * The method getEditorClass is used by the views to make a text area to edit html. It must be set
 	 * @return the class name
@@ -366,6 +448,14 @@ class Core extends \yii\base\Component {
 		return $this->notifications;
 	}
 
+	/**
+	 * To test whether notifications are enabled.
+	 */
+	public function isActivities() {
+
+		return $this->activities;
+	}
+
 	public function isUpdateSelective() {
 
 		return $this->updateSelective;
@@ -375,25 +465,17 @@ class Core extends \yii\base\Component {
 
 	public function registerComponents() {
 
-		// Init system services
-		$this->initSystemServices();
-
 		// Register services
 		$this->registerResourceServices();
 		$this->registerMapperServices();
 		$this->registerEntityServices();
+		$this->registerSystemServices();
 
 		// Init services
 		$this->initResourceServices();
 		$this->initMapperServices();
 		$this->initEntityServices();
-	}
-
-	public function initSystemServices() {
-
-		$factory = Yii::$app->factory->getContainer();
-
-		//$factory->set( '<name>', '<classpath>' );
+		$this->initSystemServices();
 	}
 
 	public function registerResourceServices() {
@@ -433,14 +515,22 @@ class Core extends \yii\base\Component {
 		$factory = Yii::$app->factory->getContainer();
 
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ICountryService', 'cmsgears\core\common\services\entities\CountryService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IProvinceService', 'cmsgears\core\common\services\entities\ProvinceService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ICityService', 'cmsgears\core\common\services\entities\CityService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IObjectService', 'cmsgears\core\common\services\entities\ObjectService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IPermissionService', 'cmsgears\core\common\services\entities\PermissionService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IProvinceService', 'cmsgears\core\common\services\entities\ProvinceService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IRoleService', 'cmsgears\core\common\services\entities\RoleService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ISiteService', 'cmsgears\core\common\services\entities\SiteService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ITemplateService', 'cmsgears\core\common\services\entities\TemplateService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IThemeService', 'cmsgears\core\common\services\entities\ThemeService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IUserService', 'cmsgears\core\common\services\entities\UserService' );
+	}
+
+	public function registerSystemServices() {
+
+		$factory = Yii::$app->factory->getContainer();
+
+		//$factory->set( '<interface path>', '<classpath>' );
 	}
 
 	public function initResourceServices() {
@@ -480,9 +570,10 @@ class Core extends \yii\base\Component {
 		$factory = Yii::$app->factory->getContainer();
 
 		$factory->set( 'countryService', 'cmsgears\core\common\services\entities\CountryService' );
-		$factory->set( 'objectService', 'cmsgears\core\common\services\entities\ObjectService' );
-		$factory->set( 'permissionService', 'cmsgears\core\common\services\entities\PermissionService' );
 		$factory->set( 'provinceService', 'cmsgears\core\common\services\entities\ProvinceService' );
+		$factory->set( 'cityService', 'cmsgears\core\common\services\entities\CityService' );
+		$factory->set( 'objectService', 'cmsgears\core\common\services\entities\ObjectDataService' );
+		$factory->set( 'permissionService', 'cmsgears\core\common\services\entities\PermissionService' );
 		$factory->set( 'roleService', 'cmsgears\core\common\services\entities\RoleService' );
 		$factory->set( 'siteService', 'cmsgears\core\common\services\entities\SiteService' );
 		$factory->set( 'templateService', 'cmsgears\core\common\services\entities\TemplateService' );
@@ -490,7 +581,14 @@ class Core extends \yii\base\Component {
 		$factory->set( 'userService', 'cmsgears\core\common\services\entities\UserService' );
 	}
 
-	// Cookies
+	public function initSystemServices() {
+
+		$factory = Yii::$app->factory->getContainer();
+
+		//$factory->set( '<name>', '<classpath>' );
+	}
+
+	// Cookies & Session
 
 	public function setAppUser( $user ) {
 
@@ -517,12 +615,12 @@ class Core extends \yii\base\Component {
 	public function getAppUser() {
 
 		$cookieName = '_app-user';
-		$appUser	= [];
+		$appUser	= null;
 		$user		= Yii::$app->user->identity;
 
 		if( $user != null ) {
 
-			$appUser	= $user;
+			$appUser = $user;
 		}
 		else if( isset( $_COOKIE[ $cookieName ] ) ) {
 
@@ -545,9 +643,9 @@ class Core extends \yii\base\Component {
 
 		if( isset( $_COOKIE[ $cookieName ] ) ) {
 
-			$data 				= unserialize( $_COOKIE[ $cookieName ] );
+			$data			= unserialize( $_COOKIE[ $cookieName ] );
 
-			$data[ 'user' ]	   = null;
+			$data[ 'user' ]	= null;
 
 			return setcookie( $cookieName, serialize( $data ), time() + ( 10 * 365 * 24 * 60 * 60 ), "/", null );
 		}
@@ -573,8 +671,41 @@ class Core extends \yii\base\Component {
 	 */
 	public function setSessionParam( $param, $value ) {
 
-		$session = $this->getSession();
+		Yii::$app->session->set( $param, $value );
+	}
 
-		$session->set( $param, $value );
+	/*
+	 * @return $session - return session param
+	 */
+	public function getSessionParam( $param ) {
+
+		return Yii::$app->session->get( $param );
+	}
+
+	/*
+	 * @return $session - Open a session if does not exist in application.
+	 */
+	public function setSessionObject( $param, $object ) {
+
+		$data = base64_encode( serialize( $object ) );
+
+		Yii::$app->session->set( $param, $data );
+	}
+
+	/*
+	 * @return $session - return session param
+	 */
+	public function getSessionObject( $param ) {
+
+		$data = Yii::$app->session->get( $param );
+
+		if( isset( $data ) ) {
+
+			$object = unserialize( base64_decode( $data ) );
+
+			return $object;
+		}
+
+		return null;
 	}
 }

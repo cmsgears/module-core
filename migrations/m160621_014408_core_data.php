@@ -11,11 +11,17 @@ use cmsgears\core\common\models\resources\Form;
 use cmsgears\core\common\models\resources\FormField;
 use cmsgears\core\common\models\resources\Category;
 
+use cmsgears\core\common\services\base\EntityService;
+
 use cmsgears\core\common\utilities\DateUtil;
 
 class m160621_014408_core_data extends \yii\db\Migration {
 
-	public $prefix;
+	// Public Variables
+
+	// Private Variables
+
+	private $prefix;
 
 	// Entities
 
@@ -35,12 +41,12 @@ class m160621_014408_core_data extends \yii\db\Migration {
 
 	public function init() {
 
-		$this->prefix		= 'cmg_';
+		// Table prefix
+		$this->prefix			= Yii::$app->migration->cmgPrefix;
 
-		// Get the values via config
-		$this->siteName		= Yii::$app->migration->getSiteName();
-		$this->siteTitle	= Yii::$app->migration->getSiteTitle();
-
+		// Site config
+		$this->siteName			= Yii::$app->migration->getSiteName();
+		$this->siteTitle		= Yii::$app->migration->getSiteTitle();
 		$this->siteMaster		= Yii::$app->migration->getSiteMaster();
 
 		$this->primaryDomain	= Yii::$app->migration->getPrimaryDomain();
@@ -55,13 +61,21 @@ class m160621_014408_core_data extends \yii\db\Migration {
 		// Create default users
 		$this->insertDefaultUsers();
 
-		// Create RBAC and Site Members
+		// Create roles and permissions
 		$this->insertRolePermission();
+
+		// Create permissions
+		$this->insertGalleryRolePermission();
+		$this->insertFileRolePermission();
+
+		// Create Site Members
 		$this->insertSiteMembers();
 
 		// Create various config
 		$this->insertCoreConfig();
+		$this->insertCacheConfig();
 		$this->insertMailConfig();
+		$this->insertCommentsConfig();
 		$this->insertBackendConfig();
 		$this->insertFrontendConfig();
 
@@ -121,21 +135,21 @@ class m160621_014408_core_data extends \yii\db\Migration {
 
 		// Roles
 
-		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'homeUrl', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'adminUrl', 'homeUrl', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
 
 		$roles = [
-			[ $this->master->id, $this->master->id, 'Super Admin', 'super-admin', 'dashboard', CoreGlobal::TYPE_SYSTEM, null, 'The Super Admin have all the permisisons to perform operations on the admin site and website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Admin','admin','dashboard', CoreGlobal::TYPE_SYSTEM, null, 'The Admin have all the permisisons to perform operations on the admin site and website except RBAC module.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'User', 'user', null, CoreGlobal::TYPE_SYSTEM, null, 'The role User is limited to website users.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'User Manager', 'user-manager', 'dashboard', CoreGlobal::TYPE_SYSTEM, null, 'The role User Manager is limited to manage site users from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Super Admin', 'super-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The Super Admin have all the permisisons to perform operations on the admin site and website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Admin','admin','dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The Admin have all the permisisons to perform operations on the admin site and website except RBAC module.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'User', 'user', NULL, NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role User is limited to website users.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'User Admin', 'user-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role User Admin is limited to manage site users from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
 
-		$superAdminRole		= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
-		$adminRole			= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$userRole			= Role::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
-		$userManagerRole	= Role::findBySlugType( 'user-manager', CoreGlobal::TYPE_SYSTEM );
+		$superAdminRole	= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
+		$adminRole		= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$userRole		= Role::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
+		$userAdminRole	= Role::findBySlugType( 'user-admin', CoreGlobal::TYPE_SYSTEM );
 
 		// Permissions
 
@@ -165,7 +179,95 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $superAdminRole->id, $adminPerm->id ], [ $superAdminRole->id, $userPerm->id ], [ $superAdminRole->id, $corePerm->id ], [ $superAdminRole->id, $identityPerm->id ], [ $superAdminRole->id, $rbacPerm->id ],
 			[ $adminRole->id, $adminPerm->id ], [ $adminRole->id, $userPerm->id ], [ $adminRole->id, $corePerm->id ],
 			[ $userRole->id, $userPerm->id ],
-			[ $userManagerRole->id, $adminPerm->id ], [ $userManagerRole->id, $userPerm->id ], [ $userManagerRole->id, $identityPerm->id ]
+			[ $userAdminRole->id, $adminPerm->id ], [ $userAdminRole->id, $userPerm->id ], [ $userAdminRole->id, $identityPerm->id ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_role_permission', $columns, $mappings );
+	}
+
+	private function insertGalleryRolePermission() {
+
+		// Roles
+
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'adminUrl', 'homeUrl', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
+
+		$roles = [
+			[ $this->master->id, $this->master->id, 'Gallery Admin', 'gallery-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role Gallery Admin is limited to manage galleries from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
+
+		$superAdminRole		= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
+		$adminRole			= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$galleryAdminRole	= Role::findBySlugType( 'gallery-admin', CoreGlobal::TYPE_SYSTEM );
+
+		// Permissions
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'type', 'icon', 'group', 'description', 'createdAt', 'modifiedAt' ];
+
+		$permissions = [
+			// Admin Permissions - Hard Coded
+			[ $this->master->id, $this->master->id, 'Admin Galleries', 'admin-galleries', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission admin galleries allows user to administer galleries from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
+
+		// Admin
+		$adminPerm				= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$userPerm				= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
+		$galleryAdminPerm		= Permission::findBySlugType( 'admin-galleries', CoreGlobal::TYPE_SYSTEM );
+
+		// RBAC Mapping
+
+		$columns = [ 'roleId', 'permissionId' ];
+
+		$mappings = [
+				[ $superAdminRole->id, $galleryAdminPerm->id ],
+				[ $adminRole->id, $galleryAdminPerm->id ],
+				[ $galleryAdminRole->id, $adminPerm->id ], [ $galleryAdminRole->id, $userPerm->id ], [ $galleryAdminRole->id, $galleryAdminPerm->id ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_role_permission', $columns, $mappings );
+	}
+
+	private function insertFileRolePermission() {
+
+		// Roles
+
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'adminUrl', 'homeUrl', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
+
+		$roles = [
+				[ $this->master->id, $this->master->id, 'File Admin', 'file-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role File Admin is limited to manage files from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
+
+		$superAdminRole		= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
+		$adminRole			= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$fileAdminRole		= Role::findBySlugType( 'file-admin', CoreGlobal::TYPE_SYSTEM );
+
+		// Permissions
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'type', 'icon', 'group', 'description', 'createdAt', 'modifiedAt' ];
+
+		$permissions = [
+			// Admin Permissions - Hard Coded
+			[ $this->master->id, $this->master->id, 'Admin Files', 'admin-files', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission admin files allows user to administer files from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
+
+		// Admin
+		$adminPerm			= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$userPerm			= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
+		$fileAdminPerm		= Permission::findBySlugType( 'admin-files', CoreGlobal::TYPE_SYSTEM );
+
+		// RBAC Mapping
+
+		$columns = [ 'roleId', 'permissionId' ];
+
+		$mappings = [
+				[ $superAdminRole->id, $fileAdminPerm->id ],
+				[ $adminRole->id, $fileAdminPerm->id ],
+				[ $fileAdminRole->id, $adminPerm->id ], [ $fileAdminRole->id, $userPerm->id ], [ $fileAdminRole->id, $fileAdminPerm->id ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role_permission', $columns, $mappings );
@@ -216,23 +318,55 @@ class m160621_014408_core_data extends \yii\db\Migration {
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
-			[ $config->id, 'locale_message', 'Locale Message', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Check for i18n support.\"}' ],
-			[ $config->id, 'language','Language', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Language used on html tag.\",\"placeholder\":\"Language\"}' ],
-			[ $config->id, 'locale','Locale', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Site default locale.\",\"placeholder\":\"Locale\"}' ],
-			[ $config->id, 'charset','Charset', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Charset used on html head meta.\",\"placeholder\":\"Charset\"}' ],
-			[ $config->id, 'site_title','Site Title', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Site title used in forming page title.\",\"placeholder\":\"Site Title\"}' ],
-			[ $config->id, 'site_name','Site Name', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Site name used on footers etc.\",\"placeholder\":\"Site Name\"}' ],
-			[ $config->id, 'site_url','Frontend URL', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Frontend URL\",\"placeholder\":\"Frontend URL\"}' ],
-			[ $config->id, 'admin_url','Backend URL', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Backend URL\",\"placeholder\":\"Backend URL\"}' ],
-			[ $config->id, 'registration','Registration', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Check whether site registration is allowed.\"}' ],
-			[ $config->id, 'change_email','Change Email', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Check whether email change is allowed for user profile.\"}' ],
-			[ $config->id, 'change_username','Change Username', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Check whether username change is allowed for user profile.\"}' ],
-			[ $config->id, 'date_format','Date Format', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Date format used by the formatter.\",\"placeholder\":\"Date Format\"}' ],
-			[ $config->id, 'time_format','Time Format', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Time format used by the formatter.\",\"placeholder\":\"Time Format\"}' ],
-			[ $config->id, 'date_time_format','Date Time Format', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Date time format used by the formatter.\",\"placeholder\":\"Time Format\"}' ],
-			[ $config->id, 'timezone','Timezone', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Time format used by the formatter.\",\"placeholder\":\"Time Format\"}' ],
-			[ $config->id, 'autologin','Auto Login', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Auto login on account confirmation and activation.\"}' ],
-			[ $config->id, 'caching','Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Enable HTML Caching.\"}' ]
+			[ $config->id, 'locale_message', 'Locale Message', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Check for i18n support."}' ],
+			[ $config->id, 'language','Language', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Language used on html tag.","placeholder":"Language"}' ],
+			[ $config->id, 'locale','Locale', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Site default locale.","placeholder":"Locale"}' ],
+			[ $config->id, 'charset','Charset', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Charset used on html head meta.","placeholder":"Charset"}' ],
+			[ $config->id, 'site_title','Site Title', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Site title used in forming page title.","placeholder":"Site Title"}' ],
+			[ $config->id, 'site_name','Site Name', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Site name used on footers etc.","placeholder":"Site Name"}' ],
+			[ $config->id, 'site_url','Frontend URL', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Frontend URL","placeholder":"Frontend URL"}' ],
+			[ $config->id, 'admin_url','Backend URL', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Backend URL","placeholder":"Backend URL"}' ],
+			[ $config->id, 'registration','Registration', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Check whether site registration is allowed."}' ],
+			[ $config->id, 'login','Login', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Check whether site login is allowed."}' ],
+			[ $config->id, 'change_email','Change Email', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Check whether email change is allowed for user profile."}' ],
+			[ $config->id, 'change_username','Change Username', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Check whether username change is allowed for user profile."}' ],
+			[ $config->id, 'date_format','Date Format', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Date format used by the formatter.","placeholder":"Date Format"}' ],
+			[ $config->id, 'time_format','Time Format', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Time format used by the formatter.","placeholder":"Time Format"}' ],
+			[ $config->id, 'date_time_format','Date Time Format', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Date time format used by the formatter.","placeholder":"Time Format"}' ],
+			[ $config->id, 'timezone','Timezone', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Time format used by the formatter.","placeholder":"Time Format"}' ],
+			[ $config->id, 'auto_login','Auto Login', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Auto login on account confirmation and activation."}' ],
+			[ $config->id, 'auto_load','Auto Load', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Auto load widgets etc using ajax."}' ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
+	}
+
+	private function insertCacheConfig() {
+
+		$this->insert( $this->prefix . 'core_form', [
+				'siteId' => $this->site->id,
+				'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
+				'name' => 'Config Cache', 'slug' => 'config-cache',
+				'type' => CoreGlobal::TYPE_SYSTEM,
+				'description' => 'Cache configuration form.',
+				'successMessage' => 'All configurations saved successfully.',
+				'captcha' => false,
+				'visibility' => Form::VISIBILITY_PROTECTED,
+				'active' => true, 'userMail' => false,'adminMail' => false,
+				'createdAt' => DateUtil::getDateTime(),
+				'modifiedAt' => DateUtil::getDateTime()
+		]);
+
+		$config	= Form::findBySlug( 'config-cache', CoreGlobal::TYPE_SYSTEM );
+
+		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
+
+		$fields	= [
+				[ $config->id, 'caching','Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Enable HTML Caching."}' ],
+				[ $config->id, 'cache_type','Cache Type', FormField::TYPE_SELECT, false, NULL, 0, NULL, '{"title":"Cache types","items":{"none":"Choose Cache Type","file":"File","database":"Database","apc":"APC","mem":"Memcached","redis":"Redis","win":"Windows Cache","xcache":"XCache"}}' ],
+				[ $config->id, 'cache_duration','Cache Duration', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Cache Duration in seconds.","placeholder":"Cache Duration"}' ],
+				[ $config->id, 'html_caching','HTML Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Enable HTML Caching."}' ],
+				[ $config->id, 'json_caching','JSON Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Enable JSON Caching."}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -259,19 +393,54 @@ class m160621_014408_core_data extends \yii\db\Migration {
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
-			[ $config->id, 'smtp','SMTP', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Check whether SMTP is required.\"}' ],
-			[ $config->id, 'smtp_username','SMTP Username', FormField::TYPE_TEXT, false, NULL, 0, NULL , '{\"title\":\"SMTP username.\",\"placeholder\":\"SMTP Username\"}' ],
-			[ $config->id, 'smtp_password','SMTP Password', FormField::TYPE_PASSWORD, false, NULL, 0, NULL, '{\"title\":\"SMTP password.\",\"placeholder\":\"SMTP Password\"}' ],
-			[ $config->id, 'smtp_host','SMTP Host', FormField::TYPE_TEXT, false, NULL, 0, NULL, '{\"title\":\"SMTP host.\",\"placeholder\":\"SMTP Host\"}' ],
-			[ $config->id, 'smtp_port','SMTP Port', FormField::TYPE_TEXT, false, NULL, 0, NULL, '{\"title\":\"SMTP port.\",\"placeholder\":\"SMTP Port\"}' ],
-			[ $config->id, 'smtp_encryption','SMTP Encryption', FormField::TYPE_TEXT, false, NULL, 0, NULL, '{\"title\":\"SMTP encryption.\",\"placeholder\":\"SMTP Encryption\"}' ],
-			[ $config->id, 'debug','SMTP Debug', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{\"title\":\"Check whether SMTP debug is required.\"}' ],
-			[ $config->id, 'sender_name','Sender Name', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Sender name.\",\"placeholder\":\"Sender Name\"}' ],
-			[ $config->id, 'sender_email','Sender Email', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Sender email.\",\"placeholder\":\"Sender Email\"}' ],
-			[ $config->id, 'contact_name','Contact Name', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Contact name.\",\"placeholder\":\"Contact Name\"}' ],
-			[ $config->id, 'contact_email','Contact Email', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Contact email.\",\"placeholder\":\"Contact Email\"}' ],
-			[ $config->id, 'info_name','Info Name', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Info name.\",\"placeholder\":\"Info Name\"}' ],
-			[ $config->id, 'info_email','Info Email', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Info email.\",\"placeholder\":\"Info Email\"}' ]
+			[ $config->id, 'smtp','SMTP', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Check whether SMTP is required."}' ],
+			[ $config->id, 'smtp_username','SMTP Username', FormField::TYPE_TEXT, false, NULL, 0, NULL , '{"title":"SMTP username.","placeholder":"SMTP Username"}' ],
+			[ $config->id, 'smtp_password','SMTP Password', FormField::TYPE_PASSWORD, false, NULL, 0, NULL, '{"title":"SMTP password.","placeholder":"SMTP Password"}' ],
+			[ $config->id, 'smtp_host','SMTP Host', FormField::TYPE_TEXT, false, NULL, 0, NULL, '{"title":"SMTP host.","placeholder":"SMTP Host"}' ],
+			[ $config->id, 'smtp_port','SMTP Port', FormField::TYPE_TEXT, false, NULL, 0, NULL, '{"title":"SMTP port.","placeholder":"SMTP Port"}' ],
+			[ $config->id, 'smtp_encryption','SMTP Encryption', FormField::TYPE_SELECT, false, NULL, 0, NULL, '{"title":"SMTP encryption.","items":{"none":"Choose Encryption","ssl":"SSL","tls":"TLS"}}' ],
+			[ $config->id, 'debug','SMTP Debug', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Check whether SMTP debug is required."}' ],
+			[ $config->id, 'sender_name','Sender Name', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Sender name.","placeholder":"Sender Name"}' ],
+			[ $config->id, 'sender_email','Sender Email', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Sender email.","placeholder":"Sender Email"}' ],
+			[ $config->id, 'contact_name','Contact Name', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Contact name.","placeholder":"Contact Name"}' ],
+			[ $config->id, 'contact_email','Contact Email', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Contact email.","placeholder":"Contact Email"}' ],
+			[ $config->id, 'info_name','Info Name', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Info name.","placeholder":"Info Name"}' ],
+			[ $config->id, 'info_email','Info Email', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Info email.","placeholder":"Info Email"}' ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
+	}
+
+	private function insertCommentsConfig() {
+
+		$this->insert( $this->prefix . 'core_form', [
+				'siteId' => $this->site->id,
+				'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
+				'name' => 'Config Comment', 'slug' => 'config-comment',
+				'type' => CoreGlobal::TYPE_SYSTEM,
+				'description' => 'Comment configuration form.',
+				'successMessage' => 'All configurations saved successfully.',
+				'captcha' => false,
+				'visibility' => Form::VISIBILITY_PROTECTED,
+				'active' => true, 'userMail' => false,'adminMail' => false,
+				'createdAt' => DateUtil::getDateTime(),
+				'modifiedAt' => DateUtil::getDateTime()
+		]);
+
+		$config	= Form::findBySlug( 'config-comment', CoreGlobal::TYPE_SYSTEM );
+
+		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
+
+		$fields	= [
+				[ $config->id, 'comments', 'Comments', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Comments allowed."}' ],
+				[ $config->id, 'comments_user', 'Comments User', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Comments need logged in user."}' ],
+				[ $config->id, 'comments_recent', 'Comments Recent', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Show recent comments on top."}' ],
+				[ $config->id, 'comments_limit','Comments Limit', FormField::TYPE_TEXT, false, 'required,number', 0, NULL, '{"title":"Page limit of comments.","placeholder":"Comments per page"}' ],
+				[ $config->id, 'comments_email_admin', 'Comments Email Admin', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Trigger mail to admin for new comment."}' ],
+				[ $config->id, 'comments_email_user', 'Comments Email User', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Trigger mail to user on approval."}' ],
+				[ $config->id, 'comments_form_top', 'Comments Form Top', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Show the comment form on top of comments."}' ],
+				[ $config->id, 'comments_auto', 'Comments Auto', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Auto approve a comment in case existing approved comment exist for user or email."}' ],
+				[ $config->id, 'comments_filter','Comments Filter', FormField::TYPE_TEXTAREA, false, NULL, 0, NULL, '{"title":"Comments filter having comma seperated words to trash in case words match.","placeholder":"Comments filter"}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -298,7 +467,10 @@ class m160621_014408_core_data extends \yii\db\Migration {
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
-			[ $config->id, 'theme', 'Theme', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Current theme.\",\"placeholder\":\"Theme\"}' ]
+			[ $config->id, 'cmg_powered', 'CMG Powered', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Show Powered by CMSGears on login screen."}' ],
+			[ $config->id, 'default_avatar', 'Default Avatar', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default avatar for site elements."}' ],
+			[ $config->id, 'user_avatar', 'User Avatar', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default avatar for user."}' ],
+			[ $config->id, 'default_banner', 'Default Banner', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default banner for site elements."}' ],
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -325,7 +497,10 @@ class m160621_014408_core_data extends \yii\db\Migration {
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
-			[ $config->id, 'theme', 'Theme', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{\"title\":\"Current theme.\",\"placeholder\":\"Theme\"}' ]
+			[ $config->id, 'default_avatar', 'Default Avatar', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default avatar for site elements."}' ],
+			[ $config->id, 'user_avatar', 'User Avatar', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default avatar for user."}' ],
+			[ $config->id, 'default_banner', 'Default Banner', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default banner for site elements."}' ],
+			[ $config->id, 'fonts', 'Fonts', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Fonts available for content edittors."}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -355,12 +530,20 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $this->site->id, 'site_url', 'Site Url', 'core', 'text', $defaultSite ],
 			[ $this->site->id, 'admin_url', 'Admin Url', 'core', 'text', $defaultAdmin ],
 			[ $this->site->id, 'registration','Registration','core','flag','1' ],
+			[ $this->site->id, 'login','Login','core','flag','1' ],
 			[ $this->site->id, 'change_email','Change Email','core','flag','1' ],
 			[ $this->site->id, 'change_username','Change Username','core','flag','1' ],
 			[ $this->site->id, 'date_format','Date Format','core','text','yyyy-MM-dd' ],
 			[ $this->site->id, 'time_format','Time Format','core','text','HH:mm:ss' ],
 			[ $this->site->id, 'date_time_format','Date Time Format','core','text','yyyy-MM-dd HH:mm:ss' ],
 			[ $this->site->id, 'timezone','Timezone','core','text', $timezone ],
+			[ $this->site->id, 'auto_login','Auto Login','core','flag','0' ],
+			[ $this->site->id, 'auto_load','Auto Load','core','flag','0' ],
+			[ $this->site->id, 'caching','Caching','cache','flag','0' ],
+			[ $this->site->id, 'cache_type','Cache Type','cache','text',NULL ],
+			[ $this->site->id, 'cache_duration','Cache Type','cache','text',NULL ],
+			[ $this->site->id, 'html_caching','HTML Caching','cache','flag','0' ],
+			[ $this->site->id, 'json_caching','JSON Caching','cache','flag','0' ],
 			[ $this->site->id, 'smtp','SMTP','mail','flag','0' ],
 			[ $this->site->id, 'smtp_username','SMTP Username','mail','text','' ],
 			[ $this->site->id, 'smtp_password','SMTP Password','mail','text','' ],
@@ -374,10 +557,23 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $this->site->id, 'contact_email','Contact Email','mail','text', "$siteContact@$primaryDomain" ],
 			[ $this->site->id, 'info_name','Info Name','mail','text','Info' ],
 			[ $this->site->id, 'info_email','Info Email','mail','text',"$siteInfo@$primaryDomain" ],
-			[ $this->site->id, 'theme','Theme','backend','text','admin' ],
-			[ $this->site->id, 'theme','Theme','frontend','text','basic' ],
-			[ $this->site->id, 'autologin','Auto Login','core','flag','0' ],
-			[ $this->site->id, 'caching','Caching','core','flag','0' ]
+			[ $this->site->id, 'comments','Comments','comment','flag','1' ],
+			[ $this->site->id, 'comments_user','Comments User','comment','flag','0' ],
+			[ $this->site->id, 'comments_recent','Comments Recent','comment','flag','0' ],
+			[ $this->site->id, 'comments_limit','Comments Limit','comment','text', EntityService::PAGE_LIMIT ],
+			[ $this->site->id, 'comments_email_admin','Comments Email Admin','comment','flag','1' ],
+			[ $this->site->id, 'comments_email_user','Comments Email User','comment','flag','1' ],
+			[ $this->site->id, 'comments_form_top','Comments Form Top','comment','flag','1' ],
+			[ $this->site->id, 'comments_auto','Comments Auto','comment','flag','1' ],
+			[ $this->site->id, 'comments_filter','Comments Filter','comment','text', NULL ],
+			[ $this->site->id, 'cmg_powered','CMG Powered','backend','flag','1' ],
+			[ $this->site->id, 'default_avatar', 'Default Avatar','backend','text', 'avatar-site.png' ],
+			[ $this->site->id, 'user_avatar','User Avatar','backend','text', 'avatar-user.png' ],
+			[ $this->site->id, 'default_banner','Default Banner','backend','text', 'banner-site.jpg' ],
+			[ $this->site->id, 'default_avatar', 'Default Avatar','frontend','text', 'avatar-site.png' ],
+			[ $this->site->id, 'user_avatar','User Avatar','frontend','text', 'avatar-user.png' ],
+			[ $this->site->id, 'default_banner','Default Banner','frontend','text', 'banner-site.jpg' ],
+			[ $this->site->id, 'fonts','Fonts','frontend','text', 'Arial,Arial Black,Courier New,Sans Serif' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );

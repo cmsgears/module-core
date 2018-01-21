@@ -2,12 +2,10 @@
 namespace cmsgears\core\common\widgets;
 
 // Yii Imports
-use \Yii;
-use yii\base\Widget;
-use yii\base\InvalidConfigException;
+use Yii;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\frontend\config\SiteProperties;
 
 class Editor extends \cmsgears\core\common\base\Widget {
 
@@ -26,6 +24,10 @@ class Editor extends \cmsgears\core\common\base\Widget {
 	// Public -----------------
 
 	public $selector;
+
+	public $fonts	= 'default'; // 'default' OR 'site'
+
+	public $config	= [];
 
 	// Protected --------------
 
@@ -54,7 +56,12 @@ class Editor extends \cmsgears\core\common\base\Widget {
 		$editorClass	= Yii::$app->core->getEditorClass();
 		$editor			= Yii::createObject( $editorClass );
 
-		$editor->widget( [ 'selector' => $this->selector, 'loadAssets' => $this->loadAssets ] );
+		if( $this->fonts == 'site' ) {
+
+			$this->config[ 'fonts' ]	= SiteProperties::getInstance()->getFonts();
+		}
+
+		$editor->widget( [ 'selector' => $this->selector, 'config' => $this->config, 'loadAssets' => $this->loadAssets ] );
 	}
 
 	// Editor --------------------------------

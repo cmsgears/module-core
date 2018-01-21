@@ -2,14 +2,13 @@
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\Permission;
 use cmsgears\core\common\models\mappers\RolePermission;
 
 use cmsgears\core\common\services\interfaces\entities\IPermissionService;
@@ -33,6 +32,8 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 	public static $modelClass	= '\cmsgears\core\common\models\entities\Permission';
 
 	public static $modelTable	= CoreTables::TABLE_PERMISSION;
+
+	public static $typed		= true;
 
 	public static $parentType	= CoreGlobal::TYPE_PERMISSION;
 
@@ -69,24 +70,84 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 
 	public function getPage( $config = [] ) {
 
+		$modelClass	= static::$modelClass;
+		$modelTable	= static::$modelTable;
+
+		// Sorting ----------
+
 		$sort = new Sort([
 			'attributes' => [
 				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Name'
 				],
 				'slug' => [
-					'asc' => [ 'slug' => SORT_ASC ],
-					'desc' => ['slug' => SORT_DESC ],
+					'asc' => [ "$modelTable.slug" => SORT_ASC ],
+					'desc' => [ "$modelTable.slug" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Slug'
-				]
+				],
+	            'type' => [
+	                'asc' => [ "$modelTable.type" => SORT_ASC ],
+	                'desc' => [ "$modelTable.type" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Type'
+	            ],
+	            'icon' => [
+	                'asc' => [ "$modelTable.icon" => SORT_ASC ],
+	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Icon'
+	            ],
+	            'cdate' => [
+	                'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Created At'
+	            ],
+	            'udate' => [
+	                'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Updated At'
+	            ]
 			]
 		]);
 
-		$config[ 'sort' ] = $sort;
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [ 'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'desc' => "$modelTable.description" ];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'desc' => "$modelTable.description"
+		];
+
+		// Result -----------
 
 		return parent::findPage( $config );
 	}
@@ -98,6 +159,14 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 	// Read - Lists ----
 
 	// Read - Maps -----
+
+	public function getLeafIdNameListByType( $type, $config = [] ) {
+
+		$config[ 'conditions' ][ 'type' ] 	= $type;
+		$config[ 'conditions' ][ 'group' ] 	= false;
+
+		return $this->getIdNameList( $config );
+	}
 
 	// Read - Others ---
 
@@ -120,29 +189,47 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 	 */
 	public function bindRoles( $binder ) {
 
-		$permissionId	= $binder->binderId;
-		$roles			= $binder->bindedData;
+		$permId	= $binder->binderId;
+		$binded	= $binder->binded;
 
 		// Clear all existing mappings
-		RolePermission::deleteByPermissionId( $permissionId );
+		RolePermission::deleteByRoleId( $permId );
 
 		// Create updated mappings
-		if( isset( $roles ) && count( $roles ) > 0 ) {
+		if( count( $binded ) > 0 ) {
 
-			foreach ( $roles as $key => $value ) {
+			foreach ( $binded as $id ) {
 
-				if( isset( $value ) && $value > 0 ) {
+				$toSave					= new RolePermission();
+				$toSave->roleId			= $id;
+				$toSave->permissionId	= $permId;
 
-					$toSave					= new RolePermission();
-					$toSave->permissionId	= $permissionId;
-					$toSave->roleId			= $value;
-
-					$toSave->save();
-				}
+				$toSave->save();
 			}
 		}
 
 		return true;
+	}
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
 	}
 
 	// Delete -------------
@@ -170,4 +257,5 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 	// Update -------------
 
 	// Delete -------------
+
 }

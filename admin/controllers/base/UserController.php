@@ -2,8 +2,7 @@
 namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
-use \Yii;
-use yii\filters\VerbFilter;
+use Yii;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
@@ -47,21 +46,27 @@ abstract class UserController extends CrudController {
 
 		parent::init();
 
+		// Views
 		$this->setViewPath( '@cmsgears/module-core/admin/views/user' );
 
+		// Permission
 		$this->crudPermission		= CoreGlobal::PERM_IDENTITY;
+
+		// Config
+		$this->showCreate			= true;
+
+		// Services
 		$this->modelService			= Yii::$app->factory->get( 'userService' );
 
 		$this->siteMemberService	= Yii::$app->factory->get( 'siteMemberService' );
 		$this->roleService			= Yii::$app->factory->get( 'roleService' );
 		$this->optionService		= Yii::$app->factory->get( 'optionService' );
 
-		$this->returnUrl			= Url::previous( 'users' );
-
-		$this->showCreate			= true;
-
 		$this->roleSuperAdmin		= $this->roleService->getBySlug( 'super-admin', true );
 		$this->roleSuperAdmin		= isset( $this->roleSuperAdmin ) ? $this->roleSuperAdmin->id : null;
+
+		// Return Url
+		$this->returnUrl			= Url::previous( 'users' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -139,7 +144,7 @@ abstract class UserController extends CrudController {
 				// Send Account Mail
 				Yii::$app->coreMailer->sendCreateUserMail( $user );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->redirect( "update?id=$model->id" );
 			}
 		}
 
@@ -147,7 +152,8 @@ abstract class UserController extends CrudController {
 
 			return $this->render( 'create', [
 				'model' => $model,
-				'siteMember' => $siteMember
+				'siteMember' => $siteMember,
+				'statusMap' => User::$statusMap
 			]);
 		}
 		else {
@@ -161,7 +167,8 @@ abstract class UserController extends CrudController {
 				'model' => $model,
 				'siteMember' => $siteMember,
 				'avatar' => $avatar,
-				'roleMap' => $roleMap
+				'roleMap' => $roleMap,
+				'statusMap' => User::$statusMap
 			]);
 		}
 	}
@@ -186,7 +193,7 @@ abstract class UserController extends CrudController {
 
 				$this->siteMemberService->update( $siteMember );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->refresh();
 			}
 
 			if( isset( $this->roleSlug ) ) {
@@ -195,7 +202,7 @@ abstract class UserController extends CrudController {
 					'model' => $model,
 					'siteMember' => $siteMember,
 					'avatar' => $avatar,
-					'status' => User::$statusMap
+					'statusMap' => User::$statusMap
 				]);
 			}
 			else {
@@ -209,7 +216,7 @@ abstract class UserController extends CrudController {
 					'siteMember' => $siteMember,
 					'avatar' => $avatar,
 					'roleMap' => $roleMap,
-					'status' => User::$statusMap
+					'statusMap' => User::$statusMap
 				]);
 			}
 		}
@@ -246,7 +253,7 @@ abstract class UserController extends CrudController {
 					'siteMember' => $siteMember,
 					'avatar' => $avatar,
 					'roleMap' => $roleMap,
-					'status' => User::$statusMap
+					'statusMap' => User::$statusMap
 				]);
 			}
 		}

@@ -2,8 +2,7 @@
 namespace cmsgears\core\admin\components;
 
 // Yii Imports
-use \Yii;
-use yii\helpers\ArrayHelper;
+use Yii;
 
 /**
  * The component dashboard forms the dashboard for admin by merging the dashboard html for the modules specified in application configuration. This dashboard is specific only for Admin Application.

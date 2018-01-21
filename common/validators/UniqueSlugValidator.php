@@ -16,10 +16,12 @@ class UniqueSlugValidator extends \yii\validators\UniqueValidator {
 
         $query->andWhere( "$targetAttribute=:val", [ ':val' => $attribVal ] );
 
+		// Test for new record
         if( !$model instanceof ActiveRecordInterface || $model->getIsNewRecord() ) {
 
             $exists = $query->exists();
         }
+		// Test for existing records
         else {
 
             $models = $query->limit( 2 )->all();
@@ -27,7 +29,7 @@ class UniqueSlugValidator extends \yii\validators\UniqueValidator {
 
             if( $n === 1 ) {
 
-                $exists = $models[0]->getPrimaryKey() != $model->getOldPrimaryKey();
+                $exists = $models[ 0 ]->getPrimaryKey() != $model->getOldPrimaryKey();
             }
             else {
 

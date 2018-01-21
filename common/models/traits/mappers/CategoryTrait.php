@@ -1,12 +1,7 @@
 <?php
 namespace cmsgears\core\common\models\traits\mappers;
 
-// Yii Import
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Category;
 use cmsgears\core\common\models\mappers\ModelCategory;
@@ -22,7 +17,15 @@ trait CategoryTrait {
 	public function getModelCategories() {
 
 		return $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->mParentType'" );
+					->where( "parentType='$this->modelType'" );
+	}
+
+	public function getActiveModelCategories() {
+
+		$modelCategoryTable	= CoreTables::TABLE_MODEL_CATEGORY;
+
+		return $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )
+					->where( "$modelCategoryTable.parentType='$this->modelType' AND $modelCategoryTable.active=1" );
 	}
 
 	/**
@@ -30,48 +33,48 @@ trait CategoryTrait {
 	 */
 	public function getCategories() {
 
-		$category	= CoreTables::TABLE_CATEGORY;
+		$categoryTable = CoreTables::TABLE_CATEGORY;
 
 		$query = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
 
 						$modelCategoryTable	= CoreTables::TABLE_MODEL_CATEGORY;
 
-						$query->onCondition( [ "$modelCategoryTable.parentType" => $this->mParentType ] );
+						$query->onCondition( [ "$modelCategoryTable.parentType" => $this->modelType ] );
 					})
-					->where( "$category.type='$this->categoryType'" );
+					->where( "$categoryTable.type='$this->categoryType'" );
 
 		return $query;
 	}
 
 	public function getActiveCategories() {
 
-		$category	= CoreTables::TABLE_CATEGORY;
+		$categoryTable = CoreTables::TABLE_CATEGORY;
 
 		$query = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
 					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
 
 						$modelCategoryTable	= CoreTables::TABLE_MODEL_CATEGORY;
 
-						$query->onCondition( [ "$modelCategoryTable.parentType" => $this->mParentType, "$modelCategoryTable.active" => true ] );
+						$query->onCondition( [ "$modelCategoryTable.parentType" => $this->modelType, "$modelCategoryTable.active" => true ] );
 					})
-					->where( "$category.type='$this->categoryType'" );
+					->where( "$categoryTable.type='$this->categoryType'" );
 
 		return $query;
 	}
 
-	public function getCategoriesByType( $type ) {
+	public function getCategoriesByType( $type, $active = true ) {
 
-		$category	= CoreTables::TABLE_CATEGORY;
+		$categoryTable = CoreTables::TABLE_CATEGORY;
 
 		$categories = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
-							->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
+							->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) use( &$active ) {
 
 								$modelCategory	= CoreTables::TABLE_MODEL_CATEGORY;
 
-								$query->onCondition( [ "$modelCategory.parentType" => $this->mParentType, "$modelCategory.active" => true ] );
+								$query->onCondition( [ "$modelCategory.parentType" => $this->modelType, "$modelCategory.active" => $active ] );
 							})
-							->where( "$category.type='$type'" )
+							->where( "$categoryTable.type='$type'" )
 							->all();
 
 		return $categories;
@@ -80,7 +83,7 @@ trait CategoryTrait {
 	/**
 	 * @return array - list of category id associated with parent
 	 */
-	public function getCategoryIdList( $active = false ) {
+	public function getCategoryIdList( $active = true ) {
 
 		$categories		= null;
 		$categoriesList	= [];
@@ -102,9 +105,9 @@ trait CategoryTrait {
 		return $categoriesList;
 	}
 
-	public function getCategoryIdListByType( $type ) {
+	public function getCategoryIdListByType( $type, $active = true ) {
 
-		$categories			= $this->getCategoriesByType( $type );
+		$categories			= $this->getCategoriesByType( $type, $active );
 		$categoriesList		= [];
 
 		foreach ( $categories as $category ) {
@@ -115,7 +118,7 @@ trait CategoryTrait {
 		return $categoriesList;
 	}
 
-	public function getCategoryNameList( $active = false ) {
+	public function getCategoryNameList( $active = true, $l1 = false ) {
 
 		$categories			= null;
 		$categoriesList		= [];
@@ -131,15 +134,25 @@ trait CategoryTrait {
 
 		foreach ( $categories as $category ) {
 
-			array_push( $categoriesList, $category->name );
+			if( $l1 ) {
+
+				if( $category->lValue == 1 ) {
+
+					array_push( $categoriesList, $category->name );
+				}
+			}
+			else {
+
+				array_push( $categoriesList, $category->name );
+			}
 		}
 
 		return $categoriesList;
 	}
 
-	public function getCategoryNameListByType( $type ) {
+	public function getCategoryNameListByType( $type, $active = true ) {
 
-		$categories			= $this->getCategoriesByType( $type );
+		$categories			= $this->getCategoriesByType( $type, $active );
 		$categoriesList		= [];
 
 		foreach ( $categories as $category ) {
@@ -153,7 +166,7 @@ trait CategoryTrait {
 	/**
 	 * @return array - list of category id and name associated with parent
 	 */
-	public function getCategoryIdNameList( $active = false ) {
+	public function getCategoryIdNameList( $active = true ) {
 
 		$categories			= null;
 		$categoriesList		= [];
@@ -178,7 +191,7 @@ trait CategoryTrait {
 	/**
 	 * @return array - map of category id and name associated with parent
 	 */
-	public function getCategoryIdNameMap( $active = false ) {
+	public function getCategoryIdNameMap( $active = true ) {
 
 		$categories		= null;
 		$categoriesMap	= [];
@@ -200,7 +213,7 @@ trait CategoryTrait {
 		return $categoriesMap;
 	}
 
-	public function getCategorySlugNameMap( $active = false ) {
+	public function getCategorySlugNameMap( $active = true ) {
 
 		$categories		= null;
 		$categoriesMap	= [];
@@ -222,23 +235,33 @@ trait CategoryTrait {
 		return $categoriesMap;
 	}
 
-	public function getCategoryCsv( $limit = 0, $active = true ) {
+	public function getCategoryCsv( $limit = 0, $active = true, $l1 = false ) {
 
-		$categories				= null;
-		$categoriesCsv			= [];
+		$categories		= null;
+		$categoriesCsv	= [];
 
 		if( $active ) {
 
-			$categories		= $this->activeCategories;
+			$categories	= $this->activeCategories;
 		}
 		else {
 
-			$categories		= $this->categories;
+			$categories	= $this->categories;
 		}
 
 		foreach ( $categories as $category ) {
 
-			$categoriesCsv[] = $category->name;
+			if( $l1 ) {
+
+				if( $category->lValue == 1 ) {
+
+					$categoriesCsv[] = $category->name;
+				}
+			}
+			else {
+
+				$categoriesCsv[] = $category->name;
+			}
 		}
 
 		return implode( ", ", $categoriesCsv );
@@ -252,11 +275,11 @@ trait CategoryTrait {
 
 		if( $active ) {
 
-			$categories		= $this->activeCategories;
+			$categories	= $this->activeCategories;
 		}
 		else {
 
-			$categories		= $this->categories;
+			$categories	= $this->categories;
 		}
 
 		foreach ( $categories as $category ) {

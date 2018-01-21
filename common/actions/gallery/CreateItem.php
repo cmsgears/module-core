@@ -51,13 +51,11 @@ class CreateItem extends \cmsgears\core\common\base\Action {
 
 	// CreateItem ----------------------------
 
-	public function run( $slug, $type = null ) {
+	public function run( $id ) {
 
 		$galleryService	= Yii::$app->factory->get( 'galleryService' );
 		$fileService	= Yii::$app->factory->get( 'fileService' );
-		$type			= isset( $type ) ? $type : CoreGlobal::TYPE_SITE;
-
-		$gallery		= $galleryService->getBySlugType( $slug, $type );
+		$gallery		= $galleryService->getById( $id );
 
 		if( isset( $gallery ) ) {
 

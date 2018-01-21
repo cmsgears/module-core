@@ -1,12 +1,7 @@
 <?php
 namespace cmsgears\core\common\services\resources;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\ModelMeta;
 
@@ -228,4 +223,5 @@ class ModelMetaService extends \cmsgears\core\common\services\base\EntityService
 	// Update -------------
 
 	// Delete -------------
+
 }

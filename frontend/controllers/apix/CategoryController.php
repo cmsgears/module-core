@@ -2,16 +2,13 @@
 namespace cmsgears\core\frontend\controllers\apix;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\utilities\AjaxUtil;
-
-class CategoryController extends \cmsgears\core\admin\controllers\base\Controller {
+class CategoryController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -29,7 +26,9 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 
 		parent::init();
 
-		$this->modelService	= Yii::$app->factory->get( 'categoryService' );
+		$this->crudPermission	= CoreGlobal::PERM_USER;
+
+		$this->modelService		= Yii::$app->factory->get( 'categoryService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -46,13 +45,13 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					// 'autoSearch' => [ 'permission' => $this->crudPermission ]
+					'auto-search' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'autoSearch' => [ 'post' ]
+					'auto-search' => [ 'post' ]
 				]
 			]
 		];
@@ -72,4 +71,5 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 	// CMG parent classes --------------------
 
 	// CategoryController --------------------
+
 }

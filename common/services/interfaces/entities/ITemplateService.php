@@ -1,12 +1,7 @@
 <?php
 namespace cmsgears\core\common\services\interfaces\entities;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\services\interfaces\base\INameTypeService;
 use cmsgears\core\common\services\interfaces\base\ISlugTypeService;
 
@@ -18,6 +13,8 @@ interface ITemplateService extends INameTypeService, ISlugTypeService {
 
 	// Read - Models ---
 
+	public function getActiveByType( $type );
+
 	// Read - Lists ----
 
 	// Read - Maps -----
@@ -25,6 +22,10 @@ interface ITemplateService extends INameTypeService, ISlugTypeService {
 	// Create -------------
 
 	// Update -------------
+
+	public function switchFileRender( $model, $config = [] );
+
+	public function switchGroupLayout( $model, $config = [] );
 
 	// Delete -------------
 

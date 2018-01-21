@@ -2,14 +2,10 @@
 namespace cmsgears\core\common\services\mappers;
 
 // Yii Imports
-use \Yii;
 use yii\db\Query;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\Option;
 use cmsgears\core\common\models\mappers\ModelOption;
 
 use cmsgears\core\common\services\interfaces\resources\IOptionService;
@@ -134,8 +130,32 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 		]);
 	}
 
-	// Delete -------------
+	public function toggle( $parentId, $parentType, $modelId ) {
 
+		$toSave		= ModelOption::findByModelId( $parentId, $parentType, $modelId );
+
+		// Existing mapping
+		if( isset( $toSave ) ) {
+
+			if( $toSave->active ) {
+
+				$toSave->active	= false;
+			}
+			else {
+
+				$toSave->active	= true;
+			}
+
+			$toSave->update();
+		}
+		// New Mapping
+		else {
+
+			$this->createByParams( [ 'modelId' => $modelId, 'parentId' => $parentId, 'parentType' => $parentType, 'active' => true ] );
+		}
+	}
+
+	// Delete -------------
 
 	// Static Methods ----------------------------------------------
 
@@ -162,8 +182,8 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 	public function bindOptions( $binder, $parentType ) {
 
 		$parentId	= $binder->binderId;
-		$allData	= $binder->allData;
-		$activeData	= $binder->bindedData;
+		$allData	= $binder->all;
+		$activeData	= $binder->binded;
 
 		foreach ( $allData as $id ) {
 
@@ -186,14 +206,7 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 			// Save only required data
 			else if( in_array( $id, $activeData ) ) {
 
-				$toSave		= new ModelOption();
-
-				$toSave->parentId	= $parentId;
-				$toSave->parentType	= $parentType;
-				$toSave->modelId	= $id;
-				$toSave->active		= true;
-
-				$toSave->save();
+				$this->createByParams( [ 'modelId' => $id, 'parentId' => $parentId, 'parentType' => $parentType, 'active' => true ] );
 			}
 		}
 
@@ -201,4 +214,5 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 	}
 
 	// Delete -------------
+
 }

@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -117,7 +117,12 @@ class ModelHierarchy extends \cmsgears\core\common\models\base\Resource {
 
 	public static function findRoot( $rootId, $parentType ) {
 
-		return self::find()->where( 'rootId=:rid AND parentId=NULL parentType=:type', [ ':rid' => $rootId, ':type' => $parentType ] )->one();
+		return self::find()->where( 'rootId=:rid AND parentType=:type AND parentId IS NULL', [ ':rid' => $rootId, ':type' => $parentType ] )->one();
+	}
+
+	public static function findChild( $parentId, $parentType, $childId ) {
+
+		return self::find()->where( 'parentId=:pid AND parentType=:type AND childId=:cid', [ ':pid' => $parentId, ':type' => $parentType, ':cid' => $childId ] )->one();
 	}
 
 	// Create -----------------
@@ -125,4 +130,9 @@ class ModelHierarchy extends \cmsgears\core\common\models\base\Resource {
 	// Update -----------------
 
 	// Delete -----------------
+
+	public static function deleteByRootId( $rootId, $parentType ) {
+
+		return self::deleteAll( 'rootId=:rid AND parentType=:type', [ ':rid' => $rootId, ':type' => $parentType ] );
+	}
 }

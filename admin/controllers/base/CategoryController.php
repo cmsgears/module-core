@@ -2,15 +2,11 @@
 namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
-use \Yii;
-use yii\filters\VerbFilter;
-use yii\helpers\Url;
+use Yii;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\models\resources\Category;
 
 abstract class CategoryController extends \cmsgears\core\admin\controllers\base\CrudController {
 
@@ -32,11 +28,16 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 		parent::init();
 
+		// Views
 		$this->setViewPath( '@cmsgears/module-core/admin/views/category' );
 
+		// Permission
 		$this->crudPermission	= CoreGlobal::PERM_CORE;
+
+		// Services
 		$this->modelService		= Yii::$app->factory->get( 'categoryService' );
 
+		// Type
 		$this->type				= CoreGlobal::TYPE_SITE;
 
 		// Notes: Configure sidebar and returnUrl exclusively in child classes. We can also change type in child classes.
@@ -78,7 +79,7 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 			$this->modelService->create( $model );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( "update?id=$model->id" );
 		}
 
 		$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
@@ -101,7 +102,7 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 				$this->modelService->update( $model );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->refresh();
 			}
 
 			$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [

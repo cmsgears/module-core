@@ -1,12 +1,6 @@
 <?php
 namespace cmsgears\core\common\services\interfaces\mappers;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 interface IModelCategoryService extends \cmsgears\core\common\services\interfaces\base\IMapperService {
 
 	// Data Provider ------
@@ -29,7 +23,7 @@ interface IModelCategoryService extends \cmsgears\core\common\services\interface
 
 	// Update -------------
 
-	public function bindCategories( $parentId, $parentType, $binderClass = 'Binder' );
+	public function bindCategories( $parentId, $parentType, $config = [] );
 
 	// Delete -------------
 

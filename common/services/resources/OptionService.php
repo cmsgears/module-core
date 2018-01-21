@@ -2,7 +2,6 @@
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
-use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -276,4 +275,5 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 	// Update -------------
 
 	// Delete -------------
+
 }

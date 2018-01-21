@@ -12,12 +12,17 @@ class CoreGlobal {
 	const SITE_BLOG				= 'blog';
 	const SITE_FORUM			= 'forum';
 
+	const APP_ADMIN				= 'app-admin';
+	const APP_FRONTEND			= 'app-frontend';
+	const APP_CONSOLE			= 'app-console';
+
 	// System Pages ---------------------------------------------------
 
 	const PAGE_ACCOUNT_ACTIVATE = 'activate-account';
 	const PAGE_PASSWORD_FORGOT	= 'forgot-password';
 	const PAGE_PASSWORD_RESET	= 'reset-password';
-	const PAGE_LOGIN			= 'login';
+	const PAGE_LOGIN				= 'login';
+	const PAGE_SITEMEMBER		= 'site-member';
 
 	const FLASH_GENERIC			= 'message';
 	const MODEL_GENERIC			= 'model';
@@ -49,6 +54,7 @@ class CoreGlobal {
 	const TYPE_PROVINCE			= 'province';
 	const TYPE_ROLE				= 'role';
 	const TYPE_SITE				= 'site';
+	const TYPE_APP				= 'app';
 	const TYPE_TEMPLATE			= 'template';
 	const TYPE_THEME			= 'theme';
 	const TYPE_USER				= 'user';
@@ -91,19 +97,23 @@ class CoreGlobal {
 
 	// Text Limits - Ideal for string validators -----------------------
 
-	const TEXT_SMALL			=  64;
-	const TEXT_MEDIUM			= 160; // Meta Description Limit
-	const TEXT_LARGE			= 255;
-	const TEXT_XLARGE			= 512;
-	const TEXT_XXLARGE			= 1024;
+	const TEXT_SMALL		=  64;
+	const TEXT_MEDIUM		= 160; // Meta Description Limit
+	const TEXT_LARGE		= 255;
+	const TEXT_XLARGE		= 512;
+	const TEXT_XXLARGE		= 1024;
+	const TEXT_XXXLARGE		= 2048;
+	const TEXT_XTRALARGE	= 4096;
 
 	// Text limit for display ------------------------------------------
 
-	const DISPLAY_TEXT_SMALL	= 160; // Meta Description Limit ... Truncate description
-	const DISPLAY_TEXT_MEDIUM	= 255;
-	const DISPLAY_TEXT_LARGE	= 350;
-	const DISPLAY_TEXT_XLARGE	= 512;
-	const DISPLAY_TEXT_XXLARGE	= 1024;
+	const DISPLAY_TEXT_SMALL		= 160; // Meta Description Limit ... Truncate description
+	const DISPLAY_TEXT_MEDIUM		= 255;
+	const DISPLAY_TEXT_LARGE		= 350;
+	const DISPLAY_TEXT_XLARGE		= 512;
+	const DISPLAY_TEXT_XXLARGE		= 1024;
+	const DISPLAY_TEXT_XXXLARGE		= 2048;
+	const DISPLAY_TEXT_XTRALARGE	= 4096;
 
 	// Hierarchy -- Nested Set -----------------------------------------
 
@@ -113,7 +123,9 @@ class CoreGlobal {
 	// Config ----------------------------------------------------------
 
 	const CONFIG_CORE			= 'core';		// Core Config defining site configuration
+	const CONFIG_CACHE			= 'cache';
 	const CONFIG_MAIL			= 'mail';		// Mail Config defining mail configurations and useful in case SMTP is required
+	const CONFIG_COMMENT		= 'comment';
 	const CONFIG_ADMIN			= 'backend';
 	const CONFIG_FRONTEND		= 'frontend';
 
@@ -128,12 +140,18 @@ class CoreGlobal {
 	const PERM_USER					= 'user';	// Allows to view User Site Home
 	const PERM_GUEST				= 'guest';
 
-	// Site specific - Forms, Galleries, Settings, Testimonials, Categories, Geo DB
+	// Site specific - Settings, Testimonials, Categories, Geo DB
 	const PERM_CORE					= 'core';
 
 	// User
 	const PERM_IDENTITY				= 'identity';	// Allows admin to manage site users
 	const PERM_RBAC					= 'rbac';		// Allows admin to manage roles and permissions
+
+	// Gallery
+	const PERM_GALLERY_ADMIN		= 'admin-galleries';
+
+	// File
+	const PERM_FILE_ADMIN			= 'admin-files';
 
 	// TODO: Implement I18N for Messages, Errors and Field Labels
 
@@ -143,7 +161,11 @@ class CoreGlobal {
 	const DATA_CONFIG				= 'config';
 	const DATA_SOCIAL_LINKS			= 'socialLinks';
 	const DATA_REJECT_REASON		= 'rejectReason';
+	const DATA_TERMINATE_REASON		= 'terminateReason';
 	const DATA_APPROVAL_REQUEST		= 'approvalRequest';
+
+	const DATA_GRID_LAYOUT			= 'gridLayout';		// Used to determine grid view among grid or table.
+	const DATA_SIDEBAR_MICRO		= 'microSidebar';	// Used to show micro or full view of sidebar.
 
 	// model attributes
 	const META_TYPE_USER			= 'user';
@@ -188,13 +210,19 @@ class CoreGlobal {
 
 	// Errors - Generic
 	const ERROR_REQUEST				= 'requestError';
-	const ERROR_NOT_FOUND			= 'notFoundError';
-	const ERROR_NOT_ALLOWED			= 'notAllowedError';
+	const ERROR_NOT_FOUND			= 'notFoundError'; // 404 - not found
+	const ERROR_NO_ACCESS			= 'noAccessError'; // 403 - forbidden
+	const ERROR_NOT_ALLOWED			= 'notAllowedError'; // 500 - not authorized
 	const ERROR_EXIST				= 'entryExistError';
 	const ERROR_SELECT				= 'selectError';
 	const ERROR_URL_ENTITY			= 'urlEntityError';
 	const ERROR_DEPENDENCY			= 'dependencyError';
 	const ERROR_SESSION_OVER		= 'sessionOverError';
+	const ERROR_SESSION_EXPIRED		= 'sessionExpiredError';
+	const ERROR_TOKEN_EXPIRED		= 'tokenExpiredError';
+
+	// Errors - Comments
+	const ERROR_NO_COMMENTS			= 'noCommentsError';
 
 	// Errors - Permission
 	const ERROR_PERM_VIEW			= 'viewError';
@@ -252,8 +280,9 @@ class CoreGlobal {
 	const FIELD_TITLE				= 'titleField';
 	const FIELD_TYPE				= 'typeField';
 	const FIELD_ICON				= 'iconField';
-	const FIELD_VALUE_TYPE			= 'valueTypeField';
+	const FIELD_KEY					= 'keyField';
 	const FIELD_VALUE				= 'valueField';
+	const FIELD_VALUE_TYPE			= 'valueTypeField';
 	const FIELD_DESCRIPTION			= 'descField';
 	const FIELD_NOTES				= 'notesField';
 
@@ -263,8 +292,11 @@ class CoreGlobal {
 	const FIELD_VISIBILITY			= 'visibilityField';
 	const FIELD_PRIORITY			= 'priorityField';
 	const FIELD_SEVERITY			= 'severityField';
+	const FIELD_SCOPE				= 'scopeField';
 	const FIELD_ORDER				= 'orderField';
 	const FIELD_LIMIT				= 'limitField';
+	const FIELD_COUNT				= 'countField';
+	const FIELD_EXPIRED				= 'expiredField';
 	const FIELD_FEATURED			= 'featuredField';
 	const FIELD_USER_MAPPED			= 'userMappedField';
 
@@ -277,6 +309,8 @@ class CoreGlobal {
 	const FIELD_TIME_END			= 'endTimeField';
 	const FIELD_CREATED_AT			= 'createdAtField';
 	const FIELD_MODIFIED_AT			= 'modifiedAtField';
+
+	const FIELD_SERVICE				= 'serviceField';
 
 	const FIELD_MESSAGE				= 'messageField';
 	const FIELD_MESSAGE_SUCCESS		= 'messageSuccessField';
@@ -318,7 +352,7 @@ class CoreGlobal {
 
 	const FIELD_GLOBAL				= 'globalField';
 	const FIELD_SESSION				= 'sessionField';
-	const FIELD_FIELD_TOKEN			= 'tokenField';
+	const FIELD_TOKEN				= 'tokenField';
 	const FIELD_VALIDATORS			= 'validatorsField';
 	const FIELD_RENDERER			= 'rendererField';
 	const FIELD_EVENT_LOG			= 'eventLogField';
@@ -326,6 +360,7 @@ class CoreGlobal {
 	const FIELD_AGENT_BROWSER		= 'browserAgentField';
 	const FIELD_HTML_OPTIONS		= 'htmlOptionsField';
 	const FIELD_DATA				= 'dataField';
+	const FIELD_DATA_WIDGET			= 'widgetDataField';
 	const FIELD_COMPRESS			= 'compressField';
 
 	// Role Fields

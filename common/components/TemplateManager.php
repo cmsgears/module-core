@@ -1,12 +1,25 @@
 <?php
+/**
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ * @license https://www.cmsgears.org/license/
+ * @package module
+ * @subpackage core
+ */
 namespace cmsgears\core\common\components;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+/*
+ * TemplateManager find appropriate template and render the view based on given configurations.
+ *
+ * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
+ * @since 1.0.0
+ */
 class TemplateManager extends \yii\base\Component {
 
 	// Variables ---------------------------------------------------
@@ -27,8 +40,6 @@ class TemplateManager extends \yii\base\Component {
 
 	// Constructor and Initialisation ------------------------------
 
-	// Instance methods --------------------------------------------
-
 	public function init() {
 
 		parent::init();
@@ -36,7 +47,13 @@ class TemplateManager extends \yii\base\Component {
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
 	}
 
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
 	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
@@ -126,6 +143,29 @@ class TemplateManager extends \yii\base\Component {
 			else {
 
 				return "<p>Theme or appropriate renderer is not found for this resource. Please configure appropriate theme.</p>";
+			}
+		}
+		else {
+
+			switch( $renderEngine ) {
+
+				case 'twig': {
+
+					$tplName	= uniqid( 'string_template_', true );
+					$twig		= new \Twig_Environment( new \Twig_Loader_Array( [ $tplName => $template->content ] ) );
+
+					$content	= $twig->render( $tplName, $models );
+
+					return $content;
+
+					break;
+				}
+				case 'smarty': {
+
+					// TODO: Add smarty support
+
+					break;
+				}
 			}
 		}
 	}

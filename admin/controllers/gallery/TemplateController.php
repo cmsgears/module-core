@@ -2,7 +2,6 @@
 namespace cmsgears\core\admin\controllers\gallery;
 
 // Yii Imports
-use \Yii;
 use yii\helpers\Url;
 
 // CMG Imports
@@ -26,12 +25,27 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		parent::init();
 
-		$this->sidebar		= [ 'parent' => 'sidebar-core', 'child' => 'gallery-template' ];
+		// Permissions
+		$this->crudPermission	= CoreGlobal::PERM_GALLERY_ADMIN;
 
-		$this->type			= CoreGlobal::TYPE_GALLERY;
+		// Type
+		$this->type				= CoreGlobal::TYPE_GALLERY;
 
-		$this->returnUrl	= Url::previous( 'templates' );
-		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/gallery/template/all' ], true );
+		// Sidebar
+		$this->sidebar			= [ 'parent' => 'sidebar-gallery', 'child' => 'template' ];
+
+		// Return Url
+		$this->returnUrl		= Url::previous( 'templates' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/gallery/template/all' ], true );
+
+		// Breadcrumbs
+		$this->breadcrumbs	= [
+			'base' => [ [ 'label' => 'Galleries', 'url' =>  [ '/core/gallery/all' ] ] ],
+			'all' => [ [ 'label' => 'Templates' ] ],
+			'create' => [ [ 'label' => 'Templates', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Templates', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Templates', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		];
 	}
 
 	// Instance methods --------------------------------------------

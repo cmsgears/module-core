@@ -7,7 +7,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\interfaces\IApproval;
 
 /**
- * Useful for models required registration process with admin approval. The model using this trait must use status column for tracking state.
+ * Useful for models required registration process with admin approval. The model using this
+ * trait must use status column to track current state.
  */
 trait ApprovalTrait {
 
@@ -55,9 +56,13 @@ trait ApprovalTrait {
 		'terminated' => IApproval::STATUS_TERMINATED
 	];
 
-	public function getStatusStr() {
+	public function getStatusStr( $strict = false ) {
 
-		if( $this->status >= IApproval::STATUS_SUBMITTED ) {
+		if( $strict ) {
+
+			return self::$statusMap[ $this->status ];
+		}
+		else if( $this->status >= IApproval::STATUS_SUBMITTED ) {
 
 			return self::$statusMap[ $this->status ];
 		}
@@ -90,7 +95,7 @@ trait ApprovalTrait {
 		return $this->status == IApproval::STATUS_SUBMITTED || $this->status == IApproval::STATUS_RE_SUBMIT;
 	}
 
-	public function isBelowSubmitted( $strict = true ) {
+	public function isBelowRejected( $strict = true ) {
 
 		if( $strict ) {
 
@@ -118,6 +123,16 @@ trait ApprovalTrait {
 		}
 
 		return $this->status >= IApproval::STATUS_RE_SUBMIT;
+	}
+
+	public function isBelowConfirmed( $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->status < IApproval::STATUS_CONFIRMED;
+		}
+
+		return $this->status <= IApproval::STATUS_CONFIRMED;
 	}
 
 	public function isConfirmed( $strict = true ) {

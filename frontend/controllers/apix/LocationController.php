@@ -11,7 +11,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\utilities\CodeGenUtil;
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class LocationController extends \cmsgears\core\admin\controllers\base\Controller {
+class LocationController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
@@ -63,7 +63,7 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwn
 
 	// Public -----------------
 
-	public $mParentType		= CoreGlobal::TYPE_GALLERY;
+	public $modelType	= CoreGlobal::TYPE_GALLERY;
 
 	// Protected --------------
 
@@ -208,6 +208,15 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwn
 		return Yii::$app->formatter->asBoolean( $this->active );
 	}
 
+	/**
+	 * THe method belongsTo check whether the gallery belongs to given model. The model must have galleryId column.
+	 * @return boolean
+	 */
+	public function belongsTo( $model ) {
+
+		return $this->id == $model->galleryId;
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------
@@ -250,4 +259,5 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwn
 	// Update -----------------
 
 	// Delete -----------------
+
 }

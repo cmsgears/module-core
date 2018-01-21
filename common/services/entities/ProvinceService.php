@@ -1,18 +1,21 @@
 <?php
 namespace cmsgears\core\common\services\entities;
 
-use \Yii;
+// Yii Imports
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\Province;
+
+use cmsgears\core\common\services\traits\NameTrait;
 
 use cmsgears\core\common\services\interfaces\entities\IProvinceService;
+use cmsgears\core\common\services\base\EntityService;
 
-class ProvinceService extends \cmsgears\core\common\services\base\EntityService implements IProvinceService {
+class ProvinceService extends EntityService implements IProvinceService {
 
 	// Variables ---------------------------------------------------
 
@@ -40,6 +43,8 @@ class ProvinceService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Traits ------------------------------------------------------
 
+	use NameTrait;
+
 	// Constructor and Initialisation ------------------------------
 
 	// Instance methods --------------------------------------------
@@ -58,26 +63,75 @@ class ProvinceService extends \cmsgears\core\common\services\base\EntityService 
 
 	public function getPage( $config = [] ) {
 
+		$modelClass		= static::$modelClass;
+		$modelTable		= static::$modelTable;
+		$countryTable	= CoreTables::TABLE_COUNTRY;
+
+		// Sorting ----------
+
 		$sort = new Sort([
 			'attributes' => [
-				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+				'country' => [
+					'asc' => [ "$countryTable.name" => SORT_ASC ],
+					'desc' => [ "$countryTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'Name'
+					'label' => 'Country'
 				],
-				'slug' => [
-					'asc' => [ 'slug' => SORT_ASC ],
-					'desc' => ['slug' => SORT_DESC ],
+				'name' => [
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'Slug'
+					'label' => 'name'
+				],
+				'code' => [
+					'asc' => [ "$modelTable.code" => SORT_ASC ],
+					'desc' => [ "$modelTable.code" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Code'
+				],
+				'iso' => [
+					'asc' => [ "$modelTable.iso" => SORT_ASC ],
+					'desc' => [ "$modelTable.iso" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'ISO'
 				]
 			]
 		]);
 
-		$config[ 'sort' ] = $sort;
+		if( !isset( $config[ 'sort' ] ) ) {
 
-		return parent::findPage( $config );
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [ 'name' => "$modelTable.name", 'code' => "$modelTable.code" ];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name", 'code' => "$modelTable.code", 'iso' => "$modelTable.iso"
+		];
+
+		// Result -----------
+
+		return parent::getPage( $config );
 	}
 
 	// Read ---------------
@@ -89,6 +143,20 @@ class ProvinceService extends \cmsgears\core\common\services\base\EntityService 
 		$modelClass	= self::$modelClass;
 
 		return $modelClass::findByCode( $code );
+	}
+
+	public function getAllByCode( $code ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findAllByCode( $code );
+	}
+
+	public function getByCountryIdCode( $countryId, $code ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findByCountryIdCode( $countryId, $code );
 	}
 
 	// Read - Lists ----
@@ -105,6 +173,11 @@ class ProvinceService extends \cmsgears\core\common\services\base\EntityService 
 		return self::findIdNameMap( [ 'conditions' => [ 'countryId' => $countryId ] ] );
 	}
 
+	public function getIsoNameMapByCountryId( $countryId ) {
+
+		return self::findNameValueMap( [ 'nameColumn' => 'iso', 'valueColumn' => 'name', 'conditions' => [ 'countryId' => $countryId ] ] );
+	}
+
 	// Read - Others ---
 
 	// Create -------------
@@ -113,11 +186,32 @@ class ProvinceService extends \cmsgears\core\common\services\base\EntityService 
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'countryId', 'code', 'codeNum', 'name' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'code', 'iso', 'name' ];
 
 		return parent::update( $model, [
 			'attributes' => $attributes
 		]);
+	}
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
 	}
 
 	// Delete -------------
@@ -145,4 +239,5 @@ class ProvinceService extends \cmsgears\core\common\services\base\EntityService 
 	// Update -------------
 
 	// Delete -------------
+
 }

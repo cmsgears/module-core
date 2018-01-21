@@ -1,14 +1,12 @@
 <?php
 namespace cmsgears\core\common\services\entities;
 
-use \Yii;
 use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\core\common\models\mappers\ModelObject;
 
 use cmsgears\core\common\services\interfaces\entities\IObjectService;
@@ -30,6 +28,8 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 	public static $modelClass	= '\cmsgears\core\common\models\entities\ObjectData';
 
 	public static $modelTable	= CoreTables::TABLE_OBJECT_DATA;
+
+	public static $typed		= true;
 
 	public static $parentType	= CoreGlobal::TYPE_OBJECT;
 
@@ -77,6 +77,12 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ 'id' => SORT_ASC ],
+					'desc' => [ 'id' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 				'name' => [
 					'asc' => [ 'name' => SORT_ASC ],
 					'desc' => ['name' => SORT_DESC ],
@@ -89,6 +95,9 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 					'default' => SORT_DESC,
 					'label' => 'slug'
 				]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 
@@ -133,7 +142,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'templateId', 'avatarId', 'name', 'icon', 'description', 'type', 'active', 'htmlOptions', 'data' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'templateId', 'avatarId', 'name', 'icon', 'description', 'type', 'active', 'htmlOptions', 'content', 'data' ];
 		$data		= isset( $config[ 'data' ] ) ? $config[ 'data' ] : null;
 		$avatar		= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
@@ -188,4 +197,5 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 	// Update -------------
 
 	// Delete -------------
+
 }

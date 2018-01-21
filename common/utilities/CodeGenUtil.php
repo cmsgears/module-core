@@ -6,6 +6,9 @@ use \Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 /**
  * The class CodeGenUtil provides utility methods to generate code snippets for commonly used code.
  */
@@ -46,16 +49,37 @@ class CodeGenUtil {
 		return "Showing $start to $end out of $total entries";
 	}
 
+	public static function getPaginationOptions( $limits = [], $pageLimit = null ) {
+
+		$pageLimits		= count( $limits ) > 0 ? $limits : [ '5' => 5, '10' => 10, '15' => 15, '20' => 20 ];
+
+		$pageLimit		= Yii::$app->request->get( 'per-page' );
+		$pageLimit		= isset( $pageLimit ) && in_array( $pageLimit, $pageLimits ) ? $pageLimit : $pageLimit;
+
+		$pageLimitIdx	= array_search( $pageLimit, $pageLimits );
+
+		$options		= self::generateSelectOptionsFromArray( $pageLimits, $pageLimitIdx );
+
+		return $options;
+	}
+
 	/**
 	 * @return string - csv of urls from the given associative array and base url
 	 */
-	public static function generateLinksFromMap( $baseUrl, $map, $csv = true ) {
+	public static function generateLinksFromMap( $baseUrl, $map, $csv = true, $absolute = true ) {
 
 		$html	= [];
 
 		foreach ( $map as $key => $value ) {
 
-			$html[]	= Html::a( $value, Url::to( $baseUrl . $key, true ) );
+			if( $absolute ) {
+
+				$html[]	= Html::a( $value, Url::to( $baseUrl . $key, true ) );
+			}
+			else {
+
+				$html[]	= Html::a( $value, Url::toRoute( $baseUrl . $key ) );
+			}
 		}
 
 		if( $csv ) {
@@ -231,6 +255,24 @@ class CodeGenUtil {
 		return $listItems;
 	}
 
+	public static function getRangeOptions( $start, $end, $selected = null ) {
+
+		$options = '';
+
+		for( $i = $start; $i <= $end; $i++ ) {
+
+			if( $selected === $i ) {
+
+				$options .= "<option value='$i' selected>$i</option>";
+			}
+			else {
+				$options .= "<option value='$i'>$i</option>";
+			}
+		}
+
+		return $options;
+	}
+
 	// Return Image Tag
 	public static function getImageThumbTag( $image, $options = [] ) {
 
@@ -279,6 +321,25 @@ class CodeGenUtil {
 		}
 	}
 
+	public static function getThumbUrl( $file, $options = [] ) {
+
+		if( $file == null ) {
+
+			if( isset( $options[ 'image' ] ) ) {
+
+				$image	= $options[ 'image' ];
+
+				return Yii::getAlias( '@images' ) . "/$image";
+			}
+		}
+		else {
+
+			return $file->getThumbUrl();
+		}
+
+		return null;
+	}
+
 	public static function getMediumUrl( $file, $options = [] ) {
 
 		if( $file == null ) {
@@ -317,19 +378,40 @@ class CodeGenUtil {
 		return null;
 	}
 
-	public static function generateMetaTags( $params ) {
+	public static function generateMetaTags( $params, $config = [] ) {
+
+		$descLimit		= isset( $config[ 'descLimit' ] ) ? $config[ 'descLimit' ] : 160;
+		$keywordsLimit	= isset( $config[ 'keywordsLimit' ] ) ? $config[ 'keywordsLimit' ] : 10;
 
 		$metaContent	= '';
 
 		if( isset( $params[ 'desc' ] ) ) {
 
 			$description	= $params[ 'desc' ];
+
+			$description	= filter_var( $description, FILTER_SANITIZE_STRING );
+
+			// SEO Limit - 160
+			if( strlen( $description ) > $descLimit ) {
+
+				$description = substr( $description, 0, $descLimit );
+			}
+
 			$metaContent	.= "<meta name='description' content='$description' />";
 		}
 
-		if( isset( $params[ 'meta' ] ) ) {
+		if( isset( $params[ 'keywords' ] ) ) {
 
-			$keywords		= $params[ 'meta' ];
+			$keywords		= $params[ 'keywords' ];
+			$keywords		= preg_split( "/,/", $keywords );
+
+			if( count( $keywords ) > $keywordsLimit ) {
+
+				$keywords	= array_slice( $keywords, 0, $keywordsLimit );
+			}
+
+			$keywords		= join( ',', $keywords );
+
 			$metaContent	.= "<meta name='keywords' content='$keywords' />";
 		}
 
@@ -411,6 +493,24 @@ class CodeGenUtil {
 
 		return $options;
 	}
-}
 
-?>
+	public static function getSummary( $content, $limit = CoreGlobal::TEXT_LARGE ) {
+
+		if( strlen( $content ) > $limit ) {
+
+			$content	= "$content ...";
+
+			return substr( $content, 0, $limit );
+		}
+	}
+
+	public static function isAbsolutePath( $path, $alias = true ) {
+
+		if( $alias ) {
+
+			return $path[0] === '@';
+		}
+
+		return $path[1] === ':' || $path[0] === '/';
+	}
+}

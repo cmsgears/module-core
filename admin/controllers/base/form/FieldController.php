@@ -35,9 +35,22 @@ class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
 		$this->setViewPath( '@cmsgears/module-core/admin/views/form/field' );
 
 		$this->crudPermission		= CoreGlobal::PERM_CORE;
-		$this->modelService			= Yii::$app->factory->get( 'formFieldService' );
 
+		// Services
+		$this->modelService			= Yii::$app->factory->get( 'formFieldService' );
 		$this->formService			= Yii::$app->factory->get( 'formService' );
+		
+		// Return Url
+		$this->returnUrl		= Url::previous( 'formFields' );
+		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/config/all' ], true );
+		
+		// Breadcrumbs
+		$this->breadcrumbs		= [
+			'all' => [ [ 'label' => 'Form Field' ] ],
+			'create' => [ [ 'label' => 'Form Field', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Form Field', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Form Field', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+		];
 
 		// Note: Set returnUrl and sidebar in child classes.
 	}
@@ -84,6 +97,8 @@ class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	public function actionAll( $fid ) {
 
+		Url::remember( Yii::$app->request->getUrl(), 'formFields' );
+
 		$dataProvider = $this->modelService->getPageByFormId( $fid );
 
 		return $this->render( 'all', [
@@ -102,7 +117,7 @@ class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
 
 			$this->modelService->create( $model );
 
-			return $this->redirect( [ "all?fid=$fid" ] );
+			return $this->redirect( $this->returnUrl );
 		}
 
 		return $this->render( 'create', [
@@ -125,7 +140,7 @@ class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
 
 				$this->modelService->update( $model );
 
-				return $this->redirect( [ "all?fid=$model->formId" ] );
+				return $this->redirect( $this->returnUrl );
 			}
 
 			return $this->render( 'update', [
@@ -152,7 +167,7 @@ class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
 
 				$this->modelService->delete( $model );
 
-				return $this->redirect( [ "all?fid=$model->formId" ] );
+				return $this->redirect( $this->returnUrl );
 			}
 
 			return $this->render( 'delete', [

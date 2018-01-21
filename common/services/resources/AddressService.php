@@ -1,14 +1,10 @@
 <?php
 namespace cmsgears\core\common\services\resources;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\Address;
 use cmsgears\core\common\models\mappers\ModelAddress;
 
 use cmsgears\core\common\services\interfaces\resources\IAddressService;
@@ -88,10 +84,10 @@ class AddressService extends \cmsgears\core\common\services\base\EntityService i
 
 		$model->provinceName	= $model->province->name;
 		$model->countryName		= $model->country->name;
+        
+        $config[ 'attributes' ] = $attributes;
 
-		return parent::update( $model, [
-			'attributes' => $attributes
-		]);
+		return parent::update( $model, $config );
 	}
 
 	// Delete -------------
@@ -128,4 +124,5 @@ class AddressService extends \cmsgears\core\common\services\base\EntityService i
 	// Update -------------
 
 	// Delete -------------
+
 }

@@ -1,12 +1,6 @@
 <?php
 namespace cmsgears\core\common\services\traits;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 /**
  * Used by services with base model having name, slug and type columns with sluggable behaviour which allows unique name for a type.
  */
@@ -28,18 +22,18 @@ trait SlugTypeTrait {
 
 	// Read - Models ---
 
-	public function getBySlug( $slug, $first = false ) {
+	public function getBySlug( $slug, $first = false, $config = [] ) {
 
 		$modelClass = static::$modelClass;
 
-		return $modelClass::findBySlug( $slug, $first );
+		return $modelClass::findBySlug( $slug, $first, $config );
 	}
 
-	public function getBySlugType( $slug, $type ) {
+	public function getBySlugType( $slug, $type, $config = [] ) {
 
 		$modelClass = static::$modelClass;
 
-		return $modelClass::findBySlugType( $slug, $type );
+		return $modelClass::findBySlugType( $slug, $type, $config );
 	}
 
 	// Read - Lists ----

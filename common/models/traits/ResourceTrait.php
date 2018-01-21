@@ -2,13 +2,16 @@
 namespace cmsgears\core\common\models\traits;
 
 // Yii Import
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use Yii;
 
 /**
- * The model using this trait must have parentId and parentType columns. It allows to map anonymous table having id and unique type to another table.
+ * It provide methods to map parent and model resource.
+ *
+ * The model using this trait must have parentId and parentType columns. These columns map the
+ * source i.e. parent to the multiple rows of mapper table. It allows to map multiple models for
+ * same parentId and parentType combination.
+ *
+ * Examples: ModelComment, ModelMeta
  */
 trait ResourceTrait {
 
@@ -25,6 +28,11 @@ trait ResourceTrait {
 	// ParentTypeTrait -----------------------
 
 	// Validators -------------
+
+	public function checkParent( $parentId, $parentType ) {
+
+		return $this->parentId == $parentId && $this->parentType == $parentType;
+	}
 
 	// Static Methods ----------------------------------------------
 

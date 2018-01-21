@@ -1,14 +1,23 @@
 <?php
+/**
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ * @license https://www.cmsgears.org/license/
+ * @package module
+ * @subpackage core
+ */
 namespace cmsgears\core\common\components;
-
-// Yii Imports
-use \Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
  * The migration component for CMSGears based sites.
+ *
+ * It defines the default prefix for CMSGears and Application specific database tables.
+ *
+ * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
+ * @since 1.0.0
  */
 class Migration extends \yii\base\Component {
 
@@ -17,6 +26,10 @@ class Migration extends \yii\base\Component {
 	// Global -----------------
 
 	// Public -----------------
+
+	// Table prefix
+	public $cmgPrefix		= 'cmg_'; // Used for CMSGears tables
+	public $sitePrefix		= 'site_'; // Used for project tables
 
 	public $fk				= true;
 
@@ -34,7 +47,7 @@ class Migration extends \yii\base\Component {
 	public $uploadsUrl		= 'http://www.cmsgears.org/uploads/';
 
 	public $testAccounts	= true;
-	
+
 	public $siteSlug		= CoreGlobal::SITE_MAIN;
 	public $siteMaster		= 'demomaster';
 	public $siteContact		= 'democontact';
@@ -51,7 +64,11 @@ class Migration extends \yii\base\Component {
 
 	// Instance methods --------------------------------------------
 
+	// Yii interfaces ------------------------
+
 	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
@@ -111,7 +128,7 @@ class Migration extends \yii\base\Component {
 
 		return $this->siteSlug;
 	}
-	
+
 	public function getSiteMaster() {
 
 		return $this->siteMaster;

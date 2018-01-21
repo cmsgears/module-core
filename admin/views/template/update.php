@@ -8,44 +8,87 @@ use cmsgears\core\common\widgets\Editor;
 use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= 'Update Template | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Update Template | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 $renderers		= Yii::$app->templateManager->renderers;
 
-Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true ] );
+Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );
 ?>
-<div class="box box-cud">
-	<div class="box-wrap-header">
-		<div class="header">Update Template</div>
-	</div>
-	<div class="box-wrap-content frm-split-40-60">
-		<?php $form = ActiveForm::begin( [ 'id' => 'frm-template' ] );?>
-
-		<?= $form->field( $model, 'name' ) ?>
-		<?= $form->field( $model, 'description' )->textarea() ?>
-		<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'wrap-icon-picker clearfix' ] ] ) ?>
-		<?= $form->field( $model, 'renderer' )->dropDownList( $renderers ) ?>
-
-		<?= $form->field( $model, 'fileRender' )->checkbox( [ 'class' => 'template-file' ] ) ?>
-
-		<div class="render-file">
-			<?= $form->field( $model, 'layout' ) ?>
-			<?= $form->field( $model, 'layoutGroup' )->checkbox() ?>
-			<?= $form->field( $model, 'viewPath' ) ?>
+<div class="box-crud-wrap row">
+	<div class="box-crud-wrap-main colf colf3x2">
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-template', 'options' => [ 'class' => 'form' ] ] ); ?>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Basic Details</div>
+			</div>
+			<div class="box-content-wrap frm-split-40-60">
+				<div class="box-content">
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'name' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'renderer' )->dropDownList( $renderers, [ 'class' => 'cmt-select' ] ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'description' )->textarea() ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active', null, 'cmti cmti-checkbox' ) ?>
+						</div>
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'fileRender', [ 'class' => 'cmt-checkbox cmt-choice template-file' ], 'cmti cmti-checkbox' ) ?>
+						</div>
+					</div>
+					<div class="row render-file">
+						<div class="col col2">
+							<?= $form->field( $model, 'layout' ) ?>
+						</div>
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'layoutGroup', null, 'cmti cmti-checkbox' ) ?>
+						</div>
+					</div>
+					<div class="row render-file">
+						<div class="col col2">
+							<?= $form->field( $model, 'viewPath' ) ?>
+						</div>
+						<div class="col col2"></div>
+					</div>
+				</div>
+			</div>
 		</div>
 
-		<div class="render-content box-content clearfix">
-			<div class="header">Template Content</div>
-			<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+		<div class="filler-height filler-height-medium"></div>
+
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Content</div>
+			</div>
+			<div class="box-content-wysiwyg">
+				<div class="box-content">
+					<?= $form->field( $model, 'content' )->textarea( [ 'class' => 'content-editor' ] )->label( false ) ?>
+				</div>
+			</div>
 		</div>
 
-		<div class="filler-height"></div>
+		<div class="filler-height filler-height-medium"></div>
 
-		<div class="align align-center">
-			<?=Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] );?>
+		<div class="align align-right">
+			<?= Html::a( 'View All', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
 			<input class="element-medium" type="submit" value="Update" />
 		</div>
 
+		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
+	</div>
+	<div class="box-crud-wrap-sidebar colf colf3">
+
 	</div>
 </div>

@@ -1,13 +1,7 @@
 <?php
 namespace cmsgears\core\common\services\base;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Meta;
 
 use cmsgears\core\common\services\interfaces\base\IMetaService;
@@ -59,6 +53,11 @@ abstract class MetaService extends EntityService implements IMetaService {
 		return self::findByName( $modelId, $name, $first );
 	}
 
+	public function getByModelId( $modelId ) {
+
+		return self::findByModelId( $modelId );
+	}
+
 	public function getByType( $modelId, $type ) {
 
 		return self::findByType( $modelId, $type );
@@ -77,11 +76,30 @@ abstract class MetaService extends EntityService implements IMetaService {
 
 			$modelClass			= static::$modelClass;
 
+			// Initialise
 			$meta				= new $modelClass();
 			$meta->modelId		= $modelId;
 			$meta->name			= $name;
+			$meta->label		= $name;
 			$meta->type			= $type;
 			$meta->valueType	= $valueType;
+
+			switch( $valueType ) {
+
+				case Meta::VALUE_TYPE_FLAG: {
+
+					$meta->value = false;
+				}
+				default: {
+
+					$meta->value = null;
+				}
+			}
+
+			// Create & Refresh
+			$meta->save();
+
+			$meta->refresh();
 		}
 
 		return $meta;
@@ -91,12 +109,26 @@ abstract class MetaService extends EntityService implements IMetaService {
 
 	// Read - Maps -----
 
+	public function getNameValueMapByModelId( $modelId ) {
+
+		$config[ 'conditions' ][ 'modelId' ]	= $modelId;
+
+		return $this->getNameValueMap( $config );
+	}
+
 	public function getNameValueMapByType( $modelId, $type ) {
 
 		$config[ 'conditions' ][ 'modelId' ]	= $modelId;
 		$config[ 'conditions' ][ 'type' ]		= $type;
 
 		return $this->getNameValueMap( $config );
+	}
+
+	public function getIdMetaMapByModelId( $modelId ) {
+
+		$config[ 'conditions' ][ 'modelId' ]	= $modelId;
+
+		return $this->getObjectMap( $config );
 	}
 
 	public function getIdMetaMapByType( $modelId, $type ) {
@@ -161,7 +193,6 @@ abstract class MetaService extends EntityService implements IMetaService {
 		return parent::update( $model, $config );
 	}
 
-
 	public function updateByParams( $params = [], $config = [] ) {
 
 		$modelId	= $params[ 'modelId' ];
@@ -202,15 +233,42 @@ abstract class MetaService extends EntityService implements IMetaService {
 
 			if( !isset( $meta[ 'valueType' ] ) ) {
 
-				$meta[ 'valueType' ]	= Meta::VALUE_TYPE_TEXT;
+				$meta[ 'valueType' ] = Meta::VALUE_TYPE_TEXT;
 			}
 
-			$model			= $this->initByNameType( $config[ 'modelId' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ] );
+			$model = $this->initByNameType( $config[ 'modelId' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ] );
 
 			$model->value	= $meta[ 'value' ];
 			$model->label	= $form->getAttributeLabel( $meta[ 'name' ] );
 
 			$this->update( $model );
+		}
+	}
+
+	public function toggle( $modelId, $type, $name, $label ) {
+
+		$model	= $this->getByNameType( $modelId, $name, $type );
+
+		// Create if it does not exist
+		if( !isset( $model ) ) {
+
+			$this->createByParams([
+				'modelId' => $modelId, 'name' => $name, 'label' => $label, 'type' => $type,
+				'valueType' => Meta::VALUE_TYPE_FLAG, 'value' => true
+			]);
+		}
+		else {
+
+			if( $model->value ) {
+
+				$model->value = false;
+			}
+			else {
+
+				$model->value = true;
+			}
+
+			$model->update();
 		}
 	}
 
@@ -242,6 +300,13 @@ abstract class MetaService extends EntityService implements IMetaService {
 		return $modelClass::findByName( $modelId, $name, $first );
 	}
 
+	public static function findByModelId( $modelId ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByModelId( $modelId );
+	}
+
 	public static function findByType( $modelId, $type ) {
 
 		$modelClass	= static::$modelClass;
@@ -267,4 +332,5 @@ abstract class MetaService extends EntityService implements IMetaService {
 	// Update -------------
 
 	// Delete -------------
+
 }

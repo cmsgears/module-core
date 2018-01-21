@@ -2,10 +2,13 @@
 namespace cmsgears\core\common\base;
 
 // Yii Imports
-use \Yii;
+use yii\helpers\Html;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\config\CoreProperties;
+use cmsgears\core\common\config\CacheProperties;
+
+use cmsgears\core\common\utilities\CodeGenUtil;
 
 abstract class Widget extends \yii\base\Widget {
 
@@ -23,31 +26,52 @@ abstract class Widget extends \yii\base\Widget {
 
 	// Public -----------------
 
-	// html options for Yii Widget
+	/**
+	 * Flag to check whether the widget html need wrapper.
+	 */
+	public $wrap			= false;
+
+	/**
+	 * The wrapper tag to be used for widget html wrapping.
+	 */
+	public $wrapper			= 'div';
+
+	/**
+	 * Html options to be used for wrapper.
+	 */
 	public $options			= [];
 
 	/**
-	 * Flag to check whether assets can be loaded. We can load widget assets seperately in case the bundle is not added as dependency to layout asset bundle.
+	 * Flag to check whether assets can be loaded. We can load widget assets separately in case the
+	 * bundle is not added as dependency to layout asset bundle.
 	 */
 	public $loadAssets		= false;
 
 	/**
-	 * The path at which view template file is located. It can have alias - ex: '@widget/my-view'. By default it's the views folder within widget directory.
+	 * The path at which view template file is located. It can have alias - ex: '@widget/my-view'.
+	 * By default it's the views folder within widget directory.
 	 */
 	public $templateDir		= null;
 
 	/**
-	 * The template directory/file used to render widget. If it's a directory, the view can be formed using multiple files.
+	 * The template directory/file used to render widget. If it's a directory, the view can be formed
+	 * using multiple files. It can be absolute path to directly access the view.
 	 */
 	public $template		= 'simple';
 
 	/**
-	 * This flag can be utilised by widgets to use fallback options in case application factory having model service is not available or initialised.
+	 * This flag can be utilised by widgets to use fallback options in case application factory having
+	 * model service is not available or initialised.
 	 *
-	 * The widgets in need of model service can utilise factory to get required service. In case factory is not needed, widget can directly
-	 * use models to query them or service in use must provided static method.
+	 * The widgets in need of model service can utilise factory to get required service. In case factory
+	 * is not needed, widget can directly use models to query them or service in use must provided static method.
 	 */
-	public $factory			= true;
+	public $factory		= true;
+
+	/**
+	 * Flag to render data from cache.
+	 */
+	public $cache		= false;
 
 	/**
 	 * Flag for data rendering from database based cached data.
@@ -62,12 +86,20 @@ abstract class Widget extends \yii\base\Widget {
 	/**
 	 * Flag for widget autoloading.
 	 */
-	public $autoload	= false;
+	public $autoload			= false;
+	public $autoloadTemplate	= 'autoload';
+
+	/**
+	 * Auto Loading using CMT-JS Framework.
+	 */
+	public $autoloadApp			= 'autoload';
+	public $autoloadController	= 'autoload';
+	public $autoloadAction		= 'autoload';
 
 	/**
 	 * Url for autoloading.
 	 */
-	public $autoloadUrl	= null;
+	public $autoloadUrl			= null;
 
 	// Protected --------------
 
@@ -76,6 +108,15 @@ abstract class Widget extends \yii\base\Widget {
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+    public function init() {
+
+        parent::init();
+
+        $this->autoload	= ( isset( $this->autoloadUrl ) && CoreProperties::getInstance()->isAutoLoad() ) ? true : false;
+
+		$this->cache	= $this->cache ? $this->cache : CacheProperties::getInstance()->isCaching();
+    }
 
 	// Instance methods --------------------------------------------
 
@@ -121,7 +162,19 @@ abstract class Widget extends \yii\base\Widget {
 
 	abstract public function renderWidget( $config = [] );
 
-	public function renderAutoload( $config = [] ) {}
+	public function renderAutoload( $config = [] ) {
+
+		$autoloadView	= CodeGenUtil::isAbsolutePath( $this->autoloadTemplate ) ? $this->autoloadTemplate : "$this->template/$this->autoloadTemplate";
+
+		$widgetHtml		= $this->render( $autoloadView, [ 'widget' => $this ] );
+
+		if( $this->wrap ) {
+
+			return Html::tag( $this->wrapper, $widgetHtml, $this->options );
+		}
+
+		return $widgetHtml;
+	}
 
 	// Widget --------------------------------
 

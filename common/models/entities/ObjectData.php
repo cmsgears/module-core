@@ -131,7 +131,7 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 		$rules = [
 			// Required, Safe
 			[ [ 'siteId', 'name', 'type' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'content', 'data', 'title' ], 'safe' ],
 			// Unique
 			[ [ 'siteId', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'siteId', 'name', 'type' ] ],
 			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],

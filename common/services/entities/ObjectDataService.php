@@ -159,6 +159,27 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 			'attributes' => $attributes
 		]);
 	}
+    
+    protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
 
 	// Delete -------------
 

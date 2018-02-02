@@ -129,32 +129,31 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 
 			$siteMember = $this->siteMemberService->findBySiteIdUserId(  $siteId, $user->id );
 
-			if( isset( $siteMember ) ) {
+			if( !isset( $siteMember ) ) {
 
-				// Redirect user to home
-				if( isset( $model->redirectUrl ) ) {
+				$this->siteMemberService->create( $user );
+			}
+			// Redirect user to home
+			if( isset( $model->redirectUrl ) ) {
 
-					$homeUrl	= $model->redirectUrl;
-				}
-				else if( isset( $storedLink ) ) {
+				$homeUrl	= $model->redirectUrl;
+			}
+			else if( isset( $storedLink ) ) {
 
-					$homeUrl = $storedLink;
-				}
-				// Redirect user to home set by admin
-				else if( isset( $role ) && isset( $role->homeUrl ) ) {
+				$homeUrl = $storedLink;
+			}
+			// Redirect user to home set by admin
+			else if( isset( $role ) && isset( $role->homeUrl ) ) {
 
-					$homeUrl	= Url::to( [ "/$role->homeUrl" ], true );
-				}
-				// Redirect user to home set by app config
-				else {
+				$homeUrl	= Url::to( [ "/$role->homeUrl" ], true );
+			}
+			// Redirect user to home set by app config
+			else {
 
-					$homeUrl	= Url::to( [ Yii::$app->core->getLoginRedirectPage() ], true );
-				}
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $homeUrl );
+				$homeUrl	= Url::to( [ Yii::$app->core->getLoginRedirectPage() ], true );
 			}
 			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), CoreGlobal::PAGE_SITEMEMBER );
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $homeUrl );
 		}
 
 		// Generate Errors

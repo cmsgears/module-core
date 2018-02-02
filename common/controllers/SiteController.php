@@ -241,13 +241,13 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 			
 			$siteMember = $this->siteMemberService->findBySiteIdUserId(  $siteId, $user->id );
 
-			if( isset( $siteMember ) ) {
+			if( !isset( $siteMember ) ) {
 
-				// Redirect user to home
-				$this->checkHome();
+				$this->siteMemberService->create( $user );
 			}
-			
-			return Yii::$app->response->redirect( [ CoreGlobal::PAGE_SITEMEMBER ] )->send();
+
+			// Redirect user to home
+			$this->checkHome();
 		}
 
 		return $this->render( CoreGlobal::PAGE_LOGIN, [ CoreGlobal::MODEL_GENERIC => $model ] );

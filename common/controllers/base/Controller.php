@@ -146,6 +146,15 @@ abstract class Controller extends \yii\web\Controller {
 			$role		= $user->role;
 			$storedLink	= Url::previous( CoreGlobal::REDIRECT_LOGIN );
 
+			$siteId		= Yii::$app->core->getSiteId();
+
+			$siteMember = Yii::$app->factory->get( 'siteMemberService' )->findBySiteIdUserId(  $siteId, $user->id );
+
+			if( !isset( $siteMember ) ) {
+
+				Yii::$app->factory->get( 'siteMemberService' )->create( $user );
+			}
+
 			// Redirect user to stored link on login
 			if( isset( $storedLink ) ) {
 

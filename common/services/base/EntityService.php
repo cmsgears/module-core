@@ -811,7 +811,7 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 				// Numeric - Range - Start & End
 				if( isset( $start ) && isset( $end ) ) {
 
-					$query->andWhere( "$key BETWEEN ':start' AND ':end'", [ ':start' => $start, ':end' => $end ] );
+					$query->andWhere( "$key BETWEEN :start AND :end", [ ':start' => $start, ':end' => $end ] );
 				}
 				// Numeric - Range - Start
 				else if( isset( $start ) ) {

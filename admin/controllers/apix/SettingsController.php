@@ -93,27 +93,73 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 	public function actionUpdate( $type ) {
 
 		$settings		= $this->modelService->getMetaMapBySlugType( Yii::$app->core->getSiteSlug(), $type );
-		$fieldsMap		= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
-		$model			= new GenericForm( [ 'fields' => $fieldsMap ] );
 
-		if( $model->load( Yii::$app->request->post(), "setting$type" ) && $model->validate() ) {
+		if( count( $settings )  > 0 ) {
+		
+			$fieldsMap		= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
+			$model			= new GenericForm( [ 'fields' => $fieldsMap ] );
 
-			$settings	= FormUtil::getModelMetas( $model, $settings );
+			if( $model->load( Yii::$app->request->post(), "setting$type" ) && $model->validate() ) {
 
-			$this->metaService->updateMultiple( $settings, [ 'parent' => Yii::$app->core->site ] );
+				$settings	= FormUtil::getModelMetas( $model, $settings );
 
+				$this->metaService->updateMultiple( $settings, [ 'parent' => Yii::$app->core->site ] );
+
+				$data		= [];
+
+				foreach ( $settings as $key => $value ) {
+
+					$data[]	= $value->getFieldInfo();
+				}
+
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+			}
+
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+			
+		}
+		else {
+
+			$settings	= Yii::$app->request->post( "setting$type");
+
+			$siteId		= Yii::$app->core->getSiteId();
+
+			$models		= [];
 			$data		= [];
 
-			foreach ( $settings as $key => $value ) {
+ 			foreach( $settings as $key => $value ) {
+
+				$model				= new $this->metaService->modelClass;
+				$model->modelId		= $siteId;
+				$model->name		= $key;
+				$model->value		= $value;
+
+				if( $value == '1' ) {
+
+					$model->valueType	= 'flag';
+				}
+				else {
+
+					$model->valueType	= 'text';
+				}
+
+				$model->type		= $type;
+				$model->label		= $key;
+
+				if( $model->validate() ) {
+
+					$this->metaService->create( $model );
+
+					$models[] = $model;
+				}
+			}
+
+			foreach ( $models as $key => $value ) {
 
 				$data[]	= $value->getFieldInfo();
 			}
 
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 		}
-
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
-			
-		
 	}
 }

@@ -14,6 +14,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\interfaces\IOwner;
 
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\mappers\ModelObject;
 
 use cmsgears\core\common\models\traits\CreateModifyTrait;
 use cmsgears\core\common\models\traits\NameTypeTrait;
@@ -131,7 +132,7 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 		$rules = [
 			// Required, Safe
 			[ [ 'siteId', 'name', 'type' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'content', 'data', 'title' ], 'safe' ],
 			// Unique
 			[ [ 'siteId', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'siteId', 'name', 'type' ] ],
 			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
@@ -241,6 +242,11 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 
 		return $this->hasOne( Theme::className(), [ 'id' => 'themeId' ] );
 	}
+    
+    public function getObjects() {
+        
+        return $this->hasMany( ModelObject::className(), [ 'parentId' => 'id' ] );
+    }
 
 	/**
 	 * @return string representation of flag
@@ -277,6 +283,13 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 
 		return parent::queryWithAll( $config );
 	}
+    
+    public static function queryWithModelObjects( $config = [] ) {
+        
+        $config[ 'relations' ]  = [ 'objects' ];
+        
+        return parent::queryWithAll( $config );
+    }
 
 	// Read - Find ------------
 

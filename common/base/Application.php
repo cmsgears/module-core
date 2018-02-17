@@ -100,10 +100,10 @@ class Application extends \yii\web\Application {
 						// site config
 						$coreProperties	= CoreProperties::getInstance();
 
-						Yii::$app->formatter->dateFormat		= $coreProperties->getDateFormat();
-						Yii::$app->formatter->timeFormat		= $coreProperties->getTimeFormat();
+						Yii::$app->formatter->dateFormat	= $coreProperties->getDateFormat();
+						Yii::$app->formatter->timeFormat	= $coreProperties->getTimeFormat();
 						Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
-						Yii::$app->timeZone						= $coreProperties->getTimezone();
+						Yii::$app->timeZone			= $coreProperties->getTimezone();
 						
 						return parent::createController( $siteRoute );
 					}
@@ -115,9 +115,9 @@ class Application extends \yii\web\Application {
 				// Find Site
 				$siteName		= array_shift( ( explode( ".", $_SERVER[ 'HTTP_HOST' ] ) ) );
 
-				if( !isset( $siteName ) || strcmp( $siteName, 'www' ) == 0  || strcmp( $siteName, 'localhost' ) == 0 ) {
+				if( !isset( $siteName ) || strcmp( $siteName, 'www' ) == 0 ) {
 
-					$siteName	= 'merchant';
+					$siteName	= 'main';
 				}
 
 				$site			= SiteService::findBySlug( $siteName );
@@ -133,10 +133,10 @@ class Application extends \yii\web\Application {
 					// site config
 					$coreProperties	= CoreProperties::getInstance();
 
-					Yii::$app->formatter->dateFormat		= $coreProperties->getDateFormat();
-					Yii::$app->formatter->timeFormat		= $coreProperties->getTimeFormat();
+					Yii::$app->formatter->dateFormat	= $coreProperties->getDateFormat();
+					Yii::$app->formatter->timeFormat	= $coreProperties->getTimeFormat();
 					Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
-					Yii::$app->timeZone						= $coreProperties->getTimezone();
+					Yii::$app->timeZone			= $coreProperties->getTimezone();
 					
 					return parent::createController( $route );
 				}
@@ -156,10 +156,10 @@ class Application extends \yii\web\Application {
 				// site config
 				$coreProperties	= CoreProperties::getInstance();
 
-				Yii::$app->formatter->dateFormat		= $coreProperties->getDateFormat();
-				Yii::$app->formatter->timeFormat		= $coreProperties->getTimeFormat();
+				Yii::$app->formatter->dateFormat	= $coreProperties->getDateFormat();
+				Yii::$app->formatter->timeFormat	= $coreProperties->getTimeFormat();
 				Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
-				Yii::$app->timeZone						= $coreProperties->getTimezone();
+				Yii::$app->timeZone			= $coreProperties->getTimezone();
 			}
 		}
 

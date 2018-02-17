@@ -236,18 +236,9 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post(), 'Login' ) && $model->login() ) {
 
-			$siteId = Yii::$app->core->getSiteId();
-			$user	= $model->getUser();
-			
-			$siteMember = $this->siteMemberService->findBySiteIdUserId(  $siteId, $user->id );
 
-			if( isset( $siteMember ) ) {
-
-				// Redirect user to home
-				$this->checkHome();
-			}
-			
-			return Yii::$app->response->redirect( [ CoreGlobal::PAGE_SITEMEMBER ] )->send();
+			// Redirect user to home
+			$this->checkHome();
 		}
 
 		return $this->render( CoreGlobal::PAGE_LOGIN, [ CoreGlobal::MODEL_GENERIC => $model ] );

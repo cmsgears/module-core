@@ -287,6 +287,8 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
     public static function queryWithModelObjects( $config = [] ) {
         
         $config[ 'relations' ]  = [ 'objects' ];
+        
+        return parent::queryWithAll( $config );
     }
 
 	// Read - Find ------------

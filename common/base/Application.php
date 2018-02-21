@@ -113,14 +113,13 @@ class Application extends \yii\web\Application {
 			else {
 
 				// Find Site
-				$siteName		= array_shift( ( explode( ".", $_SERVER[ 'HTTP_HOST' ] ) ) );
+             	$host 			= explode( ".", $_SERVER[ 'HTTP_HOST' ]);
+				$siteName		= array_shift(  $host  );
 
-				if( !isset( $siteName ) || strcmp( $siteName, 'www' ) == 0 ) {
+				if( !isset( $siteName ) || strcmp( $siteName, 'www' ) == 0 || strcmp( $siteName, 'localhost' ) == 0 ) {
 
 					$siteName	= 'main';
 				}
-
-				$site			= SiteService::findBySlug( $siteName );
 
 				// Site Found
 				if( isset( $site ) ) {

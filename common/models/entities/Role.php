@@ -1,8 +1,16 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
@@ -11,22 +19,29 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\base\IAuthor;
+use cmsgears\core\common\models\interfaces\base\INameType;
+use cmsgears\core\common\models\interfaces\base\ISlugType;
+
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\Entity;
 use cmsgears\core\common\models\mappers\RolePermission;
 
-use cmsgears\core\common\models\traits\CreateModifyTrait;
-use cmsgears\core\common\models\traits\NameTypeTrait;
-use cmsgears\core\common\models\traits\SlugTypeTrait;
+use cmsgears\core\common\models\traits\base\AuthorTrait;
+use cmsgears\core\common\models\traits\base\NameTypeTrait;
+use cmsgears\core\common\models\traits\base\SlugTypeTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 use cmsgears\core\common\models\traits\resources\HierarchyTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
 /**
- * Role Entity
+ * All the users will be assigned a role based on which they can perform actions.
  *
- * @property long $id
- * @property long $createdBy
- * @property long $modifiedBy
+ * @property integer $id
+ * @property integer $createdBy
+ * @property integer $modifiedBy
  * @property string $name
  * @property string $slug
  * @property string $type
@@ -37,8 +52,14 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $homeUrl
  * @property datetime $createdAt
  * @property datetime $modifiedAt
+ * @property string $data
+ * @property string $gridCache
+ * @property boolean $gridCacheValid
+ * @property datetime $gridCachedAt
+ *
+ * @since 1.0.0
  */
-class Role extends \cmsgears\core\common\models\base\Entity {
+class Role extends Entity implements IAuthor, INameType, ISlugType {
 
 	// Variables ---------------------------------------------------
 
@@ -54,15 +75,17 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 
 	// Public -----------------
 
-	private $modelType	= CoreGlobal::TYPE_ROLE; // required for traits
-
 	// Protected --------------
 
 	// Private ----------------
 
+	private $modelType	= CoreGlobal::TYPE_ROLE;
+
 	// Traits ------------------------------------------------------
 
-	use CreateModifyTrait;
+	use AuthorTrait;
+	use DataTrait;
+	use GridCacheTrait;
 	use HierarchyTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
@@ -84,17 +107,17 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 
 		return [
 			'authorBehavior' => [
-				'class' => AuthorBehavior::className()
+				'class' => AuthorBehavior::class
 			],
 			'sluggableBehavior' => [
-				'class' => SluggableBehavior::className(),
+				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
-				'slugAttribute' => 'slug',
+				'slugAttribute' => 'slug', // Unique irrespective of type
 				'immutable' => true,
 				'ensureUnique' => true
 			],
 			'timestampBehavior' => [
-				'class' => TimestampBehavior::className(),
+				'class' => TimestampBehavior::class,
 				'createdAtAttribute' => 'createdAt',
 				'updatedAtAttribute' => 'modifiedAt',
 				'value' => new Expression('NOW()')
@@ -109,25 +132,26 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
 			[ [ 'name' ], 'required' ],
-			[ [ 'id' ], 'safe' ],
+			[ [ 'id', 'data', 'gridCache' ], 'safe' ],
 			// Unique
-			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
+			[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
-			[ [ 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'slug', 'adminUrl', 'homeUrl' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
-			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'slug', 'adminUrl', 'homeUrl' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ 'group', 'boolean' ],
+			[ [ 'group', 'gridCacheValid' ], 'boolean' ],
 			[ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
-		// trim if required
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'name', 'adminUrl', 'homeUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
@@ -149,7 +173,10 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'homeUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HOME_URL )
+			'adminUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ADMIN_URL ),
+			'homeUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HOME_URL ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
+			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
 		];
 	}
 
@@ -162,29 +189,35 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 	// Role ----------------------------------
 
 	/**
-	 * @return array - Permission
+	 * Return list of permissions mapped to this role.
+	 *
+	 * @return Permission[]
 	 */
 	public function getPermissions() {
 
-		return $this->hasMany( Permission::className(), [ 'id' => 'permissionId' ] )
-					->viaTable( CoreTables::TABLE_ROLE_PERMISSION, [ 'roleId' => 'id' ] );
+		return $this->hasMany( Permission::class, [ 'id' => 'permissionId' ] )
+			->viaTable( CoreTables::TABLE_ROLE_PERMISSION, [ 'roleId' => 'id' ] );
 	}
 
 	/**
-	 * @return array - having permissions list from the joining table
+	 * Return mapping list of permissions mapped to this role.
+	 *
+	 * @return RolePermission[]
 	 */
 	public function getPermissionMappingList() {
 
-		return $this->hasMany( RolePermission::className(), [ 'roleId' => 'id' ] );
+		return $this->hasMany( RolePermission::class, [ 'roleId' => 'id' ] );
 	}
 
 	/**
-	 * @return array having permission id element.
+	 * Generate and return the array having id of mapped permissions.
+	 *
+	 * @return array
 	 */
 	public function getPermissionsIdList() {
 
 		$permissions		= $this->permissionMappingList;
-		$permissionsList	= array();
+		$permissionsList	= [];
 
 		foreach ( $permissions as $permission ) {
 
@@ -195,21 +228,25 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 	}
 
 	/**
-	 * @return array having permission name element.
+	 * Generate and return the array having slug of mapped permissions.
+	 *
+	 * @return array
 	 */
-	public function getPermissionsSlugList( $level = 0 ) {
+	public function getPermissionsSlugList() {
 
 		$slugList	= [];
 		$idList		= [];
 
-		// TODO: get roles hierarchy
+		// TODO: Use roles hierarchy recursively to get child roles
 
-		// TODO: get permission slugs from role cache
+		if( !empty( $this->gridCache ) ) {
 
-		// Generate L0 Slugs and Ids List
-		if( $level <= 1 ) {
+			return $this->getGridCacheAttribute( 'permissionsSlugList' );
+		}
+		else {
 
-			$permissions	= $this->permissions;
+			// Generate L0 Slugs and Ids List
+			$permissions = $this->permissions;
 
 			foreach ( $permissions as $permission ) {
 
@@ -220,20 +257,24 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 
 				array_push( $idList, $permission->id );
 			}
-		}
 
-		// Add L1 slugs to L0 slugs
-		if( $level == 1 ) {
+			// Add child permission slugs recursively till all leaf nodes get exhausted.
+			do {
 
-			$permissions	= Permission::findLeafNodes( $idList );
+				$permissions	= Permission::findGroupPermissions( $idList );
+				$idList			= [];
 
-			foreach ( $permissions as $permission ) {
+				foreach ( $permissions as $permission ) {
 
-				if( !in_array( $permission->slug, $slugList ) ) {
+					if( !in_array( $permission->slug, $slugList ) ) {
 
-					array_push( $slugList, $permission->slug );
+						array_push( $slugList, $permission->slug );
+					}
+
+					array_push( $idList, $permission->id );
 				}
 			}
+			while( count( $idList ) > 0 );
 		}
 
 		return $slugList;
@@ -250,7 +291,7 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_ROLE;
+		return CoreTables::getTableName( CoreTables::TABLE_ROLE );
 	}
 
 	// CMG parent classes --------------------
@@ -259,6 +300,9 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
@@ -267,6 +311,12 @@ class Role extends \cmsgears\core\common\models\base\Entity {
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the role with permissions.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with permissions.
+	 */
 	public static function queryWithPermissions( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'permissions' ];

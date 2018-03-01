@@ -1,13 +1,29 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
+use yii\base\Model;
 use yii\helpers\ArrayHelper;
 
 /**
  * It's useful to bind multiple models to a model using checkbox group.
+ *
+ * @property integer $binderId
+ * @property array $all
+ * @property array $binded
+ * @property array $value
+ *
+ * @since 1.0.0
  */
-class Binder extends \yii\base\Model {
+class Binder extends Model {
 
 	// Variables ---------------------------------------------------
 
@@ -23,7 +39,7 @@ class Binder extends \yii\base\Model {
 
 	// Public -----------------
 
-	public $binderId; // Binder to which binded data need to be binded
+	public $binderId; // Binder to which data need to be binded
 
 	public $all		= []; // All data
 
@@ -49,13 +65,21 @@ class Binder extends \yii\base\Model {
 
 	// yii\base\Model ---------
 
+	/**
+	 * @inheritdoc
+	 */
 	public function rules() {
 
-		return [
-			[ [ 'binderId' ], 'required' ],
+		// Model Rules
+		$rules = [
+			// Required, Safe
+			[ 'binderId', 'required' ],
 			[ [ 'all', 'binded', 'value' ], 'safe' ],
+			// Other
 			[ 'binderId', 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
+
+		return $rules;
 	}
 
 	// CMG interfaces ------------------------
@@ -66,20 +90,29 @@ class Binder extends \yii\base\Model {
 
 	// Binder --------------------------------
 
-	public function mergeWithBinded( $merge, $csv = false ) {
+	/**
+	 * Merge the given data either in csv format or as array.
+	 *
+	 * @param array|string $merge
+	 * @param boolean $csv
+	 */
+	public function mergeWithBinded( $data, $csv = false ) {
+
+		$merge = [];
 
 		if( $csv && strlen( $merge ) > 1 ) {
 
-			$merge = preg_split( '/,/',  $merge );
-		}
-		else {
-
-			$merge = [];
+			$merge = preg_split( '/,/',  $data );
 		}
 
 		$this->binded = ArrayHelper::merge( $this->binded, $merge );
 	}
 
+	/**
+	 * Generate and return an array having id as key and value.
+	 *
+	 * @return array
+	 */
 	public function getValueMap() {
 
 		$count	= count( $this->binded );
@@ -93,9 +126,14 @@ class Binder extends \yii\base\Model {
 		return $map;
 	}
 
+	/**
+	 * Analyze and merge the key and value from given map with the binder.
+	 *
+	 * @param array $map
+	 */
 	public function mergeMapWithBinded( $map ) {
 
-		foreach ( $map as $key => $value ) {
+		foreach( $map as $key => $value ) {
 
 			if( !in_array( $key, $this->binded ) ) {
 

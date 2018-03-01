@@ -1,7 +1,21 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\forms;
 
-class GenericForm extends \yii\base\Model {
+// Yii Imports
+use yii\base\Model;
+
+/**
+ * Process dynamic forms.
+ */
+class GenericForm extends Model {
 
 	// Variables ---------------------------------------------------
 
@@ -19,17 +33,47 @@ class GenericForm extends \yii\base\Model {
 
 	public $active;
 
+	/**
+	 * Check for AJAX processing.
+	 *
+	 * @var boolean
+	 */
+	public $ajax = false;
+
+	/**
+	 * Form fields.
+	 *
+	 * @var array
+	 */
 	public $fields;
 
+	/**
+	 * Model attributes.
+	 *
+	 * @var array
+	 */
 	public $attribs;
 
+	/**
+	 * Captcha challenge.
+	 *
+	 * @var string
+	 */
 	public $captcha;
 
-	public $ajax = false;	// Is ajax processing required
+	/**
+	 * Captcha URL to handle regular forms.
+	 *
+	 * @var string
+	 */
+	public $captchaAction;
 
-	public $captchaAction;		// Captcha url to handle regular forms
-
-	public $acaptchaAction;	// Captcha url to handle ajax requests
+	/**
+	 * Captcha URL to handle AJAX requests.
+	 *
+	 * @var type
+	 */
+	public $acaptchaAction;
 
 	// Protected --------------
 
@@ -47,7 +91,7 @@ class GenericForm extends \yii\base\Model {
 
 		unset( $config[ 'fields' ] );
 
-		foreach ( $fields as $key => $field ) {
+		foreach( $fields as $key => $field ) {
 
 			if( isset( $field->value ) ) {
 
@@ -58,7 +102,7 @@ class GenericForm extends \yii\base\Model {
 				$this->__set( $key, null );
 			}
 
-			$this->attribs[]	= $key;
+			$this->attribs[] = $key;
 		}
 
 		parent::__construct( $config );
@@ -72,9 +116,15 @@ class GenericForm extends \yii\base\Model {
 
 	// yii\base\Object --------
 
+	/**
+	 * Override [[\yii\base\BaseObject::__set()]] to set field if it does not exist.
+	 *
+	 * @param string $name
+	 * @param mixed $value
+	 */
 	public function __set( $name, $value ) {
 
-		$setter		= 'set' . $name;
+		$setter = 'set' . $name;
 
 		if( method_exists( $this, $setter ) ) {
 
@@ -82,7 +132,7 @@ class GenericForm extends \yii\base\Model {
 		}
 		else {
 
-			$this->$name	= $value;
+			$this->$name = $value;
 		}
 	}
 
@@ -90,23 +140,26 @@ class GenericForm extends \yii\base\Model {
 
 	// yii\base\Model ---------
 
+	/**
+	 * @inheritdoc
+	 */
 	public function rules() {
 
 		// Prepare validators list
-		$validators		= [];
-		$fields			= $this->fields;
+		$validators	= [];
+		$fields		= $this->fields;
 
-		foreach ( $fields as $key => $field ) {
+		foreach( $fields as $key => $field ) {
 
 			if( isset( $field->validators ) ) {
 
 				$fieldValidators = preg_split( "/,/", $field->validators );
 
-				foreach ( $fieldValidators as $validator ) {
+				foreach( $fieldValidators as $validator ) {
 
 					if( !isset( $validators[ $validator ] ) ) {
 
-						$validators[ $validator ]	= [];
+						$validators[ $validator ] = [];
 					}
 
 					if( strlen( $validator ) > 0 ) {
@@ -121,6 +174,7 @@ class GenericForm extends \yii\base\Model {
 			[ $this->attribs, 'safe' ]
 		];
 
+		// Handle AJAX captcha validation
 		if( $this->ajax ) {
 
 			if( empty( $this->acaptchaAction ) ) {
@@ -130,6 +184,7 @@ class GenericForm extends \yii\base\Model {
 
 			$rules[] = [ 'captcha', 'captcha', 'captchaAction' => $this->acaptchaAction, 'on' => 'captcha' ];
 		}
+		// Handle regular captcha validation
 		else {
 
 			if( empty( $this->captchaAction ) ) {
@@ -140,23 +195,27 @@ class GenericForm extends \yii\base\Model {
 			$rules[] = [ 'captcha', 'captcha', 'captchaAction' => $this->captchaAction, 'on' => 'captcha' ];
 		}
 
+		// Generate rules for form fields
 		foreach ( $validators as $key => $value ) {
 
 			if( count( $value ) > 0 ) {
 
-				$rules[]	= [ $value, $key ];
+				$rules[] = [ $value, $key ];
 			}
 		}
 
 		return $rules;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function attributeLabels() {
 
 		$fields	= $this->fields;
 		$labels	= [];
 
-		foreach ( $fields as $key => $field ) {
+		foreach( $fields as $key => $field ) {
 
 			if( isset( $field->label ) ) {
 
@@ -180,8 +239,9 @@ class GenericForm extends \yii\base\Model {
 	// GenericForm ---------------------------
 
 	/**
-	 * The method collect the list of class members and their values using reflection.
-	 * return array - list of class members and their value
+	 * Collect and return the list of class members and their values using reflection.
+	 *
+	 * @return array List of class members and their value.
 	 */
 	public function getFormAttributes( $classPath = null ) {
 

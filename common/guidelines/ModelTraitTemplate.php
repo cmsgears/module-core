@@ -1,11 +1,12 @@
 <?php
 /**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
  * @link https://www.cmsgears.org/
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- * @license https://www.cmsgears.org/license/
- * @package module
- * @subpackage core
  */
+
 namespace cmsgears\core\common\guidelines;
 
 // Yii Imports
@@ -17,9 +18,10 @@ use cmsgears\core\common\config\CoreGlobal;
 // Project Imports
 
 /**
- * EntityTraitTemplate can be used as template for traits specific for model classes associated with database table.
+ * ModelTraitTemplate can be used as template for traits specific to classes extending
+ * [[\cmsgears\core\common\models\base\ActiveRecord]].
  *
- * Entity traits can be further divided into below mentioned sections:
+ * Model traits can be further divided into below mentioned sections:
  * <ol>
  *	<li>Yii imports</li>
  *	<li>CMG imports</li>
@@ -61,10 +63,9 @@ use cmsgears\core\common\config\CoreGlobal;
  *	<li>Trait closure</li>
  * </ol>
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
-trait EntityTraitTemplate {
+trait ModelTraitTemplate {
 
 	// Variables ---------------------------------------------------
 
@@ -107,4 +108,5 @@ trait EntityTraitTemplate {
 	// Update -----------------
 
 	// Delete -----------------
+
 }

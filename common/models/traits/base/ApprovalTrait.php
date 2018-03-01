@@ -1,5 +1,13 @@
 <?php
-namespace cmsgears\core\common\models\traits\interfaces;
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
+namespace cmsgears\core\common\models\traits\base;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -9,8 +17,16 @@ use cmsgears\core\common\models\interfaces\IApproval;
 /**
  * Useful for models required registration process with admin approval. The model using this
  * trait must use status column to track current state.
+ *
+ * @property integer $status
+ *
+ * @since 1.0.0
  */
 trait ApprovalTrait {
+
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
 
 	public static $statusMap = [
 		IApproval::STATUS_NEW => 'New',
@@ -56,6 +72,32 @@ trait ApprovalTrait {
 		'terminated' => IApproval::STATUS_TERMINATED
 	];
 
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG classes ---------------------------
+
+	// Validators ----------------------------
+
+	// ApprovalTrait -------------------------
+
+	/**
+	 * Returns string representation of [[$status]].
+	 *
+	 * @param boolean $strict
+	 * @return string
+	 */
 	public function getStatusStr( $strict = false ) {
 
 		if( $strict ) {
@@ -70,6 +112,9 @@ trait ApprovalTrait {
 		return 'Registration';
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function isNew( $strict = true ) {
 
 		if( $strict ) {
@@ -80,11 +125,17 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_NEW;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function isRegistration() {
 
 		return $this->status >= IApproval::STATUS_NEW && $this->status < IApproval::STATUS_SUBMITTED;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function isSubmitted( $strict = true ) {
 
 		if( $strict ) {
@@ -95,6 +146,9 @@ trait ApprovalTrait {
 		return $this->status == IApproval::STATUS_SUBMITTED || $this->status == IApproval::STATUS_RE_SUBMIT;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function isBelowRejected( $strict = true ) {
 
 		if( $strict ) {
@@ -105,6 +159,9 @@ trait ApprovalTrait {
 		return $this->status <= IApproval::STATUS_REJECTED;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function isRejected( $strict = true ) {
 
 		if( $strict ) {
@@ -115,6 +172,9 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_REJECTED;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function isReSubmit( $strict = true ) {
 
 		if( $strict ) {
@@ -125,6 +185,9 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_RE_SUBMIT;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function isBelowConfirmed( $strict = true ) {
 
 		if( $strict ) {
@@ -135,6 +198,9 @@ trait ApprovalTrait {
 		return $this->status <= IApproval::STATUS_CONFIRMED;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function isConfirmed( $strict = true ) {
 
 		if( $strict ) {
@@ -145,6 +211,9 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_CONFIRMED;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function isActive( $strict = true ) {
 
 		if( $strict ) {
@@ -155,6 +224,9 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_ACTIVE;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function isFrojen( $strict = true ) {
 
 		if( $strict ) {
@@ -165,6 +237,9 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_FROJEN;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function isUpliftFreeze( $strict = true ) {
 
 		if( $strict ) {
@@ -175,6 +250,9 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_UPLIFT_FREEZE;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function isBlocked( $strict = true ) {
 
 		if( $strict ) {
@@ -185,6 +263,9 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_BLOCKED;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function isUpliftBlock( $strict = true ) {
 
 		if( $strict ) {
@@ -195,6 +276,9 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_UPLIFT_BLOCK;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function isTerminated( $strict = true ) {
 
 		if( $strict ) {
@@ -205,31 +289,41 @@ trait ApprovalTrait {
 		return $this->status >= IApproval::STATUS_TERMINATED;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function toggleFrojen() {
 
 		if( $this->isFrojen() ) {
 
-			$this->status	= IApproval::STATUS_ACTIVE;
+			$this->status = IApproval::STATUS_ACTIVE;
 		}
 		else {
 
-			$this->status	= IApproval::STATUS_FROJEN;
+			$this->status = IApproval::STATUS_FROJEN;
 		}
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function toggleBlock() {
 
 		if( $this->isBlocked() || !$this->isActive( false ) ) {
 
-			$this->status	= IApproval::STATUS_ACTIVE;
+			$this->status = IApproval::STATUS_ACTIVE;
 		}
 		else {
 
-			$this->status	= IApproval::STATUS_BLOCKED;
+			$this->status = IApproval::STATUS_BLOCKED;
 		}
 	}
 
-	// User cannot edit model in submitted states.
+	/**
+	 * The model owner cannot update it in the states defined within this method.
+	 *
+	 * @return boolean
+	 */
 	public function isEditable() {
 
 		$editable = [ IApproval::STATUS_SUBMITTED, IApproval::STATUS_RE_SUBMIT, IApproval::STATUS_UPLIFT_FREEZE, IApproval::STATUS_UPLIFT_BLOCK ];
@@ -237,27 +331,45 @@ trait ApprovalTrait {
 		return !in_array( $this->status, $editable );
 	}
 
-	// User can submit the model for limit removal in selected states i.e. new, rejected, frozen or blocked.
+	/**
+	 * The model owner can submit the model for limit removal in selected states i.e. new,
+	 * rejected, frozen or blocked. defined within this method.
+	 *
+	 * @return boolean
+	 */
 	public function isSubmittable() {
 
 		return $this->isRegistration() || $this->status == IApproval::STATUS_REJECTED ||
-				$this->status == IApproval::STATUS_FROJEN || $this->status == IApproval::STATUS_BLOCKED;
-
-				return true;
+			$this->status == IApproval::STATUS_FROJEN || $this->status == IApproval::STATUS_BLOCKED;
 	}
 
+	/**
+	 * Admin can check whether the model is ready for approval in selected states i.e. frozen,
+	 * uplift-freeze, blocked or uplift-block defined within this method. A model can be activated only
+	 * in the states specified within this method.
+	 *
+	 * @return boolean
+	 */
 	public function isApprovable() {
 
 		return $this->status == IApproval::STATUS_FROJEN || $this->status == IApproval::STATUS_UPLIFT_FREEZE ||
 				$this->status == IApproval::STATUS_BLOCKED || $this->status == IApproval::STATUS_UPLIFT_BLOCK;
 	}
 
-	// Is available for non owners - few of the features can be disabled for frozen state based on model nature.
+	/**
+	 * Check whether the model is publicly available for non owners. Some of the features can
+	 * be disabled for frozen state based on model nature.
+	 *
+	 * @return boolean
+	 */
 	public function isPublic() {
 
 		return $this->status == IApproval::STATUS_ACTIVE || $this->status == IApproval::STATUS_FROJEN;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getRejectReason() {
 
 		$reason = $this->getDataMeta( CoreGlobal::DATA_REJECT_REASON );
@@ -283,4 +395,23 @@ trait ApprovalTrait {
 
 		return $reason;
 	}
+
+	// Static Methods ----------------------------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG classes ---------------------------
+
+	// ApprovalTrait -------------------------
+
+	// Read - Query -----------
+
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
+
 }

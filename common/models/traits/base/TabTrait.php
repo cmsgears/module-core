@@ -1,19 +1,41 @@
 <?php
-namespace cmsgears\core\common\models\traits;
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
+namespace cmsgears\core\common\models\traits\base;
 
 // Yii Import
 use Yii;
 
 /**
- * The tabs to show data in tabs. It reads the controller action and find the active, next and previous tabs.
+ * The tabs to show data in tabs. It reads the controller action and find the active, next
+ * and previous tabs.
  *
- * The models using this trait must initiate the tab arrays using Yii's init method.
+ * The models using this trait must initiate the tab arrays using init method.
  *
  */
 trait TabTrait {
 
-	// Different scenarios can follow different tab status. In such cases, the model must initiate the appropriate tabs based on given scenario.
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	/**
+	 * Different scenarios can follow different tab status. In such cases, the model must
+	 * initiate the appropriate tabs based on given scenario.
+	 */
 	public $tabScenario;
+
+	// Protected --------------
+
+	// Private ----------------
 
 	private $tabStatus		= [];
 
@@ -33,8 +55,13 @@ trait TabTrait {
 
 	// CMG classes ---------------------------
 
+	// Validators ----------------------------
+
 	// TabTrait ------------------------------
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getTabStatus() {
 
 		$action	= Yii::$app->controller->action->id;
@@ -47,6 +74,9 @@ trait TabTrait {
 		return null;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getNextStatus( $status = null ) {
 
 		if( !isset( $status ) ) {
@@ -62,6 +92,9 @@ trait TabTrait {
 		return null;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getPreviousTab() {
 
 		$action		= Yii::$app->controller->action->id;
@@ -91,6 +124,9 @@ trait TabTrait {
 		return null;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getNextTab() {
 
 		$action		= Yii::$app->controller->action->id;
@@ -119,8 +155,6 @@ trait TabTrait {
 
 		return null;
 	}
-
-	// Validators -------------
 
 	// Static Methods ----------------------------------------------
 

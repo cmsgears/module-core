@@ -1,8 +1,16 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\mappers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -10,12 +18,14 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 
 /**
- * RolePermission Entity
+ * Mapper to map roles and permissions.
  *
- * @property long $roleId
- * @property long $permissionId
+ * @property integer $roleId
+ * @property integer $permissionId
+ *
+ * @since 1.0.0
  */
-class RolePermission extends \cmsgears\core\common\models\base\Entity {
+class RolePermission extends \cmsgears\core\common\models\base\ActiveRecord {
 
 	// Variables ---------------------------------------------------
 
@@ -54,14 +64,17 @@ class RolePermission extends \cmsgears\core\common\models\base\Entity {
 	 */
 	public function rules() {
 
-		return [
+		// Model Rules
+		$rules = [
 			// Required, Safe
 			[ [ 'roleId', 'permissionId' ], 'required' ],
 			// Unique
-			[ [ 'roleId', 'permissionId' ], 'unique', 'targetAttribute' => [ 'roleId', 'permissionId' ] ],
+			[ [ 'roleId', 'permissionId' ], 'unique', 'targetAttribute' => [ 'roleId', 'permissionId' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Other
 			[ [ 'roleId', 'permissionId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
+
+		return $rules;
 	}
 
 	/**
@@ -79,12 +92,24 @@ class RolePermission extends \cmsgears\core\common\models\base\Entity {
 
 	// CMG parent classes --------------------
 
+	/**
+	 * @inheritdoc
+	 */
+	public function isExist() {
+
+		$mapping = self::findByCountryIdCode( $this->roleId, $this->permissionId );
+
+		return isset( $mapping );
+	}
+
 	// Validators ----------------------------
 
 	// RolePermission ------------------------
 
 	/**
-	 * @return Role - from the mapping.
+	 * Return the role associated with the mapping.
+	 *
+	 * @return Role
 	 */
 	public function getRole() {
 
@@ -92,7 +117,9 @@ class RolePermission extends \cmsgears\core\common\models\base\Entity {
 	}
 
 	/**
-	 * @return Permission - from the mapping.
+	 * Return the permission associated with the mapping.
+	 *
+	 * @return Permission
 	 */
 	public function getPermission() {
 
@@ -110,7 +137,7 @@ class RolePermission extends \cmsgears\core\common\models\base\Entity {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_ROLE_PERMISSION;
+		return CoreTables::getTableName( CoreTables::TABLE_ROLE_PERMISSION );
 	}
 
 	// CMG parent classes --------------------
@@ -119,6 +146,9 @@ class RolePermission extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'role', 'permission' ];
@@ -127,6 +157,12 @@ class RolePermission extends \cmsgears\core\common\models\base\Entity {
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the mapping with role.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with role.
+	 */
 	public static function queryWithRole( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'role' ];
@@ -134,6 +170,12 @@ class RolePermission extends \cmsgears\core\common\models\base\Entity {
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the mapping with permission.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with permission.
+	 */
 	public static function queryWithPermission( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'permission' ];
@@ -143,6 +185,18 @@ class RolePermission extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Find ------------
 
+	/**
+	 * Find and return the mapping associated with given role id and permission id.
+	 *
+	 * @param integer $roleId
+	 * @param integer $permissionId
+	 * @return RolePermission
+	 */
+	public static function findByCountryIdCode( $roleId, $permissionId ) {
+
+		return self::find()->where( 'roleId=:rid AND $permissionId=:pid', [ ':rid' => $roleId, ':pid' => $permissionId ] )->one();
+	}
+
 	// Create -----------------
 
 	// Update -----------------
@@ -150,18 +204,24 @@ class RolePermission extends \cmsgears\core\common\models\base\Entity {
 	// Delete -----------------
 
 	/**
-	 * Delete the mappings by given role id.
+	 * Delete all the mappings associated with given role id.
+	 *
+	 * @param type $roleId
+	 * @return int the number of rows deleted.
 	 */
 	public static function deleteByRoleId( $roleId ) {
 
-		self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
+		return self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
 	}
 
 	/**
-	 * Delete the mappings by given permission id.
+	 * Delete all the mappings associated with given permission id.
+	 *
+	 * @param type $permissionId
+	 * @return int the number of rows deleted.
 	 */
 	public static function deleteByPermissionId( $permissionId ) {
 
-		self::deleteAll( 'permissionId=:id', [ ':id' => $permissionId ] );
+		return self::deleteAll( 'permissionId=:id', [ ':id' => $permissionId ] );
 	}
 }

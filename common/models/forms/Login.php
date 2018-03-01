@@ -1,19 +1,36 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
-use \Yii;
+use Yii;
+use yii\base\Model;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\entities\User;
-
-use cmsgears\core\common\utilities\MessageUtil;
 use cmsgears\core\common\utilities\DateUtil;
 
-class Login extends \yii\base\Model {
+/**
+ * Used to login already registered users.
+ *
+ * @property string $email
+ * @property string $password
+ * @property boolean $rememberMe
+ * @property boolean $admin
+ * @property string $redirectUrl
+ *
+ * @since 1.0.0
+ */
+class Login extends Model {
 
 	// Variables ---------------------------------------------------
 
@@ -35,6 +52,8 @@ class Login extends \yii\base\Model {
 	public $admin;
 	public $redirectUrl;
 
+	public $interval;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -53,6 +72,8 @@ class Login extends \yii\base\Model {
 		$this->user			= null;
 		$this->userService	= Yii::$app->factory->get( 'userService' );
 
+		$this->interval		= 3600 * 24 * 30;
+
 		parent::__construct( $config );
 	}
 
@@ -66,8 +87,12 @@ class Login extends \yii\base\Model {
 
 	// yii\base\Model ---------
 
+	/**
+	 * @inheritdoc
+	 */
 	public function rules() {
 
+		// Model Rules
 		$rules =  [
 			[ [ 'email', 'password' ], 'required' ],
 			[ 'rememberMe', 'boolean' ],
@@ -78,6 +103,7 @@ class Login extends \yii\base\Model {
 			[ 'password', 'validatePassword' ]
 		];
 
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'email', 'password' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
@@ -88,11 +114,14 @@ class Login extends \yii\base\Model {
 		return $rules;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function attributeLabels() {
 
 		return [
 			'email' => 'Email',
-			'password' => 'Password',
+			'password' => 'Password'
 		];
 	}
 
@@ -102,6 +131,13 @@ class Login extends \yii\base\Model {
 
 	// Validators ----------------------------
 
+	/**
+	 * Check whether user exist and verified. It will add appropriate errors in case
+	 * user is not found, not verified or blocked by admin.
+	 *
+	 * @param string $attribute
+	 * @param array $params
+	 */
 	public function validateUser( $attribute, $params ) {
 
 		if( !$this->hasErrors() ) {
@@ -127,6 +163,12 @@ class Login extends \yii\base\Model {
 		}
 	}
 
+	/**
+	 * Check whether the password provided by user is valid.
+	 *
+	 * @param string $attribute
+	 * @param array $params
+	 */
 	public function validatePassword( $attribute, $params ) {
 
 		if( !$this->hasErrors() ) {
@@ -142,6 +184,11 @@ class Login extends \yii\base\Model {
 
 	// Login ---------------------------------
 
+	/**
+	 * Find and return the user using given email or username.
+	 *
+	 * @return \cmsgears\core\common\models\entities\User
+	 */
 	public function getUser() {
 
 		// Find user having email or username
@@ -158,6 +205,11 @@ class Login extends \yii\base\Model {
 		return $this->user;
 	}
 
+	/**
+	 * Login and remember the user for pre-defined interval.
+	 *
+	 * @return boolean
+	 */
 	public function login() {
 
 		if ( $this->validate() ) {
@@ -176,10 +228,11 @@ class Login extends \yii\base\Model {
 				}
 			}
 
-			$user->lastLoginAt	= DateUtil::getDateTime();
+			$user->lastLoginAt = DateUtil::getDateTime();
+
 			$user->save();
 
-			return Yii::$app->user->login( $user, $this->rememberMe ? 3600 * 24 * 30 : 0 );
+			return Yii::$app->user->login( $user, $this->rememberMe ? $this->interval : 0 );
 		}
 
 		return false;

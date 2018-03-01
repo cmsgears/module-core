@@ -1,8 +1,21 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
+// Yii Imports
+use cmsgears\core\common\base\Migration;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class m160620_095703_core extends \yii\db\Migration {
+use cmsgears\core\common\models\base\Meta;
+
+class m160620_095703_core extends Migration {
 
 	// Public Variables
 
@@ -99,7 +112,7 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->createTable( $this->prefix . 'core_locale', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'code' => $this->string( Yii::$app->core->smallText )->notNull(),
-			'name' => $this->string( Yii::$app->core->mediumText )->notNull()
+			'name' => $this->string( Yii::$app->core->xLargeText )->notNull()
 		], $this->options );
 	}
 
@@ -109,17 +122,21 @@ class m160620_095703_core extends \yii\db\Migration {
 			'id' => $this->bigPrimaryKey( 20 ),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
 			'modifiedBy' => $this->bigInteger( 20 ),
-			'name' => $this->string( Yii::$app->core->largeText )->notNull(),
-			'slug' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'slug' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull()->defaultValue( CoreGlobal::TYPE_SITE ),
-			'description' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'title' => $this->string( Yii::$app->core->xxxLargeText ),
+			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'default' => $this->boolean()->notNull()->defaultValue( false ),
 			'renderer' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
-			'basePath' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'basePath' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'content' => $this->text(),
-			'data' => $this->text()
+			'data' => $this->text(),
+			'gridCache' => $this->mediumText(),
+			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
+			'gridCachedAt' => $this->dateTime()
 		], $this->options );
 
 		// Index for columns creator and modifier
@@ -131,13 +148,16 @@ class m160620_095703_core extends \yii\db\Migration {
 
 		$this->createTable( $this->prefix . 'core_template', [
 			'id' => $this->bigPrimaryKey( 20 ),
+			'siteId' => $this->bigInteger( 20 ),
+			'themeId' => $this->bigInteger( 20 ),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
 			'modifiedBy' => $this->bigInteger( 20 ),
-			'name' => $this->string( Yii::$app->core->largeText )->notNull(),
-			'slug' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'slug' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
-			'description' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'title' => $this->string( Yii::$app->core->xxxLargeText ),
+			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'active' => $this->boolean()->notNull()->defaultValue( false ),
 			'renderer' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'fileRender' => $this->boolean()->notNull()->defaultValue( false ),
@@ -147,10 +167,15 @@ class m160620_095703_core extends \yii\db\Migration {
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'content' => $this->text(),
-			'data' => $this->text()
+			'data' => $this->text(),
+			'gridCache' => $this->mediumText(),
+			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
+			'gridCachedAt' => $this->dateTime()
 		], $this->options );
 
 		// Index for columns creator and modifier
+		$this->createIndex( 'idx_' . $this->prefix . 'template_site', $this->prefix . 'core_template', 'siteId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'template_theme', $this->prefix . 'core_template', 'themeId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'template_creator', $this->prefix . 'core_template', 'createdBy' );
 		$this->createIndex( 'idx_' . $this->prefix . 'template_modifier', $this->prefix . 'core_template', 'modifiedBy' );
 	}
@@ -159,26 +184,31 @@ class m160620_095703_core extends \yii\db\Migration {
 
 		$this->createTable( $this->prefix . 'core_object', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'siteId' => $this->bigInteger( 20 )->notNull(),
+			'siteId' => $this->bigInteger( 20 ),
 			'themeId' => $this->bigInteger( 20 ),
 			'templateId' => $this->bigInteger( 20 ),
 			'avatarId' => $this->bigInteger( 20 ),
 			'bannerId' => $this->bigInteger( 20 ),
+			'videoId' => $this->bigInteger( 20 ),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
 			'modifiedBy' => $this->bigInteger( 20 ),
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'slug' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
-			'title' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
+			'title' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
+			'url' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'active' => $this->boolean()->notNull()->defaultValue( false ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'htmlOptions' => $this->text(),
 			'content' => $this->text(),
-			'data' => $this->text()
+			'data' => $this->text(),
+			'gridCache' => $this->mediumText(),
+			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
+			'gridCachedAt' => $this->dateTime()
 		], $this->options );
 
 		// Index for columns creator and modifier
@@ -187,6 +217,7 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'object_template', $this->prefix . 'core_object', 'templateId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_avatar', $this->prefix . 'core_object', 'avatarId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_banner', $this->prefix . 'core_object', 'bannerId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'object_video', $this->prefix . 'core_object', 'videoId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_creator', $this->prefix . 'core_object', 'createdBy' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_modifier', $this->prefix . 'core_object', 'modifiedBy' );
 	}
@@ -222,9 +253,14 @@ class m160620_095703_core extends \yii\db\Migration {
 			'id' => $this->bigPrimaryKey( 20 ),
 			'countryId' => $this->bigInteger( 20 )->notNull(),
 			'provinceId' => $this->bigInteger( 20 ),
-			'zone' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ), // It could be County in US, Tehsil in India
 			'name' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
-			'postal' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
+			'iso' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
+			'postal' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
+			'zone' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'regions' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
+			'zipCodes' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
+			'timeZone' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'latitude' => $this->float( 4 ),
 			'longitude' => $this->float( 4 )
 		], $this->options );
@@ -273,16 +309,20 @@ class m160620_095703_core extends \yii\db\Migration {
 			'id' => $this->bigPrimaryKey( 20 ),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
 			'modifiedBy' => $this->bigInteger( 20 ),
-			'name' => $this->string( Yii::$app->core->largeText )->notNull(),
-			'slug' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'slug' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
-			'description' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'group' => $this->boolean()->notNull()->defaultValue( false ),
-			'adminUrl' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
-			'homeUrl' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
+			'adminUrl' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'homeUrl' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'createdAt' => $this->dateTime()->notNull(),
-			'modifiedAt' => $this->dateTime()
+			'modifiedAt' => $this->dateTime(),
+			'data' => $this->text(),
+			'gridCache' => $this->mediumText(),
+			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
+			'gridCachedAt' => $this->dateTime()
 		], $this->options );
 
 		// Index for columns creator and modifier
@@ -296,14 +336,18 @@ class m160620_095703_core extends \yii\db\Migration {
 			'id' => $this->bigPrimaryKey( 20 ),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
 			'modifiedBy' => $this->bigInteger( 20 ),
-			'name' => $this->string( Yii::$app->core->largeText )->notNull(),
-			'slug' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'slug' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
-			'description' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'group' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
-			'modifiedAt' => $this->dateTime()
+			'modifiedAt' => $this->dateTime(),
+			'data' => $this->text(),
+			'gridCache' => $this->mediumText(),
+			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
+			'gridCachedAt' => $this->dateTime()
 		], $this->options );
 
 		// Index for columns creator and modifier
@@ -331,16 +375,25 @@ class m160620_095703_core extends \yii\db\Migration {
 			'localeId' => $this->bigInteger( 20 ),
 			'genderId' => $this->bigInteger( 20 ),
 			'avatarId' => $this->bigInteger( 20 ),
+			'bannerId' => $this->bigInteger( 20 ),
+			'templateId' => $this->bigInteger( 20 ),
 			'status' => $this->smallInteger( 6 ),
-			'email' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'email' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'username' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'passwordHash' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
-			'firstName' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
-			'lastName' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
+			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
+			'title' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
+			'firstName' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'middleName' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'lastName' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'message' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
+			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'dob' => $this->date(),
+			'mobile' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'phone' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
-			'avatarUrl' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
-			'websiteUrl' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'timeZone' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'avatarUrl' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
+			'websiteUrl' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'verifyToken' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'resetToken' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'registeredAt' => $this->dateTime(),
@@ -348,33 +401,51 @@ class m160620_095703_core extends \yii\db\Migration {
 			'lastActivityAt' => $this->dateTime(),
 			'authKey' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'accessToken' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
+			'accessTokenType' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'tokenCreatedAt' => $this->dateTime(),
 			'tokenAccessedAt' => $this->dateTime(),
 			'content' => $this->text(),
-			'data' => $this->text()
+			'data' => $this->text(),
+			'gridCache' => $this->mediumText(),
+			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
+			'gridCachedAt' => $this->dateTime()
 		], $this->options );
 
 		// Index for columns locale, gender and avatar
 		$this->createIndex( 'idx_' . $this->prefix . 'user_locale', $this->prefix . 'core_user', 'localeId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'user_gender', $this->prefix . 'core_user', 'genderId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'user_avatar', $this->prefix . 'core_user', 'avatarId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'user_banner', $this->prefix . 'core_user', 'bannerId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'user_template', $this->prefix . 'core_user', 'templateId' );
 	}
 
 	private function upSite() {
 
 		$this->createTable( $this->prefix . 'core_site', [
 			'id' => $this->bigPrimaryKey( 20 ),
+			'createdBy' => $this->bigInteger( 20 )->notNull(),
+			'modifiedBy' => $this->bigInteger( 20 ),
 			'avatarId' => $this->bigInteger( 20 ),
 			'bannerId' => $this->bigInteger( 20 ),
 			'themeId' => $this->bigInteger( 20 ),
-			'name' => $this->string( Yii::$app->core->largeText )->notNull(),
-			'slug' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'slug' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
+			'icon' => $this->string( Yii::$app->core->largeText ),
+			'title' => $this->string( Yii::$app->core->xxxLargeText ),
+			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( false ),
-			'data' => $this->text()
+			'createdAt' => $this->dateTime()->notNull(),
+			'modifiedAt' => $this->dateTime(),
+			'data' => $this->text(),
+			'gridCache' => $this->mediumText(),
+			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
+			'gridCachedAt' => $this->dateTime()
 		], $this->options );
 
 		// Index for columns avatar, banner and theme
+		$this->createIndex( 'idx_' . $this->prefix . 'site_creator', $this->prefix . 'core_site', 'createdBy' );
+		$this->createIndex( 'idx_' . $this->prefix . 'site_modifier', $this->prefix . 'core_site', 'modifiedBy' );
 		$this->createIndex( 'idx_' . $this->prefix . 'site_avatar', $this->prefix . 'core_site', 'avatarId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'site_banner', $this->prefix . 'core_site', 'bannerId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'site_theme', $this->prefix . 'core_site', 'themeId' );
@@ -385,14 +456,14 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->createTable( $this->prefix . 'core_site_meta', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'modelId' => $this->bigInteger( 20 )->notNull(),
-			'name' => $this->string( Yii::$app->core->largeText )->notNull(),
-			'label' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'label' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
-			'valueType' => $this->string( Yii::$app->core->mediumText )->notNull()->defaultValue( 'text' ),
+			'valueType' => $this->string( Yii::$app->core->mediumText )->notNull()->defaultValue( Meta::VALUE_TYPE_TEXT ),
 			'value' => $this->text()
 		], $this->options );
 
-		// Index for columns site, parent, creator and modifier
+		// Index for column parent
 		$this->createIndex( 'idx_' . $this->prefix . 'site_meta_parent', $this->prefix . 'core_site_meta', 'modelId' );
 	}
 
@@ -614,8 +685,8 @@ class m160620_095703_core extends \yii\db\Migration {
 			'localeId' => $this->bigInteger( 20 )->notNull(),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
+			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
-			'name' => $this->string( Yii::$app->core->largeText )->notNull(),
 			'value' => $this->text()
 		], $this->options );
 
@@ -819,6 +890,8 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'theme_modifier', $this->prefix . 'core_theme', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
 
 		// Template
+		$this->addForeignKey( 'fk_' . $this->prefix . 'template_site', $this->prefix . 'core_template', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'template_theme', $this->prefix . 'core_template', 'themeId', $this->prefix . 'core_theme', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'template_creator', $this->prefix . 'core_template', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'template_modifier', $this->prefix . 'core_template', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
 
@@ -828,6 +901,7 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_template', $this->prefix . 'core_object', 'templateId', $this->prefix . 'core_template', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_avatar', $this->prefix . 'core_object', 'avatarId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_banner', $this->prefix . 'core_object', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'object_video', $this->prefix . 'core_object', 'videoId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_creator', $this->prefix . 'core_object', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_modifier', $this->prefix . 'core_object', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
 
@@ -859,8 +933,12 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'user_locale', $this->prefix . 'core_user', 'localeId', $this->prefix . 'core_locale', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'user_gender', $this->prefix . 'core_user', 'genderId', $this->prefix . 'core_option', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'user_avatar', $this->prefix . 'core_user', 'avatarId', $this->prefix . 'core_file', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'user_banner', $this->prefix . 'core_user', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'user_template', $this->prefix . 'core_user', 'templateId', $this->prefix . 'core_template', 'id', 'SET NULL' );
 
 		// Site
+		$this->addForeignKey( 'fk_' . $this->prefix . 'site_creator', $this->prefix . 'core_site', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'site_modifier', $this->prefix . 'core_site', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'site_avatar', $this->prefix . 'core_site', 'avatarId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'site_banner', $this->prefix . 'core_site', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'site_theme', $this->prefix . 'core_site', 'themeId', $this->prefix . 'core_theme', 'id', 'SET NULL' );
@@ -1000,6 +1078,8 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'theme_modifier', $this->prefix . 'core_theme' );
 
 		// Template
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'template_site', $this->prefix . 'core_template' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'template_theme', $this->prefix . 'core_template' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'template_creator', $this->prefix . 'core_template' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'template_modifier', $this->prefix . 'core_template' );
 
@@ -1009,6 +1089,7 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_template', $this->prefix . 'core_object' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_avatar', $this->prefix . 'core_object' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_banner', $this->prefix . 'core_object' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_video', $this->prefix . 'core_object' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_creator', $this->prefix . 'core_object' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_modifier', $this->prefix . 'core_object' );
 
@@ -1040,8 +1121,12 @@ class m160620_095703_core extends \yii\db\Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_locale', $this->prefix . 'core_user' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_gender', $this->prefix . 'core_user' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_avatar', $this->prefix . 'core_user' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_banner', $this->prefix . 'core_user' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_template', $this->prefix . 'core_user' );
 
 		// Site
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_creator', $this->prefix . 'core_site' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_modifier', $this->prefix . 'core_site' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_avatar', $this->prefix . 'core_site' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_banner', $this->prefix . 'core_site' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_theme', $this->prefix . 'core_site' );

@@ -1,20 +1,17 @@
 <?php
 namespace cmsgears\core\common\models\hierarchy;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 /**
- * HierarchicalModel - It can be used by models which need parent child relationship. It supports two way relationship i.e. by parentId and Nested Set(left, right value).
+ * HierarchicalModel can be used by models which need parent child relationship. It supports
+ * two way relationship i.e. by parentId and Nested Set(left, right value).
  *
  * @property long $parentId
  * @property long $rootId
  * @property string $name
  * @property integer lValue
  * @property integer rValue
+ *
+ * @since 1.0.0
  */
 abstract class NestedSetModel extends HierarchicalModel {
 

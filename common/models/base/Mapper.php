@@ -1,12 +1,28 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\base;
 
 /**
- * Mapper Entity
+ * Base model of all the mapper mapping parent model to model being mapped.
  *
- * It's the parent entity for all the mappers.
+ * The parent model can be either entity or resource. Similarly the model being mapped
+ * can be both entity or resource.
+ *
+ * @property integer $modelId Id of model being mapped.
+ * @property integer $parentId Id of parent model.
+ * @property integer $parentType Type of parent model.
+ * @property boolean $active Flag to check whether mapping is still active.
+ *
+ * @since 1.0.0
  */
-abstract class Mapper extends Entity {
+abstract class Mapper extends ActiveRecord {
 
 	// Variables ---------------------------------------------------
 
@@ -48,6 +64,11 @@ abstract class Mapper extends Entity {
 
 	// Mapper --------------------------------
 
+	/**
+	 * Returns primary model of the mapper.
+	 *
+	 * @return ActiveRecord Primary model.
+	 */
 	abstract public function getModel();
 
 	// Static Methods ----------------------------------------------

@@ -104,7 +104,7 @@ class Application extends \yii\web\Application {
 						Yii::$app->formatter->timeFormat	= $coreProperties->getTimeFormat();
 						Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
 						Yii::$app->timeZone			= $coreProperties->getTimezone();
-						
+
 						return parent::createController( $siteRoute );
 					}
 				}
@@ -113,13 +113,18 @@ class Application extends \yii\web\Application {
 			else {
 
 				// Find Site
-             	$host 			= explode( ".", $_SERVER[ 'HTTP_HOST' ]);
-				$siteName		= array_shift(  $host  );
+				//$siteName		= array_shift( ( explode( ".", $_SERVER[ 'HTTP_HOST' ] ) ) );
 
+				$host		= explode( ".", $_SERVER[ 'HTTP_HOST' ] );
+				$siteName	= array_shift( $host );
+
+				//if( !isset( $siteName ) || strcmp( $siteName, 'www' ) == 0 ) {
 				if( !isset( $siteName ) || strcmp( $siteName, 'www' ) == 0 || strcmp( $siteName, 'localhost' ) == 0 ) {
 
 					$siteName	= 'main';
 				}
+
+				//$site	= SiteService::findBySlug( $siteName );
 
 				// Site Found
 				if( isset( $site ) ) {
@@ -136,7 +141,7 @@ class Application extends \yii\web\Application {
 					Yii::$app->formatter->timeFormat	= $coreProperties->getTimeFormat();
 					Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
 					Yii::$app->timeZone			= $coreProperties->getTimezone();
-					
+
 					return parent::createController( $route );
 				}
 			}
@@ -151,7 +156,7 @@ class Application extends \yii\web\Application {
 				// Configure Current Site
 				Yii::$app->core->site		= $site;
 				Yii::$app->core->siteId		= $site->id;
-				
+
 				// site config
 				$coreProperties	= CoreProperties::getInstance();
 

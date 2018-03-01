@@ -11,7 +11,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * The CoreProperties class provides methods to access the core properties defined in database.
  * It also define the accessor methods for pre-defined properties.
  */
-class CoreProperties extends CmgProperties {
+class CoreProperties extends Properties {
 
 	// Variables ---------------------------------------------------
 

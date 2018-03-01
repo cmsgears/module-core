@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
@@ -11,16 +19,26 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\interfaces\IOwner;
+use cmsgears\core\common\models\interfaces\base\IAuthor;
+use cmsgears\core\common\models\interfaces\base\IMultiSite;
+use cmsgears\core\common\models\interfaces\base\INameType;
+use cmsgears\core\common\models\interfaces\base\IOwner;
+use cmsgears\core\common\models\interfaces\base\ISlugType;
 
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\Entity;
 use cmsgears\core\common\models\mappers\ModelObject;
 
-use cmsgears\core\common\models\traits\CreateModifyTrait;
-use cmsgears\core\common\models\traits\NameTypeTrait;
-use cmsgears\core\common\models\traits\SlugTypeTrait;
-use cmsgears\core\common\models\traits\resources\MetaTrait;
+use cmsgears\core\common\models\traits\base\AuthorTrait;
+use cmsgears\core\common\models\traits\base\MultiSiteTrait;
+use cmsgears\core\common\models\traits\base\NameTypeTrait;
+use cmsgears\core\common\models\traits\base\SlugTypeTrait;
+use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\resources\GridCacheTrait;
+use cmsgears\core\common\models\traits\resources\HierarchyTrait;
+use cmsgears\core\common\models\traits\resources\MetaTrait;
+use cmsgears\core\common\models\traits\resources\SocialLinkTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
 use cmsgears\core\common\models\traits\mappers\TemplateTrait;
@@ -30,28 +48,36 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
 /**
  * ObjectData Entity
  *
- * @property long $id
- * @property long $siteId
- * @property long $themeId
- * @property long $templateId
- * @property long $avatarId
- * @property long $bannerId
- * @property long $createdBy
- * @property long $modifiedBy
+ * @property integer $id
+ * @property integer $siteId
+ * @property integer $themeId
+ * @property integer $templateId
+ * @property integer $avatarId
+ * @property integer $bannerId
+ * @property integer $videoId
+ * @property integer $createdBy
+ * @property integer $modifiedBy
  * @property string $name
  * @property string $slug
  * @property string $type
  * @property string $icon
+ * @property string $title
  * @property string $description
+ * @property string $url
  * @property boolean $active
- * @property short $order
+ * @property integer $order
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $htmlOptions
  * @property string $content
  * @property string $data
+ * @property string $gridCache
+ * @property boolean $gridCacheValid
+ * @property datetime $gridCachedAt
+ *
+ * @since 1.0.0
  */
-class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOwner {
+class ObjectData extends Entity implements IAuthor, IMultiSite, INameType, IOwner, ISlugType {
 
 	// Variables ---------------------------------------------------
 
@@ -63,13 +89,9 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 
 	// Protected --------------
 
-	public static $multiSite = true;
-
 	// Variables -----------------------------
 
 	// Public -----------------
-
-	public $modelType		= CoreGlobal::TYPE_OBJECT;
 
 	// Protected --------------
 
@@ -77,14 +99,21 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 
 	// Private ----------------
 
+	private $modelType		= CoreGlobal::TYPE_OBJECT;
+
 	// Traits ------------------------------------------------------
 
-	use MetaTrait;
-	use CreateModifyTrait;
+	use AuthorTrait;
+	use ContentTrait;
 	use DataTrait;
 	use FileTrait;
+	use GridCacheTrait;
+	use HierarchyTrait;
+	use MetaTrait;
+	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
+	use SocialLinkTrait;
 	use TemplateTrait;
 	use VisualTrait;
 
@@ -104,16 +133,16 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 	public function behaviors() {
 
 		return [
-			AuthorBehavior::className(),
+			AuthorBehavior::class,
 			'sluggableBehavior' => [
-				'class' => SluggableBehavior::className(),
+				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
-				'slugAttribute' => 'slug',
-				'immutable' => true,
-				'ensureUnique' => false
+				'slugAttribute' => 'slug', // Unique for combination of Site Id, Theme Id and Type
+				'ensureUnique' => true,
+				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'themeId', 'type' ] ]
 			],
 			'timestampBehavior' => [
-				'class' => TimestampBehavior::className(),
+				'class' => TimestampBehavior::class,
 				'createdAtAttribute' => 'createdAt',
 				'updatedAtAttribute' => 'modifiedAt',
 				'value' => new Expression('NOW()')
@@ -128,31 +157,32 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'siteId', 'name', 'type' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'content', 'data', 'title' ], 'safe' ],
+			[ [ 'name', 'type' ], 'required' ],
+			[ [ 'id', 'htmlOptions', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique
-			[ [ 'siteId', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'siteId', 'name', 'type' ] ],
-			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
+			[ [ 'name', 'siteId', 'themeId', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'siteId', 'themeId', 'type' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
-			[ [ 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'name' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'slug', 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'name', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
+			[ 'slug', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'title', 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ [ 'active' ], 'boolean' ],
+			[ [ 'active', 'gridCacheValid' ], 'boolean' ],
 			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'themeId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'siteId', 'avatarId', 'bannerId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+			[ [ 'siteId', 'avatarId', 'bannerId', 'videoId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
-		// trim if required
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'title', 'description' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -179,7 +209,8 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
-			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
+			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
 		];
 	}
 
@@ -209,13 +240,20 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 
 	// IOwner -----------------
 
+	/**
+	 * Check whether given user is owner of this object.
+	 *
+	 * @param User $user
+	 * @param boolean $strict
+	 * @return boolean
+	 */
 	public function isOwner( $user = null, $strict = false ) {
 
 		if( $this->testOwner ) {
 
 			if( !isset( $user ) && !$strict ) {
 
-				$user	= Yii::$app->user->getIdentity();
+				$user = Yii::$app->user->getIdentity();
 			}
 
 			if( isset( $user ) ) {
@@ -233,23 +271,40 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 
 	// ObjectData ----------------------------
 
+	/**
+	 * Returns site to which this object belongs. A object can also exist without assigning site.
+	 *
+	 * @return Site|null
+	 */
 	public function getSite() {
 
-		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+		return $this->hasOne( Site::class, [ 'id' => 'siteId' ] );
 	}
 
+	/**
+	 * Returns theme to which this object belongs. A object can also exist without assigning theme.
+	 *
+	 * @return Theme|null
+	 */
 	public function getTheme() {
 
-		return $this->hasOne( Theme::className(), [ 'id' => 'themeId' ] );
+		return $this->hasOne( Theme::class, [ 'id' => 'themeId' ] );
 	}
-    
+
+	/**
+	 * Returns the objects mapped to it.
+	 *
+	 * @return ObjectData[]
+	 */
     public function getObjects() {
-        
-        return $this->hasMany( ModelObject::className(), [ 'parentId' => 'id' ] );
+
+        return $this->hasMany( ModelObject::class, [ 'parentId' => 'id' ] );
     }
 
 	/**
-	 * @return string representation of flag
+	 * Returns string representation of active flag.
+	 *
+	 * @return string
 	 */
 	public function getActiveStr() {
 
@@ -267,7 +322,7 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_OBJECT_DATA;
+		return CoreTables::getTableName( CoreTables::TABLE_OBJECT_DATA );
 	}
 
 	// CMG parent classes --------------------
@@ -276,34 +331,52 @@ class ObjectData extends \cmsgears\core\common\models\base\Entity implements IOw
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'site', 'template', 'theme', 'creator', 'modifier' ];
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'video', 'site', 'theme', 'template', 'creator', 'modifier' ];
 		$config[ 'relations' ]	= $relations;
 
 		return parent::queryWithAll( $config );
 	}
-    
+
+	/**
+	 * Return query to find the object with objects assigned to it.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with assigned objects.
+	 */
     public static function queryWithModelObjects( $config = [] ) {
-        
-        $config[ 'relations' ]  = [ 'objects' ];
-        
+
+        $config[ 'relations' ] = [ 'objects' ];
+
         return parent::queryWithAll( $config );
     }
 
 	// Read - Find ------------
 
-	public static function findByType( $type ) {
+	/**
+	 * Find and returns the objects with given type.
+	 *
+	 * @param string $type
+	 * @param array $config
+	 * @return ObjectData[]
+	 */
+	public static function findByType( $type, $config = [] ) {
 
-		if( static::$multiSite ) {
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 
-			$siteId	= Yii::$app->core->siteId;
+		if( static::isMultiSite() && !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
 			return static::find()->where( 'type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( 'order ASC' )->all();
 		}
 		else {
 
-			return static::find()->where( 'type=:type AND ORDER BY DESC', [ ':type' => $type ] )->orderBy( 'order ASC' )->all();
+			return static::find()->where( 'type=:type', [ ':type' => $type ] )->orderBy( 'order ASC' )->all();
 		}
 	}
 

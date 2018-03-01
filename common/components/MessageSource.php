@@ -154,6 +154,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_TIME_END => 'End Time',
 		CoreGlobal::FIELD_CREATED_AT => 'Created At',
 		CoreGlobal::FIELD_MODIFIED_AT => 'Updated At',
+		CoreGlobal::FIELD_TIME_ZONE => 'Time Zone',
 
 		CoreGlobal::FIELD_SERVICE => 'Service',
 
@@ -200,6 +201,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_TOKEN => 'Token',
 		CoreGlobal::FIELD_VALIDATORS => 'Validators',
 		CoreGlobal::FIELD_RENDERER => 'Render Engine',
+		CoreGlobal::FIELD_FILE_RENDER => 'File Render',
 		CoreGlobal::FIELD_EVENT_LOG => 'Event Log',
 		CoreGlobal::FIELD_IP => 'IP Address',
 		CoreGlobal::FIELD_AGENT_BROWSER => 'Browser Agent',
@@ -207,8 +209,10 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_DATA => 'Data',
 		CoreGlobal::FIELD_DATA_WIDGET => 'Widget Data',
 		CoreGlobal::FIELD_COMPRESS => 'Store Compressed',
+		CoreGlobal::FIELD_GRID_CACHE => 'Grid Cache',
 
 		// Role Fields
+		CoreGlobal::FIELD_ADMIN_URL => 'Admin Url',
 		CoreGlobal::FIELD_HOME_URL => 'Home Url',
 
 		// Address Fields
@@ -218,6 +222,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_CITY => 'City',
 		CoreGlobal::FIELD_ZIP => 'Postal Code',
 		CoreGlobal::FIELD_ZIP_SUB => 'Postal Code Ext',
+		CoreGlobal::FIELD_MOBILE => 'Mobile',
 		CoreGlobal::FIELD_PHONE => 'Phone',
 		CoreGlobal::FIELD_FAX => 'Fax',
 		CoreGlobal::FIELD_LONGITUDE => 'Longitude',
@@ -225,6 +230,9 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_ZOOM => 'Zoom Level',
 		CoreGlobal::FIELD_ADDRESS => 'Address',
 		CoreGlobal::FIELD_ADDRESS_TYPE => 'Address Type',
+		CoreGlobal::FIELD_ZONE => 'Zone',
+		CoreGlobal::FIELD_REGIONS => 'Regions',
+		CoreGlobal::FIELD_ZIP_CODES => 'Zip Codes',
 
 		// User Fields
 		CoreGlobal::FIELD_EMAIL => 'Email',
@@ -233,6 +241,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_PASSWORD_REPEAT => 'Confirm Password',
 		CoreGlobal::FIELD_PASSWORD_OLD => 'Old Password',
 		CoreGlobal::FIELD_FIRSTNAME => 'First Name',
+		CoreGlobal::FIELD_MIDDLENAME => 'Middle Name',
 		CoreGlobal::FIELD_LASTNAME => 'Last Name',
 		CoreGlobal::FIELD_DOB => 'Date of Birth',
 		CoreGlobal::FIELD_TERMS => 'Terms',
@@ -258,6 +267,7 @@ class MessageSource extends \yii\base\Component {
 
 		// Views
 		CoreGlobal::FIELD_LAYOUT => 'Layout',
+		CoreGlobal::FIELD_LAYOUT_GROUP => 'Layout Group',
 		CoreGlobal::FIELD_STYLE => 'Style',
 		CoreGlobal::FIELD_BASE_PATH => 'Base Path',
 		CoreGlobal::FIELD_VIEW_PATH => 'View Path',

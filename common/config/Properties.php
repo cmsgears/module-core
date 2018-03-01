@@ -4,7 +4,7 @@ namespace cmsgears\core\common\config;
 // Yii Imports
 use Yii;
 
-class CmgProperties {
+class Properties {
 
 	// Variables ---------------------------------------------------
 

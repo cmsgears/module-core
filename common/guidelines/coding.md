@@ -2,18 +2,18 @@ Below mentioned coding convention can be used to follow CMG. Though it's not man
 or necessary to follow it, but we highly recommend it for CMG modules, plugins, widgets 
 and themes development.
 
-Generic:
+Generic
 ========================================
 * Follow camel case naming convention to name a class and it's methods and variables.
 
-Fillers:
+Fillers
 ========================================
 * Add one filler line between the imports from different modules.
 * Add one filler line before starting a new block and before first statement of each 
 block. The block could be class, method, if, if else, while, do while.
 * We can exclude filler line before first statement of closure(anonymous method).
 
-Class:
+Class
 ========================================
 * Namespace must be the first line.
 * All the use statements must be used before starting the class.
@@ -23,15 +23,13 @@ class name must be same.
 * Though it's not mandatory, but it will be nice to include Yii imports followed by 
 CMG specific imports before project imports.
 
-Methods:
+Methods
 ========================================
 * We can follow the class hierarchy while overriding methods i.e. parent class methods 
 must come before class specific methods.
 
-Controllers:
+Controllers
 ========================================
-* We have declared modelService as public due to it's anonymous nature depending on the 
-controller and inter-operability with action classes.
-* The metaService also need public access modifier similar to modelService.
-* Rest of the services can be declared as protected and accessed outside controller 
-using application factory.
+* We have declared the variables model and modelService as public due to anonymous nature 
+depending on the controller and inter-operability with action classes.
+* The metaService variable also need public access modifier similar to model and modelService.

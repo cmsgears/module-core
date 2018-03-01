@@ -1,8 +1,18 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\base;
 
 /**
- * Tables provided by Core Module.
+ * It provide table name constants of db tables available in Core Module.
+ *
+ * @since 1.0.0
  */
 class CoreTables {
 
@@ -14,7 +24,7 @@ class CoreTables {
 	const TABLE_TEMPLATE			= 'cmg_core_template';
 	const TABLE_OBJECT_DATA			= 'cmg_core_object';
 
-	// Address
+	// Location
 	const TABLE_COUNTRY				= 'cmg_core_country';
 	const TABLE_PROVINCE			= 'cmg_core_province';
 	const TABLE_CITY				= 'cmg_core_city';
@@ -74,4 +84,9 @@ class CoreTables {
 	const TABLE_MODEL_OPTION		= 'cmg_core_model_option';
 	const TABLE_MODEL_FORM			= 'cmg_core_model_form';
 
+	// TODO: Update to add cmg prefix after removing it from all the constants.
+	public static function getTableName( $name ) {
+
+		return $name;
+	}
 }

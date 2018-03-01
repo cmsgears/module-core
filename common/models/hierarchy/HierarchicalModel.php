@@ -1,18 +1,18 @@
 <?php
 namespace cmsgears\core\common\models\hierarchy;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\models\base\ActiveRecord;
 
 /**
- * HierarchicalModel - It can be used by models which need simple parent child relationship. It does not support Nested Set(left, right value), but support hierarchy via parentId.
+ * HierarchicalModel can be used by models which need simple parent child relationship. It
+ * does not support Nested Set(left, right value), but support hierarchy via parentId.
  *
  * @property integer $parentId
+ *
+ * @since 1.0.0
  */
-abstract class HierarchicalModel extends \cmsgears\core\common\models\base\Entity {
+abstract class HierarchicalModel extends ActiveRecord {
 
 	// Variables ---------------------------------------------------
 
@@ -54,13 +54,28 @@ abstract class HierarchicalModel extends \cmsgears\core\common\models\base\Entit
 
 	// HierarchicalModel ---------------------
 
+	/**
+	 * Return the corresponding parent model.
+	 *
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
 	abstract public function getParent();
 
+	/**
+	 * Check whether the model has parent.
+	 *
+	 * @return boolean
+	 */
 	public function hasParent() {
 
 		return isset( $this->parentId ) && $this->parentId > 0;
 	}
 
+	/**
+	 * Return the name of associated parent.
+	 *
+	 * @return string|null
+	 */
 	public function getParentName() {
 
 		$parent	= $this->parent;
@@ -68,7 +83,12 @@ abstract class HierarchicalModel extends \cmsgears\core\common\models\base\Entit
 		return isset( $parent ) ? $parent->name : null;
 	}
 
-	abstract public function getChildren();
+	/**
+	 * Return either immediate or all children.
+	 *
+	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
+	 */
+	abstract public function getChildren( $immediate = true );
 
 	// Static Methods ----------------------------------------------
 

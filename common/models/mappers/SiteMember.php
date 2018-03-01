@@ -1,8 +1,16 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\mappers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
 
@@ -15,7 +23,7 @@ use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Role;
 
 /**
- * SiteMember Entity - A user can have only one role specific to a site, though a role can have multiple permissions.
+ * A user can have only one role specific to a site, though a role can have multiple permissions.
  *
  * @property long $id
  * @property long $siteId
@@ -23,6 +31,8 @@ use cmsgears\core\common\models\entities\Role;
  * @property long $roleId
  * @property datetime $createdAt
  * @property datetime $modifiedAt
+ *
+ * @since 1.0.0
  */
 class SiteMember extends \cmsgears\core\common\models\base\Entity {
 
@@ -78,7 +88,8 @@ class SiteMember extends \cmsgears\core\common\models\base\Entity {
 	 */
 	public function rules() {
 
-		return [
+		// Model Rules
+		$rules = [
 			// Required, Safe
 			[ [ 'siteId', 'userId', 'roleId' ], 'required' ],
 			// Unique
@@ -87,6 +98,8 @@ class SiteMember extends \cmsgears\core\common\models\base\Entity {
 			[ [ 'siteId', 'userId', 'roleId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
+
+		return $rules;
 	}
 
 	/**
@@ -110,6 +123,8 @@ class SiteMember extends \cmsgears\core\common\models\base\Entity {
 	// SiteMember ----------------------------
 
 	/**
+	 * Return corresponding site to which site member belongs.
+	 *
 	 * @return Site
 	 */
 	public function getSite() {
@@ -118,6 +133,8 @@ class SiteMember extends \cmsgears\core\common\models\base\Entity {
 	}
 
 	/**
+	 * Return corresponding user to which site member belongs.
+	 *
 	 * @return User
 	 */
 	public function getUser() {
@@ -126,6 +143,8 @@ class SiteMember extends \cmsgears\core\common\models\base\Entity {
 	}
 
 	/**
+	 * Return role assigned at site level to the site member.
+	 *
 	 * @return Role
 	 */
 	public function getRole() {
@@ -153,6 +172,9 @@ class SiteMember extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'user', 'role' ];
@@ -161,6 +183,12 @@ class SiteMember extends \cmsgears\core\common\models\base\Entity {
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the site member with site.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with site.
+	 */
 	public static function queryWithSite( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'site' ];
@@ -168,6 +196,12 @@ class SiteMember extends \cmsgears\core\common\models\base\Entity {
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the site member with user.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with user.
+	 */
 	public static function queryWithUser( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'user', 'role' ];
@@ -178,7 +212,11 @@ class SiteMember extends \cmsgears\core\common\models\base\Entity {
 	// Read - Find ------------
 
 	/**
-	 * @return Site - by id
+	 * Find and return the site member using given site id and user id.
+	 *
+	 * @param \cmsgears\core\common\models\entities\Site $siteId
+	 * @param \cmsgears\core\common\models\entities\User $userId
+	 * @return SiteMember
 	 */
 	public static function findBySiteIdUserId( $siteId, $userId ) {
 
@@ -192,26 +230,35 @@ class SiteMember extends \cmsgears\core\common\models\base\Entity {
 	// Delete -----------------
 
 	/**
-	 * Delete the mappings by given site id.
+	 * Delete all the site members associated with given site id.
+	 *
+	 * @param integer $siteId
+	 * @return int the number of rows deleted.
 	 */
 	public static function deleteBySiteId( $siteId ) {
 
-		self::deleteAll( 'siteId=:id', [ ':id' => $siteId ] );
+		return self::deleteAll( 'siteId=:id', [ ':id' => $siteId ] );
 	}
 
 	/**
-	 * Delete the mappings by given user id.
+	 * Delete all the site members associated with given user id.
+	 *
+	 * @param integer $userId
+	 * @return int the number of rows deleted.
 	 */
-	public static function deleteByUserId( $memberId ) {
+	public static function deleteByUserId( $userId ) {
 
-		self::deleteAll( 'userId=:id', [ ':id' => $memberId ] );
+		return self::deleteAll( 'userId=:id', [ ':id' => $userId ] );
 	}
 
 	/**
-	 * Delete the mappings by given role id.
+	 * Delete all the site members associated with given role id.
+	 *
+	 * @param integer $roleId
+	 * @return int the number of rows deleted.
 	 */
 	public static function deleteByRoleId( $roleId ) {
 
-		self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
+		return self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
 	}
 }

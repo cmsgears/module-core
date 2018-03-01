@@ -7,7 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class CommentProperties extends \cmsgears\core\common\config\CmgProperties {
+class CommentProperties extends Properties {
 
 	// Variables ---------------------------------------------------
 

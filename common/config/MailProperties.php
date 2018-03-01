@@ -7,7 +7,7 @@ use \Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class MailProperties extends CmgProperties {
+class MailProperties extends Properties {
 
 	// Variables ---------------------------------------------------
 

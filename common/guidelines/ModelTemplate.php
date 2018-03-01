@@ -1,11 +1,12 @@
 <?php
 /**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
  * @link https://www.cmsgears.org/
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- * @license https://www.cmsgears.org/license/
- * @package module
- * @subpackage core
  */
+
 namespace cmsgears\core\common\guidelines;
 
 // Yii Imports
@@ -17,9 +18,9 @@ use cmsgears\core\common\config\CoreGlobal;
 // Project Imports
 
 /**
- * EntityTemplate can be used as template for model classes associated with database table.
+ * ModelTemplate can be used as template for model classes associated with database table.
  *
- * Entities extending \yii\db\ActiveRecord. can be further divided into below mentioned sections:
+ * Models extending [[\cmsgears\core\common\models\base\ActiveRecord]] can be further divided into below mentioned sections:
  * <ol>
  *	<li>Yii imports</li>
  *	<li>CMG imports</li>
@@ -82,10 +83,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *	<li>Class closure</li>
  * </ol>
  *
- * EntityTemplate Entity
- *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
- * @since 1.0.0
+ * ModelTemplate defines template sections of entities, resources and mapper.
  *
  * @property int - short $<short>
  * @property int $<integer>
@@ -95,8 +93,10 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $<string>
  * @property bool $<boolean>
  * @property array $<array>
+ *
+ * @since 1.0.0
  */
-class EntityTemplate extends \cmsgears\core\common\models\base\Entity {
+class ModelTemplate extends \cmsgears\core\common\models\base\ActiveRecord {
 
 	// Variables ---------------------------------------------------
 

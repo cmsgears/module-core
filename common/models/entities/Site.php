@@ -1,36 +1,66 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\base\IAuthor;
+use cmsgears\core\common\models\interfaces\base\IName;
+use cmsgears\core\common\models\interfaces\base\ISlug;
+
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\Entity;
 use cmsgears\core\common\models\resources\SiteMeta;
 
-use cmsgears\core\common\models\traits\NameTrait;
-use cmsgears\core\common\models\traits\SlugTrait;
+use cmsgears\core\common\models\traits\base\AuthorTrait;
+use cmsgears\core\common\models\traits\base\NameTrait;
+use cmsgears\core\common\models\traits\base\SlugTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
+
+use cmsgears\core\common\behaviors\AuthorBehavior;
 
 /**
  * Site Entity
  *
- * @property long $id
- * @property long $avatarId
- * @property long $bannerId
- * @property long $themeId
+ * @property integer $id
+ * @property integer $avatarId
+ * @property integer $bannerId
+ * @property integer $themeId
+ * @property integer $createdBy
+ * @property integer $modifiedBy
  * @property string $name
  * @property string $slug
- * @property short $order
+ * @property string $icon
+ * @property string $title
+ * @property string $description
+ * @property integer $order
  * @property boolean $active
+ * @property datetime $createdAt
+ * @property datetime $modifiedAt
  * @property string $data
+ * @property string $gridCache
+ * @property boolean $gridCacheValid
+ * @property datetime $gridCachedAt
+ *
+ * @since 1.0.0
  */
-class Site extends \cmsgears\core\common\models\base\Entity {
+class Site extends Entity implements IAuthor, IName, ISlug {
 
 	// Variables ---------------------------------------------------
 
@@ -46,15 +76,17 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 
 	// Public -----------------
 
-	public $modelType	= CoreGlobal::TYPE_SITE;
-
 	// Protected --------------
 
 	// Private ----------------
 
+	private $modelType	= CoreGlobal::TYPE_SITE;
+
 	// Traits ------------------------------------------------------
 
+	use AuthorTrait;
 	use DataTrait;
+	use GridCacheTrait;
 	use NameTrait;
 	use SlugTrait;
 	use VisualTrait;
@@ -75,12 +107,19 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 	public function behaviors() {
 
 		return [
+			AuthorBehavior::class,
 			'sluggableBehavior' => [
-				'class' => SluggableBehavior::className(),
+				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
 				'slugAttribute' => 'slug',
 				'immutable' => true,
 				'ensureUnique' => true
+			],
+			'timestampBehavior' => [
+				'class' => TimestampBehavior::class,
+				'createdAtAttribute' => 'createdAt',
+				'updatedAtAttribute' => 'modifiedAt',
+				'value' => new Expression('NOW()')
 			]
 		];
 	}
@@ -92,26 +131,30 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'name' ], 'required' ],
-			[ [ 'id', 'data' ], 'safe' ],
+			[ 'name', 'required' ],
+			[ [ 'id', 'data', 'gridCache' ], 'safe' ],
 			// Unique
 			[ 'name', 'unique' ],
 			// Text Limit
-			[ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'title', 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ 'active', 'boolean' ],
-			[ [ 'avatarId', 'bannerId', 'themeId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+			[ [ 'active', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'avatarId', 'bannerId', 'themeId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ 'gridCachedAt', 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
-		// trim if required
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'title', 'description' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -119,7 +162,7 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 		return $rules;
 	}
 
-	/**attributes
+	/**
 	 * @inheritdoc
 	 */
 	public function attributeLabels() {
@@ -129,6 +172,9 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
@@ -143,30 +189,43 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 
 	// Site ----------------------------------
 
+	/**
+	 * Return active theme configured for the site.
+	 *
+	 * @return Theme
+	 */
 	public function getTheme() {
 
-		return $this->hasOne( Theme::className(), [ 'id' => 'themeId' ] );
+		return $this->hasOne( Theme::class, [ 'id' => 'themeId' ] );
 	}
 
 	/**
-	 * @return array - SiteMeta
+	 * Return meta data of the site.
+	 *
+	 * @return \cmsgears\core\common\models\resources\SiteMeta[]
 	 */
 	public function getMetas() {
 
-		return $this->hasMany( SiteMeta::className(), [ 'modelId' => 'id' ] );
+		return $this->hasMany( SiteMeta::class, [ 'modelId' => 'id' ] );
 	}
 
 	/**
-	 * @return array - list of site Users
+	 * Return members of the site.
+	 *
+	 * @return User[]
 	 */
 	public function getMembers() {
 
-		return $this->hasMany( User::className(), [ 'id' => 'userId' ] )
-					->viaTable( CoreTables::TABLE_SITE_MEMBER, [ 'siteId' => 'id' ] );
+		$siteMemberTable = CoreTables::getTableName( CoreTables::TABLE_SITE_MEMBER );
+
+		return $this->hasMany( User::class, [ 'id' => 'userId' ] )
+			->viaTable( $siteMemberTable, [ 'siteId' => 'id' ] );
 	}
 
 	/**
-	 * @return string representation of flag
+	 * Returns string representation of active flag.
+	 *
+	 * @return string
 	 */
 	public function getActiveStr() {
 
@@ -184,7 +243,7 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_SITE;
+		return CoreTables::getTableName( CoreTables::TABLE_SITE );
 	}
 
 	// CMG parent classes --------------------
@@ -193,16 +252,25 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$modelTable				= CoreTables::TABLE_SITE;
+		//$modelTable				= CoreTables::getTableName( CoreTables::TABLE_SITE );
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'theme' ];
 		$config[ 'relations' ]	= $relations;
-		$config[ 'groups' ]		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : [ "$modelTable.id" ];
+		//$config[ 'groups' ]		= isset( $config[ 'groups' ] ) ? $config[ 'groups' ] : [ "$modelTable.id" ];
 
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the site with theme.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with theme.
+	 */
 	public static function queryWithTheme( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'avatar', 'banner', 'theme' ];
@@ -210,6 +278,12 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the site with meta.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with meta.
+	 */
 	public static function queryWithMetas( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'avatar', 'banner', 'metas' ];
@@ -217,6 +291,12 @@ class Site extends \cmsgears\core\common\models\base\Entity {
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the site with members.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with members.
+	 */
 	public static function queryWithMembers( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'avatar', 'banner', 'members' ];

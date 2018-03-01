@@ -72,6 +72,7 @@ class CoreGlobal {
 	const TYPE_TAG				= 'tag';
 
 	// Additional
+	const TYPE_ADMIN			= 'admin';
 	const TYPE_REVIEW			= 'review';
 	const TYPE_TESTIMONIAL		= 'testimonial';
 	const TYPE_OPTION_GROUP		= 'option-group';
@@ -99,21 +100,11 @@ class CoreGlobal {
 
 	const TEXT_SMALL		=  64;
 	const TEXT_MEDIUM		= 160; // Meta Description Limit
-	const TEXT_LARGE		= 255;
+	const TEXT_LARGE		= 256;
 	const TEXT_XLARGE		= 512;
 	const TEXT_XXLARGE		= 1024;
 	const TEXT_XXXLARGE		= 2048;
 	const TEXT_XTRALARGE	= 4096;
-
-	// Text limit for display ------------------------------------------
-
-	const DISPLAY_TEXT_SMALL		= 160; // Meta Description Limit ... Truncate description
-	const DISPLAY_TEXT_MEDIUM		= 255;
-	const DISPLAY_TEXT_LARGE		= 350;
-	const DISPLAY_TEXT_XLARGE		= 512;
-	const DISPLAY_TEXT_XXLARGE		= 1024;
-	const DISPLAY_TEXT_XXXLARGE		= 2048;
-	const DISPLAY_TEXT_XTRALARGE	= 4096;
 
 	// Hierarchy -- Nested Set -----------------------------------------
 
@@ -309,6 +300,7 @@ class CoreGlobal {
 	const FIELD_TIME_END			= 'endTimeField';
 	const FIELD_CREATED_AT			= 'createdAtField';
 	const FIELD_MODIFIED_AT			= 'modifiedAtField';
+	const FIELD_TIME_ZONE			= 'timeZoneField';
 
 	const FIELD_SERVICE				= 'serviceField';
 
@@ -355,6 +347,7 @@ class CoreGlobal {
 	const FIELD_TOKEN				= 'tokenField';
 	const FIELD_VALIDATORS			= 'validatorsField';
 	const FIELD_RENDERER			= 'rendererField';
+	const FIELD_FILE_RENDER			= 'fileRenderField';
 	const FIELD_EVENT_LOG			= 'eventLogField';
 	const FIELD_IP					= 'ipField';
 	const FIELD_AGENT_BROWSER		= 'browserAgentField';
@@ -362,8 +355,10 @@ class CoreGlobal {
 	const FIELD_DATA				= 'dataField';
 	const FIELD_DATA_WIDGET			= 'widgetDataField';
 	const FIELD_COMPRESS			= 'compressField';
+	const FIELD_GRID_CACHE			= 'gridCacheField';
 
 	// Role Fields
+	const FIELD_ADMIN_URL			= 'adminUrlField';
 	const FIELD_HOME_URL			= 'homeUrlField';
 
 	// Address Fields
@@ -373,6 +368,7 @@ class CoreGlobal {
 	const FIELD_CITY				= 'cityField';
 	const FIELD_ZIP					= 'zipField';
 	const FIELD_ZIP_SUB				= 'subZipField';
+	const FIELD_MOBILE				= 'mobileField';
 	const FIELD_PHONE				= 'phoneField';
 	const FIELD_FAX					= 'faxField';
 	const FIELD_LONGITUDE			= 'longitudeField';
@@ -380,6 +376,9 @@ class CoreGlobal {
 	const FIELD_ZOOM				= 'zoomField';
 	const FIELD_ADDRESS				= 'addressField';
 	const FIELD_ADDRESS_TYPE		= 'addressTypeField';
+	const FIELD_ZONE				= 'zoneField';
+	const FIELD_REGIONS				= 'regionsField';
+	const FIELD_ZIP_CODES			= 'zipCodesField';
 
 	// User Fields
 	const FIELD_EMAIL				= 'emailField';
@@ -388,6 +387,7 @@ class CoreGlobal {
 	const FIELD_PASSWORD_REPEAT		= 'passwordRepeatField';
 	const FIELD_PASSWORD_OLD		= 'passwordOldField';
 	const FIELD_FIRSTNAME			= 'firstNameField';
+	const FIELD_MIDDLENAME			= 'middleNameField';
 	const FIELD_LASTNAME			= 'lastNameField';
 	const FIELD_DOB					= 'dobField';
 	const FIELD_TERMS				= 'termsField';
@@ -413,6 +413,7 @@ class CoreGlobal {
 
 	// Views
 	const FIELD_LAYOUT			= 'layoutField';
+	const FIELD_LAYOUT_GROUP	= 'layoutGroupField';
 	const FIELD_STYLE			= 'styleField';
 	const FIELD_BASE_PATH		= 'basePathField';
 	const FIELD_VIEW_PATH		= 'viewPathField';

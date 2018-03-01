@@ -15,12 +15,12 @@ trait HierarchyTrait {
 	public function getParent() {
 
 		return $this->hasOne( get_class( $this ), [ 'id' => 'parentId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_HIERARCHY, [ 'childId' => 'id' ], function( $query ) {
+			->viaTable( CoreTables::TABLE_MODEL_HIERARCHY, [ 'childId' => 'id' ], function( $query ) {
 
-						$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
+				$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
 
-						$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->modelType ] );
-					});
+				$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->modelType ] );
+			});
 	}
 
 	/**
@@ -29,12 +29,12 @@ trait HierarchyTrait {
 	public function getParents() {
 
 		return $this->hasMany( get_class( $this ), [ 'id' => 'parentId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_HIERARCHY, [ 'childId' => 'id' ], function( $query ) {
+			->viaTable( CoreTables::TABLE_MODEL_HIERARCHY, [ 'childId' => 'id' ], function( $query ) {
 
-						$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
+				$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
 
-						$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->modelType ] );
-					});
+				$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->modelType ] );
+			});
 	}
 
 	/**
@@ -43,11 +43,29 @@ trait HierarchyTrait {
 	public function getChildren() {
 
 		return $this->hasMany( get_class( $this ), [ 'id' => 'childId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_HIERARCHY, [ 'parentId' => 'id' ], function( $query ) {
+			->viaTable( CoreTables::TABLE_MODEL_HIERARCHY, [ 'parentId' => 'id' ], function( $query ) {
 
-						$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
+				$modelHierarchy = CoreTables::TABLE_MODEL_HIERARCHY;
 
-						$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->modelType ] );
-					});
+				$query->onCondition( "$modelHierarchy.parentType=:ptype", [ ':ptype' => $this->modelType ] );
+			});
+	}
+
+	/**
+	 * Return the list of permission id of child permissions.
+	 *
+	 * @return array
+	 */
+	public function getChildrenIdList() {
+
+		$children		= $this->getChildren();
+		$cildrenIdList	= [];
+
+		foreach( $children as $child ) {
+
+			array_push( $cildrenIdList, $child->id );
+		}
+
+		return $cildrenIdList;
 	}
 }

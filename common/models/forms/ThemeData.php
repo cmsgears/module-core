@@ -1,14 +1,31 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
-use \Yii;
+use Yii;
+use yii\base\Model;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class ThemeData extends \yii\base\Model {
+/**
+ * It collect the additional CSS added on top of theme CSS to further customize the
+ * look and feel of the application.
+ *
+ * @property string $css
+ *
+ * @since 1.0.0
+ */
+class ThemeData extends Model {
 
 	// Variables ---------------------------------------------------
 
@@ -44,15 +61,20 @@ class ThemeData extends \yii\base\Model {
 
 	// yii\base\Model ---------
 
+	/**
+	 * @inheritdoc
+	 */
 	public function rules() {
 
+		// Model Rules
 		$rules = [
-			[ [ 'css' ], 'safe' ]
+			[ 'css', 'safe' ]
 		];
 
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'css' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ 'css', 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -60,6 +82,9 @@ class ThemeData extends \yii\base\Model {
 		return $rules;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function attributeLabels() {
 
 		return [

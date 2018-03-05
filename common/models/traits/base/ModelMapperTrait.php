@@ -33,7 +33,7 @@ use Yii;
  *
  * @since 1.0.0
  */
-trait MapperTrait {
+trait ModelMapperTrait {
 
 	// Variables ---------------------------------------------------
 
@@ -57,7 +57,7 @@ trait MapperTrait {
 
 	// Validators ----------------------------
 
-	// MapperTrait ---------------------------
+	// ModelMapperTrait ----------------------
 
 	/**
 	 * @inheritdoc
@@ -81,7 +81,7 @@ trait MapperTrait {
 
 	// CMG classes ---------------------------
 
-	// MapperTrait ---------------------------
+	// ModelMapperTrait ----------------------
 
 	// Read - Query -----------
 

@@ -1,5 +1,13 @@
 <?php
-namespace cmsgears\core\common\models\resources;
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
+namespace cmsgears\core\common\models\resource;
 
 // Yii Imports
 use Yii;
@@ -9,22 +17,39 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\base\IMultiSite;
+
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\Resource;
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Role;
 
+use cmsgears\core\common\models\traits\base\MultiSiteTrait;
+use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 /**
- * SiteAccess Entity - Logs user stats specific to controller and action execution.
+ * Logs user stats specific to login sessions and actions executed by user.
  *
- * @property long $id
- * @property long $siteId
- * @property long $userId
- * @property long $roleId
+ * @property integer $id
+ * @property integer $siteId
+ * @property integer $userId
+ * @property integer $roleId
+ * @property string $ip
+ * @property integer $ipNum
+ * @property string $controller
+ * @property string $action
+ * @property string $url
+ * @property boolean $failed
+ * @property integer $failCount
  * @property datetime $createdAt
  * @property datetime $modifiedAt
+ * @property string $gridCache
+ * @property boolean $gridCacheValid
+ * @property datetime $gridCachedAt
+ *
+ * @since 1.0.0
  */
-class SiteAccess extends \cmsgears\core\common\models\base\Mapper {
+class SiteAccess extends Resource implements IMultiSite {
 
 	// Variables ---------------------------------------------------
 
@@ -45,6 +70,9 @@ class SiteAccess extends \cmsgears\core\common\models\base\Mapper {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use GridCacheTrait;
+	use MultiSiteTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -81,14 +109,16 @@ class SiteAccess extends \cmsgears\core\common\models\base\Mapper {
 		return [
 			// Required, Safe
 			[ [ 'siteId', 'userId', 'roleId' ], 'required' ],
+			[ 'gridCache', 'safe' ],
 			// Text Limit
 			[ 'ip', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'action', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'url', 'controller' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'controller', 'action' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'url', 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Other
 			[ [ 'siteId', 'userId', 'roleId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ 'ipNum', 'number', 'integerOnly' => true ],
-			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+			[ [ 'ipNum', 'failCount' ], 'number', 'integerOnly' => true ],
+			[ [ 'failed', 'gridCacheValid' ] => 'boolean' ],
+			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 	}
 
@@ -103,7 +133,10 @@ class SiteAccess extends \cmsgears\core\common\models\base\Mapper {
 			'roleId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ROLE ),
 			'ip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP ),
 			'ipNum' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP ),
-			'url' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_URL )
+			'url' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_URL ),
+			'failed' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FAILED ),
+			'failCount' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FAIL_COUNT ),
+			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
 		];
 	}
 
@@ -116,6 +149,8 @@ class SiteAccess extends \cmsgears\core\common\models\base\Mapper {
 	// SiteAccess ----------------------------
 
 	/**
+	 * Return the site associated with the access log.
+	 *
 	 * @return Site
 	 */
 	public function getSite() {
@@ -124,6 +159,8 @@ class SiteAccess extends \cmsgears\core\common\models\base\Mapper {
 	}
 
 	/**
+	 * Return the user associated with the access log.
+	 *
 	 * @return User
 	 */
 	public function getUser() {
@@ -132,6 +169,8 @@ class SiteAccess extends \cmsgears\core\common\models\base\Mapper {
 	}
 
 	/**
+	 * Return the role associated with the access log.
+	 *
 	 * @return Role
 	 */
 	public function getRole() {
@@ -150,7 +189,7 @@ class SiteAccess extends \cmsgears\core\common\models\base\Mapper {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_SITE_ACCESS;
+		return CoreTables::getTableName( CoreTables::TABLE_SITE_ACCESS );
 	}
 
 	// CMG parent classes --------------------
@@ -159,6 +198,9 @@ class SiteAccess extends \cmsgears\core\common\models\base\Mapper {
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'user', 'role' ];
@@ -167,6 +209,12 @@ class SiteAccess extends \cmsgears\core\common\models\base\Mapper {
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the access log with site assigned to it.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with site.
+	 */
 	public static function queryWithSite( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'site' ];
@@ -174,6 +222,12 @@ class SiteAccess extends \cmsgears\core\common\models\base\Mapper {
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the access log with user assigned to it.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with user.
+	 */
 	public static function queryWithUser( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'user', 'role' ];
@@ -184,7 +238,11 @@ class SiteAccess extends \cmsgears\core\common\models\base\Mapper {
 	// Read - Find ------------
 
 	/**
-	 * @return Site - by id
+	 * Return all the access logs associated with given user id and site id.
+	 *
+	 * @param integer $siteId
+	 * @param integer $userId
+	 * @return SiteAccess
 	 */
 	public static function findBySiteIdUserId( $siteId, $userId ) {
 
@@ -198,26 +256,35 @@ class SiteAccess extends \cmsgears\core\common\models\base\Mapper {
 	// Delete -----------------
 
 	/**
-	 * Delete the mappings by given site id.
+	 * Delete the access log for given site id.
+	 *
+	 * @param integer $siteId
+	 * @return int the number of rows deleted.
 	 */
 	public static function deleteBySiteId( $siteId ) {
 
-		self::deleteAll( 'siteId=:id', [ ':id' => $siteId ] );
+		return self::deleteAll( 'siteId=:id', [ ':id' => $siteId ] );
 	}
 
 	/**
-	 * Delete the mappings by given user id.
+	 * Delete the access log for given user id.
+	 *
+	 * @param integer $userId
+	 * @return int the number of rows deleted.
 	 */
 	public static function deleteByUserId( $userId ) {
 
-		self::deleteAll( 'userId=:id', [ ':id' => $userId ] );
+		return self::deleteAll( 'userId=:id', [ ':id' => $userId ] );
 	}
 
 	/**
-	 * Delete the mappings by given role id.
+	 * Delete the access log for given role id.
+	 *
+	 * @param integer $roleId
+	 * @return int the number of rows deleted.
 	 */
 	public static function deleteByRoleId( $roleId ) {
 
-		self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
+		return self::deleteAll( 'roleId=:id', [ ':id' => $roleId ] );
 	}
 }

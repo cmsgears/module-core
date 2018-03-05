@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\traits\mappers;
 
 // CMG Imports
@@ -12,52 +20,144 @@ use cmsgears\core\common\models\mappers\ModelFile;
  */
 trait FileTrait {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG classes ---------------------------
+
+	// Validators ----------------------------
+
+	// FileTrait -----------------------------
+
 	/**
-	 * @return array - ModelFile associated with parent
+	 * @inheritdoc
 	 */
 	public function getModelFiles() {
 
+		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
+
 		return $this->hasMany( ModelFile::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->modelType'" );
+			->where( "$modelFileTable.parentType='$this->modelType'" );
 	}
 
 	/**
-	 * @return array - ModelFile associated with parent
+	 * @inheritdoc
 	 */
-	public function getModelFilesByType( $type ) {
+	public function getActiveModelFiles() {
+
+		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
 
 		return $this->hasMany( ModelFile::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] )->all();
+			->where( "$modelFileTable.parentType='$this->modelType' AND $modelFileTable.active=1" );
 	}
 
 	/**
-	 * @return array - files associated with parent
+	 * @inheritdoc
+	 */
+	public function getModelFilesByType( $type, $active = true ) {
+
+		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
+
+		return $this->hasOne( ModelFile::className(), [ 'parentId' => 'id' ] )
+			->where( "$modelFileTable.parentType=:ptype AND $modelFileTable.type=:type AND $modelFileTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
+	}
+
+	/**
+	 * @inheritdoc
 	 */
 	public function getFiles() {
 
+		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
+
 		return $this->hasMany( File::className(), [ 'id' => 'modelId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_FILE, [ 'parentId' => 'id' ], function( $query ) {
+			->viaTable( $modelFileTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelFileTable ) {
 
-						$modelFileTable	= CoreTables::TABLE_MODEL_FILE;
-
-						$query->onCondition( "$modelFileTable.parentType=:type", [ ':type' => $this->modelType ] );
-					});
+					$query->onCondition( [ "$modelFileTable.parentType" => $this->modelType ] );
+				}
+			);
 	}
 
-	// Useful only in cases where unique title is allowed
+	/**
+	 * @inheritdoc
+	 */
+	public function getActiveFiles() {
+
+		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
+
+		return $this->hasMany( File::className(), [ 'id' => 'modelId' ] )
+			->viaTable( $modelFileTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelFileTable ) {
+
+					$query->onCondition( [ "$modelFileTable.parentType" => $this->modelType, "$modelFileTable.active" => true ] );
+				}
+			);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getFilesByType( $type, $active = true ) {
+
+		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
+
+		return $this->hasMany( File::className(), [ 'id' => 'modelId' ] )
+			->viaTable( $modelFileTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$type, &$active, &$modelFileTable ) {
+
+					$query->onCondition( [ "$modelFileTable.parentType" => $this->modelType, "$modelFileTable.type" => $type, "$modelFileTable.active" => $active ] );
+				}
+			)->all();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function getFileByTitle( $title ) {
 
-		$fileTable	= CoreTables::TABLE_FILE;
+		$fileTable		= CoreTables::getTableName( CoreTables::TABLE_FILE );
+		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
 
-		$file		= $this->hasOne( File::className(), [ 'id' => 'modelId' ] )
-							->where( "$fileTable.title=:title", [ ':title' => $title ] )
-							->viaTable( CoreTables::TABLE_MODEL_FILE, [ 'parentId' => 'id' ], function( $query ) {
+		return $this->hasOne( File::className(), [ 'id' => 'modelId' ] )
+			->viaTable( $modelFileTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelFileTable ) {
 
-								$modelFileTable	= CoreTables::TABLE_MODEL_FILE;
-
-								$query->onCondition( "$modelFileTable.parentType=:type", [ ':type' => $this->modelType ] );
-							})->one();
-
-		return $file;
+					$query->onCondition( "$modelFileTable.parentType=:type", [ ':type' => $this->modelType ] );
+				}
+			)->where( "$fileTable.title=:title", [ ':title' => $title ] )->one();
 	}
+
+	// Static Methods ----------------------------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG classes ---------------------------
+
+	// FileTrait -----------------------------
+
+	// Read - Query -----------
+
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
+
 }

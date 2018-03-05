@@ -18,6 +18,7 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\Mapper;
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Role;
@@ -25,16 +26,16 @@ use cmsgears\core\common\models\entities\Role;
 /**
  * A user can have only one role specific to a site, though a role can have multiple permissions.
  *
- * @property long $id
- * @property long $siteId
- * @property long $userId
- * @property long $roleId
+ * @property integer $id
+ * @property integer $siteId
+ * @property integer $userId
+ * @property integer $roleId
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  *
  * @since 1.0.0
  */
-class SiteMember extends \cmsgears\core\common\models\base\Entity {
+class SiteMember extends Mapper {
 
 	// Variables ---------------------------------------------------
 

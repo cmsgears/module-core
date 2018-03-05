@@ -10,15 +10,7 @@
 namespace cmsgears\core\common\models\base;
 
 /**
- * Base model of all the mapper mapping parent model to model being mapped.
- *
- * The parent model can be either entity or resource. Similarly the model being mapped
- * can be both entity or resource.
- *
- * @property integer $modelId Id of model being mapped.
- * @property integer $parentId Id of parent model.
- * @property integer $parentType Type of parent model.
- * @property boolean $active Flag to check whether mapping is still active.
+ * Base model of all the mapper mapping two different models.
  *
  * @since 1.0.0
  */
@@ -63,13 +55,6 @@ abstract class Mapper extends ActiveRecord {
 	// Validators ----------------------------
 
 	// Mapper --------------------------------
-
-	/**
-	 * Returns primary model of the mapper.
-	 *
-	 * @return ActiveRecord Primary model.
-	 */
-	abstract public function getModel();
 
 	// Static Methods ----------------------------------------------
 

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
@@ -22,11 +30,11 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
 /**
  * ModelComment Entity
  *
- * @property long $id
- * @property long $baseId
- * @property long $parentId
- * @property long $createdBy
- * @property long $modifiedBy
+ * @property integer $id
+ * @property integer $baseId
+ * @property integer $parentId
+ * @property integer $createdBy
+ * @property integer $modifiedBy
  * @property string $parentType
  * @property string $type
  * @property string $name
@@ -35,15 +43,17 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $websiteUrl
  * @property string $ip
  * @property string $agent
- * @property short $status
- * @property short $fragment
- * @property short $rating
+ * @property integer $status
+ * @property integer $fragment
+ * @property integer $rating
  * @property boolean $featured
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property datetime $approvedAt
  * @property string $content
  * @property string $data
+ *
+ * @since 1.0.0
  */
 class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
@@ -241,7 +251,7 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_MODEL_COMMENT;
+		return CoreTables::getTableName( CoreTables::TABLE_MODEL_COMMENT );
 	}
 
 	// CMG parent classes --------------------

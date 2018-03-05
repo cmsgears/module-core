@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\traits\mappers;
 
 // CMG Imports
@@ -11,69 +19,162 @@ use cmsgears\core\common\models\mappers\ModelGallery;
  */
 trait GalleryTrait {
 
-	// Single Gallery ----------------------------
+	// Variables ---------------------------------------------------
 
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG classes ---------------------------
+
+	// Validators ----------------------------
+
+	// GalleryTrait --------------------------
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getModelGalleries() {
+
+		$modelGalleryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
+
+		return $this->hasMany( ModelGallery::className(), [ 'parentId' => 'id' ] )
+			->where( "$modelGalleryTable.parentType='$this->modelType'" );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getActiveModelGalleries() {
+
+		$modelGalleryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
+
+		return $this->hasMany( ModelGallery::className(), [ 'parentId' => 'id' ] )
+			->where( "$modelGalleryTable.parentType='$this->modelType' AND $modelGalleryTable.active=1" );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getModelGalleriesByType( $type, $active = true ) {
+
+		$modelGalleryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
+
+		return $this->hasOne( ModelGallery::className(), [ 'parentId' => 'id' ] )
+			->where( "$modelGalleryTable.parentType=:ptype AND $modelGalleryTable.type=:type AND $modelGalleryTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getGalleries() {
+
+		$modelGalleryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
+
+		return $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
+			->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelGalleryTable ) {
+
+					$query->onCondition( [ "$modelGalleryTable.parentType" => $this->modelType ] );
+				}
+			);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getActiveGalleries() {
+
+		$modelGalleryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
+
+		return $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
+			->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelGalleryTable ) {
+
+					$query->onCondition( [ "$modelGalleryTable.parentType" => $this->modelType, "$modelGalleryTable.active" => true ] );
+				}
+			);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getGalleriesByType( $type, $active = true ) {
+
+		$modelGalleryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
+
+		return $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
+			->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$type, &$active, &$modelGalleryTable ) {
+
+					$query->onCondition( [ "$modelGalleryTable.parentType" => $this->modelType, "$modelGalleryTable.type" => $type, "$modelGalleryTable.active" => $active ] );
+				}
+			)->all();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getGalleryByTitle( $title ) {
+
+		$galleryTable		= CoreTables::getTableName( CoreTables::TABLE_GALLERY );
+		$modelGalleryTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
+
+		return $this->hasOne( Gallery::className(), [ 'id' => 'modelId' ] )
+			->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelGalleryTable ) {
+
+					$query->onCondition( "$modelGalleryTable.parentType=:type", [ ':type' => $this->modelType ] );
+				}
+			)->where( "$galleryTable.title=:title", [ ':title' => $title ] )->one();
+	}
+
+	// Useful for models having single gallery mapped via $galleryId.
+
+	/**
+	 * @inheritdoc
+	 */
 	public function hasGallery() {
 
 		return $this->galleryId > 0;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getGallery() {
 
 		return $this->hasOne( Gallery::className(), [ 'id' => 'galleryId' ] );
 	}
 
-	// Multiple Galleries ------------------------
+	// Static Methods ----------------------------------------------
 
-	public function getModelGalleries() {
+	// Yii classes ---------------------------
 
-		return $this->hasMany( ModelGallery::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->modelType'" );
-	}
+	// CMG classes ---------------------------
 
-	public function getModelGalleryByType( $type, $first = true ) {
+	// GalleryTrait --------------------------
 
-		$query = $this->hasOne( ModelGallery::className(), [ 'parentId' => 'id' ] )
-						->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] );
+	// Read - Query -----------
 
-		if( $first ) {
+	// Read - Find ------------
 
-			return $query->one();
-		}
+	// Create -----------------
 
-		return $query->all();
-	}
+	// Update -----------------
 
-	public function getGalleries() {
+	// Delete -----------------
 
-		$modelGalleryTable	= CoreTables::TABLE_MODEL_GALLERY;
-
-		return $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
-					->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ], function( $query ) use( &$modelGalleryTable ) {
-						$query->onCondition( [ "$modelGalleryTable.parentType" => $this->modelType ] );
-					});
-	}
-
-	public function getGalleryById( $id ) {
-
-		$galleryTable	= CoreTables::TABLE_GALLERY;
-
-		return $this->getGalleries()->where( [ "$galleryTable.id" => $id ] )->one();
-	}
-
-	public function getGalleryByType( $type, $first = true ) {
-
-		$modelGalleryTable	= CoreTables::TABLE_MODEL_GALLERY;
-		$query				= $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
-									->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ], function( $query ) use( &$modelGalleryTable, &$type ) {
-										$query->onCondition( [ "$modelGalleryTable.parentType" => $this->modelType, "$modelGalleryTable.type" => $type ] );
-									});
-
-		if( $first ) {
-
-			return $query->one();
-		}
-
-		return $query->all();
-	}
 }

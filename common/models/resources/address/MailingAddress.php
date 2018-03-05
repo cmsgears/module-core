@@ -7,28 +7,17 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\models\resources;
+namespace cmsgears\core\common\models\resources\address;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\ModelMeta;
-
-use cmsgears\core\common\models\entities\Site;
+use cmsgears\core\common\models\resources\Address;
 
 /**
- * The meta model used to store site meta data and attributes.
- *
- * @property integer $id
- * @property integer $modelId
- * @property string $name
- * @property string $label
- * @property string $type
- * @property string $valueType
- * @property string $value
+ * The mailing address model.
  *
  * @since 1.0.0
  */
-class SiteMeta extends ModelMeta {
+class MailingAddress extends Address {
 
 	// Variables ---------------------------------------------------
 
@@ -43,6 +32,8 @@ class SiteMeta extends ModelMeta {
 	// Variables -----------------------------
 
 	// Public -----------------
+
+	public $type	= self::TYPE_MAILING;
 
 	// Protected --------------
 
@@ -68,17 +59,7 @@ class SiteMeta extends ModelMeta {
 
 	// Validators ----------------------------
 
-	// SiteMeta ------------------------------
-
-	/**
-	 * Returns the site model using one-to-one(hasOne) relationship.
-	 *
-	 * @return \cmsgears\core\common\models\entities\Site Site to which this meta belongs.
-	 */
-	public function getParent() {
-
-		return $this->hasOne( Site::className(), [ 'id' => 'modelId' ] );
-	}
+	// ShippingAddress -----------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -86,17 +67,9 @@ class SiteMeta extends ModelMeta {
 
 	// yii\db\ActiveRecord ----
 
-	/**
-	 * @inheritdoc
-	 */
-	public static function tableName() {
-
-		return CoreTables::getTableName( CoreTables::TABLE_SITE_META );
-	}
-
 	// CMG parent classes --------------------
 
-	// SiteMeta ------------------------------
+	// ShippingAddress -----------------------
 
 	// Read - Query -----------
 

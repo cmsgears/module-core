@@ -83,6 +83,7 @@ class CoreTables {
 	const TABLE_MODEL_CATEGORY		= 'cmg_core_model_category';
 	const TABLE_MODEL_OPTION		= 'cmg_core_model_option';
 	const TABLE_MODEL_FORM			= 'cmg_core_model_form';
+	const TABLE_MODEL_FOLLOWER		= 'cmg_core_model_follower';
 
 	// TODO: Update to add cmg prefix after removing it from all the constants.
 	public static function getTableName( $name ) {

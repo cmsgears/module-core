@@ -1,7 +1,23 @@
 <?php
-namespace cmsgears\core\common\models\resources;
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
 
-class ShippingAddress extends Address {
+namespace cmsgears\core\common\models\resources\address;
+
+// CMG Imports
+use cmsgears\core\common\models\resources\Address;
+
+/**
+ * The primary address model.
+ *
+ * @since 1.0.0
+ */
+class PrimaryAddress extends Address {
 
 	// Variables ---------------------------------------------------
 
@@ -17,7 +33,7 @@ class ShippingAddress extends Address {
 
 	// Public -----------------
 
-	public $type	= self::TYPE_SHIPPING;
+	public $type	= self::TYPE_PRIMARY;
 
 	// Protected --------------
 
@@ -43,7 +59,7 @@ class ShippingAddress extends Address {
 
 	// Validators ----------------------------
 
-	// ShippingAddress -----------------------
+	// BillingAddress ------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -53,7 +69,7 @@ class ShippingAddress extends Address {
 
 	// CMG parent classes --------------------
 
-	// ShippingAddress -----------------------
+	// BillingAddress ------------------------
 
 	// Read - Query -----------
 

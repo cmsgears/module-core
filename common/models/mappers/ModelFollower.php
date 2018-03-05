@@ -9,29 +9,34 @@
 
 namespace cmsgears\core\common\models\mappers;
 
+// Yii Imports
+use Yii;
+use yii\db\Expression;
+use yii\behaviors\TimestampBehavior;
+
 // CMG Imports
-use cmsgears\core\common\models\interfaces\base\IModelMapper;
+use cmsgears\core\common\models\interfaces\base\IFollower;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\ModelMapper;
-use cmsgears\core\common\models\resources\Tag;
+use cmsgears\core\common\models\entities\User;
 
-use cmsgears\core\common\models\traits\ModelMapperTrait;
+use cmsgears\core\common\models\traits\base\ModelMapperTrait;
 
 /**
- * The mapper to map Tag Model to specific parent model for given parentId and parentType.
+ * The model follower records user following a model based on interest.
  *
- * @property integer $id
- * @property integer $modelId
- * @property integer $parentId
- * @property string $parentType
+ * @property int $id
+ * @property int $modelId
+ * @property int $parentId
+ * @property int $parentType
  * @property string $type
- * @property integer $order
+ * @property int $order
  * @property boolean $active
- *
- * @since 1.0.0
+ * @property int $createdAt
+ * @property int $modifiedAt
  */
-class ModelTag extends ModelMapper implements IModelMapper {
+class ModelFollower extends ModelMapper implements IFollower {
 
 	// Variables ---------------------------------------------------
 
@@ -65,7 +70,34 @@ class ModelTag extends ModelMapper implements IModelMapper {
 
 	// yii\base\Component -----
 
+    /**
+     * @inheritdoc
+     */
+     public function behaviors() {
+
+        return [
+            'timestampBehavior' => [
+                'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+ 				'updatedAtAttribute' => 'modifiedAt',
+ 				'value' => new Expression('NOW()')
+            ]
+        ];
+    }
+
 	// yii\base\Model ---------
+
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
+
+		$rules = parent::rules();
+
+		$rules[] = [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ];
+
+		return $rules;
+	}
 
 	// CMG interfaces ------------------------
 
@@ -73,16 +105,16 @@ class ModelTag extends ModelMapper implements IModelMapper {
 
 	// Validators ----------------------------
 
-	// ModelTag ------------------------------
+	// ModelFollower -------------------------
 
 	/**
-	 * Return the tag associated with the mapping.
+	 * Return the user associated with the mapping.
 	 *
-	 * @return Tag
+	 * @return User
 	 */
 	public function getModel() {
 
-		return $this->hasOne( Tag::className(), [ 'id' => 'modelId' ] );
+		return $this->hasOne( User::className(), [ 'id' => 'modelId' ] );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -91,19 +123,30 @@ class ModelTag extends ModelMapper implements IModelMapper {
 
 	// yii\db\ActiveRecord ----
 
-	/**
-	 * @inheritdoc
-	 */
+    /**
+     * @inheritdoc
+     */
 	public static function tableName() {
 
-		return CoreTables::getTableName( CoreTables::TABLE_MODEL_TAG );
+		return CoreTables::getTables( CoreTables::TABLE_MODEL_FOLLOWER );
 	}
 
 	// CMG parent classes --------------------
 
-	// ModelTag ------------------------------
+	// ModelFollower -------------------------
 
 	// Read - Query -----------
+
+    /**
+     * @inheritdoc
+     */
+	public static function queryWithHasOne( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'user' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
 
 	// Read - Find ------------
 

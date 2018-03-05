@@ -7,28 +7,14 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\models\resources;
-
-// CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\ModelMeta;
-
-use cmsgears\core\common\models\entities\Site;
+namespace cmsgears\core\common\models\base;
 
 /**
- * The meta model used to store site meta data and attributes.
- *
- * @property integer $id
- * @property integer $modelId
- * @property string $name
- * @property string $label
- * @property string $type
- * @property string $valueType
- * @property string $value
+ * Base model of all the resources specific to model.
  *
  * @since 1.0.0
  */
-class SiteMeta extends ModelMeta {
+abstract class ModelResource extends Resource {
 
 	// Variables ---------------------------------------------------
 
@@ -68,17 +54,7 @@ class SiteMeta extends ModelMeta {
 
 	// Validators ----------------------------
 
-	// SiteMeta ------------------------------
-
-	/**
-	 * Returns the site model using one-to-one(hasOne) relationship.
-	 *
-	 * @return \cmsgears\core\common\models\entities\Site Site to which this meta belongs.
-	 */
-	public function getParent() {
-
-		return $this->hasOne( Site::className(), [ 'id' => 'modelId' ] );
-	}
+	// ModelResource -------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -86,17 +62,9 @@ class SiteMeta extends ModelMeta {
 
 	// yii\db\ActiveRecord ----
 
-	/**
-	 * @inheritdoc
-	 */
-	public static function tableName() {
-
-		return CoreTables::getTableName( CoreTables::TABLE_SITE_META );
-	}
-
 	// CMG parent classes --------------------
 
-	// SiteMeta ------------------------------
+	// ModelResource -------------------------
 
 	// Read - Query -----------
 

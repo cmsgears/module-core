@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
@@ -20,7 +28,9 @@ use cmsgears\core\common\models\traits\ResourceTrait;
  * @property integer $rootId
  * @property string $parentType
  * @property string $lValue
- * @property short $rValue
+ * @property integer $rValue
+ *
+ * @since 1.0.0
  */
 class ModelHierarchy extends \cmsgears\core\common\models\base\Resource {
 
@@ -104,7 +114,7 @@ class ModelHierarchy extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_MODEL_HIERARCHY;
+		return CoreTables::getTableName( CoreTables::TABLE_MODEL_HIERARCHY );
 	}
 
 	// CMG parent classes --------------------

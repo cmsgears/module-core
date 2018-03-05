@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\traits\mappers;
 
 // CMG Imports
@@ -7,97 +15,126 @@ use cmsgears\core\common\models\resources\Category;
 use cmsgears\core\common\models\mappers\ModelCategory;
 
 /**
- * CategoryTrait can be used to categories relevant models. The model must define the member variable $categoryType which is unique for the model.
+ * It provide methods specific to managing category mappings of respective models.
  */
 trait CategoryTrait {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG classes ---------------------------
+
+	// Validators ----------------------------
+
+	// CategoryTrait -------------------------
+
 	/**
-	 * @return array - ModelCategory associated with parent
+	 * @inheritdoc
 	 */
 	public function getModelCategories() {
 
-		return $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->modelType'" );
-	}
-
-	public function getActiveModelCategories() {
-
-		$modelCategoryTable	= CoreTables::TABLE_MODEL_CATEGORY;
+		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
 
 		return $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )
-					->where( "$modelCategoryTable.parentType='$this->modelType' AND $modelCategoryTable.active=1" );
+			->where( "$modelCategoryTable.parentType='$this->modelType'" );
 	}
 
 	/**
-	 * @return array - Category associated with parent
+	 * @inheritdoc
+	 */
+	public function getActiveModelCategories() {
+
+		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
+
+		return $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )
+			->where( "$modelCategoryTable.parentType='$this->modelType' AND $modelCategoryTable.active=1" );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getModelCategoriesByType( $type, $active = true ) {
+
+		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
+
+		return $this->hasOne( ModelCategory::className(), [ 'parentId' => 'id' ] )
+			->where( "$modelCategoryTable.parentType=:ptype AND $modelCategoryTable.type=:type AND $modelCategoryTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
+	}
+
+	/**
+	 * @inheritdoc
 	 */
 	public function getCategories() {
 
-		$categoryTable = CoreTables::TABLE_CATEGORY;
+		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
 
-		$query = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
+		return $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
+			->viaTable( $modelCategoryTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelCategoryTable ) {
 
-						$modelCategoryTable	= CoreTables::TABLE_MODEL_CATEGORY;
-
-						$query->onCondition( [ "$modelCategoryTable.parentType" => $this->modelType ] );
-					})
-					->where( "$categoryTable.type='$this->categoryType'" );
-
-		return $query;
+					$query->onCondition( [ "$modelCategoryTable.parentType" => $this->modelType ] );
+				}
+			);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getActiveCategories() {
 
-		$categoryTable = CoreTables::TABLE_CATEGORY;
+		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
 
-		$query = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) {
+		return $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
+			->viaTable( $modelCategoryTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelCategoryTable ) {
 
-						$modelCategoryTable	= CoreTables::TABLE_MODEL_CATEGORY;
-
-						$query->onCondition( [ "$modelCategoryTable.parentType" => $this->modelType, "$modelCategoryTable.active" => true ] );
-					})
-					->where( "$categoryTable.type='$this->categoryType'" );
-
-		return $query;
+					$query->onCondition( [ "$modelCategoryTable.parentType" => $this->modelType, "$modelCategoryTable.active" => true ] );
+				}
+			);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getCategoriesByType( $type, $active = true ) {
 
-		$categoryTable = CoreTables::TABLE_CATEGORY;
+		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
 
 		$categories = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
-							->viaTable( CoreTables::TABLE_MODEL_CATEGORY, [ 'parentId' => 'id' ], function( $query ) use( &$active ) {
+			->viaTable( $modelCategoryTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$type, &$active, &$modelCategoryTable ) {
 
-								$modelCategory	= CoreTables::TABLE_MODEL_CATEGORY;
-
-								$query->onCondition( [ "$modelCategory.parentType" => $this->modelType, "$modelCategory.active" => $active ] );
-							})
-							->where( "$categoryTable.type='$type'" )
-							->all();
+					$query->onCondition( [ "$modelCategoryTable.parentType" => $this->modelType, "$modelCategoryTable.type" => $type, "$modelCategoryTable.active" => $active ] );
+				}
+			)->all();
 
 		return $categories;
 	}
 
 	/**
-	 * @return array - list of category id associated with parent
+	 * @inheritdoc
 	 */
 	public function getCategoryIdList( $active = true ) {
 
-		$categories		= null;
+		$categories		= $active ? $this->activeCategories : $this->categories;
 		$categoriesList	= [];
 
-		if( $active ) {
-
-			$categories = $this->activeCategories;
-		}
-		else {
-
-			$categories = $this->categories;
-		}
-
-		foreach ( $categories as $category ) {
+		foreach( $categories as $category ) {
 
 			array_push( $categoriesList, $category->id );
 		}
@@ -105,12 +142,15 @@ trait CategoryTrait {
 		return $categoriesList;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getCategoryIdListByType( $type, $active = true ) {
 
 		$categories			= $this->getCategoriesByType( $type, $active );
 		$categoriesList		= [];
 
-		foreach ( $categories as $category ) {
+		foreach( $categories as $category ) {
 
 			array_push( $categoriesList, $category->id );
 		}
@@ -118,21 +158,15 @@ trait CategoryTrait {
 		return $categoriesList;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getCategoryNameList( $active = true, $l1 = false ) {
 
-		$categories			= null;
-		$categoriesList		= [];
+		$categories		= $active ? $this->activeCategories : $this->categories;
+		$categoriesList	= [];
 
-		if( $active ) {
-
-			$categories = $this->activeCategories;
-		}
-		else {
-
-			$categories = $this->categories;
-		}
-
-		foreach ( $categories as $category ) {
+		foreach( $categories as $category ) {
 
 			if( $l1 ) {
 
@@ -150,37 +184,41 @@ trait CategoryTrait {
 		return $categoriesList;
 	}
 
-	public function getCategoryNameListByType( $type, $active = true ) {
+	/**
+	 * @inheritdoc
+	 */
+	public function getCategoryNameListByType( $type, $active = true, $l1 = false ) {
 
-		$categories			= $this->getCategoriesByType( $type, $active );
-		$categoriesList		= [];
+		$categories		= $this->getCategoriesByType( $type, $active );
+		$categoriesList	= [];
 
-		foreach ( $categories as $category ) {
+		foreach( $categories as $category ) {
 
-			array_push( $categoriesList, $category->name );
+			if( $l1 ) {
+
+				if( $category->lValue == 1 ) {
+
+					array_push( $categoriesList, $category->name );
+				}
+			}
+			else {
+
+				array_push( $categoriesList, $category->name );
+			}
 		}
 
 		return $categoriesList;
 	}
 
 	/**
-	 * @return array - list of category id and name associated with parent
+	 * @inheritdoc
 	 */
 	public function getCategoryIdNameList( $active = true ) {
 
-		$categories			= null;
-		$categoriesList		= [];
+		$categories		= $active ? $this->activeCategories : $this->categories;
+		$categoriesList	= [];
 
-		if( $active ) {
-
-			$categories = $this->activeCategories;
-		}
-		else {
-
-			$categories = $this->categories;
-		}
-
-		foreach ( $categories as $category ) {
+		foreach( $categories as $category ) {
 
 			$categoriesList[] = [ 'id' => $category->id, 'name' => $category->name ];
 		}
@@ -189,23 +227,14 @@ trait CategoryTrait {
 	}
 
 	/**
-	 * @return array - map of category id and name associated with parent
+	 * @inheritdoc
 	 */
 	public function getCategoryIdNameMap( $active = true ) {
 
-		$categories		= null;
+		$categories		= $active ? $this->activeCategories : $this->categories;
 		$categoriesMap	= [];
 
-		if( $active ) {
-
-			$categories		= $this->activeCategories;
-		}
-		else {
-
-			$categories		= $this->categories;
-		}
-
-		foreach ( $categories as $category ) {
+		foreach( $categories as $category ) {
 
 			$categoriesMap[ $category->id ] = $category->name;
 		}
@@ -213,21 +242,15 @@ trait CategoryTrait {
 		return $categoriesMap;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getCategorySlugNameMap( $active = true ) {
 
-		$categories		= null;
+		$categories		= $active ? $this->activeCategories : $this->categories;
 		$categoriesMap	= [];
 
-		if( $active ) {
-
-			$categories		= $this->activeCategories;
-		}
-		else {
-
-			$categories		= $this->categories;
-		}
-
-		foreach ( $categories as $category ) {
+		foreach( $categories as $category ) {
 
 			$categoriesMap[ $category->slug ] = $category->name;
 		}
@@ -235,19 +258,13 @@ trait CategoryTrait {
 		return $categoriesMap;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getCategoryCsv( $limit = 0, $active = true, $l1 = false ) {
 
-		$categories		= null;
+		$categories		= $active ? $this->activeCategories : $this->categories;
 		$categoriesCsv	= [];
-
-		if( $active ) {
-
-			$categories	= $this->activeCategories;
-		}
-		else {
-
-			$categories	= $this->categories;
-		}
 
 		foreach ( $categories as $category ) {
 
@@ -264,43 +281,68 @@ trait CategoryTrait {
 			}
 		}
 
+		if( $limit > 0 ) {
+
+			$categoriesCsv = array_splice( $categoriesCsv, $limit );
+		}
+
 		return implode( ", ", $categoriesCsv );
 	}
 
-	public function getCategoryLinks( $baseUrl, $limit = 0, $wrapper = 'li', $active = true ) {
+	/**
+	 * @inheritdoc
+	 */
+	public function getCategoryLinks( $baseUrl, $wrapper = 'li', $limit = 0, $active = true, $l1 = false ) {
 
-		$categories		= null;
+		$categories		= $active ? $this->activeCategories : $this->categories;
 		$categoryLinks	= null;
-		$count			= 1;
 
-		if( $active ) {
+		foreach( $categories as $category ) {
 
-			$categories	= $this->activeCategories;
-		}
-		else {
+			$link = null;
 
-			$categories	= $this->categories;
-		}
+			if( $l1 ) {
 
-		foreach ( $categories as $category ) {
+				if( $category->lValue == 1 ) {
 
-			if( isset( $wrapper ) ) {
-
-				$categoryLinks	.= "<$wrapper><a href='$baseUrl/$category->slug'>$category->name</a></$wrapper>";
+					$link = "<a href='$baseUrl/$category->slug'>$category->name</a>";
+				}
 			}
 			else {
 
-				$categoryLinks	.= "<a href='$baseUrl/$category->slug'>$category->name</a>";
+				$link = "<a href='$baseUrl/$category->slug'>$category->name</a>";
 			}
 
-			if( $limit > 0 && $count >= $limit ) {
+			if( isset( $wrapper ) ) {
 
-				break;
+				$categoryLinks	.= "<$wrapper>$link</$wrapper>";
 			}
+		}
 
-			$count++;
+		if( $limit > 0 ) {
+
+			$categoryLinks = array_splice( $categoryLinks, $limit );
 		}
 
 		return $categoryLinks;
 	}
+
+	// Static Methods ----------------------------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG classes ---------------------------
+
+	// CategoryTrait -------------------------
+
+	// Read - Query -----------
+
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
+
 }

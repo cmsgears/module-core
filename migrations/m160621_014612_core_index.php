@@ -113,11 +113,11 @@ class m160621_014612_core_index extends \yii\db\Migration {
 		// Site Access
 		$this->createIndex( 'idx_' . $this->prefix . 'site_access_ip', $this->prefix . 'core_site_access', 'ip' );
 		$this->createIndex( 'idx_' . $this->prefix . 'site_access_ipn', $this->prefix . 'core_site_access', 'ipNum' );
-		$this->createIndex( 'idx_' . $this->prefix . 'site_access_url', $this->prefix . 'core_site_access', 'url' );
+		//$this->createIndex( 'idx_' . $this->prefix . 'site_access_url', $this->prefix . 'core_site_access', 'url' );
 
 		// File
 		$this->createIndex( 'idx_' . $this->prefix . 'file_name', $this->prefix . 'core_file', 'name' );
-		$this->createIndex( 'idx_' . $this->prefix . 'file_title', $this->prefix . 'core_file', 'title' );
+		//$this->createIndex( 'idx_' . $this->prefix . 'file_title', $this->prefix . 'core_file', 'title' );
 		$this->createIndex( 'idx_' . $this->prefix . 'file_ext', $this->prefix . 'core_file', 'extension' );
 		$this->createIndex( 'idx_' . $this->prefix . 'file_dir', $this->prefix . 'core_file', 'directory' );
 		$this->createIndex( 'idx_' . $this->prefix . 'file_type', $this->prefix . 'core_file', 'type' );
@@ -217,6 +217,11 @@ class m160621_014612_core_index extends \yii\db\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'model_form_parent_t', $this->prefix . 'core_model_form', 'parentType' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_form_type', $this->prefix . 'core_model_form', 'type' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_form_pipta', $this->prefix . 'core_model_form', [ 'parentId', 'parentType', 'active' ] );
+
+		// Model Follower
+		$this->createIndex( 'idx_' . $this->prefix . 'model_follower_parent_t', $this->prefix . 'core_model_follower', 'parentType' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_follower_type', $this->prefix . 'core_model_follower', 'type' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_follower_pipta', $this->prefix . 'core_model_follower', [ 'parentId', 'parentType', 'active' ] );
 	}
 
 	public function down() {

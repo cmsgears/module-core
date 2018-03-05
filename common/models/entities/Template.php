@@ -28,8 +28,8 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Entity;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
-use cmsgears\core\common\models\traits\base\NameTypeTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
+use cmsgears\core\common\models\traits\base\NameTypeTrait;
 use cmsgears\core\common\models\traits\base\SlugTypeTrait;
 use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
@@ -119,9 +119,9 @@ class Template extends Entity implements IAuthor, IMultiSite, INameType, ISlugTy
 			'sluggableBehavior' => [
 				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
-				'slugAttribute' => 'slug', // Unique for combination of Site Id, Theme Id and Type
+				'slugAttribute' => 'slug', // Unique for combination of Site Id and Theme Id
 				'ensureUnique' => true,
-				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'themeId', 'type' ] ]
+				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'themeId' ] ]
 			],
 			'timestampBehavior' => [
 				'class' => TimestampBehavior::class,
@@ -221,16 +221,6 @@ class Template extends Entity implements IAuthor, IMultiSite, INameType, ISlugTy
 	// Validators ----------------------------
 
 	// Template ------------------------------
-
-	/**
-	 * Returns site to which this template belongs. A template can also exist without assigning site.
-	 *
-	 * @return Site|null
-	 */
-	public function getSite() {
-
-		return $this->hasOne( Site::class, [ 'id' => 'siteId' ] );
-	}
 
 	/**
 	 * Returns theme to which this template belongs. A template can also exist without assigning theme.

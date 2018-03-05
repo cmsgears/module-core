@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
@@ -9,22 +17,26 @@ use yii\helpers\ArrayHelper;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\Resource;
 
 use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
- * Option Entity
+ * The option model stores the options available for a category. The options can be
+ * selected for a model using the category.
  *
- * @property long $id
- * @property long $categoryId
+ * @property integer $id
+ * @property integer $categoryId
  * @property string $name
  * @property string $value
  * @property string $icon
  * @property string $htmlOptions
  * @property string $content
  * @property string $data
+ *
+ * @since 1.0.0
  */
-class Option extends \cmsgears\core\common\models\base\Resource {
+class Option extends Resource {
 
 	// Variables ---------------------------------------------------
 
@@ -40,11 +52,11 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 
 	// Public -----------------
 
-	public $modelType	= CoreGlobal::TYPE_OPTION;
-
 	// Protected --------------
 
 	// Private ----------------
+
+	private $modelType = CoreGlobal::TYPE_OPTION;
 
 	// Traits ------------------------------------------------------
 
@@ -67,10 +79,10 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'name' ], 'required' ],
+			[ 'name', 'required' ],
 			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
 			// Unique
 			[ [ 'categoryId', 'name' ], 'unique', 'targetAttribute' => [ 'categoryId', 'name' ] ],
@@ -81,7 +93,7 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 			[ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ]
 		];
 
-		// trim if required
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'name', 'value', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
@@ -103,6 +115,7 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
@@ -116,7 +129,9 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 	// Option --------------------------------
 
 	/**
-	 * @return Category - The parent category.
+	 * Returns respective category to which it is mapped.
+	 *
+	 * @return Category
 	 */
 	public function getCategory() {
 
@@ -134,7 +149,7 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_OPTION;
+		return CoreTables::getTableName( CoreTables::TABLE_OPTION );
 	}
 
 	// CMG parent classes --------------------
@@ -143,6 +158,9 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'category' ];
@@ -151,6 +169,12 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the option with category.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with category.
+	 */
 	public static function queryWithCategory( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'category' ];
@@ -163,23 +187,24 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 	/**
 	 * @return Option - by category id
 	 */
+
+	/**
+	 * Return the options available for given category id.
+	 *
+	 * @param integer $categoryId
+	 * @return Option[]
+	 */
 	public static function findByCategoryId( $categoryId ) {
 
 		return self::find()->where( 'categoryId=:id', [ ':id' => $categoryId ] )->all();
 	}
 
 	/**
-	 * @return Option - by category slug and type
-	 */
-	public static function findByCategorySlugType( $categorySlug, $categoryType ) {
-
-		$categoryTable = CoreTables::TABLE_CATEGORY;
-
-		return self::queryWithCategory( [ 'conditions' => [ "$categoryTable.slug" => $categorySlug, "$categoryTable.type" => $categoryType ] ] )->all();
-	}
-
-	/**
-	 * @return Option - by name and category id
+	 * Return the option using given name and category id.
+	 *
+	 * @param string $name
+	 * @param integer $categoryId
+	 * @return Option
 	 */
 	public static function findByNameCategoryId( $name, $categoryId ) {
 
@@ -189,7 +214,9 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 	}
 
 	/**
-	 * @return boolean - check whether option exist by name and category id
+	 * Check whether option exist by name and category id.
+	 *
+	 * @return boolean
 	 */
 	public static function isExistByNameCategoryId( $name, $categoryId ) {
 
@@ -205,7 +232,10 @@ class Option extends \cmsgears\core\common\models\base\Resource {
 	// Delete -----------------
 
 	/**
-	 * Delete Option - by category id
+	 * Delete all the options for given category id.
+	 *
+	 * @param integer $categoryId
+	 * @return integer number of rows.
 	 */
 	public static function deleteByCategoryId( $categoryId ) {
 

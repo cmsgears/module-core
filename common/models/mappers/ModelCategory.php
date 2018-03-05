@@ -1,30 +1,38 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\mappers;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\models\interfaces\base\IModelMapper;
 
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\resources\Category;
 
-use cmsgears\core\common\models\traits\MapperTrait;
+use cmsgears\core\common\models\traits\ModelMapperTrait;
 
 /**
- * ModelCategory Entity - The mapper to map Category Model to specific parent model for given parentId and parentType.
+ * The mapper to map Category Model to specific parent model for given parentId and parentType.
  *
- * @property long $id
- * @property long $modelId
- * @property long $parentId
+ * @property integer $id
+ * @property integer $modelId
+ * @property integer $parentId
  * @property string $parentType
  * @property string $type
- * @property short $order
+ * @property integer $order
  * @property boolean $active
  * @property boolean $userMapped
+ *
+ * @since 1.0.0
  */
-class ModelCategory extends \cmsgears\core\common\models\base\Mapper {
+class ModelCategory extends ModelMapper implements IModelMapper {
 
 	// Variables ---------------------------------------------------
 
@@ -46,7 +54,7 @@ class ModelCategory extends \cmsgears\core\common\models\base\Mapper {
 
 	// Traits ------------------------------------------------------
 
-	use MapperTrait;
+	use ModelMapperTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -65,35 +73,11 @@ class ModelCategory extends \cmsgears\core\common\models\base\Mapper {
 	 */
 	public function rules() {
 
-		return [
-			// Required, Safe
-			[ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
-			[ [ 'id' ], 'safe' ],
-			// Unique
-			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
-			// Text Limit
-			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			// Other
-			[ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'active', 'userMapped' ], 'boolean' ]
-		];
-	}
+		$rules = parent::rules();
 
-	/**
-	 * @inheritdoc
-	 */
-	public function attributeLabels() {
+		$rules[] = [ 'userMapped', 'boolean' ];
 
-		return [
-			'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CATEGORY ),
-			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
-		];
+		return $rules;
 	}
 
 	// CMG interfaces ------------------------
@@ -105,7 +89,9 @@ class ModelCategory extends \cmsgears\core\common\models\base\Mapper {
 	// ModelCategory -------------------------
 
 	/**
-	 * @return Category - associated category
+	 * Return the category associated with the mapping.
+	 *
+	 * @return Category
 	 */
 	public function getModel() {
 
@@ -123,7 +109,7 @@ class ModelCategory extends \cmsgears\core\common\models\base\Mapper {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_MODEL_CATEGORY;
+		return CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
 	}
 
 	// CMG parent classes --------------------
@@ -131,14 +117,6 @@ class ModelCategory extends \cmsgears\core\common\models\base\Mapper {
 	// ModelCategory -------------------------
 
 	// Read - Query -----------
-
-	public static function queryWithHasOne( $config = [] ) {
-
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'model' ];
-		$config[ 'relations' ]	= $relations;
-
-		return parent::queryWithAll( $config );
-	}
 
 	// Read - Find ------------
 

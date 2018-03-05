@@ -144,7 +144,8 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_EXPIRED => 'Expired',
 		CoreGlobal::FIELD_FEATURED => 'Featured',
 		CoreGlobal::FIELD_USER_MAPPED => 'User Mapped',
-
+		CoreGlobal::FIELD_FAILED => 'Failed',
+		CoreGlobal::FIELD_FAIL_COUNT => 'Failure Count',
 		CoreGlobal::FIELD_DATE_START => 'Start Date',
 		CoreGlobal::FIELD_DATE_END => 'End Date',
 		CoreGlobal::FIELD_DAY_WEEK => 'Week Day',

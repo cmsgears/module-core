@@ -1,7 +1,23 @@
 <?php
-namespace cmsgears\core\common\models\resources;
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
 
-class BillingAddress extends Address {
+namespace cmsgears\core\common\models\resources\address;
+
+// CMG Imports
+use cmsgears\core\common\models\resources\Address;
+
+/**
+ * The branch address model.
+ *
+ * @since 1.0.0
+ */
+class BranchAddress extends Address {
 
 	// Variables ---------------------------------------------------
 
@@ -17,7 +33,7 @@ class BillingAddress extends Address {
 
 	// Public -----------------
 
-	public $type	= self::TYPE_BILLING;
+	public $type	= self::TYPE_BRANCH;
 
 	// Protected --------------
 

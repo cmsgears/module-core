@@ -31,13 +31,15 @@ use cmsgears\core\common\models\traits\base\ResourceTrait;
  *
  * These messages can be further categorised using the type attribute.
  *
- * @property long $id
- * @property long $localeId
+ * @property integer $id
+ * @property integer $localeId
  * @property integer $parentId
  * @property string $parentType
  * @property string $name
  * @property string $type
  * @property string $value
+ *
+ * @since 1.0.0
  */
 class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 

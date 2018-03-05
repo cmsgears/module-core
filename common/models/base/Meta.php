@@ -27,7 +27,7 @@ use Yii;
  *
  * @since 1.0.0
  */
-abstract class Meta extends ActiveRecord {
+abstract class Meta extends Resource {
 
 	// Variables ---------------------------------------------------
 

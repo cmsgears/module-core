@@ -7,16 +7,15 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\models\traits\base;
+namespace cmsgears\core\common\models\traits\resources;
+
+// CMG Imports
+use cmsgears\core\common\models\entities\Template;
 
 /**
- * The models having siteId column and supporting multi-site must use this trait.
- *
- * @property integer $siteId
- *
- * @since 1.0.0
+ * TemplateTrait can be used to assist models supporting templates.
  */
-trait MultiSiteTrait {
+trait TemplateTrait {
 
 	// Variables ---------------------------------------------------
 
@@ -40,16 +39,23 @@ trait MultiSiteTrait {
 
 	// Validators ----------------------------
 
-	// MultiSiteTrait ------------------------
+	// TemplateTrait -------------------------
 
-	/**
-	 * Returns the corresponding site model.
-	 *
-	 * @return \cmsgears\core\common\models\entities\Site Site to which this model belongs.
-	 */
-	public function getSite() {
+	public function getTemplate() {
 
-		return $this->hasOne( Site::class, [ 'id' => 'siteId' ] );
+		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
+	}
+
+	public function getTemplateName() {
+
+		$template = $this->template;
+
+		if( isset( $template ) ) {
+
+			return $template->name;
+		}
+
+		return '';
 	}
 
 	// Static Methods ----------------------------------------------
@@ -58,29 +64,13 @@ trait MultiSiteTrait {
 
 	// CMG classes ---------------------------
 
-	// MultiSiteTrait ------------------------
-
-	/**
-	 * @inheritdoc
-	 *
-	 * @return true Model using this trait supports multi-site.
-	 */
-	public static function isMultiSite() {
-
-		return true;
-	}
+	// TemplateTrait -------------------------
 
 	// Read - Query -----------
 
-	/**
-	 * Return query to find the model with site.
-	 *
-	 * @param array $config
-	 * @return \yii\db\ActiveQuery to query with site.
-	 */
-	public static function queryWithSite( $config = [] ) {
+	public static function queryWithTemplate( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'site' ];
+		$config[ 'relations' ]	= [ 'template' ];
 
 		return parent::queryWithAll( $config );
 	}

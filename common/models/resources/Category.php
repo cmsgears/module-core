@@ -1,42 +1,66 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
 use Yii;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\Site;
+use cmsgears\core\common\models\interfaces\base\IAuthor;
+use cmsgears\core\common\models\interfaces\base\IMultiSite;
+use cmsgears\core\common\models\interfaces\base\INameType;
+use cmsgears\core\common\models\interfaces\base\ISlugType;
 
-use cmsgears\core\common\models\traits\NameTypeTrait;
-use cmsgears\core\common\models\traits\SlugTypeTrait;
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\hierarchy\NestedSetModel;
+
+use cmsgears\core\common\models\traits\base\AuthorTrait;
+use cmsgears\core\common\models\traits\base\MultiSiteTrait;
+use cmsgears\core\common\models\traits\base\NameTypeTrait;
+use cmsgears\core\common\models\traits\base\SlugTypeTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
  * Category Entity
  *
- * @property long $id
- * @property long $siteId
- * @property long $parentId
- * @property long $rootId
+ * @property integer $id
+ * @property integer $siteId
+ * @property integer $templateId
+ * @property integer $parentId
+ * @property integer $rootId
+ * @property integer $createdBy
+ * @property integer $modifiedBy
  * @property string $name
  * @property string $slug
  * @property string $type
  * @property string $icon
+ * @property string $title
  * @property string $description
  * @property boolean $featured
- * @property short $lValue
- * @property short $rValue
- * @property short $order
+ * @property integer $lValue
+ * @property integer $rValue
+ * @property integer $order
  * @property string $htmlOptions
+ * @property datetime $createdAt
+ * @property datetime $modifiedAt
  * @property string $content
  * @property string $data
+ *
+ * @since 1.0.0
  */
-class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
+class Category extends NestedSetModel implements IAuthor, IMultiSite, INameType, ISlugType {
 
 	// Variables ---------------------------------------------------
 
@@ -48,21 +72,21 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 
 	// Protected --------------
 
-	public static $multiSite = true;
-
 	// Variables -----------------------------
 
 	// Public -----------------
-
-	public $modelType	= CoreGlobal::TYPE_CATEGORY;
 
 	// Protected --------------
 
 	// Private ----------------
 
+	private $modelType	= CoreGlobal::TYPE_CATEGORY;
+
 	// Traits ------------------------------------------------------
 
+	use AuthorTrait;
 	use DataTrait;
+	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 
@@ -85,9 +109,15 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 			'sluggableBehavior' => [
 				'class' => SluggableBehavior::className(),
 				'attribute' => 'name',
-				'slugAttribute' => 'slug',
-				'immutable' => true,
-				'ensureUnique' => false
+				'slugAttribute' => 'slug', // Unique for Site Id
+				'ensureUnique' => true,
+				'uniqueValidator' => [ 'targetAttribute' => 'siteId' ]
+			],
+			'timestampBehavior' => [
+				'class' => TimestampBehavior::className(),
+				'createdAtAttribute' => 'createdAt',
+				'updatedAtAttribute' => 'modifiedAt',
+				'value' => new Expression('NOW()')
 			]
 		];
 	}
@@ -99,7 +129,7 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
 			[ [ 'siteId', 'name' ], 'required' ],
@@ -107,18 +137,22 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 			// Unique
 			// Notes: disabled it in order to allow sub categories having same name as parent, but with different slug. It can be enable based on project needs by extending the model and service.
 			//[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'name', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'slug', 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'slug', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'title', 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
+			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ [ 'parentId', 'rootId', 'order' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ 'featured', 'boolean' ]
+			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ 'featured', 'boolean' ],
+			[ [ 'templateId', 'parentId', 'rootId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'siteId', 'createdBy', 'modifiedBy', 'lValue', 'rValue' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
-		// trim if required
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'name', 'description', 'icon' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
@@ -157,23 +191,22 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 
 	// Category ------------------------------
 
-	public function getSite() {
-
-		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
-	}
-
 	/**
-	 * @return Category - parent category
+	 * Return the immediate parent of the category.
+	 *
+	 * @return Category
 	 */
 	public function getParent() {
 
-		$parentTable =  CoreTables::TABLE_CATEGORY;
+		$parentTable =  CoreTables::getTableName( CoreTables::TABLE_CATEGORY );
 
 		return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] )->from( "$parentTable as parent" );
 	}
 
 	/**
-	 * @return array - list of immediate child categories
+	 * Returns list of immediate child categories.
+	 *
+	 * @return Category[]
 	 */
 	public function getChildren() {
 
@@ -181,7 +214,9 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 	}
 
 	/**
-	 * @return array - list of Option having all the options belonging to this category
+	 * Returns list of options mapped to this category.
+	 *
+	 * @return Option[]
 	 */
 	public function getOptions() {
 
@@ -189,7 +224,9 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 	}
 
 	/**
-	 * @return string representation of flag
+	 * String representation of featured flag.
+	 *
+	 * @return string
 	 */
 	public function getFeaturedStr() {
 
@@ -207,7 +244,7 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_CATEGORY;
+		return CoreTables::getTableName( CoreTables::TABLE_CATEGORY );
 	}
 
 	// CMG parent classes --------------------
@@ -216,6 +253,9 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site' ];
@@ -224,13 +264,12 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 		return parent::queryWithAll( $config );
 	}
 
-	public static function queryWithSite( $config = [] ) {
-
-		$config[ 'relations' ]	= [ 'site' ];
-
-		return parent::queryWithAll( $config );
-	}
-
+	/**
+	 * Return query to find the category with options.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with options.
+	 */
 	public static function queryWithOptions( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'options' ];
@@ -240,17 +279,38 @@ class Category extends \cmsgears\core\common\models\hierarchy\NestedSetModel {
 
 	// Read - Find ------------
 
-	public static function findByParentId( $id ) {
+	/**
+	 * Find and return the categories having given parent id.
+	 *
+	 * @param string $parentId
+	 * @return Category[]
+	 */
+	public static function findByParentId( $parentId ) {
 
-		return self::find()->where( 'parentId=:id', [ ':id' => $id ] )->all();
+		return self::find()->where( 'parentId=:id', [ ':id' => $parentId ] )->all();
 	}
 
 	/**
-	 * @return Category - by type and featured
+	 * Find and return the featured categories for given type.
+	 *
+	 * @param string $type
+	 * @param array $config
+	 * @return Category
 	 */
-	public static function getFeaturedByType( $type ) {
+	public static function getFeaturedByType( $type, $config = [] ) {
 
-		return self::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( [ 'order' => SORT_ASC ] )->all();
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		if( static::isMultiSite() && !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			return static::find()->where( 'type=:type AND siteId=:siteId AND featured=1', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( [ 'order' => SORT_ASC ] )->all();
+		}
+		else {
+
+			return static::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( [ 'order' => SORT_ASC ] )->all();
+		}
 	}
 
 	// Create -----------------

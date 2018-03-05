@@ -1,7 +1,30 @@
 <?php
-namespace cmsgears\core\common\models\resources;
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
 
-class MailingAddress extends Address {
+namespace cmsgears\core\common\models\base;
+
+// CMG Imports
+use cmsgears\core\common\models\interfaces\base\IFollower;
+
+/**
+ * Follower represents interest of one model in another model.
+ *
+ * @property int $id
+ * @property int $modelId
+ * @property string $type
+ * @property boolean $active
+ * @property int $createdAt
+ * @property int $modifiedAt
+ *
+ * @since 1.0.0
+ */
+abstract class Follower extends Mapper implements IFollower {
 
 	// Variables ---------------------------------------------------
 
@@ -16,8 +39,6 @@ class MailingAddress extends Address {
 	// Variables -----------------------------
 
 	// Public -----------------
-
-	public $type	= self::TYPE_MAILING;
 
 	// Protected --------------
 
@@ -43,7 +64,7 @@ class MailingAddress extends Address {
 
 	// Validators ----------------------------
 
-	// ShippingAddress -----------------------
+	// Follower ------------------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -53,7 +74,7 @@ class MailingAddress extends Address {
 
 	// CMG parent classes --------------------
 
-	// ShippingAddress -----------------------
+	// Follower ------------------------------
 
 	// Read - Query -----------
 

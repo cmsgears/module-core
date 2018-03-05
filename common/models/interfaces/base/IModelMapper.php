@@ -10,11 +10,11 @@
 namespace cmsgears\core\common\models\interfaces\base;
 
 /**
- * The IMapper interface provide methods specific to mapping of two different models.
+ * The IModelMapper interface provide methods specific to mapping parent model to model.
  *
  * @since 1.0.0
  */
-interface IMapper {
+interface IModelMapper {
 
 	/**
 	 * Check parent using given parent id and type.

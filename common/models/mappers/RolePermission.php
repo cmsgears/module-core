@@ -16,6 +16,7 @@ use Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\Mapper;
 
 /**
  * Mapper to map roles and permissions.
@@ -25,7 +26,7 @@ use cmsgears\core\common\models\base\CoreTables;
  *
  * @since 1.0.0
  */
-class RolePermission extends \cmsgears\core\common\models\base\ActiveRecord {
+class RolePermission extends Mapper {
 
 	// Variables ---------------------------------------------------
 

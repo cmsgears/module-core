@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\traits\mappers;
 
 // CMG Imports
@@ -11,35 +19,127 @@ use cmsgears\core\common\models\mappers\ModelObject;
  */
 trait ObjectTrait {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG classes ---------------------------
+
+	// Validators ----------------------------
+
+	// ObjectTrait ---------------------------
+
 	/**
-	 * @return array - ModelObject associated with parent
+	 * @inheritdoc
 	 */
 	public function getModelObjects() {
 
+		$modelObjectTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+
 		return $this->hasMany( ModelObject::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->modelType'" );
+			->where( "$modelObjectTable.parentType='$this->modelType'" );
 	}
 
 	/**
-	 * @return array - ModelObject associated with parent
+	 * @inheritdoc
 	 */
-	public function getModelObjectsByType( $type ) {
+	public function getActiveModelObjects() {
+
+		$modelObjectTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
 
 		return $this->hasMany( ModelObject::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] )->all();
+			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.active=1" );
 	}
 
 	/**
-	 * @return array - objects associated with parent
+	 * @inheritdoc
+	 */
+	public function getModelObjectsByType( $type, $active = true ) {
+
+		$modelObjectTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+
+		return $this->hasOne( ModelObject::className(), [ 'parentId' => 'id' ] )
+			->where( "$modelObjectTable.parentType=:ptype AND $modelObjectTable.type=:type AND $modelObjectTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
+	}
+
+	/**
+	 * @inheritdoc
 	 */
 	public function getObjects() {
 
+		$modelObjectTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+
 		return $this->hasMany( ObjectData::className(), [ 'id' => 'modelId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_OBJECT, [ 'parentId' => 'id' ], function( $query ) {
+			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelObjectTable ) {
 
-						$modelObjectTable = CoreTables::TABLE_MODEL_OBJECT;
-
-						$query->onCondition( "$modelObjectTable.parentType=:type", [ ':type' => $this->modelType ] );
-					});
+					$query->onCondition( [ "$modelObjectTable.parentType" => $this->modelType ] );
+				}
+			);
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getActiveObjects() {
+
+		$modelObjectTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+
+		return $this->hasMany( ObjectData::className(), [ 'id' => 'modelId' ] )
+			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelObjectTable ) {
+
+					$query->onCondition( [ "$modelObjectTable.parentType" => $this->modelType, "$modelObjectTable.active" => true ] );
+				}
+			);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getObjectsByType( $type, $active = true ) {
+
+		$modelObjectTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+
+		return $this->hasMany( ObjectData::className(), [ 'id' => 'modelId' ] )
+			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$type, &$active, &$modelObjectTable ) {
+
+					$query->onCondition( [ "$modelObjectTable.parentType" => $this->modelType, "$modelObjectTable.type" => $type, "$modelObjectTable.active" => $active ] );
+				}
+			)->all();
+	}
+
+	// Static Methods ----------------------------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG classes ---------------------------
+
+	// ObjectTrait ---------------------------
+
+	// Read - Query -----------
+
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
+
 }

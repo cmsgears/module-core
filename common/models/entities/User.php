@@ -23,6 +23,8 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\config\CoreProperties;
 
 use cmsgears\core\common\models\interfaces\base\IApproval;
+use cmsgears\core\common\models\interfaces\mappers\IAddress;
+use cmsgears\core\common\models\interfaces\mappers\IFile;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Entity;
@@ -83,7 +85,7 @@ use cmsgears\core\common\models\traits\resources\VisualTrait;
  *
  * @since 1.0.0
  */
-class User extends Entity implements IdentityInterface, IApproval {
+class User extends Entity implements IdentityInterface, IAddress, IApproval, IFile {
 
 	// Variables ---------------------------------------------------
 

@@ -24,6 +24,8 @@ use cmsgears\core\common\models\interfaces\base\IMultiSite;
 use cmsgears\core\common\models\interfaces\base\INameType;
 use cmsgears\core\common\models\interfaces\base\IOwner;
 use cmsgears\core\common\models\interfaces\base\ISlugType;
+use cmsgears\core\common\models\interfaces\mappers\ICategory;
+use cmsgears\core\common\models\interfaces\mappers\IFile;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Entity;
@@ -39,9 +41,10 @@ use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 use cmsgears\core\common\models\traits\resources\HierarchyTrait;
 use cmsgears\core\common\models\traits\resources\MetaTrait;
 use cmsgears\core\common\models\traits\resources\SocialLinkTrait;
+use cmsgears\core\common\models\traits\resources\TemplateTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
+use cmsgears\core\common\models\traits\mappers\CategoryTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
-use cmsgears\core\common\models\traits\mappers\TemplateTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -77,7 +80,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class ObjectData extends Entity implements IAuthor, IMultiSite, INameType, IOwner, ISlugType {
+class ObjectData extends Entity implements IAuthor, ICategory, IFile, IMultiSite, INameType, IOwner, ISlugType {
 
 	// Variables ---------------------------------------------------
 
@@ -104,6 +107,7 @@ class ObjectData extends Entity implements IAuthor, IMultiSite, INameType, IOwne
 	// Traits ------------------------------------------------------
 
 	use AuthorTrait;
+	use CategoryTrait;
 	use ContentTrait;
 	use DataTrait;
 	use FileTrait;
@@ -137,9 +141,9 @@ class ObjectData extends Entity implements IAuthor, IMultiSite, INameType, IOwne
 			'sluggableBehavior' => [
 				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
-				'slugAttribute' => 'slug', // Unique for combination of Site Id, Theme Id and Type
+				'slugAttribute' => 'slug', // Unique for combination of Site Id and Theme Id
 				'ensureUnique' => true,
-				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'themeId', 'type' ] ]
+				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'themeId' ] ]
 			],
 			'timestampBehavior' => [
 				'class' => TimestampBehavior::class,
@@ -272,16 +276,6 @@ class ObjectData extends Entity implements IAuthor, IMultiSite, INameType, IOwne
 	// ObjectData ----------------------------
 
 	/**
-	 * Returns site to which this object belongs. A object can also exist without assigning site.
-	 *
-	 * @return Site|null
-	 */
-	public function getSite() {
-
-		return $this->hasOne( Site::class, [ 'id' => 'siteId' ] );
-	}
-
-	/**
 	 * Returns theme to which this object belongs. A object can also exist without assigning theme.
 	 *
 	 * @return Theme|null
@@ -372,11 +366,11 @@ class ObjectData extends Entity implements IAuthor, IMultiSite, INameType, IOwne
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( 'order ASC' )->all();
+			return static::find()->where( 'type=:type AND siteId=:siteId', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( [ 'order' => SORT_ASC ] )->all();
 		}
 		else {
 
-			return static::find()->where( 'type=:type', [ ':type' => $type ] )->orderBy( 'order ASC' )->all();
+			return static::find()->where( 'type=:type', [ ':type' => $type ] )->orderBy( [ 'order' => SORT_ASC ] )->all();
 		}
 	}
 

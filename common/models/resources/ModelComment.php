@@ -18,44 +18,59 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\interfaces\base\IAuthor;
+use cmsgears\core\common\models\interfaces\base\IModelResource;
+use cmsgears\core\common\models\interfaces\resources\IData;
+use cmsgears\core\common\models\interfaces\resources\IGridCache;
+use cmsgears\core\common\models\interfaces\mappers\IFile;
 
-use cmsgears\core\common\models\traits\CreateModifyTrait;
-use cmsgears\core\common\models\traits\ResourceTrait;
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\ModelResource;
+
+use cmsgears\core\common\models\traits\base\AuthorTrait;
+use cmsgears\core\common\models\traits\base\ModelResourceTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
 /**
- * ModelComment Entity
+ * The comment model stores the comment for relevant parent models supporting comment feature.
  *
  * @property integer $id
  * @property integer $baseId
+ * @property integer $bannerId
+ * @property integer $videoId
  * @property integer $parentId
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $parentType
- * @property string $type
  * @property string $name
  * @property string $email
  * @property string $avatarUrl
  * @property string $websiteUrl
  * @property string $ip
+ * @property integer $ipNum
  * @property string $agent
  * @property integer $status
+ * @property string $type
  * @property integer $fragment
  * @property integer $rating
+ * @property boolean $pinned
  * @property boolean $featured
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property datetime $approvedAt
  * @property string $content
  * @property string $data
+ * @property string $gridCache
+ * @property boolean $gridCacheValid
+ * @property datetime $gridCachedAt
  *
  * @since 1.0.0
  */
-class ModelComment extends \cmsgears\core\common\models\base\Resource {
+class ModelComment extends ModelResource implements IAuthor, IData, IFile, IGridCache, IModelResource {
 
 	// Variables ---------------------------------------------------
 
@@ -97,20 +112,21 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
 	// Public -----------------
 
-	public $modelType	= CoreGlobal::TYPE_COMMENT;
-
 	public $captcha;
 
 	// Protected --------------
 
 	// Private ----------------
 
+	private $modelType	= CoreGlobal::TYPE_COMMENT;
+
 	// Traits ------------------------------------------------------
 
-	use CreateModifyTrait;
+	use AuthorTrait;
 	use DataTrait;
 	use FileTrait;
-	use ResourceTrait;
+	use GridCacheTrait;
+	use ModelResourceTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -147,26 +163,27 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
 			[ [ 'parentId', 'parentType', 'name', 'email' ], 'required' ],
-			[ [ 'id', 'content', 'data', 'type' ], 'safe' ],
+			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Email
 			[ 'email', 'email' ],
 			// Text Limit
 			[ [ 'parentType', 'type', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'name', 'email', 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'name', 'email', 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Check captcha need for testimonial and review
 			[ 'content', 'required', 'on' => [ self::TYPE_COMMENT, self::TYPE_TESTIMONIAL ] ],
 			[ [ 'content', 'rating' ], 'required', 'on' => [ self::TYPE_REVIEW ] ],
 			[ 'captcha', 'captcha', 'captchaAction' => '/core/site/captcha', 'on' => 'captcha' ],
 			// Other
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
-			[ [ 'status', 'fragment' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'parentId', 'baseId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ [ 'createdAt', 'modifiedAt', 'approvedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+			[ [ 'pinned', 'featured', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'ipNum', 'status', 'fragment', 'rating' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'baseId', 'bannerId', 'videoId', 'parentId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'createdAt', 'modifiedAt', 'approvedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
 		// Enable captcha for non-logged in users
@@ -177,7 +194,7 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 			$rules[] = [ 'captcha', 'required' ];
 		}
 
-		// trim if required
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'name', 'email', 'avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
@@ -206,9 +223,11 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 			'agent' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AGENT_BROWSER ),
 			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
 			'rating' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RATING ),
+			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
 			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
-			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
+			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
 		];
 	}
 
@@ -220,21 +239,51 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
 	// ModelComment --------------------------
 
+	/**
+	 * Return the immediate parent comment.
+	 *
+	 * @return ModelComment
+	 */
 	public function getBaseComment() {
 
 		return $this->hasOne( ModelComment::className(), [ 'id' => 'baseId' ] );
 	}
 
+	/**
+	 * Return all the immediate child comments.
+	 *
+	 * @return ModelComment
+	 */
 	public function getChildComments() {
 
 		return $this->hasMany( ModelComment::className(), [ 'baseId' => 'id' ] );
 	}
 
+	/**
+	 * Returns string representation of status.
+	 *
+	 * @return string
+	 */
 	public function getStatusStr() {
 
 		return self::$statusMap[ $this->status ];
 	}
 
+	/**
+	 * Returns string representation of pinned flag.
+	 *
+	 * @return boolean
+	 */
+	public function getPinnedStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->pinned );
+	}
+
+	/**
+	 * Returns string representation of featured flag.
+	 *
+	 * @return boolean
+	 */
 	public function getFeaturedStr() {
 
 		return Yii::$app->formatter->asBoolean( $this->featured );
@@ -260,6 +309,9 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
@@ -268,15 +320,31 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 		return parent::queryWithAll( $config );
 	}
 
-	public static function queryByParentConfig( $parentId, $parentType, $config = [] ) {
+	/**
+	 * Return query to find the comments by type.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $type
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query by type.
+	 */
+	public static function queryByType( $parentId, $parentType, $type = ModelComment::TYPE_COMMENT, $config = [] ) {
 
-		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
+		//$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
 		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
 
-		return self::queryByParent( $parentId, $parentType )->andWhere( [ 'type' => $type, 'status' => $status ] );
+		return self::queryByParent( $parentId, $parentType, $config )->andWhere( [ 'type' => $type, 'status' => $status ] );
 	}
 
-	public static function queryByParentTypeConfig( $parentType, $config = [] ) {
+	/**
+	 * Return query to find the comments by parent type.
+	 *
+	 * @param string $parentType
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query by parent type.
+	 */
+	public static function queryByParentType( $parentType, $config = [] ) {
 
 		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
 		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : self::STATUS_APPROVED;
@@ -284,6 +352,13 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 		return self::find()->where( [ 'parentType' => $parentType, 'type' => $type, 'status' => $status ] );
 	}
 
+	/**
+	 * Return query to find the child comments.
+	 *
+	 * @param integer $baseId
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query child comments.
+	 */
 	public static function queryByBaseId( $baseId, $config = [] ) {
 
 		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : self::TYPE_COMMENT;
@@ -292,26 +367,60 @@ class ModelComment extends \cmsgears\core\common\models\base\Resource {
 		return self::find()->where( [ 'baseId' => $baseId, 'type' => $type, 'status' => $status ] );
 	}
 
-	public static function queryByEmail( $email ) {
+	/**
+	 * Return query to find the comments by email.
+	 *
+	 * @param string $email
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query by email.
+	 */
+	public static function queryByEmail( $email, $config = [] ) {
 
 		return self::find()->where( [ 'email' => $email ] );
 	}
 
-	public static function queryL0Approved( $parentId, $parentType, $type ) {
+	/**
+	 * Return query to find top level approved comments.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $type
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query by email.
+	 */
+	public static function queryL0Approved( $parentId, $parentType, $type = ModelComment::TYPE_COMMENT, $config = [] ) {
 
-		return self::queryByParentConfig( $parentId, $parentType, [ 'type' => $type ] )->andWhere( [ 'baseId' => null ] );
+		return self::queryByType( $parentId, $parentType, $type, $config )->andWhere( [ 'baseId' => null ] );
 	}
 
 	// Read - Find ------------
 
-	public static function findByUser( $parentId, $parentType, $userId ) {
+	/**
+	 * Find and return the comment for given user id.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param integer $userId
+	 * @param string $type
+	 * @return ModelComment
+	 */
+	public static function findByUser( $parentId, $parentType, $userId, $type = ModelComment::TYPE_COMMENT ) {
 
-		return static::find()->where( 'parentId=:pid AND parentType=:ptype AND createdBy=:uid', [ ':pid' => $parentId, ':ptype' => $parentType, ':uid' => $userId ] )->one();
+		return static::find()->where( 'parentId=:pid AND parentType=:ptype AND createdBy=:uid AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':uid' => $userId, ':type' => $type ] )->one();
 	}
 
-	public static function isExistByUser( $parentId, $parentType, $userId ) {
+	/**
+	 * Check whether comment already exist for given user id.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param integer $userId
+	 * @param string $type
+	 * @return boolean
+	 */
+	public static function isExistByUser( $parentId, $parentType, $userId, $type = ModelComment::TYPE_COMMENT ) {
 
-		$comment	= static::findByUser( $parentId, $parentType, $userId );
+		$comment	= static::findByUser( $parentId, $parentType, $userId, $type );
 
 		$isExist	= isset( $comment );
 

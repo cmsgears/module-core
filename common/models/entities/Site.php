@@ -11,6 +11,7 @@ namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
 use Yii;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -21,6 +22,10 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\interfaces\base\IAuthor;
 use cmsgears\core\common\models\interfaces\base\IName;
 use cmsgears\core\common\models\interfaces\base\ISlug;
+use cmsgears\core\common\models\interfaces\resources\IContent;
+use cmsgears\core\common\models\interfaces\resources\IData;
+use cmsgears\core\common\models\interfaces\resources\IGridCache;
+use cmsgears\core\common\models\interfaces\resources\IVisual;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Entity;
@@ -29,6 +34,7 @@ use cmsgears\core\common\models\resources\SiteMeta;
 use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\NameTrait;
 use cmsgears\core\common\models\traits\base\SlugTrait;
+use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
@@ -60,7 +66,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Site extends Entity implements IAuthor, IName, ISlug {
+class Site extends Entity implements IAuthor, IContent, IData, IGridCache, IName, ISlug, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -85,6 +91,7 @@ class Site extends Entity implements IAuthor, IName, ISlug {
 	// Traits ------------------------------------------------------
 
 	use AuthorTrait;
+	use ContentTrait;
 	use DataTrait;
 	use GridCacheTrait;
 	use NameTrait;
@@ -135,7 +142,7 @@ class Site extends Entity implements IAuthor, IName, ISlug {
 		$rules = [
 			// Required, Safe
 			[ 'name', 'required' ],
-			[ [ 'id', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique
 			[ 'name', 'unique' ],
 			// Text Limit
@@ -177,6 +184,7 @@ class Site extends Entity implements IAuthor, IName, ISlug {
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}

@@ -22,6 +22,9 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\interfaces\base\IAuthor;
 use cmsgears\core\common\models\interfaces\base\IName;
 use cmsgears\core\common\models\interfaces\base\ISlug;
+use cmsgears\core\common\models\interfaces\resources\IContent;
+use cmsgears\core\common\models\interfaces\resources\IData;
+use cmsgears\core\common\models\interfaces\resources\IGridCache;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Entity;
@@ -59,7 +62,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Theme extends Entity implements IAuthor, IName, ISlug {
+class Theme extends Entity implements IAuthor, IContent, IData, IGridCache, IName, ISlug {
 
 	// Variables ---------------------------------------------------
 

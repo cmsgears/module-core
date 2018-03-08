@@ -30,6 +30,8 @@ use cmsgears\core\common\models\entities\Role;
  * @property integer $siteId
  * @property integer $userId
  * @property integer $roleId
+ * @property boolean $pinned
+ * @property boolean $featured
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  *
@@ -96,6 +98,7 @@ class SiteMember extends Mapper {
 			// Unique
 			[ [ 'siteId', 'userId', 'roleId' ], 'unique', 'targetAttribute' => [ 'siteId', 'userId', 'roleId' ] ],
 			// Other
+			[ [ 'pinned', 'featured' ], 'boolean' ],
 			[ [ 'siteId', 'userId', 'roleId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
@@ -151,6 +154,26 @@ class SiteMember extends Mapper {
 	public function getRole() {
 
 		return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
+	}
+
+	/**
+	 * Returns string representation of pinned flag.
+	 *
+	 * @return boolean
+	 */
+	public function getPinnedStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->pinned );
+	}
+
+	/**
+	 * Returns string representation of featured flag.
+	 *
+	 * @return boolean
+	 */
+	public function getFeaturedStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->featured );
 	}
 
 	// Static Methods ----------------------------------------------

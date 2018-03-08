@@ -13,16 +13,19 @@ namespace cmsgears\core\common\models\resources;
 use Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\base\Resource;
 
 /**
- * Stats Entity
+ * The stats stores meta data of tables.
  *
  * @property integer $id
  * @property string $table
- * @property integer $rows
+ * @property string $type
+ * @property integer $count
  *
  * @since 1.0.0
  */
@@ -65,12 +68,13 @@ class Stats extends Resource {
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'table', 'rows' ], 'required' ],
+			[ [ 'table', 'type', 'count' ], 'required' ],
 			[ 'id', 'safe' ],
 			// Text Limit
+			[ 'type', 'string', 'min' => 0, 'max' => Yii::$app->core->mediumText ],
 			[ 'table', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			// Others
 			[ 'rows' => 'number', 'integerOnly' => true ]
@@ -85,8 +89,9 @@ class Stats extends Resource {
 	public function attributeLabels() {
 
 		return [
-			'table' => 'table',
-			'rows' => 'rows'
+			'table' => 'Table',
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'count' => 'Count'
 		];
 	}
 
@@ -109,7 +114,7 @@ class Stats extends Resource {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_STATS;
+		return CoreTables::getTableName( CoreTables::TABLE_STATS );
 	}
 
 	// CMG parent classes --------------------
@@ -120,21 +125,20 @@ class Stats extends Resource {
 
 	// Read - Find ------------
 
-	public static function getRowCount( $table, $type = null ) {
+	/**
+	 * Returns row count for given table and type.
+	 *
+	 * @param string $table
+	 * @param string $type
+	 * @return integer
+	 */
+	public static function getRowCount( $table, $type = 'row' ) {
 
-		// Row count for model type
-		if( isset( $type ) ) {
+		$stat = self::find()->where( '`table`=:table AND type=:type', [ ':table' => $table, ':type' => $type ] )->one();
 
-		}
-		// Row count for model
-		else {
+		if( isset( $stat ) ) {
 
-			$query = self::find()->where( '`table`=:table AND type IS NULL', [ ':table' => $table ] )->one();
-
-			if( isset( $query ) ) {
-
-				return $query->rows();
-			}
+			return $stat->count;
 		}
 
 		return 0;

@@ -193,7 +193,7 @@ class RolePermission extends Mapper {
 	 * @param integer $permissionId
 	 * @return RolePermission
 	 */
-	public static function findByCountryIdCode( $roleId, $permissionId ) {
+	public static function findByRoleIdPermissionId( $roleId, $permissionId ) {
 
 		return self::find()->where( 'roleId=:rid AND $permissionId=:pid', [ ':rid' => $roleId, ':pid' => $permissionId ] )->one();
 	}

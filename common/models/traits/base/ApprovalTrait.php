@@ -12,7 +12,7 @@ namespace cmsgears\core\common\models\traits\base;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\interfaces\IApproval;
+use cmsgears\core\common\models\interfaces\base\IApproval;
 
 /**
  * Useful for models required registration process with admin approval. The model using this

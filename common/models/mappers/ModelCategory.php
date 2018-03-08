@@ -28,7 +28,7 @@ use cmsgears\core\common\models\traits\ModelMapperTrait;
  * @property string $type
  * @property integer $order
  * @property boolean $active
- * @property boolean $userMapped
+ * @property string $nodes
  *
  * @since 1.0.0
  */
@@ -75,7 +75,7 @@ class ModelCategory extends ModelMapper implements IModelMapper {
 
 		$rules = parent::rules();
 
-		$rules[] = [ 'userMapped', 'boolean' ];
+		$rules[] = [ 'nodes', 'safe' ];
 
 		return $rules;
 	}

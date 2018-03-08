@@ -14,8 +14,39 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\forms\SocialLink;
 
+/**
+ * SocialLinkTrait provide options to manage social links associated with a model using
+ * [[$data]] attribute. The model must also use [[DataTrait]].
+ */
 trait SocialLinkTrait {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG classes ---------------------------
+
+	// Validators ----------------------------
+
+	// SocialLinkTrait -----------------------
+
+	/**
+	 * @inheritdoc
+	 */
 	public function getSocialLinks() {
 
 		$links 	= $this->getDataMeta( CoreGlobal::DATA_SOCIAL_LINKS );
@@ -33,6 +64,9 @@ trait SocialLinkTrait {
 		return $map;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function updateSocialLinks( $links ) {
 
 		$map = [];
@@ -48,6 +82,9 @@ trait SocialLinkTrait {
 		$this->updateDataMeta( CoreGlobal::DATA_SOCIAL_LINKS, $map );
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function updateSocialLink( $link ) {
 
 		$map = $this->getSocialLinks();
@@ -57,6 +94,9 @@ trait SocialLinkTrait {
 		$this->updateSocialLinks( $map );
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function deleteSocialLink( $link ) {
 
 		$map = $this->getSocialLinks();
@@ -65,4 +105,23 @@ trait SocialLinkTrait {
 
 		$this->updateSocialLinks( $map );
 	}
+
+	// Static Methods ----------------------------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG classes ---------------------------
+
+	// SocialLinkTrait -----------------------
+
+	// Read - Query -----------
+
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
+
 }

@@ -9,10 +9,17 @@
 
 namespace cmsgears\core\common\models\traits\resources;
 
-// Yii Imports
-use Yii;
-
 trait GridCacheTrait {
+
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	private $localGridCache;
 
@@ -26,22 +33,96 @@ trait GridCacheTrait {
 
 	// CMG classes ---------------------------
 
+	// Validators ----------------------------
+
 	// GridCacheTrait ------------------------
 
+	/**
+	 * @inheritdoc
+	 */
 	public function isGridCacheValid() {
 
 		return $this->gridCacheValid;
 	}
 
-	public function getGridCacheAttribute( $attribute ) {
+	/**
+	 * @inheritdoc
+	 */
+	public function generateJsonFromGridObject( $dataObject ) {
 
+		$data				= json_encode( $dataObject );
+		$this->gridCache	= $data;
 	}
 
-	public function setGridCacheAttribute( $attribute, $value ) {
+	/**
+	 * @inheritdoc
+	 */
+	public function generateGridObjectFromJson( $assoc = false ) {
 
+		$obj = json_decode( $this->gridCache, $assoc );
+
+		return (object)$obj;
 	}
 
-	// Validators -------------
+	/**
+	 * @inheritdoc
+	 */
+	public function getGridCacheAttribute( $name, $assoc = false ) {
+
+		$object	= $this->generateGridObjectFromJson( $assoc );
+
+		if( isset( $object->$name ) ) {
+
+			return $object->$name;
+		}
+
+		return null;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function setGridCacheAttribute( $name, $value, $assoc = false ) {
+
+		// Convert data to object
+		$object	= $this->generateGridObjectFromJson( $assoc );
+
+		// Add/Update meta
+		$object->$name	= $value;
+
+		// Convert object back to data
+		$this->generateJsonFromGridObject( $object );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function updateGridCacheAttribute( $name, $value, $assoc = false ) {
+
+		// set object property
+		$this->setGridCacheAttribute( $name, $value, $assoc );
+
+		// Save model meta state
+		$this->update();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function removeGridCacheAttribute( $name, $assoc = false ) {
+
+		// Convert data to object
+		$object	= $this->generateGridObjectFromJson( $assoc );
+
+		// Remove meta
+		unset( $object->$name );
+
+		// Convert object back to data
+		$this->generateJsonFromGridObject( $object );
+
+		// Save model meta state
+		$this->update();
+	}
 
 	// Static Methods ----------------------------------------------
 

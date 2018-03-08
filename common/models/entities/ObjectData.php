@@ -24,6 +24,14 @@ use cmsgears\core\common\models\interfaces\base\IMultiSite;
 use cmsgears\core\common\models\interfaces\base\INameType;
 use cmsgears\core\common\models\interfaces\base\IOwner;
 use cmsgears\core\common\models\interfaces\base\ISlugType;
+use cmsgears\core\common\models\interfaces\resources\IComment;
+use cmsgears\core\common\models\interfaces\resources\IContent;
+use cmsgears\core\common\models\interfaces\resources\IData;
+use cmsgears\core\common\models\interfaces\resources\IGridCache;
+use cmsgears\core\common\models\interfaces\resources\IHierarchy;
+use cmsgears\core\common\models\interfaces\resources\IModelMeta;
+use cmsgears\core\common\models\interfaces\resources\ITemplate;
+use cmsgears\core\common\models\interfaces\resources\IVisual;
 use cmsgears\core\common\models\interfaces\mappers\ICategory;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
 
@@ -35,11 +43,12 @@ use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
 use cmsgears\core\common\models\traits\base\NameTypeTrait;
 use cmsgears\core\common\models\traits\base\SlugTypeTrait;
+use cmsgears\core\common\models\traits\resources\CommentTrait;
 use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 use cmsgears\core\common\models\traits\resources\HierarchyTrait;
-use cmsgears\core\common\models\traits\resources\MetaTrait;
+use cmsgears\core\common\models\traits\resources\ModelMetaTrait;
 use cmsgears\core\common\models\traits\resources\SocialLinkTrait;
 use cmsgears\core\common\models\traits\resources\TemplateTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
@@ -80,7 +89,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class ObjectData extends Entity implements IAuthor, ICategory, IFile, IMultiSite, INameType, IOwner, ISlugType {
+class ObjectData extends Entity implements IAuthor, ICategory, IComment, IContent, IData, IFile,
+	IGridCache, IHierarchy, IModelMeta, IMultiSite, INameType, IOwner, ISlugType, ITemplate, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -108,12 +118,13 @@ class ObjectData extends Entity implements IAuthor, ICategory, IFile, IMultiSite
 
 	use AuthorTrait;
 	use CategoryTrait;
+	use CommentTrait;
 	use ContentTrait;
 	use DataTrait;
 	use FileTrait;
 	use GridCacheTrait;
 	use HierarchyTrait;
-	use MetaTrait;
+	use ModelMetaTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;

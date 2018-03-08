@@ -50,6 +50,18 @@ class City extends Entity implements IName {
 
 	// Constants --------------
 
+	// Low level divisions
+	const TYPE_CITY		= 'city';
+	const TYPE_TOWN		= 'town';
+	const TYPE_VILLAGE	= 'village';
+
+	// Group level divisions
+	const TYPE_COUNTY		= 'county';
+	const TYPE_MUNICIPALITY	= 'municipality';
+	const TYPE_TEHSIL		= 'tehsil';
+	const TYPE_TALUKA		= 'taluka';
+	const TYPE_MANDAL		= 'mandal';
+
 	// Public -----------------
 
 	// Protected --------------

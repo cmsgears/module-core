@@ -12,13 +12,25 @@ namespace cmsgears\core\common\models\base;
 // Yii Imports
 use Yii;
 
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\models\interfaces\base\IMeta;
+
+use cmsgears\core\common\models\traits\base\MetaTrait;
+
 /**
- * Meta represents meta data of a model.
+ * Meta represents meta data of a model. It's the base class for Models having
+ * separate table to store meta data.
+ *
+ * Example: Site and SiteMeta where Site is the entity model and SiteMeta stores attributes
+ * and meta data of sites.
  *
  * A model can have multiple meta mapped to it, but only one meta with the same name of
  * a particular type is allowed for a model. We can have value type hints using $valueType.
  *
  * @property int $id
+ * @property int $modelId
  * @property string $name
  * @property string $label
  * @property string $type
@@ -27,7 +39,7 @@ use Yii;
  *
  * @since 1.0.0
  */
-abstract class Meta extends Resource {
+abstract class Meta extends Resource implements IMeta {
 
 	// Variables ---------------------------------------------------
 
@@ -35,32 +47,7 @@ abstract class Meta extends Resource {
 
 	// Constants --------------
 
-	const VALUE_TYPE_TEXT		= 'text';
-	const VALUE_TYPE_FLAG		= 'flag';
-	const VALUE_TYPE_LIST		= 'list';
-	const VALUE_TYPE_MAP		= 'map';
-	const VALUE_TYPE_CSV		= 'csv';
-	const VALUE_TYPE_OBJECT		= 'json';
-	const VALUE_TYPE_HTML		= 'html';
-	const VALUE_TYPE_MARKDOWN	= 'markdown';
-
 	// Public -----------------
-
-	/**
-	 * Stores the map of types having value type as key and value as text representation of key.
-	 *
-	 * @var array
-	 */
-	public static $typeMap	= [
-		self::VALUE_TYPE_TEXT => 'Text',
-		self::VALUE_TYPE_FLAG => 'Flag',
-		self::VALUE_TYPE_LIST => 'List',
-		self::VALUE_TYPE_MAP => 'Map',
-		self::VALUE_TYPE_CSV => 'Csv',
-		self::VALUE_TYPE_OBJECT => 'Object',
-		self::VALUE_TYPE_HTML => 'Html',
-		self::VALUE_TYPE_MARKDOWN => 'Markdown'
-	];
 
 	// Protected --------------
 
@@ -73,6 +60,8 @@ abstract class Meta extends Resource {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use MetaTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -94,7 +83,7 @@ abstract class Meta extends Resource {
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ 'name', 'required' ],
+			[ [ 'modelId', 'name' ], 'required' ],
 			[ [ 'id', 'value' ], 'safe' ],
 			// Unique
 			[ [ 'modelId', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'modelId', 'name', 'type' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
@@ -102,6 +91,7 @@ abstract class Meta extends Resource {
 			[ [ 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'modelId', 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 
 		// Trim Text
@@ -121,6 +111,7 @@ abstract class Meta extends Resource {
 	public function attributeLabels() {
 
 		return [
+			'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
@@ -138,160 +129,20 @@ abstract class Meta extends Resource {
 	// Meta ----------------------------------
 
 	/**
-	 * Generate and return label using meta name.
+	 * Returns the parent model using one-to-one(hasOne) relationship.
 	 *
-	 * It replace underscore(_) by space and update first letter of words to uppercase.
-	 *
-	 * @return string generated label.
+	 * @return ActiveRecord The parent model to which this meta belongs.
 	 */
-	public function getLabel() {
-
-		$label		= preg_replace( '/_/', ' ', $this->name );
-		$label		= ucwords( $label );
-
-		return $label;
-	}
+	abstract public function getParent();
 
 	/**
-	 * Check whether value type is text.
+	 * Checks whether the meta belong to given parent model.
 	 *
 	 * @return boolean
 	 */
-	public function isText() {
+	public function belongsTo( $model ) {
 
-		return $this->valueType == self::VALUE_TYPE_TEXT;
-	}
-
-	/**
-	 * Check whether value type is boolean i.e. 0 or 1.
-	 *
-	 * @return boolean
-	 */
-	public function isFlag() {
-
-		return $this->valueType == self::VALUE_TYPE_FLAG;
-	}
-
-	/**
-	 * Check whether value type is list i.e. indexed array.
-	 *
-	 * @return boolean
-	 */
-	public function isList() {
-
-		return $this->valueType == self::VALUE_TYPE_LIST;
-	}
-
-	/**
-	 * Check whether value type is map i.e. associative array.
-	 *
-	 * @return boolean
-	 */
-	public function isMap() {
-
-		return $this->valueType == self::VALUE_TYPE_MAP;
-	}
-
-	/**
-	 * Check whether value type is csv i.e. string having comma separated values.
-	 *
-	 * @return boolean
-	 */
-	public function isCsv() {
-
-		return $this->valueType == self::VALUE_TYPE_CSV;
-	}
-
-	/**
-	 * Check whether value type is object i.e. JOSN.
-	 *
-	 * @return boolean
-	 */
-	public function isObject() {
-
-		return $this->valueType == self::VALUE_TYPE_OBJECT;
-	}
-
-	/**
-	 * Check whether value type is HTML.
-	 *
-	 * @return boolean
-	 */
-	public function isHtml() {
-
-		return $this->valueType == self::VALUE_TYPE_HTML;
-	}
-
-	/**
-	 * Check whether value type is Markdown.
-	 *
-	 * @return boolean
-	 */
-	public function isMarkdown() {
-
-		return $this->valueType == self::VALUE_TYPE_MARKDOWN;
-	}
-
-	/**
-	 * Convert and return the value stored in [[value]] using [[valueType]].
-	 *
-	 * @return mixed Converted value.
-	 */
-	public function getFieldValue() {
-
-		switch( $this->valueType ) {
-
-			case self::VALUE_TYPE_TEXT: {
-
-				return $this->value;
-			}
-			case self::VALUE_TYPE_FLAG: {
-
-				return Yii::$app->formatter->asBoolean( $this->value );
-			}
-			case self::VALUE_TYPE_LIST: {
-
-				return json_decode( $this->value );
-			}
-			case self::VALUE_TYPE_MAP: {
-
-				return json_decode( $this->value, true );
-			}
-			case self::VALUE_TYPE_OBJECT: {
-
-				return json_decode( $this->value );
-			}
-			default: {
-
-				return $this->value;
-			}
-		}
-	}
-
-	/**
-	 * Generate and return the map having label, name and value as keys.
-	 *
-	 * @return array Map of label, name and value.
-	 */
-	public function getFieldInfo() {
-
-		switch( $this->valueType ) {
-
-			case self::VALUE_TYPE_TEXT: {
-
-				return [ 'label' => $this->getLabel(), 'name' => $this->name, 'value' => $this->value ];
-			}
-			case self::VALUE_TYPE_FLAG: {
-
-				$value = Yii::$app->formatter->asBoolean( $this->value );
-
-				return [ 'label' => $this->getLabel(), 'name' => $this->name, 'value' => $value ];
-			}
-			default: {
-
-				return [ 'label' => $this->getLabel(), 'name' => $this->name, 'value' => $this->value ];
-			}
-		}
+		return $this->modelId == $model->id;
 	}
 
 	// Static Methods ----------------------------------------------
@@ -306,12 +157,195 @@ abstract class Meta extends Resource {
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
+	public static function queryWithHasOne( $config = [] ) {
+
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'parent' ];
+		$config[ 'relations' ]	= $relations;
+
+		return parent::queryWithAll( $config );
+	}
+
+	/**
+	 * Return query to find the meta with parent model.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with parent model.
+	 */
+	public static function queryWithParent( $config = [] ) {
+
+		$config[ 'relations' ]	= [ 'parent' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	/**
+	 * Return query to find the meta by parent id.
+	 *
+	 * @param integer $modelId Parent Id.
+	 * @return \yii\db\ActiveQuery to query by parent id.
+	 */
+	public static function queryByModelId( $modelId ) {
+
+		return static::find()->where( 'modelId=:pid', [ ':pid' => $modelId ] );
+	}
+
+	/**
+	 * Return query to find the meta by parent id and meta name.
+	 *
+	 * @param integer $modelId Parent Id.
+	 * @param string $name
+	 * @return \yii\db\ActiveQuery to query by parent id and meta name.
+	 */
+	public static function queryByName( $modelId, $name ) {
+
+		return static::find()->where( 'modelId=:pid AND name=:name', [ ':pid' => $modelId, ':name' => $name ] );
+	}
+
+	/**
+	 * Return query to find the meta by parent id and meta type.
+	 *
+	 * @param integer $modelId Parent Id.
+	 * @param string $type
+	 * @return \yii\db\ActiveQuery to query by parent id and meta type.
+	 */
+	public static function queryByType( $modelId, $type ) {
+
+		return static::find()->where( 'modelId=:pid AND type=:type', [ ':pid' => $modelId, ':type' => $type ] );
+	}
+
+	/**
+	 * Return query to find the meta by parent id, meta name and meta type.
+	 *
+	 * @param integer $modelId Parent Id.
+	 * @param string $name
+	 * @param string $type
+	 * @return \yii\db\ActiveQuery to query by parent id, meta name and meta type.
+	 */
+	public static function queryByNameType( $modelId, $name, $type ) {
+
+		return static::find()->where( 'modelId=:pid AND name=:name AND type=:type', [ ':pid' => $modelId, ':name' => $name, ':type' => $type ] );
+	}
+
 	// Read - Find ------------
+
+	/**
+	 * Return meta models by parent id.
+	 *
+	 * @param integer $modelId Parent Id.
+	 * @return ModelMeta[] by parent id.
+	 */
+	public static function findByModelId( $modelId ) {
+
+		return self::queryByModelId( $modelId )->all();
+	}
+
+	/**
+	 * Return meta models by parent id and meta name.
+	 *
+	 * @param integer $modelId Parent Id.
+	 * @param string $name
+	 * @return ModelMeta[] by parent id and meta name.
+	 */
+	public static function findByName( $modelId, $name ) {
+
+		$query	= self::queryByName( $modelId, $name );
+
+		return $query->all();
+	}
+
+	/**
+	 * Return first meta model by parent id and meta name.
+	 *
+	 * @param integer $modelId Parent Id.
+	 * @param string $name
+	 * @return ModelMeta|array|null by parent id and meta name.
+	 */
+	public static function findFirstByName( $modelId, $name ) {
+
+		$query	= self::queryByName( $modelId, $name );
+
+		return $query->one();
+	}
+
+	/**
+	 * Return meta models by parent id and meta type.
+	 *
+	 * @param integer $modelId Parent Id.
+	 * @param string $type
+	 * @return ModelMeta[] by parent id and meta type.
+	 */
+	public static function findByType( $modelId, $type ) {
+
+		return self::queryByType( $modelId, $type )->all();
+	}
+
+	/**
+	 * Return meta model by parent id, meta name and meta type.
+	 *
+	 * @param integer $modelId Parent Id.
+	 * @param string $name
+	 * @param string $type
+	 * @return ModelMeta|array|null by parent id, meta name and meta type.
+	 */
+	public static function findByNameType( $modelId, $name, $type ) {
+
+		return self::queryByNameType( $modelId, $name, $type )->one();
+	}
+
+	/**
+	 * Check whether meta exist by parent id, meta name and meta type.
+	 *
+	 * @param integer $modelId Parent Id.
+	 * @param string $name
+	 * @param string $type
+	 * @return boolean
+	 */
+	public static function isExistByNameType( $modelId, $name, $type ) {
+
+		$meta = self::findByNameType( $modelId, $type, $name );
+
+		return isset( $meta );
+	}
 
 	// Create -----------------
 
 	// Update -----------------
 
+	/**
+	 * Update the meta value for given parent id, name, type.
+	 *
+	 * @param integer $modelId Parent Id.
+	 * @param string $name
+	 * @param string $type
+	 * @param type $value
+	 * @return int|false either 1 or false if meta not found or validation fails.
+	 */
+	public static function updateByNameType( $modelId, $name, $type, $value ) {
+
+		$meta = self::findByNameType( $modelId, $name, $type );
+
+		if( isset( $meta ) ) {
+
+			$meta->value = $value;
+
+			return $meta->update();
+		}
+
+		return false;
+	}
+
 	// Delete -----------------
 
+	/**
+	 * Delete all meta related to a model.
+	 *
+	 * @return int the number of rows deleted.
+	 */
+	public static function deleteByModelId( $modelId ) {
+
+		return self::deleteAll( 'modelId=:id', [ ':id' => $modelId ] );
+	}
 }

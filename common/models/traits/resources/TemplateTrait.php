@@ -41,11 +41,17 @@ trait TemplateTrait {
 
 	// TemplateTrait -------------------------
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getTemplate() {
 
 		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getTemplateName() {
 
 		$template = $this->template;

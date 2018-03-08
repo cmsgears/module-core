@@ -16,7 +16,7 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\common\models\traits\ModelMapperTrait;
+use cmsgears\core\common\models\traits\base\ModelMapperTrait;
 
 /**
  * The mapper to map File Model to specific parent model for given parentId and parentType.
@@ -99,6 +99,26 @@ class ModelFile extends ModelMapper implements IModelMapper {
 		return $this->hasOne( File::className(), [ 'id' => 'modelId' ] );
 	}
 
+	/**
+	 * Returns string representation of pinned flag.
+	 *
+	 * @return boolean
+	 */
+	public function getPinnedStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->pinned );
+	}
+
+	/**
+	 * Returns string representation of featured flag.
+	 *
+	 * @return boolean
+	 */
+	public function getFeaturedStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->featured );
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------
@@ -121,21 +141,50 @@ class ModelFile extends ModelMapper implements IModelMapper {
 
 	// Read - Find ------------
 
+	/**
+	 * Find and return the mappings for given title. It's useful in cases where unique
+	 * title is required for file.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $title
+	 * @return ModelFile
+	 */
 	public static function findByFileTitle( $parentId, $parentType, $title ) {
 
-		return self::queryByParent( $parentId, $parentType )->andWhere( 'title=:title', [ ':title' => $title ] )->one();
+		$fileTable = CoreTables::getTableName( CoreTables::TABLE_FILE );
+
+		return self::queryByParent( $parentId, $parentType )->andWhere( "$fileTable.title=:title", [ ':title' => $title ] )->one();
 	}
 
+	/**
+	 * Find and return the mappings for given title.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $title
+	 * @return ModelFile[]
+	 */
 	public static function findByFileTitleLike( $parentId, $parentType, $title ) {
 
-		return self::queryByParent( $parentId, $parentType )->andFilterWhere( [ 'like', 'title', $title ] )->all();
+		$fileTable = CoreTables::getTableName( CoreTables::TABLE_FILE );
+
+		return self::queryByParent( $parentId, $parentType )->andFilterWhere( [ 'like', "$fileTable.title", $title ] )->all();
 	}
 
-	public static function findByFileType( $parentId, $parentType, $type ) {
+	/**
+	 * Find and return the mappings for file type.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $fileType
+	 * @return ModelFile[]
+	 */
+	public static function findByFileType( $parentId, $parentType, $fileType ) {
 
-		$fileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
+		$fileTable = CoreTables::getTableName( CoreTables::TABLE_FILE );
 
-		return self::queryByParent( $parentId, $parentType )->andFilterWhere( [ 'like', "$fileTable.type", $type ] )->all();
+		return self::queryByParent( $parentId, $parentType )->andFilterWhere( [ 'like', "$fileTable.type", $fileType ] )->all();
 	}
 
 	// Create -----------------

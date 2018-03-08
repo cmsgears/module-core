@@ -10,11 +10,11 @@
 namespace cmsgears\core\common\models\interfaces\base;
 
 /**
- * The IResource interface provide methods specific to mapping multiple models to a parent.
+ * The IModelResource interface provide methods specific to mapping multiple models to a parent.
  *
  * @since 1.0.0
  */
-interface IResource {
+interface IModelResource {
 
 	/**
 	 * Check parent using given parent id and type.

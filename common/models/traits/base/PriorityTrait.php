@@ -10,7 +10,7 @@
 namespace cmsgears\core\common\models\traits\base;
 
 // CMG Imports
-use cmsgears\core\common\models\interfaces\IPriority;
+use cmsgears\core\common\models\interfaces\base\IPriority;
 
 /**
  * It's useful for models having priority attribute.

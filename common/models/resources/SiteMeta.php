@@ -11,7 +11,7 @@ namespace cmsgears\core\common\models\resources;
 
 // CMG Imports
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\ModelMeta;
+use cmsgears\core\common\models\base\Meta;
 
 use cmsgears\core\common\models\entities\Site;
 
@@ -28,7 +28,7 @@ use cmsgears\core\common\models\entities\Site;
  *
  * @since 1.0.0
  */
-class SiteMeta extends ModelMeta {
+class SiteMeta extends Meta {
 
 	// Variables ---------------------------------------------------
 

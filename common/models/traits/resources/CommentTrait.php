@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\traits\resources;
 
 // Yii Imports
@@ -13,40 +21,66 @@ use cmsgears\core\common\models\resources\ModelComment;
  */
 trait CommentTrait {
 
-	/**
-	 * Query top level approved comments.
-	 */
-	public function getModelComments() {
+	// Variables ---------------------------------------------------
 
-		return ModelComment::queryL0Approved( $this->id, $this->modelType, ModelComment::TYPE_COMMENT );
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG classes ---------------------------
+
+	// Validators ----------------------------
+
+	// CommentTrait --------------------------
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getModelComments( $config = [] ) {
+
+		return ModelComment::queryL0Approved( $this->id, $this->modelType, ModelComment::TYPE_COMMENT, $config );
 	}
 
 	/**
-	 * Query top level approved reviews.
+	 * @inheritdoc
 	 */
-	public function getModelReviews() {
+	public function getModelReviews( $config = [] ) {
 
-		return ModelComment::queryL0Approved( $this->id, $this->modelType, ModelComment::TYPE_REVIEW );
+		return ModelComment::queryL0Approved( $this->id, $this->modelType, ModelComment::TYPE_REVIEW, $config );
 	}
 
 	/**
-	 * Query top level approved feedbacks.
+	 * @inheritdoc
 	 */
-	public function getModelFeedbacks() {
+	public function getModelFeedbacks( $config = [] ) {
 
-		return ModelComment::queryL0Approved( $this->id, $this->modelType, ModelComment::TYPE_FEEDBACK );
+		return ModelComment::queryL0Approved( $this->id, $this->modelType, ModelComment::TYPE_FEEDBACK, $config );
 	}
 
 	/**
-	 * Query top level approved testimonials.
+	 * @inheritdoc
 	 */
-	public function getModelTestimonials() {
+	public function getModelTestimonials( $config = [] ) {
 
-		return ModelComment::queryL0Approved( $this->id, $this->modelType, ModelComment::TYPE_TESTIMONIAL );
+		return ModelComment::queryL0Approved( $this->id, $this->modelType, ModelComment::TYPE_TESTIMONIAL, $config );
 	}
 
-	// Average rating from all the approved reviews
-	public function getAverageRating( $type = ModelComment::TYPE_REVIEW, $topLevel = true ) {
+	/**
+	 * @inheritdoc
+	 */
+	public function getAverageRating( $type, $topLevel = true ) {
 
 		$commentTable	= CoreTables::TABLE_MODEL_COMMENT;
 		$query			= new Query();
@@ -79,7 +113,42 @@ trait CommentTrait {
 		return $average;
 	}
 
-	public function getRatingStars( $minStars = 0, $maxStars = 5, $topLevel = true ) {
+	/**
+	 * @inheritdoc
+	 */
+	public function getCommentsAverageRating( $topLevel = true ) {
+
+		return $this->getAverageRating( ModelComment::TYPE_COMMENT, $topLevel );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getReviewsAverageRating( $topLevel = true ) {
+
+		return $this->getAverageRating( ModelComment::TYPE_REVIEW, $topLevel );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getFeedbacksAverageRating( $topLevel = true ) {
+
+		return $this->getAverageRating( ModelComment::TYPE_FEEDBACK, $topLevel );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getTestimonialsAverageRating( $topLevel = true ) {
+
+		return $this->getAverageRating( ModelComment::TYPE_TESTIMONIAL, $topLevel );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getRatingStars( $type, $minStars = 0, $maxStars = 5, $topLevel = true ) {
 
 		$returnArr		= [];
 
@@ -93,7 +162,7 @@ trait CommentTrait {
 
 		$query->select( [ 'rating', 'count(id) as total' ] )
 				->from( $commentTable )
-				->where( [ 'parentId' => $this->id, 'parentType' => $this->modelType, 'status' => ModelComment::STATUS_APPROVED ] )
+				->where( [ 'parentId' => $this->id, 'parentType' => $this->modelType, 'type' => $type, 'status' => ModelComment::STATUS_APPROVED ] )
 				->andFilterWhere( [ 'between', 'rating', $minStars, $maxStars ] );
 
 		if( $topLevel ) {
@@ -121,10 +190,42 @@ trait CommentTrait {
 		return $returnArr;
 	}
 
-	public function getCommentStatusCounts( $config = [] ) {
+	/**
+	 * @inheritdoc
+	 */
+	public function getCommentsRatingStars( $minStars = 0, $maxStars = 5, $topLevel = true ) {
 
-		$type			= isset( $config[ 'type' ] ) ? $config[ 'type' ] : ModelComment::TYPE_COMMENT;
-		$topLevel		= isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
+		return $this->getRatingStars( ModelComment::TYPE_COMMENT, $minStars, $maxStars, $topLevel );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getReviewsRatingStars( $minStars = 0, $maxStars = 5, $topLevel = true ) {
+
+		return $this->getRatingStars( ModelComment::TYPE_REVIEW, $minStars, $maxStars, $topLevel );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getFeedbacksRatingStars( $minStars = 0, $maxStars = 5, $topLevel = true ) {
+
+		return $this->getRatingStars( ModelComment::TYPE_FEEDBACK, $minStars, $maxStars, $topLevel );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getTestimonialsRatingStars( $minStars = 0, $maxStars = 5, $topLevel = true ) {
+
+		return $this->getRatingStars( ModelComment::TYPE_TESTIMONIAL, $minStars, $maxStars, $topLevel );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getCommentStatusCounts( $type = ModelComment::TYPE_COMMENT, $topLevel = true ) {
 
 		$returnArr		= [ ModelComment::STATUS_NEW => 0, ModelComment::STATUS_BLOCKED => 0, ModelComment::STATUS_APPROVED => 0 ];
 
@@ -151,10 +252,10 @@ trait CommentTrait {
 		return $returnArr;
 	}
 
-	public function getApprovedCommentCount( $config = [] ) {
-
-		$type			= isset( $config[ 'type' ] ) ? $config[ 'type' ] : ModelComment::TYPE_COMMENT;
-		$topLevel		= isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
+	/**
+	 * @inheritdoc
+	 */
+	public function getApprovedCommentCount( $type = ModelComment::TYPE_COMMENT, $topLevel = true ) {
 
 		$commentTable	= CoreTables::TABLE_MODEL_COMMENT;
 		$query			= new Query();
@@ -174,10 +275,30 @@ trait CommentTrait {
 		return 0;
 	}
 
-	public function getApprovedReviewCount( $config = [] ) {
+	/**
+	 * @inheritdoc
+	 */
+	public function getApprovedReviewCount( $topLevel = true ) {
 
-		$config[ 'type' ] = ModelComment::TYPE_REVIEW;
-
-		return $this->getApprovedCommentCount( $config );
+		return $this->getApprovedCommentCount( ModelComment::TYPE_REVIEW, $topLevel );
 	}
+
+	// Static Methods ----------------------------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG classes ---------------------------
+
+	// CommentTrait --------------------------
+
+	// Read - Query -----------
+
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
+
 }

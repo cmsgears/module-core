@@ -10,7 +10,7 @@
 namespace cmsgears\core\common\models\traits\base;
 
 // CMG Imports
-use cmsgears\core\common\models\interfaces\IVisibility;
+use cmsgears\core\common\models\interfaces\base\IVisibility;
 
 /**
  * It's useful for models having visibility attribute.

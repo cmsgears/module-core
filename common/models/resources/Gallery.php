@@ -26,6 +26,10 @@ use cmsgears\core\common\models\interfaces\base\INameType;
 use cmsgears\core\common\models\interfaces\base\IOwner;
 use cmsgears\core\common\models\interfaces\base\ISlugType;
 use cmsgears\core\common\models\interfaces\base\IVisibility;
+use cmsgears\core\common\models\interfaces\resources\IData;
+use cmsgears\core\common\models\interfaces\resources\IGridCache;
+use cmsgears\core\common\models\interfaces\resources\IModelMeta;
+use cmsgears\core\common\models\interfaces\resources\ITemplate;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
 
 use cmsgears\core\common\models\base\CoreTables;
@@ -38,8 +42,9 @@ use cmsgears\core\common\models\traits\base\NameTypeTrait;
 use cmsgears\core\common\models\traits\base\OwnerTrait;
 use cmsgears\core\common\models\traits\base\SlugTypeTrait;
 use cmsgears\core\common\models\traits\base\VisibilityTrait;
-use cmsgears\core\common\models\traits\resources\MetaTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\resources\GridCacheTrait;
+use cmsgears\core\common\models\traits\resources\ModelMetaTrait;
 use cmsgears\core\common\models\traits\resources\TemplateTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
 
@@ -71,7 +76,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Gallery extends Resource implements IApproval, IAuthor, IFile, IMultiSite, INameType, IOwner, ISlugType, IVisibility {
+class Gallery extends Resource implements IApproval, IAuthor, IData, IFile, IGridCache, IModelMeta, IMultiSite,
+	INameType, IOwner, ISlugType, ITemplate, IVisibility {
 
 	// Variables ---------------------------------------------------
 
@@ -99,7 +105,8 @@ class Gallery extends Resource implements IApproval, IAuthor, IFile, IMultiSite,
 	use AuthorTrait;
 	use DataTrait;
 	use FileTrait;
-	use MetaTrait;
+	use GridCacheTrait;
+	use ModelMetaTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use OwnerTrait;

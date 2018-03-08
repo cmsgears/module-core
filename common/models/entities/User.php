@@ -23,6 +23,12 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\config\CoreProperties;
 
 use cmsgears\core\common\models\interfaces\base\IApproval;
+use cmsgears\core\common\models\interfaces\resources\IContent;
+use cmsgears\core\common\models\interfaces\resources\IData;
+use cmsgears\core\common\models\interfaces\resources\IGridCache;
+use cmsgears\core\common\models\interfaces\resources\IModelMeta;
+use cmsgears\core\common\models\interfaces\resources\ISocialLink;
+use cmsgears\core\common\models\interfaces\resources\IVisual;
 use cmsgears\core\common\models\interfaces\mappers\IAddress;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
 
@@ -32,14 +38,14 @@ use cmsgears\core\common\models\mappers\SiteMember;
 use cmsgears\core\common\models\resources\Option;
 
 use cmsgears\core\common\models\traits\base\ApprovalTrait;
-use cmsgears\core\common\models\traits\mappers\AddressTrait;
-use cmsgears\core\common\models\traits\mappers\FileTrait;
 use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
-use cmsgears\core\common\models\traits\resources\MetaTrait;
+use cmsgears\core\common\models\traits\resources\ModelMetaTrait;
 use cmsgears\core\common\models\traits\resources\SocialLinkTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
+use cmsgears\core\common\models\traits\mappers\AddressTrait;
+use cmsgears\core\common\models\traits\mappers\FileTrait;
 
 /**
  * User Entity - The primary class.
@@ -85,7 +91,8 @@ use cmsgears\core\common\models\traits\resources\VisualTrait;
  *
  * @since 1.0.0
  */
-class User extends Entity implements IdentityInterface, IAddress, IApproval, IFile {
+class User extends Entity implements IdentityInterface, IAddress, IApproval, IContent, IData,
+	IGridCache, IFile, IModelMeta, ISocialLink, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -126,7 +133,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, IFi
 	use DataTrait;
 	use FileTrait;
 	use GridCacheTrait;
-	use MetaTrait;
+	use ModelMetaTrait;
 	use SocialLinkTrait;
 	use VisualTrait;
 

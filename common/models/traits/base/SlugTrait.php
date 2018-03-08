@@ -88,7 +88,7 @@ trait SlugTrait {
 	 * @param array $config
 	 * @return \cmsgears\core\common\models\base\ActiveRecord
 	 */
-	public static function findBySlug( $slug, $config ) {
+	public static function findBySlug( $slug, $config = [] ) {
 
 		return static::queryBySlug( $slug, $config )->one();
 	}
@@ -98,9 +98,9 @@ trait SlugTrait {
 	 *
 	 * @return boolean
 	 */
-	public static function isExistBySlug( $slug ) {
+	public static function isExistBySlug( $slug, $config = [] ) {
 
-		$model	= static::findBySlug( $slug );
+		$model	= static::findBySlug( $slug, $config );
 
 		return isset( $model );
 	}

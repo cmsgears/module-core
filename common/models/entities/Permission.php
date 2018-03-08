@@ -22,6 +22,9 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\interfaces\base\IAuthor;
 use cmsgears\core\common\models\interfaces\base\INameType;
 use cmsgears\core\common\models\interfaces\base\ISlugType;
+use cmsgears\core\common\models\interfaces\resources\IData;
+use cmsgears\core\common\models\interfaces\resources\IGridCache;
+use cmsgears\core\common\models\interfaces\resources\IHierarchy;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Entity;
@@ -57,7 +60,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Permission extends Entity implements IAuthor, INameType, ISlugType {
+class Permission extends Entity implements IAuthor, IData, IGridCache, IHierarchy, INameType, ISlugType {
 
 	// Variables ---------------------------------------------------
 

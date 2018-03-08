@@ -12,6 +12,10 @@ namespace cmsgears\core\common\models\base;
 /**
  * Base model of all the resources specific to model.
  *
+ * @property integer $id
+ * @property integer $parentId
+ * @property string $parentType
+ *
  * @since 1.0.0
  */
 abstract class ModelResource extends Resource {

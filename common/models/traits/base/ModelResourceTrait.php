@@ -26,7 +26,7 @@ use Yii;
  *
  * @since 1.0.0
  */
-trait ResourceTrait {
+trait ModelResourceTrait {
 
 	// Variables ---------------------------------------------------
 
@@ -50,7 +50,7 @@ trait ResourceTrait {
 
 	// Validators ----------------------------
 
-	// ResourceTrait -------------------------
+	// ModelResourceTrait --------------------
 
 	/**
 	 * @inheritdoc
@@ -66,14 +66,14 @@ trait ResourceTrait {
 
 	// CMG classes ---------------------------
 
-	// ResourceTrait -------------------------
+	// ModelResourceTrait --------------------
 
 	// Read - Query -----------
 
 	/**
 	 * Return query to find the models by given parent id and parent type.
 	 *
-	 * @param string $parentId
+	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param array $config
 	 * @return \yii\db\ActiveQuery to query by parent id and parent type.

@@ -7,7 +7,14 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-class m160621_016618_core_stats extends \yii\db\Migration {
+// Yii Imports
+use cmsgears\core\common\base\Migration;
+
+/**
+ * The core stats migration insert the default row count for all the tables available in
+ * core module. A scheduled console job can be executed to update these stats.
+ */
+class m160621_016618_core_stats extends Migration {
 
 	// Public Variables
 
@@ -19,8 +26,8 @@ class m160621_016618_core_stats extends \yii\db\Migration {
 
 	public function init() {
 
-		// Fixed
-		$this->prefix		= 'cmg_';
+		// Table prefix
+		$this->prefix		= Yii::$app->migration->cmgPrefix;
 
 		// Get the values via config
 		$this->options		= Yii::$app->migration->getTableOptions();
@@ -46,49 +53,51 @@ class m160621_016618_core_stats extends \yii\db\Migration {
 			'id' => $this->primaryKey( 11 ),
 			'table' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
-			'rows' => $this->bigInteger( 20 )->notNull()->defaultValue( 0 )
+			'count' => $this->bigInteger( 20 )->notNull()->defaultValue( 0 )
 		], $this->options );
 	}
 
 	private function insertTables() {
 
-		$columns 	= [ 'table', 'rows' ];
+		$columns 	= [ 'table', 'type', 'count' ];
 
 		$tableData	= [
-			[ $this->prefix . 'core_locale', 0 ],
-			[ $this->prefix . 'core_theme', 0 ],
-			[ $this->prefix . 'core_template', 0 ],
-			[ $this->prefix . 'core_object', 0 ],
-			[ $this->prefix . 'core_country', 0 ],
-			[ $this->prefix . 'core_province', 0 ],
-			[ $this->prefix . 'core_city', 0 ],
-			[ $this->prefix . 'core_address', 0 ],
-			[ $this->prefix . 'core_role', 0 ],
-			[ $this->prefix . 'core_permission', 0 ],
-			[ $this->prefix . 'core_role_permission', 0 ],
-			[ $this->prefix . 'core_user', 0 ],
-			[ $this->prefix . 'core_site', 0 ],
-			[ $this->prefix . 'core_site_meta', 0 ],
-			[ $this->prefix . 'core_site_member', 0 ],
-			[ $this->prefix . 'core_file', 0 ],
-			[ $this->prefix . 'core_gallery', 0 ],
-			[ $this->prefix . 'core_tag', 0 ],
-			[ $this->prefix . 'core_category', 0 ],
-			[ $this->prefix . 'core_option', 0 ],
-			[ $this->prefix . 'core_form', 0 ],
-			[ $this->prefix . 'core_form_field', 0 ],
-			[ $this->prefix . 'core_model_message', 0 ],
-			[ $this->prefix . 'core_model_hierarchy', 0 ],
-			[ $this->prefix . 'core_model_comment', 0 ],
-			[ $this->prefix . 'core_model_meta', 0 ],
-			[ $this->prefix . 'core_model_object', 0 ],
-			[ $this->prefix . 'core_model_address', 0 ],
-			[ $this->prefix . 'core_model_file', 0 ],
-			[ $this->prefix . 'core_model_gallery', 0 ],
-			[ $this->prefix . 'core_model_tag', 0 ],
-			[ $this->prefix . 'core_model_category', 0 ],
-			[ $this->prefix . 'core_model_option', 0 ],
-			[ $this->prefix . 'core_model_form', 0 ]
+			[ $this->prefix . 'core_locale', 'rows', 0 ],
+			[ $this->prefix . 'core_theme', 'rows', 0 ],
+			[ $this->prefix . 'core_template', 'rows', 0 ],
+			[ $this->prefix . 'core_object', 'rows', 0 ],
+			[ $this->prefix . 'core_country', 'rows', 0 ],
+			[ $this->prefix . 'core_province', 'rows', 0 ],
+			[ $this->prefix . 'core_city', 'rows', 0 ],
+			[ $this->prefix . 'core_address', 'rows', 0 ],
+			[ $this->prefix . 'core_role', 'rows', 0 ],
+			[ $this->prefix . 'core_permission', 'rows', 0 ],
+			[ $this->prefix . 'core_role_permission', 'rows', 0 ],
+			[ $this->prefix . 'core_user', 'rows', 0 ],
+			[ $this->prefix . 'core_site', 'rows', 0 ],
+			[ $this->prefix . 'core_site_meta', 'rows', 0 ],
+			[ $this->prefix . 'core_site_member', 'rows', 0 ],
+			[ $this->prefix . 'core_site_access', 'rows', 0 ],
+			[ $this->prefix . 'core_file', 'rows', 0 ],
+			[ $this->prefix . 'core_gallery', 'rows', 0 ],
+			[ $this->prefix . 'core_form', 'rows', 0 ],
+			[ $this->prefix . 'core_form_field', 'rows', 0 ],
+			[ $this->prefix . 'core_tag', 'rows', 0 ],
+			[ $this->prefix . 'core_category', 'rows', 0 ],
+			[ $this->prefix . 'core_option', 'rows', 0 ],
+			[ $this->prefix . 'core_model_message', 'rows', 0 ],
+			[ $this->prefix . 'core_model_hierarchy', 'rows', 0 ],
+			[ $this->prefix . 'core_model_comment', 'rows', 0 ],
+			[ $this->prefix . 'core_model_meta', 'rows', 0 ],
+			[ $this->prefix . 'core_model_object', 'rows', 0 ],
+			[ $this->prefix . 'core_model_address', 'rows', 0 ],
+			[ $this->prefix . 'core_model_file', 'rows', 0 ],
+			[ $this->prefix . 'core_model_gallery', 'rows', 0 ],
+			[ $this->prefix . 'core_model_tag', 'rows', 0 ],
+			[ $this->prefix . 'core_model_category', 'rows', 0 ],
+			[ $this->prefix . 'core_model_option', 'rows', 0 ],
+			[ $this->prefix . 'core_model_form', 'rows', 0 ],
+			[ $this->prefix . 'core_model_follower', 'rows', 0 ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_stats', $columns, $tableData );

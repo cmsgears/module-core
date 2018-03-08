@@ -15,6 +15,19 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\Meta;
 
+/**
+ * The core migration inserts the database tables of core module. It also insert the foreign
+ * keys if FK flag of migration component is true.
+ *
+ * Made some of the fields size consistent as listed below:
+ * * Name - 512 bytes (It can be changed to 1024 bytes to support larger names. MySQL does not support
+ * indexing for string length beyond 1024 bytes. In case longer names are required, the name index must be
+ * dropped first. A FULLTEXT index can be used in such cases.)
+ * * Slug - 1024 bytes (Slug will be generated using name for first time. It can be changed later.)
+ * * Type - 160 bytes (Used to group and classify the table rows.)
+ * * Title - 2048 bytes (Can be used for longer names instead of Name. It can't be indexed. )
+ * * Description - 4096 bytes (Used to describe the model in brief.)
+ */
 class m160620_095703_core extends Migration {
 
 	// Public Variables
@@ -133,9 +146,9 @@ class m160620_095703_core extends Migration {
 			'basePath' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
-			'content' => $this->text(),
-			'data' => $this->text(),
-			'gridCache' => $this->mediumText(),
+			'content' => $this->mediumText(),
+			'data' => $this->mediumText(),
+			'gridCache' => $this->longText(),
 			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
 			'gridCachedAt' => $this->dateTime()
 		], $this->options );
@@ -167,9 +180,9 @@ class m160620_095703_core extends Migration {
 			'viewPath' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
-			'content' => $this->text(),
-			'data' => $this->text(),
-			'gridCache' => $this->mediumText(),
+			'content' => $this->mediumText(),
+			'data' => $this->mediumText(),
+			'gridCache' => $this->longText(),
 			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
 			'gridCachedAt' => $this->dateTime()
 		], $this->options );
@@ -205,9 +218,9 @@ class m160620_095703_core extends Migration {
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'htmlOptions' => $this->text(),
-			'content' => $this->text(),
-			'data' => $this->text(),
-			'gridCache' => $this->mediumText(),
+			'content' => $this->mediumText(),
+			'data' => $this->mediumText(),
+			'gridCache' => $this->longText(),
 			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
 			'gridCachedAt' => $this->dateTime()
 		], $this->options );
@@ -287,8 +300,8 @@ class m160620_095703_core extends Migration {
 			'cityName' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'zip' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
 			'subZip' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
-			'firstName' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
-			'lastName' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
+			'firstName' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'lastName' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'phone' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'email' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'fax' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
@@ -320,8 +333,8 @@ class m160620_095703_core extends Migration {
 			'homeUrl' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
-			'data' => $this->text(),
-			'gridCache' => $this->mediumText(),
+			'data' => $this->mediumText(),
+			'gridCache' => $this->longText(),
 			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
 			'gridCachedAt' => $this->dateTime()
 		], $this->options );
@@ -345,8 +358,8 @@ class m160620_095703_core extends Migration {
 			'group' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
-			'data' => $this->text(),
-			'gridCache' => $this->mediumText(),
+			'data' => $this->mediumText(),
+			'gridCache' => $this->longText(),
 			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
 			'gridCachedAt' => $this->dateTime()
 		], $this->options );
@@ -405,9 +418,9 @@ class m160620_095703_core extends Migration {
 			'accessTokenType' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'tokenCreatedAt' => $this->dateTime(),
 			'tokenAccessedAt' => $this->dateTime(),
-			'content' => $this->text(),
-			'data' => $this->text(),
-			'gridCache' => $this->mediumText(),
+			'content' => $this->mediumText(),
+			'data' => $this->mediumText(),
+			'gridCache' => $this->longText(),
 			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
 			'gridCachedAt' => $this->dateTime()
 		], $this->options );
@@ -438,8 +451,9 @@ class m160620_095703_core extends Migration {
 			'active' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
-			'data' => $this->text(),
-			'gridCache' => $this->mediumText(),
+			'content' => $this->mediumText(),
+			'data' => $this->mediumText(),
+			'gridCache' => $this->longText(),
 			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
 			'gridCachedAt' => $this->dateTime()
 		], $this->options );
@@ -475,6 +489,8 @@ class m160620_095703_core extends Migration {
 			'siteId' => $this->bigInteger( 20 )->notNull(),
 			'userId' => $this->bigInteger( 20 )->notNull(),
 			'roleId' => $this->bigInteger( 20 )->notNull(),
+			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
+			'featured' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime()
 		], $this->options );
@@ -493,7 +509,7 @@ class m160620_095703_core extends Migration {
 			'userId' => $this->bigInteger( 20 ),
 			'roleId' => $this->bigInteger( 20 ),
 			'ip' => $this->string( Yii::$app->core->mediumText )->notNull(),
-			'ipNum' => $this->integer( 11 ),
+			'ipNum' => $this->integer( 11 )->defaultValue( 0 ),
 			'controller' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'action' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'url' => $this->string( Yii::$app->core->xxxLargeText )->notNull(),
@@ -501,7 +517,7 @@ class m160620_095703_core extends Migration {
 			'failCount' => $this->smallInteger( 6 ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
-			'gridCache' => $this->mediumText(),
+			'gridCache' => $this->longText(),
 			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
 			'gridCachedAt' => $this->dateTime()
 		], $this->options );
@@ -536,15 +552,15 @@ class m160620_095703_core extends Migration {
 			'shared' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
-			'content' => $this->text(),
-			'data' => $this->text(),
-			'gridCache' => $this->mediumText(),
+			'content' => $this->mediumText(),
+			'data' => $this->mediumText(),
+			'gridCache' => $this->longText(),
 			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
 			'gridCachedAt' => $this->dateTime()
 		], $this->options );
 
 		// Index for columns creator and modifier
-		$this->createIndex( 'idx_' . $this->prefix . 'file_site', $this->prefix . 'core_site', 'siteId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'file_site', $this->prefix . 'core_file', 'siteId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'file_creator', $this->prefix . 'core_file', 'createdBy' );
 		$this->createIndex( 'idx_' . $this->prefix . 'file_modifier', $this->prefix . 'core_file', 'modifiedBy' );
 	}
@@ -567,9 +583,9 @@ class m160620_095703_core extends Migration {
 			'visibility' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
-			'content' => $this->text(),
-			'data' => $this->text(),
-			'gridCache' => $this->mediumText(),
+			'content' => $this->mediumText(),
+			'data' => $this->mediumText(),
+			'gridCache' => $this->longText(),
 			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
 			'gridCachedAt' => $this->dateTime()
 		], $this->options );
@@ -605,9 +621,9 @@ class m160620_095703_core extends Migration {
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'htmlOptions' => $this->text(),
-			'content' => $this->text(),
-			'data' => $this->text(),
-			'gridCache' => $this->mediumText(),
+			'content' => $this->mediumText(),
+			'data' => $this->mediumText(),
+			'gridCache' => $this->longText(),
 			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
 			'gridCachedAt' => $this->dateTime()
 		], $this->options );
@@ -632,8 +648,8 @@ class m160620_095703_core extends Migration {
 			'validators' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( false ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'htmlOptions' => $this->text(),
-			'content' => $this->text(),
-			'data' => $this->text()
+			'content' => $this->mediumText(),
+			'data' => $this->mediumText()
 		], $this->options );
 
 		// Index for columns creator and modifier
@@ -689,8 +705,8 @@ class m160620_095703_core extends Migration {
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'htmlOptions' => $this->text(),
-			'content' => $this->text(),
-			'data' => $this->text()
+			'content' => $this->mediumText(),
+			'data' => $this->mediumText()
 		], $this->options );
 
 		// Index for columns site
@@ -711,8 +727,8 @@ class m160620_095703_core extends Migration {
 			'value' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'icon' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'htmlOptions' => $this->text(),
-			'content' => $this->text(),
-			'data' => $this->text()
+			'content' => $this->mediumText(),
+			'data' => $this->mediumText()
 		], $this->options );
 
 		// Index for columns site
@@ -728,7 +744,7 @@ class m160620_095703_core extends Migration {
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
-			'value' => $this->text()
+			'value' => $this->mediumText()
 		], $this->options );
 
 		// Index for columns creator and modifier
@@ -753,30 +769,39 @@ class m160620_095703_core extends Migration {
 		$this->createTable( $this->prefix . 'core_model_comment', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'baseId' => $this->bigInteger( 20 ),
+			'bannerId' => $this->bigInteger( 20 ),
+			'videoId' => $this->bigInteger( 20 ),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'createdBy' => $this->bigInteger( 20 ),
 			'modifiedBy' => $this->bigInteger( 20 ),
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
-			'name' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
-			'email' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
-			'avatarUrl' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
-			'websiteUrl' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'name' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'email' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'avatarUrl' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
+			'websiteUrl' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'ip' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
-			'agent' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
+			'ipNum' => $this->integer(11)->defaultValue( 0 ),
+			'agent' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'status' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'fragment' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'rating' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
+			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'approvedAt' => $this->dateTime(),
-			'content' => $this->text(),
-			'data' => $this->text()
+			'content' => $this->mediumText(),
+			'data' => $this->mediumText(),
+			'gridCache' => $this->longText(),
+			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
+			'gridCachedAt' => $this->dateTime()
 		], $this->options );
 
 		// Index for columns base, creator and modifier
 		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_base', $this->prefix . 'core_model_comment', 'baseId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_banner', $this->prefix . 'core_model_comment', 'bannerId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_video', $this->prefix . 'core_model_comment', 'bannerId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_creator', $this->prefix . 'core_model_comment', 'createdBy' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_modifier', $this->prefix . 'core_model_comment', 'modifiedBy' );
 	}
@@ -787,11 +812,11 @@ class m160620_095703_core extends Migration {
 			'id' => $this->bigPrimaryKey( 20 ),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
+			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'label' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
-			'valueType' => $this->string( Yii::$app->core->mediumText )->notNull()->defaultValue( 'text' ),
-			'name' => $this->string( Yii::$app->core->largeText )->notNull(),
-			'label' => $this->string( Yii::$app->core->xLargeText )->notNull(),
-			'value' => $this->text()
+			'valueType' => $this->string( Yii::$app->core->mediumText )->notNull()->defaultValue( Meta::VALUE_TYPE_TEXT ),
+			'value' => $this->mediumText()
 		], $this->options );
 	}
 
@@ -805,7 +830,10 @@ class m160620_095703_core extends Migration {
 			'type' => $this->string( Yii::$app->core->mediumText ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true ),
-			'userMapped' => $this->boolean()->notNull()->defaultValue( false )
+			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
+			'featured' => $this->boolean()->notNull()->defaultValue( false ),
+			//'userMapped' => $this->boolean()->notNull()->defaultValue( false ),
+			'nodes' => $this->text()
 		], $this->options );
 
 		// Index for columns user
@@ -855,7 +883,9 @@ class m160620_095703_core extends Migration {
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
-			'active' => $this->boolean()->notNull()->defaultValue( true )
+			'active' => $this->boolean()->notNull()->defaultValue( true ),
+			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
+			'featured' => $this->boolean()->notNull()->defaultValue( false )
 		], $this->options );
 
 		// Index for columns user
@@ -888,7 +918,8 @@ class m160620_095703_core extends Migration {
 			'type' => $this->string( Yii::$app->core->mediumText ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true ),
-			'userMapped' => $this->boolean()->notNull()->defaultValue( false )
+			//'userMapped' => $this->boolean()->notNull()->defaultValue( false ),
+			'nodes' => $this->text()
 		], $this->options );
 
 		// Index for columns user
@@ -937,6 +968,8 @@ class m160620_095703_core extends Migration {
 			'type' => $this->string( Yii::$app->core->mediumText ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'active' => $this->boolean()->notNull()->defaultValue( true ),
+			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
+			'featured' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 		], $this->options );
@@ -1041,8 +1074,8 @@ class m160620_095703_core extends Migration {
 		// Tag
 		$this->addForeignKey( 'fk_' . $this->prefix . 'tag_site', $this->prefix . 'core_tag', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'tag_template', $this->prefix . 'core_tag', 'templateId', $this->prefix . 'core_template', 'id', 'SET NULL' );
-		$this->addForeignKey( 'fk_' . $this->prefix . 'tag_creator', $this->prefix . 'core_form', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
-		$this->addForeignKey( 'fk_' . $this->prefix . 'tag_modifier', $this->prefix . 'core_form', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'tag_creator', $this->prefix . 'core_tag', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'tag_modifier', $this->prefix . 'core_tag', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
 
 		// Category
 		$this->addForeignKey( 'fk_' . $this->prefix . 'category_site', $this->prefix . 'core_category', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
@@ -1059,6 +1092,8 @@ class m160620_095703_core extends Migration {
 
 		// Model Comment
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_comment_base', $this->prefix . 'core_model_comment', 'baseId', $this->prefix . 'core_model_comment', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_comment_banner', $this->prefix . 'core_model_comment', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_comment_video', $this->prefix . 'core_model_comment', 'videoId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_comment_creator', $this->prefix . 'core_model_comment', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_comment_modifier', $this->prefix . 'core_model_comment', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
 
@@ -1141,6 +1176,7 @@ class m160620_095703_core extends Migration {
 		$this->dropTable( $this->prefix . 'core_model_category' );
 		$this->dropTable( $this->prefix . 'core_model_option' );
 		$this->dropTable( $this->prefix . 'core_model_form' );
+		$this->dropTable( $this->prefix . 'core_model_follower' );
 	}
 
 	private function dropForeignKeys() {
@@ -1257,6 +1293,8 @@ class m160620_095703_core extends Migration {
 
 		// Model Comment
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_base', $this->prefix . 'core_model_comment' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_banner', $this->prefix . 'core_model_comment' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_video', $this->prefix . 'core_model_comment' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_creator', $this->prefix . 'core_model_comment' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_modifier', $this->prefix . 'core_model_comment' );
 

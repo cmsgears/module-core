@@ -18,6 +18,7 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\interfaces\base\IMultiSite;
+use cmsgears\core\common\models\interfaces\resources\IGridCache;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Resource;
@@ -49,7 +50,7 @@ use cmsgears\core\common\models\traits\resources\GridCacheTrait;
  *
  * @since 1.0.0
  */
-class SiteAccess extends Resource implements IMultiSite {
+class SiteAccess extends Resource implements IGridCache, IMultiSite {
 
 	// Variables ---------------------------------------------------
 

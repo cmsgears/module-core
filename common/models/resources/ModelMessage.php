@@ -16,10 +16,13 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\base\IModelResource;
+
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\ModelResource;
 use cmsgears\core\common\models\entities\Locale;
 
-use cmsgears\core\common\models\traits\base\ResourceTrait;
+use cmsgears\core\common\models\traits\base\ModelResourceTrait;
 
 /**
  * Stores messages and templates in different languages apart from primary language.
@@ -29,7 +32,7 @@ use cmsgears\core\common\models\traits\base\ResourceTrait;
  *
  * Other models can also store their messages. These can be either model property or content.
  *
- * These messages can be further categorised using the type attribute.
+ * These messages can be further categorized using the type attribute.
  *
  * @property integer $id
  * @property integer $localeId
@@ -41,7 +44,7 @@ use cmsgears\core\common\models\traits\base\ResourceTrait;
  *
  * @since 1.0.0
  */
-class ModelMessage extends \cmsgears\core\common\models\base\Resource {
+class ModelMessage extends ModelResource implements IModelResource {
 
 	// Variables ---------------------------------------------------
 
@@ -63,7 +66,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 
 	// Traits ------------------------------------------------------
 
-	use ResourceTrait;
+	use ModelResourceTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -132,7 +135,9 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 	// ModelMessage --------------------------
 
 	/**
-	 * @return Locale - parent locale.
+	 * Return the corresponding locale.
+	 *
+	 * @return Locale
 	 */
 	public function getLocale() {
 
@@ -191,6 +196,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param string $name
+	 * @param string $type
 	 * @param int $localeId
 	 * @return ModelMessage by name, type and locale id
 	 */
@@ -212,7 +218,9 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public static function isExistByNameTypeLocaleId( $parentId, $parentType, $name, $type, $localeId ) {
 
-		return isset( self::findByNameLocaleId( $parentId, $parentType, $name, $type, $localeId ) );
+		$message = self::findByNameLocaleId( $parentId, $parentType, $name, $type, $localeId );
+
+		return isset( $message );
 	}
 
 	// Create -----------------

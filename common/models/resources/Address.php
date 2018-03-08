@@ -119,8 +119,8 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 			// Text Limit
 			[ [ 'zip', 'subZip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ [ 'phone', 'fax' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'countryName', 'provinceName', 'firstName', 'lastName' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'title', 'line1', 'line2', 'line3', 'cityName', 'email' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'countryName', 'provinceName' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'title', 'line1', 'line2', 'line3', 'cityName', 'firstName', 'lastName', 'email' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			[ 'website', 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
 			// Other
 			[ [ 'zip', 'subZip' ], 'alphanumhyphenspace' ],

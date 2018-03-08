@@ -9,12 +9,20 @@
 
 namespace cmsgears\core\common\models\traits\resources;
 
-// Yii Imports
-use Yii;
-
+/**
+ * ContentTrait can be used to add content feature to relevant models.
+ */
 trait ContentTrait {
 
-	private $localGridCache;
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
 
 	// Instance methods --------------------------------------------
 
@@ -26,9 +34,9 @@ trait ContentTrait {
 
 	// CMG classes ---------------------------
 
-	// ContentTrait --------------------------
+	// Validators ----------------------------
 
-	// Validators -------------
+	// ContentTrait --------------------------
 
 	// Static Methods ----------------------------------------------
 

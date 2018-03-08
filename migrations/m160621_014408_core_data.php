@@ -7,6 +7,9 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
+// Yii Imports
+use cmsgears\core\common\base\Migration;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
@@ -23,7 +26,10 @@ use cmsgears\core\common\services\base\EntityService;
 
 use cmsgears\core\common\utilities\DateUtil;
 
-class m160621_014408_core_data extends \yii\db\Migration {
+/**
+ * The core data migration inserts the base data required to run the application.
+ */
+class m160621_014408_core_data extends Migration {
 
 	// Public Variables
 
@@ -62,12 +68,14 @@ class m160621_014408_core_data extends \yii\db\Migration {
 
 	public function up() {
 
-		// Create main site
-		$this->insertMainSite();
+		// Insert Locales
 		$this->insertLocale();
 
 		// Create default users
 		$this->insertDefaultUsers();
+
+		// Create main site
+		$this->insertMainSite();
 
 		// Create roles and permissions
 		$this->insertRolePermission();
@@ -94,22 +102,41 @@ class m160621_014408_core_data extends \yii\db\Migration {
 		$this->insertCategories();
 	}
 
-	private function insertMainSite() {
-
-		$this->insert( $this->prefix . 'core_site', [
-			'name' => CoreGlobal::SITE_MAIN, 'slug' => CoreGlobal::SITE_MAIN, 'order' => 0, 'active' => true
-		]);
-
-		$this->site	= Site::findBySlug( CoreGlobal::SITE_MAIN );
-
-		Yii::$app->core->setSite( $this->site );
-	}
-
 	private function insertLocale() {
 
-		$this->insert( $this->prefix . 'core_locale', [
-			'code' => 'en_US', 'name' =>'English US'
-		]);
+		$columns = [ 'code', 'name' ];
+
+		$locales = [
+			[ 'en_AS', 'English American Samoa' ],
+			[ 'en_AU', 'English Australia' ],
+			[ 'en_BE', 'English Belgium' ],
+			[ 'en_BZ', 'English Belize' ],
+			[ 'en_BW', 'English Botswana' ],
+			[ 'en_CA', 'English Canada' ],
+			[ 'en_GB', 'English United Kingdom' ],
+			[ 'en_GU', 'English Guam' ],
+			[ 'en_HK', 'English Hong Kong SAR China' ],
+			[ 'en_IE', 'English Ireland' ],
+			[ 'en_IN', 'English India' ],
+			[ 'en_JM', 'English Jamaica' ],
+			[ 'en_MT', 'English Malta' ],
+			[ 'en_MH', 'English Marshall Islands' ],
+			[ 'en_MP', 'English Northern Mariana Islands' ],
+			[ 'en_MU', 'English Mauritius' ],
+			[ 'en_NA', 'English Namibia' ],
+			[ 'en_NZ', 'English New Zealand' ],
+			[ 'en_PH', 'English Philippines' ],
+			[ 'en_PK', 'English Pakistan' ],
+			[ 'en_SG', 'English Singapore' ],
+			[ 'en_TT', 'English Trinidad and Tobago' ],
+			[ 'en_UM', 'English U.S. Minor Outlying Islands' ],
+			[ 'en_US', 'English US' ],
+			[ 'en_VI', 'English U.S. Virgin Islands' ],
+			[ 'en_ZA', 'English South Africa' ],
+			[ 'en_ZW', 'English Zimbabwe' ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_locale', $columns, $locales );
 
 		$this->locale = Locale::findByCode( 'en_US' );
 	}
@@ -120,7 +147,7 @@ class m160621_014408_core_data extends \yii\db\Migration {
 		$siteMaster		= $this->siteMaster;
 
 		// Default password for all test users is test#123
-		// Super Admin i.e. demomaster must change password on first login and remove other users if required.
+		// Super Admin i.e. demomaster must change username, password and email on first login and remove other users if required.
 
 		$columns = [ 'localeId', 'status', 'email', 'username', 'passwordHash', 'firstName', 'lastName', 'registeredAt', 'lastLoginAt', 'authKey' ];
 
@@ -130,13 +157,29 @@ class m160621_014408_core_data extends \yii\db\Migration {
 
 		if( Yii::$app->migration->isTestAccounts() ) {
 
-			$users[]	= [ $this->locale->id, User::STATUS_ACTIVE, "demoadmin@$primaryDomain", 'demoadmin','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','admin', DateUtil::getDateTime(), DateUtil::getDateTime(), 'SQ1LLCWEPva4IKuQklILLGDpmUTGzq8E' ];
-			$users[]	= [ $this->locale->id, User::STATUS_ACTIVE, "demouser@$primaryDomain", 'demouser','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','user', DateUtil::getDateTime(), DateUtil::getDateTime(), '-jG5ExHS0Y39ucSxHhl3PZ4xmPsfvQFC' ];
+			$users[] = [ $this->locale->id, User::STATUS_ACTIVE, "demoadmin@$primaryDomain", 'demoadmin','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','admin', DateUtil::getDateTime(), DateUtil::getDateTime(), 'SQ1LLCWEPva4IKuQklILLGDpmUTGzq8E' ];
+			$users[] = [ $this->locale->id, User::STATUS_ACTIVE, "demouser@$primaryDomain", 'demouser','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','user', DateUtil::getDateTime(), DateUtil::getDateTime(), '-jG5ExHS0Y39ucSxHhl3PZ4xmPsfvQFC' ];
+			$users[] = [ $this->locale->id, User::STATUS_ACTIVE, "demouadmin@$primaryDomain", 'demouadmin','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','user', DateUtil::getDateTime(), DateUtil::getDateTime(), '-jG5ExHS0Y39ucSxHhl3PZ4xmPsfvQFC' ];
 		}
 
 		$this->batchInsert( $this->prefix . 'core_user', $columns, $users );
 
 		$this->master	= User::findByUsername( $this->siteMaster );
+	}
+
+	private function insertMainSite() {
+
+		$this->insert( $this->prefix . 'core_site', [
+			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
+			'name' => CoreGlobal::SITE_MAIN, 'slug' => CoreGlobal::SITE_MAIN,
+			'order' => 0, 'active' => true,
+			'createdAt' => DateUtil::getDateTime(),
+			'modifiedAt' => DateUtil::getDateTime()
+		]);
+
+		$this->site	= Site::findBySlug( CoreGlobal::SITE_MAIN );
+
+		Yii::$app->core->setSite( $this->site );
 	}
 
 	private function insertRolePermission() {
@@ -149,7 +192,7 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $this->master->id, $this->master->id, 'Super Admin', 'super-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The Super Admin have all the permisisons to perform operations on the admin site and website.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
 			[ $this->master->id, $this->master->id, 'Admin','admin','dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The Admin have all the permisisons to perform operations on the admin site and website except RBAC module.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
 			[ $this->master->id, $this->master->id, 'User', 'user', NULL, NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role User is limited to website users.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'User Admin', 'user-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role User Admin is limited to manage site users from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'User Admin', 'user-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role User Admin is limited to manage site users from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
@@ -164,11 +207,11 @@ class m160621_014408_core_data extends \yii\db\Migration {
 		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
 
 		$permissions = [
-			[ $this->master->id, $this->master->id, 'Admin', 'admin', CoreGlobal::TYPE_SYSTEM, NULL, 'The permission admin is to distinguish between admin and site user. It is a must have permission for admins.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'User', 'user', CoreGlobal::TYPE_SYSTEM, NULL, 'The permission user is to distinguish between admin and site user. It is a must have permission for users.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'Core', 'core', CoreGlobal::TYPE_SYSTEM, NULL, 'The permission core is to manage settings, drop downs, world countries, galleries and newsletters from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Admin', 'admin', CoreGlobal::TYPE_SYSTEM, NULL, 'The permission admin is to distinguish between admin and app user. It is a must have permission for admins.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'User', 'user', CoreGlobal::TYPE_SYSTEM, NULL, 'The permission user is to distinguish between admin and app user. It is a must have permission for app users.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
+			[ $this->master->id, $this->master->id, 'Core', 'core', CoreGlobal::TYPE_SYSTEM, NULL, 'The permission core is to manage sites, themes, testimonials, countries, drop downs and settings from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
 			[ $this->master->id, $this->master->id, 'Identity', 'identity', CoreGlobal::TYPE_SYSTEM, NULL, 'The permission identity is to manage users from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ],
-			[ $this->master->id, $this->master->id, 'RBAC', 'rbac', CoreGlobal::TYPE_SYSTEM, NULL, 'The permission rbac is to manage roles and permissions from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'RBAC', 'rbac', CoreGlobal::TYPE_SYSTEM, NULL, 'The permission rbac is to manage roles and permissions from admin. It also need identity permission.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
@@ -286,6 +329,7 @@ class m160621_014408_core_data extends \yii\db\Migration {
 		$superAdminRole		= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
 		$adminRole			= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
 		$userRole			= Role::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
+		$userAdminRole		= Role::findBySlugType( 'user-admin', CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'siteId', 'userId', 'roleId', 'createdAt', 'modifiedAt' ];
 
@@ -297,9 +341,11 @@ class m160621_014408_core_data extends \yii\db\Migration {
 
 			$admin	= User::findByUsername( 'demoadmin' );
 			$user	= User::findByUsername( 'demouser' );
+			$uadmin	= User::findByUsername( 'demouadmin' );
 
 			$roles[] = [ $this->site->id, $admin->id, $adminRole->id, DateUtil::getDateTime(), DateUtil::getDateTime() ];
 			$roles[] = [ $this->site->id, $user->id, $userRole->id, DateUtil::getDateTime(), DateUtil::getDateTime() ];
+			$roles[] = [ $this->site->id, $uadmin->id, $userAdminRole->id, DateUtil::getDateTime(), DateUtil::getDateTime() ];
 		}
 
 		$this->batchInsert( $this->prefix . 'core_site_member', $columns, $roles );
@@ -321,7 +367,7 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlug( 'config-core', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-core', CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -352,29 +398,29 @@ class m160621_014408_core_data extends \yii\db\Migration {
 	private function insertCacheConfig() {
 
 		$this->insert( $this->prefix . 'core_form', [
-				'siteId' => $this->site->id,
-				'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-				'name' => 'Config Cache', 'slug' => 'config-cache',
-				'type' => CoreGlobal::TYPE_SYSTEM,
-				'description' => 'Cache configuration form.',
-				'successMessage' => 'All configurations saved successfully.',
-				'captcha' => false,
-				'visibility' => Form::VISIBILITY_PROTECTED,
-				'active' => true, 'userMail' => false,'adminMail' => false,
-				'createdAt' => DateUtil::getDateTime(),
-				'modifiedAt' => DateUtil::getDateTime()
+			'siteId' => $this->site->id,
+			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
+			'name' => 'Config Cache', 'slug' => 'config-cache',
+			'type' => CoreGlobal::TYPE_SYSTEM,
+			'description' => 'Cache configuration form.',
+			'successMessage' => 'All configurations saved successfully.',
+			'captcha' => false,
+			'visibility' => Form::VISIBILITY_PROTECTED,
+			'active' => true, 'userMail' => false,'adminMail' => false,
+			'createdAt' => DateUtil::getDateTime(),
+			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlug( 'config-cache', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-cache', CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
-				[ $config->id, 'caching','Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Enable HTML Caching."}' ],
-				[ $config->id, 'cache_type','Cache Type', FormField::TYPE_SELECT, false, NULL, 0, NULL, '{"title":"Cache types","items":{"none":"Choose Cache Type","file":"File","database":"Database","apc":"APC","mem":"Memcached","redis":"Redis","win":"Windows Cache","xcache":"XCache"}}' ],
-				[ $config->id, 'cache_duration','Cache Duration', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Cache Duration in seconds.","placeholder":"Cache Duration"}' ],
-				[ $config->id, 'html_caching','HTML Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Enable HTML Caching."}' ],
-				[ $config->id, 'json_caching','JSON Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Enable JSON Caching."}' ]
+			[ $config->id, 'caching','Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Enable HTML Caching."}' ],
+			[ $config->id, 'cache_duration','Cache Duration', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Cache Duration in seconds. It applies only to default cache which is volatile.","placeholder":"Cache Duration"}' ],
+			[ $config->id, 'default_cache','Default Cache', FormField::TYPE_SELECT, false, NULL, 0, NULL, '{"title":"Default Cache","items":{"none":"Choose Cache Type","file":"File","database":"Database","apc":"APC","mem":"Memcached","redis":"Redis","win":"Windows Cache","xcache":"XCache"}}' ],
+			[ $config->id, 'primary_cache','Primary Cache', FormField::TYPE_SELECT, false, NULL, 0, NULL, '{"title":"Primary Cache","items":{"none":"Choose Cache Type","file":"File","database":"Database"}}' ],
+			[ $config->id, 'secondary_cache','Secondary Cache', FormField::TYPE_SELECT, false, NULL, 0, NULL, '{"title":"Secondary Cache","items":{"none":"Choose Cache Type","elastic":"Elasticsearch","redis":"Redis"}}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -396,7 +442,7 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlug( 'config-mail', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-mail', CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -422,33 +468,33 @@ class m160621_014408_core_data extends \yii\db\Migration {
 	private function insertCommentsConfig() {
 
 		$this->insert( $this->prefix . 'core_form', [
-				'siteId' => $this->site->id,
-				'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-				'name' => 'Config Comment', 'slug' => 'config-comment',
-				'type' => CoreGlobal::TYPE_SYSTEM,
-				'description' => 'Comment configuration form.',
-				'successMessage' => 'All configurations saved successfully.',
-				'captcha' => false,
-				'visibility' => Form::VISIBILITY_PROTECTED,
-				'active' => true, 'userMail' => false,'adminMail' => false,
-				'createdAt' => DateUtil::getDateTime(),
-				'modifiedAt' => DateUtil::getDateTime()
+			'siteId' => $this->site->id,
+			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
+			'name' => 'Config Comment', 'slug' => 'config-comment',
+			'type' => CoreGlobal::TYPE_SYSTEM,
+			'description' => 'Comment configuration form.',
+			'successMessage' => 'All configurations saved successfully.',
+			'captcha' => false,
+			'visibility' => Form::VISIBILITY_PROTECTED,
+			'active' => true, 'userMail' => false,'adminMail' => false,
+			'createdAt' => DateUtil::getDateTime(),
+			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlug( 'config-comment', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-comment', CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
-				[ $config->id, 'comments', 'Comments', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Comments allowed."}' ],
-				[ $config->id, 'comments_user', 'Comments User', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Comments need logged in user."}' ],
-				[ $config->id, 'comments_recent', 'Comments Recent', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Show recent comments on top."}' ],
-				[ $config->id, 'comments_limit','Comments Limit', FormField::TYPE_TEXT, false, 'required,number', 0, NULL, '{"title":"Page limit of comments.","placeholder":"Comments per page"}' ],
-				[ $config->id, 'comments_email_admin', 'Comments Email Admin', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Trigger mail to admin for new comment."}' ],
-				[ $config->id, 'comments_email_user', 'Comments Email User', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Trigger mail to user on approval."}' ],
-				[ $config->id, 'comments_form_top', 'Comments Form Top', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Show the comment form on top of comments."}' ],
-				[ $config->id, 'comments_auto', 'Comments Auto', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Auto approve a comment in case existing approved comment exist for user or email."}' ],
-				[ $config->id, 'comments_filter','Comments Filter', FormField::TYPE_TEXTAREA, false, NULL, 0, NULL, '{"title":"Comments filter having comma seperated words to trash in case words match.","placeholder":"Comments filter"}' ]
+			[ $config->id, 'comments', 'Comments', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Comments allowed."}' ],
+			[ $config->id, 'comments_user', 'Comments User', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Comments need logged in user."}' ],
+			[ $config->id, 'comments_recent', 'Comments Recent', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Show recent comments on top."}' ],
+			[ $config->id, 'comments_limit','Comments Limit', FormField::TYPE_TEXT, false, 'required,number', 0, NULL, '{"title":"Page limit of comments.","placeholder":"Comments per page"}' ],
+			[ $config->id, 'comments_email_admin', 'Comments Email Admin', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Trigger mail to admin for new comment."}' ],
+			[ $config->id, 'comments_email_user', 'Comments Email User', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Trigger mail to user on approval."}' ],
+			[ $config->id, 'comments_form_top', 'Comments Form Top', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Show the comment form on top of comments."}' ],
+			[ $config->id, 'comments_auto', 'Comments Auto', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Auto approve a comment in case existing approved comment exist for user or email."}' ],
+			[ $config->id, 'comments_filter','Comments Filter', FormField::TYPE_TEXTAREA, false, NULL, 0, NULL, '{"title":"Comments filter having comma seperated words to trash in case words match.","placeholder":"Comments filter"}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -470,7 +516,7 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlug( 'config-backend', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-backend', CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -500,7 +546,7 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$config	= Form::findBySlug( 'config-frontend', CoreGlobal::TYPE_SYSTEM );
+		$config	= Form::findBySlugType( 'config-frontend', CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
 
@@ -508,7 +554,7 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $config->id, 'default_avatar', 'Default Avatar', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default avatar for site elements."}' ],
 			[ $config->id, 'user_avatar', 'User Avatar', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default avatar for user."}' ],
 			[ $config->id, 'default_banner', 'Default Banner', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default banner for site elements."}' ],
-			[ $config->id, 'fonts', 'Fonts', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Fonts available for content edittors."}' ]
+			[ $config->id, 'fonts', 'Fonts', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Fonts available for content editors."}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -548,10 +594,10 @@ class m160621_014408_core_data extends \yii\db\Migration {
 			[ $this->site->id, 'auto_login','Auto Login','core','flag','0' ],
 			[ $this->site->id, 'auto_load','Auto Load','core','flag','0' ],
 			[ $this->site->id, 'caching','Caching','cache','flag','0' ],
-			[ $this->site->id, 'cache_type','Cache Type','cache','text',NULL ],
 			[ $this->site->id, 'cache_duration','Cache Type','cache','text',NULL ],
-			[ $this->site->id, 'html_caching','HTML Caching','cache','flag','0' ],
-			[ $this->site->id, 'json_caching','JSON Caching','cache','flag','0' ],
+			[ $this->site->id, 'default_cache','Default Cache','cache','text',NULL ],
+			[ $this->site->id, 'primary_cache','Primary Cache','cache','text',NULL ],
+			[ $this->site->id, 'secondary_cache','Secondary Cache','cache','text',NULL ],
 			[ $this->site->id, 'smtp','SMTP','mail','flag','0' ],
 			[ $this->site->id, 'smtp_username','SMTP Username','mail','text','' ],
 			[ $this->site->id, 'smtp_password','SMTP Password','mail','text','' ],
@@ -591,11 +637,14 @@ class m160621_014408_core_data extends \yii\db\Migration {
 
 		$this->insert( $this->prefix . 'core_category', [
 			'siteId' => $this->site->id,
+			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
 			'name' => 'Gender', 'slug' => 'gender',
 			'type' => CoreGlobal::TYPE_OPTION_GROUP, 'icon' => null,
 			'description' => 'Gender category with available options.',
 			'featured' => false,
-			'lValue' => 1, 'rValue' => 2
+			'lValue' => 1, 'rValue' => 2,
+			'createdAt' => DateUtil::getDateTime(),
+			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
 		$category	= Category::findBySlugType( 'gender', CoreGlobal::TYPE_OPTION_GROUP );

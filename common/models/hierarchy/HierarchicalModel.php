@@ -88,7 +88,7 @@ abstract class HierarchicalModel extends ActiveRecord {
 	 *
 	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
 	 */
-	abstract public function getChildren( $immediate = true );
+	abstract public function getChildren();
 
 	// Static Methods ----------------------------------------------
 

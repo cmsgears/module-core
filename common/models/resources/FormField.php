@@ -16,6 +16,8 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\resources\IData;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Resource;
 
@@ -39,7 +41,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  *
  * @since 1.0.0
  */
-class FormField extends Resource {
+class FormField extends Resource implements IData {
 
 	// TODO: further analysis is required to remove the alphanumu validator for name field to support html forms.
 

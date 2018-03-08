@@ -33,6 +33,8 @@ use cmsgears\core\common\models\traits\base\ModelMapperTrait;
  * @property string $type
  * @property int $order
  * @property boolean $active
+ * @property boolean $pinned
+ * @property boolean $featured
  * @property int $createdAt
  * @property int $modifiedAt
  */
@@ -94,6 +96,7 @@ class ModelFollower extends ModelMapper implements IFollower {
 
 		$rules = parent::rules();
 
+		$rules[] = [ [ 'pinned', 'featured' ], 'boolean' ];
 		$rules[] = [ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ];
 
 		return $rules;
@@ -115,6 +118,26 @@ class ModelFollower extends ModelMapper implements IFollower {
 	public function getModel() {
 
 		return $this->hasOne( User::className(), [ 'id' => 'modelId' ] );
+	}
+
+	/**
+	 * Returns string representation of pinned flag.
+	 *
+	 * @return boolean
+	 */
+	public function getPinnedStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->pinned );
+	}
+
+	/**
+	 * Returns string representation of featured flag.
+	 *
+	 * @return boolean
+	 */
+	public function getFeaturedStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->featured );
 	}
 
 	// Static Methods ----------------------------------------------

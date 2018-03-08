@@ -142,6 +142,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_LIMIT => 'Limit',
 		CoreGlobal::FIELD_COUNT => 'Count',
 		CoreGlobal::FIELD_EXPIRED => 'Expired',
+		CoreGlobal::FIELD_PINNED => 'Pinned',
 		CoreGlobal::FIELD_FEATURED => 'Featured',
 		CoreGlobal::FIELD_USER_MAPPED => 'User Mapped',
 		CoreGlobal::FIELD_FAILED => 'Failed',

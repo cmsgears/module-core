@@ -288,6 +288,7 @@ class CoreGlobal {
 	const FIELD_LIMIT				= 'limitField';
 	const FIELD_COUNT				= 'countField';
 	const FIELD_EXPIRED				= 'expiredField';
+	const FIELD_PINNED				= 'pinnedField';
 	const FIELD_FEATURED			= 'featuredField';
 	const FIELD_USER_MAPPED			= 'userMappedField';
 	const FIELD_FAILED				= 'failedField';

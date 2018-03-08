@@ -10,7 +10,7 @@
 namespace cmsgears\core\common\models\traits\base;
 
 // CMG Imports
-use cmsgears\core\common\models\interfaces\ISeverity;
+use cmsgears\core\common\models\interfaces\base\ISeverity;
 
 /**
  * It's useful for models having severity attribute.

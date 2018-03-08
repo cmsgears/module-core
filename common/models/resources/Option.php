@@ -16,6 +16,8 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\resources\IData;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Resource;
 
@@ -36,7 +38,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  *
  * @since 1.0.0
  */
-class Option extends Resource {
+class Option extends Resource implements IData {
 
 	// Variables ---------------------------------------------------
 
@@ -196,7 +198,9 @@ class Option extends Resource {
 	 */
 	public static function findByCategoryId( $categoryId ) {
 
-		return self::find()->where( 'categoryId=:id', [ ':id' => $categoryId ] )->all();
+		$optionTable = CoreTables::getTableName( CoreTables::TABLE_OPTION );
+
+		return self::find()->where( "$optionTable.categoryId=:id", [ ':id' => $categoryId ] )->all();
 	}
 
 	/**
@@ -208,9 +212,9 @@ class Option extends Resource {
 	 */
 	public static function findByNameCategoryId( $name, $categoryId ) {
 
-		$optionTable = CoreTables::TABLE_OPTION;
+		$optionTable = CoreTables::getTableName( CoreTables::TABLE_OPTION );
 
-		return self::find()->where( "$optionTable.name=:name AND categoryId=:id", [ ':name' => $name, ':id' => $categoryId ] )->one();
+		return self::find()->where( "$optionTable.name=:name AND $optionTable.categoryId=:id", [ ':name' => $name, ':id' => $categoryId ] )->one();
 	}
 
 	/**

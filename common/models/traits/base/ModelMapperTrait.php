@@ -29,6 +29,7 @@ use Yii;
  * @property integer $modelId
  * @property integer $parentId
  * @property integer $parentType
+ * @property boolean $type
  * @property boolean $active
  *
  * @since 1.0.0
@@ -157,7 +158,8 @@ trait ModelMapperTrait {
 	/**
 	 * Find and return the mappings for given parent id and parent type.
 	 *
-	 * @param integer $modelId
+	 * @param integer $parentId
+	 * @param string $parentType
 	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
 	 */
 	public static function findByParent( $parentId, $parentType ) {
@@ -186,6 +188,19 @@ trait ModelMapperTrait {
 	public static function findByParentType( $parentType ) {
 
 		return self::find()->where( 'parentType=:ptype', [ ':ptype' => $parentType ] )->all();
+	}
+
+	/**
+	 * Find and return the mappings for type.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $type
+	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
+	 */
+	public static function findByType( $parentId, $parentType, $type ) {
+
+		return self::queryByParent( $parentId, $parentType )->andFilterWhere( [ 'like', 'type', $type ] )->all();
 	}
 
 	/**
@@ -221,6 +236,19 @@ trait ModelMapperTrait {
 	public static function findActiveByParentType( $parentType ) {
 
 		return self::find()->where( 'parentType=:ptype AND active=1', [ ':ptype' => $parentType ] )->all();
+	}
+
+	/**
+	 * Find and return the mappings for type.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $type
+	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
+	 */
+	public static function findActiveByType( $parentId, $parentType, $type ) {
+
+		return self::queryByParent( $parentId, $parentType )->andWhere( 'active=1' )->andFilterWhere( [ 'like', 'type', $type ] )->all();
 	}
 
 	/**

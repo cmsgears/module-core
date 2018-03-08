@@ -11,6 +11,7 @@ namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
 use Yii;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
@@ -33,7 +34,7 @@ use cmsgears\core\common\models\traits\base\SlugTypeTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
- * Category Entity
+ * The category model can be used to categorize other models via model category.
  *
  * @property integer $id
  * @property integer $siteId
@@ -283,9 +284,10 @@ class Category extends NestedSetModel implements IAuthor, IMultiSite, INameType,
 	 * Find and return the categories having given parent id.
 	 *
 	 * @param string $parentId
+	 * @param array $config
 	 * @return Category[]
 	 */
-	public static function findByParentId( $parentId ) {
+	public static function findByParentId( $parentId, $config = [] ) {
 
 		return self::find()->where( 'parentId=:id', [ ':id' => $parentId ] )->all();
 	}

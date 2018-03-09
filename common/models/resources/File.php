@@ -127,10 +127,10 @@ class File extends Resource implements IAuthor, IMultiSite, IOwner, IVisibility 
 
 		return [
 			'authorBehavior' => [
-				'class' => AuthorBehavior::className()
+				'class' => AuthorBehavior::class
 			],
 			'timestampBehavior' => [
-				'class' => TimestampBehavior::className(),
+				'class' => TimestampBehavior::class,
 				'createdAtAttribute' => 'createdAt',
 				'updatedAtAttribute' => 'modifiedAt',
 				'value' => new Expression('NOW()')

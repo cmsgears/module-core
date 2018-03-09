@@ -79,7 +79,7 @@ class ModelFollower extends ModelMapper implements IFollower {
 
         return [
             'timestampBehavior' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
 				'createdAtAttribute' => 'createdAt',
  				'updatedAtAttribute' => 'modifiedAt',
  				'value' => new Expression('NOW()')
@@ -117,7 +117,7 @@ class ModelFollower extends ModelMapper implements IFollower {
 	 */
 	public function getModel() {
 
-		return $this->hasOne( User::className(), [ 'id' => 'modelId' ] );
+		return $this->hasOne( User::class, [ 'id' => 'modelId' ] );
 	}
 
 	/**

@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\models\resource;
+namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
 use Yii;
@@ -92,7 +92,7 @@ class SiteAccess extends Resource implements IGridCache, IMultiSite {
 
 		return [
 			'timestampBehavior' => [
-				'class' => TimestampBehavior::className(),
+				'class' => TimestampBehavior::class,
 				'createdAtAttribute' => 'createdAt',
 				'updatedAtAttribute' => 'modifiedAt',
 				'value' => new Expression('NOW()')
@@ -156,7 +156,7 @@ class SiteAccess extends Resource implements IGridCache, IMultiSite {
 	 */
 	public function getSite() {
 
-		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+		return $this->hasOne( Site::class, [ 'id' => 'siteId' ] );
 	}
 
 	/**
@@ -166,7 +166,7 @@ class SiteAccess extends Resource implements IGridCache, IMultiSite {
 	 */
 	public function getUser() {
 
-		return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
+		return $this->hasOne( User::class, [ 'id' => 'userId' ] );
 	}
 
 	/**
@@ -176,7 +176,7 @@ class SiteAccess extends Resource implements IGridCache, IMultiSite {
 	 */
 	public function getRole() {
 
-		return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
+		return $this->hasOne( Role::class, [ 'id' => 'roleId' ] );
 	}
 
 	// Static Methods ----------------------------------------------

@@ -96,7 +96,7 @@ class ModelGallery extends ModelMapper implements IModelMapper {
 	 */
 	public function getModel() {
 
-		return $this->hasOne( Gallery::className(), [ 'id' => 'modelId' ] );
+		return $this->hasOne( Gallery::class, [ 'id' => 'modelId' ] );
 	}
 
 	/**

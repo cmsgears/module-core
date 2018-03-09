@@ -82,7 +82,7 @@ class ModelAddress extends ModelMapper implements IModelMapper {
 	 */
 	public function getModel() {
 
-		return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] );
+		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] );
 	}
 
 	// Static Methods ----------------------------------------------

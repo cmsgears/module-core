@@ -50,7 +50,7 @@ trait OptionTrait {
 
 		$modelOptionTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OPTION );
 
-		return $this->hasMany( ModelOption::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelOption::class, [ 'parentId' => 'id' ] )
 			->where( "$modelOptionTable.parentType='$this->modelType'" );
 	}
 
@@ -61,7 +61,7 @@ trait OptionTrait {
 
 		$modelOptionTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OPTION );
 
-		return $this->hasMany( ModelOption::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelOption::class, [ 'parentId' => 'id' ] )
 			->where( "$modelOptionTable.parentType='$this->modelType' AND $modelOptionTable.active=1" );
 	}
 
@@ -72,7 +72,7 @@ trait OptionTrait {
 
 		$modelOptionTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OPTION );
 
-		return $this->hasOne( ModelOption::className(), [ 'parentId' => 'id' ] )
+		return $this->hasOne( ModelOption::class, [ 'parentId' => 'id' ] )
 			->where( "$modelOptionTable.parentType=:ptype AND $modelOptionTable.type=:type AND $modelOptionTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
 	}
 
@@ -83,7 +83,7 @@ trait OptionTrait {
 
 		$modelOptionTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OPTION );
 
-		return $this->hasMany( Option::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( Option::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelOptionTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelOptionTable ) {
 
@@ -99,7 +99,7 @@ trait OptionTrait {
 
 		$modelOptionTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OPTION );
 
-		return $this->hasMany( Option::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( Option::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelOptionTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelOptionTable ) {
 
@@ -115,7 +115,7 @@ trait OptionTrait {
 
 		$modelOptionTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OPTION );
 
-		return $this->hasMany( Option::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( Option::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelOptionTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$type, &$active, &$modelOptionTable ) {
 

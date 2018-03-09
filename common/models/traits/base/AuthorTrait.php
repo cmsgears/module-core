@@ -57,7 +57,7 @@ trait AuthorTrait {
 
 		$userTable = CoreTables::TABLE_USER;
 
-		return $this->hasOne( User::className(), [ 'id' => 'createdBy' ] )->from( "$userTable as creator" );
+		return $this->hasOne( User::class, [ 'id' => 'createdBy' ] )->from( "$userTable as creator" );
 	}
 
 	/**
@@ -67,7 +67,7 @@ trait AuthorTrait {
 
 		$userTable = CoreTables::TABLE_USER;
 
-		return $this->hasOne( User::className(), [ 'id' => 'modifiedBy' ] )->from( "$userTable as modifier" );
+		return $this->hasOne( User::class, [ 'id' => 'modifiedBy' ] )->from( "$userTable as modifier" );
 	}
 
 	/**

@@ -7,13 +7,15 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-// Yii Imports
+// CMG Imports
 use cmsgears\core\common\base\Migration;
 
 /**
  * The core index migration inserts the recommended indexes for better performance. It
  * also list down other possible index commented out. These indexes can be created using
  * project based migration script.
+ *
+ * @since 1.0.0
  */
 class m160621_014612_core_index extends Migration {
 
@@ -26,7 +28,7 @@ class m160621_014612_core_index extends Migration {
 	public function init() {
 
 		// Table prefix
-		$this->prefix		= Yii::$app->migration->cmgPrefix;
+		$this->prefix = Yii::$app->migration->cmgPrefix;
 	}
 
 	public function up() {

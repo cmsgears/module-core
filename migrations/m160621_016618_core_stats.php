@@ -7,12 +7,14 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-// Yii Imports
+// CMG Imports
 use cmsgears\core\common\base\Migration;
 
 /**
  * The core stats migration insert the default row count for all the tables available in
  * core module. A scheduled console job can be executed to update these stats.
+ *
+ * @since 1.0.0
  */
 class m160621_016618_core_stats extends Migration {
 
@@ -51,7 +53,7 @@ class m160621_016618_core_stats extends Migration {
 
 		$this->createTable( $this->prefix . 'core_stats', [
 			'id' => $this->primaryKey( 11 ),
-			'table' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
+			'tableName' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'count' => $this->bigInteger( 20 )->notNull()->defaultValue( 0 )
 		], $this->options );
@@ -59,7 +61,7 @@ class m160621_016618_core_stats extends Migration {
 
 	private function insertTables() {
 
-		$columns 	= [ 'table', 'type', 'count' ];
+		$columns 	= [ 'tableName', 'type', 'count' ];
 
 		$tableData	= [
 			[ $this->prefix . 'core_locale', 'rows', 0 ],

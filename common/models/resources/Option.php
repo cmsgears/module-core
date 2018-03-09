@@ -137,7 +137,7 @@ class Option extends Resource implements IData {
 	 */
 	public function getCategory() {
 
-		return $this->hasOne( Category::className(), [ 'id' => 'categoryId' ] );
+		return $this->hasOne( Category::class, [ 'id' => 'categoryId' ] );
 	}
 
 	// Static Methods ----------------------------------------------

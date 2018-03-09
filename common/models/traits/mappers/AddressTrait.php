@@ -50,7 +50,7 @@ trait AddressTrait {
 
 		$modelAddressTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_ADDRESS );
 
-		return $this->hasMany( ModelAddress::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelAddress::class, [ 'parentId' => 'id' ] )
 			->where( "$modelAddressTable.parentType='$this->modelType'" );
 	}
 
@@ -61,7 +61,7 @@ trait AddressTrait {
 
 		$modelAddressTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_ADDRESS );
 
-		return $this->hasMany( ModelAddress::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelAddress::class, [ 'parentId' => 'id' ] )
 			->where( "$modelAddressTable.parentType='$this->modelType' AND $modelAddressTable.active=1" );
 	}
 
@@ -72,7 +72,7 @@ trait AddressTrait {
 
 		$modelAddressTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_ADDRESS );
 
-		return $this->hasOne( ModelAddress::className(), [ 'parentId' => 'id' ] )
+		return $this->hasOne( ModelAddress::class, [ 'parentId' => 'id' ] )
 			->where( "$modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type AND $modelAddressTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
 	}
 
@@ -83,7 +83,7 @@ trait AddressTrait {
 
 		$modelAddressTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_ADDRESS );
 
-		return $this->hasMany( Address::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelAddressTable ) {
 
@@ -99,7 +99,7 @@ trait AddressTrait {
 
 		$modelAddressTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_ADDRESS );
 
-		return $this->hasMany( Address::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelAddressTable ) {
 
@@ -115,7 +115,7 @@ trait AddressTrait {
 
 		$modelAddressTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_ADDRESS );
 
-		return $this->hasMany( Address::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$type, &$active, &$modelAddressTable ) {
 
@@ -133,7 +133,7 @@ trait AddressTrait {
 
 		$modelAddressTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_ADDRESS );
 
-		return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] )
+		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
 				function( $query, $type = Address::TYPE_DEFAULT ) use( &$modelAddressTable ) {
 
@@ -149,7 +149,7 @@ trait AddressTrait {
 
 		$modelAddressTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_ADDRESS );
 
-		return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] )
+		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
 				function( $query, $type = Address::TYPE_PRIMARY ) use( &$modelAddressTable ) {
 
@@ -165,7 +165,7 @@ trait AddressTrait {
 
 		$modelAddressTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_ADDRESS );
 
-		return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] )
+		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
 				function( $query, $type = Address::TYPE_RESIDENTIAL ) use( &$modelAddressTable ) {
 
@@ -181,7 +181,7 @@ trait AddressTrait {
 
 		$modelAddressTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_ADDRESS );
 
-		return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] )
+		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
 				function( $query, $type = Address::TYPE_SHIPPING ) use( &$modelAddressTable ) {
 
@@ -197,7 +197,7 @@ trait AddressTrait {
 
 		$modelAddressTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_ADDRESS );
 
-		return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] )
+		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
 				function( $query, $type = Address::TYPE_BILLING ) use( &$modelAddressTable ) {
 
@@ -213,7 +213,7 @@ trait AddressTrait {
 
 		$modelAddressTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_ADDRESS );
 
-		return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] )
+		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
 				function( $query, $type = Address::TYPE_OFFICE ) use( &$modelAddressTable ) {
 
@@ -229,7 +229,7 @@ trait AddressTrait {
 
 		$modelAddressTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_ADDRESS );
 
-		return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] )
+		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
 				function( $query, $type = Address::TYPE_MAILING ) use( &$modelAddressTable ) {
 
@@ -245,7 +245,7 @@ trait AddressTrait {
 
 		$modelAddressTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_ADDRESS );
 
-		return $this->hasOne( Address::className(), [ 'id' => 'modelId' ] )
+		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
 				function( $query, $type = Address::TYPE_BRANCH ) use( &$modelAddressTable ) {
 

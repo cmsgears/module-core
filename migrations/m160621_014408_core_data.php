@@ -7,11 +7,10 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-// Yii Imports
-use cmsgears\core\common\base\Migration;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\base\Migration;
 
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\entities\Locale;
@@ -28,6 +27,8 @@ use cmsgears\core\common\utilities\DateUtil;
 
 /**
  * The core data migration inserts the base data required to run the application.
+ *
+ * @since 1.0.0
  */
 class m160621_014408_core_data extends Migration {
 

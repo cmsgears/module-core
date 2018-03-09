@@ -23,7 +23,7 @@ use cmsgears\core\common\models\base\Resource;
  * The stats stores meta data of tables.
  *
  * @property integer $id
- * @property string $table
+ * @property string $tableName
  * @property string $type
  * @property integer $count
  *
@@ -71,11 +71,11 @@ class Stats extends Resource {
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'table', 'type', 'count' ], 'required' ],
+			[ [ 'tableName', 'type', 'count' ], 'required' ],
 			[ 'id', 'safe' ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 0, 'max' => Yii::$app->core->mediumText ],
-			[ 'table', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'tableName', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			// Others
 			[ 'rows' => 'number', 'integerOnly' => true ]
 		];
@@ -89,7 +89,7 @@ class Stats extends Resource {
 	public function attributeLabels() {
 
 		return [
-			'table' => 'Table',
+			'tableName' => 'Table',
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'count' => 'Count'
 		];
@@ -150,4 +150,13 @@ class Stats extends Resource {
 
 	// Delete -----------------
 
+	/**
+	 * Delete all stats related to given table name.
+	 *
+	 * @return int the number of rows deleted.
+	 */
+	public static function deleteByTableName( $tableName ) {
+
+		return self::deleteAll( 'tableName=:tableName', [ ':tableName' => $tableName ] );
+	}
 }

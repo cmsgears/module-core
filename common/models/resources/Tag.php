@@ -98,14 +98,14 @@ class Tag extends Resource implements IAuthor, IMultiSite, INameType, ISlugType 
 
 		return [
 			'sluggableBehavior' => [
-				'class' => SluggableBehavior::className(),
+				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
 				'slugAttribute' => 'slug', // Unique for Site Id
 				'ensureUnique' => true,
 				'uniqueValidator' => [ 'targetAttribute' => 'siteId' ]
 			],
 			'timestampBehavior' => [
-				'class' => TimestampBehavior::className(),
+				'class' => TimestampBehavior::class,
 				'createdAtAttribute' => 'createdAt',
 				'updatedAtAttribute' => 'modifiedAt',
 				'value' => new Expression('NOW()')
@@ -126,7 +126,7 @@ class Tag extends Resource implements IAuthor, IMultiSite, INameType, ISlugType 
 			[ [ 'siteId', 'name' ], 'required' ],
 			[ [ 'id', 'htmlOptions' ], 'safe' ],
 			// Unique
-			[ [ 'siteId', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'siteId', 'name', 'type' ] ],
+			[ [ 'siteId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'siteId', 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

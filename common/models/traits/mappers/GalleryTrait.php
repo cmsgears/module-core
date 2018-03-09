@@ -50,7 +50,7 @@ trait GalleryTrait {
 
 		$modelGalleryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
 
-		return $this->hasMany( ModelGallery::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelGallery::class, [ 'parentId' => 'id' ] )
 			->where( "$modelGalleryTable.parentType='$this->modelType'" );
 	}
 
@@ -61,7 +61,7 @@ trait GalleryTrait {
 
 		$modelGalleryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
 
-		return $this->hasMany( ModelGallery::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelGallery::class, [ 'parentId' => 'id' ] )
 			->where( "$modelGalleryTable.parentType='$this->modelType' AND $modelGalleryTable.active=1" );
 	}
 
@@ -72,7 +72,7 @@ trait GalleryTrait {
 
 		$modelGalleryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
 
-		return $this->hasOne( ModelGallery::className(), [ 'parentId' => 'id' ] )
+		return $this->hasOne( ModelGallery::class, [ 'parentId' => 'id' ] )
 			->where( "$modelGalleryTable.parentType=:ptype AND $modelGalleryTable.type=:type AND $modelGalleryTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
 	}
 
@@ -83,7 +83,7 @@ trait GalleryTrait {
 
 		$modelGalleryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
 
-		return $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( Gallery::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelGalleryTable ) {
 
@@ -99,7 +99,7 @@ trait GalleryTrait {
 
 		$modelGalleryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
 
-		return $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( Gallery::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelGalleryTable ) {
 
@@ -115,7 +115,7 @@ trait GalleryTrait {
 
 		$modelGalleryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
 
-		return $this->hasMany( Gallery::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( Gallery::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$type, &$active, &$modelGalleryTable ) {
 
@@ -132,7 +132,7 @@ trait GalleryTrait {
 		$galleryTable		= CoreTables::getTableName( CoreTables::TABLE_GALLERY );
 		$modelGalleryTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
 
-		return $this->hasOne( Gallery::className(), [ 'id' => 'modelId' ] )
+		return $this->hasOne( Gallery::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelGalleryTable ) {
 
@@ -156,7 +156,7 @@ trait GalleryTrait {
 	 */
 	public function getGallery() {
 
-		return $this->hasOne( Gallery::className(), [ 'id' => 'galleryId' ] );
+		return $this->hasOne( Gallery::class, [ 'id' => 'galleryId' ] );
 	}
 
 	// Static Methods ----------------------------------------------

@@ -180,7 +180,7 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public function getCountry() {
 
-		return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] );
+		return $this->hasOne( Country::class, [ 'id' => 'countryId' ] );
 	}
 
 	/**
@@ -188,7 +188,7 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public function getProvince() {
 
-		return $this->hasOne( Province::className(), [ 'id' => 'provinceId' ] );
+		return $this->hasOne( Province::class, [ 'id' => 'provinceId' ] );
 	}
 
 	/**
@@ -196,7 +196,7 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public function getCity() {
 
-		return $this->hasOne( City::className(), [ 'id' => 'cityId' ] );
+		return $this->hasOne( City::class, [ 'id' => 'cityId' ] );
 	}
 
 	// TODO: Use address template to return the address string.

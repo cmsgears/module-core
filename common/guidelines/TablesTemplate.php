@@ -37,5 +37,5 @@ class TablesTemplate {
 
 	// Resources ------------
 
-	// Mappers & Traits -----
+	// Mappers --------------
 }

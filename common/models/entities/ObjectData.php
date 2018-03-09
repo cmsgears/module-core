@@ -177,8 +177,8 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 			// Required, Safe
 			[ [ 'name', 'type' ], 'required' ],
 			[ [ 'id', 'htmlOptions', 'content', 'data', 'gridCache' ], 'safe' ],
-			// Unique
-			[ [ 'name', 'siteId', 'themeId', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'siteId', 'themeId', 'type' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			// Unique - Allowed multiple names for same type. Slug will differentiate the models.
+			//[ [ 'siteId', 'themeId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

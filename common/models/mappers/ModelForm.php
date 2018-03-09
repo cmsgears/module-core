@@ -82,7 +82,7 @@ class ModelForm extends ModelMapper implements IModelMapper {
 	 */
 	public function getModel() {
 
-		return $this->hasOne( Form::className(), [ 'id' => 'modelId' ] );
+		return $this->hasOne( Form::class, [ 'id' => 'modelId' ] );
 	}
 
 	// Static Methods ----------------------------------------------

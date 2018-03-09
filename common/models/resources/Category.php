@@ -108,14 +108,14 @@ class Category extends NestedSetModel implements IAuthor, IMultiSite, INameType,
 
 		return [
 			'sluggableBehavior' => [
-				'class' => SluggableBehavior::className(),
+				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
 				'slugAttribute' => 'slug', // Unique for Site Id
 				'ensureUnique' => true,
 				'uniqueValidator' => [ 'targetAttribute' => 'siteId' ]
 			],
 			'timestampBehavior' => [
-				'class' => TimestampBehavior::className(),
+				'class' => TimestampBehavior::class,
 				'createdAtAttribute' => 'createdAt',
 				'updatedAtAttribute' => 'modifiedAt',
 				'value' => new Expression('NOW()')
@@ -201,7 +201,7 @@ class Category extends NestedSetModel implements IAuthor, IMultiSite, INameType,
 
 		$parentTable =  CoreTables::getTableName( CoreTables::TABLE_CATEGORY );
 
-		return $this->hasOne( Category::className(), [ 'id' => 'parentId' ] )->from( "$parentTable as parent" );
+		return $this->hasOne( Category::class, [ 'id' => 'parentId' ] )->from( "$parentTable as parent" );
 	}
 
 	/**
@@ -211,7 +211,7 @@ class Category extends NestedSetModel implements IAuthor, IMultiSite, INameType,
 	 */
 	public function getChildren() {
 
-		return $this->hasMany( Category::className(), [ 'parentId' => 'id' ] );
+		return $this->hasMany( Category::class, [ 'parentId' => 'id' ] );
 	}
 
 	/**
@@ -221,7 +221,7 @@ class Category extends NestedSetModel implements IAuthor, IMultiSite, INameType,
 	 */
 	public function getOptions() {
 
-		return $this->hasMany( Option::className(), [ 'categoryId' => 'id' ] );
+		return $this->hasMany( Option::class, [ 'categoryId' => 'id' ] );
 	}
 
 	/**

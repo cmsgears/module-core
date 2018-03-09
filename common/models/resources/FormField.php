@@ -33,6 +33,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * @property short $type
  * @property string $icon
  * @property boolean $compress
+ * @property boolean $active
  * @property string $validators
  * @property integer $order
  * @property string $htmlOptions
@@ -133,7 +134,7 @@ class FormField extends Resource implements IData {
 			// Other
 			[ 'name', 'alphanumu' ],
 			[ [ 'type', 'order' ], 'number', 'integerOnly' => true ],
-			[ 'compress', 'boolean' ]
+			[ [ 'compress', 'active' ], 'boolean' ]
 		];
 
 		// Trim Text
@@ -158,6 +159,7 @@ class FormField extends Resource implements IData {
 			'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'compress' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COMPRESS ),
+			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'validators' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALIDATORS ),
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
@@ -181,7 +183,7 @@ class FormField extends Resource implements IData {
 	 */
 	public function getForm() {
 
-		return $this->hasOne( Form::className(), [ 'id' => 'formId' ] );
+		return $this->hasOne( Form::class, [ 'id' => 'formId' ] );
 	}
 
 	/**

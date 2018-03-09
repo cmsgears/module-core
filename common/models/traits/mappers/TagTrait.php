@@ -50,7 +50,7 @@ trait TagTrait {
 
 		$modelTagTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_TAG );
 
-		return $this->hasMany( ModelTag::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelTag::class, [ 'parentId' => 'id' ] )
 			->where( "$modelTagTable.parentType='$this->modelType'" );
 	}
 
@@ -61,7 +61,7 @@ trait TagTrait {
 
 		$modelTagTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_TAG );
 
-		return $this->hasMany( ModelTag::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelTag::class, [ 'parentId' => 'id' ] )
 			->where( "$modelTagTable.parentType='$this->modelType' AND $modelTagTable.active=1" );
 	}
 
@@ -72,7 +72,7 @@ trait TagTrait {
 
 		$modelTagTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_TAG );
 
-		return $this->hasOne( ModelTag::className(), [ 'parentId' => 'id' ] )
+		return $this->hasOne( ModelTag::class, [ 'parentId' => 'id' ] )
 			->where( "$modelTagTable.parentType=:ptype AND $modelTagTable.type=:type AND $modelTagTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
 	}
 
@@ -83,7 +83,7 @@ trait TagTrait {
 
 		$modelTagTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_TAG );
 
-		return $this->hasMany( Tag::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( Tag::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelTagTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelTagTable ) {
 
@@ -99,7 +99,7 @@ trait TagTrait {
 
 		$modelTagTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_TAG );
 
-		return $this->hasMany( Tag::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( Tag::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelTagTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelTagTable ) {
 
@@ -115,7 +115,7 @@ trait TagTrait {
 
 		$modelTagTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_TAG );
 
-		return $this->hasMany( Tag::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( Tag::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelTagTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$type, &$active, &$modelTagTable ) {
 

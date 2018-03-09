@@ -67,6 +67,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property boolean $userMail Send mail to user if set and email field exist.
  * @property boolean $adminMail Send mail to admin if set.
  * @property boolean $uniqueSubmit
+ * @property boolean $updateSubmit
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $htmlOptions
@@ -131,16 +132,16 @@ class Form extends Resource implements IAuthor, IData, IGridCache, IModelMeta, I
 
 		return [
 			'authorBehavior' => [
-				'class' => AuthorBehavior::className()
+				'class' => AuthorBehavior::class
 			],
 			'timestampBehavior' => [
-				'class' => TimestampBehavior::className(),
+				'class' => TimestampBehavior::class,
 				'createdAtAttribute' => 'createdAt',
 				'updatedAtAttribute' => 'modifiedAt',
 				'value' => new Expression('NOW()')
 			],
 			'sluggableBehavior' => [
-				'class' => SluggableBehavior::className(),
+				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
 				'slugAttribute' => 'slug', // Unique for Site Id
 				'ensureUnique' => true,
@@ -162,7 +163,7 @@ class Form extends Resource implements IAuthor, IData, IGridCache, IModelMeta, I
 			[ [ 'name', 'captcha', 'visibility', 'active' ], 'required' ],
 			[ [ 'id', 'htmlOptions', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique
-			[ [ 'siteId', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'siteId', 'name', 'type' ] ],
+			[ [ 'siteId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'siteId', 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
@@ -172,7 +173,7 @@ class Form extends Resource implements IAuthor, IData, IGridCache, IModelMeta, I
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ 'visibility', 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'captcha', 'active', 'userMail', 'adminMail', 'uniqueSubmit', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'captcha', 'active', 'userMail', 'adminMail', 'uniqueSubmit', 'updateSubmit', 'gridCacheValid' ], 'boolean' ],
 			[ 'templateId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -250,7 +251,7 @@ class Form extends Resource implements IAuthor, IData, IGridCache, IModelMeta, I
 	 */
 	public function getFields() {
 
-		return $this->hasMany( FormField::className(), [ 'formId' => 'id' ] );
+		return $this->hasMany( FormField::class, [ 'formId' => 'id' ] );
 	}
 
 	/**

@@ -50,7 +50,7 @@ trait CategoryTrait {
 
 		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
 
-		return $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelCategory::class, [ 'parentId' => 'id' ] )
 			->where( "$modelCategoryTable.parentType='$this->modelType'" );
 	}
 
@@ -61,7 +61,7 @@ trait CategoryTrait {
 
 		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
 
-		return $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelCategory::class, [ 'parentId' => 'id' ] )
 			->where( "$modelCategoryTable.parentType='$this->modelType' AND $modelCategoryTable.active=1" );
 	}
 
@@ -72,7 +72,7 @@ trait CategoryTrait {
 
 		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
 
-		return $this->hasOne( ModelCategory::className(), [ 'parentId' => 'id' ] )
+		return $this->hasOne( ModelCategory::class, [ 'parentId' => 'id' ] )
 			->where( "$modelCategoryTable.parentType=:ptype AND $modelCategoryTable.type=:type AND $modelCategoryTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
 	}
 
@@ -83,7 +83,7 @@ trait CategoryTrait {
 
 		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
 
-		return $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( Category::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelCategoryTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelCategoryTable ) {
 
@@ -99,7 +99,7 @@ trait CategoryTrait {
 
 		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
 
-		return $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( Category::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelCategoryTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelCategoryTable ) {
 
@@ -115,7 +115,7 @@ trait CategoryTrait {
 
 		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
 
-		$categories = $this->hasMany( Category::className(), [ 'id' => 'modelId' ] )
+		$categories = $this->hasMany( Category::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelCategoryTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$type, &$active, &$modelCategoryTable ) {
 

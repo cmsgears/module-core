@@ -91,7 +91,7 @@ class ModelMessage extends ModelResource implements IModelResource {
 			[ [ 'localeId', 'parentId', 'parentType', 'name' ], 'required' ],
 			[ [ 'id', 'value' ], 'safe' ],
 			// Unique
-			[ [ 'parentId', 'parentType', 'localeId', 'name' ], 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'localeId', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ [ 'localeId', 'parentId', 'parentType', 'name' ], 'unique', 'targetAttribute' => [ 'localeId', 'parentId', 'parentType', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
@@ -141,7 +141,7 @@ class ModelMessage extends ModelResource implements IModelResource {
 	 */
 	public function getLocale() {
 
-		return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] );
+		return $this->hasOne( Locale::class, [ 'id' => 'localeId' ] );
 	}
 
 	// Static Methods ----------------------------------------------

@@ -50,7 +50,7 @@ trait ObjectTrait {
 
 		$modelObjectTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
 
-		return $this->hasMany( ModelObject::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelObject::class, [ 'parentId' => 'id' ] )
 			->where( "$modelObjectTable.parentType='$this->modelType'" );
 	}
 
@@ -61,7 +61,7 @@ trait ObjectTrait {
 
 		$modelObjectTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
 
-		return $this->hasMany( ModelObject::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelObject::class, [ 'parentId' => 'id' ] )
 			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.active=1" );
 	}
 
@@ -72,7 +72,7 @@ trait ObjectTrait {
 
 		$modelObjectTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
 
-		return $this->hasOne( ModelObject::className(), [ 'parentId' => 'id' ] )
+		return $this->hasOne( ModelObject::class, [ 'parentId' => 'id' ] )
 			->where( "$modelObjectTable.parentType=:ptype AND $modelObjectTable.type=:type AND $modelObjectTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
 	}
 
@@ -83,7 +83,7 @@ trait ObjectTrait {
 
 		$modelObjectTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
 
-		return $this->hasMany( ObjectData::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( ObjectData::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelObjectTable ) {
 
@@ -99,7 +99,7 @@ trait ObjectTrait {
 
 		$modelObjectTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
 
-		return $this->hasMany( ObjectData::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( ObjectData::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelObjectTable ) {
 
@@ -115,7 +115,7 @@ trait ObjectTrait {
 
 		$modelObjectTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
 
-		return $this->hasMany( ObjectData::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( ObjectData::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$type, &$active, &$modelObjectTable ) {
 

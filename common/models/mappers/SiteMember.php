@@ -76,7 +76,7 @@ class SiteMember extends Mapper {
 
 		return [
 			'timestampBehavior' => [
-				'class' => TimestampBehavior::className(),
+				'class' => TimestampBehavior::class,
 				'createdAtAttribute' => 'createdAt',
 				'updatedAtAttribute' => 'modifiedAt',
 				'value' => new Expression('NOW()')
@@ -133,7 +133,7 @@ class SiteMember extends Mapper {
 	 */
 	public function getSite() {
 
-		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
+		return $this->hasOne( Site::class, [ 'id' => 'siteId' ] );
 	}
 
 	/**
@@ -143,7 +143,7 @@ class SiteMember extends Mapper {
 	 */
 	public function getUser() {
 
-		return $this->hasOne( User::className(), [ 'id' => 'userId' ] );
+		return $this->hasOne( User::class, [ 'id' => 'userId' ] );
 	}
 
 	/**
@@ -153,7 +153,7 @@ class SiteMember extends Mapper {
 	 */
 	public function getRole() {
 
-		return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
+		return $this->hasOne( Role::class, [ 'id' => 'roleId' ] );
 	}
 
 	/**
@@ -187,7 +187,7 @@ class SiteMember extends Mapper {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_SITE_MEMBER;
+		return CoreTables::getTableName( CoreTables::TABLE_SITE_MEMBER );
 	}
 
 	// CMG parent classes --------------------

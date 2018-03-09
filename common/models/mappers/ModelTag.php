@@ -82,7 +82,7 @@ class ModelTag extends ModelMapper implements IModelMapper {
 	 */
 	public function getModel() {
 
-		return $this->hasOne( Tag::className(), [ 'id' => 'modelId' ] );
+		return $this->hasOne( Tag::class, [ 'id' => 'modelId' ] );
 	}
 
 	// Static Methods ----------------------------------------------

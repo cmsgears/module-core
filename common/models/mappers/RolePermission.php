@@ -114,7 +114,7 @@ class RolePermission extends Mapper {
 	 */
 	public function getRole() {
 
-		return $this->hasOne( Role::className(), [ 'id' => 'roleId' ] );
+		return $this->hasOne( Role::class, [ 'id' => 'roleId' ] );
 	}
 
 	/**
@@ -124,7 +124,7 @@ class RolePermission extends Mapper {
 	 */
 	public function getPermission() {
 
-		return $this->hasOne( Permission::className(), [ 'id' => 'permissionId' ] );
+		return $this->hasOne( Permission::class, [ 'id' => 'permissionId' ] );
 	}
 
 	// Static Methods ----------------------------------------------

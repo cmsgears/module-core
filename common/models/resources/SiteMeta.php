@@ -77,7 +77,7 @@ class SiteMeta extends Meta {
 	 */
 	public function getParent() {
 
-		return $this->hasOne( Site::className(), [ 'id' => 'modelId' ] );
+		return $this->hasOne( Site::class, [ 'id' => 'modelId' ] );
 	}
 
 	// Static Methods ----------------------------------------------

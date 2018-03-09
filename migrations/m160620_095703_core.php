@@ -7,11 +7,10 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-// Yii Imports
-use cmsgears\core\common\base\Migration;
-
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\base\Migration;
 
 use cmsgears\core\common\models\base\Meta;
 
@@ -27,6 +26,8 @@ use cmsgears\core\common\models\base\Meta;
  * * Type - 160 bytes (Used to group and classify the table rows.)
  * * Title - 2048 bytes (Can be used for longer names instead of Name. It can't be indexed. )
  * * Description - 4096 bytes (Used to describe the model in brief.)
+ *
+ * @since 1.0.0
  */
 class m160620_095703_core extends Migration {
 
@@ -618,6 +619,7 @@ class m160620_095703_core extends Migration {
 			'userMail' => $this->boolean()->notNull()->defaultValue( false ),
 			'adminMail' => $this->boolean()->notNull()->defaultValue( false ),
 			'uniqueSubmit' => $this->boolean()->notNull()->defaultValue( false ),
+			'updateSubmit' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'htmlOptions' => $this->text(),
@@ -645,6 +647,7 @@ class m160620_095703_core extends Migration {
 			'type' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'compress' => $this->boolean()->notNull()->defaultValue( false ),
+			'active' => $this->boolean()->notNull()->defaultValue( true ),
 			'validators' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( false ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'htmlOptions' => $this->text(),

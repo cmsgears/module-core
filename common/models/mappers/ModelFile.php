@@ -96,7 +96,7 @@ class ModelFile extends ModelMapper implements IModelMapper {
 	 */
 	public function getModel() {
 
-		return $this->hasOne( File::className(), [ 'id' => 'modelId' ] );
+		return $this->hasOne( File::class, [ 'id' => 'modelId' ] );
 	}
 
 	/**

@@ -51,7 +51,7 @@ trait FileTrait {
 
 		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
 
-		return $this->hasMany( ModelFile::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelFile::class, [ 'parentId' => 'id' ] )
 			->where( "$modelFileTable.parentType='$this->modelType'" );
 	}
 
@@ -62,7 +62,7 @@ trait FileTrait {
 
 		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
 
-		return $this->hasMany( ModelFile::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelFile::class, [ 'parentId' => 'id' ] )
 			->where( "$modelFileTable.parentType='$this->modelType' AND $modelFileTable.active=1" );
 	}
 
@@ -73,7 +73,7 @@ trait FileTrait {
 
 		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
 
-		return $this->hasOne( ModelFile::className(), [ 'parentId' => 'id' ] )
+		return $this->hasOne( ModelFile::class, [ 'parentId' => 'id' ] )
 			->where( "$modelFileTable.parentType=:ptype AND $modelFileTable.type=:type AND $modelFileTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
 	}
 
@@ -84,7 +84,7 @@ trait FileTrait {
 
 		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
 
-		return $this->hasMany( File::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( File::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelFileTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelFileTable ) {
 
@@ -100,7 +100,7 @@ trait FileTrait {
 
 		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
 
-		return $this->hasMany( File::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( File::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelFileTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelFileTable ) {
 
@@ -116,7 +116,7 @@ trait FileTrait {
 
 		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
 
-		return $this->hasMany( File::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( File::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelFileTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$type, &$active, &$modelFileTable ) {
 
@@ -133,7 +133,7 @@ trait FileTrait {
 		$fileTable		= CoreTables::getTableName( CoreTables::TABLE_FILE );
 		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
 
-		return $this->hasOne( File::className(), [ 'id' => 'modelId' ] )
+		return $this->hasOne( File::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelFileTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelFileTable ) {
 

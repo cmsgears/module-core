@@ -54,7 +54,7 @@ trait FormTrait {
 
 		$modelFormTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FORM );
 
-		return $this->hasMany( ModelForm::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelForm::class, [ 'parentId' => 'id' ] )
 			->where( "$modelFormTable.parentType='$this->modelType'" );
 	}
 
@@ -65,7 +65,7 @@ trait FormTrait {
 
 		$modelFormTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FORM );
 
-		return $this->hasMany( ModelForm::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelForm::class, [ 'parentId' => 'id' ] )
 			->where( "$modelFormTable.parentType='$this->modelType' AND $modelFormTable.active=1" );
 	}
 
@@ -76,7 +76,7 @@ trait FormTrait {
 
 		$modelFormTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FORM );
 
-		return $this->hasOne( ModelForm::className(), [ 'parentId' => 'id' ] )
+		return $this->hasOne( ModelForm::class, [ 'parentId' => 'id' ] )
 			->where( "$modelFormTable.parentType=:ptype AND $modelFormTable.type=:type AND $modelFormTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
 	}
 
@@ -87,7 +87,7 @@ trait FormTrait {
 
 		$modelFormTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FORM );
 
-		return $this->hasMany( Form::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( Form::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelFormTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelFormTable ) {
 
@@ -103,7 +103,7 @@ trait FormTrait {
 
 		$modelFormTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FORM );
 
-		return $this->hasMany( Form::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( Form::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelFormTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$modelFormTable ) {
 
@@ -119,7 +119,7 @@ trait FormTrait {
 
 		$modelFormTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FORM );
 
-		return $this->hasMany( Form::className(), [ 'id' => 'modelId' ] )
+		return $this->hasMany( Form::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelFormTable, [ 'parentId' => 'id' ],
 				function( $query ) use( &$type, &$active, &$modelFormTable ) {
 

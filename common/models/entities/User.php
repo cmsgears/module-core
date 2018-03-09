@@ -185,6 +185,9 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			// Required, Safe
 			[ 'email', 'required' ],
 			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
+			// Unique
+			[ 'email', 'unique' ],
+			[ 'username', 'unique' ],
 			// Email
 			[ 'email', 'email' ],
 			[ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],

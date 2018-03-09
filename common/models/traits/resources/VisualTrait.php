@@ -52,7 +52,7 @@ trait VisualTrait {
 
 		$fileTable	= CoreTables::getTableName( CoreTables::TABLE_FILE );
 
-		return $this->hasOne( File::className(), [ 'id' => 'avatarId' ] )->from( "$fileTable as avatar" );
+		return $this->hasOne( File::class, [ 'id' => 'avatarId' ] )->from( "$fileTable as avatar" );
 	}
 
 	/**
@@ -73,7 +73,7 @@ trait VisualTrait {
 
 		$fileTable	= CoreTables::getTableName( CoreTables::TABLE_FILE );
 
-		return $this->hasOne( File::className(), [ 'id' => 'bannerId' ] )->from( "$fileTable as banner" );
+		return $this->hasOne( File::class, [ 'id' => 'bannerId' ] )->from( "$fileTable as banner" );
 	}
 
 	/**
@@ -94,7 +94,7 @@ trait VisualTrait {
 
 		$fileTable	= CoreTables::getTableName( CoreTables::TABLE_FILE );
 
-		return $this->hasOne( File::className(), [ 'id' => 'textureId' ] )->from( "$fileTable as texture" );
+		return $this->hasOne( File::class, [ 'id' => 'textureId' ] )->from( "$fileTable as texture" );
 	}
 
 	/**
@@ -115,7 +115,7 @@ trait VisualTrait {
 
 		$fileTable	= CoreTables::getTableName( CoreTables::TABLE_FILE );
 
-		return $this->hasOne( File::className(), [ 'id' => 'videoId' ] )->from( "$fileTable as video" );
+		return $this->hasOne( File::class, [ 'id' => 'videoId' ] )->from( "$fileTable as video" );
 	}
 
 	/**

@@ -46,7 +46,7 @@ trait TemplateTrait {
 	 */
 	public function getTemplate() {
 
-		return $this->hasOne( Template::className(), [ 'id' => 'templateId' ] );
+		return $this->hasOne( Template::class, [ 'id' => 'templateId' ] );
 	}
 
 	/**

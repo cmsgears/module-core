@@ -145,10 +145,10 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFile, IGrid
 
 		return [
 			'authorBehavior' => [
-				'class' => AuthorBehavior::className()
+				'class' => AuthorBehavior::class
 			],
 			'timestampBehavior' => [
-				'class' => TimestampBehavior::className(),
+				'class' => TimestampBehavior::class,
 				'createdAtAttribute' => 'createdAt',
 				'updatedAtAttribute' => 'modifiedAt',
 				'value' => new Expression('NOW()')
@@ -246,7 +246,7 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFile, IGrid
 	 */
 	public function getBaseComment() {
 
-		return $this->hasOne( ModelComment::className(), [ 'id' => 'baseId' ] );
+		return $this->hasOne( ModelComment::class, [ 'id' => 'baseId' ] );
 	}
 
 	/**
@@ -256,7 +256,7 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFile, IGrid
 	 */
 	public function getChildComments() {
 
-		return $this->hasMany( ModelComment::className(), [ 'baseId' => 'id' ] );
+		return $this->hasMany( ModelComment::class, [ 'baseId' => 'id' ] );
 	}
 
 	/**

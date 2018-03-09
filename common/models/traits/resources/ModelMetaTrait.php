@@ -52,7 +52,7 @@ trait ModelMetaTrait {
 
 		$modelMetaTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_META );
 
-		return $this->hasMany( ModelMeta::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelMeta::class, [ 'parentId' => 'id' ] )
 			->where( "$modelMetaTable.parentType='$this->modelType'" );
 	}
 
@@ -63,7 +63,7 @@ trait ModelMetaTrait {
 
 		$modelMetaTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_META );
 
-		return $this->hasMany( ModelMeta::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelMeta::class, [ 'parentId' => 'id' ] )
 			->where( "$modelMetaTable.parentType=:ptype AND $modelMetaTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] )->all();
 	}
 
@@ -74,7 +74,7 @@ trait ModelMetaTrait {
 
 		$modelMetaTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_META );
 
-		return $this->hasMany( ModelMeta::className(), [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelMeta::class, [ 'parentId' => 'id' ] )
 			->where( "$modelMetaTable.parentType=:ptype AND $modelMetaTable.type=:type AND $modelMetaTable.name=:name", [ ':ptype' => $this->modelType, ':type' => $type, ':name' => $name ] )->one();
 	}
 

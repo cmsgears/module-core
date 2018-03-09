@@ -87,7 +87,7 @@ class ModelMeta extends ModelResource implements IMeta, IModelResource {
 			[ [ 'parentId', 'parentType', 'name' ], 'required' ],
 			[ [ 'id', 'value' ], 'safe' ],
 			// Unique
-			[ [ 'parentId', 'parentType', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'name', 'type' ] ],
+			[ [ 'parentId', 'parentType', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ [ 'parentType', 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],

@@ -82,7 +82,7 @@ class ModelOption extends ModelMapper implements IModelMapper {
 	 */
 	public function getModel() {
 
-		return $this->hasOne( Option::className(), [ 'id' => 'modelId' ] );
+		return $this->hasOne( Option::class, [ 'id' => 'modelId' ] );
 	}
 
 	// Static Methods ----------------------------------------------

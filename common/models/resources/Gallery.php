@@ -131,17 +131,17 @@ class Gallery extends Resource implements IApproval, IAuthor, IData, IFile, IGri
 
 		return [
 			'authorBehavior' => [
-				'class' => AuthorBehavior::className()
+				'class' => AuthorBehavior::class
 			],
 			'sluggableBehavior' => [
-				'class' => SluggableBehavior::className(),
+				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
 				'slugAttribute' => 'slug', // Unique for Site Id
 				'ensureUnique' => true,
 				'uniqueValidator' => [ 'targetAttribute' => 'siteId' ]
 			],
 			'timestampBehavior' => [
-				'class' => TimestampBehavior::className(),
+				'class' => TimestampBehavior::class,
 				'createdAtAttribute' => 'createdAt',
 				'updatedAtAttribute' => 'modifiedAt',
 				'value' => new Expression('NOW()')

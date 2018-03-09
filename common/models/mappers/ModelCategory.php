@@ -95,7 +95,7 @@ class ModelCategory extends ModelMapper implements IModelMapper {
 	 */
 	public function getModel() {
 
-		return $this->hasOne( Category::className(), [ 'id' => 'modelId' ] );
+		return $this->hasOne( Category::class, [ 'id' => 'modelId' ] );
 	}
 
 	// Static Methods ----------------------------------------------

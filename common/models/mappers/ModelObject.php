@@ -98,7 +98,7 @@ class ModelObject extends ModelMapper implements IModelMapper {
 	 */
 	public function getModel() {
 
-		return $this->hasOne( ObjectData::className(), [ 'id' => 'modelId' ] );
+		return $this->hasOne( ObjectData::class, [ 'id' => 'modelId' ] );
 	}
 
 	/**

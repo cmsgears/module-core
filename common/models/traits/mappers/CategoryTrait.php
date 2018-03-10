@@ -111,6 +111,30 @@ trait CategoryTrait {
 	/**
 	 * @inheritdoc
 	 */
+	public function getActiveCategoriesNode() {
+
+		$categoryTable = CoreTables::TABLE_CATEGORY;
+
+		$query = $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )->onCondition( [ "$modelCategoryTable.parentType" => $this->modelType, "$modelCategoryTable.active" => true ] );
+
+		return $query;
+	}
+	
+	/**
+	 * @inheritdoc
+	 */
+	public function getCategoriesNode() {
+
+		$categoryTable = CoreTables::TABLE_CATEGORY;
+
+		$query = $this->hasMany( ModelCategory::className(), [ 'parentId' => 'id' ] )->onCondition( [ "$modelCategoryTable.parentType" => $this->modelType ] );
+
+		return $query;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function getCategoriesByType( $type, $active = true ) {
 
 		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );

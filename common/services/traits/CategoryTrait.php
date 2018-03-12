@@ -24,8 +24,8 @@ trait CategoryTrait {
 
 	public function getByNodeId( $categoryId, $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= static::$modelTable;
 
 		$config[ 'page' ]	= isset( $config[ 'page' ] ) ? $config[ 'page' ] : false;
 		$config[ 'query' ]	= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
@@ -34,17 +34,17 @@ trait CategoryTrait {
 
 		if( $config[ 'active' ] ) {
 
-			$config[ 'query' ]->joinWith( 'activeCategoriesNode' )->andWhere( "MATCH( nodes ) AGAINST('$categoryId' IN NATURAL LANGUAGE MODE)" );
+			$config[ 'query' ]->joinWith( 'activeModelCategories' )->andWhere( "MATCH( nodes ) AGAINST('$categoryId' IN NATURAL LANGUAGE MODE)" );
 
 		}
 		else {
 
-			$config[ 'query' ]->joinWith( 'categoriesNode' )->andWhere( ['like', 'nodes', $categoryId ] );
+			$config[ 'query' ]->joinWith( 'modelCategories' )->andWhere( ['like', 'nodes', $categoryId ] );
 		}
 
 		if( $config[ 'page' ] ) {
 
-			$page	= $this->getPublicPage( $config );
+			$page = $this->getPublicPage( $config );
 
 			return $page->getModels();
 		}

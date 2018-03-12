@@ -302,7 +302,7 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 			if( isset( $args[ 'attribute' ] ) ) $attribute	= $args[ 'attribute' ];
 
 			// Update Image
-			$fileId		= $file->id;
+			$fileId = $file->id;
 
 			if( $file->changed ) {
 

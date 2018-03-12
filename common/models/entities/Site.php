@@ -47,6 +47,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $id
  * @property integer $avatarId
  * @property integer $bannerId
+ * @property integer $videoId
  * @property integer $themeId
  * @property integer $createdBy
  * @property integer $modifiedBy

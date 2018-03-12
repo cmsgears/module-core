@@ -133,7 +133,7 @@ class SiteAccess extends Resource implements IGridCache, IMultiSite {
 			'userId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USER ),
 			'roleId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ROLE ),
 			'ip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP ),
-			'ipNum' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP ),
+			'ipNum' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP_NUM ),
 			'url' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_URL ),
 			'failed' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FAILED ),
 			'failCount' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FAIL_COUNT ),

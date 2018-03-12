@@ -280,6 +280,7 @@ class CoreGlobal {
 	const FIELD_ACTIVE				= 'activeField';
 	const FIELD_STATUS				= 'statusField';
 	const FIELD_CONSUMED			= 'consumedField';
+	const FIELD_TRASH				= 'trashField';
 	const FIELD_VISIBILITY			= 'visibilityField';
 	const FIELD_PRIORITY			= 'priorityField';
 	const FIELD_SEVERITY			= 'severityField';
@@ -353,6 +354,7 @@ class CoreGlobal {
 	const FIELD_FILE_RENDER			= 'fileRenderField';
 	const FIELD_EVENT_LOG			= 'eventLogField';
 	const FIELD_IP					= 'ipField';
+	const FIELD_IP_NUM				= 'ipNumField';
 	const FIELD_AGENT_BROWSER		= 'browserAgentField';
 	const FIELD_HTML_OPTIONS		= 'htmlOptionsField';
 	const FIELD_DATA				= 'dataField';

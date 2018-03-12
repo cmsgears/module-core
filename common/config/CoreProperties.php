@@ -1,8 +1,16 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\config;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -10,14 +18,14 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * The CoreProperties class provides methods to access the core properties defined in database.
  * It also define the accessor methods for pre-defined properties.
+ *
+ * @since 1.0.0
  */
 class CoreProperties extends Properties {
 
 	// Variables ---------------------------------------------------
 
-	//TODO Add code for caching the properties
-
-	// Global -----------------
+	// Globals ----------------
 
 	const DIR_TEMP					= 'temp/';
 	const DIR_AVATAR				= 'avatar/';
@@ -90,17 +98,9 @@ class CoreProperties extends Properties {
 
 	private static $instance;
 
+	// Traits ------------------------------------------------------
+
 	// Constructor and Initialisation ------------------------------
-
-	// Instance methods --------------------------------------------
-
-	// Yii parent classes --------------------
-
-	// CMG parent classes --------------------
-
-	// CoreProperties ------------------------
-
-	// Singleton
 
 	/**
 	 * Return Singleton instance.
@@ -117,7 +117,17 @@ class CoreProperties extends Properties {
 		return self::$instance;
 	}
 
-	// Properties
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// CoreProperties ------------------------
 
 	/**
 	 * Returns Temp directory to store temporary files.
@@ -273,4 +283,5 @@ class CoreProperties extends Properties {
 
 		return $this->properties[ self::PROP_SITE_URL ] . \Yii::getAlias( '@web' ) ;
 	}
+
 }

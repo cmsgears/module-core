@@ -7,15 +7,21 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\models\traits\resources;
+namespace cmsgears\core\common\models\traits\base;
 
-// CMG Imports
-use cmsgears\core\common\models\entities\Template;
+// Yii Imports
+use Yii;
 
 /**
- * TemplateTrait can be used to assist models supporting templates.
+ * It will be useful for models whose owner is identified by userId column. Rest of the
+ * models must implement the method having appropriate logic to identify the owner and must
+ * not use this trait.
+ *
+ * @property integer $userId
+ *
+ * @since 1.0.0
  */
-trait TemplateTrait {
+trait UserOwnerTrait {
 
 	// Variables ---------------------------------------------------
 
@@ -39,29 +45,23 @@ trait TemplateTrait {
 
 	// Validators ----------------------------
 
-	// TemplateTrait -------------------------
+	// OwnerTrait ----------------------------
 
-	/**
-	 * @inheritdoc
-	 */
-	public function getTemplate() {
+	// IOwner -----------------
 
-		return $this->hasOne( Template::class, [ 'id' => 'templateId' ] );
-	}
+	public function isOwner( $user = null, $strict = false ) {
 
-	/**
-	 * @inheritdoc
-	 */
-	public function getTemplateName() {
+		if( !isset( $user ) && !$strict ) {
 
-		$template = $this->template;
-
-		if( isset( $template ) ) {
-
-			return $template->name;
+			$user	= Yii::$app->user->getIdentity();
 		}
 
-		return '';
+		if( isset( $user ) ) {
+
+			return $this->userId == $user->id;
+		}
+
+		return false;
 	}
 
 	// Static Methods ----------------------------------------------
@@ -70,22 +70,9 @@ trait TemplateTrait {
 
 	// CMG classes ---------------------------
 
-	// TemplateTrait -------------------------
+	// OwnerTrait ----------------------------
 
 	// Read - Query -----------
-
-	/**
-	 * Return query to find the model with template.
-	 *
-	 * @param array $config
-	 * @return \yii\db\ActiveQuery to query with template.
-	 */
-	public static function queryWithTemplate( $config = [] ) {
-
-		$config[ 'relations' ]	= [ 'template' ];
-
-		return parent::queryWithAll( $config );
-	}
 
 	// Read - Find ------------
 

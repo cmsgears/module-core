@@ -1,19 +1,27 @@
 <?php
-namespace cmsgears\core\common\config;
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
 
-// Yii Imports
-use \Yii;
+namespace cmsgears\core\common\config;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+/**
+ * MailProperties provide methods to access the properties specific to SMTP server.
+ *
+ * @since 1.0.0
+ */
 class MailProperties extends Properties {
 
 	// Variables ---------------------------------------------------
 
-	//TODO Add code for caching the properties
-
-	// Global -----------------
+	// Globals ----------------
 
 	/**
 	 * The property to find whether SMTP is required.
@@ -88,17 +96,9 @@ class MailProperties extends Properties {
 
 	private static $instance;
 
+	// Traits ------------------------------------------------------
+
 	// Constructor and Initialisation ------------------------------
-
-	// Instance methods --------------------------------------------
-
-	// Yii parent classes --------------------
-
-	// CMG parent classes --------------------
-
-	// MailProperties ------------------------
-
-	// Singleton
 
 	/**
 	 * Return Singleton instance.
@@ -115,7 +115,17 @@ class MailProperties extends Properties {
 		return self::$instance;
 	}
 
-	// Properties
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// MailProperties -------------------------
 
 	/**
 	 * Returns whether smtp is required for sending mails.
@@ -220,4 +230,5 @@ class MailProperties extends Properties {
 
 		return $this->properties[ self::PROP_INFO_EMAIL ];
 	}
+
 }

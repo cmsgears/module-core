@@ -1,20 +1,27 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\config;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
- * The CoreProperties class provides methods to access the core properties defined in database.
- * It also define the methods to access pre-defined properties.
+ * CacheProperties provide methods to access the properties specific to caching.
+ *
+ * @since 1.0.0
  */
 class CacheProperties extends Properties {
 
 	// Variables ---------------------------------------------------
 
-	//TODO Add code for caching the properties
-
-	// Global -----------------
+	// Globals ----------------
 
 	const PROP_CACHING				= 'caching';
 
@@ -34,17 +41,9 @@ class CacheProperties extends Properties {
 
 	private static $instance;
 
+	// Traits ------------------------------------------------------
+
 	// Constructor and Initialisation ------------------------------
-
-	// Instance methods --------------------------------------------
-
-	// Yii parent classes --------------------
-
-	// CMG parent classes --------------------
-
-	// CoreProperties ------------------------
-
-	// Singleton
 
 	/**
 	 * Return Singleton instance.
@@ -61,7 +60,17 @@ class CacheProperties extends Properties {
 		return self::$instance;
 	}
 
-	// Properties
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// CacheProperties -----------------------
 
 	public function isCaching() {
 
@@ -87,4 +96,5 @@ class CacheProperties extends Properties {
 
 		return $this->properties[ self::PROP_CACHING_JSON ];
 	}
+
 }

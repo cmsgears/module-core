@@ -1,14 +1,28 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\config;
 
 // Yii Imports
 use Yii;
 
-class Properties {
+/**
+ * Properties is the base class for all the property classes having properties stored using
+ * [[\cmsgears\core\common\models\resources\SiteMeta]].
+ *
+ * @since 1.0.0
+ */
+abstract class Properties {
 
 	// Variables ---------------------------------------------------
 
-	// Global -----------------
+	// Globals ----------------
 
 	// Public -----------------
 
@@ -24,6 +38,8 @@ class Properties {
 
 	// Private ----------------
 
+	// Traits ------------------------------------------------------
+
 	// Constructor and Initialisation ------------------------------
 
 	/*
@@ -31,13 +47,13 @@ class Properties {
 	 */
 	public function init( $configType ) {
 
-		$siteService	= Yii::$app->factory->get( 'siteService' );
+		$siteService = Yii::$app->factory->get( 'siteService' );
 
 		if( Yii::$app->core->siteConfigAll ) {
 
 			if( empty( self::$typePropertyMap ) ) {
 
-				self::$typePropertyMap	= [];
+				self::$typePropertyMap = [];
 
 				$properties	= $siteService->getIdMetaMapBySlug( Yii::$app->core->getSiteSlug() );
 
@@ -54,30 +70,32 @@ class Properties {
 				}
 			}
 
-			$this->properties	= self::$typePropertyMap[ $configType ];
+			$this->properties = self::$typePropertyMap[ $configType ];
 		}
 		else {
 
-			$this->properties	= $siteService->getMetaNameValueMapBySlugType( Yii::$app->core->getSiteSlug(), $configType );
+			$this->properties = $siteService->getMetaNameValueMapBySlugType( Yii::$app->core->getSiteSlug(), $configType );
 		}
 
 		// Load main site properties in case child site does not have it's own properties
 		// TODO: Load main site properties and override with child site properties
 		if( Yii::$app->core->multiSite && count( $this->properties ) == 0 ) {
 
-			$this->properties	= $siteService->getMetaNameValueMapBySlugType( Yii::$app->core->getMainSiteSlug(), $configType );
+			$this->properties = $siteService->getMetaNameValueMapBySlugType( Yii::$app->core->getMainSiteSlug(), $configType );
 		}
 	}
 
 	// Instance methods --------------------------------------------
 
+	// Yii interfaces ------------------------
+
 	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
-	// CmgProperties -------------------------
-
-	// Properties
+	// Properties ----------------------------
 
 	/**
 	 * Return all the properties.
@@ -96,4 +114,5 @@ class Properties {
 
 		return $this->properties[ $findKey ];
 	}
+
 }

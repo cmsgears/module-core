@@ -276,8 +276,8 @@ class m160620_095703_core extends Migration {
 			'regions' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'zipCodes' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'timeZone' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
-			'latitude' => $this->float( 4 ),
-			'longitude' => $this->float( 4 )
+			'latitude' => $this->float(),
+			'longitude' => $this->float()
 		], $this->options );
 
 		// Index for columns country
@@ -307,8 +307,8 @@ class m160620_095703_core extends Migration {
 			'email' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'fax' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'website' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
-			'latitude' => $this->float( 4 ),
-			'longitude' => $this->float( 4 ),
+			'latitude' => $this->float(),
+			'longitude' => $this->float(),
 			'zoomLevel' => $this->smallInteger( 6 )->defaultValue( 5 )
 		], $this->options );
 
@@ -391,6 +391,7 @@ class m160620_095703_core extends Migration {
 			'genderId' => $this->bigInteger( 20 ),
 			'avatarId' => $this->bigInteger( 20 ),
 			'bannerId' => $this->bigInteger( 20 ),
+			'videoId' => $this->bigInteger( 20 ),
 			'templateId' => $this->bigInteger( 20 ),
 			'status' => $this->smallInteger( 6 ),
 			'email' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
@@ -431,6 +432,7 @@ class m160620_095703_core extends Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'user_gender', $this->prefix . 'core_user', 'genderId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'user_avatar', $this->prefix . 'core_user', 'avatarId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'user_banner', $this->prefix . 'core_user', 'bannerId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'user_video', $this->prefix . 'core_user', 'videoId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'user_template', $this->prefix . 'core_user', 'templateId' );
 	}
 
@@ -442,6 +444,7 @@ class m160620_095703_core extends Migration {
 			'modifiedBy' => $this->bigInteger( 20 ),
 			'avatarId' => $this->bigInteger( 20 ),
 			'bannerId' => $this->bigInteger( 20 ),
+			'videoId' => $this->bigInteger( 20 ),
 			'themeId' => $this->bigInteger( 20 ),
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'slug' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
@@ -464,6 +467,7 @@ class m160620_095703_core extends Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'site_modifier', $this->prefix . 'core_site', 'modifiedBy' );
 		$this->createIndex( 'idx_' . $this->prefix . 'site_avatar', $this->prefix . 'core_site', 'avatarId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'site_banner', $this->prefix . 'core_site', 'bannerId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'site_video', $this->prefix . 'core_site', 'videoId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'site_theme', $this->prefix . 'core_site', 'themeId' );
 	}
 
@@ -541,7 +545,7 @@ class m160620_095703_core extends Migration {
 			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'extension' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'directory' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
-			'size' => $this->float( 2 )->notNull()->defaultValue( 0 ),
+			'size' => $this->float()->notNull()->defaultValue( 0 ),
 			'visibility' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'storage' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
@@ -1032,6 +1036,7 @@ class m160620_095703_core extends Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'user_gender', $this->prefix . 'core_user', 'genderId', $this->prefix . 'core_option', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'user_avatar', $this->prefix . 'core_user', 'avatarId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'user_banner', $this->prefix . 'core_user', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'user_video', $this->prefix . 'core_user', 'videoId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'user_template', $this->prefix . 'core_user', 'templateId', $this->prefix . 'core_template', 'id', 'SET NULL' );
 
 		// Site
@@ -1039,6 +1044,7 @@ class m160620_095703_core extends Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'site_modifier', $this->prefix . 'core_site', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'site_avatar', $this->prefix . 'core_site', 'avatarId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'site_banner', $this->prefix . 'core_site', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'site_video', $this->prefix . 'core_site', 'videoId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'site_theme', $this->prefix . 'core_site', 'themeId', $this->prefix . 'core_theme', 'id', 'SET NULL' );
 
 		// Site Meta
@@ -1233,6 +1239,7 @@ class m160620_095703_core extends Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_gender', $this->prefix . 'core_user' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_avatar', $this->prefix . 'core_user' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_banner', $this->prefix . 'core_user' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_video', $this->prefix . 'core_user' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_template', $this->prefix . 'core_user' );
 
 		// Site
@@ -1240,6 +1247,7 @@ class m160620_095703_core extends Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_modifier', $this->prefix . 'core_site' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_avatar', $this->prefix . 'core_site' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_banner', $this->prefix . 'core_site' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_video', $this->prefix . 'core_site' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'site_theme', $this->prefix . 'core_site' );
 
 		// Site Meta

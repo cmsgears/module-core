@@ -55,6 +55,7 @@ use cmsgears\core\common\models\traits\mappers\FileTrait;
  * @property integer $genderId
  * @property integer $avatarId
  * @property integer $bannerId
+ * @property integer $videoId
  * @property integer $templateId
  * @property integer $status
  * @property string $email

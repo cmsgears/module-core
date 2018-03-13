@@ -15,6 +15,8 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\base\Component;
+
 // Project Imports
 
 /**
@@ -50,7 +52,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
-class ComponentTemplate extends \cmsgears\core\common\base\Component {
+class ComponentTemplate extends Component {
 
 	// Variables ---------------------------------------------------
 

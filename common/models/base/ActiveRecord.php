@@ -11,6 +11,7 @@ namespace cmsgears\core\common\models\base;
 
 // Yii Imports
 use Yii;
+use yii\helpers\HtmlPurifier;
 
 /**
  * Base model of all the entities, resources and mapper.
@@ -155,26 +156,16 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord {
 	 * default in case application property does not override it.
 	 *
 	 * @param string $text to be cut down.
-	 * @param string|boolean $link to be appended at the end of cut down text.
 	 * @return string the cut down text.
 	 */
-	public function getMediumText( $text, $link = false ) {
+	public function getMediumText( $text ) {
 
 		if( strlen( $text ) > Yii::$app->core->mediumText ) {
 
-			$text	= substr( $text, 0, Yii::$app->core->mediumText );
-
-			if( $link ) {
-
-				$text	= "$text ... $link";
-			}
-			else {
-
-				$text	= "$text ...";
-			}
+			$text = substr( $text, 0, Yii::$app->core->mediumText );
 		}
 
-		return $text;
+		return HtmlPurifier::process( $text );
 	}
 
 	/**

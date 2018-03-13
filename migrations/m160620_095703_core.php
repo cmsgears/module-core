@@ -67,6 +67,7 @@ class m160620_095703_core extends Migration {
 
 		// Generic Object
 		$this->upObject();
+		$this->upObjectMeta();
 
 		// Location
 		$this->upCountry();
@@ -205,12 +206,14 @@ class m160620_095703_core extends Migration {
 			'avatarId' => $this->bigInteger( 20 ),
 			'bannerId' => $this->bigInteger( 20 ),
 			'videoId' => $this->bigInteger( 20 ),
+			'galleryId' => $this->bigInteger( 20 ),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
 			'modifiedBy' => $this->bigInteger( 20 ),
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'slug' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
+			'texture' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'title' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'url' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
@@ -233,8 +236,25 @@ class m160620_095703_core extends Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'object_avatar', $this->prefix . 'core_object', 'avatarId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_banner', $this->prefix . 'core_object', 'bannerId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_video', $this->prefix . 'core_object', 'videoId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'object_gallery', $this->prefix . 'core_object', 'galleryId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_creator', $this->prefix . 'core_object', 'createdBy' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_modifier', $this->prefix . 'core_object', 'modifiedBy' );
+	}
+
+	private function upObjectMeta() {
+
+		$this->createTable( $this->prefix . 'core_object_meta', [
+			'id' => $this->bigPrimaryKey( 20 ),
+			'modelId' => $this->bigInteger( 20 )->notNull(),
+			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'label' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
+			'type' => $this->string( Yii::$app->core->mediumText ),
+			'valueType' => $this->string( Yii::$app->core->mediumText )->notNull()->defaultValue( Meta::VALUE_TYPE_TEXT ),
+			'value' => $this->text()
+		], $this->options );
+
+		// Index for column parent
+		$this->createIndex( 'idx_' . $this->prefix . 'object_meta_parent', $this->prefix . 'core_object_meta', 'modelId' );
 	}
 
 	private function upCountry() {
@@ -1004,8 +1024,12 @@ class m160620_095703_core extends Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_avatar', $this->prefix . 'core_object', 'avatarId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_banner', $this->prefix . 'core_object', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_video', $this->prefix . 'core_object', 'videoId', $this->prefix . 'core_file', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'object_gallery', $this->prefix . 'core_object', 'galleryId', $this->prefix . 'core_gallery', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_creator', $this->prefix . 'core_object', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'object_modifier', $this->prefix . 'core_object', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
+
+		// Object Meta
+		$this->addForeignKey( 'fk_' . $this->prefix . 'object_meta_parent', $this->prefix . 'core_object_meta', 'modelId', $this->prefix . 'core_object', 'id', 'CASCADE' );
 
 		// Province
 		$this->addForeignKey( 'fk_' . $this->prefix . 'province_country', $this->prefix . 'core_province', 'countryId', $this->prefix . 'core_country', 'id', 'RESTRICT' );
@@ -1146,6 +1170,7 @@ class m160620_095703_core extends Migration {
 		$this->dropTable( $this->prefix . 'core_theme' );
 		$this->dropTable( $this->prefix . 'core_template' );
 		$this->dropTable( $this->prefix . 'core_object' );
+		$this->dropTable( $this->prefix . 'core_object_meta' );
 
 		$this->dropTable( $this->prefix . 'core_country' );
 		$this->dropTable( $this->prefix . 'core_province' );
@@ -1207,8 +1232,12 @@ class m160620_095703_core extends Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_avatar', $this->prefix . 'core_object' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_banner', $this->prefix . 'core_object' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_video', $this->prefix . 'core_object' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_gallery', $this->prefix . 'core_object' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_creator', $this->prefix . 'core_object' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_modifier', $this->prefix . 'core_object' );
+
+		// Object Meta
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'object_meta_parent', $this->prefix . 'core_object_meta' );
 
 		// Province
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'province_country', $this->prefix . 'core_province' );

@@ -1,8 +1,18 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\config;
 
 /**
- * The CoreGlobal class defines the global constants and variables available for core and dependent modules.
+ * CoreGlobal defines the global constants and variables available for core and dependent modules.
+ *
+ * @since 1.0.0
  */
 class CoreGlobal {
 
@@ -10,7 +20,6 @@ class CoreGlobal {
 
 	const SITE_MAIN				= 'main';
 	const SITE_BLOG				= 'blog';
-	const SITE_FORUM			= 'forum';
 
 	const APP_ADMIN				= 'app-admin';
 	const APP_FRONTEND			= 'app-frontend';
@@ -18,10 +27,13 @@ class CoreGlobal {
 
 	// System Pages ---------------------------------------------------
 
+	const PAGE_HOME				= 'home';
+
 	const PAGE_ACCOUNT_ACTIVATE = 'activate-account';
 	const PAGE_PASSWORD_FORGOT	= 'forgot-password';
 	const PAGE_PASSWORD_RESET	= 'reset-password';
-	const PAGE_LOGIN				= 'login';
+	const PAGE_LOGIN			= 'login';
+
 	const PAGE_SITEMEMBER		= 'site-member';
 
 	const FLASH_GENERIC			= 'message';
@@ -94,7 +106,7 @@ class CoreGlobal {
 
 	// Categories Slug -------------------------------------------------
 
-	const CATEGORY_GENDER		= 'gender';
+	const CATEGORY_GENDER	= 'gender';
 
 	// Text Limits - Ideal for string validators -----------------------
 
@@ -108,41 +120,48 @@ class CoreGlobal {
 
 	// Hierarchy -- Nested Set -----------------------------------------
 
-	const HIERARCHY_VALUE_L		= 1;
-	const HIERARCHY_VALUE_R		= 2;
+	const HIERARCHY_VALUE_L	= 1;
+	const HIERARCHY_VALUE_R	= 2;
 
 	// Config ----------------------------------------------------------
 
-	const CONFIG_CORE			= 'core';		// Core Config defining site configuration
-	const CONFIG_CACHE			= 'cache';
-	const CONFIG_MAIL			= 'mail';		// Mail Config defining mail configurations and useful in case SMTP is required
-	const CONFIG_COMMENT		= 'comment';
-	const CONFIG_ADMIN			= 'backend';
-	const CONFIG_FRONTEND		= 'frontend';
+	const CONFIG_CORE		= 'core';		// Core Config defining site configuration
+	const CONFIG_CACHE		= 'cache';
+	const CONFIG_MAIL		= 'mail';		// Mail Config defining mail configurations and useful in case SMTP is required
+	const CONFIG_COMMENT	= 'comment';
+	const CONFIG_ADMIN		= 'backend';
+	const CONFIG_FRONTEND	= 'frontend';
 
 	// Roles -----------------------------------------------------------
 
-	const ROLE_USER					= 'user';
+	const ROLE_SUPER_ADMIN		= 'super-admin';
+
+	const ROLE_ADMIN			= 'admin';
+	const ROLE_USER				= 'user';
+
+	const ROLE_USER_ADMIN		= 'user-admin';
+	const ROLE_GALLERY_ADMIN	= 'gallery-admin';
+	const ROLE_FILE_ADMIN		= 'file-admin';
 
 	// Permissions -----------------------------------------------------
 
 	// Site
-	const PERM_ADMIN				= 'admin';	// Allows to view Admin Site Home
-	const PERM_USER					= 'user';	// Allows to view User Site Home
-	const PERM_GUEST				= 'guest';
+	const PERM_ADMIN			= 'admin';	// Allows to view Admin Site Home
+	const PERM_USER				= 'user';	// Allows to view User Site Home
+	const PERM_GUEST			= 'guest';
 
 	// Site specific - Settings, Testimonials, Categories, Geo DB
-	const PERM_CORE					= 'core';
+	const PERM_CORE				= 'core';
 
 	// User
-	const PERM_IDENTITY				= 'identity';	// Allows admin to manage site users
-	const PERM_RBAC					= 'rbac';		// Allows admin to manage roles and permissions
+	const PERM_IDENTITY			= 'identity';	// Allows admin to manage site users
+	const PERM_RBAC				= 'rbac';		// Allows admin to manage roles and permissions
 
 	// Gallery
-	const PERM_GALLERY_ADMIN		= 'admin-galleries';
+	const PERM_GALLERY_ADMIN	= 'admin-galleries';
 
 	// File
-	const PERM_FILE_ADMIN			= 'admin-files';
+	const PERM_FILE_ADMIN		= 'admin-files';
 
 	// TODO: Implement I18N for Messages, Errors and Field Labels
 
@@ -150,12 +169,14 @@ class CoreGlobal {
 
 	// data attributes
 	const DATA_CONFIG				= 'config';
+
 	const DATA_SOCIAL_LINKS			= 'socialLinks';
+
 	const DATA_REJECT_REASON		= 'rejectReason';
 	const DATA_TERMINATE_REASON		= 'terminateReason';
 	const DATA_APPROVAL_REQUEST		= 'approvalRequest';
 
-	const DATA_GRID_LAYOUT			= 'gridLayout';		// Used to determine grid view among grid or table.
+	const DATA_GRID_LAYOUT			= 'gridLayout';		// Used to determine grid view among grid, list, card or table.
 	const DATA_SIDEBAR_MICRO		= 'microSidebar';	// Used to show micro or full view of sidebar.
 
 	// model attributes
@@ -271,6 +292,7 @@ class CoreGlobal {
 	const FIELD_TITLE				= 'titleField';
 	const FIELD_TYPE				= 'typeField';
 	const FIELD_ICON				= 'iconField';
+	const FIELD_TEXTURE				= 'textureField';
 	const FIELD_KEY					= 'keyField';
 	const FIELD_VALUE				= 'valueField';
 	const FIELD_VALUE_TYPE			= 'valueTypeField';
@@ -424,6 +446,8 @@ class CoreGlobal {
 	const FIELD_VIEW_PATH		= 'viewPathField';
 	const FIELD_VIEW_COUNT		= 'viewCountField';
 	const FIELD_REFERRAL_COUNT	= 'referralCountField';
+	const FIELD_LIKE_COUNT		= 'likeCountField';
+	const FIELD_WISH_COUNT		= 'wishCountField';
 
 	// Forms
 	const FIELD_FORM			= 'formField';
@@ -436,4 +460,5 @@ class CoreGlobal {
 	// Visibility
 	const FIELD_PRIVATE			= 'privateField';
 	const FIELD_PUBLIC			= 'publicField';
+
 }

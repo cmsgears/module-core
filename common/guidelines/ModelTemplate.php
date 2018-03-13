@@ -15,6 +15,8 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\base\ActiveRecord;
+
 // Project Imports
 
 /**
@@ -96,7 +98,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * @since 1.0.0
  */
-class ModelTemplate extends \cmsgears\core\common\models\base\ActiveRecord {
+class ModelTemplate extends ActiveRecord {
 
 	// Variables ---------------------------------------------------
 

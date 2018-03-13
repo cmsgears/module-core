@@ -14,8 +14,9 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\File;
 
 /**
- * VisualTrait can be used to assist models supporting avatar, banner, texture or video.
- * It might be possible that few models support only one or two among these four.
+ * VisualTrait can be used to assist models supporting avatar, banner or video.
+ * It might be possible that few models support only one or two among these assets.
+ *
  * CodeGenUtil provides utility methods to generate placeholder graphics in case a model
  * does not have Avatar or Banner.
  */
@@ -85,27 +86,6 @@ trait VisualTrait {
 		$bannerUrl	= isset( $banner ) ? $banner->getFileUrl() : null;
 
 		return $bannerUrl;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function getTexture() {
-
-		$fileTable	= CoreTables::getTableName( CoreTables::TABLE_FILE );
-
-		return $this->hasOne( File::class, [ 'id' => 'textureId' ] )->from( "$fileTable as texture" );
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function getTextureUrl() {
-
-		$texture	= $this->texture;
-		$textureUrl	= isset( $texture ) ? $texture->getFileUrl() : null;
-
-		return $textureUrl;
 	}
 
 	/**

@@ -15,6 +15,8 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\base\Action;
+
 // Project Imports
 
 /**
@@ -61,7 +63,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
-class AssetTemplate extends \cmsgears\core\common\base\Action {
+class ActionTemplate extends Action {
 
 	// Variables ---------------------------------------------------
 

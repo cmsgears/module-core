@@ -11,6 +11,7 @@ namespace cmsgears\core\common\guidelines;
 
 // Yii Imports
 use Yii;
+use yii\web\AssetBundle;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -50,7 +51,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
-class AssetTemplate extends \yii\web\AssetBundle {
+class AssetTemplate extends AssetBundle {
 
 	// Variables ---------------------------------------------------
 

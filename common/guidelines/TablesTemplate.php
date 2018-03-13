@@ -38,4 +38,5 @@ class TablesTemplate {
 	// Resources ------------
 
 	// Mappers --------------
+
 }

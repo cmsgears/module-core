@@ -11,6 +11,7 @@ namespace cmsgears\core\common\guidelines;
 
 // Yii Imports
 use Yii;
+use yii\base\BaseObject;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -51,7 +52,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
-class MinTemplate extends \yii\base\Object {
+class MinTemplate extends BaseObject {
 
 	// Variables ---------------------------------------------------
 

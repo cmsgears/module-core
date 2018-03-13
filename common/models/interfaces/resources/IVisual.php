@@ -45,20 +45,6 @@ interface IVisual {
 	public function getBannerUrl();
 
 	/**
-	 * Returns the texture associated with model.
-	 *
-	 * @return File
-	 */
-	public function getTexture();
-
-	/**
-	 * Returns the texture url associated with model.
-	 *
-	 * @return string
-	 */
-	public function getTextureUrl();
-
-	/**
 	 * Returns the video associated with model.
 	 *
 	 * @return File

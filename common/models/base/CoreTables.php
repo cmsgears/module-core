@@ -57,6 +57,10 @@ class CoreTables extends DbTables {
 	const TABLE_FORM				= 'cmg_core_form';
 	const TABLE_FORM_FIELD			= 'cmg_core_form_field';
 
+	// Model Meta
+	const TABLE_SITE_META			= 'cmg_core_site_meta';
+	const TABLE_OBJECT_META			= 'cmg_core_object_meta';
+
 	// Model Resources
 	const TABLE_MODEL_MESSAGE		= 'cmg_core_model_message';
 	const TABLE_MODEL_HIERARCHY		= 'cmg_core_model_hierarchy';
@@ -71,7 +75,6 @@ class CoreTables extends DbTables {
 
 	// Direct Mappers
 	const TABLE_ROLE_PERMISSION		= 'cmg_core_role_permission';
-	const TABLE_SITE_META			= 'cmg_core_site_meta';
 	const TABLE_SITE_MEMBER			= 'cmg_core_site_member';
 
 	// Model Mappers

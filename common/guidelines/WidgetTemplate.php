@@ -15,6 +15,8 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\base\Widget;
+
 // Project Imports
 
 /**
@@ -69,7 +71,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
-class WidgetTemplate extends \cmsgears\core\common\base\Widget {
+class WidgetTemplate extends Widget {
 
 	// Variables ---------------------------------------------------
 

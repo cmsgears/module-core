@@ -25,13 +25,13 @@ class CacheProperties extends Properties {
 
 	const PROP_CACHING				= 'caching';
 
-	const PROP_CACHE_TYPE			= 'cache_type';
-
 	const PROP_CACHE_DURATION		= 'cache_duration';
 
-	const PROP_CACHING_HTML 		= 'html_caching';
+	const PROP_DEFAULT_CACHE		= 'default_cache';
 
-	const PROP_CACHING_JSON 		= 'json_caching';
+	const PROP_PRIMARY_CACHE 		= 'primary_cache';
+
+	const PROP_SECONDARY_CACHE 		= 'secondary_cache';
 
 	// Public -----------------
 
@@ -72,29 +72,54 @@ class CacheProperties extends Properties {
 
 	// CacheProperties -----------------------
 
+	/**
+	 * Check whether caching is enabled.
+	 *
+	 * @return boolean
+	 */
 	public function isCaching() {
 
 		return $this->properties[ self::PROP_CACHING ];
 	}
 
-	public function getCacheType() {
-
-		return $this->properties[ self::PROP_CACHE_TYPE ];
-	}
-
+	/**
+	 * Returns the cache duration.
+	 *
+	 * @return integer
+	 */
 	public function getCacheDuration() {
 
 		return $this->properties[ self::PROP_CACHE_DURATION ];
 	}
 
-	public function isHtmlCaching() {
+	/**
+	 * Returns the default caching mechanism.
+	 *
+	 * @return string
+	 */
+	public function getDefaultCache() {
 
-		return $this->properties[ self::PROP_CACHING_HTML ];
+		return $this->properties[ self::PROP_DEFAULT_CACHE ];
 	}
 
-	public function isJsonCaching() {
+	/**
+	 * Returns the primary caching mechanism.
+	 *
+	 * @return string
+	 */
+	public function getPrimaryCache() {
 
-		return $this->properties[ self::PROP_CACHING_JSON ];
+		return $this->properties[ self::PROP_PRIMARY_CACHE ];
+	}
+
+	/**
+	 * Returns the secondary caching mechanism.
+	 *
+	 * @return string
+	 */
+	public function getSecondaryCache() {
+
+		return $this->properties[ self::PROP_SECONDARY_CACHE ];
 	}
 
 }

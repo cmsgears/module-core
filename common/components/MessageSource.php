@@ -125,6 +125,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_TITLE => 'Title',
 		CoreGlobal::FIELD_TYPE => 'Type',
 		CoreGlobal::FIELD_ICON => 'Icon',
+		CoreGlobal::FIELD_TEXTURE => 'Texture',
 		CoreGlobal::FIELD_KEY => 'Key',
 		CoreGlobal::FIELD_VALUE => 'Value',
 		CoreGlobal::FIELD_VALUE_TYPE => 'Value Type',
@@ -277,6 +278,8 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_VIEW_PATH => 'View Path',
 		CoreGlobal::FIELD_VIEW_COUNT => 'Views',
 		CoreGlobal::FIELD_REFERRAL_COUNT => 'Referrals',
+		CoreGlobal::FIELD_LIKE_COUNT => 'Likes',
+		CoreGlobal::FIELD_WISH_COUNT => 'Wish Count',
 
 		// Forms
 		CoreGlobal::FIELD_FORM => 'Form',

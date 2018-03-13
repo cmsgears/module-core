@@ -15,6 +15,8 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\services\base\EntityService;
+
 // Project Imports
 
 /**
@@ -70,7 +72,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
-class EntityServiceTemplate extends \cmsgears\core\common\services\base\EntityService {
+class EntityServiceTemplate extends EntityService {
 
 	// Variables ---------------------------------------------------
 

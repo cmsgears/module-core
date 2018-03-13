@@ -70,6 +70,15 @@ class m160621_014612_core_index extends Migration {
 		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_object' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'object_desc' . '(description ASC)' );
 		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_object' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'object_search' . '(name ASC, title ASC, description ASC, content ASC)' );
 
+		// Object Meta
+		$this->createIndex( 'idx_' . $this->prefix . 'object_meta_name', $this->prefix . 'core_object_meta', 'name' );
+		$this->createIndex( 'idx_' . $this->prefix . 'object_meta_type', $this->prefix . 'core_object_meta', 'type' );
+		//$this->createIndex( 'idx_' . $this->prefix . 'object_meta_label', $this->prefix . 'core_object_meta', 'label' );
+		//$this->createIndex( 'idx_' . $this->prefix . 'object_meta_vtype', $this->prefix . 'core_object_meta', 'valueType' );
+		//$this->createIndex( 'idx_' . $this->prefix . 'object_meta_mit', $this->prefix . 'core_object_meta', [ 'modelId', 'type' ] );
+		//$this->createIndex( 'idx_' . $this->prefix . 'object_meta_mitn', $this->prefix . 'core_object_meta', [ 'modelId', 'type', 'name' ] );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_object_meta' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'object_meta_search' . '(name ASC, value ASC)' );
+
 		// Country
 		$this->createIndex( 'idx_' . $this->prefix . 'country_name', $this->prefix . 'core_country', 'name' );
 		$this->createIndex( 'idx_' . $this->prefix . 'country_code', $this->prefix . 'core_country', 'code' );

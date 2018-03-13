@@ -29,14 +29,15 @@ use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
 use cmsgears\core\common\models\interfaces\resources\IHierarchy;
-use cmsgears\core\common\models\interfaces\resources\IModelMeta;
 use cmsgears\core\common\models\interfaces\resources\ITemplate;
 use cmsgears\core\common\models\interfaces\resources\IVisual;
 use cmsgears\core\common\models\interfaces\mappers\ICategory;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
+use cmsgears\core\common\models\interfaces\mappers\IGallery;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Entity;
+use cmsgears\core\common\models\resources\ObjectMeta;
 use cmsgears\core\common\models\mappers\ModelObject;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
@@ -48,12 +49,12 @@ use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 use cmsgears\core\common\models\traits\resources\HierarchyTrait;
-use cmsgears\core\common\models\traits\resources\ModelMetaTrait;
 use cmsgears\core\common\models\traits\resources\SocialLinkTrait;
 use cmsgears\core\common\models\traits\resources\TemplateTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
 use cmsgears\core\common\models\traits\mappers\CategoryTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
+use cmsgears\core\common\models\traits\mappers\GalleryTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -67,12 +68,14 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $avatarId
  * @property integer $bannerId
  * @property integer $videoId
+ * @property integer $galleryId
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
  * @property string $slug
  * @property string $type
  * @property string $icon
+ * @property string $texture
  * @property string $title
  * @property string $description
  * @property string $url
@@ -90,7 +93,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @since 1.0.0
  */
 class ObjectData extends Entity implements IAuthor, ICategory, IComment, IContent, IData, IFile,
-	IGridCache, IHierarchy, IModelMeta, IMultiSite, INameType, IOwner, ISlugType, ITemplate, IVisual {
+	IGallery, IGridCache, IHierarchy, IMultiSite, INameType, IOwner, ISlugType, ITemplate, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -122,9 +125,9 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 	use ContentTrait;
 	use DataTrait;
 	use FileTrait;
+	use GalleryTrait;
 	use GridCacheTrait;
 	use HierarchyTrait;
-	use ModelMetaTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
@@ -181,7 +184,7 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 			//[ [ 'siteId', 'themeId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'icon', 'texture' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'name', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
 			[ 'slug', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			[ 'title', 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
@@ -190,7 +193,7 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 			[ [ 'active', 'gridCacheValid' ], 'boolean' ],
 			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'themeId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'siteId', 'avatarId', 'bannerId', 'videoId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'siteId', 'avatarId', 'bannerId', 'videoId', 'galleryId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
@@ -231,6 +234,9 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 
 	// yii\db\BaseActiveRecord
 
+	/**
+	 * @inheritdoc
+	 */
 	public function beforeSave( $insert ) {
 
 		if( parent::beforeSave( $insert ) ) {
@@ -243,6 +249,11 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 			if( $this->templateId <= 0 ) {
 
 				$this->templateId = null;
+			}
+
+			if( !isset( $this->order ) || strlen( $this->order ) <= 0 ) {
+
+				$this->order = 0;
 			}
 
 			return true;
@@ -294,6 +305,16 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 	public function getTheme() {
 
 		return $this->hasOne( Theme::class, [ 'id' => 'themeId' ] );
+	}
+
+	/**
+	 * Return meta data of the object.
+	 *
+	 * @return \cmsgears\core\common\models\resources\ObjectMeta[]
+	 */
+	public function getMetas() {
+
+		return $this->hasMany( ObjectMeta::class, [ 'modelId' => 'id' ] );
 	}
 
 	/**

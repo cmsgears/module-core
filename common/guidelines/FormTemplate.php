@@ -11,6 +11,7 @@ namespace cmsgears\core\common\guidelines;
 
 // Yii Imports
 use Yii;
+use yii\base\Model;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -78,7 +79,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property bool $<boolean>
  * @property array $<array>
  */
-class FormTemplate extends \yii\base\Model {
+class FormTemplate extends Model {
 
 	// Variables ---------------------------------------------------
 

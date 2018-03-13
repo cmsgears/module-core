@@ -217,11 +217,11 @@ class m160621_014408_core_data extends Migration {
 
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
 
-		$adminPerm			= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$userPerm			= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
-		$corePerm			= Permission::findBySlugType( 'core', CoreGlobal::TYPE_SYSTEM );
-		$identityPerm		= Permission::findBySlugType( 'identity', CoreGlobal::TYPE_SYSTEM );
-		$rbacPerm			= Permission::findBySlugType( 'rbac', CoreGlobal::TYPE_SYSTEM );
+		$adminPerm		= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$userPerm		= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
+		$corePerm		= Permission::findBySlugType( 'core', CoreGlobal::TYPE_SYSTEM );
+		$identityPerm	= Permission::findBySlugType( 'identity', CoreGlobal::TYPE_SYSTEM );
+		$rbacPerm		= Permission::findBySlugType( 'rbac', CoreGlobal::TYPE_SYSTEM );
 
 		// RBAC Mapping
 
@@ -264,18 +264,18 @@ class m160621_014408_core_data extends Migration {
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
 
 		// Admin
-		$adminPerm				= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$userPerm				= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
-		$galleryAdminPerm		= Permission::findBySlugType( 'admin-galleries', CoreGlobal::TYPE_SYSTEM );
+		$adminPerm			= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$userPerm			= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
+		$galleryAdminPerm	= Permission::findBySlugType( 'admin-galleries', CoreGlobal::TYPE_SYSTEM );
 
 		// RBAC Mapping
 
 		$columns = [ 'roleId', 'permissionId' ];
 
 		$mappings = [
-				[ $superAdminRole->id, $galleryAdminPerm->id ],
-				[ $adminRole->id, $galleryAdminPerm->id ],
-				[ $galleryAdminRole->id, $adminPerm->id ], [ $galleryAdminRole->id, $userPerm->id ], [ $galleryAdminRole->id, $galleryAdminPerm->id ]
+			[ $superAdminRole->id, $galleryAdminPerm->id ],
+			[ $adminRole->id, $galleryAdminPerm->id ],
+			[ $galleryAdminRole->id, $adminPerm->id ], [ $galleryAdminRole->id, $userPerm->id ], [ $galleryAdminRole->id, $galleryAdminPerm->id ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role_permission', $columns, $mappings );
@@ -288,7 +288,7 @@ class m160621_014408_core_data extends Migration {
 		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'adminUrl', 'homeUrl', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
 
 		$roles = [
-				[ $this->master->id, $this->master->id, 'File Admin', 'file-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role File Admin is limited to manage files from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+			[ $this->master->id, $this->master->id, 'File Admin', 'file-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role File Admin is limited to manage files from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
@@ -317,9 +317,9 @@ class m160621_014408_core_data extends Migration {
 		$columns = [ 'roleId', 'permissionId' ];
 
 		$mappings = [
-				[ $superAdminRole->id, $fileAdminPerm->id ],
-				[ $adminRole->id, $fileAdminPerm->id ],
-				[ $fileAdminRole->id, $adminPerm->id ], [ $fileAdminRole->id, $userPerm->id ], [ $fileAdminRole->id, $fileAdminPerm->id ]
+			[ $superAdminRole->id, $fileAdminPerm->id ],
+			[ $adminRole->id, $fileAdminPerm->id ],
+			[ $fileAdminRole->id, $adminPerm->id ], [ $fileAdminRole->id, $userPerm->id ], [ $fileAdminRole->id, $fileAdminPerm->id ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role_permission', $columns, $mappings );

@@ -640,10 +640,10 @@ abstract class EntityService extends \yii\base\Component implements IEntityServi
 		// Filter sites
 		$siteOnly				= isset( $config[ 'siteOnly' ] ) ? $config[ 'siteOnly' ] : true;
 		$excludeMain			= isset( $config[ 'excludeMainSite' ] ) ? $config[ 'excludeMainSite' ] : false; // Exclude main site in multisite scenario
-		$config[ 'siteId' ]		= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : ( $modelClass::$multiSite ? Yii::$app->core->siteId : null );
+		$config[ 'siteId' ]		= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : ( $modelClass::isMultiSite() ? Yii::$app->core->siteId : null );
 
 		// Site specific models for multi-site applications
-		if( $modelClass::$multiSite ) {
+		if( $modelClass::isMultiSite() ) {
 
 			// Restrict to site only in case model supports multisite i.e. siteId column
 			if( $siteOnly ) {

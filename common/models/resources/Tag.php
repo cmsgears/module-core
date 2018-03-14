@@ -11,6 +11,7 @@ namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
 use Yii;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;

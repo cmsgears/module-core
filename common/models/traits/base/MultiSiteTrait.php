@@ -9,6 +9,10 @@
 
 namespace cmsgears\core\common\models\traits\base;
 
+// CMG Imports
+use cmsgears\core\common\models\entities\Site;
+
+
 /**
  * The models having siteId column and supporting multi-site must use this trait.
  *

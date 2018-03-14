@@ -31,7 +31,7 @@ use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
 use cmsgears\core\common\models\traits\base\OwnerTrait;
 use cmsgears\core\common\models\traits\base\VisibilityTrait;
-use cmsgears\core\common\models\traits\resources\MetaTrait;
+use cmsgears\core\common\models\traits\base\MetaTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 

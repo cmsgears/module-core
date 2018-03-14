@@ -331,6 +331,19 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 		}
 	}
 
+	/**
+	 * Find and return model using given slug and type.
+	 *
+	 * @param string $slug
+	 * @param string $type
+	 * @param integer $themeId
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
+	public static function findByThemeId( $slug, $type, $themeId ) {
+		
+		return self::queryBySlugType( $slug, $type, [ 'ignoreSite' => true ] )->andWhere( 'themeId=:themeId', [ ':themeId' => $themeId ] )->one();
+	}
+
 	// Create -----------------
 
 	// Update -----------------

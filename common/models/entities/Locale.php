@@ -56,6 +56,8 @@ class Locale extends Entity implements IName {
 
 	// Protected --------------
 
+	protected $modelType	= CoreGlobal::TYPE_LOCALE;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------

@@ -95,9 +95,9 @@ class Gallery extends Resource implements IApproval, IAuthor, IData, IFile, IGri
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $modelType	= CoreGlobal::TYPE_GALLERY;
 
-	private $modelType	= CoreGlobal::TYPE_GALLERY;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

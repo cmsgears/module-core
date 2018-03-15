@@ -101,6 +101,8 @@ class File extends Resource implements IAuthor, IModelMeta, IMultiSite, IOwner, 
 
 	// Protected --------------
 
+	protected $modelType	= CoreGlobal::TYPE_FILE;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------

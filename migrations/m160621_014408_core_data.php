@@ -665,4 +665,5 @@ class m160621_014408_core_data extends Migration {
 
 		echo "m160621_014408_core_data will be deleted with m160621_014408_core.\n";
 	}
+
 }

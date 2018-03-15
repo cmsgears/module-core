@@ -116,9 +116,9 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFile, IGrid
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $modelType	= CoreGlobal::TYPE_COMMENT;
 
-	private $modelType	= CoreGlobal::TYPE_COMMENT;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

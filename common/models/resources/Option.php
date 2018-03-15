@@ -56,9 +56,9 @@ class Option extends Resource implements IData {
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $modelType	= CoreGlobal::TYPE_OPTION;
 
-	private $modelType = CoreGlobal::TYPE_OPTION;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

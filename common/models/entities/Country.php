@@ -51,6 +51,8 @@ class Country extends Entity implements IName {
 
 	// Protected --------------
 
+	protected $modelType	= CoreGlobal::TYPE_COUNTRY;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------

@@ -88,9 +88,9 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $modelType	= CoreGlobal::TYPE_TEMPLATE;
 
-	private $modelType	= CoreGlobal::TYPE_TEMPLATE;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

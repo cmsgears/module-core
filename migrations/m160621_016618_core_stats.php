@@ -109,4 +109,5 @@ class m160621_016618_core_stats extends Migration {
 
 		$this->dropTable( $this->prefix . 'core_stats' );
 	}
+
 }

@@ -383,74 +383,74 @@ class m160621_014612_core_index extends Migration {
 		$this->dropIndex( 'idx_' . $this->prefix . 'role_slug', $this->prefix . 'core_role' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'role_type', $this->prefix . 'core_role' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'role_icon', $this->prefix . 'core_role' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_role' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'role_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_role' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'role_search' . '(name ASC, description ASC)' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'role_desc', $this->prefix . 'core_role' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'role_search', $this->prefix . 'core_role' );
 
 		// Permission
 		$this->dropIndex( 'idx_' . $this->prefix . 'permission_name', $this->prefix . 'core_permission' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'permission_slug', $this->prefix . 'core_permission' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'permission_type', $this->prefix . 'core_permission' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'permission_icon', $this->prefix . 'core_permission' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_permission' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'permission_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_permission' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'permission_search' . '(name ASC, description ASC)' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'permission_desc', $this->prefix . 'core_permission' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'permission_search', $this->prefix . 'core_permission' );
 
 		// User
-		$this->dropIndex( 'idx_' . $this->prefix . 'user_email', $this->prefix . 'core_user', 'email' );
-		$this->dropIndex( 'idx_' . $this->prefix . 'user_username', $this->prefix . 'core_user', 'username' );
-		//$this->dropIndex( 'idx_' . $this->prefix . 'user_name_f', $this->prefix . 'core_user', 'firstName' );
-		//$this->dropIndex( 'idx_' . $this->prefix . 'user_name_m', $this->prefix . 'core_user', 'middleName' );
-		//$this->dropIndex( 'idx_' . $this->prefix . 'user_name_l', $this->prefix . 'core_user', 'lastName' );
-		//$this->dropIndex( 'idx_' . $this->prefix . 'user_mobile', $this->prefix . 'core_user', 'mobile' );
-		//$this->dropIndex( 'idx_' . $this->prefix . 'user_phone', $this->prefix . 'core_user', 'phone' );
-		//$this->dropIndex( 'idx_' . $this->prefix . 'user_tzone', $this->prefix . 'core_user', 'timeZone' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_user' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'user_search' . '(firstName ASC, middleName ASC, lastName ASC, message ASC, description ASC, content ASC)' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'user_email', $this->prefix . 'core_user' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'user_username', $this->prefix . 'core_user' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'user_name_f', $this->prefix . 'core_user' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'user_name_m', $this->prefix . 'core_user' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'user_name_l', $this->prefix . 'core_user' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'user_mobile', $this->prefix . 'core_user' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'user_phone', $this->prefix . 'core_user' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'user_tzone', $this->prefix . 'core_user' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'user_search', $this->prefix . 'core_user' );
 
 		// Site
 		$this->dropIndex( 'idx_' . $this->prefix . 'site_name', $this->prefix . 'core_site' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'site_slug', $this->prefix . 'core_site' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'site_slug', $this->prefix . 'core_site' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_site' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'site_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_site' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'site_search' . '(name ASC, title ASC, description ASC, content ASC)' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'site_desc', $this->prefix . 'core_site' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'site_search', $this->prefix . 'core_site' );
 
 		// Site Meta
 		$this->dropIndex( 'idx_' . $this->prefix . 'site_meta_name', $this->prefix . 'core_site_meta' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'site_meta_type', $this->prefix . 'core_site_meta' );
-		//$this->dropIndex( 'idx_' . $this->prefix . 'site_meta_label', $this->prefix . 'core_site_meta', 'label' );
-		//$this->dropIndex( 'idx_' . $this->prefix . 'site_meta_vtype', $this->prefix . 'core_site_meta', 'valueType' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'site_meta_label', $this->prefix . 'core_site_meta' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'site_meta_vtype', $this->prefix . 'core_site_meta' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'site_meta_mit', $this->prefix . 'core_site_meta' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'site_meta_mitn', $this->prefix . 'core_site_meta' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_site_meta' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'site_meta_search' . '(name ASC, value ASC)' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'site_meta_search', $this->prefix . 'core_site_meta' );
 
 		// Site Access
-		$this->dropIndex( 'idx_' . $this->prefix . 'site_access_ip', $this->prefix . 'core_site_access', 'ip' );
-		$this->dropIndex( 'idx_' . $this->prefix . 'site_access_ipn', $this->prefix . 'core_site_access', 'ipNum' );
-		//$this->dropIndex( 'idx_' . $this->prefix . 'site_access_con', $this->prefix . 'core_site_access', 'controller' );
-		//$this->dropIndex( 'idx_' . $this->prefix . 'site_access_act', $this->prefix . 'core_site_access', 'action' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'site_access_ip', $this->prefix . 'core_site_access' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'site_access_ipn', $this->prefix . 'core_site_access' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'site_access_con', $this->prefix . 'core_site_access' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'site_access_act', $this->prefix . 'core_site_access' );
 
 		// File
 		$this->dropIndex( 'idx_' . $this->prefix . 'file_name', $this->prefix . 'core_file' );
-		//$this->dropIndex( 'idx_' . $this->prefix . 'file_ext', $this->prefix . 'core_file', 'extension' );
-		//$this->dropIndex( 'idx_' . $this->prefix . 'file_dir', $this->prefix . 'core_file', 'directory' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'file_ext', $this->prefix . 'core_file' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'file_dir', $this->prefix . 'core_file' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'file_type', $this->prefix . 'core_file' );
-		//$this->dropIndex( 'idx_' . $this->prefix . 'file_storage', $this->prefix . 'core_file', 'storage' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_file' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'file_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_file' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'file_search' . '(name ASC, title ASC, description ASC, content ASC)' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'file_storage', $this->prefix . 'core_file' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'file_desc', $this->prefix . 'core_file' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'file_search', $this->prefix . 'core_file' );
 
 		// Gallery
 		$this->dropIndex( 'idx_' . $this->prefix . 'gallery_name', $this->prefix . 'core_gallery' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'gallery_slug', $this->prefix . 'core_gallery' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'gallery_type', $this->prefix . 'core_gallery' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'gallery_icon', $this->prefix . 'core_gallery' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_gallery' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'gallery_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_gallery' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'gallery_search' . '(name ASC, title ASC, description ASC, content ASC)' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'gallery_desc', $this->prefix . 'core_gallery' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'gallery_search', $this->prefix . 'core_gallery' );
 
 		// Form
 		$this->dropIndex( 'idx_' . $this->prefix . 'form_name', $this->prefix . 'core_form' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'form_slug', $this->prefix . 'core_form' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'form_type', $this->prefix . 'core_form' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'form_icon', $this->prefix . 'core_form' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_form' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'form_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_form' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'form_search' . '(name ASC, title ASC, description ASC, content ASC)' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'form_desc', $this->prefix . 'core_form' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'form_search', $this->prefix . 'core_form' );
 
 		// Form Field
 		//$this->dropIndex( 'idx_' . $this->prefix . 'form_field_icon', $this->prefix . 'core_form_field' );
@@ -460,23 +460,23 @@ class m160621_014612_core_index extends Migration {
 		$this->dropIndex( 'idx_' . $this->prefix . 'tag_slug', $this->prefix . 'core_tag' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'tag_type', $this->prefix . 'core_tag' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'tag_icon', $this->prefix . 'core_tag' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_tag' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'tag_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_tag' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'tag_search' . '(name ASC, title ASC, description ASC)' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'tag_desc', $this->prefix . 'core_tag' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'tag_search', $this->prefix . 'core_tag' );
 
 		// Category
 		$this->dropIndex( 'idx_' . $this->prefix . 'category_name', $this->prefix . 'core_category' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'category_slug', $this->prefix . 'core_category' );
 		$this->dropIndex( 'idx_' . $this->prefix . 'category_type', $this->prefix . 'core_category' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'category_icon', $this->prefix . 'core_category' );
-		//$this->dropIndex( 'idx_' . $this->prefix . 'category_tf', $this->prefix . 'core_category', [ 'type', 'featured' ] );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_category' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'category_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_category' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'category_search' . '(name ASC, title ASC, description ASC, content ASC)' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'category_tf', $this->prefix . 'core_category' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'category_desc', $this->prefix . 'core_category' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'category_search', $this->prefix . 'core_category' );
 
 		// Option
 		$this->dropIndex( 'idx_' . $this->prefix . 'option_name', $this->prefix . 'core_option' );
-		//$this->dropIndex( 'idx_' . $this->prefix . 'option_value', $this->prefix . 'core_option', 'value' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'option_value', $this->prefix . 'core_option' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'option_icon', $this->prefix . 'core_option' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_option' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'option_search' . '(name ASC, title ASC, value ASC, content ASC)' );
+		//$this->dropIndex( 'idx_' . $this->prefix . 'option_search', $this->prefix . 'core_option' );
 	}
 
 	private function downDependent() {
@@ -548,4 +548,5 @@ class m160621_014612_core_index extends Migration {
 		$this->dropIndex( 'idx_' . $this->prefix . 'model_form_type', $this->prefix . 'core_model_form' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'model_form_pipta', $this->prefix . 'core_model_form' );
 	}
+
 }

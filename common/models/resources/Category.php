@@ -79,9 +79,9 @@ class Category extends NestedSetModel implements IAuthor, IMultiSite, INameType,
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $modelType	= CoreGlobal::TYPE_CATEGORY;
 
-	private $modelType	= CoreGlobal::TYPE_CATEGORY;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

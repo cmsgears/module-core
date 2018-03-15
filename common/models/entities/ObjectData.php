@@ -111,11 +111,11 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 
 	// Protected --------------
 
+	protected $modelType	= CoreGlobal::TYPE_OBJECT;
+
 	protected $testOwner	= false;
 
 	// Private ----------------
-
-	private $modelType		= CoreGlobal::TYPE_OBJECT;
 
 	// Traits ------------------------------------------------------
 

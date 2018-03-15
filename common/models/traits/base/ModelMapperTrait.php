@@ -333,4 +333,5 @@ trait ModelMapperTrait {
 
 		return self::deleteAll( 'modelId=:mid', [ ':mid' => $modelId ] );
 	}
+
 }

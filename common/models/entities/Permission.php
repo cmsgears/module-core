@@ -78,9 +78,9 @@ class Permission extends Entity implements IAuthor, IData, IGridCache, IHierarch
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $modelType	= CoreGlobal::TYPE_PERMISSION;
 
-	private $modelType	= CoreGlobal::TYPE_PERMISSION;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

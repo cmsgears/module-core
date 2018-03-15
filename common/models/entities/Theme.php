@@ -80,9 +80,9 @@ class Theme extends Entity implements IAuthor, IContent, IData, IGridCache, INam
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $modelType	= CoreGlobal::TYPE_THEME;
 
-	private $modelType	= CoreGlobal::TYPE_THEME;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

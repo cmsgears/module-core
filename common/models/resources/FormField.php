@@ -94,9 +94,9 @@ class FormField extends Resource implements IData {
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $modelType	= CoreGlobal::TYPE_FORM_FIELD;
 
-	private $modelType	= CoreGlobal::TYPE_FORM_FIELD;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

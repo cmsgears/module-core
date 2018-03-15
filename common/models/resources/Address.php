@@ -87,6 +87,8 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 
 	// Protected --------------
 
+	protected $modelType	= CoreGlobal::TYPE_ADDRESS;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------

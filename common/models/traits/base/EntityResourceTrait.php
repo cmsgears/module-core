@@ -16,17 +16,15 @@ use Yii;
  * It provide methods to map parent and model resource.
  *
  * The model using this trait must have parentId and parentType columns. These columns map the
- * source i.e. parent to the multiple rows of resource table. It allows to map multiple models for
+ * source i.e. parent to the multiple rows of entity table. It allows to map multiple models for
  * same parentId and parentType combination.
- *
- * Examples: [[\cmsgears\core\common\models\resources\ModelComment]], [[\cmsgears\core\common\models\resources\ModelMeta]]
  *
  * @property integer $parentId
  * @property integer $parentType
  *
  * @since 1.0.0
  */
-trait ModelResourceTrait {
+trait EntityResourceTrait {
 
 	// Variables ---------------------------------------------------
 
@@ -50,7 +48,7 @@ trait ModelResourceTrait {
 
 	// Validators ----------------------------
 
-	// ModelResourceTrait --------------------
+	// EntityResourceTrait -------------------
 
 	/**
 	 * @inheritdoc
@@ -66,7 +64,7 @@ trait ModelResourceTrait {
 
 	// CMG classes ---------------------------
 
-	// ModelResourceTrait --------------------
+	// EntityResourceTrait -------------------
 
 	// Read - Query -----------
 

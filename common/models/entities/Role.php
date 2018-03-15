@@ -80,9 +80,9 @@ class Role extends Entity implements IAuthor, IData, IGridCache, IHierarchy, INa
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $modelType	= CoreGlobal::TYPE_ROLE;
 
-	private $modelType	= CoreGlobal::TYPE_ROLE;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

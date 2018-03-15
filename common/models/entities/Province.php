@@ -52,6 +52,8 @@ class Province extends Entity implements IName {
 
 	// Protected --------------
 
+	protected $modelType	= CoreGlobal::TYPE_PROVINCE;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------

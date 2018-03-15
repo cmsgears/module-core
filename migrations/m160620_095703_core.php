@@ -1365,4 +1365,5 @@ class m160620_095703_core extends Migration {
 		// Model Follower
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_follower_parent', $this->prefix . 'core_model_follower' );
 	}
+
 }

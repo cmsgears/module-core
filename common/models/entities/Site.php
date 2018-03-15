@@ -85,9 +85,9 @@ class Site extends Entity implements IAuthor, IContent, IData, IGridCache, IName
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $modelType	= CoreGlobal::TYPE_SITE;
 
-	private $modelType	= CoreGlobal::TYPE_SITE;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

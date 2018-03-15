@@ -122,9 +122,9 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $modelType	= CoreGlobal::TYPE_USER;
 
-	private $modelType	= CoreGlobal::TYPE_USER;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

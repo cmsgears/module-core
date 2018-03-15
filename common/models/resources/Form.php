@@ -98,9 +98,9 @@ class Form extends Resource implements IAuthor, IData, IGridCache, IModelMeta, I
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $modelType	= CoreGlobal::TYPE_FORM;
 
-	private $modelType	= CoreGlobal::TYPE_FORM;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

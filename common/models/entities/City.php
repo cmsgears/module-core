@@ -72,6 +72,8 @@ class City extends Entity implements IName {
 
 	// Protected --------------
 
+	protected $modelType	= CoreGlobal::TYPE_CITY;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------

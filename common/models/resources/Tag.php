@@ -71,9 +71,9 @@ class Tag extends Resource implements IAuthor, IMultiSite, INameType, ISlugType 
 
 	// Protected --------------
 
-	// Private ----------------
+	protected $modelType	= CoreGlobal::TYPE_TAG;
 
-	private $modelType	= CoreGlobal::TYPE_TAG;
+	// Private ----------------
 
 	// Traits ------------------------------------------------------
 

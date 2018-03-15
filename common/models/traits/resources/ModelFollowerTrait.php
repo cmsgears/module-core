@@ -7,14 +7,14 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\models\traits\base;
+namespace cmsgears\core\common\models\traits\resources;
 
 /**
- * FollowerTrait can be used to add follow, like, wish features to relevant models.
+ * ModelFollowerTrait can be used to add follow, like, wish features to relevant models.
  *
  * @since 1.0.0
  */
-trait FollowerTrait {
+trait ModelFollowerTrait {
 
 	// Variables ---------------------------------------------------
 
@@ -38,7 +38,7 @@ trait FollowerTrait {
 
 	// Validators ----------------------------
 
-	// FollowerTrait -------------------------
+	// ModelFollowerTrait --------------------
 
 	// Static Methods ----------------------------------------------
 
@@ -46,7 +46,7 @@ trait FollowerTrait {
 
 	// CMG classes ---------------------------
 
-	// FollowerTrait -------------------------
+	// ModelFollowerTrait --------------------
 
 	// Read - Query -----------
 

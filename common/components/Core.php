@@ -40,21 +40,6 @@ class Core extends \cmsgears\core\common\base\Component {
 	// Public -----------------
 
 	/**
-	 * @var Stats will be used to store table row count to solve pagination link issue to generate links for large tables without any joins or where conditions specially for InnoDB engine.
-	 * It provides the following features to an application:
-	 * # Create stats table when enabled.
-	 * # Stats Triggers can be enabled to update row count on addition and deletion.
-	 * # CRON job or MySQL event can be added to update row count in case triggers are not used.
-	 * # The stats table storing row counts can be avoided if pages are scrolled using previous and next buttons without having page links.
-	 */
-	public $stats				= false;
-
-	/**
-	 * @var It will add triggers while running migrations on row addition and deletion if stats is enabled. In case triggers are skipped, project specific migration can be created in order to add the relevant triggers.
-	 */
-	public $statsTriggers		= false;
-
-	/**
 	 * @var main site to load configurations in case sub sites are not configured.
 	 */
 	public $mainSiteId			= 1;

@@ -10,6 +10,7 @@ namespace cmsgears\core\common\base;
 
 // Yii Imports
 use Yii;
+use yii\web\Application as BaseApplication;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreProperties;
@@ -26,7 +27,7 @@ use cmsgears\core\common\services\entities\SiteService;
  * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
-class Application extends \yii\web\Application {
+class Application extends BaseApplication {
 
 	// Variables ---------------------------------------------------
 
@@ -61,7 +62,7 @@ class Application extends \yii\web\Application {
 	 */
 	public function createController( $route ) {
 
-		// find whether multisite is enabled
+		// Process multi site request
 		if( Yii::$app->core->multiSite ) {
 
 			if( $route === '' ) {
@@ -82,7 +83,7 @@ class Application extends \yii\web\Application {
 
 				if( strpos( $route, '/' ) !== false ) {
 
-					list ( $site, $siteRoute ) = explode( '/', $route, 2 );
+					list( $site, $siteRoute ) = explode( '/', $route, 2 );
 
 					// Find Site
 					$site = SiteService::findBySlug( $site );
@@ -90,20 +91,23 @@ class Application extends \yii\web\Application {
 					// Site Found
 					if( isset( $site ) ) {
 
-						// Configure Current Site
+						// Configure Site
 						Yii::$app->core->site		= $site;
 						Yii::$app->core->siteId		= $site->id;
 						Yii::$app->core->siteSlug	= $site->slug;
 
-						Yii::$app->urlManager->baseUrl	= Yii::$app->urlManager->baseUrl . "/" . $site->name;
-
-						// site config
+						// Configure App
 						$coreProperties	= CoreProperties::getInstance();
 
 						Yii::$app->formatter->dateFormat	= $coreProperties->getDateFormat();
 						Yii::$app->formatter->timeFormat	= $coreProperties->getTimeFormat();
-						Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
-						Yii::$app->timeZone			= $coreProperties->getTimezone();
+
+						Yii::$app->formatter->datetimeFormat = $coreProperties->getDateTimeFormat();
+
+						Yii::$app->timeZone = $coreProperties->getTimezone();
+
+						// Update base url to form urls
+						Yii::$app->urlManager->baseUrl	= Yii::$app->urlManager->baseUrl . "/" . $site->name;
 
 						return parent::createController( $siteRoute );
 					}
@@ -113,57 +117,69 @@ class Application extends \yii\web\Application {
 			else {
 
 				// Find Site
-				//$siteName		= array_shift( ( explode( ".", $_SERVER[ 'HTTP_HOST' ] ) ) );
-
 				$host		= explode( ".", $_SERVER[ 'HTTP_HOST' ] );
-				$siteName	= array_shift( $host );
+				$siteName	= 'main';
 
-				//if( !isset( $siteName ) || strcmp( $siteName, 'www' ) == 0 ) {
-				if( !isset( $siteName ) || strcmp( $siteName, 'www' ) == 0 || strcmp( $siteName, 'localhost' ) == 0 ) {
+				if( count( $host ) == 2 ) {
 
-					$siteName	= 'main';
+					$siteName = 'main';
+				}
+				else {
+
+					$siteName = array_shift( $host );
+
+					// Accessed via www or localhost
+					if( strcmp( $siteName, 'www' ) == 0 || strcmp( $siteName, 'localhost' ) == 0 ) {
+
+						$siteName = 'main';
+					}
 				}
 
-				//$site	= SiteService::findBySlug( $siteName );
+				$site = SiteService::findBySlug( $siteName );
 
 				// Site Found
 				if( isset( $site ) ) {
 
-					// Configure Current Site
+					// Configure Site
 					Yii::$app->core->site		= $site;
 					Yii::$app->core->siteId		= $site->id;
 					Yii::$app->core->siteSlug	= $site->slug;
 
-					// site config
+					// Configure App
 					$coreProperties	= CoreProperties::getInstance();
 
 					Yii::$app->formatter->dateFormat	= $coreProperties->getDateFormat();
 					Yii::$app->formatter->timeFormat	= $coreProperties->getTimeFormat();
-					Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
-					Yii::$app->timeZone			= $coreProperties->getTimezone();
+
+					Yii::$app->formatter->datetimeFormat = $coreProperties->getDateTimeFormat();
+
+					Yii::$app->timeZone = $coreProperties->getTimezone();
 
 					return parent::createController( $route );
 				}
 			}
 		}
+		// Process single site request
 		else {
 
-			$site	= SiteService::findBySlug( 'main' );
+			$site = SiteService::findBySlug( 'main' );
 
 			// Site Found
 			if( isset( $site ) ) {
 
-				// Configure Current Site
-				Yii::$app->core->site		= $site;
-				Yii::$app->core->siteId		= $site->id;
+				// Configure Site
+				Yii::$app->core->site	= $site;
+				Yii::$app->core->siteId	= $site->id;
 
-				// site config
+				// Configure App
 				$coreProperties	= CoreProperties::getInstance();
 
 				Yii::$app->formatter->dateFormat	= $coreProperties->getDateFormat();
 				Yii::$app->formatter->timeFormat	= $coreProperties->getTimeFormat();
-				Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
-				Yii::$app->timeZone			= $coreProperties->getTimezone();
+
+				Yii::$app->formatter->datetimeFormat = $coreProperties->getDateTimeFormat();
+
+				Yii::$app->timeZone = $coreProperties->getTimezone();
 			}
 		}
 

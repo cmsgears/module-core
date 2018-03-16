@@ -159,7 +159,7 @@ class Gallery extends Resource implements IApproval, IAuthor, IData, IFile, IGri
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ 'name', 'required' ],
+			[ [ 'siteId', 'name' ], 'required' ],
 			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],

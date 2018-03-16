@@ -160,7 +160,7 @@ class Form extends Resource implements IAuthor, IData, IGridCache, IModelMeta, I
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'name', 'captcha', 'visibility', 'active' ], 'required' ],
+			[ [ 'siteId', 'name', 'captcha', 'visibility', 'active' ], 'required' ],
 			[ [ 'id', 'htmlOptions', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique
 			[ [ 'siteId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'siteId', 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],

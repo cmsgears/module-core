@@ -148,7 +148,9 @@ trait GalleryTrait {
 	 */
 	public function hasGallery() {
 
-		return $this->galleryId > 0;
+		$result = isset( $this->galleryId ) && $this->galleryId > 0;
+
+		return $result;
 	}
 
 	/**

@@ -295,7 +295,7 @@ class m160620_095703_core extends Migration {
 			'zone' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'regions' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'zipCodes' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
-			'timeZone' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'timeZone' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'latitude' => $this->float(),
 			'longitude' => $this->float()
 		], $this->options );
@@ -427,7 +427,7 @@ class m160620_095703_core extends Migration {
 			'dob' => $this->date(),
 			'mobile' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'phone' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
-			'timeZone' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'timeZone' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'avatarUrl' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'websiteUrl' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'verifyToken' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
@@ -530,9 +530,9 @@ class m160620_095703_core extends Migration {
 
 		$this->createTable( $this->prefix . 'core_site_access', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'siteId' => $this->bigInteger( 20 ),
-			'userId' => $this->bigInteger( 20 ),
-			'roleId' => $this->bigInteger( 20 ),
+			'siteId' => $this->bigInteger( 20 )->notNull(),
+			'userId' => $this->bigInteger( 20 )->notNull(),
+			'roleId' => $this->bigInteger( 20 )->notNull(),
 			'ip' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'ipNum' => $this->integer( 11 )->defaultValue( 0 ),
 			'controller' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
@@ -557,7 +557,7 @@ class m160620_095703_core extends Migration {
 
 		$this->createTable( $this->prefix . 'core_file', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'siteId' => $this->bigInteger( 20 ),
+			'siteId' => $this->bigInteger( 20 )->notNull(),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
 			'modifiedBy' => $this->bigInteger( 20 ),
 			'name' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
@@ -594,7 +594,7 @@ class m160620_095703_core extends Migration {
 
 		$this->createTable( $this->prefix . 'core_gallery', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'siteId' => $this->bigInteger( 20 ),
+			'siteId' => $this->bigInteger( 20 )->notNull(),
 			'templateId' => $this->bigInteger( 20 ),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
 			'modifiedBy' => $this->bigInteger( 20 ),
@@ -626,7 +626,7 @@ class m160620_095703_core extends Migration {
 
 		$this->createTable( $this->prefix . 'core_form', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'siteId' => $this->bigInteger( 20 ),
+			'siteId' => $this->bigInteger( 20 )->notNull(),
 			'templateId' => $this->bigInteger( 20 ),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
 			'modifiedBy' => $this->bigInteger( 20 ),
@@ -687,7 +687,7 @@ class m160620_095703_core extends Migration {
 
 		$this->createTable( $this->prefix . 'core_tag', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'siteId' => $this->bigInteger( 20 ),
+			'siteId' => $this->bigInteger( 20 )->notNull(),
 			'templateId' => $this->bigInteger( 20 ),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
 			'modifiedBy' => $this->bigInteger( 20 ),
@@ -713,7 +713,7 @@ class m160620_095703_core extends Migration {
 
 		$this->createTable( $this->prefix . 'core_category', [
 			'id' => $this->bigPrimaryKey( 20 ),
-			'siteId' => $this->bigInteger( 20 ),
+			'siteId' => $this->bigInteger( 20 )->notNull(),
 			'templateId' => $this->bigInteger( 20 ),
 			'parentId' => $this->bigInteger( 20 ),
 			'rootId' => $this->bigInteger( 20 ),
@@ -1080,9 +1080,9 @@ class m160620_095703_core extends Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'site_member_role', $this->prefix . 'core_site_member', 'roleId', $this->prefix . 'core_role', 'id', 'CASCADE' );
 
 		// Site Access
-		$this->addForeignKey( 'fk_' . $this->prefix . 'site_access_site', $this->prefix . 'core_site_access', 'siteId', $this->prefix . 'core_site', 'id', 'SET NULL' );
-		$this->addForeignKey( 'fk_' . $this->prefix . 'site_access_user', $this->prefix . 'core_site_access', 'userId', $this->prefix . 'core_user', 'id', 'SET NULL' );
-		$this->addForeignKey( 'fk_' . $this->prefix . 'site_access_role', $this->prefix . 'core_site_access', 'roleId', $this->prefix . 'core_role', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'site_access_site', $this->prefix . 'core_site_access', 'siteId', $this->prefix . 'core_site', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'site_access_user', $this->prefix . 'core_site_access', 'userId', $this->prefix . 'core_user', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'site_access_role', $this->prefix . 'core_site_access', 'roleId', $this->prefix . 'core_role', 'id', 'RESTRICT' );
 
 		// File
 		$this->addForeignKey( 'fk_' . $this->prefix . 'file_site', $this->prefix . 'core_file', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );

@@ -36,7 +36,7 @@ use cmsgears\core\common\models\traits\base\NameTrait;
  * @property string $zone
  * @property string $regions
  * @property string $zipCodes
- * @property string $timeZone
+ * @property integer $timeZone
  * @property float $latitude
  * @property float $longitude
  *
@@ -109,6 +109,7 @@ class City extends Entity implements IName {
 			[ [ 'name', 'iso', 'zone', 'timeZone' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'regions', 'zipCodes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
+			[ 'timeZone', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'countryId', 'provinceId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'latitude', 'longitude' ], 'number' ]
 		];

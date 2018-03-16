@@ -101,7 +101,7 @@ class File extends Resource implements IAuthor, IModelMeta, IMultiSite, IOwner, 
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_FILE;
+	protected $modelType = CoreGlobal::TYPE_FILE;
 
 	// Private ----------------
 
@@ -151,7 +151,7 @@ class File extends Resource implements IAuthor, IModelMeta, IMultiSite, IOwner, 
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'name', 'extension', 'directory' ], 'required' ],
+			[ [ 'siteId', 'name', 'extension', 'directory' ], 'required' ],
 			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Text Limit
 			[ [ 'extension', 'type', 'storage' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],

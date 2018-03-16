@@ -71,7 +71,7 @@ use cmsgears\core\common\models\traits\mappers\FileTrait;
  * @property string $dob
  * @property string $mobile
  * @property string $phone
- * @property string $timeZone
+ * @property integer $timeZone
  * @property string $avatarUrl
  * @property string $websiteUrl
  * @property string $verifyToken
@@ -203,12 +203,13 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			[ [ 'type', 'title' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ 'accessTokenType', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ [ 'username', 'passwordHash', 'mobile', 'phone', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'email', 'firstName', 'middleName', 'lastName', 'timeZone' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'email', 'firstName', 'middleName', 'lastName' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'message', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ [ 'localeId', 'genderId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'id', 'avatarId', 'bannerId', 'status' ], 'number', 'integerOnly' => true ],
+			[ [ 'status', 'timeZone' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'avatarId', 'bannerId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
 			[ 'dob', 'date' ],
 			[ 'gridCacheValid', 'boolean' ],

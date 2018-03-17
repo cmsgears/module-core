@@ -16,7 +16,7 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\resources\Option;
 
-use cmsgears\core\common\models\traits\ModelMapperTrait;
+use cmsgears\core\common\models\traits\base\ModelMapperTrait;
 
 /**
  * The mapper to map Option Model to specific parent model for given parentId and parentType.

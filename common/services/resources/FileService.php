@@ -216,10 +216,21 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 	 */
 	public function create( $model, $config = [] ) {
 
+		// model class
+		$modelClass		= static::$modelClass;
+		
 		// Default visibility
 		if( !isset( $model->visibility ) ) {
 
 			$model->visibility = File::VISIBILITY_PUBLIC;
+		}
+		
+		$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : ( $modelClass::isMultiSite() ? Yii::$app->core->siteId : null );
+
+		if( $siteId ) {
+
+			$model->siteId = $siteId;
+
 		}
 
 		// Default sharing

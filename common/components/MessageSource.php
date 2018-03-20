@@ -193,6 +193,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_MEMBER => 'Member',
 		CoreGlobal::FIELD_OWNER => 'Owner',
 		CoreGlobal::FIELD_APPROVER => 'Approver',
+		CoreGlobal::FIELD_FOLLOWER => 'Follower',
 
 		CoreGlobal::FIELD_WEBSITE => 'Website',
 		CoreGlobal::FIELD_AVATAR => 'Avatar',

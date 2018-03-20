@@ -199,7 +199,7 @@ class Role extends Entity implements IAuthor, IData, IGridCache, IHierarchy, INa
 	public function getPermissions() {
 
 		return $this->hasMany( Permission::class, [ 'id' => 'permissionId' ] )
-			->viaTable( CoreTables::TABLE_ROLE_PERMISSION, [ 'roleId' => 'id' ] );
+			->viaTable( CoreTables::getTableName( CoreTables::TABLE_ROLE_PERMISSION ), [ 'roleId' => 'id' ] );
 	}
 
 	/**

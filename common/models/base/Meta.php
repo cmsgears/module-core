@@ -348,4 +348,5 @@ abstract class Meta extends Resource implements IMeta {
 
 		return self::deleteAll( 'modelId=:id', [ ':id' => $modelId ] );
 	}
+
 }

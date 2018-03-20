@@ -21,4 +21,5 @@ interface IFollower {
 	const TYPE_DISLIKE	= 'dislike'; // User or Model Dislikes
 	const TYPE_FOLLOW	= 'follow'; // User Followers
 	const TYPE_WISHLIST	= 'wish'; // User who wish to have this model - specially if model is doing sales
+
 }

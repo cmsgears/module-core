@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\base;
 
 // CMG Imports
@@ -6,7 +14,10 @@ use cmsgears\core\common\models\base\Meta;
 
 use cmsgears\core\common\services\interfaces\base\IMetaService;
 
-abstract class MetaService extends EntityService implements IMetaService {
+/**
+ * MetaService is base class for all the services having [[\cmsgears\core\common\models\base\Meta]] as primary model.
+ */
+abstract class MetaService extends ResourceService implements IMetaService {
 
 	// Variables ---------------------------------------------------
 
@@ -48,14 +59,19 @@ abstract class MetaService extends EntityService implements IMetaService {
 
 	// Read - Models ---
 
-	public function getByName( $modelId, $name, $first = false ) {
-
-		return self::findByName( $modelId, $name, $first );
-	}
-
 	public function getByModelId( $modelId ) {
 
 		return self::findByModelId( $modelId );
+	}
+
+	public function getByName( $modelId, $name ) {
+
+		return self::findByName( $modelId, $name );
+	}
+
+	public function getFirstByName( $modelId, $name ) {
+
+		return self::getFirstByName( $modelId, $name );
 	}
 
 	public function getByType( $modelId, $type ) {
@@ -70,11 +86,11 @@ abstract class MetaService extends EntityService implements IMetaService {
 
 	public function initByNameType( $modelId, $name, $type, $valueType = 'text' ) {
 
-		$meta	= $this->getByNameType( $modelId, $name, $type );
+		$meta = $this->getByNameType( $modelId, $name, $type );
 
 		if( !isset( $meta ) ) {
 
-			$modelClass			= static::$modelClass;
+			$modelClass = static::$modelClass;
 
 			// Initialise
 			$meta				= new $modelClass();
@@ -281,6 +297,14 @@ abstract class MetaService extends EntityService implements IMetaService {
 		$modelClass::deleteAll( 'modelId=:id', [ ':id' => $modelId ] );
 	}
 
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
+
 	// Static Methods ----------------------------------------------
 
 	// CMG parent classes --------------------
@@ -293,18 +317,25 @@ abstract class MetaService extends EntityService implements IMetaService {
 
 	// Read - Models ---
 
-	public static function findByName( $modelId, $name, $first = false ) {
-
-		$modelClass	= static::$modelClass;
-
-		return $modelClass::findByName( $modelId, $name, $first );
-	}
-
 	public static function findByModelId( $modelId ) {
 
 		$modelClass	= static::$modelClass;
 
 		return $modelClass::findByModelId( $modelId );
+	}
+
+	public static function findByName( $modelId, $name ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByName( $modelId, $name );
+	}
+
+	public static function findFirstByName( $modelId, $name ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findFirstByName( $modelId, $name );
 	}
 
 	public static function findByType( $modelId, $type ) {

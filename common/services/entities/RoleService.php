@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
@@ -13,13 +21,18 @@ use cmsgears\core\common\models\mappers\RolePermission;
 
 use cmsgears\core\common\services\interfaces\entities\IRoleService;
 
-use cmsgears\core\common\services\traits\NameTypeTrait;
-use cmsgears\core\common\services\traits\SlugTypeTrait;
+use cmsgears\core\common\services\base\EntityService;
+
+use cmsgears\core\common\services\traits\base\NameTypeTrait;
+use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
- * The class RoleService is base class to perform database activities for Role Entity.
+ * RoleService provide service methods of role model.
+ *
+ * @since 1.0.0
  */
-class RoleService extends \cmsgears\core\common\services\base\EntityService implements IRoleService {
+class RoleService extends EntityService implements IRoleService {
 
 	// Variables ---------------------------------------------------
 
@@ -49,6 +62,7 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 
@@ -264,6 +278,14 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 	}
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

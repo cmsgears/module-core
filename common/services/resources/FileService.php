@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
@@ -14,12 +22,17 @@ use cmsgears\core\common\models\mappers\ModelFile;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
-use cmsgears\core\common\services\traits\VisibilityTrait;
+use cmsgears\core\common\services\base\ResourceService;
+
+use cmsgears\core\common\services\traits\base\VisibilityTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
- * The class FileService is base class to perform database activities for CmgFile Entity.
+ * FileService provide service methods of file model.
+ *
+ * @since 1.0.0
  */
-class FileService extends \cmsgears\core\common\services\base\EntityService implements IFileService {
+class FileService extends ResourceService implements IFileService {
 
 	// Variables ---------------------------------------------------
 
@@ -47,6 +60,7 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
 	use VisibilityTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -218,13 +232,13 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 		// model class
 		$modelClass		= static::$modelClass;
-		
+
 		// Default visibility
 		if( !isset( $model->visibility ) ) {
 
 			$model->visibility = File::VISIBILITY_PUBLIC;
 		}
-		
+
 		$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : ( $modelClass::isMultiSite() ? Yii::$app->core->siteId : null );
 
 		if( $siteId ) {
@@ -544,6 +558,14 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 			}
 		}
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

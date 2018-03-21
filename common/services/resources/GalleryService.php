@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
@@ -16,13 +24,18 @@ use cmsgears\core\common\models\mappers\ModelFile;
 use cmsgears\core\common\services\interfaces\resources\IGalleryService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
-use cmsgears\core\common\services\traits\NameTypeTrait;
-use cmsgears\core\common\services\traits\SlugTypeTrait;
+use cmsgears\core\common\services\base\ResourceService;
+
+use cmsgears\core\common\services\traits\base\NameTypeTrait;
+use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
- * The class GalleryService is base class to perform database activities for Gallery Entity.
+ * GalleryService provide service methods of gallery model.
+ *
+ * @since 1.0.0
  */
-class GalleryService extends \cmsgears\core\common\services\base\EntityService implements IGalleryService {
+class GalleryService extends ResourceService implements IGalleryService {
 
 	// Variables ---------------------------------------------------
 
@@ -54,6 +67,7 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 
@@ -374,6 +388,14 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 		// Delete model
 		return parent::delete( $model, $config );
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

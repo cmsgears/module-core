@@ -21,8 +21,6 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\entities\User;
 
-use cmsgears\core\common\models\traits\base\ModelMapperTrait;
-
 /**
  * The model follower records user following a model based on interest.
  *
@@ -59,8 +57,6 @@ class ModelFollower extends ModelMapper implements IFollower {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
-
-	use ModelMapperTrait;
 
 	// Constructor and Initialisation ------------------------------
 

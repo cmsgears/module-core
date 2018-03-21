@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\mappers;
 
 // Yii Imports
@@ -11,12 +19,14 @@ use cmsgears\core\common\models\mappers\ModelOption;
 use cmsgears\core\common\services\interfaces\resources\IOptionService;
 use cmsgears\core\common\services\interfaces\mappers\IModelOptionService;
 
-use cmsgears\core\common\services\traits\MapperTrait;
+use cmsgears\core\common\services\base\ModelMapperService;
 
 /**
- * The class ModelOptionService is base class to perform database activities for ModelCategory Entity.
+ * ModelOptionService provide service methods of option mapper.
+ *
+ * @since 1.0.0
  */
-class ModelOptionService extends \cmsgears\core\common\services\base\EntityService implements IModelOptionService {
+class ModelOptionService extends  ModelMapperService implements IModelOptionService {
 
 	// Variables ---------------------------------------------------
 
@@ -45,8 +55,6 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 	private $optionService;
 
 	// Traits ------------------------------------------------------
-
-	use MapperTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -156,6 +164,14 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 	}
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

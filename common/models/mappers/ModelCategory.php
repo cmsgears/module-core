@@ -10,13 +10,10 @@
 namespace cmsgears\core\common\models\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\interfaces\base\IModelMapper;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\resources\Category;
-
-use cmsgears\core\common\models\traits\base\ModelMapperTrait;
 
 /**
  * The mapper to map Category Model to specific parent model for given parentId and parentType.
@@ -32,7 +29,7 @@ use cmsgears\core\common\models\traits\base\ModelMapperTrait;
  *
  * @since 1.0.0
  */
-class ModelCategory extends ModelMapper implements IModelMapper {
+class ModelCategory extends ModelMapper {
 
 	// Variables ---------------------------------------------------
 
@@ -53,8 +50,6 @@ class ModelCategory extends ModelMapper implements IModelMapper {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
-
-	use ModelMapperTrait;
 
 	// Constructor and Initialisation ------------------------------
 

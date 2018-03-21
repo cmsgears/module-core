@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\mappers;
 
 // Yii Imports
@@ -8,15 +16,19 @@ use Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-use \cmsgears\core\common\models\mappers\SiteMember;
+use cmsgears\core\common\models\mappers\SiteMember;
 
 use cmsgears\core\common\services\interfaces\mappers\ISiteMemberService;
 use cmsgears\core\common\services\interfaces\entities\IRoleService;
 
+use cmsgears\core\common\services\base\MapperService;
+
 /**
- * The class SiteMemberService is base class to perform database activities for SiteMember Entity.
+ * SiteMemberService provide service methods of site member mapper.
+ *
+ * @since 1.0.0
  */
-class SiteMemberService extends \cmsgears\core\common\services\base\EntityService implements ISiteMemberService {
+class SiteMemberService extends  MapperService implements ISiteMemberService {
 
 	// Variables ---------------------------------------------------
 
@@ -143,6 +155,14 @@ class SiteMemberService extends \cmsgears\core\common\services\base\EntityServic
 	}
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

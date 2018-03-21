@@ -1,9 +1,22 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\interfaces\base;
 
 use cmsgears\core\common\models\base\Meta;
 
-interface IMetaService extends IEntityService {
+/**
+ * The base meta service interface declares the methods available with all the meta services.
+ *
+ * @since 1.0.0
+ */
+interface IMetaService extends IResourceService {
 
 	// Data Provider ------
 
@@ -11,9 +24,13 @@ interface IMetaService extends IEntityService {
 
 	// Read - Models ---
 
-	public function getByType( $modelId, $type );
+	public function getByModelId( $modelId );
 
 	public function getByName( $modelId, $name );
+
+	public function getFirstByName( $modelId, $name );
+
+	public function getByType( $modelId, $type );
 
 	public function getByNameType( $modelId, $type, $name );
 
@@ -33,6 +50,8 @@ interface IMetaService extends IEntityService {
 
 	public function getNameMetaMapByType( $modelId, $type );
 
+	// Read - Others ---
+
 	// Create -------------
 
 	// Update -------------
@@ -42,4 +61,13 @@ interface IMetaService extends IEntityService {
 	// Delete -------------
 
 	public function deleteByModelId( $modelId );
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
+
 }

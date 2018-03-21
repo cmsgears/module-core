@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\mappers;
 
 // CMG Imports
@@ -8,12 +16,14 @@ use cmsgears\core\common\models\mappers\ModelFile;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\core\common\services\interfaces\mappers\IModelFileService;
 
-use cmsgears\core\common\services\traits\MapperTrait;
+use cmsgears\core\common\services\base\ModelMapperService;
 
 /**
- * The class ModelFileService is base class to perform database activities for ModelFile Entity.
+ * ModelFileService provide service methods of file mapper.
+ *
+ * @since 1.0.0
  */
-class ModelFileService extends \cmsgears\core\common\services\base\EntityService implements IModelFileService {
+class ModelFileService extends ModelMapperService implements IModelFileService {
 
 	// Variables ---------------------------------------------------
 
@@ -42,8 +52,6 @@ class ModelFileService extends \cmsgears\core\common\services\base\EntityService
 	private $fileService;
 
 	// Traits ------------------------------------------------------
-
-	use MapperTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -145,6 +153,14 @@ class ModelFileService extends \cmsgears\core\common\services\base\EntityService
 
 		$this->fileService->deleteMultiple( $files );
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

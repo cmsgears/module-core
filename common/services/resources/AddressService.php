@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // CMG Imports
@@ -9,10 +17,14 @@ use cmsgears\core\common\models\mappers\ModelAddress;
 
 use cmsgears\core\common\services\interfaces\resources\IAddressService;
 
+use cmsgears\core\common\services\base\ResourceService;
+
 /**
- * The class AddressService is base class to perform database activities for Address Entity.
+ * AddressService provide service methods of address model.
+ *
+ * @since 1.0.0
  */
-class AddressService extends \cmsgears\core\common\services\base\EntityService implements IAddressService {
+class AddressService extends ResourceService implements IAddressService {
 
 	// Variables ---------------------------------------------------
 
@@ -84,7 +96,7 @@ class AddressService extends \cmsgears\core\common\services\base\EntityService i
 
 		$model->provinceName	= $model->province->name;
 		$model->countryName		= $model->country->name;
-        
+
         $config[ 'attributes' ] = $attributes;
 
 		return parent::update( $model, $config );
@@ -100,6 +112,14 @@ class AddressService extends \cmsgears\core\common\services\base\EntityService i
 		// Delete model
 		return parent::delete( $model, $config );
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

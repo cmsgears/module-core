@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
@@ -14,10 +22,16 @@ use cmsgears\core\common\models\mappers\ModelOption;
 
 use cmsgears\core\common\services\interfaces\resources\IOptionService;
 
+use cmsgears\core\common\services\base\ResourceService;
+
+use cmsgears\core\common\services\traits\resources\DataTrait;
+
 /**
- * The class OptionService is base class to perform database activities for Option Entity.
+ * OptionService provide service methods of option model.
+ *
+ * @since 1.0.0
  */
-class OptionService extends \cmsgears\core\common\services\base\EntityService implements IOptionService {
+class OptionService extends ResourceService implements IOptionService {
 
 	// Variables ---------------------------------------------------
 
@@ -44,6 +58,8 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use DataTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -231,6 +247,14 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 		// Delete model
 		return parent::delete( $model, $config );
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

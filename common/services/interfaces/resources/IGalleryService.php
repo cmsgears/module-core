@@ -1,11 +1,26 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\interfaces\resources;
 
 // CMG Imports
-use cmsgears\core\common\services\interfaces\base\INameTypeService;
-use cmsgears\core\common\services\interfaces\base\ISlugTypeService;
+use cmsgears\core\common\services\interfaces\base\INameType;
+use cmsgears\core\common\services\interfaces\base\IResourceService;
+use cmsgears\core\common\services\interfaces\base\ISlugType;
+use cmsgears\core\common\services\interfaces\resources\IData;
 
-interface IGalleryService extends INameTypeService, ISlugTypeService {
+/**
+ * IGalleryService provide service methods for gallery model.
+ *
+ * @since 1.0.0
+ */
+interface IGalleryService extends IResourceService, IData, INameType, ISlugType {
 
 	// Data Provider ------
 
@@ -16,6 +31,8 @@ interface IGalleryService extends INameTypeService, ISlugTypeService {
 	// Read - Lists ----
 
 	// Read - Maps -----
+
+	// Read - Others ---
 
 	// Create -------------
 
@@ -30,5 +47,13 @@ interface IGalleryService extends INameTypeService, ISlugTypeService {
 	public function switchActive( $model, $config = [] );
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 }

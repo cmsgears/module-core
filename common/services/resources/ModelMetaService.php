@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // CMG Imports
@@ -7,10 +15,14 @@ use cmsgears\core\common\models\resources\ModelMeta;
 
 use cmsgears\core\common\services\interfaces\resources\IModelMetaService;
 
+use cmsgears\core\common\services\base\ModelResourceService;
+
 /**
- * The class ModelMetaService is base class to perform database activities for ModelMeta Entity.
+ * ModelMetaService provide service methods of model meta.
+ *
+ * @since 1.0.0
  */
-class ModelMetaService extends \cmsgears\core\common\services\base\EntityService implements IModelMetaService {
+class ModelMetaService extends ModelResourceService implements IModelMetaService {
 
 	// Variables ---------------------------------------------------
 
@@ -199,6 +211,14 @@ class ModelMetaService extends \cmsgears\core\common\services\base\EntityService
 	}
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // CMG Imports
@@ -6,7 +14,14 @@ use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\services\interfaces\resources\ISiteMetaService;
 
-class SiteMetaService extends \cmsgears\core\common\services\base\MetaService implements ISiteMetaService {
+use cmsgears\core\common\services\base\MetaService;
+
+/**
+ * SiteMetaService provide service methods of site meta.
+ *
+ * @since 1.0.0
+ */
+class SiteMetaService extends MetaService implements ISiteMetaService {
 
 	// Variables ---------------------------------------------------
 
@@ -65,6 +80,14 @@ class SiteMetaService extends \cmsgears\core\common\services\base\MetaService im
 	// Update -------------
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

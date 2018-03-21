@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
@@ -14,14 +22,19 @@ use cmsgears\core\common\models\resources\ModelComment;
 use cmsgears\files\components\FileManager;
 
 use cmsgears\core\common\services\interfaces\resources\IModelCommentService;
-use cmsgears\core\common\services\traits\ResourceTrait;
+
+use cmsgears\core\common\services\base\ModelResourceService;
+
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 use cmsgears\core\common\utilities\DateUtil;
 
 /**
- * The class ModelCommentService is base class to perform database activities for ModelComment Entity.
+ * ModelCommentService provide service methods of model comment.
+ *
+ * @since 1.0.0
  */
-class ModelCommentService extends \cmsgears\core\common\services\base\EntityService implements IModelCommentService {
+class ModelCommentService extends ModelResourceService implements IModelCommentService {
 
 	// Variables ---------------------------------------------------
 
@@ -52,7 +65,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Traits ------------------------------------------------------
 
-	use ResourceTrait;
+	use DataTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -216,7 +229,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 	}
 
 	public function getCommentPageByParent( $parentId, $parentType, $config = [] ) {
-        
+
         $modelTable  = self::$modelTable;
 
 		$config[ 'conditions' ][ "$modelTable.type" ] = ModelComment::TYPE_COMMENT;
@@ -225,7 +238,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 	}
 
 	public function getReviewPageByParent( $parentId, $parentType, $config = [] ) {
-        
+
         $modelTable  = self::$modelTable;
 
 		$config[ 'conditions' ][ "$modelTable.type" ] = ModelComment::TYPE_REVIEW;
@@ -502,6 +515,14 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 		// Delete model
 		return parent::delete( $model, $config );
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

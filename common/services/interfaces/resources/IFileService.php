@@ -1,7 +1,24 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\interfaces\resources;
 
-interface IFileService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
+// CMG Imports
+use cmsgears\core\common\services\interfaces\base\IResourceService;
+use cmsgears\core\common\services\interfaces\resources\IData;
+
+/**
+ * IFileService provide service methods for file model.
+ *
+ * @since 1.0.0
+ */
+interface IFileService extends IResourceService, IData {
 
 	// Data Provider ------
 
@@ -12,6 +29,8 @@ interface IFileService extends \cmsgears\core\common\services\interfaces\base\IE
 	// Read - Lists ----
 
 	// Read - Maps -----
+
+	// Read - Others ---
 
 	// Create -------------
 
@@ -28,4 +47,13 @@ interface IFileService extends \cmsgears\core\common\services\interfaces\base\IE
 	// Delete -------------
 
 	public function deleteFiles( $files = [] );
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
+
 }

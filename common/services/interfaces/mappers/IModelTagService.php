@@ -1,7 +1,23 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\interfaces\mappers;
 
-interface IModelTagService extends \cmsgears\core\common\services\interfaces\base\IMapperService {
+// CMG Imports
+cmsgears\core\common\services\interfaces\base\IModelMapperService;
+
+/**
+ * IModelTagService provide service methods for tag mapper.
+ *
+ * @since 1.0.0
+ */
+interface IModelTagService extends IModelMapperService {
 
 	// Data Provider ------
 
@@ -12,6 +28,8 @@ interface IModelTagService extends \cmsgears\core\common\services\interfaces\bas
 	// Read - Lists ----
 
 	// Read - Maps -----
+
+	// Read - Others ---
 
 	// Create -------------
 
@@ -28,4 +46,13 @@ interface IModelTagService extends \cmsgears\core\common\services\interfaces\bas
 	// Delete -------------
 
 	public function deleteByTagSlug( $parentId, $parentType, $tagSlug, $delete = false );
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
+
 }

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\mappers;
 
 // CMG Imports
@@ -8,12 +16,14 @@ use cmsgears\core\common\models\mappers\ModelGallery;
 use cmsgears\core\common\services\interfaces\resources\IGalleryService;
 use cmsgears\core\common\services\interfaces\mappers\IModelGalleryService;
 
-use cmsgears\core\common\services\traits\MapperTrait;
+use cmsgears\core\common\services\base\ModelMapperService;
 
 /**
- * The class ModelGalleryService is base class to perform database activities for ModelGallery Entity.
+ * ModelGalleryService provide service methods of gallery mapper.
+ *
+ * @since 1.0.0
  */
-class ModelGalleryService extends \cmsgears\core\common\services\base\EntityService implements IModelGalleryService {
+class ModelGalleryService extends ModelMapperService implements IModelGalleryService {
 
 	// Variables ---------------------------------------------------
 
@@ -42,8 +52,6 @@ class ModelGalleryService extends \cmsgears\core\common\services\base\EntityServ
 	private $galleryService;
 
 	// Traits ------------------------------------------------------
-
-	use MapperTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -145,6 +153,14 @@ class ModelGalleryService extends \cmsgears\core\common\services\base\EntityServ
 	}
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

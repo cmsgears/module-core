@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
@@ -13,13 +21,18 @@ use cmsgears\core\common\models\entities\Theme;
 
 use cmsgears\core\common\services\interfaces\entities\IThemeService;
 
-use cmsgears\core\common\services\traits\NameTrait;
-use cmsgears\core\common\services\traits\SlugTrait;
+use cmsgears\core\common\services\base\EntityService;
+
+use cmsgears\core\common\services\traits\base\NameTrait;
+use cmsgears\core\common\services\traits\base\SlugTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
- * The class ThemeService is base class to perform database activities for Theme Entity.
+ * ThemeService provide service methods of theme model.
+ *
+ * @since 1.0.0
  */
-class ThemeService extends \cmsgears\core\common\services\base\EntityService implements IThemeService {
+class ThemeService extends EntityService implements IThemeService {
 
 	// Variables ---------------------------------------------------
 
@@ -47,6 +60,7 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
 	use NameTrait;
 	use SlugTrait;
 
@@ -249,6 +263,14 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 	}
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

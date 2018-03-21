@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
@@ -15,13 +23,18 @@ use cmsgears\core\common\services\interfaces\entities\ISiteService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\core\common\services\interfaces\resources\ISiteMetaService;
 
-use cmsgears\core\common\services\traits\NameTrait;
-use cmsgears\core\common\services\traits\SlugTrait;
+use cmsgears\core\common\services\base\EntityService;
+
+use cmsgears\core\common\services\traits\base\NameTrait;
+use cmsgears\core\common\services\traits\base\SlugTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
- * The class SiteService is base class to perform database activities for Site Entity.
+ * SiteService provide service methods of site model.
+ *
+ * @since 1.0.0
  */
-class SiteService extends \cmsgears\core\common\services\base\EntityService implements ISiteService {
+class SiteService extends EntityService implements ISiteService {
 
 	// Variables ---------------------------------------------------
 
@@ -52,6 +65,7 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
 	use NameTrait;
 	use SlugTrait;
 
@@ -287,6 +301,14 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 		// Delete model
 		return parent::delete( $model, $config );
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

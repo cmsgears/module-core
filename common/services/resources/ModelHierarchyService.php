@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // CMG Imports
@@ -9,10 +17,14 @@ use cmsgears\core\common\models\resources\ModelHierarchy;
 
 use cmsgears\core\common\services\interfaces\resources\IModelHierarchyService;
 
+use cmsgears\core\common\services\base\ModelResourceService;
+
 /**
- * The class ModelHierarchyService is base class to perform database activities for ModelHierarchy Entity.
+ * ModelHierarchyService provide service methods of model hierarchy.
+ *
+ * @since 1.0.0
  */
-class ModelHierarchyService extends \cmsgears\core\common\services\base\EntityService implements IModelHierarchyService {
+class ModelHierarchyService extends ModelResourceService implements IModelHierarchyService {
 
 	// Variables ---------------------------------------------------
 
@@ -144,6 +156,14 @@ class ModelHierarchyService extends \cmsgears\core\common\services\base\EntitySe
 
 		ModelHierarchy::deleteByRootId( $rootId, $parentType );
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

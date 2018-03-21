@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
@@ -13,13 +21,18 @@ use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\services\interfaces\entities\ITemplateService;
 
-use cmsgears\core\common\services\traits\NameTypeTrait;
-use cmsgears\core\common\services\traits\SlugTypeTrait;
+use cmsgears\core\common\services\base\EntityService;
+
+use cmsgears\core\common\services\traits\base\NameTypeTrait;
+use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
- * The class TemplateService is base class to perform database activities for Template Entity.
+ * TemplateService provide service methods of template model.
+ *
+ * @since 1.0.0
  */
-class TemplateService extends \cmsgears\core\common\services\base\EntityService implements ITemplateService {
+class TemplateService extends EntityService implements ITemplateService {
 
 	// Variables ---------------------------------------------------
 
@@ -49,6 +62,7 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 
@@ -335,6 +349,14 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 	}
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\mappers;
 
 // Yii Imports
@@ -12,12 +20,14 @@ use cmsgears\core\common\models\mappers\ModelCategory;
 use cmsgears\core\common\services\interfaces\resources\ICategoryService;
 use cmsgears\core\common\services\interfaces\mappers\IModelCategoryService;
 
-use cmsgears\core\common\services\traits\MapperTrait;
+use cmsgears\core\common\services\base\ModelMapperService;
 
 /**
- * The class ModelCategoryService is base class to perform database activities for ModelCategory Entity.
+ * ModelCategoryService provide service methods of category mapper.
+ *
+ * @since 1.0.0
  */
-class ModelCategoryService extends \cmsgears\core\common\services\base\EntityService implements IModelCategoryService {
+class ModelCategoryService extends ModelMapperService implements IModelCategoryService {
 
 	// Variables ---------------------------------------------------
 
@@ -46,8 +56,6 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 	private $categoryService;
 
 	// Traits ------------------------------------------------------
-
-	use MapperTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -198,6 +206,14 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 	}
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
@@ -14,16 +22,21 @@ use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\services\interfaces\entities\IUserService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
-use cmsgears\core\common\services\traits\ApprovalTrait;
-use cmsgears\core\common\services\traits\DataTrait;
-use cmsgears\core\common\services\traits\ModelMetaTrait;
+use cmsgears\core\common\services\base\EntityService;
+
+use cmsgears\core\common\services\traits\base\ApprovalTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
+use cmsgears\core\common\services\traits\resources\ModelMetaTrait;
+use cmsgears\core\common\services\traits\resources\SocialLinkTrait;
 
 use cmsgears\core\common\utilities\DateUtil;
 
 /**
- * The class UserService is base class to perform database activities for User Entity.
+ * UserService provide service methods of user model.
+ *
+ * @since 1.0.0
  */
-class UserService extends \cmsgears\core\common\services\base\EntityService implements IUserService {
+class UserService extends EntityService implements IUserService {
 
 	// Variables ---------------------------------------------------
 
@@ -56,6 +69,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	use ApprovalTrait;
 	use DataTrait;
 	use ModelMetaTrait;
+	use SocialLinkTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -631,6 +645,14 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		// Delete model
 		return parent::delete( $model, $config );
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

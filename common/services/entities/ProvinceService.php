@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
@@ -10,11 +18,17 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
 
-use cmsgears\core\common\services\traits\NameTrait;
-
 use cmsgears\core\common\services\interfaces\entities\IProvinceService;
+
 use cmsgears\core\common\services\base\EntityService;
 
+use cmsgears\core\common\services\traits\base\NameTrait;
+
+/**
+ * ProvinceService provide service methods of province model.
+ *
+ * @since 1.0.0
+ */
 class ProvinceService extends EntityService implements IProvinceService {
 
 	// Variables ---------------------------------------------------
@@ -215,6 +229,14 @@ class ProvinceService extends EntityService implements IProvinceService {
 	}
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

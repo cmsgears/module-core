@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
@@ -13,7 +21,16 @@ use cmsgears\core\common\models\resources\FormField;
 
 use cmsgears\core\common\services\interfaces\resources\IFormFieldService;
 
-class FormFieldService extends \cmsgears\core\common\services\base\EntityService implements IFormFieldService {
+use cmsgears\core\common\services\base\ResourceService;
+
+use cmsgears\core\common\services\traits\resources\DataTrait;
+
+/**
+ * FormFieldService provide service methods of form fields.
+ *
+ * @since 1.0.0
+ */
+class FormFieldService extends ResourceService implements IFormFieldService {
 
 	// Variables ---------------------------------------------------
 
@@ -40,6 +57,8 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use DataTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -169,6 +188,14 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 	}
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

@@ -23,6 +23,7 @@ use cmsgears\core\common\models\interfaces\base\IAuthor;
 use cmsgears\core\common\models\interfaces\base\IMultiSite;
 use cmsgears\core\common\models\interfaces\base\IOwner;
 use cmsgears\core\common\models\interfaces\base\IVisibility;
+use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IModelMeta;
 
 use cmsgears\core\common\models\base\CoreTables;
@@ -32,6 +33,7 @@ use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
 use cmsgears\core\common\models\traits\base\OwnerTrait;
 use cmsgears\core\common\models\traits\base\VisibilityTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\ModelMetaTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
@@ -68,7 +70,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class File extends Resource implements IAuthor, IModelMeta, IMultiSite, IOwner, IVisibility {
+class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, IOwner, IVisibility {
 
 	// Variables ---------------------------------------------------
 
@@ -108,6 +110,7 @@ class File extends Resource implements IAuthor, IModelMeta, IMultiSite, IOwner, 
 	// Traits ------------------------------------------------------
 
 	use AuthorTrait;
+	use DataTrait;
 	use ModelMetaTrait;
 	use MultiSiteTrait;
 	use OwnerTrait;

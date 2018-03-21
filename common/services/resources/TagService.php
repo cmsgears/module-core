@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
@@ -11,15 +19,19 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\mappers\ModelTag;
 
-use cmsgears\core\common\services\base\EntityService;
 use cmsgears\core\common\services\interfaces\resources\ITagService;
-use cmsgears\core\common\services\traits\NameTypeTrait;
-use cmsgears\core\common\services\traits\SlugTypeTrait;
+
+use cmsgears\core\common\services\base\ResourceService;
+
+use cmsgears\core\common\services\traits\base\NameTypeTrait;
+use cmsgears\core\common\services\traits\base\SlugTypeTrait;
 
 /**
- * The class TagService is base class to perform database activities for Tag Entity.
+ * TagService provide service methods of tag model.
+ *
+ * @since 1.0.0
  */
-class TagService extends EntityService implements ITagService {
+class TagService extends ResourceService implements ITagService {
 
 	// Variables ---------------------------------------------------
 
@@ -185,6 +197,14 @@ class TagService extends EntityService implements ITagService {
 		// Delete model
 		return parent::delete( $model, $config );
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

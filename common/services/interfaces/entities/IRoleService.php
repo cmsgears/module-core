@@ -1,16 +1,26 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\interfaces\entities;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\services\interfaces\base\IEntityService;
+use cmsgears\core\common\services\interfaces\base\INameType;
+use cmsgears\core\common\services\interfaces\base\ISlugType;
+use cmsgears\core\common\services\interfaces\resources\IData;
 
-use cmsgears\core\common\services\interfaces\base\INameTypeService;
-use cmsgears\core\common\services\interfaces\base\ISlugTypeService;
-
-interface IRoleService extends INameTypeService, ISlugTypeService {
+/**
+ * IRoleService provide service methods for role model.
+ *
+ * @since 1.0.0
+ */
+interface IRoleService extends IEntityService, IData, INameType, ISlugType {
 
 	// Data Provider ------
 
@@ -24,6 +34,8 @@ interface IRoleService extends INameTypeService, ISlugTypeService {
 
 	public function getIdNameMapByRoles( $roles );
 
+	// Read - Others ---
+
 	// Create -------------
 
 	// Update -------------
@@ -31,5 +43,13 @@ interface IRoleService extends INameTypeService, ISlugTypeService {
 	public function bindPermissions( $binder );
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 }

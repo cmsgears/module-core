@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
@@ -13,10 +21,18 @@ use cmsgears\core\common\models\mappers\ModelForm;
 
 use cmsgears\core\common\services\interfaces\resources\IFormService;
 
-use cmsgears\core\common\services\traits\NameTypeTrait;
-use cmsgears\core\common\services\traits\SlugTypeTrait;
+use cmsgears\core\common\services\base\ResourceService;
 
-class FormService extends \cmsgears\core\common\services\base\EntityService implements IFormService {
+use cmsgears\core\common\services\traits\base\NameTypeTrait;
+use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
+
+/**
+ * FormService provide service methods of form model.
+ *
+ * @since 1.0.0
+ */
+class FormService extends ResourceService implements IFormService {
 
 	// Variables ---------------------------------------------------
 
@@ -46,6 +62,7 @@ class FormService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 
@@ -194,6 +211,14 @@ class FormService extends \cmsgears\core\common\services\base\EntityService impl
 		// Delete model
 		return parent::delete( $model, $config );
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

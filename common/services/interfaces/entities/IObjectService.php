@@ -11,6 +11,7 @@ namespace cmsgears\core\common\services\interfaces\entities;
 
 // CMG Imports
 use cmsgears\core\common\services\interfaces\base\IEntityService;
+use cmsgears\core\common\services\interfaces\base\IMultiSite;
 use cmsgears\core\common\services\interfaces\base\INameType;
 use cmsgears\core\common\services\interfaces\base\ISlugType;
 use cmsgears\core\common\services\interfaces\resources\IData;
@@ -20,7 +21,7 @@ use cmsgears\core\common\services\interfaces\resources\IData;
  *
  * @since 1.0.0
  */
-interface IObjectService extends IEntityService, IData, INameType, ISlugType {
+interface IObjectService extends IEntityService, IData, IMultiSite, INameType, ISlugType {
 
 	// Data Provider ------
 

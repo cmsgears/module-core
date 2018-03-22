@@ -125,6 +125,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_TITLE => 'Title',
 		CoreGlobal::FIELD_TYPE => 'Type',
 		CoreGlobal::FIELD_ICON => 'Icon',
+		CoreGlobal::FIELD_CLASSPATH => 'Classpath',
 		CoreGlobal::FIELD_TEXTURE => 'Texture',
 		CoreGlobal::FIELD_KEY => 'Key',
 		CoreGlobal::FIELD_VALUE => 'Value',

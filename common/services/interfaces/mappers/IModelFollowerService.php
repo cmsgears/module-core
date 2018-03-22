@@ -10,7 +10,9 @@
 namespace cmsgears\core\common\services\interfaces\mappers;
 
 // CMG Imports
-cmsgears\core\common\services\interfaces\base\IModelMapperService;
+use cmsgears\core\common\models\interfaces\base\IFollower;
+
+use cmsgears\core\common\services\interfaces\base\IModelMapperService;
 
 /**
  * IModelFollowerService provide service methods for follower mapper.
@@ -25,15 +27,29 @@ interface IModelFollowerService extends IModelMapperService {
 
 	// Read - Models ---
 
+	public static function getByFollower( $parentId, $parentType, $type = IFollower::TYPE_FOLLOW );
+
 	// Read - Lists ----
+
+    public function getFollowersIdList( $parentId, $parentType );
+
+    public function getFollowingIdList( $parentType );
 
 	// Read - Maps -----
 
 	// Read - Others ---
 
+	public function getFollowCount( $parentType, $type = IFollower::TYPE_FOLLOW );
+
+	public function getFollowersCount( $parentId, $parentType, $type = IFollower::TYPE_FOLLOW );
+
+	public function getStatusCounts( $parentId, $parentType, $type = IFollower::TYPE_FOLLOW );
+
 	// Create -------------
 
 	// Update -------------
+
+	public function toggleStatus( $model );
 
 	// Delete -------------
 

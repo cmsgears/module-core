@@ -78,6 +78,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $texture
  * @property string $title
  * @property string $description
+ * @property string $classPath
  * @property string $url
  * @property boolean $active
  * @property integer $order
@@ -187,7 +188,7 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 			[ [ 'icon', 'texture' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'name', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
 			[ 'slug', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
-			[ 'title', 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'title', 'classPath' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ [ 'active', 'gridCacheValid' ], 'boolean' ],
@@ -223,7 +224,9 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'classPath' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CLASSPATH ),
 			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
@@ -415,7 +418,7 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 	 * @return \cmsgears\core\common\models\base\ActiveRecord
 	 */
 	public static function findByThemeId( $slug, $type, $themeId ) {
-		
+
 		return self::queryBySlugType( $slug, $type, [ 'ignoreSite' => true ] )->andWhere( 'themeId=:themeId', [ ':themeId' => $themeId ] )->one();
 	}
 

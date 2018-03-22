@@ -167,6 +167,19 @@ class ModelFollower extends ModelMapper implements IFollower {
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the mapping by type and follower id.
+	 *
+	 * @param integer $type
+	 * @param string $parentType
+	 * @param integer $modelId
+	 * @return \yii\db\ActiveQuery to query by type and follower id.
+	 */
+	public static function queryByTypeParentTypeModelId( $type, $parentType, $modelId ) {
+
+		return self::find()->where( 'type=:type AND parentType=:ptype AND modelId=:mid', [ ':type' => $type, ':parentType' => $parentType, ':mid' => $modelId ] );
+	}
+
 	// Read - Find ------------
 
 	// Create -----------------

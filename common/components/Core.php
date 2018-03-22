@@ -473,11 +473,15 @@ class Core extends \cmsgears\core\common\base\Component {
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IFormFieldService', 'cmsgears\core\common\services\resources\FormFieldService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IFormService', 'cmsgears\core\common\services\resources\FormService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IGalleryService', 'cmsgears\core\common\services\resources\GalleryService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelMetaService', 'cmsgears\core\common\services\resources\ModelMetaService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelCommentService', 'cmsgears\core\common\services\resources\ModelCommentService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelHierarchyService', 'cmsgears\core\common\services\resources\ModelHierarchyService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelMessageService', 'cmsgears\core\common\services\resources\ModelMessageService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelMetaService', 'cmsgears\core\common\services\resources\ModelMetaService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IObjectMetaService', 'cmsgears\core\common\services\resources\ObjectMetaService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IOptionService', 'cmsgears\core\common\services\resources\OptionService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\ISiteAccessService', 'cmsgears\core\common\services\resources\SiteAccessService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\ISiteMetaService', 'cmsgears\core\common\services\resources\SiteMetaService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IStatsService', 'cmsgears\core\common\services\resources\StatsService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\ITagService', 'cmsgears\core\common\services\resources\TagService' );
 	}
 
@@ -490,6 +494,7 @@ class Core extends \cmsgears\core\common\base\Component {
 		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelFileService', 'cmsgears\core\common\services\mappers\ModelFileService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelFormService', 'cmsgears\core\common\services\mappers\ModelFormService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelGalleryService', 'cmsgears\core\common\services\mappers\ModelGalleryService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelObjectService', 'cmsgears\core\common\services\mappers\ModelObjectService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelOptionService', 'cmsgears\core\common\services\mappers\ModelOptionService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelTagService', 'cmsgears\core\common\services\mappers\ModelTagService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\ISiteMemberService', 'cmsgears\core\common\services\mappers\SiteMemberService' );
@@ -499,15 +504,21 @@ class Core extends \cmsgears\core\common\base\Component {
 
 		$factory = Yii::$app->factory->getContainer();
 
+		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ILocaleService', 'cmsgears\core\common\services\entities\LocaleService' );
+
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ICountryService', 'cmsgears\core\common\services\entities\CountryService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IProvinceService', 'cmsgears\core\common\services\entities\ProvinceService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ICityService', 'cmsgears\core\common\services\entities\CityService' );
+
+		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ISiteService', 'cmsgears\core\common\services\entities\SiteService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IThemeService', 'cmsgears\core\common\services\entities\ThemeService' );
+
+		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ITemplateService', 'cmsgears\core\common\services\entities\TemplateService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IObjectService', 'cmsgears\core\common\services\entities\ObjectService' );
+
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IPermissionService', 'cmsgears\core\common\services\entities\PermissionService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IRoleService', 'cmsgears\core\common\services\entities\RoleService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ISiteService', 'cmsgears\core\common\services\entities\SiteService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ITemplateService', 'cmsgears\core\common\services\entities\TemplateService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IThemeService', 'cmsgears\core\common\services\entities\ThemeService' );
+
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IUserService', 'cmsgears\core\common\services\entities\UserService' );
 	}
 
@@ -528,11 +539,15 @@ class Core extends \cmsgears\core\common\base\Component {
 		$factory->set( 'formFieldService', 'cmsgears\core\common\services\resources\FormFieldService' );
 		$factory->set( 'formService', 'cmsgears\core\common\services\resources\FormService' );
 		$factory->set( 'galleryService', 'cmsgears\core\common\services\resources\GalleryService' );
-		$factory->set( 'modelMetaService', 'cmsgears\core\common\services\resources\ModelMetaService' );
 		$factory->set( 'modelCommentService', 'cmsgears\core\common\services\resources\ModelCommentService' );
 		$factory->set( 'modelHierarchyService', 'cmsgears\core\common\services\resources\ModelHierarchyService' );
+		$factory->set( 'modelMessageService', 'cmsgears\core\common\services\resources\ModelMessageService' );
+		$factory->set( 'modelMetaService', 'cmsgears\core\common\services\resources\ModelMetaService' );
+		$factory->set( 'objectMetaService', 'cmsgears\core\common\services\resources\ObjectMetaService' );
 		$factory->set( 'optionService', 'cmsgears\core\common\services\resources\OptionService' );
+		$factory->set( 'siteAccessService', 'cmsgears\core\common\services\resources\SiteAccessService' );
 		$factory->set( 'siteMetaService', 'cmsgears\core\common\services\resources\SiteMetaService' );
+		$factory->set( 'statsService', 'cmsgears\core\common\services\resources\StatsService' );
 		$factory->set( 'tagService', 'cmsgears\core\common\services\resources\TagService' );
 	}
 
@@ -545,6 +560,7 @@ class Core extends \cmsgears\core\common\base\Component {
 		$factory->set( 'modelFileService', 'cmsgears\core\common\services\mappers\ModelFileService' );
 		$factory->set( 'modelFormService', 'cmsgears\core\common\services\mappers\ModelFormService' );
 		$factory->set( 'modelGalleryService', 'cmsgears\core\common\services\mappers\ModelGalleryService' );
+		$factory->set( 'modelObjectService', 'cmsgears\core\common\services\mappers\ModelObjectService' );
 		$factory->set( 'modelOptionService', 'cmsgears\core\common\services\mappers\ModelOptionService' );
 		$factory->set( 'modelTagService', 'cmsgears\core\common\services\mappers\ModelTagService' );
 		$factory->set( 'siteMemberService', 'cmsgears\core\common\services\mappers\SiteMemberService' );
@@ -554,15 +570,21 @@ class Core extends \cmsgears\core\common\base\Component {
 
 		$factory = Yii::$app->factory->getContainer();
 
+		$factory->set( 'localeService', 'cmsgears\core\common\services\entities\LocaleService' );
+
 		$factory->set( 'countryService', 'cmsgears\core\common\services\entities\CountryService' );
 		$factory->set( 'provinceService', 'cmsgears\core\common\services\entities\ProvinceService' );
 		$factory->set( 'cityService', 'cmsgears\core\common\services\entities\CityService' );
-		$factory->set( 'objectService', 'cmsgears\core\common\services\entities\ObjectDataService' );
+
+		$factory->set( 'siteService', 'cmsgears\core\common\services\entities\SiteService' );
+		$factory->set( 'themeService', 'cmsgears\core\common\services\entities\ThemeService' );
+
+		$factory->set( 'templateService', 'cmsgears\core\common\services\entities\TemplateService' );
+		$factory->set( 'objectService', 'cmsgears\core\common\services\entities\ObjectService' );
+
 		$factory->set( 'permissionService', 'cmsgears\core\common\services\entities\PermissionService' );
 		$factory->set( 'roleService', 'cmsgears\core\common\services\entities\RoleService' );
-		$factory->set( 'siteService', 'cmsgears\core\common\services\entities\SiteService' );
-		$factory->set( 'templateService', 'cmsgears\core\common\services\entities\TemplateService' );
-		$factory->set( 'themeService', 'cmsgears\core\common\services\entities\ThemeService' );
+
 		$factory->set( 'userService', 'cmsgears\core\common\services\entities\UserService' );
 	}
 

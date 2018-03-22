@@ -216,6 +216,7 @@ class m160620_095703_core extends Migration {
 			'texture' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'title' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
+			'classPath' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'url' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'active' => $this->boolean()->notNull()->defaultValue( false ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),

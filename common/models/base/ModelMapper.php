@@ -191,6 +191,20 @@ abstract class ModelMapper extends Mapper {
 	}
 
 	/**
+	 * Return query to find the mapping for given parent id and parent type.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @return \yii\db\ActiveQuery to find using parent id and parent type.
+	 */
+	public static function queryByParent( $parentId, $parentType ) {
+
+		$tableName = self::tableName();
+
+		return self::queryWithModel()->where( "$tableName.parentId=:pid AND $tableName.parentType=:ptype", [ ':pid' => $parentId, ':ptype' => $parentType ] );
+	}
+
+	/**
 	 * Return query to find the mapping for given mapped model id.
 	 *
 	 * @param integer $parentId
@@ -206,57 +220,21 @@ abstract class ModelMapper extends Mapper {
 	}
 
 	/**
-	 * Return query to find the mapping for given parent id and parent type.
+	 * Return query to find the mapping for given parent id, parent type and mapping type.
 	 *
 	 * @param integer $parentId
 	 * @param string $parentType
-	 * @param integer $modelId
-	 * @return \yii\db\ActiveQuery to find with parent id and parent type.
+	 * @param string $type
+	 * @return \yii\db\ActiveQuery to find using parent id, parent type and mapping type.
 	 */
-	public static function queryByParent( $parentId, $parentType ) {
+	public static function queryByType( $parentId, $parentType, $type ) {
 
 		$tableName = self::tableName();
 
-		return self::queryWithModel()->where( "$tableName.parentId=:pid AND $tableName.parentType=:ptype", [ ':pid' => $parentId, ':ptype' => $parentType ] );
+		return self::queryWithModel()->where( "$tableName.parentId=:pid AND $tableName.parentType=:ptype AND $tableName.type=:type", [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] );
 	}
 
 	// Read - Find ------------
-
-	/**
-	 * Find and return the mapping for given parent id, parent type and mapped model id.
-	 *
-	 * @param integer $parentId
-	 * @param string $parentType
-	 * @param integer $modelId
-	 * @return \cmsgears\core\common\models\base\ActiveRecord
-	 */
-	public static function findByModelId( $parentId, $parentType, $modelId ) {
-
-		return self::queryByModelId( $parentId, $parentType, $modelId )->one();
-	}
-
-	/**
-	 * Find and return the mappings for given mapped model id.
-	 *
-	 * @param integer $modelId
-	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
-	 */
-	public static function findAllByModelId( $modelId ) {
-
-		return self::find()->where( 'modelId=:id', [ ':id' => $modelId ] )->all();
-	}
-
-	/**
-	 * Find and return the mappings for given parent id and parent type.
-	 *
-	 * @param integer $parentId
-	 * @param string $parentType
-	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
-	 */
-	public static function findByParent( $parentId, $parentType ) {
-
-		return self::queryByParent( $parentId, $parentType )->all();
-	}
 
 	/**
 	 * Find and return the mappings for given parent id. It's useful in cases where only
@@ -282,6 +260,42 @@ abstract class ModelMapper extends Mapper {
 	}
 
 	/**
+	 * Find and return the mappings for given parent id and parent type.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
+	 */
+	public static function findByParent( $parentId, $parentType ) {
+
+		return self::queryByParent( $parentId, $parentType )->all();
+	}
+
+	/**
+	 * Find and return the mappings for given mapped model id.
+	 *
+	 * @param integer $modelId
+	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
+	 */
+	public static function findByModelId( $parentId, $parentType, $modelId ) {
+
+		return self::queryByModelId( $parentId, $parentType, $modelId )->all();
+	}
+
+	/**
+	 * Find and return the mapping for given parent id, parent type and mapped model id.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param integer $modelId
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
+	public static function findFirstByModelId( $parentId, $parentType, $modelId ) {
+
+		return self::queryByModelId( $parentId, $parentType, $modelId )->one();
+	}
+
+	/**
 	 * Find and return appropriate mapped models for given parent id, parent type and type.
 	 *
 	 * @param integer $parentId
@@ -291,7 +305,7 @@ abstract class ModelMapper extends Mapper {
 	 */
 	public static function findByType( $parentId, $parentType, $type ) {
 
-		return self::queryByParent( $parentId, $parentType )->andWhere( 'type=:type', [ ':type' => $type ] )->all();
+		return self::queryByType( $parentId, $parentType, $type )->all();
 	}
 
 	/**
@@ -305,7 +319,21 @@ abstract class ModelMapper extends Mapper {
 	 */
 	public static function findFirstByType( $parentId, $parentType, $type ) {
 
-		return self::queryByParent( $parentId, $parentType )->andWhere( 'type=:type', [ ':type' => $type ] )->one();
+		return self::queryByType( $parentId, $parentType, $type )->one();
+	}
+
+	/**
+	 * Find and return the mapping for given parent id, parent type and mapped model id.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param integer $modelId
+	 * @param integer $type
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
+	public static function findByParentModelIdType( $parentId, $parentType, $modelId, $type ) {
+
+		return self::queryByModelId( $parentId, $parentType, $modelId )->andWhere( 'type=:type', [ ':type' => $type ] )->one();
 	}
 
 	/**

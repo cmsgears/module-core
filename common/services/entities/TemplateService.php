@@ -23,6 +23,7 @@ use cmsgears\core\common\services\interfaces\entities\ITemplateService;
 
 use cmsgears\core\common\services\base\EntityService;
 
+use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
@@ -63,6 +64,7 @@ class TemplateService extends EntityService implements ITemplateService {
 	// Traits ------------------------------------------------------
 
 	use DataTrait;
+	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 

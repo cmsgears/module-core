@@ -120,6 +120,7 @@ class MessageSource extends \yii\base\Component {
 
 		CoreGlobal::FIELD_DEFAULT => 'Default',
 		CoreGlobal::FIELD_NAME => 'Name',
+		CoreGlobal::FIELD_NUMBER => 'Number',
 		CoreGlobal::FIELD_SLUG => 'Slug',
 		CoreGlobal::FIELD_LABEL => 'Label',
 		CoreGlobal::FIELD_TITLE => 'Title',

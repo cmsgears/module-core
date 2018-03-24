@@ -287,6 +287,7 @@ class CoreGlobal {
 
 	const FIELD_DEFAULT				= 'Default';
 	const FIELD_NAME				= 'nameField';
+	const FIELD_NUMBER				= 'numberField';
 	const FIELD_SLUG				= 'slugField';
 	const FIELD_LABEL				= 'labelField';
 	const FIELD_TITLE				= 'titleField';

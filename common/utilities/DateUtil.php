@@ -7,8 +7,9 @@ use \DateTime;
  * DateUtil provide several utility methods related to date and time.
  */
 class DateUtil {
-    
+
     // Months ------------------------------------------------------
+
     const MONTH_JAN     = 1;
     const MONTH_FEB     = 2;
     const MONTH_MAR     = 3;
@@ -21,22 +22,22 @@ class DateUtil {
     const MONTH_OCT     = 10;
     const MONTH_NOV     = 11;
     const MONTH_DEC     = 12;
-    
+
     public static $monthsMap = [
-        self::MONTH_JAN => 'January',  
-        self::MONTH_FEB => 'February', 
-        self::MONTH_MAR => 'March', 
-        self::MONTH_APR => 'April', 
-        self::MONTH_MAY => 'May', 
-        self::MONTH_JUN => 'June', 
-        self::MONTH_JUL => 'July', 
-        self::MONTH_AUG => 'August', 
-        self::MONTH_SEP => 'September', 
-        self::MONTH_OCT => 'October', 
-        self::MONTH_NOV => 'November', 
-        self::MONTH_DEC =>'December' 
+        self::MONTH_JAN => 'January',
+        self::MONTH_FEB => 'February',
+        self::MONTH_MAR => 'March',
+        self::MONTH_APR => 'April',
+        self::MONTH_MAY => 'May',
+        self::MONTH_JUN => 'June',
+        self::MONTH_JUL => 'July',
+        self::MONTH_AUG => 'August',
+        self::MONTH_SEP => 'September',
+        self::MONTH_OCT => 'October',
+        self::MONTH_NOV => 'November',
+        self::MONTH_DEC =>'December'
     ];
-    
+
 
 	// Week Days ---------------------------------------------------
 
@@ -76,6 +77,21 @@ class DateUtil {
 		self::WEEK_DAY_SAT => 'Saturday',
 		self::WEEK_DAY_SUN => 'Sunday'
 	];
+
+	// Time --------------------------------------------------------
+
+    // Time Duration
+    const DURATION_DAY      = 0;
+    const DURATION_WEEK     = 1;
+    const DURATION_MONTH    = 2;
+    const DURATION_YEAR     = 3;
+
+    public static $durationMap = [
+        self::DURATION_DAY  => 'Today',
+        self::DURATION_WEEK => 'This Week',
+        self::DURATION_MONTH => 'This Month',
+        self::DURATION_YEAR => 'This Year'
+    ];
 
 	// Hrs/Mins ----------------------------------------------------
 
@@ -144,7 +160,7 @@ class DateUtil {
 
 		return $dateUTC->format( $format );
 	}
-	
+
 	/**
 	 * @return time - current time having specified format in UTC
 	 */
@@ -620,17 +636,17 @@ class DateUtil {
 
 		return $timezone_list;
 	}
-    
+
     // Dates list from 1 to 31
     public static function getDatesList() {
-        
+
         $list   = [];
-        
+
         for( $i = 1; $i <= 31; $i++ ) {
-            
+
             $list[ $i ] = $i;
         }
-        
+
         return $list;
     }
 }

@@ -104,11 +104,11 @@ trait NameTypeTrait {
 		$config[ 'query' ]		= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
 		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name" ];
 		$config[ 'array' ]		= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
-		$config[ 'siteId' ]		= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : ($modelClass::$multiSite ? Yii::$app->core->siteId : null );
+		$config[ 'siteId' ]		= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : ($modelClass::isMultiSite() ? Yii::$app->core->siteId : null );
 
 		$config[ 'query' ]->andWhere( "$modelTable.name like '$name%'" );
 
-		if( $modelClass::$multiSite ) {
+		if( $modelClass::isMultiSite() ) {
 
 			$config[ 'conditions' ][ "$modelTable.siteId" ]	= $config[ 'siteId' ];
 		}

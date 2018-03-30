@@ -10,8 +10,6 @@
 namespace cmsgears\core\common\services\resources;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
-
 use cmsgears\core\common\services\interfaces\resources\IObjectMetaService;
 
 use cmsgears\core\common\services\base\MetaService;
@@ -31,11 +29,7 @@ class ObjectMetaService extends MetaService implements IObjectMetaService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\ObjectMeta';
-
-	public static $modelTable	= CoreTables::TABLE_OBJECT_META;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\resources\ObjectMeta';
 
 	// Protected --------------
 

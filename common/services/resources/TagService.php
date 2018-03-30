@@ -16,9 +16,6 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\mappers\ModelTag;
-
 use cmsgears\core\common\services\interfaces\resources\ITagService;
 
 use cmsgears\core\common\services\base\ResourceService;
@@ -42,8 +39,6 @@ class TagService extends ResourceService implements ITagService {
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\core\common\models\resources\Tag';
-
-	public static $modelTable	= CoreTables::TABLE_TAG;
 
 	public static $typed		= true;
 
@@ -82,24 +77,24 @@ class TagService extends ResourceService implements ITagService {
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
 				'id' => [
-					'asc' => [ 'id' => SORT_ASC ],
-					'desc' => [ 'id' => SORT_DESC ],
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
 				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'Name',
+					'label' => 'Name'
 				]
 			],
 			'defaultOrder' => [
@@ -127,7 +122,12 @@ class TagService extends ResourceService implements ITagService {
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name",  'title' =>  "$modelTable.title", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'title' => "$modelTable.title",
+				'slug' => "$modelTable.slug",
+				'template' => "$modelTable.template"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -135,7 +135,10 @@ class TagService extends ResourceService implements ITagService {
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template",  'active' => "$modelTable.active"
+			'name' => "$modelTable.name",
+			'slug' => "$modelTable.slug",
+			'template' => "$modelTable.template",
+			'active' => "$modelTable.active"
 		];
 
 		// Result -----------
@@ -166,6 +169,19 @@ class TagService extends ResourceService implements ITagService {
 		]);
 	}
 
+	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete mapping
+		Yii::$app->get( 'modelTagService' )->deleteByModelId( $model->id );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
+
+	// Bulk ---------------
+
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
@@ -186,19 +202,6 @@ class TagService extends ResourceService implements ITagService {
 			}
 		}
 	}
-
-	// Delete -------------
-
-	public function delete( $model, $config = [] ) {
-
-		// Delete mapping
-		ModelTag::deleteByModelId( $model->id );
-
-		// Delete model
-		return parent::delete( $model, $config );
-	}
-
-	// Bulk ---------------
 
 	// Notifications ------
 

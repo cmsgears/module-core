@@ -32,9 +32,9 @@ trait NameTrait {
 
 	// Read - Models ---
 
-	public function getByName( $name ) {
+	public function getByName( $name, $config = [] ) {
 
-		return self::findByName( $name );
+		return self::findByName( $name, $config );
 	}
 
 	public function searchByName( $name, $config = [] ) {
@@ -88,7 +88,7 @@ trait NameTrait {
 
 	// Read - Models ---
 
-	public static function findByName( $name ) {
+	public static function findByName( $name, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 

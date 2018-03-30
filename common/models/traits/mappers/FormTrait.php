@@ -10,7 +10,6 @@
 namespace cmsgears\core\common\models\traits\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Form;
 use cmsgears\core\common\models\mappers\ModelForm;
 
@@ -52,7 +51,7 @@ trait FormTrait {
 	 */
 	public function getModelForms() {
 
-		$modelFormTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FORM );
+		$modelFormTable = ModelForm::tableName();
 
 		return $this->hasMany( ModelForm::class, [ 'parentId' => 'id' ] )
 			->where( "$modelFormTable.parentType='$this->modelType'" );
@@ -63,7 +62,7 @@ trait FormTrait {
 	 */
 	public function getActiveModelForms() {
 
-		$modelFormTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FORM );
+		$modelFormTable = ModelForm::tableName();
 
 		return $this->hasMany( ModelForm::class, [ 'parentId' => 'id' ] )
 			->where( "$modelFormTable.parentType='$this->modelType' AND $modelFormTable.active=1" );
@@ -74,7 +73,7 @@ trait FormTrait {
 	 */
 	public function getModelFormsByType( $type, $active = true ) {
 
-		$modelFormTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FORM );
+		$modelFormTable = ModelForm::tableName();
 
 		return $this->hasOne( ModelForm::class, [ 'parentId' => 'id' ] )
 			->where( "$modelFormTable.parentType=:ptype AND $modelFormTable.type=:type AND $modelFormTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
@@ -85,7 +84,7 @@ trait FormTrait {
 	 */
 	public function getForms() {
 
-		$modelFormTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FORM );
+		$modelFormTable = ModelForm::tableName();
 
 		return $this->hasMany( Form::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelFormTable, [ 'parentId' => 'id' ],
@@ -101,7 +100,7 @@ trait FormTrait {
 	 */
 	public function getActiveForms() {
 
-		$modelFormTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FORM );
+		$modelFormTable = ModelForm::tableName();
 
 		return $this->hasMany( Form::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelFormTable, [ 'parentId' => 'id' ],
@@ -117,7 +116,7 @@ trait FormTrait {
 	 */
 	public function getFormsByType( $type, $active = true ) {
 
-		$modelFormTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FORM );
+		$modelFormTable = ModelForm::tableName();
 
 		return $this->hasMany( Form::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelFormTable, [ 'parentId' => 'id' ],

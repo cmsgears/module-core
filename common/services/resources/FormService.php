@@ -16,9 +16,6 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\mappers\ModelForm;
-
 use cmsgears\core\common\services\interfaces\resources\IFormService;
 
 use cmsgears\core\common\services\base\ResourceService;
@@ -43,8 +40,6 @@ class FormService extends ResourceService implements IFormService {
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\core\common\models\resources\Form';
-
-	public static $modelTable	= CoreTables::TABLE_FORM;
 
 	public static $typed		= true;
 
@@ -84,36 +79,36 @@ class FormService extends ResourceService implements IFormService {
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
 				'id' => [
-					'asc' => [ 'id' => SORT_ASC ],
-					'desc' => [ 'id' => SORT_DESC ],
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
 				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'name',
+					'label' => 'Name'
 				],
 				'cdate' => [
-					'asc' => [ 'createdAt' => SORT_ASC ],
-					'desc' => ['createdAt' => SORT_DESC ],
+					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'cdate',
+					'label' => 'Created At'
 				],
 				'udate' => [
-					'asc' => [ 'updatedAt' => SORT_ASC ],
-					'desc' => ['updatedAt' => SORT_DESC ],
+					'asc' => [ "$modelTable.updatedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.updatedAt" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'udate',
+					'label' => 'Updated At'
 				]
 			],
 			'defaultOrder' => [
@@ -141,7 +136,11 @@ class FormService extends ResourceService implements IFormService {
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'slug' => "$modelTable.slug",
+				'template' => "$modelTable.template"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -149,7 +148,10 @@ class FormService extends ResourceService implements IFormService {
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template",  'active' => "$modelTable.active"
+			'name' => "$modelTable.name",
+			'slug' => "$modelTable.slug",
+			'template' => "$modelTable.template",
+			'active' => "$modelTable.active"
 		];
 
 		// Result -----------
@@ -180,6 +182,19 @@ class FormService extends ResourceService implements IFormService {
 		]);
 	}
 
+	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete mapping
+		Yii::$app->get( 'modelFormService' )->deleteByModelId( $model->id );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
+
+	// Bulk ---------------
+
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
@@ -200,19 +215,6 @@ class FormService extends ResourceService implements IFormService {
 			}
 		}
 	}
-
-	// Delete -------------
-
-	public function delete( $model, $config = [] ) {
-
-		// Delete mapping
-		ModelForm::deleteByModelId( $model->id );
-
-		// Delete model
-		return parent::delete( $model, $config );
-	}
-
-	// Bulk ---------------
 
 	// Notifications ------
 

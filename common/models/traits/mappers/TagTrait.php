@@ -10,7 +10,6 @@
 namespace cmsgears\core\common\models\traits\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Tag;
 use cmsgears\core\common\models\mappers\ModelTag;
 
@@ -48,7 +47,7 @@ trait TagTrait {
 	 */
 	public function getModelTags() {
 
-		$modelTagTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_TAG );
+		$modelTagTable = ModelTag::tableName();
 
 		return $this->hasMany( ModelTag::class, [ 'parentId' => 'id' ] )
 			->where( "$modelTagTable.parentType='$this->modelType'" );
@@ -59,7 +58,7 @@ trait TagTrait {
 	 */
 	public function getActiveModelTags() {
 
-		$modelTagTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_TAG );
+		$modelTagTable = ModelTag::tableName();
 
 		return $this->hasMany( ModelTag::class, [ 'parentId' => 'id' ] )
 			->where( "$modelTagTable.parentType='$this->modelType' AND $modelTagTable.active=1" );
@@ -70,7 +69,7 @@ trait TagTrait {
 	 */
 	public function getModelTagsByType( $type, $active = true ) {
 
-		$modelTagTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_TAG );
+		$modelTagTable = ModelTag::tableName();
 
 		return $this->hasOne( ModelTag::class, [ 'parentId' => 'id' ] )
 			->where( "$modelTagTable.parentType=:ptype AND $modelTagTable.type=:type AND $modelTagTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
@@ -81,7 +80,7 @@ trait TagTrait {
 	 */
 	public function getTags() {
 
-		$modelTagTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_TAG );
+		$modelTagTable = ModelTag::tableName();
 
 		return $this->hasMany( Tag::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelTagTable, [ 'parentId' => 'id' ],
@@ -97,7 +96,7 @@ trait TagTrait {
 	 */
 	public function getActiveTags() {
 
-		$modelTagTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_TAG );
+		$modelTagTable = ModelTag::tableName();
 
 		return $this->hasMany( Tag::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelTagTable, [ 'parentId' => 'id' ],
@@ -113,7 +112,7 @@ trait TagTrait {
 	 */
 	public function getTagsByType( $type, $active = true ) {
 
-		$modelTagTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_TAG );
+		$modelTagTable = ModelTag::tableName();
 
 		return $this->hasMany( Tag::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelTagTable, [ 'parentId' => 'id' ],

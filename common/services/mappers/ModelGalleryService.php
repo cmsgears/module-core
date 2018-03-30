@@ -10,9 +10,6 @@
 namespace cmsgears\core\common\services\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\mappers\ModelGallery;
-
 use cmsgears\core\common\services\interfaces\resources\IGalleryService;
 use cmsgears\core\common\services\interfaces\mappers\IModelGalleryService;
 
@@ -33,11 +30,7 @@ class ModelGalleryService extends ModelMapperService implements IModelGallerySer
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelGallery';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_GALLERY;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\mappers\ModelGallery';
 
 	// Protected --------------
 
@@ -57,7 +50,7 @@ class ModelGalleryService extends ModelMapperService implements IModelGallerySer
 
 	public function __construct( IGalleryService $galleryService, $config = [] ) {
 
-		$this->galleryService	= $galleryService;
+		$this->galleryService = $galleryService;
 
 		parent::__construct( $config );
 	}
@@ -101,7 +94,9 @@ class ModelGalleryService extends ModelMapperService implements IModelGallerySer
 		$gallery->save();
 
 		// Create Model Gallery
-		$modelGallery				= new ModelGallery();
+		$modelClass	= static::$modelClass;
+
+		$modelGallery = new $modelClass();
 
 		$modelGallery->modelId		= $gallery->id;
 		$modelGallery->parentId		= $parentId;
@@ -123,7 +118,7 @@ class ModelGalleryService extends ModelMapperService implements IModelGallerySer
 		// Update Existing
 		if( isset( $gallery->id ) && !empty( $gallery->id ) ) {
 
-			$existingGallery	= $this->getByModelId( $parentId, $parentType, $gallery->id );
+			$existingGallery = $this->getByModelId( $parentId, $parentType, $gallery->id );
 
 			if( isset( $existingGallery ) ) {
 
@@ -143,7 +138,7 @@ class ModelGalleryService extends ModelMapperService implements IModelGallerySer
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'type', 'order' ];
 
-		$gallery	= $config[ 'gallery' ];
+		$gallery = $config[ 'gallery' ];
 
 		$this->galleryService->update( $gallery );
 

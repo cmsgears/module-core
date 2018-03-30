@@ -10,7 +10,6 @@
 namespace cmsgears\core\common\models\traits\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\models\mappers\ModelFile;
 
@@ -49,7 +48,7 @@ trait FileTrait {
 	 */
 	public function getModelFiles() {
 
-		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
+		$modelFileTable = ModelFile::tableName();
 
 		return $this->hasMany( ModelFile::class, [ 'parentId' => 'id' ] )
 			->where( "$modelFileTable.parentType='$this->modelType'" );
@@ -60,7 +59,7 @@ trait FileTrait {
 	 */
 	public function getActiveModelFiles() {
 
-		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
+		$modelFileTable = ModelFile::tableName();
 
 		return $this->hasMany( ModelFile::class, [ 'parentId' => 'id' ] )
 			->where( "$modelFileTable.parentType='$this->modelType' AND $modelFileTable.active=1" );
@@ -71,7 +70,7 @@ trait FileTrait {
 	 */
 	public function getModelFilesByType( $type, $active = true ) {
 
-		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
+		$modelFileTable = ModelFile::tableName();
 
 		return $this->hasOne( ModelFile::class, [ 'parentId' => 'id' ] )
 			->where( "$modelFileTable.parentType=:ptype AND $modelFileTable.type=:type AND $modelFileTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
@@ -82,7 +81,7 @@ trait FileTrait {
 	 */
 	public function getFiles() {
 
-		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
+		$modelFileTable = ModelFile::tableName();
 
 		return $this->hasMany( File::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelFileTable, [ 'parentId' => 'id' ],
@@ -98,7 +97,7 @@ trait FileTrait {
 	 */
 	public function getActiveFiles() {
 
-		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
+		$modelFileTable = ModelFile::tableName();
 
 		return $this->hasMany( File::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelFileTable, [ 'parentId' => 'id' ],
@@ -114,7 +113,7 @@ trait FileTrait {
 	 */
 	public function getFilesByType( $type, $active = true ) {
 
-		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
+		$modelFileTable = ModelFile::tableName();
 
 		return $this->hasMany( File::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelFileTable, [ 'parentId' => 'id' ],
@@ -130,8 +129,8 @@ trait FileTrait {
 	 */
 	public function getFileByTitle( $title ) {
 
-		$fileTable		= CoreTables::getTableName( CoreTables::TABLE_FILE );
-		$modelFileTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
+		$fileTable		= File::tableName();
+		$modelFileTable = ModelFile::tableName();
 
 		return $this->hasOne( File::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelFileTable, [ 'parentId' => 'id' ],

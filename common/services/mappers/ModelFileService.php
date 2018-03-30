@@ -10,9 +10,6 @@
 namespace cmsgears\core\common\services\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\mappers\ModelFile;
-
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\core\common\services\interfaces\mappers\IModelFileService;
 
@@ -33,11 +30,7 @@ class ModelFileService extends ModelMapperService implements IModelFileService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelFile';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_FILE;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\mappers\ModelFile';
 
 	// Protected --------------
 
@@ -57,7 +50,7 @@ class ModelFileService extends ModelMapperService implements IModelFileService {
 
 	public function __construct( IFileService $fileService, $config = [] ) {
 
-		$this->fileService	= $fileService;
+		$this->fileService = $fileService;
 
 		parent::__construct( $config );
 	}
@@ -82,17 +75,23 @@ class ModelFileService extends ModelMapperService implements IModelFileService {
 
 	public function getByFileTitle( $parentId, $parentType, $fileTitle ) {
 
-		return ModelFile::findByFileTitle( $parentId, $parentType, $fileTitle );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByFileTitle( $parentId, $parentType, $fileTitle );
 	}
 
 	public function getByFileTitleLike( $parentId, $parentType, $likeTitle ) {
 
-		return ModelFile::findByFileTitleLike( $parentId, $parentType, $likeTitle );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByFileTitleLike( $parentId, $parentType, $likeTitle );
 	}
 
 	public function getByFileType( $parentId, $parentType, $fileType ) {
 
-		return ModelFile::findByFileType( $parentId, $parentType, $fileType );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByFileType( $parentId, $parentType, $fileType );
 	}
 
 	// Read - Lists ----
@@ -110,11 +109,11 @@ class ModelFileService extends ModelMapperService implements IModelFileService {
 
 		if( isset( $file ) && isset( $file->title ) ) {
 
-			$fileModel	= $this->getByFileTitle( $parent->id, $parentType, $file->title );
+			$fileModel = $this->getByFileTitle( $parent->id, $parentType, $file->title );
 
 			if( isset( $fileModel ) ) {
 
-				$file->id	= $fileModel->file->id;
+				$file->id = $fileModel->file->id;
 
 				$this->fileService->saveFile( $file, [ 'model' => $fileModel, 'attribute' => 'modelId' ] );
 
@@ -122,7 +121,7 @@ class ModelFileService extends ModelMapperService implements IModelFileService {
 			}
 			else {
 
-				$fileModel				= new ModelFile();
+				$fileModel = $this->getModelObject();
 
 				$fileModel->parentId	= $parent->id;
 				$fileModel->parentType	= $parentType;

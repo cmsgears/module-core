@@ -10,7 +10,7 @@
 namespace cmsgears\core\common\models\traits\resources;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\resources\ModelHierarchy;
 
 /**
  * HierarchyTrait can be used to access parent child relationship.
@@ -46,7 +46,7 @@ trait HierarchyTrait {
 	 */
 	public function getParent() {
 
-		$modelHierarchyTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_HIERARCHY );
+		$modelHierarchyTable = ModelHierarchy::tableName();
 
 		return $this->hasOne( get_class( $this ), [ 'id' => 'parentId' ] )
 			->viaTable( $modelHierarchyTable, [ 'childId' => 'id' ], function( $query ) use( &$modelHierarchyTable ) {
@@ -60,7 +60,7 @@ trait HierarchyTrait {
 	 */
 	public function getParents() {
 
-		$modelHierarchyTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_HIERARCHY );
+		$modelHierarchyTable = ModelHierarchy::tableName();
 
 		return $this->hasMany( get_class( $this ), [ 'id' => 'parentId' ] )
 			->viaTable( $modelHierarchyTable, [ 'childId' => 'id' ], function( $query ) use( &$modelHierarchyTable ) {
@@ -74,7 +74,7 @@ trait HierarchyTrait {
 	 */
 	public function getChildren() {
 
-		$modelHierarchyTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_HIERARCHY );
+		$modelHierarchyTable = ModelHierarchy::tableName();
 
 		return $this->hasMany( get_class( $this ), [ 'id' => 'childId' ] )
 			->viaTable( $modelHierarchyTable, [ 'parentId' => 'id' ], function( $query ) use( &$modelHierarchyTable ) {

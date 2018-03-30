@@ -14,7 +14,6 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\mappers\ModelObject;
 
 use cmsgears\core\common\services\interfaces\entities\IObjectService;
@@ -43,8 +42,6 @@ class ObjectDataService extends EntityService implements IObjectService {
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\core\common\models\entities\ObjectData';
-
-	public static $modelTable	= CoreTables::TABLE_OBJECT_DATA;
 
 	public static $typed		= true;
 
@@ -94,25 +91,62 @@ class ObjectDataService extends EntityService implements IObjectService {
 
 	public function getPage( $config = [] ) {
 
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$templateTable	= Yii::$app->get( 'templateService' )->getModelTable();
+
+		// Sorting ----------
+
 		$sort = new Sort([
 			'attributes' => [
 				'id' => [
-					'asc' => [ 'id' => SORT_ASC ],
-					'desc' => [ 'id' => SORT_DESC ],
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
+	            'template' => [
+	                'asc' => [ "`$templateTable`.`name`" => SORT_ASC ],
+	                'desc' => [ "`$templateTable`.`name`" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Template'
+	            ],
 				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'name'
+					'label' => 'Name'
 				],
 				'slug' => [
-					'asc' => [ 'slug' => SORT_ASC ],
-					'desc' => ['slug' => SORT_DESC ],
+					'asc' => [ "$modelTable.slug" => SORT_ASC ],
+					'desc' => [ "$modelTable.slug" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'slug'
+					'label' => 'Slug'
+				],
+				'title' => [
+					'asc' => [ "$modelTable.title" => SORT_ASC ],
+					'desc' => [ "$modelTable.title" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Title'
+				],
+	            'active' => [
+	                'asc' => [ "$modelTable.active" => SORT_ASC ],
+	                'desc' => [ "$modelTable.active" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Active'
+	            ],
+				'cdate' => [
+					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Created At'
+				],
+				'udate' => [
+					'asc' => [ "$modelTable.updatedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.updatedAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Updated At'
 				]
 			],
 			'defaultOrder' => [
@@ -125,14 +159,84 @@ class ObjectDataService extends EntityService implements IObjectService {
 			$config[ 'sort' ] = $sort;
 		}
 
-		return parent::findPage( $config );
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [
+				'name' => "$modelTable.name",
+				'slug' => "$modelTable.slug",
+				'title' =>  "$modelTable.title",
+				'template' => "$modelTable.template"
+			];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name",
+			'slug' => "$modelTable.slug",
+			'title' =>  "$modelTable.title",
+			'desc' =>  "$modelTable.description",
+			'template' => "$modelTable.template",
+			'active' => "$modelTable.active"
+		];
+
+		// Result -----------
+
+		$config[ 'conditions' ][ "$modelTable.type" ] = static::$parentType;
+
+		return parent::getPage( $config );
 	}
 
 	// Read ---------------
 
 	// Read - Models ---
 
+	public function getByName( $name ) {
+
+		return $this->getByNameType( $name, static::$parentType );
+	}
+
+	public function getFirstByName( $name ) {
+
+		return $this->getFirstByNameType( $name, static::$parentType );
+	}
+
 	// Read - Lists ----
+
+	public function getIdList( $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.type" ] = static::$parentType;
+
+		return parent::getIdList( $config );
+	}
+
+	public function getIdNameList( $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.type" ] = static::$parentType;
+
+		return parent::getIdNameList( $config );
+	}
 
 	// Read - Maps -----
 
@@ -179,7 +283,23 @@ class ObjectDataService extends EntityService implements IObjectService {
 		]);
 	}
 
-    protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete files
+		$this->fileService->deleteFiles( [ $model->avatar, $model->banner ] );
+
+		// Delete mapping
+		ModelObject::deleteByModelId( $model->id );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
+
+	// Bulk ---------------
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
 
@@ -199,22 +319,6 @@ class ObjectDataService extends EntityService implements IObjectService {
 			}
 		}
 	}
-
-	// Delete -------------
-
-	public function delete( $model, $config = [] ) {
-
-		// Delete files
-		$this->fileService->deleteFiles( [ $model->avatar, $model->banner ] );
-
-		// Delete mapping
-		ModelObject::deleteByModelId( $model->id );
-
-		// Delete model
-		return parent::delete( $model, $config );
-	}
-
-	// Bulk ---------------
 
 	// Notifications ------
 

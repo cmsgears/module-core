@@ -60,14 +60,20 @@ trait SlugTypeTrait {
 
 	// Read - Maps -----
 
-	public function getSlugModelMap() {
+	public function getSlugModelMap( $config = [] ) {
 
-		return $this->generateObjectMap( [ 'key' => 'slug' ] );
+		$config[ 'key' ] = 'slug';
+
+		return $this->generateObjectMap( $config );
 	}
 
-	public function getSlugModelMapByType( $type ) {
+	public function getSlugModelMapByType( $type, $config = [] ) {
 
-		return $this->generateObjectMap( [ 'key' => 'slug', 'conditions' => [ 'type' => $type ] ] );
+		$config[ 'key' ] = 'slug';
+
+		$config[ 'conditions' ][ 'type' ] = $type;
+
+		return $this->generateObjectMap( $config );
 	}
 
 	// Create -------------

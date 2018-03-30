@@ -67,11 +67,6 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	public static $modelClass	= '\cmsgears\core\common\models\entities\ObjectData';
 
 	/**
-	 * The model table used for advanced model operations.
-	 */
-	public static $modelTable	= null;
-
-	/**
 	 * The service must specify whether it's corresponding model supports type for classification
 	 * of the model.
 	 */
@@ -116,9 +111,18 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		return static::$modelClass;
 	}
 
+	public function getModelObject( $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+
+		return new $modelClass( $config );
+	}
+
 	public function getModelTable() {
 
-		return static::$modelTable;
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::tableName();
 	}
 
 	public function isTyped() {
@@ -177,9 +181,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	// Similar query considering category and tag for similarity
 	protected function generateSimilarQuery( $config = [] ) {
 
-		// DB Tables
-		$modelClass			= static::$modelClass;
-		$modelTable			= static::$modelTable;
+		// Model Class and Table
+		$modelClass	= static::$modelClass;
+		$modelTable = $modelClass::tableName();
 
 		$parentType			= isset( $config[ 'parentType' ] ) ? $config[ 'parentType' ] : static::$parentType;
 		$modelId			= isset( $config[ 'modelId' ] ) ? $config[ 'modelId' ] : null;
@@ -266,7 +270,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	public function getByIds( $ids = [], $config = [] ) {
 
-		$modelTable		= static::$modelTable;
+		// Model Class and Table
+		$modelClass	= static::$modelClass;
+		$modelTable = $modelClass::tableName();
 
 		$config[ 'filters' ][]	= [ 'in', "$modelTable.id", $ids ];
 
@@ -623,9 +629,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	protected static function applyPublicFilters( $config ) {
 
-		// model class
+		// Model Class and Table
 		$modelClass	= static::$modelClass;
-		$modelTable = static::$modelTable;
+		$modelTable = $modelClass::tableName();
 
 		// Public models
 		$public		= isset( $config[ 'public' ] ) ? $config[ 'public' ] : false;
@@ -652,9 +658,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	protected static function applySiteFilters( $config ) {
 
-		// model class
-		$modelClass		= static::$modelClass;
-		$modelTable 	= static::$modelTable;
+		// Model Class and Table
+		$modelClass	= static::$modelClass;
+		$modelTable = $modelClass::tableName();
 
 		// Filter sites
 		$siteOnly				= isset( $config[ 'siteOnly' ] ) ? $config[ 'siteOnly' ] : true;
@@ -891,10 +897,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public static function findPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable 	= static::$modelTable;
+		// Model Class and Table
+		$modelClass	= static::$modelClass;
+		$modelTable = $modelClass::tableName();
 
-		$sort			= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
+		$sort = isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
 
 		// Default sort
 		if( !$sort ) {
@@ -950,10 +957,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public static function findPageForSearch( $config = [] ) {
 
-		// Model
-		$modelClass			= static::$modelClass;
-		$modelTable			= static::$modelTable;
-		$parentType			= isset( $config[ 'parentType' ] ) ? $config[ 'parentType' ] : static::$parentType;
+		// Model Class and Table
+		$modelClass	= static::$modelClass;
+		$modelTable = $modelClass::tableName();
+
+		$parentType	= isset( $config[ 'parentType' ] ) ? $config[ 'parentType' ] : static::$parentType;
 
 		// Search in
 		$searchModel	 	= isset( $config[ 'searchModel' ] ) ? $config[ 'searchModel' ] : true; // Search in model name
@@ -1200,8 +1208,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public static function generateList( $config = [] ) {
 
-		// table name
-		$tableName		= static::$modelTable;
+		// Model Class and Table
+		$modelClass	= static::$modelClass;
+		$modelTable = $modelClass::tableName();
 
 		// query generation
 		$query			= new Query();
@@ -1214,7 +1223,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		// Conditions ----------
 
-		$query->select( $column )->from( $tableName );
+		$query->select( $column )->from( $modelTable );
 
 		if( isset( $conditions ) ) {
 
@@ -1277,8 +1286,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public static function generateNameValueList( $config = [] ) {
 
-		// table name
-		$tableName		= static::$modelTable;
+		// Model Class and Table
+		$modelClass	= static::$modelClass;
+		$modelTable = $modelClass::tableName();
 
 		// map columns
 		$nameColumn		= isset( $config[ 'nameColumn' ] ) ? $config[ 'nameColumn' ] : 'name';
@@ -1303,7 +1313,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		// Conditions ----------
 
 		$query->select( [ "$nameColumn as $nameAlias", "$valueColumn as $valueAlias" ] )
-			  ->from( $tableName );
+			  ->from( $modelTable );
 
 		if( isset( $conditions ) ) {
 

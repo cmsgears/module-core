@@ -10,7 +10,6 @@
 namespace cmsgears\core\common\models\traits\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Category;
 use cmsgears\core\common\models\mappers\ModelCategory;
 
@@ -48,7 +47,7 @@ trait CategoryTrait {
 	 */
 	public function getModelCategories() {
 
-		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
+		$modelCategoryTable = ModelCategory::tableName();
 
 		return $this->hasMany( ModelCategory::class, [ 'parentId' => 'id' ] )
 			->where( "$modelCategoryTable.parentType='$this->modelType'" );
@@ -59,7 +58,7 @@ trait CategoryTrait {
 	 */
 	public function getActiveModelCategories() {
 
-		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
+		$modelCategoryTable = ModelCategory::tableName();
 
 		return $this->hasMany( ModelCategory::class, [ 'parentId' => 'id' ] )
 			->where( "$modelCategoryTable.parentType='$this->modelType' AND $modelCategoryTable.active=1" );
@@ -70,7 +69,7 @@ trait CategoryTrait {
 	 */
 	public function getModelCategoriesByType( $type, $active = true ) {
 
-		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
+		$modelCategoryTable = ModelCategory::tableName();
 
 		return $this->hasOne( ModelCategory::class, [ 'parentId' => 'id' ] )
 			->where( "$modelCategoryTable.parentType=:ptype AND $modelCategoryTable.type=:type AND $modelCategoryTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
@@ -81,7 +80,7 @@ trait CategoryTrait {
 	 */
 	public function getCategories() {
 
-		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
+		$modelCategoryTable = ModelCategory::tableName();
 
 		return $this->hasMany( Category::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelCategoryTable, [ 'parentId' => 'id' ],
@@ -97,7 +96,7 @@ trait CategoryTrait {
 	 */
 	public function getActiveCategories() {
 
-		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
+		$modelCategoryTable = ModelCategory::tableName();
 
 		return $this->hasMany( Category::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelCategoryTable, [ 'parentId' => 'id' ],
@@ -113,7 +112,7 @@ trait CategoryTrait {
 	 */
 	public function getCategoriesByType( $type, $active = true ) {
 
-		$modelCategoryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_CATEGORY );
+		$modelCategoryTable = ModelCategory::tableName();
 
 		$categories = $this->hasMany( Category::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelCategoryTable, [ 'parentId' => 'id' ],

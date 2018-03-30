@@ -10,8 +10,6 @@
 namespace cmsgears\core\common\services\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
-
 use cmsgears\core\common\models\interfaces\base\IFollower;
 
 use cmsgears\core\common\services\interfaces\mappers\IModelFollowerService;
@@ -33,11 +31,7 @@ class ModelFollowerService extends ModelMapperService implements IModelFollowerS
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelFollower';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_FOLLOWER;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\mappers\ModelFollower';
 
 	// Protected --------------
 
@@ -74,7 +68,8 @@ class ModelFollowerService extends ModelMapperService implements IModelFollowerS
 	public static function getByFollower( $parentId, $parentType, $type = IFollower::TYPE_FOLLOW ) {
 
 		$modelClass = static::$modelClass;
-		$user		= Yii::$app->user->identity;
+
+		$user = Yii::$app->user->identity;
 
 		return $modelClass::findByParentModelIdType( $parentId, $parentType, $user->id, $type );
 	}
@@ -100,7 +95,8 @@ class ModelFollowerService extends ModelMapperService implements IModelFollowerS
 	public function getFollowCount( $parentType, $type = IFollower::TYPE_FOLLOW ) {
 
 		$modelClass = static::$modelClass;
-		$user		= Yii::$app->user->identity;
+
+		$user = Yii::$app->user->identity;
 
 		return IFollower::queryByTypeParentTypeModelId( $type, $parentType, $user->id )->andWhere( [ 'active' => true ] )->count();
 	}
@@ -160,14 +156,15 @@ class ModelFollowerService extends ModelMapperService implements IModelFollowerS
 	public function updateByParams( $params = [], $config = [] ) {
 
 		$modelClass = static::$modelClass;
-		$user		= Yii::$app->user->identity;
+
+		$user = Yii::$app->user->identity;
 
 		//$userId		= $params[ 'modelId' ];
 		$parentId	= $params[ 'parentId' ];
 		$parentType	= $params[ 'parentType' ];
 		$type		= $params[ 'type' ];
 
-		$follower	= $modelClass::findByParentModelIdType( $parentId, $parentType, $user->id, $type );
+		$follower = $modelClass::findByParentModelIdType( $parentId, $parentType, $user->id, $type );
 
 		if( isset( $follower ) ) {
 

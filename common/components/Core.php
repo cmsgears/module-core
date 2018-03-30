@@ -468,6 +468,7 @@ class Core extends \cmsgears\core\common\base\Component {
 		$factory = Yii::$app->factory->getContainer();
 
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IAddressService', 'cmsgears\core\common\services\resources\AddressService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\ILocationService', 'cmsgears\core\common\services\resources\LocationService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\ICategoryService', 'cmsgears\core\common\services\resources\CategoryService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IFileService', 'cmsgears\core\common\services\resources\FileService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IFormFieldService', 'cmsgears\core\common\services\resources\FormFieldService' );
@@ -490,6 +491,7 @@ class Core extends \cmsgears\core\common\base\Component {
 		$factory = Yii::$app->factory->getContainer();
 
 		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelAddressService', 'cmsgears\core\common\services\mappers\ModelAddressService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelLocationService', 'cmsgears\core\common\services\mappers\ModelLocationService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelCategoryService', 'cmsgears\core\common\services\mappers\ModelCategoryService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelFileService', 'cmsgears\core\common\services\mappers\ModelFileService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelFormService', 'cmsgears\core\common\services\mappers\ModelFormService' );
@@ -534,6 +536,7 @@ class Core extends \cmsgears\core\common\base\Component {
 		$factory = Yii::$app->factory->getContainer();
 
 		$factory->set( 'addressService', 'cmsgears\core\common\services\resources\AddressService' );
+		$factory->set( 'locationService', 'cmsgears\core\common\services\resources\LocationService' );
 		$factory->set( 'categoryService', 'cmsgears\core\common\services\resources\CategoryService' );
 		$factory->set( 'fileService', 'cmsgears\core\common\services\resources\FileService' );
 		$factory->set( 'formFieldService', 'cmsgears\core\common\services\resources\FormFieldService' );
@@ -556,6 +559,7 @@ class Core extends \cmsgears\core\common\base\Component {
 		$factory = Yii::$app->factory->getContainer();
 
 		$factory->set( 'modelAddressService', 'cmsgears\core\common\services\mappers\ModelAddressService' );
+		$factory->set( 'modelLocationService', 'cmsgears\core\common\services\mappers\ModelLocationService' );
 		$factory->set( 'modelCategoryService', 'cmsgears\core\common\services\mappers\ModelCategoryService' );
 		$factory->set( 'modelFileService', 'cmsgears\core\common\services\mappers\ModelFileService' );
 		$factory->set( 'modelFormService', 'cmsgears\core\common\services\mappers\ModelFormService' );

@@ -16,9 +16,6 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\Country;
-
 use cmsgears\core\common\services\interfaces\entities\ICountryService;
 
 use cmsgears\core\common\services\base\EntityService;
@@ -41,8 +38,6 @@ class CountryService extends EntityService implements ICountryService {
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\core\common\models\entities\Country';
-
-	public static $modelTable	= CoreTables::TABLE_COUNTRY;
 
 	public static $parentType	= CoreGlobal::TYPE_COUNTRY;
 
@@ -78,28 +73,34 @@ class CountryService extends EntityService implements ICountryService {
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'name'
 				],
 				'code' => [
-					'asc' => [ 'code' => SORT_ASC ],
-					'desc' => [ 'code' => SORT_DESC ],
+					'asc' => [ "$modelTable.code" => SORT_ASC ],
+					'desc' => [ "$modelTable.code" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Code'
 				],
 				'iso' => [
-					'asc' => [ 'iso' => SORT_ASC ],
-					'desc' => [ 'iso' => SORT_DESC ],
+					'asc' => [ "$modelTable.iso" => SORT_ASC ],
+					'desc' => [ "$modelTable.iso" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'ISO'
 				]
@@ -148,7 +149,9 @@ class CountryService extends EntityService implements ICountryService {
 
 	public function getByCode( $code ) {
 
-		return Country::findByCode( $code );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByCode( $code );
 	}
 
 	// Read - Lists ----
@@ -170,6 +173,10 @@ class CountryService extends EntityService implements ICountryService {
 		]);
 	}
 
+	// Delete -------------
+
+	// Bulk ---------------
+
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
@@ -190,10 +197,6 @@ class CountryService extends EntityService implements ICountryService {
 			}
 		}
 	}
-
-	// Delete -------------
-
-	// Bulk ---------------
 
 	// Notifications ------
 

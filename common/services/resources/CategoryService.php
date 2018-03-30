@@ -16,11 +16,6 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\Category;
-use cmsgears\core\common\models\resources\Option;
-use cmsgears\core\common\models\mappers\ModelCategory;
-
 use cmsgears\core\common\services\interfaces\resources\ICategoryService;
 
 use cmsgears\core\common\services\base\ResourceService;
@@ -47,8 +42,6 @@ class CategoryService extends ResourceService implements ICategoryService {
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\core\common\models\resources\Category';
-
-	public static $modelTable	= CoreTables::TABLE_CATEGORY;
 
 	public static $typed		= true;
 
@@ -90,16 +83,16 @@ class CategoryService extends ResourceService implements ICategoryService {
 
 	public function getPage( $config = [] ) {
 
-		$modelTable = static::$modelTable;
 		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
 				'id' => [
-					'asc' => [ 'id' => SORT_ASC ],
-					'desc' => [ 'id' => SORT_DESC ],
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
@@ -107,7 +100,7 @@ class CategoryService extends ResourceService implements ICategoryService {
 					'asc' => [ 'parent.name' => SORT_ASC ],
 					'desc' => [ 'parent.name' => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'Parent',
+					'label' => 'Parent'
 				],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
@@ -155,7 +148,10 @@ class CategoryService extends ResourceService implements ICategoryService {
 
 		// Query ------------
 
-		$query 	= $modelClass::find()->joinWith( 'parent' );
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$query 	= $modelClass::find()->joinWith( 'parent' );
+		}
 
 		// Filters ----------
 
@@ -192,7 +188,10 @@ class CategoryService extends ResourceService implements ICategoryService {
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'desc' => "$modelTable.description" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'desc' => "$modelTable.description"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -200,8 +199,11 @@ class CategoryService extends ResourceService implements ICategoryService {
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'desc' => "$modelTable.description",
-			'pname' => 'parent.name', 'pdesc' => 'parent.description'
+			'name' => "$modelTable.name",
+			'slug' => "$modelTable.slug",
+			'desc' => "$modelTable.description",
+			'pname' => 'parent.name',
+			'pdesc' => 'parent.description'
 		];
 
 		// Result -----------
@@ -217,12 +219,16 @@ class CategoryService extends ResourceService implements ICategoryService {
 
 	public function getByParentId( $id ) {
 
-		return Category::findByParentId( $id );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByParentId( $id );
 	}
 
 	public function getFeaturedByType( $type ) {
 
-		return Category::getFeaturedByType( $type );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findFeaturedByType( $type );
 	}
 
 	public function getL0ByType( $type ) {
@@ -243,7 +249,7 @@ class CategoryService extends ResourceService implements ICategoryService {
 
 	public function getTopLevelIdNameListById( $id, $config = [] ) {
 
-		$category	= self::findById( $id );
+		$category = self::findById( $id );
 
 		return $this->getSubLevelList( $category->id, $category->rootId, [ 'having' => 'depth = 1' ] );
 	}
@@ -261,9 +267,7 @@ class CategoryService extends ResourceService implements ICategoryService {
 
 	public function create( $model, $config = [] ) {
 
-		$model	= $this->createInHierarchy( $model );
-
-		return $model;
+		return $this->createInHierarchy( $model );
 	}
 
 	// Update -------------
@@ -300,6 +304,25 @@ class CategoryService extends ResourceService implements ICategoryService {
 			'attributes' => [ 'featured' ]
 		]);
 	}
+
+	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete mapping
+		Yii::$app->get( 'modelCategoryService' )->deleteByModelId( $model->id );
+
+		// Delete options and mappings - mappings will be deleted by cascade effect
+		Yii::$app->get( 'optionService' )->deleteByCategoryId( $model->id );
+
+		// Update Hierarchy
+		$model = $this->deleteInHierarchy( $model );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -342,25 +365,6 @@ class CategoryService extends ResourceService implements ICategoryService {
 		}
 	}
 
-	// Delete -------------
-
-	public function delete( $model, $config = [] ) {
-
-		// Delete mapping
-		ModelCategory::deleteByModelId( $model->id );
-
-		// Delete options and mappings - mappings will be deleted by cascade effect
-		Option::deleteByCategoryId( $model->id );
-
-		// Update Hierarchy
-		$model = $this->deleteInHierarchy( $model );
-
-		// Delete model
-		return parent::delete( $model, $config );
-	}
-
-	// Bulk ---------------
-
 	// Notifications ------
 
 	// Cache --------------
@@ -378,16 +382,6 @@ class CategoryService extends ResourceService implements ICategoryService {
 	// Read ---------------
 
 	// Read - Models ---
-
-	public static function findByParentId( $id ) {
-
-		return Category::findByParentId( $id );
-	}
-
-	public static function findFeaturedByType( $type ) {
-
-		return Category::getFeaturedByType( $type );
-	}
 
 	// Read - Lists ----
 

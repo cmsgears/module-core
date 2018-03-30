@@ -10,8 +10,6 @@
 namespace cmsgears\core\common\services\resources;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
-
 use cmsgears\core\common\services\interfaces\resources\IStatsService;
 
 use cmsgears\core\common\services\base\ResourceService;
@@ -31,11 +29,7 @@ class StatsService extends ResourceService implements IStatsService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\Stats';
-
-	public static $modelTable	= CoreTables::TABLE_STATS;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\resources\Stats';
 
 	// Protected --------------
 

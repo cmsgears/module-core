@@ -10,7 +10,6 @@
 namespace cmsgears\core\common\models\traits\resources;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\File;
 
 /**
@@ -51,7 +50,7 @@ trait VisualTrait {
 	 */
 	public function getAvatar() {
 
-		$fileTable	= CoreTables::getTableName( CoreTables::TABLE_FILE );
+		$fileTable	= File::tableName();
 
 		return $this->hasOne( File::class, [ 'id' => 'avatarId' ] )->from( "$fileTable as avatar" );
 	}
@@ -72,7 +71,7 @@ trait VisualTrait {
 	 */
 	public function getBanner() {
 
-		$fileTable	= CoreTables::getTableName( CoreTables::TABLE_FILE );
+		$fileTable	= File::tableName();
 
 		return $this->hasOne( File::class, [ 'id' => 'bannerId' ] )->from( "$fileTable as banner" );
 	}
@@ -93,7 +92,7 @@ trait VisualTrait {
 	 */
 	public function getVideo() {
 
-		$fileTable	= CoreTables::getTableName( CoreTables::TABLE_FILE );
+		$fileTable	= File::tableName();
 
 		return $this->hasOne( File::class, [ 'id' => 'videoId' ] )->from( "$fileTable as video" );
 	}

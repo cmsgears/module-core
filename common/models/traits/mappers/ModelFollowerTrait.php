@@ -12,7 +12,6 @@ namespace cmsgears\core\common\models\traits\mappers;
 // CMG Imports
 use cmsgears\core\common\models\interfaces\base\IFollower;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\mappers\ModelFollower;
 
@@ -56,7 +55,7 @@ trait ModelFollowerTrait {
 	 */
 	public function getModelFollowers() {
 
-		$modelFollowerTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FOLLOWER );
+		$modelFollowerTable = ModelFollower::tableName();
 
 		return $this->hasMany( ModelFollower::class, [ 'parentId' => 'id' ] )
 			->where( "$modelFollowerTable.parentType='$this->modelType'" );
@@ -67,7 +66,7 @@ trait ModelFollowerTrait {
 	 */
 	public function getActiveModelFollowers() {
 
-		$modelFollowerTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FOLLOWER );
+		$modelFollowerTable = ModelFollower::tableName();
 
 		return $this->hasMany( ModelFollower::class, [ 'parentId' => 'id' ] )
 			->where( "$modelFollowerTable.parentType='$this->modelType' AND $modelFollowerTable.active=1" );
@@ -78,7 +77,7 @@ trait ModelFollowerTrait {
 	 */
 	public function getModelFollowersByType( $type, $active = true ) {
 
-		$modelFollowerTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FOLLOWER );
+		$modelFollowerTable = ModelFollower::tableName();
 
 		return $this->hasOne( ModelFollower::class, [ 'parentId' => 'id' ] )
 			->where( "$modelFollowerTable.parentType=:ptype AND $modelFollowerTable.type=:type AND $modelFollowerTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
@@ -89,7 +88,7 @@ trait ModelFollowerTrait {
 	 */
 	public function getFollowers() {
 
-		$modelFollowerTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FOLLOWER );
+		$modelFollowerTable = ModelFollower::tableName();
 
 		return $this->hasMany( User::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelFollowerTable, [ 'parentId' => 'id' ],
@@ -105,7 +104,7 @@ trait ModelFollowerTrait {
 	 */
 	public function getActiveFollowers() {
 
-		$modelFollowerTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FOLLOWER );
+		$modelFollowerTable = ModelFollower::tableName();
 
 		return $this->hasMany( User::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelFollowerTable, [ 'parentId' => 'id' ],
@@ -121,7 +120,7 @@ trait ModelFollowerTrait {
 	 */
 	public function getFollowersByType( $type, $active = true ) {
 
-		$modelFollowerTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_FOLLOWER );
+		$modelFollowerTable = ModelFollower::tableName();
 
 		$users = $this->hasMany( User::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelFollowerTable, [ 'parentId' => 'id' ],
@@ -148,7 +147,7 @@ trait ModelFollowerTrait {
 			IFollower::TYPE_WISHLIST => [ 0 => 0, 1 => 0 ]
 		];
 
-		$followerTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_FOLLOWER );
+		$followerTable	= ModelFollower::tableName();
 		$query			= new Query();
 
     	$query->select( [ 'type', 'active', 'count(id) as total' ] )
@@ -232,7 +231,7 @@ trait ModelFollowerTrait {
 
 		if( isset( $user ) ) {
 
-			$followerTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_FOLLOWER );
+			$followerTable	= ModelFollower::tableName();
 			$query			= new Query();
 
 	    	$query->select( [ 'type', 'active' ] )

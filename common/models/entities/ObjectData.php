@@ -112,9 +112,9 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_OBJECT;
+	protected $modelType = CoreGlobal::TYPE_OBJECT;
 
-	protected $testOwner	= false;
+	protected $testOwner = false;
 
 	// Private ----------------
 
@@ -157,8 +157,9 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
 				'slugAttribute' => 'slug', // Unique for combination of Site Id and Theme Id
+				'immutable' => true,
 				'ensureUnique' => true,
-				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'themeId' ] ]
+				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'themeId', 'slug' ] ]
 			],
 			'timestampBehavior' => [
 				'class' => TimestampBehavior::class,

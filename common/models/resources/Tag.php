@@ -71,7 +71,7 @@ class Tag extends Resource implements IAuthor, IMultiSite, INameType, ISlugType 
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_TAG;
+	protected $modelType = CoreGlobal::TYPE_TAG;
 
 	// Private ----------------
 
@@ -101,9 +101,10 @@ class Tag extends Resource implements IAuthor, IMultiSite, INameType, ISlugType 
 			'sluggableBehavior' => [
 				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
-				'slugAttribute' => 'slug', // Unique for Site Id
+				'slugAttribute' => 'slug', // Unique for Site Id and Type
+				'immutable' => true,
 				'ensureUnique' => true,
-				'uniqueValidator' => [ 'targetAttribute' => 'siteId' ]
+				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'slug', 'type' ] ]
 			],
 			'timestampBehavior' => [
 				'class' => TimestampBehavior::class,

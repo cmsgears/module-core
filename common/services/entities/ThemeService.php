@@ -16,7 +16,6 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Theme;
 
 use cmsgears\core\common\services\interfaces\entities\IThemeService;
@@ -43,8 +42,6 @@ class ThemeService extends EntityService implements IThemeService {
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\core\common\models\entities\Theme';
-
-	public static $modelTable	= CoreTables::TABLE_THEME;
 
 	public static $parentType	= CoreGlobal::TYPE_THEME;
 
@@ -82,13 +79,19 @@ class ThemeService extends EntityService implements IThemeService {
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 	            'name' => [
 	                'asc' => [ "$modelTable.name" => SORT_ASC ],
 	                'desc' => [ "$modelTable.name" => SORT_DESC ],
@@ -156,7 +159,11 @@ class ThemeService extends EntityService implements IThemeService {
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'desc' => "$modelTable.description", 'content' => "$modelTable.content" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'desc' => "$modelTable.description",
+				'content' => "$modelTable.content"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -164,8 +171,11 @@ class ThemeService extends EntityService implements IThemeService {
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'desc' => "$modelTable.description", 'content' => "$modelTable.content",
-			'default' => "$modelTable.default", 'renderer' => "$modelTable.renderer"
+			'name' => "$modelTable.name",
+			'desc' => "$modelTable.description",
+			'content' => "$modelTable.content",
+			'default' => "$modelTable.default",
+			'renderer' => "$modelTable.renderer"
 		];
 
 		// Result -----------
@@ -190,7 +200,9 @@ class ThemeService extends EntityService implements IThemeService {
 		// Uncheck default for all other themes
 		if( $model->default ) {
 
-			Theme::updateAll( [ 'default' => false ], '`default`=1' );
+			$modelClass	= static::$modelClass;
+
+			$modelClass::updateAll( [ 'default' => false ], '`default`=1' );
 		}
 
 		return parent::create( $model );
@@ -205,7 +217,9 @@ class ThemeService extends EntityService implements IThemeService {
 		// Uncheck default for all other themes
 		if( $model->default ) {
 
-			Theme::updateAll( [ 'default' => false ], '`default`=1' );
+			$modelClass	= static::$modelClass;
+
+			$modelClass::updateAll( [ 'default' => false ], '`default`=1' );
 		}
 
 		return parent::update( $model, [
@@ -222,6 +236,8 @@ class ThemeService extends EntityService implements IThemeService {
 	 */
 	public function makeDefault( Theme $model, $config = [] ) {
 
+		$modelClass	= static::$modelClass;
+
 		$type = CoreGlobal::TYPE_SITE;
 
 		if( $model->type !== $type ) {
@@ -230,7 +246,7 @@ class ThemeService extends EntityService implements IThemeService {
 		}
 
 		// Disable All
-		Theme::updateAll( [ 'default' => false ], "`default`=1 AND `type`='$type'" );
+		$modelClass::updateAll( [ 'default' => false ], "`default`=1 AND `type`='$type'" );
 
 		// Make Default
 		$model->default = true;
@@ -240,6 +256,10 @@ class ThemeService extends EntityService implements IThemeService {
 			'attributes' => [ 'default' ]
 		]);
 	}
+
+	// Delete -------------
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -261,10 +281,6 @@ class ThemeService extends EntityService implements IThemeService {
 			}
 		}
 	}
-
-	// Delete -------------
-
-	// Bulk ---------------
 
 	// Notifications ------
 

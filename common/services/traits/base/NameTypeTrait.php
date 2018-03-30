@@ -45,55 +45,55 @@ trait NameTypeTrait {
 
 	// Read - Models ---
 
-	public function getByName( $name ) {
+	public function getByName( $name, $config = [] ) {
 
 		$modelClass = static::$modelClass;
 
-		return $modelClass::findByName( $name );
+		return $modelClass::findByName( $name, $config );
 	}
 
 	/**
 	 * Useful for models having unique name irrespective of their type.
 	 */
-	public function getFirstByName( $name ) {
+	public function getFirstByName( $name, $config = [] ) {
 
 		$modelClass = static::$modelClass;
 
-		return $modelClass::FindFirstByName( $name );
+		return $modelClass::findFirstByName( $name, $config );
 	}
 
-	public function getByType( $type ) {
+	public function getByType( $type, $config = [] ) {
 
 		$modelClass = static::$modelClass;
 
-		return $modelClass::findByType( $type );
+		return $modelClass::findByType( $type, $config );
 	}
 
 	/**
 	 * Useful for models having only one row for a type.
 	 */
-	public function getFirstByType( $type ) {
+	public function getFirstByType( $type, $config = [] ) {
 
 		$modelClass = static::$modelClass;
 
-		return $modelClass::findFirstByType( $type );
+		return $modelClass::findFirstByType( $type, $config );
 	}
 
-	public function getByNameType( $name, $type ) {
+	public function getByNameType( $name, $type, $config = [] ) {
 
 		$modelClass = static::$modelClass;
 
-		return $modelClass::findByNameType( $name, $type );
+		return $modelClass::findByNameType( $name, $type, $config );
 	}
 
 	/**
 	 * Useful for models having unique name for type.
 	 */
-	public function getFirstByNameType( $name, $type ) {
+	public function getFirstByNameType( $name, $type, $config = [] ) {
 
 		$modelClass = static::$modelClass;
 
-		return $modelClass::findFirstByNameType( $name, $type );
+		return $modelClass::findFirstByNameType( $name, $type, $config );
 	}
 
 	public function searchByName( $name, $config = [] ) {

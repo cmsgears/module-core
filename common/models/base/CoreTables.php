@@ -49,6 +49,7 @@ class CoreTables extends DbTables {
 
 	// Address
 	const TABLE_ADDRESS				= 'cmg_core_address';
+	const TABLE_LOCATION			= 'cmg_core_location';
 
 	// Image Gallery, Portfolio
 	const TABLE_GALLERY				= 'cmg_core_gallery';
@@ -80,6 +81,7 @@ class CoreTables extends DbTables {
 	// Model Mappers
 	const TABLE_MODEL_OBJECT		= 'cmg_core_model_object';
 	const TABLE_MODEL_ADDRESS		= 'cmg_core_model_address';
+	const TABLE_MODEL_LOCATION		= 'cmg_core_model_location';
 	const TABLE_MODEL_FILE			= 'cmg_core_model_file';
 	const TABLE_MODEL_GALLERY		= 'cmg_core_model_gallery';
 	const TABLE_MODEL_TAG			= 'cmg_core_model_tag';

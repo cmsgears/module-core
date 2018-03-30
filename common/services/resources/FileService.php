@@ -16,9 +16,7 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\File;
-use cmsgears\core\common\models\mappers\ModelFile;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
@@ -43,8 +41,6 @@ class FileService extends ResourceService implements IFileService {
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\core\common\models\resources\File';
-
-	public static $modelTable	= CoreTables::TABLE_FILE;
 
 	public static $parentType	= CoreGlobal::TYPE_FILE;
 
@@ -81,76 +77,76 @@ class FileService extends ResourceService implements IFileService {
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
 				'id' => [
-					'asc' => [ 'id' => SORT_ASC ],
-					'desc' => [ 'id' => SORT_DESC ],
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
 				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Name'
 				],
 				'title' => [
-					'asc' => [ 'title' => SORT_ASC ],
-					'desc' => [ 'title' => SORT_DESC ],
+					'asc' => [ "$modelTable.title" => SORT_ASC ],
+					'desc' => [ "$modelTable.title" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Title'
 				],
 				'extension' => [
-					'asc' => [ 'extension' => SORT_ASC ],
-					'desc' => [ 'extension' => SORT_DESC ],
+					'asc' => [ "$modelTable.extension" => SORT_ASC ],
+					'desc' => [ "$modelTable.extension" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Extension'
 				],
 				'directory' => [
-					'asc' => [ 'directory' => SORT_ASC ],
-					'desc' => [ 'directory' => SORT_DESC ],
+					'asc' => [ "$modelTable.directory" => SORT_ASC ],
+					'desc' => [ "$modelTable.directory" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Directory'
 				],
 				'size' => [
-					'asc' => [ 'size' => SORT_ASC ],
-					'desc' => [ 'size' => SORT_DESC ],
+					'asc' => [ "$modelTable.size" => SORT_ASC ],
+					'desc' => [ "$modelTable.size" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Size'
 				],
 				'url' => [
-					'asc' => [ 'url' => SORT_ASC ],
-					'desc' => [ 'url' => SORT_DESC ],
+					'asc' => [ "$modelTable.url" => SORT_ASC ],
+					'desc' => [ "$modelTable.url" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Path'
 				],
 				'visibility' => [
-					'asc' => [ 'visibility' => SORT_ASC ],
-					'desc' => [ 'visibility' => SORT_DESC ],
+					'asc' => [ "$modelTable.visibility" => SORT_ASC ],
+					'desc' => [ "$modelTable.visibility" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Visibility'
 				],
 				'shared' => [
-					'asc' => [ 'shared' => SORT_ASC ],
-					'desc' => [ 'shared' => SORT_DESC ],
+					'asc' => [ "$modelTable.shared" => SORT_ASC ],
+					'desc' => [ "$modelTable.shared" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Shared'
 				],
 	            'cdate' => [
-	                'asc' => [ 'createdAt' => SORT_ASC ],
-	                'desc' => ['createdAt' => SORT_DESC ],
+	                'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Created At'
 	            ],
 	            'udate' => [
-	                'asc' => [ 'modifiedAt' => SORT_ASC ],
-	                'desc' => ['modifiedAt' => SORT_DESC ],
+	                'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Updated At'
 	            ]
@@ -188,7 +184,11 @@ class FileService extends ResourceService implements IFileService {
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'title' => "$modelTable.title", 'extension' => "$modelTable.extension", 'directory' => "$modelTable.directory" ];
+			$search = [
+				'title' => "$modelTable.title",
+				'extension' => "$modelTable.extension",
+				'directory' => "$modelTable.directory"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -196,7 +196,9 @@ class FileService extends ResourceService implements IFileService {
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'title' => "$modelTable.title", 'extension' => "$modelTable.extension", 'directory' => "$modelTable.directory",
+			'title' => "$modelTable.title",
+			'extension' => "$modelTable.extension",
+			'directory' => "$modelTable.directory",
 			'visibility' => "$modelTable.visibility"
 		];
 
@@ -231,7 +233,7 @@ class FileService extends ResourceService implements IFileService {
 	public function create( $model, $config = [] ) {
 
 		// model class
-		$modelClass		= static::$modelClass;
+		$modelClass = static::$modelClass;
 
 		// Default visibility
 		if( !isset( $model->visibility ) ) {
@@ -244,7 +246,6 @@ class FileService extends ResourceService implements IFileService {
 		if( $siteId ) {
 
 			$model->siteId = $siteId;
-
 		}
 
 		// Default sharing
@@ -269,12 +270,12 @@ class FileService extends ResourceService implements IFileService {
 		if( $model->changed ) {
 
 			// Find existing file
-			$existingFile	= self::findById( $model->id );
+			$existingFile = self::findById( $model->id );
 
 			// Delete from disk
 			$existingFile->clearDisk();
 
-			$attributes[]	= 'size';
+			$attributes[] = 'size';
 		}
 
 		return parent::update( $model, [
@@ -482,6 +483,46 @@ class FileService extends ResourceService implements IFileService {
 		}
 	}
 
+	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		$admin	= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		if( isset( $model ) ) {
+
+			// Only admin is authorised to delete a shared file
+			if( $admin || $model->type !== 'shared' ) {
+
+				// Delete mapping
+				Yii::$app->get( 'modelFileService' )->deleteByModelId( $model->id );
+
+				// Delete from disk
+				$model->clearDisk();
+
+				// Delete model
+				return parent::delete( $model, $config );
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public function deleteFiles( $files = [] ) {
+
+		foreach ( $files as $file ) {
+
+			if( isset( $file ) ) {
+
+				$this->delete( $file );
+			}
+		}
+	}
+
+	// Bulk ---------------
+
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
@@ -520,46 +561,6 @@ class FileService extends ResourceService implements IFileService {
 			}
 		}
 	}
-
-	// Delete -------------
-
-	public function delete( $model, $config = [] ) {
-
-		$admin	= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
-
-		if( isset( $model ) ) {
-
-			// Only admin is authorised to delete a shared file
-			if( $admin || $model->type !== 'shared' ) {
-
-				// Delete mapping
-				ModelFile::deleteByModelId( $model->id );
-
-				// Delete from disk
-				$model->clearDisk();
-
-				// Delete model
-				return parent::delete( $model, $config );
-			}
-
-			return true;
-		}
-
-		return false;
-	}
-
-	public function deleteFiles( $files = [] ) {
-
-		foreach ( $files as $file ) {
-
-			if( isset( $file ) ) {
-
-				$this->delete( $file );
-			}
-		}
-	}
-
-	// Bulk ---------------
 
 	// Notifications ------
 

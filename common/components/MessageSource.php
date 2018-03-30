@@ -173,6 +173,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_ROLE => 'Role',
 		CoreGlobal::FIELD_PERMISSION => 'Permission',
 		CoreGlobal::FIELD_GENDER => 'Gender',
+		CoreGlobal::FIELD_AGE => 'Age',
 		CoreGlobal::FIELD_PARENT => 'Parent',
 		CoreGlobal::FIELD_PARENT_TYPE => 'Parent Type',
 		CoreGlobal::FIELD_LOCALE => 'Locale',

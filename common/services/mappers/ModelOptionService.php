@@ -13,9 +13,6 @@ namespace cmsgears\core\common\services\mappers;
 use yii\db\Query;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\mappers\ModelOption;
-
 use cmsgears\core\common\services\interfaces\resources\IOptionService;
 use cmsgears\core\common\services\interfaces\mappers\IModelOptionService;
 
@@ -36,11 +33,7 @@ class ModelOptionService extends  ModelMapperService implements IModelOptionServ
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelOption';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_OPTION;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\mappers\ModelOption';
 
 	// Protected --------------
 
@@ -60,7 +53,7 @@ class ModelOptionService extends  ModelMapperService implements IModelOptionServ
 
 	public function __construct( IOptionService $optionService, $config = [] ) {
 
-		$this->optionService	= $optionService;
+		$this->optionService = $optionService;
 
 		parent::__construct( $config );
 	}
@@ -83,10 +76,11 @@ class ModelOptionService extends  ModelMapperService implements IModelOptionServ
 
 	public function getModelCounts( $parentType, $categorySlug, $active = false ) {
 
-		$categoryTable	= CoreTables::TABLE_CATEGORY;
-		$optionTable	= CoreTables::TABLE_OPTION;
-		$mOptionTable	= CoreTables::TABLE_MODEL_OPTION;
-		$query			= new Query();
+		$categoryTable	= Yii::$app->get( 'categoryService' )->getModelTable();
+		$optionTable	= Yii::$app->get( 'optionService' )->getModelTable();
+		$mOptionTable	= Yii::$app->get( 'modelOptionService' )->getModelTable();
+
+		$query = new Query();
 
 		$query->select( [ "$optionTable.name", "count($optionTable.id) as total" ] )
 				->from( $optionTable )
@@ -100,7 +94,8 @@ class ModelOptionService extends  ModelMapperService implements IModelOptionServ
 			$query->andWhere( "$mOptionTable.active=$active" );
 		}
 
-		$counts		= $query->all();
+		$counts	= $query->all();
+
 		$returnArr	= [];
 		$counter	= 0;
 
@@ -108,7 +103,7 @@ class ModelOptionService extends  ModelMapperService implements IModelOptionServ
 
 			$returnArr[ $count[ 'name' ] ] = $count[ 'total' ];
 
-			$counter	= $counter + $count[ 'total' ];
+			$counter = $counter + $count[ 'total' ];
 		}
 
 		$returnArr[ 'all' ] = $counter;
@@ -140,7 +135,9 @@ class ModelOptionService extends  ModelMapperService implements IModelOptionServ
 
 	public function toggle( $parentId, $parentType, $modelId ) {
 
-		$toSave		= ModelOption::findByModelId( $parentId, $parentType, $modelId );
+		$modelClass	= static::$modelClass;
+
+		$toSave	= $modelClass::findByModelId( $parentId, $parentType, $modelId );
 
 		// Existing mapping
 		if( isset( $toSave ) ) {
@@ -161,6 +158,42 @@ class ModelOptionService extends  ModelMapperService implements IModelOptionServ
 
 			$this->createByParams( [ 'modelId' => $modelId, 'parentId' => $parentId, 'parentType' => $parentType, 'active' => true ] );
 		}
+	}
+
+	public function bindOptions( $binder, $parentType ) {
+
+		$parentId	= $binder->binderId;
+		$allData	= $binder->all;
+		$activeData	= $binder->binded;
+
+		foreach ( $allData as $id ) {
+
+			$modelClass	= static::$modelClass;
+
+			$toSave = $modelClass::findByModelId( $parentId, $parentType, $id );
+
+			// Existing mapping
+			if( isset( $toSave ) ) {
+
+				if( in_array( $id, $activeData ) ) {
+
+					$toSave->active	= true;
+				}
+				else {
+
+					$toSave->active	= false;
+				}
+
+				$toSave->update();
+			}
+			// Save only required data
+			else if( in_array( $id, $activeData ) ) {
+
+				$this->createByParams( [ 'modelId' => $id, 'parentId' => $parentId, 'parentType' => $parentType, 'active' => true ] );
+			}
+		}
+
+		return true;
 	}
 
 	// Delete -------------
@@ -194,40 +227,6 @@ class ModelOptionService extends  ModelMapperService implements IModelOptionServ
 	// Create -------------
 
 	// Update -------------
-
-	public function bindOptions( $binder, $parentType ) {
-
-		$parentId	= $binder->binderId;
-		$allData	= $binder->all;
-		$activeData	= $binder->binded;
-
-		foreach ( $allData as $id ) {
-
-			$toSave		= ModelOption::findByModelId( $parentId, $parentType, $id );
-
-			// Existing mapping
-			if( isset( $toSave ) ) {
-
-				if( in_array( $id, $activeData ) ) {
-
-					$toSave->active	= true;
-				}
-				else {
-
-					$toSave->active	= false;
-				}
-
-				$toSave->update();
-			}
-			// Save only required data
-			else if( in_array( $id, $activeData ) ) {
-
-				$this->createByParams( [ 'modelId' => $id, 'parentId' => $parentId, 'parentType' => $parentType, 'active' => true ] );
-			}
-		}
-
-		return true;
-	}
 
 	// Delete -------------
 

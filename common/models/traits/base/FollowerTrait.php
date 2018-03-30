@@ -50,6 +50,14 @@ trait FollowerTrait {
 
 	// Read - Query -----------
 
+    public static function queryWithFollowers( $config = [] ) {
+
+        $relations              = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'followers' ];
+        $config[ 'relations' ]  = $relations;
+
+        return parent::queryWithAll( $config );
+    }
+
 	// Read - Find ------------
 
 	// Create -----------------

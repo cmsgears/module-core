@@ -13,9 +13,7 @@ namespace cmsgears\core\common\services\mappers;
 use Yii;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Address;
-use cmsgears\core\common\models\mappers\ModelAddress;
 
 use cmsgears\core\common\services\interfaces\mappers\IModelAddressService;
 
@@ -36,11 +34,7 @@ class ModelAddressService extends ModelMapperService implements IModelAddressSer
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelAddress';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_ADDRESS;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\mappers\ModelAddress';
 
 	// Protected --------------
 
@@ -62,7 +56,7 @@ class ModelAddressService extends ModelMapperService implements IModelAddressSer
 
 		parent::init();
 
-		$this->addressService	= Yii::$app->factory->get( 'addressService' );
+		$this->addressService = Yii::$app->factory->get( 'addressService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -85,7 +79,9 @@ class ModelAddressService extends ModelMapperService implements IModelAddressSer
 
 	public function getByType( $parentId, $parentType, $type, $first = false ) {
 
-		return ModelAddress::findByType( $parentId, $parentType, $type, $first );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByType( $parentId, $parentType, $type, $first );
 	}
 
 	// Read - Lists ----
@@ -104,10 +100,10 @@ class ModelAddressService extends ModelMapperService implements IModelAddressSer
 		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
 		// Create Address
-		$address	= $this->addressService->create( $address );
+		$address = $this->addressService->create( $address );
 
 		// Create Model Address
-		$modelAddress				= new ModelAddress();
+		$modelAddress = $this->getModelObject();
 
 		$modelAddress->modelId		= $address->id;
 		$modelAddress->parentId		= $parentId;
@@ -125,12 +121,13 @@ class ModelAddressService extends ModelMapperService implements IModelAddressSer
 
 		$parentId	= $config[ 'parentId' ];
 		$parentType = $config[ 'parentType' ];
-		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
-		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
+
+		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+		$order	= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
 		if( isset( $address->id ) && !empty( $address->id ) ) {
 
-			$existingAddress	= $this->getByModelId( $parentId, $parentType, $address->id );
+			$existingAddress = $this->getByModelId( $parentId, $parentType, $address->id );
 
 			if( isset( $existingAddress ) ) {
 
@@ -147,17 +144,18 @@ class ModelAddressService extends ModelMapperService implements IModelAddressSer
 
 		$parentId	= $config[ 'parentId' ];
 		$parentType = $config[ 'parentType' ];
-		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
-		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
-		$existingAddress	= $this->getByType( $parentId, $parentType, $type, true );
+		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+		$order	= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
+
+		$existingAddress = $this->getByType( $parentId, $parentType, $type, true );
 
 		if( isset( $existingAddress ) ) {
 
-			$addressToUpdate	= $existingAddress->model;
+			$addressToUpdate = $existingAddress->model;
 
 			$addressToUpdate->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'cityName', 'zip',
-											'firstName', 'lastName', 'phone', 'email', 'fax', 'longitude', 'latitude', 'zoomLevel' ] );
+								'firstName', 'lastName', 'phone', 'email', 'fax', 'longitude', 'latitude', 'zoomLevel' ] );
 
 			$this->addressService->update( $addressToUpdate, $config );
 
@@ -180,7 +178,7 @@ class ModelAddressService extends ModelMapperService implements IModelAddressSer
 
 		$config[ 'type' ]	= Address::TYPE_SHIPPING;
 
-		$shippingAddress	= new Address();
+		$shippingAddress	= Yii::$app->get( 'addressService' )->getModelObject();
 
 		$shippingAddress->copyForUpdateFrom( $address, [ 'countryId', 'provinceId', 'line1', 'line2', 'line3', 'cityName', 'zip', 'firstName', 'lastName', 'phone', 'email', 'fax' ] );
 

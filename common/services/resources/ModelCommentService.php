@@ -16,7 +16,6 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\ModelComment;
 
 use cmsgears\files\components\FileManager;
@@ -45,8 +44,6 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelComment';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_COMMENT;
 
 	public static $parentType	= CoreGlobal::TYPE_COMMENT;
 
@@ -93,16 +90,16 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
 				'id' => [
-					'asc' => [ 'id' => SORT_ASC ],
-					'desc' => [ 'id' => SORT_DESC ],
+					'asc' => [ "$modelClass.id" => SORT_ASC ],
+					'desc' => [ "$modelClass.id" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
@@ -193,8 +190,10 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 		if( isset( $searchCol ) ) {
 
 			$search = [
-				'user' => "concat(creator.firstName,creator.lastName)", 'name' => "$modelTable.name",
-				'email' =>  "$modelTable.email", 'content' => "$modelTable.content"
+				'user' => "concat(creator.firstName,creator.lastName)",
+				'name' => "$modelTable.name",
+				'email' =>  "$modelTable.email",
+				'content' => "$modelTable.content"
 			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
@@ -203,9 +202,13 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'user' => "concat(creator.firstName,creator.lastName)", 'name' => "$modelTable.name",
-			'email' => "$modelTable.email", 'content' => "$modelTable.content",
-			'status' => "$modelTable.status", 'rating' => "$modelTable.rating", 'featured' => "$modelTable.featured"
+			'user' => "concat(creator.firstName,creator.lastName)",
+			'name' => "$modelTable.name",
+			'email' => "$modelTable.email",
+			'content' => "$modelTable.content",
+			'status' => "$modelTable.status",
+			'rating' => "$modelTable.rating",
+			'featured' => "$modelTable.featured"
 		];
 
 		// Result -----------
@@ -230,7 +233,7 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 
 	public function getCommentPageByParent( $parentId, $parentType, $config = [] ) {
 
-        $modelTable  = self::$modelTable;
+        $modelTable	= $this->getModelTable();
 
 		$config[ 'conditions' ][ "$modelTable.type" ] = ModelComment::TYPE_COMMENT;
 
@@ -239,7 +242,7 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 
 	public function getReviewPageByParent( $parentId, $parentType, $config = [] ) {
 
-        $modelTable  = self::$modelTable;
+       $modelTable	= $this->getModelTable();
 
 		$config[ 'conditions' ][ "$modelTable.type" ] = ModelComment::TYPE_REVIEW;
 
@@ -272,7 +275,7 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 	 */
 	public function getPageForApproved( $config = [] ) {
 
-		$modelTable = self::$modelTable;
+		$modelTable	= $this->getModelTable();
 		$topLevel	= isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
 
 		if( $topLevel ) {
@@ -292,7 +295,8 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 	public function getByUser( $parentId, $parentType ) {
 
 		$modelClass	= self::$modelClass;
-		$user		= Yii::$app->user->getIdentity();
+
+		$user = Yii::$app->user->getIdentity();
 
 		return $modelClass::findByUser( $parentId, $parentType, $user->id );
 	}
@@ -300,7 +304,8 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 	public function isExistByUser( $parentId, $parentType ) {
 
 		$modelClass	= self::$modelClass;
-		$user		= Yii::$app->user->getIdentity();
+
+		$user = Yii::$app->user->getIdentity();
 
 		if( isset( $user ) ) {
 
@@ -312,12 +317,16 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 
 	public function getByParentConfig( $parentId, $config = [] ) {
 
-		return ModelComment::queryByParentConfig( $parentId, $config )->andWhere( [ 'baseId' => null ] )->all();
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::queryByParentConfig( $parentId, $config )->andWhere( [ 'baseId' => null ] )->all();
 	}
 
 	public function getByParentTypeConfig( $parentType, $config = [] ) {
 
-		return ModelComment::queryByParentTypeConfig( $parentType, $config )->andWhere( [ 'baseId' => null ] )->all();
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::queryByParentTypeConfig( $parentType, $config )->andWhere( [ 'baseId' => null ] )->all();
 	}
 
 	/**
@@ -325,7 +334,9 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 	 */
 	public function getByBaseId( $baseId, $config = [] ) {
 
-		return ModelComment::queryByBaseId( $baseId, $config )->all();
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::queryByBaseId( $baseId, $config )->all();
 	}
 
 	/**
@@ -338,7 +349,9 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 
 	public function getByEmail( $email ) {
 
-		return ModelComment::queryByEmail( $email )->one();
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::queryByEmail( $email )->one();
 	}
 
 	// Read - Lists ----
@@ -452,6 +465,19 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 		return $model;
 	}
 
+	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete files
+		$this->modelFileService->deleteMultiple( $model->modelFiles );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
+
+	// Bulk ---------------
+
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
@@ -504,19 +530,6 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 			}
 		}
 	}
-
-	// Delete -------------
-
-	public function delete( $model, $config = [] ) {
-
-		// Delete files
-		$this->modelFileService->deleteMultiple( $model->modelFiles );
-
-		// Delete model
-		return parent::delete( $model, $config );
-	}
-
-	// Bulk ---------------
 
 	// Notifications ------
 

@@ -98,7 +98,7 @@ class Form extends Resource implements IAuthor, IData, IGridCache, IModelMeta, I
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_FORM;
+	protected $modelType = CoreGlobal::TYPE_FORM;
 
 	// Private ----------------
 
@@ -144,8 +144,9 @@ class Form extends Resource implements IAuthor, IData, IGridCache, IModelMeta, I
 				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
 				'slugAttribute' => 'slug', // Unique for Site Id
+				'immutable' => true,
 				'ensureUnique' => true,
-				'uniqueValidator' => [ 'targetAttribute' => 'siteId' ]
+				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'slug' ] ]
 			]
 		];
 	}

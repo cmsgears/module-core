@@ -10,7 +10,6 @@
 namespace cmsgears\core\common\models\traits\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Gallery;
 use cmsgears\core\common\models\mappers\ModelGallery;
 
@@ -48,7 +47,7 @@ trait GalleryTrait {
 	 */
 	public function getModelGalleries() {
 
-		$modelGalleryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
+		$modelGalleryTable = ModelGallery::tableName();
 
 		return $this->hasMany( ModelGallery::class, [ 'parentId' => 'id' ] )
 			->where( "$modelGalleryTable.parentType='$this->modelType'" );
@@ -59,7 +58,7 @@ trait GalleryTrait {
 	 */
 	public function getActiveModelGalleries() {
 
-		$modelGalleryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
+		$modelGalleryTable = ModelGallery::tableName();
 
 		return $this->hasMany( ModelGallery::class, [ 'parentId' => 'id' ] )
 			->where( "$modelGalleryTable.parentType='$this->modelType' AND $modelGalleryTable.active=1" );
@@ -70,7 +69,7 @@ trait GalleryTrait {
 	 */
 	public function getModelGalleriesByType( $type, $active = true ) {
 
-		$modelGalleryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
+		$modelGalleryTable = ModelGallery::tableName();
 
 		return $this->hasOne( ModelGallery::class, [ 'parentId' => 'id' ] )
 			->where( "$modelGalleryTable.parentType=:ptype AND $modelGalleryTable.type=:type AND $modelGalleryTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
@@ -81,7 +80,7 @@ trait GalleryTrait {
 	 */
 	public function getGalleries() {
 
-		$modelGalleryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
+		$modelGalleryTable = ModelGallery::tableName();
 
 		return $this->hasMany( Gallery::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ],
@@ -97,7 +96,7 @@ trait GalleryTrait {
 	 */
 	public function getActiveGalleries() {
 
-		$modelGalleryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
+		$modelGalleryTable = ModelGallery::tableName();
 
 		return $this->hasMany( Gallery::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ],
@@ -113,7 +112,7 @@ trait GalleryTrait {
 	 */
 	public function getGalleriesByType( $type, $active = true ) {
 
-		$modelGalleryTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
+		$modelGalleryTable = ModelGallery::tableName();
 
 		return $this->hasMany( Gallery::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ],
@@ -129,8 +128,8 @@ trait GalleryTrait {
 	 */
 	public function getGalleryByTitle( $title ) {
 
-		$galleryTable		= CoreTables::getTableName( CoreTables::TABLE_GALLERY );
-		$modelGalleryTable	= CoreTables::getTableName( CoreTables::TABLE_MODEL_GALLERY );
+		$galleryTable		= Gallery::tableName();
+		$modelGalleryTable	= ModelGallery::tableName();
 
 		return $this->hasOne( Gallery::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelGalleryTable, [ 'parentId' => 'id' ],

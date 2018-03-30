@@ -12,7 +12,6 @@ namespace cmsgears\core\common\models\traits\resources;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\ModelMeta;
 
 /**
@@ -50,7 +49,7 @@ trait ModelMetaTrait {
 	 */
 	public function getModelMetas() {
 
-		$modelMetaTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_META );
+		$modelMetaTable = ModelMeta::tableName();
 
 		return $this->hasMany( ModelMeta::class, [ 'parentId' => 'id' ] )
 			->where( "$modelMetaTable.parentType='$this->modelType'" );
@@ -61,7 +60,7 @@ trait ModelMetaTrait {
 	 */
 	public function getModelMetasByType( $type ) {
 
-		$modelMetaTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_META );
+		$modelMetaTable = ModelMeta::tableName();
 
 		return $this->hasMany( ModelMeta::class, [ 'parentId' => 'id' ] )
 			->where( "$modelMetaTable.parentType=:ptype AND $modelMetaTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] )->all();
@@ -72,7 +71,7 @@ trait ModelMetaTrait {
 	 */
 	public function getModelMetaByTypeName( $type, $name ) {
 
-		$modelMetaTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_META );
+		$modelMetaTable = ModelMeta::tableName();
 
 		return $this->hasMany( ModelMeta::class, [ 'parentId' => 'id' ] )
 			->where( "$modelMetaTable.parentType=:ptype AND $modelMetaTable.type=:type AND $modelMetaTable.name=:name", [ ':ptype' => $this->modelType, ':type' => $type, ':name' => $name ] )->one();

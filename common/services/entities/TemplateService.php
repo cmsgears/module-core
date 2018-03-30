@@ -17,8 +17,6 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-
 use cmsgears\core\common\services\interfaces\entities\ITemplateService;
 
 use cmsgears\core\common\services\base\EntityService;
@@ -44,8 +42,6 @@ class TemplateService extends EntityService implements ITemplateService {
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\core\common\models\entities\Template';
-
-	public static $modelTable	= CoreTables::TABLE_TEMPLATE;
 
 	public static $typed		= true;
 
@@ -86,82 +82,82 @@ class TemplateService extends EntityService implements ITemplateService {
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
 				'id' => [
-					'asc' => [ 'id' => SORT_ASC ],
-					'desc' => [ 'id' => SORT_DESC ],
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
 	            'name' => [
-	                'asc' => [ 'name' => SORT_ASC ],
-	                'desc' => ['name' => SORT_DESC ],
+	                'asc' => [ "$modelTable.name" => SORT_ASC ],
+	                'desc' => [ "$modelTable.name" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Name'
 	            ],
 	            'slug' => [
-	                'asc' => [ 'slug' => SORT_ASC ],
-	                'desc' => ['slug' => SORT_DESC ],
+	                'asc' => [ "$modelTable.slug" => SORT_ASC ],
+	                'desc' => [ "$modelTable.slug" => SORT_DESC ],
 	                'default' => SORT_DESC,
-	                'label' => 'Slug'
+	                'label' => "Slug"
 	            ],
 	            'type' => [
-	                'asc' => [ 'type' => SORT_ASC ],
-	                'desc' => ['type' => SORT_DESC ],
+	                'asc' => [ "$modelTable.type" => SORT_ASC ],
+	                'desc' => [ "$modelTable.type" => SORT_DESC ],
 	                'default' => SORT_DESC,
-	                'label' => 'Type'
+	                'label' => "Type"
 	            ],
 	            'icon' => [
-	                'asc' => [ 'icon' => SORT_ASC ],
-	                'desc' => ['icon' => SORT_DESC ],
+	                'asc' => [ "$modelTable.icon" => SORT_ASC ],
+	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Icon'
 	            ],
 	            'renderer' => [
-	                'asc' => [ 'renderer' => SORT_ASC ],
-	                'desc' => ['renderer' => SORT_DESC ],
+	                'asc' => [ "$modelTable.renderer" => SORT_ASC ],
+	                'desc' => [ "$modelTable.renderer" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Renderer'
 	            ],
 	            'frender' => [
-	                'asc' => [ 'fileRender' => SORT_ASC ],
-	                'desc' => ['fileRender' => SORT_DESC ],
+	                'asc' => [  "$modelTable.fileRender" => SORT_ASC ],
+	                'desc' => [ "$modelTable.fileRender" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'File Render'
 	            ],
 	            'layout' => [
-	                'asc' => [ 'layout' => SORT_ASC ],
-	                'desc' => ['layout' => SORT_DESC ],
+	                'asc' => [ "$modelTable.layout" => SORT_ASC ],
+	                'desc' => [ "$modelTable.layout" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Layout'
 	            ],
 	            'lgroup' => [
-	                'asc' => [ 'layoutGroup' => SORT_ASC ],
-	                'desc' => ['layoutGroup' => SORT_DESC ],
+	                'asc' => [ "$modelTable.layoutGroup" => SORT_ASC ],
+	                'desc' => [ "$modelTable.layoutGroup" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Layout Group'
 	            ],
 	            'vpath' => [
-	                'asc' => [ 'viewPath' => SORT_ASC ],
-	                'desc' => ['viewPath' => SORT_DESC ],
+	                'asc' => [ "$modelTable.viewPath" => SORT_ASC ],
+	                'desc' => [ "$modelTable.viewPath" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'View Path'
 	            ],
 	            'cdate' => [
-	                'asc' => [ 'createdAt' => SORT_ASC ],
-	                'desc' => ['createdAt' => SORT_DESC ],
+	                'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Created At'
 	            ],
 	            'udate' => [
-	                'asc' => [ 'modifiedAt' => SORT_ASC ],
-	                'desc' => ['modifiedAt' => SORT_DESC ],
+	                'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Updated At'
 	            ]
@@ -208,7 +204,11 @@ class TemplateService extends EntityService implements ITemplateService {
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'desc' => "$modelTable.description", 'content' => "$modelTable.content" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'desc' => "$modelTable.description",
+				'content' => "$modelTable.content"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -216,8 +216,11 @@ class TemplateService extends EntityService implements ITemplateService {
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'desc' => "$modelTable.description", 'content' => "$modelTable.content",
-			'file' => "$modelTable.fileRender", 'layout' => "$modelTable.layoutGroup"
+			'name' => "$modelTable.name",
+			'desc' => "$modelTable.description",
+			'content' => "$modelTable.content",
+			'file' => "$modelTable.fileRender",
+			'layout' => "$modelTable.layoutGroup"
 		];
 
 		// Result -----------
@@ -271,8 +274,9 @@ class TemplateService extends EntityService implements ITemplateService {
 
 	public function switchFileRender( $model, $config = [] ) {
 
-		$global			= $model->fileRender ? false : true;
-		$model->fileRender	= $global;
+		$global = $model->fileRender ? false : true;
+
+		$model->fileRender = $global;
 
 		return parent::updateSelective( $model, [
 			'attributes' => [ 'fileRender' ]
@@ -281,13 +285,18 @@ class TemplateService extends EntityService implements ITemplateService {
 
 	public function switchGroupLayout( $model, $config = [] ) {
 
-		$global			= $model->layoutGroup ? false : true;
+		$global = $model->layoutGroup ? false : true;
+
 		$model->layoutGroup	= $global;
 
 		return parent::updateSelective( $model, [
 			'attributes' => [ 'layoutGroup' ]
 		]);
  	}
+
+	// Delete -------------
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -349,10 +358,6 @@ class TemplateService extends EntityService implements ITemplateService {
 			}
 		}
 	}
-
-	// Delete -------------
-
-	// Bulk ---------------
 
 	// Notifications ------
 

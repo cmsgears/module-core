@@ -74,6 +74,7 @@ class CoreGlobal {
 	// Resources
 	const TYPE_ACTIVITY			= 'activity';
 	const TYPE_ADDRESS			= 'address';
+	const TYPE_LOCATION			= 'location';
 	const TYPE_CATEGORY			= 'category';
 	const TYPE_COMMENT			= 'comment';
 	const TYPE_FILE				= 'file';
@@ -341,6 +342,7 @@ class CoreGlobal {
 	const FIELD_ROLE				= 'roleField';
 	const FIELD_PERMISSION			= 'permissionField';
 	const FIELD_GENDER				= 'genderField';
+	const FIELD_AGE					= 'ageField';
 	const FIELD_PARENT				= 'parentField';
 	const FIELD_PARENT_TYPE			= 'parentTypeField';
 	const FIELD_LOCALE				= 'localeField';

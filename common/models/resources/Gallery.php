@@ -95,7 +95,7 @@ class Gallery extends Resource implements IApproval, IAuthor, IData, IFile, IGri
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_GALLERY;
+	protected $modelType = CoreGlobal::TYPE_GALLERY;
 
 	// Private ----------------
 
@@ -137,8 +137,9 @@ class Gallery extends Resource implements IApproval, IAuthor, IData, IFile, IGri
 				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
 				'slugAttribute' => 'slug', // Unique for Site Id
+				'immutable' => true,
 				'ensureUnique' => true,
-				'uniqueValidator' => [ 'targetAttribute' => 'siteId' ]
+				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'slug' ] ]
 			],
 			'timestampBehavior' => [
 				'class' => TimestampBehavior::class,

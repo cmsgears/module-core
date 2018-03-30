@@ -41,8 +41,6 @@ class CityService extends EntityService implements ICityService {
 
 	public static $modelClass	= '\cmsgears\core\common\models\entities\City';
 
-	public static $modelTable	= CoreTables::TABLE_CITY;
-
 	public static $parentType	= CoreGlobal::TYPE_CITY;
 
 	// Protected --------------
@@ -77,15 +75,22 @@ class CityService extends EntityService implements ICityService {
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
-		$countryTable	= CoreTables::TABLE_COUNTRY;
-		$provinceTable	= CoreTables::TABLE_PROVINCE;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$countryTable	= Yii::$app->get( 'countryService' )->getModelTable();
+		$provinceTable	= Yii::$app->get( 'province	Service' )->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 				'country' => [
 					'asc' => [ "$countryTable.name" => SORT_ASC ],
 					'desc' => [ "$countryTable.name" => SORT_DESC ],
@@ -151,7 +156,10 @@ class CityService extends EntityService implements ICityService {
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'zone' => "$modelTable.zone" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'zone' => "$modelTable.zone"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -159,7 +167,9 @@ class CityService extends EntityService implements ICityService {
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'zone' => "$modelTable.zone", 'postal' => "$modelTable.postal"
+			'name' => "$modelTable.name",
+			'zone' => "$modelTable.zone",
+			'postal' => "$modelTable.postal"
 		];
 
 		// Result -----------
@@ -191,6 +201,10 @@ class CityService extends EntityService implements ICityService {
 
 	// Update -------------
 
+	// Delete -------------
+
+	// Bulk ---------------
+
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
@@ -211,10 +225,6 @@ class CityService extends EntityService implements ICityService {
 			}
 		}
 	}
-
-	// Delete -------------
-
-	// Bulk ---------------
 
 	// Notifications ------
 

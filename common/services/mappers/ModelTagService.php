@@ -14,9 +14,6 @@ use Yii;
 
 // CMG Imports
 use cmsgears\core\common\models\forms\Binder;
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\Tag;
-use cmsgears\core\common\models\mappers\ModelTag;
 
 use cmsgears\core\common\services\interfaces\mappers\IModelTagService;
 use cmsgears\core\common\services\interfaces\resources\ITagService;
@@ -38,11 +35,7 @@ class ModelTagService extends ModelMapperService implements IModelTagService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelTag';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_TAG;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\mappers\ModelTag';
 
 	// Protected --------------
 
@@ -97,14 +90,14 @@ class ModelTagService extends ModelMapperService implements IModelTagService {
 
 		foreach ( $tags as $tagName ) {
 
-			$tagName	= trim( $tagName );
+			$tagName = trim( $tagName );
 
 			if( empty( $tagName ) ) {
 
 				continue;
 			}
 
-			$tag = Tag::findByNameType( $tagName, $parentType, true );
+			$tag = $this->tagService->getFirstByNameType( $tagName, $parentType );
 
 			if( !isset( $tag ) ) {
 
@@ -172,7 +165,7 @@ class ModelTagService extends ModelMapperService implements IModelTagService {
 
 			$process = $binded;
 
-			ModelTag::disableByParent( $parentId, $parentType );
+			Yii::$app->get( 'modelTagService' )->disableByParent( $parentId, $parentType );
 
 			$this->createFromArray( $parentId, $parentType, $process );
 		}
@@ -184,7 +177,7 @@ class ModelTagService extends ModelMapperService implements IModelTagService {
 
 	public function deleteByTagSlug( $parentId, $parentType, $tagSlug, $delete = false ) {
 
-		$tag	= $this->tagService->getBySlugType( $tagSlug, $parentType );
+		$tag = $this->tagService->getBySlugType( $tagSlug, $parentType );
 
 		$this->disableByModelId( $parentId, $parentType, $tag->id, $delete = false );
 

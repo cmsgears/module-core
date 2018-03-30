@@ -38,11 +38,7 @@ class SiteMemberService extends  MapperService implements ISiteMemberService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\mappers\SiteMember';
-
-	public static $modelTable	= CoreTables::TABLE_SITE_MEMBER;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\mappers\SiteMember';
 
 	// Protected --------------
 
@@ -91,7 +87,7 @@ class SiteMemberService extends  MapperService implements ISiteMemberService {
 	 */
 	public function getSiteMemberBySiteId( $siteId ) {
 
-		$modelTable	= static::$modelTable;
+		$modelTable	= $this->getModelTable();
 
 		$config = [];
 		$config[ 'conditions' ][ "$modelTable.siteId" ]	= $siteId;
@@ -106,7 +102,9 @@ class SiteMemberService extends  MapperService implements ISiteMemberService {
 	 */
 	public function findBySiteIdUserId( $siteId, $userId ) {
 
-		return SiteMember::findBySiteIdUserId( $siteId, $userId );
+		$modelTable	= $this->getModelTable();
+
+		return $modelTable::findBySiteIdUserId( $siteId, $userId );
 	}
 
 	// Read - Lists ----
@@ -124,7 +122,7 @@ class SiteMemberService extends  MapperService implements ISiteMemberService {
 
 		if( !isset( $siteMember ) ) {
 
-			$siteMember	= new SiteMember();
+			$siteMember	= $this->getModelObject();
 		}
 
 		if( isset( $roleId ) ) {
@@ -133,7 +131,8 @@ class SiteMemberService extends  MapperService implements ISiteMemberService {
 		}
 		else {
 
-			$role				= $this->roleService->getBySlugType( CoreGlobal::ROLE_USER, CoreGlobal::TYPE_SYSTEM );
+			$role = $this->roleService->getBySlugType( CoreGlobal::ROLE_USER, CoreGlobal::TYPE_SYSTEM );
+
 			$siteMember->roleId	= $role->id;
 		}
 

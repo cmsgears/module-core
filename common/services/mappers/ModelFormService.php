@@ -10,8 +10,6 @@
 namespace cmsgears\core\common\services\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
-
 use cmsgears\core\common\services\interfaces\resources\IFormService;
 use cmsgears\core\common\services\interfaces\mappers\IModelFormService;
 
@@ -32,11 +30,7 @@ class ModelFormService extends ModelMapperService implements IModelFormService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelForm';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_FORM;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\mappers\ModelForm';
 
 	// Protected --------------
 
@@ -56,7 +50,7 @@ class ModelFormService extends ModelMapperService implements IModelFormService {
 
 	public function __construct( IFormService $formService, $config = [] ) {
 
-		$this->formService	= $formService;
+		$this->formService = $formService;
 
 		parent::__construct( $config );
 	}

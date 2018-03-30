@@ -7,19 +7,19 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\services\resources;
+namespace cmsgears\core\common\services\mappers;
 
 // CMG Imports
-use cmsgears\core\common\services\interfaces\resources\ISiteAccessService;
+use cmsgears\core\common\services\interfaces\mappers\IModelLocationService;
 
-use cmsgears\core\common\services\base\ResourceService;
+use cmsgears\core\common\services\base\ModelMapperService;
 
 /**
- * SiteAccessService provide service methods of site access model.
+ * ModelLocationService provide service methods of address mapper.
  *
  * @since 1.0.0
  */
-class SiteAccessService extends ResourceService implements ISiteAccessService {
+class ModelLocationService extends ModelMapperService implements IModelLocationService {
 
 	// Variables ---------------------------------------------------
 
@@ -29,7 +29,7 @@ class SiteAccessService extends ResourceService implements ISiteAccessService {
 
 	// Public -----------------
 
-	public static $modelClass = '\cmsgears\core\common\models\resources\SiteAccess';
+	public static $modelClass = '\cmsgears\core\common\models\mappers\ModelLocation';
 
 	// Protected --------------
 
@@ -55,7 +55,7 @@ class SiteAccessService extends ResourceService implements ISiteAccessService {
 
 	// CMG parent classes --------------------
 
-	// SiteAccessService ---------------------
+	// ModelLocationService ------------------
 
 	// Data Provider ------
 
@@ -87,7 +87,7 @@ class SiteAccessService extends ResourceService implements ISiteAccessService {
 
 	// CMG parent classes --------------------
 
-	// SiteAccessService ---------------------
+	// ModelLocationService ------------------
 
 	// Data Provider ------
 

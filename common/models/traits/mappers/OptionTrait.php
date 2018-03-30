@@ -10,7 +10,6 @@
 namespace cmsgears\core\common\models\traits\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Option;
 use cmsgears\core\common\models\mappers\ModelOption;
 
@@ -48,7 +47,7 @@ trait OptionTrait {
 	 */
 	public function getModelOptions() {
 
-		$modelOptionTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OPTION );
+		$modelOptionTable = ModelOption::tableName();
 
 		return $this->hasMany( ModelOption::class, [ 'parentId' => 'id' ] )
 			->where( "$modelOptionTable.parentType='$this->modelType'" );
@@ -59,7 +58,7 @@ trait OptionTrait {
 	 */
 	public function getActiveModelOptions() {
 
-		$modelOptionTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OPTION );
+		$modelOptionTable = ModelOption::tableName();
 
 		return $this->hasMany( ModelOption::class, [ 'parentId' => 'id' ] )
 			->where( "$modelOptionTable.parentType='$this->modelType' AND $modelOptionTable.active=1" );
@@ -70,7 +69,7 @@ trait OptionTrait {
 	 */
 	public function getModelOptionsByType( $type, $active = true ) {
 
-		$modelOptionTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OPTION );
+		$modelOptionTable = ModelOption::tableName();
 
 		return $this->hasOne( ModelOption::class, [ 'parentId' => 'id' ] )
 			->where( "$modelOptionTable.parentType=:ptype AND $modelOptionTable.type=:type AND $modelOptionTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
@@ -81,7 +80,7 @@ trait OptionTrait {
 	 */
 	public function getOptions() {
 
-		$modelOptionTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OPTION );
+		$modelOptionTable = ModelOption::tableName();
 
 		return $this->hasMany( Option::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelOptionTable, [ 'parentId' => 'id' ],
@@ -97,7 +96,7 @@ trait OptionTrait {
 	 */
 	public function getActiveOptions() {
 
-		$modelOptionTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OPTION );
+		$modelOptionTable = ModelOption::tableName();
 
 		return $this->hasMany( Option::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelOptionTable, [ 'parentId' => 'id' ],
@@ -113,7 +112,7 @@ trait OptionTrait {
 	 */
 	public function getOptionsByType( $type, $active = true ) {
 
-		$modelOptionTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OPTION );
+		$modelOptionTable = ModelOption::tableName();
 
 		return $this->hasMany( Option::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelOptionTable, [ 'parentId' => 'id' ],
@@ -131,7 +130,7 @@ trait OptionTrait {
 	 */
 	public function getOptionIdListByCategoryId( $categoryId, $active = true ) {
 
-		$optionTable	= CoreTables::getTableName( CoreTables::TABLE_OPTION );
+		$optionTable	= Option::tableName();
 
 		$options		= null;
 		$optionsList	= [];
@@ -158,7 +157,7 @@ trait OptionTrait {
 	 */
 	public function getOptionsCsvByCategoryId( $categoryId, $active = true ) {
 
-		$optionTable	= CoreTables::getTableName( CoreTables::TABLE_OPTION );
+		$optionTable	= Option::tableName();
 
 		$options		= null;
 		$optionsCsv		= [];
@@ -185,7 +184,7 @@ trait OptionTrait {
 	 */
 	public function getOptionsByCategoryId( $categoryId, $active = true ) {
 
-		$optionTable	= CoreTables::getTableName( CoreTables::TABLE_OPTION );
+		$optionTable	= Option::tableName();
 
 		$options		= null;
 

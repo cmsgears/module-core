@@ -88,7 +88,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_TEMPLATE;
+	protected $modelType = CoreGlobal::TYPE_TEMPLATE;
 
 	// Private ----------------
 
@@ -123,8 +123,9 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
 				'slugAttribute' => 'slug', // Unique for combination of Site Id and Theme Id
+				'immutable' => true,
 				'ensureUnique' => true,
-				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'themeId' ] ]
+				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'themeId', 'slug' ] ]
 			],
 			'timestampBehavior' => [
 				'class' => TimestampBehavior::class,
@@ -340,7 +341,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 	 * @return \cmsgears\core\common\models\base\ActiveRecord
 	 */
 	public static function findByThemeId( $slug, $type, $themeId ) {
-		
+
 		return self::queryBySlugType( $slug, $type, [ 'ignoreSite' => true ] )->andWhere( 'themeId=:themeId', [ ':themeId' => $themeId ] )->one();
 	}
 

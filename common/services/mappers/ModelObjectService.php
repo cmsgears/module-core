@@ -10,8 +10,6 @@
 namespace cmsgears\core\common\services\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
-
 use cmsgears\core\common\services\interfaces\entities\IObjectService;
 use cmsgears\core\common\services\interfaces\mappers\IModelObjectService;
 
@@ -32,11 +30,7 @@ class ModelObjectService extends ModelMapperService implements IModelObjectServi
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelObject';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_OBJECT;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\mappers\ModelObject';
 
 	// Protected --------------
 
@@ -56,7 +50,7 @@ class ModelObjectService extends ModelMapperService implements IModelObjectServi
 
 	public function __construct( IObjectService $objectService, $config = [] ) {
 
-		$this->objectService	= $objectService;
+		$this->objectService = $objectService;
 
 		parent::__construct( $config );
 	}

@@ -10,7 +10,6 @@
 namespace cmsgears\core\common\services\resources;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\ModelMeta;
 
 use cmsgears\core\common\services\interfaces\resources\IModelMetaService;
@@ -32,11 +31,7 @@ class ModelMetaService extends ModelResourceService implements IModelMetaService
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelMeta';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_META;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\resources\ModelMeta';
 
 	// Protected --------------
 
@@ -72,21 +67,28 @@ class ModelMetaService extends ModelResourceService implements IModelMetaService
 
 	public function getByType( $parentId, $parentType, $type ) {
 
-		return ModelMeta::findByType( $parentId, $parentType, $type );
+		$modelClass = static::$modelClass;
+
+		return $modelClass::findByType( $parentId, $parentType, $type );
 	}
 
 	public function getByNameType( $parentId, $parentType, $name, $type ) {
 
-		return ModelMeta::findByNameType( $parentId, $parentType, $name, $type );
+		$modelClass = static::$modelClass;
+
+		return $modelClass::findByNameType( $parentId, $parentType, $name, $type );
 	}
 
 	public function initByNameType( $parentId, $parentType, $name, $type, $valueType = ModelMeta::VALUE_TYPE_TEXT ) {
 
-		$meta	= ModelMeta::findByNameType( $parentId, $parentType, $name, $type );
+		$modelClass = static::$modelClass;
+
+		$meta = $modelClass::findByNameType( $parentId, $parentType, $name, $type );
 
 		if( !isset( $meta ) ) {
 
-			$meta				= new ModelMeta();
+			$meta = new $modelClass();
+
 			$meta->parentId		= $parentId;
 			$meta->parentType	= $parentType;
 			$meta->name			= $name;
@@ -103,6 +105,8 @@ class ModelMetaService extends ModelResourceService implements IModelMetaService
 
 	public function getNameValueMapByType( $parentId, $parentType, $type ) {
 
+		$config = [];
+
 		$config[ 'conditions' ][ 'parentId' ]	= $parentId;
 		$config[ 'conditions' ][ 'parentType' ] = $parentType;
 		$config[ 'conditions' ][ 'type' ]		= $type;
@@ -112,6 +116,8 @@ class ModelMetaService extends ModelResourceService implements IModelMetaService
 
 	public function getIdMetaMapByType( $parentId, $parentType, $type ) {
 
+		$config = [];
+
 		$config[ 'conditions' ][ 'parentId' ]	= $parentId;
 		$config[ 'conditions' ][ 'parentType' ] = $parentType;
 		$config[ 'conditions' ][ 'type' ]		= $type;
@@ -120,6 +126,8 @@ class ModelMetaService extends ModelResourceService implements IModelMetaService
 	}
 
 	public function getNameMetaMapByType( $parentId, $parentType, $type ) {
+
+		$config = [];
 
 		$config[ 'key' ] = 'name';
 
@@ -198,10 +206,10 @@ class ModelMetaService extends ModelResourceService implements IModelMetaService
 
 			if( !isset( $meta[ 'valueType' ] ) ) {
 
-				$meta[ 'valueType' ]	= ModelMeta::VALUE_TYPE_TEXT;
+				$meta[ 'valueType' ] = ModelMeta::VALUE_TYPE_TEXT;
 			}
 
-			$model			= $this->initByNameType( $config[ 'parentId' ], $config[ 'parentType' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ] );
+			$model = $this->initByNameType( $config[ 'parentId' ], $config[ 'parentType' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ] );
 
 			$model->value	= $meta[ 'value' ];
 			$model->label	= $form->getMetaLabel( $meta[ 'name' ] );

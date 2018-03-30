@@ -16,8 +16,6 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-
 use cmsgears\core\common\services\interfaces\entities\IProvinceService;
 
 use cmsgears\core\common\services\base\EntityService;
@@ -40,8 +38,6 @@ class ProvinceService extends EntityService implements IProvinceService {
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\core\common\models\entities\Province';
-
-	public static $modelTable	= CoreTables::TABLE_PROVINCE;
 
 	public static $parentType	= CoreGlobal::TYPE_PROVINCE;
 
@@ -77,14 +73,21 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
-		$countryTable	= CoreTables::TABLE_COUNTRY;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$countryTable = Yii::$app->get( 'countryService' )->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 				'country' => [
 					'asc' => [ "$countryTable.name" => SORT_ASC ],
 					'desc' => [ "$countryTable.name" => SORT_DESC ],
@@ -132,7 +135,10 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'code' => "$modelTable.code" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'code' => "$modelTable.code"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -140,7 +146,9 @@ class ProvinceService extends EntityService implements IProvinceService {
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'code' => "$modelTable.code", 'iso' => "$modelTable.iso"
+			'name' => "$modelTable.name",
+			'code' => "$modelTable.code",
+			'iso' => "$modelTable.iso"
 		];
 
 		// Result -----------
@@ -207,6 +215,10 @@ class ProvinceService extends EntityService implements IProvinceService {
 		]);
 	}
 
+	// Delete -------------
+
+	// Bulk ---------------
+
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
@@ -227,10 +239,6 @@ class ProvinceService extends EntityService implements IProvinceService {
 			}
 		}
 	}
-
-	// Delete -------------
-
-	// Bulk ---------------
 
 	// Notifications ------
 

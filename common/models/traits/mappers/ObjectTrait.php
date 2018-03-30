@@ -10,7 +10,6 @@
 namespace cmsgears\core\common\models\traits\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\ObjectData;
 use cmsgears\core\common\models\mappers\ModelObject;
 
@@ -48,7 +47,7 @@ trait ObjectTrait {
 	 */
 	public function getModelObjects() {
 
-		$modelObjectTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$modelObjectTable = ModelObject::tableName();
 
 		return $this->hasMany( ModelObject::class, [ 'parentId' => 'id' ] )
 			->where( "$modelObjectTable.parentType='$this->modelType'" );
@@ -59,7 +58,7 @@ trait ObjectTrait {
 	 */
 	public function getActiveModelObjects() {
 
-		$modelObjectTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$modelObjectTable = ModelObject::tableName();
 
 		return $this->hasMany( ModelObject::class, [ 'parentId' => 'id' ] )
 			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.active=1" );
@@ -70,7 +69,7 @@ trait ObjectTrait {
 	 */
 	public function getModelObjectsByType( $type, $active = true ) {
 
-		$modelObjectTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$modelObjectTable = ModelObject::tableName();
 
 		return $this->hasOne( ModelObject::class, [ 'parentId' => 'id' ] )
 			->where( "$modelObjectTable.parentType=:ptype AND $modelObjectTable.type=:type AND $modelObjectTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
@@ -81,7 +80,7 @@ trait ObjectTrait {
 	 */
 	public function getObjects() {
 
-		$modelObjectTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$modelObjectTable = ModelObject::tableName();
 
 		return $this->hasMany( ObjectData::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
@@ -97,7 +96,7 @@ trait ObjectTrait {
 	 */
 	public function getActiveObjects() {
 
-		$modelObjectTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$modelObjectTable = ModelObject::tableName();
 
 		return $this->hasMany( ObjectData::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],
@@ -113,7 +112,7 @@ trait ObjectTrait {
 	 */
 	public function getObjectsByType( $type, $active = true ) {
 
-		$modelObjectTable = CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
+		$modelObjectTable = ModelObject::tableName();
 
 		return $this->hasMany( ObjectData::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelObjectTable, [ 'parentId' => 'id' ],

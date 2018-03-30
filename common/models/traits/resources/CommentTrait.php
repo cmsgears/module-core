@@ -13,7 +13,6 @@ namespace cmsgears\core\common\models\traits\resources;
 use yii\db\Query;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\ModelComment;
 
 /**
@@ -82,7 +81,7 @@ trait CommentTrait {
 	 */
 	public function getAverageRating( $type, $topLevel = true ) {
 
-		$commentTable	= CoreTables::TABLE_MODEL_COMMENT;
+		$commentTable	= ModelComment::tableName();
 		$query			= new Query();
 
 		$query->select( [ 'avg(rating) as average, count(id) as total' ] )
@@ -157,7 +156,7 @@ trait CommentTrait {
 			$returnArr[ $i ] = 0;
 		}
 
-		$commentTable	= CoreTables::TABLE_MODEL_COMMENT;
+		$commentTable	= ModelComment::tableName();
 		$query			= new Query();
 
 		$query->select( [ 'rating', 'count(id) as total' ] )
@@ -229,7 +228,7 @@ trait CommentTrait {
 
 		$returnArr		= [ ModelComment::STATUS_NEW => 0, ModelComment::STATUS_BLOCKED => 0, ModelComment::STATUS_APPROVED => 0 ];
 
-		$commentTable	= CoreTables::TABLE_MODEL_COMMENT;
+		$commentTable	= ModelComment::tableName();
 		$query			= new Query();
 
 		$query->select( [ 'status', 'count(id) as total' ] )
@@ -257,7 +256,7 @@ trait CommentTrait {
 	 */
 	public function getApprovedCommentCount( $type = ModelComment::TYPE_COMMENT, $topLevel = true ) {
 
-		$commentTable	= CoreTables::TABLE_MODEL_COMMENT;
+		$commentTable	= ModelComment::tableName();
 		$query			= new Query();
 
 		$query->select( [ 'count(id) as total' ] )

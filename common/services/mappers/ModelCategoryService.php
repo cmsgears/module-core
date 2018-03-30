@@ -14,8 +14,6 @@ use Yii;
 
 // CMG Imports
 use cmsgears\core\common\models\forms\Binder;
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\mappers\ModelCategory;
 
 use cmsgears\core\common\services\interfaces\resources\ICategoryService;
 use cmsgears\core\common\services\interfaces\mappers\IModelCategoryService;
@@ -37,11 +35,7 @@ class ModelCategoryService extends ModelMapperService implements IModelCategoryS
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelCategory';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_CATEGORY;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\mappers\ModelCategory';
 
 	// Protected --------------
 
@@ -61,7 +55,7 @@ class ModelCategoryService extends ModelMapperService implements IModelCategoryS
 
 	public function __construct( ICategoryService $categoryService, $config = [] ) {
 
-		$this->categoryService	= $categoryService;
+		$this->categoryService = $categoryService;
 
 		parent::__construct( $config );
 	}
@@ -86,9 +80,10 @@ class ModelCategoryService extends ModelMapperService implements IModelCategoryS
 
 	public function getModelCounts( $parentType, $categoryType ) {
 
-		$categoryTable	= CoreTables::TABLE_CATEGORY;
-		$mcategoryTable	= CoreTables::TABLE_MODEL_CATEGORY;
-		$query			= new Query();
+		$categoryTable	= Yii::$app->get( 'categoryService' )->getModelTable();
+		$mcategoryTable	= Yii::$app->get( 'modelCategoryService' )->getModelTable();
+
+		$query = new Query();
 
 		$query->select( [ 'slug', "count($categoryTable.id) as total" ] )
 				->from( $categoryTable )
@@ -96,7 +91,8 @@ class ModelCategoryService extends ModelMapperService implements IModelCategoryS
 				->where( "$mcategoryTable.parentType='$parentType' AND $categoryTable.type='$categoryType'" )
 				->groupBy( "$categoryTable.id" );
 
-		$counts		= $query->all();
+		$counts = $query->all();
+
 		$returnArr	= [];
 		$counter	= 0;
 
@@ -104,7 +100,7 @@ class ModelCategoryService extends ModelMapperService implements IModelCategoryS
 
 			$returnArr[ $count[ 'slug' ] ] = $count[ 'total' ];
 
-			$counter	= $counter + $count[ 'total' ];
+			$counter = $counter + $count[ 'total' ];
 		}
 
 		$returnArr[ 'all' ] = $counter;
@@ -116,14 +112,16 @@ class ModelCategoryService extends ModelMapperService implements IModelCategoryS
 
 	public function getActiveCategoryIdList( $categoryId, $parentType ) {
 
-		$models = ModelCategory::findActiveByCategoryIdParentType( $categoryId, $parentType );
+		$modelClass	= static::$modelClass;
+
+		$models = $modelClass::findActiveByCategoryIdParentType( $categoryId, $parentType );
 		$ids	= [];
 
 		foreach ( $models as $model ) {
 
-			$category	= $model->category;
+			$category = $model->category;
 
-			$ids[]		= $category->id;
+			$ids[] = $category->id;
 		}
 
 		return $ids;
@@ -131,14 +129,16 @@ class ModelCategoryService extends ModelMapperService implements IModelCategoryS
 
 	public function getActiveCategoryIdListByParent( $parentId, $parentType ) {
 
-		$models = ModelCategory::findActiveByParent( $parentId, $parentType );
+		$modelClass	= static::$modelClass;
+
+		$models = $modelClass::findActiveByParent( $parentId, $parentType );
 		$ids	= [];
 
 		foreach ( $models as $model ) {
 
-			$category	= $model->category;
+			$category = $model->category;
 
-			$ids[]		= $category->id;
+			$ids[] = $category->id;
 		}
 
 		return $ids;
@@ -153,6 +153,8 @@ class ModelCategoryService extends ModelMapperService implements IModelCategoryS
 	// Update -------------
 
 	public function bindCategories( $parentId, $parentType, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
 
 		$binderName	= isset( $config[ 'binder' ] ) ? $config[ 'binder' ] : 'Binder';
 		$binder		= new Binder();
@@ -173,13 +175,13 @@ class ModelCategoryService extends ModelMapperService implements IModelCategoryS
 
 			$process = $binded;
 
-			ModelCategory::disableByParent( $parentId, $parentType );
+			$modelClass::disableByParent( $parentId, $parentType );
 		}
 
 		// Process the List
-		foreach ( $process as $id ) {
+		foreach( $process as $id ) {
 
-			$existingMapping	= ModelCategory::findByModelId( $parentId, $parentType, $id );
+			$existingMapping = $modelClass::findByModelId( $parentId, $parentType, $id );
 
 			// Existing mapping
 			if( isset( $existingMapping ) ) {

@@ -10,8 +10,6 @@
 namespace cmsgears\core\common\services\resources;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
-
 use cmsgears\core\common\services\interfaces\resources\IModelMessageService;
 
 use cmsgears\core\common\services\base\ModelResourceService;
@@ -31,11 +29,7 @@ class ModelMessageService extends ModelResourceService implements IModelMessageS
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelMessage';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_MESSAGE;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\resources\ModelMessage';
 
 	// Protected --------------
 

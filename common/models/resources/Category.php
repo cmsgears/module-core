@@ -79,7 +79,7 @@ class Category extends NestedSetModel implements IAuthor, IMultiSite, INameType,
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_CATEGORY;
+	protected $modelType = CoreGlobal::TYPE_CATEGORY;
 
 	// Private ----------------
 
@@ -110,9 +110,10 @@ class Category extends NestedSetModel implements IAuthor, IMultiSite, INameType,
 			'sluggableBehavior' => [
 				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
-				'slugAttribute' => 'slug', // Unique for Site Id
+				'slugAttribute' => 'slug', // Unique for Site Id and Type
+				'immutable' => true,
 				'ensureUnique' => true,
-				'uniqueValidator' => [ 'targetAttribute' => 'siteId' ]
+				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'slug', 'type' ] ]
 			],
 			'timestampBehavior' => [
 				'class' => TimestampBehavior::class,

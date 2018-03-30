@@ -10,16 +10,18 @@
 namespace cmsgears\core\common\services\resources;
 
 // CMG Imports
-use cmsgears\core\common\services\interfaces\resources\ISiteAccessService;
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\common\services\interfaces\resources\ILocationService;
 
 use cmsgears\core\common\services\base\ResourceService;
 
 /**
- * SiteAccessService provide service methods of site access model.
+ * LocationService provide service methods of location model.
  *
  * @since 1.0.0
  */
-class SiteAccessService extends ResourceService implements ISiteAccessService {
+class LocationService extends ResourceService implements ILocationService {
 
 	// Variables ---------------------------------------------------
 
@@ -29,7 +31,9 @@ class SiteAccessService extends ResourceService implements ISiteAccessService {
 
 	// Public -----------------
 
-	public static $modelClass = '\cmsgears\core\common\models\resources\SiteAccess';
+	public static $modelClass	= '\cmsgears\core\common\models\resources\Location';
+
+	public static $parentType	= CoreGlobal::TYPE_LOCATION;
 
 	// Protected --------------
 
@@ -55,7 +59,7 @@ class SiteAccessService extends ResourceService implements ISiteAccessService {
 
 	// CMG parent classes --------------------
 
-	// SiteAccessService ---------------------
+	// LocationService -----------------------
 
 	// Data Provider ------
 
@@ -87,7 +91,7 @@ class SiteAccessService extends ResourceService implements ISiteAccessService {
 
 	// CMG parent classes --------------------
 
-	// SiteAccessService ---------------------
+	// LocationService -----------------------
 
 	// Data Provider ------
 

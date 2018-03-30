@@ -44,8 +44,6 @@ class PermissionService extends EntityService implements IPermissionService {
 
 	public static $modelClass	= '\cmsgears\core\common\models\entities\Permission';
 
-	public static $modelTable	= CoreTables::TABLE_PERMISSION;
-
 	public static $typed		= true;
 
 	public static $parentType	= CoreGlobal::TYPE_PERMISSION;
@@ -85,12 +83,18 @@ class PermissionService extends EntityService implements IPermissionService {
 	public function getPage( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
-		$modelTable	= static::$modelTable;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
@@ -150,7 +154,11 @@ class PermissionService extends EntityService implements IPermissionService {
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'desc' => "$modelTable.description" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'slug' => "$modelTable.slug",
+				'desc' => "$modelTable.description"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -158,7 +166,9 @@ class PermissionService extends EntityService implements IPermissionService {
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'desc' => "$modelTable.description"
+			'name' => "$modelTable.name",
+			'slug' => "$modelTable.slug",
+			'desc' => "$modelTable.description"
 		];
 
 		// Result -----------
@@ -214,7 +224,8 @@ class PermissionService extends EntityService implements IPermissionService {
 
 			foreach ( $binded as $id ) {
 
-				$toSave					= new RolePermission();
+				$toSave	= new RolePermission();
+
 				$toSave->roleId			= $id;
 				$toSave->permissionId	= $permId;
 
@@ -224,6 +235,10 @@ class PermissionService extends EntityService implements IPermissionService {
 
 		return true;
 	}
+
+	// Delete -------------
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -245,10 +260,6 @@ class PermissionService extends EntityService implements IPermissionService {
 			}
 		}
 	}
-
-	// Delete -------------
-
-	// Bulk ---------------
 
 	// Notifications ------
 

@@ -16,7 +16,6 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\User;
 
 use cmsgears\core\common\services\interfaces\entities\IUserService;
@@ -47,8 +46,6 @@ class UserService extends EntityService implements IUserService {
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\core\common\models\entities\User';
-
-	public static $modelTable	= CoreTables::TABLE_USER;
 
 	public static $parentType	= CoreGlobal::TYPE_USER;
 
@@ -97,15 +94,21 @@ class UserService extends EntityService implements IUserService {
 	public function getPage( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
-		$modelTable	= static::$modelTable;
+		$modelTable	= $this->getModelTable();
 
-		$siteTable			= CoreTables::TABLE_SITE;
-		$siteMemberTable	= CoreTables::TABLE_SITE_MEMBER;
+		$siteTable			= Yii::$app->get( 'siteService' )->getModelTable();
+		$siteMemberTable	= Yii::$app->get( 'siteMemberService' )->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 				'gender' => [
 					'asc' => [ "$modelTable.genderId" => SORT_ASC ],
 					'desc' => [ "$modelTable.genderId" => SORT_DESC ],
@@ -227,9 +230,10 @@ class UserService extends EntityService implements IUserService {
 
 	public function getPageByRoleType( $roleType ) {
 
-		$roleTable = CoreTables::TABLE_ROLE;
+		$modelClass	= static::$modelClass;
+		$roleTable	= Yii::$app->get( 'roleService' )->getModelTable();
 
-		return $this->getPage( [ 'conditions' => [ "$roleTable.type" => $roleType ], 'query' => User::queryWithSiteMembers() ] );
+		return $this->getPage( [ 'conditions' => [ "$roleTable.type" => $roleType ], 'query' => $modelClass::queryWithSiteMembers() ] );
 	}
 
 	public function getPageByAdmins() {
@@ -311,12 +315,12 @@ class UserService extends EntityService implements IUserService {
 
 	public function searchByName( $name, $config = [] ) {
 
-		$modelClass					= static::$modelClass;
-		$modelTable					= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
-		$config[ 'query' ]			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$config[ 'columns' ]		= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "concat($modelTable.firstName, ' ', $modelTable.lastName) AS name" ];
-		$config[ 'array' ]			= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
+		$config[ 'query' ]		= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
+		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "concat($modelTable.firstName, ' ', $modelTable.lastName) AS name" ];
+		$config[ 'array' ]		= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
 
 		$config[ 'query' ]->andWhere( "concat($modelTable.firstName, $modelTable.lastName) like '$name%'" );
 
@@ -329,19 +333,22 @@ class UserService extends EntityService implements IUserService {
 	 */
 	public function getIdNameMapByRoleSlug( $roleSlug ) {
 
-		$roleTable			= CoreTables::TABLE_ROLE;
-		$userTable			= CoreTables::TABLE_USER;
-		$siteTable			= CoreTables::TABLE_SITE;
-		$siteMemberTable	= CoreTables::TABLE_SITE_MEMBER;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
-		$users				= User::find()
-								->leftJoin( $siteMemberTable, "$siteMemberTable.userId = $userTable.id" )
-								->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
-								->leftJoin( $roleTable, "$roleTable.id = $siteMemberTable.roleId" )
-								->where( "$roleTable.slug=:slug AND $siteTable.name=:name", [ ':slug' => $roleSlug, ':name' => Yii::$app->core->getSiteName() ] )->all();
-		$usersMap			= [];
+		$roleTable			= Yii::$app->get( 'roleService' )->getModelTable();
+		$siteTable			= Yii::$app->get( 'siteService' )->getModelTable();
+		$siteMemberTable	= Yii::$app->get( 'siteMemberService' )->getModelTable();
 
-		foreach ( $users as $user ) {
+		$users	= $modelClass::find()
+					->leftJoin( $siteMemberTable, "$siteMemberTable.userId = $modelTable.id" )
+					->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
+					->leftJoin( $roleTable, "$roleTable.id = $siteMemberTable.roleId" )
+					->where( "$roleTable.slug=:slug AND $siteTable.name=:name", [ ':slug' => $roleSlug, ':name' => Yii::$app->core->getSiteName() ] )->all();
+
+		$usersMap = [];
+
+		foreach( $users as $user ) {
 
 			$usersMap[ $user->id ] = $user->getName();
 		}
@@ -389,7 +396,7 @@ class UserService extends EntityService implements IUserService {
 
 		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : User::STATUS_NEW;
 
-		$user	= new User();
+		$user	= $this->getModelObject();
 		$date	= DateUtil::getDateTime();
 
 		$user->email		= $model->email;
@@ -440,8 +447,10 @@ class UserService extends EntityService implements IUserService {
 		// Check Token
 		if( $user->isVerifyTokenValid( $token ) ) {
 
+			$modelClass	= static::$modelClass;
+
 			// Find existing user
-			$userToUpdate	= User::findById( $user->id );
+			$userToUpdate = $modelClass::findById( $user->id );
 
 			// User need admin approval
 			if( Yii::$app->core->isUserApproval() ) {
@@ -476,8 +485,10 @@ class UserService extends EntityService implements IUserService {
 		// Check Token
 		if( $user->isVerifyTokenValid( $token ) ) {
 
+			$modelClass	= static::$modelClass;
+
 			// Find existing user
-			$userToUpdate	= User::findById( $user->id );
+			$userToUpdate = $modelClass::findById( $user->id );
 
 			// Generate Password
 			$userToUpdate->generatePassword( $resetForm->password );
@@ -510,8 +521,10 @@ class UserService extends EntityService implements IUserService {
 	 */
 	public function forgotPassword( $user ) {
 
+		$modelClass	= static::$modelClass;
+
 		// Find existing user
-		$userToUpdate	= User::findById( $user->id );
+		$userToUpdate = $modelClass::findById( $user->id );
 
 		// Generate Token
 		$userToUpdate->generateResetToken();
@@ -531,8 +544,10 @@ class UserService extends EntityService implements IUserService {
 	 */
 	public function resetPassword( $user, $resetForm ) {
 
+		$modelClass	= static::$modelClass;
+
 		// Find existing user
-		$userToUpdate	= User::findById( $user->id );
+		$userToUpdate = $modelClass::findById( $user->id );
 
 		// Generate Password
 		$userToUpdate->generatePassword( $resetForm->password );
@@ -571,6 +586,37 @@ class UserService extends EntityService implements IUserService {
 			'attributes' => [ 'avatarId' ]
 		]);
 	}
+
+	// Log last activity ----
+
+	public function logLastActivity() {
+
+		$user = Yii::$app->user->getIdentity();
+
+		if( isset( $user ) ) {
+
+			$user->lastActivityAt = Date( 'Y-m-d h:i:s' );
+
+			$this->update( $user, [ 'attributes' => [ 'lastActivityAt' ] ] );
+		}
+	}
+
+	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete Files
+		$this->fileService->deleteFiles( [ $model->avatar ] );
+
+		// Delete Notifications
+		//Yii::$app->eventManager->deleteNotifications( $model->id, static::$parentType, true );
+		Yii::$app->eventManager->deleteNotifications( $model->id, static::$parentType );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -616,37 +662,6 @@ class UserService extends EntityService implements IUserService {
 			}
 		}
 	}
-
-	// Log last activity ----
-
-	public function logLastActivity() {
-
-		$user	= Yii::$app->user->getIdentity();
-
-		if( isset( $user ) ) {
-
-			$user->lastActivityAt	= Date( 'Y-m-d h:i:s' );
-
-			$this->update( $user, [ 'attributes' => [ 'lastActivityAt' ] ] );
-		}
-	}
-
-	// Delete -------------
-
-	public function delete( $model, $config = [] ) {
-
-		// Delete Files
-		$this->fileService->deleteFiles( [ $model->avatar ] );
-
-		// Delete Notifications
-		//Yii::$app->eventManager->deleteNotifications( $model->id, static::$parentType, true );
-		Yii::$app->eventManager->deleteNotifications( $model->id, static::$parentType );
-
-		// Delete model
-		return parent::delete( $model, $config );
-	}
-
-	// Bulk ---------------
 
 	// Notifications ------
 

@@ -16,9 +16,6 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\Locale;
-
 use cmsgears\core\common\services\interfaces\entities\ILocaleService;
 
 use cmsgears\core\common\services\base\EntityService;
@@ -41,8 +38,6 @@ class LocaleService extends EntityService implements ILocaleService {
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\core\common\models\entities\Locale';
-
-	public static $modelTable	= CoreTables::TABLE_LOCALE;
 
 	public static $parentType	= CoreGlobal::TYPE_LOCALE;
 
@@ -79,21 +74,27 @@ class LocaleService extends EntityService implements ILocaleService {
 	public function getPage( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
-		$modelTable	= static::$modelTable;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'name'
 				],
 				'code' => [
-					'asc' => [ 'code' => SORT_ASC ],
-					'desc' => [ 'code' => SORT_DESC ],
+					'asc' => [ "$modelTable.code" => SORT_ASC ],
+					'desc' => [ "$modelTable.code" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Code'
 				]
@@ -142,7 +143,9 @@ class LocaleService extends EntityService implements ILocaleService {
 
 	public function getByCode( $code ) {
 
-		return Locale::findByCode( $code );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByCode( $code );
 	}
 
 	// Read - Lists ----
@@ -164,6 +167,10 @@ class LocaleService extends EntityService implements ILocaleService {
 		]);
 	}
 
+	// Delete -------------
+
+	// Bulk ---------------
+
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
@@ -184,10 +191,6 @@ class LocaleService extends EntityService implements ILocaleService {
 			}
 		}
 	}
-
-	// Delete -------------
-
-	// Bulk ---------------
 
 	// Notifications ------
 

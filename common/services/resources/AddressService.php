@@ -12,9 +12,6 @@ namespace cmsgears\core\common\services\resources;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\mappers\ModelAddress;
-
 use cmsgears\core\common\services\interfaces\resources\IAddressService;
 
 use cmsgears\core\common\services\base\ResourceService;
@@ -35,8 +32,6 @@ class AddressService extends ResourceService implements IAddressService {
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\core\common\models\resources\Address';
-
-	public static $modelTable	= CoreTables::TABLE_ADDRESS;
 
 	public static $parentType	= CoreGlobal::TYPE_ADDRESS;
 
@@ -107,7 +102,7 @@ class AddressService extends ResourceService implements IAddressService {
 	public function delete( $model, $config = [] ) {
 
 		// Delete mapping
-		ModelAddress::deleteByModelId( $model->id );
+		Yii::$app->get( 'modelAddressService' )->deleteByModelId( $model->id );
 
 		// Delete model
 		return parent::delete( $model, $config );

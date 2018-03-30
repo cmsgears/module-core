@@ -32,9 +32,9 @@ trait SlugTrait {
 
 	// Read - Models ---
 
-	public function getBySlug( $slug ) {
+	public function getBySlug( $slug, $config = [] ) {
 
-		return self::findBySlug( $slug );
+		return self::findBySlug( $slug, $config );
 	}
 
 	// Read - Lists ----
@@ -69,7 +69,7 @@ trait SlugTrait {
 
 	// Read - Models ---
 
-	public static function findBySlug( $slug ) {
+	public static function findBySlug( $slug, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 

@@ -74,6 +74,7 @@ class m160620_095703_core extends Migration {
 		$this->upProvince();
 		$this->upCity();
 		$this->upAddress();
+		$this->upLocation();
 
 		// RBAC
 		$this->upRole();
@@ -109,6 +110,7 @@ class m160620_095703_core extends Migration {
 		// Traits - Mappers
 		$this->upModelObject();
 		$this->upModelAddress();
+		$this->upModelLocation();
 		$this->upModelFile();
 		$this->upModelGallery();
 		$this->upModelTag();
@@ -337,6 +339,30 @@ class m160620_095703_core extends Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'address_country', $this->prefix . 'core_address', 'countryId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'address_province', $this->prefix . 'core_address', 'provinceId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'address_city', $this->prefix . 'core_address', 'cityId' );
+	}
+
+	private function upLocation() {
+
+		$this->createTable( $this->prefix . 'core_location', [
+			'id' => $this->bigPrimaryKey( 20 ),
+			'countryId' => $this->bigInteger( 20 ),
+			'provinceId' => $this->bigInteger( 20 ),
+			'cityId' => $this->bigInteger( 20 ),
+			'title' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'countryName' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
+			'provinceName' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
+			'cityName' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'zip' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
+			'subZip' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
+			'latitude' => $this->float(),
+			'longitude' => $this->float(),
+			'zoomLevel' => $this->smallInteger( 6 )->defaultValue( 5 )
+		], $this->options );
+
+		// Index for columns country
+		$this->createIndex( 'idx_' . $this->prefix . 'location_country', $this->prefix . 'core_location', 'countryId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'location_province', $this->prefix . 'core_location', 'provinceId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'location_city', $this->prefix . 'core_location', 'cityId' );
 	}
 
 	private function upRole() {
@@ -884,6 +910,22 @@ class m160620_095703_core extends Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'model_address_parent', $this->prefix . 'core_model_address', 'modelId' );
 	}
 
+	private function upModelLocation() {
+
+		$this->createTable( $this->prefix . 'core_model_location', [
+			'id' => $this->bigPrimaryKey( 20 ),
+			'modelId' => $this->bigInteger( 20 )->notNull(),
+			'parentId' => $this->bigInteger( 20 )->notNull(),
+			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
+			'type' => $this->string( Yii::$app->core->mediumText ),
+			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'active' => $this->boolean()->notNull()->defaultValue( true )
+		], $this->options );
+
+		// Index for columns user
+		$this->createIndex( 'idx_' . $this->prefix . 'model_location_parent', $this->prefix . 'core_model_location', 'modelId' );
+	}
+
 	private function upModelFile() {
 
 		$this->createTable( $this->prefix . 'core_model_file', [
@@ -1044,6 +1086,11 @@ class m160620_095703_core extends Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'address_province', $this->prefix . 'core_address', 'provinceId', $this->prefix . 'core_province', 'id', 'CASCADE' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'address_city', $this->prefix . 'core_address', 'cityId', $this->prefix . 'core_city', 'id', 'CASCADE' );
 
+		// Location
+		$this->addForeignKey( 'fk_' . $this->prefix . 'location_country', $this->prefix . 'core_location', 'countryId', $this->prefix . 'core_country', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'location_province', $this->prefix . 'core_location', 'provinceId', $this->prefix . 'core_province', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'location_city', $this->prefix . 'core_location', 'cityId', $this->prefix . 'core_city', 'id', 'SET NULL' );
+
 		// Role
 		$this->addForeignKey( 'fk_' . $this->prefix . 'role_creator', $this->prefix . 'core_role', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'role_modifier', $this->prefix . 'core_role', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
@@ -1137,6 +1184,9 @@ class m160620_095703_core extends Migration {
 		// Model Address
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_address_parent', $this->prefix . 'core_model_address', 'modelId', $this->prefix . 'core_address', 'id', 'CASCADE' );
 
+		// Model Location
+		$this->addForeignKey( 'fk_' . $this->prefix . 'model_location_parent', $this->prefix . 'core_model_location', 'modelId', $this->prefix . 'core_location', 'id', 'CASCADE' );
+
 		// Model File
 		$this->addForeignKey( 'fk_' . $this->prefix . 'model_file_parent', $this->prefix . 'core_model_file', 'modelId', $this->prefix . 'core_file', 'id', 'CASCADE' );
 
@@ -1177,6 +1227,7 @@ class m160620_095703_core extends Migration {
 		$this->dropTable( $this->prefix . 'core_province' );
 		$this->dropTable( $this->prefix . 'core_city' );
 		$this->dropTable( $this->prefix . 'core_address' );
+		$this->dropTable( $this->prefix . 'core_location' );
 
 		$this->dropTable( $this->prefix . 'core_role' );
 		$this->dropTable( $this->prefix . 'core_permission' );
@@ -1251,6 +1302,11 @@ class m160620_095703_core extends Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'address_country', $this->prefix . 'core_address' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'address_province', $this->prefix . 'core_address' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'address_city', $this->prefix . 'core_address' );
+
+		// Location
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'location_country', $this->prefix . 'core_location' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'location_province', $this->prefix . 'core_location' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'location_city', $this->prefix . 'core_location' );
 
 		// Role
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'role_creator', $this->prefix . 'core_role' );
@@ -1344,6 +1400,9 @@ class m160620_095703_core extends Migration {
 
 		// Model Address
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_address_parent', $this->prefix . 'core_model_address' );
+
+		// Model Location
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_location_parent', $this->prefix . 'core_model_location' );
 
 		// Model File
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_file_parent', $this->prefix . 'core_model_file' );

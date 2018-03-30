@@ -16,9 +16,6 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\FormField;
-
 use cmsgears\core\common\services\interfaces\resources\IFormFieldService;
 
 use cmsgears\core\common\services\base\ResourceService;
@@ -41,8 +38,6 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\core\common\models\resources\FormField';
-
-	public static $modelTable	= CoreTables::TABLE_FORM_FIELD;
 
 	public static $parentType	= CoreGlobal::TYPE_FORM_FIELD;
 
@@ -78,18 +73,24 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
-				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'name',
+					'label' => 'Id'
+				],
+				'name' => [
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
 				]
 			],
 			'defaultOrder' => [
@@ -117,7 +118,11 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'slug' => "$modelTable.slug",
+				'template' => "$modelTable.template"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -125,7 +130,10 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template",  'active' => "$modelTable.active"
+			'name' => "$modelTable.name",
+			'slug' => "$modelTable.slug",
+			'template' => "$modelTable.template",
+			'active' => "$modelTable.active"
 		];
 
 		// Result -----------
@@ -144,7 +152,9 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 
 	public function getByFormId( $formId ) {
 
-		return self::findByFormId( $formId );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByFormId( $formId );
 	}
 
 	// Read - Lists ----
@@ -165,6 +175,10 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 			'attributes' => $attributes
 		]);
 	}
+
+	// Delete -------------
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -187,10 +201,6 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 		}
 	}
 
-	// Delete -------------
-
-	// Bulk ---------------
-
 	// Notifications ------
 
 	// Cache --------------
@@ -208,11 +218,6 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 	// Read ---------------
 
 	// Read - Models ---
-
-	public static function findByFormId( $formId ) {
-
-		return FormField::findByFormId( $formId );
-	}
 
 	// Read - Lists ----
 

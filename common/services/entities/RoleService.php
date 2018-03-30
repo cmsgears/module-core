@@ -16,7 +16,6 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\mappers\RolePermission;
 
 use cmsgears\core\common\services\interfaces\entities\IRoleService;
@@ -43,8 +42,6 @@ class RoleService extends EntityService implements IRoleService {
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\core\common\models\entities\Role';
-
-	public static $modelTable	= CoreTables::TABLE_ROLE;
 
 	public static $typed		= true;
 
@@ -85,12 +82,18 @@ class RoleService extends EntityService implements IRoleService {
 	public function getPage( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
-		$modelTable	= static::$modelTable;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
@@ -184,7 +187,11 @@ class RoleService extends EntityService implements IRoleService {
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'desc' => "$modelTable.description" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'slug' => "$modelTable.slug",
+				'desc' => "$modelTable.description"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -192,7 +199,9 @@ class RoleService extends EntityService implements IRoleService {
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'desc' => "$modelTable.description"
+			'name' => "$modelTable.name",
+			'slug' => "$modelTable.slug",
+			'desc' => "$modelTable.description"
 		];
 
 		// Result -----------
@@ -245,7 +254,8 @@ class RoleService extends EntityService implements IRoleService {
 
 			foreach ( $binded as $id ) {
 
-				$toSave					= new RolePermission();
+				$toSave	= new RolePermission();
+
 				$toSave->roleId			= $roleId;
 				$toSave->permissionId	= $id;
 
@@ -255,6 +265,10 @@ class RoleService extends EntityService implements IRoleService {
 
 		return true;
 	}
+
+	// Delete -------------
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -276,10 +290,6 @@ class RoleService extends EntityService implements IRoleService {
 			}
 		}
 	}
-
-	// Delete -------------
-
-	// Bulk ---------------
 
 	// Notifications ------
 

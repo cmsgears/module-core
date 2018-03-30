@@ -7,14 +7,17 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\services\interfaces\base;
+namespace cmsgears\core\common\services\interfaces\resources;
+
+// CMG Imports
+use cmsgears\core\common\services\interfaces\base\IResourceService;
 
 /**
- * ISlugType declare the methods provided by service trait - [[\cmsgears\core\common\services\traits\base\SlugTypeTrait]].
+ * ILocationService provide service methods for location model.
  *
  * @since 1.0.0
  */
-interface ISlugType extends IEntityService {
+interface ILocationService extends IResourceService {
 
 	// Data Provider ------
 
@@ -22,19 +25,9 @@ interface ISlugType extends IEntityService {
 
 	// Read - Models ---
 
-	public function getBySlug( $slug, $config = [] );
-
-	public function getFirstBySlug( $slug, $config = [] );
-
-	public function getBySlugType( $slug, $type, $config = [] );
-
 	// Read - Lists ----
 
 	// Read - Maps -----
-
-	public function getSlugModelMap();
-
-	public function getSlugModelMapByType( $type );
 
 	// Read - Others ---
 

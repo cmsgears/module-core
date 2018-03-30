@@ -12,9 +12,6 @@ namespace cmsgears\core\common\services\resources;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\ModelHierarchy;
-
 use cmsgears\core\common\services\interfaces\resources\IModelHierarchyService;
 
 use cmsgears\core\common\services\base\ModelResourceService;
@@ -34,11 +31,7 @@ class ModelHierarchyService extends ModelResourceService implements IModelHierar
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelHierarchy';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_HIERARCHY;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\resources\ModelHierarchy';
 
 	// Protected --------------
 
@@ -74,12 +67,16 @@ class ModelHierarchyService extends ModelResourceService implements IModelHierar
 
 	public function getRoot( $rootId, $parentType ) {
 
-		return ModelHierarchy::findRoot( $rootId, $parentType );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findRoot( $rootId, $parentType );
 	}
 
 	public function getChildren( $parentId, $parentType ) {
 
-		return ModelHierarchy::findByParent( $parentId, $parentType );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByParent( $parentId, $parentType );
 	}
 
 	// Read - Lists ----
@@ -92,12 +89,13 @@ class ModelHierarchyService extends ModelResourceService implements IModelHierar
 
 	public function createInHierarchy( $parentId, $parentType, $rootId, $childId ) {
 
-		$root	= $this->getRoot( $rootId, $parentType );
+		$root = $this->getRoot( $rootId, $parentType );
 
 		// Add Root
 		if( !isset( $root ) ) {
 
-			$model				= new ModelHierarchy();
+			$model	= $this->getModelObject();
+
 			$model->rootId		= $rootId;
 			$model->parentType	= $parentType;
 			$model->lValue		= CoreGlobal::HIERARCHY_VALUE_L;
@@ -107,7 +105,8 @@ class ModelHierarchyService extends ModelResourceService implements IModelHierar
 			$model->save();
 		}
 
-		$model				= new ModelHierarchy();
+		$model	= $this->getModelObject();
+
 		$model->rootId		= $rootId;
 		$model->parentType	= $parentType;
 
@@ -120,13 +119,15 @@ class ModelHierarchyService extends ModelResourceService implements IModelHierar
 
 	public function assignRootChildren( $parentType, $binder ) {
 
+		$modelClass	= static::$modelClass;
+
 		$parentId	= $binder->binderId;
 		$binded		= $binder->binded;
 
 		// Add root children if not exist in hierarchy
-		foreach ( $binded as $id ) {
+		foreach( $binded as $id ) {
 
-			$child	= ModelHierarchy::findChild( $parentId, $parentType, $id );
+			$child	= $modelClass::findChild( $parentId, $parentType, $id );
 
 			if( !isset( $child ) ) {
 
@@ -135,9 +136,9 @@ class ModelHierarchyService extends ModelResourceService implements IModelHierar
 		}
 
 		// Remove unmapped children
-		$existingChildren	= $this->getChildren( $parentId, $parentType );
+		$existingChildren = $this->getChildren( $parentId, $parentType );
 
-		foreach ( $existingChildren as $child ) {
+		foreach( $existingChildren as $child ) {
 
 			// Remove unmapped child
 			if( !in_array( $child->childId, $binded ) ) {
@@ -154,7 +155,9 @@ class ModelHierarchyService extends ModelResourceService implements IModelHierar
 
 	public function deleteByRootId( $rootId, $parentType ) {
 
-		ModelHierarchy::deleteByRootId( $rootId, $parentType );
+		$modelClass	= static::$modelClass;
+
+		$modelClass::deleteByRootId( $rootId, $parentType );
 	}
 
 	// Bulk ---------------

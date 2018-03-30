@@ -46,8 +46,6 @@ class SiteService extends EntityService implements ISiteService {
 
 	public static $modelClass	= '\cmsgears\core\common\models\entities\Site';
 
-	public static $modelTable	= CoreTables::TABLE_SITE;
-
 	public static $parentType	= CoreGlobal::TYPE_SITE;
 
 	// Protected --------------
@@ -95,13 +93,19 @@ class SiteService extends EntityService implements ISiteService {
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
@@ -184,7 +188,9 @@ class SiteService extends EntityService implements ISiteService {
 	 */
 	public function getIdMetaMapBySlug( $slug ) {
 
-		$site = Site::findBySlug( $slug );
+		$modelClass	= static::$modelClass;
+
+		$site = $modelClass::findBySlug( $slug );
 
 		return $this->siteMetaService->getIdMetaMapByModelId( $site->id );
 	}
@@ -196,7 +202,9 @@ class SiteService extends EntityService implements ISiteService {
 	 */
 	public function getMetaMapBySlugType( $slug, $type ) {
 
-		$site = Site::findBySlug( $slug );
+		$modelClass	= static::$modelClass;
+
+		$site = $modelClass::findBySlug( $slug );
 
 		return $this->siteMetaService->getNameMetaMapByType( $site->id, $type );
 	}
@@ -208,7 +216,9 @@ class SiteService extends EntityService implements ISiteService {
 	 */
 	public function getMetaNameValueMapBySlugType( $slug, $type ) {
 
-		$site = Site::findBySlug( $slug );
+		$modelClass	= static::$modelClass;
+
+		$site = $modelClass::findBySlug( $slug );
 
 		return $this->siteMetaService->getNameValueMapByType( $site->id, $type );
 	}
@@ -245,6 +255,19 @@ class SiteService extends EntityService implements ISiteService {
 			'attributes' => $attributes
 		]);
 	}
+
+	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete dependencies
+		$this->fileService->deleteFiles( [ $model->avatar, $model->banner ] );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -290,19 +313,6 @@ class SiteService extends EntityService implements ISiteService {
 			}
 		}
 	}
-
-	// Delete -------------
-
-	public function delete( $model, $config = [] ) {
-
-		// Delete dependencies
-		$this->fileService->deleteFiles( [ $model->avatar, $model->banner ] );
-
-		// Delete model
-		return parent::delete( $model, $config );
-	}
-
-	// Bulk ---------------
 
 	// Notifications ------
 

@@ -15,11 +15,6 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\Category;
-use cmsgears\core\common\models\resources\Option;
-use cmsgears\core\common\models\mappers\ModelOption;
-
 use cmsgears\core\common\services\interfaces\resources\IOptionService;
 
 use cmsgears\core\common\services\base\ResourceService;
@@ -42,8 +37,6 @@ class OptionService extends ResourceService implements IOptionService {
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\core\common\models\resources\Option';
-
-	public static $modelTable	= CoreTables::TABLE_OPTION;
 
 	public static $parentType	= CoreGlobal::TYPE_OPTION;
 
@@ -79,19 +72,28 @@ class OptionService extends ResourceService implements IOptionService {
 
 	public function getPage( $config = [] ) {
 
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
 		$sort = new Sort([
 			'attributes' => [
-				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'name'
+					'label' => 'Id'
+				],
+				'name' => [
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
 				],
 				'slug' => [
-					'asc' => [ 'slug' => SORT_ASC ],
-					'desc' => ['slug' => SORT_DESC ],
+					'asc' => [ "$modelTable.slug" => SORT_ASC ],
+					'desc' => [ "$modelTable.slug" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'slug'
+					'label' => 'Slug'
 				]
 			]
 		]);
@@ -107,27 +109,37 @@ class OptionService extends ResourceService implements IOptionService {
 
 	public function getByCategoryId( $categoryId ) {
 
-		return self::findByCategoryId( $categoryId );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByCategoryId( $categoryId );
 	}
 
 	public function getByCategorySlug( $categorySlug, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
 
-		return Option::findByCategorySlugType( $categorySlug, $categoryType );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByCategorySlugType( $categorySlug, $categoryType );
 	}
 
 	public function getByNameCategoryId( $name, $categoryId ) {
 
-		return self::findByNameCategoryId( $name, $categoryId );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByNameCategoryId( $name, $categoryId );
 	}
 
 	public function getByNameCategoryName( $name, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
 
-		return self::findByNameCategoryName( $name, $categoryName, $categoryType );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByNameCategoryName( $name, $categoryName, $categoryType );
 	}
 
 	public function getByValueCategoryName( $value, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
 
-		return self::findByValueCategoryName( $value, $categoryName, $categoryType );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByValueCategoryName( $value, $categoryName, $categoryType );
 	}
 
 	// Read - Lists ----
@@ -158,7 +170,7 @@ class OptionService extends ResourceService implements IOptionService {
 	 */
 	public function getIdNameMapByCategorySlug( $categorySlug, $config = [], $type = CoreGlobal::TYPE_OPTION_GROUP ) {
 
-		$category	= Category::findBySlugType( $categorySlug, $type );
+		$category	= Yii::$app->get( 'categoryService' )->getBySlugType( $categorySlug, $type );
 
 		$config[ 'conditions' ][ 'categoryId' ] = $category->id;
 
@@ -171,7 +183,7 @@ class OptionService extends ResourceService implements IOptionService {
 	 */
 	public function getValueNameMapByCategoryId( $categoryId ) {
 
-		$category	= Category::findById( $categoryId );
+		$category	= Yii::$app->get( 'categoryService' )->getById( $categoryId );
 		$options	= $category->options;
 		$optionsMap	= array();
 
@@ -189,11 +201,11 @@ class OptionService extends ResourceService implements IOptionService {
 	 */
 	public function getValueNameMapByCategoryName( $categoryName, $type = CoreGlobal::TYPE_OPTION_GROUP ) {
 
-		$category	= Category::findByNameType( $categoryName, $type );
+		$category	= Yii::$app->get( 'categoryService' )->getByNameType( $categoryName, $type );
 		$options	= $category->options;
 		$optionsMap	= array();
 
-		foreach ( $options as $option ) {
+		foreach( $options as $option ) {
 
 			$optionsMap[ $option->value ] = $option->name;
 		}
@@ -203,11 +215,11 @@ class OptionService extends ResourceService implements IOptionService {
 
 	public function getValueNameMapByCategorySlug( $categorySlug, $type = CoreGlobal::TYPE_OPTION_GROUP ) {
 
-		$category	= Category::findBySlugType( $categorySlug, $type );
+		$category	= Yii::$app->get( 'categoryService' )->getBySlugType( $categorySlug, $type );
 		$options	= $category->options;
 		$optionsMap = array();
 
-		foreach ( $options as $option ) {
+		foreach( $options as $option ) {
 
 			$optionsMap[ $option->value ] = $option->name;
 		}
@@ -221,7 +233,7 @@ class OptionService extends ResourceService implements IOptionService {
 
 	public function create( $model, $config = [] ) {
 
-		$model->value	= $model->name;
+		$model->value = $model->name;
 
 		return parent::create( $model, $config );
 	}
@@ -242,7 +254,7 @@ class OptionService extends ResourceService implements IOptionService {
 	public function delete( $model, $config = [] ) {
 
 		// Delete mapping
-		ModelOption::deleteByModelId( $model->id );
+		Yii::$app->get( 'modelOptionService' )->deleteByModelId( $model->id );
 
 		// Delete model
 		return parent::delete( $model, $config );
@@ -267,26 +279,6 @@ class OptionService extends ResourceService implements IOptionService {
 	// Read ---------------
 
 	// Read - Models ---
-
-	public static function findByCategoryId( $categoryId ) {
-
-		return Option::findByCategoryId( $categoryId );
-	}
-
-	public static function findByNameCategoryId( $name, $categoryId ) {
-
-		return Option::findByNameCategoryId( $name, $categoryId );
-	}
-
-	public static function findByNameCategoryName( $name, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
-
-		return Option::findByNameCategoryName( $name, $categoryName, $categoryType );
-	}
-
-	public static function findByValueCategoryName( $value, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
-
-		return Option::findByValueCategoryName( $value, $categoryName, $categoryType );
-	}
 
 	// Read - Lists ----
 

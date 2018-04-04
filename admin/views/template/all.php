@@ -4,63 +4,71 @@ use cmsgears\widgets\popup\Popup;
 
 use cmsgears\widgets\grid\DataGrid;
 
-$coreProperties = $this->context->getCoreProperties();
-$this->title	= 'Templates | ' . $coreProperties->getSiteTitle();
+$type = ucfirst( $type );
 
-// Templates
+$coreProperties = $this->context->getCoreProperties();
+$this->title	= "$type Templates | " . $coreProperties->getSiteTitle();
+
+// View Templates
 $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
+$themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
-	'title' => 'Templates', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name', 'desc' => 'Description', 'content' => 'Content' ],
+	'title' => "$type Templates", 'options' => [ 'class' => 'grid-data grid-data-admin' ],
+	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'content' => 'Content' ],
 	'sortColumns' => [
-		'name' => 'Name', 'slug' => 'Slug', 'renderer' => 'Renderer', 'frender' => 'File Render',
-		'layout' => 'Layout', 'lgroup' => 'Layout Group', 'vpath' => 'View Path',
-		'cdate' => 'Created At', 'udate' => 'Updated At', 'ldate' => 'Sent At'
+		'name' => 'Name', 'slug' => 'Slug', 'title' => 'Title', 'active' => 'Active', 'renderer' => 'Renderer',
+		'frender' => 'File Render', 'layout' => 'Layout', 'lgroup' => 'Layout Group', 'vpath' => 'View Path',
+		'cdate' => 'Created At', 'udate' => 'Updated At'
 	],
-	'filters' => [ 'status' => [ 'file' => 'File Render', 'layout' => 'Group Layout' ] ],
+	'filters' => [ 'model' => [ 'active' => 'Active', 'frender' => 'File Render', 'lgroup' => 'Group Layout' ] ],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
+		'title' => [ 'title' => 'Title', 'type' => 'text' ],
 		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
 		'content' => [ 'title' => 'Content', 'type' => 'text' ],
-		'file' => [ 'title' => 'File Render', 'type' => 'flag' ],
-		'layout' => [ 'title' => 'Layout Group', 'type' => 'flag' ]
+		'renderer' => [ 'title' => 'Renderer', 'type' => 'select', 'options' => Yii::$app->templateManager->renderers ],
+		'frender' => [ 'title' => 'File Render', 'type' => 'flag' ],
+		'layout' => [ 'title' => 'Layout', 'type' => 'text' ],
+		'lgroup' => [ 'title' => 'Layout Group', 'type' => 'flag' ],
+		'active' => [ 'title' => 'Active', 'type' => 'flag' ],
+		'cdate' => [ 'title' => 'Created At', 'type' => 'date' ],
+		'udate' => [ 'title' => 'Updated At', 'type' => 'date' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk',
 	'bulkActions' => [
-		'status' => [ 'file' => 'File Render', 'cache' => 'Cache Render', 'group' => 'Layout Group', 'single' => 'Single Layout' ],
-		'model' => [ 'delete' => 'Delete' ]
+		'model' => [ 'active' => 'Activate', 'inactive' => 'Disable', 'frender' => 'File Render', 'crender' => 'Content Render', 'group' => 'Layout Group', 'single' => 'Single Layout', 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x2', null, null, null, 'x3', null, 'x2', 'x2', null ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x2', 'x2', null, null, null, null, 'x2', 'x3', null ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'name' => 'Name',
-		'file' => [ 'title' => 'File Render', 'generate' => function( $model ) { return $model->getFileRenderStr(); } ],
-		'glayout' => [ 'title' => 'Layout Group', 'generate' => function( $model ) { return $model->getGroupLayoutStr(); } ],
+		'title' => 'Title',
+		'frender' => [ 'title' => 'File', 'generate' => function( $model ) { return $model->getFileRenderStr(); } ],
+		'lgroup' => [ 'title' => 'Group', 'generate' => function( $model ) { return $model->getGroupLayoutStr(); } ],
 		'active' => [ 'title' => 'Active', 'generate' => function( $model ) { return $model->getActiveStr(); } ],
-		'description' => 'Description',
 		'renderer' => 'Renderer',
 		'layout' => 'Layout',
 		'viewPath' => 'View Path',
 		'actions' => 'Actions'
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
-	'templateDir' => '@themes/admin/views/templates/widget/grid',
+	'templateDir' => "$themeTemplates/widget/grid",
 	//'dataView' => "$moduleTemplates/grid/data/template",
 	//'cardView' => "$moduleTemplates/grid/cards/template",
 	//'actionView' => "$moduleTemplates/grid/actions/template"
 ]) ?>
 
 <?= Popup::widget([
-	'title' => 'Update Templates', 'size' => 'medium',
-	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'bulk',
+	'title' => 'Bulk Templates', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
 	'data' => [ 'model' => 'Template', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "core/template/bulk" ]
 ]) ?>
 
 <?= Popup::widget([
 	'title' => 'Delete Template', 'size' => 'medium',
-	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'delete',
+	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
 	'data' => [ 'model' => 'Template', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "core/template/delete?id=" ]
 ]) ?>

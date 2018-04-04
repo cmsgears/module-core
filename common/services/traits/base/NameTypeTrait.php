@@ -9,6 +9,9 @@
 
 namespace cmsgears\core\common\services\traits\base;
 
+// Yii Imports
+use Yii;
+
 /**
  * NameTypeTrait provide methods for models having name, slug and type columns with sluggable
  * behavior which allows unique name for a type.
@@ -34,7 +37,8 @@ trait NameTypeTrait {
 
 	public function getPageByType( $type, $config = [] ) {
 
-		$modelTable	= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
 		$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 
@@ -99,7 +103,7 @@ trait NameTypeTrait {
 	public function searchByName( $name, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
-		$modelTable	= static::$modelTable;
+		$modelTable	= $this->getModelTable();
 
 		$config[ 'query' ]		= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
 		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name" ];
@@ -118,7 +122,8 @@ trait NameTypeTrait {
 
 	public function searchByNameType( $name, $type, $config = [] ) {
 
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
 		$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 

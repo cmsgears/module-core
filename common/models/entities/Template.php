@@ -41,7 +41,7 @@ use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
 /**
- * Template Entity
+ * Template model can be used to render the models having template support.
  *
  * @property integer $id
  * @property integer $siteId
@@ -119,6 +119,12 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 
 		return [
 			AuthorBehavior::class,
+			'timestampBehavior' => [
+				'class' => TimestampBehavior::class,
+				'createdAtAttribute' => 'createdAt',
+				'updatedAtAttribute' => 'modifiedAt',
+				'value' => new Expression('NOW()')
+			],
 			'sluggableBehavior' => [
 				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
@@ -126,12 +132,6 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 				'immutable' => true,
 				'ensureUnique' => true,
 				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'themeId', 'slug' ] ]
-			],
-			'timestampBehavior' => [
-				'class' => TimestampBehavior::class,
-				'createdAtAttribute' => 'createdAt',
-				'updatedAtAttribute' => 'modifiedAt',
-				'value' => new Expression('NOW()')
 			]
 		];
 	}
@@ -149,6 +149,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 			[ [ 'name', 'type' ], 'required' ],
 			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique
+			[ [ 'siteId', 'themeId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'slug' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			[ [ 'siteId', 'themeId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ [ 'type', 'renderer', 'layout' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],

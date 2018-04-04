@@ -102,9 +102,9 @@ class SiteMemberService extends  MapperService implements ISiteMemberService {
 	 */
 	public function findBySiteIdUserId( $siteId, $userId ) {
 
-		$modelTable	= $this->getModelTable();
+		$modelClass	= $this->getModelClass();
 
-		return $modelTable::findBySiteIdUserId( $siteId, $userId );
+		return $modelClass::findBySiteIdUserId( $siteId, $userId );
 	}
 
 	// Read - Lists ----

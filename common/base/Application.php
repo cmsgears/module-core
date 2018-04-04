@@ -53,7 +53,7 @@ class Application extends BaseApplication {
 
 	/**
 	 * This method extends the controller instance creation and add additional functionality
-	 * to initialise application properties by reading core properties.
+	 * to initialize application properties by reading core properties.
 	 *
 	 * It also detect whether multi-site is enable and change route accordingly after reading
 	 * the site name from current route. The identified site properties will be used where applicable.
@@ -61,6 +61,11 @@ class Application extends BaseApplication {
 	 * @see \yii\base\Module#createController()
 	 */
 	public function createController( $route ) {
+
+		$coreProperties = null;
+
+		$site			= null;
+		$siteRoute		= null;
 
 		// Process multi site request
 		if( Yii::$app->core->multiSite ) {
@@ -91,25 +96,10 @@ class Application extends BaseApplication {
 					// Site Found
 					if( isset( $site ) ) {
 
-						// Configure Site
-						Yii::$app->core->site		= $site;
-						Yii::$app->core->siteId		= $site->id;
-						Yii::$app->core->siteSlug	= $site->slug;
-
-						// Configure App
 						$coreProperties	= CoreProperties::getInstance();
-
-						Yii::$app->formatter->dateFormat	= $coreProperties->getDateFormat();
-						Yii::$app->formatter->timeFormat	= $coreProperties->getTimeFormat();
-
-						Yii::$app->formatter->datetimeFormat = $coreProperties->getDateTimeFormat();
-
-						Yii::$app->timeZone = $coreProperties->getTimezone();
 
 						// Update base url to form urls
 						Yii::$app->urlManager->baseUrl	= Yii::$app->urlManager->baseUrl . "/" . $site->name;
-
-						return parent::createController( $siteRoute );
 					}
 				}
 			}
@@ -140,22 +130,7 @@ class Application extends BaseApplication {
 				// Site Found
 				if( isset( $site ) ) {
 
-					// Configure Site
-					Yii::$app->core->site		= $site;
-					Yii::$app->core->siteId		= $site->id;
-					Yii::$app->core->siteSlug	= $site->slug;
-
-					// Configure App
 					$coreProperties	= CoreProperties::getInstance();
-
-					Yii::$app->formatter->dateFormat	= $coreProperties->getDateFormat();
-					Yii::$app->formatter->timeFormat	= $coreProperties->getTimeFormat();
-
-					Yii::$app->formatter->datetimeFormat = $coreProperties->getDateTimeFormat();
-
-					Yii::$app->timeZone = $coreProperties->getTimezone();
-
-					return parent::createController( $route );
 				}
 			}
 		}
@@ -167,23 +142,35 @@ class Application extends BaseApplication {
 			// Site Found
 			if( isset( $site ) ) {
 
-				// Configure Site
-				Yii::$app->core->site	= $site;
-				Yii::$app->core->siteId	= $site->id;
-
-				// Configure App
 				$coreProperties	= CoreProperties::getInstance();
-
-				Yii::$app->formatter->dateFormat	= $coreProperties->getDateFormat();
-				Yii::$app->formatter->timeFormat	= $coreProperties->getTimeFormat();
-
-				Yii::$app->formatter->datetimeFormat = $coreProperties->getDateTimeFormat();
-
-				Yii::$app->timeZone = $coreProperties->getTimezone();
 			}
 		}
 
-	   return parent::createController( $route );
+		// Configure App
+		if( isset( $coreProperties ) ) {
+
+			Yii::$app->formatter->dateFormat	= $coreProperties->getDateFormat();
+			Yii::$app->formatter->timeFormat	= $coreProperties->getTimeFormat();
+
+			Yii::$app->formatter->datetimeFormat = $coreProperties->getDateTimeFormat();
+
+			Yii::$app->timeZone = $coreProperties->getTimezone();
+		}
+
+		if( isset( $site ) ) {
+
+			// Configure Site
+			Yii::$app->core->site		= $site;
+			Yii::$app->core->siteId		= $site->id;
+			Yii::$app->core->siteSlug	= $site->slug;
+		}
+
+		if( isset( $siteRoute ) ) {
+
+			return parent::createController( $siteRoute );
+		}
+
+		return parent::createController( $route );
 	}
 
 	// CMG interfaces ------------------------

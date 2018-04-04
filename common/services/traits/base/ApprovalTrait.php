@@ -15,7 +15,7 @@ use yii\base\UnknownMethodException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\interfaces\IApproval;
+use cmsgears\core\common\models\interfaces\base\IApproval;
 
 /**
  * Useful for services required registration process with admin approval.
@@ -52,15 +52,15 @@ trait ApprovalTrait {
 	public function getPageByOwnerId( $ownerId, $config = [] ) {
 
 		$owner		= isset( $config[ 'owner' ] ) ? $config[ 'owner' ] : false;
-		$modelTable	= static::$modelTable;
+		$modelTable	= $this->getModelTable();
 
 		if( $owner ) {
 
-			$config[ 'conditions' ][ "$modelTable.ownerId" ]	= $ownerId;
+			$config[ 'conditions' ][ "$modelTable.ownerId" ] = $ownerId;
 		}
 		else {
 
-			$config[ 'conditions' ][ "$modelTable.createdBy" ]	= $ownerId;
+			$config[ 'conditions' ][ "$modelTable.createdBy" ] = $ownerId;
 		}
 
 		return $this->getPage( $config );
@@ -68,9 +68,9 @@ trait ApprovalTrait {
 
 	public function getPageByOwnerIdStatus( $ownerId, $status, $config = [] ) {
 
-		$modelTable	= static::$modelTable;
+		$modelTable	= $this->getModelTable();
 
-		$config[ 'conditions' ][ "$modelTable.status" ]	  = $status;
+		$config[ 'conditions' ][ "$modelTable.status" ] = $status;
 
 		return $this->getPageByOwnerId( $ownerId, $config );
 	}
@@ -81,20 +81,20 @@ trait ApprovalTrait {
 	public function getPageByAuthorityId( $id, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
-		$modelTable	= static::$modelTable;
+		$modelTable	= $this->getModelTable();
 		$query		= null;
 
-		$owner		= isset( $config[ 'owner' ] ) ? $config[ 'owner' ] : false;
+		$owner = isset( $config[ 'owner' ] ) ? $config[ 'owner' ] : false;
 
 		if( $owner ) {
 
-			$query		= $modelClass::queryWithOwnerAuthor();
+			$query = $modelClass::queryWithOwnerAuthor();
 
 			$query->andWhere( "$modelTable.ownerId =:owner OR ($modelTable.ownerId IS NULL AND $modelTable.createdBy =:creator )", [ ':owner' => $id, ':creator' => $id ] );
 		}
 		else {
 
-			$query		= $modelClass::queryWithAuthor();
+			$query = $modelClass::queryWithAuthor();
 
 			$query->andWhere( "$modelTable.createdBy =:creator", [ ':creator' => $id ] );
 		}
@@ -106,9 +106,9 @@ trait ApprovalTrait {
 
 	public function getPageByAuthorityIdStatus( $id, $status, $config = [] ) {
 
-		$modelTable	= static::$modelTable;
+		$modelTable	= $this->getModelTable();
 
-		$config[ 'conditions' ][ "$modelTable.status" ]	  = $status;
+		$config[ 'conditions' ][ "$modelTable.status" ] = $status;
 
 		return $this->getPageByAuthorityId( $id, $config );
 	}
@@ -131,7 +131,7 @@ trait ApprovalTrait {
 
 	public function updateStatus( $model, $status ) {
 
-		$model->status	= $status;
+		$model->status = $status;
 
 		$model->update();
 

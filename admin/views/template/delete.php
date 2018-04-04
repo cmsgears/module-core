@@ -24,11 +24,14 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
 					<div class="row">
-						<div class="col col2">
+						<div class="col col3">
 							<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
-						<div class="col col2">
-							<?= $form->field( $model, 'renderer' )->dropDownList( $renderers, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
+						<div class="col col3">
+							<?= $form->field( $model, 'slug' )->textInput( [ 'readonly' => 'true' ] ) ?>
+						</div>
+						<div class="col col3">
+							<?= $form->field( $model, 'title' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -36,13 +39,18 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ], 'disabled' => true ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
+							<?= $form->field( $model, 'renderer' )->dropDownList( $renderers, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col col2">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
 						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
+						</div>
+					</div>
+					<div class="row">
 						<div class="col col2">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'fileRender', [ 'class' => 'cmt-checkbox cmt-choice template-file', 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
 						</div>

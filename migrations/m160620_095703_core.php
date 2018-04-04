@@ -1256,6 +1256,7 @@ class m160620_095703_core extends Migration {
 
 		$this->dropTable( $this->prefix . 'core_model_object' );
 		$this->dropTable( $this->prefix . 'core_model_address' );
+		$this->dropTable( $this->prefix . 'core_model_location' );
 		$this->dropTable( $this->prefix . 'core_model_file' );
 		$this->dropTable( $this->prefix . 'core_model_gallery' );
 		$this->dropTable( $this->prefix . 'core_model_tag' );

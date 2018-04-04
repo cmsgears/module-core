@@ -58,7 +58,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::ERROR_NOT_FOUND => 'The requested resource does not exist.',
 		CoreGlobal::ERROR_NO_ACCESS => 'You are not allowed to access this resource.',
 		CoreGlobal::ERROR_NOT_ALLOWED => 'You are not allowed to perform this action.',
-		CoreGlobal::ERROR_EXIST => 'An entry with the same name already exist. Please provide a different name.',
+		CoreGlobal::ERROR_EXIST => 'A record with the same value already exist. Please provide a different name.',
 		CoreGlobal::ERROR_SELECT => 'Please choose a valid value.',
 		CoreGlobal::ERROR_URL_ENTITY => 'An entry with the same url already exist.',
 		CoreGlobal::ERROR_DEPENDENCY => 'This entry can not be deleted since other rows in other tables are dependent on it.',
@@ -136,6 +136,7 @@ class MessageSource extends \yii\base\Component {
 
 		CoreGlobal::FIELD_ACTIVE => 'Active',
 		CoreGlobal::FIELD_STATUS => 'Status',
+		CoreGlobal::FIELD_ACCESS => 'Access',
 		CoreGlobal::FIELD_CONSUMED => 'Consumed',
 		CoreGlobal::FIELD_TRASH => 'Trash',
 		CoreGlobal::FIELD_VISIBILITY => 'Visibility',

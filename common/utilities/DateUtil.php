@@ -81,16 +81,22 @@ class DateUtil {
 	// Time --------------------------------------------------------
 
     // Time Duration
-    const DURATION_DAY      = 0;
-    const DURATION_WEEK     = 1;
-    const DURATION_MONTH    = 2;
-    const DURATION_YEAR     = 3;
+    const DURATION_YEAR     =  0;
+    const DURATION_MONTH    = 10;
+	const DURATION_WEEK     = 20;
+    const DURATION_DAY      = 30;
+	const DURATION_HOUR		= 40;
+	const DURATION_MINUTE	= 50;
+	const DURATION_SECOND	= 60;
 
     public static $durationMap = [
-        self::DURATION_DAY  => 'Today',
-        self::DURATION_WEEK => 'This Week',
-        self::DURATION_MONTH => 'This Month',
-        self::DURATION_YEAR => 'This Year'
+		self::DURATION_YEAR => 'Year',
+		self::DURATION_MONTH => 'Month',
+		self::DURATION_WEEK => 'Week',
+		self::DURATION_DAY => 'Day',
+		self::DURATION_HOUR => 'Hour',
+		self::DURATION_MINUTE => 'Minute',
+		self::DURATION_SECOND => 'Second'
     ];
 
 	// Hrs/Mins ----------------------------------------------------

@@ -19,9 +19,10 @@ use cmsgears\core\common\config\CoreGlobal;
 // Project Imports
 
 /**
- * MinTemplate can be used as template for classes without any special categorization and static methods.
+ * MinTemplate can be used as template for classes without any special categorization and
+ * static methods. It can be used for Module etc.
  *
- * Classes using default template can be further divided into below mentioned sections:
+ * Classes using min template can be further divided into below mentioned sections:
  * <ol>
  *	<li>Yii imports</li>
  *	<li>CMG imports</li>

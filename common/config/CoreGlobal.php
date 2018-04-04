@@ -226,7 +226,7 @@ class CoreGlobal {
 	const ERROR_NOT_FOUND			= 'notFoundError'; // 404 - not found
 	const ERROR_NO_ACCESS			= 'noAccessError'; // 403 - forbidden
 	const ERROR_NOT_ALLOWED			= 'notAllowedError'; // 500 - not authorized
-	const ERROR_EXIST				= 'entryExistError';
+	const ERROR_EXIST				= 'rowExistError';
 	const ERROR_SELECT				= 'selectError';
 	const ERROR_URL_ENTITY			= 'urlEntityError';
 	const ERROR_DEPENDENCY			= 'dependencyError';
@@ -304,6 +304,7 @@ class CoreGlobal {
 
 	const FIELD_ACTIVE				= 'activeField';
 	const FIELD_STATUS				= 'statusField';
+	const FIELD_ACCESS				= 'accessField';
 	const FIELD_CONSUMED			= 'consumedField';
 	const FIELD_TRASH				= 'trashField';
 	const FIELD_VISIBILITY			= 'visibilityField';

@@ -10,7 +10,7 @@
 namespace cmsgears\core\common\services\interfaces\mappers;
 
 // CMG Imports
-cmsgears\core\common\services\interfaces\base\IMapperService;
+use cmsgears\core\common\services\interfaces\base\IMapperService;
 
 /**
  * ISiteMemberService provide service methods for site member mapper.

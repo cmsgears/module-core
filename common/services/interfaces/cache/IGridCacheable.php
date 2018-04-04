@@ -18,5 +18,21 @@ namespace cmsgears\core\common\services\interfaces\cache;
  */
 interface IGridCacheable {
 
+	/**
+	 * Prepare the model to cache grid.
+	 *
+	 * @return array
+	 */
+	public function prepareGridCache();
+
+	/**
+	 * Prepare and cache the grid using primary and secondary cache mechanisms. It does not use
+	 * the default caching.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param array $config
+	 * @return void
+	 */
 	public function cacheGrid( $model, $config = [] );
+
 }

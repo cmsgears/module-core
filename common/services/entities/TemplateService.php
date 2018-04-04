@@ -24,6 +24,7 @@ use cmsgears\core\common\services\base\EntityService;
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
@@ -60,6 +61,7 @@ class TemplateService extends EntityService implements ITemplateService {
 	// Traits ------------------------------------------------------
 
 	use DataTrait;
+	use GridCacheTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
@@ -95,6 +97,12 @@ class TemplateService extends EntityService implements ITemplateService {
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
+				'theme' => [
+					'asc' => [ "$modelTable.themeId" => SORT_ASC ],
+					'desc' => [ "$modelTable.themeId" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 	            'name' => [
 	                'asc' => [ "$modelTable.name" => SORT_ASC ],
 	                'desc' => [ "$modelTable.name" => SORT_DESC ],
@@ -118,6 +126,18 @@ class TemplateService extends EntityService implements ITemplateService {
 	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Icon'
+	            ],
+	            'title' => [
+	                'asc' => [ "$modelTable.title" => SORT_ASC ],
+	                'desc' => [ "$modelTable.title" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Icon'
+	            ],
+	            'active' => [
+	                'asc' => [ "$modelTable.active" => SORT_ASC ],
+	                'desc' => [ "$modelTable.active" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Active'
 	            ],
 	            'renderer' => [
 	                'asc' => [ "$modelTable.renderer" => SORT_ASC ],
@@ -174,24 +194,43 @@ class TemplateService extends EntityService implements ITemplateService {
 
 		// Query ------------
 
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
 		// Filters ----------
 
-		// Filter - Status
-		$status	= Yii::$app->request->getQueryParam( 'status' );
+		// Params
+		$type	= Yii::$app->request->getQueryParam( 'type' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
-		if( isset( $status ) ) {
+		// Filter - Type
+		if( isset( $type ) ) {
 
-			switch( $status ) {
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
 
-				case 'file': {
+		// Filter - Model
+		if( isset( $filter ) ) {
 
-					$config[ 'conditions' ][ "$modelTable.fileRender" ]	= true;
+			switch( $filter ) {
+
+				case 'active': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = true;
 
 					break;
 				}
-				case 'layout': {
+				case 'frender': {
 
-					$config[ 'conditions' ][ "$modelTable.layoutGroup" ]	= true;
+					$config[ 'conditions' ][ "$modelTable.fileRender" ] = true;
+
+					break;
+				}
+				case 'lgroup': {
+
+					$config[ 'conditions' ][ "$modelTable.layoutGroup" ] = true;
 
 					break;
 				}
@@ -206,6 +245,7 @@ class TemplateService extends EntityService implements ITemplateService {
 
 			$search = [
 				'name' => "$modelTable.name",
+				'title' => "$modelTable.title",
 				'desc' => "$modelTable.description",
 				'content' => "$modelTable.content"
 			];
@@ -217,10 +257,17 @@ class TemplateService extends EntityService implements ITemplateService {
 
 		$config[ 'report-col' ]	= [
 			'name' => "$modelTable.name",
+			'type' => "$modelTable.type",
+			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
+			'active' => "$modelTable.active",
+			'renderer' => "$modelTable.renderer",
+			'frender' => "$modelTable.fileRender",
+			'layout' => "$modelTable.layout",
+			'lgroup' => "$modelTable.layoutGroup",
 			'content' => "$modelTable.content",
-			'file' => "$modelTable.fileRender",
-			'layout' => "$modelTable.layoutGroup"
+			'cdate' => "$modelTable.createdAt",
+			'udate' => "$modelTable.modifiedAt"
 		];
 
 		// Result -----------
@@ -265,14 +312,31 @@ class TemplateService extends EntityService implements ITemplateService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'icon', 'description', 'renderer', 'fileRender', 'layout', 'layoutGroup', 'viewPath', 'content' , 'active' ];
+		$admin		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'slug', 'icon', 'title', 'description', 'renderer', 'fileRender', 'layout', 'layoutGroup', 'viewPath', 'content' ];
+
+		if( $admin ) {
+
+			$attributes[] = 'status';
+		}
 
 		return parent::update( $model, [
 			'attributes' => $attributes
 		]);
 	}
 
-	public function switchFileRender( $model, $config = [] ) {
+	public function toggleActive( $model, $config = [] ) {
+
+		$active = $model->active ? false : true;
+
+		$model->fileRender = $active;
+
+		return parent::updateSelective( $model, [
+			'attributes' => [ 'active' ]
+		]);
+ 	}
+
+	public function toggleFileRender( $model, $config = [] ) {
 
 		$global = $model->fileRender ? false : true;
 
@@ -283,7 +347,7 @@ class TemplateService extends EntityService implements ITemplateService {
 		]);
  	}
 
-	public function switchGroupLayout( $model, $config = [] ) {
+	public function toggleGroupLayout( $model, $config = [] ) {
 
 		$global = $model->layoutGroup ? false : true;
 
@@ -302,11 +366,27 @@ class TemplateService extends EntityService implements ITemplateService {
 
 		switch( $column ) {
 
-			case 'status': {
+			case 'model': {
 
 				switch( $action ) {
 
-					case 'file': {
+					case 'active': {
+
+						$model->active = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'inactive': {
+
+						$model->active = false;
+
+						$model->update();
+
+						break;
+					}
+					case 'frender': {
 
 						$model->fileRender = true;
 
@@ -314,7 +394,7 @@ class TemplateService extends EntityService implements ITemplateService {
 
 						break;
 					}
-					case 'cache': {
+					case 'crender': {
 
 						$model->fileRender = false;
 
@@ -338,14 +418,6 @@ class TemplateService extends EntityService implements ITemplateService {
 
 						break;
 					}
-				}
-
-				break;
-			}
-			case 'model': {
-
-				switch( $action ) {
-
 					case 'delete': {
 
 						$this->delete( $model );

@@ -154,7 +154,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	}
 
 	/**
-	 * @return - DataProvider of publicly accessible models with applied configuration.
+	 * Returns data provider of publicly accessible models with applied configuration.
+	 *
+	 * @return \cmsgears\core\common\data\ActiveDataProvider
 	 */
 	public function getPublicPage( $config = [] ) {
 
@@ -416,6 +418,15 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	public function create( $model, $config = [] ) {
 
+		$modelClass	= new static::$modelClass;
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		if( $modelClass::isMultiSite() && !$ignoreSite ) {
+
+			$model->siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+		}
+
 		$model->save();
 
 		if( $model->id > 0 ) {
@@ -435,7 +446,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		$model	= new static::$modelClass;
 
-		foreach ( $params as $key => $value ) {
+		foreach( $params as $key => $value ) {
 
 			$model->$key = $value;
 		}
@@ -568,12 +579,10 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 			if( Yii::$app->core->isUpdateSelective() ) {
 
-				$model	= $this->getById( $model->id );
+				$model = $this->getById( $model->id );
 			}
 
-			$model->delete();
-
-			return true;
+			return $model->delete();
 		}
 
 		return false;
@@ -794,6 +803,12 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 					$reportColumns[ $column ][ 'find' ] = $find;
 				}
 
+				// Flag
+				if( isset( $flag ) ) {
+
+					$reportColumns[ $column ][ 'flag' ] = $flag;
+				}
+
 				// Numeric
 				if( isset( $flag ) || isset( $match ) ) {
 
@@ -816,6 +831,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 			foreach ( $reportColumns as $key => $column ) {
 
 				$find	= isset( $column[ 'find' ] ) ? $column[ 'find' ] : null;
+				$flag	= isset( $column[ 'flag' ] ) ? $column[ 'flag' ] : null;
 				$match	= isset( $column[ 'match' ] ) ? $column[ 'match' ] : null;
 				$start	= isset( $column[ 'start' ] ) ? $column[ 'start' ] : null;
 				$end	= isset( $column[ 'end' ] ) ? $column[ 'end' ] : null;
@@ -826,10 +842,15 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 					$query->andFilterWhere( [ 'like', $key, $find ] );
 				}
 
+				// Flag
+				if( isset( $flag ) ) {
+
+					$query->andWhere( "$key=:flag", [ ':flag' => $flag ] );
+				}
+
 				// Numeric
 				if( isset( $match ) ) {
 
-					// TODO: Check for numerical and string matches
 					$query->andWhere( "$key=:match", [ ':match' => $match ] );
 				}
 

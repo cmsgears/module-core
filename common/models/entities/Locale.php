@@ -32,6 +32,10 @@ use cmsgears\core\common\models\traits\base\NameTrait;
  *
  * The above mentioned code and name represent English Language preferred in United States.
  *
+ * The code can be further split into Language and Region as shown in above example. The language
+ * must be two or three letter lowercase according to ISO-639 and region must be two letter uppercase
+ * country code according to ISO-3166.
+ *
  * @property long $id
  * @property string $code
  * @property string $name
@@ -56,7 +60,7 @@ class Locale extends Entity implements IName {
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_LOCALE;
+	protected $modelType = CoreGlobal::TYPE_LOCALE;
 
 	// Private ----------------
 

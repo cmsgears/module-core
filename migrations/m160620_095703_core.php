@@ -105,6 +105,7 @@ class m160620_095703_core extends Migration {
 		$this->upModelMessage();
 		$this->upModelHierarchy();
 		$this->upModelComment();
+		$this->upModelAnalytics();
 		$this->upModelMeta();
 
 		// Traits - Mappers
@@ -219,9 +220,12 @@ class m160620_095703_core extends Migration {
 			'title' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'classPath' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
-			'url' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
-			'active' => $this->boolean()->notNull()->defaultValue( false ),
+			'link' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
+			'status' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'visibility' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
+			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
+			'featured' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'htmlOptions' => $this->text(),
@@ -292,6 +296,7 @@ class m160620_095703_core extends Migration {
 			'countryId' => $this->bigInteger( 20 )->notNull(),
 			'provinceId' => $this->bigInteger( 20 ),
 			'name' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
+			'code' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
 			'iso' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'postal' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
@@ -440,15 +445,17 @@ class m160620_095703_core extends Migration {
 			'bannerId' => $this->bigInteger( 20 ),
 			'videoId' => $this->bigInteger( 20 ),
 			'templateId' => $this->bigInteger( 20 ),
-			'status' => $this->smallInteger( 6 ),
+			'status' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'email' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'username' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'passwordHash' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
+			'icon' => $this->string( Yii::$app->core->largeText ),
 			'title' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
 			'firstName' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'middleName' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'lastName' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'name' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'message' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'dob' => $this->date(),
@@ -633,6 +640,9 @@ class m160620_095703_core extends Migration {
 			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'status' => $this->smallInteger( 6 ),
 			'visibility' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
+			'order' => $this->smallInteger( 6 ),
+			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
+			'featured' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'content' => $this->mediumText(),
@@ -663,10 +673,11 @@ class m160620_095703_core extends Migration {
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'title' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
-			'successMessage' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
+			'success' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
+			'failure' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'captcha' => $this->boolean()->notNull()->defaultValue( false ),
 			'visibility' => $this->smallInteger( 6 ),
-			'active' => $this->boolean()->notNull()->defaultValue( false ),
+			'status' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'userMail' => $this->boolean()->notNull()->defaultValue( false ),
 			'adminMail' => $this->boolean()->notNull()->defaultValue( false ),
 			'uniqueSubmit' => $this->boolean()->notNull()->defaultValue( false ),
@@ -715,7 +726,6 @@ class m160620_095703_core extends Migration {
 		$this->createTable( $this->prefix . 'core_tag', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'siteId' => $this->bigInteger( 20 )->notNull(),
-			'templateId' => $this->bigInteger( 20 ),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
 			'modifiedBy' => $this->bigInteger( 20 ),
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
@@ -731,7 +741,6 @@ class m160620_095703_core extends Migration {
 
 		// Index for columns site
 		$this->createIndex( 'idx_' . $this->prefix . 'tag_site', $this->prefix . 'core_tag', 'siteId' );
-		$this->createIndex( 'idx_' . $this->prefix . 'tag_template', $this->prefix . 'core_tag', 'templateId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'tag_creator', $this->prefix . 'core_tag', 'createdBy' );
 		$this->createIndex( 'idx_' . $this->prefix . 'tag_modifier', $this->prefix . 'core_tag', 'modifiedBy' );
 	}
@@ -741,7 +750,6 @@ class m160620_095703_core extends Migration {
 		$this->createTable( $this->prefix . 'core_category', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'siteId' => $this->bigInteger( 20 )->notNull(),
-			'templateId' => $this->bigInteger( 20 ),
 			'parentId' => $this->bigInteger( 20 ),
 			'rootId' => $this->bigInteger( 20 ),
 			'createdBy' => $this->bigInteger( 20 )->notNull(),
@@ -752,10 +760,11 @@ class m160620_095703_core extends Migration {
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'title' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'description' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
-			'featured' => $this->boolean()->notNull()->defaultValue( false ),
 			'lValue' => $this->smallInteger( 6 ),
 			'rValue' => $this->smallInteger( 6 ),
 			'order' => $this->smallInteger( 20 ),
+			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
+			'featured' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'htmlOptions' => $this->text(),
@@ -765,7 +774,6 @@ class m160620_095703_core extends Migration {
 
 		// Index for columns site
 		$this->createIndex( 'idx_' . $this->prefix . 'category_site', $this->prefix . 'core_category', 'siteId' );
-		$this->createIndex( 'idx_' . $this->prefix . 'category_template', $this->prefix . 'core_category', 'templateId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'category_parent', $this->prefix . 'core_category', 'parentId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'category_root', $this->prefix . 'core_category', 'rootId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'category_creator', $this->prefix . 'core_category', 'createdBy' );
@@ -840,6 +848,7 @@ class m160620_095703_core extends Migration {
 			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'fragment' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'rating' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
+			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
@@ -858,6 +867,31 @@ class m160620_095703_core extends Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_video', $this->prefix . 'core_model_comment', 'videoId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_creator', $this->prefix . 'core_model_comment', 'createdBy' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_modifier', $this->prefix . 'core_model_comment', 'modifiedBy' );
+	}
+
+	private function upModelAnalytics() {
+
+		$this->createTable( $this->prefix . 'core_model_analytics', [
+			'id' => $this->bigPrimaryKey( 20 ),
+			'parentId' => $this->bigInteger( 20 )->notNull(),
+			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
+			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( CoreGlobal::TYPE_SITE ),
+			'views' => $this->integer( 11 )->defaultValue( 0 ),
+			'referrals' => $this->integer( 11 )->defaultValue( 0 ),
+			'comments' => $this->integer( 11 )->defaultValue( 0 ),
+			'ratings' => $this->float(),
+			'likes' => $this->integer( 11 )->defaultValue( 0 ),
+			'wish' => $this->integer( 11 )->defaultValue( 0 ),
+			'weight' => $this->float(),
+			'rank' => $this->integer( 11 )->defaultValue( 0 ),
+			'data' => $this->mediumText(),
+			'gridCache' => $this->longText(),
+			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
+			'gridCachedAt' => $this->dateTime()
+		], $this->options );
+
+		// Index for columns base, creator and modifier
+		$this->createIndex( 'idx_' . $this->prefix . 'model_analytics_parent', $this->prefix . 'core_model_analytics', 'parentId' );
 	}
 
 	private function upModelMeta() {
@@ -1154,13 +1188,11 @@ class m160620_095703_core extends Migration {
 
 		// Tag
 		$this->addForeignKey( 'fk_' . $this->prefix . 'tag_site', $this->prefix . 'core_tag', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
-		$this->addForeignKey( 'fk_' . $this->prefix . 'tag_template', $this->prefix . 'core_tag', 'templateId', $this->prefix . 'core_template', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'tag_creator', $this->prefix . 'core_tag', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'tag_modifier', $this->prefix . 'core_tag', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
 
 		// Category
 		$this->addForeignKey( 'fk_' . $this->prefix . 'category_site', $this->prefix . 'core_category', 'siteId', $this->prefix . 'core_site', 'id', 'RESTRICT' );
-		$this->addForeignKey( 'fk_' . $this->prefix . 'category_template', $this->prefix . 'core_category', 'templateId', $this->prefix . 'core_template', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'category_parent', $this->prefix . 'core_category', 'parentId', $this->prefix . 'core_category', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'category_creator', $this->prefix . 'core_category', 'createdBy', $this->prefix . 'core_user', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'category_modifier', $this->prefix . 'core_category', 'modifiedBy', $this->prefix . 'core_user', 'id', 'SET NULL' );
@@ -1252,6 +1284,7 @@ class m160620_095703_core extends Migration {
 		$this->dropTable( $this->prefix . 'core_model_message' );
 		$this->dropTable( $this->prefix . 'core_model_hierarchy' );
 		$this->dropTable( $this->prefix . 'core_model_comment' );
+		$this->dropTable( $this->prefix . 'core_model_analytics' );
 		$this->dropTable( $this->prefix . 'core_model_meta' );
 
 		$this->dropTable( $this->prefix . 'core_model_object' );
@@ -1372,13 +1405,11 @@ class m160620_095703_core extends Migration {
 
 		// Tag
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'tag_site', $this->prefix . 'core_tag' );
-		$this->dropForeignKey( 'fk_' . $this->prefix . 'tag_template', $this->prefix . 'core_tag' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'tag_creator', $this->prefix . 'core_tag' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'tag_modifier', $this->prefix . 'core_tag' );
 
 		// Category
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'category_site', $this->prefix . 'core_category' );
-		$this->dropForeignKey( 'fk_' . $this->prefix . 'category_template', $this->prefix . 'core_category' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'category_parent', $this->prefix . 'core_category' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'category_creator', $this->prefix . 'core_category' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'category_modifier', $this->prefix . 'core_category' );

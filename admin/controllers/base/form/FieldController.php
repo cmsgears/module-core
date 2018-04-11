@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\base\form;
 
 // Yii Imports
@@ -10,9 +18,14 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\FormField;
+use cmsgears\core\admin\controllers\base\Controller;
 
-class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
+/**
+ * FieldController provides actions specific to form field model.
+ *
+ * @since 1.0.0
+ */
+class FieldController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -39,11 +52,11 @@ class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
 		// Services
 		$this->modelService			= Yii::$app->factory->get( 'formFieldService' );
 		$this->formService			= Yii::$app->factory->get( 'formService' );
-		
+
 		// Return Url
 		$this->returnUrl		= Url::previous( 'formFields' );
 		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/config/all' ], true );
-		
+
 		// Breadcrumbs
 		$this->breadcrumbs		= [
 			'all' => [ [ 'label' => 'Form Field' ] ],
@@ -99,11 +112,14 @@ class FieldController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		Url::remember( Yii::$app->request->getUrl(), 'formFields' );
 
+		$modelClass = $this->modelService->getModelClass();
+
 		$dataProvider = $this->modelService->getPageByFormId( $fid );
 
 		return $this->render( 'all', [
-			 'dataProvider' => $dataProvider,
-			 'formId' => $fid
+			'dataProvider' => $dataProvider,
+			'formId' => $fid,
+			'typeMap' => $modelClass::$typeMap
 		]);
 	}
 

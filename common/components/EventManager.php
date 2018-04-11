@@ -93,6 +93,16 @@ class EventManager extends Component {
 		// Trigger notifications using given template, message and config
 	}
 
+	public function deleteNotificationsByUserId( $userId, $config = [] ) {
+
+		// Delete notifications triggered for a user
+	}
+
+	public function deleteNotificationsByParent( $parentId, $parentType, $config = [] ) {
+
+		// Delete notifications triggered for a model
+	}
+
 	// Reminder Trigger -------
 
 	public function triggerReminder( $slug, $data, $config = [] ) {
@@ -101,6 +111,36 @@ class EventManager extends Component {
 	}
 
 	// Activity Logger --------
+
+	/**
+	 * Trigger activity log on model creation.
+	 *
+	 * @param type $model
+	 */
+	public function logCreate( $model, $service, $config = [] ) {
+
+		// Trigger create activity
+	}
+
+	/**
+	 * Trigger activity log on model update.
+	 *
+	 * @param type $model
+	 */
+	public function logUpdate( $model, $service, $config = [] ) {
+
+		// Trigger update activity
+	}
+
+	/**
+	 * Trigger activity log on model delete.
+	 *
+	 * @param type $model
+	 */
+	public function logDelete( $model, $service, $config = [] ) {
+
+		// Trigger delete activity
+	}
 
 	public function triggerActivity( $slug, $data, $config = [] ) {
 

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\sites;
 
 // Yii Imports
@@ -9,9 +17,14 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\File;
+use cmsgears\core\admin\controllers\base\CrudController;
 
-class MemberController extends \cmsgears\core\admin\controllers\base\CrudController {
+/**
+ * MemberController provides actions specific to site members.
+ *
+ * @since 1.0.0
+ */
+class MemberController extends CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -20,15 +33,15 @@ class MemberController extends \cmsgears\core\admin\controllers\base\CrudControl
 	// Public -----------------
 
 	// Protected --------------
+
 	protected $roleType;
-	protected $roleSuperAdmin;
-	
+	protected $superRoleId;
+
 	// Private ----------------
 
-	private $themeService;
 	private $userService;
 	private $roleService;
-	
+
 	// Constructor and Initialisation ------------------------------
 
 	public function init() {
@@ -36,31 +49,37 @@ class MemberController extends \cmsgears\core\admin\controllers\base\CrudControl
 		parent::init();
 
 		// Permission
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'siteMemberService' );
-		$this->userService		= Yii::$app->factory->get( 'userService' );
-		$this->roleService			= Yii::$app->factory->get( 'roleService' );
+		$this->modelService	= Yii::$app->factory->get( 'siteMemberService' );
 
-		$this->themeService		= Yii::$app->factory->get( 'themeService' );
+		$this->userService	= Yii::$app->factory->get( 'userService' );
+		$this->roleService	= Yii::$app->factory->get( 'roleService' );
 
 		// Sidebar
-		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'site' ];
-		
-		$this->roleSuperAdmin		= $this->roleService->getBySlug( 'super-admin', true );
-		$this->roleSuperAdmin		= isset( $this->roleSuperAdmin ) ? $this->roleSuperAdmin->id : null;
+		$this->sidebar = [ 'parent' => 'sidebar-core', 'child' => 'site' ];
+
+		$this->roleType = 'system';
+
+		$this->superRoleId	= $this->roleService->getBySlugType( 'super-admin', $this->roleType );
+		$this->superRoleId	= isset( $this->superRoleId ) ? $this->superRoleId->id : null;
 
 		// Return Url
-		$this->returnUrl		= Url::previous( 'sitesMember' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/sites/members/all' ], true );
-		$this->roleType =		'system';
+		$this->returnUrl = Url::previous( 'site-members' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/sites/members/all' ], true );
+
+		// Sites Url
+		$sitesUrl = Url::previous( 'sites' );
+		$sitesUrl = isset( $this->sitesUrl ) ? $this->sitesUrl : Url::toRoute( [ '/core/sites/all' ], true );
+
 		// Breadcrumbs
-		$this->breadcrumbs		= [
-			'all' => [ [ 'label' => 'Site Member' ] ],
-			'create' => [ [ 'label' => 'Site member', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Site member', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Site member', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+		$this->breadcrumbs = [
+			'base' => [ [ 'label' => 'Sites', 'url' =>  $sitesUrl ] ],
+			'all' => [ [ 'label' => 'Site Members' ] ],
+			'create' => [ [ 'label' => 'Site Members', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Site Members', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Site Members', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 
@@ -80,39 +99,37 @@ class MemberController extends \cmsgears\core\admin\controllers\base\CrudControl
 
 	// SitesController------------------------
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
-		Url::remember( Yii::$app->request->getUrl(), 'sitesMember' );
-		$siteId = Yii::$app->request->get("id");
+		Url::remember( Yii::$app->request->getUrl(), 'site-members' );
 
-		$dataProvider = $this->modelService->getSiteMemberBySiteId( $siteId );
+		$siteId = Yii::$app->request->get( 'sid' );
+
+		$dataProvider = $this->modelService->getPageBySiteId( $siteId );
 
 		return $this->render( 'all', [
-			 'dataProvider' => $dataProvider,
+			'dataProvider' => $dataProvider,
 			'siteId' => $siteId
-			
 		]);
 	}
 
-	public function actionCreate() {
+	public function actionCreate( $config = [] ) {
 
-		$siteId = Yii::$app->request->get("siteId");
+		$siteId = Yii::$app->request->get( 'sid' );
 
-		$modelClass	= $this->modelService->getModelClass();
-		$model		= new $modelClass;
-	
+		$model	= $this->modelService->getModelObject();
+
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$user = $this->userService->getById( $model->userId );
-			
-			$hello = $this->modelService->create( $user, [ 'roleId' => $model->roleId, 'siteId' => $model->siteId ] );
-			
-			return $this->redirect( "all?id=$model->siteId" );
+			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
+
+			return $this->redirect( "all?sid=$siteId" );
 		}
-		
-		$roleMap	= $this->roleService->getIdNameMapByType( $this->roleType );
-		unset( $roleMap[ $this->roleSuperAdmin ] );
-		
+
+		$roleMap = $this->roleService->getIdNameMapByType( $this->roleType );
+
+		unset( $roleMap[ $this->superRoleId ] );
+
 		return $this->render( 'create', [
 			'model' => $model,
 			'siteId' => $siteId,
@@ -120,33 +137,28 @@ class MemberController extends \cmsgears\core\admin\controllers\base\CrudControl
 		]);
 	}
 
-	public function actionUpdate( $id ) {
+	public function actionUpdate( $id, $config = [] ) {
 
-		$siteId = Yii::$app->request->get("siteId");
-		
 		// Find Model
-		$model	= $this->modelService->getById( $id );
-		
+		$model = $this->modelService->getById( $id );
+
 		// Update if exist
 		if( isset( $model ) ) {
 
-			$user = $this->userService->getById( $model->userId );
-			
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->modelService->update( $model, [ ] );
+				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
 
-				return $this->refresh();
+				return $this->redirect( $this->returnUrl );
 			}
 
-			$roleMap	= $this->roleService->getIdNameMapByType( $this->roleType );
-			unset( $roleMap[ $this->roleSuperAdmin ] );
-		
+			$roleMap = $this->roleService->getIdNameMapByType( $this->roleType );
+
+			unset( $roleMap[ $this->superRoleId ] );
+
 			// Render view
 			return $this->render( 'update', [
 				'model' => $model,
-				'user'	=> $user,
-				'siteId' => $siteId,
 				'roleMap' => $roleMap
 			]);
 		}
@@ -155,10 +167,10 @@ class MemberController extends \cmsgears\core\admin\controllers\base\CrudControl
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $id ) {
+	public function actionDelete( $id, $config = [] ) {
 
 		// Find Model
-		$model	= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		// Delete if exist
 		if( isset( $model ) ) {
@@ -166,6 +178,8 @@ class MemberController extends \cmsgears\core\admin\controllers\base\CrudControl
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
 				try {
+
+					$this->model = $model;
 
 					$this->modelService->delete( $model );
 
@@ -177,18 +191,17 @@ class MemberController extends \cmsgears\core\admin\controllers\base\CrudControl
 				}
 			}
 
-			$themesMap = $this->themeService->getIdNameMap();
+			$roleMap = $this->roleService->getIdNameMapByType( $this->roleType );
 
 			// Render view
 			return $this->render( 'delete', [
 				'model' => $model,
-				'avatar' => $model->avatar,
-				'banner' => $model->banner,
-				'themesMap' => $themesMap
+				'roleMap' => $roleMap
 			]);
 		}
 
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

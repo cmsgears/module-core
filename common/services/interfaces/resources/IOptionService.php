@@ -10,8 +10,6 @@
 namespace cmsgears\core\common\services\interfaces\resources;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\services\interfaces\base\IResourceService;
 use cmsgears\core\common\services\interfaces\resources\IData;
 
@@ -30,13 +28,9 @@ interface IOptionService extends IResourceService, IData {
 
 	public function getByCategoryId( $categoryId );
 
-	public function getByCategorySlug( $categorySlug, $categoryType = CoreGlobal::TYPE_OPTION_GROUP );
-
 	public function getByNameCategoryId( $name, $categoryId );
 
-	public function getByNameCategoryName( $name, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP );
-
-	public function getByValueCategoryName( $value, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP );
+	public function isExistByNameCategoryId( $name, $categoryId );
 
 	// Read - Lists ----
 
@@ -46,13 +40,9 @@ interface IOptionService extends IResourceService, IData {
 
 	public function getIdNameMapByCategoryId( $categoryId, $config = [] );
 
-	public function getIdNameMapByCategorySlug( $categoryName, $config = [], $type = CoreGlobal::TYPE_OPTION_GROUP );
+	public function getValueNameMapByCategoryId( $categoryId, $config = [] );
 
-	public function getValueNameMapByCategoryId( $categoryId );
-
-	public function getValueNameMapByCategoryName( $categoryName, $type = CoreGlobal::TYPE_OPTION_GROUP );
-
-	public function getValueNameMapByCategorySlug( $categorySlug, $type = CoreGlobal::TYPE_OPTION_GROUP );
+	public function getIdNameMapByCategorySlug( $slug, $config = [] );
 
 	// Read - Others ---
 
@@ -61,6 +51,8 @@ interface IOptionService extends IResourceService, IData {
 	// Update -------------
 
 	// Delete -------------
+
+	public function deleteByCategoryId( $categoryId );
 
 	// Bulk ---------------
 

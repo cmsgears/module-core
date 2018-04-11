@@ -85,7 +85,7 @@ class Site extends Entity implements IAuthor, IContent, IData, IGridCache, IName
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_SITE;
+	protected $modelType = CoreGlobal::TYPE_SITE;
 
 	// Private ----------------
 
@@ -155,7 +155,8 @@ class Site extends Entity implements IAuthor, IContent, IData, IGridCache, IName
 			// Other
 			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'active', 'gridCacheValid' ], 'boolean' ],
-			[ [ 'avatarId', 'bannerId', 'themeId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ 'themeId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'avatarId', 'bannerId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ 'gridCachedAt', 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
@@ -188,6 +189,26 @@ class Site extends Entity implements IAuthor, IContent, IData, IGridCache, IName
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
+	}
+
+	// yii\db\BaseActiveRecord
+
+	/**
+	 * @inheritdoc
+	 */
+	public function beforeSave( $insert ) {
+
+		if( parent::beforeSave( $insert ) ) {
+
+			if( $this->themeId <= 0 ) {
+
+				$this->themeId = null;
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 	// CMG interfaces ------------------------

@@ -10,6 +10,7 @@
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
@@ -75,6 +76,8 @@ class OptionService extends ResourceService implements IOptionService {
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
+		$categoryTable = Yii::$app->factory->get( 'categoryService' )->getModelTable();
+
 		$sort = new Sort([
 			'attributes' => [
 				'id' => [
@@ -83,24 +86,60 @@ class OptionService extends ResourceService implements IOptionService {
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
+				'category' => [
+					'asc' => [ "$categoryTable.name" => SORT_ASC ],
+					'desc' => [ "$categoryTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Category'
+				],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Name'
 				],
-				'slug' => [
-					'asc' => [ "$modelTable.slug" => SORT_ASC ],
-					'desc' => [ "$modelTable.slug" => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'Slug'
-				]
+	            'icon' => [
+	                'asc' => [ "$modelTable.icon" => SORT_ASC ],
+	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Icon'
+	            ]
 			]
 		]);
 
-		$config[ 'sort' ] = $sort;
+		if( !isset( $config[ 'sort' ] ) ) {
 
-		return parent::findPage( $config );
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		// Filters ----------
+
+		// Searching --------
+
+		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [
+				'name' => "$modelTable.name",
+				'value' => "$modelTable.value"
+			];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name",
+			'value' => "$modelTable.value"
+		];
+
+		// Result -----------
+
+		return parent::getPage( $config );
 	}
 
 	// Read ---------------
@@ -114,13 +153,6 @@ class OptionService extends ResourceService implements IOptionService {
 		return $modelClass::findByCategoryId( $categoryId );
 	}
 
-	public function getByCategorySlug( $categorySlug, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
-
-		$modelClass	= static::$modelClass;
-
-		return $modelClass::findByCategorySlugType( $categorySlug, $categoryType );
-	}
-
 	public function getByNameCategoryId( $name, $categoryId ) {
 
 		$modelClass	= static::$modelClass;
@@ -128,18 +160,11 @@ class OptionService extends ResourceService implements IOptionService {
 		return $modelClass::findByNameCategoryId( $name, $categoryId );
 	}
 
-	public function getByNameCategoryName( $name, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
+	public function isExistByNameCategoryId( $name, $categoryId ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::findByNameCategoryName( $name, $categoryName, $categoryType );
-	}
-
-	public function getByValueCategoryName( $value, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
-
-		$modelClass	= static::$modelClass;
-
-		return $modelClass::findByValueCategoryName( $value, $categoryName, $categoryType );
+		return $modelClass::isExistByNameCategoryId( $name, $categoryId );
 	}
 
 	// Read - Lists ----
@@ -148,7 +173,7 @@ class OptionService extends ResourceService implements IOptionService {
 
 		$config[ 'conditions' ][ 'categoryId' ] = $categoryId;
 
-		return self::findIdList( $config );
+		return $this->getIdList( $config );
 	}
 
 	// Read - Maps -----
@@ -161,70 +186,32 @@ class OptionService extends ResourceService implements IOptionService {
 
 		$config[ 'conditions' ][ 'categoryId' ] = $categoryId;
 
-		return self::findIdNameMap( $config );
-	}
-
-	/**
-	 * @param integer $categoryName - category name
-	 * @return array - an array having id as key and name as value for given category name.
-	 */
-	public function getIdNameMapByCategorySlug( $categorySlug, $config = [], $type = CoreGlobal::TYPE_OPTION_GROUP ) {
-
-		$category	= Yii::$app->get( 'categoryService' )->getBySlugType( $categorySlug, $type );
-
-		$config[ 'conditions' ][ 'categoryId' ] = $category->id;
-
-		return self::findIdNameMap( $config );
+		return $this->getIdNameMap( $config );
 	}
 
 	/**
 	 * @param integer $categoryId - category id
 	 * @return array - an array having value as key and name as value for given category id.
 	 */
-	public function getValueNameMapByCategoryId( $categoryId ) {
+	public function getValueNameMapByCategoryId( $categoryId, $config = [] ) {
 
-		$category	= Yii::$app->get( 'categoryService' )->getById( $categoryId );
-		$options	= $category->options;
-		$optionsMap	= array();
+		$modelTable	= $this->getModelTable();
 
-		foreach ( $options as $option ) {
+		$config[ 'nameColumn' ]		= "$modelTable.value";
+		$config[ 'valueColumn' ]	= "$modelTable.name";
 
-			$optionsMap[ $option->value ] = $option->name;
-		}
+		$config[ 'conditions' ][ 'categoryId' ] = $categoryId;
 
-		return $optionsMap;
+		return $this->getIdNameMap( $config );
 	}
 
-	/**
-	 * @param integer $categoryName - category name
-	 * @return array - an array having value as key and name as value for given category name.
-	 */
-	public function getValueNameMapByCategoryName( $categoryName, $type = CoreGlobal::TYPE_OPTION_GROUP ) {
+	public function getIdNameMapByCategorySlug( $slug, $config = [] ) {
 
-		$category	= Yii::$app->get( 'categoryService' )->getByNameType( $categoryName, $type );
-		$options	= $category->options;
-		$optionsMap	= array();
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_SYSTEM;
 
-		foreach( $options as $option ) {
+		$category = Yii::$app->factory->get( 'categoryService' )->getBySlugType( $slug, $type, $config );
 
-			$optionsMap[ $option->value ] = $option->name;
-		}
-
-		return $optionsMap;
-	}
-
-	public function getValueNameMapByCategorySlug( $categorySlug, $type = CoreGlobal::TYPE_OPTION_GROUP ) {
-
-		$category	= Yii::$app->get( 'categoryService' )->getBySlugType( $categorySlug, $type );
-		$options	= $category->options;
-		$optionsMap = array();
-
-		foreach( $options as $option ) {
-
-			$optionsMap[ $option->value ] = $option->name;
-		}
-
-		return $optionsMap;
+		return $this->getIdNameMapByCategoryId( $category->id );
 	}
 
 	// Read - Others ---
@@ -233,7 +220,10 @@ class OptionService extends ResourceService implements IOptionService {
 
 	public function create( $model, $config = [] ) {
 
-		$model->value = $model->name;
+		if( empty( $model->value ) ) {
+
+			$model->value = $model->name;
+		}
 
 		return parent::create( $model, $config );
 	}
@@ -242,7 +232,7 @@ class OptionService extends ResourceService implements IOptionService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'categoryId', 'name', 'value', 'icon', 'htmlOptions' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'value', 'icon', 'htmlOptions' ];
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -254,13 +244,44 @@ class OptionService extends ResourceService implements IOptionService {
 	public function delete( $model, $config = [] ) {
 
 		// Delete mapping
-		Yii::$app->get( 'modelOptionService' )->deleteByModelId( $model->id );
+		Yii::$app->factory->get( 'modelOptionService' )->deleteByModelId( $model->id );
 
 		// Delete model
 		return parent::delete( $model, $config );
 	}
 
+	public function deleteByCategoryId( $categoryId ) {
+
+		$options = $this->getByCategoryId( $categoryId );
+
+		foreach( $options as $option ) {
+
+			$this->delete( $option );
+		}
+	}
+
 	// Bulk ---------------
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
 
 	// Notifications ------
 

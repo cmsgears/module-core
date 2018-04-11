@@ -65,15 +65,30 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 
 	// Read - Models ---
 
+	public function getByParentId( $parentId ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByParentId( $parentId );
+	}
+
+	public function getByParentType( $parentType ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByParentType( $parentType );
+	}
+
 	/**
-	 * @param long $modelId of mapped model.
-	 * @return array of model mappings having matching $modelId.
+	 * @param long $parentId of parent model.
+	 * @param long $parentType assigned to parent model.
+	 * @return array of model mappings having matching $parentId and $parentType.
 	 */
-	public function getAllByModelId( $modelId ) {
+	public function getByParent( $parentId, $parentType ) {
 
-		$modelClass	= self::$modelClass;
+		$modelClass	= static::$modelClass;
 
-		return $modelClass::findAllByModelId( $modelId );
+		return $modelClass::findByParent( $parentId, $parentType );
 	}
 
 	/**
@@ -84,63 +99,56 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 	 */
 	public function getByModelId( $parentId, $parentType, $modelId ) {
 
-		$modelClass	= self::$modelClass;
+		$modelClass	= static::$modelClass;
 
 		return $modelClass::findByModelId( $parentId, $parentType, $modelId );
 	}
 
-	/**
-	 * @param long $parentId of parent model.
-	 * @param long $parentType assigned to parent model.
-	 * @return array of model mappings having matching $parentId and $parentType.
-	 */
-	public function getByParent( $parentId, $parentType ) {
+	public function getByType( $parentId, $parentType, $type ) {
 
-		$modelClass	= self::$modelClass;
+		$modelClass	= static::$modelClass;
 
-		return $modelClass::findByParent( $parentId, $parentType );
+		return $modelClass::findByType( $parentId, $parentType, $type );
 	}
 
-	public function getByParentId( $parentId ) {
+	public function getFirstByType( $parentId, $parentType, $type ) {
 
-		$modelClass	= self::$modelClass;
+		$modelClass	= static::$modelClass;
 
-		return $modelClass::findByParentId( $parentId );
+		return $modelClass::findFirstByType( $parentId, $parentType, $type );
 	}
-
-	public function getByParentType( $parentType ) {
-
-		$modelClass	= self::$modelClass;
-
-		return $modelClass::findByParentType( $parentType );
-	}
-
-	// Models having active column
 
 	public function getActiveByParent( $parentId, $parentType ) {
 
-		$modelClass	= self::$modelClass;
+		$modelClass	= static::$modelClass;
 
 		return $modelClass::findActiveByParent( $parentId, $parentType );
 	}
 
 	public function getActiveByParentId( $parentId ) {
 
-		$modelClass	= self::$modelClass;
+		$modelClass	= static::$modelClass;
 
 		return $modelClass::findActiveByParentId( $parentId );
 	}
 
 	public function getActiveByParentType( $parentType ) {
 
-		$modelClass	= self::$modelClass;
+		$modelClass	= static::$modelClass;
 
 		return $modelClass::findActiveByParentType( $parentType );
 	}
 
+	public function getActiveByType( $modelId, $parentType, $type ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findActiveByType( $modelId, $parentType, $type );
+	}
+
 	public function getActiveByModelIdParentType( $modelId, $parentType ) {
 
-		$modelClass	= self::$modelClass;
+		$modelClass	= static::$modelClass;
 
 		return $modelClass::findActiveByModelIdParentType( $modelId, $parentType );
 	}
@@ -159,7 +167,7 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 
 	public function activate( $model ) {
 
-		$model->active	= true;
+		$model->active = true;
 
 		$model->update();
 
@@ -182,7 +190,7 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 
 	public function disable( $model ) {
 
-		$model->active	= false;
+		$model->active = false;
 
 		$model->update();
 
@@ -212,14 +220,14 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 
 	public function deleteByParent( $parentId, $parentType ) {
 
-		$modelClass	= self::$modelClass;
+		$modelClass	= static::$modelClass;
 
 		return $modelClass::deleteByParent( $parentId, $parentType );
 	}
 
 	public function deleteByModelId( $modelId ) {
 
-		$modelClass	= self::$modelClass;
+		$modelClass	= static::$modelClass;
 
 		return $modelClass::deleteByModelId( $modelId );
 	}

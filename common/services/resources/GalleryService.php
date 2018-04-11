@@ -12,6 +12,7 @@ namespace cmsgears\core\common\services\resources;
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -21,6 +22,7 @@ use cmsgears\core\common\services\interfaces\resources\IFileService;
 
 use cmsgears\core\common\services\base\ResourceService;
 
+use cmsgears\core\common\services\traits\base\ApprovalTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
@@ -60,6 +62,7 @@ class GalleryService extends ResourceService implements IGalleryService {
 
 	// Traits ------------------------------------------------------
 
+	use ApprovalTrait;
 	use DataTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
@@ -68,7 +71,7 @@ class GalleryService extends ResourceService implements IGalleryService {
 
 	public function __construct( IFileService $fileService, $config = [] ) {
 
-		$this->fileService	= $fileService;
+		$this->fileService = $fileService;
 
 		parent::__construct( $config );
 	}
@@ -92,7 +95,7 @@ class GalleryService extends ResourceService implements IGalleryService {
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		$templateTable	= Yii::$app->get( 'templateService' )->getModelTable();
+		$templateTable = Yii::$app->factory->get( 'templateService' )->getModelTable();
 
 		// Sorting ----------
 
@@ -105,8 +108,8 @@ class GalleryService extends ResourceService implements IGalleryService {
 					'label' => 'Id'
 				],
 	            'template' => [
-	                'asc' => [ "`$templateTable`.`name`" => SORT_ASC ],
-	                'desc' => [ "`$templateTable`.`name`" => SORT_DESC ],
+	                'asc' => [ "$templateTable.name" => SORT_ASC ],
+	                'desc' => [ "$templateTable.name" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Template'
 	            ],
@@ -128,18 +131,48 @@ class GalleryService extends ResourceService implements IGalleryService {
 	                'default' => SORT_DESC,
 	                'label' => 'Type'
 	            ],
+	            'icon' => [
+	                'asc' => [ "$modelTable.icon" => SORT_ASC ],
+	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Icon'
+	            ],
 				'title' => [
 					'asc' => [ "$modelTable.title" => SORT_ASC ],
 					'desc' => [ "$modelTable.title" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Title'
 				],
-	            'active' => [
-	                'asc' => [ "$modelTable.active" => SORT_ASC ],
-	                'desc' => [ "$modelTable.active" => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'Active'
-	            ],
+				'status' => [
+					'asc' => [ "$modelTable.status" => SORT_ASC ],
+					'desc' => [ "$modelTable.status" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Status'
+				],
+				'visibility' => [
+					'asc' => [ "$modelTable.visibility" => SORT_ASC ],
+					'desc' => [ "$modelTable.visibility" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Visibility'
+				],
+				'order' => [
+					'asc' => [ "$modelTable.order" => SORT_ASC ],
+					'desc' => [ "$modelTable.order" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Order'
+				],
+				'pinned' => [
+					'asc' => [ "$modelTable.pinned" => SORT_ASC ],
+					'desc' => [ "$modelTable.pinned" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Pinned'
+				],
+				'featured' => [
+					'asc' => [ "$modelTable.featured" => SORT_ASC ],
+					'desc' => [ "$modelTable.featured" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Featured'
+				],
 				'cdate' => [
 					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
 					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
@@ -147,8 +180,8 @@ class GalleryService extends ResourceService implements IGalleryService {
 					'label' => 'Created At'
 				],
 				'udate' => [
-					'asc' => [ "$modelTable.updatedAt" => SORT_ASC ],
-					'desc' => [ "$modelTable.updatedAt" => SORT_DESC ],
+					'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Updated At'
 				]
@@ -172,16 +205,37 @@ class GalleryService extends ResourceService implements IGalleryService {
 
 		// Filters ----------
 
-		// Filter - Status
+		// Params
+		$type	= Yii::$app->request->getQueryParam( 'type' );
 		$status	= Yii::$app->request->getQueryParam( 'status' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
-		if( isset( $status ) ) {
+		// Filter - Type
+		if( isset( $type ) ) {
 
-			switch( $status ) {
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
 
-				case 'active': {
+		// Filter - Status
+		if( isset( $status ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
 
-					$config[ 'conditions' ][ "$modelTable.active" ]	= true;
+			$config[ 'conditions' ][ "$modelTable.status" ]	= $modelClass::$urlRevStatusMap[ $status ];
+		}
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'pinned': {
+
+					$config[ 'conditions' ][ "$modelTable.pinned" ] = true;
+
+					break;
+				}
+				case 'featured': {
+
+					$config[ 'conditions' ][ "$modelTable.featured" ] = true;
 
 					break;
 				}
@@ -196,9 +250,9 @@ class GalleryService extends ResourceService implements IGalleryService {
 
 			$search = [
 				'name' => "$modelTable.name",
-				'slug' => "$modelTable.slug",
 				'title' => "$modelTable.title",
-				'desc' => "$modelTable.description"
+				'desc' => "$modelTable.description",
+				'content' => "$modelTable.content"
 			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
@@ -208,11 +262,14 @@ class GalleryService extends ResourceService implements IGalleryService {
 
 		$config[ 'report-col' ]	= [
 			'name' => "$modelTable.name",
-			'slug' => "$modelTable.slug",
 			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
 			'content' => "$modelTable.content",
-			'active' => "$modelTable.active"
+			'status' => "$modelTable.status",
+			'visibility' => "$modelTable.visibility",
+			'order' => "$modelTable.order",
+			'pinned' => "$modelTable.pinned",
+			'featured' => "$modelTable.featured"
 		];
 
 		// Result -----------
@@ -232,27 +289,9 @@ class GalleryService extends ResourceService implements IGalleryService {
 
 	// Create -------------
 
-	public function createByParams( $params = [], $config = [] ) {
-
-		$autoName = isset( $config[ 'autoName' ] ) ? $config[ 'autoName' ] : false;
-
-		if( $autoName ) {
-
-			$gallery = $this->getByNameType( $params[ 'name' ], $params[ 'type' ] );
-
-			// Rare scenario
-			if( isset( $gallery ) ) {
-
-				$params[ 'name' ] = Yii::$app->security->generateRandomString( 16 );
-			}
-		}
-
-		return parent::createByParams( $params, $config );
-	}
-
 	public function createItem( $gallery, $item ) {
 
-		$modelFile = Yii::$app->get( 'modelFileService' )->getModelObject();
+		$modelFile = Yii::$app->factory->get( 'modelFileService' )->getModelObject();
 
 		// Save Gallery Image
 		$this->fileService->saveImage( $item, [ 'model' => $modelFile, 'attribute' => 'modelId' ] );
@@ -273,12 +312,16 @@ class GalleryService extends ResourceService implements IGalleryService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'templateId', 'name', 'title', 'description' ];
+		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-		// Provide activate/deactivate capability to admin
-		if( isset( $config[ 'admin' ] ) && $config[ 'admin' ] ) {
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'templateId', 'name', 'slug', 'icon', 'title',
+			'description', 'visibility', 'content'
+		];
 
-			$attributes[] = 'active';
+		if( $admin ) {
+
+			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'pinned', 'featured' ] );
 		}
 
 		return parent::update( $model, [
@@ -319,32 +362,15 @@ class GalleryService extends ResourceService implements IGalleryService {
 		}
 	}
 
-	public function switchActive( $model, $config = [] ) {
-
-		$global	= $model->global ? false : true;
-
-		$model->global	= $global;
-
-		return parent::updateSelective( $model, [
-			'attributes' => [ 'global' ]
-		]);
- 	}
-
 	// Delete -------------
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete items
-		$items	= $model->files;
-
 		// Delete Items
-		foreach ( $items as $item ) {
-
-			$this->fileService->delete( $item );
-		}
+		$this->fileService->deleteFiles( $model->files );
 
 		// Delete mappings
-		Yii::$app->get( 'modelGalleryService' )->deleteByModelId( $model->id );
+		Yii::$app->factory->get( 'modelGalleryService' )->deleteByModelId( $model->id );
 
 		// Delete model
 		return parent::delete( $model, $config );
@@ -360,19 +386,33 @@ class GalleryService extends ResourceService implements IGalleryService {
 
 				switch( $action ) {
 
-					case 'active': {
+					case 'confirmed': {
 
-						$model->active = true;
-
-						$model->update();
+						$this->confirm( $model );
 
 						break;
 					}
-					case 'block': {
+					case 'rejected': {
 
-						$model->active = false;
+						$this->reject( $model );
 
-						$model->update();
+						break;
+					}
+					case 'active': {
+
+						$this->approve( $model );
+
+						break;
+					}
+					case 'frozen': {
+
+						$this->freeze( $model );
+
+						break;
+					}
+					case 'blocked': {
+
+						$this->block( $model );
 
 						break;
 					}
@@ -384,6 +424,22 @@ class GalleryService extends ResourceService implements IGalleryService {
 
 				switch( $action ) {
 
+					case 'pinned': {
+
+						$model->pinned = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'featured': {
+
+						$model->featured = true;
+
+						$model->update();
+
+						break;
+					}
 					case 'delete': {
 
 						$this->delete( $model );

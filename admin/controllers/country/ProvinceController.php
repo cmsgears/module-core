@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\country;
 
 // Yii Imports
@@ -8,7 +16,14 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class ProvinceController extends \cmsgears\core\admin\controllers\base\Controller {
+use cmsgears\core\admin\controllers\base\Controller;
+
+/**
+ * ProvinceController provides actions specific to province model.
+ *
+ * @since 1.0.0
+ */
+class ProvinceController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -27,21 +42,21 @@ class ProvinceController extends \cmsgears\core\admin\controllers\base\Controlle
 		parent::init();
 
 		// Permission
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
-		// Services
-		$this->modelService		= Yii::$app->factory->get( 'provinceService' );
+		// Service
+		$this->modelService = Yii::$app->factory->get( 'provinceService' );
 
 		// Sidebar
-		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'country' ];
+		$this->sidebar = [ 'parent' => 'sidebar-core', 'child' => 'country' ];
 
 		// Return Url
-		$this->returnUrl		= Url::previous( 'provinces' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/country/province/all' ], true );
+		$this->returnUrl = Url::previous( 'provinces' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/country/province/all' ], true );
 
 		// Country Url
-		$countryUrl		= Url::previous( 'countries' );
-		$countryUrl		= isset( $countryUrl ) ? $countryUrl : Url::toRoute( [ '/core/country/all' ], true );
+		$countryUrl = Url::previous( 'countries' );
+		$countryUrl = isset( $countryUrl ) ? $countryUrl : Url::toRoute( [ '/core/country/all' ], true );
 
 		// Breadcrumbs
 		$this->breadcrumbs	= [
@@ -71,9 +86,9 @@ class ProvinceController extends \cmsgears\core\admin\controllers\base\Controlle
 
 	public function actionAll( $cid ) {
 
-		$dataProvider	= $this->modelService->getPage( [ 'conditions' => [ 'countryId' => $cid ] ] );
-
 		Url::remember( Yii::$app->request->getUrl(), 'provinces' );
+
+		$dataProvider = $this->modelService->getPage( [ 'conditions' => [ 'countryId' => $cid ] ] );
 
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
@@ -83,15 +98,15 @@ class ProvinceController extends \cmsgears\core\admin\controllers\base\Controlle
 
 	public function actionCreate( $cid ) {
 
-		$modelClass			= $this->modelService->getModelClass();
-		$model				= new $modelClass;
-		$model->countryId	= $cid;
+		$model = $this->modelService->getModelObject();
 
-		if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
+		$model->countryId = $cid;
 
-			$this->modelService->create( $model );
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			return $this->redirect( "update?id=$model->id" );
+			$this->model = $this->modelService->create( $model );
+
+			return $this->redirect( "all?cid=$cid" );
 		}
 
 		return $this->render( 'create', [
@@ -102,16 +117,16 @@ class ProvinceController extends \cmsgears\core\admin\controllers\base\Controlle
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model	= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		// Update if exist
 		if( isset( $model ) ) {
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->modelService->update( $model );
+				$this->model = $this->modelService->update( $model );
 
-				return $this->refresh();
+				return $this->redirect( $this->returnUrl );
 			}
 
 			// Render view
@@ -127,7 +142,7 @@ class ProvinceController extends \cmsgears\core\admin\controllers\base\Controlle
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		// Delete if exist
 		if( isset( $model ) ) {
@@ -136,13 +151,15 @@ class ProvinceController extends \cmsgears\core\admin\controllers\base\Controlle
 
 				try {
 
+					$this->model = $model;
+
 					$this->modelService->delete( $model );
 
 					return $this->redirect( $this->returnUrl );
 				}
 				catch( Exception $e ) {
 
-					throw new HttpException( 409,  Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+					throw new HttpException( 409, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY ) );
 				}
 			}
 
@@ -155,4 +172,5 @@ class ProvinceController extends \cmsgears\core\admin\controllers\base\Controlle
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

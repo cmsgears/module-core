@@ -11,8 +11,13 @@ namespace cmsgears\core\common\models\mappers;
 
 // CMG Imports
 use cmsgears\core\common\models\base\CoreTables;
+
+use cmsgears\core\common\models\interfaces\base\IFeatured;
+
 use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\entities\ObjectData;
+
+use cmsgears\core\common\models\traits\base\FeaturedTrait;
 
 /**
  * The mapper to map Object Model to specific parent model for given parentId and parentType.
@@ -30,7 +35,7 @@ use cmsgears\core\common\models\entities\ObjectData;
  *
  * @since 1.0.0
  */
-class ModelObject extends ModelMapper {
+class ModelObject extends ModelMapper implements IFeatured {
 
 	// Variables ---------------------------------------------------
 
@@ -51,6 +56,8 @@ class ModelObject extends ModelMapper {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use FeaturedTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -93,26 +100,6 @@ class ModelObject extends ModelMapper {
 	public function getModel() {
 
 		return $this->hasOne( ObjectData::class, [ 'id' => 'modelId' ] );
-	}
-
-	/**
-	 * Returns string representation of pinned flag.
-	 *
-	 * @return boolean
-	 */
-	public function getPinnedStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->pinned );
-	}
-
-	/**
-	 * Returns string representation of featured flag.
-	 *
-	 * @return boolean
-	 */
-	public function getFeaturedStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->featured );
 	}
 
 	// Static Methods ----------------------------------------------

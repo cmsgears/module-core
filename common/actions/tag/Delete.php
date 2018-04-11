@@ -58,7 +58,7 @@ class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
 			$modelTag	= $modelTagService->getById( $cid );
 
-			if( isset( $modelTag ) && $modelTag->checkParent( $this->model->id, $this->parentType ) ) {
+			if( isset( $modelTag ) && $modelTag->isParentValid( $this->model->id, $this->parentType ) ) {
 
 				$modelTagService->delete( $modelTag );
 

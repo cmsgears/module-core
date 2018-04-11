@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\content;
 
 // Yii Imports
@@ -9,12 +17,16 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\File;
 
+use cmsgears\core\common\actions\base\ModelAction;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * UpdateAvatar can be used to update avatar of discovered model.
+ * Video action configures the video of model having video.
+ *
+ * @since 1.0.0
  */
-class UpdateAvatar extends \cmsgears\core\common\actions\base\ModelAction {
+class Video extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -30,7 +42,7 @@ class UpdateAvatar extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $fileName	= 'Avatar';
+	public $fileName = 'Video';
 
 	// Protected --------------
 
@@ -50,40 +62,28 @@ class UpdateAvatar extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// UpdateAvatar --------------------------
+	// Video ---------------------------------
 
 	public function run() {
 
 		if( isset( $this->model ) ) {
 
-			$avatar = new File();
+			$video = File::loadFile( $this->model->video, $this->fileName );
 
-			if( isset( $this->model->avatar ) ) {
+			if( $this->modelService->updateVideo( $this->model, $video ) ) {
 
-				$avatar	= $this->model->avatar;
-			}
-
-			if( $avatar->load( Yii::$app->request->post(), $this->fileName ) ) {
-
-				$this->modelService->updateAvatar( $this->model, $avatar );
-
-				$this->model->refresh();
-
-				$avatar		= $this->model->avatar;
-				$response	= [ 'thumbUrl' => $avatar->getThumbUrl(), 'fileUrl' => $avatar->getFileUrl() ];
+				$response = [ 'fileUrl' => $video->getFileUrl() ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
 			}
 
-			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $avatar );
-
 			// Trigger Ajax Failure
-			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 		}
 
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

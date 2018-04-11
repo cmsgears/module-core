@@ -24,7 +24,7 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
 						<div class="col col2">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'group', null, 'cmti cmti-checkbox' ) ?>
+							<?= $form->field( $model, 'slug' ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -35,12 +35,16 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'description' )->textarea() ?>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'group', [ 'class' => 'cmt-checkbox cmt-choice cmt-field-group', 'group-target' => 'group-permission' ], 'cmti cmti-checkbox' ) ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="filler-height filler-height-medium"></div>
-		<?php if( $model->group ) { ?>
-		<div class="box box-crud">
+		<div class="box box-crud group-permission">
 			<div class="box-header">
 				<div class="box-header-title">Group Permissions</div>
 			</div>
@@ -48,9 +52,9 @@ $returnUrl		= $this->context->returnUrl;
 				<div class="box-content">
 					<div class="row padding padding-small-v">
 					<?php
-						$children	= $model->getChildrenIdList();
+						$children = $model->getChildrenIdList();
 
-						foreach ( $permissions as $permission ) {
+						foreach( $permissions as $permission ) {
 					?>
 							<div class="col col4">
 					<?php
@@ -73,7 +77,6 @@ $returnUrl		= $this->context->returnUrl;
 				</div>
 			</div>
 		</div>
-		<?php } ?>
 		<div class="filler-height filler-height-medium"></div>
 		<?php if( count( $roles ) > 0 ) { ?>
 		<div class="box box-crud">

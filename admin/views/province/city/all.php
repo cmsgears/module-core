@@ -7,29 +7,39 @@ use cmsgears\widgets\grid\DataGrid;
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= 'Cities | ' . $coreProperties->getSiteTitle();
 
-// Templates
+// View Templates
 $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
+$themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => "create?pid=$provinceId", 'data' => [ ],
 	'title' => 'Cities', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name', 'code' => 'Code' ],
+	'searchColumns' => [ 'name' => 'Name', 'code' => 'Code', 'iso' => 'ISO', 'postal' => 'Postal Code', 'zone' => 'Zone' ],
 	'sortColumns' => [
-		'name' => 'Name', 'zone' => 'Zone', 'postal' => 'Postal Code',
+		'name' => 'Name', 'code' => 'Code', 'iso' => 'ISO', 'postal' => 'Postal Code', 'zone' => 'Zone',
 		'latitude' => 'Latitude', 'longitude' => 'Longitude'
 	],
 	'filters' => [],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
+		'code' => [ 'title' => 'Code', 'type' => 'text' ],
+		'iso' => [ 'title' => 'ISO', 'type' => 'text' ],
+		'postal' => [ 'title' => 'Postal Code', 'type' => 'text' ],
 		'zone' => [ 'title' => 'Zone', 'type' => 'text' ],
-		'postal' => [ 'title' => 'Postal Code', 'type' => 'text' ]
+		'regions' => [ 'title' => 'Regions', 'type' => 'text' ],
+		'zcodes' => [ 'title' => 'Zip Codes', 'type' => 'text' ]
 	],
-	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [ 'model' => [ 'delete' => 'Delete' ] ],
+	'bulkPopup' => 'popup-grid-bulk',
+	'bulkActions' => [
+		'model' => [ 'delete' => 'Delete' ]
+	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x5', 'x2', 'x2', 'x2', 'x2', null ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x3', null, 'x2', 'x2', null, 'x2', 'x2', null ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'name' => 'Name',
+		'code' => 'Code',
+		'iso' => 'ISO',
 		'zone' => 'Zone',
 		'postal' => 'Postal Code',
 		'latitude' => 'Latitude',
@@ -37,20 +47,20 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 		'actions' => 'Actions'
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
-	'templateDir' => '@themes/admin/views/templates/widget/grid',
+	'templateDir' => "$themeTemplates/widget/grid",
 	//'dataView' => "$moduleTemplates/grid/data/country",
 	//'cardView' => "$moduleTemplates/grid/cards/country",
 	//'actionView' => "$moduleTemplates/grid/actions/city"
 ]) ?>
 
 <?= Popup::widget([
-	'title' => 'Update Cities', 'size' => 'medium',
-	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'bulk',
+	'title' => 'Apply Bulk Action', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
 	'data' => [ 'model' => 'City', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "core/province/city/bulk" ]
 ]) ?>
 
 <?= Popup::widget([
 	'title' => 'Delete City', 'size' => 'medium',
-	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'delete',
+	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
 	'data' => [ 'model' => 'City', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "core/province/city/delete?id=" ]
 ]) ?>

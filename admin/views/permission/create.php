@@ -24,7 +24,7 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
 						<div class="col col2">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'group', null, 'cmti cmti-checkbox' ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'group', [ 'class' => 'cmt-checkbox cmt-choice cmt-field-group', 'group-target' => 'group-permission' ], 'cmti cmti-checkbox' ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -58,14 +58,45 @@ $returnUrl		= $this->context->returnUrl;
 			</div>
 		</div>
 		<?php } ?>
-
 		<div class="filler-height filler-height-medium"></div>
+		<div class="box box-crud group-permission">
+			<div class="box-header">
+				<div class="box-header-title">Group Permissions</div>
+			</div>
+			<div class="box-content">
+				<div class="box-content">
+					<div class="row padding padding-small-v">
+					<?php
+						$children = $model->getChildrenIdList();
 
+						foreach( $permissions as $permission ) {
+					?>
+							<div class="col col4">
+					<?php
+							if( in_array( $permission[ 'id' ], $children ) ) {
+					?>
+								<input type="checkbox" name="Children[binded][]" value="<?= $permission[ 'id' ] ?>" checked /><?= $permission[ 'name' ] ?>
+					<?php
+							}
+							else {
+					?>
+								<input type="checkbox" name="Children[binded][]" value="<?= $permission[ 'id' ] ?>" /><?= $permission[ 'name' ] ?>
+					<?php
+							}
+					?>
+							</div>
+					<?php
+						}
+					?>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium"></div>
 		<div class="align align-right">
 			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
 			<input class="element-medium" type="submit" value="Create" />
 		</div>
-
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
 	</div>

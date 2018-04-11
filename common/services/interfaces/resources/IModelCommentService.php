@@ -42,10 +42,6 @@ interface IModelCommentService extends IModelResourceService, IData {
 
 	public function isExistByUser( $parentId, $parentType );
 
-	public function getByParentConfig( $parentId, $config = [] );
-
-	public function getByParentTypeConfig( $parentType, $config = [] );
-
 	public function getByBaseId( $baseId, $config = [] );
 
 	public function isExistByEmail( $email );
@@ -74,9 +70,9 @@ interface IModelCommentService extends IModelResourceService, IData {
 
 	public function markTrash( $model );
 
-	public function updateSpamRequest( $model );
+	public function updateSpamRequest( $model, $value = true );
 
-	public function updateDeleteRequest( $model );
+	public function updateDeleteRequest( $model, $value = true );
 
 	// Delete -------------
 

@@ -58,13 +58,14 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::ERROR_NOT_FOUND => 'The requested resource does not exist.',
 		CoreGlobal::ERROR_NO_ACCESS => 'You are not allowed to access this resource.',
 		CoreGlobal::ERROR_NOT_ALLOWED => 'You are not allowed to perform this action.',
-		CoreGlobal::ERROR_EXIST => 'A record with the same value already exist. Please provide a different name.',
+		CoreGlobal::ERROR_EXIST => 'A record with the same value already exist. Please provide unique value.',
 		CoreGlobal::ERROR_SELECT => 'Please choose a valid value.',
 		CoreGlobal::ERROR_URL_ENTITY => 'An entry with the same url already exist.',
 		CoreGlobal::ERROR_DEPENDENCY => 'This entry can not be deleted since other rows in other tables are dependent on it.',
 		CoreGlobal::ERROR_SESSION_OVER => 'User related to this account not found. Most probably session is over.',
 		CoreGlobal::ERROR_SESSION_EXPIRED => 'Your session expired.',
 		CoreGlobal::ERROR_TOKEN_EXPIRED => 'Your token expired.',
+		CoreGlobal::ERROR_PARENT_CHAIN => 'A model cannot be parent of itself.',
 
 		// Errors - Comments
 		CoreGlobal::ERROR_NO_COMMENTS => 'Comments are not allowed.',
@@ -189,6 +190,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_OBJECT => 'Object',
 		CoreGlobal::FIELD_THEME => 'Theme',
 		CoreGlobal::FIELD_COMMENT => 'Comment',
+		CoreGlobal::FIELD_COMMENTS => 'Comments',
 		CoreGlobal::FIELD_TEMPLATE => 'Template',
 
 		CoreGlobal::FIELD_USER => 'User',
@@ -285,12 +287,17 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_REFERRAL_COUNT => 'Referrals',
 		CoreGlobal::FIELD_LIKE_COUNT => 'Likes',
 		CoreGlobal::FIELD_WISH_COUNT => 'Wish Count',
+		CoreGlobal::FIELD_RATINGS => 'Ratings',
+		CoreGlobal::FIELD_WEIGHT => 'Weight',
+		CoreGlobal::FIELD_RANK => 'Rank',
 
 		// Forms
 		CoreGlobal::FIELD_FORM => 'Form',
 		CoreGlobal::FIELD_CAPTCHA => 'Captcha',
 		CoreGlobal::FIELD_MAIL_USER => 'Send User Mail',
 		CoreGlobal::FIELD_MAIL_ADMIN => 'Send Admin Mail',
+		CoreGlobal::FIELD_FORM_UNIQUE => 'Unique Submit',
+		CoreGlobal::FIELD_FORM_UPDATE => 'Update Submit',
 		CoreGlobal::FIELD_META => 'Meta',
 		CoreGlobal::FIELD_RATING => 'Rating',
 

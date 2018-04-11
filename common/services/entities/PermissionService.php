@@ -16,7 +16,6 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\mappers\RolePermission;
 
 use cmsgears\core\common\services\interfaces\entities\IPermissionService;
@@ -119,6 +118,12 @@ class PermissionService extends EntityService implements IPermissionService {
 	                'default' => SORT_DESC,
 	                'label' => 'Icon'
 	            ],
+	            'group' => [
+	                'asc' => [ "$modelTable.group" => SORT_ASC ],
+	                'desc' => [ "$modelTable.group" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Group'
+	            ],
 	            'cdate' => [
 	                'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
 	                'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
@@ -131,6 +136,9 @@ class PermissionService extends EntityService implements IPermissionService {
 	                'default' => SORT_DESC,
 	                'label' => 'Updated At'
 	            ]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 
@@ -148,6 +156,30 @@ class PermissionService extends EntityService implements IPermissionService {
 
 		// Filters ----------
 
+		// Params
+		$type	= Yii::$app->request->getQueryParam( 'type' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
+
+		// Filter - Type
+		if( isset( $type ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'group': {
+
+					$config[ 'conditions' ][ "$modelTable.group" ] = true;
+
+					break;
+				}
+			}
+		}
+
 		// Searching --------
 
 		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
@@ -156,7 +188,6 @@ class PermissionService extends EntityService implements IPermissionService {
 
 			$search = [
 				'name' => "$modelTable.name",
-				'slug' => "$modelTable.slug",
 				'desc' => "$modelTable.description"
 			];
 
@@ -167,7 +198,6 @@ class PermissionService extends EntityService implements IPermissionService {
 
 		$config[ 'report-col' ]	= [
 			'name' => "$modelTable.name",
-			'slug' => "$modelTable.slug",
 			'desc' => "$modelTable.description"
 		];
 
@@ -182,15 +212,15 @@ class PermissionService extends EntityService implements IPermissionService {
 
 	// Read - Lists ----
 
-	// Read - Maps -----
-
-	public function getLeafIdNameListByType( $type, $config = [] ) {
+	public function getIdNameListByTypeGroup( $type, $group = false, $config = [] ) {
 
 		$config[ 'conditions' ][ 'type' ] 	= $type;
-		$config[ 'conditions' ][ 'group' ] 	= false;
+		$config[ 'conditions' ][ 'group' ] 	= $group;
 
 		return $this->getIdNameList( $config );
 	}
+
+	// Read - Maps -----
 
 	// Read - Others ---
 
@@ -200,7 +230,7 @@ class PermissionService extends EntityService implements IPermissionService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'slug', 'icon', 'description', 'group' ];
 
 		return parent::update( $model, [
 			'attributes' => $attributes

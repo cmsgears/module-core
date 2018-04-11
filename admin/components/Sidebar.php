@@ -1,14 +1,25 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\components;
 
 // Yii Imports
 use Yii;
+use yii\base\Component;
 use yii\helpers\ArrayHelper;
 
 /**
- * The component sidebar forms the sidebar for admin by merging the sidebar html for the modules specified in application configuration. This sidebar is specific only for Admin Application.
+ * The component sidebar forms the sidebar for admin by merging the sidebar html for
+ * the modules and plugins specified in application configuration. This sidebar is
+ * specific only for Admin Application.
  */
-class Sidebar extends \yii\base\Component {
+class Sidebar extends Component {
 
 	// Variables ---------------------------------------------------
 
@@ -45,10 +56,10 @@ class Sidebar extends \yii\base\Component {
 		$modules		= $this->modules;
 
 		// Collect sidebar html from all the modules
-		foreach ( $modules as $module ) {
+		foreach( $modules as $module ) {
 
-			$module		= Yii::$app->getModule( $module );
-			$html		= $module->getSidebarHtml();
+			$module	= Yii::$app->getModule( $module );
+			$html	= $module->getSidebarHtml();
 
 			ob_start();
 
@@ -82,27 +93,28 @@ class Sidebar extends \yii\base\Component {
 		$modules	= $this->modules;
 
 		// Collect settings from all the modules
-		foreach ( $modules as $module ) {
+		foreach( $modules as $module ) {
 
-			$module		= Yii::$app->getModule( $module );
+			$module = Yii::$app->getModule( $module );
 
 			if( isset( $module->config	) ) {
 
-				$config	  = ArrayHelper::merge( $config, $module->config );
+				$config = ArrayHelper::merge( $config, $module->config );
 			}
 		}
 
-		$plugins	= $this->plugins;
+		$plugins = $this->plugins;
 
 		// Collect settings from all the plugins
-		foreach ( $plugins as $plugin ) {
+		foreach( $plugins as $plugin ) {
 
 			if( isset( $plugin	) ) {
 
-				$config	  = ArrayHelper::merge( $config, $plugin );
+				$config = ArrayHelper::merge( $config, $plugin );
 			}
 		}
 
 		return $config;
 	}
+
 }

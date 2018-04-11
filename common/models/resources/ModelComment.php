@@ -19,7 +19,7 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\interfaces\base\IAuthor;
-use cmsgears\core\common\models\interfaces\base\IModelResource;
+use cmsgears\core\common\models\interfaces\base\IFeatured;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
@@ -28,7 +28,7 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\ModelResource;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
-use cmsgears\core\common\models\traits\base\ModelResourceTrait;
+use cmsgears\core\common\models\traits\base\FeaturedTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
@@ -57,6 +57,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $type
  * @property integer $fragment
  * @property integer $rating
+ * @property integer $order
  * @property boolean $pinned
  * @property boolean $featured
  * @property datetime $createdAt
@@ -70,7 +71,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class ModelComment extends ModelResource implements IAuthor, IData, IFile, IGridCache, IModelResource {
+class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, IFile, IGridCache {
 
 	// Variables ---------------------------------------------------
 
@@ -116,7 +117,7 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFile, IGrid
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_COMMENT;
+	protected $modelType = CoreGlobal::TYPE_COMMENT;
 
 	// Private ----------------
 
@@ -124,9 +125,9 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFile, IGrid
 
 	use AuthorTrait;
 	use DataTrait;
+	use FeaturedTrait;
 	use FileTrait;
 	use GridCacheTrait;
-	use ModelResourceTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -181,7 +182,7 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFile, IGrid
 			// Other
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
 			[ [ 'pinned', 'featured', 'gridCacheValid' ], 'boolean' ],
-			[ [ 'ipNum', 'status', 'fragment', 'rating' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'ipNum', 'status', 'fragment', 'rating', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'baseId', 'bannerId', 'videoId', 'parentId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'approvedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
@@ -270,26 +271,6 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFile, IGrid
 		return self::$statusMap[ $this->status ];
 	}
 
-	/**
-	 * Returns string representation of pinned flag.
-	 *
-	 * @return boolean
-	 */
-	public function getPinnedStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->pinned );
-	}
-
-	/**
-	 * Returns string representation of featured flag.
-	 *
-	 * @return boolean
-	 */
-	public function getFeaturedStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->featured );
-	}
-
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------
@@ -315,8 +296,9 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFile, IGrid
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}

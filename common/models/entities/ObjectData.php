@@ -19,11 +19,14 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\base\IApproval;
 use cmsgears\core\common\models\interfaces\base\IAuthor;
+use cmsgears\core\common\models\interfaces\base\IFeatured;
 use cmsgears\core\common\models\interfaces\base\IMultiSite;
 use cmsgears\core\common\models\interfaces\base\INameType;
 use cmsgears\core\common\models\interfaces\base\IOwner;
 use cmsgears\core\common\models\interfaces\base\ISlugType;
+use cmsgears\core\common\models\interfaces\base\IVisibility;
 use cmsgears\core\common\models\interfaces\resources\IComment;
 use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
@@ -40,10 +43,13 @@ use cmsgears\core\common\models\base\Entity;
 use cmsgears\core\common\models\resources\ObjectMeta;
 use cmsgears\core\common\models\mappers\ModelObject;
 
+use cmsgears\core\common\models\traits\base\ApprovalTrait;
 use cmsgears\core\common\models\traits\base\AuthorTrait;
+use cmsgears\core\common\models\traits\base\FeaturedTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
 use cmsgears\core\common\models\traits\base\NameTypeTrait;
 use cmsgears\core\common\models\traits\base\SlugTypeTrait;
+use cmsgears\core\common\models\traits\base\VisibilityTrait;
 use cmsgears\core\common\models\traits\resources\CommentTrait;
 use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
@@ -79,9 +85,12 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $title
  * @property string $description
  * @property string $classPath
- * @property string $url
- * @property boolean $active
+ * @property string $link
+ * @property integer $status
+ * @property integer $visibility
  * @property integer $order
+ * @property boolean $pinned
+ * @property boolean $featured
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $htmlOptions
@@ -93,8 +102,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class ObjectData extends Entity implements IAuthor, ICategory, IComment, IContent, IData, IFile,
-	IGallery, IGridCache, IHierarchy, IMultiSite, INameType, IOwner, ISlugType, ITemplate, IVisual {
+class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComment, IContent, IData, IFeatured, IFile,
+	IGallery, IGridCache, IHierarchy, IMultiSite, INameType, IOwner, ISlugType, ITemplate, IVisibility, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -120,11 +129,13 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 
 	// Traits ------------------------------------------------------
 
+	use ApprovalTrait;
 	use AuthorTrait;
 	use CategoryTrait;
 	use CommentTrait;
 	use ContentTrait;
 	use DataTrait;
+	use FeaturedTrait;
 	use FileTrait;
 	use GalleryTrait;
 	use GridCacheTrait;
@@ -134,6 +145,7 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 	use SlugTypeTrait;
 	use SocialLinkTrait;
 	use TemplateTrait;
+	use VisibilityTrait;
 	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -159,7 +171,7 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 				'slugAttribute' => 'slug', // Unique for combination of Site Id and Theme Id
 				'immutable' => true,
 				'ensureUnique' => true,
-				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'themeId', 'slug' ] ]
+				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'slug' ] ]
 			],
 			'timestampBehavior' => [
 				'class' => TimestampBehavior::class,
@@ -184,16 +196,17 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 			[ [ 'id', 'htmlOptions', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique - Allowed multiple names for same type. Slug will differentiate the models.
 			//[ [ 'siteId', 'themeId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ [ 'siteId', 'themeId', 'type', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'slug' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'icon', 'texture' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'name', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
 			[ 'slug', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
-			[ [ 'title', 'classPath' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'title', 'classPath', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ [ 'active', 'gridCacheValid' ], 'boolean' ],
-			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'pinned', 'featured', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'visibility', 'status', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'themeId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'siteId', 'avatarId', 'bannerId', 'videoId', 'galleryId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -221,14 +234,22 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
 			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
+			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
+			'galleryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GALLERY ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'texture' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEXTURE ),
 			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'classPath' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CLASSPATH ),
-			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'link' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINK ),
+			'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
+			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
+			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
@@ -331,16 +352,6 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
         return $this->hasMany( ModelObject::class, [ 'parentId' => 'id' ] );
     }
 
-	/**
-	 * Returns string representation of active flag.
-	 *
-	 * @return string
-	 */
-	public function getActiveStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->active );
-	}
-
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------
@@ -366,8 +377,13 @@ class ObjectData extends Entity implements IAuthor, ICategory, IComment, IConten
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'banner', 'video', 'site', 'theme', 'template', 'creator', 'modifier' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [
+			'site', 'theme', 'template',
+			'avatar', 'banner', 'video',
+			'creator', 'modifier'
+		];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}

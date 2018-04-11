@@ -76,7 +76,7 @@ class ProvinceService extends EntityService implements IProvinceService {
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		$countryTable = Yii::$app->get( 'countryService' )->getModelTable();
+		$countryTable = Yii::$app->factory->get( 'countryService' )->getModelTable();
 
 		// Sorting ----------
 
@@ -112,6 +112,9 @@ class ProvinceService extends EntityService implements IProvinceService {
 					'default' => SORT_DESC,
 					'label' => 'ISO'
 				]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 
@@ -131,13 +134,14 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol = Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
 			$search = [
 				'name' => "$modelTable.name",
-				'code' => "$modelTable.code"
+				'code' => "$modelTable.code",
+				'iso' => "$modelTable.iso"
 			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
@@ -160,18 +164,18 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 	// Read - Models ---
 
+	public function getByCountryId( $countryId ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findByCountryId( $countryId );
+	}
+
 	public function getByCode( $code ) {
 
 		$modelClass	= self::$modelClass;
 
 		return $modelClass::findByCode( $code );
-	}
-
-	public function getAllByCode( $code ) {
-
-		$modelClass	= self::$modelClass;
-
-		return $modelClass::findAllByCode( $code );
 	}
 
 	public function getByCountryIdCode( $countryId, $code ) {

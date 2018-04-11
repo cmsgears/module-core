@@ -95,6 +95,42 @@ class TagService extends ResourceService implements ITagService {
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Name'
+				],
+				'slug' => [
+					'asc' => [ "$modelTable.slug" => SORT_ASC ],
+					'desc' => [ "$modelTable.slug" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Slug'
+				],
+	            'type' => [
+	                'asc' => [ "$modelTable.type" => SORT_ASC ],
+	                'desc' => [ "$modelTable.type" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Type'
+	            ],
+	            'icon' => [
+	                'asc' => [ "$modelTable.icon" => SORT_ASC ],
+	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Icon'
+	            ],
+	            'title' => [
+	                'asc' => [ "$modelTable.title" => SORT_ASC ],
+	                'desc' => [ "$modelTable.title" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Title'
+	            ],
+				'cdate' => [
+					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Created At'
+				],
+				'udate' => [
+					'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Updated At'
 				]
 			],
 			'defaultOrder' => [
@@ -116,6 +152,15 @@ class TagService extends ResourceService implements ITagService {
 
 		// Filters ----------
 
+		// Params
+		$type = Yii::$app->request->getQueryParam( 'type' );
+
+		// Filter - Type
+		if( isset( $type ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
+
 		// Searching --------
 
 		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
@@ -125,8 +170,7 @@ class TagService extends ResourceService implements ITagService {
 			$search = [
 				'name' => "$modelTable.name",
 				'title' => "$modelTable.title",
-				'slug' => "$modelTable.slug",
-				'template' => "$modelTable.template"
+				'desc' => "$modelTable.description"
 			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
@@ -136,9 +180,8 @@ class TagService extends ResourceService implements ITagService {
 
 		$config[ 'report-col' ]	= [
 			'name' => "$modelTable.name",
-			'slug' => "$modelTable.slug",
-			'template' => "$modelTable.template",
-			'active' => "$modelTable.active"
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description"
 		];
 
 		// Result -----------
@@ -162,7 +205,7 @@ class TagService extends ResourceService implements ITagService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'icon', 'description' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'slug', 'icon', 'title', 'description' ];
 
 		return parent::update( $model, [
 			'attributes' => $attributes

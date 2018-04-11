@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
@@ -8,7 +16,14 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class CategoryController extends \cmsgears\core\admin\controllers\base\Controller {
+use cmsgears\core\admin\controllers\base\Controller;
+
+/**
+ * CategoryController provides actions specific to category models.
+ *
+ * @since 1.0.0
+ */
+class CategoryController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -27,10 +42,10 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 		parent::init();
 
 		// Permission
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'categoryService' );
+		$this->modelService = Yii::$app->factory->get( 'categoryService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -55,7 +70,7 @@ class CategoryController extends \cmsgears\core\admin\controllers\base\Controlle
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'auto-search' => [ 'post' ],
 					'bulk' => [ 'post' ],

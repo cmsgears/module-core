@@ -30,6 +30,8 @@ interface IRoleService extends IEntityService, IData, INameType, ISlugType {
 
 	// Read - Lists ----
 
+	public function getIdNameListByTypeGroup( $type, $group = false, $config = [] );
+
 	// Read - Maps -----
 
 	public function getIdNameMapByRoles( $roles );

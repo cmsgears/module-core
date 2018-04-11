@@ -23,7 +23,9 @@ $returnUrl		= $this->context->returnUrl;
 						<div class="col col2">
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
-						<div class="col col2"></div>
+						<div class="col col2">
+							<?= $form->field( $model, 'slug' ) ?>
+						</div>
 					</div>
 					<div class="row">
 						<div class="col col2">
@@ -41,6 +43,11 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'description' )->textarea() ?>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'group', [ 'class' => 'cmt-checkbox cmt-choice cmt-field-group', 'group-target' => 'group-permission' ], 'cmti cmti-checkbox' ) ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -54,7 +61,7 @@ $returnUrl		= $this->context->returnUrl;
 				<div class="box-content">
 					<div class="row padding padding-small-v">
 					<?php
-						$modelPermissions	= $model->getPermissionsIdList();
+						$modelPermissions = $model->getPermissionsIdList();
 
 						foreach ( $permissions as $permission ) {
 					?>

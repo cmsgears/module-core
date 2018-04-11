@@ -51,7 +51,7 @@ class Country extends Entity implements IName {
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_COUNTRY;
+	protected $modelType = CoreGlobal::TYPE_COUNTRY;
 
 	// Private ----------------
 
@@ -84,6 +84,7 @@ class Country extends Entity implements IName {
 			// Unique
 			[ 'code', 'unique' ],
 			[ 'name', 'unique' ],
+			[ 'iso', 'unique' ],
 			// Text Limit
 			[ [ 'code', 'iso' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ]
@@ -168,7 +169,7 @@ class Country extends Entity implements IName {
 	 */
 	public static function queryWithProvinces( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'provinces' ];
+		$config[ 'relations' ] = [ 'provinces' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -181,7 +182,7 @@ class Country extends Entity implements IName {
 	 */
 	public static function queryWithCities( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'cities' ];
+		$config[ 'relations' ] = [ 'cities' ];
 
 		return parent::queryWithAll( $config );
 	}

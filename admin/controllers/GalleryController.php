@@ -1,11 +1,29 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
 use Yii;
 use yii\helpers\Url;
 
-class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryController {
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\admin\controllers\base\GalleryController as BaseGalleryController;
+
+/**
+ * GalleryController provide actions specific to site galleries.
+ *
+ * @since 1.0.0
+ */
+class GalleryController extends BaseGalleryController {
 
 	// Variables ---------------------------------------------------
 
@@ -23,15 +41,18 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryCon
 
 		parent::init();
 
+		// Type
+		$this->type = CoreGlobal::TYPE_SITE;
+
 		// Sidebar
-		$this->sidebar		= [ 'parent' => 'sidebar-gallery', 'child' => 'gallery' ];
+		$this->sidebar = [ 'parent' => 'sidebar-gallery', 'child' => 'gallery' ];
 
 		// Return Url
-		$this->returnUrl	= Url::previous( 'galleries' );
-		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/gallery/all' ], true );
+		$this->returnUrl = Url::previous( 'galleries' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/gallery/all' ], true );
 
 		// Breadcrumbs
-		$this->breadcrumbs		= [
+		$this->breadcrumbs = [
 			'all' => [ [ 'label' => 'Galleries' ] ],
 			'create' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Galleries', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
@@ -56,11 +77,12 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\GalleryCon
 
 	// GalleryController ---------------------
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
 		// Remember return url for crud
 		Url::remember( Yii::$app->request->getUrl(), 'galleries' );
 
-		return parent::actionAll();
+		return parent::actionAll( $config );
 	}
+
 }

@@ -30,9 +30,9 @@ interface IPermissionService extends IEntityService, IData, INameType, ISlugType
 
 	// Read - Lists ----
 
-	// Read - Maps -----
+	public function getIdNameListByTypeGroup( $type, $group = false, $config = [] );
 
-	public function getLeafIdNameListByType( $type, $config = [] );
+	// Read - Maps -----
 
 	// Read - Others ---
 

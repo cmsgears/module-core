@@ -1,4 +1,3 @@
-
 <?php
 // CMG Imports
 use cmsgears\widgets\popup\Popup;
@@ -6,57 +5,65 @@ use cmsgears\widgets\popup\Popup;
 use cmsgears\widgets\grid\DataGrid;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= 'Form | ' . $coreProperties->getSiteTitle();
-$fid = Yii::$app->request->get('fid'); 
-// Templates
-$moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
-?>
+$this->title	= 'Form Fields | ' . $coreProperties->getSiteTitle();
 
+// View Templates
+$moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
+$themeTemplates		= '@themes/admin/views/templates';
+?>
 <?= DataGrid::widget([
-	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => "create?fid=$fid", 'data' => [ ],
+	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => "create?fid=$formId", 'data' => [ ],
 	'title' => 'Blocks', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title' ],
 	'sortColumns' => [
-		'name' => 'Name', 'slug' => 'Slug', 'title' => 'Title', 'active' => 'Active',
-		'cdate' => 'Created At', 'udate' => 'Updated At'
+		'name' => 'Name', 'label' => 'Label',
+		'compress' => 'Compress', 'active' => 'Active', 'order' => 'Order'
 	],
-	'filters' => [ 'status' => [ 'active' => 'Active' ] ],
+	'filters' => [
+		'status' => [ 'active' => 'Active', 'inactive' => 'Inactive', 'compress' => 'Compress' ]
+	],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
-		'title' => [ 'title' => 'Title', 'type' => 'text' ],
-		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
-		'active' => [ 'title' => 'Active', 'type' => 'flag' ]
+		'label' => [ 'title' => 'Label', 'type' => 'text' ],
+		'type' => [ 'title' => 'Type', 'type' => 'select', 'options' => $typeMap ],
+		'active' => [ 'title' => 'Active', 'type' => 'flag' ],
+		'compress' => [ 'title' => 'Compress', 'type' => 'flag' ],
+		'validators' => [ 'title' => 'Label', 'type' => 'text' ],
+		'order' => [ 'title' => 'Order', 'type' => 'text' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'status' => [ 'block' => 'Block', 'active' => 'Activate' ],
-		'model' => [ 'delete' => 'Delete' ]
+		'model' => [ 'active' => 'Activate', 'inactive' => 'Inactivate', 'compress' => 'Compress', 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null , 'x4', 'x2', 'x2', 'x2', 'x2', 'x2'  ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x3', 'x3', null, 'x3', null, null, null ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
+		'icon' => [ 'title' => 'Icon', 'generate' => function( $model ) {
+			return "<div class='align align-center'><i class=\"$model->icon\"></i></div>" ;
+		}],
 		'name' => 'Name',
 		'label' => 'Label',
-		'icon' => [ 'title' => 'Icon', 'generate' => function( $model ) { $icon = "<div class='align align-center'><i class='fa-2x " . $model->icon ."'></i></div>" ; return $icon;  } ],
 		'type' => [ 'title' => 'Type', 'generate' => function( $model ) { return $model->getTypeStr();  } ],
-		'validators' => 'Validator',	
+		'validators' => 'Validators',
+		'active' => 'Active',
+		'compress' => 'Compress',
 		'actions' => 'Actions'
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
-	'templateDir' => '@themes/admin/views/templates/widget/grid',
+	'templateDir' => "$themeTemplates/widget/grid",
 	//'dataView' => "$moduleTemplates/grid/data/gallery",
 	//'cardView' => "$moduleTemplates/grid/cards/gallery",
 	//'actionView' => "$moduleTemplates/grid/actions/Block"
 ]) ?>
 
 <?= Popup::widget([
-	'title' => 'Update Block', 'size' => 'medium',
-	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'bulk',
-	'data' => [ 'model' => 'Block', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "core/field/bulk" ]
+	'title' => 'Apply Bulk Action', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
+	'data' => [ 'model' => 'Form Field', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "core/field/bulk" ]
 ]) ?>
 
 <?= Popup::widget([
-	'title' => 'Delete Block', 'size' => 'medium',
-	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'delete',
-	'data' => [ 'model' => 'Block', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "core/field/delete?id=" ]
+	'title' => 'Delete Form Field', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
+	'data' => [ 'model' => 'Form Field', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "core/field/delete?id=" ]
 ]) ?>

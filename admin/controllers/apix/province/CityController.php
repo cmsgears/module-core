@@ -1,5 +1,13 @@
 <?php
-namespace cmsgears\core\admin\controllers\apix\country;
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
+namespace cmsgears\core\admin\controllers\apix\province;
 
 // Yii Imports
 use Yii;
@@ -8,7 +16,14 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class CityController extends \cmsgears\core\admin\controllers\base\Controller {
+use cmsgears\core\admin\controllers\base\Controller;
+
+/**
+ * CityController provide actions specific to city model.
+ *
+ * @since 1.0.0
+ */
+class CityController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -27,10 +42,10 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 		parent::init();
 
 		// Permission
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'cityService' );
+		$this->modelService = Yii::$app->factory->get( 'cityService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -52,7 +67,7 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]

@@ -95,6 +95,16 @@ trait AuthorTrait {
 		return false;
 	}
 
+	// Static Methods ----------------------------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG classes ---------------------------
+
+	// AuthorTrait ---------------------------
+
+	// Read - Query -----------
+
 	/**
 	 * @inheritdoc
 	 */
@@ -122,16 +132,6 @@ trait AuthorTrait {
 
 		return static::find()->where( 'createdBy=:cid', [ ':cid' => $userId ] );
 	}
-
-	// Static Methods ----------------------------------------------
-
-	// Yii classes ---------------------------
-
-	// CMG classes ---------------------------
-
-	// AuthorTrait ---------------------------
-
-	// Read - Query -----------
 
 	// Read - Find ------------
 

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
@@ -8,7 +16,14 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class FileController extends \cmsgears\core\admin\controllers\base\Controller {
+use cmsgears\core\admin\controllers\base\Controller;
+
+/**
+ * FileController provide actions specific to file model.
+ *
+ * @since 1.0.0
+ */
+class FileController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -76,7 +91,10 @@ class FileController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		return [
 			'file-handler' => [ 'class' => 'cmsgears\core\common\actions\file\FileHandler' ],
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'bulk' => [
+				'class' => 'cmsgears\core\common\actions\grid\Bulk',
+				'config' => [ 'admin' => true ]
+			],
 			'delete' => [
 				'class' => 'cmsgears\core\common\actions\grid\Delete',
 				'config' => [ 'admin' => true ]

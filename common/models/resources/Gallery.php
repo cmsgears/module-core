@@ -21,6 +21,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\interfaces\base\IApproval;
 use cmsgears\core\common\models\interfaces\base\IAuthor;
+use cmsgears\core\common\models\interfaces\base\IFeatured;
 use cmsgears\core\common\models\interfaces\base\IMultiSite;
 use cmsgears\core\common\models\interfaces\base\INameType;
 use cmsgears\core\common\models\interfaces\base\IOwner;
@@ -37,6 +38,7 @@ use cmsgears\core\common\models\base\Resource;
 
 use cmsgears\core\common\models\traits\base\ApprovalTrait;
 use cmsgears\core\common\models\traits\base\AuthorTrait;
+use cmsgears\core\common\models\traits\base\FeaturedTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
 use cmsgears\core\common\models\traits\base\NameTypeTrait;
 use cmsgears\core\common\models\traits\base\OwnerTrait;
@@ -51,7 +53,7 @@ use cmsgears\core\common\models\traits\mappers\FileTrait;
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
 /**
- * Gallery model provide options to manage files group.
+ * Gallery can be used to group files especially images.
  *
  * @property integer $id
  * @property integer $siteId
@@ -66,6 +68,9 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $description
  * @property integer $status
  * @property integer $visibility
+ * @property integer $order
+ * @property boolean $pinned
+ * @property boolean $featured
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $content
@@ -76,7 +81,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Gallery extends Resource implements IApproval, IAuthor, IData, IFile, IGridCache, IModelMeta, IMultiSite,
+class Gallery extends Resource implements IApproval, IAuthor, IData, IFeatured, IFile, IGridCache, IModelMeta, IMultiSite,
 	INameType, IOwner, ISlugType, ITemplate, IVisibility {
 
 	// Variables ---------------------------------------------------
@@ -104,6 +109,7 @@ class Gallery extends Resource implements IApproval, IAuthor, IData, IFile, IGri
 	use ApprovalTrait;
 	use AuthorTrait;
 	use DataTrait;
+	use FeaturedTrait;
 	use FileTrait;
 	use GridCacheTrait;
 	use ModelMetaTrait;
@@ -162,6 +168,8 @@ class Gallery extends Resource implements IApproval, IAuthor, IData, IFile, IGri
 			// Required, Safe
 			[ [ 'siteId', 'name' ], 'required' ],
 			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
+			// Unique
+			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
@@ -170,7 +178,7 @@ class Gallery extends Resource implements IApproval, IAuthor, IData, IFile, IGri
 			[ 'title', 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			//Other
-			[ 'gridCacheValid', 'boolean' ],
+			[ [ 'pinned', 'featured', 'gridCacheValid' ], 'boolean' ],
 			[ 'templateId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'status', 'visibility' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -204,6 +212,9 @@ class Gallery extends Resource implements IApproval, IAuthor, IData, IFile, IGri
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
 			'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
+			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
 			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )

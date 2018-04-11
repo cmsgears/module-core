@@ -11,8 +11,13 @@ namespace cmsgears\core\common\models\mappers;
 
 // CMG Imports
 use cmsgears\core\common\models\base\CoreTables;
+
+use cmsgears\core\common\models\interfaces\base\IFeatured;
+
 use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\resources\File;
+
+use cmsgears\core\common\models\traits\base\FeaturedTrait;
 
 /**
  * The mapper to map File Model to specific parent model for given parentId and parentType.
@@ -29,7 +34,7 @@ use cmsgears\core\common\models\resources\File;
  *
  * @since 1.0.0
  */
-class ModelFile extends ModelMapper {
+class ModelFile extends ModelMapper implements IFeatured {
 
 	// Variables ---------------------------------------------------
 
@@ -50,6 +55,8 @@ class ModelFile extends ModelMapper {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use FeaturedTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -91,26 +98,6 @@ class ModelFile extends ModelMapper {
 	public function getModel() {
 
 		return $this->hasOne( File::class, [ 'id' => 'modelId' ] );
-	}
-
-	/**
-	 * Returns string representation of pinned flag.
-	 *
-	 * @return boolean
-	 */
-	public function getPinnedStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->pinned );
-	}
-
-	/**
-	 * Returns string representation of featured flag.
-	 *
-	 * @return boolean
-	 */
-	public function getFeaturedStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->featured );
 	}
 
 	// Static Methods ----------------------------------------------

@@ -50,7 +50,7 @@ interface INestedSet extends IHierarchy {
 
 	// Update -------------
 
-	public function updateInHierarchy( $model, $modelToUpdate );
+	public function updateInHierarchy( $model );
 
 	// Delete -------------
 

@@ -80,7 +80,7 @@ class Role extends Entity implements IAuthor, IData, IGridCache, IHierarchy, INa
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_ROLE;
+	protected $modelType = CoreGlobal::TYPE_ROLE;
 
 	// Private ----------------
 
@@ -157,7 +157,7 @@ class Role extends Entity implements IAuthor, IData, IGridCache, IHierarchy, INa
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'adminUrl', 'homeUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'description', 'adminUrl', 'homeUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -251,37 +251,58 @@ class Role extends Entity implements IAuthor, IData, IGridCache, IHierarchy, INa
 			// Generate L0 Slugs and Ids List
 			$permissions = $this->permissions;
 
-			foreach ( $permissions as $permission ) {
+			foreach( $permissions as $permission ) {
 
 				if( !in_array( $permission->slug, $slugList ) ) {
 
 					array_push( $slugList, $permission->slug );
-				}
 
-				array_push( $idList, $permission->id );
+					if( $permission->group ) {
+
+						array_push( $idList, $permission->id );
+					}
+				}
 			}
 
 			// Add child permission slugs recursively till all leaf nodes get exhausted.
-			do {
+			while( count( $idList ) > 0 ) {
 
-				$permissions	= Permission::findGroupPermissions( $idList );
-				$idList			= [];
+				$permissions = Permission::findGroupPermissions( $idList );
 
-				foreach ( $permissions as $permission ) {
+				$idList = [];
+
+				foreach( $permissions as $permission ) {
 
 					if( !in_array( $permission->slug, $slugList ) ) {
 
 						array_push( $slugList, $permission->slug );
-					}
 
-					array_push( $idList, $permission->id );
+						if( $permission->group ) {
+
+							array_push( $idList, $permission->id );
+						}
+					}
 				}
-			}
-			while( count( $idList ) > 0 );
+
+				if( count( $idList ) == 0 ) {
+
+					break;
+				}
+			};
 		}
 
 		return $slugList;
 	}
+
+	/**
+	 * Returns string representation of group flag.
+	 *
+	 * @return string
+	 */
+    public function getGroupStr() {
+
+        return Yii::$app->formatter->asBoolean( $this->group );
+    }
 
 	// Static Methods ----------------------------------------------
 

@@ -148,6 +148,9 @@ class RoleService extends EntityService implements IRoleService {
 	                'default' => SORT_DESC,
 	                'label' => 'Updated At'
 	            ]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 
@@ -165,16 +168,24 @@ class RoleService extends EntityService implements IRoleService {
 
 		// Filters ----------
 
-		// Filter - Status
-		$status	= Yii::$app->request->getQueryParam( 'status' );
+		// Params
+		$type	= Yii::$app->request->getQueryParam( 'type' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
-		if( isset( $status ) ) {
+		// Filter - Type
+		if( isset( $type ) ) {
 
-			switch( $status ) {
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
 
 				case 'group': {
 
-					$config[ 'conditions' ][ "$modelTable.group" ]	= true;
+					$config[ 'conditions' ][ "$modelTable.group" ] = true;
 
 					break;
 				}
@@ -183,13 +194,12 @@ class RoleService extends EntityService implements IRoleService {
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol = Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
 			$search = [
 				'name' => "$modelTable.name",
-				'slug' => "$modelTable.slug",
 				'desc' => "$modelTable.description"
 			];
 
@@ -200,7 +210,7 @@ class RoleService extends EntityService implements IRoleService {
 
 		$config[ 'report-col' ]	= [
 			'name' => "$modelTable.name",
-			'slug' => "$modelTable.slug",
+			'type' => "$modelTable.type",
 			'desc' => "$modelTable.description"
 		];
 
@@ -214,6 +224,14 @@ class RoleService extends EntityService implements IRoleService {
 	// Read - Models ---
 
 	// Read - Lists ----
+
+	public function getIdNameListByTypeGroup( $type, $group = false, $config = [] ) {
+
+		$config[ 'conditions' ][ 'type' ] 	= $type;
+		$config[ 'conditions' ][ 'group' ] 	= $group;
+
+		return $this->getIdNameList( $config );
+	}
 
 	// Read - Maps -----
 
@@ -230,7 +248,7 @@ class RoleService extends EntityService implements IRoleService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description', 'adminUrl', 'homeUrl' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'slug', 'icon', 'description', 'group', 'adminUrl', 'homeUrl' ];
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -252,7 +270,7 @@ class RoleService extends EntityService implements IRoleService {
 		// Create updated mappings
 		if( count( $binded ) > 0 ) {
 
-			foreach ( $binded as $id ) {
+			foreach( $binded as $id ) {
 
 				$toSave	= new RolePermission();
 

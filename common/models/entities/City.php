@@ -30,6 +30,7 @@ use cmsgears\core\common\models\traits\base\NameTrait;
  * @property integer $countryId
  * @property integer $provinceId
  * @property string $name
+ * @property string $code
  * @property string $iso
  * @property string $type
  * @property string $postal
@@ -72,7 +73,7 @@ class City extends Entity implements IName {
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_CITY;
+	protected $modelType = CoreGlobal::TYPE_CITY;
 
 	// Private ----------------
 
@@ -105,6 +106,7 @@ class City extends Entity implements IName {
 			// Unique
 			[ [ 'countryId', 'provinceId', 'zone', 'iso' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'zone', 'iso' ] ],
 			// Text Limit
+			[ 'code', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ [ 'type', 'postal' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'name', 'iso', 'zone', 'timeZone' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'regions', 'zipCodes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
@@ -134,6 +136,7 @@ class City extends Entity implements IName {
 			'countryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
 			'provinceId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PROVINCE ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'code' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CODE ),
 			'iso' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ISO ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'postal' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP ),
@@ -219,7 +222,8 @@ class City extends Entity implements IName {
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country', 'province' ];
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country', 'province' ];
+
 		$config[ 'relations' ]	= $relations;
 
 		return parent::queryWithAll( $config );
@@ -233,7 +237,7 @@ class City extends Entity implements IName {
 	 */
 	public static function queryWithCountry( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'country' ];
+		$config[ 'relations' ] = [ 'country' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -246,7 +250,7 @@ class City extends Entity implements IName {
 	 */
 	public static function queryWithProvince( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'province' ];
+		$config[ 'relations' ] = [ 'province' ];
 
 		return parent::queryWithAll( $config );
 	}

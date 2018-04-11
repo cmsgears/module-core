@@ -87,6 +87,8 @@ class TemplateService extends EntityService implements ITemplateService {
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
+		$themeTable = Yii::$app->factory->get( 'themeService' )->getModelTable();
+
 		// Sorting ----------
 
 		$sort = new Sort([
@@ -98,8 +100,8 @@ class TemplateService extends EntityService implements ITemplateService {
 					'label' => 'Id'
 				],
 				'theme' => [
-					'asc' => [ "$modelTable.themeId" => SORT_ASC ],
-					'desc' => [ "$modelTable.themeId" => SORT_DESC ],
+					'asc' => [ "$themeTable.name" => SORT_ASC ],
+					'desc' => [ "$themeTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
@@ -317,7 +319,7 @@ class TemplateService extends EntityService implements ITemplateService {
 
 		if( $admin ) {
 
-			$attributes[] = 'status';
+			$attributes[] = 'active';
 		}
 
 		return parent::update( $model, [

@@ -55,6 +55,35 @@ abstract class NestedSetModel extends HierarchicalModel {
 
 	// NestedSetModel ------------------------
 
+	/**
+	 * Return the corresponding root model.
+	 *
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
+	abstract public function getRoot();
+
+	/**
+	 * Check whether the model has root.
+	 *
+	 * @return boolean
+	 */
+	public function hasRoot() {
+
+		return isset( $this->rootId ) && $this->rootId > 0;
+	}
+
+	/**
+	 * Return the name of associated parent.
+	 *
+	 * @return string|null
+	 */
+	public function getRootName() {
+
+		$root = $this->root;
+
+		return isset( $root ) ? $root->name : null;
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------

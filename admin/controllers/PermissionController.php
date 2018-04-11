@@ -1,11 +1,27 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
 use Yii;
 use yii\helpers\Url;
 
-class PermissionController extends \cmsgears\core\admin\controllers\base\PermissionController {
+// CMG Imports
+use cmsgears\core\admin\controllers\base\PermissionController as BasePermissionController;
+
+/**
+ * PermissionController provides actions specific to permission model.
+ *
+ * @since 1.0.0
+ */
+class PermissionController extends BasePermissionController {
 
 	// Variables ---------------------------------------------------
 
@@ -23,13 +39,15 @@ class PermissionController extends \cmsgears\core\admin\controllers\base\Permiss
 
 		parent::init();
 
-		$this->sidebar		= [ 'parent' => 'sidebar-identity', 'child' => 'perm' ];
+		// Sidebar
+		$this->sidebar = [ 'parent' => 'sidebar-identity', 'child' => 'perm' ];
 
-		$this->returnUrl	= Url::previous( 'permissions' );
-		$this->returnUrl	= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/permission/all' ], true );
+		// Return Url
+		$this->returnUrl = Url::previous( 'permissions' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/permission/all' ], true );
 
 		// Breadcrumbs
-		$this->breadcrumbs	= [
+		$this->breadcrumbs = [
 			'all' => [ [ 'label' => 'Permissions' ] ],
 			'groups' => [ [ 'label' => 'Permissions', 'url' => $this->returnUrl ], [ 'label' => 'Groups' ] ],
 			'create' => [ [ 'label' => 'Permissions', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
@@ -54,43 +72,11 @@ class PermissionController extends \cmsgears\core\admin\controllers\base\Permiss
 
 	// PermissionController ------------------
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
 		Url::remember( Yii::$app->request->getUrl(), 'permissions' );
 
-		return parent::actionAll();
+		return parent::actionAll( $config );
 	}
 
-	public function actionGroups() {
-
-		$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'perm-group' ];
-
-		Url::remember( Yii::$app->request->getUrl(), 'permissions' );
-
-		return parent::actionGroups();
-	}
-
-	public function actionUpdate( $id ) {
-
-		$model	= $this->modelService->getById( $id );
-
-		if( $model->group ) {
-
-			$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'perm-group' ];
-		}
-
-		return parent::actionUpdate( $id );
-	}
-
-	public function actionDelete( $id ) {
-
-		$model	= $this->modelService->getById( $id );
-
-		if( $model->group ) {
-
-			$this->sidebar	= [ 'parent' => 'sidebar-identity', 'child' => 'perm-group' ];
-		}
-
-		return parent::actionDelete( $id );
-	}
 }

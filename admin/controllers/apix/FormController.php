@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
@@ -8,7 +16,14 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class FormController extends \cmsgears\core\admin\controllers\base\Controller {
+use cmsgears\core\admin\controllers\base\Controller;
+
+/**
+ * FormController provides actions specific to form model.
+ *
+ * @since 1.0.0
+ */
+class FormController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -20,7 +35,6 @@ class FormController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Private ----------------
 
-
 	// Constructor and Initialisation ------------------------------
 
 	public function init() {
@@ -28,10 +42,10 @@ class FormController extends \cmsgears\core\admin\controllers\base\Controller {
 		parent::init();
 
 		// Permission
-        $this->crudPermission	= CoreGlobal::PERM_ADMIN;
-		// Services
-		$this->modelService		= Yii::$app->factory->get( 'formService' );
+        $this->crudPermission = CoreGlobal::PERM_CORE;
 
+		// Services
+		$this->modelService = Yii::$app->factory->get( 'formService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -48,15 +62,13 @@ class FormController extends \cmsgears\core\admin\controllers\base\Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-				
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
-				
 					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
@@ -69,7 +81,6 @@ class FormController extends \cmsgears\core\admin\controllers\base\Controller {
 	public function actions() {
 
 		return [
-			
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
@@ -79,6 +90,6 @@ class FormController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// CMG parent classes --------------------
 
-	// BlockController ---------------------
+	// FormController ------------------------
 
 }

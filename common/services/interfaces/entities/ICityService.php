@@ -26,9 +26,13 @@ interface ICityService extends IEntityService, IName {
 
 	// Read - Models ---
 
-	public function getUnique( $name, $countryId, $provinceId, $zone = null );
+	public function getUnique( $name, $countryId, $provinceId );
 
-	public function isUniqueExist( $name, $countryId, $provinceId, $zone = null );
+	public function isUniqueExist( $name, $countryId, $provinceId );
+
+	public function getUniqueByZone( $name, $countryId, $provinceId, $zone );
+
+	public function isUniqueExistByZone( $name, $countryId, $provinceId, $zone );
 
 	// Read - Lists ----
 

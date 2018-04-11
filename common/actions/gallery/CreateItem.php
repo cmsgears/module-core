@@ -1,18 +1,32 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\gallery;
 
 // Yii Imports
-use \Yii;
-use yii\base\InvalidConfigException;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\File;
 
+use cmsgears\core\common\base\Action;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class CreateItem extends \cmsgears\core\common\base\Action {
+/**
+ * CreateItem creates the gallery item.
+ *
+ * @since 1.0.0
+ */
+class CreateItem extends Action {
 
 	// Variables ---------------------------------------------------
 
@@ -70,7 +84,9 @@ class CreateItem extends \cmsgears\core\common\base\Action {
 				}
 			}
 
-			$item	= new File();
+			$item = new File();
+
+			$item->siteId = $gallery->siteId;
 
 			if( $item->load( Yii::$app->request->post(), 'File' ) && $item->validate() ) {
 
@@ -92,4 +108,5 @@ class CreateItem extends \cmsgears\core\common\base\Action {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

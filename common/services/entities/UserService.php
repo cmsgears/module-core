@@ -96,8 +96,8 @@ class UserService extends EntityService implements IUserService {
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		$siteTable			= Yii::$app->get( 'siteService' )->getModelTable();
-		$siteMemberTable	= Yii::$app->get( 'siteMemberService' )->getModelTable();
+		$siteTable	= Yii::$app->factory->get( 'siteService' )->getModelTable();
+		$roleTable	= Yii::$app->factory->get( 'roleService' )->getModelTable();
 
 		// Sorting ----------
 
@@ -109,6 +109,12 @@ class UserService extends EntityService implements IUserService {
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
+				'locale' => [
+					'asc' => [ "$modelTable.localeId" => SORT_ASC ],
+					'desc' => [ "$modelTable.localeId" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Locale'
+				],
 				'gender' => [
 					'asc' => [ "$modelTable.genderId" => SORT_ASC ],
 					'desc' => [ "$modelTable.genderId" => SORT_DESC ],
@@ -116,22 +122,10 @@ class UserService extends EntityService implements IUserService {
 					'label' => 'Gender'
 				],
 				'role' => [
-					'asc' => [ "$siteMemberTable.roleId" => SORT_ASC ],
-					'desc' => [ "$siteMemberTable.roleId" => SORT_DESC ],
+					'asc' => [ "$roleTable.name" => SORT_ASC ],
+					'desc' => [ "$roleTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Role'
-				],
-				'name' => [
-					'asc' => [ "$modelTable.firstName" => SORT_ASC, "$modelTable.lastName" => SORT_ASC ],
-					'desc' => [ "$modelTable.firstName" => SORT_DESC, "$modelTable.lastName" => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'Name'
-				],
-				'username' => [
-					'asc' => [ "$modelTable.username" => SORT_ASC ],
-					'desc' => [ "$modelTable.username" => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'Username'
 				],
 				'status' => [
 					'asc' => [ "$modelTable.status" => SORT_ASC ],
@@ -145,11 +139,47 @@ class UserService extends EntityService implements IUserService {
 					'default' => SORT_DESC,
 					'label' => 'Email'
 				],
+				'username' => [
+					'asc' => [ "$modelTable.username" => SORT_ASC ],
+					'desc' => [ "$modelTable.username" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Username'
+				],
+				'type' => [
+					'asc' => [ "$modelTable.type" => SORT_ASC ],
+					'desc' => [ "$modelTable.type" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Type'
+				],
+				'icon' => [
+					'asc' => [ "$modelTable.icon" => SORT_ASC ],
+					'desc' => [ "$modelTable.icon" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Icon'
+				],
+				'title' => [
+					'asc' => [ "$modelTable.title" => SORT_ASC ],
+					'desc' => [ "$modelTable.title" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Title'
+				],
+				'name' => [
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
+				],
 				'dob' => [
 					'asc' => [ "$modelTable.dob" => SORT_ASC ],
 					'desc' => [ "$modelTable.dob" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Birth Date'
+				],
+				'mobile' => [
+					'asc' => [ "$modelTable.mobile" => SORT_ASC ],
+					'desc' => [ "$modelTable.mobile" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Mobile'
 				],
 				'phone' => [
 					'asc' => [ "$modelTable.phone" => SORT_ASC ],
@@ -157,24 +187,33 @@ class UserService extends EntityService implements IUserService {
 					'default' => SORT_DESC,
 					'label' => 'Phone'
 				],
-	            'cdate' => [
-	                'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
-	                'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+				'tzone' => [
+					'asc' => [ "$modelTable.timeZone" => SORT_ASC ],
+					'desc' => [ "$modelTable.timeZone" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Time Zone'
+				],
+	            'rdate' => [
+	                'asc' => [ "$modelTable.registeredAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.registeredAt" => SORT_DESC ],
 	                'default' => SORT_DESC,
-	                'label' => 'Created At'
-	            ],
-	            'udate' => [
-	                'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
-	                'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'Updated At'
+	                'label' => 'Registered At'
 	            ],
 	            'ldate' => [
 	                'asc' => [ "$modelTable.lastLoginAt" => SORT_ASC ],
 	                'desc' => [ "$modelTable.lastLoginAt" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Last Login'
+	            ],
+	            'adate' => [
+	                'asc' => [ "$modelTable.lastActivityAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.lastActivityAt" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Last Activity'
 	            ]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 
@@ -187,7 +226,7 @@ class UserService extends EntityService implements IUserService {
 
 		if( !isset( $config[ 'query' ] ) ) {
 
-			$config[ 'hasOne' ] = true;
+			$config[ 'query' ] = $modelClass::queryWithSiteMembers();
 		}
 
 		$config[ 'conditions' ][ "$siteTable.slug" ] = Yii::$app->core->getSiteSlug();
@@ -195,7 +234,14 @@ class UserService extends EntityService implements IUserService {
 		// Filters ----------
 
 		// Filter - Status
+		$type	= Yii::$app->request->getQueryParam( 'type' );
 		$status	= Yii::$app->request->getQueryParam( 'status' );
+
+		// Filter - Type
+		if( isset( $type ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
 
 		if( isset( $status ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
 
@@ -209,8 +255,10 @@ class UserService extends EntityService implements IUserService {
 		if( isset( $searchCol ) ) {
 
 			$search = [
-				'name' => "concat($modelTable.firstName,$modelTable.lastName)", 'username' => "$modelTable.username",
-				'email' => "$modelTable.email", 'phone' => "$modelTable.phone"
+				'name' => "$modelTable.name", 'message' => "$modelTable.message", 'desc' => "$modelTable.description",
+				'username' => "$modelTable.username", 'email' => "$modelTable.email",
+				'mobile' => "$modelTable.mobile", 'phone' => "$modelTable.phone",
+				'content' => "$modelTable.ontent"
 			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
@@ -219,31 +267,17 @@ class UserService extends EntityService implements IUserService {
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "concat($modelTable.firstName,$modelTable.lastName)", 'username' => "$modelTable.username",
-			'email' => "$modelTable.email", 'phone' => "$modelTable.phone"
+			'locale' => "$modelTable.localeId", 'gender' => "$modelTable.genderId",
+			'name' => "$modelTable.name", 'status' => "$modelTable.status",
+			'message' => "$modelTable.message", 'desc' => "$modelTable.description",
+			'username' => "$modelTable.username", 'email' => "$modelTable.email",
+			'mobile' => "$modelTable.mobile", 'phone' => "$modelTable.phone",
+			'tzone' => "$modelTable.timeZone", 'content' => "$modelTable.ontent",
 		];
 
 		// Result -----------
 
 		return parent::getPage( $config );
-	}
-
-	public function getPageByRoleType( $roleType ) {
-
-		$modelClass	= static::$modelClass;
-		$roleTable	= Yii::$app->get( 'roleService' )->getModelTable();
-
-		return $this->getPage( [ 'conditions' => [ "$roleTable.type" => $roleType ], 'query' => $modelClass::queryWithSiteMembers() ] );
-	}
-
-	public function getPageByAdmins() {
-
-		return $this->getPageByPermissionName( CoreGlobal::PERM_ADMIN );
-	}
-
-	public function getPageByUsers() {
-
-		return $this->getPageByPermissionName( CoreGlobal::PERM_USER );
 	}
 
 	// Read ---------------
@@ -311,6 +345,21 @@ class UserService extends EntityService implements IUserService {
 
 	// Read - Lists ----
 
+	public function getIdNameListByUsername( $username, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'query' ]	= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
+
+		$config[ 'nameColumn' ]		= "$modelTable.id";
+		$config[ 'valueColumn' ]	= "concat($modelTable.username, ', ', $modelTable.email)";
+
+		$config[ 'query' ]->andWhere( "$modelTable.username LIKE :uname", [ ':uname' => "$username%" ] );
+
+		return static::findIdNameList( $config );
+	}
+
 	// Read - Maps -----
 
 	public function searchByName( $name, $config = [] ) {
@@ -319,10 +368,10 @@ class UserService extends EntityService implements IUserService {
 		$modelTable	= $this->getModelTable();
 
 		$config[ 'query' ]		= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "concat($modelTable.firstName, ' ', $modelTable.lastName) AS name" ];
+		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name" ];
 		$config[ 'array' ]		= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
 
-		$config[ 'query' ]->andWhere( "concat($modelTable.firstName, $modelTable.lastName) like '$name%'" );
+		$config[ 'query' ]->andWhere( "$modelTable.name LIKE :name", [ ':name' => "$name%" ] );
 
 		return static::searchModels( $config );
 	}
@@ -369,22 +418,25 @@ class UserService extends EntityService implements IUserService {
 	public function create( $model, $config = [] ) {
 
 		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner = isset( $config[ 'avatar' ] ) ? $config[ 'banner' ] : null;
+		$video	= isset( $config[ 'avatar' ] ) ? $config[ 'video' ] : null;
 
 		// Set Attributes
-		$model->registeredAt	= DateUtil::getDateTime();
-		$model->status			= User::STATUS_NEW;
+		$model->registeredAt = DateUtil::getDateTime();
+
+		if( !isset( $model->status ) ) {
+
+			$model->status = User::STATUS_NEW;
+		}
 
 		// Generate Tokens
 		$model->generateVerifyToken();
 		$model->generateAuthKey();
 
 		// Save Files
-		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
 
-		// Create User
-		$model->save();
-
-		return $model;
+		return parent::create( $model, $config );
 	}
 
 	/**
@@ -401,7 +453,9 @@ class UserService extends EntityService implements IUserService {
 
 		$user->email		= $model->email;
 		$user->username		= $model->username;
+		$user->title		= $model->title;
 		$user->firstName	= $model->firstName;
+		$user->middleName	= $model->middleName;
 		$user->lastName		= $model->lastName;
 		$user->registeredAt	= $date;
 		$user->status		= $status;
@@ -425,11 +479,25 @@ class UserService extends EntityService implements IUserService {
 	 */
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'avatarId', 'genderId', 'email', 'username', 'firstName', 'lastName', 'status', 'phone', 'avatarUrl', 'websiteUrl', 'dob' ];
-		$avatar		= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'localeId', 'genderId', 'avatarId', 'bannerId', 'videoId', 'templateId',
+			'email', 'username', 'title', 'firstName', 'middleName', 'lastName', 'message',
+			'description', 'dob', 'mobile', 'phone', 'timeZone', 'avatarUrl', 'websiteUrl', 'content'
+		];
+
+		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner = isset( $config[ 'avatar' ] ) ? $config[ 'banner' ] : null;
+		$video	= isset( $config[ 'avatar' ] ) ? $config[ 'video' ] : null;
 
 		// Save Files
-		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
+
+		if( $admin ) {
+
+			$attributes[] = 'status';
+		}
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -606,11 +674,10 @@ class UserService extends EntityService implements IUserService {
 	public function delete( $model, $config = [] ) {
 
 		// Delete Files
-		$this->fileService->deleteFiles( [ $model->avatar ] );
+		$this->fileService->deleteFiles( [ $model->avatar, $model->banner, $model->video ] );
 
 		// Delete Notifications
-		//Yii::$app->eventManager->deleteNotifications( $model->id, static::$parentType, true );
-		Yii::$app->eventManager->deleteNotifications( $model->id, static::$parentType );
+		Yii::$app->eventManager->deleteNotificationsByUserId( $model->id );
 
 		// Delete model
 		return parent::delete( $model, $config );

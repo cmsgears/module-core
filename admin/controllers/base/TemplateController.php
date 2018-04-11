@@ -15,6 +15,8 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\behaviors\ActivityBehavior;
+
 /**
  * TemplateController provide actions specific to template management.
  *
@@ -44,10 +46,10 @@ abstract class TemplateController extends CrudController {
 		$this->setViewPath( '@cmsgears/module-core/admin/views/template' );
 
 		// Permission
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'templateService' );
+		$this->modelService = Yii::$app->factory->get( 'templateService' );
 
 		// Notes: Configure type, sidebar and returnUrl exclusively in child classes.
 	}
@@ -59,6 +61,21 @@ abstract class TemplateController extends CrudController {
 	// Yii parent classes --------------------
 
 	// yii\base\Component -----
+
+	public function behaviors() {
+
+		$behaviors = parent::behaviors();
+
+		$behaviors[ 'activity' ] = [
+			'class' => ActivityBehavior::class,
+			'admin' => true,
+			'create' => [ 'create' ],
+			'update' => [ 'update' ],
+			'delete' => [ 'delete' ]
+		];
+
+		return $behaviors;
+	}
 
 	// yii\base\Controller ----
 
@@ -80,19 +97,14 @@ abstract class TemplateController extends CrudController {
 
 	public function actionCreate( $config = [] ) {
 
-		$modelClass		= $this->modelService->getModelClass();
-		$model			= new $modelClass;
+		$model = $this->modelService->getModelObject();
 
 		$model->type	= $this->type;
 		$model->siteId	= Yii::$app->core->siteId;
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->modelService->add( $model, [ 'admin' => true ] );
-
-			$model->refresh();
-
-			$this->model = $model;
+			$this->model = $this->modelService->add( $model, [ 'admin' => true ] );
 
 			return $this->redirect( 'all' );
 		}

@@ -477,6 +477,7 @@ class Core extends \cmsgears\core\common\base\Component {
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelCommentService', 'cmsgears\core\common\services\resources\ModelCommentService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelHierarchyService', 'cmsgears\core\common\services\resources\ModelHierarchyService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelMessageService', 'cmsgears\core\common\services\resources\ModelMessageService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelAnalyticsService', 'cmsgears\core\common\services\resources\ModelAnalyticsService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelMetaService', 'cmsgears\core\common\services\resources\ModelMetaService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IObjectMetaService', 'cmsgears\core\common\services\resources\ObjectMetaService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IOptionService', 'cmsgears\core\common\services\resources\OptionService' );
@@ -516,7 +517,7 @@ class Core extends \cmsgears\core\common\base\Component {
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IThemeService', 'cmsgears\core\common\services\entities\ThemeService' );
 
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ITemplateService', 'cmsgears\core\common\services\entities\TemplateService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IObjectService', 'cmsgears\core\common\services\entities\ObjectService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IObjectService', 'cmsgears\core\common\services\entities\ObjectDataService' );
 
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IPermissionService', 'cmsgears\core\common\services\entities\PermissionService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IRoleService', 'cmsgears\core\common\services\entities\RoleService' );
@@ -545,6 +546,7 @@ class Core extends \cmsgears\core\common\base\Component {
 		$factory->set( 'modelCommentService', 'cmsgears\core\common\services\resources\ModelCommentService' );
 		$factory->set( 'modelHierarchyService', 'cmsgears\core\common\services\resources\ModelHierarchyService' );
 		$factory->set( 'modelMessageService', 'cmsgears\core\common\services\resources\ModelMessageService' );
+		$factory->set( 'modelAnalyticsService', 'cmsgears\core\common\services\resources\ModelAnalyticsService' );
 		$factory->set( 'modelMetaService', 'cmsgears\core\common\services\resources\ModelMetaService' );
 		$factory->set( 'objectMetaService', 'cmsgears\core\common\services\resources\ObjectMetaService' );
 		$factory->set( 'optionService', 'cmsgears\core\common\services\resources\OptionService' );
@@ -584,7 +586,7 @@ class Core extends \cmsgears\core\common\base\Component {
 		$factory->set( 'themeService', 'cmsgears\core\common\services\entities\ThemeService' );
 
 		$factory->set( 'templateService', 'cmsgears\core\common\services\entities\TemplateService' );
-		$factory->set( 'objectService', 'cmsgears\core\common\services\entities\ObjectService' );
+		$factory->set( 'objectService', 'cmsgears\core\common\services\entities\ObjectDataService' );
 
 		$factory->set( 'permissionService', 'cmsgears\core\common\services\entities\PermissionService' );
 		$factory->set( 'roleService', 'cmsgears\core\common\services\entities\RoleService' );

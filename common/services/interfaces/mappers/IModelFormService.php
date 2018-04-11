@@ -10,7 +10,7 @@
 namespace cmsgears\core\common\services\interfaces\mappers;
 
 // CMG Imports
-cmsgears\core\common\services\interfaces\base\IModelMapperService;
+use cmsgears\core\common\services\interfaces\base\IModelMapperService;
 
 /**
  * IModelFormService provide service methods for form mapper.

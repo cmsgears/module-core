@@ -10,7 +10,6 @@
 namespace cmsgears\core\common\services\mappers;
 
 // CMG Imports
-use cmsgears\core\common\services\interfaces\entities\IObjectService;
 use cmsgears\core\common\services\interfaces\mappers\IModelObjectService;
 
 use cmsgears\core\common\services\base\ModelMapperService;
@@ -42,18 +41,9 @@ class ModelObjectService extends ModelMapperService implements IModelObjectServi
 
 	// Private ----------------
 
-	private $objectService;
-
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
-
-	public function __construct( IObjectService $objectService, $config = [] ) {
-
-		$this->objectService = $objectService;
-
-		parent::__construct( $config );
-	}
 
 	// Instance methods --------------------------------------------
 

@@ -56,7 +56,7 @@ class Option extends Resource implements IData {
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_OPTION;
+	protected $modelType = CoreGlobal::TYPE_OPTION;
 
 	// Private ----------------
 
@@ -87,7 +87,7 @@ class Option extends Resource implements IData {
 			[ 'name', 'required' ],
 			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
 			// Unique
-			[ [ 'categoryId', 'name' ], 'unique', 'targetAttribute' => [ 'categoryId', 'name' ] ],
+			[ [ 'categoryId', 'name' ], 'unique', 'targetAttribute' => [ 'categoryId', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'value', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
@@ -245,4 +245,5 @@ class Option extends Resource implements IData {
 
 		return self::deleteAll( 'categoryId=:id', [ ':id' => $categoryId ] );
 	}
+
 }

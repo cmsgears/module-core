@@ -49,13 +49,15 @@ abstract class Properties {
 
 		$siteService = Yii::$app->factory->get( 'siteService' );
 
+		$site = $siteService->getBySlug( Yii::$app->core->getSiteSlug() );
+
 		if( Yii::$app->core->siteConfigAll ) {
 
 			if( empty( self::$typePropertyMap ) ) {
 
 				self::$typePropertyMap = [];
 
-				$properties	= $siteService->getIdMetaMapBySlug( Yii::$app->core->getSiteSlug() );
+				$properties	= $siteService->getIdMetaMap( $site );
 
 				foreach ( $properties as $property ) {
 
@@ -74,14 +76,14 @@ abstract class Properties {
 		}
 		else {
 
-			$this->properties = $siteService->getMetaNameValueMapBySlugType( Yii::$app->core->getSiteSlug(), $configType );
+			$this->properties = $siteService->getMetaNameValueMapByMetaType( $site, $configType );
 		}
 
 		// Load main site properties in case child site does not have it's own properties
 		// TODO: Load main site properties and override with child site properties
 		if( Yii::$app->core->multiSite && count( $this->properties ) == 0 ) {
 
-			$this->properties = $siteService->getMetaNameValueMapBySlugType( Yii::$app->core->getMainSiteSlug(), $configType );
+			$this->properties = $siteService->getMetaNameValueMapByMetaType( $site, $configType );
 		}
 	}
 

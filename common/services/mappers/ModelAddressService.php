@@ -77,13 +77,6 @@ class ModelAddressService extends ModelMapperService implements IModelAddressSer
 
 	// Read - Models ---
 
-	public function getByType( $parentId, $parentType, $type, $first = false ) {
-
-		$modelClass	= static::$modelClass;
-
-		return $modelClass::findByType( $parentId, $parentType, $type, $first );
-	}
-
 	// Read - Lists ----
 
 	// Read - Maps -----

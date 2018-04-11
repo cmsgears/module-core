@@ -6,6 +6,7 @@ use yii\helpers\Html;
 // CMG Imports
 use cmsgears\files\widgets\AvatarUploader;
 use cmsgears\files\widgets\ImageUploader;
+use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Delete Site | ' . $coreProperties->getSiteTitle();
@@ -21,8 +22,27 @@ $returnUrl		= $this->context->returnUrl;
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
 					<div class="row">
-						<div class="col col2">
+						<div class="col col3">
 							<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
+						</div>
+						<div class="col col3">
+							<?= $form->field( $model, 'slug' )->textInput( [ 'readonly' => true ] ) ?>
+						</div>
+						<div class="col col3">
+							<?= $form->field( $model, 'title' )->textInput( [ 'readonly' => true ] ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap', 'disabled' => true ] ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'themeId' )->dropDownList( $themesMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
 						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'order' )->textInput( [ 'readonly' => true ] ) ?>
@@ -30,9 +50,7 @@ $returnUrl		= $this->context->returnUrl;
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $model, 'themeId' )->dropDownList( $themesMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
-						</div>
-						<div class="col col2">
+							<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => true ] ) ?>
 						</div>
 					</div>
 				</div>

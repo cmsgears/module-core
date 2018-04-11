@@ -9,12 +9,13 @@
 
 namespace cmsgears\core\common\services\entities;
 
+// Yii Imports
+use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\models\mappers\ModelObject;
 
 use cmsgears\core\common\services\interfaces\entities\IObjectService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
@@ -85,7 +86,7 @@ class ObjectDataService extends EntityService implements IObjectService {
 
 	// CMG parent classes --------------------
 
-	// CountryService ------------------------
+	// ObjectDataService ---------------------
 
 	// Data Provider ------
 
@@ -94,7 +95,7 @@ class ObjectDataService extends EntityService implements IObjectService {
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		$templateTable	= Yii::$app->get( 'templateService' )->getModelTable();
+		$templateTable = Yii::$app->factory->get( 'templateService' )->getModelTable();
 
 		// Sorting ----------
 
@@ -106,12 +107,12 @@ class ObjectDataService extends EntityService implements IObjectService {
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
-	            'template' => [
-	                'asc' => [ "`$templateTable`.`name`" => SORT_ASC ],
-	                'desc' => [ "`$templateTable`.`name`" => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'Template'
-	            ],
+				'template' => [
+					'asc' => [ "$templateTable.name" => SORT_ASC ],
+					'desc' => [ "$templateTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Template',
+				],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
@@ -124,18 +125,60 @@ class ObjectDataService extends EntityService implements IObjectService {
 					'default' => SORT_DESC,
 					'label' => 'Slug'
 				],
+	            'type' => [
+	                'asc' => [ "$modelTable.type" => SORT_ASC ],
+	                'desc' => [ "$modelTable.type" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Type'
+	            ],
+	            'icon' => [
+	                'asc' => [ "$modelTable.icon" => SORT_ASC ],
+	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Icon'
+	            ],
+	            'texture' => [
+	                'asc' => [ "$modelTable.texture" => SORT_ASC ],
+	                'desc' => [ "$modelTable.texture" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Texture'
+	            ],
 				'title' => [
 					'asc' => [ "$modelTable.title" => SORT_ASC ],
 					'desc' => [ "$modelTable.title" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Title'
 				],
-	            'active' => [
-	                'asc' => [ "$modelTable.active" => SORT_ASC ],
-	                'desc' => [ "$modelTable.active" => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'Active'
-	            ],
+				'status' => [
+					'asc' => [ "$modelTable.status" => SORT_ASC ],
+					'desc' => [ "$modelTable.status" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Status'
+				],
+				'visibility' => [
+					'asc' => [ "$modelTable.visibility" => SORT_ASC ],
+					'desc' => [ "$modelTable.visibility" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Visibility'
+				],
+				'order' => [
+					'asc' => [ "$modelTable.order" => SORT_ASC ],
+					'desc' => [ "$modelTable.order" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Order'
+				],
+				'pinned' => [
+					'asc' => [ "$modelTable.pinned" => SORT_ASC ],
+					'desc' => [ "$modelTable.pinned" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Pinned'
+				],
+				'featured' => [
+					'asc' => [ "$modelTable.featured" => SORT_ASC ],
+					'desc' => [ "$modelTable.featured" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Featured'
+				],
 				'cdate' => [
 					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
 					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
@@ -143,8 +186,8 @@ class ObjectDataService extends EntityService implements IObjectService {
 					'label' => 'Created At'
 				],
 				'udate' => [
-					'asc' => [ "$modelTable.updatedAt" => SORT_ASC ],
-					'desc' => [ "$modelTable.updatedAt" => SORT_DESC ],
+					'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Updated At'
 				]
@@ -168,17 +211,54 @@ class ObjectDataService extends EntityService implements IObjectService {
 
 		// Filters ----------
 
+		// Params
+		$type	= Yii::$app->request->getQueryParam( 'type' );
+		$status	= Yii::$app->request->getQueryParam( 'status' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
+
+		// Filter - Type
+		if( isset( $type ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
+
+		// Filter - Status
+		if( isset( $status ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.status" ]	= $modelClass::$urlRevStatusMap[ $status ];
+		}
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'pinned': {
+
+					$config[ 'conditions' ][ "$modelTable.pinned" ] = true;
+
+					break;
+				}
+				case 'featured': {
+
+					$config[ 'conditions' ][ "$modelTable.featured" ] = true;
+
+					break;
+				}
+			}
+		}
+
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol = Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
 			$search = [
 				'name' => "$modelTable.name",
-				'slug' => "$modelTable.slug",
-				'title' =>  "$modelTable.title",
-				'template' => "$modelTable.template"
+				'title' => "$modelTable.title",
+				'desc' => "$modelTable.description",
+				'content' => "$modelTable.content"
 			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
@@ -188,11 +268,14 @@ class ObjectDataService extends EntityService implements IObjectService {
 
 		$config[ 'report-col' ]	= [
 			'name' => "$modelTable.name",
-			'slug' => "$modelTable.slug",
-			'title' =>  "$modelTable.title",
-			'desc' =>  "$modelTable.description",
-			'template' => "$modelTable.template",
-			'active' => "$modelTable.active"
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'content' => "$modelTable.content",
+			'status' => "$modelTable.status",
+			'visibility' => "$modelTable.visibility",
+			'order' => "$modelTable.order",
+			'pinned' => "$modelTable.pinned",
+			'featured' => "$modelTable.featured"
 		];
 
 		// Result -----------
@@ -214,6 +297,13 @@ class ObjectDataService extends EntityService implements IObjectService {
 	public function getFirstByName( $name ) {
 
 		return $this->getFirstByNameType( $name, static::$parentType );
+	}
+
+	public function getFeatured() {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::find()->where( 'featured=:featured AND type=:type', [ ':featured' => true, ':type' => static::$parentType ] )->all();
 	}
 
 	// Read - Lists ----
@@ -246,17 +336,16 @@ class ObjectDataService extends EntityService implements IObjectService {
 
 	public function create( $model, $config = [] ) {
 
-		$data	= isset( $config[ 'data' ] ) ? $config[ 'data' ] : null;
-		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
-		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$avatar	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video 	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 
-		// Generate Data
-		if( isset( $data ) ) {
+		if( !isset( $model->visibility ) ) {
 
-			$model->generateJsonFromObject( $data );
+			$model->visibility = Page::VISIBILITY_PRIVATE;
 		}
 
-		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
 
 		return parent::create( $model, $config );
 	}
@@ -265,18 +354,24 @@ class ObjectDataService extends EntityService implements IObjectService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'templateId', 'avatarId', 'name', 'title', 'icon', 'description', 'type', 'active', 'htmlOptions', 'content', 'data' ];
-		$data		= isset( $config[ 'data' ] ) ? $config[ 'data' ] : null;
-		$avatar		= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
-		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-		// Generate Data
-		if( isset( $data ) ) {
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'templateId', 'avatarId', 'bannerId', 'videoId',
+			'name', 'title', 'icon', 'description',
+			'htmlOptions', 'content', 'data'
+		];
 
-			$model->generateJsonFromObject( $data );
+		$avatar	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video 	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
+
+		if( $admin ) {
+
+			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'pinned', 'featured' ] );
 		}
 
-		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -288,10 +383,10 @@ class ObjectDataService extends EntityService implements IObjectService {
 	public function delete( $model, $config = [] ) {
 
 		// Delete files
-		$this->fileService->deleteFiles( [ $model->avatar, $model->banner ] );
+		$this->fileService->deleteFiles( [ 'avatarId' => $model->avatar, 'bannerId' => $model->banner, 'video' => $model->video ] );
 
 		// Delete mapping
-		ModelObject::deleteByModelId( $model->id );
+		Yii::$app->factory->get( 'modelObjectService' )->deleteByModelId( $model->id );
 
 		// Delete model
 		return parent::delete( $model, $config );
@@ -303,10 +398,64 @@ class ObjectDataService extends EntityService implements IObjectService {
 
 		switch( $column ) {
 
+			case 'status': {
+
+				switch( $action ) {
+
+					case 'confirmed': {
+
+						$this->confirm( $model );
+
+						break;
+					}
+					case 'rejected': {
+
+						$this->reject( $model );
+
+						break;
+					}
+					case 'active': {
+
+						$this->approve( $model );
+
+						break;
+					}
+					case 'frozen': {
+
+						$this->freeze( $model );
+
+						break;
+					}
+					case 'blocked': {
+
+						$this->block( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
 			case 'model': {
 
 				switch( $action ) {
 
+					case 'pinned': {
+
+						$model->pinned = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'featured': {
+
+						$model->featured = true;
+
+						$model->update();
+
+						break;
+					}
 					case 'delete': {
 
 						$this->delete( $model );
@@ -330,7 +479,7 @@ class ObjectDataService extends EntityService implements IObjectService {
 
 	// CMG parent classes --------------------
 
-	// CountryService ------------------------
+	// ObjectDataService ---------------------
 
 	// Data Provider ------
 

@@ -26,6 +26,14 @@ $returnUrl		= $this->context->returnUrl;
 					</div>
 					<div class="row">
 						<div class="col col2">
+							<?= $form->field( $model, 'code' )->textInput( [ 'readonly' => true ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'iso' )->textInput( [ 'readonly' => true ] ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
 							<?= $form->field( $model, 'latitude' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
 						<div class="col col2">
@@ -34,9 +42,16 @@ $returnUrl		= $this->context->returnUrl;
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $model, 'postal' )->textarea( [ 'readonly' => true ] ) ?>
+							<?= $form->field( $model, 'postal' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
-						<div class="col col2"></div>
+						<div class="col col2">
+							<?= $form->field( $model, 'regions' )->textarea( [ 'readonly' => true ] ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'zipCodes' )->textarea( [ 'readonly' => true ] ) ?>
+						</div>
 					</div>
 				</div>
 			</div>

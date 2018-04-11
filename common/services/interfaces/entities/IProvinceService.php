@@ -25,9 +25,9 @@ interface IProvinceService extends IEntityService {
 
 	// Read - Models ---
 
-	public function getByCode( $code );
+	public function getByCountryId( $countryId );
 
-	public function getAllByCode( $code );
+	public function getByCode( $code );
 
 	public function getByCountryIdCode( $countryId, $code );
 

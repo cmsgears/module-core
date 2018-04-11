@@ -1,16 +1,30 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\gallery;
 
 // Yii Imports
-use \Yii;
-use yii\base\InvalidConfigException;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\base\Action;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class UpdateItem extends \cmsgears\core\common\base\Action {
+/**
+ * UpdateItem update the gallery item.
+ *
+ * @since 1.0.0
+ */
+class UpdateItem extends Action {
 
 	// Variables ---------------------------------------------------
 
@@ -26,7 +40,7 @@ class UpdateItem extends \cmsgears\core\common\base\Action {
 
 	// Public -----------------
 
-	public $fileName	= 'File';
+	public $fileName = 'File';
 
 	// Protected --------------
 
@@ -53,12 +67,13 @@ class UpdateItem extends \cmsgears\core\common\base\Action {
 		$galleryService		= Yii::$app->factory->get( 'galleryService' );
 		$fileService		= Yii::$app->factory->get( 'fileService' );
 		$modelFileService	= Yii::$app->factory->get( 'modelFileService' );
-		$gallery			= $galleryService->getById( $id );
+
+		$gallery = $galleryService->getById( $id );
 
 		if( isset( $gallery ) ) {
 
 			$modelFile	= $modelFileService->getByModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $iid );
-			$file		= $modelFile->file;
+			$file		= $modelFile->model;
 
 			if( isset( $file ) && $file->load( Yii::$app->request->post(), $this->fileName ) ) {
 
@@ -72,4 +87,5 @@ class UpdateItem extends \cmsgears\core\common\base\Action {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

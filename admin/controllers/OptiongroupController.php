@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
@@ -8,7 +16,14 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class OptiongroupController extends \cmsgears\core\admin\controllers\base\CrudController {
+use cmsgears\core\admin\controllers\base\CrudController;
+
+/**
+ * OptiongroupController provides actions specific to category models categorized for option group.
+ *
+ * @since 1.0.0
+ */
+class OptiongroupController extends CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -28,21 +43,24 @@ class OptiongroupController extends \cmsgears\core\admin\controllers\base\CrudCo
 
 		parent::init();
 
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_CORE;
+
 		// Type
-		$this->type				= CoreGlobal::TYPE_OPTION_GROUP;
+		$this->type = CoreGlobal::TYPE_OPTION_GROUP;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'categoryService' );
+		$this->modelService = Yii::$app->factory->get( 'categoryService' );
 
 		// Sidebar
-		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'option-group' ];
+		$this->sidebar = [ 'parent' => 'sidebar-core', 'child' => 'option-group' ];
 
 		// Return Url
-		$this->returnUrl		= Url::previous( 'ogroups' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/optiongroup/all' ], true );
+		$this->returnUrl = Url::previous( 'ogroups' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/optiongroup/all' ], true );
 
 		// Breadcrumbs
-		$this->breadcrumbs		= [
+		$this->breadcrumbs = [
 			'all' => [ [ 'label' => 'Option Groups' ] ],
 			'create' => [ [ 'label' => 'Option Groups', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Option Groups', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
@@ -67,7 +85,7 @@ class OptiongroupController extends \cmsgears\core\admin\controllers\base\CrudCo
 
 	// OptionGroupController -----------------
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
 		Url::remember( Yii::$app->request->getUrl(), 'ogroups' );
 
@@ -78,22 +96,23 @@ class OptiongroupController extends \cmsgears\core\admin\controllers\base\CrudCo
 		]);
 	}
 
-	public function actionCreate() {
+	public function actionCreate( $config = [] ) {
 
-		$modelClass		= $this->modelService->getModelClass();
-		$model			= new $modelClass;
+		$model = $this->modelService->getModelObject();
+
 		$model->type	= $this->type;
 		$model->siteId	= Yii::$app->core->siteId;
 
-		if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->modelService->create( $model );
+			$this->model = $this->modelService->create( $model );
 
-			return $this->redirect( "update?id=$model->id" );
+			return $this->redirect( 'all' );
 		}
 
 		return $this->render( 'create', [
 			'model' => $model
 		]);
 	}
+
 }

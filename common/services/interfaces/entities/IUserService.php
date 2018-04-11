@@ -25,12 +25,6 @@ interface IUserService extends IEntityService, IApproval, IData, IModelMeta, ISo
 
 	// Data Provider ------
 
-	public function getPageByRoleType( $roleType );
-
-	public function getPageByAdmins();
-
-	public function getPageByUsers();
-
 	// Read ---------------
 
 	// Read - Models ---
@@ -46,6 +40,8 @@ interface IUserService extends IEntityService, IApproval, IData, IModelMeta, ISo
 	public function isExistByUsername( $username );
 
 	// Read - Lists ----
+
+	public function getIdNameListByUsername( $username, $config = [] );
 
 	// Read - Maps -----
 

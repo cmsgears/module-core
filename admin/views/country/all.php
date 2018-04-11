@@ -7,8 +7,9 @@ use cmsgears\widgets\grid\DataGrid;
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= 'Countries | ' . $coreProperties->getSiteTitle();
 
-// Templates
+// View Templates
 $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
+$themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
@@ -23,7 +24,10 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 		'code' => [ 'title' => 'Code', 'type' => 'text' ],
 		'iso' => [ 'title' => 'ISO', 'type' => 'text' ]
 	],
-	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [ 'model' => [ 'delete' => 'Delete' ] ],
+	'bulkPopup' => 'popup-grid-bulk',
+	'bulkActions' => [
+		'model' => [ 'delete' => 'Delete' ]
+	],
 	'header' => false, 'footer' => true,
 	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x9', 'x2', 'x2', null ] ],
 	'gridColumns' => [
@@ -34,20 +38,20 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 		'actions' => 'Actions'
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
-	'templateDir' => '@themes/admin/views/templates/widget/grid',
+	'templateDir' => "$themeTemplates/widget/grid",
 	//'dataView' => "$moduleTemplates/grid/data/country",
 	//'cardView' => "$moduleTemplates/grid/cards/country",
 	'actionView' => "$moduleTemplates/grid/actions/country"
 ]) ?>
 
 <?= Popup::widget([
-	'title' => 'Update Countries', 'size' => 'medium',
-	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'bulk',
+	'title' => 'Apply Bulk Action', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
 	'data' => [ 'model' => 'Country', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "core/country/bulk" ]
 ]) ?>
 
 <?= Popup::widget([
 	'title' => 'Delete Country', 'size' => 'medium',
-	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'delete',
+	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
 	'data' => [ 'model' => 'Country', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "core/country/delete?id=" ]
 ]) ?>

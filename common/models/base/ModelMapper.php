@@ -171,8 +171,9 @@ abstract class ModelMapper extends Mapper {
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'model' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'model' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -185,7 +186,7 @@ abstract class ModelMapper extends Mapper {
 	 */
 	public static function queryWithModel( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'model' ];
+		$config[ 'relations' ] = [ 'model' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -199,7 +200,7 @@ abstract class ModelMapper extends Mapper {
 	 */
 	public static function queryByParent( $parentId, $parentType ) {
 
-		$tableName = self::tableName();
+		$tableName = static::tableName();
 
 		return self::queryWithModel()->where( "$tableName.parentId=:pid AND $tableName.parentType=:ptype", [ ':pid' => $parentId, ':ptype' => $parentType ] );
 	}
@@ -214,7 +215,7 @@ abstract class ModelMapper extends Mapper {
 	 */
 	public static function queryByModelId( $parentId, $parentType, $modelId ) {
 
-		$tableName = self::tableName();
+		$tableName = static::tableName();
 
 		return self::queryWithModel()->where( "$tableName.parentId=:pid AND $tableName.parentType=:ptype AND $tableName.modelId=:mid", [ ':pid' => $parentId, ':ptype' => $parentType, ':mid' => $modelId ] );
 	}
@@ -229,7 +230,7 @@ abstract class ModelMapper extends Mapper {
 	 */
 	public static function queryByType( $parentId, $parentType, $type ) {
 
-		$tableName = self::tableName();
+		$tableName = static::tableName();
 
 		return self::queryWithModel()->where( "$tableName.parentId=:pid AND $tableName.parentType=:ptype AND $tableName.type=:type", [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] );
 	}
@@ -278,19 +279,6 @@ abstract class ModelMapper extends Mapper {
 	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
 	 */
 	public static function findByModelId( $parentId, $parentType, $modelId ) {
-
-		return self::queryByModelId( $parentId, $parentType, $modelId )->all();
-	}
-
-	/**
-	 * Find and return the mapping for given parent id, parent type and mapped model id.
-	 *
-	 * @param integer $parentId
-	 * @param string $parentType
-	 * @param integer $modelId
-	 * @return \cmsgears\core\common\models\base\ActiveRecord
-	 */
-	public static function findFirstByModelId( $parentId, $parentType, $modelId ) {
 
 		return self::queryByModelId( $parentId, $parentType, $modelId )->one();
 	}
@@ -410,7 +398,7 @@ abstract class ModelMapper extends Mapper {
 	 */
 	public static function disableByParent( $parentId, $parentType ) {
 
-		$tableName = self::tableName();
+		$tableName = static::tableName();
 
 		// Disable all mappings
 		$query		= "UPDATE $tableName SET `active`=0 WHERE `parentType`='$parentType' AND `parentId`=$parentId";

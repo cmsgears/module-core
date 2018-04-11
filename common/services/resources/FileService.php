@@ -22,6 +22,7 @@ use cmsgears\core\common\services\interfaces\resources\IFileService;
 
 use cmsgears\core\common\services\base\ResourceService;
 
+use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\VisibilityTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 
@@ -57,6 +58,7 @@ class FileService extends ResourceService implements IFileService {
 	// Traits ------------------------------------------------------
 
 	use DataTrait;
+	use MultiSiteTrait;
 	use VisibilityTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -120,17 +122,29 @@ class FileService extends ResourceService implements IFileService {
 					'default' => SORT_DESC,
 					'label' => 'Size'
 				],
-				'url' => [
-					'asc' => [ "$modelTable.url" => SORT_ASC ],
-					'desc' => [ "$modelTable.url" => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'Path'
-				],
 				'visibility' => [
 					'asc' => [ "$modelTable.visibility" => SORT_ASC ],
 					'desc' => [ "$modelTable.visibility" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Visibility'
+				],
+				'type' => [
+					'asc' => [ "$modelTable.type" => SORT_ASC ],
+					'desc' => [ "$modelTable.type" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Type'
+				],
+				'storage' => [
+					'asc' => [ "$modelTable.storage" => SORT_ASC ],
+					'desc' => [ "$modelTable.storage" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Storage'
+				],
+				'url' => [
+					'asc' => [ "$modelTable.url" => SORT_ASC ],
+					'desc' => [ "$modelTable.url" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Path'
 				],
 				'shared' => [
 					'asc' => [ "$modelTable.shared" => SORT_ASC ],
@@ -170,9 +184,17 @@ class FileService extends ResourceService implements IFileService {
 
 		// Filters ----------
 
-		// Filter - Visibility
+		// Params
+		$type		= Yii::$app->request->getQueryParam( 'type' );
 		$visibility	= Yii::$app->request->getQueryParam( 'visibility' );
 
+		// Filter - Type
+		if( isset( $type ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
+
+		// Filter - Visibility
 		if( isset( $visibility ) && isset( $modelClass::$urlRevVisibilityMap[ $visibility ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.visibility" ]	= $modelClass::$urlRevVisibilityMap[ $visibility ];
@@ -180,12 +202,13 @@ class FileService extends ResourceService implements IFileService {
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol = Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
 			$search = [
 				'title' => "$modelTable.title",
+				'desc' => "$modelTable.description",
 				'extension' => "$modelTable.extension",
 				'directory' => "$modelTable.directory"
 			];
@@ -197,6 +220,7 @@ class FileService extends ResourceService implements IFileService {
 
 		$config[ 'report-col' ]	= [
 			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
 			'extension' => "$modelTable.extension",
 			'directory' => "$modelTable.directory",
 			'visibility' => "$modelTable.visibility"
@@ -241,12 +265,7 @@ class FileService extends ResourceService implements IFileService {
 			$model->visibility = File::VISIBILITY_PUBLIC;
 		}
 
-		$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : ( $modelClass::isMultiSite() ? Yii::$app->core->siteId : null );
-
-		if( $siteId ) {
-
-			$model->siteId = $siteId;
-		}
+		$model->siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
 		// Default sharing
 		if( !isset( $model->shared ) ) {
@@ -265,7 +284,7 @@ class FileService extends ResourceService implements IFileService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'altText', 'link', 'type' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'altText', 'link', 'type', 'content' ];
 
 		if( $model->changed ) {
 
@@ -285,7 +304,7 @@ class FileService extends ResourceService implements IFileService {
 
 	public function updateData( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'altText', 'link', 'type', 'name', 'directory', 'extension', 'url', 'medium', 'thumb' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'altText', 'link', 'type', 'content', 'name', 'directory', 'extension', 'url', 'medium', 'thumb' ];
 
 		if( $model->changed ) {
 
@@ -295,7 +314,7 @@ class FileService extends ResourceService implements IFileService {
 			// Delete from disk
 			$existingFile->clearDisk();
 
-			$attributes[]	= 'size';
+			$attributes[] = 'size';
 		}
 
 		return parent::update( $model, [
@@ -492,10 +511,10 @@ class FileService extends ResourceService implements IFileService {
 		if( isset( $model ) ) {
 
 			// Only admin is authorised to delete a shared file
-			if( $admin || $model->type !== 'shared' ) {
+			if( $admin || !$model->shared ) {
 
-				// Delete mapping
-				Yii::$app->get( 'modelFileService' )->deleteByModelId( $model->id );
+				// Delete mappings
+				Yii::$app->factory->get( 'modelFileService' )->deleteByModelId( $model->id );
 
 				// Delete from disk
 				$model->clearDisk();
@@ -503,8 +522,6 @@ class FileService extends ResourceService implements IFileService {
 				// Delete model
 				return parent::delete( $model, $config );
 			}
-
-			return true;
 		}
 
 		return false;
@@ -552,6 +569,20 @@ class FileService extends ResourceService implements IFileService {
 						$model->visibility = File::VISIBILITY_PRIVATE;
 
 						$model->update();
+
+						break;
+					}
+				}
+
+				break;
+			}
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model, $config );
 
 						break;
 					}

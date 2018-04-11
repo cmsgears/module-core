@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
@@ -8,7 +16,14 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class ThemeController extends \cmsgears\core\admin\controllers\base\CrudController {
+use cmsgears\core\admin\controllers\base\CrudController;
+
+/**
+ * ThemeController provides actions specific to theme model.
+ *
+ * @since 1.0.0
+ */
+class ThemeController extends CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -27,20 +42,20 @@ class ThemeController extends \cmsgears\core\admin\controllers\base\CrudControll
 		parent::init();
 
 		// Permission
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'themeService' );
+		$this->modelService = Yii::$app->factory->get( 'themeService' );
 
 		// Sidebar
-		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'theme' ];
+		$this->sidebar = [ 'parent' => 'sidebar-core', 'child' => 'theme' ];
 
 		// Return Url
-		$this->returnUrl		= Url::previous( 'themes' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/theme/all' ], true );
+		$this->returnUrl = Url::previous( 'themes' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/theme/all' ], true );
 
 		// Breadcrumbs
-		$this->breadcrumbs		= [
+		$this->breadcrumbs = [
 			'all' => [ [ 'label' => 'Themes' ] ],
 			'create' => [ [ 'label' => 'Themes', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Themes', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
@@ -64,10 +79,11 @@ class ThemeController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 	// ThemeController -----------------------
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
 		Url::remember( Yii::$app->request->getUrl(), 'themes' );
 
-		return parent::actionAll();
+		return parent::actionAll( $config );
 	}
+
 }

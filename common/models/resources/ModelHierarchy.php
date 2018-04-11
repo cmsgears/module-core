@@ -15,12 +15,8 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\interfaces\base\IModelResource;
-
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\ModelResource;
-
-use cmsgears\core\common\models\traits\base\ModelResourceTrait;
 
 /**
  * ModelHierarchy Entity
@@ -35,7 +31,7 @@ use cmsgears\core\common\models\traits\base\ModelResourceTrait;
  *
  * @since 1.0.0
  */
-class ModelHierarchy extends ModelResource implements IModelResource {
+class ModelHierarchy extends ModelResource {
 
 	// Variables ---------------------------------------------------
 
@@ -56,8 +52,6 @@ class ModelHierarchy extends ModelResource implements IModelResource {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
-
-	use ModelResourceTrait;
 
 	// Constructor and Initialisation ------------------------------
 

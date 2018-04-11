@@ -16,9 +16,6 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\Site;
-
 use cmsgears\core\common\services\interfaces\entities\ISiteService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\core\common\services\interfaces\resources\ISiteMetaService;
@@ -28,6 +25,7 @@ use cmsgears\core\common\services\base\EntityService;
 use cmsgears\core\common\services\traits\base\NameTrait;
 use cmsgears\core\common\services\traits\base\SlugTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
+use cmsgears\core\common\services\traits\resources\MetaTrait;
 
 /**
  * SiteService provide service methods of site model.
@@ -59,20 +57,21 @@ class SiteService extends EntityService implements ISiteService {
 	// Private ----------------
 
 	private $fileService;
-	private $siteMetaService;
+	private $metaService;
 
 	// Traits ------------------------------------------------------
 
 	use DataTrait;
+	use MetaTrait;
 	use NameTrait;
 	use SlugTrait;
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( IFileService $fileService, ISiteMetaService $siteMetaService, $config = [] ) {
+	public function __construct( IFileService $fileService, ISiteMetaService $metaService, $config = [] ) {
 
-		$this->fileService		= $fileService;
-		$this->siteMetaService	= $siteMetaService;
+		$this->fileService	= $fileService;
+		$this->metaService	= $metaService;
 
 		parent::__construct( $config );
 	}
@@ -96,6 +95,8 @@ class SiteService extends EntityService implements ISiteService {
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
+		$themeTable = Yii::$app->factory->get( 'themeService' )->getModelTable();
+
 		// Sorting ----------
 
 		$sort = new Sort([
@@ -103,6 +104,12 @@ class SiteService extends EntityService implements ISiteService {
 				'id' => [
 					'asc' => [ "$modelTable.id" => SORT_ASC ],
 					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
+				'theme' => [
+					'asc' => [ "$themeTable.name" => SORT_ASC ],
+					'desc' => [ "$themeTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
@@ -118,6 +125,18 @@ class SiteService extends EntityService implements ISiteService {
 					'default' => SORT_DESC,
 					'label' => 'slug'
 				],
+				'icon' => [
+					'asc' => [ "$modelTable.icon" => SORT_ASC ],
+					'desc' => [ "$modelTable.icon" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Icon'
+				],
+				'title' => [
+					'asc' => [ "$modelTable.title" => SORT_ASC ],
+					'desc' => [ "$modelTable.title" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Title'
+				],
 				'order' => [
 					'asc' => [ "$modelTable.order" => SORT_ASC ],
 					'desc' => [ "$modelTable.order" => SORT_DESC ],
@@ -129,7 +148,22 @@ class SiteService extends EntityService implements ISiteService {
 					'desc' => [ "$modelTable.active" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Active'
+				],
+				'cdate' => [
+					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Created At'
+				],
+				'udate' => [
+					'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Updated At'
 				]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 
@@ -147,21 +181,34 @@ class SiteService extends EntityService implements ISiteService {
 
 		// Filters ----------
 
-		// Filter - Status
-		$status	= Yii::$app->request->getQueryParam( 'status' );
+		// Params
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
-		if( isset( $status ) && $status === 'active' ) {
+		// Filter - Model
+		if( isset( $filter ) ) {
 
-			$config[ 'conditions' ][ "$modelTable.active" ]	= true;
+			switch( $filter ) {
+
+				case 'active': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = true;
+
+					break;
+				}
+			}
 		}
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol = Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'title' => "$modelTable.title",
+				'desc' => "$modelTable.description",
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -170,6 +217,9 @@ class SiteService extends EntityService implements ISiteService {
 
 		$config[ 'report-col' ]	= [
 			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'order' => "$modelTable.order",
 			'active' => "$modelTable.active"
 		];
 
@@ -181,47 +231,6 @@ class SiteService extends EntityService implements ISiteService {
 	// Read ---------------
 
 	// Read - Models ---
-
-	/**
-	 * @param string $slug
-	 * @return array - An associative array of site meta for the given site slug having id as key and model as value.
-	 */
-	public function getIdMetaMapBySlug( $slug ) {
-
-		$modelClass	= static::$modelClass;
-
-		$site = $modelClass::findBySlug( $slug );
-
-		return $this->siteMetaService->getIdMetaMapByModelId( $site->id );
-	}
-
-	/**
-	 * @param string $name
-	 * @param string $type
-	 * @return array - An associative array of site meta for the given site slug and meta type having name as key and value as meta.
-	 */
-	public function getMetaMapBySlugType( $slug, $type ) {
-
-		$modelClass	= static::$modelClass;
-
-		$site = $modelClass::findBySlug( $slug );
-
-		return $this->siteMetaService->getNameMetaMapByType( $site->id, $type );
-	}
-
-	/**
-	 * @param string $slug
-	 * @param string $type
-	 * @return array - An associative array of site meta for the given site slug and meta type having name as key and value as value.
-	 */
-	public function getMetaNameValueMapBySlugType( $slug, $type ) {
-
-		$modelClass	= static::$modelClass;
-
-		$site = $modelClass::findBySlug( $slug );
-
-		return $this->siteMetaService->getNameValueMapByType( $site->id, $type );
-	}
 
 	// Read - Lists ----
 
@@ -245,11 +254,17 @@ class SiteService extends EntityService implements ISiteService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'avatarId', 'bannerId', 'themeId', 'name', 'order', 'active' ];
+		$admin		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'avatarId', 'bannerId', 'themeId', 'name', 'slug', 'title', 'description', 'order' ];
 		$avatar		= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 
 		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
+
+		if( $admin ) {
+
+			$attributes[] = 'active';
+		}
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -273,7 +288,7 @@ class SiteService extends EntityService implements ISiteService {
 
 		switch( $column ) {
 
-			case 'status': {
+			case 'model': {
 
 				switch( $action ) {
 
@@ -285,7 +300,7 @@ class SiteService extends EntityService implements ISiteService {
 
 						break;
 					}
-					case 'block': {
+					case 'inactive': {
 
 						$model->active = false;
 
@@ -293,14 +308,6 @@ class SiteService extends EntityService implements ISiteService {
 
 						break;
 					}
-				}
-
-				break;
-			}
-			case 'model': {
-
-				switch( $action ) {
-
 					case 'delete': {
 
 						$this->delete( $model );

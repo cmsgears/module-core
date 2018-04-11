@@ -54,11 +54,11 @@ class Remove extends \cmsgears\core\common\actions\base\ModelAction {
 
 		if( isset( $this->model ) && isset( $cid ) ) {
 
-			$modelTagService	= Yii::$app->factory->get( 'modelTagService' );
+			$modelTagService = Yii::$app->factory->get( 'modelTagService' );
 
-			$modelTag	= $modelTagService->getById( $cid );
+			$modelTag = $modelTagService->getById( $cid );
 
-			if( isset( $modelTag ) && $modelTag->checkParent( $this->model->id, $this->parentType ) ) {
+			if( isset( $modelTag ) && $modelTag->isParentValid( $this->model->id, $this->parentType ) ) {
 
 				$modelTagService->disable( $modelTag );
 
@@ -70,4 +70,5 @@ class Remove extends \cmsgears\core\common\actions\base\ModelAction {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

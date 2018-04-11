@@ -10,6 +10,7 @@
 namespace cmsgears\core\common\services\interfaces\resources;
 
 // CMG Imports
+use cmsgears\core\common\services\interfaces\base\IApproval;
 use cmsgears\core\common\services\interfaces\base\INameType;
 use cmsgears\core\common\services\interfaces\base\IResourceService;
 use cmsgears\core\common\services\interfaces\base\ISlugType;
@@ -20,7 +21,7 @@ use cmsgears\core\common\services\interfaces\resources\IData;
  *
  * @since 1.0.0
  */
-interface IGalleryService extends IResourceService, IData, INameType, ISlugType {
+interface IGalleryService extends IResourceService, IApproval, IData, INameType, ISlugType {
 
 	// Data Provider ------
 
@@ -43,8 +44,6 @@ interface IGalleryService extends IResourceService, IData, INameType, ISlugType 
 	public function updateItem( $item );
 
 	public function refreshItems( $gallery, $config = [] );
-
-	public function switchActive( $model, $config = [] );
 
 	// Delete -------------
 

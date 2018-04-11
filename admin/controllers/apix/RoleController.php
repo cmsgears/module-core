@@ -1,11 +1,27 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
 use Yii;
 use yii\filters\VerbFilter;
 
-class RoleController extends \cmsgears\core\admin\controllers\base\Controller {
+//CMG Imports
+use cmsgears\core\admin\controllers\base\Controller;
+
+/**
+ * RoleController provides actions specific to role model.
+ *
+ * @since 1.0.0
+ */
+class RoleController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -46,7 +62,7 @@ class RoleController extends \cmsgears\core\admin\controllers\base\Controller {
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]

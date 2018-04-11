@@ -170,6 +170,7 @@ class CoreGlobal {
 
 	// data attributes
 	const DATA_CONFIG				= 'config';
+	const DATA_SEO					= 'seo';
 
 	const DATA_SOCIAL_LINKS			= 'socialLinks';
 
@@ -233,6 +234,7 @@ class CoreGlobal {
 	const ERROR_SESSION_OVER		= 'sessionOverError';
 	const ERROR_SESSION_EXPIRED		= 'sessionExpiredError';
 	const ERROR_TOKEN_EXPIRED		= 'tokenExpiredError';
+	const ERROR_PARENT_CHAIN		= 'parentChainError';
 
 	// Errors - Comments
 	const ERROR_NO_COMMENTS			= 'noCommentsError';
@@ -358,6 +360,7 @@ class CoreGlobal {
 	const FIELD_OBJECT				= 'objectField';
 	const FIELD_THEME				= 'themeField';
 	const FIELD_COMMENT				= 'commentField';
+	const FIELD_COMMENTS			= 'commentsField';
 	const FIELD_TEMPLATE			= 'templateField';
 
 	const FIELD_USER				= 'userField';
@@ -454,12 +457,17 @@ class CoreGlobal {
 	const FIELD_REFERRAL_COUNT	= 'referralCountField';
 	const FIELD_LIKE_COUNT		= 'likeCountField';
 	const FIELD_WISH_COUNT		= 'wishCountField';
+	const FIELD_RATINGS			= 'ratingsField';
+	const FIELD_WEIGHT			= 'WeightField';
+	const FIELD_RANK			= 'RankField';
 
 	// Forms
 	const FIELD_FORM			= 'formField';
 	const FIELD_CAPTCHA			= 'captchaField';
 	const FIELD_MAIL_USER		= 'userMailField';
 	const FIELD_MAIL_ADMIN		= 'adminMailField';
+	const FIELD_FORM_UNIQUE		= 'uniqueSubmitField';
+	const FIELD_FORM_UPDATE		= 'updateSubmitField';
 	const FIELD_META			= 'metaField';
 	const FIELD_RATING			= 'ratingField';
 

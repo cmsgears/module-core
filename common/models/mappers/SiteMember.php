@@ -17,11 +17,15 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\base\IFeatured;
+
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Mapper;
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\entities\Role;
+
+use cmsgears\core\common\models\traits\base\FeaturedTrait;
 
 /**
  * A user can have only one role specific to a site, though a role can have multiple permissions.
@@ -37,7 +41,7 @@ use cmsgears\core\common\models\entities\Role;
  *
  * @since 1.0.0
  */
-class SiteMember extends Mapper {
+class SiteMember extends Mapper implements IFeatured {
 
 	// Variables ---------------------------------------------------
 
@@ -53,11 +57,15 @@ class SiteMember extends Mapper {
 
 	// Public -----------------
 
+	public $name;
+
 	// Protected --------------
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use FeaturedTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -94,9 +102,10 @@ class SiteMember extends Mapper {
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'siteId', 'userId', 'roleId' ], 'required' ],
+			[ [ 'siteId', 'roleId' ], 'required' ],
+			[ 'name', 'safe' ],
 			// Unique
-			[ [ 'siteId', 'userId', 'roleId' ], 'unique', 'targetAttribute' => [ 'siteId', 'userId', 'roleId' ] ],
+			[ [ 'siteId', 'userId' ], 'unique', 'targetAttribute' => [ 'siteId', 'userId' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Other
 			[ [ 'pinned', 'featured' ], 'boolean' ],
 			[ [ 'siteId', 'userId', 'roleId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
@@ -154,26 +163,6 @@ class SiteMember extends Mapper {
 	public function getRole() {
 
 		return $this->hasOne( Role::class, [ 'id' => 'roleId' ] );
-	}
-
-	/**
-	 * Returns string representation of pinned flag.
-	 *
-	 * @return boolean
-	 */
-	public function getPinnedStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->pinned );
-	}
-
-	/**
-	 * Returns string representation of featured flag.
-	 *
-	 * @return boolean
-	 */
-	public function getFeaturedStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->featured );
 	}
 
 	// Static Methods ----------------------------------------------

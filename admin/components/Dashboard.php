@@ -1,13 +1,26 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\components;
 
 // Yii Imports
 use Yii;
+use yii\base\Component;
 
 /**
- * The component dashboard forms the dashboard for admin by merging the dashboard html for the modules specified in application configuration. This dashboard is specific only for Admin Application.
+ * Dashboard component forms the dashboard for admin by merging the dashboard html for the
+ * modules and plugins specified in application configuration. This dashboard is specific
+ * only for Admin Application.
+ *
+ * @since 1.0.0
  */
-class Dashboard extends \yii\base\Component {
+class Dashboard extends Component {
 
 	// Variables ---------------------------------------------------
 
@@ -46,8 +59,8 @@ class Dashboard extends \yii\base\Component {
 		// Collect sidebar html from all the modules
 		foreach ( $modules as $module ) {
 
-			$module		= Yii::$app->getModule( $module );
-			$html		= $module->getDashboardHtml();
+			$module	= Yii::$app->getModule( $module );
+			$html	= $module->getDashboardHtml();
 
 			ob_start();
 
@@ -71,4 +84,5 @@ class Dashboard extends \yii\base\Component {
 
 		// TODO: Add options to render plugins on dashboard.
 	}
+
 }

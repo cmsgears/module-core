@@ -15,11 +15,14 @@ use yii\db\Expression;
 use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
+use cmsgears\core\common\models\interfaces\base\IFeatured;
 use cmsgears\core\common\models\interfaces\base\IFollower;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\entities\User;
+
+use cmsgears\core\common\models\traits\base\FeaturedTrait;
 
 /**
  * The model follower records user following a model based on interest.
@@ -36,7 +39,7 @@ use cmsgears\core\common\models\entities\User;
  * @property int $createdAt
  * @property int $modifiedAt
  */
-class ModelFollower extends ModelMapper implements IFollower {
+class ModelFollower extends ModelMapper implements IFeatured, IFollower {
 
 	// Variables ---------------------------------------------------
 
@@ -57,6 +60,8 @@ class ModelFollower extends ModelMapper implements IFollower {
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use FeaturedTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -116,26 +121,6 @@ class ModelFollower extends ModelMapper implements IFollower {
 		return $this->hasOne( User::class, [ 'id' => 'modelId' ] );
 	}
 
-	/**
-	 * Returns string representation of pinned flag.
-	 *
-	 * @return boolean
-	 */
-	public function getPinnedStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->pinned );
-	}
-
-	/**
-	 * Returns string representation of featured flag.
-	 *
-	 * @return boolean
-	 */
-	public function getFeaturedStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->featured );
-	}
-
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------
@@ -161,8 +146,9 @@ class ModelFollower extends ModelMapper implements IFollower {
      */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'user' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'user' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}

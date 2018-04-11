@@ -76,6 +76,8 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
+		$formTable = Yii::$app->factory->get( 'formService' )->getModelTable();
+
 		// Sorting ----------
 
 		$sort = new Sort([
@@ -86,11 +88,53 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
+				'form' => [
+					'asc' => [ "$formTable.name" => SORT_ASC ],
+					'desc' => [ "$formTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Form'
+				],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Name'
+				],
+				'label' => [
+					'asc' => [ "$modelTable.label" => SORT_ASC ],
+					'desc' => [ "$modelTable.label" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Label'
+				],
+				'type' => [
+					'asc' => [ "$modelTable.type" => SORT_ASC ],
+					'desc' => [ "$modelTable.type" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Type'
+				],
+				'icon' => [
+					'asc' => [ "$modelTable.icon" => SORT_ASC ],
+					'desc' => [ "$modelTable.icon" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Icon'
+				],
+				'compress' => [
+					'asc' => [ "$modelTable.compress" => SORT_ASC ],
+					'desc' => [ "$modelTable.compress" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Compress'
+				],
+				'active' => [
+					'asc' => [ "$modelTable.active" => SORT_ASC ],
+					'desc' => [ "$modelTable.active" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Active'
+				],
+				'order' => [
+					'asc' => [ "$modelTable.order" => SORT_ASC ],
+					'desc' => [ "$modelTable.order" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Order'
 				]
 			],
 			'defaultOrder' => [
@@ -112,6 +156,42 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 
 		// Filters ----------
 
+		// Params
+		$type	= Yii::$app->request->getQueryParam( 'type' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
+
+		// Filter - Type
+		if( isset( $type ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'active': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = true;
+
+					break;
+				}
+				case 'inactive': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = false;
+
+					break;
+				}
+				case 'compress': {
+
+					$config[ 'conditions' ][ "$modelTable.compress" ] = true;
+
+					break;
+				}
+			}
+		}
+
 		// Searching --------
 
 		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
@@ -120,8 +200,9 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 
 			$search = [
 				'name' => "$modelTable.name",
-				'slug' => "$modelTable.slug",
-				'template' => "$modelTable.template"
+				'label' => "$modelTable.label",
+				'validators' => "$modelTable.validators",
+				'content' => "$modelTable.content"
 			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
@@ -131,9 +212,12 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 
 		$config[ 'report-col' ]	= [
 			'name' => "$modelTable.name",
-			'slug' => "$modelTable.slug",
-			'template' => "$modelTable.template",
-			'active' => "$modelTable.active"
+			'label' => "$modelTable.label",
+			'validators' => "$modelTable.validators",
+			'content' => "$modelTable.content",
+			'order' => "$modelTable.order",
+			'active' => "$modelTable.active",
+			'compress' => "$modelTable.compress"
 		];
 
 		// Result -----------
@@ -169,7 +253,10 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions', 'data' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'label', 'type', 'compress', 'validators',
+			'order', 'icon', 'htmlOptions', 'content'
+		];
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -188,6 +275,30 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 
 				switch( $action ) {
 
+					case 'active': {
+
+						$model->active = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'inactive': {
+
+						$model->active = false;
+
+						$model->update();
+
+						break;
+					}
+					case 'compress': {
+
+						$model->comress = true;
+
+						$model->update();
+
+						break;
+					}
 					case 'delete': {
 
 						$this->delete( $model );

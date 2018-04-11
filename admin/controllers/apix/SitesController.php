@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
@@ -8,7 +16,14 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
+use cmsgears\core\admin\controllers\base\Controller;
+
+/**
+ * SitesController provides actions specific to site model.
+ *
+ * @since 1.0.0
+ */
+class SitesController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -26,11 +41,11 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		parent::init();
 
-		// Permissions
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'siteService' );
+		$this->modelService = Yii::$app->factory->get( 'siteService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -52,7 +67,7 @@ class SitesController extends \cmsgears\core\admin\controllers\base\Controller {
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]

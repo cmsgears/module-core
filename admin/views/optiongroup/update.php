@@ -20,11 +20,14 @@ $returnUrl		= $this->context->returnUrl;
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
 					<div class="row">
-						<div class="col col2">
+						<div class="col col3">
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
-						<div class="col col2">
-							<?= $form->field( $model, 'description' )->textarea() ?>
+						<div class="col col3">
+							<?= $form->field( $model, 'slug' ) ?>
+						</div>
+						<div class="col col3">
+							<?= $form->field( $model, 'title' ) ?>
 						</div>
 					</div>
 					<div class="filler-height"> </div>
@@ -33,10 +36,15 @@ $returnUrl		= $this->context->returnUrl;
 							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 						<div class="col col2">
+							<?= $form->field( $model, 'description' )->textarea() ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
 							<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 						</div>
 					</div>
-					<div class="filler-height"> </div>
+					<div class="filler-height"></div>
 				</div>
 			</div>
 		</div>

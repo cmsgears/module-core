@@ -139,6 +139,8 @@ interface IActiveRecordService {
 
 	public function createOrUpdate( $model, $config = [] );
 
+	public function linkModel( $model, $column, $link );
+
 	// Delete -------------
 
 	public function delete( $model, $config = [] );

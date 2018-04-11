@@ -37,9 +37,9 @@ interface ICategoryService extends IResourceService, IData, INameType, INestedSe
 
 	// Read - Lists ----
 
-	public function getTopLevelIdNameListByType( $type, $config = [] );
+	public function getL0IdNameListByType( $type, $config = [] );
 
-	public function getTopLevelIdNameListById( $id, $config = [] );
+	public function getL0IdNameListById( $id, $config = [] );
 
 	public function getLevelListByType( $type );
 
@@ -50,10 +50,6 @@ interface ICategoryService extends IResourceService, IData, INameType, INestedSe
 	// Create -------------
 
 	// Update -------------
-
-	public function markFeatured( $model );
-
-	public function markRegular( $model );
 
 	// Delete -------------
 

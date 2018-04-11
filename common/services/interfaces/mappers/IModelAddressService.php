@@ -10,7 +10,7 @@
 namespace cmsgears\core\common\services\interfaces\mappers;
 
 // CMG Imports
-cmsgears\core\common\services\interfaces\base\IModelMapperService;
+use cmsgears\core\common\services\interfaces\base\IModelMapperService;
 
 /**
  * IModelAddressService provide service methods for address mapper.
@@ -24,8 +24,6 @@ interface IModelAddressService extends IModelMapperService {
 	// Read ---------------
 
 	// Read - Models ---
-
-	public function getByType( $parentId, $parentType, $type, $first = false );
 
 	// Read - Lists ----
 

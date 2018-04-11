@@ -24,7 +24,7 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'group', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
+							<?= $form->field( $model, 'slug' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -33,6 +33,11 @@ $returnUrl		= $this->context->returnUrl;
 						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'group', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
 						</div>
 					</div>
 				</div>

@@ -16,8 +16,6 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-
 use cmsgears\core\common\services\interfaces\entities\ICityService;
 
 use cmsgears\core\common\services\base\EntityService;
@@ -78,8 +76,8 @@ class CityService extends EntityService implements ICityService {
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		$countryTable	= Yii::$app->get( 'countryService' )->getModelTable();
-		$provinceTable	= Yii::$app->get( 'province	Service' )->getModelTable();
+		$countryTable	= Yii::$app->factory->get( 'countryService' )->getModelTable();
+		$provinceTable	= Yii::$app->factory->get( 'provinceService' )->getModelTable();
 
 		// Sorting ----------
 
@@ -109,17 +107,35 @@ class CityService extends EntityService implements ICityService {
 					'default' => SORT_DESC,
 					'label' => 'name'
 				],
-				'zone' => [
-					'asc' => [ "$modelTable.zone" => SORT_ASC ],
-					'desc' => [ "$modelTable.zone" => SORT_DESC ],
+				'iso' => [
+					'asc' => [ "$modelTable.iso" => SORT_ASC ],
+					'desc' => [ "$modelTable.iso" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'Zone'
+					'label' => 'ISO'
+				],
+				'type' => [
+					'asc' => [ "$modelTable.type" => SORT_ASC ],
+					'desc' => [ "$modelTable.type" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Type'
 				],
 				'postal' => [
 					'asc' => [ "$modelTable.postal" => SORT_ASC ],
 					'desc' => [ "$modelTable.postal" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Postal Code'
+				],
+				'zone' => [
+					'asc' => [ "$modelTable.zone" => SORT_ASC ],
+					'desc' => [ "$modelTable.zone" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Zone'
+				],
+				'tzone' => [
+					'asc' => [ "$modelTable.timeZone" => SORT_ASC ],
+					'desc' => [ "$modelTable.timeZone" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Time Zone'
 				],
 				'latitude' => [
 					'asc' => [ "$modelTable.latitude" => SORT_ASC ],
@@ -150,14 +166,26 @@ class CityService extends EntityService implements ICityService {
 
 		// Filters ----------
 
+		// Params
+		$type = Yii::$app->request->getQueryParam( 'type' );
+
+		// Filter - Type
+		if( isset( $type ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
+
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol = Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
 			$search = [
 				'name' => "$modelTable.name",
+				'code' => "$modelTable.code",
+				'iso' => "$modelTable.iso",
+				'postal' => "$modelTable.postal",
 				'zone' => "$modelTable.zone"
 			];
 
@@ -168,8 +196,12 @@ class CityService extends EntityService implements ICityService {
 
 		$config[ 'report-col' ]	= [
 			'name' => "$modelTable.name",
+			'code' => "$modelTable.code",
+			'iso' => "$modelTable.iso",
+			'postal' => "$modelTable.postal",
 			'zone' => "$modelTable.zone",
-			'postal' => "$modelTable.postal"
+			'regions' => "$modelTable.regions",
+			'zcodes' => "$modelTable.zipCodes"
 		];
 
 		// Result -----------
@@ -177,21 +209,37 @@ class CityService extends EntityService implements ICityService {
 		return parent::getPage( $config );
 	}
 
+	// Read - Models ---
+
+	public function getUnique( $name, $countryId, $provinceId ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findUnique( $name, $countryId, $provinceId );
+	}
+
+	public function isUniqueExist( $name, $countryId, $provinceId ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::isUniqueExist( $name, $countryId, $provinceId );
+	}
+
+	public function getUniqueByZone( $name, $countryId, $provinceId, $zone ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findUniqueByZone( $name, $countryId, $provinceId, $zone );
+	}
+
+	public function isUniqueExistByZone( $name, $countryId, $provinceId, $zone ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::isUniqueExistByZone( $name, $countryId, $provinceId, $zone );
+	}
+
 	// Read - Lists ----
-
-	public function getUnique( $name, $countryId, $provinceId, $zone = null ) {
-
-		$modelClass	= self::$modelClass;
-
-		return $modelClass::findUnique( $name, $countryId, $provinceId, $zone );
-	}
-
-	public function isUniqueExist( $name, $countryId, $provinceId, $zone = null ) {
-
-		$modelClass	= self::$modelClass;
-
-		return $modelClass::isUniqueExist( $name, $countryId, $provinceId, $zone );
-	}
 
 	// Read - Maps -----
 

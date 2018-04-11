@@ -12,6 +12,7 @@ namespace cmsgears\core\common\services\resources;
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -93,22 +94,24 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
+		$userTable = Yii::$app->factory->get( 'userService' )->getModelTable();
+
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
 				'id' => [
-					'asc' => [ "$modelClass.id" => SORT_ASC ],
-					'desc' => [ "$modelClass.id" => SORT_DESC ],
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
-				'user' => [
-					'asc' => [ "creator.firstName" => SORT_ASC, "creator.lastName" => SORT_ASC ],
-					'desc' => [ "creator.firstName" => SORT_DESC, "creator.lastName" => SORT_DESC ],
+	            'user' => [
+					'asc' => [ "$userTable.name" => SORT_ASC ],
+					'desc' => [ "$userTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'User'
-				],
+	                'label' => 'User'
+	            ],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
@@ -138,6 +141,12 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 					'desc' => [ "$modelTable.rating" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Rating'
+				],
+				'pinned' => [
+					'asc' => [ "$modelTable.pinned" => SORT_ASC ],
+					'desc' => [ "$modelTable.pinned" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Pinned'
 				],
 				'featured' => [
 					'asc' => [ "$modelTable.featured" => SORT_ASC ],
@@ -183,6 +192,36 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 
 		// Filters ----------
 
+		// Params
+		$status	= Yii::$app->request->getQueryParam( 'status' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
+
+		// Filter - Status
+		if( isset( $status ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.status" ]	= $modelClass::$urlRevStatusMap[ $status ];
+		}
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'pinned': {
+
+					$config[ 'conditions' ][ "$modelTable.pinned" ] = true;
+
+					break;
+				}
+				case 'featured': {
+
+					$config[ 'conditions' ][ "$modelTable.featured" ] = true;
+
+					break;
+				}
+			}
+		}
+
 		// Searching --------
 
 		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
@@ -190,7 +229,7 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 		if( isset( $searchCol ) ) {
 
 			$search = [
-				'user' => "concat(creator.firstName,creator.lastName)",
+				'user' => "concat(creator.firstName, ' ', creator.lastName)",
 				'name' => "$modelTable.name",
 				'email' =>  "$modelTable.email",
 				'content' => "$modelTable.content"
@@ -202,7 +241,7 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'user' => "concat(creator.firstName,creator.lastName)",
+			'user' => "concat(creator.firstName, ' ', creator.lastName)",
 			'name' => "$modelTable.name",
 			'email' => "$modelTable.email",
 			'content' => "$modelTable.content",
@@ -292,6 +331,16 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 
 	// Read - Models ---
 
+	/**
+	 * It returns immediate child comments for given base id.
+	 */
+	public function getByBaseId( $baseId, $config = [] ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::queryByBaseId( $baseId, $config )->all();
+	}
+
 	public function getByUser( $parentId, $parentType ) {
 
 		$modelClass	= self::$modelClass;
@@ -313,30 +362,6 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 		}
 
 		return false;
-	}
-
-	public function getByParentConfig( $parentId, $config = [] ) {
-
-		$modelClass	= self::$modelClass;
-
-		return $modelClass::queryByParentConfig( $parentId, $config )->andWhere( [ 'baseId' => null ] )->all();
-	}
-
-	public function getByParentTypeConfig( $parentType, $config = [] ) {
-
-		$modelClass	= self::$modelClass;
-
-		return $modelClass::queryByParentTypeConfig( $parentType, $config )->andWhere( [ 'baseId' => null ] )->all();
-	}
-
-	/**
-	 * It returns child comments for given base id.
-	 */
-	public function getByBaseId( $baseId, $config = [] ) {
-
-		$modelClass	= self::$modelClass;
-
-		return $modelClass::queryByBaseId( $baseId, $config )->all();
 	}
 
 	/**
@@ -376,13 +401,13 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 
 			case FileManager::FILE_TYPE_IMAGE : {
 
-				$this->fileService->saveImage( $file );
+				$file = $this->fileService->saveImage( $file );
 
 				break;
 			}
 			default: {
 
-				$this->fileService->saveFile( $file );
+				$file = $this->fileService->saveFile( $file );
 
 				break;
 			}
@@ -402,11 +427,11 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 	public function update( $model, $config = [] ) {
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content' ];
+		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-		// Allows admin to update status
-		if( isset( $config[ 'admin' ] ) && $config[ 'admin' ] ) {
+		if( $admin ) {
 
-			$attributes[] = 'status';
+			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'pinned', 'featured' ] );
 		}
 
 		return parent::update( $model, [
@@ -418,47 +443,49 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 
 	public function updateStatus( $model, $status ) {
 
-		$model->status	= $status;
-
-		$model->update();
-	}
-
-	public function approve( $model ) {
-
-		$model->approvedAt	= DateUtil::getDateTime();
-
-		$this->updateStatus( $model, ModelComment::STATUS_APPROVED );
-	}
-
-	public function block( $model ) {
-
-		$this->updateStatus( $model, ModelComment::STATUS_BLOCKED );
-	}
-
-	public function markSpam( $model ) {
-
-		$this->updateStatus( $model, ModelComment::STATUS_SPAM );
-	}
-
-	public function markTrash( $model ) {
-
-		$this->updateStatus( $model, ModelComment::STATUS_TRASH );
-	}
-
-	// Attributes
-
-	public function updateSpamRequest( $model ) {
-
-		$model->setDataMeta( CoreGlobal::META_COMMENT_SPAM_REQUEST, true );
+		$model->status = $status;
 
 		$model->update();
 
 		return $model;
 	}
 
-	public function updateDeleteRequest( $model ) {
+	public function approve( $model ) {
 
-		$model->setDataMeta( CoreGlobal::META_COMMENT_DELETE_REQUEST, true );
+		$model->approvedAt	= DateUtil::getDateTime();
+
+		return $this->updateStatus( $model, ModelComment::STATUS_APPROVED );
+	}
+
+	public function block( $model ) {
+
+		return $this->updateStatus( $model, ModelComment::STATUS_BLOCKED );
+	}
+
+	public function markSpam( $model ) {
+
+		return $this->updateStatus( $model, ModelComment::STATUS_SPAM );
+	}
+
+	public function markTrash( $model ) {
+
+		return $this->updateStatus( $model, ModelComment::STATUS_TRASH );
+	}
+
+	// Attributes
+
+	public function updateSpamRequest( $model, $value = true ) {
+
+		$model->setDataMeta( CoreGlobal::META_COMMENT_SPAM_REQUEST, $value );
+
+		$model->update();
+
+		return $model;
+	}
+
+	public function updateDeleteRequest( $model, $value = true ) {
+
+		$model->setDataMeta( CoreGlobal::META_COMMENT_DELETE_REQUEST, $value );
 
 		$model->update();
 
@@ -486,15 +513,9 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 
 				switch( $action ) {
 
-					case 'approve': {
+					case 'approved': {
 
 						$this->approve( $model );
-
-						break;
-					}
-					case 'block': {
-
-						$this->block( $model );
 
 						break;
 					}
@@ -510,6 +531,12 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 
 						break;
 					}
+					case 'blocked': {
+
+						$this->block( $model );
+
+						break;
+					}
 				}
 
 				break;
@@ -518,6 +545,22 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 
 				switch( $action ) {
 
+					case 'pinned': {
+
+						$model->pinned = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'featured': {
+
+						$model->featured = true;
+
+						$model->update();
+
+						break;
+					}
 					case 'delete': {
 
 						$this->delete( $model );

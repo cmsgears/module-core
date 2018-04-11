@@ -12,6 +12,7 @@ namespace cmsgears\core\common\services\entities;
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -110,6 +111,12 @@ class ThemeService extends EntityService implements IThemeService {
 	                'default' => SORT_DESC,
 	                'label' => "Type"
 	            ],
+	            'title' => [
+	                'asc' => [ "$modelTable.title" => SORT_ASC ],
+	                'desc' => [ "$modelTable.title" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => "Title"
+	            ],
 	            'default' => [
 	                'asc' => [ "$modelTable.default" => SORT_ASC ],
 	                'desc' => [ "$modelTable.default" => SORT_DESC ],
@@ -127,7 +134,19 @@ class ThemeService extends EntityService implements IThemeService {
 	                'desc' => [ "$modelTable.basePath" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => "Base Path"
-	            ]
+	            ],
+				'cdate' => [
+					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Created At'
+				],
+				'udate' => [
+					'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Updated At'
+				]
 			]
 		]);
 
@@ -145,12 +164,28 @@ class ThemeService extends EntityService implements IThemeService {
 
 		// Filters ----------
 
-		// Filter - Status
-		$status	= Yii::$app->request->getQueryParam( 'status' );
+		// Params
+		$type	= Yii::$app->request->getQueryParam( 'type' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
-		if( isset( $status ) && $status === 'default' ) {
+		// Filter - Type
+		if( isset( $type ) ) {
 
-			$config[ 'conditions' ][ "$modelTable.default" ]	= true;
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'default': {
+
+					$config[ 'conditions' ][ "$modelTable.default" ] = true;
+
+					break;
+				}
+			}
 		}
 
 		// Searching --------
@@ -161,6 +196,7 @@ class ThemeService extends EntityService implements IThemeService {
 
 			$search = [
 				'name' => "$modelTable.name",
+				'title' => "$modelTable.title",
 				'desc' => "$modelTable.description",
 				'content' => "$modelTable.content"
 			];
@@ -172,6 +208,7 @@ class ThemeService extends EntityService implements IThemeService {
 
 		$config[ 'report-col' ]	= [
 			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
 			'content' => "$modelTable.content",
 			'default' => "$modelTable.default",
@@ -190,6 +227,20 @@ class ThemeService extends EntityService implements IThemeService {
 	// Read - Lists ----
 
 	// Read - Maps -----
+
+	public function getIdNameMap( $options = [] ) {
+
+		$map = parent::getIdNameMap( $options );
+
+		if( isset( $options[ 'default' ] ) && $options[ 'default' ] ) {
+
+			unset( $options[ 'default' ] );
+
+			$map = ArrayHelper::merge( [ '0' => 'Choose Theme' ], $map );
+		}
+
+		return $map;
+	}
 
 	// Read - Others ---
 
@@ -212,7 +263,7 @@ class ThemeService extends EntityService implements IThemeService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description', 'default', 'basePath', 'renderer' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'slug', 'title', 'description', 'default', 'basePath', 'renderer' ];
 
 		// Uncheck default for all other themes
 		if( $model->default ) {

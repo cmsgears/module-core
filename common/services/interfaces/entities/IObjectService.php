@@ -29,6 +29,8 @@ interface IObjectService extends IEntityService, IData, IMultiSite, INameType, I
 
 	// Read - Models ---
 
+	public function getFeatured();
+
 	// Read - Lists ----
 
 	// Read - Maps -----

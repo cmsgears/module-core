@@ -23,7 +23,9 @@ $returnUrl		= $this->context->returnUrl;
 						<div class="col col2">
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
-						<div class="col col2"></div>
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'group', [ 'class' => 'cmt-checkbox cmt-choice cmt-field-group', 'group-target' => 'group-permission' ], 'cmti cmti-checkbox' ) ?>
+						</div>
 					</div>
 					<div class="row">
 						<div class="col col2">

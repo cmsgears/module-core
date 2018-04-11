@@ -64,7 +64,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	/**
 	 * The model class used to call model static methods.
 	 */
-	public static $modelClass	= '\cmsgears\core\common\models\entities\ObjectData';
+	public static $modelClass	= null;
 
 	/**
 	 * The service must specify whether it's corresponding model supports type for classification
@@ -569,6 +569,20 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		}
 
 		return $this->create( $model, $config );
+	}
+
+	public function linkModel( $model, $column, $link ) {
+
+		if( empty( $link ) ) {
+
+			return;
+		}
+
+		$model->$column = $link->id;
+
+		$this->update( $model, [
+			'attributes' => [ $column ]
+		]);
 	}
 
 	// Delete -------------
@@ -1212,8 +1226,8 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	public static function findIdNameList( $config = [] ) {
 
-		$config[ 'nameColumn' ]		= 'id';
-		$config[ 'valueColumn' ]	= 'name';
+		$config[ 'nameColumn' ]		= isset( $config[ 'nameColumn' ] ) ? $config[ 'nameColumn' ] : 'id';
+		$config[ 'valueColumn' ]	= isset( $config[ 'valueColumn' ] ) ? $config[ 'valueColumn' ] : 'name';
 		$config[ 'nameAlias' ]		= 'id';
 		$config[ 'valueAlias' ]		= 'name';
 
@@ -1402,8 +1416,8 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	public static function findIdNameMap( $config = [] ) {
 
-		$config[ 'nameColumn' ]		= 'id';
-		$config[ 'valueColumn' ]	= 'name';
+		$config[ 'nameColumn' ]		= isset( $config[ 'nameColumn' ] ) ? $config[ 'nameColumn' ] : 'id';
+		$config[ 'valueColumn' ]	= isset( $config[ 'valueColumn' ] ) ? $config[ 'valueColumn' ] : 'name';
 		$config[ 'nameAlias' ]		= 'id';
 		$config[ 'valueAlias' ]		= 'name';
 

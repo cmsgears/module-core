@@ -12,6 +12,7 @@ namespace cmsgears\core\common\services\resources;
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -22,8 +23,8 @@ use cmsgears\core\common\services\base\ResourceService;
 
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
-use cmsgears\core\common\services\traits\resources\HierarchyTrait;
-use cmsgears\core\common\services\traits\resources\NestedSetTrait;
+use cmsgears\core\common\services\traits\hierarchy\HierarchyTrait;
+use cmsgears\core\common\services\traits\hierarchy\NestedSetTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
@@ -102,6 +103,12 @@ class CategoryService extends ResourceService implements ICategoryService {
 					'default' => SORT_DESC,
 					'label' => 'Parent'
 				],
+				'root' => [
+					'asc' => [ 'root.name' => SORT_ASC ],
+					'desc' => [ 'root.name' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Root'
+				],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
@@ -126,6 +133,18 @@ class CategoryService extends ResourceService implements ICategoryService {
 	                'default' => SORT_DESC,
 	                'label' => 'Icon'
 	            ],
+	            'title' => [
+	                'asc' => [ "$modelTable.title" => SORT_ASC ],
+	                'desc' => [ "$modelTable.title" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Title'
+	            ],
+	            'pinned' => [
+	                'asc' => [ "$modelTable.pinned" => SORT_ASC ],
+	                'desc' => [ "$modelTable.pinned" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Pinned'
+	            ],
 	            'featured' => [
 	                'asc' => [ "$modelTable.featured" => SORT_ASC ],
 	                'desc' => [ "$modelTable.featured" => SORT_DESC ],
@@ -137,60 +156,86 @@ class CategoryService extends ResourceService implements ICategoryService {
 	                'desc' => [ "$modelTable.`order`" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Order'
-	            ]
+	            ],
+				'cdate' => [
+					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Created At'
+				],
+				'udate' => [
+					'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Updated At'
+				]
 			],
 			'defaultOrder' => [
 				'id' => SORT_DESC
 			]
 		]);
 
-		$config[ 'sort' ] 	= $sort;
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
 
 		// Query ------------
 
 		if( !isset( $config[ 'query' ] ) ) {
 
-			$query 	= $modelClass::find()->joinWith( 'parent' );
+			$config[ 'hasOne' ] = true;
 		}
 
 		// Filters ----------
 
-		// Filter - Status
-		$status	= Yii::$app->request->getQueryParam( 'status' );
+		// Params
+		$type	= Yii::$app->request->getQueryParam( 'type' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
-		if( isset( $status ) ) {
+		// Filter - Type
+		if( isset( $type ) ) {
 
-			switch( $status ) {
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
 
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'pinned': {
+
+					$config[ 'conditions' ][ "$modelTable.pinned" ] = true;
+
+					break;
+				}
 				case 'featured': {
 
-					$config[ 'conditions' ][ "$modelTable.featured" ]	= true;
+					$config[ 'conditions' ][ "$modelTable.featured" ] = true;
+
+					break;
+				}
+				case 'top': {
+
+					$config[ 'conditions' ][ "$modelTable.parentId" ] = null;
 
 					break;
 				}
 			}
 		}
 
-		// Filter - Level
-		$parent	= Yii::$app->request->getQueryParam( 'parent' );
-
-		if( isset( $parent ) ) {
-
-			if( $parent === 'top' ) {
-
-				$query->andWhere( "$modelTable.parentId IS NULL" );
-			}
-		}
-
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol = Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
 			$search = [
 				'name' => "$modelTable.name",
-				'desc' => "$modelTable.description"
+				'title' => "$modelTable.title",
+				'desc' => "$modelTable.description",
+				'content' => "$modelTable.content"
 			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
@@ -200,15 +245,17 @@ class CategoryService extends ResourceService implements ICategoryService {
 
 		$config[ 'report-col' ]	= [
 			'name' => "$modelTable.name",
-			'slug' => "$modelTable.slug",
+			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
+			'content' => "$modelTable.content",
+			'featured' => "$modelTable.featured",
 			'pname' => 'parent.name',
-			'pdesc' => 'parent.description'
+			'pdesc' => 'parent.description',
+			'rname' => 'root.name',
+			'rdesc' => 'root.description'
 		];
 
 		// Result -----------
-
-		$config[ 'query' ]	= $query;
 
 		return parent::getPage( $config );
 	}
@@ -235,19 +282,19 @@ class CategoryService extends ResourceService implements ICategoryService {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::find()->where( [ 'type' => $type, 'lValue' => 1 ] )->all();
+		return $modelClass::findL0ByType( $type );
 	}
 
 	// Read - Lists ----
 
-	public function getTopLevelIdNameListByType( $type, $config = [] ) {
+	public function getL0IdNameListByType( $type, $config = [] ) {
 
 		$config[ 'conditions' ][ 'parentId' ] = null;
 
 		return $this->getIdNameListByType( $type, $config );
 	}
 
-	public function getTopLevelIdNameListById( $id, $config = [] ) {
+	public function getL0IdNameListById( $id, $config = [] ) {
 
 		$category = self::findById( $id );
 
@@ -274,34 +321,21 @@ class CategoryService extends ResourceService implements ICategoryService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description', 'type', 'icon', 'featured', 'htmlOptions' ];
+		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-		// Find existing model
-		$modelToUpdate	= $this->getById( $model->id );
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'slug', 'type', 'icon', 'title', 'description', 'htmlOptions', 'content' ];
 
 		// Update Hierarchy
-		$modelToUpdate	= $this->updateInHierarchy( $model, $modelToUpdate );
+		$this->updateInHierarchy( $model );
+
+		if( $admin ) {
+
+			$attributes	= ArrayHelper::merge( $attributes, [ 'order', 'pinned', 'featured' ] );
+		}
 
 		return parent::update( $model, [
 			'attributes' => $attributes
-		]);
-	}
-
-	public function markFeatured( $model ) {
-
-		$model->featured = true;
-
-		return parent::update( $model, [
-			'attributes' => [ 'featured' ]
-		]);
-	}
-
-	public function markRegular( $model ) {
-
-		$model->featured = false;
-
-		return parent::update( $model, [
-			'attributes' => [ 'featured' ]
 		]);
 	}
 
@@ -310,10 +344,10 @@ class CategoryService extends ResourceService implements ICategoryService {
 	public function delete( $model, $config = [] ) {
 
 		// Delete mapping
-		Yii::$app->get( 'modelCategoryService' )->deleteByModelId( $model->id );
+		Yii::$app->factory->get( 'modelCategoryService' )->deleteByModelId( $model->id );
 
-		// Delete options and mappings - mappings will be deleted by cascade effect
-		Yii::$app->get( 'optionService' )->deleteByCategoryId( $model->id );
+		// Delete options
+		Yii::$app->factory->get( 'optionService' )->deleteByCategoryId( $model->id );
 
 		// Update Hierarchy
 		$model = $this->deleteInHierarchy( $model );
@@ -328,30 +362,26 @@ class CategoryService extends ResourceService implements ICategoryService {
 
 		switch( $column ) {
 
-			case 'status': {
-
-				switch( $action ) {
-
-					case 'featured': {
-
-						$this->markFeatured( $model );
-
-						break;
-					}
-					case 'regular': {
-
-						$this->markRegular( $model );
-
-						break;
-					}
-				}
-
-				break;
-			}
 			case 'model': {
 
 				switch( $action ) {
 
+					case 'pinned': {
+
+						$model->pinned = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'featured': {
+
+						$model->featured = true;
+
+						$model->update();
+
+						break;
+					}
 					case 'delete': {
 
 						$this->delete( $model );

@@ -146,7 +146,8 @@ class m160621_014612_core_index extends Migration {
 		//$this->createIndex( 'idx_' . $this->prefix . 'user_mobile', $this->prefix . 'core_user', 'mobile' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'user_phone', $this->prefix . 'core_user', 'phone' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'user_tzone', $this->prefix . 'core_user', 'timeZone' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_user' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'user_search' . '(firstName ASC, middleName ASC, lastName ASC, message ASC, description ASC, content ASC)' );
+		$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_user' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'user_name' . '(name ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_user' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'user_search' . '(name ASC, message ASC, description ASC, content ASC)' );
 
 		// Site
 		$this->createIndex( 'idx_' . $this->prefix . 'site_name', $this->prefix . 'core_site', 'name' );
@@ -403,6 +404,7 @@ class m160621_014612_core_index extends Migration {
 		//$this->dropIndex( 'idx_' . $this->prefix . 'user_mobile', $this->prefix . 'core_user' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'user_phone', $this->prefix . 'core_user' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'user_tzone', $this->prefix . 'core_user' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'user_name', $this->prefix . 'core_user' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'user_search', $this->prefix . 'core_user' );
 
 		// Site

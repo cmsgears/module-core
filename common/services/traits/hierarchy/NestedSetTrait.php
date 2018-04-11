@@ -115,7 +115,7 @@ trait NestedSetTrait {
 
 	public function getChildIdListById( $modelId ) {
 
-		$model	= self::findById( $modelId );
+		$model = self::findById( $modelId );
 
 		return $this->getChildIdList( $model );
 	}
@@ -133,7 +133,7 @@ trait NestedSetTrait {
 
 	public function createInHierarchy( $model ) {
 
-		$table		= static::$modelTable;
+		$table = $this->getModelTable();
 
 		// Manage Hierarchy
 
@@ -157,7 +157,7 @@ trait NestedSetTrait {
 		// Child Model
 		else {
 
-			$parentModel	= $this->getById( $model->parentId );
+			$parentModel = $this->getById( $model->parentId );
 
 			// Top Level Parent
 			if( !$parentModel->hasParent() ) {
@@ -207,13 +207,15 @@ trait NestedSetTrait {
 
 	// Update -------------
 
-	public function updateInHierarchy( $model, $modelToUpdate ) {
+	public function updateInHierarchy( $model ) {
 
-		$table		= static::$modelTable;
+		$table = $this->getModelTable();
 
-		$rootId		= $model->rootId;
-		$lValue		= $model->lValue;
-		$rValue		= $model->rValue;
+		$rootId	= $model->rootId;
+		$lValue	= $model->lValue;
+		$rValue	= $model->rValue;
+
+		$modelToUpdate = $this->getById( $model->id );
 
 		// Remove from hierarchy
 		$this->deleteAllInHierarchy( $modelToUpdate );
@@ -233,12 +235,12 @@ trait NestedSetTrait {
 		else if( $model->parentId > 0 ) {
 
 			// Find Parent
-			$parent			= $this->getById( $model->parentId );
+			$parent		= $this->getById( $model->parentId );
 
-			$diff			= $rValue - $lValue + 1;
-			$prValue		= $parent->rValue;
-			$rootId			= $parent->rootId;
-			$cdiff			= $prValue - $lValue;
+			$diff		= $rValue - $lValue + 1;
+			$prValue	= $parent->rValue;
+			$rootId		= $parent->rootId;
+			$cdiff		= $prValue - $lValue;
 
 			$parent->rValue	= $parent->rValue + $diff;
 
@@ -275,7 +277,7 @@ trait NestedSetTrait {
 
 	public function deleteInHierarchy( $model ) {
 
-		$table		= static::$modelTable;
+		$table = $this->getModelTable();
 
 		$parent		= $model->parent;
 		$children	= $model->children;
@@ -289,15 +291,16 @@ trait NestedSetTrait {
 			// Not a top level node
 			if( isset( $parent ) ) {
 
-				$children	= $this->getSubLevelList( $model->id, $model->rootId, [ 'having' => 'depth=1' ] );
-				$ids		= [];
+				$children = $this->getSubLevelList( $model->id, $model->rootId, [ 'having' => 'depth=1' ] );
 
-				foreach ( $children as $child ) {
+				$ids = [];
 
-					$ids[]	= $child[ 'id' ];
+				foreach( $children as $child ) {
+
+					$ids[] = $child[ 'id' ];
 				}
 
-				$ids	= join( ',', $ids );
+				$ids = join( ',', $ids );
 
 				// Update Parent Id
 				Yii::$app->db->createCommand( "UPDATE $table set parentId = $parent->id WHERE id IN( $ids )" )->execute();
@@ -312,7 +315,7 @@ trait NestedSetTrait {
 			// Top level node
 			else {
 
-				$children	= $this->getSubLevelList( $model->id, $model->rootId, [ 'having' => 'depth=1' ] );
+				$children = $this->getSubLevelList( $model->id, $model->rootId, [ 'having' => 'depth=1' ] );
 
 				// first child and it's children ---------
 
@@ -327,7 +330,7 @@ trait NestedSetTrait {
 
 				// remaining children --------------------
 
-				$count	= count( $children );
+				$count = count( $children );
 
 				if( $count > 1 ) {
 
@@ -369,7 +372,7 @@ trait NestedSetTrait {
 
 	public function deleteAllInHierarchy( $model ) {
 
-		$table		= static::$modelTable;
+		$table = $this->getModelTable();
 
 		$parent		= $model->parent;
 		$children	= $model->children;
@@ -448,10 +451,11 @@ trait NestedSetTrait {
 	 */
 	public static function findLevelList( $config = [] ) {
 
-		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : [];
+		$conditions	= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : [];
 
-		$modelTable		= static::$modelTable;
-		$query			= new Query();
+		$modelClass	= static::$modelClass;
+		$modelTable	= $modelClass->tableName();
+		$query		= new Query();
 
 		$query->select( 'node.id, node.name, node.rootId, node.lValue, node.rValue, ( COUNT( parent.id ) - 1 ) AS depth' );
 		$query->from( "$modelTable AS node, $modelTable AS parent" );
@@ -466,10 +470,10 @@ trait NestedSetTrait {
 		$query->orderBy( 'node.rootId, node.lValue, depth' );
 
 		// Create command
-		$command	= $query->createCommand();
+		$command = $query->createCommand();
 
 		// Execute the command
-		$list		= $command->queryAll();
+		$list = $command->queryAll();
 
 		return $list;
 	}
@@ -497,21 +501,22 @@ trait NestedSetTrait {
 	 */
 	public static function findSubLevelList( $parentId, $rootId, $config = [] ) {
 
-		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
-		$having			= isset( $config[ 'having' ] ) ? $config[ 'having' ] : null;
+		$conditions	= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+		$having		= isset( $config[ 'having' ] ) ? $config[ 'having' ] : null;
 
-		$modelTable		= static::$modelTable;
-		$query			= new Query();
+		$modelClass	= static::$modelClass;
+		$modelTable	= $modelClass->tableName();
+		$query		= new Query();
 
-		$subSelect	= "(
-							SELECT `node`.`id`, `node`.`name`, (COUNT(`parent`.`id`) - 1) AS `depth`
-							FROM `$modelTable` AS `node`,
-							`$modelTable` AS `parent`
-							WHERE `node`.`lValue` BETWEEN `parent`.`lValue` AND `parent`.`rValue` AND `node`.`rootId`=`parent`.`rootId` AND `node`.`rootId`=$rootId
-							AND `node`.`id` = $parentId
-							GROUP BY `node`.`id`
-							ORDER BY `node`.`lValue`
-						)AS sub_tree";
+		$subSelect = "(
+			SELECT `node`.`id`, `node`.`name`, (COUNT(`parent`.`id`) - 1) AS `depth`
+			FROM `$modelTable` AS `node`,
+			`$modelTable` AS `parent`
+			WHERE `node`.`lValue` BETWEEN `parent`.`lValue` AND `parent`.`rValue` AND `node`.`rootId`=`parent`.`rootId` AND `node`.`rootId`=$rootId
+			AND `node`.`id` = $parentId
+			GROUP BY `node`.`id`
+			ORDER BY `node`.`lValue`
+		)AS sub_tree";
 
 		$query->select( 'node.id, node.name, node.rootId, node.lValue, node.rValue, (COUNT(parent.id) - (sub_tree.depth + 1)) AS depth' );
 		$query->from( "$modelTable AS node, $modelTable AS parent, $modelTable AS sub_parent, $subSelect" );
@@ -534,10 +539,10 @@ trait NestedSetTrait {
 		}
 
 		// Create command
-		$command	= $query->createCommand();
+		$command = $query->createCommand();
 
 		// Execute the command
-		$list		= $command->queryAll();
+		$list = $command->queryAll();
 
 		return $list;
 	}
@@ -550,10 +555,11 @@ trait NestedSetTrait {
 	 */
 	public static function findChildNodes( $parentId, $config = [] ) {
 
-		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+		$conditions = isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 
-		$modelTable		= static::$modelTable;
-		$query			= new Query();
+		$modelClass	= static::$modelClass;
+		$modelTable	= $modelClass->tableName();
+		$query		= new Query();
 
 		$query->select( 'node.id, node.name' );
 		$query->from( "$modelTable AS node, $modelTable AS parent" );
@@ -567,10 +573,10 @@ trait NestedSetTrait {
 		$query->orderBy( 'node.lValue' );
 
 		// Create command
-		$command	= $query->createCommand();
+		$command = $query->createCommand();
 
 		// Execute the command
-		$list		= $command->queryAll();
+		$list = $command->queryAll();
 
 		return $list;
 	}
@@ -583,10 +589,11 @@ trait NestedSetTrait {
 	 */
 	public static function findLeafNodes( $rootId, $config = [] ) {
 
-		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+		$conditions	= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 
-		$modelTable		= static::$modelTable;
-		$query			= new Query();
+		$modelClass	= static::$modelClass;
+		$modelTable	= $modelClass->tableName();
+		$query		= new Query();
 
 		$query->select( 'id, name' );
 		$query->from( $modelTable );
@@ -598,10 +605,10 @@ trait NestedSetTrait {
 		}
 
 		// Create command
-		$command	= $query->createCommand();
+		$command = $query->createCommand();
 
 		// Execute the command
-		$list		= $command->queryAll();
+		$list = $command->queryAll();
 
 		return $list;
 	}
@@ -615,10 +622,11 @@ trait NestedSetTrait {
 	 */
 	public static function findParentNodes( $leafId, $config = [] ) {
 
-		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+		$conditions	= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 
-		$modelTable		= static::$modelTable;
-		$query			= new Query();
+		$modelClass	= static::$modelClass;
+		$modelTable	= $modelClass->tableName();
+		$query		= new Query();
 
 		$query->select( 'parent.id, parent.name' );
 		$query->from( "$modelTable AS node, $modelTable AS parent" );
@@ -632,10 +640,10 @@ trait NestedSetTrait {
 		$query->orderBy( 'node.lValue' );
 
 		// Create command
-		$command	= $query->createCommand();
+		$command = $query->createCommand();
 
 		// Execute the command
-		$list		= $command->queryAll();
+		$list = $command->queryAll();
 
 		return $list;
 	}

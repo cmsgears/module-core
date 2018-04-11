@@ -58,7 +58,7 @@ class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
 			$modelCategory	= $modelCategoryService->getById( $cid );
 
-			if( isset( $modelCategory ) && $modelCategory->checkParent( $this->model->id, $this->parentType ) ) {
+			if( isset( $modelCategory ) && $modelCategory->isParentValid( $this->model->id, $this->parentType ) ) {
 
 				$modelCategoryService->delete( $modelCategory );
 

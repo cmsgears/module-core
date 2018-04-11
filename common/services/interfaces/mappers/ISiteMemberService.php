@@ -21,13 +21,13 @@ interface ISiteMemberService extends IMapperService {
 
 	// Data Provider ------
 
+	public function getPageBySiteId( $siteId, $config = [] );
+
 	// Read ---------------
 
 	// Read - Models ---
 
-	public function findBySiteIdUserId( $siteId, $userId );
-
-	public function getSiteMemberBySiteId( $siteId );
+	public function getBySiteIdUserId( $siteId, $userId );
 
 	// Read - Lists ----
 

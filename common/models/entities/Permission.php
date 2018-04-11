@@ -78,7 +78,7 @@ class Permission extends Entity implements IAuthor, IData, IGridCache, IHierarch
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_PERMISSION;
+	protected $modelType = CoreGlobal::TYPE_PERMISSION;
 
 	// Private ----------------
 
@@ -155,7 +155,7 @@ class Permission extends Entity implements IAuthor, IData, IGridCache, IHierarch
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'adminUrl', 'homeUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'description' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -225,6 +225,16 @@ class Permission extends Entity implements IAuthor, IData, IGridCache, IHierarch
 
 		return $rolesList;
 	}
+
+	/**
+	 * Returns string representation of group flag.
+	 *
+	 * @return string
+	 */
+    public function getGroupStr() {
+
+        return Yii::$app->formatter->asBoolean( $this->group );
+    }
 
 	// Static Methods ----------------------------------------------
 

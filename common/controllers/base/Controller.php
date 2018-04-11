@@ -94,7 +94,7 @@ abstract class Controller extends \yii\web\Controller {
 
 		if( !isset( $this->coreProperties ) ) {
 
-			$this->coreProperties	= CoreProperties::getInstance();
+			$this->coreProperties = CoreProperties::getInstance();
 		}
 
 		return $this->coreProperties;
@@ -104,7 +104,7 @@ abstract class Controller extends \yii\web\Controller {
 
 		if( !isset( $this->cacheProperties ) ) {
 
-			$this->cacheProperties	= CacheProperties::getInstance();
+			$this->cacheProperties = CacheProperties::getInstance();
 		}
 
 		return $this->cacheProperties;
@@ -114,7 +114,7 @@ abstract class Controller extends \yii\web\Controller {
 
 		if( !isset( $this->mailProperties ) ) {
 
-			$this->mailProperties	= MailProperties::getInstance();
+			$this->mailProperties = MailProperties::getInstance();
 		}
 
 		return $this->mailProperties;
@@ -148,7 +148,7 @@ abstract class Controller extends \yii\web\Controller {
 
 			$siteId		= Yii::$app->core->getSiteId();
 
-			$siteMember = Yii::$app->factory->get( 'siteMemberService' )->findBySiteIdUserId(  $siteId, $user->id );
+			$siteMember = Yii::$app->factory->get( 'siteMemberService' )->getBySiteIdUserId(  $siteId, $user->id );
 
 			if( !isset( $siteMember ) ) {
 
@@ -190,4 +190,5 @@ abstract class Controller extends \yii\web\Controller {
 			}
 		}
 	}
+
 }

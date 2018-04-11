@@ -104,6 +104,9 @@ class CountryService extends EntityService implements ICountryService {
 					'default' => SORT_DESC,
 					'label' => 'ISO'
 				]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 
@@ -127,7 +130,11 @@ class CountryService extends EntityService implements ICountryService {
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'code' => "$modelTable.code" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'code' => "$modelTable.code",
+				'iso' => "$modelTable.iso"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -135,7 +142,9 @@ class CountryService extends EntityService implements ICountryService {
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'code' => "$modelTable.code", 'iso' => "$modelTable.iso"
+			'name' => "$modelTable.name",
+			'code' => "$modelTable.code",
+			'iso' => "$modelTable.iso"
 		];
 
 		// Result -----------
@@ -152,6 +161,13 @@ class CountryService extends EntityService implements ICountryService {
 		$modelClass	= static::$modelClass;
 
 		return $modelClass::findByCode( $code );
+	}
+
+	public function getByIso( $iso ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findByIso( $iso );
 	}
 
 	// Read - Lists ----

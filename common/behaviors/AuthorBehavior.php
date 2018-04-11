@@ -1,10 +1,25 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\behaviors;
 
-use \Yii;
+// Yii Imports
+use Yii;
+use yii\behaviors\AttributeBehavior;
 use yii\db\BaseActiveRecord;
 
-class AuthorBehavior extends \yii\behaviors\AttributeBehavior {
+/**
+ * AuthorBehavior saves the user who create or update the model.
+ *
+ * @since 1.0.0
+ */
+class AuthorBehavior extends AttributeBehavior {
 
 	public $createdByAttribute = 'createdBy';
 
@@ -45,4 +60,5 @@ class AuthorBehavior extends \yii\behaviors\AttributeBehavior {
 
 		$owner->updateAttributes( array_fill_keys( ( array ) $attribute, $this->getValue(null)));
 	}
+
 }

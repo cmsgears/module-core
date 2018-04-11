@@ -11,11 +11,11 @@ namespace cmsgears\core\common\services\mappers;
 
 // Yii Imports
 use Yii;
+use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\mappers\SiteMember;
 
 use cmsgears\core\common\services\interfaces\mappers\ISiteMemberService;
@@ -28,7 +28,7 @@ use cmsgears\core\common\services\base\MapperService;
  *
  * @since 1.0.0
  */
-class SiteMemberService extends  MapperService implements ISiteMemberService {
+class SiteMemberService extends MapperService implements ISiteMemberService {
 
 	// Variables ---------------------------------------------------
 
@@ -77,30 +77,170 @@ class SiteMemberService extends  MapperService implements ISiteMemberService {
 
 	// Data Provider ------
 
+	public function getPage( $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$siteTable = Yii::$app->factory->get( 'siteService' )->getModelTable();
+		$roleTable = Yii::$app->factory->get( 'roleService' )->getModelTable();
+		$userTable = Yii::$app->factory->get( 'userService' )->getModelTable();
+
+		// Sorting ----------
+
+		$sort = new Sort([
+			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
+	            'site' => [
+	                'asc' => [ "$siteTable.name" => SORT_ASC ],
+	                'desc' => [ "$siteTable.name" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Template'
+	            ],
+				'role' => [
+					'asc' => [ "$roleTable.name" => SORT_ASC ],
+					'desc' => [ "$roleTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Slug'
+				],
+				'name' => [
+					'asc' => [ "$userTable.name" => SORT_ASC ],
+					'desc' => [ "$userTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
+				],
+				'email' => [
+					'asc' => [ "$userTable.email" => SORT_ASC ],
+					'desc' => [ "$userTable.email" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
+				],
+				'pinned' => [
+					'asc' => [ "$modelTable.pinned" => SORT_ASC ],
+					'desc' => [ "$modelTable.pinned" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Pinned'
+				],
+				'featured' => [
+					'asc' => [ "$modelTable.featured" => SORT_ASC ],
+					'desc' => [ "$modelTable.featured" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Featured'
+				],
+				'cdate' => [
+					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Created At'
+				],
+				'udate' => [
+					'asc' => [ "$modelTable.updatedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.updatedAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Updated At'
+				]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
+			]
+		]);
+
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Params
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'pinned': {
+
+					$config[ 'conditions' ][ "$modelTable.pinned" ] = true;
+
+					break;
+				}
+				case 'featured': {
+
+					$config[ 'conditions' ][ "$modelTable.featured" ] = true;
+
+					break;
+				}
+			}
+		}
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [
+				'name' => "$modelTable.name",
+				'title' => "$modelTable.title",
+				'desc' => "$modelTable.description",
+				'content' => "$modelTable.content"
+			];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'content' => "$modelTable.content",
+			'status' => "$modelTable.status",
+			'visibility' => "$modelTable.visibility",
+			'order' => "$modelTable.order",
+			'pinned' => "$modelTable.pinned",
+			'featured' => "$modelTable.featured"
+		];
+
+		// Result -----------
+
+		return parent::getPage( $config );
+	}
+
+	public function getPageBySiteId( $siteId, $config = [] ) {
+
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.siteId" ]	= $siteId;
+
+		return $this->getPage( $config );
+	}
+
 	// Read ---------------
 
 	// Read - Models ---
 
 	/**
 	 * @param integer $siteId
-	 * @return SiteMembers - for the given site
-	 */
-	public function getSiteMemberBySiteId( $siteId ) {
-
-		$modelTable	= $this->getModelTable();
-
-		$config = [];
-		$config[ 'conditions' ][ "$modelTable.siteId" ]	= $siteId;
-
-		return $this->getPage( $config );
-	}
-
-	/**
-	 * @param integer $siteId
 	 * @param integer $userId
 	 * @return SiteMember - for the given site and user
 	 */
-	public function findBySiteIdUserId( $siteId, $userId ) {
+	public function getBySiteIdUserId( $siteId, $userId ) {
 
 		$modelClass	= $this->getModelClass();
 
@@ -115,31 +255,34 @@ class SiteMemberService extends  MapperService implements ISiteMemberService {
 
 	// Create -------------
 
-	public function create( $user, $config = [] ) {
+	public function createByParams( $params = [], $config = [] ) {
 
-		$siteMember = isset( $config[ 'siteMember' ] ) ? $config[ 'siteMember' ] : null;
-		$roleId		= isset( $config[ 'roleId' ] ) ? $config[ 'roleId' ] : null;
+		$userId = isset( $params[ 'userId' ] ) ? $params[ 'userId' ] : null;
+		$roleId = isset( $params[ 'roleId' ] ) ? $params[ 'roleId' ] : null;
+		$siteId = isset( $params[ 'siteId' ] ) ? $params[ 'siteId' ] : null;
 
-		if( !isset( $siteMember ) ) {
+		if( !isset( $userId ) && isset( Yii::$app->user->identity ) ) {
 
-			$siteMember	= $this->getModelObject();
+			$userId = Yii::$app->user->identity->id;
 		}
 
-		if( isset( $roleId ) ) {
-
-			$siteMember->roleId	= $roleId;
-		}
-		else {
+		if( !isset( $roleId ) ) {
 
 			$role = $this->roleService->getBySlugType( CoreGlobal::ROLE_USER, CoreGlobal::TYPE_SYSTEM );
 
-			$siteMember->roleId	= $role->id;
+			$roleId	= $role->id;
 		}
 
-		$siteMember->siteId = isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
-		$siteMember->userId	= $user->id;
+		if( !isset( $siteId ) ) {
 
-		return parent::create( $siteMember, $config );
+			$siteId = Yii::$app->core->siteId;
+		}
+
+		$params[ 'userId' ] = $userId;
+		$params[ 'roleId' ] = $roleId;
+		$params[ 'siteId' ] = $siteId;
+
+		return parent::createByParams( $params, $config );
 	}
 
 	// Update -------------

@@ -22,10 +22,8 @@ $siteId	= Yii::$app->core->siteId;
 				<?php if( $user->isPermitted( CoreGlobal::PERM_RBAC ) ) { ?>
 					<li class='role <?= $child === 'role' ? 'active' : null ?>'><?= Html::a( "Roles", ['/core/role/all'] ) ?></li>
 					<li class='perm <?= $child === 'perm' ? 'active' : null ?>'><?= Html::a( "Permissions", ['/core/permission/all'] ) ?></li>
-					<li class='perm-group <?= $child === 'perm-group' ? 'active' : null ?>'><?= Html::a( "Permission Groups", ['/core/permission/groups'] ) ?></li>
 				<?php } ?>
 				<?php if( $user->isPermitted( CoreGlobal::PERM_IDENTITY ) ) { ?>
-					<li class='admin <?= $child === 'admin' ? 'active' : null ?>'><?= Html::a( "Admins", ['/core/admin/all'] ) ?></li>
 					<li class='user <?= $child === 'user' ? 'active' : null ?>'><?= Html::a( "Users", ['/core/user/all'] ) ?></li>
 				<?php } ?>
 			</ul>

@@ -6,6 +6,7 @@ use yii\helpers\Html;
 // CMG Imports
 use cmsgears\files\widgets\AvatarUploader;
 use cmsgears\files\widgets\ImageUploader;
+use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Add Site | ' . $coreProperties->getSiteTitle();
@@ -25,14 +26,28 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
 						<div class="col col2">
+							<?= $form->field( $model, 'title' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'themeId' )->dropDownList( $themesMap, [ 'class' => 'cmt-select' ] ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active', null, 'cmti cmti-checkbox' ) ?>
+						</div>
+						<div class="col col2">
 							<?= $form->field( $model, 'order' ) ?>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $model, 'themeId' )->dropDownList( $themesMap, [ 'class' => 'cmt-select' ] ) ?>
-						</div>
-						<div class="col col2">
+							<?= $form->field( $model, 'description' )->textarea() ?>
 						</div>
 					</div>
 				</div>

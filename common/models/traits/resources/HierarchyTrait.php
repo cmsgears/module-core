@@ -88,8 +88,9 @@ trait HierarchyTrait {
 	 */
 	public function getChildrenIdList() {
 
-		$children		= $this->children;
-		$cildrenIdList	= [];
+		$children = $this->children;
+
+		$cildrenIdList = [];
 
 		foreach( $children as $child ) {
 

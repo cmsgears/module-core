@@ -10,9 +10,6 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Delete Comment | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 
-$modelClass		= $this->context->modelService->getModelClass();
-$statusMap		= $modelClass::$statusMap;
-
 Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );
 ?>
 <div class="box-crud-wrap row">

@@ -123,7 +123,7 @@ class DataModel extends Model {
 
 		$attributes	= get_object_vars( $object );
 
-		foreach ( $attributes as $key => $value ) {
+		foreach( $attributes as $key => $value ) {
 
 			$this->__set( $key, $value );
 		}

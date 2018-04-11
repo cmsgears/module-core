@@ -150,17 +150,17 @@ class m160621_014408_core_data extends Migration {
 		// Default password for all test users is test#123
 		// Super Admin i.e. demomaster must change username, password and email on first login and remove other users if required.
 
-		$columns = [ 'localeId', 'status', 'email', 'username', 'passwordHash', 'firstName', 'lastName', 'registeredAt', 'lastLoginAt', 'authKey' ];
+		$columns = [ 'localeId', 'status', 'email', 'username', 'passwordHash', 'firstName', 'lastName', 'name', 'registeredAt', 'lastLoginAt', 'authKey' ];
 
 		$users	= [
-			[ $this->locale->id, User::STATUS_ACTIVE, "$siteMaster@$primaryDomain", 'demomaster', '$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W', 'demo', 'master', DateUtil::getDateTime(), DateUtil::getDateTime(), 'JuL37UBqGpjnA7kaPiRnlsiWRwbRvXx7' ]
+			[ $this->locale->id, User::STATUS_ACTIVE, "$siteMaster@$primaryDomain", 'demomaster', '$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W', 'Demo', 'Master', 'Demo Master', DateUtil::getDateTime(), DateUtil::getDateTime(), 'JuL37UBqGpjnA7kaPiRnlsiWRwbRvXx7' ]
 		];
 
 		if( Yii::$app->migration->isTestAccounts() ) {
 
-			$users[] = [ $this->locale->id, User::STATUS_ACTIVE, "demoadmin@$primaryDomain", 'demoadmin','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','admin', DateUtil::getDateTime(), DateUtil::getDateTime(), 'SQ1LLCWEPva4IKuQklILLGDpmUTGzq8E' ];
-			$users[] = [ $this->locale->id, User::STATUS_ACTIVE, "demouser@$primaryDomain", 'demouser','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','user', DateUtil::getDateTime(), DateUtil::getDateTime(), '-jG5ExHS0Y39ucSxHhl3PZ4xmPsfvQFC' ];
-			$users[] = [ $this->locale->id, User::STATUS_ACTIVE, "demouadmin@$primaryDomain", 'demouadmin','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','demo','user', DateUtil::getDateTime(), DateUtil::getDateTime(), '-jG5ExHS0Y39ucSxHhl3PZ4xmPsfvQFC' ];
+			$users[] = [ $this->locale->id, User::STATUS_ACTIVE, "demoadmin@$primaryDomain", 'demoadmin','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','Demo','Admin', 'Demo Admin', DateUtil::getDateTime(), DateUtil::getDateTime(), 'SQ1LLCWEPva4IKuQklILLGDpmUTGzq8E' ];
+			$users[] = [ $this->locale->id, User::STATUS_ACTIVE, "demouser@$primaryDomain", 'demouser','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','Demo','User', 'Demo User', DateUtil::getDateTime(), DateUtil::getDateTime(), '-jG5ExHS0Y39ucSxHhl3PZ4xmPsfvQFC' ];
+			$users[] = [ $this->locale->id, User::STATUS_ACTIVE, "demouadmin@$primaryDomain", 'demouadmin','$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W','Demo','User', 'Demo User', DateUtil::getDateTime(), DateUtil::getDateTime(), '-jG5ExHS0Y39ucSxHhl3PZ4xmPsfvQFC' ];
 		}
 
 		$this->batchInsert( $this->prefix . 'core_user', $columns, $users );
@@ -360,10 +360,10 @@ class m160621_014408_core_data extends Migration {
 			'name' => 'Config Core', 'slug' => 'config-core',
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Core configuration form.',
-			'successMessage' => 'All configurations saved successfully.',
+			'success' => 'All configurations saved successfully.',
 			'captcha' => false,
 			'visibility' => Form::VISIBILITY_PROTECTED,
-			'active' => true, 'userMail' => false,'adminMail' => false,
+			'status' => Form::STATUS_ACTIVE, 'userMail' => false,'adminMail' => false,
 			'createdAt' => DateUtil::getDateTime(),
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
@@ -404,10 +404,10 @@ class m160621_014408_core_data extends Migration {
 			'name' => 'Config Cache', 'slug' => 'config-cache',
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Cache configuration form.',
-			'successMessage' => 'All configurations saved successfully.',
+			'success' => 'All configurations saved successfully.',
 			'captcha' => false,
 			'visibility' => Form::VISIBILITY_PROTECTED,
-			'active' => true, 'userMail' => false,'adminMail' => false,
+			'status' => Form::STATUS_ACTIVE, 'userMail' => false,'adminMail' => false,
 			'createdAt' => DateUtil::getDateTime(),
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
@@ -435,10 +435,10 @@ class m160621_014408_core_data extends Migration {
 			'name' => 'Config Mail', 'slug' => 'config-mail',
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Mail configuration form.',
-			'successMessage' => 'All configurations saved successfully.',
+			'success' => 'All configurations saved successfully.',
 			'captcha' => false,
 			'visibility' => Form::VISIBILITY_PROTECTED,
-			'active' => true, 'userMail' => false,'adminMail' => false,
+			'status' => Form::STATUS_ACTIVE, 'userMail' => false,'adminMail' => false,
 			'createdAt' => DateUtil::getDateTime(),
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
@@ -474,10 +474,10 @@ class m160621_014408_core_data extends Migration {
 			'name' => 'Config Comment', 'slug' => 'config-comment',
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Comment configuration form.',
-			'successMessage' => 'All configurations saved successfully.',
+			'success' => 'All configurations saved successfully.',
 			'captcha' => false,
 			'visibility' => Form::VISIBILITY_PROTECTED,
-			'active' => true, 'userMail' => false,'adminMail' => false,
+			'status' => Form::STATUS_ACTIVE, 'userMail' => false,'adminMail' => false,
 			'createdAt' => DateUtil::getDateTime(),
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
@@ -509,10 +509,10 @@ class m160621_014408_core_data extends Migration {
 			'name' => 'Config Backend', 'slug' => 'config-backend',
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Backend configuration form.',
-			'successMessage' => 'All configurations saved successfully.',
+			'success' => 'All configurations saved successfully.',
 			'captcha' => false,
 			'visibility' => Form::VISIBILITY_PROTECTED,
-			'active' => true, 'userMail' => false,'adminMail' => false,
+			'status' => Form::STATUS_ACTIVE, 'userMail' => false,'adminMail' => false,
 			'createdAt' => DateUtil::getDateTime(),
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
@@ -539,10 +539,10 @@ class m160621_014408_core_data extends Migration {
 			'name' => 'Config Frontend', 'slug' => 'config-frontend',
 			'type' => CoreGlobal::TYPE_SYSTEM,
 			'description' => 'Frontend configuration form.',
-			'successMessage' => 'All configurations saved successfully.',
+			'success' => 'All configurations saved successfully.',
 			'captcha' => false,
 			'visibility' => Form::VISIBILITY_PROTECTED,
-			'active' => true, 'userMail' => false,'adminMail' => false,
+			'status' => Form::STATUS_ACTIVE, 'userMail' => false,'adminMail' => false,
 			'createdAt' => DateUtil::getDateTime(),
 			'modifiedAt' => DateUtil::getDateTime()
 		]);

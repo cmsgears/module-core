@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\content;
 
 // Yii Imports
@@ -9,12 +17,16 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\File;
 
+use cmsgears\core\common\actions\base\ModelAction;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * UpdateBanner can be used to update banner of discovered model.
+ * Banner action configures the banner of model having banner.
+ *
+ * @since 1.0.0
  */
-class UpdateBanner extends \cmsgears\core\common\actions\base\ModelAction {
+class Banner extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -30,7 +42,7 @@ class UpdateBanner extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $fileName	= 'Banner';
+	public $fileName = 'Banner';
 
 	// Protected --------------
 
@@ -50,40 +62,28 @@ class UpdateBanner extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// UpdateBanner --------------------------
+	// Banner --------------------------------
 
 	public function run() {
 
 		if( isset( $this->model ) ) {
 
-			$banner = $this->model->banner;
+			$banner = File::loadFile( $this->model->banner, $this->fileName );
 
-			if( !isset( $banner ) ) {
+			if( $this->modelService->updateBanner( $this->model, $banner ) ) {
 
-				$banner	= new File();
-			}
-
-			if( $banner->load( Yii::$app->request->post(), $this->fileName ) ) {
-
-				$this->modelService->updateBanner( $this->model, $banner );
-
-				$this->model->refresh();
-
-				$banner		= $this->model->banner;
-				$response	= [ 'fileUrl' => $banner->getFileUrl() ];
+				$response = [ 'fileUrl' => $banner->getFileUrl(), 'mediumUrl' => $banner->getMediumUrl(), 'thumbUrl' => $banner->getThumbUrl() ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
 			}
 
-			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $banner );
-
 			// Trigger Ajax Failure
-			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 		}
 
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

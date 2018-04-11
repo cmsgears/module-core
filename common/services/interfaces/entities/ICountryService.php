@@ -28,6 +28,8 @@ interface ICountryService extends IEntityService, IName {
 
 	public function getByCode( $code );
 
+	public function getByIso( $iso );
+
 	// Read - Lists ----
 
 	// Read - Maps -----

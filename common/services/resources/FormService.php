@@ -82,6 +82,8 @@ class FormService extends ResourceService implements IFormService {
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
+		$templateTable = Yii::$app->factory->get( 'templateService' )->getModelTable();
+
 		// Sorting ----------
 
 		$sort = new Sort([
@@ -92,11 +94,83 @@ class FormService extends ResourceService implements IFormService {
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
+	            'template' => [
+	                'asc' => [ "$templateTable.name" => SORT_ASC ],
+	                'desc' => [ "$templateTable.name" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Template'
+	            ],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Name'
+				],
+				'slug' => [
+					'asc' => [ "$modelTable.slug" => SORT_ASC ],
+					'desc' => [ "$modelTable.slug" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Slug'
+				],
+	            'type' => [
+	                'asc' => [ "$modelTable.type" => SORT_ASC ],
+	                'desc' => [ "$modelTable.type" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Type'
+	            ],
+	            'icon' => [
+	                'asc' => [ "$modelTable.icon" => SORT_ASC ],
+	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Icon'
+	            ],
+				'title' => [
+					'asc' => [ "$modelTable.title" => SORT_ASC ],
+					'desc' => [ "$modelTable.title" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Title'
+				],
+				'captcha' => [
+					'asc' => [ "$modelTable.captcha" => SORT_ASC ],
+					'desc' => [ "$modelTable.captcha" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Captcha'
+				],
+				'visibility' => [
+					'asc' => [ "$modelTable.visibility" => SORT_ASC ],
+					'desc' => [ "$modelTable.visibility" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Visibility'
+				],
+				'status' => [
+					'asc' => [ "$modelTable.status" => SORT_ASC ],
+					'desc' => [ "$modelTable.status" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Status'
+				],
+				'umail' => [
+					'asc' => [ "$modelTable.userMail" => SORT_ASC ],
+					'desc' => [ "$modelTable.userMail" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'User Mail'
+				],
+				'amail' => [
+					'asc' => [ "$modelTable.adminMail" => SORT_ASC ],
+					'desc' => [ "$modelTable.adminMail" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Admin Mail'
+				],
+				'unsubmit' => [
+					'asc' => [ "$modelTable.uniqueSubmit" => SORT_ASC ],
+					'desc' => [ "$modelTable.uniqueSubmit" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Unique Submit'
+				],
+				'upsubmit' => [
+					'asc' => [ "$modelTable.updateSubmit" => SORT_ASC ],
+					'desc' => [ "$modelTable.updateSubmit" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Update Submit'
 				],
 				'cdate' => [
 					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
@@ -105,8 +179,8 @@ class FormService extends ResourceService implements IFormService {
 					'label' => 'Created At'
 				],
 				'udate' => [
-					'asc' => [ "$modelTable.updatedAt" => SORT_ASC ],
-					'desc' => [ "$modelTable.updatedAt" => SORT_DESC ],
+					'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Updated At'
 				]
@@ -130,16 +204,74 @@ class FormService extends ResourceService implements IFormService {
 
 		// Filters ----------
 
+		// Params
+		$type	= Yii::$app->request->getQueryParam( 'type' );
+		$status	= Yii::$app->request->getQueryParam( 'status' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
+
+		// Filter - Type
+		if( isset( $type ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
+
+		// Filter - Status
+		if( isset( $status ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.status" ]	= $modelClass::$urlRevStatusMap[ $status ];
+		}
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'captcha': {
+
+					$config[ 'conditions' ][ "$modelTable.captcha" ] = true;
+
+					break;
+				}
+				case 'umail': {
+
+					$config[ 'conditions' ][ "$modelTable.userMail" ] = true;
+
+					break;
+				}
+				case 'amail': {
+
+					$config[ 'conditions' ][ "$modelTable.adminMail" ] = true;
+
+					break;
+				}
+				case 'unsubmit': {
+
+					$config[ 'conditions' ][ "$modelTable.uniqueSubmit" ] = true;
+
+					break;
+				}
+				case 'upsubmit': {
+
+					$config[ 'conditions' ][ "$modelTable.updateSubmit" ] = true;
+
+					break;
+				}
+			}
+		}
+
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol = Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
 			$search = [
 				'name' => "$modelTable.name",
-				'slug' => "$modelTable.slug",
-				'template' => "$modelTable.template"
+				'title' => "$modelTable.title",
+				'desc' => "$modelTable.description",
+				'success' => "$modelTable.description",
+				'failure' => "$modelTable.description",
+				'content' => "$modelTable.content"
 			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
@@ -149,9 +281,18 @@ class FormService extends ResourceService implements IFormService {
 
 		$config[ 'report-col' ]	= [
 			'name' => "$modelTable.name",
-			'slug' => "$modelTable.slug",
-			'template' => "$modelTable.template",
-			'active' => "$modelTable.active"
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'success' => "$modelTable.description",
+			'failure' => "$modelTable.description",
+			'content' => "$modelTable.content",
+			'captcha' => "$modelTable.captcha",
+			'status' => "$modelTable.status",
+			'visibility' => "$modelTable.visibility",
+			'umail' => "$modelTable.userMail",
+			'amail' => "$modelTable.adminMail",
+			'unsubmit' => "$modelTable.uniqueSubmit",
+			'upsubmit' => "$modelTable.updateSubmit"
 		];
 
 		// Result -----------
@@ -175,7 +316,18 @@ class FormService extends ResourceService implements IFormService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'templateId', 'name', 'description', 'successMessage', 'captcha', 'visibility', 'active', 'userMail', 'adminMail', 'htmlOptions', 'data' ];
+		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'templateId', 'name', 'slug', 'icon', 'title', 'description',
+			'success', 'failure', 'captcha', 'visibility', 'status',
+			'userMail', 'adminMail', 'uniqueSubmit', 'updateSubmit',
+			'htmlOptions', 'content' ];
+
+		if( $admin ) {
+
+			$attributes[] = 'status';
+		}
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -186,8 +338,11 @@ class FormService extends ResourceService implements IFormService {
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete mapping
-		Yii::$app->get( 'modelFormService' )->deleteByModelId( $model->id );
+		// Delete mappings
+		Yii::$app->factory->get( 'modelFormService' )->deleteByModelId( $model->id );
+
+		// Delete Fields
+		Yii::$app->factory->get( 'formFieldService' )->deleteByFormId( $model->id );
 
 		// Delete model
 		return parent::delete( $model, $config );
@@ -199,10 +354,88 @@ class FormService extends ResourceService implements IFormService {
 
 		switch( $column ) {
 
+			case 'status': {
+
+				switch( $action ) {
+
+					case 'confirmed': {
+
+						$this->confirm( $model );
+
+						break;
+					}
+					case 'rejected': {
+
+						$this->reject( $model );
+
+						break;
+					}
+					case 'active': {
+
+						$this->approve( $model );
+
+						break;
+					}
+					case 'frozen': {
+
+						$this->freeze( $model );
+
+						break;
+					}
+					case 'blocked': {
+
+						$this->block( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
 			case 'model': {
 
 				switch( $action ) {
 
+					case 'captcha': {
+
+						$model->captcha = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'umail': {
+
+						$model->umail = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'amail': {
+
+						$model->amail = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'unsubmit': {
+
+						$model->unsubmit = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'upsubmit': {
+
+						$model->upsubmit = true;
+
+						$model->update();
+
+						break;
+					}
 					case 'delete': {
 
 						$this->delete( $model );

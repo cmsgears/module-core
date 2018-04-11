@@ -14,25 +14,20 @@ use cmsgears\core\common\services\interfaces\base\IEntityService;
 use cmsgears\core\common\services\interfaces\base\IName;
 use cmsgears\core\common\services\interfaces\base\ISlug;
 use cmsgears\core\common\services\interfaces\resources\IData;
+use cmsgears\core\common\services\interfaces\resources\IMeta;
 
 /**
  * ISiteService provide service methods for site model.
  *
  * @since 1.0.0
  */
-interface ISiteService extends IEntityService, IData, IName, ISlug {
+interface ISiteService extends IEntityService, IData, IMeta, IName, ISlug {
 
 	// Data Provider ------
 
 	// Read ---------------
 
 	// Read - Models ---
-
-	public function getIdMetaMapBySlug( $slug );
-
-	public function getMetaMapBySlugType( $slug, $type );
-
-	public function getMetaNameValueMapBySlugType( $slug, $type );
 
 	// Read - Lists ----
 

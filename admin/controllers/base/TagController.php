@@ -1,18 +1,28 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
-use \Yii;
-use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
-use yii\helpers\Url;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\Tag;
+use cmsgears\core\admin\controllers\base\CrudController;
 
-abstract class TagController extends \cmsgears\core\admin\controllers\base\CrudController {
+/**
+ * TagController provides actions specific to tag model.
+ *
+ * @since 1.0.0
+ */
+abstract class TagController extends CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -32,14 +42,19 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\CrudC
 
 		parent::init();
 
+		// Views Path
 		$this->setViewPath( '@cmsgears/module-core/admin/views/tag' );
 
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
-		$this->modelService		= Yii::$app->factory->get( 'tagService' );
+		// Config
+		$this->type = CoreGlobal::TYPE_SITE;
 
-		$this->type				= CoreGlobal::TYPE_SITE;
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
-		$this->returnUrl		= Url::previous( 'tags' );
+		// Services
+		$this->modelService = Yii::$app->factory->get( 'tagService' );
+
+		// Notes: Configure sidebar and returnUrl exclusively in child classes. We can also change type in child classes.
 	}
 
 	// Instance methods --------------------------------------------
@@ -58,31 +73,32 @@ abstract class TagController extends \cmsgears\core\admin\controllers\base\CrudC
 
 	// TagController -------------------------
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
 		$dataProvider = $this->modelService->getPageByType( $this->type );
 
 		return $this->render( 'all', [
-			 'dataProvider' => $dataProvider
+			'dataProvider' => $dataProvider
 		]);
 	}
 
-	public function actionCreate() {
+	public function actionCreate( $config = [] ) {
 
-		$modelClass		= $this->modelService->getModelClass();
-		$model			= new $modelClass;
+		$model = $this->modelService->getModelObject();
+
 		$model->siteId	= Yii::$app->core->siteId;
 		$model->type	= $this->type;
 
-		if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->modelService->create( $model );
+			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
 
-			return $this->redirect( $this->returnUrl );
+			return $this->redirect( 'all' );
 		}
 
 		return $this->render( 'create', [
 			'model' => $model
 		]);
 	}
+
 }

@@ -3,17 +3,13 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
-// CMG Imports
-use cmsgears\files\widgets\AvatarUploader;
-use cmsgears\files\widgets\ImageUploader;
-
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Delete Site | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Delete Site Member | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
 <div class="box-crud-wrap row">
 	<div class="box-crud-wrap-main colf colf3x2">
-		<?php $form = ActiveForm::begin( [ 'id' => 'frm-site', 'options' => [ 'class' => 'form' ] ] ); ?>
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-member', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
 			<div class="box-header">
 				<div class="box-header-title">Basic Details</div>
@@ -22,37 +18,19 @@ $returnUrl		= $this->context->returnUrl;
 				<div class="box-content">
 					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] ) ?>
+							<div class="element-40">Email</div>
+							<div class="element-60"><?= $model->user->email ?></div>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'order' )->textInput( [ 'readonly' => true ] ) ?>
+							<?= $form->field( $model, 'roleId' )->dropDownList( $roleMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $model, 'themeId' )->dropDownList( $themesMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'pinned', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
 						</div>
 						<div class="col col2">
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="filler-height filler-height-medium"></div>
-		<div class="box box-crud">
-			<div class="box-header">
-				<div class="box-header-title">Files</div>
-			</div>
-			<div class="box-content">
-				<div class="box-content">
-					<div class="row padding padding-small-v">
-						<div class="col col2">
-							<label>Avatar</label>
-							<?= AvatarUploader::widget( [ 'model' => $avatar, 'disabled' => true ] ) ?>
-						</div>
-						<div class="col col2">
-							<label>Banner</label>
-							<?= ImageUploader::widget( [ 'model' => $banner, 'disabled' => true ] ) ?>
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
 						</div>
 					</div>
 				</div>

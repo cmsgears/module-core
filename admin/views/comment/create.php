@@ -7,12 +7,9 @@ use yii\helpers\Html;
 use cmsgears\core\common\widgets\Editor;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Create Comment | ' . $coreProperties->getSiteTitle();
+$this->title 	= "Create $title | " . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 $user			= isset( $model->createdBy ) ? $model->creator->getName() : null;
-
-$modelClass		= $this->context->modelService->getModelClass();
-$statusMap		= $modelClass::$statusMap;
 
 Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );
 ?>
@@ -26,16 +23,15 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
 					<div class="row">
-						<div class="col col2">
-							<span class="note">Notes: Use Search Creator only in case submit need to be done on behalf of selected user.</span>
-						</div>
-						<div class="col col2">
+						<div class="row row-medium">
 							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'createdBy', [
 								'placeholder' => 'Search Creator', 'icon' => 'cmti cmti-search', 'value' => $user,
 								'url' => 'core/user/auto-search'
 							]) ?>
 						</div>
+						<div class="note">Notes: Use Search Creator only in case submit need to be done on behalf of selected user.</div>
 					</div>
+					<div class="filler-height filler-height-medium"></div>
 					<div class="row">
 						<div class="col col2">
 							<?= $form->field( $model, 'name' ) ?>

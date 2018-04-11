@@ -95,8 +95,9 @@ abstract class CrudController extends Controller {
 
 	public function actionCreate( $config = [] ) {
 
-		$modelClass	= $this->modelService->getModelClass();
-		$model		= new $modelClass;
+		$modelClass = $this->modelService->getModelClass();
+
+		$model = new $modelClass();
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 
@@ -112,11 +113,7 @@ abstract class CrudController extends Controller {
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->modelService->add( $model, [ 'admin' => true ] );
-
-			$model->refresh();
-
-			$this->model = $model;
+			$this->model = $this->modelService->add( $model, [ 'admin' => true ] );
 
 			return $this->redirect( 'all' );
 		}
@@ -129,7 +126,7 @@ abstract class CrudController extends Controller {
 	public function actionUpdate( $id, $config = [] ) {
 
 		// Find Model
-		$model	= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		// Update if exist
 		if( isset( $model ) ) {
@@ -141,11 +138,7 @@ abstract class CrudController extends Controller {
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->modelService->update( $model, [ 'admin' => true ] );
-
-				$model->refresh();
-
-				$this->model = $model;
+				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
 
 				return $this->redirect( $this->returnUrl );
 			}
@@ -163,7 +156,7 @@ abstract class CrudController extends Controller {
 	public function actionDelete( $id, $config = [] ) {
 
 		// Find Model
-		$model	= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		// Delete if exist
 		if( isset( $model ) ) {
@@ -177,9 +170,9 @@ abstract class CrudController extends Controller {
 
 				try {
 
-					$this->modelService->delete( $model, [ 'admin' => true ] );
-
 					$this->model = $model;
+
+					$this->modelService->delete( $model, [ 'admin' => true ] );
 
 					return $this->redirect( $this->returnUrl );
 				}
@@ -189,7 +182,7 @@ abstract class CrudController extends Controller {
 				 */
 				catch( Exception $e ) {
 
-					throw new HttpException( 409,  Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+					throw new HttpException( 409, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
 				}
 			}
 

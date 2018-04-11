@@ -32,13 +32,14 @@ use cmsgears\core\common\models\traits\base\MultiSiteTrait;
 use cmsgears\core\common\models\traits\base\NameTypeTrait;
 use cmsgears\core\common\models\traits\base\SlugTypeTrait;
 
+use cmsgears\core\common\behaviors\AuthorBehavior;
+
 /**
  * A tag can be used for user defined categories to further categorize the models. Tag
  * does not follow hierarchy like categories.
  *
  * @property integer $id
  * @property integer $siteId
- * @property integer $templateId
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
@@ -98,6 +99,7 @@ class Tag extends Resource implements IAuthor, IMultiSite, INameType, ISlugType 
 	public function behaviors() {
 
 		return [
+			AuthorBehavior::class,
 			'sluggableBehavior' => [
 				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
@@ -137,7 +139,6 @@ class Tag extends Resource implements IAuthor, IMultiSite, INameType, ISlugType 
 			[ 'title', 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Others
-			[ 'templateId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
@@ -160,7 +161,6 @@ class Tag extends Resource implements IAuthor, IMultiSite, INameType, ISlugType 
 
 		return [
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
-			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'createdBy' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),

@@ -62,10 +62,12 @@ use cmsgears\core\common\models\traits\mappers\FileTrait;
  * @property string $username
  * @property string $passwordHash
  * @property string $type
+ * @property string $icon
  * @property string $title
  * @property string $firstName
  * @property string $middleName
  * @property string $lastName
+ * @property string $name
  * @property string $message
  * @property string $description
  * @property string $dob
@@ -76,7 +78,7 @@ use cmsgears\core\common\models\traits\mappers\FileTrait;
  * @property string $websiteUrl
  * @property string $verifyToken
  * @property string $resetToken
- * @property string $registeredAt
+ * @property datetime $registeredAt
  * @property datetime $lastLoginAt
  * @property datetime $lastActivityAt
  * @property string $authKey
@@ -122,7 +124,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_USER;
+	protected $modelType = CoreGlobal::TYPE_USER;
 
 	// Private ----------------
 
@@ -201,10 +203,10 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			[ 'username', 'validateUsernameChange', 'on' => [ 'profile' ] ],
 			// Text Limit
 			[ [ 'type', 'title' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
-			[ 'accessTokenType', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'icon', 'accessTokenType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ [ 'username', 'passwordHash', 'mobile', 'phone', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ [ 'email', 'firstName', 'middleName', 'lastName' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
-			[ [ 'message', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'name', 'message', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ [ 'localeId', 'genderId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
@@ -237,11 +239,13 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			'genderId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GENDER ),
 			'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
 			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
+			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
 			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
 			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
 			'username' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USERNAME ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'firstName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
 			'middleName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MIDDLENAME ),
@@ -283,6 +287,8 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 
 				$this->timeZone = null;
 			}
+
+			$this->name = $this->getName();
 
 			return true;
 		}
@@ -439,7 +445,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public function getSiteMembers() {
 
-		return $this->hasMany( SiteMember::class, [ "userId" => 'id' ] );
+		return $this->hasMany( SiteMember::class, [ 'userId' => 'id' ] );
 	}
 
 	/**
@@ -467,6 +473,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 		$siteTable			= CoreTables::getTableName( CoreTables::TABLE_SITE );
 		$siteMemberTable	= CoreTables::getTableName( CoreTables::TABLE_SITE_MEMBER );
 
+		// TODO: Check why it's not working without appending one() after recent Yii Upgrade
 		return Role::find()
 			->leftJoin( $siteMemberTable, "$siteMemberTable.roleId = $roleTable.id" )
 			->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
@@ -809,21 +816,8 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'role', 'locale', 'gender' ];
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'locale', 'gender' ];
 		$config[ 'relations' ]	= $relations;
-
-		return parent::queryWithAll( $config );
-	}
-
-	/**
-	 * Return query to find the user with role.
-	 *
-	 * @param array $config
-	 * @return \yii\db\ActiveQuery to query with role.
-	 */
-	public static function queryWithRole( $config = [] ) {
-
-		$config[ 'relations' ]	= [ 'avatar', 'role' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -836,6 +830,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function queryWithLocale( $config = [] ) {
 
+		// TODO: Check why it's not working with avatar with recent Yii Upgrade
 		$config[ 'relations' ]	= [ 'avatar', 'locale' ];
 
 		return parent::queryWithAll( $config );
@@ -849,6 +844,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function queryWithGender( $config = [] ) {
 
+		// TODO: Check why it's not working with avatar with recent Yii Upgrade
 		$config[ 'relations' ]	= [ 'avatar', 'gender' ];
 
 		return parent::queryWithAll( $config );
@@ -862,7 +858,10 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public static function queryWithSiteMembers( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
+		// TODO: Check why it's not working with avatar with recent Yii Upgrade
+		//$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
+
+		$config[ 'relations' ]	= [ 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
 
 		return parent::queryWithAll( $config );
 	}

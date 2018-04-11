@@ -1,13 +1,29 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\gallery;
 
 // Yii Imports
+use Yii;
 use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateController {
+use cmsgears\core\admin\controllers\base\TemplateController as BaseTemplateController;
+
+/**
+ * TemplateController provide actions specific to gallery templates.
+ *
+ * @since 1.0.0
+ */
+class TemplateController extends BaseTemplateController {
 
 	// Variables ---------------------------------------------------
 
@@ -25,18 +41,18 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 		parent::init();
 
-		// Permissions
-		$this->crudPermission	= CoreGlobal::PERM_GALLERY_ADMIN;
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_GALLERY_ADMIN;
 
 		// Type
-		$this->type				= CoreGlobal::TYPE_GALLERY;
+		$this->type = CoreGlobal::TYPE_GALLERY;
 
 		// Sidebar
-		$this->sidebar			= [ 'parent' => 'sidebar-gallery', 'child' => 'template' ];
+		$this->sidebar = [ 'parent' => 'sidebar-gallery', 'child' => 'template' ];
 
 		// Return Url
-		$this->returnUrl		= Url::previous( 'templates' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/gallery/template/all' ], true );
+		$this->returnUrl = Url::previous( 'templates' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/gallery/template/all' ], true );
 
 		// Breadcrumbs
 		$this->breadcrumbs	= [
@@ -64,10 +80,11 @@ class TemplateController extends \cmsgears\core\admin\controllers\base\TemplateC
 
 	// TemplateController --------------------
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
-		Url::remember( [ 'gallery/template/all' ], 'templates' );
+		Url::remember( Yii::$app->request->getUrl(), 'templates' );
 
-		return parent::actionAll();
+		return parent::actionAll( $config );
 	}
+
 }

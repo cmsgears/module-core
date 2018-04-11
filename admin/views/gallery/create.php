@@ -3,6 +3,9 @@
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
+// CMG Imports
+use cmsgears\icons\widgets\IconChooser;
+
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Add Gallery | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
@@ -26,18 +29,31 @@ $returnUrl		= $this->context->returnUrl;
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'active', null, 'cmti cmti-checkbox' ) ?>
+							<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'templateId' )->dropDownList( $templatesMap, [ 'class' => 'cmt-select' ] ) ?>
+							<?= $form->field( $model, 'description' )->textarea() ?>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $model, 'description' )->textarea() ?>
+							<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
-						<div class="col col2 render-file">
-
+						<div class="col col2">
+							<?= $form->field( $model, 'visibility' )->dropDownList( $visibilityMap, [ 'class' => 'cmt-select' ] ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'pinned', null, 'cmti cmti-checkbox' ) ?>
+						</div>
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured', null, 'cmti cmti-checkbox' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
 					</div>
 				</div>

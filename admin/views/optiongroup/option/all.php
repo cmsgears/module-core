@@ -7,17 +7,18 @@ use cmsgears\widgets\grid\DataGrid;
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= 'Options | ' . $coreProperties->getSiteTitle();
 
-// Templates
+// View Templates
 $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
+$themeTemplates		= '@themes/admin/views/templates';
 ?>
-
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => "create?cid=$category->id", 'data' => [ ],
 	'title' => 'Options', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name' ],
+	'searchColumns' => [ 'name' => 'Name', 'value' => 'Value' ],
 	'sortColumns' => [
 		'name' => 'Name'
 	],
+	'filters' => [],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
 		'value' => [ 'title' => 'Value', 'type' => 'text' ]
@@ -26,29 +27,31 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 		'model' => [ 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null , 'x4', null, 'x8', null ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x4', 'x8', null ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
+		'icon' => [ 'title' => 'Icon', 'generate' => function( $model ) {
+			return "<div class='align align-center'><i class=\"$model->icon\"></i></div>" ;
+		}],
 		'name' => 'Name',
-		'icon' => [ 'title' => 'Icon', 'generate' => function( $model ) { return "<i class=\"$model->icon\"></i>"; } ],
 		'value' => 'Value',
-		'actions'	=> 'Actions'
+		'actions' => 'Actions'
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
-	'templateDir' => '@themes/admin/views/templates/widget/grid',
+	'templateDir' => "$themeTemplates/widget/grid",
 	//'dataView' => "$moduleTemplates/grid/data/option",
 	//'cardView' => "$moduleTemplates/grid/cards/option",
 	//'actionView' => "$moduleTemplates/grid/actions/option"
 ]) ?>
 
 <?= Popup::widget([
-	'title' => 'Update Block', 'size' => 'medium',
-	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'bulk',
-	'data' => [ 'model' => 'Block', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "core/optiongroup/option/bulk" ]
+	'title' => 'Apply Bulk Action', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
+	'data' => [ 'model' => 'Option', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "core/optiongroup/option/bulk" ]
 ]) ?>
 
 <?= Popup::widget([
-	'title' => 'Delete Block', 'size' => 'medium',
-	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'delete',
-	'data' => [ 'model' => 'Block', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "core/optiongroup/option/delete?id=" ]
+	'title' => 'Delete Option', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
+	'data' => [ 'model' => 'Option', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "core/optiongroup/option/delete?id=" ]
 ]) ?>

@@ -52,7 +52,7 @@ class Province extends Entity implements IName {
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_PROVINCE;
+	protected $modelType = CoreGlobal::TYPE_PROVINCE;
 
 	// Private ----------------
 
@@ -159,8 +159,9 @@ class Province extends Entity implements IName {
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -173,7 +174,7 @@ class Province extends Entity implements IName {
 	 */
 	public static function queryWithCountry( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'country' ];
+		$config[ 'relations' ] = [ 'country' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -181,9 +182,10 @@ class Province extends Entity implements IName {
 	// Read - Find ------------
 
 	/**
+	 * Find and return the provinces associated with given country id.
 	 *
-	 * @param type $countryId
-	 * @return type
+	 * @param integer $countryId
+	 * @return Province[]
 	 */
 	public static function findByCountryId( $countryId ) {
 
@@ -191,14 +193,14 @@ class Province extends Entity implements IName {
 	}
 
 	/**
-	 * Find and return the province associated with given code.
+	 * Find and return the provinces associated with given code.
 	 *
 	 * @param string $code
-	 * @return Province
+	 * @return Province[]
 	 */
 	public static function findByCode( $code ) {
 
-		return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
+		return self::find()->where( 'code=:code', [ ':code' => $code ] )->all();
 	}
 
 	/**

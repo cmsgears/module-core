@@ -19,6 +19,7 @@ use yii\behaviors\SluggableBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\base\IApproval;
 use cmsgears\core\common\models\interfaces\base\IAuthor;
 use cmsgears\core\common\models\interfaces\base\IMultiSite;
 use cmsgears\core\common\models\interfaces\base\INameType;
@@ -33,6 +34,7 @@ use cmsgears\core\common\models\interfaces\resources\ITemplate;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Resource;
 
+use cmsgears\core\common\models\traits\base\ApprovalTrait;
 use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
 use cmsgears\core\common\models\traits\base\NameTypeTrait;
@@ -60,10 +62,11 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $icon
  * @property string $title
  * @property string $description
- * @property string $successMessage
+ * @property string $success
+ * @property string $failure
  * @property boolean $captcha
  * @property boolean $visibility
- * @property boolean $active
+ * @property integer $status
  * @property boolean $userMail Send mail to user if set and email field exist.
  * @property boolean $adminMail Send mail to admin if set.
  * @property boolean $uniqueSubmit
@@ -79,8 +82,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Form extends Resource implements IAuthor, IData, IGridCache, IModelMeta, IMultiSite, INameType,
-	IOwner, ISlugType, ITemplate, IVisibility {
+class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IModelMeta,
+	IMultiSite, INameType, IOwner, ISlugType, ITemplate, IVisibility {
 
 	// Variables ---------------------------------------------------
 
@@ -104,6 +107,7 @@ class Form extends Resource implements IAuthor, IData, IGridCache, IModelMeta, I
 
 	// Traits ------------------------------------------------------
 
+	use ApprovalTrait;
 	use AuthorTrait;
 	use DataTrait;
 	use GridCacheTrait;
@@ -161,20 +165,21 @@ class Form extends Resource implements IAuthor, IData, IGridCache, IModelMeta, I
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'siteId', 'name', 'captcha', 'visibility', 'active' ], 'required' ],
+			[ [ 'siteId', 'name', 'captcha', 'visibility', 'status' ], 'required' ],
 			[ [ 'id', 'htmlOptions', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique
+			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			[ [ 'siteId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'siteId', 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'slug', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
-			[ [ 'title', 'successMessage' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'title', 'success', 'failure' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ 'visibility', 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'captcha', 'active', 'userMail', 'adminMail', 'uniqueSubmit', 'updateSubmit', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'visibility', 'status' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'captcha', 'userMail', 'adminMail', 'uniqueSubmit', 'updateSubmit', 'gridCacheValid' ], 'boolean' ],
 			[ 'templateId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -183,7 +188,7 @@ class Form extends Resource implements IAuthor, IData, IGridCache, IModelMeta, I
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'title', 'description', 'successMessage', 'htmlOptions' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'title', 'description', 'success', 'failure', 'htmlOptions' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -204,12 +209,15 @@ class Form extends Resource implements IAuthor, IData, IGridCache, IModelMeta, I
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'successMessage' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE_SUCCESS ),
+			'success' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE_SUCCESS ),
+			'failure' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE_FAILURE ),
 			'captcha' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CAPTCHA ),
 			'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
-			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
 			'userMail' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MAIL_USER ),
 			'adminMail' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MAIL_ADMIN ),
+			'uniqueSubmit' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FORM_UNIQUE ),
+			'updateSubmit' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FORM_UPDATE ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_META ),
@@ -262,15 +270,15 @@ class Form extends Resource implements IAuthor, IData, IGridCache, IModelMeta, I
 	 */
 	public function getFieldsMap() {
 
-		$formFields		= $this->fields;
-		$formFieldsMap	= array();
+		$formFields = $this->fields;
+		$fieldsMap	= [];
 
-		foreach ( $formFields as $formField ) {
+		foreach( $formFields as $formField ) {
 
-			$formFieldsMap[ $formField->name ] = $formField;
+			$fieldsMap[ $formField->name ] = $formField;
 		}
 
-		return $formFieldsMap;
+		return $fieldsMap;
 	}
 
 	/**
@@ -294,16 +302,6 @@ class Form extends Resource implements IAuthor, IData, IGridCache, IModelMeta, I
 	}
 
 	/**
-	 * Returns string representation of active flag.
-	 *
-	 * @return string
-	 */
-	public function getActiveStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->active );
-	}
-
-	/**
 	 * Returns string representation of user mail flag.
 	 *
 	 * @return string
@@ -321,6 +319,26 @@ class Form extends Resource implements IAuthor, IData, IGridCache, IModelMeta, I
 	public function getAdminMailStr() {
 
 		return Yii::$app->formatter->asBoolean( $this->adminMail );
+	}
+
+	/**
+	 * Returns string representation of unique submit flag.
+	 *
+	 * @return string
+	 */
+	public function getUniqueSubmitStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->uniqueSubmit );
+	}
+
+	/**
+	 * Returns string representation of update submit flag.
+	 *
+	 * @return string
+	 */
+	public function getUpdateSubmitStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->updateSubmit );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -348,8 +366,9 @@ class Form extends Resource implements IAuthor, IData, IGridCache, IModelMeta, I
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template', 'creator', 'modifier' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template', 'creator', 'modifier' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}

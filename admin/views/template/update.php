@@ -75,7 +75,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 
 		<div class="filler-height filler-height-medium"></div>
 
-		<div class="box box-crud">
+		<div class="box box-crud render-content">
 			<div class="box-header">
 				<div class="box-header-title">Content</div>
 			</div>

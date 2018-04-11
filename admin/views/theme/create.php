@@ -22,7 +22,7 @@ $renderers		= Yii::$app->templateManager->renderers;
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'description' )->textarea() ?>
+							<?= $form->field( $model, 'title' ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -37,7 +37,9 @@ $renderers		= Yii::$app->templateManager->renderers;
 						<div class="col col2">
 							<?= $form->field( $model, 'basePath' ) ?>
 						</div>
-						<div class="col col2"></div>
+						<div class="col col2">
+							<?= $form->field( $model, 'description' )->textarea() ?>
+						</div>
 					</div>
 				</div>
 			</div>

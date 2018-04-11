@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\apix\country;
 
 // Yii Imports
@@ -8,7 +16,14 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class ProvinceController extends \cmsgears\core\admin\controllers\base\Controller {
+use cmsgears\core\admin\controllers\base\Controller;
+
+/**
+ * ProvinceController provide actions specific to province model.
+ *
+ * @since 1.0.0
+ */
+class ProvinceController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -27,10 +42,10 @@ class ProvinceController extends \cmsgears\core\admin\controllers\base\Controlle
 		parent::init();
 
 		// Permission
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'provinceService' );
+		$this->modelService = Yii::$app->factory->get( 'provinceService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -52,7 +67,7 @@ class ProvinceController extends \cmsgears\core\admin\controllers\base\Controlle
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]

@@ -1,11 +1,27 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\apix\optiongroup;
 
 // Yii Imports
 use Yii;
 use yii\filters\VerbFilter;
 
-class OptionController extends \cmsgears\core\admin\controllers\base\Controller {
+// CMG Imports
+use cmsgears\core\admin\controllers\base\Controller;
+
+/**
+ * OptionController provides actions specific to option model.
+ *
+ * @since 1.0.0
+ */
+class OptionController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -24,7 +40,7 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 		parent::init();
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'categoryService' );
+		$this->modelService = Yii::$app->factory->get( 'optionService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -46,7 +62,7 @@ class OptionController extends \cmsgears\core\admin\controllers\base\Controller 
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'bulk' => [ 'post' ],
 					'delete' => [ 'post' ]

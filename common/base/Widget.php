@@ -57,7 +57,7 @@ abstract class Widget extends \yii\base\Widget {
 	 * The template directory/file used to render widget. If it's a directory, the view can be formed
 	 * using multiple files. It can be absolute path to directly access the view.
 	 */
-	public $template		= 'simple';
+	public $template		= 'default';
 
 	/**
 	 * This flag can be utilised by widgets to use fallback options in case application factory having

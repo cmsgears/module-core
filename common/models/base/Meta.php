@@ -11,6 +11,7 @@ namespace cmsgears\core\common\models\base;
 
 // Yii Imports
 use Yii;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;

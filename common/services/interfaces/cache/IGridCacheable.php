@@ -23,7 +23,7 @@ interface IGridCacheable {
 	 *
 	 * @return array
 	 */
-	public function prepareGridCache();
+	public function prepareGridCache( $model, $config = [] );
 
 	/**
 	 * Prepare and cache the grid using primary and secondary cache mechanisms. It does not use

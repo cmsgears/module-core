@@ -60,6 +60,8 @@ interface IModelMapperService extends IMapperService {
 
 	public function disable( $model );
 
+	public function disableByParent( $parentId, $parentType, $delete = false );
+
 	public function disableByModelId( $parentId, $parentType, $modelId, $delete = false );
 
 	// Delete -------------

@@ -7,14 +7,14 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\services\interfaces\mappers;
+namespace cmsgears\core\common\services\interfaces\base;
 
 /**
- * ICategory declare the methods provided by service trait - [[\cmsgears\core\common\services\traits\mappers\CategoryTrait]].
+ * IFeatured declare the methods provided by service trait - [[\cmsgears\core\common\services\traits\base\FeaturedTrait]].
  *
  * @since 1.0.0
  */
-interface ICategory  {
+interface IFeatured {
 
 	// Data Provider ------
 
@@ -22,15 +22,9 @@ interface ICategory  {
 
 	// Read - Models ---
 
-	public function getByCategoryId( $categoryId, $config = [] );
+	public function getPinned( $config = [] );
 
-	public function getByCategoryIds( $ids, $config = [] );
-
-	public function getPinnedByCategoryId( $categoryId, $config = [] );
-
-	public function getFeaturedByCategoryId( $categoryId, $config = [] );
-
-	public function getByCategoryNodeId( $categoryId, $config = [] );
+	public function getFeatured( $config = [] );
 
 	// Read - Lists ----
 

@@ -9,6 +9,9 @@
 
 namespace cmsgears\core\common\models\traits\base;
 
+// Yii Imports
+use Yii;
+
 /**
  * MetaTrait provide methods for model meta and meta tables.
  *
@@ -64,10 +67,24 @@ trait MetaTrait {
 	 */
 	public function generateLabel() {
 
-		$label		= preg_replace( '/_/', ' ', $this->name );
-		$label		= ucwords( $label );
+		$label = preg_replace( '/_/', ' ', $this->name );
+		$label = ucwords( $label );
 
 		return $label;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getLabel() {
+
+		if( empty( $this->label ) ) {
+
+			$this->label = preg_replace( '/_/', ' ', $this->name );
+			$this->label = ucwords( $this->label );
+		}
+
+		return $this->label;
 	}
 
 	/**

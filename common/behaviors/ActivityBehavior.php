@@ -45,6 +45,12 @@ class ActivityBehavior extends Behavior {
 			$service	= $this->owner->modelService;
 			$action		= $event->action->id;
 
+			// No logging in absense of model
+			if( !$model ) {
+
+				return;
+			}
+
 			// Log create activity
 			if( in_array( $action, $this->create ) ) {
 

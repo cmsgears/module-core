@@ -197,6 +197,25 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 		return $model;
 	}
 
+	public function disableByParent( $parentId, $parentType, $delete = false ) {
+
+		$models = $this->getByParent( $parentId, $parentType );
+
+		foreach( $models as $model ) {
+
+			// Hard delete
+			if( $delete ) {
+
+				$model->delete();
+			}
+			// Soft delete
+			else {
+
+				$this->disable( $model );
+			}
+		}
+	}
+
 	public function disableByModelId( $parentId, $parentType, $modelId, $delete = false ) {
 
 		$model = $this->getByModelId( $parentId, $parentType, $modelId );

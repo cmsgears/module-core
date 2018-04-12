@@ -10,11 +10,11 @@
 namespace cmsgears\core\common\services\traits\base;
 
 /**
- * NameTrait provide methods for models having name attribute.
+ * FeaturedTrait provide methods specific to featured models.
  *
  * @since 1.0.0
  */
-trait NameTrait {
+trait FeaturedTrait {
 
 	// Instance methods --------------------------------------------
 
@@ -24,7 +24,7 @@ trait NameTrait {
 
 	// CMG parent classes --------------------
 
-	// SlugTrait -----------------------------
+	// FeaturedTrait -------------------------
 
 	// Data Provider ------
 
@@ -32,30 +32,18 @@ trait NameTrait {
 
 	// Read - Models ---
 
-	public function getByName( $name, $config = [] ) {
-
-		return self::findByName( $name, $config );
-	}
-
-	public function searchByName( $name, $config = [] ) {
+	public function getPinned( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
-		$modelTable	= $this->getModelTable();
 
-		$config[ 'query' ]		= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name" ];
-		$config[ 'array' ]		= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
+		return $modelClass::find()->where( 'pinned=:pinned', [ ':pinned' => true ] )->all();
+	}
 
-		$config[ 'query' ]->andWhere( "$modelTable.name like '$name%'" );
+	public function getFeatured( $config = [] ) {
 
-		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$modelClass	= static::$modelClass;
 
-		if( $modelClass::isMultiSite() && !$ignoreSite ) {
-
-			$config[ 'conditions' ][ "$modelTable.siteId" ]	= $config[ 'siteId' ];
-		}
-
-		return static::searchModels( $config );
+		return $modelClass::find()->where( 'featured=:featured', [ ':featured' => true ] )->all();
 	}
 
 	// Read - Lists ----
@@ -82,20 +70,13 @@ trait NameTrait {
 
 	// CMG parent classes --------------------
 
-	// SlugTrait -----------------------------
+	// FeaturedTrait -------------------------
 
 	// Data Provider ------
 
 	// Read ---------------
 
 	// Read - Models ---
-
-	public static function findByName( $name, $config = [] ) {
-
-		$modelClass	= static::$modelClass;
-
-		return $modelClass::queryByName( $name )->one();
-	}
 
 	// Read - Lists ----
 

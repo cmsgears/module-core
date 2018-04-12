@@ -51,6 +51,10 @@ interface IFollowerService extends IMapperService {
 
 	// Delete -------------
 
+	public function deleteByFollowerId( $followerId );
+
+	public function deleteByModelId( $modelId );
+
 	// Bulk ---------------
 
 	// Notifications ------

@@ -17,7 +17,7 @@ namespace cmsgears\core\common\services\traits\cache;
  */
 trait GridCacheTrait {
 
-	public function prepareGridCache() {
+	public function prepareGridCache( $model, $config = [] ) {
 
 		// Prepare the model for grid cache
 	}

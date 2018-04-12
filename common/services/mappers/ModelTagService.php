@@ -165,7 +165,7 @@ class ModelTagService extends ModelMapperService implements IModelTagService {
 
 			$process = $binded;
 
-			Yii::$app->get( 'modelTagService' )->disableByParent( $parentId, $parentType );
+			$this->disableByParent( $parentId, $parentType );
 
 			$this->createFromArray( $parentId, $parentType, $process );
 		}

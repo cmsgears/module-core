@@ -165,95 +165,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		return $this->getPage( $config );
 	}
 
-	/**
-	 * @return - DataProvider or array of models with applied configuration.
-	 */
-	public function getPageForSimilar( $config = [] ) {
-
-		$config[ 'query' ]	= $this->generateSimilarQuery( $config );
-
-		return $this->getPublicPage( $config );
-	}
-
 	public function getPageForSearch( $config = [] ) {
 
 		return static::findPageForSearch( $config );
-	}
-
-	// Similar query considering category and tag for similarity
-	protected function generateSimilarQuery( $config = [] ) {
-
-		// Model Class and Table
-		$modelClass	= static::$modelClass;
-		$modelTable = $modelClass::tableName();
-
-		$parentType			= isset( $config[ 'parentType' ] ) ? $config[ 'parentType' ] : static::$parentType;
-		$modelId			= isset( $config[ 'modelId' ] ) ? $config[ 'modelId' ] : null;
-		$mcategoryTable		= CoreTables::TABLE_MODEL_CATEGORY;
-		$categoryTable		= CoreTables::TABLE_CATEGORY;
-		$mtagTable			= CoreTables::TABLE_MODEL_TAG;
-		$tagTable			= CoreTables::TABLE_TAG;
-		$filter				= null;
-
-		// Search Query
-		$query				= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$hasOne				= isset( $config[ 'hasOne' ] ) ? $config[ 'hasOne' ] : false;
-
-		// Use model joins
-		if( $hasOne ) {
-
-			$query = $modelClass::queryWithHasOne();
-		}
-
-		// Tags
-		if( isset( $config[ 'tags' ] ) && count( $config[ 'tags' ] ) > 0 ) {
-
-			$query->leftJoin( $mtagTable, "$modelTable.id=$mtagTable.parentId AND $mtagTable.parentType='$parentType' AND $mtagTable.active=TRUE" )
-			->leftJoin( $tagTable, "$mtagTable.modelId=$tagTable.id" );
-
-			// Exclude current model
-			if( $modelId != null ) {
-
-				$query->andWhere( "$mtagTable.parentId != :modelId", [ ':modelId' => $modelId ] );
-			}
-
-			$filter	= "$tagTable.id in( " . join( ",", $config[ 'tags' ] ). ")";
-		}
-
-		// Categories
-		if( isset( $config[ 'categories' ] ) && count( $config[ 'categories' ] ) > 0 ) {
-
-			$query->leftJoin( "$mcategoryTable", "$modelTable.id=$mcategoryTable.parentId AND $mcategoryTable.parentType='$parentType' AND $mcategoryTable.active=TRUE" )
-			->leftJoin( "$categoryTable", "$mcategoryTable.modelId=$categoryTable.id" );
-
-			// Exclude current model
-			if( $modelId != null ) {
-
-				if( count( $config[ 'tags' ] ) > 0 ) {
-
-					$query->orWhere( "$mcategoryTable.parentId != :modelId", [ ':modelId' => $modelId ] );
-				}
-				else {
-
-					$query->andWhere( "$mcategoryTable.parentId != :modelId", [ ':modelId' => $modelId ] );
-				}
-			}
-
-			$filter	= "$categoryTable.id in( " . join( ",", $config[ 'categories' ] ). ")";
-		}
-
-		// Mixed
-		if( isset( $config[ 'tags' ] ) && count( $config[ 'tags' ] ) > 0 && isset( $config[ 'categories' ] ) && count( $config[ 'categories' ] ) > 0 ) {
-
-			$filter	= "( $tagTable.id in( " . join( ",", $config[ 'tags' ] ). ") OR $categoryTable.id in( " . join( ",", $config[ 'categories' ] ). ") )";
-		}
-
-		if( isset( $filter ) ) {
-
-			$query->andWhere( $filter );
-		}
-
-		return $query;
 	}
 
 	// Read ---------------
@@ -279,16 +193,6 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$config[ 'filters' ][]	= [ 'in', "$modelTable.id", $ids ];
 
 		return static::searchModels( $config );
-	}
-
-	public function getSimilar( $config = [] ) {
-
-		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 5;
-		$query	= $this->generateSimilarQuery( $config );
-
-		$query->limit( $limit );
-
-        return $query->all();
 	}
 
 	/**

@@ -61,21 +61,21 @@ abstract class ModelResourceService extends ResourceService implements IModelRes
 
 	public function getByParent( $parentId, $parentType ) {
 
-		$modelClass	= self::$modelClass;
+		$modelClass	= static::$modelClass;
 
 		return $modelClass::findByParent( $parentId, $parentType );
 	}
 
 	public function getByParentId( $parentId ) {
 
-		$modelClass	= self::$modelClass;
+		$modelClass	= static::$modelClass;
 
 		return $modelClass::findByParentId( $parentId );
 	}
 
 	public function getByParentType( $parentType ) {
 
-		$modelClass	= self::$modelClass;
+		$modelClass	= static::$modelClass;
 
 		return $modelClass::findByParentType( $parentType );
 	}
@@ -94,18 +94,16 @@ abstract class ModelResourceService extends ResourceService implements IModelRes
 
 	public function deleteByParent( $parentId, $parentType ) {
 
-		$modelClass	= self::$modelClass;
+		//$modelClass	= static::$modelClass;
 
-		return $modelClass::deleteByParent( $parentId, $parentType );
+		//return $modelClass::deleteByParent( $parentId, $parentType );
 
-		/*
 		$models	= $this->getByParent( $parentId, $parentType );
 
 		foreach ( $models as $model ) {
 
 			$this->delete( $model );
 		}
-		 */
 	}
 
 	// Bulk ---------------

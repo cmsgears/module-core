@@ -310,4 +310,26 @@ abstract class Follower extends Mapper implements IFollower {
 
 	// Delete -----------------
 
+	/**
+	 * Delete all mappings by given parent id and type.
+	 *
+	 * @param integer $followerId
+	 * @return integer Number of rows deleted.
+	 */
+	public static function deleteByFollowerId( $followerId ) {
+
+		return self::deleteAll( 'followerId=:fid', [ ':fid' => $followerId ] );
+	}
+
+	/**
+	 * Delete all mappings related to given model id.
+	 *
+	 * @param integer $modelId
+	 * @return integer Number of rows deleted.
+	 */
+	public static function deleteByModelId( $modelId ) {
+
+		return self::deleteAll( 'modelId=:mid', [ ':mid' => $modelId ] );
+	}
+
 }

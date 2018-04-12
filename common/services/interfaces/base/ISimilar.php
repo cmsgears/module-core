@@ -7,30 +7,24 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\services\interfaces\mappers;
+namespace cmsgears\core\common\services\interfaces\base;
 
 /**
- * ICategory declare the methods provided by service trait - [[\cmsgears\core\common\services\traits\mappers\CategoryTrait]].
+ * ISimilar declare the methods provided by service trait - [[\cmsgears\core\common\services\traits\base\SimilarTrait]].
  *
  * @since 1.0.0
  */
-interface ICategory  {
+interface ISimilar {
 
 	// Data Provider ------
+
+	public function getPageForSimilar( $config = [] );
 
 	// Read ---------------
 
 	// Read - Models ---
 
-	public function getByCategoryId( $categoryId, $config = [] );
-
-	public function getByCategoryIds( $ids, $config = [] );
-
-	public function getPinnedByCategoryId( $categoryId, $config = [] );
-
-	public function getFeaturedByCategoryId( $categoryId, $config = [] );
-
-	public function getByCategoryNodeId( $categoryId, $config = [] );
+	public function getSimilar( $config = [] );
 
 	// Read - Lists ----
 

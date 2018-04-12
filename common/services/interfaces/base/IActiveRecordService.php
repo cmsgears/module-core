@@ -39,8 +39,6 @@ interface IActiveRecordService {
 
 	public function getPublicPage( $config = [] );
 
-	public function getPageForSimilar( $config = [] );
-
 	// Searching
 
 	public function getPageForSearch( $config = [] );
@@ -52,8 +50,6 @@ interface IActiveRecordService {
 	public function getById( $id );
 
 	public function getByIds( $ids = [], $config = [] );
-
-	public function getSimilar( $config = [] );
 
 	public function getModels( $config = [] );
 

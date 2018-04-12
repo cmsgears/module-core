@@ -112,7 +112,9 @@ trait NameTypeTrait {
 
 		$config[ 'query' ]->andWhere( "$modelTable.name like '$name%'" );
 
-		if( $modelClass::isMultiSite() ) {
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		if( $modelClass::isMultiSite() && !$ignoreSite ) {
 
 			$config[ 'conditions' ][ "$modelTable.siteId" ]	= $config[ 'siteId' ];
 		}

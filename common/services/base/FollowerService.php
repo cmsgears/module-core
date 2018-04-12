@@ -184,6 +184,20 @@ abstract class FollowerService extends MapperService implements IFollowerService
 
 	// Delete -------------
 
+	public function deleteByFollowerId( $followerId ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::deleteByFollowerId( $followerId );
+	}
+
+	public function deleteByModelId( $modelId ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::deleteByModelId( $modelId );
+	}
+
 	// Bulk ---------------
 
 	// Notifications ------

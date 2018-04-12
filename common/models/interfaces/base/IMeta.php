@@ -35,6 +35,13 @@ interface IMeta {
 	public function generateLabel();
 
 	/**
+	 * Returns label.
+	 * 
+	 * @return string
+	 */
+	public function getLabel();
+
+	/**
 	 * Check whether value type is text.
 	 *
 	 * @return boolean

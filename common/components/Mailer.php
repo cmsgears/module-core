@@ -8,9 +8,6 @@
  */
 namespace cmsgears\core\common\components;
 
-// Yii Imports
-use Yii;
-
 /**
  * The mail component used for sending possible mails by the CMSGears core module. It must be initialised
  * for app using the name coreMailer. It's used by various controllers to trigger mails.
@@ -24,14 +21,25 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 
 	// Globals ----------------
 
+	// Account mails
 	const MAIL_ACCOUNT_CREATE			= "account/create";
 	const MAIL_ACCOUNT_ACTIVATE			= "account/activate";
 	const MAIL_REG						= "register";
 	const MAIL_REG_CONFIRM				= "register-confirm";
 	const MAIL_PASSWORD_RESET			= "password-reset";
 	const MAIL_PASSWORD_CHANGE			= 'password-change';
+
+	// Comment mails
 	const MAIL_COMMENT_SPAM_REQUEST		= 'comment/spam-request';
 	const MAIL_COMMENT_DELETE_REQUEST	= 'comment/delete-request';
+
+	// Status mails
+	const MAIL_APPROVE     = 'status/approve';
+	const MAIL_REJECT      = 'status/reject';
+	const MAIL_BLOCK       = 'status/block';
+	const MAIL_FROZEN      = 'status/frozen';
+	const MAIL_ACTIVATE    = 'status/activate';
+	const MAIL_A_REQUEST   = 'status/activation-request';
 
 	// Public -----------------
 
@@ -202,4 +210,86 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 			//->setTextBody( "heroor" )
 			->send();
 	}
+
+	// == Status Mails ========
+
+	public function sendApproveMail( $model, $email ) {
+
+		$fromEmail 	= $this->mailProperties->getSenderEmail();
+		$fromName 	= $this->mailProperties->getSenderName();
+
+		// Send Mail
+		$this->getMailer()->compose( self::MAIL_APPROVE, [ 'coreProperties' => $this->coreProperties, 'model' => $model ] )
+			->setTo( $email )
+			->setFrom( [ $fromEmail => $fromName ] )
+			->setSubject( "Approved $model->name | " . $this->coreProperties->getSiteName() )
+			->send();
+	}
+
+	public function sendRejectMail( $model, $email, $message ) {
+
+		$fromEmail 	= $this->mailProperties->getSenderEmail();
+		$fromName 	= $this->mailProperties->getSenderName();
+
+		// Send Mail
+		$this->getMailer()->compose( self::MAIL_REJECT, [ 'coreProperties' => $this->coreProperties, 'model' => $model, 'message' => $message ] )
+			->setTo( $email )
+			->setFrom( [ $fromEmail => $fromName ] )
+			->setSubject( "Rejected $model->name | " . $this->coreProperties->getSiteName() )
+			->send();
+	}
+
+	public function sendBlockMail( $model, $email, $message ) {
+
+		$fromEmail 	= $this->mailProperties->getSenderEmail();
+		$fromName 	= $this->mailProperties->getSenderName();
+
+		// Send Mail
+		$this->getMailer()->compose( self::MAIL_BLOCK, [ 'coreProperties' => $this->coreProperties, 'model' => $model, 'message' => $message ] )
+			->setTo( $email )
+			->setFrom( [ $fromEmail => $fromName ] )
+			->setSubject( "Blocked $model->name | " . $this->coreProperties->getSiteName() )
+			->send();
+	}
+
+	public function sendFreezeMail( $model, $email, $message ) {
+
+		$fromEmail  = $this->mailProperties->getSenderEmail();
+		$fromName   = $this->mailProperties->getSenderName();
+
+		// Send Mail
+		$this->getMailer()->compose( self::MAIL_FROZEN, [ 'coreProperties' => $this->coreProperties, 'model' => $model, 'message' => $message ] )
+			->setTo( $email )
+			->setFrom( [ $fromEmail => $fromName ] )
+			->setSubject( "Frozen $model->name | " . $this->coreProperties->getSiteName() )
+			->send();
+	}
+
+	public function sendActivateMail( $model, $email ) {
+
+		$fromEmail 	= $this->mailProperties->getSenderEmail();
+		$fromName 	= $this->mailProperties->getSenderName();
+
+		// Send Mail
+		$this->getMailer()->compose( self::MAIL_ACTIVATE, [ 'coreProperties' => $this->coreProperties, 'model' => $model ] )
+			->setTo( $email )
+			->setFrom( [ $fromEmail => $fromName ] )
+			->setSubject( "Activated $model->name | " . $this->coreProperties->getSiteName() )
+			->send();
+	}
+
+	public function sendActivationRequestMail( $model, $url ) {
+
+		$fromEmail  = $this->mailProperties->getSenderEmail();
+		$fromName   = $this->mailProperties->getSenderName();
+		$toEmail    = $this->mailProperties->getContactEmail();
+
+		// Send Mail
+		$this->getMailer()->compose( self::MAIL_A_REQUEST, [ 'coreProperties' => $this->coreProperties, 'model' => $model, 'url' => $url ] )
+			->setTo( $toEmail )
+			->setFrom( [ $fromEmail => $fromName ] )
+			->setSubject( "Activation Request - $model->name | " . $this->coreProperties->getSiteName() )
+			->send();
+	}
+
 }

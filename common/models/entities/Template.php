@@ -131,7 +131,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 				'slugAttribute' => 'slug', // Unique for combination of Site Id and Theme Id
 				'immutable' => true,
 				'ensureUnique' => true,
-				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'themeId', 'slug' ] ]
+				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'slug' ] ]
 			]
 		];
 	}
@@ -149,7 +149,8 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 			[ [ 'name', 'type' ], 'required' ],
 			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique
-			[ [ 'siteId', 'themeId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'slug' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			// Need both slug and name unique
+			[ [ 'siteId', 'themeId', 'type', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'slug' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			[ [ 'siteId', 'themeId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ [ 'type', 'renderer', 'layout' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],

@@ -9,6 +9,10 @@
 
 namespace cmsgears\core\common\services\base;
 
+// Yii Imports
+use Yii;
+use yii\data\Sort;
+
 // CMG Imports
 use cmsgears\core\common\models\base\Meta;
 
@@ -54,6 +58,131 @@ abstract class MetaService extends ResourceService implements IMetaService {
 	// MetaService ---------------------------
 
 	// Data Provider ------
+
+	public function getPage( $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		// Sorting ----------
+
+		$sort = new Sort([
+			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
+				'name' => [
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'name'
+				],
+				'label' => [
+					'asc' => [ "$modelTable.label" => SORT_ASC ],
+					'desc' => [ "$modelTable.label" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Label'
+				],
+				'type' => [
+					'asc' => [ "$modelTable.type" => SORT_ASC ],
+					'desc' => [ "$modelTable.type" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Type'
+				],
+				'active' => [
+					'asc' => [ "$modelTable.active" => SORT_ASC ],
+					'desc' => [ "$modelTable.active" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Active'
+				],
+				'vtype' => [
+					'asc' => [ "$modelTable.valueType" => SORT_ASC ],
+					'desc' => [ "$modelTable.valueType" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Value Type'
+				]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
+			]
+		]);
+
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Params
+		$type	= Yii::$app->request->getQueryParam( 'type' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
+
+		// Filter - Type
+		if( isset( $type ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'active': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = true;
+
+					break;
+				}
+				case 'inactive': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = false;
+
+					break;
+				}
+			}
+		}
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [
+				'name' => "$modelTable.name",
+				'label' => "$modelTable.label",
+				'value' => "$modelTable.value"
+			];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name",
+			'label' => "$modelTable.label",
+			'type' => "$modelTable.type",
+			'vtype' => "$modelTable.valueType",
+			'value' => "$modelTable.value"
+		];
+
+		// Result -----------
+
+		return parent::getPage( $config );
+	}
 
 	// Read ---------------
 
@@ -298,6 +427,43 @@ abstract class MetaService extends ResourceService implements IMetaService {
 	}
 
 	// Bulk ---------------
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'active': {
+
+						$model->active = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'inactive': {
+
+						$model->active = false;
+
+						$model->update();
+
+						break;
+					}
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
 
 	// Notifications ------
 

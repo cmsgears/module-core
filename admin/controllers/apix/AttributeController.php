@@ -14,14 +14,16 @@ use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\admin\controllers\base\Controller;
 
 /**
- * RoleController provides actions specific to role model.
+ * AttributeController provides actions specific to model attributes.
  *
  * @since 1.0.0
  */
-class RoleController extends Controller {
+abstract class AttributeController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -39,8 +41,8 @@ class RoleController extends Controller {
 
 		parent::init();
 
-		// Services
-		$this->modelService = Yii::$app->factory->get( 'roleService' );
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 	}
 
 	// Instance methods --------------------------------------------
@@ -85,6 +87,6 @@ class RoleController extends Controller {
 
 	// CMG parent classes --------------------
 
-	// RoleController ------------------------
+	// AttributeController -------------------
 
 }

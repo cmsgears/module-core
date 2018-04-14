@@ -36,7 +36,7 @@ interface IMeta {
 
 	/**
 	 * Returns label.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getLabel();
@@ -110,4 +110,12 @@ interface IMeta {
 	 * @return array Map of label, name and value.
 	 */
 	public function getFieldInfo();
+
+	/**
+	 * Returns string representation of value type.
+	 *
+	 * @return string
+	 */
+	public function getValueTypeStr();
+
 }

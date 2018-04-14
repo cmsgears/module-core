@@ -209,6 +209,14 @@ trait MetaTrait {
 		}
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public function getValueTypeStr() {
+
+		return static::$typeMap[ $this->valueType ];
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii classes ---------------------------

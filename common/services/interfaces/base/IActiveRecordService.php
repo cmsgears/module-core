@@ -149,6 +149,12 @@ interface IActiveRecordService {
 
 	// Notifications ------
 
+	// Trigger Admin Notifications
+	public function notifyAdmin( $model, $config = [] );
+
+    // Trigger User Notifications
+    public function notifyUser( $model, $config = [] );
+
 	// Cache --------------
 
 	// Additional ---------

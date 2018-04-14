@@ -17,8 +17,10 @@ use yii\helpers\ArrayHelper;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\interfaces\base\IMeta;
+use cmsgears\core\common\models\interfaces\resources\IData;
 
 use cmsgears\core\common\models\traits\base\MetaTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
  * Meta represents meta data of a model. It's the base class for Models having
@@ -35,12 +37,14 @@ use cmsgears\core\common\models\traits\base\MetaTrait;
  * @property string $name
  * @property string $label
  * @property string $type
+ * @property boolean $active
  * @property string $valueType
  * @property string $value
+ * @property string $data
  *
  * @since 1.0.0
  */
-abstract class Meta extends Resource implements IMeta {
+abstract class Meta extends Resource implements IData, IMeta {
 
 	// Variables ---------------------------------------------------
 
@@ -62,6 +66,7 @@ abstract class Meta extends Resource implements IMeta {
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
 	use MetaTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -85,13 +90,15 @@ abstract class Meta extends Resource implements IMeta {
 		$rules = [
 			// Required, Safe
 			[ [ 'modelId', 'name' ], 'required' ],
-			[ [ 'id', 'value' ], 'safe' ],
+			[ [ 'id', 'value', 'data' ], 'safe' ],
 			// Unique
 			[ [ 'modelId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'modelId', 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ [ 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			// Other
+			[ 'active', 'boolean' ],
 			[ 'modelId', 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 
@@ -116,6 +123,7 @@ abstract class Meta extends Resource implements IMeta {
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'valueType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE_TYPE ),
 			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE )
 		];
@@ -144,6 +152,16 @@ abstract class Meta extends Resource implements IMeta {
 	public function belongsTo( $model ) {
 
 		return $this->modelId == $model->id;
+	}
+
+	/**
+	 * Returns string representation of active flag.
+	 *
+	 * @return boolean
+	 */
+	public function getActiveStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->active );
 	}
 
 	// Static Methods ----------------------------------------------

@@ -239,5 +239,13 @@ interface IApproval {
 	 *
 	 * @return string
 	 */
-	public function getRejectReason();
+	public function getRejectMessage();
+
+	/**
+	 * Returns reason of termination provided by admin for termination state.
+	 *
+	 * @return string
+	 */
+	public function getTerminateMessage();
+
 }

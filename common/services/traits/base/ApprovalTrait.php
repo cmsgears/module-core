@@ -11,6 +11,7 @@ namespace cmsgears\core\common\services\traits\base;
 
 // Yii Imports
 use yii\base\UnknownMethodException;
+use yii\db\Expression;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -51,12 +52,12 @@ trait ApprovalTrait {
 	 */
 	public function getPageByOwnerId( $ownerId, $config = [] ) {
 
-		$owner		= isset( $config[ 'owner' ] ) ? $config[ 'owner' ] : false;
+		$owner		= $config[ 'owner' ] ?? false;
 		$modelTable	= $this->getModelTable();
 
 		if( $owner ) {
 
-			$config[ 'conditions' ][ "$modelTable.ownerId" ] = $ownerId;
+			$config[ 'conditions' ][ "$modelTable.holderId" ] = $ownerId;
 		}
 		else {
 
@@ -84,13 +85,13 @@ trait ApprovalTrait {
 		$modelTable	= $this->getModelTable();
 		$query		= null;
 
-		$owner = isset( $config[ 'owner' ] ) ? $config[ 'owner' ] : false;
+		$owner = $config[ 'owner' ] ?? false;
 
 		if( $owner ) {
 
 			$query = $modelClass::queryWithOwnerAuthor();
 
-			$query->andWhere( "$modelTable.ownerId =:owner OR ($modelTable.ownerId IS NULL AND $modelTable.createdBy =:creator )", [ ':owner' => $id, ':creator' => $id ] );
+			$query->andWhere( "$modelTable.holderId =:oid OR ($modelTable.holderId IS NULL AND $modelTable.createdBy =:creator )", [ ':oid' => $id, ':creator' => $id ] );
 		}
 		else {
 
@@ -123,6 +124,89 @@ trait ApprovalTrait {
 
 	// Read - Others ---
 
+	public function getCountsByOwnerId( $ownerId, $config = [] ) {
+
+		$owner = $config[ 'owner' ] ?? false;
+
+		$modelTable	= $this->getModelTable();
+
+		$query = new Query();
+
+		$query->select( [ 'status', 'count(id) as total' ] )
+				->from( $modelTable );
+
+		if( $owner ) {
+
+			$query->where( "$modelTable.holderId=$ownerId" )->groupBy( 'status' );
+		}
+		else {
+
+			$query->where( "$modelTable.createdBy=$ownerId" )->groupBy( 'status' );
+		}
+
+		$counts     = $query->all();
+		$returnArr  = [];
+		$counter    = 0;
+
+		foreach( $counts as $count ) {
+
+			$returnArr[ $count[ 'status' ] ] = $count[ 'total' ];
+
+			$counter += $count[ 'total' ];
+		}
+
+		$returnArr[ 'all' ] = $counter;
+
+		return $returnArr;
+	}
+
+	public function getCountsByAuthorityId( $id, $config = [] ) {
+
+		$owner	= $config[ 'owner' ] ?? false;
+		$index	= $config[ 'index' ] ?? null;
+
+		$modelTable	= $this->getModelTable();
+
+		$query = new Query();
+
+		$query->select( [ 'status', 'count(id) as total' ] );
+
+		if( isset( $index ) ) {
+
+			$query->from( [ new Expression( "{{%$modelTable}} USE INDEX ($index)" ) ] );
+		}
+		else {
+
+			$query->from( $modelTable );
+		}
+
+		if( $owner ) {
+
+			$query->where( "$modelTable.holderId=$id" )->groupBy( 'status' );
+		}
+		else {
+
+			$query->where( "($modelTable.holderId IS NULL AND $modelTable.createdBy=$id) OR $modelTable.holderId=$id" );
+		}
+
+		$query->groupBy( 'status' );
+
+		$counts     = $query->all();
+		$returnArr  = [];
+		$counter    = 0;
+
+		foreach( $counts as $count ) {
+
+			$returnArr[ $count[ 'status' ] ] = $count[ 'total' ];
+
+			$counter += $count[ 'total' ];
+		}
+
+		$returnArr[ 'all' ] = $counter;
+
+		return $returnArr;
+	}
+
 	// Create -------------
 
 	// Update -------------
@@ -138,55 +222,184 @@ trait ApprovalTrait {
 		return $model;
 	}
 
-	public function submit( $model, $public = true ) {
+	public function submit( $model, $notify = true, $config = [] ) {
 
-		return $this->updateStatus( $model, IApproval::STATUS_SUBMITTED );
-	}
+		if( !$model->isSubmitted( true ) && $model->isSubmittable() ) {
 
-	public function confirm( $model, $public = true ) {
+			$model = $this->updateStatus( $model, IApproval::STATUS_SUBMITTED );
 
-		return $this->updateStatus( $model, IApproval::STATUS_CONFIRMED );
-	}
+			if( $notify ) {
 
-	public function approve( $model, $public = true ) {
+				$title = $model->getClassName() . " Submitted";
 
-		return $this->updateStatus( $model, IApproval::STATUS_ACTIVE );
-	}
+				$config[ 'template' ] = $config[ 'template' ] ?? CoreGlobal::TEMPLATE_NOTIFY_SUBMIT;
 
-	public function reject( $model, $message = null ) {
+				$this->notifyAdmin( $model, $config, $title );
+			}
 
-		$this->setRejectMessage( $model, $message );
-
-		return $this->updateStatus( $model, IApproval::STATUS_REJECTED );
-	}
-
-	public function freeze( $model, $message = null ) {
-
-		$this->setRejectMessage( $model, $message );
-
-		return $this->updateStatus( $model, IApproval::STATUS_FROJEN );
-	}
-
-	public function block( $model, $message = null ) {
-
-		$this->setRejectMessage( $model, $message );
-
-		return $this->updateStatus( $model, IApproval::STATUS_BLOCKED );
-	}
-
-	public function terminate( $model, $message = null ) {
-
-		if( !$model->isTerminated() ) {
-
-			$this->setTerminateMessage( $model, $message );
-
-			return $this->updateStatus( $model, IApproval::STATUS_TERMINATED );
+			return $model;
 		}
 
-		return $model;
+		return false;
+	}
+
+	public function confirm( $model, $notify = true, $config = [] ) {
+
+		if( !$model->isConfirmed( true ) ) {
+
+			$model = $this->updateStatus( $model, IApproval::STATUS_CONFIRMED );
+
+			if( $notify ) {
+
+				$title = $model->getClassName() . " Confirmed";
+
+				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_CONFIRM;
+
+				$this->notifyUser( $model, $config, $title );
+			}
+
+			return $model;
+		}
+
+		return false;
+	}
+
+	public function approve( $model, $notify = true, $config = [] ) {
+
+		if( !$model->isActive( true ) && $model->isApprovable() ) {
+
+			$model = $this->updateStatus( $model, IApproval::STATUS_ACTIVE );
+
+			if( $notify ) {
+
+				$title = $model->getClassName() . " Approved";
+
+				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_APPROVE;
+
+				$this->notifyUser( $model, $config, $title );
+			}
+
+			return $model;
+		}
+
+		return false;
+	}
+
+	public function activate( $model, $notify = true, $config = [] ) {
+
+		if( !$model->isActive( true ) ) {
+
+			$model = $this->updateStatus( $model, IApproval::STATUS_ACTIVE );
+
+			if( $notify ) {
+
+				$title = $model->getClassName() . " Activated";
+
+				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_ACTIVE;
+
+				$this->notifyUser( $model, $config, $title );
+			}
+
+			return $model;
+		}
+
+		return false;
+	}
+
+	public function reject( $model, $notify = true, $config = [] ) {
+
+		if( !$model->isRejected( true ) ) {
+
+			$model = $this->updateStatus( $model, IApproval::STATUS_REJECTED );
+
+			if( $notify ) {
+
+				$title = $model->getClassName() . " Rejected";
+
+				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_REJECT;
+				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
+
+				$this->notifyUser( $model, $config, $title );
+			}
+
+			return $model;
+		}
+
+		return false;
+	}
+
+	public function freeze( $model, $notify = true, $config = [] ) {
+
+		if( !$model->isFrojen( true ) ) {
+
+			$model = $this->updateStatus( $model, IApproval::STATUS_FROJEN );
+
+			if( $notify ) {
+
+				$title = $model->getClassName() . " Frozen";
+
+				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_ACTIVE;
+				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
+
+				$this->notifyUser( $model, $config, $title );
+			}
+
+			return $model;
+		}
+
+		return false;
+	}
+
+	public function block( $model, $notify = true, $config = [] ) {
+
+		if( !$model->isBlocked( true ) ) {
+
+			$model = $this->updateStatus( $model, IApproval::STATUS_BLOCKED );
+
+			if( $notify ) {
+
+				$title = $model->getClassName() . " Blocked";
+
+				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_BLOCK;
+				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
+
+				$this->notifyUser( $model, $config, $title );
+			}
+
+			return $model;
+		}
+
+		return false;
+	}
+
+	public function terminate( $model, $notify = true, $config = [] ) {
+
+		if( !$model->isTerminated( true ) ) {
+
+			$model = $this->updateStatus( $model, IApproval::STATUS_TERMINATED );
+
+			if( $notify ) {
+
+				$title = $model->getClassName() . " Terminated";
+
+				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_TERMINATE;
+				$config[ 'data' ][ 'message' ] = $model->getTerminateMessage();
+
+				$this->notifyUser( $model, $config, $title );
+			}
+
+			return $model;
+		}
+
+		return false;
 	}
 
 	// Model messages
+
+	public function getRejectMessage( $model ) {
+
+		return $model->getRejectMessage();
+	}
 
 	public function setRejectMessage( $model, $message = null ) {
 
@@ -205,6 +418,11 @@ trait ApprovalTrait {
 
 			// Do nothing
 		}
+	}
+
+	public function getTerminateMessage( $model ) {
+
+		return $model->getTerminateMessage();
 	}
 
 	public function setTerminateMessage( $model, $message = null ) {

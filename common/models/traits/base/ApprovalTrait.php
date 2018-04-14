@@ -370,7 +370,7 @@ trait ApprovalTrait {
 	/**
 	 * @inheritdoc
 	 */
-	public function getRejectReason() {
+	public function getRejectMessage() {
 
 		$reason = $this->getDataMeta( CoreGlobal::DATA_REJECT_REASON );
 		$text	= 'rejection';
@@ -383,6 +383,26 @@ trait ApprovalTrait {
 
 			$text	= 'block';
 		}
+
+		if( isset( $reason ) && strlen( $reason ) > 0 ) {
+
+			$reason	= "The reason for $text is - $reason";
+		}
+		else {
+
+			$reason	= "No reason was specified by admin.";
+		}
+
+		return $reason;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getTerminateMessage() {
+
+		$reason = $this->getDataMeta( CoreGlobal::DATA_TERMINATE_REASON );
+		$text	= 'termination';
 
 		if( isset( $reason ) && strlen( $reason ) > 0 ) {
 

@@ -57,7 +57,7 @@ interface IUserService extends IEntityService, IApproval, IData, IModelMeta, ISo
 
 	public function verify( $user, $token );
 
-	public function activate( $user, $token, $resetForm );
+	public function reset( $user, $token, $resetForm );
 
 	public function forgotPassword( $user );
 

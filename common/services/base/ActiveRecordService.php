@@ -15,7 +15,6 @@ use yii\base\Component;
 use yii\data\Sort;
 use yii\db\Expression;
 use yii\db\Query;
-
 use yii\helpers\ArrayHelper;
 use yii\helpers\HtmlPurifier;
 
@@ -200,7 +199,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public function getModels( $config = [] ) {
 
-		$advanced	= isset( $config[ 'advanced' ] ) ? $config[ 'advanced' ] : false;
+		$advanced	= $config[ 'advanced' ] ?? false;
 
 		if( $advanced ) {
 
@@ -221,9 +220,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public function getRandom( $config = [] ) {
 
-		$offset			= isset( $config[ 'offset' ] ) ? $config[ 'offset' ] : 0;
-		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
-		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
+		$offset			= $config[ 'offset' ] ?? 0;
+		$limit			= $config[ 'limit' ] ?? 10;
+		$conditions		= $config[ 'conditions' ] ?? null;
 
 		// model class
 		$modelClass		= static::$modelClass;
@@ -324,11 +323,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		$modelClass	= new static::$modelClass;
 
-		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$ignoreSite	= $config[ 'ignoreSite' ] ?? false;
 
 		if( $modelClass::isMultiSite() && !$ignoreSite ) {
 
-			$model->siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+			$model->siteId	= $config[ 'siteId' ] ?? Yii::$app->core->siteId;
 		}
 
 		$model->save();
@@ -414,7 +413,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	public function updateAttributes( $model, $config = [] ) {
 
-		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [];
+		$attributes	= $config[ 'attributes' ] ?? [];
 
 		if( $model->updateAttributes( $attributes ) !== false ) {
 
@@ -428,8 +427,8 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		$modelClass	= static::$modelClass;
 
-		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [];
-		$condition	= isset( $config[ 'condition' ] ) ? $config[ 'condition' ] : null;
+		$attributes	= $config[ 'attributes' ] ?? [];
+		$condition	= $config[ 'condition' ] ?? null;
 
 		return $modelClass::updateAll( $attributes, $condition );
 	}
@@ -544,6 +543,36 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	// Notifications ------
 
+    // Trigger Admin Notifications
+	public function notifyAdmin( $model, $config = [] ) {
+
+		$config[ 'admin' ] = true;
+
+		$this->sendNotification( $model, $config );
+	}
+
+    // Trigger User Notifications
+    public function notifyUser( $model, $config = [] ) {
+
+		$config[ 'admin' ] = false;
+
+		$this->sendNotification( $model, $config );
+	}
+
+    protected function sendNotification( $model, $config = [] ) {
+
+		$templateData	= $config[ 'data' ] ?? [];
+		$templateConfig	= [];
+
+		$templateData	= ArrayHelper::merge( [ 'model' => $model, 'service' => $this ], $templateData );
+
+		$templateConfig[ 'parentId' ]	= $model->id;
+		$templateConfig[ 'parentType' ]	= self::$parentType;
+		$templateConfig[ 'title' ]      = $config[ 'title' ] ?? $model->name ?? null;
+
+		return Yii::$app->eventManager->triggerNotification( $config[ 'template' ], $templateData, $templateConfig );
+	}
+
 	// Cache --------------
 
 	// Additional ---------
@@ -561,11 +590,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$modelTable = $modelClass::tableName();
 
 		// Public models
-		$public		= isset( $config[ 'public' ] ) ? $config[ 'public' ] : false;
+		$public = $config[ 'public' ] ?? false;
 
 		if( $public ) {
 
-			$interfaces		= class_implements( $modelClass );
+			$interfaces = class_implements( $modelClass );
 
 			// Select only active and frozen models excluding new, blocked and terminated models.
 			if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\IApproval' ] ) ) {
@@ -590,9 +619,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$modelTable = $modelClass::tableName();
 
 		// Filter sites
-		$siteOnly				= isset( $config[ 'siteOnly' ] ) ? $config[ 'siteOnly' ] : true;
-		$excludeMain			= isset( $config[ 'excludeMainSite' ] ) ? $config[ 'excludeMainSite' ] : false; // Exclude main site in multisite scenario
-		$config[ 'siteId' ]		= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : ( $modelClass::isMultiSite() ? Yii::$app->core->siteId : null );
+		$siteOnly			= $config[ 'siteOnly' ] ?? true;
+		$excludeMain		= $config[ 'excludeMainSite' ] ?? false; // Exclude main site in multisite scenario
+		$config[ 'siteId' ]	= $config[ 'siteId' ] ?? ( $modelClass::isMultiSite() ? Yii::$app->core->siteId : null );
 
 		// Site specific models for multi-site applications
 		if( $modelClass::isMultiSite() ) {
@@ -606,8 +635,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 			// Exclude main site
 			if( $excludeMain ) {
 
-				$mainSiteId					= Yii::$app->core->mainSiteId;
-				$config[ 'conditions' ][] 	= "siteId!=$mainSiteId";
+				$mainSiteId = Yii::$app->core->mainSiteId;
+
+				$config[ 'conditions' ][] = "siteId!=$mainSiteId";
 			}
 		}
 
@@ -627,25 +657,25 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$modelClass		= static::$modelClass;
 
 		// query generation
-		$query			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::$pageLimit; // Page Limit from config
-		$page			= isset( $config[ 'page' ] ) ? $config[ 'page' ] : 0; // Current Page from config
+		$query			= $config[ 'query' ] ?? $modelClass::find();
+		$limit			= $config[ 'limit' ] ?? self::$pageLimit; // Page Limit from config
+		$page			= $config[ 'page' ] ?? 0; // Current Page from config
 		$page			= Yii::$app->request->get( 'page' ) != null ? Yii::$app->request->get( 'page' ) - 1 : $page; // Current Page from params
 		$pageLimit		= Yii::$app->request->get( 'per-page' ); // Page Limit from params
-		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
-		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
-		$random			= isset( $config[ 'random' ] ) ? $config[ 'random' ] : false; // Be careful in using random at database level for tables having high row count
+		$conditions		= $config[ 'conditions' ] ?? null;
+		$filters		= $config[ 'filters' ] ?? null;
+		$random			= $config[ 'random' ] ?? false; // Be careful in using random at database level for tables having high row count
 
 		// search and sort
-		$searchParam	= isset( $config[ 'search-param' ] ) ? $config[ 'search-param' ] : 'keywords';
-		$searchCol		= isset( $config[ 'search-col' ] ) ? $config[ 'search-col' ] : [];
-		$sort			= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
+		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
+		$searchCol		= $config[ 'search-col' ] ?? [];
+		$sort			= $config[ 'sort' ] ?? false;
 
 		// report
-		$reportCol		= isset( $config[ 'report-col' ] ) ? $config[ 'report-col' ] : [];
+		$reportCol		= $config[ 'report-col' ] ?? [];
 
 		// url generation
-		$route			= isset( $config[ 'route' ] ) ? $config[ 'route' ] : null;
+		$route			= $config[ 'route' ] ?? null;
 
 		$pagination		= [];
 
@@ -748,11 +778,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 			foreach ( $reportColumns as $key => $column ) {
 
-				$find	= isset( $column[ 'find' ] ) ? $column[ 'find' ] : null;
-				$flag	= isset( $column[ 'flag' ] ) ? $column[ 'flag' ] : null;
-				$match	= isset( $column[ 'match' ] ) ? $column[ 'match' ] : null;
-				$start	= isset( $column[ 'start' ] ) ? $column[ 'start' ] : null;
-				$end	= isset( $column[ 'end' ] ) ? $column[ 'end' ] : null;
+				$find	= $column[ 'find' ] ?? null;
+				$flag	= $column[ 'flag' ] ?? null;
+				$match	= $column[ 'match' ] ?? null;
+				$start	= $column[ 'start' ] ?? null;
+				$end	= $column[ 'end' ] ?? null;
 
 				// String search
 				if( isset( $find ) ) {
@@ -818,7 +848,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		if( isset( $route ) ) {
 
-			$pagination[ 'route' ]	= $route;
+			$pagination[ 'route' ] = $route;
 		}
 
 		$dataProvider	= new ActiveDataProvider([
@@ -840,7 +870,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$modelClass	= static::$modelClass;
 		$modelTable = $modelClass::tableName();
 
-		$sort = isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
+		$sort = $config[ 'sort' ] ?? false;
 
 		// Default sort
 		if( !$sort ) {
@@ -860,10 +890,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		}
 
 		// Default conditions
-		if( !isset( $config[ 'conditions' ] ) ) {
-
-			$config[ 'conditions' ] = [];
-		}
+		$config[ 'conditions' ] = $config[ 'conditions' ] ?? [];
 
 		// Default query
 		if( !isset( $config[ 'query' ] ) ) {
@@ -873,7 +900,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 			if( $hasOne ) {
 
-				$config[ 'query' ]	= $modelClass::queryWithHasOne();
+				$config[ 'query' ] = $modelClass::queryWithHasOne();
 			}
 		}
 
@@ -900,12 +927,12 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$modelClass	= static::$modelClass;
 		$modelTable = $modelClass::tableName();
 
-		$parentType	= isset( $config[ 'parentType' ] ) ? $config[ 'parentType' ] : static::$parentType;
+		$parentType	= $config[ 'parentType' ] ?? static::$parentType;
 
 		// Search in
-		$searchModel	 	= isset( $config[ 'searchModel' ] ) ? $config[ 'searchModel' ] : true; // Search in model name
-		$searchCategory 	= isset( $config[ 'searchCategory' ] ) ? $config[ 'searchCategory' ] : false; // Search in category name
-		$searchTag		 	= isset( $config[ 'searchTag' ] ) ? $config[ 'searchTag' ] : false; // Search in tag name
+		$searchModel	 	= $config[ 'searchModel' ] ?? true; // Search in model name
+		$searchCategory 	= $config[ 'searchModel' ] ?? false; // Search in category name
+		$searchTag		 	= $config[ 'searchTag' ] ?? false; // Search in tag name
 
 		// DB Tables
 		$mcategoryTable		= CoreTables::TABLE_MODEL_CATEGORY;
@@ -922,8 +949,8 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$keywords			= Yii::$app->request->getQueryParam( $searchParam );
 
 		// Search Query
-		$query				= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$hasOne				= isset( $config[ 'hasOne' ] ) ? $config[ 'hasOne' ] : false;
+		$query				= $config[ 'query' ] ?? $modelClass::find();
+		$hasOne				= $config[ 'hasOne' ] ?? false;
 
 		// Use model joins
 		if( $hasOne ) {
@@ -1017,19 +1044,19 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$config			= static::applySiteFilters( $config );
 
 		// query generation
-		$query			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$offset			= isset( $config[ 'offset' ] ) ? $config[ 'offset' ] : 0;
-		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::PAGE_LIMIT;
-		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
-		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
-		$sort			= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : [ 'id' => SORT_ASC ];
-		$public			= isset( $config[ 'public' ] ) ? $config[ 'public' ] : false;
+		$query			= $config[ 'query' ] ?? $modelClass::find();
+		$offset			= $config[ 'offset' ] ?? 0;
+		$limit			= $config[ 'limit' ] ?? self::PAGE_LIMIT;
+		$conditions		= $config[ 'conditions' ] ?? null;
+		$filters		= $config[ 'filters' ] ?? null;
+		$sort			= $config[ 'sort' ] ?? [ 'id' => SORT_ASC ];
+		$public			= $config[ 'public' ] ?? false;
 
 		// selected columns
-		$columns		= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [];
+		$columns		= $config[ 'columns' ] ?? [];
 
 		// array result
-		$array			= isset( $config[ 'array' ] ) ? $config[ 'array' ] : false;
+		$array			= $config[ 'array' ] ?? false;
 
 		// Selective columns ---
 
@@ -1130,8 +1157,8 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	public static function findIdNameList( $config = [] ) {
 
-		$config[ 'nameColumn' ]		= isset( $config[ 'nameColumn' ] ) ? $config[ 'nameColumn' ] : 'id';
-		$config[ 'valueColumn' ]	= isset( $config[ 'valueColumn' ] ) ? $config[ 'valueColumn' ] : 'name';
+		$config[ 'nameColumn' ]		= $config[ 'nameColumn' ] ?? 'id';
+		$config[ 'valueColumn' ]	= $config[ 'valueColumn' ] ?? 'name';
 		$config[ 'nameAlias' ]		= 'id';
 		$config[ 'valueAlias' ]		= 'name';
 
@@ -1153,12 +1180,12 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		// query generation
 		$query			= new Query();
-		$column			= isset( $config[ 'column' ] ) ? $config[ 'column' ] : 'id';
-		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
-		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
+		$column			= $config[ 'column' ] ?? 'id';
+		$conditions		= $config[ 'conditions' ] ?? null;
+		$filters		= $config[ 'filters' ] ?? null;
 
 		// sorting
-		$order			= isset( $config[ 'order' ] ) ? $config[ 'order' ] : null;
+		$order			= $config[ 'order' ] ?? null;
 
 		// Conditions ----------
 
@@ -1230,24 +1257,24 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$modelTable = $modelClass::tableName();
 
 		// map columns
-		$nameColumn		= isset( $config[ 'nameColumn' ] ) ? $config[ 'nameColumn' ] : 'name';
-		$valueColumn	= isset( $config[ 'valueColumn' ] ) ? $config[ 'valueColumn' ] : 'value';
+		$nameColumn		= $config[ 'nameColumn' ] ?? 'name';
+		$valueColumn	= $config[ 'valueColumn' ] ?? 'value';
 
 		// column alias
-		$nameAlias		= isset( $config[ 'nameAlias' ] ) ? $config[ 'nameAlias' ] : 'name';
-		$valueAlias		= isset( $config[ 'valueAlias' ] ) ? $config[ 'valueAlias' ] : 'value';
+		$nameAlias		= $config[ 'nameAlias' ] ?? 'name';
+		$valueAlias		= $config[ 'valueAlias' ] ?? 'value';
 
 		// limit
-		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
+		$limit			= $config[ 'limit' ] ?? 0;
 
 		// query generation
-		$query			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : new Query();
-		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
-		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
+		$query			= $config[ 'query' ] ?? new Query();
+		$conditions		= $config[ 'conditions' ] ?? null;
+		$filters		= $config[ 'filters' ] ?? null;
 
 		// additional data
-		$prepend		= isset( $config[ 'prepend' ] ) ? $config[ 'prepend' ] : [];
-		$append			= isset( $config[ 'append' ] ) ? $config[ 'append' ] : [];
+		$prepend		= $config[ 'prepend' ] ?? [];
+		$append			= $config[ 'append' ] ?? [];
 
 		// Conditions ----------
 
@@ -1320,8 +1347,8 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	public static function findIdNameMap( $config = [] ) {
 
-		$config[ 'nameColumn' ]		= isset( $config[ 'nameColumn' ] ) ? $config[ 'nameColumn' ] : 'id';
-		$config[ 'valueColumn' ]	= isset( $config[ 'valueColumn' ] ) ? $config[ 'valueColumn' ] : 'name';
+		$config[ 'nameColumn' ]		= $config[ 'nameColumn' ] ?? 'id';
+		$config[ 'valueColumn' ]	= $config[ 'valueColumn' ] ?? 'name';
 		$config[ 'nameAlias' ]		= 'id';
 		$config[ 'valueAlias' ]		= 'name';
 
@@ -1343,8 +1370,8 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	public static function generateMap( $config = [] ) {
 
 		// column alias
-		$nameAlias		= isset( $config[ 'nameAlias' ] ) ? $config[ 'nameAlias' ] : 'name';
-		$valueAlias		= isset( $config[ 'valueAlias' ] ) ? $config[ 'valueAlias' ] : 'value';
+		$nameAlias		= $config[ 'nameAlias' ] ?? 'name';
+		$valueAlias		= $config[ 'valueAlias' ] ?? 'value';
 
 		$arrayList		= static::generateNameValueList( $config );
 		$map			= [];
@@ -1364,14 +1391,14 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	public static function generateObjectMap( $config = [] ) {
 
 		// map columns
-		$key			= isset( $config[ 'key' ] ) ? $config[ 'key' ] : 'id';
+		$key			= $config[ 'key' ] ?? 'id';
 		$value			= static::$modelClass;
 
 		// query generation
-		$query			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $value::find();
-		$limit			= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : self::PAGE_LIMIT;
-		$conditions		= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
-		$filters		= isset( $config[ 'filters' ] ) ? $config[ 'filters' ] : null;
+		$query			= $config[ 'query' ] ?? $value::find();
+		$limit			= $config[ 'limit' ] ?? self::PAGE_LIMIT;
+		$conditions		= $config[ 'conditions' ] ?? null;
+		$filters		= $config[ 'filters' ] ?? null;
 
 		// Conditions ----------
 
@@ -1406,9 +1433,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		// Result --------------
 
-		$map		= [];
+		$map = [];
 
-		foreach ( $objects as $object ) {
+		foreach( $objects as $object ) {
 
 			$map[ $object->$key ] = $object;
 		}
@@ -1429,11 +1456,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		// Multiple columns
 		if( is_array( $columns ) ) {
 
-			foreach ( $columns as $ckey => $column ) {
+			foreach( $columns as $ckey => $column ) {
 
 				$query	= null;
 
-				foreach ( $searchTerms as $skey => $term ) {
+				foreach( $searchTerms as $skey => $term ) {
 
 					if( $skey  == 0 ) {
 
@@ -1461,7 +1488,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		// Single column
 		else {
 
-			foreach ( $searchTerms as $key => $value ) {
+			foreach( $searchTerms as $key => $value ) {
 
 				if( $key  == 0 ) {
 
@@ -1485,18 +1512,18 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	public static function updateSelective( $model, $config = [] ) {
 
-		$selective	= isset( $config[ 'selective' ] ) ? $config[ 'selective' ] : true;
-		$validate	= isset( $config[ 'validate' ] ) ? $config[ 'validate' ] : true;
+		$selective	= $config[ 'selective' ] ?? true;
+		$validate	= $config[ 'validate' ] ?? true;
 
 		if( Yii::$app->core->isUpdateSelective() && $selective ) {
 
-			$attributes		= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [];
+			$attributes		= $config[ 'attributes' ] ?? [];
 
 			$existingModel	= self::findById( $model->id );
 
 			$existingModel->copyForUpdateFrom( $model, $attributes );
 
-			$update			= $existingModel->update( $validate );
+			$update = $existingModel->update( $validate );
 
 			if( $update ) {
 
@@ -1515,9 +1542,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		}
 		else {
 
-			$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : null;
+			$attributes	= $config[ 'attributes' ] ?? null;
 
-			$update		= $model->update( $validate, $attributes );
+			$update = $model->update( $validate, $attributes );
 
 			if( $update ) {
 

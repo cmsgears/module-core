@@ -548,7 +548,7 @@ class UserService extends EntityService implements IUserService {
 	 * @param ResetPasswordForm $resetForm
 	 * @return boolean
 	 */
-	public function activate( $user, $token, $resetForm ) {
+	public function reset( $user, $token, $resetForm ) {
 
 		// Check Token
 		if( $user->isVerifyTokenValid( $token ) ) {

@@ -256,8 +256,10 @@ class m160620_095703_core extends Migration {
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'label' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
+			'active' => $this->boolean()->defaultValue( false ),
 			'valueType' => $this->string( Yii::$app->core->mediumText )->notNull()->defaultValue( Meta::VALUE_TYPE_TEXT ),
-			'value' => $this->text()
+			'value' => $this->text(),
+			'data' => $this->mediumText()
 		], $this->options );
 
 		// Index for column parent
@@ -533,8 +535,10 @@ class m160620_095703_core extends Migration {
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'label' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
+			'active' => $this->boolean()->defaultValue( false ),
 			'valueType' => $this->string( Yii::$app->core->mediumText )->notNull()->defaultValue( Meta::VALUE_TYPE_TEXT ),
-			'value' => $this->text()
+			'value' => $this->text(),
+			'data' => $this->mediumText()
 		], $this->options );
 
 		// Index for column parent
@@ -847,7 +851,7 @@ class m160620_095703_core extends Migration {
 			'status' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'fragment' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
-			'rating' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
+			'rating' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
@@ -903,8 +907,10 @@ class m160620_095703_core extends Migration {
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'label' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
+			'active' => $this->boolean()->defaultValue( false ),
 			'valueType' => $this->string( Yii::$app->core->mediumText )->notNull()->defaultValue( Meta::VALUE_TYPE_TEXT ),
-			'value' => $this->mediumText()
+			'value' => $this->mediumText(),
+			'data' => $this->mediumText()
 		], $this->options );
 	}
 

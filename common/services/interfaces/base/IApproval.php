@@ -36,27 +36,37 @@ interface IApproval {
 
 	// Read - Others ---
 
+	public function getCountsByOwnerId( $ownerId, $config = [] );
+
+	public function getCountsByAuthorityId( $id, $config = [] );
+
 	// Create -------------
 
 	// Update -------------
 
 	public function updateStatus( $model, $status );
 
-	public function submit( $model, $public = true );
+	public function submit( $model, $notify = true, $config = [] );
 
-	public function confirm( $model, $public = true );
+	public function confirm( $model, $notify = true, $config = [] );
 
-	public function approve( $model, $public = true );
+	public function approve( $model, $notify = true, $config = [] );
 
-	public function reject( $model, $message = null );
+	public function activate( $model, $notify = true, $config = [] );
 
-	public function freeze( $model, $message = null );
+	public function reject( $model, $notify = true, $config = [] );
 
-	public function block( $model, $message = null );
+	public function freeze( $model, $notify = true, $config = [] );
 
-	public function terminate( $model, $message = null );
+	public function block( $model, $notify = true, $config = [] );
+
+	public function terminate( $model, $notify = true, $config = [] );
+
+	public function getRejectMessage( $model );
 
 	public function setRejectMessage( $model, $message = null );
+
+	public function getTerminateMessage( $model );
 
 	public function setTerminateMessage( $model, $message = null );
 

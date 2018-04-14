@@ -92,7 +92,21 @@ class CoreGlobal {
 
 	// Templates -------------------------------------------------------
 
-	const TEMPLATE_DEFAULT			= 'default';
+	const TEMPLATE_DEFAULT	= 'default';
+
+	// Notification - Status Templates
+    const TEMPLATE_NOTIFY_NEW		= 'status-new';
+	const TEMPLATE_NOTIFY_SUBMIT    = 'status-submit';
+	const TEMPLATE_NOTIFY_REJECT    = 'status-reject';
+    const TEMPLATE_NOTIFY_RESUBMIT	= 'status-resubmit';
+	const TEMPLATE_NOTIFY_CONFIRM	= 'status-confirm';
+	const TEMPLATE_NOTIFY_ACTIVE	= 'status-active';
+	const TEMPLATE_NOTIFY_APPROVE	= 'status-approve';
+	const TEMPLATE_NOTIFY_FREEZE	= 'status-freeze';
+	const TEMPLATE_NOTIFY_BLOCK		= 'status-block';
+	const TEMPLATE_NOTIFY_UP_FREEZE	= 'status-uplift-freeze';
+	const TEMPLATE_NOTIFY_UP_BLOCK	= 'status-uplift-block';
+	const TEMPLATE_NOTIFY_TERMINATE	= 'status-terminate';
 
 	// Template Views --------------------------------------------------
 

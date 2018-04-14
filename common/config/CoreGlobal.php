@@ -375,6 +375,7 @@ class CoreGlobal {
 	const FIELD_THEME				= 'themeField';
 	const FIELD_COMMENT				= 'commentField';
 	const FIELD_COMMENTS			= 'commentsField';
+	const FIELD_REVIEWS				= 'reviewsField';
 	const FIELD_TEMPLATE			= 'templateField';
 
 	const FIELD_USER				= 'userField';

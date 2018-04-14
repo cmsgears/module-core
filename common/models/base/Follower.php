@@ -31,6 +31,7 @@ use cmsgears\core\common\models\traits\base\FollowerTrait;
  * @property boolean $active
  * @property int $createdAt
  * @property int $modifiedAt
+ * @property string data
  *
  * @since 1.0.0
  */
@@ -94,7 +95,7 @@ abstract class Follower extends Mapper implements IFollower {
 		$rules = [
 			// Required, Safe
 			[ [ 'userId', 'modelId' ], 'required' ],
-			[ [ 'id', 'value' ], 'safe' ],
+			[ [ 'id', 'value', 'data' ], 'safe' ],
 			// Unique
 			[ [ 'userId', 'modelId', 'type' ], 'unique', 'targetAttribute' => [ 'userId', 'modelId', 'type' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Other
@@ -114,7 +115,8 @@ abstract class Follower extends Mapper implements IFollower {
 		return [
 			'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'followerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FOLLOWER ),
-			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE )
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 

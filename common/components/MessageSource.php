@@ -16,7 +16,6 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * It can also read messages stored in db or utilize I18N(internationalization) for these keys.
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
 class MessageSource extends \yii\base\Component {
@@ -191,6 +190,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_THEME => 'Theme',
 		CoreGlobal::FIELD_COMMENT => 'Comment',
 		CoreGlobal::FIELD_COMMENTS => 'Comments',
+		CoreGlobal::FIELD_REVIEWS => 'Reviews',
 		CoreGlobal::FIELD_TEMPLATE => 'Template',
 
 		CoreGlobal::FIELD_USER => 'User',

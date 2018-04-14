@@ -32,8 +32,8 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * A model can have multiple meta mapped to it, but only one meta with the same name of
  * a particular type is allowed for a model. We can have value type hints using $valueType.
  *
- * @property int $id
- * @property int $modelId
+ * @property integer $id
+ * @property integer $modelId
  * @property string $name
  * @property string $label
  * @property string $type
@@ -125,7 +125,8 @@ abstract class Meta extends Resource implements IData, IMeta {
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'valueType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE_TYPE ),
-			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE )
+			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
 	}
 
@@ -181,8 +182,9 @@ abstract class Meta extends Resource implements IData, IMeta {
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'parent' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'parent' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -195,7 +197,7 @@ abstract class Meta extends Resource implements IData, IMeta {
 	 */
 	public static function queryWithParent( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'parent' ];
+		$config[ 'relations' ] = [ 'parent' ];
 
 		return parent::queryWithAll( $config );
 	}

@@ -33,6 +33,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * @property short $type
  * @property string $icon
  * @property boolean $compress
+ * @property boolean $meta
  * @property boolean $active
  * @property string $validators
  * @property integer $order
@@ -94,7 +95,7 @@ class FormField extends Resource implements IData {
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_FORM_FIELD;
+	protected $modelType = CoreGlobal::TYPE_FORM_FIELD;
 
 	// Private ----------------
 
@@ -134,7 +135,7 @@ class FormField extends Resource implements IData {
 			// Other
 			[ 'name', 'alphanumu' ],
 			[ [ 'type', 'order' ], 'number', 'integerOnly' => true ],
-			[ [ 'compress', 'active' ], 'boolean' ]
+			[ [ 'compress', 'meta', 'active' ], 'boolean' ]
 		];
 
 		// Trim Text
@@ -159,6 +160,7 @@ class FormField extends Resource implements IData {
 			'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'compress' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COMPRESS ),
+			'meta' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_META ),
 			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'validators' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALIDATORS ),
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
@@ -204,6 +206,26 @@ class FormField extends Resource implements IData {
 	public function getCompressStr() {
 
 		return Yii::$app->formatter->asBoolean( $this->compress );
+	}
+
+	/**
+	 * Returns string representation of meta flag.
+	 *
+	 * @return string
+	 */
+	public function getMetaStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->meta );
+	}
+
+	/**
+	 * Returns string representation of active flag.
+	 *
+	 * @return string
+	 */
+	public function getActiveStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->active );
 	}
 
 	/**

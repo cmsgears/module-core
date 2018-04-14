@@ -370,27 +370,27 @@ class m160621_014408_core_data extends Migration {
 
 		$config	= Form::findBySlugType( 'config-core', CoreGlobal::TYPE_SYSTEM );
 
-		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
+		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
-			[ $config->id, 'locale_message', 'Locale Message', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Check for i18n support."}' ],
-			[ $config->id, 'language','Language', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Language used on html tag.","placeholder":"Language"}' ],
-			[ $config->id, 'locale','Locale', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Site default locale.","placeholder":"Locale"}' ],
-			[ $config->id, 'charset','Charset', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Charset used on html head meta.","placeholder":"Charset"}' ],
-			[ $config->id, 'site_title','Site Title', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Site title used in forming page title.","placeholder":"Site Title"}' ],
-			[ $config->id, 'site_name','Site Name', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Site name used on footers etc.","placeholder":"Site Name"}' ],
-			[ $config->id, 'site_url','Frontend URL', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Frontend URL","placeholder":"Frontend URL"}' ],
-			[ $config->id, 'admin_url','Backend URL', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Backend URL","placeholder":"Backend URL"}' ],
-			[ $config->id, 'registration','Registration', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Check whether site registration is allowed."}' ],
-			[ $config->id, 'login','Login', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Check whether site login is allowed."}' ],
-			[ $config->id, 'change_email','Change Email', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Check whether email change is allowed for user profile."}' ],
-			[ $config->id, 'change_username','Change Username', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Check whether username change is allowed for user profile."}' ],
-			[ $config->id, 'date_format','Date Format', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Date format used by the formatter.","placeholder":"Date Format"}' ],
-			[ $config->id, 'time_format','Time Format', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Time format used by the formatter.","placeholder":"Time Format"}' ],
-			[ $config->id, 'date_time_format','Date Time Format', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Date time format used by the formatter.","placeholder":"Time Format"}' ],
-			[ $config->id, 'timezone','Timezone', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Time format used by the formatter.","placeholder":"Time Format"}' ],
-			[ $config->id, 'auto_login','Auto Login', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Auto login on account confirmation and activation."}' ],
-			[ $config->id, 'auto_load','Auto Load', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Auto load widgets etc using ajax."}' ]
+			[ $config->id, 'locale_message', 'Locale Message', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Check for i18n support."}' ],
+			[ $config->id, 'language','Language', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Language used on html tag.","placeholder":"Language"}' ],
+			[ $config->id, 'locale','Locale', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Site default locale.","placeholder":"Locale"}' ],
+			[ $config->id, 'charset','Charset', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Charset used on html head meta.","placeholder":"Charset"}' ],
+			[ $config->id, 'site_title','Site Title', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Site title used in forming page title.","placeholder":"Site Title"}' ],
+			[ $config->id, 'site_name','Site Name', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Site name used on footers etc.","placeholder":"Site Name"}' ],
+			[ $config->id, 'site_url','Frontend URL', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Frontend URL","placeholder":"Frontend URL"}' ],
+			[ $config->id, 'admin_url','Backend URL', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Backend URL","placeholder":"Backend URL"}' ],
+			[ $config->id, 'registration','Registration', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Check whether site registration is allowed."}' ],
+			[ $config->id, 'login','Login', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Check whether site login is allowed."}' ],
+			[ $config->id, 'change_email','Change Email', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Check whether email change is allowed for user profile."}' ],
+			[ $config->id, 'change_username','Change Username', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Check whether username change is allowed for user profile."}' ],
+			[ $config->id, 'date_format','Date Format', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Date format used by the formatter.","placeholder":"Date Format"}' ],
+			[ $config->id, 'time_format','Time Format', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Time format used by the formatter.","placeholder":"Time Format"}' ],
+			[ $config->id, 'date_time_format','Date Time Format', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Date time format used by the formatter.","placeholder":"Time Format"}' ],
+			[ $config->id, 'timezone','Timezone', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Time format used by the formatter.","placeholder":"Time Format"}' ],
+			[ $config->id, 'auto_login','Auto Login', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Auto login on account confirmation and activation."}' ],
+			[ $config->id, 'auto_load','Auto Load', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Auto load widgets etc using ajax."}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -414,14 +414,14 @@ class m160621_014408_core_data extends Migration {
 
 		$config	= Form::findBySlugType( 'config-cache', CoreGlobal::TYPE_SYSTEM );
 
-		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
+		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
-			[ $config->id, 'caching','Caching', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Enable HTML Caching."}' ],
-			[ $config->id, 'cache_duration','Cache Duration', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Cache Duration in seconds. It applies only to default cache which is volatile.","placeholder":"Cache Duration"}' ],
-			[ $config->id, 'default_cache','Default Cache', FormField::TYPE_SELECT, false, NULL, 0, NULL, '{"title":"Default Cache","items":{"none":"Choose Cache Type","file":"File","database":"Database","apc":"APC","mem":"Memcached","redis":"Redis","win":"Windows Cache","xcache":"XCache"}}' ],
-			[ $config->id, 'primary_cache','Primary Cache', FormField::TYPE_SELECT, false, NULL, 0, NULL, '{"title":"Primary Cache","items":{"none":"Choose Cache Type","file":"File","database":"Database"}}' ],
-			[ $config->id, 'secondary_cache','Secondary Cache', FormField::TYPE_SELECT, false, NULL, 0, NULL, '{"title":"Secondary Cache","items":{"none":"Choose Cache Type","elastic":"Elasticsearch","redis":"Redis"}}' ]
+			[ $config->id, 'caching','Caching', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Enable HTML Caching."}' ],
+			[ $config->id, 'cache_duration','Cache Duration', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Cache Duration in seconds. It applies only to default cache which is volatile.","placeholder":"Cache Duration"}' ],
+			[ $config->id, 'default_cache','Default Cache', FormField::TYPE_SELECT, false, true, true, NULL, 0, NULL, '{"title":"Default Cache","items":{"none":"Choose Cache Type","file":"File","database":"Database","apc":"APC","mem":"Memcached","redis":"Redis","win":"Windows Cache","xcache":"XCache"}}' ],
+			[ $config->id, 'primary_cache','Primary Cache', FormField::TYPE_SELECT, false, true, true, NULL, 0, NULL, '{"title":"Primary Cache","items":{"none":"Choose Cache Type","file":"File","database":"Database"}}' ],
+			[ $config->id, 'secondary_cache','Secondary Cache', FormField::TYPE_SELECT, false, true, true, NULL, 0, NULL, '{"title":"Secondary Cache","items":{"none":"Choose Cache Type","elastic":"Elasticsearch","redis":"Redis"}}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -445,22 +445,22 @@ class m160621_014408_core_data extends Migration {
 
 		$config	= Form::findBySlugType( 'config-mail', CoreGlobal::TYPE_SYSTEM );
 
-		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
+		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
-			[ $config->id, 'smtp','SMTP', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Check whether SMTP is required."}' ],
-			[ $config->id, 'smtp_username','SMTP Username', FormField::TYPE_TEXT, false, NULL, 0, NULL , '{"title":"SMTP username.","placeholder":"SMTP Username"}' ],
-			[ $config->id, 'smtp_password','SMTP Password', FormField::TYPE_PASSWORD, false, NULL, 0, NULL, '{"title":"SMTP password.","placeholder":"SMTP Password"}' ],
-			[ $config->id, 'smtp_host','SMTP Host', FormField::TYPE_TEXT, false, NULL, 0, NULL, '{"title":"SMTP host.","placeholder":"SMTP Host"}' ],
-			[ $config->id, 'smtp_port','SMTP Port', FormField::TYPE_TEXT, false, NULL, 0, NULL, '{"title":"SMTP port.","placeholder":"SMTP Port"}' ],
-			[ $config->id, 'smtp_encryption','SMTP Encryption', FormField::TYPE_SELECT, false, NULL, 0, NULL, '{"title":"SMTP encryption.","items":{"none":"Choose Encryption","ssl":"SSL","tls":"TLS"}}' ],
-			[ $config->id, 'debug','SMTP Debug', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Check whether SMTP debug is required."}' ],
-			[ $config->id, 'sender_name','Sender Name', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Sender name.","placeholder":"Sender Name"}' ],
-			[ $config->id, 'sender_email','Sender Email', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Sender email.","placeholder":"Sender Email"}' ],
-			[ $config->id, 'contact_name','Contact Name', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Contact name.","placeholder":"Contact Name"}' ],
-			[ $config->id, 'contact_email','Contact Email', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Contact email.","placeholder":"Contact Email"}' ],
-			[ $config->id, 'info_name','Info Name', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Info name.","placeholder":"Info Name"}' ],
-			[ $config->id, 'info_email','Info Email', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Info email.","placeholder":"Info Email"}' ]
+			[ $config->id, 'smtp','SMTP', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Check whether SMTP is required."}' ],
+			[ $config->id, 'smtp_username','SMTP Username', FormField::TYPE_TEXT, false, true, true, NULL, 0, NULL , '{"title":"SMTP username.","placeholder":"SMTP Username"}' ],
+			[ $config->id, 'smtp_password','SMTP Password', FormField::TYPE_PASSWORD, false, true, true, NULL, 0, NULL, '{"title":"SMTP password.","placeholder":"SMTP Password"}' ],
+			[ $config->id, 'smtp_host','SMTP Host', FormField::TYPE_TEXT, false, true, true, NULL, 0, NULL, '{"title":"SMTP host.","placeholder":"SMTP Host"}' ],
+			[ $config->id, 'smtp_port','SMTP Port', FormField::TYPE_TEXT, false, true, true, NULL, 0, NULL, '{"title":"SMTP port.","placeholder":"SMTP Port"}' ],
+			[ $config->id, 'smtp_encryption','SMTP Encryption', FormField::TYPE_SELECT, false, true, true, NULL, 0, NULL, '{"title":"SMTP encryption.","items":{"none":"Choose Encryption","ssl":"SSL","tls":"TLS"}}' ],
+			[ $config->id, 'debug','SMTP Debug', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Check whether SMTP debug is required."}' ],
+			[ $config->id, 'sender_name','Sender Name', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Sender name.","placeholder":"Sender Name"}' ],
+			[ $config->id, 'sender_email','Sender Email', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Sender email.","placeholder":"Sender Email"}' ],
+			[ $config->id, 'contact_name','Contact Name', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Contact name.","placeholder":"Contact Name"}' ],
+			[ $config->id, 'contact_email','Contact Email', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Contact email.","placeholder":"Contact Email"}' ],
+			[ $config->id, 'info_name','Info Name', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Info name.","placeholder":"Info Name"}' ],
+			[ $config->id, 'info_email','Info Email', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Info email.","placeholder":"Info Email"}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -484,18 +484,18 @@ class m160621_014408_core_data extends Migration {
 
 		$config	= Form::findBySlugType( 'config-comment', CoreGlobal::TYPE_SYSTEM );
 
-		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
+		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
-			[ $config->id, 'comments', 'Comments', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Comments allowed."}' ],
-			[ $config->id, 'comments_user', 'Comments User', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Comments need logged in user."}' ],
-			[ $config->id, 'comments_recent', 'Comments Recent', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Show recent comments on top."}' ],
-			[ $config->id, 'comments_limit','Comments Limit', FormField::TYPE_TEXT, false, 'required,number', 0, NULL, '{"title":"Page limit of comments.","placeholder":"Comments per page"}' ],
-			[ $config->id, 'comments_email_admin', 'Comments Email Admin', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Trigger mail to admin for new comment."}' ],
-			[ $config->id, 'comments_email_user', 'Comments Email User', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Trigger mail to user on approval."}' ],
-			[ $config->id, 'comments_form_top', 'Comments Form Top', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Show the comment form on top of comments."}' ],
-			[ $config->id, 'comments_auto', 'Comments Auto', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Auto approve a comment in case existing approved comment exist for user or email."}' ],
-			[ $config->id, 'comments_filter','Comments Filter', FormField::TYPE_TEXTAREA, false, NULL, 0, NULL, '{"title":"Comments filter having comma seperated words to trash in case words match.","placeholder":"Comments filter"}' ]
+			[ $config->id, 'comments', 'Comments', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Comments allowed."}' ],
+			[ $config->id, 'comments_user', 'Comments User', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Comments need logged in user."}' ],
+			[ $config->id, 'comments_recent', 'Comments Recent', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Show recent comments on top."}' ],
+			[ $config->id, 'comments_limit','Comments Limit', FormField::TYPE_TEXT, false, true, true, 'required,number', 0, NULL, '{"title":"Page limit of comments.","placeholder":"Comments per page"}' ],
+			[ $config->id, 'comments_email_admin', 'Comments Email Admin', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Trigger mail to admin for new comment."}' ],
+			[ $config->id, 'comments_email_user', 'Comments Email User', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Trigger mail to user on approval."}' ],
+			[ $config->id, 'comments_form_top', 'Comments Form Top', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Show the comment form on top of comments."}' ],
+			[ $config->id, 'comments_auto', 'Comments Auto', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Auto approve a comment in case existing approved comment exist for user or email."}' ],
+			[ $config->id, 'comments_filter','Comments Filter', FormField::TYPE_TEXTAREA, false, true, true, NULL, 0, NULL, '{"title":"Comments filter having comma seperated words to trash in case words match.","placeholder":"Comments filter"}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -519,13 +519,13 @@ class m160621_014408_core_data extends Migration {
 
 		$config	= Form::findBySlugType( 'config-backend', CoreGlobal::TYPE_SYSTEM );
 
-		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
+		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
-			[ $config->id, 'cmg_powered', 'CMG Powered', FormField::TYPE_TOGGLE, false, 'required', 0, NULL, '{"title":"Show Powered by CMSGears on login screen."}' ],
-			[ $config->id, 'default_avatar', 'Default Avatar', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default avatar for site elements."}' ],
-			[ $config->id, 'user_avatar', 'User Avatar', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default avatar for user."}' ],
-			[ $config->id, 'default_banner', 'Default Banner', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default banner for site elements."}' ],
+			[ $config->id, 'cmg_powered', 'CMG Powered', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Show Powered by CMSGears on login screen."}' ],
+			[ $config->id, 'default_avatar', 'Default Avatar', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Default avatar for site elements."}' ],
+			[ $config->id, 'user_avatar', 'User Avatar', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Default avatar for user."}' ],
+			[ $config->id, 'default_banner', 'Default Banner', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Default banner for site elements."}' ],
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -549,13 +549,13 @@ class m160621_014408_core_data extends Migration {
 
 		$config	= Form::findBySlugType( 'config-frontend', CoreGlobal::TYPE_SYSTEM );
 
-		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions' ];
+		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
-			[ $config->id, 'default_avatar', 'Default Avatar', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default avatar for site elements."}' ],
-			[ $config->id, 'user_avatar', 'User Avatar', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default avatar for user."}' ],
-			[ $config->id, 'default_banner', 'Default Banner', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Default banner for site elements."}' ],
-			[ $config->id, 'fonts', 'Fonts', FormField::TYPE_TEXT, false, 'required', 0, NULL, '{"title":"Fonts available for content editors."}' ]
+			[ $config->id, 'default_avatar', 'Default Avatar', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Default avatar for site elements."}' ],
+			[ $config->id, 'user_avatar', 'User Avatar', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Default avatar for user."}' ],
+			[ $config->id, 'default_banner', 'Default Banner', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Default banner for site elements."}' ],
+			[ $config->id, 'fonts', 'Fonts', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Fonts available for content editors."}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );

@@ -713,6 +713,7 @@ class m160620_095703_core extends Migration {
 			'type' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'compress' => $this->boolean()->notNull()->defaultValue( false ),
+			'meta' => $this->boolean()->defaultValue( true ),
 			'active' => $this->boolean()->notNull()->defaultValue( true ),
 			'validators' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( false ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),

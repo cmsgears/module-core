@@ -143,6 +143,8 @@ interface IActiveRecordService {
 
 	public function deleteMultiple( $models, $config = [] );
 
+	public function deleteById( $id, $config = [] );
+
 	// Bulk ---------------
 
 	public function applyBulkByTargetId( $column, $action, $target, $config = [] );

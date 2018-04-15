@@ -37,7 +37,7 @@ trait DataTrait {
 
 	public function getDataMeta( $model, $key, $assoc = false ) {
 
-		$object	= $model->generateObjectFromJson( $assoc );
+		$object	= $model->generateDataObjectFromJson( $assoc );
 		$meta	= new Meta();
 
 		if( isset( $object->$name ) ) {

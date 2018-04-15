@@ -513,6 +513,13 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		}
 	}
 
+	public function deleteById( $id, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::deleteById( $id );
+	}
+
 	// Bulk ---------------
 
 	/**

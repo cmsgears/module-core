@@ -280,9 +280,16 @@ class ObjectDataService extends EntityService implements IObjectService {
 
 		// Result -----------
 
-		$config[ 'conditions' ][ "$modelTable.type" ] = static::$parentType;
-
 		return parent::getPage( $config );
+	}
+
+	public function getPageByType( $type, $config = [] ) {
+
+		$modelTable = $this->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+
+		return $this->getPage( $config );
 	}
 
 	// Read ---------------
@@ -336,13 +343,15 @@ class ObjectDataService extends EntityService implements IObjectService {
 
 	public function create( $model, $config = [] ) {
 
+		$modelClass	= static::$modelClass;
+
 		$avatar	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
 		$banner	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$video 	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 
 		if( !isset( $model->visibility ) ) {
 
-			$model->visibility = Page::VISIBILITY_PRIVATE;
+			$model->visibility = $modelClass::VISIBILITY_PRIVATE;
 		}
 
 		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
@@ -358,8 +367,8 @@ class ObjectDataService extends EntityService implements IObjectService {
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
 			'templateId', 'avatarId', 'bannerId', 'videoId',
-			'name', 'title', 'icon', 'description',
-			'htmlOptions', 'content', 'data'
+			'name', 'title', 'icon', 'description', 'visibility',
+			'htmlOptions', 'content'
 		];
 
 		$avatar	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;

@@ -366,6 +366,11 @@ class GalleryService extends ResourceService implements IGalleryService {
 
 	public function delete( $model, $config = [] ) {
 
+		if( empty( $model ) ) {
+
+			return false;
+		}
+
 		// Delete Items
 		$this->fileService->deleteFiles( $model->files );
 

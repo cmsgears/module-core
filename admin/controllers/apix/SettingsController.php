@@ -77,7 +77,7 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 
 	public function actionIndex( $type ) {
 
-		$settings		= $this->modelService->getMetaMapBySlugType( Yii::$app->core->getSiteSlug(), $type );
+		$settings		= $this->modelService->getMetaMapByMetaType( Yii::$app->core->site, $type );
 		$fieldsMap		= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
 		$model			= new GenericForm( [ 'fields' => $fieldsMap ] );
 

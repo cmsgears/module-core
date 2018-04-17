@@ -127,7 +127,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 			$role		= $user->role;
 			$storedLink	= Url::previous( CoreGlobal::REDIRECT_LOGIN );
 
-			$siteMember = $this->siteMemberService->findBySiteIdUserId(  $siteId, $user->id );
+			$siteMember = $this->siteMemberService->getBySiteIdUserId(  $siteId, $user->id );
 
 			if( !isset( $siteMember ) ) {
 

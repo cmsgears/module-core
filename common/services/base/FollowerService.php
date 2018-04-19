@@ -8,9 +8,10 @@
  */
 
 namespace cmsgears\core\common\services\base;
-
+use Yii;
 // CMG Imports
 use cmsgears\core\common\models\interfaces\base\IFollower;
+use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\base\IFollowerService;
 
@@ -73,14 +74,14 @@ abstract class FollowerService extends MapperService implements IFollowerService
 
     public function getFollowersIdList( $modelId ) {
 
-        return self::findList( [  'column' => 'followerId', 'conditions' => [ 'type' => IFollower::TYPE_FOLLOW, 'active' => true, 'modelId' => $modelId ] ] );
+        return self::findList( [  'column' => 'userId', 'conditions' => [ 'type' => IFollower::TYPE_FOLLOW, 'active' => true, 'modelId' => $modelId ] ] );
     }
 
     public function getFollowingIdList() {
 
 		$user = Yii::$app->user->identity;
 
-        return self::findList( [  'column' => 'modelId', 'conditions' => [ 'type' => IFollower::TYPE_FOLLOW, 'active' => true, 'followerId' => $user->id ] ] );
+        return self::findList( [  'column' => 'modelId', 'conditions' => [ 'type' => IFollower::TYPE_FOLLOW, 'active' => true, 'userId' => $user->id ] ] );
     }
 
 	// Read - Maps -----
@@ -152,7 +153,7 @@ abstract class FollowerService extends MapperService implements IFollowerService
 		$modelClass = static::$modelClass;
 		$user		= Yii::$app->user->identity;
 
-		//$userId		= $params[ 'followerId' ];
+		$userId		= $params[ 'userId' ];
 		$modelId	= $params[ 'modelId' ];
 		$type		= $params[ 'type' ];
 
@@ -184,11 +185,11 @@ abstract class FollowerService extends MapperService implements IFollowerService
 
 	// Delete -------------
 
-	public function deleteByFollowerId( $followerId ) {
+	public function deleteByFollowerId( $userId ) {
 
 		$modelClass = static::$modelClass;
 
-		return $modelClass::deleteByFollowerId( $followerId );
+		return $modelClass::deleteByFollowerId( $userId );
 	}
 
 	public function deleteByModelId( $modelId ) {
@@ -231,3 +232,4 @@ abstract class FollowerService extends MapperService implements IFollowerService
 	// Delete -------------
 
 }
+

@@ -124,7 +124,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 			if( isset( $user ) ) {
 
 				// Add User to current Site
-				$this->siteMemberService->create( $user );
+				$this->siteMemberService->createByParams( [ 'userId' => $user->id ] );
 
 				// Send Register Mail
 				Yii::$app->coreMailer->sendRegisterMail( $user );

@@ -92,7 +92,7 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 
 	public function actionUpdate( $type ) {
 
-		$settings		= $this->modelService->getMetaMapBySlugType( Yii::$app->core->getSiteSlug(), $type );
+		$settings		= $this->modelService->getMetaMapByMetaType( Yii::$app->core->site, $type );
 
 		if( count( $settings )  > 0 ) {
 		

@@ -112,7 +112,7 @@ abstract class PageWidget extends Widget {
 	/*
 	 * Useful in case limited text is displayed for a model irrespective of total length. It will be useful in maintaining same height for all the models.
 	 */
-	public $textLimit		= CoreGlobal::DISPLAY_TEXT_SMALL;
+	public $textLimit		= CoreGlobal::TEXT_SMALL;
 
 	// Filter Models	- multisite environment
 

@@ -6,6 +6,7 @@ use cmsgears\widgets\grid\DataGrid;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= 'Form Fields | ' . $coreProperties->getSiteTitle();
+$apixBase		= $this->context->apixBase;
 
 // View Templates
 $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
@@ -13,7 +14,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => "create?fid=$formId", 'data' => [ ],
-	'title' => 'Blocks', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
+	'title' => 'Form Fields', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title' ],
 	'sortColumns' => [
 		'name' => 'Name', 'label' => 'Label',
@@ -51,19 +52,19 @@ $themeTemplates		= '@themes/admin/views/templates';
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
 	'templateDir' => "$themeTemplates/widget/grid",
-	//'dataView' => "$moduleTemplates/grid/data/gallery",
-	//'cardView' => "$moduleTemplates/grid/cards/gallery",
-	//'actionView' => "$moduleTemplates/grid/actions/Block"
+	//'dataView' => "$moduleTemplates/grid/data/field",
+	//'cardView' => "$moduleTemplates/grid/cards/field",
+	//'actionView' => "$moduleTemplates/grid/actions/field"
 ]) ?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
-	'data' => [ 'model' => 'Form Field', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "core/field/bulk" ]
+	'data' => [ 'model' => 'Form Field', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
 ]) ?>
 
 <?= Popup::widget([
 	'title' => 'Delete Form Field', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
-	'data' => [ 'model' => 'Form Field', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "core/field/delete?id=" ]
+	'data' => [ 'model' => 'Form Field', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
 ]) ?>

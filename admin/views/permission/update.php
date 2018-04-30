@@ -46,7 +46,7 @@ $returnUrl		= $this->context->returnUrl;
 		<div class="filler-height filler-height-medium"></div>
 		<div class="box box-crud group-permission">
 			<div class="box-header">
-				<div class="box-header-title">Group Permissions</div>
+				<div class="box-header-title">Group <?= ucfirst( $type ) ?> Permissions</div>
 			</div>
 			<div class="box-content">
 				<div class="box-content">
@@ -77,45 +77,79 @@ $returnUrl		= $this->context->returnUrl;
 				</div>
 			</div>
 		</div>
-		<div class="filler-height filler-height-medium"></div>
-		<?php if( count( $roles ) > 0 ) { ?>
-		<div class="box box-crud">
-			<div class="box-header">
-				<div class="box-header-title">Assign Roles</div>
-			</div>
-			<div class="box-content">
+		<?php if( count( $spermissions ) > 0 ) { ?>
+			<div class="filler-height filler-height-medium"></div>
+			<div class="box box-crud group-permission">
+				<div class="box-header">
+					<div class="box-header-title">Group System Permissions</div>
+				</div>
 				<div class="box-content">
-					<div class="row padding padding-small-v">
-					<?php
-						$modelRoles	= $model->getRolesIdList();
+					<div class="box-content">
+						<div class="row padding padding-small-v">
+						<?php
+							$children = $model->getChildrenIdList();
 
-						foreach ( $roles as $role ) {
-					?>
-							<div class="col col4">
-					<?php
-							if( in_array( $role[ 'id' ], $modelRoles ) ) {
-					?>
-								<input type="checkbox" name="Binder[binded][]" value="<?= $role[ 'id' ] ?>" checked /><?= $role[ 'name' ] ?>
-					<?php
+							foreach( $spermissions as $permission ) {
+						?>
+								<div class="col col4">
+						<?php
+								if( in_array( $permission[ 'id' ], $children ) ) {
+						?>
+									<input type="checkbox" name="Children[binded][]" value="<?= $permission[ 'id' ] ?>" checked /><?= $permission[ 'name' ] ?>
+						<?php
+								}
+								else {
+						?>
+									<input type="checkbox" name="Children[binded][]" value="<?= $permission[ 'id' ] ?>" /><?= $permission[ 'name' ] ?>
+						<?php
+								}
+						?>
+								</div>
+						<?php
 							}
-							else {
-					?>
-								<input type="checkbox" name="Binder[binded][]" value="<?= $role[ 'id' ] ?>" /><?= $role[ 'name' ] ?>
-					<?php
-							}
-					?>
-							</div>
-					<?php
-						}
-					?>
+						?>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 		<?php } ?>
+		<?php if( count( $roles ) > 0 ) { ?>
+			<div class="filler-height filler-height-medium"></div>
+			<div class="box box-crud">
+				<div class="box-header">
+					<div class="box-header-title">Assign Roles</div>
+				</div>
+				<div class="box-content">
+					<div class="box-content">
+						<div class="row padding padding-small-v">
+						<?php
+							$modelRoles	= $model->getRolesIdList();
 
+							foreach( $roles as $role ) {
+						?>
+								<div class="col col4">
+						<?php
+								if( in_array( $role[ 'id' ], $modelRoles ) ) {
+						?>
+									<input type="checkbox" name="Binder[binded][]" value="<?= $role[ 'id' ] ?>" checked /><?= $role[ 'name' ] ?>
+						<?php
+								}
+								else {
+						?>
+									<input type="checkbox" name="Binder[binded][]" value="<?= $role[ 'id' ] ?>" /><?= $role[ 'name' ] ?>
+						<?php
+								}
+						?>
+								</div>
+						<?php
+							}
+						?>
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php } ?>
 		<div class="filler-height filler-height-medium"></div>
-
 		<div class="align align-right">
 			<?= Html::a( 'View All', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
 			<input class="element-medium" type="submit" value="Update" />

@@ -17,12 +17,15 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\models\interfaces\base\IFeatured;
 use cmsgears\core\common\models\interfaces\base\IFollower;
+use cmsgears\core\common\models\interfaces\resources\IData;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\entities\User;
 
 use cmsgears\core\common\models\traits\base\FeaturedTrait;
+use cmsgears\core\common\models\traits\base\FollowerTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
  * The model follower records user following a model based on interest.
@@ -38,8 +41,9 @@ use cmsgears\core\common\models\traits\base\FeaturedTrait;
  * @property boolean $featured
  * @property int $createdAt
  * @property int $modifiedAt
+ * @property string $data
  */
-class ModelFollower extends ModelMapper implements IFeatured, IFollower {
+class ModelFollower extends ModelMapper implements IData, IFeatured, IFollower {
 
 	// Variables ---------------------------------------------------
 
@@ -61,7 +65,9 @@ class ModelFollower extends ModelMapper implements IFeatured, IFollower {
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
 	use FeaturedTrait;
+	use FollowerTrait;
 
 	// Constructor and Initialisation ------------------------------
 

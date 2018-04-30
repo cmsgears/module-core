@@ -44,8 +44,9 @@ class TemplateController extends BaseTemplateController {
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_GALLERY_ADMIN;
 
-		// Type
-		$this->type = CoreGlobal::TYPE_GALLERY;
+		// Config
+		$this->type		= CoreGlobal::TYPE_GALLERY;
+		$this->apixBase = 'core/template';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-gallery', 'child' => 'template' ];

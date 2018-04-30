@@ -41,8 +41,9 @@ class GalleryController extends BaseGalleryController {
 
 		parent::init();
 
-		// Type
-		$this->type = CoreGlobal::TYPE_SITE;
+		// Config
+		$this->type		= CoreGlobal::TYPE_SITE;
+		$this->apixBase	= 'core/gallery';
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-gallery', 'child' => 'gallery' ];

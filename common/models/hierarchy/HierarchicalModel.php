@@ -85,7 +85,7 @@ abstract class HierarchicalModel extends ActiveRecord {
 	abstract public function getParent();
 
 	/**
-	 * Check whether the model has parent.
+	 * Check whether the model has valid parent.
 	 *
 	 * @return boolean
 	 */

@@ -83,6 +83,11 @@ interface IApproval {
 	const STATUS_TERMINATED		= 20000;
 
 	/**
+	 * Soft delete
+	 */
+	const STATUS_DELETED		= 25000;
+
+	/**
 	 * Check whether model is in new state.
 	 *
 	 * @param boolean $strict
@@ -188,6 +193,14 @@ interface IApproval {
 	 * @return boolean
 	 */
 	public function isTerminated( $strict = true );
+
+	/**
+	 * Check whether model is soft deleted and ready for garbage collection.
+	 *
+	 * @param boolean $strict
+	 * @return boolean
+	 */
+	public function isDeleted( $strict = true );
 
 	/**
 	 * Toggle between active and frozen states.

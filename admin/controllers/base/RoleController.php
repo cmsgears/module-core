@@ -34,6 +34,7 @@ abstract class RoleController extends CrudController {
 	// Protected --------------
 
 	protected $type;
+	protected $system;
 
 	protected $permissionService;
 
@@ -107,11 +108,14 @@ abstract class RoleController extends CrudController {
 			return $this->redirect( 'all' );
 		}
 
-		$permissions = $this->permissionService->getIdNameListByType( $this->type );
+		$permissions	= $this->permissionService->getIdNameListByType( $this->type );
+		$spermissions	= $this->system ? $this->permissionService->getIdNameListByType( CoreGlobal::TYPE_SYSTEM ) : [];
 
 		return $this->render( 'create', [
 			'model' => $model,
-			'permissions' => $permissions
+			'type' => $this->type,
+			'permissions' => $permissions,
+			'spermissions' => $spermissions
 		]);
 	}
 
@@ -135,14 +139,17 @@ abstract class RoleController extends CrudController {
 
 				$this->modelService->bindPermissions( $binder );
 
-				return $this->refresh();
+				return $this->redirect( $this->returnUrl );
 			}
 
-			$permissions = $this->permissionService->getIdNameListByType( $this->type );
+			$permissions	= $this->permissionService->getIdNameListByType( $this->type );
+			$spermissions	= $this->system ? $this->permissionService->getIdNameListByType( CoreGlobal::TYPE_SYSTEM ) : [];
 
 			return $this->render( 'update', [
 				'model' => $model,
-				'permissions' => $permissions
+				'type' => $this->type,
+				'permissions' => $permissions,
+				'spermissions' => $spermissions
 			]);
 		}
 
@@ -165,11 +172,14 @@ abstract class RoleController extends CrudController {
 				return $this->redirect( $this->returnUrl );
 			}
 
-			$permissions = $this->permissionService->getIdNameListByType( $this->type );
+			$permissions	= $this->permissionService->getIdNameListByType( $this->type );
+			$spermissions	= $this->system ? $this->permissionService->getIdNameListByType( CoreGlobal::TYPE_SYSTEM ) : [];
 
 			return $this->render( 'delete', [
 				'model' => $model,
-				'permissions' => $permissions
+				'type' => $this->type,
+				'permissions' => $permissions,
+				'spermissions' => $spermissions
 			]);
 		}
 

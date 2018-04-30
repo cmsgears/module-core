@@ -185,7 +185,6 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	public function getByIds( $ids = [], $config = [] ) {
 
-		// Model Class and Table
 		$modelClass	= static::$modelClass;
 		$modelTable = $modelClass::tableName();
 
@@ -464,14 +463,12 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	public function createOrUpdate( $model, $config = [] ) {
 
-		$existing = isset( $model->id ) ? $model : null;
+		if( empty( $model->id ) ) {
 
-		if( isset( $existing ) ) {
-
-			return $this->update( $existing, $config );
+			return $this->create( $model, $config );
 		}
 
-		return $this->create( $model, $config );
+		return $this->update( $model, $config );
 	}
 
 	public function linkModel( $model, $column, $link ) {
@@ -492,6 +489,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	public function delete( $model, $config = [] ) {
 
+		$hard	= $config[ 'hard' ] ?? true;
+		$notify = $config[ 'notify' ] ?? true;
+
 		if( isset( $model ) ) {
 
 			if( Yii::$app->core->isUpdateSelective() ) {
@@ -499,7 +499,12 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 				$model = $this->getById( $model->id );
 			}
 
-			return $model->delete();
+			if( $hard ) {
+
+				return $model->delete();
+			}
+
+			return $this->softDelete( $model, $notify, $config );
 		}
 
 		return false;
@@ -576,6 +581,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$templateConfig[ 'parentId' ]	= $model->id;
 		$templateConfig[ 'parentType' ]	= self::$parentType;
 		$templateConfig[ 'title' ]      = $config[ 'title' ] ?? $model->name ?? null;
+		$templateConfig[ 'users' ]      = $config[ 'users' ] ?? [];
 
 		return Yii::$app->eventManager->triggerNotification( $config[ 'template' ], $templateData, $templateConfig );
 	}
@@ -592,7 +598,6 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	protected static function applyPublicFilters( $config ) {
 
-		// Model Class and Table
 		$modelClass	= static::$modelClass;
 		$modelTable = $modelClass::tableName();
 
@@ -621,7 +626,6 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	protected static function applySiteFilters( $config ) {
 
-		// Model Class and Table
 		$modelClass	= static::$modelClass;
 		$modelTable = $modelClass::tableName();
 
@@ -660,8 +664,8 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public static function findDataProvider( $config = [] ) {
 
-		// model class
-		$modelClass		= static::$modelClass;
+		$modelClass	= static::$modelClass;
+		$modelTable = $modelClass::tableName();
 
 		// query generation
 		$query			= $config[ 'query' ] ?? $modelClass::find();
@@ -701,6 +705,15 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 			}
 
 			$query->andWhere( $conditions );
+		}
+
+		$interfaces = class_implements( static::class );
+
+		if( isset( $interfaces[ 'cmsgears\core\common\services\interfaces\base\IApproval' ] ) ) {
+
+			$softDelete = $modelClass::STATUS_DELETED;
+
+			$query->andWhere( "$modelTable.status!=$softDelete" );
 		}
 
 		// Random -------------
@@ -873,7 +886,6 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public static function findPage( $config = [] ) {
 
-		// Model Class and Table
 		$modelClass	= static::$modelClass;
 		$modelTable = $modelClass::tableName();
 
@@ -930,7 +942,6 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public static function findPageForSearch( $config = [] ) {
 
-		// Model Class and Table
 		$modelClass	= static::$modelClass;
 		$modelTable = $modelClass::tableName();
 
@@ -1042,13 +1053,12 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public static function searchModels( $config = [] ) {
 
-		// model class
-		$modelClass		= static::$modelClass;
+		$modelClass	= static::$modelClass;
+		$modelTable = $modelClass::tableName();
 
 		// Filters
-		$config			= static::applyPublicFilters( $config );
-
-		$config			= static::applySiteFilters( $config );
+		$config	= static::applyPublicFilters( $config );
+		$config	= static::applySiteFilters( $config );
 
 		// query generation
 		$query			= $config[ 'query' ] ?? $modelClass::find();
@@ -1087,6 +1097,15 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 			}
 
 			$query->andWhere( $conditions );
+		}
+
+		$interfaces = class_implements( static::class );
+
+		if( isset( $interfaces[ 'cmsgears\core\common\services\interfaces\base\IApproval' ] ) ) {
+
+			$softDelete = $modelClass::STATUS_DELETED;
+
+			$query->andWhere( "$modelTable.status!=$softDelete" );
 		}
 
 		// Filters -------------
@@ -1181,7 +1200,6 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public static function generateList( $config = [] ) {
 
-		// Model Class and Table
 		$modelClass	= static::$modelClass;
 		$modelTable = $modelClass::tableName();
 
@@ -1211,6 +1229,15 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 			}
 
 			$query->andWhere( $conditions );
+		}
+
+		$interfaces = class_implements( static::class );
+
+		if( isset( $interfaces[ 'cmsgears\core\common\services\interfaces\base\IApproval' ] ) ) {
+
+			$softDelete = $modelClass::STATUS_DELETED;
+
+			$query->andWhere( "$modelTable.status!=$softDelete" );
 		}
 
 		// Filters -------------
@@ -1259,7 +1286,6 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public static function generateNameValueList( $config = [] ) {
 
-		// Model Class and Table
 		$modelClass	= static::$modelClass;
 		$modelTable = $modelClass::tableName();
 
@@ -1301,6 +1327,15 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 			}
 
 			$query->andWhere( $conditions );
+		}
+
+		$interfaces = class_implements( static::class );
+
+		if( isset( $interfaces[ 'cmsgears\core\common\services\interfaces\base\IApproval' ] ) ) {
+
+			$softDelete = $modelClass::STATUS_DELETED;
+
+			$query->andWhere( "$modelTable.status!=$softDelete" );
 		}
 
 		// Filters -------------
@@ -1397,15 +1432,18 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public static function generateObjectMap( $config = [] ) {
 
+		$modelClass	= static::$modelClass;
+		$modelTable = $modelClass::tableName();
+
 		// map columns
-		$key			= $config[ 'key' ] ?? 'id';
-		$value			= static::$modelClass;
+		$key	= $config[ 'key' ] ?? 'id';
+		$value	= static::$modelClass;
 
 		// query generation
-		$query			= $config[ 'query' ] ?? $value::find();
-		$limit			= $config[ 'limit' ] ?? self::PAGE_LIMIT;
-		$conditions		= $config[ 'conditions' ] ?? null;
-		$filters		= $config[ 'filters' ] ?? null;
+		$query		= $config[ 'query' ] ?? $value::find();
+		$limit		= $config[ 'limit' ] ?? self::PAGE_LIMIT;
+		$conditions	= $config[ 'conditions' ] ?? null;
+		$filters	= $config[ 'filters' ] ?? null;
 
 		// Conditions ----------
 
@@ -1424,6 +1462,15 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 			$query->andWhere( $conditions );
 		}
 
+		$interfaces = class_implements( static::class );
+
+		if( isset( $interfaces[ 'cmsgears\core\common\services\interfaces\base\IApproval' ] ) ) {
+
+			$softDelete = $modelClass::STATUS_DELETED;
+
+			$query->andWhere( "$modelTable.status!=$softDelete" );
+		}
+
 		// Filters -------------
 
 		if( isset( $filters ) ) {
@@ -1436,7 +1483,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		// Quering -------------
 
-		$objects	= $query->all();
+		$objects = $query->all();
 
 		// Result --------------
 
@@ -1453,7 +1500,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	// Read - Others ---
 
 	/**
-	 * It generate search query for specified columns by parsing the comma seperated search terms
+	 * It generate search query for specified columns by parsing the comma separated search terms
 	 */
 	public static function generateSearchQuery( $columns, $searchTerms ) {
 

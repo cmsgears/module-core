@@ -7,10 +7,12 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\services\interfaces\base;
+namespace cmsgears\core\common\services\interfaces\mappers;
 
 // CMG Imports
 use cmsgears\core\common\models\interfaces\base\IFollower;
+
+use cmsgears\core\common\services\interfaces\base\IMapperService;
 
 /**
  * The base follower service interface declares the methods available with all the follower services.
@@ -25,11 +27,11 @@ interface IFollowerService extends IMapperService {
 
 	// Read - Models ---
 
-	public static function getByFollower( $modelId, $type = IFollower::TYPE_FOLLOW );
+	public static function getByFollower( $parentId, $type = IFollower::TYPE_FOLLOW );
 
 	// Read - Lists ----
 
-    public function getFollowersIdList( $modelId );
+    public function getFollowersIdList( $parentId );
 
     public function getFollowingIdList();
 
@@ -39,9 +41,9 @@ interface IFollowerService extends IMapperService {
 
 	public function getFollowCount( $type = IFollower::TYPE_FOLLOW );
 
-	public function getFollowersCount( $modelId, $type = IFollower::TYPE_FOLLOW );
+	public function getFollowersCount( $parentId, $type = IFollower::TYPE_FOLLOW );
 
-	public function getStatusCounts( $modelId, $type = IFollower::TYPE_FOLLOW );
+	public function getStatusCounts( $parentId, $type = IFollower::TYPE_FOLLOW );
 
 	// Create -------------
 
@@ -51,9 +53,9 @@ interface IFollowerService extends IMapperService {
 
 	// Delete -------------
 
-	public function deleteByFollowerId( $followerId );
-
 	public function deleteByModelId( $modelId );
+
+	public function deleteByParentId( $parentId );
 
 	// Bulk ---------------
 

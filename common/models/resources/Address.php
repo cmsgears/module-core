@@ -114,10 +114,8 @@ class Address extends Resource {
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'countryId', 'provinceId', 'line1', 'cityName', 'zip' ], 'required' ],
-			[ 'cityId', 'required', 'on' => 'city' ],
+			[ [ 'countryId', 'provinceId', 'cityName', 'line1', 'zip' ], 'required' ],
 			[ [ 'latitude', 'longitude' ], 'required', 'on' => 'location' ],
-			[ [ 'latitude', 'longitude', 'cityId' ], 'required', 'on' => 'locationWithCity' ],
 			[ [ 'id' ], 'safe' ],
 			// Text Limit
 			[ [ 'zip', 'subZip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
@@ -155,6 +153,8 @@ class Address extends Resource {
 			'line1' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE1 ),
 			'line2' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE2 ),
 			'line3' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE3 ),
+			'countryName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
+			'provinceName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PROVINCE ),
 			'cityName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CITY ),
 			'zip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP ),
 			'subZip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP_SUB ),

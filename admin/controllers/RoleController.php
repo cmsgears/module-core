@@ -39,6 +39,9 @@ class RoleController extends BaseRoleController {
 
 		parent::init();
 
+		// Config
+		$this->apixBase	= 'core/role';
+
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-identity', 'child' => 'role' ];
 

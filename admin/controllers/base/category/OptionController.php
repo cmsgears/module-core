@@ -71,7 +71,7 @@ class OptionController extends Controller {
 
 	public function actionAll( $cid ) {
 
-		$dataProvider	= $this->modelService->getPage( [ 'conditions' => [ 'categoryId' => $cid ]] );
+		$dataProvider	= $this->modelService->getPage( [ 'conditions' => [ 'categoryId' => $cid ] ] );
 		$category		= $this->categoryService->getById( $cid );
 
 		return $this->render( 'all', [

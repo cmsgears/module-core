@@ -53,7 +53,10 @@ class CityService extends EntityService implements ICityService {
 
 	// Traits ------------------------------------------------------
 
-	use NameTrait;
+	use NameTrait {
+
+		searchByName as baseSearchByName;
+	}
 
 	// Constructor and Initialisation ------------------------------
 
@@ -240,6 +243,16 @@ class CityService extends EntityService implements ICityService {
 	}
 
 	// Read - Lists ----
+
+	public function searchByName( $name, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'columns' ] = [ "$modelTable.id", "$modelTable.name", "$modelTable.latitude", "$modelTable.longitude", "$modelTable.postal" ];
+
+		return $this->baseSearchByName( $name, $config );
+	}
 
 	// Read - Maps -----
 

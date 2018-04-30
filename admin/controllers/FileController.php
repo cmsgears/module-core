@@ -46,6 +46,9 @@ class FileController extends CrudController {
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_CORE;
 
+		// Config
+		$this->apixBase	= 'core/file';
+
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'fileService' );
 

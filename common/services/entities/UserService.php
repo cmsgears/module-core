@@ -368,7 +368,7 @@ class UserService extends EntityService implements IUserService {
 		$modelTable	= $this->getModelTable();
 
 		$config[ 'query' ]		= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name" ];
+		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.email" ];
 		$config[ 'array' ]		= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
 
 		$config[ 'query' ]->andWhere( "$modelTable.name LIKE :name", [ ':name' => "$name%" ] );
@@ -418,8 +418,8 @@ class UserService extends EntityService implements IUserService {
 	public function create( $model, $config = [] ) {
 
 		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
-		$banner = isset( $config[ 'avatar' ] ) ? $config[ 'banner' ] : null;
-		$video	= isset( $config[ 'avatar' ] ) ? $config[ 'video' ] : null;
+		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 
 		// Set Attributes
 		$model->registeredAt = DateUtil::getDateTime();
@@ -488,8 +488,8 @@ class UserService extends EntityService implements IUserService {
 		];
 
 		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
-		$banner = isset( $config[ 'avatar' ] ) ? $config[ 'banner' ] : null;
-		$video	= isset( $config[ 'avatar' ] ) ? $config[ 'video' ] : null;
+		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 
 		// Save Files
 		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );

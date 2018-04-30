@@ -23,8 +23,10 @@ use cmsgears\core\common\models\entities\Site;
  * @property string $name
  * @property string $label
  * @property string $type
+ * @property boolean $active
  * @property string $valueType
  * @property string $value
+ * @property string $data
  *
  * @since 1.0.0
  */

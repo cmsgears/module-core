@@ -44,6 +44,9 @@ class ProvinceController extends Controller {
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_CORE;
 
+		// Config
+		$this->apixBase = 'core/country/province';
+
 		// Service
 		$this->modelService = Yii::$app->factory->get( 'provinceService' );
 

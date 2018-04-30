@@ -27,13 +27,16 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 		parent::init();
 
 		// Permissions
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->crudPermission = CoreGlobal::PERM_CORE;
+
+		// Config
+		$this->apixBase	= 'core/settings';
 
 		// Sidebar
-		$this->sidebar			= [ 'parent' => 'sidebar-settings', 'child' => 'settings' ];
+		$this->sidebar = [ 'parent' => 'sidebar-settings', 'child' => 'settings' ];
 
 		// Breadcrumbs
-		$this->breadcrumbs		= [
+		$this->breadcrumbs = [
 			'index' => [ [ 'label' => 'Settings' ] ]
 		];
 	}

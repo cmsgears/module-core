@@ -9,6 +9,9 @@
 
 namespace cmsgears\core\common\services\resources;
 
+// Yii Imports
+use Yii;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
@@ -102,7 +105,7 @@ class AddressService extends ResourceService implements IAddressService {
 	public function delete( $model, $config = [] ) {
 
 		// Delete mapping
-		Yii::$app->get( 'modelAddressService' )->deleteByModelId( $model->id );
+		Yii::$app->factory->get( 'modelAddressService' )->deleteByModelId( $model->id );
 
 		// Delete model
 		return parent::delete( $model, $config );

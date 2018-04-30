@@ -54,8 +54,11 @@ trait FollowerTrait {
 	 */
 	public function getFollowers() {
 
+		$followerClass = $this->followerClass;
+		$followerTable = $followerClass::tableName();
+
 		return $this->hasMany( User::class, [ 'id' => 'followerId' ] )
-			->viaTable( $this->followerTable, [ 'modelId' => 'id' ] );
+			->viaTable( $followerTable, [ 'modelId' => 'id' ] );
 	}
 
 	/**
@@ -63,10 +66,12 @@ trait FollowerTrait {
 	 */
 	public function getActiveFollowers() {
 
+		$followerClass = $this->followerClass;
+		$followerTable = $followerClass::tableName();
+
 		return $this->hasMany( User::class, [ 'id' => 'followerId' ] )
-			->viaTable( $this->followerTable, [ 'modelId' => 'id' ],
-				function( $query ) {
-					$followerTable = $this->followerTable;
+			->viaTable( $followerTable, [ 'modelId' => 'id' ],
+				function( $query ) use( $followerTable ) {
 					$query->onCondition( [ "$followerTable.active" => true ] );
 				}
 			);
@@ -77,10 +82,12 @@ trait FollowerTrait {
 	 */
 	public function getFollowersByType( $type, $active = true ) {
 
+		$followerClass = $this->followerClass;
+		$followerTable = $followerClass::tableName();
+
 		$users = $this->hasMany( User::class, [ 'id' => 'followerId' ] )
-			->viaTable( $this->followerTable, [ 'modelId' => 'id' ],
-				function( $query ) use( &$type, &$active ) {
-					$followerTable = $this->followerTable;
+			->viaTable( $followerTable, [ 'modelId' => 'id' ],
+				function( $query ) use( $followerTable, $type, $active ) {
 					$query->onCondition( [ "$followerTable.type" => $type, "$followerTable.active" => $active ] );
 				}
 			)->all();
@@ -89,11 +96,26 @@ trait FollowerTrait {
 	}
 
 	/**
+	 * Returns follower models.
+	 *
+	 * @return \cmsgears\core\common\models\base\Meta[]
+	 */
+	public function getModelFollowers() {
+
+		$followerClass = $this->followerClass;
+
+		return $this->hasMany( $followerClass, [ 'parentId' => 'id' ] );
+	}
+
+	/**
 	 * Generate and return the follow counts.
 	 *
 	 * @return array
 	 */
 	protected function generateFollowCounts() {
+
+		$followerClass = $this->followerClass;
+		$followerTable = $followerClass::tableName();
 
 		$returnArr = [
 			IFollower::TYPE_LIKE => [ 0 => 0, 1 => 0 ],
@@ -105,7 +127,7 @@ trait FollowerTrait {
 		$query = new Query();
 
     	$query->select( [ 'type', 'active', 'count(id) as total' ] )
-				->from( $this->followerTable )
+				->from( $followerTable )
 				->where( [ 'modelId' => $this->id, 'active' => true ] )
 				->groupBy( [ 'type', 'active' ] );
 
@@ -180,6 +202,9 @@ trait FollowerTrait {
 	 */
 	protected function generateUserFollows() {
 
+		$followerClass = $this->followerClass;
+		$followerTable = $followerClass::tableName();
+
 		$user		= Yii::$app->user->identity;
 		$returnArr	= [ IFollower::TYPE_LIKE => false, IFollower::TYPE_DISLIKE => false, IFollower::TYPE_FOLLOW => false, IFollower::TYPE_WISHLIST => false ];
 
@@ -188,7 +213,7 @@ trait FollowerTrait {
 			$query = new Query();
 
 	    	$query->select( [ 'type', 'active' ] )
-					->from( $this->followerTable )
+					->from( $followerTable )
 					->where( [ 'parentId' => $this->id, 'parentType' => $this->modelType, 'modelId' => $user->id ] );
 
 			$follows = $query->all();
@@ -263,6 +288,19 @@ trait FollowerTrait {
 	// FollowerTrait -------------------------
 
 	// Read - Query -----------
+
+	/**
+	 * Return query to find the model with followers.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with followers.
+	 */
+	public static function queryWithFollowers( $config = [] ) {
+
+		$config[ 'relations' ][] = [ 'followers' ];
+
+		return parent::queryWithAll( $config );
+	}
 
 	// Read - Find ------------
 

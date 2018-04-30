@@ -25,7 +25,7 @@ use cmsgears\core\common\services\entities\UserService;
  * It define the post login and logout path to redirect user to a different path than the
  * default one. Though ajax based login need to specify the path within the javascript code.
  *
- * All the admin sites must set useRbac to true to get the admin functional since the admin
+ * All the admin sites must set rbac to true to get the admin functional since the admin
  * controllers use it for almost every action.
  *
  * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
@@ -108,7 +108,7 @@ class Core extends \cmsgears\core\common\base\Component {
 	 * @var The indicator whether CMG RBAC has to be used for the project. All the admin sites must set this to true. Though it's optional for
 	 * front end sites. The front end sites can use either CMG RBAC or Yii's RBAC system or no RBAC system based on project needs.
 	 */
-	public $useRbac				= true;
+	public $rbac				= true;
 
 	/**
 	 * @var The default filter class available for CMG RBAC system. A different filter can be used based on project needs.
@@ -127,7 +127,7 @@ class Core extends \cmsgears\core\common\base\Component {
 	 * mobile applications having same users. It's used by user class to load permissions when accessed
 	 * using access token.
 	 *
-	 * OAuth 2.0 can be used to provide APIS to 3rd party web and mobile applications.
+	 * OAuth 2.0 or other authorization mechanism can be used to provide APIS to 3rd party web and mobile applications.
 	 *
 	 * @var boolean
 	 */
@@ -174,6 +174,12 @@ class Core extends \cmsgears\core\common\base\Component {
 	 * @var Update selective allows services to update selected columns.
 	 */
 	public $updateSelective		= true;
+
+	/**
+	 *
+	 * @var boolean Check whether soft delete is enabled.
+	 */
+	public $softDelete			= true;
 
 	// Protected --------------
 
@@ -357,7 +363,7 @@ class Core extends \cmsgears\core\common\base\Component {
 	 */
 	public function isRbac() {
 
-		return $this->useRbac;
+		return $this->rbac;
 	}
 
 	/**
@@ -444,6 +450,11 @@ class Core extends \cmsgears\core\common\base\Component {
 	public function isUpdateSelective() {
 
 		return $this->updateSelective;
+	}
+
+	public function isSoftDelete() {
+
+		return $this->softDelete;
 	}
 
 	// Components and Objects

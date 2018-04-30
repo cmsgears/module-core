@@ -45,84 +45,116 @@ $returnUrl		= $this->context->returnUrl;
 		</div>
 		<div class="filler-height filler-height-medium"></div>
 		<?php if( $model->group ) { ?>
-		<div class="box box-crud">
-			<div class="box-header">
-				<div class="box-header-title">Grouped Permissions</div>
-			</div>
-			<div class="box-content">
+			<div class="box box-crud">
+				<div class="box-header">
+					<div class="box-header-title">Grouped <?= ucfirst( $type ) ?> Permissions</div>
+				</div>
 				<div class="box-content">
-					<div class="row padding padding-small-v">
-					<?php
-						$children	= $model->getChildrenIdList();
+					<div class="box-content">
+						<div class="row padding padding-small-v">
+						<?php
+							$children = $model->getChildrenIdList();
 
-						foreach ( $permissions as $permission ) {
-					?>
-							<div class="col col4">
-					<?php
-							if( in_array( $permission[ 'id' ], $children ) ) {
-					?>
-								<input type="checkbox" name="Children[binded][]" value="<?= $permission[ 'id' ] ?>" checked disabled /><?= $permission[ 'name' ] ?>
-					<?php
+							foreach( $permissions as $permission ) {
+						?>
+								<div class="col col4">
+						<?php
+								if( in_array( $permission[ 'id' ], $children ) ) {
+						?>
+									<input type="checkbox" name="Children[binded][]" value="<?= $permission[ 'id' ] ?>" checked disabled /><?= $permission[ 'name' ] ?>
+						<?php
+								}
+								else {
+						?>
+									<input type="checkbox" name="Children[binded][]" value="<?= $permission[ 'id' ] ?>" disabled /><?= $permission[ 'name' ] ?>
+						<?php
+								}
+						?>
+								</div>
+						<?php
 							}
-							else {
-					?>
-								<input type="checkbox" name="Children[binded][]" value="<?= $permission[ 'id' ] ?>" disabled /><?= $permission[ 'name' ] ?>
-					<?php
-							}
-					?>
-							</div>
-					<?php
-						}
-					?>
+						?>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+			<?php if( count( $spermissions ) > 0 ) { ?>
+				<div class="box box-crud">
+					<div class="box-header">
+						<div class="box-header-title">Grouped System Permissions</div>
+					</div>
+					<div class="box-content">
+						<div class="box-content">
+							<div class="row padding padding-small-v">
+							<?php
+								$children = $model->getChildrenIdList();
+
+								foreach( $spermissions as $permission ) {
+							?>
+									<div class="col col4">
+							<?php
+									if( in_array( $permission[ 'id' ], $children ) ) {
+							?>
+										<input type="checkbox" name="Children[binded][]" value="<?= $permission[ 'id' ] ?>" checked disabled /><?= $permission[ 'name' ] ?>
+							<?php
+									}
+									else {
+							?>
+										<input type="checkbox" name="Children[binded][]" value="<?= $permission[ 'id' ] ?>" disabled /><?= $permission[ 'name' ] ?>
+							<?php
+									}
+							?>
+									</div>
+							<?php
+								}
+							?>
+							</div>
+						</div>
+					</div>
+				</div>
+			<?php } ?>
 		<?php } ?>
-		<div class="filler-height filler-height-medium"></div>
 		<?php if( count( $roles ) > 0 ) { ?>
-		<div class="box box-crud">
-			<div class="box-header">
-				<div class="box-header-title">Assigned Roles</div>
-			</div>
-			<div class="box-content">
+			<div class="filler-height filler-height-medium"></div>
+			<div class="box box-crud">
+				<div class="box-header">
+					<div class="box-header-title">Assigned Roles</div>
+				</div>
 				<div class="box-content">
-					<div class="row padding padding-small-v">
-					<?php
-						$modelRoles	= $model->getRolesIdList();
+					<div class="box-content">
+						<div class="row padding padding-small-v">
+						<?php
+							$modelRoles	= $model->getRolesIdList();
 
-						foreach ( $roles as $role ) {
-					?>
-							<div class="col col4">
-					<?php
-							if( in_array( $role[ 'id' ], $modelRoles ) ) {
-					?>
-								<input type="checkbox" name="Binder[binded][]" value="<?= $role[ 'id' ] ?>" checked disabled /><?= $role[ 'name' ] ?>
-					<?php
+							foreach( $roles as $role ) {
+						?>
+								<div class="col col4">
+						<?php
+								if( in_array( $role[ 'id' ], $modelRoles ) ) {
+						?>
+									<input type="checkbox" name="Binder[binded][]" value="<?= $role[ 'id' ] ?>" checked disabled /><?= $role[ 'name' ] ?>
+						<?php
+								}
+								else {
+						?>
+									<input type="checkbox" name="Binder[binded][]" value="<?= $role[ 'id' ] ?>" disabled /><?= $role[ 'name' ] ?>
+						<?php
+								}
+						?>
+								</div>
+						<?php
 							}
-							else {
-					?>
-								<input type="checkbox" name="Binder[binded][]" value="<?= $role[ 'id' ] ?>" disabled /><?= $role[ 'name' ] ?>
-					<?php
-							}
-					?>
-							</div>
-					<?php
-						}
-					?>
+						?>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 		<?php } ?>
-
 		<div class="filler-height filler-height-medium"></div>
-
 		<div class="align align-right">
 			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
 			<input class="element-medium" type="submit" value="Delete" />
 		</div>
-
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
 	</div>

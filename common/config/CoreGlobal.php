@@ -22,7 +22,7 @@ class CoreGlobal {
 	const SITE_BLOG				= 'blog';
 
 	const APP_ADMIN				= 'app-admin';
-	const APP_FRONTEND			= 'app-frontend';
+	const APP_FRONTEND			= 'app-site';
 	const APP_CONSOLE			= 'app-console';
 
 	// System Pages ---------------------------------------------------
@@ -107,6 +107,7 @@ class CoreGlobal {
 	const TEMPLATE_NOTIFY_UP_FREEZE	= 'status-uplift-freeze';
 	const TEMPLATE_NOTIFY_UP_BLOCK	= 'status-uplift-block';
 	const TEMPLATE_NOTIFY_TERMINATE	= 'status-terminate';
+	const TEMPLATE_NOTIFY_DELETE	= 'status-delete';
 
 	// Template Views --------------------------------------------------
 

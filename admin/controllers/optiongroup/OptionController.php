@@ -38,6 +38,9 @@ class OptionController extends BaseOptionController {
 
 		parent::init();
 
+		// Config
+		$this->apixBase = 'core/optiongroup/option';
+
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-core', 'child' => 'option-group' ];
 

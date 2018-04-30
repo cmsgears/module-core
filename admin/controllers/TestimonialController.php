@@ -46,6 +46,7 @@ class TestimonialController extends CommentController {
 		// Config
 		$this->parentType	= CoreGlobal::TYPE_SITE;
 		$this->commentType	= ModelComment::TYPE_TESTIMONIAL;
+		$this->apixBase		= 'core/comment';
 		$this->parentUrl	= '/core/sites/update?id=';
 		$this->urlKey		= 'testimonials';
 		$this->title		= 'Testimonial';

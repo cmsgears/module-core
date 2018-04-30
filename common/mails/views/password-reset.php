@@ -10,10 +10,11 @@ $logoUrl	= Url::to( "@web/images/logo-mail.png", true );
 
 $logo		= "<img class=\"logo\" style=\"margin:10px;\" src=\"$logoUrl\">";
 $siteName	= Html::encode( $coreProperties->getSiteName() );
+$siteUrl	= Html::encode( $coreProperties->getSiteUrl() );
+
 $name		= Html::encode( $user->getName() );
 $email		= Html::encode( $user->email );
 $token		= Html::encode( $user->resetToken );
-$siteUrl	= Html::encode( $coreProperties->getSiteUrl() );
 
 if( $user->isPermitted( CoreGlobal::PERM_ADMIN ) ) {
 

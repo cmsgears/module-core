@@ -29,7 +29,6 @@ class UserController extends Controller {
 	// Protected --------------
 
 	protected $memberService;
-	protected $siteMemberService;
 	protected $roleService;
 	protected $optionService;
 
@@ -46,11 +45,14 @@ class UserController extends Controller {
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_IDENTITY;
 
+		// Config
+		$this->apixBase	= 'core/user';
+
 		// Services
-		$this->modelService			= Yii::$app->factory->get( 'userService' );
-		$this->siteMemberService	= Yii::$app->factory->get( 'siteMemberService' );
-		$this->roleService			= Yii::$app->factory->get( 'roleService' );
-		$this->optionService		= Yii::$app->factory->get( 'optionService' );
+		$this->modelService		= Yii::$app->factory->get( 'userService' );
+		$this->memberService	= Yii::$app->factory->get( 'siteMemberService' );
+		$this->roleService		= Yii::$app->factory->get( 'roleService' );
+		$this->optionService	= Yii::$app->factory->get( 'optionService' );
 
 		// Super Admin
 		$superRole = $this->roleService->getBySlugType( CoreGlobal::ROLE_SUPER_ADMIN, CoreGlobal::TYPE_SYSTEM );
@@ -146,7 +148,7 @@ class UserController extends Controller {
 	public function actionCreate() {
 
 		$model	= $this->modelService->getModelObject();
-		$member	= $this->siteMemberService->getModelObject();
+		$member	= $this->memberService->getModelObject();
 		$avatar	= File::loadFile( null, 'Avatar' );
 		$banner	= File::loadFile( null, 'Banner' );
 		$video	= File::loadFile( null, 'Video' );
@@ -163,7 +165,7 @@ class UserController extends Controller {
 			$member->userId = $this->model->id;
 
 			// Add User to current Site
-			$member = $this->siteMemberService->create( $member );
+			$member = $this->memberService->create( $member );
 
 			if( $this->model && $member ) {
 
@@ -212,7 +214,7 @@ class UserController extends Controller {
 				// Update User and Site Member
 				$this->model = $this->modelService->update( $model, [ 'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video ] );
 
-				$this->siteMemberService->update( $member );
+				$this->memberService->update( $member );
 
 				return $this->redirect( $this->returnUrl );
 			}

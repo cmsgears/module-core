@@ -39,6 +39,9 @@ class PermissionController extends BasePermissionController {
 
 		parent::init();
 
+		// Config
+		$this->apixBase	= 'core/permission';
+
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-identity', 'child' => 'perm' ];
 

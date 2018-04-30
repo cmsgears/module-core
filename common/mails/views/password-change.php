@@ -7,9 +7,10 @@ $logoUrl	= Url::to( "@web/images/logo-mail.png", true );
 
 $logo		= "<img class=\"logo\" style=\"margin:10px;\" src=\"$logoUrl\">";
 $siteName	= Html::encode( $coreProperties->getSiteName() );
+$siteUrl	= Html::encode( $coreProperties->getSiteUrl() );
+
 $name		= Html::encode( $user->getName() );
 $email		= Html::encode( $user->email );
-$siteUrl	= Html::encode( $coreProperties->getSiteUrl() );
 ?>
 <table cellspacing="0" cellpadding="2" border="0" align="center" width="805px" style="font-family: Calibri; color: #4f4f4f; font-size: 14px; font-weight: 400;">
 	<tbody>

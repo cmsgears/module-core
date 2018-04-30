@@ -44,6 +44,9 @@ class CountryController extends CrudController {
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_CORE;
 
+		// Config
+		$this->apixBase	= 'core/country';
+
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'countryService' );
 

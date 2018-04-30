@@ -51,50 +51,83 @@ $returnUrl		= $this->context->returnUrl;
 				</div>
 			</div>
 		</div>
-		<div class="filler-height filler-height-medium"></div>
 		<?php if( count( $permissions ) > 0 ) { ?>
-		<div class="box box-crud">
-			<div class="box-header">
-				<div class="box-header-title">Assign Permissions</div>
-			</div>
-			<div class="box-content">
+			<div class="filler-height filler-height-medium"></div>
+			<div class="box box-crud">
+				<div class="box-header">
+					<div class="box-header-title">Assign <?= ucfirst( $type ) ?> Permissions</div>
+				</div>
 				<div class="box-content">
-					<div class="row padding padding-small-v">
-					<?php
-						$modelPermissions = $model->getPermissionsIdList();
+					<div class="box-content">
+						<div class="row padding padding-small-v">
+						<?php
+							$modelPermissions = $model->getPermissionsIdList();
 
-						foreach ( $permissions as $permission ) {
-					?>
-							<div class="col col4">
-					<?php
-							if( in_array( $permission[ 'id' ], $modelPermissions ) ) {
-					?>
-								<input type="checkbox" name="Binder[binded][]" value="<?= $permission[ 'id' ] ?>" checked /><?= $permission[ 'name' ] ?>
-					<?php
+							foreach ( $permissions as $permission ) {
+						?>
+								<div class="col col4">
+						<?php
+								if( in_array( $permission[ 'id' ], $modelPermissions ) ) {
+						?>
+									<input type="checkbox" name="Binder[binded][]" value="<?= $permission[ 'id' ] ?>" checked /><?= $permission[ 'name' ] ?>
+						<?php
+								}
+								else {
+						?>
+									<input type="checkbox" name="Binder[binded][]" value="<?= $permission[ 'id' ] ?>" /><?= $permission[ 'name' ] ?>
+						<?php
+								}
+						?>
+								</div>
+						<?php
 							}
-							else {
-					?>
-								<input type="checkbox" name="Binder[binded][]" value="<?= $permission[ 'id' ] ?>" /><?= $permission[ 'name' ] ?>
-					<?php
-							}
-					?>
-							</div>
-					<?php
-						}
-					?>
+						?>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 		<?php } ?>
+		<?php if( count( $spermissions ) > 0 ) { ?>
+			<div class="filler-height filler-height-medium"></div>
+			<div class="box box-crud">
+				<div class="box-header">
+					<div class="box-header-title">Assign System Permissions</div>
+				</div>
+				<div class="box-content">
+					<div class="box-content">
+						<div class="row padding padding-small-v">
+						<?php
+							$modelPermissions = $model->getPermissionsIdList();
 
+							foreach ( $spermissions as $permission ) {
+						?>
+								<div class="col col4">
+						<?php
+								if( in_array( $permission[ 'id' ], $modelPermissions ) ) {
+						?>
+									<input type="checkbox" name="Binder[binded][]" value="<?= $permission[ 'id' ] ?>" checked /><?= $permission[ 'name' ] ?>
+						<?php
+								}
+								else {
+						?>
+									<input type="checkbox" name="Binder[binded][]" value="<?= $permission[ 'id' ] ?>" /><?= $permission[ 'name' ] ?>
+						<?php
+								}
+						?>
+								</div>
+						<?php
+							}
+						?>
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php } ?>
 		<div class="filler-height filler-height-medium"></div>
-
 		<div class="align align-right">
 			<?= Html::a( 'View All', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
 			<input class="element-medium" type="submit" value="Update" />
 		</div>
-
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
 	</div>

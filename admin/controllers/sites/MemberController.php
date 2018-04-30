@@ -51,6 +51,9 @@ class MemberController extends CrudController {
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_CORE;
 
+		// Config
+		$this->apixBase = 'core/sites/member';
+
 		// Services
 		$this->modelService	= Yii::$app->factory->get( 'siteMemberService' );
 

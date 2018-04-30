@@ -292,6 +292,19 @@ trait ApprovalTrait {
 	/**
 	 * @inheritdoc
 	 */
+	public function isDeleted( $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->status == IApproval::STATUS_DELETED;
+		}
+
+		return $this->status >= IApproval::STATUS_DELETED;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function toggleFrojen() {
 
 		if( $this->isFrojen() ) {

@@ -46,8 +46,9 @@ class OptiongroupController extends CrudController {
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_CORE;
 
-		// Type
-		$this->type = CoreGlobal::TYPE_OPTION_GROUP;
+		// Config
+		$this->type		= CoreGlobal::TYPE_OPTION_GROUP;
+		$this->apixBase	= 'core/optiongroup';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'categoryService' );

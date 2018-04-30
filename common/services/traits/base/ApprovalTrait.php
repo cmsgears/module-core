@@ -230,7 +230,7 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = $model->getClassName() . " Submitted";
+				$title = $model->getClassName() . ' Submitted';
 
 				$config[ 'template' ] = $config[ 'template' ] ?? CoreGlobal::TEMPLATE_NOTIFY_SUBMIT;
 
@@ -251,7 +251,7 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = $model->getClassName() . " Confirmed";
+				$title = $model->getClassName() . ' Confirmed';
 
 				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_CONFIRM;
 
@@ -272,7 +272,7 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = $model->getClassName() . " Approved";
+				$title = $model->getClassName() . ' Approved';
 
 				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_APPROVE;
 
@@ -289,13 +289,20 @@ trait ApprovalTrait {
 
 		if( !$model->isActive( true ) ) {
 
+			$oldStatus = $model->getStatusStr();
+
 			$model = $this->updateStatus( $model, IApproval::STATUS_ACTIVE );
+
+			$newStatus = $model->getStatusStr();
 
 			if( $notify ) {
 
-				$title = $model->getClassName() . " Activated";
+				$title = $model->getClassName() . ' Activated';
 
 				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_ACTIVE;
+
+				$config[ 'data' ][ 'oldStatus' ] = $oldStatus;
+				$config[ 'data' ][ 'newStatus' ] = $newStatus;
 
 				$this->notifyUser( $model, $config, $title );
 			}
@@ -314,7 +321,7 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = $model->getClassName() . " Rejected";
+				$title = $model->getClassName() . ' Rejected';
 
 				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_REJECT;
 				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
@@ -336,7 +343,7 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = $model->getClassName() . " Frozen";
+				$title = $model->getClassName() . ' Frozen';
 
 				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_ACTIVE;
 				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
@@ -358,7 +365,7 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = $model->getClassName() . " Blocked";
+				$title = $model->getClassName() . ' Blocked';
 
 				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_BLOCK;
 				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
@@ -380,7 +387,7 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = $model->getClassName() . " Terminated";
+				$title = $model->getClassName() . ' Terminated';
 
 				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_TERMINATE;
 				$config[ 'data' ][ 'message' ] = $model->getTerminateMessage();
@@ -392,6 +399,73 @@ trait ApprovalTrait {
 		}
 
 		return false;
+	}
+
+	public function softDelete( $model, $notify = true, $config = [] ) {
+
+		if( !$model->isDeleted( true ) ) {
+
+			$model = $this->updateStatus( $model, IApproval::STATUS_DELETED );
+
+			if( $notify ) {
+
+				$title = $model->getClassName() . ' Deleted';
+
+				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_DELETE;
+
+				$this->notifyUser( $model, $config, $title );
+			}
+
+			return $model;
+		}
+
+		return false;
+	}
+
+	public function toggleFrojen( $model, $notify = true, $config = [] ) {
+
+		$oldStatus = $model->getStatusStr();
+
+		$model->toggleFrojen();
+
+		$newStatus = $model->getStatusStr();
+
+		if( $notify ) {
+
+			$title = $model->isActive( true ) ? $model->getClassName() . ' Activated' : $model->getClassName() . ' Frozen';
+
+			$config[ 'template' ] = $model->isActive( true ) ? CoreGlobal::TEMPLATE_NOTIFY_ACTIVE : CoreGlobal::TEMPLATE_NOTIFY_FREEZE;
+
+			$config[ 'data' ][ 'oldStatus' ] = $oldStatus;
+			$config[ 'data' ][ 'newStatus' ] = $newStatus;
+
+			$this->notifyUser( $model, $config, $title );
+		}
+
+		return $model;
+	}
+
+	public function toggleBlock( $model, $notify = true, $config = [] ) {
+
+		$oldStatus = $model->getStatusStr();
+
+		$model->toggleBlock();
+
+		$newStatus = $model->getStatusStr();
+
+		if( $notify ) {
+
+			$title = $model->isActive( true ) ? $model->getClassName() . ' Activated' : $model->getClassName() . ' Blocked';
+
+			$config[ 'template' ] = $model->isActive( true ) ? CoreGlobal::TEMPLATE_NOTIFY_ACTIVE : CoreGlobal::TEMPLATE_NOTIFY_BLOCK;
+
+			$config[ 'data' ][ 'oldStatus' ] = $oldStatus;
+			$config[ 'data' ][ 'newStatus' ] = $newStatus;
+
+			$this->notifyUser( $model, $config, $title );
+		}
+
+		return $model;
 	}
 
 	// Model messages

@@ -61,7 +61,7 @@ $returnUrl		= $this->context->returnUrl;
 		<div class="filler-height filler-height-medium"></div>
 		<div class="box box-crud group-permission">
 			<div class="box-header">
-				<div class="box-header-title">Group Permissions</div>
+				<div class="box-header-title">Group <?= ucfirst( $type ) ?> Permissions</div>
 			</div>
 			<div class="box-content">
 				<div class="box-content">
@@ -92,6 +92,42 @@ $returnUrl		= $this->context->returnUrl;
 				</div>
 			</div>
 		</div>
+		<?php if( count( $spermissions ) > 0 ) { ?>
+			<div class="filler-height filler-height-medium"></div>
+			<div class="box box-crud group-permission">
+				<div class="box-header">
+					<div class="box-header-title">Group System Permissions</div>
+				</div>
+				<div class="box-content">
+					<div class="box-content">
+						<div class="row padding padding-small-v">
+						<?php
+							$children = $model->getChildrenIdList();
+
+							foreach( $spermissions as $permission ) {
+						?>
+								<div class="col col4">
+						<?php
+								if( in_array( $permission[ 'id' ], $children ) ) {
+						?>
+									<input type="checkbox" name="Children[binded][]" value="<?= $permission[ 'id' ] ?>" checked /><?= $permission[ 'name' ] ?>
+						<?php
+								}
+								else {
+						?>
+									<input type="checkbox" name="Children[binded][]" value="<?= $permission[ 'id' ] ?>" /><?= $permission[ 'name' ] ?>
+						<?php
+								}
+						?>
+								</div>
+						<?php
+							}
+						?>
+						</div>
+					</div>
+				</div>
+			</div>
+		<?php } ?>
 		<div class="filler-height filler-height-medium"></div>
 		<div class="align align-right">
 			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>

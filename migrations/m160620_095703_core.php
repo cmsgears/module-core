@@ -306,8 +306,8 @@ class m160620_095703_core extends Migration {
 			'regions' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'zipCodes' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'timeZone' => $this->smallInteger( 6 )->defaultValue( 0 ),
-			'latitude' => $this->float(),
-			'longitude' => $this->float()
+			'latitude' => $this->float()->defaultValue( 0 ),
+			'longitude' => $this->float()->defaultValue( 0 )
 		], $this->options );
 
 		// Index for columns country
@@ -337,8 +337,8 @@ class m160620_095703_core extends Migration {
 			'email' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'fax' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'website' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
-			'latitude' => $this->float(),
-			'longitude' => $this->float(),
+			'latitude' => $this->float()->defaultValue( 0 ),
+			'longitude' => $this->float()->defaultValue( 0 ),
 			'zoomLevel' => $this->smallInteger( 6 )->defaultValue( 5 )
 		], $this->options );
 
@@ -1083,6 +1083,7 @@ class m160620_095703_core extends Migration {
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
+			'data' => $this->mediumText()
 		], $this->options );
 
 		// Index for columns user

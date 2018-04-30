@@ -59,10 +59,9 @@ abstract class CommentController extends Controller {
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_CORE;
 
-		// Apix Base
-		$this->apixBase = "core/comment";
-
-		$this->title = 'Comment';
+		// Config
+		$this->apixBase = 'core/comment';
+		$this->title	= 'Comment';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'modelCommentService' );

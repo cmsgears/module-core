@@ -255,6 +255,28 @@ class SiteMemberService extends MapperService implements ISiteMemberService {
 
 	// Create -------------
 
+	public function create( $model, $config = [] ) {
+
+		if( empty( $model->userId ) ) {
+
+			$model->userId = Yii::$app->user->identity->id;
+		}
+
+		if( empty( $model->roleId ) || $model->roleId <= 0 ) {
+
+			$role = $this->roleService->getBySlugType( CoreGlobal::ROLE_USER, CoreGlobal::TYPE_SYSTEM );
+
+			$model->roleId	= $role->id;
+		}
+
+		if( empty( $model->siteId ) ) {
+
+			$model->siteId = Yii::$app->core->siteId;
+		}
+
+		return parent::create( $model, $config );
+	}
+
 	public function createByParams( $params = [], $config = [] ) {
 
 		$userId = isset( $params[ 'userId' ] ) ? $params[ 'userId' ] : null;

@@ -34,6 +34,7 @@ abstract class PermissionController extends CrudController {
 	// Protected --------------
 
 	protected $type;
+	protected $system;
 
 	protected $roleService;
 
@@ -47,13 +48,15 @@ abstract class PermissionController extends CrudController {
 
 		parent::init();
 
+		// Views
 		$this->setViewPath( '@cmsgears/module-core/admin/views/permission' );
 
-		// Permissions
+		// Permission
 		$this->crudPermission = CoreGlobal::PERM_RBAC;
 
 		// Config
-		$this->type = CoreGlobal::TYPE_SYSTEM;
+		$this->type		= CoreGlobal::TYPE_SYSTEM;
+		$this->system	= false;
 
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'permissionService' );
@@ -114,11 +117,14 @@ abstract class PermissionController extends CrudController {
 
 		$roles			= $this->roleService->getIdNameListByType( $this->type );
 		$permissions	= $this->modelService->getIdNameListByTypeGroup( $this->type );
+		$spermissions	= $this->system ? $this->modelService->getIdNameListByTypeGroup( CoreGlobal::TYPE_SYSTEM ) : [];
 
 		return $this->render( 'create', [
 			'model' => $model,
 			'roles' => $roles,
-			'permissions' => $permissions
+			'type' => $this->type,
+			'permissions' => $permissions,
+			'spermissions' => $spermissions
 		]);
 	}
 
@@ -151,11 +157,14 @@ abstract class PermissionController extends CrudController {
 
 			$roles			= $this->roleService->getIdNameListByType( $this->type );
 			$permissions	= $this->modelService->getIdNameListByTypeGroup( $this->type );
+			$spermissions	= $this->system ? $this->modelService->getIdNameListByTypeGroup( CoreGlobal::TYPE_SYSTEM ) : [];
 
 			return $this->render( 'update', [
 				'model' => $model,
 				'roles' => $roles,
-				'permissions' => $permissions
+				'type' => $this->type,
+				'permissions' => $permissions,
+				'spermissions' => $spermissions
 			]);
 		}
 
@@ -187,11 +196,14 @@ abstract class PermissionController extends CrudController {
 
 			$roles			= $this->roleService->getIdNameListByType( $this->type );
 			$permissions	= $this->modelService->getIdNameListByTypeGroup( $this->type );
+			$spermissions	= $this->system ? $this->modelService->getIdNameListByTypeGroup( CoreGlobal::TYPE_SYSTEM ) : [];
 
 			return $this->render( 'delete', [
 				'model' => $model,
 				'roles' => $roles,
-				'permissions' => $permissions
+				'type' => $this->type,
+				'permissions' => $permissions,
+				'spermissions' => $spermissions
 			]);
 		}
 

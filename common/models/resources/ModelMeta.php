@@ -18,12 +18,14 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\interfaces\base\IMeta;
 use cmsgears\core\common\models\interfaces\base\IModelResource;
+use cmsgears\core\common\models\interfaces\resources\IData;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\ModelResource;
 
 use cmsgears\core\common\models\traits\base\MetaTrait;
 use cmsgears\core\common\models\traits\base\ModelResourceTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
  * ModelMeta Entity
@@ -36,10 +38,11 @@ use cmsgears\core\common\models\traits\base\ModelResourceTrait;
  * @property string $type
  * @property string $valueType
  * @property string $value
+ * @property string $data
  *
  * @since 1.0.0
  */
-class ModelMeta extends ModelResource implements IMeta, IModelResource {
+class ModelMeta extends ModelResource implements IData, IMeta, IModelResource {
 
 	// Variables ---------------------------------------------------
 
@@ -61,6 +64,7 @@ class ModelMeta extends ModelResource implements IMeta, IModelResource {
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
 	use MetaTrait;
 	use ModelResourceTrait;
 

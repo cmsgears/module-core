@@ -44,6 +44,9 @@ class ThemeController extends CrudController {
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_CORE;
 
+		// Config
+		$this->apixBase	= 'core/theme';
+
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'themeService' );
 

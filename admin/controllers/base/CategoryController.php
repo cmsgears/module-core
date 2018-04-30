@@ -45,11 +45,11 @@ abstract class CategoryController extends CrudController {
 		// Views
 		$this->setViewPath( '@cmsgears/module-core/admin/views/category' );
 
-		// Config
-		$this->type = CoreGlobal::TYPE_SITE;
-
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_CORE;
+
+		// Config
+		$this->type = CoreGlobal::TYPE_SITE;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'categoryService' );

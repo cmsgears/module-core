@@ -11,7 +11,6 @@ namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
 use Yii;
-use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
@@ -57,11 +56,11 @@ abstract class GalleryController extends CrudController {
 		// Views
 		$this->setViewPath( '@cmsgears/module-core/admin/views/gallery' );
 
-		// Config
-		$this->templateType	= CoreGlobal::TYPE_GALLERY;
-
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_GALLERY_ADMIN;
+
+		// Config
+		$this->templateType	= CoreGlobal::TYPE_GALLERY;
 
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'galleryService' );

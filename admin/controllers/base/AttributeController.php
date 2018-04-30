@@ -33,7 +33,6 @@ abstract class AttributeController extends Controller {
 	// Public -----------------
 
 	public $title;
-	public $apixBase;
 
 	// Protected --------------
 

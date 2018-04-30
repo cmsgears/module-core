@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\admin\controllers\apix;
+namespace cmsgears\core\admin\controllers\apix\form;
 
 // Yii Imports
 use Yii;

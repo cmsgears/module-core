@@ -8,12 +8,13 @@
  */
 
 namespace cmsgears\core\common\services\base;
-use Yii;
+
 // CMG Imports
 use cmsgears\core\common\models\interfaces\base\IFollower;
-use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\services\interfaces\base\IFollowerService;
+use cmsgears\core\common\services\interfaces\mappers\IFollowerService;
+
+use cmsgears\core\common\services\base\MapperService;
 
 /**
  * FollowerService defines commonly used methods specific to follower models.
@@ -62,26 +63,26 @@ abstract class FollowerService extends MapperService implements IFollowerService
 
 	// Read - Models ---
 
-	public static function getByFollower( $modelId, $type = IFollower::TYPE_FOLLOW ) {
+	public static function getByFollower( $parentId, $type = IFollower::TYPE_FOLLOW ) {
 
 		$modelClass = static::$modelClass;
 		$user		= Yii::$app->user->identity;
 
-		return $modelClass::findByFollower( $modelId, $user->id, $type );
+		return $modelClass::findByFollower( $user->id, $parentId, $type );
 	}
 
 	// Read - Lists ----
 
-    public function getFollowersIdList( $modelId ) {
+    public function getFollowersIdList( $parentId ) {
 
-        return self::findList( [  'column' => 'userId', 'conditions' => [ 'type' => IFollower::TYPE_FOLLOW, 'active' => true, 'modelId' => $modelId ] ] );
+        return self::findList( [  'column' => 'modelId', 'conditions' => [ 'type' => IFollower::TYPE_FOLLOW, 'active' => true, 'parentId' => $parentId ] ] );
     }
 
     public function getFollowingIdList() {
 
 		$user = Yii::$app->user->identity;
 
-        return self::findList( [  'column' => 'modelId', 'conditions' => [ 'type' => IFollower::TYPE_FOLLOW, 'active' => true, 'userId' => $user->id ] ] );
+        return self::findList( [  'column' => 'parentId', 'conditions' => [ 'type' => IFollower::TYPE_FOLLOW, 'active' => true, 'modelId' => $user->id ] ] );
     }
 
 	// Read - Maps -----
@@ -93,17 +94,17 @@ abstract class FollowerService extends MapperService implements IFollowerService
 		$modelClass = static::$modelClass;
 		$user		= Yii::$app->user->identity;
 
-		return $modelClass::queryByTypeFollowerId( $type, $user->id )->andWhere( [ 'active' => true ] )->count();
+		return $modelClass::queryByTypeModelId( $type, $user->id )->andWhere( [ 'active' => true ] )->count();
 	}
 
-	public function getFollowersCount( $model, $type = IFollower::TYPE_FOLLOW ) {
+	public function getFollowersCount( $parentId, $type = IFollower::TYPE_FOLLOW ) {
 
 		$modelClass = static::$modelClass;
 
-		return $modelClass::queryByTypeModelId( $type, $model->id )->andWhere( [ 'active' => true ] )->count();
+		return $modelClass::queryByTypeParentId( $type, $parentId )->andWhere( [ 'active' => true ] )->count();
 	}
 
-    public function getStatusCounts( $modelId, $type = IFollower::TYPE_FOLLOW ) {
+    public function getStatusCounts( $parentId, $type = IFollower::TYPE_FOLLOW ) {
 
         $followerTable = static::$modelTable;
 
@@ -111,7 +112,7 @@ abstract class FollowerService extends MapperService implements IFollowerService
 
         $query->select( [ 'active', 'count(id) as total' ] )
 			->from( $followerTable )
-			->where( [ 'modelId' => $modelId, 'type' => $type ] )
+			->where( [ 'parentId' => $parentId, 'type' => $type ] )
 			->groupBy( 'active' );
 
         $counts     = $query->all();
@@ -153,11 +154,11 @@ abstract class FollowerService extends MapperService implements IFollowerService
 		$modelClass = static::$modelClass;
 		$user		= Yii::$app->user->identity;
 
-		$userId		= $params[ 'userId' ];
-		$modelId	= $params[ 'modelId' ];
+		//$userId		= $params[ 'modelId' ];
+		$parentId	= $params[ 'parentId' ];
 		$type		= $params[ 'type' ];
 
-		$follower	= $modelClass::findByFollower( $modelId, $user->id, $type );
+		$follower	= $modelClass::findByFollower( $user->id, $parentId, $type );
 
 		if( isset( $follower ) ) {
 
@@ -185,18 +186,18 @@ abstract class FollowerService extends MapperService implements IFollowerService
 
 	// Delete -------------
 
-	public function deleteByFollowerId( $userId ) {
-
-		$modelClass = static::$modelClass;
-
-		return $modelClass::deleteByFollowerId( $userId );
-	}
-
 	public function deleteByModelId( $modelId ) {
 
 		$modelClass = static::$modelClass;
 
 		return $modelClass::deleteByModelId( $modelId );
+	}
+
+	public function deleteByParentId( $parentId ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::deleteByParentId( $parentId );
 	}
 
 	// Bulk ---------------
@@ -232,4 +233,3 @@ abstract class FollowerService extends MapperService implements IFollowerService
 	// Delete -------------
 
 }
-

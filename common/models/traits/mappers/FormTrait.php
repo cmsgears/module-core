@@ -19,6 +19,8 @@ use cmsgears\core\common\models\mappers\ModelForm;
  * The model can also support meta trait to save the submitted form values as model
  * attributes. The submitted form values can also be stored in data column using data
  * trait.
+ *
+ * @since 1.0.0
  */
 trait FormTrait {
 

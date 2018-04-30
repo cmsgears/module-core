@@ -26,7 +26,7 @@ use cmsgears\core\common\models\traits\base\FollowerTrait;
  *
  * @property int $id
  * @property int $modelId
- * @property int $userId
+ * @property int $parentId
  * @property string $type
  * @property boolean $active
  * @property int $createdAt
@@ -94,13 +94,14 @@ abstract class Follower extends Mapper implements IFollower {
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'userId', 'modelId' ], 'required' ],
+			[ [ 'modelId', 'parentId' ], 'required' ],
 			[ [ 'id', 'value', 'data' ], 'safe' ],
 			// Unique
-			[ [ 'userId', 'modelId', 'type' ], 'unique', 'targetAttribute' => [ 'userId', 'modelId', 'type' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ [ 'modelId', 'parentId', 'type' ], 'unique', 'targetAttribute' => [ 'userId', 'modelId', 'type' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			// Text Limit
+			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			// Other
-			[ 'type', 'string' ],
-			[ [ 'userId', 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'modelId', 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
@@ -113,8 +114,8 @@ abstract class Follower extends Mapper implements IFollower {
 	public function attributeLabels() {
 
 		return [
-			'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'userId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FOLLOWER ),
+			'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FOLLOWER ),
+			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];
@@ -129,23 +130,23 @@ abstract class Follower extends Mapper implements IFollower {
 	// Follower ------------------------------
 
 	/**
-	 * Returns the parent model using one-to-one(hasOne) relationship.
-	 *
-	 * @return ActiveRecord The parent model.
-	 */
-	abstract public function getModel();
-
-	/**
-	 * Return the user who follows model.
+	 * Returns the follower model using one-to-one(hasOne) relationship.
 	 *
 	 * @return \cmsgears\core\common\models\entities\User
 	 */
-	public function getFollower() {
+	public function getModel() {
 
 		$userTable = CoreTables::getTableName( CoreTables::TABLE_USER );
 
-		return $this->hasOne( User::class, [ 'id' => 'userId' ] )->from( "$userTable as follower" );
+		return $this->hasOne( User::class, [ 'id' => 'modelId' ] )->from( "$userTable as follower" );
 	}
+
+	/**
+	 * Return the parent model followed by users.
+	 *
+	 * @return ActiveRecord The parent model.
+	 */
+	abstract public function getParent();
 
 	/**
 	 * Checks whether the follower belong to given parent model.
@@ -154,7 +155,7 @@ abstract class Follower extends Mapper implements IFollower {
 	 */
 	public function belongsTo( $model ) {
 
-		return $this->modelId == $model->id;
+		return $this->parentId == $model->id;
 	}
 
 	// Static Methods ----------------------------------------------
@@ -174,21 +175,9 @@ abstract class Follower extends Mapper implements IFollower {
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'model', 'follower' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'model', 'parent' ];
 
-		return parent::queryWithAll( $config );
-	}
-
-	/**
-	 * Return query to find the mapping with parent model.
-	 *
-	 * @param array $config
-	 * @return \yii\db\ActiveQuery to query with parent model.
-	 */
-	public static function queryWithModel( $config = [] ) {
-
-		$config[ 'relations' ]	= [ 'model' ];
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -199,9 +188,22 @@ abstract class Follower extends Mapper implements IFollower {
 	 * @param array $config
 	 * @return \yii\db\ActiveQuery to query with follower.
 	 */
-	public static function queryWithFollower( $config = [] ) {
+	public static function queryWithModel( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'follower' ];
+		$config[ 'relations' ] = [ 'model' ];
+
+		return parent::queryWithAll( $config );
+	}
+
+	/**
+	 * Return query to find the mapping with parent model.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with parent model.
+	 */
+	public static function queryWithParent( $config = [] ) {
+
+		$config[ 'relations' ] = [ 'parent' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -218,11 +220,11 @@ abstract class Follower extends Mapper implements IFollower {
 	}
 
 	/**
-	 * Return query to find the mapping by type and model id.
+	 * Return query to find the mapping by type and follower id.
 	 *
 	 * @param integer $type
 	 * @param integer $modelId
-	 * @return \yii\db\ActiveQuery to query by type and model id.
+	 * @return \yii\db\ActiveQuery to query by type and follower id.
 	 */
 	public static function queryByTypeModelId( $type, $modelId ) {
 
@@ -230,15 +232,15 @@ abstract class Follower extends Mapper implements IFollower {
 	}
 
 	/**
-	 * Return query to find the mapping by type and follower id.
+	 * Return query to find the mapping by type and parent id.
 	 *
 	 * @param integer $type
-	 * @param integer $userId
-	 * @return \yii\db\ActiveQuery to query by type and follower id.
+	 * @param integer $parentId
+	 * @return \yii\db\ActiveQuery to query by type and parent id.
 	 */
-	public static function queryByTypeFollowerId( $type, $userId ) {
+	public static function queryByTypeParentId( $type, $parentId ) {
 
-		return self::find()->where( 'type=:type AND userId=:fid', [ ':type' => $type, ':fid' => $userId ] );
+		return self::find()->where( 'type=:type AND parentId=:pid', [ ':type' => $type, ':pid' => $parentId ] );
 	}
 
 	// Read - Find ------------
@@ -255,7 +257,7 @@ abstract class Follower extends Mapper implements IFollower {
 	}
 
 	/**
-	 * Find and return all the follower using given type and model id.
+	 * Find and return all the follower using given type and follower id.
 	 *
 	 * @param integer $type
 	 * @param integer $modelId
@@ -267,41 +269,41 @@ abstract class Follower extends Mapper implements IFollower {
 	}
 
 	/**
-	 * Find and return all the follower using given type and follower id.
+	 * Find and return all the follower using given type and parent id.
 	 *
 	 * @param integer $type
-	 * @param integer $userId
+	 * @param integer $parentId
 	 * @return Follower[]
 	 */
-	public static function findByTypeFollowerId( $type, $userId ) {
+	public static function findByTypeParentId( $type, $parentId ) {
 
-		return self::queryByTypeFollowerId( $type, $userId )->all();
+		return self::queryByTypeParentId( $type, $parentId )->all();
 	}
 
 	/**
-	 * Find and return the follower using given model id, follower id and type.
+	 * Find and return the follower using given follower id, parent id and type.
 	 *
 	 * @param integer $modelId
-	 * @param integer $userId
+	 * @param integer $followerId
 	 * @param integer $type
 	 * @return Follower
 	 */
-	public static function findByFollower( $modelId, $userId, $type = self::TYPE_FOLLOW ) {
+	public static function findByFollower( $modelId, $parentId, $type = self::TYPE_FOLLOW ) {
 
-		return self::find()->where( 'modelId=:mid AND userId=:fid AND type =:type', [ ':mid' => $modelId, ':fid' => $userId, ':type' => $type ] )->one();
+		return self::find()->where( 'modelId=:mid AND parentId=:pid AND type =:type', [ ':mid' => $modelId, ':pid' => $parentId, ':type' => $type ] )->one();
 	}
 
 	/**
-	 * Check whether follower exist using given model id, follower id and type.
+	 * Check whether follower exist using given follower id, parent id and type.
 	 *
 	 * @param integer $modelId
-	 * @param integer $userId
+	 * @param integer $parentId
 	 * @param integer $type
 	 * @return boolean
 	 */
-	public static function isExistByFollower( $modelId, $userId, $type = self::TYPE_FOLLOW ) {
+	public static function isExistByFollower( $modelId, $parentId, $type = self::TYPE_FOLLOW ) {
 
-		$follower = self::findByFollower( $modelId, $userId, $type );
+		$follower = self::findByFollower( $modelId, $parentId, $type );
 
 		return isset( $follower );
 	}
@@ -313,18 +315,7 @@ abstract class Follower extends Mapper implements IFollower {
 	// Delete -----------------
 
 	/**
-	 * Delete all mappings by given parent id and type.
-	 *
-	 * @param integer $userId
-	 * @return integer Number of rows deleted.
-	 */
-	public static function deleteByFollowerId( $userId ) {
-
-		return self::deleteAll( 'userId=:fid', [ ':fid' => $userId ] );
-	}
-
-	/**
-	 * Delete all mappings related to given model id.
+	 * Delete all mappings related to given follower id.
 	 *
 	 * @param integer $modelId
 	 * @return integer Number of rows deleted.
@@ -334,5 +325,15 @@ abstract class Follower extends Mapper implements IFollower {
 		return self::deleteAll( 'modelId=:mid', [ ':mid' => $modelId ] );
 	}
 
-}
+	/**
+	 * Delete all mappings by given parent id and type.
+	 *
+	 * @param integer $parentId
+	 * @return integer Number of rows deleted.
+	 */
+	public static function deleteByParentId( $parentId ) {
 
+		return self::deleteAll( 'parentId=:pid', [ ':pid' => $parentId ] );
+	}
+
+}

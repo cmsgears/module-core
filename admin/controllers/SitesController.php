@@ -49,6 +49,9 @@ class SitesController extends CrudController {
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_CORE;
 
+		// Config
+		$this->apixBase	= 'core/sites';
+
 		// Services
 		$this->modelService	= Yii::$app->factory->get( 'siteService' );
 

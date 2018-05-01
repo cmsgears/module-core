@@ -49,10 +49,10 @@ class FileController extends Controller {
 		parent::init();
 
 		// Permissions
-		$this->crudPermission 	= CoreGlobal::PERM_ADMIN;
+		$this->crudPermission = CoreGlobal::PERM_ADMIN;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'fileService' );
+		$this->modelService = Yii::$app->factory->get( 'fileService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -69,7 +69,7 @@ class FileController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'file-handler'  => [ 'permission' => $this->crudPermission ],
+					'file-handler' => [ 'permission' => $this->crudPermission ],
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]

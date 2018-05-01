@@ -46,7 +46,7 @@ trait NameTrait {
 		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name" ];
 		$config[ 'array' ]		= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
 
-		$config[ 'query' ]->andWhere( "$modelTable.name like '$name%'" );
+		$config[ 'query' ]->andWhere( "$modelTable.name like :name", [ ':name' => "$name%" ] );
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 

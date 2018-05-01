@@ -61,6 +61,14 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 
 	// Data Provider ------
 
+	public function getPageByParent( $parentId, $parentType ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		return $this->getPage( [ 'conditions' => [ "$modelTable.parentId" => $parentId, "$modelTable.parentType" => $parentType ] ] );
+	}
+
 	// Read ---------------
 
 	// Read - Models ---

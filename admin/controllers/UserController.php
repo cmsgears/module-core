@@ -28,6 +28,8 @@ class UserController extends Controller {
 
 	// Protected --------------
 
+	protected $type;
+
 	protected $memberService;
 	protected $roleService;
 	protected $optionService;
@@ -42,10 +44,14 @@ class UserController extends Controller {
 
 		parent::init();
 
+		// Views
+		$this->setViewPath( '@cmsgears/module-core/admin/views/user' );
+
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_IDENTITY;
 
 		// Config
+		$this->type		= CoreGlobal::TYPE_DEFAULT;
 		$this->apixBase	= 'core/user';
 
 		// Services
@@ -156,6 +162,7 @@ class UserController extends Controller {
 		$model->setScenario( 'create' );
 
 		$member->siteId = Yii::$app->core->siteId;
+		$model->type	= $this->type;
 
 		if( $model->load( Yii::$app->request->post(), 'User' ) && $member->load( Yii::$app->request->post(), 'SiteMember' ) && $model->validate() && $member->validate() ) {
 

@@ -150,8 +150,8 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique
 			// Need both slug and name unique
-			[ [ 'siteId', 'themeId', 'type', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'slug' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
-			[ [ 'siteId', 'themeId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ [ 'siteId', 'themeId', 'type', 'slug' ], 'unique', 'targetAttribute' => [ 'type', 'slug' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ [ 'siteId', 'themeId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ [ 'type', 'renderer', 'layout' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

@@ -5,7 +5,7 @@ use cmsgears\widgets\popup\Popup;
 use cmsgears\widgets\grid\DataGrid;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= 'Templates | ' . $coreProperties->getSiteTitle();
+$this->title	= 'Users | ' . $coreProperties->getSiteTitle();
 $apixBase		= $this->context->apixBase;
 
 // View Templates
@@ -14,7 +14,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
-	'title' => 'Templates', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
+	'title' => 'Users', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [
 		'name' => 'Name', 'message' => 'Message', 'desc' => 'Description',
 		'username' => 'Username', 'email' => 'Email',

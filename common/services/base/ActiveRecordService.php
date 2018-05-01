@@ -1103,9 +1103,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		if( isset( $interfaces[ 'cmsgears\core\common\services\interfaces\base\IApproval' ] ) ) {
 
-			$softDelete = $modelClass::STATUS_DELETED;
+			$statusFilter = $modelClass::STATUS_TERMINATED;
 
-			$query->andWhere( "$modelTable.status!=$softDelete" );
+			$query->andWhere( "$modelTable.status<$statusFilter" );
 		}
 
 		// Filters -------------
@@ -1235,9 +1235,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		if( isset( $interfaces[ 'cmsgears\core\common\services\interfaces\base\IApproval' ] ) ) {
 
-			$softDelete = $modelClass::STATUS_DELETED;
+			$statusFilter = $modelClass::STATUS_TERMINATED;
 
-			$query->andWhere( "$modelTable.status!=$softDelete" );
+			$query->andWhere( "$modelTable.status<$statusFilter" );
 		}
 
 		// Filters -------------
@@ -1333,9 +1333,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		if( isset( $interfaces[ 'cmsgears\core\common\services\interfaces\base\IApproval' ] ) ) {
 
-			$softDelete = $modelClass::STATUS_DELETED;
+			$statusFilter = $modelClass::STATUS_TERMINATED;
 
-			$query->andWhere( "$modelTable.status!=$softDelete" );
+			$query->andWhere( "$modelTable.status<$statusFilter" );
 		}
 
 		// Filters -------------
@@ -1466,9 +1466,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		if( isset( $interfaces[ 'cmsgears\core\common\services\interfaces\base\IApproval' ] ) ) {
 
-			$softDelete = $modelClass::STATUS_DELETED;
+			$statusFilter = $modelClass::STATUS_TERMINATED;
 
-			$query->andWhere( "$modelTable.status!=$softDelete" );
+			$query->andWhere( "$modelTable.status<$statusFilter" );
 		}
 
 		// Filters -------------
@@ -1579,7 +1579,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 			$update = $existingModel->update( $validate );
 
-			if( $update ) {
+			if( $existingModel->update( $validate ) !== false || count( $existingModel->getErrors() ) > 0 ) {
 
 				return $existingModel;
 			}

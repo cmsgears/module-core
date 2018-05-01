@@ -130,7 +130,7 @@ class Tag extends Resource implements IAuthor, IMultiSite, INameType, ISlugType 
 			[ [ 'siteId', 'name' ], 'required' ],
 			[ [ 'id', 'htmlOptions' ], 'safe' ],
 			// Unique
-			[ [ 'siteId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'siteId', 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ [ 'siteId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

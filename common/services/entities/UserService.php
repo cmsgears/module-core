@@ -280,6 +280,15 @@ class UserService extends EntityService implements IUserService {
 		return parent::getPage( $config );
 	}
 
+	public function getPageByType( $type, $config = [] ) {
+
+		$modelTable = $this->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+
+		return $this->getPage( $config );
+	}
+
 	// Read ---------------
 
 	// Read - Models ---

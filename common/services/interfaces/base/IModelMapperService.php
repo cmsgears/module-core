@@ -18,6 +18,8 @@ interface IModelMapperService extends IMapperService {
 
 	// Data Provider ------
 
+	public function getPageByParent( $parentId, $parentType );
+
 	// Read ---------------
 
 	// Read - Models ---

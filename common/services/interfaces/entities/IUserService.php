@@ -25,6 +25,8 @@ interface IUserService extends IEntityService, IApproval, IData, IModelMeta, ISo
 
 	// Data Provider ------
 
+	public function getPageByType( $type, $config = [] );
+
 	// Read ---------------
 
 	// Read - Models ---

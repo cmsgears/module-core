@@ -195,8 +195,8 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 			[ [ 'name', 'type' ], 'required' ],
 			[ [ 'id', 'htmlOptions', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique - Allowed multiple names for same type. Slug will differentiate the models.
-			//[ [ 'siteId', 'themeId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
-			[ [ 'siteId', 'themeId', 'type', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'slug' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			//[ [ 'siteId', 'themeId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ [ 'siteId', 'themeId', 'type', 'slug' ], 'unique', 'targetAttribute' => [ 'type', 'slug' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'icon', 'texture' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

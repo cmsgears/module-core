@@ -110,7 +110,7 @@ trait NameTypeTrait {
 		$config[ 'array' ]		= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
 		$config[ 'siteId' ]		= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : ($modelClass::isMultiSite() ? Yii::$app->core->siteId : null );
 
-		$config[ 'query' ]->andWhere( "$modelTable.name like '$name%'" );
+		$config[ 'query' ]->andWhere( "$modelTable.name like :name", [ ':name' => "$name%" ] );
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 

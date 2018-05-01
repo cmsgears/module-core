@@ -889,7 +889,7 @@ class FormDesigner extends \yii\base\Component {
 						</div>
 						{hint}\n{error}";
 
-		$field		= $form->field( $model, $field, [ 'template' => $template ] )->textInput( $options );
+		$field = $form->field( $model, $field, [ 'template' => $template ] )->textInput( $options );
 
 		if( isset( $label ) ) {
 

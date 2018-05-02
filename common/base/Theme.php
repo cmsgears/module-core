@@ -1,29 +1,35 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\base;
 
 // Yii Imports
 use Yii;
+use yii\base\Theme as BaseTheme;
 
 /**
- * @var array $childs is a map of child themes. We can use child theme to override parent theme assets using it's assets bundles.
+ * Theme represents an application theme.
+ *
+ * @since 1.0.0
  */
-class Theme extends \yii\base\Theme {
+class Theme extends BaseTheme {
 
 	// Variables ---------------------------------------------------
 
-	// Globals -------------------------------
-
-	// Constants --------------
+	// Globals ----------------
 
 	// Public -----------------
 
-	// Protected --------------
-
-	// Variables -----------------------------
-
-	// Public -----------------
-
-	public $childs		= [];
+	/**
+	 * @var array Map of child themes. Child themes override or add additional features to parent theme.
+	 */
+	public $childs = [];
 
 	// Protected --------------
 
@@ -56,22 +62,14 @@ class Theme extends \yii\base\Theme {
 	public function registerChildAssets( $view ) {
 
 		// register child theme assets from config
-		$themeChilds	= $this->childs;
+		$themeChilds = $this->childs;
 
-		foreach ( $themeChilds as $child ) {
+		foreach( $themeChilds as $child ) {
 
 			$child = Yii::createObject( $child );
 
 			$child->registerAssets( $view );
 		}
 	}
-
-	// Static Methods ----------------------------------------------
-
-	// Yii parent classes --------------------
-
-	// CMG parent classes --------------------
-
-	// Theme ---------------------------------
 
 }

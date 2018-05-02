@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\actions\data;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -54,7 +54,7 @@ class SetMeta extends \cmsgears\core\common\actions\base\ModelAction {
 
 	public function run() {
 
-		$meta	= new Meta();
+		$meta = new Meta();
 
 		if( $meta->load( Yii::$app->request->post(), 'Meta' ) && $meta->validate() ) {
 

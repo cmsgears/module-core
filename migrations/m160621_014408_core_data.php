@@ -153,7 +153,7 @@ class m160621_014408_core_data extends Migration {
 		$columns = [ 'localeId', 'status', 'email', 'username', 'type', 'passwordHash', 'firstName', 'lastName', 'name', 'registeredAt', 'lastLoginAt', 'authKey' ];
 
 		$users	= [
-			[ $this->locale->id, User::STATUS_ACTIVE, "$siteMaster@$primaryDomain", 'demomaster', CoreGlobal::TYPE_DEFAULT, '$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W', 'Demo', 'Master', 'Demo Master', DateUtil::getDateTime(), DateUtil::getDateTime(), 'JuL37UBqGpjnA7kaPiRnlsiWRwbRvXx7' ]
+			[ $this->locale->id, User::STATUS_ACTIVE, "$siteMaster@$primaryDomain", $siteMaster, CoreGlobal::TYPE_DEFAULT, '$2y$13$Ut5b2RskRpGA9Q0nKSO6Xe65eaBHdx/q8InO8Ln6Lt3HzOK4ECz8W', 'Demo', 'Master', 'Demo Master', DateUtil::getDateTime(), DateUtil::getDateTime(), 'JuL37UBqGpjnA7kaPiRnlsiWRwbRvXx7' ]
 		];
 
 		if( Yii::$app->migration->isTestAccounts() ) {

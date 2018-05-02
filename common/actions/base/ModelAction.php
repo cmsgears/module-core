@@ -76,13 +76,16 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 	// Type of Mapper or Resource. It's different from $parentType and $type.
 	public $modelType;
 
+	/**
+	 * The model discovered either by controller(filters - discover or owner) or ModelAction's init method.
+	 * It can also be directly set by controller.
+	 */
+	public $model;
+
 	// Protected --------------
 
 	// Model service to identify model in action. The controller must define model service.
 	protected $modelService;
-
-	// The model discovered either by controller(filters - discover or owner) or ModelAction's init method.
-	protected $model;
 
 	// Private ----------------
 
@@ -139,13 +142,13 @@ class ModelAction extends \cmsgears\core\common\base\Action {
     protected function beforeRun() {
 
 		// Get model from controller
-		$this->model = $this->controller->model;
+		$this->model = $this->model ?? $this->controller->model;
 
 		// Proceed only if model is not discovered yet
 		if( !isset( $this->model ) ) {
 
 			// Read slug from url
-			$slug	= Yii::$app->request->get( $this->slugParam, null );
+			$slug = Yii::$app->request->get( $this->slugParam, null );
 
 			// Try to find model using slug
 			if( isset( $slug ) ) {
@@ -155,12 +158,12 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 					// Search model using slug and type ... It works well for tables having unique slug and type
 					if( isset( $this->type ) ) {
 
-						$this->model	= $this->modelService->getBySlugType( $slug, $this->type );
+						$this->model = $this->modelService->getBySlugType( $slug, $this->type );
 					}
 					// Get first model of matched slug ... It works well for tables having unique slug
 					else {
 
-						$this->model	= $this->modelService->getBySlug( $slug, true );
+						$this->model = $this->modelService->getBySlug( $slug, true );
 					}
 				}
 				else {

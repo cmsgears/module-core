@@ -34,7 +34,7 @@ $returnUrl		= $this->context->returnUrl;
 						<div class="site-member <?= empty( $model->name ) ? 'hidden-easy' : null ?>">
 							<div class="row">
 								<div class="col col2">
-									<?= $form->field( $model, 'name' ) ?>
+									<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => true ] )->label( 'User' ) ?>
 								</div>
 								<div class="col col2">
 									<?= $form->field( $model, 'siteId', [ 'errorOptions' => [ 'class' => 'help-block hidden' ] ] )->hiddenInput( [ 'value'=> $siteId ] )->label( false )  ?>

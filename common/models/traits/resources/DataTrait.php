@@ -81,7 +81,7 @@ trait DataTrait {
 		$object	= $this->generateDataObjectFromJson( $assoc );
 
 		// Add/Update meta
-		$object->$name	= $value;
+		$object->$name = $value;
 
 		// Convert object back to data
 		$this->generateJsonFromDataObject( $object );

@@ -49,7 +49,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'name' => 'Name',
 		'title' => 'Title',
 		'template' => [ 'title' => 'Template', 'generate' => function( $model ) {
-			return isset( $model->template ) ? $model->template->getName() : null;
+			return isset( $model->template ) ? $model->template->name : null;
 		}],
 		'visibility' => [ 'title' => 'Visibility', 'generate' => function( $model ) { return $model->getVisibilityStr(); } ],
 		'pinned' => [ 'title' => 'Pinned', 'generate' => function( $model ) { return $model->getPinnedStr(); } ],

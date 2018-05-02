@@ -22,7 +22,7 @@ class UserController extends \cmsgears\core\common\controllers\apix\UserControll
 
 		parent::init();
 
-		$this->crudPermission	= CoreGlobal::PERM_USER;
+		$this->crudPermission = CoreGlobal::PERM_USER;
 	}
 
 	// Instance methods --------------------------------------------

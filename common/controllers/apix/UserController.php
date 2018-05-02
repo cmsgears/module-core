@@ -36,7 +36,7 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 
 		parent::init();
 
-		$this->crudPermission		= CoreGlobal::PERM_USER;
+		$this->crudPermission = CoreGlobal::PERM_USER;
 
 		$this->modelService			= Yii::$app->factory->get( 'userService' );
 		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );

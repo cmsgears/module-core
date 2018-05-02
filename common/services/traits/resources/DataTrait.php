@@ -72,7 +72,7 @@ trait DataTrait {
 
 	public function updateDataByParams( $model, $params = [], $config = [] ) {
 
-		foreach ( $params as $key => $value ) {
+		foreach( $params as $key => $value ) {
 
 			$model->setDataMeta( $key, $value );
 		}

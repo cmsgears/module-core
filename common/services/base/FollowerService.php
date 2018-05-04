@@ -9,6 +9,7 @@
 
 namespace cmsgears\core\common\services\base;
 
+use Yii;
 // CMG Imports
 use cmsgears\core\common\models\interfaces\base\IFollower;
 
@@ -135,7 +136,7 @@ abstract class FollowerService extends MapperService implements IFollowerService
 
 	public function createByParams( $params = [], $config = [] ) {
 
-		$params[ 'active' ]	= CoreGlobal::STATUS_ACTIVE;
+		$params[ 'active' ]	= true;
 
 		return parent::createByParams( $params, $config );
 	}

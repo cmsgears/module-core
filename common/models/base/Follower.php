@@ -97,7 +97,7 @@ abstract class Follower extends Mapper implements IFollower {
 			[ [ 'modelId', 'parentId' ], 'required' ],
 			[ [ 'id', 'value', 'data' ], 'safe' ],
 			// Unique
-			[ [ 'modelId', 'parentId', 'type' ], 'unique', 'targetAttribute' => [ 'userId', 'modelId', 'type' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ [ 'modelId', 'parentId', 'type' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'type'], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			// Other

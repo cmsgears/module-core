@@ -10,14 +10,15 @@
 namespace cmsgears\core\common\assets;
 
 // Yii Imports
+use yii\web\AssetBundle;
 use yii\web\View;
 
 /**
- * CaptchaAsset can be used to load yii.captcha.js from yii assets directory.
+ * Conditionizr can be used to load selective assets based on browser features.
  *
  * @since 1.0.0
  */
-class CaptchaAsset extends \yii\web\AssetBundle {
+class Conditionizr extends AssetBundle {
 
 	// Variables ---------------------------------------------------
 
@@ -28,14 +29,14 @@ class CaptchaAsset extends \yii\web\AssetBundle {
 	/**
 	 * @inheritdoc
 	 */
-    public $sourcePath = '@yii/assets';
+	public $sourcePath = '@bower/conditionizr';
 
 	/**
 	 * @inheritdoc
 	 */
-    public $js = [
-        'yii.captcha.js',
-    ];
+	public $js = [
+		'dist/conditionizr.min.js'
+	];
 
 	/**
 	 * @inheritdoc
@@ -44,13 +45,6 @@ class CaptchaAsset extends \yii\web\AssetBundle {
 		'position' => View::POS_END
 	];
 
-	/**
-	 * @inheritdoc
-	 */
-    public $depends = [
-        'cmsgears\core\common\assets\YiiAsset'
-    ];
-
 	// Protected --------------
 
 	// Private ----------------
@@ -58,6 +52,17 @@ class CaptchaAsset extends \yii\web\AssetBundle {
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	/**
+	 * @inheritdoc
+	 */
+    public function init() {
+
+		if( YII_DEBUG ) {
+
+			$this->js = [ 'dist/conditionizr.js' ];
+		}
+    }
 
 	// Instance methods --------------------------------------------
 
@@ -69,6 +74,6 @@ class CaptchaAsset extends \yii\web\AssetBundle {
 
 	// CMG parent classes --------------------
 
-	// CaptchaAsset --------------------------
+	// Conditionizr --------------------------
 
 }

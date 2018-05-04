@@ -50,7 +50,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'user' => [ 'title' => 'User', 'generate' => function( $model ) {
-			return isset( $model->user ) ? $model->user->firstName . ' ' . $model->user->lastName : null;
+			return isset( $model->creator ) ? $model->creator->name : null;
 		}],
 		'name' => 'Name',
 		'email' => 'Email',
@@ -75,11 +75,11 @@ $themeTemplates		= '@themes/admin/views/templates';
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
-	'data' => [ 'model' => $type, 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
+	'data' => [ 'model' => $type, 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
 ]) ?>
 
 <?= Popup::widget([
 	'title' => "Delete $type", 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
-	'data' => [ 'model' => $type, 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
+	'data' => [ 'model' => $type, 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
 ]) ?>

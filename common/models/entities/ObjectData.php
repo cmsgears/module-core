@@ -37,6 +37,7 @@ use cmsgears\core\common\models\interfaces\resources\IVisual;
 use cmsgears\core\common\models\interfaces\mappers\ICategory;
 use cmsgears\core\common\models\interfaces\mappers\IFile;
 use cmsgears\core\common\models\interfaces\mappers\IGallery;
+use cmsgears\core\common\models\interfaces\mappers\IObject;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Entity;
@@ -61,6 +62,7 @@ use cmsgears\core\common\models\traits\resources\VisualTrait;
 use cmsgears\core\common\models\traits\mappers\CategoryTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
 use cmsgears\core\common\models\traits\mappers\GalleryTrait;
+use cmsgears\core\common\models\traits\mappers\ObjectTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -103,7 +105,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @since 1.0.0
  */
 class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComment, IContent, IData, IFeatured, IFile,
-	IGallery, IGridCache, IHierarchy, IMultiSite, INameType, IOwner, ISlugType, ITemplate, IVisibility, IVisual {
+	IGallery, IGridCache, IHierarchy, IMultiSite, INameType, IObject, IOwner, ISlugType, ITemplate, IVisibility, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -142,6 +144,7 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	use HierarchyTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
+	use ObjectTrait;
 	use SlugTypeTrait;
 	use SocialLinkTrait;
 	use TemplateTrait;

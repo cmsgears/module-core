@@ -912,7 +912,7 @@ class FormDesigner extends \yii\base\Component {
 		$icon			= isset( $config[ 'icon' ] ) ? $config[ 'icon' ] : null;
 		$value			= isset( $config[ 'value' ] ) ? $config[ 'value' ] : null;
 
-		$app			= isset( $config[ 'app' ] ) ? $config[ 'app' ] : 'site';
+		$app			= isset( $config[ 'app' ] ) ? $config[ 'app' ] : 'mapper';
 		$controller		= isset( $config[ 'controller' ] ) ? $config[ 'controller' ] : 'auto';
 		$action			= isset( $config[ 'action' ] ) ? $config[ 'action' ] : 'autoSearch';
 		$type			= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;

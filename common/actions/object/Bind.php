@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\common\actions\category;
+namespace cmsgears\core\common\actions\object;
 
 // Yii Imports
 use Yii;
@@ -12,7 +12,7 @@ use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Bind action binds multiple categories to a model using Binder form.
+ * Bind action binds multiple object to a model using Binder form.
  */
 class Bind extends \cmsgears\core\common\actions\base\ModelAction {
 
@@ -58,9 +58,9 @@ class Bind extends \cmsgears\core\common\actions\base\ModelAction {
 
 		if( isset( $this->model ) ) {
 
-			if( $binder->load( Yii::$app->request->post(), 'CategoryBinder' ) ) {
+			if( $binder->load( Yii::$app->request->post(), 'ObjectBinder' ) ) {
 
-				$this->modelService->bindCategories( $binder );
+				$this->modelService->bindObjects( $binder );
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );

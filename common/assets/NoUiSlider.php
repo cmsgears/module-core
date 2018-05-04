@@ -10,14 +10,15 @@
 namespace cmsgears\core\common\assets;
 
 // Yii Imports
+use yii\web\AssetBundle;
 use yii\web\View;
 
 /**
- * CaptchaAsset can be used to load yii.captcha.js from yii assets directory.
+ * NoUiSlider can be used for range selection.
  *
  * @since 1.0.0
  */
-class CaptchaAsset extends \yii\web\AssetBundle {
+class NoUiSlider extends AssetBundle {
 
 	// Variables ---------------------------------------------------
 
@@ -28,14 +29,28 @@ class CaptchaAsset extends \yii\web\AssetBundle {
 	/**
 	 * @inheritdoc
 	 */
-    public $sourcePath = '@yii/assets';
+	public $sourcePath = '@bower/nouislider';
 
 	/**
 	 * @inheritdoc
 	 */
-    public $js = [
-        'yii.captcha.js',
-    ];
+	public $css = [
+		'distribute/nouislider.min.css'
+	];
+
+	/**
+	 * @inheritdoc
+	 */
+	public $cssOptions = [
+		'position' => View::POS_HEAD
+	];
+
+	/**
+	 * @inheritdoc
+	 */
+	public $js = [
+		'distribute/nouislider.min.js'
+	];
 
 	/**
 	 * @inheritdoc
@@ -44,13 +59,6 @@ class CaptchaAsset extends \yii\web\AssetBundle {
 		'position' => View::POS_END
 	];
 
-	/**
-	 * @inheritdoc
-	 */
-    public $depends = [
-        'cmsgears\core\common\assets\YiiAsset'
-    ];
-
 	// Protected --------------
 
 	// Private ----------------
@@ -58,6 +66,17 @@ class CaptchaAsset extends \yii\web\AssetBundle {
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	/**
+	 * @inheritdoc
+	 */
+    public function init() {
+
+		if( YII_DEBUG ) {
+
+			$this->js = [ 'distribute/nouislider.js' ];
+		}
+    }
 
 	// Instance methods --------------------------------------------
 
@@ -69,6 +88,6 @@ class CaptchaAsset extends \yii\web\AssetBundle {
 
 	// CMG parent classes --------------------
 
-	// CaptchaAsset --------------------------
+	// NoUiSlider ----------------------------
 
 }

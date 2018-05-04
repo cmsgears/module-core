@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\common\actions\category;
+namespace cmsgears\core\common\actions\mapper;
 
 // Yii Imports
 use Yii;
@@ -7,14 +7,12 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\forms\Binder;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Bind action binds multiple categories to a model using Binder form.
+ * Assign action maps existing category to model in action using mapper.
  */
-class Bind extends \cmsgears\core\common\actions\base\ModelAction {
+class Assign extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -34,6 +32,8 @@ class Bind extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Protected --------------
 
+	protected $modelMapperService;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
@@ -50,27 +50,26 @@ class Bind extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// Bind ----------------------------------
+	// Assign --------------------------------
 
 	public function run() {
 
-		$binder = new Binder();
+		$post = yii::$app->request->post();
 
-		if( isset( $this->model ) ) {
+		if( isset( $this->model ) && isset( $post[ 'itemId' ] ) ) {
 
-			if( $binder->load( Yii::$app->request->post(), 'CategoryBinder' ) ) {
+			$mappingType = isset( $post[ 'ctype' ] ) ? $post[ 'ctype' ] : null;
 
-				$this->modelService->bindCategories( $binder );
+			$modelMapper = $this->modelMapperService->activateByModelId( $this->model->id, $this->parentType, $post[ 'itemId' ], $mappingType );
 
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
-			}
+			$data = [ 'cid' => $modelMapper->id, 'name' => $modelMapper->model->name ];
 
-			// Trigger Ajax Failure
-			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 		}
 
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

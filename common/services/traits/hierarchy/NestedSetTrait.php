@@ -454,7 +454,7 @@ trait NestedSetTrait {
 		$conditions	= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : [];
 
 		$modelClass	= static::$modelClass;
-		$modelTable	= $modelClass->tableName();
+		$modelTable	= $modelClass::tableName();
 		$query		= new Query();
 
 		$query->select( 'node.id, node.name, node.rootId, node.lValue, node.rValue, ( COUNT( parent.id ) - 1 ) AS depth' );

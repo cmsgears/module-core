@@ -50,7 +50,8 @@ trait ObjectTrait {
 		$modelObjectTable = ModelObject::tableName();
 
 		return $this->hasMany( ModelObject::class, [ 'parentId' => 'id' ] )
-			->where( "$modelObjectTable.parentType='$this->modelType'" );
+			->where( "$modelObjectTable.parentType='$this->modelType'" )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
 	}
 
 	/**
@@ -61,7 +62,8 @@ trait ObjectTrait {
 		$modelObjectTable = ModelObject::tableName();
 
 		return $this->hasMany( ModelObject::class, [ 'parentId' => 'id' ] )
-			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.active=1" );
+			->where( "$modelObjectTable.parentType='$this->modelType' AND $modelObjectTable.active=1" )
+			->orderBy( [ "$modelObjectTable.order" => SORT_DESC, "$modelObjectTable.id" => SORT_ASC ] );
 	}
 
 	/**
@@ -72,7 +74,8 @@ trait ObjectTrait {
 		$modelObjectTable = ModelObject::tableName();
 
 		return $this->hasOne( ModelObject::class, [ 'parentId' => 'id' ] )
-			->where( "$modelObjectTable.parentType=:ptype AND $modelObjectTable.type=:type AND $modelObjectTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
+			->where( "$modelObjectTable.parentType=:ptype AND $modelObjectTable.type=:type AND $modelObjectTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+			->orderBy( [ 'order' => SORT_DESC, 'id' => SORT_ASC ] )->all();
 	}
 
 	/**

@@ -1,13 +1,13 @@
 <?php
-namespace cmsgears\core\common\actions\category;
+namespace cmsgears\core\common\actions\object;
 
 // Yii Imports
 use Yii;
 
 /**
- * Assign action maps existing category to model in action using ModelCategory mapper.
+ * Delete action deletes the object mapping.
  */
-class Assign extends \cmsgears\core\common\actions\mapper\Assign {
+class Delete extends \cmsgears\core\common\actions\mapper\Delete {
 
 	// Variables ---------------------------------------------------
 
@@ -35,7 +35,7 @@ class Assign extends \cmsgears\core\common\actions\mapper\Assign {
 
 		parent::init();
 
-		$this->modelMapperService = Yii::$app->factory->get( 'modelCategoryService' );
+		$this->modelMapperService = Yii::$app->factory->get( 'modelObjectService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -48,6 +48,6 @@ class Assign extends \cmsgears\core\common\actions\mapper\Assign {
 
 	// CMG parent classes --------------------
 
-	// Assign --------------------------------
+	// Delete --------------------------------
 
 }

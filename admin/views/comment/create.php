@@ -25,8 +25,8 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="row">
 						<div class="row row-medium">
 							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'createdBy', [
-								'placeholder' => 'Search Creator', 'icon' => 'cmti cmti-search', 'value' => $user,
-								'url' => 'core/user/auto-search'
+								'placeholder' => 'Search Creator', 'icon' => 'cmti cmti-search',
+								'value' => $user, 'url' => 'core/user/auto-search'
 							]) ?>
 						</div>
 						<div class="note">Notes: Use Search Creator only in case submit need to be done on behalf of selected user.</div>

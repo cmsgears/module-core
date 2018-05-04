@@ -13,11 +13,11 @@ namespace cmsgears\core\common\assets;
 use yii\web\View;
 
 /**
- * CaptchaAsset can be used to load yii.captcha.js from yii assets directory.
+ * CmgToolsUi can be used to load CMGTools UI assets.
  *
  * @since 1.0.0
  */
-class CaptchaAsset extends \yii\web\AssetBundle {
+class CmgToolsUi extends \yii\web\AssetBundle {
 
 	// Variables ---------------------------------------------------
 
@@ -28,28 +28,21 @@ class CaptchaAsset extends \yii\web\AssetBundle {
 	/**
 	 * @inheritdoc
 	 */
-    public $sourcePath = '@yii/assets';
+	public $sourcePath = '@bower/cmt-ui/dist';
 
 	/**
 	 * @inheritdoc
 	 */
-    public $js = [
-        'yii.captcha.js',
-    ];
-
-	/**
-	 * @inheritdoc
-	 */
-	public $jsOptions = [
-		'position' => View::POS_END
+	public $css = [
+		'css/cmgtools.min.css'
 	];
 
 	/**
 	 * @inheritdoc
 	 */
-    public $depends = [
-        'cmsgears\core\common\assets\YiiAsset'
-    ];
+	public $cssOptions = [
+		'position' => View::POS_HEAD
+	];
 
 	// Protected --------------
 
@@ -58,6 +51,17 @@ class CaptchaAsset extends \yii\web\AssetBundle {
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	/**
+	 * @inheritdoc
+	 */
+    public function init() {
+
+		if( YII_DEBUG ) {
+
+			$this->js = [ 'css/cmgtools.css' ];
+		}
+    }
 
 	// Instance methods --------------------------------------------
 
@@ -69,6 +73,6 @@ class CaptchaAsset extends \yii\web\AssetBundle {
 
 	// CMG parent classes --------------------
 
-	// CaptchaAsset --------------------------
+	// CmgToolsUi ----------------------------
 
 }

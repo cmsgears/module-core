@@ -56,12 +56,12 @@ class Assign extends \cmsgears\core\common\actions\base\ModelAction {
 
 		$post	= yii::$app->request->post();
 
-		if( isset( $this->model ) && isset( $post[ 'tags' ] ) ) {
+		if( isset( $this->model ) && isset( $post[ 'list' ] ) ) {
 
 			$modelTagService	= Yii::$app->factory->get( 'modelTagService' );
 			$parentId			= $this->model->id;
 			$parentType			= $this->parentType;
-			$tags				= $post[ 'tags' ];
+			$tags				= $post[ 'list' ];
 
 			$modelTagService->createFromCsv( $parentId, $parentType, $tags );
 

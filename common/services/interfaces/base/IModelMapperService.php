@@ -58,7 +58,7 @@ interface IModelMapperService extends IMapperService {
 
 	public function activate( $model );
 
-	public function activateByModelId( $parentId, $parentType, $modelId );
+	public function activateByModelId( $parentId, $parentType, $modelId, $type = null );
 
 	public function disable( $model );
 

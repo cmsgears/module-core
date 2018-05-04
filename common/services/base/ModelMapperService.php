@@ -182,7 +182,7 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 		return $model;
 	}
 
-	public function activateByModelId( $parentId, $parentType, $modelId ) {
+	public function activateByModelId( $parentId, $parentType, $modelId, $type = null ) {
 
 		$model = $this->getByModelId( $parentId, $parentType, $modelId );
 
@@ -192,7 +192,7 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 		}
 		else {
 
-			return $this->createByParams( [ 'parentId' => $parentId, 'parentType' => $parentType, 'modelId' => $modelId, 'active' => true ] );
+			return $this->createByParams( [ 'parentId' => $parentId, 'parentType' => $parentType, 'modelId' => $modelId, 'type' => $type, 'active' => true ] );
 		}
 	}
 

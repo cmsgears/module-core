@@ -10,14 +10,15 @@
 namespace cmsgears\core\common\assets;
 
 // Yii Imports
+use yii\web\AssetBundle;
 use yii\web\View;
 
 /**
- * CaptchaAsset can be used to load yii.captcha.js from yii assets directory.
+ * Animate can be used for animations.
  *
  * @since 1.0.0
  */
-class CaptchaAsset extends \yii\web\AssetBundle {
+class Animate extends AssetBundle {
 
 	// Variables ---------------------------------------------------
 
@@ -28,28 +29,21 @@ class CaptchaAsset extends \yii\web\AssetBundle {
 	/**
 	 * @inheritdoc
 	 */
-    public $sourcePath = '@yii/assets';
+	public $sourcePath = '@bower/animate.css';
 
 	/**
 	 * @inheritdoc
 	 */
-    public $js = [
-        'yii.captcha.js',
-    ];
-
-	/**
-	 * @inheritdoc
-	 */
-	public $jsOptions = [
-		'position' => View::POS_END
+	public $css = [
+		'animate.min.css'
 	];
 
 	/**
 	 * @inheritdoc
 	 */
-    public $depends = [
-        'cmsgears\core\common\assets\YiiAsset'
-    ];
+	public $cssOptions = [
+		'position' => View::POS_HEAD
+	];
 
 	// Protected --------------
 
@@ -58,6 +52,17 @@ class CaptchaAsset extends \yii\web\AssetBundle {
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	/**
+	 * @inheritdoc
+	 */
+    public function init() {
+
+		if( YII_DEBUG ) {
+
+			$this->js = [ 'animate.css' ];
+		}
+    }
 
 	// Instance methods --------------------------------------------
 
@@ -69,6 +74,6 @@ class CaptchaAsset extends \yii\web\AssetBundle {
 
 	// CMG parent classes --------------------
 
-	// CaptchaAsset --------------------------
+	// Animate -------------------------------
 
 }

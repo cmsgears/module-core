@@ -1,5 +1,5 @@
 <?php
-namespace cmsgears\core\common\actions\category;
+namespace cmsgears\core\common\actions\mapper;
 
 // Yii Imports
 use Yii;
@@ -7,14 +7,12 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\forms\Binder;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Bind action binds multiple categories to a model using Binder form.
+ * Delete action deletes the mapping.
  */
-class Bind extends \cmsgears\core\common\actions\base\ModelAction {
+class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -34,6 +32,8 @@ class Bind extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Protected --------------
 
+	protected $modelMapperService;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
@@ -50,27 +50,25 @@ class Bind extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// Bind ----------------------------------
+	// Delete --------------------------------
 
-	public function run() {
+	public function run( $cid ) {
 
-		$binder = new Binder();
+		if( isset( $this->model ) && isset( $cid ) ) {
 
-		if( isset( $this->model ) ) {
+			$modelMapper = $this->modelMapperService->getById( $cid );
 
-			if( $binder->load( Yii::$app->request->post(), 'CategoryBinder' ) ) {
+			if( isset( $modelMapper ) && $modelMapper->isParentValid( $this->model->id, $this->parentType ) ) {
 
-				$this->modelService->bindCategories( $binder );
+				$this->modelMapperService->delete( $modelMapper );
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 			}
-
-			// Trigger Ajax Failure
-			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 		}
 
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

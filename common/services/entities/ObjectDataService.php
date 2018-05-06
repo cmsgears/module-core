@@ -368,7 +368,7 @@ class ObjectDataService extends EntityService implements IObjectService {
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
 			'templateId', 'avatarId', 'bannerId', 'videoId',
 			'name', 'title', 'icon', 'description', 'visibility',
-			'htmlOptions', 'content'
+			'htmlOptions', 'summary', 'content'
 		];
 
 		$avatar	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;

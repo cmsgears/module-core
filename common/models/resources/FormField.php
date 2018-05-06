@@ -126,7 +126,7 @@ class FormField extends Resource implements IData {
 			[ [ 'formId', 'name' ], 'required' ],
 			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
 			// Unique
-			[ [ 'formId', 'name' ], 'unique', 'targetAttribute' => [ 'formId', 'name' ] ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'formId', 'name' ] ],
 			// Text Limit
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],

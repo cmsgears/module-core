@@ -83,8 +83,8 @@ class Province extends Entity implements IName {
 			[ [ 'countryId', 'code', 'name' ], 'required' ],
 			[ 'id', 'safe' ],
 			// Unique
-			[ [ 'countryId', 'code' ], 'unique', 'targetAttribute' => [ 'countryId', 'code' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
-			[ [ 'countryId', 'name' ], 'unique', 'targetAttribute' => [ 'countryId', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ 'code', 'unique', 'targetAttribute' => [ 'countryId', 'code' ] ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'countryId', 'name' ] ],
 			// Text Limit
 			[ [ 'code', 'iso' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],

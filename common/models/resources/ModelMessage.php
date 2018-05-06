@@ -91,7 +91,7 @@ class ModelMessage extends ModelResource implements IModelResource {
 			[ [ 'localeId', 'parentId', 'parentType', 'name' ], 'required' ],
 			[ [ 'id', 'value' ], 'safe' ],
 			// Unique
-			[ [ 'localeId', 'parentId', 'parentType', 'name' ], 'unique', 'targetAttribute' => [ 'localeId', 'parentId', 'parentType', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'localeId', 'parentId', 'parentType', 'name' ] ],
 			// Text Limit
 			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],

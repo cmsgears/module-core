@@ -229,6 +229,7 @@ class m160620_095703_core extends Migration {
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'htmlOptions' => $this->text(),
+			'summary' => $this->text(),
 			'content' => $this->mediumText(),
 			'data' => $this->mediumText(),
 			'gridCache' => $this->longText(),

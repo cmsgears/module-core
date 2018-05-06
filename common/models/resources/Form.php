@@ -168,8 +168,8 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 			[ [ 'siteId', 'name', 'captcha', 'visibility', 'status' ], 'required' ],
 			[ [ 'id', 'htmlOptions', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique
-			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
-			[ [ 'siteId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'type', 'name' ] ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

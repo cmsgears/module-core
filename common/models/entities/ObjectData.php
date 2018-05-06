@@ -96,6 +96,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $htmlOptions
+ * @property string $summary;
  * @property string $content
  * @property string $data
  * @property string $gridCache
@@ -196,10 +197,10 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 		$rules = [
 			// Required, Safe
 			[ [ 'name', 'type' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'content', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'summary', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique - Allowed multiple names for same type. Slug will differentiate the models.
 			//[ [ 'siteId', 'themeId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
-			[ [ 'siteId', 'themeId', 'type', 'slug' ], 'unique', 'targetAttribute' => [ 'type', 'slug' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'slug' ] ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'icon', 'texture' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
@@ -254,6 +255,7 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
 			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
+			'summary' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SUMMARY ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
 			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )

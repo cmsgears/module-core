@@ -126,6 +126,32 @@ trait VisibilityTrait {
 		return $this->visibility >= IVisibility::VISIBILITY_PROTECTED;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public function isVisible() {
+
+		// Always visible
+		if( $this->isVisibilityPublic(  true ) ) {
+
+			return true;
+		}
+		// Visible to logged in users
+		else if( $this->isVisibilityProtected(  true ) ) {
+
+			$user = Yii::$app->user->identity;
+
+			return isset( $user );
+		}
+		// Visible to owner
+		else {
+
+			$user = Yii::$app->user->identity;
+
+			return $this->createdBy == $user->id;
+		}
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii classes ---------------------------

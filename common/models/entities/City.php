@@ -104,7 +104,7 @@ class City extends Entity implements IName {
 			[ [ 'countryId', 'name' ], 'required' ],
 			[ [ 'id' ], 'safe' ],
 			// Unique
-			[ [ 'countryId', 'provinceId', 'zone', 'iso' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'zone', 'iso' ] ],
+			[ [ 'zone', 'iso' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'zone', 'iso' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ 'code', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ [ 'type', 'postal' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],

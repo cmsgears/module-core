@@ -119,7 +119,7 @@ class Category extends NestedSetModel implements IAuthor, IFeatured, IMultiSite,
 				'slugAttribute' => 'slug', // Unique for Site Id and Type
 				'immutable' => true,
 				'ensureUnique' => true,
-				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'slug', 'type' ] ]
+				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'type', 'slug' ] ]
 			],
 			'timestampBehavior' => [
 				'class' => TimestampBehavior::class,
@@ -145,7 +145,7 @@ class Category extends NestedSetModel implements IAuthor, IFeatured, IMultiSite,
 			// Unique
 			// Notes: disabled it in order to allow sub categories having same name as parent, but with different slug. It can be enable based on project needs by extending the model and service.
 			//[ [ 'name', 'type' ], 'unique', 'targetAttribute' => [ 'name', 'type' ] ],
-			[ [ 'siteId', 'slug', 'type' ], 'unique', 'targetAttribute' => [ 'slug', 'type' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ 'slug', 'unique', 'targetAttribute' => [ 'slug', 'type' ] ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

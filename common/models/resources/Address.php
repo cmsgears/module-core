@@ -88,7 +88,7 @@ class Address extends Resource {
 
 	// Protected --------------
 
-	protected $modelType	= CoreGlobal::TYPE_ADDRESS;
+	protected $modelType = CoreGlobal::TYPE_ADDRESS;
 
 	// Private ----------------
 

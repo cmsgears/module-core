@@ -60,4 +60,14 @@ interface IVisibility {
 	 * @return boolean
 	 */
 	public function isVisibilityPublic( $strict = true );
+
+	/**
+	 * Check whether model is visible. It defines the most generic visibility behavior.
+	 * The model must implement the logic in case the generic visibility needs to be different.
+	 *
+	 * @param boolean $strict
+	 * @return boolean
+	 */
+	public function isVisible();
+
 }

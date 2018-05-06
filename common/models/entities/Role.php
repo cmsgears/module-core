@@ -141,7 +141,7 @@ class Role extends Entity implements IAuthor, IData, IGridCache, IHierarchy, INa
 			[ [ 'name' ], 'required' ],
 			[ [ 'id', 'data', 'gridCache' ], 'safe' ],
 			// Unique
-			[ [ 'type', 'name' ], 'unique', 'targetAttribute' => [ 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'type', 'name' ] ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

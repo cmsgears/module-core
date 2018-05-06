@@ -106,7 +106,7 @@ class Tag extends Resource implements IAuthor, IMultiSite, INameType, ISlugType 
 				'slugAttribute' => 'slug', // Unique for Site Id and Type
 				'immutable' => true,
 				'ensureUnique' => true,
-				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'slug', 'type' ] ]
+				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'type', 'slug' ] ]
 			],
 			'timestampBehavior' => [
 				'class' => TimestampBehavior::class,
@@ -130,7 +130,8 @@ class Tag extends Resource implements IAuthor, IMultiSite, INameType, ISlugType 
 			[ [ 'siteId', 'name' ], 'required' ],
 			[ [ 'id', 'htmlOptions' ], 'safe' ],
 			// Unique
-			[ [ 'siteId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'type', 'slug' ] ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'type', 'name' ] ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],

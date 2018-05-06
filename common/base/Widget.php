@@ -27,37 +27,44 @@ abstract class Widget extends \yii\base\Widget {
 	// Public -----------------
 
 	/**
+	 * Title can be either text or html displayed on top of widget.
+	 *
+	 * @var type string
+	 */
+	public $title;
+
+	/**
 	 * Flag to check whether the widget html need wrapper.
 	 */
-	public $wrap			= false;
+	public $wrap = false;
 
 	/**
 	 * The wrapper tag to be used for widget html wrapping.
 	 */
-	public $wrapper			= 'div';
+	public $wrapper = 'div';
 
 	/**
 	 * Html options to be used for wrapper.
 	 */
-	public $options			= [];
+	public $options = [];
 
 	/**
 	 * Flag to check whether assets can be loaded. We can load widget assets separately in case the
 	 * bundle is not added as dependency to layout asset bundle.
 	 */
-	public $loadAssets		= false;
+	public $loadAssets = false;
 
 	/**
 	 * The path at which view template file is located. It can have alias - ex: '@widget/my-view'.
 	 * By default it's the views folder within widget directory.
 	 */
-	public $templateDir		= null;
+	public $templateDir = null;
 
 	/**
 	 * The template directory/file used to render widget. If it's a directory, the view can be formed
 	 * using multiple files. It can be absolute path to directly access the view.
 	 */
-	public $template		= 'default';
+	public $template = 'default';
 
 	/**
 	 * This flag can be utilised by widgets to use fallback options in case application factory having
@@ -66,22 +73,22 @@ abstract class Widget extends \yii\base\Widget {
 	 * The widgets in need of model service can utilise factory to get required service. In case factory
 	 * is not needed, widget can directly use models to query them or service in use must provided static method.
 	 */
-	public $factory		= true;
+	public $factory = true;
 
 	/**
 	 * Flag to render data from cache.
 	 */
-	public $cache		= false;
+	public $cache = false;
 
 	/**
 	 * Flag for data rendering from database based cached data.
 	 */
-	public $cacheDb		= false;
+	public $cacheDb = false;
 
 	/**
 	 * Flag for data rendering from file based cached data.
 	 */
-	public $cacheFile	= false;
+	public $cacheFile = false;
 
 	/**
 	 * Flag for widget autoloading.
@@ -99,7 +106,7 @@ abstract class Widget extends \yii\base\Widget {
 	/**
 	 * Url for autoloading.
 	 */
-	public $autoloadUrl			= null;
+	public $autoloadUrl = null;
 
 	// Protected --------------
 

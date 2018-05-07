@@ -95,6 +95,9 @@ class ObjectDataService extends EntityService implements IObjectService {
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
+		$site	= Yii::$app->core->site;
+		$theme	= $site->theme;
+
 		$templateTable = Yii::$app->factory->get( 'templateService' )->getModelTable();
 
 		// Sorting ----------
@@ -208,6 +211,9 @@ class ObjectDataService extends EntityService implements IObjectService {
 
 			$config[ 'hasOne' ] = true;
 		}
+
+		$config[ 'ignoreSite' ]		= true;
+		$config[ 'conditions' ][]	= isset( $theme ) ? "$modelTable.themeId={$theme->id} OR $modelTable.siteId={$site->id}" : "$modelTable.siteId={$site->id}";
 
 		// Filters ----------
 

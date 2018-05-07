@@ -87,6 +87,9 @@ class TemplateService extends EntityService implements ITemplateService {
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
+		$site	= Yii::$app->core->site;
+		$theme	= $site->theme;
+
 		$themeTable = Yii::$app->factory->get( 'themeService' )->getModelTable();
 
 		// Sorting ----------
@@ -200,6 +203,9 @@ class TemplateService extends EntityService implements ITemplateService {
 
 			$config[ 'hasOne' ] = true;
 		}
+
+		$config[ 'ignoreSite' ]		= true;
+		$config[ 'conditions' ][]	= isset( $theme ) ? "$modelTable.themeId={$theme->id} OR $modelTable.siteId={$site->id}" : "$modelTable.siteId={$site->id}";
 
 		// Filters ----------
 

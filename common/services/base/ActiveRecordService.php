@@ -630,12 +630,13 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$modelTable = $modelClass::tableName();
 
 		// Filter sites
+		$ignoreSite			= $config[ 'ignoreSite' ] ?? false;
 		$siteOnly			= $config[ 'siteOnly' ] ?? true;
 		$excludeMain		= $config[ 'excludeMainSite' ] ?? false; // Exclude main site in multisite scenario
 		$config[ 'siteId' ]	= $config[ 'siteId' ] ?? ( $modelClass::isMultiSite() ? Yii::$app->core->siteId : null );
 
 		// Site specific models for multi-site applications
-		if( $modelClass::isMultiSite() ) {
+		if( $modelClass::isMultiSite() && !$ignoreSite ) {
 
 			// Restrict to site only in case model supports multisite i.e. siteId column
 			if( $siteOnly ) {

@@ -24,6 +24,12 @@ interface IMeta {
 	public function getMetas();
 
 	/**
+	 * Return all the meta associated with model.
+	 *
+	 * @return \cmsgears\core\common\models\base\Meta[]
+	 */
+	public function getActiveMetas();
+	/**
 	 * Return all the meta associated with model for given type.
 	 *
 	 * @param string $type

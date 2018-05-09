@@ -48,7 +48,18 @@ trait MetaTrait {
 
 		$metaClass = $this->metaClass;
 
-		return $this->hasMany( $metaClass, [ 'parentId' => 'id' ] );
+		return $this->hasMany( $metaClass, [ 'modelId' => 'id' ] );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getActiveMetas( ) {
+
+		$metaClass = $this->metaClass;
+		$metaTable = $metaClass::tableName();
+		
+		return $this->hasMany( $metaClass, [ 'modelId' => 'id' ] )->where( [ "$metaTable.active" => true ] )->all();
 	}
 
 	/**
@@ -59,7 +70,7 @@ trait MetaTrait {
 		$metaClass = $this->metaClass;
 		$metaTable = $metaClass::tableName();
 
-		return $this->hasMany( $metaClass, [ 'parentId' => 'id' ] )->where( [ "$metaTable.type" => $type ] )->all();
+		return $this->hasMany( $metaClass, [ 'modelId' => 'id' ] )->where( [ "$metaTable.type" => $type ] )->all();
 	}
 
 	/**
@@ -70,7 +81,7 @@ trait MetaTrait {
 		$metaClass = $this->metaClass;
 		$metaTable = $metaClass::tableName();
 
-		return $this->hasMany( $metaClass, [ 'parentId' => 'id' ] )->where( [ "$metaTable.type" => $type, "$metaTable.name" => $name ] )->one();
+		return $this->hasMany( $metaClass, [ 'modelId' => 'id' ] )->where( [ "$metaTable.type" => $type, "$metaTable.name" => $name ] )->one();
 	}
 
 	/**

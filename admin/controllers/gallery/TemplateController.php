@@ -49,7 +49,7 @@ class TemplateController extends BaseTemplateController {
 		$this->apixBase = 'core/template';
 
 		// Sidebar
-		$this->sidebar = [ 'parent' => 'sidebar-gallery', 'child' => 'template' ];
+		$this->sidebar = [ 'parent' => 'sidebar-file', 'child' => 'gallery-template' ];
 
 		// Return Url
 		$this->returnUrl = Url::previous( 'templates' );

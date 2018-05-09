@@ -50,22 +50,6 @@ $siteId	= Yii::$app->core->siteId;
 	</div>
 <?php } ?>
 
-<?php if( $core->hasModule( 'core' ) && $user->isPermitted( CoreGlobal::PERM_GALLERY_ADMIN ) ) { ?>
-	<div id="sidebar-gallery" class="collapsible-tab has-children <?= $parent === 'sidebar-gallery' ? 'active' : null ?>">
-		<span class="marker"></span>
-		<div class="tab-header">
-			<div class="tab-icon"><span class="cmti cmti-design-tools"></span></div>
-			<div class="tab-title">Galleries</div>
-		</div>
-		<div class="tab-content clear <?= $parent === 'sidebar-gallery' ? 'expanded visible' : null ?>">
-			<ul>
-				<li class='gallery <?= $child === 'gallery' ? 'active' : null ?>'><?= Html::a( 'Galleries', [ '/core/gallery/all' ] ) ?></li>
-				<li class='template <?= $child === 'template' ? 'active' : null ?>'><?= Html::a( 'Templates', [ '/core/gallery/template/all' ] ) ?></li>
-			</ul>
-		</div>
-	</div>
-<?php } ?>
-
 <?php if( $core->hasModule( 'core' ) && $user->isPermitted( CoreGlobal::PERM_FILE_ADMIN ) ) { ?>
 	<div id="sidebar-file" class="collapsible-tab has-children <?= $parent === 'sidebar-file' ? 'active' : null ?>">
 		<span class="marker"></span>
@@ -76,6 +60,10 @@ $siteId	= Yii::$app->core->siteId;
 		<div class="tab-content clear <?= $parent === 'sidebar-file' ? 'expanded visible' : null ?>">
 			<ul>
 				<li class='file <?= $child === 'file' ? 'active' : null ?>'><?= Html::a( 'Files', [ '/core/file/all' ] ) ?></li>
+				<?php if( $user->isPermitted( CoreGlobal::PERM_GALLERY_ADMIN ) ) { ?>
+					<li class='gallery <?= $child === 'gallery' ? 'active' : null ?>'><?= Html::a( 'Galleries', [ '/core/gallery/all' ] ) ?></li>
+					<li class='gallery-template <?= $child === 'gallery-template' ? 'active' : null ?>'><?= Html::a( 'Gallery Templates', [ '/core/gallery/template/all' ] ) ?></li>
+				<?php } ?>
 			</ul>
 		</div>
 	</div>

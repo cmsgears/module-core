@@ -46,7 +46,7 @@ class GalleryController extends BaseGalleryController {
 		$this->apixBase	= 'core/gallery';
 
 		// Sidebar
-		$this->sidebar = [ 'parent' => 'sidebar-gallery', 'child' => 'gallery' ];
+		$this->sidebar = [ 'parent' => 'sidebar-file', 'child' => 'gallery' ];
 
 		// Return Url
 		$this->returnUrl = Url::previous( 'galleries' );

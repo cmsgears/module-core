@@ -114,6 +114,18 @@ class DataModel extends Model {
 	// DataModel -----------------------------
 
 	/**
+	 * Return class name without path.
+	 *
+	 * @return string class name without class path.
+	 */
+	public function getClassname() {
+
+		$name = get_class( $this );
+
+		return join( '', array_slice( explode( '\\', $name ), -1 ) );
+	}
+
+	/**
 	 * Accepts object and generate the model attributes and values using object attributes.
 	 *
 	 * @param object $object

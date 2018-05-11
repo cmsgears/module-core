@@ -2,6 +2,7 @@
 namespace cmsgears\core\common\base;
 
 // Yii Imports
+use yii\base\Widget as BaseWidget;
 use yii\helpers\Html;
 
 // CMG Imports
@@ -10,7 +11,7 @@ use cmsgears\core\common\config\CacheProperties;
 
 use cmsgears\core\common\utilities\CodeGenUtil;
 
-abstract class Widget extends \yii\base\Widget {
+abstract class Widget extends BaseWidget {
 
 	// Variables ---------------------------------------------------
 
@@ -65,6 +66,10 @@ abstract class Widget extends \yii\base\Widget {
 	 * using multiple files. It can be absolute path to directly access the view.
 	 */
 	public $template = 'default';
+
+	// Additional content
+	public $buffer		= false;
+	public $bufferData	= null;
 
 	/**
 	 * This flag can be utilised by widgets to use fallback options in case application factory having
@@ -152,6 +157,8 @@ abstract class Widget extends \yii\base\Widget {
 	 * @inheritdoc
 	 */
 	public function run() {
+
+		$this->bufferData = $this->buffer ? ob_get_clean() : null;
 
 		if( $this->autoload ) {
 

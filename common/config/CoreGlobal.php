@@ -468,6 +468,7 @@ class CoreGlobal {
 	const FIELD_LAYOUT_GROUP	= 'layoutGroupField';
 	const FIELD_STYLE			= 'styleField';
 	const FIELD_BASE_PATH		= 'basePathField';
+	const FIELD_VIEW			= 'viewField';
 	const FIELD_VIEW_PATH		= 'viewPathField';
 	const FIELD_VIEW_COUNT		= 'viewCountField';
 	const FIELD_REFERRAL_COUNT	= 'referralCountField';

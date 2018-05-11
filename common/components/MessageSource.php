@@ -282,6 +282,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_LAYOUT_GROUP => 'Layout Group',
 		CoreGlobal::FIELD_STYLE => 'Style',
 		CoreGlobal::FIELD_BASE_PATH => 'Base Path',
+		CoreGlobal::FIELD_VIEW => 'View',
 		CoreGlobal::FIELD_VIEW_PATH => 'View Path',
 		CoreGlobal::FIELD_VIEW_COUNT => 'Views',
 		CoreGlobal::FIELD_REFERRAL_COUNT => 'Referrals',

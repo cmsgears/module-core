@@ -21,17 +21,19 @@ $right	= '';
 		ob_start();
 ?>
 	<div class="box box-collapsible box-settings">
-		<div class="box-header">
-			<div class="box-header-title">
-				<?= ucwords( $settingTitle ) ?>
+		<div class="box-content-wrap">
+			<div class="box-header">
+				<div class="box-header-title">
+					<?= ucwords( $settingTitle ) ?>
+				</div>
+				<span class="box-collapse-trigger cmti cmti-chevron-down"></span>
+				<span id="settings-<?= $setting ?>" content="settings-<?= $setting ?>-content" cmt-app="site" cmt-controller="settings" cmt-action="getContent" action="settings/index?type=<?= $setting ?>">
+					<span class="cmt-click collapse-trigger"></span>
+				</span>
 			</div>
-			<span class="box-collapse-trigger cmti cmti-chevron-down"></span>
-			<span id="settings-<?= $setting ?>" content="settings-<?= $setting ?>-content" cmt-app="site" cmt-controller="settings" cmt-action="getContent" action="settings/index?type=<?= $setting ?>">
-				<span class="cmt-click collapse-trigger"></span>
-			</span>
-		</div>
-		<div id="settings-<?= $setting ?>-content" class="box-content-wrap clearfix">
-			<div class="box-content"></div>
+			<div id="settings-<?= $setting ?>-content" class="box-content clearfix">
+				<div class="box-content-data"></div>
+			</div>
 		</div>
 	</div>
 

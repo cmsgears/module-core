@@ -54,11 +54,11 @@ trait MetaTrait {
 	/**
 	 * @inheritdoc
 	 */
-	public function getActiveMetas( ) {
+	public function getActiveMetas() {
 
 		$metaClass = $this->metaClass;
 		$metaTable = $metaClass::tableName();
-		
+
 		return $this->hasMany( $metaClass, [ 'modelId' => 'id' ] )->where( [ "$metaTable.active" => true ] )->all();
 	}
 

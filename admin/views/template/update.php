@@ -67,7 +67,9 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 						<div class="col col2">
 							<?= $form->field( $model, 'viewPath' ) ?>
 						</div>
-						<div class="col col2"></div>
+						<div class="col col2">
+							<?= $form->field( $model, 'view' ) ?>
+						</div>
 					</div>
 				</div>
 			</div>

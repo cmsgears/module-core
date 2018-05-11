@@ -61,6 +61,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $layout
  * @property boolean $layoutGroup
  * @property string $viewPath
+ * @property string $view
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $content
@@ -155,7 +156,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 			[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'name' ] ],
 			// Text Limit
 			[ [ 'type', 'renderer', 'layout' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'icon', 'view' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ [ 'name', 'viewPath' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'title', 'classPath' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
@@ -170,7 +171,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'title', 'description', 'renderer', 'layout', 'viewPath' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'title', 'description', 'renderer', 'layout', 'viewPath', 'view' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -199,6 +200,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 			'layout' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LAYOUT ),
 			'layoutGroup' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LAYOUT_GROUP ),
 			'viewPath' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_PATH ),
+			'view' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
 			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )

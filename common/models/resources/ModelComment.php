@@ -79,10 +79,12 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 
 	// Constants --------------
 
-	const TYPE_COMMENT		=  'comment';
-	const TYPE_REVIEW		=  'review';
-	const TYPE_FEEDBACK		=  'feedback';
-	const TYPE_TESTIMONIAL	=  'testimonial';
+	// Model Comments
+	const TYPE_COMMENT		=  'comment'; // quick comment
+	const TYPE_REVIEW		=  'review'; // detailed review
+	// User experience specific to application
+	const TYPE_FEEDBACK		=  'feedback'; // enhancements, improvement
+	const TYPE_TESTIMONIAL	=  'testimonial'; // user satisfaction
 
 	const STATUS_NEW		=  500;
 	const STATUS_SPAM		=  600;

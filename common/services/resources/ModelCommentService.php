@@ -379,6 +379,21 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 		return $modelClass::queryByEmail( $email )->one();
 	}
 
+	public function getFeaturedByType( $parentId, $parentType, $type, $config = [] ) {
+
+		$modelClass	= self::$modelClass;
+		$query		= $modelClass::queryByType( $parentId, $parentType, $type, $config );
+
+		return $query->andWhere( [ 'featured' => true ] )->all();
+	}
+
+	public function getFeaturedTestimonials( $parentId, $parentType, $config = [] ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $this->getFeaturedByType( $parentId, $parentType, $modelClass::TYPE_TESTIMONIAL, $config );
+	}
+
 	// Read - Lists ----
 
 	// Read - Maps -----

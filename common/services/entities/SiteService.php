@@ -232,6 +232,13 @@ class SiteService extends EntityService implements ISiteService {
 
 	// Read - Models ---
 
+	public function getFeaturedTestimonials( $site ) {
+
+		$commentService	= Yii::$app->factory->get( 'modelCommentService' );
+
+		return $commentService->getFeaturedTestimonials( $site->id, static::$parentType );
+	}
+
 	// Read - Lists ----
 
 	// Read - Maps -----

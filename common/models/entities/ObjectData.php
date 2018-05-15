@@ -32,6 +32,7 @@ use cmsgears\core\common\models\interfaces\resources\IContent;
 use cmsgears\core\common\models\interfaces\resources\IData;
 use cmsgears\core\common\models\interfaces\resources\IGridCache;
 use cmsgears\core\common\models\interfaces\resources\IHierarchy;
+use cmsgears\core\common\models\interfaces\resources\IMeta;
 use cmsgears\core\common\models\interfaces\resources\ITemplate;
 use cmsgears\core\common\models\interfaces\resources\IVisual;
 use cmsgears\core\common\models\interfaces\mappers\ICategory;
@@ -57,6 +58,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 use cmsgears\core\common\models\traits\resources\HierarchyTrait;
 use cmsgears\core\common\models\traits\resources\SocialLinkTrait;
+use cmsgears\core\common\models\traits\resources\MetaTrait;
 use cmsgears\core\common\models\traits\resources\TemplateTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
 use cmsgears\core\common\models\traits\mappers\CategoryTrait;
@@ -106,7 +108,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @since 1.0.0
  */
 class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComment, IContent, IData, IFeatured, IFile,
-	IGallery, IGridCache, IHierarchy, IMultiSite, INameType, IObject, IOwner, ISlugType, ITemplate, IVisibility, IVisual {
+	IGallery, IGridCache, IHierarchy, IMeta, IMultiSite, INameType, IObject, IOwner, ISlugType, ITemplate, IVisibility, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -128,6 +130,8 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 
 	protected $testOwner = false;
 
+	protected $metaClass;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
@@ -143,6 +147,7 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	use GalleryTrait;
 	use GridCacheTrait;
 	use HierarchyTrait;
+	use MetaTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use ObjectTrait;
@@ -153,6 +158,13 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->metaClass = ObjectMeta::class;
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -338,16 +350,6 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 	}
 
 	/**
-	 * Return meta data of the object.
-	 *
-	 * @return \cmsgears\core\common\models\resources\ObjectMeta[]
-	 */
-	public function getMetas() {
-
-		return $this->hasMany( ObjectMeta::class, [ 'modelId' => 'id' ] );
-	}
-
-	/**
 	 * Returns the objects mapped to it.
 	 *
 	 * @return ObjectData[]
@@ -356,6 +358,11 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
 
         return $this->hasMany( ModelObject::class, [ 'parentId' => 'id' ] );
     }
+
+	public function getDisplayName() {
+
+		return !empty( $this->title ) ? $this->title : $this->name;
+	}
 
 	// Static Methods ----------------------------------------------
 

@@ -29,6 +29,8 @@ interface ISiteService extends IEntityService, IData, IMeta, IName, ISlug {
 
 	// Read - Models ---
 
+	public function getFeaturedTestimonials( $site );
+
 	// Read - Lists ----
 
 	// Read - Maps -----

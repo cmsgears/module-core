@@ -48,6 +48,8 @@ interface IModelCommentService extends IModelResourceService, IData {
 
 	public function getByEmail( $email );
 
+	public function getFeaturedByType( $parentId, $parentType, $type, $config = [] );
+
 	// Read - Lists ----
 
 	// Read - Maps -----

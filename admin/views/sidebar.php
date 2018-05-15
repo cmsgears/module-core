@@ -43,6 +43,7 @@ $siteId	= Yii::$app->core->siteId;
 				<li class='site <?= $child === 'site' ? 'active' : null ?>'><?= Html::a( 'Sites', [ '/core/sites/all' ] ) ?></li>
 				<li class='theme <?= $child === 'theme' ? 'active' : null ?>'><?= Html::a( 'Themes', [ '/core/theme/all' ] ) ?></li>
 				<li class='testimonials <?= $child === 'testimonials' ? 'active' : null ?>'><?= Html::a( 'Testimonials', [ "/core/testimonial/all?pid=$siteId" ] ) ?></li>
+				<li class='feedbacks <?= $child === 'feedbacks' ? 'active' : null ?>'><?= Html::a( 'Feedbacks', [ "/core/feedback/all?pid=$siteId" ] ) ?></li>
 				<li class='country <?= $child === 'country' ? 'active' : null ?>'><?= Html::a( 'Countries', [ '/core/country/all' ] ) ?></li>
 				<li class='option-group <?= $child === 'option-group' ? 'active' : null ?>'><?= Html::a( 'Option Groups', [ '/core/optiongroup/all' ] ) ?></li>
 			</ul>

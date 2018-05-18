@@ -680,6 +680,7 @@ class m160620_095703_core extends Migration {
 			'slug' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
+			'texture' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'title' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'success' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),

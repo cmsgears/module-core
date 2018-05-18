@@ -383,13 +383,13 @@ class CodeGenUtil {
 		$descLimit		= isset( $config[ 'descLimit' ] ) ? $config[ 'descLimit' ] : 160;
 		$keywordsLimit	= isset( $config[ 'keywordsLimit' ] ) ? $config[ 'keywordsLimit' ] : 10;
 
-		$metaContent	= '';
+		$metaContent = '';
 
 		if( isset( $params[ 'desc' ] ) ) {
 
-			$description	= $params[ 'desc' ];
+			$description = $params[ 'desc' ];
 
-			$description	= filter_var( $description, FILTER_SANITIZE_STRING );
+			$description = filter_var( $description, FILTER_SANITIZE_STRING );
 
 			// SEO Limit - 160
 			if( strlen( $description ) > $descLimit ) {
@@ -397,28 +397,29 @@ class CodeGenUtil {
 				$description = substr( $description, 0, $descLimit );
 			}
 
-			$metaContent	.= "<meta name='description' content='$description' />";
+			$metaContent .= "<meta name=\"description\" content=\"$description\" />";
 		}
 
 		if( isset( $params[ 'keywords' ] ) ) {
 
-			$keywords		= $params[ 'keywords' ];
-			$keywords		= preg_split( "/,/", $keywords );
+			$keywords	= $params[ 'keywords' ];
+			$keywords	= preg_split( "/,/", $keywords );
 
 			if( count( $keywords ) > $keywordsLimit ) {
 
-				$keywords	= array_slice( $keywords, 0, $keywordsLimit );
+				$keywords = array_slice( $keywords, 0, $keywordsLimit );
 			}
 
-			$keywords		= join( ',', $keywords );
+			$keywords = join( ',', $keywords );
 
-			$metaContent	.= "<meta name='keywords' content='$keywords' />";
+			$metaContent .= "<meta name=\"keywords\" content=\"$keywords\" />";
 		}
 
 		if( isset( $params[ 'robot' ] ) ) {
 
-			$robot			= $params[ 'robot' ];
-			$metaContent	.= "<meta name='robots' content='$robot' />";
+			$robot = $params[ 'robot' ];
+
+			$metaContent .= "<meta name=\"robots\" content=\"$robot\" />";
 		}
 
 		return $metaContent;
@@ -428,8 +429,9 @@ class CodeGenUtil {
 
 		if( isset( $params[ 'summary' ] ) ) {
 
-			$summary	= $params[ 'summary' ];
-			$seoH1		= "<h1 class='hidden'>$summary</h1>";
+			$summary = $params[ 'summary' ];
+
+			$seoH1 = "<h1 class=\"hidden\">$summary</h1>";
 
 			return $seoH1;
 		}

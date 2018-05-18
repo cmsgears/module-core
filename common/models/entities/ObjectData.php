@@ -359,11 +359,6 @@ class ObjectData extends Entity implements IApproval, IAuthor, ICategory, IComme
         return $this->hasMany( ModelObject::class, [ 'parentId' => 'id' ] );
     }
 
-	public function getDisplayName() {
-
-		return !empty( $this->title ) ? $this->title : $this->name;
-	}
-
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------

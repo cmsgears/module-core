@@ -56,18 +56,28 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 
 		return [
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
+					'submit-feedback' => [ 'post' ],
+					'submit-testimonial' => [ 'post' ],
 					'register' => [ 'post' ],
 					'login' => [ 'post' ],
 					'forgot-password' => [ 'post' ],
-					'check-user' => [ 'get' ]
+					'check-user' => [ 'get' ],
 				]
 			]
 		];
 	}
 
 	// yii\base\Controller ----
+
+	public function actions() {
+
+		return [
+			'submit-feedback' => [ 'class' => 'cmsgears\core\common\actions\comment\Feedback' ],
+			'submit-testimonial' => [ 'class' => 'cmsgears\core\common\actions\comment\Testimonial' ]
+		];
+	}
 
 	// CMG interfaces ------------------------
 

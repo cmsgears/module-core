@@ -20,8 +20,10 @@ use cmsgears\core\common\services\interfaces\resources\IFormService;
 
 use cmsgears\core\common\services\base\ResourceService;
 
+use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\cache\GridCacheTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
@@ -58,6 +60,8 @@ class FormService extends ResourceService implements IFormService {
 	// Traits ------------------------------------------------------
 
 	use DataTrait;
+	use GridCacheTrait;
+	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 
@@ -283,8 +287,8 @@ class FormService extends ResourceService implements IFormService {
 			'name' => "$modelTable.name",
 			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
-			'success' => "$modelTable.description",
-			'failure' => "$modelTable.description",
+			'success' => "$modelTable.success",
+			'failure' => "$modelTable.failure",
 			'content' => "$modelTable.content",
 			'captcha' => "$modelTable.captcha",
 			'status' => "$modelTable.status",
@@ -316,13 +320,14 @@ class FormService extends ResourceService implements IFormService {
 
 	public function update( $model, $config = [] ) {
 
-		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'templateId', 'name', 'slug', 'icon', 'title', 'description',
+			'templateId', 'name', 'slug', 'icon', 'texture', 'title', 'description',
 			'success', 'failure', 'captcha', 'visibility', 'status',
 			'userMail', 'adminMail', 'uniqueSubmit', 'updateSubmit',
-			'htmlOptions', 'content' ];
+			'htmlOptions', 'content'
+		];
 
 		if( $admin ) {
 

@@ -11,7 +11,7 @@ namespace cmsgears\core\frontend\controllers\base;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\frontend\config\WebGlobalCore;
+use cmsgears\core\frontend\config\CoreGlobalWeb;
 
 use cmsgears\core\frontend\config\SiteProperties;
 
@@ -43,7 +43,7 @@ abstract class Controller extends BaseController {
 		parent::init();
 
 		// Default Layout
-		$this->layout = WebGlobalCore::LAYOUT_PRIVATE;
+		$this->layout = CoreGlobalWeb::LAYOUT_PRIVATE;
 
 		// Default Permission
 		$this->crudPermission = CoreGlobal::PERM_USER;

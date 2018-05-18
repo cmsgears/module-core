@@ -179,7 +179,7 @@ class GenericForm extends Model {
 
 			if( empty( $this->acaptchaAction ) ) {
 
-				$this->acaptchaAction	= '/forms/form/acaptcha';
+				$this->acaptchaAction = '/forms/form/acaptcha';
 			}
 
 			$rules[] = [ 'captcha', 'captcha', 'captchaAction' => $this->acaptchaAction, 'on' => 'captcha' ];
@@ -189,7 +189,7 @@ class GenericForm extends Model {
 
 			if( empty( $this->captchaAction ) ) {
 
-				$this->captchaAction	= '/forms/form/captcha';
+				$this->captchaAction = '/forms/form/captcha';
 			}
 
 			$rules[] = [ 'captcha', 'captcha', 'captchaAction' => $this->captchaAction, 'on' => 'captcha' ];

@@ -16,4 +16,6 @@ namespace cmsgears\core\common\models\interfaces\base;
  */
 interface IName {
 
+	public function getDisplayName();
+
 }

@@ -46,6 +46,11 @@ trait NameTrait {
 
 	// NameTrait -----------------------------
 
+	public function getDisplayName() {
+
+		return !empty( $this->title ) ? $this->title : $this->name;
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii classes ---------------------------

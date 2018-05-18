@@ -37,8 +37,7 @@ trait NameTypeTrait {
 
 	public function getPageByType( $type, $config = [] ) {
 
-		$modelClass	= static::$modelClass;
-		$modelTable	= $this->getModelTable();
+		$modelTable = $this->getModelTable();
 
 		$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 

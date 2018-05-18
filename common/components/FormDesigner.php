@@ -23,7 +23,6 @@ use cmsgears\core\common\models\resources\FormField;
  * Default form designer component to generate html for form elements using form and form fields.
  * It supports CMGTools UI, JS and IconLib by default, but can be overriden to support other ui libraries.
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
 class FormDesigner extends \yii\base\Component {
@@ -52,7 +51,7 @@ class FormDesigner extends \yii\base\Component {
 
 	// FormDesigner --------------------------
 
-	// == Yii Forms ============
+	// == Yii Forms ================
 
 	// TODO: Add icon support for regular fields
 
@@ -336,7 +335,7 @@ class FormDesigner extends \yii\base\Component {
 		return $ratingHtml;
 	}
 
-	// == Apix Forms ===========
+	// == Apix Forms ===============
 
 	// TODO: Add icon support for apix fields
 
@@ -783,7 +782,7 @@ class FormDesigner extends \yii\base\Component {
 		return $fieldHtml;
 	}
 
-	// == HTML Generators ======
+	// == Form HTML Generators =====
 
 	public function getIconInput( $form, $model, $field, $options, $icon, $label = null ) {
 
@@ -1087,7 +1086,21 @@ class FormDesigner extends \yii\base\Component {
 		return $fieldHtml;
 	}
 
-	public function getRatingStars( $stars, $selected, $disabled = false, $class = 'cmt-rating' ) {
+	// == Field HTML Generators ====
+
+	/**
+	 * Generate and return stars html without field. Field must be added within same parent
+	 * in case selected value has to be preserved.
+	 *
+	 * @param type $config
+	 * @return string
+	 */
+	public function getRatingStars( $config = [] ) {
+
+		$class		= isset( $config[ 'class' ] ) && !empty( $config[ 'class' ] ) ? $config[ 'class' ] : 'cmt-rating';
+		$stars		= isset( $config[ 'stars' ] ) ? $config[ 'stars' ] : 5;
+		$selected	= isset( $config[ 'selected' ] ) ? $config[ 'selected' ] : 0;
+		$disabled	= isset( $config[ 'disabled' ] ) ? $config[ 'disabled' ] : false;
 
 		if( $disabled ) {
 
@@ -1100,17 +1113,104 @@ class FormDesigner extends \yii\base\Component {
 
 			if( $selected > 0 && $selected == $i ) {
 
-				$icon	= "<span star=\"$i\" class=\"star selected\"></span>";
+				$icon = "<span star=\"$i\" class=\"star selected\"></span>";
 			}
 			else {
 
-				$icon	= "<span star=\"$i\" class=\"star\"></span>";
+				$icon = "<span star=\"$i\" class=\"star\"></span>";
 			}
 
-			$ratingHtml	  .= $icon;
+			$ratingHtml .= $icon;
 		}
 
 		$ratingHtml	.= "</div></div>";
+
+		return $ratingHtml;
+	}
+
+	/**
+	 * Generate and return stars html with hidden field.
+	 *
+	 * @param type $config
+	 * @return string
+	 */
+	public function getRatingField( $config = [] ) {
+
+		$class		= isset( $config[ 'class' ] ) && !empty( $config[ 'class' ] ) ? $config[ 'class' ] : 'cmt-rating';
+		$stars		= isset( $config[ 'stars' ] ) ? $config[ 'stars' ] : 5;
+		$stars		= isset( $config[ 'stars' ] ) ? $config[ 'stars' ] : 5;
+		$label		= isset( $config[ 'label' ] ) ? $config[ 'label' ] : null;
+		$readOnly	= isset( $config[ 'readOnly' ] ) ? $config[ 'readOnly' ] : false;
+		$selected	= isset( $config[ 'selected' ] ) ? $config[ 'selected' ] : 0;
+		$disabled	= isset( $config[ 'disabled' ] ) ? $config[ 'disabled' ] : false;
+
+		// By default message provided for 5 stars
+		$starMessage = isset( $config[ 'message' ] ) ? $config[ 'message' ] : [ "Poor", "Good", "Very Good", "Perfect", "Excellent" ];
+
+		$modelName	= $config[ 'modelName' ];
+		$fieldName	= $modelName . '[' . $config[ 'fieldName' ] . ']';
+
+		if( $readOnly ) {
+
+			$class = "$class read-only";
+		}
+
+		if( $disabled ) {
+
+			$class = "$class disabled";
+		}
+
+		if( isset( $label ) ) {
+
+			// element-60 will work if form is configured for 40-60 split, else it will behave as normal field
+			$ratingHtml	= "<label>$label</label><div class=\"element-60 $class\">";
+		}
+		else {
+
+			$ratingHtml	= "<div class=\"$class\">";
+		}
+
+		$ratingHtml .= '<span class="wrap-stars">';
+
+		for( $i = 1; $i <= $stars; $i++ ) {
+
+			if( $selected == $i ) {
+
+				$icon = "<span star=\"$i\" class=\"star selected\"></span>";
+			}
+			else {
+
+				$icon = "<span star=\"$i\" class=\"star\"></span>";
+			}
+
+			$ratingHtml .= $icon;
+		}
+
+		$ratingHtml .= '</span>';
+
+		$ratingHtml .= '<span class="wrap-messages">';
+
+		for( $i = 1; $i <= $stars; $i++ ) {
+
+			$message = $starMessage[ $i - 1 ];
+
+			if( $selected == $i ) {
+
+				$icon = "<span star-message=\"$i\" class=\"star-message selected\">$message</span>";
+			}
+			else {
+
+				$icon = "<span star-message=\"$i\" class=\"star-message\">$message</span>";
+			}
+
+			$ratingHtml .= $icon;
+		}
+
+		$ratingHtml .= '</span>';
+
+		$ratingHtml	.= '<input class="star-selected" type="hidden" name="' . $fieldName . '" value="' . $selected . '">';
+
+		$ratingHtml	.= "</div>";
 
 		return $ratingHtml;
 	}
@@ -1126,4 +1226,5 @@ class FormDesigner extends \yii\base\Component {
 							</div>";
 	   return $elementHtml;
 	}
+
 }

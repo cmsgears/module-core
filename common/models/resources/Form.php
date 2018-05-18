@@ -60,6 +60,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $slug
  * @property string $type
  * @property string $icon
+ * @property string $texture
  * @property string $title
  * @property string $description
  * @property string $success
@@ -172,7 +173,7 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 			[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'type', 'name' ] ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'icon', 'texture' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'slug', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'title', 'success', 'failure' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
@@ -208,6 +209,7 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'texture' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEXTURE ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'success' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE_SUCCESS ),
 			'failure' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE_FAILURE ),

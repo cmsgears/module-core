@@ -7,7 +7,7 @@ use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\frontend\config\WebGlobalCore;
+use cmsgears\core\frontend\config\CoreGlobalWeb;
 
 use cmsgears\core\common\models\forms\ResetPassword;
 use cmsgears\core\common\models\resources\Address;
@@ -106,7 +106,7 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 	// Default home page for user
 	public function actionHome() {
 
-		return $this->render( WebGlobalCore::PAGE_INDEX );
+		return $this->render( CoreGlobalWeb::PAGE_INDEX );
 	}
 
 	/**
@@ -128,7 +128,7 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 
 		$genderMap	= $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [ [ 'id' => '0', 'name' => 'Choose Gender' ] ] );
 
-		return $this->render( WebGlobalCore::PAGE_PROFILE, [
+		return $this->render( CoreGlobalWeb::PAGE_PROFILE, [
 			'user' => $user,
 			'genderMap' => $genderMap
 		]);
@@ -152,7 +152,7 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 			return $this->refresh();
 		}
 
-		return $this->render( WebGlobalCore::PAGE_ACCOUNT, [
+		return $this->render( CoreGlobalWeb::PAGE_ACCOUNT, [
 			'model' => $model
 		]);
 	}
@@ -185,7 +185,7 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 		$countryId		= array_keys( $countryMap )[ 0 ];
 		$provinceMap	= $this->provinceService->getMapByCountryId( $countryId );
 
-		return $this->render( WebGlobalCore::PAGE_ADDRESS, [
+		return $this->render( CoreGlobalWeb::PAGE_ADDRESS, [
 			'address' => $address,
 			'countryMap' => $countryMap,
 			'provinceMap' => $provinceMap
@@ -211,7 +211,7 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 
 		// TODO: Check for options to cache all the user attributes.
 
-		return $this->render( WebGlobalCore::PAGE_SETTINGS, [
+		return $this->render( CoreGlobalWeb::PAGE_SETTINGS, [
 			'user' => $user,
 			'privacy' => $privacy,
 			'notification' => $notification,

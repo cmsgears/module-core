@@ -36,14 +36,14 @@ trait FeaturedTrait {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::find()->where( 'pinned=:pinned', [ ':pinned' => true ] )->all();
+		return $modelClass::find()->andWhere( 'pinned=:pinned', [ ':pinned' => true ] )->all();
 	}
 
 	public function getFeatured( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::find()->where( 'featured=:featured', [ ':featured' => true ] )->all();
+		return $modelClass::find()->andWhere( 'featured=:featured', [ ':featured' => true ] )->all();
 	}
 
 	// Read - Lists ----

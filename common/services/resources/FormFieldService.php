@@ -138,7 +138,7 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 				]
 			],
 			'defaultOrder' => [
-				'name' => SORT_DESC
+				'id' => SORT_DESC
 			]
 		]);
 

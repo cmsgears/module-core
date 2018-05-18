@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\frontend\controllers;
 
 // Yii Imports
@@ -7,11 +15,18 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\SiteProperties;
-use cmsgears\core\frontend\config\WebGlobalCore;
+use cmsgears\core\frontend\config\CoreGlobalWeb;
 
 use cmsgears\core\common\models\forms\Register;
 
-class SiteController extends \cmsgears\core\common\controllers\SiteController {
+use cmsgears\core\common\controllers\SiteController as BaseSiteController;
+
+/**
+ * SiteController provides application actions.
+ *
+ * @since 1.0.0
+ */
+class SiteController extends BaseSiteController {
 
 	// Variables ---------------------------------------------------
 
@@ -33,9 +48,11 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 		parent::init();
 
-		$this->layout				= WebGlobalCore::LAYOUT_PUBLIC;
+		// Config
+		$this->layout = CoreGlobalWeb::LAYOUT_PUBLIC;
 
-		$this->siteMemberService	= Yii::$app->factory->get( 'siteMemberService' );
+		// Services
+		$this->siteMemberService = Yii::$app->factory->get( 'siteMemberService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -51,8 +68,11 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 		$behaviours	= parent::behaviors();
 
 		$behaviours[ 'verbs' ][ 'actions' ][ 'index' ] = [ 'get' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'maintenance' ] = [ 'get' ];
 		$behaviours[ 'verbs' ][ 'actions' ][ 'register' ] = [ 'get', 'post' ];
 		$behaviours[ 'verbs' ][ 'actions' ][ 'confirm-account' ] = [ 'get', 'post' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'feedback' ] = [ 'get' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'testimonial' ] = [ 'get' ];
 
 		return $behaviours;
 	}
@@ -63,7 +83,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 		if( !Yii::$app->user->isGuest ) {
 
-			$this->layout	= WebGlobalCore::LAYOUT_PRIVATE;
+			$this->layout = CoreGlobalWeb::LAYOUT_PRIVATE;
 		}
 
 		return [
@@ -87,7 +107,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 		if( !isset( $this->siteProperties ) ) {
 
-			$this->siteProperties	= SiteProperties::getInstance();
+			$this->siteProperties = SiteProperties::getInstance();
 		}
 
 		return $this->siteProperties;
@@ -95,10 +115,14 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 	public function actionIndex() {
 
-		$this->layout	= WebGlobalCore::LAYOUT_LANDING;
+		$this->layout = CoreGlobalWeb::LAYOUT_LANDING;
 
-		// Render Page
-		return $this->render( WebGlobalCore::PAGE_INDEX );
+		return $this->render( CoreGlobalWeb::PAGE_INDEX );
+	}
+
+	public function actionMaintenance() {
+
+		return $this->render( CoreGlobalWeb::PAGE_MAINTENANCE );
 	}
 
 	public function actionLogin( $admin = false ) {
@@ -137,7 +161,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 			}
 		}
 
-		return $this->render( WebGlobalCore::PAGE_REGISTER, [ CoreGlobal::MODEL_GENERIC => $model ] );
+		return $this->render( CoreGlobalWeb::PAGE_REGISTER, [ CoreGlobal::MODEL_GENERIC => $model ] );
 	}
 
 	public function actionConfirmAccount( $token, $email ) {
@@ -169,19 +193,30 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 						Yii::$app->user->login( $user, 3600 * 24 * 30 );
 					}
 
-					return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM, [ 'confirmed' => true ] );
+					return $this->render( CoreGlobalWeb::PAGE_ACCOUNT_CONFIRM, [ 'confirmed' => true ] );
 				}
 
 				// Set Failure Message
 				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
 
-				return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM, [ 'confirmed' => false ] );
+				return $this->render( CoreGlobalWeb::PAGE_ACCOUNT_CONFIRM, [ 'confirmed' => false ] );
 			}
 		}
 
 		// Set Failure Message
 		Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
 
-		return $this->render( WebGlobalCore::PAGE_ACCOUNT_CONFIRM );
+		return $this->render( CoreGlobalWeb::PAGE_ACCOUNT_CONFIRM );
 	}
+
+	public function actionFeedback() {
+
+		return $this->render( CoreGlobalWeb::PAGE_FEEDBACK );
+	}
+
+	public function actionTestimonial() {
+
+		return $this->render( CoreGlobalWeb::PAGE_TESTIMONIAL );
+	}
+
 }

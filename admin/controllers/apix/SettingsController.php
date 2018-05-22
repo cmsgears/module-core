@@ -1,15 +1,13 @@
 <?php
 namespace cmsgears\core\admin\controllers\apix;
 
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\forms\GenericForm;
-use cmsgears\core\common\models\mappers\ModelMeta;
 
 use cmsgears\core\common\utilities\FormUtil;
 use cmsgears\core\common\utilities\AjaxUtil;
@@ -79,12 +77,12 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 
 		$settings		= $this->modelService->getMetaMapByMetaType( Yii::$app->core->site, $type );
 		$fieldsMap		= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
-		$model			= new GenericForm( [ 'fields' => $fieldsMap ] );
+		$form			= new GenericForm( [ 'fields' => $fieldsMap ] );
 
 		$htmlContent	= $this->renderPartial( '@cmsgears/module-core/admin/views/settings/info', [
 								'fieldsMap' => $fieldsMap,
 								'type' => $type,
-								'model' => $model
+								'form' => $form
 							]);
 
 		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $htmlContent );
@@ -95,7 +93,7 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 		$settings		= $this->modelService->getMetaMapByMetaType( Yii::$app->core->site, $type );
 
 		if( count( $settings )  > 0 ) {
-		
+
 			$fieldsMap		= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
 			$model			= new GenericForm( [ 'fields' => $fieldsMap ] );
 
@@ -116,7 +114,7 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 			}
 
 			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
-			
+
 		}
 		else {
 

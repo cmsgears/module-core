@@ -9,6 +9,9 @@
 
 namespace cmsgears\core\common\services\traits\base;
 
+// Yii Imports
+use Yii;
+
 /**
  * SimilarTrait provide methods specific to featured models.
  *

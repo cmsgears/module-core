@@ -22,6 +22,7 @@ use cmsgears\core\common\services\interfaces\resources\IFileService;
 
 use cmsgears\core\common\services\base\EntityService;
 
+use cmsgears\core\common\services\traits\base\ApprovalTrait;
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
@@ -62,6 +63,7 @@ class ObjectDataService extends EntityService implements IObjectService {
 
 	// Traits ------------------------------------------------------
 
+	use ApprovalTrait;
 	use DataTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
@@ -317,6 +319,20 @@ class ObjectDataService extends EntityService implements IObjectService {
 		$modelClass	= static::$modelClass;
 
 		return $modelClass::find()->where( 'featured=:featured AND type=:type', [ ':featured' => true, ':type' => static::$parentType ] )->all();
+	}
+
+	public function getActive( $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::queryByType( static::$parentType, $config )->andWhere( [ 'status' => $modelClass::STATUS_ACTIVE ] )->all();
+	}
+
+	public function getActiveByType( $type, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::queryByType( $type, $config )->andWhere( [ 'status' => $modelClass::STATUS_ACTIVE ] )->all();
 	}
 
 	// Read - Lists ----

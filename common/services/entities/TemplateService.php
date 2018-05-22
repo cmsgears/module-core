@@ -320,8 +320,12 @@ class TemplateService extends EntityService implements ITemplateService {
 
 	public function update( $model, $config = [] ) {
 
-		$admin		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'slug', 'icon', 'title', 'description', 'renderer', 'fileRender', 'layout', 'layoutGroup', 'viewPath', 'content' ];
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'slug', 'icon', 'title', 'description', 'renderer', 'fileRender',
+			'layout', 'layoutGroup', 'viewPath', 'view', 'content'
+		];
 
 		if( $admin ) {
 

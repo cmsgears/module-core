@@ -255,7 +255,7 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
 			'name', 'label', 'type', 'compress', 'validators',
-			'order', 'icon', 'htmlOptions', 'content'
+			'order', 'icon', 'active', 'htmlOptions', 'content'
 		];
 
 		return parent::update( $model, [

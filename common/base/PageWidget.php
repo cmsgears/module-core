@@ -54,7 +54,7 @@ abstract class PageWidget extends Widget {
 	/**
 	 * Html options to be used for single model wrapper.
 	 */
-	public $singleOptions = [ 'class' => 'col' ];
+	public $singleOptions = [ 'class' => 'col col1' ];
 
 	/*
 	 * Base path used for all and single paths.
@@ -241,15 +241,15 @@ abstract class PageWidget extends Widget {
 			}
 		}
 
-	   if( isset( $this->basePath ) ) {
+	   if( !empty( $this->basePath ) ) {
 
 			$this->allPath		= Url::toRoute( [ "/$this->basePath/$this->allPath" ], true );
-			$this->singlePath	= Url::toRoute( [ "/$this->basePath/$this->singlePath" ], true );
+			$this->singlePath	= !empty( $this->singlePath ) ? Url::toRoute( [ "/$this->basePath/$this->singlePath" ], true ) : Url::toRoute( [ "/$this->basePath" ], true );
 		}
 		else {
 
 			$this->allPath		= Url::toRoute( [ "/$this->allPath" ], true );
-			$this->singlePath	= Url::toRoute( [ "/$this->singlePath" ], true );
+			$this->singlePath	= !empty( $this->singlePath ) ? Url::toRoute( [ "/$this->singlePath" ], true ) : null;
 		}
 
 		$idxCounter	= 0;

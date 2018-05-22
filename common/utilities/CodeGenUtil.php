@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\utilities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -329,7 +329,7 @@ class CodeGenUtil {
 
 				$image	= $options[ 'image' ];
 
-				return Yii::getAlias( '@images' ) . "/$image";
+				return Url::toRoute( [ Yii::getAlias( '@images' ) . "/$image" ], true );
 			}
 		}
 		else {
@@ -348,7 +348,7 @@ class CodeGenUtil {
 
 				$image	= $options[ 'image' ];
 
-				return Yii::getAlias( '@images' ) . "/$image";
+				return Url::toRoute( [ Yii::getAlias( '@images' ) . "/$image" ], true );
 			}
 		}
 		else {
@@ -367,7 +367,7 @@ class CodeGenUtil {
 
 				$image	= $options[ 'image' ];
 
-				return Yii::getAlias( '@images' ) . "/$image";
+				return Url::toRoute( [ Yii::getAlias( '@images' ) . "/$image" ], true );
 			}
 		}
 		else {

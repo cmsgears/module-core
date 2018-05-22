@@ -265,6 +265,13 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 
 	// Delete -------------
 
+	public function deleteByFormId( $formId, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+
+		$modelClass::deleteByFormId( $formId );
+	}
+
 	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {

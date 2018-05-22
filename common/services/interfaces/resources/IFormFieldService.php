@@ -42,6 +42,8 @@ interface IFormFieldService extends IResourceService, IData {
 
 	// Delete -------------
 
+	public function deleteByFormId( $formId, $config = [] );
+
 	// Bulk ---------------
 
 	// Notifications ------

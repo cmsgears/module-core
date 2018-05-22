@@ -2,9 +2,10 @@
 namespace cmsgears\core\common\validators\yii;
 
 // Yii Imports
+use yii\web\AssetBundle;
 use yii\web\View;
 
-class ValidationAsset extends \yii\web\AssetBundle {
+class ValidationAsset extends AssetBundle {
 
 	// Variables ---------------------------------------------------
 
@@ -29,7 +30,7 @@ class ValidationAsset extends \yii\web\AssetBundle {
 
 	// Dependency
     public $depends = [
-        'cmsgears\core\common\assets\YiiAsset'
+        'cmsgears\assets\yii\YiiAsset'
     ];
 
 	// Protected --------------

@@ -460,4 +460,15 @@ class FormField extends Resource implements IData {
 
 	// Delete -----------------
 
+	/**
+	 * Deletes all the fields mapped to given form id.
+	 *
+	 * @param integer $formId
+	 * @return integer Number of rows deleted
+	 */
+	public static function deleteByFormId( $formId ) {
+
+		return self::deleteAll( 'formId=:fid', [ ':fid' => $formId ] );
+	}
+
 }

@@ -329,7 +329,7 @@ class CodeGenUtil {
 
 				$image	= $options[ 'image' ];
 
-				return Url::toRoute( [ Yii::getAlias( '@images' ) . "/$image" ], true );
+				return Url::toRoute( [ "/images/$image" ], true );
 			}
 		}
 		else {
@@ -348,7 +348,7 @@ class CodeGenUtil {
 
 				$image	= $options[ 'image' ];
 
-				return Url::toRoute( [ Yii::getAlias( '@images' ) . "/$image" ], true );
+				return Url::toRoute( [ "/images/$image" ], true );
 			}
 		}
 		else {
@@ -367,7 +367,7 @@ class CodeGenUtil {
 
 				$image	= $options[ 'image' ];
 
-				return Url::toRoute( [ Yii::getAlias( '@images' ) . "/$image" ], true );
+				return Url::toRoute( [ "/images/$image" ], true );
 			}
 		}
 		else {

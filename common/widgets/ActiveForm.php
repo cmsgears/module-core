@@ -3,11 +3,12 @@ namespace cmsgears\core\common\widgets;
 
 // Yii Imports
 use yii\helpers\Json;
+use yii\widgets\ActiveForm as BaseActiveForm;
 
 // CMG Imports
-use cmsgears\core\common\assets\ActiveFormAsset;
+use cmsgears\assets\yii\ActiveFormAsset;
 
-class ActiveForm extends \yii\widgets\ActiveForm {
+class ActiveForm extends BaseActiveForm {
 
 	// Variables ---------------------------------------------------
 

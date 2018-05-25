@@ -1,7 +1,10 @@
 <?php
 namespace cmsgears\core\common\widgets;
 
-class ActiveField extends \yii\widgets\ActiveField {
+// Yii Imports
+use yii\widgets\ActiveField as BaseActiveField;
+
+class ActiveField extends BaseActiveField {
 
 	// Variables ---------------------------------------------------
 

@@ -3,11 +3,12 @@ namespace cmsgears\core\common\widgets;
 
 // Yii Imports
 use yii\helpers\Json;
+use yii\captcha\Captcha as BaseCaptcha;
 
 // CMG Imports
-use cmsgears\core\common\assets\CaptchaAsset;
+use cmsgears\assets\yii\CaptchaAsset;
 
-class Captcha extends \yii\captcha\Captcha {
+class Captcha extends BaseCaptcha {
 
 	// Variables ---------------------------------------------------
 
@@ -45,10 +46,13 @@ class Captcha extends \yii\captcha\Captcha {
 
         $options = $this->getClientOptions();
         $options = empty($options) ? '' : Json::htmlEncode($options);
-        $id = $this->imageOptions['id'];
-        $view = $this->getView();
+
+        $id		= $this->imageOptions['id'];
+        $view	= $this->getView();
+
         CaptchaAsset::register($view);
-        $view->registerJs("jQuery('#$id').yiiCaptcha($options);");
+
+		$view->registerJs("jQuery('#$id').yiiCaptcha($options);");
     }
 
 	// CMG interfaces ------------------------

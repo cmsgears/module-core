@@ -83,7 +83,7 @@ class FormUtil {
 		$config[ 'label' ]		= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
 		$config[ 'modelName' ]	= isset( $config[ 'modelName' ] ) ? $config[ 'modelName' ] : 'GenericForm';
 
-		foreach ( $fields as $key => $field ) {
+		foreach( $fields as $key => $field ) {
 
 			// Convert Json to Array
 			if( isset( $field->htmlOptions ) && strlen( $field->htmlOptions ) > 0 ) {

@@ -86,7 +86,7 @@ class FormUtil {
 		foreach( $fields as $key => $field ) {
 
 			// Convert Json to Array
-			if( isset( $field->htmlOptions ) && strlen( $field->htmlOptions ) > 0 ) {
+			if( !empty( $field->htmlOptions ) ) {
 
 				$field->htmlOptions	= json_decode( $field->htmlOptions, true );
 			}

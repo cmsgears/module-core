@@ -76,6 +76,30 @@ trait MetaTrait {
 	/**
 	 * @inheritdoc
 	 */
+	public function getActiveMetasByType( $type ) {
+
+		$metaClass = $this->metaClass;
+		$metaTable = $metaClass::tableName();
+
+		return $this->hasMany( $metaClass, [ 'modelId' => 'id' ] )->where( [ "$metaTable.active" => true, "$metaTable.type" => $type ] )->all();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getActiveMetasByTypes( $types ) {
+
+		$metaClass = $this->metaClass;
+		$metaTable = $metaClass::tableName();
+
+		return $this->hasMany( $metaClass, [ 'modelId' => 'id' ] )
+			->where( [ "$metaTable.active" => true ] )
+			->filterWhere( "$metaTable.type", 'in', $types )->all();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function getMetaByTypeName( $type, $name ) {
 
 		$metaClass = $this->metaClass;

@@ -39,6 +39,22 @@ interface IMeta {
 	public function getMetasByType( $type );
 
 	/**
+	 * Return all the active meta associated with model for given type.
+	 *
+	 * @param string $type
+	 * @return \cmsgears\core\common\models\base\Meta[]
+	 */
+	public function getActiveMetasByType( $type );
+
+	/**
+	 * Return all the active meta associated with model for given types.
+	 *
+	 * @param string $type
+	 * @return \cmsgears\core\common\models\base\Meta[]
+	 */
+	public function getActiveMetasByTypes( $types );
+
+	/**
 	 * Return the meta associated with model for given type and name.
 	 *
 	 * @param string $type

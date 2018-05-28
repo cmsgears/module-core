@@ -46,8 +46,8 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'label' => 'Label',
 		'type' => [ 'title' => 'Type', 'generate' => function( $model ) { return $model->getTypeStr();  } ],
 		'validators' => 'Validators',
-		'active' => 'Active',
-		'compress' => 'Compress',
+		'active' => [ 'title' => 'Active', 'generate' => function( $model ) { return $model->getActiveStr(); } ],
+		'compress' => [ 'title' => 'Compress', 'generate' => function( $model ) { return $model->getCompressStr(); } ],
 		'actions' => 'Actions'
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],

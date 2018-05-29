@@ -72,7 +72,7 @@ class ActivityBehavior extends Behavior {
 			// Log update activity
 			else if( in_array( $action, $this->update ) ) {
 
-				$action = isset( $this->create[ $action ] ) ? $this->create[ $action ] : $action;
+				$action = isset( $this->update[ $action ] ) ? $this->update[ $action ] : $action;
 
 				if( is_string(  $action ) ) {
 
@@ -90,7 +90,7 @@ class ActivityBehavior extends Behavior {
 			// Log delete activity
 			else if( in_array( $action, $this->delete ) ) {
 
-				$action = isset( $this->create[ $action ] ) ? $this->create[ $action ] : $action;
+				$action = isset( $this->delete[ $action ] ) ? $this->delete[ $action ] : $action;
 
 				if( is_string(  $action ) ) {
 

@@ -461,6 +461,7 @@ class CoreGlobal {
 
 	// Content Fields
 	const FIELD_SUMMARY			= 'summaryField';
+	const FIELD_HELP			= 'helpField';
 	const FIELD_CONTENT			= 'contentField';
 
 	// Views

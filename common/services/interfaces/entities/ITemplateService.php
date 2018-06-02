@@ -30,6 +30,8 @@ interface ITemplateService extends IEntityService, IData, IGridCacheable, IMulti
 
 	// Read - Models ---
 
+	public function getGlobalBySlugType( $slug, $type, $config = [] );
+
 	public function getActiveByType( $type );
 
 	// Read - Lists ----

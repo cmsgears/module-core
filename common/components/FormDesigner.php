@@ -113,9 +113,9 @@ class FormDesigner extends \yii\base\Component {
 	protected function getTextHtml( $form, $model, $config, $key, $field ) {
 
 		$htmlOptions	= $field->htmlOptions;
-		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [];
-		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
-		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
+		$wrapperOptions	= !empty( $htmlOptions ) && isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [];
+		$fieldOptions	= !empty( $htmlOptions ) && isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
+		$fieldOptions	= !empty( $htmlOptions ) && count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
 		$fieldHtml = $form->field( $model, $key, $wrapperOptions )->textInput( $fieldOptions );
 

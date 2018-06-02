@@ -205,7 +205,7 @@ class TemplateService extends EntityService implements ITemplateService {
 		}
 
 		$config[ 'ignoreSite' ]		= true;
-		$config[ 'conditions' ][]	= isset( $theme ) ? "$modelTable.themeId={$theme->id} OR $modelTable.siteId={$site->id}" : "$modelTable.siteId={$site->id}";
+		$config[ 'conditions' ][]	= isset( $theme ) ? "$modelTable.themeId={$theme->id} OR $modelTable.siteId={$site->id} OR ($modelTable.themeId IS NULL AND $modelTable.siteId IS NULL)" : "$modelTable.siteId={$site->id} OR ($modelTable.themeId IS NULL AND $modelTable.siteId IS NULL)";
 
 		// Filters ----------
 
@@ -286,6 +286,13 @@ class TemplateService extends EntityService implements ITemplateService {
 	// Read ---------------
 
 	// Read - Models ---
+
+	public function getGlobalBySlugType( $slug, $type, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::findGlobalBySlugType( $slug, $type, $config );
+	}
 
 	public function getActiveByType( $type ) {
 

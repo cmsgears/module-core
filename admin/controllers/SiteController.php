@@ -38,6 +38,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 		// Breadcrumbs
 		$this->breadcrumbs	= [
 			'index' => [ [ 'label' => 'Dashboard' ] ],
+			'login' => [ [ 'label' => 'Login' ] ],
 			'dashboard' => [ [ 'label' => 'Dashboard' ] ]
 		];
 	}

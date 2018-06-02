@@ -2,7 +2,7 @@
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\widgets\aform\AjaxForm;
+use cmsgears\widgets\aform\AjaxFormWidget;
 ?>
 
 <div class="box-form box-form-basic box-form-regular">
@@ -26,7 +26,7 @@ use cmsgears\widgets\aform\AjaxForm;
 	<div class="box-form-content-wrap row row-large form frm-split-40-60">
 		<?php if( isset( $fieldsMap ) && count( $fieldsMap ) > 0 ) { ?>
 
-		<?= AjaxForm::widget([
+		<?= AjaxFormWidget::widget([
 			'options' => [ 'class' => 'cmt-form', 'id' => "frm-setting-$type", 'cmt-keep' => 1 ],
 			'slug' => "config-$type", 'type' => CoreGlobal::TYPE_SYSTEM,
 			'label' => true, 'form' => $form, 'formName' => "setting$type",

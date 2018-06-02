@@ -64,6 +64,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $view
  * @property datetime $createdAt
  * @property datetime $modifiedAt
+ * @property string $help
  * @property string $content
  * @property string $data
  * @property string $gridCache
@@ -149,7 +150,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 		$rules = [
 			// Required, Safe
 			[ [ 'name', 'type' ], 'required' ],
-			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'help', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique
 			// Need both slug and name unique
 			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'slug' ] ],
@@ -201,6 +202,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 			'layoutGroup' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LAYOUT_GROUP ),
 			'viewPath' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_PATH ),
 			'view' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW ),
+			'help' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HELP ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
 			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
@@ -314,6 +316,11 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 	}
 
 	// Read - Find ------------
+
+	public static function findGlobalBySlugType( $slug, $type, $config = [] ) {
+
+		return static::find()->where( 'slug=:slug AND type=:type AND siteId IS NULL AND themeId IS NULL', [ ':slug' => $slug, ':type' => $type ] )->one();
+	}
 
 	/**
 	 * Find and return the active templates for given type.

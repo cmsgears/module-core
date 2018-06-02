@@ -275,6 +275,7 @@ class MessageSource extends \yii\base\Component {
 
 		// Content Fields
 		CoreGlobal::FIELD_SUMMARY => 'Summary',
+		CoreGlobal::FIELD_HELP => 'Help',
 		CoreGlobal::FIELD_CONTENT => 'Content',
 
 		// Views

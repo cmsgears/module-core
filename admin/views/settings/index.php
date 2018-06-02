@@ -2,7 +2,7 @@
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= 'Settings | ' . $coreProperties->getSiteTitle();
 
-$settings		= Yii::$app->sidebar->getConfig();
+$settings = Yii::$app->sidebar->getConfig();
 
 $total	= count( $settings );
 $first	= ceil( $total / 2 );
@@ -14,9 +14,9 @@ $right	= '';
 ?>
 
 <?php
-	foreach ( $settings as $setting ) {
+	foreach( $settings as $setting ) {
 
-		$settingTitle	= str_replace( "-", " ", $setting );
+		$settingTitle = str_replace( "-", " ", $setting );
 
 		ob_start();
 ?>

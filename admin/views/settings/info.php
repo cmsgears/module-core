@@ -6,7 +6,7 @@ use cmsgears\widgets\aform\AjaxFormWidget;
 ?>
 
 <div class="box-form box-form-basic box-form-regular">
-	<span class="box-form-trigger cmti cmti-edit"></span>
+	<span class="box-trigger-form cmti cmti-edit"></span>
 	<div class="box-form-info-wrap row row-large">
 		<?php
 			if( isset( $fieldsMap ) && count( $fieldsMap ) > 0 ) {

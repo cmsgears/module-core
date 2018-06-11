@@ -515,4 +515,16 @@ class CodeGenUtil {
 
 		return $path[1] === ':' || $path[0] === '/';
 	}
+
+	public static function compressStyles( $styles ) {
+
+		$compressed = preg_replace( '!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $styles );
+		$compressed = str_replace( ': ', ':', $styles );
+		$compressed = str_replace( '; ', ';', $styles );
+		$compressed = str_replace( '{ ', '{', $styles );
+		$compressed = str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $styles );
+
+		return $compressed;
+	}
+
 }

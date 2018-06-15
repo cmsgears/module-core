@@ -82,6 +82,7 @@ use cmsgears\core\common\models\traits\mappers\FileTrait;
  * @property datetime $lastLoginAt
  * @property datetime $lastActivityAt
  * @property string $authKey
+ * @property string $otp
  * @property string $accessToken
  * @property string $accessTokenType
  * @property datetime $tokenCreatedAt
@@ -210,7 +211,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			[ 'description', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ [ 'localeId', 'genderId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'status', 'timeZone' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'status', 'timeZone', 'otp' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'avatarId', 'bannerId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
 			[ 'dob', 'date' ],
@@ -252,6 +253,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			'lastName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
 			'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'otp' => Yii::$app->coreMessage->getMessage( CoreGlobal::OTP ),
 			'dob' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DOB ),
 			'mobile' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MOBILE ),
 			'phone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PHONE ),

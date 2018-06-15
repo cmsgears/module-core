@@ -317,6 +317,7 @@ class CoreGlobal {
 	const FIELD_VALUE				= 'valueField';
 	const FIELD_VALUE_TYPE			= 'valueTypeField';
 	const FIELD_DESCRIPTION			= 'descField';
+	const FIELD_OTP					= 'otp';
 	const FIELD_NOTES				= 'notesField';
 
 	const FIELD_ACTIVE				= 'activeField';

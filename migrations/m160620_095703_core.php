@@ -477,6 +477,7 @@ class m160620_095703_core extends Migration {
 			'lastLoginAt' => $this->dateTime(),
 			'lastActivityAt' => $this->dateTime(),
 			'authKey' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
+			'otp' => $this->integer( 6 )->defaultValue( null ),
 			'accessToken' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'accessTokenType' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'tokenCreatedAt' => $this->dateTime(),

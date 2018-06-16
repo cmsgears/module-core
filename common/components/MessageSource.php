@@ -8,6 +8,9 @@
  */
 namespace cmsgears\core\common\components;
 
+// Yii Imports
+use yii\helpers\Url;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
@@ -46,7 +49,8 @@ class MessageSource extends \yii\base\Component {
 
 		// Messages - Create/Register User
 		CoreGlobal::MESSAGE_REGISTER => 'Thanks for creating your account. A confirmation email having activation link was sent to the given email address.',
-		CoreGlobal::MESSAGE_ACCOUNT_CONFIRM => 'Thanks for confirming your account. Please login to continue with us.',
+		CoreGlobal::MESSAGE_ACCOUNT_ACTIVATE => null,
+		CoreGlobal::MESSAGE_ACCOUNT_CONFIRM => null,
 		CoreGlobal::MESSAGE_FORGOT_PASSWORD => 'A confirmation email having password reset link was sent to the given email address.',
 		CoreGlobal::MESSAGE_RESET_PASSWORD => 'Your password reset request was processed successfully. Please login to continue with us.',
 
@@ -311,6 +315,22 @@ class MessageSource extends \yii\base\Component {
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		$loginLink = Url::toRoute( [ '/login' ] );
+		$loginLink = "<a id=\"link-login\" href=\"$loginLink\">Login</a>";
+
+		if( empty( $this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_ACTIVATE ] ) ) {
+
+			$this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_ACTIVATE ] = "Congratulations ! Your account has been successfully activated. <br>Please $loginLink to continue with us.";
+		}
+
+		if( empty( $this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ] ) ) {
+
+			$this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ] = "Congratulations ! Your account has been successfully confirmed. <br>Please $loginLink to continue with us.";
+		}
+	}
 
 	// Instance methods --------------------------------------------
 

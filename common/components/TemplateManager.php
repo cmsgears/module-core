@@ -105,7 +105,7 @@ class TemplateManager extends \yii\base\Component {
 			// Default Rendering using php view file
 			if( isset( $theme ) && isset( $renderEngine ) && strcmp( $renderEngine, 'default' ) == 0 ) {
 
-				$path	= "$theme->basePath/$template->viewPath/$view";
+				$path = $template->viewPath[ 0 ] == '@' ? "$template->viewPath/$view" : "$theme->basePath/$template->viewPath/$view";
 
 				// Render using controller
 				if( $page ) {

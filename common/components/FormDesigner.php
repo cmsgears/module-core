@@ -11,6 +11,7 @@ namespace cmsgears\core\common\components;
 // Yii Imports
 use yii\helpers\Html;
 use yii\helpers\StringHelper;
+use yii\helpers\HtmlPurifier;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -852,7 +853,7 @@ class FormDesigner extends \yii\base\Component {
 			$optionsStr .= "$key=\"$option\"";
 		}
 
-		$label		= $label == null ? $model->getAttributeLabel( $field ) : $label;
+		$label		= $label == null ? $model->getAttributeLabel( $field ) : HtmlPurifier::process(  $label );
 
 		$template	= "<div $optionsStr>
 			      			<label>
@@ -864,7 +865,7 @@ class FormDesigner extends \yii\base\Component {
 			      			{hint}\n{error}
 						</div>";
 
-		$field		= $form->field( $model, $field, [ 'template' => $template, 'options' => [ 'class' => 'align align-left' ] ] )->checkbox();
+		$field = $form->field( $model, $field, [ 'template' => $template, 'options' => [ 'class' => 'form-group clearfix' ] ] )->checkbox();
 
 		return $field;
 	}

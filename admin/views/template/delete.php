@@ -74,6 +74,11 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 							<?= $form->field( $model, 'view' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => 'true' ] ) ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

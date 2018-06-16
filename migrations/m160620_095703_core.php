@@ -187,6 +187,7 @@ class m160620_095703_core extends Migration {
 			'view' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
+			'htmlOptions' => $this->mediumText(),
 			'help' => $this->mediumText(),
 			'content' => $this->mediumText(),
 			'data' => $this->mediumText(),

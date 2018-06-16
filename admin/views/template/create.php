@@ -71,6 +71,11 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 							<?= $form->field( $model, 'view' ) ?>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

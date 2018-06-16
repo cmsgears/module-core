@@ -231,6 +231,7 @@ class CoreGlobal {
 
 	// Messages - Create/Register User
 	const MESSAGE_REGISTER			= 'registerMessage';
+	const MESSAGE_ACCOUNT_ACTIVATE	= 'acctActivateMessage';
 	const MESSAGE_ACCOUNT_CONFIRM	= 'acctConfirmMessage';
 	const MESSAGE_FORGOT_PASSWORD	= 'forgotPwdMessage';
 	const MESSAGE_RESET_PASSWORD	= 'resetPwdMessage';

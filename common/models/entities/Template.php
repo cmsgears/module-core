@@ -64,6 +64,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $view
  * @property datetime $createdAt
  * @property datetime $modifiedAt
+ * @property string $htmlOptions
  * @property string $help
  * @property string $content
  * @property string $data
@@ -150,7 +151,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 		$rules = [
 			// Required, Safe
 			[ [ 'name', 'type' ], 'required' ],
-			[ [ 'id', 'help', 'content', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'help', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique
 			// Need both slug and name unique
 			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'slug' ] ],
@@ -202,6 +203,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 			'layoutGroup' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LAYOUT_GROUP ),
 			'viewPath' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW_PATH ),
 			'view' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW ),
+			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'help' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HELP ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),

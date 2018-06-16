@@ -331,7 +331,7 @@ class TemplateService extends EntityService implements ITemplateService {
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
 			'name', 'slug', 'icon', 'title', 'description', 'renderer', 'fileRender',
-			'layout', 'layoutGroup', 'viewPath', 'view', 'content'
+			'layout', 'layoutGroup', 'viewPath', 'view', 'htmlOptions', 'help', 'content'
 		];
 
 		if( $admin ) {

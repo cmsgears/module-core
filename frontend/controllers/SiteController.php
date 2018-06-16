@@ -18,11 +18,13 @@ use cmsgears\core\frontend\config\SiteProperties;
 use cmsgears\core\frontend\config\CoreGlobalWeb;
 
 use cmsgears\core\common\models\forms\Register;
+use cmsgears\core\common\models\mappers\SiteMember;
 
 use cmsgears\core\common\controllers\SiteController as BaseSiteController;
 
 /**
- * SiteController provides application actions.
+ * SiteController provides application actions. Most of these actions are specific to
+ * system pages.
  *
  * @since 1.0.0
  */
@@ -71,6 +73,7 @@ class SiteController extends BaseSiteController {
 		$behaviours[ 'verbs' ][ 'actions' ][ 'maintenance' ] = [ 'get' ];
 		$behaviours[ 'verbs' ][ 'actions' ][ 'register' ] = [ 'get', 'post' ];
 		$behaviours[ 'verbs' ][ 'actions' ][ 'confirm-account' ] = [ 'get', 'post' ];
+		$behaviours[ 'verbs' ][ 'actions' ][ 'join-site' ] = [ 'get', 'post' ];
 		$behaviours[ 'verbs' ][ 'actions' ][ 'feedback' ] = [ 'get' ];
 		$behaviours[ 'verbs' ][ 'actions' ][ 'testimonial' ] = [ 'get' ];
 
@@ -137,13 +140,14 @@ class SiteController extends BaseSiteController {
 
 		// Create Form Model
 		$coreProperties = $this->getCoreProperties();
-		$model 			= new Register();
+
+		$model = new Register();
 
 		// Load and Validate Form Model
 		if( $coreProperties->isRegistration() && $model->load( Yii::$app->request->post() ) && $model->validate() ) {
 
 			// Register User
-			$user	= $this->userService->register( $model );
+			$user = $this->userService->register( $model );
 
 			if( isset( $user ) ) {
 
@@ -207,6 +211,27 @@ class SiteController extends BaseSiteController {
 		Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
 
 		return $this->render( CoreGlobalWeb::PAGE_ACCOUNT_CONFIRM );
+	}
+
+	public function actionJoinSite() {
+
+		$model	= new SiteMember();
+		$user	= Yii::$app->user->getIdentity();
+
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+
+			$siteId		= Yii::$app->core->getSiteId();
+			$siteMember = $this->siteMemberService->findBySiteIdUserId( $siteId, $user->id );
+
+			if( !isset( $siteMember ) ) {
+
+				$this->siteMemberService->create( $user );
+
+				$this->checkHome();
+			}
+		}
+
+		return $this->render( CoreGlobal::PAGE_SITEMEMBER, [ 'user' => $user, 'model' => $model ] );
 	}
 
 	public function actionFeedback() {

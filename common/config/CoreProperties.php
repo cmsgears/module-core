@@ -86,6 +86,9 @@ class CoreProperties extends Properties {
 
 	const PROP_TIMEZONE				= 'timezone';
 
+	/**
+	 * It checks whether system can login user on activation.
+	 */
 	const PROP_AUTO_LOGIN			= 'auto_login';
 
 	const PROP_AUTO_LOAD			= 'auto_load';

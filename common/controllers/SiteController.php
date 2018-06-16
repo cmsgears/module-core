@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\controllers;
 
 // Yii Imports
@@ -11,9 +19,10 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\forms\Login;
 use cmsgears\core\common\models\forms\ForgotPassword;
 use cmsgears\core\common\models\forms\ResetPassword;
-use cmsgears\core\common\models\mappers\SiteMember;
 
-class SiteController extends \cmsgears\core\common\controllers\base\Controller {
+use cmsgears\core\common\controllers\base\Controller;
+
+class SiteController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -24,7 +33,6 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 	// Protected --------------
 
 	protected $userService;
-	protected $siteMemberService;
 
 	// Private ----------------
 
@@ -34,9 +42,11 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 
 		parent::init();
 
-		$this->crudPermission	= CoreGlobal::PERM_USER;
-		$this->userService		= Yii::$app->factory->get( 'userService' );
-		$this->siteMemberService		= Yii::$app->factory->get( 'siteMemberService' );
+		// Permisison
+		$this->crudPermission = CoreGlobal::PERM_USER;
+
+		// Services
+		$this->userService = Yii::$app->factory->get( 'userService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -57,14 +67,13 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'activate-account' => [ 'get', 'post' ],
 					'forgot-password' => [ 'get', 'post' ],
 					'reset-password' => [ 'get', 'post' ],
 					'login' => [ 'get', 'post' ],
-					'logout' => [ 'get' ],
-					'site-member' => [ 'get', 'post' ]
+					'logout' => [ 'get' ]
 				]
 			]
 		];
@@ -79,7 +88,8 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 	// SiteController ------------------------
 
 	/**
-	 * The users added by site admin can be activated by providing valid token and email. If activation link is still valid, user will be activated.
+	 * The users added by site admin can be activated by providing valid token and email. If
+	 * activation link is still valid, user will be activated.
 	 */
 	public function actionActivateAccount( $token, $email ) {
 
@@ -89,14 +99,16 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 		// Unset Flash Message
 		Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, null );
 
-		$model			= new ResetPassword();
-		$model->email	= $email;
+		$model = new ResetPassword();
+
+		$model->email = $email;
 
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post(), 'ResetPassword' ) && $model->validate() ) {
 
 			$coreProperties = $this->getCoreProperties();
-			$user			= $this->userService->getByEmail( $model->email );
+
+			$user = $this->userService->getByEmail( $model->email );
 
 			// If valid user found
 			if( isset( $user ) ) {
@@ -104,13 +116,13 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 				// Activate User
 				if( $this->userService->activate( $user, $token, $model ) ) {
 
-					// Send Register Mail
+					// Send Activation Mail
 					Yii::$app->coreMailer->sendActivateUserMail( $user );
 
 					// Set Success Message
-					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ) );
+					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_ACCOUNT_ACTIVATE ) );
 
-					// Autologin
+					// Auto Login
 					if( $coreProperties->isAutoLogin() ) {
 
 						Yii::$app->user->login( $user, 3600 * 24 * 30 );
@@ -150,7 +162,7 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 			// Trigger Reset Password
 			if( isset( $user ) && $this->userService->forgotPassword( $user ) ) {
 
-				$user	= $this->userService->getByEmail( $model->email );
+				$user = $this->userService->getByEmail( $model->email );
 
 				// Load User Permissions
 				$user->loadPermissions();
@@ -181,13 +193,14 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 		// Unset Flash Message
 		Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, null );
 
-		$model			= new ResetPassword();
-		$model->email	= $email;
+		$model = new ResetPassword();
+
+		$model->email = $email;
 
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post(), 'ResetPassword' ) && $model->validate() ) {
 
-			$user	= $this->userService->getByEmail( $model->email );
+			$user = $this->userService->getByEmail( $model->email );
 
 			// If valid user found
 			if( isset( $user ) ) {
@@ -244,29 +257,6 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 		return $this->render( CoreGlobal::PAGE_LOGIN, [ CoreGlobal::MODEL_GENERIC => $model ] );
 	}
 
-	public function actionSiteMember() {
-
-			$model = new SiteMember();
-
-			$user = Yii::$app->user->getIdentity();
-
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) &&  $model->validate() ) {
-
-				$siteId = Yii::$app->core->getSiteId();
-
-				$siteMember = $this->siteMemberService->findBySiteIdUserId( $siteId, $user->id );
-
-				if( !isset( $siteMember ) ) {
-
-					$this->siteMemberService->create( $user );
-	
-					$this->checkHome();
-				}
-			}
-			
-			return $this->render( CoreGlobal::PAGE_SITEMEMBER, [ 'user' => $user, 'model' => $model ] );
-	}
-	
 	/**
 	 * The method clears user session and cookies and redirect user to login.
 	 */
@@ -281,4 +271,5 @@ class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 		// Redirect User to appropriate page
 		return $this->redirect( [ Yii::$app->core->getLogoutRedirectPage() ] );
 	}
+
 }

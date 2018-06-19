@@ -195,7 +195,7 @@ class TemplateManager extends \yii\base\Component {
 	 */
 	public function renderViewAdmin( $template, $models, $config = [] ) {
 
-		return $this->renderViewGeneric( $template, $models, CoreGlobal::TEMPLATE_VIEW_ADMIN, $config );
+		return $this->renderViewGeneric( $template, $models, CoreGlobal::TPL_VIEW_ADMIN, $config );
 	}
 
 	/**
@@ -203,7 +203,7 @@ class TemplateManager extends \yii\base\Component {
 	 */
 	public function renderViewPrivate( $template, $models, $config = [] ) {
 
-		return $this->renderViewGeneric( $template, $models, CoreGlobal::TEMPLATE_VIEW_PRIVATE, $config );
+		return $this->renderViewGeneric( $template, $models, CoreGlobal::TPL_VIEW_PRIVATE, $config );
 	}
 
 	/**
@@ -211,7 +211,7 @@ class TemplateManager extends \yii\base\Component {
 	 */
 	public function renderViewPublic( $template, $models, $config = [] ) {
 
-		return $this->renderViewGeneric( $template, $models, CoreGlobal::TEMPLATE_VIEW_PUBLIC, $config );
+		return $this->renderViewGeneric( $template, $models, CoreGlobal::TPL_VIEW_PUBLIC, $config );
 	}
 
 	/**
@@ -219,7 +219,7 @@ class TemplateManager extends \yii\base\Component {
 	 */
 	public function renderViewPrint( $template, $models, $config = [] ) {
 
-		return $this->renderViewGeneric( $template, $models, CoreGlobal::TEMPLATE_VIEW_PRINT, $config );
+		return $this->renderViewGeneric( $template, $models, CoreGlobal::TPL_VIEW_PRINT, $config );
 	}
 
 	/**
@@ -227,7 +227,7 @@ class TemplateManager extends \yii\base\Component {
 	 */
 	public function renderViewSearch( $template, $models, $config = [] ) {
 
-		return $this->renderViewGeneric( $template, $models, CoreGlobal::TEMPLATE_VIEW_SEARCH, $config );
+		return $this->renderViewGeneric( $template, $models, CoreGlobal::TPL_VIEW_SEARCH, $config );
 	}
 
 	/**
@@ -235,7 +235,7 @@ class TemplateManager extends \yii\base\Component {
 	 */
 	public function renderViewCategory( $template, $models, $config = [] ) {
 
-		return $this->renderViewGeneric( $template, $models, CoreGlobal::TEMPLATE_VIEW_CATEGRY, $config );
+		return $this->renderViewGeneric( $template, $models, CoreGlobal::TPL_VIEW_CATEGRY, $config );
 	}
 
 	/**
@@ -243,7 +243,7 @@ class TemplateManager extends \yii\base\Component {
 	 */
 	public function renderViewTag( $template, $models, $config = [] ) {
 
-		return $this->renderViewGeneric( $template, $models, CoreGlobal::TEMPLATE_VIEW_TAG, $config );
+		return $this->renderViewGeneric( $template, $models, CoreGlobal::TPL_VIEW_TAG, $config );
 	}
 
 	/**
@@ -251,6 +251,6 @@ class TemplateManager extends \yii\base\Component {
 	 */
 	public function renderViewAuthor( $template, $models, $config = [] ) {
 
-		return $this->renderViewGeneric( $template, $models, CoreGlobal::TEMPLATE_VIEW_AUTHOR, $config );
+		return $this->renderViewGeneric( $template, $models, CoreGlobal::TPL_VIEW_AUTHOR, $config );
 	}
 }

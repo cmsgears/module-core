@@ -7,6 +7,8 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\base\Action;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -17,7 +19,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  * By default it perform basic search and returns associative array having id and name attributes, but the
  * other configurations provided by these methods can be used to perform advanced search.
  */
-class AutoSearch extends \cmsgears\core\common\base\Action {
+class AutoSearch extends Action {
 
 	// Variables ---------------------------------------------------
 

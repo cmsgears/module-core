@@ -232,7 +232,7 @@ trait ApprovalTrait {
 
 				$title = $model->getClassName() . ' Submitted';
 
-				$config[ 'template' ] = $config[ 'template' ] ?? CoreGlobal::TEMPLATE_NOTIFY_SUBMIT;
+				$config[ 'template' ] = $config[ 'template' ] ?? CoreGlobal::TPL_NOTIFY_STATUS_SUBMIT;
 
 				$this->notifyAdmin( $model, $config, $title );
 			}
@@ -253,7 +253,7 @@ trait ApprovalTrait {
 
 				$title = $model->getClassName() . ' Confirmed';
 
-				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_CONFIRM;
+				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_CONFIRM;
 
 				$this->notifyUser( $model, $config, $title );
 			}
@@ -274,7 +274,7 @@ trait ApprovalTrait {
 
 				$title = $model->getClassName() . ' Approved';
 
-				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_APPROVE;
+				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_APPROVE;
 
 				$this->notifyUser( $model, $config, $title );
 			}
@@ -299,7 +299,7 @@ trait ApprovalTrait {
 
 				$title = $model->getClassName() . ' Activated';
 
-				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_ACTIVE;
+				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE;
 
 				$config[ 'data' ][ 'oldStatus' ] = $oldStatus;
 				$config[ 'data' ][ 'newStatus' ] = $newStatus;
@@ -323,7 +323,7 @@ trait ApprovalTrait {
 
 				$title = $model->getClassName() . ' Rejected';
 
-				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_REJECT;
+				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_REJECT;
 				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
 
 				$this->notifyUser( $model, $config, $title );
@@ -345,7 +345,7 @@ trait ApprovalTrait {
 
 				$title = $model->getClassName() . ' Frozen';
 
-				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_ACTIVE;
+				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE;
 				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
 
 				$this->notifyUser( $model, $config, $title );
@@ -367,7 +367,7 @@ trait ApprovalTrait {
 
 				$title = $model->getClassName() . ' Blocked';
 
-				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_BLOCK;
+				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_BLOCK;
 				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
 
 				$this->notifyUser( $model, $config, $title );
@@ -389,7 +389,7 @@ trait ApprovalTrait {
 
 				$title = $model->getClassName() . ' Terminated';
 
-				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_TERMINATE;
+				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_TERMINATE;
 				$config[ 'data' ][ 'message' ] = $model->getTerminateMessage();
 
 				$this->notifyUser( $model, $config, $title );
@@ -411,7 +411,7 @@ trait ApprovalTrait {
 
 				$title = $model->getClassName() . ' Deleted';
 
-				$config[ 'template' ] = CoreGlobal::TEMPLATE_NOTIFY_DELETE;
+				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_DELETE;
 
 				$this->notifyUser( $model, $config, $title );
 			}
@@ -434,7 +434,7 @@ trait ApprovalTrait {
 
 			$title = $model->isActive( true ) ? $model->getClassName() . ' Activated' : $model->getClassName() . ' Frozen';
 
-			$config[ 'template' ] = $model->isActive( true ) ? CoreGlobal::TEMPLATE_NOTIFY_ACTIVE : CoreGlobal::TEMPLATE_NOTIFY_FREEZE;
+			$config[ 'template' ] = $model->isActive( true ) ? CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE : CoreGlobal::TPL_NOTIFY_STATUS_FREEZE;
 
 			$config[ 'data' ][ 'oldStatus' ] = $oldStatus;
 			$config[ 'data' ][ 'newStatus' ] = $newStatus;
@@ -457,7 +457,7 @@ trait ApprovalTrait {
 
 			$title = $model->isActive( true ) ? $model->getClassName() . ' Activated' : $model->getClassName() . ' Blocked';
 
-			$config[ 'template' ] = $model->isActive( true ) ? CoreGlobal::TEMPLATE_NOTIFY_ACTIVE : CoreGlobal::TEMPLATE_NOTIFY_BLOCK;
+			$config[ 'template' ] = $model->isActive( true ) ? CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE : CoreGlobal::TPL_NOTIFY_STATUS_BLOCK;
 
 			$config[ 'data' ][ 'oldStatus' ] = $oldStatus;
 			$config[ 'data' ][ 'newStatus' ] = $newStatus;

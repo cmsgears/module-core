@@ -131,14 +131,11 @@ class DataModel extends Model {
 	 * @param object $object
 	 * @return void
 	 */
-	private function copyFromObject( $object ) {
+	protected function copyFromObject( $object ) {
 
 		$attributes	= get_object_vars( $object );
 
-		foreach( $attributes as $key => $value ) {
-
-			$this->__set( $key, $value );
-		}
+		$this->setData( $attributes );
 	}
 
 	/**
@@ -148,7 +145,7 @@ class DataModel extends Model {
 	 * @param array $data
 	 * @return void
 	 */
-	private function setData( $data ) {
+	protected function setData( $data ) {
 
 		foreach( $data as $key => $value ) {
 

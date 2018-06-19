@@ -65,6 +65,8 @@ class Register extends Model {
 
 	public $username;
 
+	public $type;
+
 	public $localeId;
 	public $genderId;
 	public $templateId;
@@ -136,6 +138,7 @@ class Register extends Model {
 			[ 'terms', 'termsValidator' ],
 			// Text Limit
 			[ 'title', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'username', 'mobile', 'phone' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ [ 'email', 'firstName', 'middleName', 'lastName', 'timeZone' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
@@ -171,6 +174,7 @@ class Register extends Model {
 			'password' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PASSWORD ),
 			'password_repeat' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PASSWORD_REPEAT ),
 			'username' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USERNAME ),
+			'type' => 'User Type',
 			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'firstName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
 			'middleName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MIDDLENAME ),

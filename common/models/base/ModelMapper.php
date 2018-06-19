@@ -143,6 +143,16 @@ abstract class ModelMapper extends Mapper {
 	}
 
 	/**
+	 * Returns string representation of active flag.
+	 *
+	 * @return string
+	 */
+    public function getActiveStr() {
+
+        return Yii::$app->formatter->asBoolean( $this->active );
+    }
+
+	/**
 	 * Check whether mapping is active using given parent id and type.
 	 *
 	 * @param integer $parentId

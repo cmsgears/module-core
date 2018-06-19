@@ -1,21 +1,23 @@
 <?php
 /**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
  * @link https://www.cmsgears.org/
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- * @license https://www.cmsgears.org/license/
- * @package module
- * @subpackage core
  */
+
 namespace cmsgears\core\common\components;
 
+// CMG Imports
+use cmsgears\core\common\base\Mailer as BaseMailer;
+
 /**
- * The mail component used for sending possible mails by the CMSGears core module. It must be initialised
- * for app using the name coreMailer. It's used by various controllers to trigger mails.
+ * The mail component used to send mails by Core Module.
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
-class Mailer extends \cmsgears\core\common\base\Mailer {
+class Mailer extends BaseMailer {
 
 	// Variables ---------------------------------------------------
 

@@ -179,6 +179,7 @@ class m160620_095703_core extends Migration {
 			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'active' => $this->boolean()->notNull()->defaultValue( false ),
 			'classPath' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
+			'dataForm' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'renderer' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'fileRender' => $this->boolean()->notNull()->defaultValue( false ),
 			'layout' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),

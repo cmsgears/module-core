@@ -89,6 +89,11 @@ class Core extends \cmsgears\core\common\base\Component {
 	public $userApproval		= false;
 
 	/**
+	 * It can be used to test otp validity in milliseconds.
+	 */
+	public $otpValidity			= 600000; // 10 minues by default
+
+	/**
 	 * @var default redirect path to be used for post login. It will be used by login action of Site Controller to redirect users
 	 * after successful login in case user role home url is not set.
 	 */
@@ -332,6 +337,11 @@ class Core extends \cmsgears\core\common\base\Component {
 	public function isUserApproval() {
 
 		return $this->userApproval;
+	}
+
+	public function getOtpValidity() {
+
+		return $this->otpValidity;
 	}
 
 	/**

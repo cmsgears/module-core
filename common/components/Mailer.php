@@ -24,16 +24,18 @@ class Mailer extends BaseMailer {
 	// Globals ----------------
 
 	// Account mails
-	const MAIL_ACCOUNT_CREATE			= "account/create";
-	const MAIL_ACCOUNT_ACTIVATE			= "account/activate";
-	const MAIL_REG						= "register";
-	const MAIL_REG_CONFIRM				= "register-confirm";
-	const MAIL_PASSWORD_RESET			= "password-reset";
-	const MAIL_PASSWORD_CHANGE			= 'password-change';
+	const MAIL_ACCOUNT_CREATE	= 'account/create';
+	const MAIL_ACCOUNT_ACTIVATE	= 'account/activate';
+
+	const MAIL_REG				= 'register/request';
+	const MAIL_REG_CONFIRM		= 'register/confirm';
+
+	const MAIL_PASSWORD_RESET	= 'password/reset';
+	const MAIL_PASSWORD_CHANGE	= 'password/change';
 
 	// Comment mails
-	const MAIL_COMMENT_SPAM_REQUEST		= 'comment/spam-request';
-	const MAIL_COMMENT_DELETE_REQUEST	= 'comment/delete-request';
+	const MAIL_COMMENT_SPAM_REQUEST		= 'comment/request/spam';
+	const MAIL_COMMENT_DELETE_REQUEST	= 'comment/request/delete';
 
 	// Status mails
 	const MAIL_APPROVE     = 'status/approve';
@@ -45,9 +47,9 @@ class Mailer extends BaseMailer {
 
 	// Public -----------------
 
-        public $htmlLayout      = '@cmsgears/module-core/common/mails/layouts/html';
-        public $textLayout      = '@cmsgears/module-core/common/mails/layouts/text';
-        public $viewPath        = '@cmsgears/module-core/common/mails/views';
+	public $htmlLayout	= '@cmsgears/module-core/common/mails/layouts/html';
+	public $textLayout	= '@cmsgears/module-core/common/mails/layouts/text';
+	public $viewPath	= '@cmsgears/module-core/common/mails/views';
 
 	// Protected --------------
 
@@ -221,7 +223,7 @@ class Mailer extends BaseMailer {
 		$fromName 	= $this->mailProperties->getSenderName();
 
 		// Send Mail
-		$this->getMailer()->compose( self::MAIL_APPROVE, [ 'coreProperties' => $this->coreProperties, 'model' => $model ] )
+		$this->getMailer()->compose( self::MAIL_APPROVE, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model ] )
 			->setTo( $email )
 			->setFrom( [ $fromEmail => $fromName ] )
 			->setSubject( "Approved $model->name | " . $this->coreProperties->getSiteName() )
@@ -234,7 +236,7 @@ class Mailer extends BaseMailer {
 		$fromName 	= $this->mailProperties->getSenderName();
 
 		// Send Mail
-		$this->getMailer()->compose( self::MAIL_REJECT, [ 'coreProperties' => $this->coreProperties, 'model' => $model, 'message' => $message ] )
+		$this->getMailer()->compose( self::MAIL_REJECT, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model, 'message' => $message ] )
 			->setTo( $email )
 			->setFrom( [ $fromEmail => $fromName ] )
 			->setSubject( "Rejected $model->name | " . $this->coreProperties->getSiteName() )
@@ -247,7 +249,7 @@ class Mailer extends BaseMailer {
 		$fromName 	= $this->mailProperties->getSenderName();
 
 		// Send Mail
-		$this->getMailer()->compose( self::MAIL_BLOCK, [ 'coreProperties' => $this->coreProperties, 'model' => $model, 'message' => $message ] )
+		$this->getMailer()->compose( self::MAIL_BLOCK, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model, 'message' => $message ] )
 			->setTo( $email )
 			->setFrom( [ $fromEmail => $fromName ] )
 			->setSubject( "Blocked $model->name | " . $this->coreProperties->getSiteName() )
@@ -260,7 +262,7 @@ class Mailer extends BaseMailer {
 		$fromName   = $this->mailProperties->getSenderName();
 
 		// Send Mail
-		$this->getMailer()->compose( self::MAIL_FROZEN, [ 'coreProperties' => $this->coreProperties, 'model' => $model, 'message' => $message ] )
+		$this->getMailer()->compose( self::MAIL_FROZEN, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model, 'message' => $message ] )
 			->setTo( $email )
 			->setFrom( [ $fromEmail => $fromName ] )
 			->setSubject( "Frozen $model->name | " . $this->coreProperties->getSiteName() )
@@ -273,7 +275,7 @@ class Mailer extends BaseMailer {
 		$fromName 	= $this->mailProperties->getSenderName();
 
 		// Send Mail
-		$this->getMailer()->compose( self::MAIL_ACTIVATE, [ 'coreProperties' => $this->coreProperties, 'model' => $model ] )
+		$this->getMailer()->compose( self::MAIL_ACTIVATE, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model ] )
 			->setTo( $email )
 			->setFrom( [ $fromEmail => $fromName ] )
 			->setSubject( "Activated $model->name | " . $this->coreProperties->getSiteName() )
@@ -287,7 +289,7 @@ class Mailer extends BaseMailer {
 		$toEmail    = $this->mailProperties->getContactEmail();
 
 		// Send Mail
-		$this->getMailer()->compose( self::MAIL_A_REQUEST, [ 'coreProperties' => $this->coreProperties, 'model' => $model, 'url' => $url ] )
+		$this->getMailer()->compose( self::MAIL_A_REQUEST, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model, 'url' => $url ] )
 			->setTo( $toEmail )
 			->setFrom( [ $fromEmail => $fromName ] )
 			->setSubject( "Activation Request - $model->name | " . $this->coreProperties->getSiteName() )

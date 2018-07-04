@@ -24,6 +24,10 @@ interface IData {
 
 	public function getDataMeta( $model, $key, $assoc = false );
 
+	public function getDataConfigMeta( $model, $key, $assoc = false );
+
+	public function getDataSettingMeta( $model, $key, $assoc = false );
+
 	// Read - Lists ----
 
 	// Read - Maps -----
@@ -40,11 +44,19 @@ interface IData {
 
 	public function updateDataMetaObj( $model, $meta );
 
+	public function updateDataConfigObj( $model, $meta );
+
+	public function updateDataSettingObj( $model, $meta );
+
 	// Delete -------------
 
 	public function removeDataMeta( $model, $key );
 
 	public function removeDataMetaObj( $model, $meta );
+
+	public function removeDataConfigObj( $model, $meta );
+
+	public function removeDataSettingObj( $model, $meta );
 
 	// Bulk ---------------
 

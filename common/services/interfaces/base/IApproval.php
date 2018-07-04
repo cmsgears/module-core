@@ -48,17 +48,23 @@ interface IApproval {
 
 	public function submit( $model, $notify = true, $config = [] );
 
+	public function reject( $model, $notify = true, $config = [] );
+
+	public function reSubmit( $model, $notify = true, $config = [] );
+
 	public function confirm( $model, $notify = true, $config = [] );
 
 	public function approve( $model, $notify = true, $config = [] );
 
 	public function activate( $model, $notify = true, $config = [] );
 
-	public function reject( $model, $notify = true, $config = [] );
-
 	public function freeze( $model, $notify = true, $config = [] );
 
+	public function upliftFreeze( $model, $notify = true, $config = [] );
+
 	public function block( $model, $notify = true, $config = [] );
+
+	public function upliftBlock( $model, $notify = true, $config = [] );
 
 	public function terminate( $model, $notify = true, $config = [] );
 

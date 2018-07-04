@@ -8,7 +8,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 $name		= Html::encode( $user->getName() );
 $email		= Html::encode( $user->email );
-$token		= Html::encode( $user->verifyToken );
+$token		= Html::encode( $user->resetToken );
 
 $siteName	= Html::encode( $coreProperties->getSiteName() );
 $logoUrl	= Url::to( "@web/images/logo-mail.png", true );
@@ -21,7 +21,7 @@ if( $user->isPermitted( CoreGlobal::PERM_ADMIN ) ) {
 	$siteUrl = Html::encode( $coreProperties->getAdminUrl() );
 }
 
-$activateLink = "$siteUrl/activate-account?token=$token&email=$email";
+$resetLink = "$siteUrl/reset-password?token=$token&email=$email";
 ?>
 <?php include dirname( __DIR__ ) . '/includes/header.php'; ?>
 <table cellspacing="0" cellpadding="0" border="0" margin="0" padding="0" width="80%" align="center" class="ctmax">
@@ -32,7 +32,7 @@ $activateLink = "$siteUrl/activate-account?token=$token&email=$email";
 	<tr><td height="20"></td></tr>
 	<tr>
 		<td>
-			<font face="'Roboto', Arial, sans-serif">Your account was created at <?= $siteName ?> by Administrator. Your account details are as mentioned below:</font>
+			<font face="'Roboto', Arial, sans-serif">Reset password request was initiated for your account. Your account details are as mentioned below:</font>
 		</td>
 	</tr>
 	<tr><td height="20"></td></tr>
@@ -41,7 +41,7 @@ $activateLink = "$siteUrl/activate-account?token=$token&email=$email";
 	</tr>
 	<tr><td height="10"></td></tr>
 	<tr>
-		<td> <font face="'Roboto', Arial, sans-serif">Activation Link: <a href="<?= $activateLink ?>">Activate Account</a></font></td>
+		<td> <font face="'Roboto', Arial, sans-serif">Reset Link: <a href="<?= $resetLink ?>">Reset Password</a></font></td>
 	</tr>
 	<tr><td height="40"></td></tr>
 </table>

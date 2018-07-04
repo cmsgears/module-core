@@ -100,6 +100,7 @@ class m160621_014612_core_index extends Migration {
 		//$this->createIndex( 'idx_' . $this->prefix . 'city_lat_lon', $this->prefix . 'core_city', [ 'latitude', 'longitude' ] );
 		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_city' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'city_reg' . '(regions ASC)' );
 		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_city' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'city_zip' . '(zipCodes ASC)' );
+		$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_city' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'city_auto' . '(autoCache ASC)' );
 
 		// Address
 		//$this->createIndex( 'idx_' . $this->prefix . 'address_title', $this->prefix . 'core_address', 'title' );
@@ -358,6 +359,7 @@ class m160621_014612_core_index extends Migration {
 		//$this->dropIndex( 'idx_' . $this->prefix . 'city_lat_lon', $this->prefix . 'core_city' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'city_reg', $this->prefix . 'core_city' );
 		//$this->dropIndex( 'idx_' . $this->prefix . 'city_zip', $this->prefix . 'core_city' );
+		$this->dropIndex( 'idx_' . $this->prefix . 'city_auto', $this->prefix . 'core_city' );
 
 		// Address
 		//$this->dropIndex( 'idx_' . $this->prefix . 'address_title', $this->prefix . 'core_address' );

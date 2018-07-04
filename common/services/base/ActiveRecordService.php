@@ -555,22 +555,65 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	// Notifications ------
 
-    // Trigger Admin Notifications
+    /**
+	 * Trigger Admin Notifications. The template settings will override.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 *
+	 * @param array $config - key elements are template(template slug), data(template data),
+	 * title(notification title), createdBy(creator id), parentId(parent model id), parentType,
+	 * link, admin(flag), adminLink and users(to notify)
+	 */
 	public function notifyAdmin( $model, $config = [] ) {
 
-		$config[ 'admin' ] = true;
+		$config[ 'admin' ]	= true;
+		$config[ 'direct' ]	= false;
 
 		$this->sendNotification( $model, $config );
 	}
 
-    // Trigger User Notifications
+    /**
+	 * Trigger User Notifications. The template settings will override.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 *
+	 * @param array $config - key elements are template(template slug), data(template data),
+	 * title(notification title), createdBy(creator id), parentId(parent model id), parentType,
+	 * link, admin(flag), adminLink and users(to notify)
+	 */
     public function notifyUser( $model, $config = [] ) {
 
-		$config[ 'admin' ] = false;
+		$config[ 'admin' ]	= false;
+		$config[ 'direct' ]	= false;
 
 		$this->sendNotification( $model, $config );
 	}
 
+    /**
+	 * Trigger User Notifications. The template settings will override.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 *
+	 * @param array $config - key elements are template(template slug), data(template data),
+	 * title(notification title), createdBy(creator id), parentId(parent model id), parentType,
+	 * link, admin(flag), adminLink and users(to notify)
+	 */
+    public function notifyModel( $model, $config = [] ) {
+
+		$config[ 'admin' ]	= false;
+		$config[ 'direct' ]	= true;
+
+		$this->sendNotification( $model, $config );
+	}
+
+	/**
+	 * Prepare the notification data and configuration and trigger it using the active
+	 * event manager.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param array $config
+	 * @return type
+	 */
     protected function sendNotification( $model, $config = [] ) {
 
 		$templateData	= $config[ 'data' ] ?? [];
@@ -578,10 +621,14 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		$templateData	= ArrayHelper::merge( [ 'model' => $model, 'service' => $this ], $templateData );
 
+		$templateConfig[ 'createdBy' ]	= $config[ 'createdBy' ] ?? null;
 		$templateConfig[ 'parentId' ]	= $model->id;
 		$templateConfig[ 'parentType' ]	= self::$parentType;
-		$templateConfig[ 'title' ]      = $config[ 'title' ] ?? $model->name ?? null;
-		$templateConfig[ 'users' ]      = $config[ 'users' ] ?? [];
+		$templateConfig[ 'link' ]		= $config[ 'link' ] ?? null;
+		$templateConfig[ 'adminLink' ]	= $config[ 'adminLink' ] ?? null;
+
+		$templateConfig[ 'title' ]	= $config[ 'title' ] ?? $model->name ?? null;
+		$templateConfig[ 'users' ]	= $config[ 'users' ] ?? [];
 
 		return Yii::$app->eventManager->triggerNotification( $config[ 'template' ], $templateData, $templateConfig );
 	}
@@ -1317,7 +1364,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		if( isset( $conditions ) ) {
 
-			foreach ( $conditions as $ckey => $condition ) {
+			foreach( $conditions as $ckey => $condition ) {
 
 				if( is_numeric( $ckey ) ) {
 
@@ -1343,9 +1390,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		if( isset( $filters ) ) {
 
-			foreach ( $filters as $filter ) {
+			foreach( $filters as $filter ) {
 
-				$query	= $query->andFilterWhere( $filter );
+				$query = $query->andFilterWhere( $filter );
 			}
 		}
 
@@ -1419,7 +1466,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$arrayList		= static::generateNameValueList( $config );
 		$map			= [];
 
-		foreach ( $arrayList as $item ) {
+		foreach( $arrayList as $item ) {
 
 			$map[ $item[ $nameAlias ] ] = $item[ $valueAlias ];
 		}

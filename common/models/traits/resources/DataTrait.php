@@ -72,6 +72,32 @@ trait DataTrait {
 		return null;
 	}
 
+	public function getDataConfigMeta( $name, $assoc = false ) {
+
+		$object	= $this->generateDataObjectFromJson( $assoc );
+		$config	= 'config';
+
+		if( isset( $object->$config ) && isset( $object->$config->$name ) ) {
+
+			return $object->$config->$name;
+		}
+
+		return null;
+	}
+
+	public function getDataSettingMeta( $name, $assoc = false ) {
+
+		$object	= $this->generateDataObjectFromJson( $assoc );
+		$config	= 'settings';
+
+		if( isset( $object->$config ) && isset( $object->$config->$name ) ) {
+
+			return $object->$config->$name;
+		}
+
+		return null;
+	}
+
 	/**
 	 * @inheritdoc
 	 */

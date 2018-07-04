@@ -47,6 +47,8 @@ use cmsgears\core\common\models\traits\resources\VisualTrait;
 use cmsgears\core\common\models\traits\mappers\AddressTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
 
+use cmsgears\core\common\utilities\DateUtil;
+
 /**
  * User Entity - The primary class.
  *
@@ -188,6 +190,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 		$rules = [
 			// Required, Safe
 			[ 'email', 'required' ],
+			[ [ 'firstName', 'email', 'username' ], 'required', 'on' => 'profile' ],
 			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique
 			[ 'email', 'unique' ],
@@ -253,7 +256,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			'lastName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
 			'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'otp' => Yii::$app->coreMessage->getMessage( CoreGlobal::OTP ),
+			'otp' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_OTP ),
 			'dob' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DOB ),
 			'mobile' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MOBILE ),
 			'phone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
@@ -681,6 +684,44 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	public function isResetTokenValid( $token ) {
 
 		return strcmp( $this->resetToken, $token ) == 0;
+	}
+
+	/**
+	 * Generate and set 6 digit random OTP.
+	 *
+	 * @return void
+	 */
+	public function generateOtp() {
+
+		$this->otp = random_int( 100000, 999999 );
+
+		$valid = DateUtil::getDateTime();
+		$valid = strtotime( $valid ) + Yii::$app->core->getOtpValidity();
+
+		$this->otpValidTill = DateUtil::getDateTimeFromMillis( $valid );
+	}
+
+	/**
+	 * Unset OTP once user verify the account.
+	 *
+	 * @return void
+	 */
+	public function unsetOtp() {
+
+		$this->otp = null;
+	}
+
+	/**
+	 * Check whether OTP is valid.
+	 *
+	 * @param integer $otp
+	 * @return boolean
+	 */
+	public function isOtpValid( $otp ) {
+
+		$now = DateUtil::getDateTime();
+
+		return $this->otp == $otp && DateUtil::lessThan( $now, $this->otpValidTill );
 	}
 
 	/**

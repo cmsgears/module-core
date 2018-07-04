@@ -91,13 +91,13 @@ trait ApprovalTrait {
 
 			$query = $modelClass::queryWithOwnerAuthor();
 
-			$query->andWhere( "$modelTable.holderId =:oid OR ($modelTable.holderId IS NULL AND $modelTable.createdBy =:creator )", [ ':oid' => $id, ':creator' => $id ] );
+			$query->andWhere( "$modelTable.holderId =:oid OR ($modelTable.holderId IS NULL AND $modelTable.createdBy =:cid )", [ ':oid' => $id, ':cid' => $id ] );
 		}
 		else {
 
 			$query = $modelClass::queryWithAuthor();
 
-			$query->andWhere( "$modelTable.createdBy =:creator", [ ':creator' => $id ] );
+			$query->andWhere( "$modelTable.createdBy =:cid", [ ':cid' => $id ] );
 		}
 
 		$config[ 'query' ] = $query;
@@ -222,6 +222,9 @@ trait ApprovalTrait {
 		return $model;
 	}
 
+	/*
+	 * Update the model status to submitted and trigger notification for appropriate admin to take action.
+	 */
 	public function submit( $model, $notify = true, $config = [] ) {
 
 		if( !$model->isSubmitted( true ) && $model->isSubmittable() ) {
@@ -230,7 +233,7 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = $model->getClassName() . ' Submitted';
+				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Submitted';
 
 				$config[ 'template' ] = $config[ 'template' ] ?? CoreGlobal::TPL_NOTIFY_STATUS_SUBMIT;
 
@@ -243,6 +246,59 @@ trait ApprovalTrait {
 		return false;
 	}
 
+	/*
+	 * Reject the model and trigger notification for appropriate user to take action.
+	 */
+	public function reject( $model, $notify = true, $config = [] ) {
+
+		if( !$model->isRejected( true ) ) {
+
+			$model = $this->updateStatus( $model, IApproval::STATUS_REJECTED );
+
+			if( $notify ) {
+
+				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Rejected';
+
+				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_REJECT;
+				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
+
+				$this->notifyUser( $model, $config, $title );
+			}
+
+			return $model;
+		}
+
+		return false;
+	}
+
+	/*
+	 * Update the model status to re-submitted and trigger notification for appropriate admin to take action.
+	 */
+	public function reSubmit( $model, $notify = true, $config = [] ) {
+
+		if( !$model->isReSubmit( true ) ) {
+
+			$model = $this->updateStatus( $model, IApproval::STATUS_RE_SUBMIT );
+
+			if( $notify ) {
+
+				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Re-submitted';
+
+				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_RESUBMIT;
+				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
+
+				$this->notifyAdmin( $model, $config, $title );
+			}
+
+			return $model;
+		}
+
+		return false;
+	}
+
+	/*
+	 * Confirm the model and trigger notification for appropriate user to take action.
+	 */
 	public function confirm( $model, $notify = true, $config = [] ) {
 
 		if( !$model->isConfirmed( true ) ) {
@@ -251,7 +307,7 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = $model->getClassName() . ' Confirmed';
+				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Confirmed';
 
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_CONFIRM;
 
@@ -264,6 +320,9 @@ trait ApprovalTrait {
 		return false;
 	}
 
+	/*
+	 * Approve the model and trigger notification for appropriate user to take action.
+	 */
 	public function approve( $model, $notify = true, $config = [] ) {
 
 		if( !$model->isActive( true ) && $model->isApprovable() ) {
@@ -272,7 +331,7 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = $model->getClassName() . ' Approved';
+				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Approved';
 
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_APPROVE;
 
@@ -285,6 +344,9 @@ trait ApprovalTrait {
 		return false;
 	}
 
+	/*
+	 * Activate the model and trigger notification for appropriate user to take action.
+	 */
 	public function activate( $model, $notify = true, $config = [] ) {
 
 		if( !$model->isActive( true ) ) {
@@ -297,7 +359,7 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = $model->getClassName() . ' Activated';
+				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Activated';
 
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE;
 
@@ -313,28 +375,9 @@ trait ApprovalTrait {
 		return false;
 	}
 
-	public function reject( $model, $notify = true, $config = [] ) {
-
-		if( !$model->isRejected( true ) ) {
-
-			$model = $this->updateStatus( $model, IApproval::STATUS_REJECTED );
-
-			if( $notify ) {
-
-				$title = $model->getClassName() . ' Rejected';
-
-				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_REJECT;
-				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
-
-				$this->notifyUser( $model, $config, $title );
-			}
-
-			return $model;
-		}
-
-		return false;
-	}
-
+	/*
+	 * Freeze the model and trigger notification for appropriate user to take action.
+	 */
 	public function freeze( $model, $notify = true, $config = [] ) {
 
 		if( !$model->isFrojen( true ) ) {
@@ -343,7 +386,7 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = $model->getClassName() . ' Frozen';
+				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Frozen';
 
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE;
 				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
@@ -357,6 +400,34 @@ trait ApprovalTrait {
 		return false;
 	}
 
+	/*
+	 * Update the model state for activation from frozen state and trigger notification for appropriate admin to take action.
+	 */
+	public function upliftFreeze( $model, $notify = true, $config = [] ) {
+
+		if( !$model->isUpliftFreeze( true ) ) {
+
+			$model = $this->updateStatus( $model, IApproval::STATUS_UPLIFT_FREEZE );
+
+			if( $notify ) {
+
+				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Uplift Freeze';
+
+				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_UP_FREEZE;
+				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
+
+				$this->notifyAdmin( $model, $config, $title );
+			}
+
+			return $model;
+		}
+
+		return false;
+	}
+
+	/*
+	 * Block the model and trigger notification for appropriate user to take action.
+	 */
 	public function block( $model, $notify = true, $config = [] ) {
 
 		if( !$model->isBlocked( true ) ) {
@@ -365,7 +436,7 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = $model->getClassName() . ' Blocked';
+				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Blocked';
 
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_BLOCK;
 				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
@@ -379,6 +450,34 @@ trait ApprovalTrait {
 		return false;
 	}
 
+	/*
+	 * Update the model state for activation from block state and trigger notification for appropriate admin to take action.
+	 */
+	public function upliftBlock( $model, $notify = true, $config = [] ) {
+
+		if( !$model->isUpliftBlock( true ) ) {
+
+			$model = $this->updateStatus( $model, IApproval::STATUS_UPLIFT_BLOCK );
+
+			if( $notify ) {
+
+				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Uplift Block';
+
+				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_UP_BLOCK;
+				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
+
+				$this->notifyAdmin( $model, $config, $title );
+			}
+
+			return $model;
+		}
+
+		return false;
+	}
+
+	/*
+	 * Terminate the model and trigger notification for appropriate user to take action.
+	 */
 	public function terminate( $model, $notify = true, $config = [] ) {
 
 		if( !$model->isTerminated( true ) ) {
@@ -387,7 +486,7 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = $model->getClassName() . ' Terminated';
+				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Terminated';
 
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_TERMINATE;
 				$config[ 'data' ][ 'message' ] = $model->getTerminateMessage();
@@ -401,6 +500,9 @@ trait ApprovalTrait {
 		return false;
 	}
 
+	/*
+	 * Soft Delete the model and trigger notification for appropriate user to take action.
+	 */
 	public function softDelete( $model, $notify = true, $config = [] ) {
 
 		if( !$model->isDeleted( true ) ) {
@@ -409,7 +511,7 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = $model->getClassName() . ' Deleted';
+				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Deleted';
 
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_DELETE;
 
@@ -422,6 +524,14 @@ trait ApprovalTrait {
 		return false;
 	}
 
+	/**
+	 * Toggle the model between Frozen and Active states.
+	 *
+	 * @param \cmsgears\core\common\models\interfaces\base\IApproval $model
+	 * @param boolean $notify
+	 * @param array $config
+	 * @return \cmsgears\core\common\models\interfaces\base\IApproval
+	 */
 	public function toggleFrojen( $model, $notify = true, $config = [] ) {
 
 		$oldStatus = $model->getStatusStr();
@@ -445,6 +555,14 @@ trait ApprovalTrait {
 		return $model;
 	}
 
+	/**
+	 * Toggle the model between Blocked and Active states.
+	 *
+	 * @param \cmsgears\core\common\models\interfaces\base\IApproval $model
+	 * @param boolean $notify
+	 * @param array $config
+	 * @return \cmsgears\core\common\models\interfaces\base\IApproval
+	 */
 	public function toggleBlock( $model, $notify = true, $config = [] ) {
 
 		$oldStatus = $model->getStatusStr();

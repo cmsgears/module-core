@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\address;
 
 // Yii Imports
@@ -7,12 +15,16 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\actions\base\ModelAction;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
  * The Update action find model address for the given id and update the corresponding address.
+ *
+ * @since 1.0.0
  */
-class Update extends \cmsgears\core\common\actions\base\ModelAction {
+class Update extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -71,7 +83,7 @@ class Update extends \cmsgears\core\common\actions\base\ModelAction {
 
 			$modelAddress	= $this->modelAddressService->getById( $cid );
 
-			if( isset( $modelAddress ) && $modelAddress->checkParent( $this->model->id, $this->parentType ) ) {
+			if( isset( $modelAddress ) && $modelAddress->isParentValid( $this->model->id, $this->parentType ) ) {
 
 				$address = $modelAddress->model;
 
@@ -103,4 +115,5 @@ class Update extends \cmsgears\core\common\actions\base\ModelAction {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

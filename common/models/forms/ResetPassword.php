@@ -76,7 +76,7 @@ class ResetPassword extends Model {
 			// Required, Safe
 			[ [ 'email', 'password', 'password_repeat' ], 'required' ],
 			[ 'oldPassword', 'required', 'on' => [ 'oldPassword' ] ],
-			[ 'password_repeat', 'compare', 'compareAttribute'=>'password' ],
+			[ 'password_repeat', 'compare', 'compareAttribute' => 'password' ],
 			[ 'email', 'email' ],
 			[ 'password', 'password' ],
 			[ 'oldPassword', 'oldPasswordValidator' ]
@@ -114,7 +114,7 @@ class ResetPassword extends Model {
 
 	public function oldPasswordValidator( $attribute, $params ) {
 
-		$user	= Yii::$app->user->getIdentity();
+		$user = Yii::$app->user->getIdentity();
 
 		if( isset( $user ) ) {
 

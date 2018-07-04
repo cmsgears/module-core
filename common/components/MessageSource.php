@@ -136,6 +136,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_VALUE => 'Value',
 		CoreGlobal::FIELD_VALUE_TYPE => 'Value Type',
 		CoreGlobal::FIELD_DESCRIPTION => 'Description',
+		CoreGlobal::FIELD_OTP => 'OTP',
 		CoreGlobal::FIELD_NOTES => 'Notes',
 
 		CoreGlobal::FIELD_ACTIVE => 'Active',
@@ -323,12 +324,12 @@ class MessageSource extends \yii\base\Component {
 
 		if( empty( $this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_ACTIVATE ] ) ) {
 
-			$this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_ACTIVATE ] = "Congratulations ! Your account has been successfully activated. <br>Please $loginLink to continue with us.";
+			$this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_ACTIVATE ] = "Congratulations ! Your account has been successfully activated. <br/><br/>Please $loginLink to continue with us.";
 		}
 
 		if( empty( $this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ] ) ) {
 
-			$this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ] = "Congratulations ! Your account has been successfully confirmed. <br>Please $loginLink to continue with us.";
+			$this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ] = "Congratulations ! Your account has been successfully confirmed. <br/><br/>Please $loginLink to continue with us.";
 		}
 	}
 

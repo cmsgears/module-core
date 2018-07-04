@@ -279,7 +279,8 @@ class m160620_095703_core extends Migration {
 			'id' => $this->bigPrimaryKey( 20 ),
 			'code' => $this->string( Yii::$app->core->smallText )->notNull(),
 			'iso' => $this->string( Yii::$app->core->smallText ),
-			'name' => $this->string( Yii::$app->core->xLargeText )->notNull()
+			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'title' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null )
 		], $this->options );
 	}
 
@@ -290,7 +291,8 @@ class m160620_095703_core extends Migration {
 			'countryId' => $this->bigInteger( 20 )->notNull(),
 			'code' => $this->string( Yii::$app->core->smallText )->notNull(),
 			'iso' => $this->string( Yii::$app->core->smallText ),
-			'name' => $this->string( Yii::$app->core->xLargeText )->notNull()
+			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'title' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null )
 		], $this->options );
 
 		// Index for columns country
@@ -305,6 +307,7 @@ class m160620_095703_core extends Migration {
 			'countryId' => $this->bigInteger( 20 )->notNull(),
 			'provinceId' => $this->bigInteger( 20 ),
 			'name' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
+			'title' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'code' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
 			'iso' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
@@ -314,7 +317,8 @@ class m160620_095703_core extends Migration {
 			'zipCodes' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'timeZone' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'latitude' => $this->float()->defaultValue( 0 ),
-			'longitude' => $this->float()->defaultValue( 0 )
+			'longitude' => $this->float()->defaultValue( 0 ),
+			'autoCache' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null )
 		], $this->options );
 
 		// Index for columns country
@@ -480,6 +484,7 @@ class m160620_095703_core extends Migration {
 			'lastActivityAt' => $this->dateTime(),
 			'authKey' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'otp' => $this->integer( 6 )->defaultValue( null ),
+			'otpValidTill' => $this->dateTime(),
 			'accessToken' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'accessTokenType' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'tokenCreatedAt' => $this->dateTime(),

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\frontend\controllers;
 
 // Yii Imports
@@ -12,7 +20,14 @@ use cmsgears\core\frontend\config\CoreGlobalWeb;
 use cmsgears\core\common\models\forms\ResetPassword;
 use cmsgears\core\common\models\resources\Address;
 
-class UserController extends \cmsgears\core\frontend\controllers\base\Controller {
+use cmsgears\core\frontend\controllers\base\Controller;
+
+/**
+ * UserController process the actions specific to User model.
+ *
+ * @since 1.0.0
+ */
+class UserController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -37,11 +52,14 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 
 		parent::init();
 
-		$this->crudPermission		= CoreGlobal::PERM_USER;
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_USER;
 
-		$this->basePath				= '/user';
+		// COnfig
+		$this->basePath = '/user';
 
-		$this->modelService			= Yii::$app->factory->get( 'userService' );
+		// Services
+		$this->modelService = Yii::$app->factory->get( 'userService' );
 
 		$this->optionService		= Yii::$app->factory->get( 'optionService' );
 		$this->countryService		= Yii::$app->factory->get( 'countryService' );
@@ -76,7 +94,7 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					// User dashboard
 					'index' => [ 'get' ],
@@ -116,17 +134,22 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 	 */
 	public function actionProfile() {
 
-		$user	= Yii::$app->user->getIdentity();
+		// Find Model
+		$user = Yii::$app->user->getIdentity();
 
-		if( $user->load( Yii::$app->request->post(), 'User' ) && $user->validate() ) {
+		// Scenario
+		$user->setScenario( 'profile' );
 
-			// Update User and Site Member
+		if( $user->load( Yii::$app->request->post(), $user->getClassName() ) && $user->validate() ) {
+
+			// Update User
 			$this->modelService->update( $user );
 
+			// Refresh Page
 			return $this->refresh();
 		}
 
-		$genderMap	= $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [ [ 'id' => '0', 'name' => 'Choose Gender' ] ] );
+		$genderMap = $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [ 'prepend' => [ [ 'id' => '0', 'name' => 'Choose Gender' ] ] ] );
 
 		return $this->render( CoreGlobalWeb::PAGE_PROFILE, [
 			'user' => $user,
@@ -141,26 +164,39 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 	 */
 	public function actionAccount() {
 
-		$user			= Yii::$app->user->getIdentity();
-		$model			= new ResetPassword();
-		$model->email	= $user->email;
+		// Find Model
+		$user	= Yii::$app->user->getIdentity();
+		$model	= new ResetPassword();
 
-		if( $model->load( Yii::$app->request->post(), 'ResetPassword' ) && $model->validate() ) {
+		// Configure Model
+		$model->email = $user->email;
 
+		// Old password required if it was already set
+		if( !empty( $user->passwordHash ) ) {
+
+			$model->setScenario( 'oldPassword' );
+		}
+
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+
+			// Update User
 			$this->modelService->resetPassword( $user, $model, false );
 
 			return $this->refresh();
 		}
 
 		return $this->render( CoreGlobalWeb::PAGE_ACCOUNT, [
+			'user' => $user,
 			'model' => $model
 		]);
 	}
 
 	/**
-	 * The address action allows user to update primary address using form submit.
+	 * The address action allows user to update primary address using form submit. Use the
+	 * corresponding Ajax Action to handle multiple user address.
 	 *
-	 * In case we need multiple address, this action can be overridden by child classes to load multiple address.
+	 * In case we need multiple address using form submit, this action can be overridden by
+	 * child classes to load multiple address.
 	 *
 	 * @return string
 	 */
@@ -171,12 +207,12 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 
 		if( empty( $address ) ) {
 
-			$address	= new Address();
+			$address = new Address();
 		}
 
-		if( $address->load( Yii::$app->request->post(), 'Address' ) && $address->validate() ) {
+		if( $address->load( Yii::$app->request->post(), $address->getClassName() ) && $address->validate() ) {
 
-			$modelAddress	= $this->modelAddressService->createOrUpdateByType( $address, [ 'parentId' => $user->id, 'parentType' => CoreGlobal::TYPE_USER, 'type' => Address::TYPE_PRIMARY ] );
+			$this->modelAddressService->createOrUpdateByType( $address, [ 'parentId' => $user->id, 'parentType' => CoreGlobal::TYPE_USER, 'type' => Address::TYPE_PRIMARY ] );
 
 			return $this->refresh();
 		}
@@ -193,14 +229,15 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 	}
 
 	/**
-	 * The settings action pre-load the privacy, notification and reminder settings and send them to view.
-	 * In case more settings are required, we can either override this action or use the model service to access additional settings.
+	 * The settings action pre-load the privacy, notification and reminder settings and
+	 * send them to view. In case more settings are required, we can either override this
+	 * action or use the model service to access additional settings.
 	 *
 	 * @return string
 	 */
 	public function actionSettings() {
 
-		$user	= Yii::$app->user->getIdentity();
+		$user = Yii::$app->user->getIdentity();
 
 		// Load key settings
 		$privacy		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );

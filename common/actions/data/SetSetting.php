@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\address;
+namespace cmsgears\core\common\actions\data;
 
 // Yii Imports
 use Yii;
@@ -15,17 +15,18 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\forms\Meta;
+
 use cmsgears\core\common\actions\base\ModelAction;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * The Delete action find model address for the given id and delete the address. The service
- * also deletes all the model addresses associated with the address.
+ * SetSetting add setting for given model supporting data trait.
  *
  * @since 1.0.0
  */
-class Delete extends ModelAction {
+class SetSetting extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -41,28 +42,13 @@ class Delete extends ModelAction {
 
 	// Public -----------------
 
-	public $parent = true;
-
 	// Protected --------------
-
-	protected $addressService;
-
-	protected $modelAddressService;
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
-
-	public function init() {
-
-		parent::init();
-
-		$this->addressService		= Yii::$app->factory->get( 'addressService' );
-
-		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
-	}
 
 	// Instance methods --------------------------------------------
 
@@ -74,27 +60,25 @@ class Delete extends ModelAction {
 
 	// CMG parent classes --------------------
 
-	// Delete --------------------------------
+	// SetSetting ----------------------------
 
-	public function run( $cid ) {
+	public function run() {
 
-		if( isset( $this->model ) ) {
+		$meta = new Meta();
 
-			$modelAddress	= $this->modelAddressService->getById( $cid );
+		if( $meta->load( Yii::$app->request->post(), 'Meta' ) && $meta->validate() ) {
 
-			if( isset( $modelAddress ) && $modelAddress->isParentValid( $this->model->id, $this->parentType ) ) {
+			// Save setting
+			$this->modelService->updateDataSettingObj( $this->model, $meta );
 
-				$address = $modelAddress->model;
-
-				$this->addressService->delete( $address );
-
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
-			}
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
 		}
 
-		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
+		// Generate Errors
+		$errors = AjaxUtil::generateErrorMessage( $meta );
 
+		// Trigger Ajax Failure
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+	}
 }

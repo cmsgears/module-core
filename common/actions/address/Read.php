@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\address;
 
 // Yii Imports
@@ -7,12 +15,16 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\actions\base\ModelAction;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
  * The Read action find model address for the given id and return the address.
+ *
+ * @since 1.0.0
  */
-class Read extends \cmsgears\core\common\actions\base\ModelAction {
+class Read extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -51,7 +63,7 @@ class Read extends \cmsgears\core\common\actions\base\ModelAction {
 
 		parent::init();
 
-		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
+		$this->modelAddressService = Yii::$app->factory->get( 'modelAddressService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -70,12 +82,14 @@ class Read extends \cmsgears\core\common\actions\base\ModelAction {
 
 		if( isset( $this->model ) ) {
 
-			$modelAddress	= $this->modelAddressService->getById( $cid );
+			$modelAddress = $this->modelAddressService->getById( $cid );
 
-			if( isset( $modelAddress ) && $modelAddress->checkParent( $this->model->id, $this->parentType ) ) {
+			if( isset( $modelAddress ) && $modelAddress->isParentValid( $this->model->id, $this->parentType ) ) {
 
-				$address	= $modelAddress->model;
-				$data		= $address->getAttributeArray( $this->returnAttributes );
+				$address = $modelAddress->model;
+
+				$adata	= $address->getAttributeArray( $this->returnAttributes );
+				$data	= [ 'address' => $adata, 'type' => $modelAddress->type ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
@@ -85,4 +99,5 @@ class Read extends \cmsgears\core\common\actions\base\ModelAction {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

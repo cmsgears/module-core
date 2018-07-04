@@ -42,6 +42,24 @@ interface IData {
 	public function getDataMeta( $name, $assoc = false );
 
 	/**
+	 * Return configuration from data object property.
+	 *
+	 * @param string $name
+	 * @param boolean $assoc
+	 * @return mixed|null
+	 */
+	public function getDataConfigMeta( $name, $assoc = false );
+
+	/**
+	 * Return setting from data object property.
+	 *
+	 * @param string $name
+	 * @param boolean $assoc
+	 * @return mixed|null
+	 */
+	public function getDataSettingMeta( $name, $assoc = false );
+
+	/**
 	 * Set the property of data object.
 	 *
 	 * @param string $name

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\controllers\apix;
 
 // Yii Imports
@@ -9,12 +17,18 @@ use yii\filters\VerbFilter;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\forms\ResetPassword;
-use cmsgears\core\common\models\resources\Address;
 use cmsgears\core\common\models\resources\ModelMeta;
+
+use cmsgears\core\common\controllers\base\Controller;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class UserController extends \cmsgears\core\common\controllers\base\Controller {
+/**
+ * UserController handles the ajax requests specific to User model.
+ *
+ * @since 1.0.0
+ */
+class UserController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -24,6 +38,7 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 
 	// Protected --------------
 
+	protected $addressService;
 	protected $modelAddressService;
 
 	protected $modelMetaService;
@@ -39,6 +54,7 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 		$this->crudPermission = CoreGlobal::PERM_USER;
 
 		$this->modelService			= Yii::$app->factory->get( 'userService' );
+		$this->addressService		= Yii::$app->factory->get( 'addressService' );
 		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
 		$this->modelMetaService		= Yii::$app->factory->get( 'modelMetaService' );
 	}
@@ -58,12 +74,18 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
 					'avatar' => [ 'permission' => $this->crudPermission ],
+					'get-address' => [ 'permission' => $this->crudPermission ],
+					'add-address' => [ 'permission' => $this->crudPermission ],
+					'update-address' => [ 'permission' => $this->crudPermission ],
+					'delete-address' => [ 'permission' => $this->crudPermission ],
 					'profile' => [ 'permission' => $this->crudPermission ],
 					'account' => [ 'permission' => $this->crudPermission ],
 					'address' => [ 'permission' => $this->crudPermission ],
 					'settings' => [ 'permission' => $this->crudPermission ],
-					'set-meta' => [ 'permission' => $this->crudPermission ],
-					'remove-meta' => [ 'permission' => $this->crudPermission ]
+					'set-config' => [ 'permission' => $this->crudPermission ],
+					'remove-config' => [ 'permission' => $this->crudPermission ],
+					'set-setting' => [ 'permission' => $this->crudPermission ],
+					'remove-setting' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
@@ -74,8 +96,10 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 					'account' => [ 'post' ],
 					'address' => [ 'post' ],
 					'settings' => [ 'post' ],
-					'set-meta' => [ 'post' ],
-					'remove-meta' => [ 'post' ]
+					'set-config' => [ 'post' ],
+					'remove-config' => [ 'post' ],
+					'set-setting' => [ 'post' ],
+					'remove-setting' => [ 'post' ]
 				]
 			]
 		];
@@ -86,9 +110,16 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 	public function actions() {
 
 		return [
-			'avatar' => [ 'class' => 'cmsgears\core\common\actions\content\UpdateAvatar' ],
-			'set-meta' => [ 'class' => 'cmsgears\core\common\actions\data\SetMeta', 'model' => Yii::$app->user->identity ],
-			'remove-meta' => [ 'class' => 'cmsgears\core\common\actions\data\RemoveMeta', 'model' => Yii::$app->user->identity ]
+			'avatar' => [ 'class' => 'cmsgears\core\common\actions\content\Avatar' ],
+			'get-address' => [ 'class' => 'cmsgears\core\common\actions\address\Read', 'parent' => true ],
+			'add-address' => [ 'class' => 'cmsgears\core\common\actions\address\Create', 'parent' => true ],
+			'update-address' => [ 'class' => 'cmsgears\core\common\actions\address\Update', 'parent' => true ],
+			'delete-address' => [ 'class' => 'cmsgears\core\common\actions\address\Delete', 'parent' => true ],
+			// Use current logged in user to update the config and settings
+			'set-config' => [ 'class' => 'cmsgears\core\common\actions\data\SetConfig', 'model' => Yii::$app->user->identity ],
+			'remove-config' => [ 'class' => 'cmsgears\core\common\actions\data\RemoveConfig', 'model' => Yii::$app->user->identity ],
+			'set-setting' => [ 'class' => 'cmsgears\core\common\actions\data\SetSetting', 'model' => Yii::$app->user->identity ],
+			'remove-setting' => [ 'class' => 'cmsgears\core\common\actions\data\RemoveSetting', 'model' => Yii::$app->user->identity ]
 		];
 	}
 
@@ -101,105 +132,138 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 	public function actionProfile() {
 
 		// Find Model
-		$user	= Yii::$app->user->getIdentity();
+		$user = Yii::$app->user->getIdentity();
 
-		$user->setScenario( 'profile' );
+		// Update/Render if exist
+		if( isset( $user ) ) {
 
-		if( $user->load( Yii::$app->request->post(), 'User' ) && $user->validate() ) {
+			// Scenario
+			$user->setScenario( 'profile' );
 
-			// Update User and Site Member
-			$this->modelService->update( $user );
+			if( $user->load( Yii::$app->request->post(), $user->getClassName() ) && $user->validate() ) {
 
-			$data	= [
-						'email' => $user->email, 'username' => $user->username, 'firstName' => $user->firstName,
-						'lastName' => $user->lastName, 'gender' => $user->getGenderStr(), 'phone' => $user->phone
-					];
+				// Update User
+				$this->modelService->update( $user );
 
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+				// Prepare response data
+				$data = [
+					'email' => $user->email, 'username' => $user->username, 'firstName' => $user->firstName,
+					'lastName' => $user->lastName, 'gender' => $user->getGenderStr(), 'phone' => $user->phone
+				];
+
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+			}
+
+			// Generate Errors
+			$errors = AjaxUtil::generateErrorMessage( $user );
+
+			// Trigger Ajax Failure
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
 
-		// Generate Errors
-		$errors = AjaxUtil::generateErrorMessage( $user );
-
-		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+		// Model not found
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
 	}
 
 	public function actionAccount() {
 
 		// Find Model
 		$user	= Yii::$app->user->getIdentity();
-		$model	= new ResetPassword();
 
-		if( $model->load( Yii::$app->request->post(), 'ResetPassword' ) && $model->validate() ) {
+		// Update/Render if exist
+		if( isset( $user ) ) {
 
-			// Update User and Site Member
-			if( $this->modelService->resetPassword( $user, $model, false ) ) {
+			$model	= new ResetPassword();
 
-				$data	= [ 'email' => $user->email, 'username' => $user->username ];
+			// Old password required if it was already set
+			if( !empty( $user->passwordHash ) ) {
 
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+				$model->setScenario( 'oldPassword' );
 			}
+
+			if( $model->load( Yii::$app->request->post(), 'ResetPassword' ) && $model->validate() ) {
+
+				// Update User
+				if( $this->modelService->resetPassword( $user, $model, false ) ) {
+
+					$data = [ 'email' => $user->email, 'username' => $user->username ];
+
+					// Trigger Ajax Success
+					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+				}
+			}
+
+			// Generate Errors
+			$errors = AjaxUtil::generateErrorMessage( $model, [ 'modelClass' => 'ResetPassword' ] );
+
+			// Trigger Ajax Failure
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
 
-		// Generate Errors
-		$errors = AjaxUtil::generateErrorMessage( $model );
-
-		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+		// Model not found
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
 	}
 
 	public function actionAddress( $type ) {
 
-		$user		= Yii::$app->user->getIdentity();
-		$address	= new Address();
+		$user = Yii::$app->user->getIdentity();
 
-		if( $address->load( Yii::$app->request->post(), 'Address' ) && $address->validate() ) {
+		// Update/Render if exist
+		if( isset( $user ) ) {
 
-		$modelAddress	= $this->modelAddressService->createOrUpdateByType( $address, [ 'parentId' => $user->id, 'parentType' => CoreGlobal::TYPE_USER, 'type' => $type ] );
-		$address		= $modelAddress->model;
+			$address = $this->addressService->getModelObject();
 
-		$data	= [
-					'line1' => $address->line1, 'line2' => $address->line2, 'cityName' => $address->cityName,
-					'country' => $address->countryName, 'province' => $address->provinceName, 'phone' => $address->phone, 'zip' => $address->zip
+			if( $address->load( Yii::$app->request->post(), $address->getClassName() ) && $address->validate() ) {
+
+				$modelAddress	= $this->modelAddressService->createOrUpdateByType( $address, [ 'parentId' => $user->id, 'parentType' => CoreGlobal::TYPE_USER, 'type' => $type ] );
+				$address		= $modelAddress->model;
+
+				$data = [
+					'line1' => $address->line1, 'line2' => $address->line2,
+					'cityName' => $address->cityName, 'country' => $address->countryName,
+					'province' => $address->provinceName, 'phone' => $address->phone,
+					'zip' => $address->zip
 				];
 
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+			}
+
+			// Generate Errors
+			$errors = AjaxUtil::generateErrorMessage( $address );
+
+			// Trigger Ajax Failure
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
 
-		// Generate Errors
-		$errors = AjaxUtil::generateErrorMessage( $address );
-
-		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+		// Model not found
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
 	}
 
 	public function actionSettings() {
 
-		$user			= Yii::$app->user->getIdentity();
-		$modelMetas		= Yii::$app->request->post( 'ModelMeta' );
-		$count			= count( $modelMetas );
-		$metas			= [];
+		$user		= Yii::$app->user->getIdentity();
+		$modelMetas	= Yii::$app->request->post( 'ModelMeta' );
+		$count		= count( $modelMetas );
+		$metas		= [];
 
-		for ( $i = 0; $i < $count; $i++ ) {
+		for( $i = 0; $i < $count; $i++ ) {
 
-			$meta		= $modelMetas[ $i ];
-			$meta		= $this->modelMetaService->initByNameType( $user->id, CoreGlobal::TYPE_USER, $meta[ 'name' ], $meta[ 'type' ] );
+			$meta	= $modelMetas[ $i ];
+			$meta	= $this->modelMetaService->initByNameType( $user->id, CoreGlobal::TYPE_USER, $meta[ 'name' ], $meta[ 'type' ] );
 
-			$metas[]	= $meta;
+			$metas[] = $meta;
 		}
 
-		// Load SchoolItem models
+		// Load models
 		if( ModelMeta::loadMultiple( $metas, Yii::$app->request->post(), 'ModelMeta' ) && ModelMeta::validateMultiple( $metas ) ) {
 
 			$this->modelService->updateModelMetas( $user, $metas );
 
-			$data	= [];
+			$data = [];
 
-			foreach ( $metas as $meta ) {
+			foreach( $metas as $meta ) {
 
 				$data[]	= $meta->getFieldInfo();
 			}
@@ -211,4 +275,5 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
+
 }

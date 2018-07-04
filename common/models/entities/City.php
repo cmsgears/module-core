@@ -40,6 +40,7 @@ use cmsgears\core\common\models\traits\base\NameTrait;
  * @property integer $timeZone
  * @property float $latitude
  * @property float $longitude
+ * @property string $autoCache
  *
  * @since 1.0.0
  */
@@ -104,12 +105,12 @@ class City extends Entity implements IName {
 			[ [ 'countryId', 'name' ], 'required' ],
 			[ [ 'id' ], 'safe' ],
 			// Unique
-			[ [ 'zone', 'iso' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'zone', 'iso' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			//[ [ 'zone', 'iso' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'name', 'zone', 'iso' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ 'code', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ [ 'type', 'postal' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'name', 'iso', 'zone', 'timeZone' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
-			[ [ 'regions', 'zipCodes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
+			[ [ 'regions', 'zipCodes', 'autoCache' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ 'timeZone', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'countryId', 'provinceId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],

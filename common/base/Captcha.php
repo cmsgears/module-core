@@ -5,7 +5,7 @@ namespace cmsgears\core\common\base;
 use yii\helpers\Json;
 
 // CMG Imports
-use cmsgears\core\common\assets\CaptchaAsset;
+use cmsgears\assets\yii\CaptchaAsset;
 
 class Captcha extends \yii\captcha\Captcha {
 

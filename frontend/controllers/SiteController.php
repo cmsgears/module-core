@@ -236,10 +236,14 @@ class SiteController extends BaseSiteController {
 
 	public function actionFeedback() {
 
+		$this->layout = CoreGlobalWeb::LAYOUT_PUBLIC;
+
 		return $this->render( CoreGlobalWeb::PAGE_FEEDBACK );
 	}
 
 	public function actionTestimonial() {
+
+		$this->layout = CoreGlobalWeb::LAYOUT_PUBLIC;
 
 		return $this->render( CoreGlobalWeb::PAGE_TESTIMONIAL );
 	}

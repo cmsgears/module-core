@@ -99,8 +99,8 @@ class CoreGlobal {
 	const TPL_NOTIFY_STATUS_REJECT		= 'status-reject';
     const TPL_NOTIFY_STATUS_RESUBMIT	= 'status-resubmit';
 	const TPL_NOTIFY_STATUS_CONFIRM		= 'status-confirm';
-	const TPL_NOTIFY_STATUS_ACTIVE		= 'status-active';
 	const TPL_NOTIFY_STATUS_APPROVE		= 'status-approve';
+	const TPL_NOTIFY_STATUS_ACTIVE		= 'status-active';
 	const TPL_NOTIFY_STATUS_FREEZE		= 'status-freeze';
 	const TPL_NOTIFY_STATUS_BLOCK		= 'status-block';
 	const TPL_NOTIFY_STATUS_UP_FREEZE	= 'status-uplift-freeze';

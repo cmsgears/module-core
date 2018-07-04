@@ -40,10 +40,44 @@ trait DataTrait {
 		$object	= $model->generateDataObjectFromJson( $assoc );
 		$meta	= new Meta();
 
-		if( isset( $object->$name ) ) {
+		if( isset( $object->$key ) ) {
 
 			$meta->key		= $key;
-			$meta->value	= $object->$name;
+			$meta->value	= $object->$key;
+
+			return $meta;
+		}
+
+		return false;
+	}
+
+	public function getDataConfigMeta( $model, $key, $assoc = false ) {
+
+		$object	= $model->generateDataObjectFromJson( $assoc );
+		$config	= 'config';
+		$meta	= new Meta();
+
+		if( isset( $object->$config ) && isset( $object->$config->$key ) ) {
+
+			$meta->key		= $key;
+			$meta->value	= $object->$config->$key;
+
+			return $meta;
+		}
+
+		return false;
+	}
+
+	public function getDataSettingMeta( $model, $key, $assoc = false ) {
+
+		$object	= $model->generateDataObjectFromJson( $assoc );
+		$config	= 'settings';
+		$meta	= new Meta();
+
+		if( isset( $object->$config ) && isset( $object->$config->$key ) ) {
+
+			$meta->key		= $key;
+			$meta->value	= $object->$config->$key;
 
 			return $meta;
 		}
@@ -89,6 +123,36 @@ trait DataTrait {
 		return $model;
 	}
 
+	public function updateDataConfigObj( $model, $meta ) {
+
+		$config = $model->getDataMeta( 'config' );
+		$key	= $meta->key;
+		$config	= !empty( $config ) ? $config : new \StdClass();
+
+		$config->$key = $meta->value;
+
+		$model->updateDataMeta( 'config', $config );
+
+		$model->refresh();
+
+		return $model;
+	}
+
+	public function updateDataSettingObj( $model, $meta ) {
+
+		$config = $model->getDataMeta( 'settings' );
+		$key	= $meta->key;
+		$config	= !empty( $config ) ? $config : new \StdClass();
+
+		$config->$key = $meta->value;
+
+		$model->updateDataMeta( 'settings', $config );
+
+		$model->refresh();
+
+		return $model;
+	}
+
 	// Delete -------------
 
 	public function removeDataMeta( $model, $key ) {
@@ -103,6 +167,32 @@ trait DataTrait {
 	public function removeDataMetaObj( $model, $meta ) {
 
 		$model->removeDataMeta( $meta->key );
+
+		$model->refresh();
+
+		return $model;
+	}
+
+	public function removeDataConfigObj( $model, $meta ) {
+
+		$config = $model->getDataMeta( 'config' );
+
+		unset( $meta->key );
+
+		$model->updateDataMeta( 'config', $config );
+
+		$model->refresh();
+
+		return $model;
+	}
+
+	public function removeDataSettingObj( $model, $meta ) {
+
+		$config = $model->getDataMeta( 'settings' );
+
+		unset( $meta->key );
+
+		$model->updateDataMeta( 'settings', $config );
 
 		$model->refresh();
 

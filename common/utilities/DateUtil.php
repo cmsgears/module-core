@@ -122,7 +122,17 @@ class DateUtil {
 			$format	= 'Y-m-d H:i:s';
 		}
 
-		return	date ( $format );
+		return	date( $format );
+	}
+
+	public static function getDateTimeFromMillis( $millis, $format = null ) {
+
+		if( !isset( $format ) ) {
+
+			$format	= 'Y-m-d H:i:s';
+		}
+
+	    return  date( $format, $millis );
 	}
 
 	/**
@@ -135,7 +145,7 @@ class DateUtil {
 			$format	= 'Y-m-d';
 		}
 
-		return	date ( $format );
+		return	date( $format );
 	}
 
 	/**
@@ -289,10 +299,18 @@ class DateUtil {
 		return $diff;
 	}
 
-	public static function lessThan( $sourceDate, $toDate, $equal = false ) {
+	/**
+	 * Compare the target date with source date to check whether target date is lesser than or equal to source date.
+	 *
+	 * @param type $sourceDate
+	 * @param type $targetDate
+	 * @param type $equal
+	 * @return boolean
+	 */
+	public static function lessThan( $sourceDate, $targetDate, $equal = false ) {
 
 		$source = is_string( $sourceDate ) ? strtotime( $sourceDate ) : $sourceDate->getTimestamp();
-		$test 	= is_string( $toDate ) ? strtotime( $toDate ) : $toDate->getTimestamp();
+		$test 	= is_string( $targetDate ) ? strtotime( $targetDate ) : $targetDate->getTimestamp();
 
 		// Test less than
 		if( $equal ) {
@@ -303,6 +321,14 @@ class DateUtil {
 		return $test < $source;
 	}
 
+	/**
+	 * Compare the given date and check whether it's between the start date and end date.
+	 *
+	 * @param type $startDate
+	 * @param type $endDate
+	 * @param type $date
+	 * @return type
+	 */
 	public static function inBetween( $startDate, $endDate, $date ) {
 
 		$start 	= is_string( $startDate ) ? strtotime( $startDate ) : $startDate->getTimestamp();
@@ -313,10 +339,18 @@ class DateUtil {
 		return ( ( $test >= $start ) && ( $test <= $end ) );
 	}
 
-	public static function greaterThan( $sourceDate, $toDate, $equal = false ) {
+	/**
+	 * Compare the target date with source date to check whether target date is greater than or equal to source date.
+	 *
+	 * @param type $sourceDate
+	 * @param type $targetDate
+	 * @param type $equal
+	 * @return type
+	 */
+	public static function greaterThan( $sourceDate, $targetDate, $equal = false ) {
 
 		$source = is_string( $sourceDate ) ? strtotime( $sourceDate ) : $sourceDate->getTimestamp();
-		$test 	= is_string( $toDate ) ? strtotime( $toDate ) : $toDate->getTimestamp();
+		$test 	= is_string( $targetDate ) ? strtotime( $targetDate ) : $targetDate->getTimestamp();
 
 		// Test greater than
 		if( $equal ) {

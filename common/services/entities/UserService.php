@@ -419,7 +419,8 @@ class UserService extends EntityService implements IUserService {
 	// Create -------------
 
 	/**
-	 * The method create user.
+	 * Create the user and associate avatar, banner or video.
+	 *
 	 * @param User $model
 	 * @param array $config
 	 * @return User
@@ -441,6 +442,7 @@ class UserService extends EntityService implements IUserService {
 		// Generate Tokens
 		$model->generateVerifyToken();
 		$model->generateAuthKey();
+		$model->generateOtp();
 
 		// Save Files
 		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
@@ -449,7 +451,8 @@ class UserService extends EntityService implements IUserService {
 	}
 
 	/**
-	 * The method registers website users and set their status to new at start. It also generate verification token.
+	 * Register User - It register the user and set status to new. It also generate verification token.
+	 *
 	 * @param RegisterForm $model
 	 * @return User
 	 */
@@ -472,6 +475,7 @@ class UserService extends EntityService implements IUserService {
 		$user->generatePassword( $model->password );
 		$user->generateVerifyToken();
 		$user->generateAuthKey();
+		$user->generateOtp();
 
 		$user->save();
 
@@ -481,7 +485,8 @@ class UserService extends EntityService implements IUserService {
 	// Update -------------
 
 	/**
-	 * The method update user including avatar.
+	 * Update the user and associate/update avatar, banner or video.
+	 *
 	 * @param User $model
 	 * @param array $config
 	 * @return User
@@ -514,7 +519,8 @@ class UserService extends EntityService implements IUserService {
 	}
 
 	/**
-	 * The method verify and confirm user by accepting valid token sent via mail. It also set user status to active.
+	 * Confirm User - The method verify and confirm user by accepting valid token sent via mail. It also set user status to active.
+	 *
 	 * @param User $user
 	 * @param string $token
 	 * @return boolean
@@ -551,7 +557,8 @@ class UserService extends EntityService implements IUserService {
 	}
 
 	/**
-	 * Activate User created from Admin Panel.
+	 * Activate User / Reset Password - Activates the User created from Admin Panel or reset password.
+	 *
 	 * @param User $user
 	 * @param string $token
 	 * @param ResetPasswordForm $resetForm
@@ -605,6 +612,7 @@ class UserService extends EntityService implements IUserService {
 
 		// Generate Token
 		$userToUpdate->generateResetToken();
+		$userToUpdate->generateOtp();
 
 		// Update User
 		$userToUpdate->update();

@@ -552,9 +552,10 @@ class m160621_014408_core_data extends Migration {
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
-			[ $config->id, 'default_avatar', 'Default Avatar', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Default avatar for site elements."}' ],
-			[ $config->id, 'user_avatar', 'User Avatar', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Default avatar for user."}' ],
-			[ $config->id, 'default_banner', 'Default Banner', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Default banner for site elements."}' ],
+			[ $config->id, 'default_avatar', 'Default Avatar', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Site avatar for site elements."}' ],
+			[ $config->id, 'user_avatar', 'User Avatar', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"User avatar for user elements."}' ],
+			[ $config->id, 'default_banner', 'Default Banner', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Site banner for site elements."}' ],
+			[ $config->id, 'page_banner', 'Page Banner', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Page banner for site elements."}' ],
 			[ $config->id, 'fonts', 'Fonts', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Fonts available for content editors."}' ]
 		];
 
@@ -628,6 +629,7 @@ class m160621_014408_core_data extends Migration {
 			[ $this->site->id, 'default_avatar', 'Default Avatar','frontend', 1, 'text', 'avatar-site.png',NULL ],
 			[ $this->site->id, 'user_avatar','User Avatar','frontend', 1, 'text', 'avatar-user.png',NULL ],
 			[ $this->site->id, 'default_banner','Default Banner','frontend', 1, 'text', 'banner-site.jpg',NULL ],
+			[ $this->site->id, 'page_banner','Page Banner','frontend', 1, 'text', 'banner-page.jpg',NULL ],
 			[ $this->site->id, 'fonts','Fonts','frontend', 1, 'text', 'Arial,Arial Black,Courier New,Sans Serif',NULL ]
 		];
 

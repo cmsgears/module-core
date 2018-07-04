@@ -207,11 +207,11 @@ class OptionService extends ResourceService implements IOptionService {
 
 	public function getIdNameMapByCategorySlug( $slug, $config = [] ) {
 
-		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_SYSTEM;
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_OPTION_GROUP;
 
 		$category = Yii::$app->factory->get( 'categoryService' )->getBySlugType( $slug, $type, $config );
 
-		return $this->getIdNameMapByCategoryId( $category->id );
+		return $this->getIdNameMapByCategoryId( $category->id, $config );
 	}
 
 	// Read - Others ---

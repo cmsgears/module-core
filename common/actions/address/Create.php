@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\address;
 
 // Yii Imports
@@ -10,12 +18,16 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\Address;
 
+use cmsgears\core\common\actions\base\ModelAction;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
  * The Create action creates model address, address and associate the model address to parent.
+ *
+ * @since 1.0.0
  */
-class Create extends \cmsgears\core\common\actions\base\ModelAction {
+class Create extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -82,7 +94,7 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 			if( $address->load( Yii::$app->request->post(), 'Address' ) && $address->validate() ) {
 
-				$type	= isset( $this->modelType ) ? $this->modelType : Address::TYPE_DEFAULT;
+				$type = isset( $this->modelType ) ? $this->modelType : Address::TYPE_DEFAULT;
 
 				// Address - Create
 				$modelAddress	= $this->modelAddressService->create( $address, [ 'parentId' => $this->model->id, 'parentType' => $this->parentType, 'type' => $type ] );
@@ -104,4 +116,5 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

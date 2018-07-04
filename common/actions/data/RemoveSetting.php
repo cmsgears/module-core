@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\data;
 
 // Yii Imports
@@ -9,14 +17,16 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\forms\Meta;
 
+use cmsgears\core\common\actions\base\ModelAction;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * SetMeta add data meta for given model supporting data trait.
+ * RemoveSetting remove setting for given model supporting data trait.
  *
- * The controller must provide appropriate model service.
+ * @since 1.0.0
  */
-class SetMeta extends \cmsgears\core\common\actions\base\ModelAction {
+class RemoveSetting extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -50,7 +60,7 @@ class SetMeta extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// SetMeta -------------------------------
+	// RemoveSetting -------------------------
 
 	public function run() {
 
@@ -58,8 +68,8 @@ class SetMeta extends \cmsgears\core\common\actions\base\ModelAction {
 
 		if( $meta->load( Yii::$app->request->post(), 'Meta' ) && $meta->validate() ) {
 
-			// Save meta
-			$this->modelService->updateDataMetaObj( $this->model, $meta );
+			// Save setting
+			$this->modelService->removeDataSettingObj( $this->model, $meta );
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );

@@ -3,35 +3,35 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+$name		= Html::encode( $user->getName() );
+$email		= Html::encode( $user->email );
+$token		= Html::encode( $user->verifyToken );
+
 $siteName	= Html::encode( $coreProperties->getSiteName() );
 $logoUrl	= Url::to( "@web/images/logo-mail.png", true );
 $siteUrl	= Html::encode( $coreProperties->getSiteUrl() );
 $homeUrl	= $siteUrl;
 $siteBkg	= "$siteUrl/images/banner-mail.jpg";
-
-$user		= $model->holder ?? $model->creator;
-$userName	= Html::encode( $user->getName() );
-$modelName	= Html::encode( $model->name );
 ?>
 <?php include dirname( __DIR__ ) . '/includes/header.php'; ?>
 <table cellspacing="0" cellpadding="0" border="0" margin="0" padding="0" width="80%" align="center" class="ctmax">
 	<tr><td height="40"></td></tr>
 	<tr>
-		<td><font face="'Roboto', Arial, sans-serif">Dear Member,</font></td>
+		<td><font face="'Roboto', Arial, sans-serif">Dear <?= $name ?>,</font></td>
 	</tr>
 	<tr><td height="20"></td></tr>
 	<tr>
 		<td>
-			<font face="'Roboto', Arial, sans-serif">Congratulations, <?= $modelName ?> has been activated. The details are as mentioned below:</font>
+			<font face="'Roboto', Arial, sans-serif">Your account password has been changed. Your account details are as mentioned below:</font>
 		</td>
 	</tr>
 	<tr><td height="20"></td></tr>
 	<tr>
-		<td> <font face="'Roboto', Arial, sans-serif">Manager: <?= $userName ?></font></td>
+		<td> <font face="'Roboto', Arial, sans-serif">Email: <?= $email ?></font></td>
 	</tr>
-	<tr><td height="20"></td></tr>
+	<tr><td height="10"></td></tr>
 	<tr>
-		<td> <font face="'Roboto', Arial, sans-serif">Please contact <?= $siteName ?> Administrator in case it's not related to you.</font></td>
+		<td> <font face="'Roboto', Arial, sans-serif">Please contact <?= $siteName ?> Administrator in case it's not initiated by you.</font></td>
 	</tr>
 	<tr><td height="40"></td></tr>
 </table>

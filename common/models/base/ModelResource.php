@@ -9,6 +9,9 @@
 
 namespace cmsgears\core\common\models\base;
 
+// Yii Imports
+use Yii;
+
 /**
  * Base model of all the resources specific to model.
  *

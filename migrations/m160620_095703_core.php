@@ -478,19 +478,25 @@ class m160620_095703_core extends Migration {
 			'avatarUrl' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'websiteUrl' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'verifyToken' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
+			'verifyTokenValidTill' => $this->dateTime()->defaultValue( null ),
 			'resetToken' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
+			'resetTokenValidTill' => $this->dateTime()->defaultValue( null ),
 			'registeredAt' => $this->dateTime(),
 			'lastLoginAt' => $this->dateTime(),
 			'lastActivityAt' => $this->dateTime(),
 			'authKey' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
+			// Otp
 			'otp' => $this->integer( 6 )->defaultValue( null ),
-			'otpValidTill' => $this->dateTime(),
+			'otpValidTill' => $this->dateTime()->defaultValue( null ),
+			// Access Token
 			'accessToken' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'accessTokenType' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'tokenCreatedAt' => $this->dateTime(),
 			'tokenAccessedAt' => $this->dateTime(),
+			// Content
 			'content' => $this->mediumText(),
 			'data' => $this->mediumText(),
+			// Cache
 			'gridCache' => $this->longText(),
 			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
 			'gridCachedAt' => $this->dateTime()

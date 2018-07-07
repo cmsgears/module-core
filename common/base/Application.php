@@ -136,8 +136,9 @@ class Application extends BaseApplication {
 		}
 		// Process single site request
 		else {
+			$siteSlug = Yii::$app->core->siteSlug;
 
-			$site = SiteService::findBySlug( 'main' );
+			$site = SiteService::findBySlug( $siteSlug );
 
 			// Site Found
 			if( isset( $site ) ) {

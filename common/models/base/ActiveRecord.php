@@ -294,6 +294,17 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord {
 			}
 		}
 
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		if( static::isMultiSite() && !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			$modelTable = static::tableName();
+			
+			$query = $query->andWhere( "$modelTable.siteId=:siteId", [ ':siteId' => $siteId ] );
+		}
+
 		return $query;
 	}
 

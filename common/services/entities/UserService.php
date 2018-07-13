@@ -27,6 +27,7 @@ use cmsgears\core\common\services\traits\base\ApprovalTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 use cmsgears\core\common\services\traits\resources\ModelMetaTrait;
 use cmsgears\core\common\services\traits\resources\SocialLinkTrait;
+use cmsgears\core\common\services\traits\resources\VisualTrait;
 
 use cmsgears\core\common\utilities\DateUtil;
 
@@ -67,6 +68,7 @@ class UserService extends EntityService implements IUserService {
 	use DataTrait;
 	use ModelMetaTrait;
 	use SocialLinkTrait;
+	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -653,23 +655,6 @@ class UserService extends EntityService implements IUserService {
 		$userToUpdate->update();
 
 		return $userToUpdate;
-	}
-
-	/**
-	 * The method create user avatar if it does not exist or save existing avatar.
-	 * @param User $model
-	 * @param CmgFile $avatar
-	 * @return User - updated User
-	 */
-	public function updateAvatar( $model, $avatar ) {
-
-		// Save Avatar
-		$this->fileService->saveImage( $avatar, [ 'model' => $model, 'attribute' => 'avatarId' ] );
-
-		// Update Model
-		return parent::update( $model, [
-			'attributes' => [ 'avatarId' ]
-		]);
 	}
 
 	// Log last activity ----

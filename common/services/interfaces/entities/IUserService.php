@@ -65,8 +65,6 @@ interface IUserService extends IEntityService, IApproval, IData, IModelMeta, ISo
 
 	public function resetPassword( $user, $resetForm );
 
-	public function updateAvatar( $user, $avatar );
-
 	// Delete -------------
 
 	// Bulk ---------------

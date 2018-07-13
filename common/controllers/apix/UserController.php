@@ -74,6 +74,7 @@ class UserController extends Controller {
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
 					'avatar' => [ 'permission' => $this->crudPermission ],
+					'clear-avatar' => [ 'permission' => $this->crudPermission ],
 					'get-address' => [ 'permission' => $this->crudPermission ],
 					'add-address' => [ 'permission' => $this->crudPermission ],
 					'update-address' => [ 'permission' => $this->crudPermission ],
@@ -89,9 +90,14 @@ class UserController extends Controller {
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'avatar' => [ 'post' ],
+					'clear-avatar' => [ 'post' ],
+					'get-address' => [ 'post' ],
+					'add-address' => [ 'post' ],
+					'update-address' => [ 'post' ],
+					'delete-address' => [ 'post' ],
 					'profile' => [ 'post' ],
 					'account' => [ 'post' ],
 					'address' => [ 'post' ],
@@ -111,6 +117,7 @@ class UserController extends Controller {
 
 		return [
 			'avatar' => [ 'class' => 'cmsgears\core\common\actions\content\Avatar' ],
+			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\ClearAvatar' ],
 			'get-address' => [ 'class' => 'cmsgears\core\common\actions\address\Read', 'parent' => true ],
 			'add-address' => [ 'class' => 'cmsgears\core\common\actions\address\Create', 'parent' => true ],
 			'update-address' => [ 'class' => 'cmsgears\core\common\actions\address\Update', 'parent' => true ],

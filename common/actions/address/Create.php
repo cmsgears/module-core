@@ -49,6 +49,7 @@ class Create extends ModelAction {
 
 	// Protected --------------
 
+	protected $addressService;
 	protected $modelAddressService;
 
 	// Private ----------------
@@ -61,6 +62,7 @@ class Create extends ModelAction {
 
 		parent::init();
 
+		$this->addressService		= Yii::$app->factory->get( 'addressService' );
 		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
 	}
 
@@ -80,7 +82,7 @@ class Create extends ModelAction {
 
 		if( isset( $this->model ) ) {
 
-			$address = new Address();
+			$address = $this->addressService->getModelObject();
 
 			if( isset( $this->scenario ) ) {
 

@@ -124,6 +124,7 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 
 		// Mapper or Resource Type
 		$modelType			= Yii::$app->request->get( 'model-type', null );
+		$modelType			= isset( $modelType ) ? $modelType : Yii::$app->request->post( 'model-type', null );
 		$this->modelType	= isset( $modelType ) ? $modelType : $this->modelType;
 	}
 

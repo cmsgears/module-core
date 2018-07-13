@@ -17,14 +17,12 @@ use yii\helpers\ArrayHelper;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\interfaces\base\IMeta;
-use cmsgears\core\common\models\interfaces\base\IModelResource;
 use cmsgears\core\common\models\interfaces\resources\IData;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\ModelResource;
 
 use cmsgears\core\common\models\traits\base\MetaTrait;
-use cmsgears\core\common\models\traits\base\ModelResourceTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
@@ -42,7 +40,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  *
  * @since 1.0.0
  */
-class ModelMeta extends ModelResource implements IData, IMeta, IModelResource {
+class ModelMeta extends ModelResource implements IData, IMeta {
 
 	// Variables ---------------------------------------------------
 
@@ -66,7 +64,6 @@ class ModelMeta extends ModelResource implements IData, IMeta, IModelResource {
 
 	use DataTrait;
 	use MetaTrait;
-	use ModelResourceTrait;
 
 	// Constructor and Initialisation ------------------------------
 

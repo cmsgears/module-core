@@ -324,6 +324,13 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 		return static::find()->where( 'slug=:slug AND type=:type AND siteId IS NULL AND themeId IS NULL', [ ':slug' => $slug, ':type' => $type ] )->one();
 	}
 
+	public static function findByThemeSlugType( $slug, $type, $config = [] ) {
+
+		$theme = Yii::$app->core->site->theme;
+
+		return static::find()->where( 'slug=:slug AND type=:type AND siteId IS NULL AND themeId=:tid', [ ':slug' => $slug, ':type' => $type, ':tid' => $theme->id ] )->one();
+	}
+
 	/**
 	 * Find and return the active templates for given type.
 	 *

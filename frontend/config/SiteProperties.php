@@ -1,10 +1,25 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\frontend\config;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class SiteProperties extends \cmsgears\core\common\config\Properties {
+use cmsgears\core\common\config\Properties;
+
+/**
+ * SiteProperties provides access to properties specific to frontend application.
+ *
+ * @since 1.0.0
+ */
+class SiteProperties extends Properties {
 
 	// Variables ---------------------------------------------------
 
@@ -26,15 +41,9 @@ class SiteProperties extends \cmsgears\core\common\config\Properties {
 
 	private static $instance;
 
+	// Traits ------------------------------------------------------
+
 	// Constructor and Initialisation ------------------------------
-
-	// Instance methods --------------------------------------------
-
-	// Yii parent classes --------------------
-
-	// CMG parent classes --------------------
-
-	// WebProperties -------------------------
 
 	public static function getInstance() {
 
@@ -48,7 +57,17 @@ class SiteProperties extends \cmsgears\core\common\config\Properties {
 		return self::$instance;
 	}
 
-	// Properties
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Properties ----------------------------
 
 	public function getUserAvatar() {
 
@@ -69,4 +88,5 @@ class SiteProperties extends \cmsgears\core\common\config\Properties {
 
 		return $this->properties[ self::PROP_FONTS ];
 	}
+
 }

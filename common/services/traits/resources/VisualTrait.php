@@ -9,6 +9,9 @@
 
 namespace cmsgears\core\common\services\traits\resources;
 
+// Yii Imports
+use Yii;
+
 /**
  * Used by services with base model having visual trait.
  *
@@ -53,6 +56,19 @@ trait VisualTrait {
 		]);
 	}
 
+	public function clearAvatar( $model ) {
+
+		$fileService = Yii::$app->factory->get( 'fileService' );
+
+		$fileService->delete( $model->avatar );
+
+		$model->avatarId = null;
+
+		return parent::update( $model, [
+			'attributes' => [ 'avatarId' ]
+		]);
+	}
+
 	public function updateBanner( $model, $banner ) {
 
 		$fileService = Yii::$app->factory->get( 'fileService' );
@@ -64,11 +80,37 @@ trait VisualTrait {
 		]);
 	}
 
+	public function clearBanner( $model ) {
+
+		$fileService = Yii::$app->factory->get( 'fileService' );
+
+		$fileService->delete( $model->banner );
+
+		$model->bannerId = null;
+
+		return parent::update( $model, [
+			'attributes' => [ 'bannerId' ]
+		]);
+	}
+
 	public function updateVideo( $model, $video ) {
 
 		$fileService = Yii::$app->factory->get( 'fileService' );
 
 		$fileService->saveFiles( $model, [ 'videoId' => $video ] );
+
+		return parent::update( $model, [
+			'attributes' => [ 'videoId' ]
+		]);
+	}
+
+	public function clearVideo( $model ) {
+
+		$fileService = Yii::$app->factory->get( 'fileService' );
+
+		$fileService->delete( $model->video );
+
+		$model->videoId = null;
 
 		return parent::update( $model, [
 			'attributes' => [ 'videoId' ]

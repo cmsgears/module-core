@@ -25,7 +25,7 @@ use cmsgears\core\common\models\forms\BaseForm;
  *
  * @since 1.0.0
  */
-class ThemeData extends BaseForm; {
+class ThemeData extends BaseForm {
 
 	// Variables ---------------------------------------------------
 

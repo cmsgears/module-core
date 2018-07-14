@@ -11,12 +11,11 @@ namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
 use Yii;
-use yii\base\Model;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-
+use cmsgears\core\common\models\forms\BaseForm;
 use cmsgears\core\common\utilities\DateUtil;
 
 /**
@@ -30,7 +29,7 @@ use cmsgears\core\common\utilities\DateUtil;
  *
  * @since 1.0.0
  */
-class Login extends Model {
+class Login extends BaseForm {
 
 	// Variables ---------------------------------------------------
 

@@ -11,11 +11,11 @@ namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
 use Yii;
-use yii\base\Model;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\models\forms\BaseForm;
 
 /**
  * Used to submit password reset request. It need a logged in user.
@@ -27,7 +27,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * @since 1.0.0
  */
-class ResetPassword extends Model {
+class ResetPassword extends BaseForm {
 
 	// Variables ---------------------------------------------------
 

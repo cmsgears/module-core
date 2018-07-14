@@ -10,12 +10,14 @@
 namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
-use yii\base\Model;
+
+// CMG Imports
+use cmsgears\core\common\models\forms\BaseForm;
 
 /**
  * Process dynamic forms.
  */
-class GenericForm extends Model {
+class GenericForm extends BaseForm {
 
 	// Variables ---------------------------------------------------
 

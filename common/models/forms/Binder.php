@@ -10,8 +10,10 @@
 namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
-use yii\base\Model;
 use yii\helpers\ArrayHelper;
+
+// CMG Imports
+use cmsgears\core\common\models\forms\BaseForm;
 
 /**
  * It's useful to bind multiple models to a model using checkbox group.
@@ -23,7 +25,7 @@ use yii\helpers\ArrayHelper;
  *
  * @since 1.0.0
  */
-class Binder extends Model {
+class Binder extends BaseForm {
 
 	// Variables ---------------------------------------------------
 

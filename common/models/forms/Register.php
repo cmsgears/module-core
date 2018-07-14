@@ -11,11 +11,11 @@ namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
 use Yii;
-use yii\base\Model;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\models\forms\BaseForm;
 
 /**
  * Used to register users.
@@ -42,7 +42,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * @since 1.0.0
  */
-class Register extends Model {
+class Register extends BaseForm {
 
 	// Variables ---------------------------------------------------
 

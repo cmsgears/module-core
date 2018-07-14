@@ -11,11 +11,11 @@ namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
 use Yii;
-use yii\base\Model;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\models\forms\BaseForm;
 
 /**
  * Meta form can be used to collect meta data.
@@ -23,7 +23,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property string $key
  * @property string $value
  */
-class Meta extends Model {
+class Meta extends BaseForm {
 
 	// Variables ---------------------------------------------------
 

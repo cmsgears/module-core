@@ -11,11 +11,11 @@ namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
 use Yii;
-use yii\base\Model;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\models\forms\BaseForm;
 
 /**
  * Form submitted by users in case they forget their account password. It does not
@@ -25,7 +25,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * @since 1.0.0
  */
-class ForgotPassword extends Model {
+class ForgotPassword extends BaseForm {
 
 	// Variables ---------------------------------------------------
 

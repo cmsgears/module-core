@@ -10,22 +10,11 @@
 namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
-use Yii;
-use yii\helpers\ArrayHelper;
+use yii\base\Model;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\common\models\forms\BaseForm;
 
-/**
- * It collect the additional CSS added on top of theme CSS to further customize the
- * look and feel of the application.
- *
- * @property string $css
- *
- * @since 1.0.0
- */
-class ThemeData extends BaseForm; {
+class BaseForm extends Model {
 
 	// Variables ---------------------------------------------------
 
@@ -40,8 +29,6 @@ class ThemeData extends BaseForm; {
 	// Variables -----------------------------
 
 	// Public -----------------
-
-	public $css;
 
 	// Protected --------------
 
@@ -61,43 +48,23 @@ class ThemeData extends BaseForm; {
 
 	// yii\base\Model ---------
 
-	/**
-	 * @inheritdoc
-	 */
-	public function rules() {
-
-		// Model Rules
-		$rules = [
-			[ 'css', 'safe' ]
-		];
-
-		// Trim Text
-		if( Yii::$app->core->trimFieldValue ) {
-
-			$trim[] = [ 'css', 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
-
-			return ArrayHelper::merge( $trim, $rules );
-		}
-
-		return $rules;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function attributeLabels() {
-
-		return [
-			'css' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STYLE )
-		];
-	}
-
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
 	// Validators ----------------------------
 
-	// ThemeData -----------------------------
+	// BaseForm ---------------------------------
 
+	/**
+	 * Return class name without path.
+	 *
+	 * @return string class name without class path.
+	 */
+	public function getClassname() {
+
+		$name	= get_class( $this );
+
+		return join( '', array_slice( explode( '\\', $name ), -1 ) );
+	}
 }

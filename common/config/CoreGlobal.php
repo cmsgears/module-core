@@ -323,7 +323,6 @@ class CoreGlobal {
 	const FIELD_VALUE		= 'valueField';
 	const FIELD_VALUE_TYPE	= 'valueTypeField';
 	const FIELD_DESCRIPTION	= 'descField';
-	const FIELD_OTP			= 'otp';
 	const FIELD_NOTES		= 'notesField';
 
 	const FIELD_ACTIVE		= 'activeField';
@@ -420,6 +419,13 @@ class CoreGlobal {
 	const FIELD_COMPRESS	= 'compressField';
 	const FIELD_GRID_CACHE	= 'gridCacheField';
 
+	// Tokens
+	const FIELD_OTP				= 'otpField';
+	const FIELD_OTP_VALIDITY	= 'otpValidityField';
+
+	const FIELD_TOKEN_VERIFY			= 'verifyTokenField';
+	const FIELD_TOKEN_VERIFY_VALIDITY	= 'verifyTokenValidityField';
+
 	// Role Fields
 	const FIELD_ADMIN_URL	= 'adminUrlField';
 	const FIELD_HOME_URL	= 'homeUrlField';
@@ -433,6 +439,7 @@ class CoreGlobal {
 	const FIELD_ZIP_SUB				= 'subZipField';
 	const FIELD_MOBILE				= 'mobileField';
 	const FIELD_PHONE				= 'phoneField';
+	const FIELD_PHONE_VERIFIED		= 'phoneVerifiedField';
 	const FIELD_FAX					= 'faxField';
 	const FIELD_LONGITUDE			= 'longitudeField';
 	const FIELD_LATITUDE			= 'latitudeField';
@@ -445,6 +452,7 @@ class CoreGlobal {
 
 	// User Fields
 	const FIELD_EMAIL				= 'emailField';
+	const FIELD_EMAIL_VERIFIED		= 'emailVerifiedField';
 	const FIELD_USERNAME			= 'usernameField';
 	const FIELD_PASSWORD			= 'passwordField';
 	const FIELD_PASSWORD_REPEAT		= 'passwordRepeatField';

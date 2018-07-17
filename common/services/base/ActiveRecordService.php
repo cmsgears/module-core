@@ -1334,6 +1334,8 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public static function generateNameValueList( $config = [] ) {
 
+		$config = static::applySiteFilters ( $config );
+
 		$modelClass	= static::$modelClass;
 		$modelTable = $modelClass::tableName();
 

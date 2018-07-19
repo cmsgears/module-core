@@ -798,9 +798,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		if( isset( $report ) && $report ) {
 
-			$reportColumns	= [];
+			$reportColumns = [];
 
-			foreach ( $reportCol as $key => $column ) {
+			foreach( $reportCol as $key => $column ) {
 
 				if( !is_string( $key ) ) {
 
@@ -826,7 +826,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 				}
 
 				// Numeric
-				if( isset( $flag ) || isset( $match ) ) {
+				if( isset( $match ) ) {
 
 					$reportColumns[ $column ][ 'match' ] = $match;
 				}
@@ -844,13 +844,13 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 				}
 			}
 
-			foreach ( $reportColumns as $key => $column ) {
+			foreach( $reportColumns as $key => $column ) {
 
-				$find	= $column[ 'find' ] ?? null;
-				$flag	= $column[ 'flag' ] ?? null;
-				$match	= $column[ 'match' ] ?? null;
-				$start	= $column[ 'start' ] ?? null;
-				$end	= $column[ 'end' ] ?? null;
+				$find	= isset( $column[ 'find' ] ) ? $column[ 'find' ] : null;
+				$flag	= isset( $column[ 'flag' ] ) ? $column[ 'flag' ] : null;
+				$match	= isset( $column[ 'match' ] ) ? $column[ 'match' ] : null;
+				$start	= isset( $column[ 'start' ] ) ? $column[ 'start' ] : null;
+				$end	= isset( $column[ 'end' ] ) ? $column[ 'end' ] : null;
 
 				// String search
 				if( isset( $find ) ) {
@@ -861,7 +861,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 				// Flag
 				if( isset( $flag ) ) {
 
-					$query->andWhere( "$key=:flag", [ ':flag' => $flag ] );
+					$query->andWhere( "{$key}=:flag", [ ':flag' => $flag ] );
 				}
 
 				// Numeric

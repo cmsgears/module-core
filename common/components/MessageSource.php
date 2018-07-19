@@ -136,6 +136,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_VALUE => 'Value',
 		CoreGlobal::FIELD_VALUE_TYPE => 'Value Type',
 		CoreGlobal::FIELD_DESCRIPTION => 'Description',
+		CoreGlobal::FIELD_OTP => 'OTP',
 		CoreGlobal::FIELD_NOTES => 'Notes',
 
 		CoreGlobal::FIELD_ACTIVE => 'Active',
@@ -227,13 +228,6 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_COMPRESS => 'Store Compressed',
 		CoreGlobal::FIELD_GRID_CACHE => 'Grid Cache',
 
-		// Tokens
-		CoreGlobal::FIELD_OTP => 'OTP',
-		CoreGlobal::FIELD_OTP_VALIDITY => 'OTP Validity',
-
-		CoreGlobal::FIELD_TOKEN_VERIFY => 'Verify Token',
-		CoreGlobal::FIELD_TOKEN_VERIFY_VALIDITY	=> 'Verify Token Validity',
-
 		// Role Fields
 		CoreGlobal::FIELD_ADMIN_URL => 'Admin Url',
 		CoreGlobal::FIELD_HOME_URL => 'Home Url',
@@ -247,7 +241,6 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_ZIP_SUB => 'Postal Code Ext',
 		CoreGlobal::FIELD_MOBILE => 'Mobile',
 		CoreGlobal::FIELD_PHONE => 'Phone',
-		CoreGlobal::FIELD_PHONE_VERIFIED => 'Phone Verified',
 		CoreGlobal::FIELD_FAX => 'Fax',
 		CoreGlobal::FIELD_LONGITUDE => 'Longitude',
 		CoreGlobal::FIELD_LATITUDE => 'Latitude',
@@ -260,7 +253,6 @@ class MessageSource extends \yii\base\Component {
 
 		// User Fields
 		CoreGlobal::FIELD_EMAIL => 'Email',
-		CoreGlobal::FIELD_EMAIL_VERIFIED => 'Email Verified',
 		CoreGlobal::FIELD_USERNAME => 'Username',
 		CoreGlobal::FIELD_PASSWORD => 'Password',
 		CoreGlobal::FIELD_PASSWORD_REPEAT => 'Confirm Password',

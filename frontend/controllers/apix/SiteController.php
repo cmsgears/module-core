@@ -1,8 +1,16 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\frontend\controllers\apix;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 use yii\filters\VerbFilter;
 
@@ -13,9 +21,16 @@ use cmsgears\core\common\models\forms\Login;
 use cmsgears\core\common\models\forms\ForgotPassword;
 use cmsgears\core\common\models\forms\Register;
 
+use cmsgears\core\frontend\controllers\base\Controller;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class SiteController extends \cmsgears\core\frontend\controllers\base\Controller {
+/**
+ * SiteController handles the ajax requests specific to site and user.
+ *
+ * @since 1.0.0
+ */
+class SiteController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -37,8 +52,10 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 
 		parent::init();
 
-		$this->crudPermission		= CoreGlobal::PERM_USER;
+		// Permissions
+		$this->crudPermission = CoreGlobal::PERM_USER;
 
+		// Services
 		$this->modelService			= Yii::$app->factory->get( 'siteService' );
 		$this->userService			= Yii::$app->factory->get( 'userService' );
 		$this->siteMemberService	= Yii::$app->factory->get( 'siteMemberService' );
@@ -127,7 +144,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		}
 
 		// Create Form Model
-		$model			= new Login();
+		$model = new Login();
 
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post(), 'Login' )	 && $model->login() ) {
@@ -146,7 +163,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 			// Redirect user to home
 			if( isset( $model->redirectUrl ) ) {
 
-				$homeUrl	= $model->redirectUrl;
+				$homeUrl = $model->redirectUrl;
 			}
 			else if( isset( $storedLink ) ) {
 
@@ -155,12 +172,12 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 			// Redirect user to home set by admin
 			else if( isset( $role ) && isset( $role->homeUrl ) ) {
 
-				$homeUrl	= Url::to( [ "/$role->homeUrl" ], true );
+				$homeUrl = Url::to( [ "/$role->homeUrl" ], true );
 			}
 			// Redirect user to home set by app config
 			else {
 
-				$homeUrl	= Url::to( [ Yii::$app->core->getLoginRedirectPage() ], true );
+				$homeUrl = Url::to( [ Yii::$app->core->getLoginRedirectPage() ], true );
 			}
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $homeUrl );
@@ -181,12 +198,12 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post(), 'ForgotPassword' ) && $model->validate() ) {
 
-			$user	= $this->userService->getByEmail( $model->email );
+			$user = $this->userService->getByEmail( $model->email );
 
 			// Trigger Reset Password
 			if( isset( $user ) && $this->userService->forgotPassword( $user ) ) {
 
-				$user	= $this->userService->getByEmail( $model->email );
+				$user = $this->userService->getByEmail( $model->email );
 
 				// Load User Permissions
 				$user->loadPermissions();
@@ -215,7 +232,7 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 
 	public function actionCheckUser( $redirect = null ) {
 
-		$user		= Yii::$app->user->getIdentity();
+		$user = Yii::$app->user->getIdentity();
 
 		if( isset( $user ) ) {
 
@@ -232,4 +249,5 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
+
 }

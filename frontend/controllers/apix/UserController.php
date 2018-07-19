@@ -48,31 +48,7 @@ class UserController extends BaseUserController {
 
 	// yii\base\Component -----
 
-/*
-	public function behaviors() {
-
-		$behaviors = parent::behaviors();
-
-		$behaviors[ 'rbac' ][ 'actions' ][ 'auto-search' ] = [ 'permission' => $this->crudPermission ];
-
-		$behaviors[ 'rbac' ][ 'verbs' ][ 'auto-search' ] = [ 'post' ];
-
-		return $behaviors;
-	}
-*/
-
 	// yii\base\Controller ----
-
-/*
-	public function actions() {
-
-		$actions = parent::actions();
-
-		$actions[ 'auto-search' ][] = [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ];
-
-		return $actions;
-	}
-*/
 
 	// CMG interfaces ------------------------
 

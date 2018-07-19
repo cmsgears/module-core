@@ -55,7 +55,7 @@ class UserController extends Controller {
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_USER;
 
-		// COnfig
+		// Config
 		$this->basePath = '/user';
 
 		// Services

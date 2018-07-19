@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\frontend\controllers\apix;
 
 // Yii Imports
@@ -8,9 +16,16 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\frontend\controllers\base\Controller;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class CityController extends \cmsgears\core\frontend\controllers\base\Controller {
+/**
+ * CityController handles the ajax requests specific to City Model.
+ *
+ * @since 1.0.0
+ */
+class CityController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -28,9 +43,11 @@ class CityController extends \cmsgears\core\frontend\controllers\base\Controller
 
 		parent::init();
 
-		$this->crudPermission	= CoreGlobal::PERM_USER;
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_USER;
 
-		$this->modelService		= Yii::$app->factory->get( 'cityService' );
+		// Services
+		$this->modelService = Yii::$app->factory->get( 'cityService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -70,13 +87,14 @@ class CityController extends \cmsgears\core\frontend\controllers\base\Controller
 		$provinceId	= Yii::$app->request->post( 'province-id' );
 		$name		= Yii::$app->request->post( 'name' );
 
-		$cities		= $this->modelService->searchByName( $name, [
-							'limit' => 5,
-							'conditions' => [ 'provinceId' => $provinceId ],
-							'columns' => [ 'id', 'name', 'latitude', 'longitude', 'postal' ]
-						]);
+		$cities = $this->modelService->searchByName( $name, [
+			'limit' => 5,
+			'conditions' => [ 'provinceId' => $provinceId ],
+			'columns' => [ 'id', 'name', 'latitude', 'longitude', 'postal' ]
+		]);
 
 		// Trigger Ajax Success
 		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $cities );
 	}
+
 }

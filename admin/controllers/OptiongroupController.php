@@ -51,7 +51,7 @@ class OptiongroupController extends CrudController {
 		$this->apixBase	= 'core/optiongroup';
 
 		// Services
-		$this->modelService = Yii::$app->factory->get( 'categoryService' );
+		$this->modelService = Yii::$app->factory->get( 'cmsgears\core\common\services\interfaces\resources\ICategoryService' );
 
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-core', 'child' => 'option-group' ];

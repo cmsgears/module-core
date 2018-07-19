@@ -202,7 +202,7 @@ class ModelMetaService extends ModelResourceService implements IModelMetaService
 
 		$metas = $form->getArrayToStore();
 
-		foreach ( $metas as $meta ) {
+		foreach( $metas as $meta ) {
 
 			if( !isset( $meta[ 'valueType' ] ) ) {
 
@@ -212,7 +212,7 @@ class ModelMetaService extends ModelResourceService implements IModelMetaService
 			$model = $this->initByNameType( $config[ 'parentId' ], $config[ 'parentType' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ] );
 
 			$model->value	= $meta[ 'value' ];
-			$model->label	= $form->getMetaLabel( $meta[ 'name' ] );
+			$model->label	= $form->getAttributeLabel( $meta[ 'name' ] );
 
 			$this->update( $model );
 		}

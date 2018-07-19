@@ -51,6 +51,23 @@ trait DataTrait {
 		return false;
 	}
 
+	public function getDataAttributeMeta( $model, $key, $assoc = false ) {
+
+		$object	= $model->generateDataObjectFromJson( $assoc );
+		$config	= 'attributes';
+		$meta	= new Meta();
+
+		if( isset( $object->$config ) && isset( $object->$config->$key ) ) {
+
+			$meta->key		= $key;
+			$meta->value	= $object->$config->$key;
+
+			return $meta;
+		}
+
+		return false;
+	}
+
 	public function getDataConfigMeta( $model, $key, $assoc = false ) {
 
 		$object	= $model->generateDataObjectFromJson( $assoc );
@@ -123,6 +140,21 @@ trait DataTrait {
 		return $model;
 	}
 
+	public function updateDataAttributeObj( $model, $meta ) {
+
+		$config = $model->getDataMeta( 'attributes' );
+		$key	= $meta->key;
+		$config	= !empty( $config ) ? $config : new \StdClass();
+
+		$config->$key = $meta->value;
+
+		$model->updateDataMeta( 'attributes', $config );
+
+		$model->refresh();
+
+		return $model;
+	}
+
 	public function updateDataConfigObj( $model, $meta ) {
 
 		$config = $model->getDataMeta( 'config' );
@@ -167,6 +199,19 @@ trait DataTrait {
 	public function removeDataMetaObj( $model, $meta ) {
 
 		$model->removeDataMeta( $meta->key );
+
+		$model->refresh();
+
+		return $model;
+	}
+
+	public function removeDataAttributeObj( $model, $meta ) {
+
+		$config = $model->getDataMeta( 'attributes' );
+
+		unset( $meta->key );
+
+		$model->updateDataMeta( 'attributes', $config );
 
 		$model->refresh();
 

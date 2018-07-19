@@ -7,14 +7,26 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\models\forms;
+namespace cmsgears\core\common\actions\data;
 
 // Yii Imports
-use yii\base\Model;
+use Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 
-class BaseForm extends Model {
+use cmsgears\core\common\models\forms\Meta;
+
+use cmsgears\core\common\actions\base\ModelAction;
+
+use cmsgears\core\common\utilities\AjaxUtil;
+
+/**
+ * SetAttribute add attribute for given model supporting data trait.
+ *
+ * @since 1.0.0
+ */
+class SetAttribute extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -44,28 +56,29 @@ class BaseForm extends Model {
 
 	// Yii parent classes --------------------
 
-	// yii\base\Component -----
-
-	// yii\base\Model ---------
-
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
-	// Validators ----------------------------
+	// SetAttribute --------------------------
 
-	// BaseForm ---------------------------------
+	public function run() {
 
-	/**
-	 * Return class name without path.
-	 *
-	 * @return string class name without class path.
-	 */
-	public function getClassname() {
+		$meta = new Meta();
 
-		$name	= get_class( $this );
+		if( $meta->load( Yii::$app->request->post(), 'Meta' ) && $meta->validate() ) {
 
-		return join( '', array_slice( explode( '\\', $name ), -1 ) );
+			// Save setting
+			$this->modelService->updateDataAttributeObj( $this->model, $meta );
+
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
+		}
+
+		// Generate Errors
+		$errors = AjaxUtil::generateErrorMessage( $meta );
+
+		// Trigger Ajax Failure
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 	}
-
 }

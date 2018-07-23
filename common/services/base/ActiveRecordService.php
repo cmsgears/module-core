@@ -1334,7 +1334,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public static function generateNameValueList( $config = [] ) {
 
-		$config = static::applySiteFilters ( $config );
+		$config = static::applySiteFilters( $config );
 
 		$modelClass	= static::$modelClass;
 		$modelTable = $modelClass::tableName();
@@ -1461,12 +1461,17 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public static function generateMap( $config = [] ) {
 
+		$parentType = static::$parentType;
+
 		// column alias
+		$default		= $config[ 'default' ] ?? false;
+		$defaultValue	= $config[ 'defaultValue' ] ?? ucfirst( $parentType );
+
 		$nameAlias		= $config[ 'nameAlias' ] ?? 'name';
 		$valueAlias		= $config[ 'valueAlias' ] ?? 'value';
 
 		$arrayList		= static::generateNameValueList( $config );
-		$map			= [];
+		$map			= $default ? [ '0' => "Choose $defaultValue" ] : [];
 
 		foreach( $arrayList as $item ) {
 

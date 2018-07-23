@@ -154,6 +154,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_EXPIRED => 'Expired',
 		CoreGlobal::FIELD_PINNED => 'Pinned',
 		CoreGlobal::FIELD_FEATURED => 'Featured',
+		CoreGlobal::FIELD_ANONYMOUS => 'Anonymous',
 		CoreGlobal::FIELD_USER_MAPPED => 'User Mapped',
 		CoreGlobal::FIELD_FAILED => 'Failed',
 		CoreGlobal::FIELD_FAIL_COUNT => 'Failure Count',
@@ -184,6 +185,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_PARENT_TYPE => 'Parent Type',
 		CoreGlobal::FIELD_LOCALE => 'Locale',
 		CoreGlobal::FIELD_PROVINCE => 'Province',
+		CoreGlobal::FIELD_REGION => 'Region',
 		CoreGlobal::FIELD_COUNTRY => 'Country',
 		CoreGlobal::FIELD_CATEGORY => 'Category',
 		CoreGlobal::FIELD_OPTION => 'Option',
@@ -250,6 +252,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_ZONE => 'Zone',
 		CoreGlobal::FIELD_REGIONS => 'Regions',
 		CoreGlobal::FIELD_ZIP_CODES => 'Zip Codes',
+		CoreGlobal::FIELD_LANDMARK => 'Landmark',
 
 		// User Fields
 		CoreGlobal::FIELD_EMAIL => 'Email',
@@ -262,6 +265,13 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_LASTNAME => 'Last Name',
 		CoreGlobal::FIELD_DOB => 'Date of Birth',
 		CoreGlobal::FIELD_TERMS => 'Terms',
+
+		// Verification Fields
+		CoreGlobal::FIELD_PHONE_VERIFIED => 'Phone Verified',
+		CoreGlobal::FIELD_EMAIL_VERIFIED => 'Email Verified',
+		CoreGlobal::FIELD_TOKEN_VERIFY => 'Verify Token',
+		CoreGlobal::FIELD_TOKEN_VERIFY_VALIDITY => 'Verify Token Validity',
+		CoreGlobal::FIELD_OTP_VALIDITY => 'OTP Validity',
 
 		// File Fields
 		CoreGlobal::FIELD_EXTENSION => 'Extension',

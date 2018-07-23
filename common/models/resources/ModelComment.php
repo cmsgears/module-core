@@ -60,6 +60,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $order
  * @property boolean $pinned
  * @property boolean $featured
+ * @property boolean $anonymous
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property datetime $approvedAt
@@ -169,7 +170,7 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'parentId', 'parentType', 'name', 'email' ], 'required' ],
+			[ [ 'parentId', 'parentType', 'content' ], 'required' ],
 			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Email
 			[ 'email', 'email' ],
@@ -178,12 +179,12 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 			[ [ 'name', 'email', 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Check captcha need for testimonial and review
-			[ 'content', 'required', 'on' => [ self::TYPE_COMMENT, self::TYPE_TESTIMONIAL ] ],
-			[ [ 'content', 'rating' ], 'required', 'on' => [ self::TYPE_REVIEW ] ],
+			[ [ 'name', 'email' ], 'required', 'on' => 'identity' ],
+			[ 'rating', 'required', 'on' => [ self::TYPE_REVIEW ] ],
 			[ 'captcha', 'captcha', 'captchaAction' => '/core/site/captcha', 'on' => 'captcha' ],
 			// Other
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
-			[ [ 'pinned', 'featured', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'pinned', 'featured', 'anonymous', 'gridCacheValid' ], 'boolean' ],
 			[ [ 'ipNum', 'status', 'fragment', 'rating', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'baseId', 'bannerId', 'videoId', 'parentId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'approvedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -229,6 +230,7 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 			'rating' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RATING ),
 			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
 			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+			'anonymous' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ANONYMOUS ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
 			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )

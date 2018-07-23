@@ -13,11 +13,11 @@ namespace cmsgears\core\common\services\interfaces\entities;
 use cmsgears\core\common\services\interfaces\base\IEntityService;
 
 /**
- * IProvinceService provide service methods for province model.
+ * IRegionService provide service methods for region model.
  *
  * @since 1.0.0
  */
-interface IProvinceService extends IEntityService {
+interface IRegionService extends IEntityService {
 
 	// Data Provider ------
 
@@ -25,21 +25,13 @@ interface IProvinceService extends IEntityService {
 
 	// Read - Models ---
 
-	public function getByCountryId( $countryId );
-
-	public function getByCountryIdCode( $countryId, $code );
-
 	public function getByCountryIdIso( $countryId, $iso );
 
 	// Read - Lists ----
 
-	public function getListByCountryId( $countryId );
-
 	// Read - Maps -----
 
-	public function getMapByCountryId( $countryId, $config = [] );
-
-	public function getIsoNameMapByCountryId( $countryId );
+	public function getMapByProvinceId( $provinceId, $config = [] );
 
 	// Read - Others ---
 

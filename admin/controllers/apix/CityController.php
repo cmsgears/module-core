@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\admin\controllers\apix\province;
+namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
 use Yii;
@@ -82,7 +82,7 @@ class CityController extends Controller {
 	public function actions() {
 
 		return [
-			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
+			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\location\CitySearch' ],
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];

@@ -27,6 +27,7 @@ class CoreTables extends DbTables {
 	// Location
 	const TABLE_COUNTRY				= 'cmg_core_country';
 	const TABLE_PROVINCE			= 'cmg_core_province';
+	const TABLE_REGION				= 'cmg_core_region';
 	const TABLE_CITY				= 'cmg_core_city';
 
 	// RBAC

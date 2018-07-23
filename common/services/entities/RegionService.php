@@ -16,18 +16,18 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\services\interfaces\entities\IProvinceService;
+use cmsgears\core\common\services\interfaces\entities\IRegionService;
 
 use cmsgears\core\common\services\base\EntityService;
 
 use cmsgears\core\common\services\traits\base\NameTrait;
 
 /**
- * ProvinceService provide service methods of province model.
+ * RegionService provide service methods of region model.
  *
  * @since 1.0.0
  */
-class ProvinceService extends EntityService implements IProvinceService {
+class RegionService extends EntityService implements IRegionService {
 
 	// Variables ---------------------------------------------------
 
@@ -37,9 +37,9 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Province';
+	public static $modelClass	= '\cmsgears\core\common\models\entities\Region';
 
-	public static $parentType	= CoreGlobal::TYPE_PROVINCE;
+	public static $parentType	= CoreGlobal::TYPE_REGION;
 
 	// Protected --------------
 
@@ -67,7 +67,7 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 	// CMG parent classes --------------------
 
-	// ProvinceService -----------------------
+	// RegionService -------------------------
 
 	// Data Provider ------
 
@@ -75,8 +75,6 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
-
-		$countryTable = Yii::$app->factory->get( 'countryService' )->getModelTable();
 
 		// Sorting ----------
 
@@ -87,12 +85,6 @@ class ProvinceService extends EntityService implements IProvinceService {
 					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
-				],
-				'country' => [
-					'asc' => [ "$countryTable.name" => SORT_ASC ],
-					'desc' => [ "$countryTable.name" => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'Country'
 				],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
@@ -134,7 +126,7 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 		// Searching --------
 
-		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
@@ -164,20 +156,6 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 	// Read - Models ---
 
-	public function getByCountryId( $countryId ) {
-
-		$modelClass	= self::$modelClass;
-
-		return $modelClass::findByCountryId( $countryId );
-	}
-
-	public function getByCountryIdCode( $countryId, $code ) {
-
-		$modelClass	= self::$modelClass;
-
-		return $modelClass::findByCountryIdCode( $countryId, $code );
-	}
-
 	public function getByCountryIdIso( $countryId, $iso ) {
 
 		$modelClass	= self::$modelClass;
@@ -187,23 +165,13 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 	// Read - Lists ----
 
-	public function getListByCountryId( $countryId ) {
-
-		return self::findIdNameList( [ 'conditions' => [ 'countryId' => $countryId ] ] );
-	}
-
 	// Read - Maps -----
 
-	public function getMapByCountryId( $countryId, $config = [] ) {
+	public function getMapByProvinceId( $provinceId, $config = [] ) {
 
-		$config[ 'conditions' ][] = [ 'countryId' => $countryId ];
+		$config[ 'conditions' ][] = [ 'provinceId' => $provinceId ];
 
 		return self::findIdNameMap( $config );
-	}
-
-	public function getIsoNameMapByCountryId( $countryId ) {
-
-		return self::findNameValueMap( [ 'nameColumn' => 'iso', 'valueColumn' => 'name', 'conditions' => [ 'countryId' => $countryId ] ] );
 	}
 
 	// Read - Others ---
@@ -214,7 +182,7 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'code', 'iso', 'name' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'code', 'iso', 'name', 'title' ];
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -256,7 +224,7 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 	// CMG parent classes --------------------
 
-	// ProvinceService -----------------------
+	// RegionService -------------------------
 
 	// Data Provider ------
 

@@ -495,6 +495,7 @@ class m160621_014408_core_data extends Migration {
 			[ $config->id, 'comments_email_user', 'Comments Email User', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Trigger mail to user on approval."}' ],
 			[ $config->id, 'comments_form_top', 'Comments Form Top', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Show the comment form on top of comments."}' ],
 			[ $config->id, 'comments_auto', 'Comments Auto', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Auto approve a comment in case existing approved comment exist for user or email."}' ],
+			[ $config->id, 'comments_anonymous', 'Comments Anonymous', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Flag to allow Anonymous comments."}' ],
 			[ $config->id, 'comments_filter','Comments Filter', FormField::TYPE_TEXTAREA, false, true, true, NULL, 0, NULL, '{"title":"Comments filter having comma seperated words to trash in case words match.","placeholder":"Comments filter"}' ]
 		];
 
@@ -621,6 +622,7 @@ class m160621_014408_core_data extends Migration {
 			[ $this->site->id, 'comments_email_user','Comments Email User','comment', 1, 'flag','1',NULL ],
 			[ $this->site->id, 'comments_form_top','Comments Form Top','comment', 1, 'flag','1',NULL ],
 			[ $this->site->id, 'comments_auto','Comments Auto','comment', 1, 'flag','1',NULL ],
+			[ $this->site->id, 'comments_anonymous', 'Comments Anonymous','comment', 1, 'flag','0',NULL ],
 			[ $this->site->id, 'comments_filter','Comments Filter','comment', 1, 'text', NULL,NULL ],
 			[ $this->site->id, 'cmg_powered','CMG Powered','backend', 1, 'flag','1',NULL ],
 			[ $this->site->id, 'default_avatar', 'Default Avatar','backend', 1, 'text', 'avatar-site.png',NULL ],

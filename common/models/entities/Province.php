@@ -193,17 +193,6 @@ class Province extends Entity implements IName {
 	}
 
 	/**
-	 * Find and return the provinces associated with given code.
-	 *
-	 * @param string $code
-	 * @return Province[]
-	 */
-	public static function findByCode( $code ) {
-
-		return self::find()->where( 'code=:code', [ ':code' => $code ] )->all();
-	}
-
-	/**
 	 * Find and return the province associated with given country id and code.
 	 *
 	 * @param integer $countryId
@@ -213,6 +202,18 @@ class Province extends Entity implements IName {
 	public static function findByCountryIdCode( $countryId, $code ) {
 
 		return self::find()->where( 'countryId=:id AND code=:code', [ ':id' => $countryId, ':code' => $code ] )->one();
+	}
+
+	/**
+	 * Find and return the province associated with given country id and iso.
+	 *
+	 * @param integer $countryId
+	 * @param string $iso
+	 * @return Province
+	 */
+	public static function findByCountryIdIso( $countryId, $iso ) {
+
+		return self::find()->where( 'countryId=:id AND iso=:iso', [ ':id' => $countryId, ':iso' => $iso ] )->one();
 	}
 
 	// Create -----------------

@@ -201,7 +201,7 @@ class TemplateService extends EntityService implements ITemplateService {
 
 		if( !isset( $config[ 'query' ] ) ) {
 
-			$config[ 'hasOne' ] = true;
+			$config[ 'query' ] = $modelClass::queryWithHasOne( [ 'ignoreSite' => true ] );
 		}
 
 		$config[ 'ignoreSite' ]		= true;
@@ -304,20 +304,6 @@ class TemplateService extends EntityService implements ITemplateService {
 	// Read - Lists ----
 
 	// Read - Maps -----
-
-	public function getIdNameMap( $options = [] ) {
-
-		$map = parent::getIdNameMap( $options );
-
-		if( isset( $options[ 'default' ] ) && $options[ 'default' ] ) {
-
-			unset( $options[ 'default' ] );
-
-			$map = ArrayHelper::merge( [ '0' => 'Choose Template' ], $map );
-		}
-
-		return $map;
-	}
 
 	// Read - Others ---
 
@@ -469,6 +455,21 @@ class TemplateService extends EntityService implements ITemplateService {
 	// Read - Models ---
 
 	// Read - Lists ----
+
+	public static function generateNameValueList( $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable = $modelClass::tableName();
+
+		$site	= Yii::$app->core->site;
+		$theme	= $site->theme;
+
+		$config[ 'ignoreSite' ] = true;
+
+		$config[ 'conditions' ][] = isset( $theme ) ? "$modelTable.themeId={$theme->id} OR $modelTable.siteId={$site->id} OR ($modelTable.themeId IS NULL AND $modelTable.siteId IS NULL)" : "$modelTable.siteId={$site->id} OR ($modelTable.themeId IS NULL AND $modelTable.siteId IS NULL)";
+
+		return parent::generateNameValueList( $config );
+	}
 
 	// Read - Maps -----
 

@@ -60,7 +60,9 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 						<div class="col col2">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'featured', null, 'cmti cmti-checkbox' ) ?>
 						</div>
-						<div class="col col2"></div>
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'anonymous', null, 'cmti cmti-checkbox' ) ?>
+						</div>
 					</div>
 				</div>
 			</div>

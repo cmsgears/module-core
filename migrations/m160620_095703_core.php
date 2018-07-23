@@ -72,6 +72,7 @@ class m160620_095703_core extends Migration {
 		// Location
 		$this->upCountry();
 		$this->upProvince();
+		$this->upRegion();
 		$this->upCity();
 		$this->upAddress();
 		$this->upLocation();
@@ -299,6 +300,22 @@ class m160620_095703_core extends Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'province_country', $this->prefix . 'core_province', 'countryId' );
 	}
 
+	private function upRegion() {
+
+		$this->createTable( $this->prefix . 'core_region', [
+			'id' => $this->bigPrimaryKey( 20 ),
+			'countryId' => $this->bigInteger( 20 )->notNull(),
+			'provinceId' => $this->bigInteger( 20 )->notNull(),
+			'code' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
+			'iso' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
+			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'title' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null )
+		], $this->options );
+
+		$this->createIndex( 'idx_' . $this->prefix . 'region_country', $this->prefix . 'core_region', 'countryId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'region_province', $this->prefix . 'core_region', 'provinceId' );
+	}
+
 	private function upCity() {
 
 		// Didn't add any dedicated table for zone(sub division) of a particular province/state, hence storing name directly.
@@ -306,6 +323,7 @@ class m160620_095703_core extends Migration {
 			'id' => $this->bigPrimaryKey( 20 ),
 			'countryId' => $this->bigInteger( 20 )->notNull(),
 			'provinceId' => $this->bigInteger( 20 ),
+			'regionId' => $this->bigInteger( 20 ),
 			'name' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'title' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'code' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
@@ -324,6 +342,7 @@ class m160620_095703_core extends Migration {
 		// Index for columns country
 		$this->createIndex( 'idx_' . $this->prefix . 'city_country', $this->prefix . 'core_city', 'countryId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'city_province', $this->prefix . 'core_city', 'provinceId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'city_region', $this->prefix . 'core_city', 'regionId' );
 	}
 
 	private function upAddress() {
@@ -332,6 +351,7 @@ class m160620_095703_core extends Migration {
 			'id' => $this->bigPrimaryKey( 20 ),
 			'countryId' => $this->bigInteger( 20 )->notNull(),
 			'provinceId' => $this->bigInteger( 20 ),
+			'regionId' => $this->bigInteger( 20 ),
 			'cityId' => $this->bigInteger( 20 ),
 			'title' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'line1' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
@@ -339,6 +359,7 @@ class m160620_095703_core extends Migration {
 			'line3' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'countryName' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'provinceName' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
+			'regionName' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'cityName' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'zip' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
 			'subZip' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
@@ -348,6 +369,7 @@ class m160620_095703_core extends Migration {
 			'email' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'fax' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
 			'website' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
+			'landmark' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'latitude' => $this->float()->defaultValue( 0 ),
 			'longitude' => $this->float()->defaultValue( 0 ),
 			'zoomLevel' => $this->smallInteger( 6 )->defaultValue( 5 )
@@ -356,6 +378,7 @@ class m160620_095703_core extends Migration {
 		// Index for columns country
 		$this->createIndex( 'idx_' . $this->prefix . 'address_country', $this->prefix . 'core_address', 'countryId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'address_province', $this->prefix . 'core_address', 'provinceId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'address_region', $this->prefix . 'core_address', 'regionId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'address_city', $this->prefix . 'core_address', 'cityId' );
 	}
 
@@ -365,10 +388,12 @@ class m160620_095703_core extends Migration {
 			'id' => $this->bigPrimaryKey( 20 ),
 			'countryId' => $this->bigInteger( 20 ),
 			'provinceId' => $this->bigInteger( 20 ),
+			'regionId' => $this->bigInteger( 20 ),
 			'cityId' => $this->bigInteger( 20 ),
 			'title' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'countryName' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'provinceName' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
+			'regionName' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'cityName' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'zip' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
 			'subZip' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
@@ -380,6 +405,7 @@ class m160620_095703_core extends Migration {
 		// Index for columns country
 		$this->createIndex( 'idx_' . $this->prefix . 'location_country', $this->prefix . 'core_location', 'countryId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'location_province', $this->prefix . 'core_location', 'provinceId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'location_region', $this->prefix . 'core_location', 'regionId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'location_city', $this->prefix . 'core_location', 'cityId' );
 	}
 
@@ -879,6 +905,7 @@ class m160620_095703_core extends Migration {
 			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
+			'anonymous' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
 			'approvedAt' => $this->dateTime(),
@@ -1142,18 +1169,25 @@ class m160620_095703_core extends Migration {
 		// Province
 		$this->addForeignKey( 'fk_' . $this->prefix . 'province_country', $this->prefix . 'core_province', 'countryId', $this->prefix . 'core_country', 'id', 'RESTRICT' );
 
+		// Region
+		$this->addForeignKey( 'fk_' . $this->prefix . 'region_country', $this->prefix . 'core_region', 'countryId', $this->prefix . 'core_country', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'region_province', $this->prefix . 'core_region', 'provinceId', $this->prefix . 'core_province', 'id', 'RESTRICT' );
+
 		// City
 		$this->addForeignKey( 'fk_' . $this->prefix . 'city_country', $this->prefix . 'core_city', 'countryId', $this->prefix . 'core_country', 'id', 'RESTRICT' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'city_province', $this->prefix . 'core_city', 'provinceId', $this->prefix . 'core_province', 'id', 'RESTRICT' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'city_region', $this->prefix . 'core_city', 'regionId', $this->prefix . 'core_region', 'id', 'RESTRICT' );
 
 		// Address
 		$this->addForeignKey( 'fk_' . $this->prefix . 'address_country', $this->prefix . 'core_address', 'countryId', $this->prefix . 'core_country', 'id', 'CASCADE' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'address_province', $this->prefix . 'core_address', 'provinceId', $this->prefix . 'core_province', 'id', 'CASCADE' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'address_region', $this->prefix . 'core_address', 'regionId', $this->prefix . 'core_region', 'id', 'CASCADE' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'address_city', $this->prefix . 'core_address', 'cityId', $this->prefix . 'core_city', 'id', 'CASCADE' );
 
 		// Location
 		$this->addForeignKey( 'fk_' . $this->prefix . 'location_country', $this->prefix . 'core_location', 'countryId', $this->prefix . 'core_country', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'location_province', $this->prefix . 'core_location', 'provinceId', $this->prefix . 'core_province', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'location_region', $this->prefix . 'core_location', 'regionId', $this->prefix . 'core_region', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'location_city', $this->prefix . 'core_location', 'cityId', $this->prefix . 'core_city', 'id', 'SET NULL' );
 
 		// Role
@@ -1286,11 +1320,12 @@ class m160620_095703_core extends Migration {
 		$this->dropTable( $this->prefix . 'core_object' );
 		$this->dropTable( $this->prefix . 'core_object_meta' );
 
-		$this->dropTable( $this->prefix . 'core_country' );
-		$this->dropTable( $this->prefix . 'core_province' );
-		$this->dropTable( $this->prefix . 'core_city' );
-		$this->dropTable( $this->prefix . 'core_address' );
 		$this->dropTable( $this->prefix . 'core_location' );
+		$this->dropTable( $this->prefix . 'core_address' );
+		$this->dropTable( $this->prefix . 'core_city' );
+		$this->dropTable( $this->prefix . 'core_region' );
+		$this->dropTable( $this->prefix . 'core_province' );
+		$this->dropTable( $this->prefix . 'core_country' );
 
 		$this->dropTable( $this->prefix . 'core_role' );
 		$this->dropTable( $this->prefix . 'core_permission' );
@@ -1359,9 +1394,13 @@ class m160620_095703_core extends Migration {
 		// Province
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'province_country', $this->prefix . 'core_province' );
 
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'region_country', $this->prefix . 'core_region' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'region_province', $this->prefix . 'core_region' );
+
 		// City
-		$this->dropForeignKey( 'fk_' . $this->prefix . 'city_country', $this->prefix . 'core_city', 'countryId' );
-		$this->dropForeignKey( 'fk_' . $this->prefix . 'city_province', $this->prefix . 'core_city', 'provinceId' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'city_country', $this->prefix . 'core_city' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'city_province', $this->prefix . 'core_city' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'city_region', $this->prefix . 'core_city' );
 
 		// Address
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'address_country', $this->prefix . 'core_address' );
@@ -1371,6 +1410,7 @@ class m160620_095703_core extends Migration {
 		// Location
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'location_country', $this->prefix . 'core_location' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'location_province', $this->prefix . 'core_location' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'location_region', $this->prefix . 'core_location' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'location_city', $this->prefix . 'core_location' );
 
 		// Role

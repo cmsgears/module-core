@@ -211,7 +211,7 @@ class ObjectDataService extends EntityService implements IObjectService {
 
 		if( !isset( $config[ 'query' ] ) ) {
 
-			$config[ 'hasOne' ] = true;
+			$config[ 'query' ] = $modelClass::queryWithHasOne( [ 'ignoreSite' => true ] );
 		}
 
 		$config[ 'ignoreSite' ]		= true;
@@ -519,6 +519,21 @@ class ObjectDataService extends EntityService implements IObjectService {
 	// Read - Models ---
 
 	// Read - Lists ----
+
+	public static function generateNameValueList( $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable = $modelClass::tableName();
+
+		$site	= Yii::$app->core->site;
+		$theme	= $site->theme;
+
+		$config[ 'ignoreSite' ] = true;
+
+		$config[ 'conditions' ][] = isset( $theme ) ? "$modelTable.themeId={$theme->id} OR $modelTable.siteId={$site->id} OR ($modelTable.themeId IS NULL AND $modelTable.siteId IS NULL)" : "$modelTable.siteId={$site->id} OR ($modelTable.themeId IS NULL AND $modelTable.siteId IS NULL)";
+
+		return parent::generateNameValueList( $config );
+	}
 
 	// Read - Maps -----
 

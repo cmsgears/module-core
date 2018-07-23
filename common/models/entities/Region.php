@@ -24,46 +24,25 @@ use cmsgears\core\common\models\base\Entity;
 use cmsgears\core\common\models\traits\base\NameTrait;
 
 /**
- * City Entity
+ * Region Entity
  *
  * @property integer $id
  * @property integer $countryId
  * @property integer $provinceId
- * @property integer $regionId
- * @property string $name
  * @property string $code
  * @property string $iso
- * @property string $type
- * @property string $postal
- * @property string $zone
- * @property string $regions
- * @property string $zipCodes
- * @property integer $timeZone
- * @property float $latitude
- * @property float $longitude
- * @property string $autoCache
+ * @property string $name
+ * @property string $title
  *
  * @since 1.0.0
  */
-class City extends Entity implements IName {
+class Region extends Entity implements IName {
 
 	// Variables ---------------------------------------------------
 
 	// Globals -------------------------------
 
 	// Constants --------------
-
-	// Low level divisions
-	const TYPE_CITY		= 'city';
-	const TYPE_TOWN		= 'town';
-	const TYPE_VILLAGE	= 'village';
-
-	// Group level divisions
-	const TYPE_COUNTY		= 'county';
-	const TYPE_MUNICIPALITY	= 'municipality';
-	const TYPE_TEHSIL		= 'tehsil';
-	const TYPE_TALUKA		= 'taluka';
-	const TYPE_MANDAL		= 'mandal';
 
 	// Public -----------------
 
@@ -75,7 +54,7 @@ class City extends Entity implements IName {
 
 	// Protected --------------
 
-	protected $modelType = CoreGlobal::TYPE_CITY;
+	protected $modelType = CoreGlobal::TYPE_REGION;
 
 	// Private ----------------
 
@@ -103,25 +82,22 @@ class City extends Entity implements IName {
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'countryId', 'name' ], 'required' ],
+			[ [ 'countryId', 'provinceId', 'name' ], 'required' ],
 			[ [ 'id' ], 'safe' ],
 			// Unique
-			//[ [ 'zone', 'iso' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'name', 'zone', 'iso' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ [ 'name' ], 'unique', 'targetAttribute' => [ 'countryId', 'provinceId', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
-			[ 'code', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
-			[ [ 'type', 'postal' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'name', 'iso', 'zone', 'timeZone' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
-			[ [ 'regions', 'zipCodes', 'autoCache' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
+			[ [ 'code', 'iso' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ 'title', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
-			[ 'timeZone', 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'countryId', 'provinceId', 'regionId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'latitude', 'longitude' ], 'number' ]
+			[ [ 'countryId', 'provinceId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ]
 		];
 
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'postal' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'code', 'iso', 'name', 'title' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -137,39 +113,11 @@ class City extends Entity implements IName {
 		return [
 			'countryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
 			'provinceId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PROVINCE ),
-			'regionId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_REGION ),
-			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'code' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CODE ),
 			'iso' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ISO ),
-			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'postal' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP ),
-			'zone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZONE ),
-			'regions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_REGIONS ),
-			'zipCodes' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP_CODES ),
-			'timeZone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TIME_ZONE ),
-			'latitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LATITUDE ),
-			'longitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LONGITUDE )
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE )
 		];
-	}
-
-	// yii\db\BaseActiveRecord
-
-	/**
-	 * @inheritdoc
-	 */
-	public function beforeSave( $insert ) {
-
-		if( parent::beforeSave( $insert ) ) {
-
-			if( $this->timeZone <= 0 ) {
-
-				$this->timeZone = null;
-			}
-
-			return true;
-		}
-
-		return false;
 	}
 
 	// CMG interfaces ------------------------
@@ -178,10 +126,10 @@ class City extends Entity implements IName {
 
 	// Validators ----------------------------
 
-	// City ----------------------------------
+	// Region --------------------------------
 
 	/**
-	 * Return corresponding country to which this city belongs.
+	 * Return corresponding country to which this region belongs.
 	 *
 	 * @return Country
 	 */
@@ -191,23 +139,13 @@ class City extends Entity implements IName {
 	}
 
 	/**
-	 * Return corresponding province to which this city belongs.
+	 * Return corresponding province to which this region belongs.
 	 *
 	 * @return Province
 	 */
 	public function getProvince() {
 
 		return $this->hasOne( Province::class, [ 'id' => 'provinceId' ] );
-	}
-
-	/**
-	 * Return corresponding region to which this city belongs.
-	 *
-	 * @return Province
-	 */
-	public function getRegion() {
-
-		return $this->hasOne( Region::class, [ 'id' => 'regionId' ] );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -221,12 +159,12 @@ class City extends Entity implements IName {
 	 */
 	public static function tableName() {
 
-		return CoreTables::getTableName( CoreTables::TABLE_CITY );
+		return CoreTables::getTableName( CoreTables::TABLE_REGION );
 	}
 
 	// CMG parent classes --------------------
 
-	// City ----------------------------------
+	// Region --------------------------------
 
 	// Read - Query -----------
 
@@ -243,7 +181,7 @@ class City extends Entity implements IName {
 	}
 
 	/**
-	 * Return query to find the city with country.
+	 * Return query to find the region with country.
 	 *
 	 * @param array $config
 	 * @return \yii\db\ActiveQuery to query with country.
@@ -256,7 +194,7 @@ class City extends Entity implements IName {
 	}
 
 	/**
-	 * Return query to find the city with province.
+	 * Return query to find the region with province.
 	 *
 	 * @param array $config
 	 * @return \yii\db\ActiveQuery to query with province.
@@ -269,7 +207,7 @@ class City extends Entity implements IName {
 	}
 
 	/**
-	 * Return query to find the city using country id.
+	 * Return query to find the region using country id.
 	 *
 	 * @param integer $countryId
 	 * @return \yii\db\ActiveQuery to query by country id.
@@ -280,7 +218,7 @@ class City extends Entity implements IName {
 	}
 
 	/**
-	 * Return query to find the city using province id.
+	 * Return query to find the region using province id.
 	 *
 	 * @param integer $provinceId
 	 * @return \yii\db\ActiveQuery to query by province id.
@@ -291,7 +229,7 @@ class City extends Entity implements IName {
 	}
 
 	/**
-	 * Return query to find the city using country id and province id.
+	 * Return query to find the region using country id and province id.
 	 *
 	 * @param integer $countryId
 	 * @param integer $provinceId
@@ -305,12 +243,24 @@ class City extends Entity implements IName {
 	// Read - Find ------------
 
 	/**
-	 * Try to find out a city having unique name within province.
+	 * Find and return the region associated with given country id and iso.
+	 *
+	 * @param integer $countryId
+	 * @param string $iso
+	 * @return Province
+	 */
+	public static function findByCountryIdIso( $countryId, $iso ) {
+
+		return self::find()->where( 'countryId=:id AND iso=:iso', [ ':id' => $countryId, ':iso' => $iso ] )->one();
+	}
+
+	/**
+	 * Try to find out a region having unique name within province.
 	 *
 	 * @param string $name
 	 * @param integer $countryId
 	 * @param integer $provinceId
-	 * @return City by name, country id and province id
+	 * @return Region by name, country id and province id
 	 */
 	public static function findUnique( $name, $countryId, $provinceId ) {
 
@@ -318,21 +268,7 @@ class City extends Entity implements IName {
 	}
 
 	/**
-	 * Try to find out a city having unique name within zone.
-	 *
-	 * @param string $name
-	 * @param integer $countryId
-	 * @param integer $provinceId
-	 * @param string $zone
-	 * @return City by name, country id, province id and zone
-	 */
-	public static function findUniqueByZone( $name, $countryId, $provinceId, $zone ) {
-
-		return self::find()->where( 'name=:name AND countryId=:cid AND provinceId=:pid AND zone=:zone', [ ':name' => $name, ':cid' => $countryId, ':pid' => $provinceId, ':zone' => $zone ] )->one();
-	}
-
-	/**
-	 * Check whether a city already exist using given name within province.
+	 * Check whether a region already exist using given name within province.
 	 *
 	 * @param string $name
 	 * @param integer $countryId
@@ -341,24 +277,9 @@ class City extends Entity implements IName {
 	 */
 	public static function isUniqueExist( $name, $countryId, $provinceId ) {
 
-		$city = self::findUnique( $name, $countryId, $provinceId );
+		$region = self::findUnique( $name, $countryId, $provinceId );
 
-		return isset( $city );
-	}
-
-	/**
-	 * Check whether a city already exist using given name within zone.
-	 *
-	 * @param string $name
-	 * @param integer $countryId
-	 * @param integer $provinceId
-	 * @return boolean
-	 */
-	public static function isUniqueExistByZone( $name, $countryId, $provinceId, $zone ) {
-
-		$city = self::findUniqueByZone( $name, $countryId, $provinceId, $zone );
-
-		return isset( $city );
+		return isset( $region );
 	}
 
 	// Create -----------------

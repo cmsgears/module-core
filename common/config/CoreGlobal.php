@@ -58,6 +58,7 @@ class CoreGlobal {
 
 	// Entities
 	const TYPE_CITY				= 'city';
+	const TYPE_REGION			= 'region';
 	const TYPE_COUNTRY			= 'country';
 	const TYPE_LOCALE			= 'locale';
 	const TYPE_OBJECT			= 'object';
@@ -341,6 +342,7 @@ class CoreGlobal {
 	const FIELD_EXPIRED		= 'expiredField';
 	const FIELD_PINNED		= 'pinnedField';
 	const FIELD_FEATURED	= 'featuredField';
+	const FIELD_ANONYMOUS	= 'anonymousField';
 	const FIELD_USER_MAPPED	= 'userMappedField';
 	const FIELD_FAILED		= 'failedField';
 	const FIELD_FAIL_COUNT	= 'failCountField';
@@ -372,6 +374,7 @@ class CoreGlobal {
 	const FIELD_PARENT_TYPE	= 'parentTypeField';
 	const FIELD_LOCALE		= 'localeField';
 	const FIELD_PROVINCE	= 'provinceField';
+	const FIELD_REGION		= 'regionField';
 	const FIELD_COUNTRY		= 'countryField';
 	const FIELD_CATEGORY	= 'categoryField';
 	const FIELD_OPTION		= 'optionField';
@@ -442,6 +445,7 @@ class CoreGlobal {
 	const FIELD_ZONE				= 'zoneField';
 	const FIELD_REGIONS				= 'regionsField';
 	const FIELD_ZIP_CODES			= 'zipCodesField';
+	const FIELD_LANDMARK			= 'landmarkField';
 
 	// User Fields
 	const FIELD_EMAIL				= 'emailField';
@@ -454,6 +458,13 @@ class CoreGlobal {
 	const FIELD_LASTNAME			= 'lastNameField';
 	const FIELD_DOB					= 'dobField';
 	const FIELD_TERMS				= 'termsField';
+
+	// Verification Fields
+	const FIELD_PHONE_VERIFIED	= 'phoneVerifiedField';
+	const FIELD_EMAIL_VERIFIED	= 'emailVerifiedField';
+	const FIELD_TOKEN_VERIFY	= 'verifyTokenField';
+	const FIELD_TOKEN_VERIFY_VALIDITY = 'verifyTokenValidityField';
+	const FIELD_OTP_VALIDITY = 'otpValidityField';
 
 	// File Fields
 	const FIELD_EXTENSION			= 'extensionField';

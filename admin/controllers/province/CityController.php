@@ -47,7 +47,7 @@ class CityController extends Controller {
 		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Config
-		$this->apixBase = 'core/province/city';
+		$this->apixBase = 'core/city';
 
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'cityService' );

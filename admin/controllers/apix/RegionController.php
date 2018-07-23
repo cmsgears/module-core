@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\admin\controllers\apix\country;
+namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
 use Yii;
@@ -16,14 +16,9 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
+use cmsgears\core\frontend\controllers\base\Controller;
 
-/**
- * ProvinceController provide actions specific to province model.
- *
- * @since 1.0.0
- */
-class ProvinceController extends Controller {
+class RegionController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -42,10 +37,10 @@ class ProvinceController extends Controller {
 		parent::init();
 
 		// Permission
-		$this->crudPermission = CoreGlobal::PERM_CORE;
+		$this->crudPermission = CoreGlobal::PERM_USER;
 
 		// Services
-		$this->modelService = Yii::$app->factory->get( 'provinceService' );
+		$this->modelService = Yii::$app->factory->get( 'regionService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -62,15 +57,13 @@ class ProvinceController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'bulk' => [ 'permission' => $this->crudPermission ],
-					'delete' => [ 'permission' => $this->crudPermission ]
+					// 'auto-search' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
-					'bulk' => [ 'post' ],
-					'delete' => [ 'post' ]
+					'options-list' => [ 'post' ]
 				]
 			]
 		];
@@ -81,8 +74,7 @@ class ProvinceController extends Controller {
 	public function actions() {
 
 		return [
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
-			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
+			'options-list' => [ 'class' => 'cmsgears\core\common\actions\location\RegionOptions' ]
 		];
 	}
 
@@ -90,6 +82,6 @@ class ProvinceController extends Controller {
 
 	// CMG parent classes --------------------
 
-	// ProvinceController --------------------
+	// RegionController ----------------------
 
 }

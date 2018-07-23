@@ -20,6 +20,7 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Resource;
 use cmsgears\core\common\models\entities\Country;
 use cmsgears\core\common\models\entities\Province;
+use cmsgears\core\common\models\entities\Region;
 use cmsgears\core\common\models\entities\City;
 
 /**
@@ -28,6 +29,7 @@ use cmsgears\core\common\models\entities\City;
  * @property integer $id
  * @property integer $countryId
  * @property integer $provinceId
+ * @property integer $regionId
  * @property integer $cityId
  * @property string $title
  * @property string $line1
@@ -35,6 +37,7 @@ use cmsgears\core\common\models\entities\City;
  * @property string $line3
  * @property string $countryName
  * @property string $provinceName
+ * @property string $regionName
  * @property string $cityName
  * @property string $zip
  * @property string $subZip
@@ -44,6 +47,7 @@ use cmsgears\core\common\models\entities\City;
  * @property string $email
  * @property string $fax
  * @property string $website
+ * @property string $landmark
  * @property integer $latitude
  * @property integer $longitude
  * @property integer $zoomLevel
@@ -120,19 +124,19 @@ class Address extends Resource {
 			// Text Limit
 			[ [ 'zip', 'subZip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ [ 'phone', 'fax' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'countryName', 'provinceName' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'countryName', 'provinceName', 'regionName' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ [ 'title', 'line1', 'line2', 'line3', 'cityName', 'firstName', 'lastName', 'email' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
-			[ 'website', 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'website', 'landmark' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
 			// Other
 			[ [ 'zip', 'subZip' ], 'alphanumhyphenspace' ],
-			[ [ 'countryId', 'provinceId', 'cityId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'countryId', 'provinceId', 'regionId', 'cityId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'longitude', 'latitude', 'zoomLevel' ], 'number' ]
 		];
 
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'line1', 'line2', 'line3', 'cityName', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'latitude', 'longitude' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'line1', 'line2', 'line3', 'cityName', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'landmark', 'latitude', 'longitude' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -147,7 +151,8 @@ class Address extends Resource {
 
 		return [
 			'countryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
-			'provinceId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PROVINCE ),
+			'provinceId' => Yii::$app->core->provinceLabel,
+			'regionId' => Yii::$app->core->regionLabel,
 			'cityId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CITY ),
 			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'line1' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE1 ),
@@ -155,6 +160,7 @@ class Address extends Resource {
 			'line3' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE3 ),
 			'countryName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
 			'provinceName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PROVINCE ),
+			'regionName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_REGION ),
 			'cityName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CITY ),
 			'zip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP ),
 			'subZip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP_SUB ),
@@ -164,6 +170,7 @@ class Address extends Resource {
 			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
 			'fax' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FAX ),
 			'website' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
+			'landmark' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LANDMARK ),
 			'latitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LATITUDE ),
 			'longitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LONGITUDE ),
 			'zoomLevel' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZOOM )
@@ -192,6 +199,14 @@ class Address extends Resource {
 	public function getProvince() {
 
 		return $this->hasOne( Province::class, [ 'id' => 'provinceId' ] );
+	}
+
+	/**
+	 * @return Region
+	 */
+	public function getRegion() {
+
+		return $this->hasOne( Region::class, [ 'id' => 'regionId' ] );
 	}
 
 	/**

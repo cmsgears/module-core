@@ -186,6 +186,11 @@ class Core extends \cmsgears\core\common\base\Component {
 	 */
 	public $softDelete			= true;
 
+	// Locations
+	public $provinceLabel	= 'Province';
+	public $regionLabel		= 'Region';
+	public $zipLabel		= 'Postal Code';
+
 	// Protected --------------
 
 	// Private ----------------
@@ -467,6 +472,21 @@ class Core extends \cmsgears\core\common\base\Component {
 		return $this->softDelete;
 	}
 
+	public function getProvinceLabel() {
+
+		return $this->provinceLabel;
+	}
+
+	public function getRegionLabel() {
+
+		return $this->regionLabel;
+	}
+
+	public function getZipLabel() {
+
+		return $this->zipLabel;
+	}
+
 	// Components and Objects
 
 	public function registerComponents() {
@@ -532,6 +552,7 @@ class Core extends \cmsgears\core\common\base\Component {
 
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ICountryService', 'cmsgears\core\common\services\entities\CountryService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IProvinceService', 'cmsgears\core\common\services\entities\ProvinceService' );
+		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IRegionService', 'cmsgears\core\common\services\entities\RegionService' );
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ICityService', 'cmsgears\core\common\services\entities\CityService' );
 
 		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ISiteService', 'cmsgears\core\common\services\entities\SiteService' );
@@ -601,6 +622,7 @@ class Core extends \cmsgears\core\common\base\Component {
 
 		$factory->set( 'countryService', 'cmsgears\core\common\services\entities\CountryService' );
 		$factory->set( 'provinceService', 'cmsgears\core\common\services\entities\ProvinceService' );
+		$factory->set( 'regionService', 'cmsgears\core\common\services\entities\RegionService' );
 		$factory->set( 'cityService', 'cmsgears\core\common\services\entities\CityService' );
 
 		$factory->set( 'siteService', 'cmsgears\core\common\services\entities\SiteService' );

@@ -298,7 +298,7 @@ class UserController extends Controller {
 		// Update/Render if exist
 		if( isset( $user ) ) {
 
-			$genderMap = $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [ [ 'id' => '0', 'name' => 'Choose Gender' ] ] );
+			$genderMap = $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [ 'default' => true ] );
 
 			return $this->render( 'profile', [
 				'user' => $user,

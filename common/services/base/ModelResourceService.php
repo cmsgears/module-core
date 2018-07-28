@@ -55,6 +55,14 @@ abstract class ModelResourceService extends ResourceService implements IModelRes
 
 	// Data Provider ------
 
+	public function getPageByParent( $parentId, $parentType, $config = [] ) {
+
+		$config[ 'conditions'][ 'parentId' ]	= $parentId;
+		$config[ 'conditions'][ 'parentType' ]	= $parentType;
+
+		return $this->getPage( $config );
+	}
+
 	// Read ---------------
 
 	// Read - Models ---

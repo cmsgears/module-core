@@ -107,6 +107,7 @@ class m160620_095703_core extends Migration {
 		$this->upModelHierarchy();
 		$this->upModelComment();
 		$this->upModelAnalytics();
+		$this->upModelHistory();
 		$this->upModelMeta();
 
 		// Traits - Mappers
@@ -399,7 +400,10 @@ class m160620_095703_core extends Migration {
 			'subZip' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
 			'latitude' => $this->float(),
 			'longitude' => $this->float(),
-			'zoomLevel' => $this->smallInteger( 6 )->defaultValue( 5 )
+			'zoomLevel' => $this->smallInteger( 6 )->defaultValue( 5 ),
+			'accessedAt' => $this->dateTime(),
+			'notes' => $this->text(),
+			'data' => $this->mediumText()
 		], $this->options );
 
 		// Index for columns country
@@ -626,6 +630,7 @@ class m160620_095703_core extends Migration {
 			'failCount' => $this->smallInteger( 6 ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
+			'data' => $this->mediumText(),
 			'gridCache' => $this->longText(),
 			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
 			'gridCachedAt' => $this->dateTime()
@@ -947,6 +952,25 @@ class m160620_095703_core extends Migration {
 
 		// Index for columns base, creator and modifier
 		$this->createIndex( 'idx_' . $this->prefix . 'model_analytics_parent', $this->prefix . 'core_model_analytics', 'parentId' );
+	}
+
+	private function upModelHistory() {
+
+		$this->createTable( $this->prefix . 'core_model_history', [
+			'id' => $this->bigPrimaryKey( 20 ),
+			'parentId' => $this->bigInteger( 20 )->notNull(),
+			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
+			'type' => $this->string( Yii::$app->core->mediumText )->defaultValue( CoreGlobal::TYPE_SITE ),
+			'ip' => $this->string( Yii::$app->core->mediumText )->defaultValue( null ),
+			'ipNum' => $this->integer(11)->defaultValue( 0 ),
+			'agent' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'createdAt' => $this->dateTime()->notNull(),
+			'data' => $this->mediumText(),
+			'gridCache' => $this->longText()
+		], $this->options );
+
+		// Index for columns base, creator and modifier
+		$this->createIndex( 'idx_' . $this->prefix . 'model_history_parent', $this->prefix . 'core_model_history', 'parentId' );
 	}
 
 	private function upModelMeta() {
@@ -1351,6 +1375,7 @@ class m160620_095703_core extends Migration {
 		$this->dropTable( $this->prefix . 'core_model_hierarchy' );
 		$this->dropTable( $this->prefix . 'core_model_comment' );
 		$this->dropTable( $this->prefix . 'core_model_analytics' );
+		$this->dropTable( $this->prefix . 'core_model_history' );
 		$this->dropTable( $this->prefix . 'core_model_meta' );
 
 		$this->dropTable( $this->prefix . 'core_model_object' );

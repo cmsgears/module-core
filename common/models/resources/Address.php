@@ -177,6 +177,26 @@ class Address extends Resource {
 		];
 	}
 
+	// yii\db\BaseActiveRecord
+
+	/**
+	 * @inheritdoc
+	 */
+	public function beforeSave( $insert ) {
+
+		if( parent::beforeSave( $insert ) ) {
+
+			if( $this->regionId <= 0 ) {
+
+				$this->regionId = null;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
@@ -222,24 +242,35 @@ class Address extends Resource {
 
 		$country	= isset( $this->countryName ) ? $this->countryName : $this->country->name;
 		$province	= isset( $this->provinceName ) ? $this->provinceName : $this->province->name;
+		$region		= isset( $this->regionName ) ? $this->regionName : ( isset( $this->region ) ? $this->region->name : null );
 		$address	= $this->line1;
 
-		if( isset( $this->line2 ) && strlen( $this->line2 ) > 0 ) {
+		if( !empty( $this->line2 ) ) {
 
 			$address .= ", $this->line2";
 		}
 
-		if( isset( $this->line3 ) && strlen( $this->line3 ) > 0 ) {
+		if( !empty( $this->line3 ) ) {
 
 			$address .= ", $this->line3";
 		}
 
-		if( isset( $this->cityName ) && strlen( $this->cityName ) > 0 ) {
+		if( !empty( $this->cityName ) ) {
 
 			$address .= ", $this->cityName";
 		}
 
-		$address .= "$this->zip, $country, $province";
+		if( !empty( $this->zip ) ) {
+
+			$address .= ", $this->zip";
+		}
+
+		if( !empty( $region ) ) {
+
+			$address .= ", $region";
+		}
+
+		$address .= ", $province, $country";
 		//$address .= ", $this->zip";
 
 		return $address;

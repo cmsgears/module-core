@@ -166,6 +166,15 @@ class City extends Entity implements IName {
 				$this->timeZone = null;
 			}
 
+			$auto = $this->name;
+
+			if( isset( $this->region ) ) {
+
+				$auto = "$auto, {$this->region->name}";
+			}
+
+			$this->autoCache = "$auto, {$this->province->name}";
+
 			return true;
 		}
 

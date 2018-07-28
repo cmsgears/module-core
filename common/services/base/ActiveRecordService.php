@@ -1464,8 +1464,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$parentType = static::$parentType;
 
 		// column alias
+		$defaultValue	= preg_replace( '/-/', ' ', $parentType);
 		$default		= $config[ 'default' ] ?? false;
-		$defaultValue	= $config[ 'defaultValue' ] ?? ucfirst( $parentType );
+		$defaultValue	= $config[ 'defaultValue' ] ?? ucfirst( $defaultValue );
 
 		$nameAlias		= $config[ 'nameAlias' ] ?? 'name';
 		$valueAlias		= $config[ 'valueAlias' ] ?? 'value';

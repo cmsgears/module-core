@@ -365,8 +365,9 @@ trait ApprovalTrait {
 	 */
 	public function isApprovable() {
 
-		return $this->status == IApproval::STATUS_FROJEN || $this->status == IApproval::STATUS_UPLIFT_FREEZE ||
-				$this->status == IApproval::STATUS_BLOCKED || $this->status == IApproval::STATUS_UPLIFT_BLOCK;
+		return $this->status == IApproval::STATUS_SUBMITTED || $this->status == IApproval::STATUS_FROJEN ||
+			$this->status == IApproval::STATUS_UPLIFT_FREEZE || $this->status == IApproval::STATUS_BLOCKED ||
+			$this->status == IApproval::STATUS_UPLIFT_BLOCK;
 	}
 
 	/**

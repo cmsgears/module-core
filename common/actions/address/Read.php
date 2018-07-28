@@ -44,7 +44,7 @@ class Read extends ModelAction {
 
 	// Attributes having UTF-8 Encoding
 	public $returnAttributes = [
-		'id', 'countryId', 'provinceId', 'cityId', 'title', 'line1', 'line2', 'line3',
+		'id', 'countryId', 'provinceId', 'regionId', 'cityId', 'title', 'line1', 'line2', 'line3',
 		'countryName', 'provinceName', 'cityName', 'zip', 'subZip',
 		'firstName', 'lastName', 'phone', 'email', 'fax', 'website',
 		'latitude', 'longitude', 'zoomLevel' ];

@@ -29,6 +29,8 @@ interface IModelOptionService extends IModelMapperService {
 
 	// Read - Lists ----
 
+	public function getValueList( $parentId, $parentType, $categorySlug, $active = true );
+
 	// Read - Maps -----
 
 	// Read - Others ---

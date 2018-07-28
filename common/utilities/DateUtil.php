@@ -605,24 +605,37 @@ class DateUtil {
 	    return "$hours::$minutes::$seconds";
 	}
 
-	public static function getYearsList( $start = null, $config = [] ) {
+	public static function generateYearsList( $config = [] ) {
 
-		$years	= [];
+		$years = [];
 
 		// Get Current year if year is not set
-		$currentyear	= date( "Y" );
-		$start			= $start != null ? $start : $currentyear;
+		$currentyear = date( "Y" );
 
-		$endYear		= isset( $config[ 'endYear' ] ) ? $config[ 'endYear' ] : $currentyear;
-		$increment		= isset( $config[ 'increment' ] ) ? $config[ 'increment' ] : 1;
-		$end			= $endYear != null ? $endYear : $limit;
-		$i				= $start;
+		$startYear	= isset( $config[ 'startYear' ] ) ? $config[ 'startYear' ] : $currentyear;
+		$endYear	= isset( $config[ 'endYear' ] ) ? $config[ 'endYear' ] : $currentyear;
+		$difference	= isset( $config[ 'difference' ] ) ? $config[ 'difference' ] : 1;
+		$reverse	= isset( $config[ 'reverse' ] ) ? $config[ 'reverse' ] : false;
 
-		while( $i <= $end ) {
+		if( $reverse ) {
 
-			$years[ $i ]	= $i;
+			$year = $endYear;
 
-			$i = $i + $increment;
+			while( $year >= $startYear ) {
+
+				$years[ $year ] = $year;
+
+				$year = $year - $difference;
+			}
+		}
+		else {
+
+			while( $year <= $endYear ) {
+
+				$years[ $year ] = $year;
+
+				$year = $year + $difference;
+			}
 		}
 
 		return $years;

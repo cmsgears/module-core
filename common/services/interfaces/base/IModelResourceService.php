@@ -18,6 +18,8 @@ interface IModelResourceService extends IResourceService {
 
 	// Data Provider ------
 
+	public function getPageByParent( $parentId, $parentType, $config = [] );
+
 	// Read ---------------
 
 	// Read - Models ---

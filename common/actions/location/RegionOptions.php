@@ -75,12 +75,18 @@ class RegionOptions extends Action {
 		$provinceId	= Yii::$app->request->post( 'province-id' );
 		$regionId	= Yii::$app->request->post( 'region-id' );
 
-		$regions = $this->modelService->getMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
+		if( isset( $provinceId ) && $provinceId > 0 ) {
 
-		$data = !empty( $regionId ) ? CodeGenUtil::generateSelectOptionsFromArray( $regions, $regionId ) : CodeGenUtil::generateSelectOptionsFromArray( $regions );
+			$regions = $this->modelService->getMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
 
-		// Trigger Ajax Success
-		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+			$data = !empty( $regionId ) ? CodeGenUtil::generateSelectOptionsFromArray( $regions, intval( $regionId ) ) : CodeGenUtil::generateSelectOptionsFromArray( $regions );
+
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+		}
+
+		// Trigger Ajax Failure
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 }

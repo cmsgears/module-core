@@ -10,6 +10,7 @@
 namespace cmsgears\core\common\services\mappers;
 
 // Yii Imports
+use Yii;
 use yii\db\Query;
 
 // CMG Imports
@@ -23,7 +24,7 @@ use cmsgears\core\common\services\base\ModelMapperService;
  *
  * @since 1.0.0
  */
-class ModelOptionService extends  ModelMapperService implements IModelOptionService {
+class ModelOptionService extends ModelMapperService implements IModelOptionService {
 
 	// Variables ---------------------------------------------------
 
@@ -115,6 +116,31 @@ class ModelOptionService extends  ModelMapperService implements IModelOptionServ
 	// Read - Models ---
 
 	// Read - Lists ----
+
+	public function getValueList( $parentId, $parentType, $categorySlug, $active = true ) {
+
+		$categoryTable	= Yii::$app->factory->get( 'categoryService' )->getModelTable();
+		$optionTable	= Yii::$app->factory->get( 'optionService' )->getModelTable();
+		$mOptionTable	= Yii::$app->factory->get( 'modelOptionService' )->getModelTable();
+
+		$query = new Query();
+
+		$query->select( [ "$optionTable.value" ] )
+				->from( $optionTable )
+				->leftJoin( $mOptionTable, "$mOptionTable.modelId=$optionTable.id" )
+				->leftJoin( $categoryTable, "$categoryTable.id=$optionTable.categoryId" )
+				->where( "$mOptionTable.parentId=:pid AND $mOptionTable.parentType=:ptype AND $mOptionTable.active=:active AND $categoryTable.slug=:cslug", [ ':pid' => $parentId, ':ptype' => $parentType, ':active' => $active, ':cslug' => $categorySlug ] );
+
+		$values = $query->all();
+		$data	= [];
+
+		foreach( $values as $value ) {
+
+			$data[] = $value[ 'value' ];
+		}
+
+		return $data;
+	}
 
 	// Read - Maps -----
 

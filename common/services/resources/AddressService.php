@@ -80,8 +80,9 @@ class AddressService extends ResourceService implements IAddressService {
 
 	public function create( $model, $config = [] ) {
 
-		$model->provinceName	= $model->province->name;
 		$model->countryName		= $model->country->name;
+		$model->provinceName	= $model->province->name;
+		$model->regionName		= isset( $model->region ) ? $model->region->name : null;
 
 		return parent::create( $model, $config );
 	}
@@ -90,10 +91,16 @@ class AddressService extends ResourceService implements IAddressService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'countryId', 'provinceId', 'cityId', 'title', 'line1', 'line2', 'line3', 'cityName', 'provinceName', 'countryName', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude', 'zoomLevel' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'countryId', 'provinceId', 'regionId', 'cityId',
+			'title', 'line1', 'line2', 'line3',
+			'cityName', 'regionName', 'provinceName', 'countryName', 'zip', 'subZip',
+			'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude', 'zoomLevel'
+		];
 
 		$model->provinceName	= $model->province->name;
 		$model->countryName		= $model->country->name;
+		$model->regionName		= isset( $model->region ) ? $model->region->name : null;
 
         $config[ 'attributes' ] = $attributes;
 
@@ -112,6 +119,27 @@ class AddressService extends ResourceService implements IAddressService {
 	}
 
 	// Bulk ---------------
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
 
 	// Notifications ------
 

@@ -37,13 +37,13 @@ trait TabTrait {
 
 	// Private ----------------
 
-	private $tabStatus		= [];
+	protected $tabStatus	= [];
 
-	private $nextStatus		= [];
+	protected $nextStatus	= [];
 
-	private $previousTab	= [];
+	protected $previousTab	= [];
 
-	private $nextTab		= [];
+	protected $nextTab		= [];
 
 	// Instance methods --------------------------------------------
 

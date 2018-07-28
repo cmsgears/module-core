@@ -387,6 +387,20 @@ class UserService extends EntityService implements IUserService {
 		return static::searchModels( $config );
 	}
 
+	public function searchByNameType( $name, $type, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'query' ]		= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
+		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.email" ];
+		$config[ 'array' ]		= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
+
+		$config[ 'query' ]->andWhere( "$modelTable.name LIKE :name AND type=:type", [ ':name' => "$name%", ':type' => $type ] );
+
+		return static::searchModels( $config );
+	}
+
 	/**
 	 * @param string $roleSlug
 	 * @return array
@@ -473,6 +487,7 @@ class UserService extends EntityService implements IUserService {
 		$user->lastName		= $model->lastName;
 		$user->registeredAt	= $date;
 		$user->status		= $status;
+		$user->type			= $model->type;
 
 		$user->generatePassword( $model->password );
 		$user->generateVerifyToken();

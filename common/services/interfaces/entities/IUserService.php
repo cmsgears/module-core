@@ -49,6 +49,8 @@ interface IUserService extends IEntityService, IApproval, IData, IModelMeta, ISo
 
 	public function searchByName( $name, $config = [] );
 
+	public function searchByNameType( $name, $type, $config = [] );
+
 	public function getIdNameMapByRoleSlug( $roleSlug );
 
 	// Read - Others ---

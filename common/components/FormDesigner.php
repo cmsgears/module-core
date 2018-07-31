@@ -976,8 +976,9 @@ class FormDesigner extends \yii\base\Component {
 
 	public function getRadioList( $form, $model, $field, $itemlist, $config = [] ) {
 
-		$flag	= isset( $config[ 'flag' ] ) ? $config[ 'flag' ] : false;
-		$label	= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
+		$flag		= isset( $config[ 'flag' ] ) ? $config[ 'flag' ] : false;
+		$label		= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
+		$disabled	= isset( $config[ 'disabled' ] ) && $config[ 'disabled' ] ? $config[ 'disabled' ] : true;
 
 		if( $flag ) {
 
@@ -990,7 +991,7 @@ class FormDesigner extends \yii\base\Component {
 			->radioList(
 				$itemlist,
 				[
-					'item' => function( $index, $label, $name, $checked, $value	) {
+					'item' => function( $index, $label, $name, $checked, $value	) use( $disabled ) {
 
 						$slabel = strtolower( $label );
 						$html	= "<label class=\"{$slabel}\"><input ";
@@ -1000,7 +1001,7 @@ class FormDesigner extends \yii\base\Component {
 							$html .= 'checked';
 						}
 
-						$html .= " type=\"radio\" name=\"{$name}\" value=\"{$value}\"><span class=\"label pad-label\">$label</span></label>";
+						$html .= " type=\"radio\" name=\"{$name}\" value=\"{$value}\" $disabled><span class=\"label pad-label\">$label</span></label>";
 
 						return $html;
 					}

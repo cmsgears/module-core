@@ -63,9 +63,9 @@ class Settings extends Action {
 
 			if( $settings->load( Yii::$app->request->post(), $settings->getClassName() ) && $settings->validate() ) {
 
-				$this->model = $modelService->updateDataMeta( $model, 'settings', $settings );
+				$modelService->updateDataMeta( $model, 'settings', $settings );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->controller->redirect( $this->controller->returnUrl );
 			}
 
 			return $this->controller->render( 'settings', [

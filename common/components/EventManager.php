@@ -86,6 +86,22 @@ class EventManager extends Component {
 		];
 	}
 
+	/**
+	 * It query appropriate services and collection messages and counts of notifications,
+	 * reminders and activities for frontend site or application.
+	 *
+	 * @return array having recent notifications, reminders, activities and counts.
+	 */
+	public function getModelStats( $parentId, $parentType ) {
+
+		return [
+			// Messages
+			'notifications' => [], 'reminders' => [], 'activities' => [],
+			// Counters - New
+			'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0
+		];
+	}
+
 	// Notification Trigger ---
 
 	public function triggerNotification( $slug, $data, $config = [] ) {

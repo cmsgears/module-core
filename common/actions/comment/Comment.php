@@ -33,7 +33,7 @@ class Comment extends Create {
 
 	public $modelType	= ModelComment::TYPE_COMMENT;
 
-	public $scenario	= ModelComment::TYPE_COMMENT;
+	public $scenario	= ModelComment::SCENARIO_IDENTITY;
 
 	// Protected --------------
 

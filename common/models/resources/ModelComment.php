@@ -87,6 +87,10 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 	const TYPE_FEEDBACK		=  'feedback'; // enhancements, improvement
 	const TYPE_TESTIMONIAL	=  'testimonial'; // user satisfaction
 
+	const SCENARIO_IDENTITY	= 'identity';
+	const SCENARIO_REVIEW	= 'review';
+	const SCENARIO_CAPTCHA	= 'captcha';
+
 	const STATUS_NEW		=  500;
 	const STATUS_SPAM		=  600;
 	const STATUS_BLOCKED	=  700;
@@ -179,9 +183,9 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 			[ [ 'name', 'email', 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Check captcha need for testimonial and review
-			[ [ 'name', 'email' ], 'required', 'on' => 'identity' ],
-			[ 'rating', 'required', 'on' => [ self::TYPE_REVIEW ] ],
-			[ 'captcha', 'captcha', 'captchaAction' => '/core/site/captcha', 'on' => 'captcha' ],
+			[ [ 'name', 'email' ], 'required', 'on' => self::SCENARIO_IDENTITY ],
+			[ 'rating', 'required', 'on' => [ self::SCENARIO_REVIEW ] ],
+			[ 'captcha', 'captcha', 'captchaAction' => '/core/site/captcha', 'on' => self::SCENARIO_CAPTCHA ],
 			// Other
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
 			[ [ 'pinned', 'featured', 'anonymous', 'gridCacheValid' ], 'boolean' ],

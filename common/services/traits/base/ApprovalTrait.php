@@ -537,6 +537,7 @@ trait ApprovalTrait {
 		$oldStatus = $model->getStatusStr();
 
 		$model->toggleFrojen();
+		$model->save();
 
 		$newStatus = $model->getStatusStr();
 
@@ -568,6 +569,7 @@ trait ApprovalTrait {
 		$oldStatus = $model->getStatusStr();
 
 		$model->toggleBlock();
+		$model->save();
 
 		$newStatus = $model->getStatusStr();
 

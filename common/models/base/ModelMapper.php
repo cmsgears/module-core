@@ -21,9 +21,11 @@ use cmsgears\core\common\config\CoreGlobal;
  * The parent model can be either entity or resource. Similarly the model being mapped
  * can be both entity or resource.
  *
- * The columns modelId, parentId and parentType map the source i.e. parent to the target
- * using modelId column via mapper table. It allows only one model mapping for same parentId
- * and parentType combination.
+ * The columns modelId, parentId and parentType map the source i.e. parent(parentId and parentType) to the
+ * target model using modelId column via mapper table. In most of the cases, we can have only one model mapping
+ * for same parentId and parentType combination. The same model can be mapped multiple times to the same
+ * parent following a particular criteria ex: only one mapping can be active at a time or only one mapping can
+ * exist between the same parent and model for a particular type.
  *
  * It also provide few additional methods for models to mark the mapping as deleted by setting
  * [[$active]] to false to avoid allocating a new row each time a mapping is created. The mapping
@@ -86,8 +88,10 @@ abstract class ModelMapper extends Mapper {
 			// Required, Safe
 			[ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
 			[ 'id', 'safe' ],
-			// Unique
-			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			// Unique - Disabled to allow multiple mappings based on active and type columns
+			//[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'on' => 'single', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'on' => 'multiType', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType', 'type' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
 			// Text Limit
 			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			// Other
@@ -143,6 +147,18 @@ abstract class ModelMapper extends Mapper {
 	}
 
 	/**
+	 * Check whether mapping is active using given parent id and type.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @return boolean
+	 */
+	public function isActiveMapping( $parentId, $parentType ) {
+
+		return $this->active && $this->parentId == $parentId && $this->parentType == $parentType;
+	}
+
+	/**
 	 * Returns string representation of active flag.
 	 *
 	 * @return string
@@ -151,18 +167,6 @@ abstract class ModelMapper extends Mapper {
 
         return Yii::$app->formatter->asBoolean( $this->active );
     }
-
-	/**
-	 * Check whether mapping is active using given parent id and type.
-	 *
-	 * @param integer $parentId
-	 * @param string $parentType
-	 * @return boolean
-	 */
-	public function isMappingActive( $parentId, $parentType ) {
-
-		return $this->active && $this->parentId == $parentId && $this->parentType == $parentType;
-	}
 
 	// Static Methods ----------------------------------------------
 
@@ -218,12 +222,25 @@ abstract class ModelMapper extends Mapper {
 	/**
 	 * Return query to find the mapping for given mapped model id.
 	 *
-	 * @param integer $parentId
-	 * @param string $parentType
 	 * @param integer $modelId
 	 * @return \yii\db\ActiveQuery to find with mapped model id.
 	 */
-	public static function queryByModelId( $parentId, $parentType, $modelId ) {
+	public static function queryByModelId( $modelId ) {
+
+		$tableName = static::tableName();
+
+		return self::queryWithModel()->where( "$tableName.modelId=:mid", [ ':mid' => $modelId ] );
+	}
+
+	/**
+	 * Return query to find the mapping for given parent id, parent type and model id.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param integer $modelId
+	 * @return \yii\db\ActiveQuery to find using parent id and parent type.
+	 */
+	public static function queryByParentModelId( $parentId, $parentType, $modelId ) {
 
 		$tableName = static::tableName();
 
@@ -238,7 +255,7 @@ abstract class ModelMapper extends Mapper {
 	 * @param string $type
 	 * @return \yii\db\ActiveQuery to find using parent id, parent type and mapping type.
 	 */
-	public static function queryByType( $parentId, $parentType, $type ) {
+	public static function queryByTypeParent( $parentId, $parentType, $type ) {
 
 		$tableName = static::tableName();
 
@@ -283,45 +300,72 @@ abstract class ModelMapper extends Mapper {
 	}
 
 	/**
-	 * Find and return the mappings for given mapped model id.
+	 * Find and return the mappings for given model id.
 	 *
 	 * @param integer $modelId
 	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
 	 */
-	public static function findByModelId( $parentId, $parentType, $modelId ) {
+	public static function findByModelId( $modelId ) {
 
-		return self::queryByModelId( $parentId, $parentType, $modelId )->one();
+		return self::queryByModelId( $modelId )->all();
 	}
 
 	/**
-	 * Find and return appropriate mapped models for given parent id, parent type and type.
+	 * Find and return the mappings for given parent id, parent type and model id.
 	 *
 	 * @param integer $parentId
 	 * @param string $parentType
-	 * @param string $type
-	 * @return Mapper[] by parent id, parent type and type
+	 * @param integer $modelId
+	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
 	 */
-	public static function findByType( $parentId, $parentType, $type ) {
+	public static function findByParentModelId( $parentId, $parentType, $modelId ) {
 
-		return self::queryByType( $parentId, $parentType, $type )->all();
+		return self::queryByParentModelId( $parentId, $parentType, $modelId )->all();
 	}
 
 	/**
-	 * Find and return appropriate mapped model for given parent id, parent type and type.
-	 * It's useful in cases where only one mapping is allowed for a model for given type.
+	 * Find and return the first mapping for given parent id, parent type and model id. It's
+	 * useful for the cases where only one mapping is allowed for a parent and model.
 	 *
 	 * @param integer $parentId
 	 * @param string $parentType
-	 * @param string $type
-	 * @return Mapper by parent id, parent type and type
+	 * @param integer $modelId
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
 	 */
-	public static function findFirstByType( $parentId, $parentType, $type ) {
+	public static function findFirstByParentModelId( $parentId, $parentType, $modelId ) {
 
-		return self::queryByType( $parentId, $parentType, $type )->one();
+		return self::queryByParentModelId( $parentId, $parentType, $modelId )->one();
 	}
 
 	/**
-	 * Find and return the mapping for given parent id, parent type and mapped model id.
+	 * Find and return the mappings for given model id and parent type.
+	 *
+	 * @param integer $modelId
+	 * @param string $parentType
+	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
+	 */
+	public static function findByModelIdParentType( $modelId, $parentType ) {
+
+		return self::find()->where( 'modelId=:mid AND parentType=:ptype', [ ':mid' => $modelId, ':ptype' => $parentType] )->all();
+	}
+
+	/**
+	 * Find and return the mappings for given parent id, parent type, model id and type.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param integer $modelId
+	 * @param integer $type
+	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
+	 */
+	public static function findByParentModelIdType( $parentId, $parentType, $modelId, $type ) {
+
+		return self::queryByParentModelId( $parentId, $parentType, $modelId )->andWhere( 'type=:type', [ ':type' => $type ] )->all();
+	}
+
+	/**
+	 * Find and return the mapping for given parent id, parent type, model id and type. It's
+	 * useful for the cases where only one mapping is allowed for a parent, model and type.
 	 *
 	 * @param integer $parentId
 	 * @param string $parentType
@@ -329,26 +373,14 @@ abstract class ModelMapper extends Mapper {
 	 * @param integer $type
 	 * @return \cmsgears\core\common\models\base\ActiveRecord
 	 */
-	public static function findByParentModelIdType( $parentId, $parentType, $modelId, $type ) {
+	public static function findFirstByParentModelIdType( $parentId, $parentType, $modelId, $type ) {
 
-		return self::queryByModelId( $parentId, $parentType, $modelId )->andWhere( 'type=:type', [ ':type' => $type ] )->one();
-	}
-
-	/**
-	 * Find and return the active mappings for given parent id and parent type.
-	 *
-	 * @param integer $parentId
-	 * @param string $parentType
-	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
-	 */
-	public static function findActiveByParent( $parentId, $parentType ) {
-
-		return self::queryByParent( $parentId, $parentType )->andWhere( 'active=1' )->all();
+		return self::queryByParentModelId( $parentId, $parentType, $modelId )->andWhere( 'type=:type', [ ':type' => $type ] )->one();
 	}
 
 	/**
 	 * Find and return the active mappings for given parent id. It's useful in cases where only
-	 * single parent type is allowed.
+	 * single parent type is allowed. It must be used carefully.
 	 *
 	 * @param integer $parentId
 	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
@@ -370,16 +402,53 @@ abstract class ModelMapper extends Mapper {
 	}
 
 	/**
-	 * Find and return the mappings for type.
+	 * Find and return the active mappings for given parent id and parent type.
 	 *
 	 * @param integer $parentId
 	 * @param string $parentType
-	 * @param string $type
 	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
 	 */
-	public static function findActiveByType( $parentId, $parentType, $type ) {
+	public static function findActiveByParent( $parentId, $parentType ) {
 
-		return self::queryByParent( $parentId, $parentType )->andWhere( 'active=1' )->andFilterWhere( [ 'like', 'type', $type ] )->all();
+		return self::queryByParent( $parentId, $parentType )->andWhere( 'active=1' )->all();
+	}
+
+	/**
+	 * Find and return the active mappings for model id.
+	 *
+	 * @param integer $modelId
+	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
+	 */
+	public static function findActiveByModelId( $modelId ) {
+
+		return self::queryByModelId( $modelId )->andWhere( 'active=1' )->all();
+	}
+
+	/**
+	 * Find and return the active mappings for parent id, parent type and model id.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param integer $modelId
+	 * @return \cmsgears\core\common\models\base\ActiveRecord[]
+	 */
+	public static function findActiveByParentModelId( $parentId, $parentType, $modelId ) {
+
+		return self::queryByParentModelId( $parentId, $parentType, $modelId )->andWhere( 'active=1' )->all();
+	}
+
+	/**
+	 * Find and return the active mappings for parent id, parent type and model id. It's
+	 * useful for the cases where only one active mapping is allowed for a parent and model.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param integer $modelId
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
+	public static function findFirstActiveByParentModelId( $parentId, $parentType, $modelId ) {
+
+		return self::queryByParentModelId( $parentId, $parentType, $modelId )->andWhere( 'active=1' )->one();
 	}
 
 	/**
@@ -392,6 +461,35 @@ abstract class ModelMapper extends Mapper {
 	public static function findActiveByModelIdParentType( $modelId, $parentType ) {
 
 		return self::find()->where( 'modelId=:mid AND parentType=:ptype AND active=1',	[ ':mid' => $modelId, ':ptype' => $parentType] )->all();
+	}
+
+	/**
+	 * Find and return the active mappings for given parent id, parent type, model id and type.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param integer $modelId
+	 * @param integer $type
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
+	public static function findActiveByParentModelIdType( $parentId, $parentType, $modelId, $type ) {
+
+		return self::queryByParentModelId( $parentId, $parentType, $modelId )->andWhere( 'type=:type', [ ':type' => $type ] )->all();
+	}
+
+	/**
+	 * Find and return the active mapping for given parent id, parent type, model id and type. It's
+	 * useful for the cases where only one mapping is allowed for a parent, model and type.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param integer $modelId
+	 * @param integer $type
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
+	public static function findFirstActiveByParentModelIdType( $parentId, $parentType, $modelId, $type ) {
+
+		return self::queryByParentModelId( $parentId, $parentType, $modelId )->andWhere( 'type=:type', [ ':type' => $type ] )->one();
 	}
 
 	// Create -----------------
@@ -421,7 +519,7 @@ abstract class ModelMapper extends Mapper {
 
 	/**
 	 * Delete all mappings related to given parent id. It's useful in cases where only
-	 * single parent type is allowed.
+	 * single parent type is allowed. It must be used carefully.
 	 *
 	 * @param integer $parentId
 	 * @return integer number of rows.

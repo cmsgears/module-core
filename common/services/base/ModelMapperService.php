@@ -73,6 +73,9 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 
 	// Read - Models ---
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getByParentId( $parentId ) {
 
 		$modelClass	= static::$modelClass;
@@ -80,6 +83,9 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 		return $modelClass::findByParentId( $parentId );
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getByParentType( $parentType ) {
 
 		$modelClass	= static::$modelClass;
@@ -88,9 +94,7 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 	}
 
 	/**
-	 * @param long $parentId of parent model.
-	 * @param long $parentType assigned to parent model.
-	 * @return array of model mappings having matching $parentId and $parentType.
+	 * @inheritdoc
 	 */
 	public function getByParent( $parentId, $parentType ) {
 
@@ -100,39 +104,68 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 	}
 
 	/**
-	 * @param long $parentId of parent model.
-	 * @param long $parentType assigned to parent model.
-	 * @param long $modelId of mapped model.
-	 * @return Object having matching $parentId, $parentType and $modelId.
+	 * @inheritdoc
 	 */
-	public function getByModelId( $parentId, $parentType, $modelId ) {
+	public function getByModelId( $modelId ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::findByModelId( $parentId, $parentType, $modelId );
+		return $modelClass::findByModelId( $modelId );
 	}
 
-	public function getByType( $parentId, $parentType, $type ) {
+	/**
+	 * @inheritdoc
+	 */
+	public function getByParentModelId( $parentId, $parentType, $modelId ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::findByType( $parentId, $parentType, $type );
+		return $modelClass::findByParentModelId( $parentId, $parentType, $modelId );
 	}
 
-	public function getFirstByType( $parentId, $parentType, $type ) {
+	/**
+	 * @inheritdoc
+	 */
+	public function getFirstByParentModelId( $parentId, $parentType, $modelId ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::findFirstByType( $parentId, $parentType, $type );
+		return $modelClass::findFirstByParentModelId( $parentId, $parentType, $modelId );
 	}
 
-	public function getActiveByParent( $parentId, $parentType ) {
+	/**
+	 * @inheritdoc
+	 */
+	public function getByModelIdParentType( $modelId, $parentType ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::findActiveByParent( $parentId, $parentType );
+		return $modelClass::findByModelIdParentType( $modelId, $parentType );
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public function getByParentModelIdType( $parentId, $parentType, $modelId, $type ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByParentModelIdType( $parentId, $parentType, $modelId, $type );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getFirstByParentModelIdType( $parentId, $parentType, $modelId, $type ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findFirstByParentModelIdType( $parentId, $parentType, $modelId, $type );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function getActiveByParentId( $parentId ) {
 
 		$modelClass	= static::$modelClass;
@@ -140,6 +173,9 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 		return $modelClass::findActiveByParentId( $parentId );
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getActiveByParentType( $parentType ) {
 
 		$modelClass	= static::$modelClass;
@@ -147,18 +183,74 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 		return $modelClass::findActiveByParentType( $parentType );
 	}
 
-	public function getActiveByType( $modelId, $parentType, $type ) {
+	/**
+	 * @inheritdoc
+	 */
+	public function getActiveByParent( $parentId, $parentType ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::findActiveByType( $modelId, $parentType, $type );
+		return $modelClass::findActiveByParent( $parentId, $parentType );
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public function getActiveByModelId( $modelId ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findActiveByModelId( $modelId );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getActiveByParentModelId( $parentId, $parentType, $modelId ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findActiveByParentModelId( $parentId, $parentType, $modelId );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getFirstActiveByParentModelId( $parentId, $parentType, $modelId ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findFirstActiveByParentModelId( $parentId, $parentType, $modelId );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function getActiveByModelIdParentType( $modelId, $parentType ) {
 
 		$modelClass	= static::$modelClass;
 
 		return $modelClass::findActiveByModelIdParentType( $modelId, $parentType );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getActiveByParentModelIdType( $parentId, $parentType, $modelId, $type ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findActiveByParentModelIdType( $parentId, $parentType, $modelId, $type );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getFirstActiveByParentModelIdType( $parentId, $parentType, $modelId, $type ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findFirstActiveByParentModelIdType( $parentId, $parentType, $modelId, $type );
 	}
 
 	// Read - Lists ----

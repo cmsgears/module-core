@@ -79,6 +79,8 @@ class Core extends \cmsgears\core\common\base\Component {
 	 */
 	public $subDirectory		= true;
 
+	// The three type of apps.
+
 	public $appAdmin			= CoreGlobal::APP_ADMIN;
 	public $appFrontend			= CoreGlobal::APP_FRONTEND;
 	public $appConsole			= CoreGlobal::APP_CONSOLE;

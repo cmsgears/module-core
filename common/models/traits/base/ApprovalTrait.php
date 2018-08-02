@@ -42,6 +42,13 @@ trait ApprovalTrait {
 		IApproval::STATUS_TERMINATED => 'Terminated'
 	];
 
+	public static $minStatusMap = [
+		IApproval::STATUS_NEW => 'New',
+		IApproval::STATUS_ACTIVE => 'Active',
+		IApproval::STATUS_BLOCKED => 'Blocked',
+		IApproval::STATUS_TERMINATED => 'Terminated'
+	];
+
 	// Used for external docs
 	public static $revStatusMap = [
 		'New' => IApproval::STATUS_NEW,

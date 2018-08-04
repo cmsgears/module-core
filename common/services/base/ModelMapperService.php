@@ -276,7 +276,7 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 
 	public function activateByModelId( $parentId, $parentType, $modelId, $type = null ) {
 
-		$model = $this->getByModelId( $parentId, $parentType, $modelId );
+		$model = $this->getFirstByParentModelId( $parentId, $parentType, $modelId );
 
 		if( isset( $model ) ) {
 

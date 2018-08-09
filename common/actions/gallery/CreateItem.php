@@ -65,17 +65,24 @@ class CreateItem extends Action {
 
 	// CreateItem ----------------------------
 
-	public function run( $id ) {
+	/**
+	 * It creates the gallery item using given $cid.
+	 *
+	 * @param type $id Parent Id
+	 * @param type $cid Gallery Id
+	 * @return string
+	 */
+	public function run( $id, $cid ) {
 
 		$galleryService	= Yii::$app->factory->get( 'galleryService' );
 		$fileService	= Yii::$app->factory->get( 'fileService' );
-		$gallery		= $galleryService->getById( $id );
+		$gallery		= $galleryService->getById( $cid );
 
 		if( isset( $gallery ) ) {
 
 			if( $this->maxItems > 0 ) {
 
-				$items	= $gallery->files;
+				$items = $gallery->files;
 
 				if( count( $items ) >= $this->maxItems ) {
 
@@ -91,8 +98,8 @@ class CreateItem extends Action {
 			if( $item->load( Yii::$app->request->post(), 'File' ) && $item->validate() ) {
 
 				$item	= $galleryService->createItem( $gallery, $item );
-				$item	= $fileService->getById( $item->id );
-				$data	= [ 'id' => $item->id, 'thumbUrl' => $item->getThumbUrl(), 'title' => $item->title, 'description' => $item->description, 'alt' => $item->altText, 'url' => $item->url ];
+				$file	= $fileService->getById( $item->id );
+				$data	= [ 'id' => $item->id, 'fid' => $file->id, 'thumbUrl' => $file->getThumbUrl(), 'title' => $file->title, 'description' => $file->description, 'alt' => $file->altText, 'url' => $file->url ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

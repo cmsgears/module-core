@@ -59,15 +59,13 @@ trait ModelMetaTrait {
 
 	// Update -------------
 
-	public function updateModelMetas( $model, $metas ) {
+	public function updateModelMetas( $model, $metas, $metaService ) {
 
-		$modelMetaService = Yii::$app->factory->get( 'modelMetaService' );
+		foreach( $metas as $meta ) {
 
-		foreach ( $metas as $meta ) {
+			if( $meta->belongsTo( $model, static::$parentType ) ) {
 
-			if( $meta->belongsTo( $model, self::$parentType ) ) {
-
-				$modelMetaService->update( $meta );
+				$metaService->update( $meta );
 			}
 		}
 

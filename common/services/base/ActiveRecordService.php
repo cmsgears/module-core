@@ -473,7 +473,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	public function linkModel( $model, $column, $link ) {
 
-		if( empty( $link ) ) {
+		if( empty( $link ) || empty( $link->id ) || $link->id == 0 ) {
 
 			return;
 		}

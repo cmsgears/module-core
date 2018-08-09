@@ -213,7 +213,7 @@ abstract class MetaService extends ResourceService implements IMetaService {
 		return self::findByNameType( $modelId, $name, $type );
 	}
 
-	public function initByNameType( $modelId, $name, $type, $valueType = 'text' ) {
+	public function initByNameType( $modelId, $name, $type, $valueType = Meta::VALUE_TYPE_TEXT, $label = null ) {
 
 		$meta = $this->getByNameType( $modelId, $name, $type );
 
@@ -222,18 +222,20 @@ abstract class MetaService extends ResourceService implements IMetaService {
 			$modelClass = static::$modelClass;
 
 			// Initialise
-			$meta				= new $modelClass();
+			$meta = new $modelClass();
+
 			$meta->modelId		= $modelId;
 			$meta->name			= $name;
-			$meta->label		= $name;
+			$meta->label		= !empty( $label ) ? $label : $name;
 			$meta->type			= $type;
+			$meta->active		= true;
 			$meta->valueType	= $valueType;
 
 			switch( $valueType ) {
 
 				case Meta::VALUE_TYPE_FLAG: {
 
-					$meta->value = false;
+					$meta->value = 0;
 				}
 				default: {
 
@@ -256,7 +258,7 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 	public function getNameValueMapByModelId( $modelId ) {
 
-		$config[ 'conditions' ][ 'modelId' ]	= $modelId;
+		$config[ 'conditions' ][ 'modelId' ] = $modelId;
 
 		return $this->getNameValueMap( $config );
 	}
@@ -271,7 +273,7 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 	public function getIdMetaMapByModelId( $modelId ) {
 
-		$config[ 'conditions' ][ 'modelId' ]	= $modelId;
+		$config[ 'conditions' ][ 'modelId' ] = $modelId;
 
 		return $this->getObjectMap( $config );
 	}
@@ -374,14 +376,19 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 		$metas = $form->getArrayToStore();
 
-		foreach ( $metas as $meta ) {
+		foreach( $metas as $meta ) {
 
 			if( !isset( $meta[ 'valueType' ] ) ) {
 
 				$meta[ 'valueType' ] = Meta::VALUE_TYPE_TEXT;
 			}
 
-			$model = $this->initByNameType( $config[ 'modelId' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ] );
+			if( !isset( $meta[ 'label' ] ) ) {
+
+				$meta[ 'label' ] = $form->getAttributeLabel( $meta[ 'name' ] );
+			}
+
+			$model = $this->initByNameType( $config[ 'modelId' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ], $meta[ 'label' ] );
 
 			$model->value	= $meta[ 'value' ];
 			$model->label	= $form->getAttributeLabel( $meta[ 'name' ] );
@@ -390,31 +397,18 @@ abstract class MetaService extends ResourceService implements IMetaService {
 		}
 	}
 
-	public function toggle( $modelId, $type, $name, $label ) {
+	public function toggle( $model ) {
 
-		$model	= $this->getByNameType( $modelId, $name, $type );
+		if( $model->value ) {
 
-		// Create if it does not exist
-		if( !isset( $model ) ) {
-
-			$this->createByParams([
-				'modelId' => $modelId, 'name' => $name, 'label' => $label, 'type' => $type,
-				'valueType' => Meta::VALUE_TYPE_FLAG, 'value' => true
-			]);
+			$model->value = false;
 		}
 		else {
 
-			if( $model->value ) {
-
-				$model->value = false;
-			}
-			else {
-
-				$model->value = true;
-			}
-
-			$model->update();
+			$model->value = true;
 		}
+
+		$model->update();
 	}
 
 	// Delete -------------

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\meta;
 
 // Yii Imports
@@ -7,14 +15,19 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\resources\Meta;
 use cmsgears\core\common\models\resources\ModelMeta;
+
+use cmsgears\core\common\actions\base\ModelAction;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * UpdateMultiple add/update multiple data meta for given model supporting data trait.
+ * UpdateMultiple add or update multiple meta of identified model.
+ *
+ * @since 1.0.0
  */
-class UpdateMultiple extends \cmsgears\core\common\actions\base\ModelAction {
+class UpdateMultiple extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -32,11 +45,20 @@ class UpdateMultiple extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Protected --------------
 
+	protected $metaService;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->metaService	= $this->controller->metaService;
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -48,46 +70,87 @@ class UpdateMultiple extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// MultiUpdate ---------------------------
+	// UpdateMultiple ------------------------
 
-	public function run( $id ) {
+	public function run() {
 
-		$model	= $this->model;
+		$model = $this->model;
 
 		if( isset( $model ) ) {
 
-			$modelMetaService	= Yii::$app->factory->get( 'modelMetaService' );
+			$metaClass	= $this->metaService->getModelClass();
+			$metaTest	= new $metaClass;
 
-			$modelMetas			= Yii::$app->request->post( 'ModelMeta' );
-			$count				= count( $modelMetas );
-			$metas				= [];
+			$data	= Yii::$app->request->post( 'Meta' );
+			$count	= count( $data );
+			$metas	= [];
 
-			for ( $i = 0; $i < $count; $i++ ) {
+			for( $i = 0; $i < $count; $i++ ) {
 
-				$meta		= $modelMetas[ $i ];
-				$meta		= $modelMetaService->initByNameType( $model->id, $this->parentType, $meta[ 'name' ], $meta[ 'type' ] );
+				$meta = $data[ $i ];
 
-				$metas[]	= $meta;
-			}
+				if( empty( $meta[ 'label' ] ) ) {
 
-			// Load SchoolItem models
-			if( ModelMeta::loadMultiple( $metas, Yii::$app->request->post(), 'ModelMeta' ) && ModelMeta::validateMultiple( $metas ) ) {
-
-				$this->modelService->updateModelMetas( $model, $metas );
-
-				$data	= [];
-
-				foreach ( $metas as $meta ) {
-
-					$data[]	= $meta->getFieldInfo();
+					$meta[ 'label' ] = null;
 				}
 
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+				if( $metaTest->hasAttribute( 'modelId' ) ) {
+
+					$meta = $this->metaService->initByNameType( $model->id, $meta[ 'name' ], $meta[ 'type' ], $meta[ 'label' ] );
+				}
+				else {
+
+					$meta = $this->metaService->initByNameType( $model->id, $this->parentType, $meta[ 'name' ], $meta[ 'type' ], $meta[ 'label' ] );
+				}
+
+				if( empty( $meta->type ) ) {
+
+					$meta->type = CoreGlobal::TYPE_DEFAULT;
+				}
+
+				$metas[] = $meta;
+			}
+
+			// Meta using modelId
+			if( $metaTest->hasAttribute( 'modelId' ) ) {
+
+				if( Meta::loadMultiple( $metas, Yii::$app->request->post(), 'Meta' ) && Meta::validateMultiple( $metas ) ) {
+
+					$this->modelService->updateMetas( $model, $metas, $this->metaService );
+
+					$data = [];
+
+					foreach( $metas as $meta ) {
+
+						$data[]	= $meta->getFieldInfo();
+					}
+
+					// Trigger Ajax Success
+					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+				}
+			}
+			// ModelMeta using parentId and parentType
+			else {
+
+				if( ModelMeta::loadMultiple( $metas, Yii::$app->request->post(), 'Meta' ) && ModelMeta::validateMultiple( $metas ) ) {
+
+					$this->modelService->updateModelMetas( $model, $metas, $this->metaService );
+
+					$data = [];
+
+					foreach( $metas as $meta ) {
+
+						$data[]	= $meta->getFieldInfo();
+					}
+
+					// Trigger Ajax Success
+					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+				}
 			}
 		}
 
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
+
 }

@@ -264,7 +264,7 @@ class ModelAddressService extends ModelMapperService implements IModelAddressSer
 
 		if( isset( $address->id ) && !empty( $address->id ) ) {
 
-			$existingAddress = $this->getByModelId( $parentId, $parentType, $address->id );
+			$existingAddress = $this->getFirstByParentModelId( $parentId, $parentType, $address->id );
 
 			if( isset( $existingAddress ) ) {
 

@@ -56,7 +56,7 @@ $this->title	= 'Gallery Items | ' . $coreProperties->getSiteTitle();
 				<div class="box-content">
 					<?= ImageUploader::widget([
 						'directory' => 'gallery', 'showFields' => true, 'modelClass' => 'File', 'fileLabel' => true,
-						'postAction' => true, 'postActionUrl' => "core/gallery/create-item?id=$gallery->id",
+						'postAction' => true, 'postActionUrl' => "core/gallery/create-item?id=$parent->id&cid=$gallery->id",
 						'cmtApp' => 'main', 'cmtController' => 'gallery', 'cmtAction' => 'updateItem'
 					])?>
 				</div>
@@ -78,10 +78,10 @@ $this->title	= 'Gallery Items | ' . $coreProperties->getSiteTitle();
 						<li>
 							<?= ImageUploader::widget([
 								'directory' => 'gallery', 'showFields' => true, 'model' => $item, 'modelClass' => 'File', 'fileLabel' => true,
-								'postAction' => true, 'postActionVisible' => true, 'postActionUrl' => "core/gallery/update-item?id=$gallery->id&iid=$item->id",
+								'postAction' => true, 'postActionVisible' => true, 'postActionUrl' => "core/gallery/update-item?id=$parent->id&cid=$gallery->id&iid=$item->id",
 								'cmtApp' => 'main', 'cmtController' => 'gallery', 'cmtAction' => 'updateItem'
 							])?>
-							<form cmt-app="main" cmt-controller="gallery" cmt-action="deleteItem" action="core/gallery/delete-item?id=<?= $gallery->id ?>&iid=<?= $item->id ?>" >
+							<form cmt-app="main" cmt-controller="gallery" cmt-action="deleteItem" action="core/gallery/delete-item?id=<?= $parent->id ?>&cid=<?= $gallery->id ?>&iid=<?= $item->id ?>" >
 								<div class="max-area-cover spinner">
 									<div class="valign-center cmti cmti-spinner-1 spin"></div>
 								</div>

@@ -178,7 +178,7 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord {
 
 		$data = [];
 
-		foreach ( $keys as $key ) {
+		foreach( $keys as $key ) {
 
 			$data[ $key ] = $this->$key;
 		}
@@ -301,7 +301,7 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord {
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
 			$modelTable = static::tableName();
-			
+
 			$query = $query->andWhere( "$modelTable.siteId=:siteId", [ ':siteId' => $siteId ] );
 		}
 

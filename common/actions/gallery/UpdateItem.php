@@ -44,11 +44,24 @@ class UpdateItem extends Action {
 
 	// Protected --------------
 
+	protected $galleryService;
+	protected $fileService;
+	protected $modelFileService;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->galleryService	= Yii::$app->factory->get( 'galleryService' );
+		$this->fileService		= Yii::$app->factory->get( 'fileService' );
+		$this->modelFileService = Yii::$app->factory->get( 'modelFileService' );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -62,25 +75,31 @@ class UpdateItem extends Action {
 
 	// DeleteItem ----------------------------
 
-	public function run( $id, $iid ) {
+	public function run( $id, $cid, $fid ) {
 
-		$galleryService		= Yii::$app->factory->get( 'galleryService' );
-		$fileService		= Yii::$app->factory->get( 'fileService' );
-		$modelFileService	= Yii::$app->factory->get( 'modelFileService' );
-
-		$gallery = $galleryService->getById( $id );
+		$gallery = $this->galleryService->getById( $cid );
 
 		if( isset( $gallery ) ) {
 
-			$modelFile	= $modelFileService->getByModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $iid );
-			$file		= $modelFile->model;
+			$modelFile = $this->modelFileService->getFirstByParentModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $fid );
 
-			if( isset( $file ) && $file->load( Yii::$app->request->post(), $this->fileName ) ) {
+			if( isset( $modelFile ) && $modelFile->isParentValid( $gallery->id, CoreGlobal::TYPE_GALLERY ) ) {
 
-				$fileService->saveImage( $file );
+				$file = $modelFile->model;
 
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $iid );
+				if( isset( $file ) && $file->load( Yii::$app->request->post(), $this->fileName ) ) {
+
+					$this->fileService->saveImage( $file );
+
+					$data	= $file->getAttributeArray( [ 'title', 'altText', 'link', 'description' ] );
+
+					$data[ 'id' ]	= $modelFile->id;
+					$data[ 'fid' ]	= $file->id;
+					$data[ 'thumbUrl' ] = $file->getThumbUrl();
+
+					// Trigger Ajax Success
+					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+				}
 			}
 		}
 

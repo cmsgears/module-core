@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\social;
+namespace cmsgears\core\common\actions\data;
 
 // Yii Imports
 use Yii;
@@ -15,18 +15,18 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\forms\SocialLink;
+use cmsgears\core\common\models\forms\Meta;
 
 use cmsgears\core\common\actions\base\ModelAction;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * DeleteLink deletes social link for given parent model.
+ * RemoveData remove data key for given model supporting data trait.
  *
  * @since 1.0.0
  */
-class DeleteLink extends ModelAction {
+class RemoveData extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -60,33 +60,26 @@ class DeleteLink extends ModelAction {
 
 	// CMG parent classes --------------------
 
-	// DeleteLink ----------------------------
+	// RemoveConfig --------------------------
 
 	public function run() {
 
-		$parent	= $this->model;
+		$meta = new Meta();
 
-		if( isset( $parent ) ) {
+		if( $meta->load( Yii::$app->request->post(), 'Meta' ) && $meta->validate() ) {
 
-			$link = new SocialLink();
+			// Save config
+			$this->modelService->removeDataKeyObj( $this->model, $meta );
 
-			if( $link->load( Yii::$app->request->post(), 'SocialLink' ) && $link->validate() ) {
-
-				$this->modelService->deleteSocialLink( $parent, $link );
-
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
-			}
-
-			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $link );
-
-			// Trigger Ajax Failure
-			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
 		}
 
+		// Generate Errors
+		$errors = AjaxUtil::generateErrorMessage( $meta );
+
 		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 	}
 
 }

@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\social;
+namespace cmsgears\core\common\actions\gallery;
 
 // Yii Imports
 use Yii;
@@ -15,18 +15,16 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\forms\SocialLink;
-
 use cmsgears\core\common\actions\base\ModelAction;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * DeleteLink deletes social link for given parent model.
+ * The ReadItem action find gallery item for given item id and returh item data.
  *
  * @since 1.0.0
  */
-class DeleteLink extends ModelAction {
+class ReadItem extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -44,11 +42,22 @@ class DeleteLink extends ModelAction {
 
 	// Protected --------------
 
+	protected $galleryService;
+	protected $modelFileService;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->galleryService	= Yii::$app->factory->get( 'galleryService' );
+		$this->modelFileService = Yii::$app->factory->get( 'modelFileService' );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -60,29 +69,28 @@ class DeleteLink extends ModelAction {
 
 	// CMG parent classes --------------------
 
-	// DeleteLink ----------------------------
+	// Read ----------------------------------
 
-	public function run() {
+	public function run( $id, $cid, $fid ) {
 
-		$parent	= $this->model;
+		$gallery = $this->galleryService->getById( $cid );
 
-		if( isset( $parent ) ) {
+		if( isset( $gallery ) ) {
 
-			$link = new SocialLink();
+			$modelFile = $this->modelFileService->getFirstByParentModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $fid );
 
-			if( $link->load( Yii::$app->request->post(), 'SocialLink' ) && $link->validate() ) {
+			if( isset( $modelFile ) && $modelFile->isParentValid( $gallery->id, CoreGlobal::TYPE_GALLERY ) ) {
 
-				$this->modelService->deleteSocialLink( $parent, $link );
+				$file	= $modelFile->model;
+
+				$data	= $file->getAttributeArray( [ 'name', 'extension', 'title', 'altText', 'link', 'description' ] );
+
+				$data[ 'id' ]	= $modelFile->id;
+				$data[ 'fid' ]	= $file->id;
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 			}
-
-			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $link );
-
-			// Trigger Ajax Failure
-			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
 
 		// Trigger Ajax Failure

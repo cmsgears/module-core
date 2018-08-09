@@ -43,9 +43,9 @@ class Create extends ModelAction {
 
 	// Public -----------------
 
-	public $parent		= true;
+	public $parent = true;
 
-	public $scenario	= 'location';
+	public $scenario = 'location';
 
 	// Protected --------------
 
@@ -102,7 +102,7 @@ class Create extends ModelAction {
 				$modelAddress	= $this->modelAddressService->create( $address, [ 'parentId' => $this->model->id, 'parentType' => $this->parentType, 'type' => $type ] );
 				$address		= $modelAddress->model;
 
-				$data	= [ 'cid' => $modelAddress->id, 'title' => $address->title, 'value' => $address->toString() ];
+				$data = [ 'cid' => $modelAddress->id, 'title' => $address->title, 'value' => $address->toString() ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

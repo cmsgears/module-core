@@ -63,17 +63,25 @@ class DeleteItem extends Action {
 
 	// DeleteItem ----------------------------
 
-	public function run( $id, $iid ) {
+	/**
+	 * It deletes the gallery item using given $cid and $iid.
+	 *
+	 * @param type $id Parent Id
+	 * @param type $cid Gallery Id
+	 * @param type $iid Item Id
+	 * @return string
+	 */
+	public function run( $id, $cid, $fid ) {
 
 		$galleryService		= Yii::$app->factory->get( 'galleryService' );
 		$modelFileService	= Yii::$app->factory->get( 'modelFileService' );
-		$gallery			= $galleryService->getById( $id );
+		$gallery			= $galleryService->getById( $cid );
 
 		if( isset( $gallery ) ) {
 
 			if( $this->minItems > 0 ) {
 
-				$items	= $gallery->files;
+				$items = $gallery->files;
 
 				if( count( $items ) <= $this->minItems ) {
 
@@ -82,7 +90,7 @@ class DeleteItem extends Action {
 				}
 			}
 
-			$modelFile	= $modelFileService->getByModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $iid );
+			$modelFile = $modelFileService->getFirstByParentModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $iid );
 
 			if( isset( $modelFile ) ) {
 
@@ -96,4 +104,5 @@ class DeleteItem extends Action {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

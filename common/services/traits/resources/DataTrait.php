@@ -35,6 +35,14 @@ trait DataTrait {
 
 	// Read - Models ---
 
+	/**
+	 * Returns the Meta object using given key from data object.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param string $key
+	 * @param boolean $assoc
+	 * @return boolean|\cmsgears\core\common\models\forms\Meta
+	 */
 	public function getDataMeta( $model, $key, $assoc = false ) {
 
 		$object	= $model->generateDataObjectFromJson( $assoc );
@@ -51,6 +59,39 @@ trait DataTrait {
 		return false;
 	}
 
+	/**
+	 * Returns the Meta object using given key from data object using data key.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param string $key
+	 * @param boolean $assoc
+	 * @return boolean|\cmsgears\core\common\models\forms\Meta
+	 */
+	public function getDataKeyMeta( $model, $key, $assoc = false ) {
+
+		$object	= $model->generateDataObjectFromJson( $assoc );
+		$config	= 'data';
+		$meta	= new Meta();
+
+		if( isset( $object->$config ) && isset( $object->$config->$key ) ) {
+
+			$meta->key		= $key;
+			$meta->value	= $object->$config->$key;
+
+			return $meta;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns the Meta object using given key from data object using attributes key.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param string $key
+	 * @param boolean $assoc
+	 * @return boolean|\cmsgears\core\common\models\forms\Meta
+	 */
 	public function getDataAttributeMeta( $model, $key, $assoc = false ) {
 
 		$object	= $model->generateDataObjectFromJson( $assoc );
@@ -68,6 +109,14 @@ trait DataTrait {
 		return false;
 	}
 
+	/**
+	 * Returns the Meta object using given key from data object using config key.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param string $key
+	 * @param boolean $assoc
+	 * @return boolean|\cmsgears\core\common\models\forms\Meta
+	 */
 	public function getDataConfigMeta( $model, $key, $assoc = false ) {
 
 		$object	= $model->generateDataObjectFromJson( $assoc );
@@ -85,6 +134,14 @@ trait DataTrait {
 		return false;
 	}
 
+	/**
+	 * Returns the Meta object using given key from data object using settings key.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param string $key
+	 * @param boolean $assoc
+	 * @return boolean|\cmsgears\core\common\models\forms\Meta
+	 */
 	public function getDataSettingMeta( $model, $key, $assoc = false ) {
 
 		$object	= $model->generateDataObjectFromJson( $assoc );
@@ -112,6 +169,14 @@ trait DataTrait {
 
 	// Update -------------
 
+	/**
+	 * Update the data object using given key and value.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param string $key
+	 * @param mixed $value
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
 	public function updateDataMeta( $model, $key, $value ) {
 
 		$model->updateDataMeta( $key, $value );
@@ -121,6 +186,14 @@ trait DataTrait {
 		return $model;
 	}
 
+	/**
+	 * Update the data object using multiple key, value pairs from the params.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param array $params
+	 * @param array $config
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
 	public function updateDataByParams( $model, $params = [], $config = [] ) {
 
 		foreach( $params as $key => $value ) {
@@ -129,8 +202,17 @@ trait DataTrait {
 		}
 
 		$model->update();
+
+		return $model;
     }
 
+	/**
+	 * Update the data object using meta model.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param \cmsgears\core\common\models\forms\Meta $meta
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
 	public function updateDataMetaObj( $model, $meta ) {
 
 		$model->updateDataMeta( $meta->key, $meta->value );
@@ -140,6 +222,35 @@ trait DataTrait {
 		return $model;
 	}
 
+	/**
+	 * Update the data object using data key and given meta object.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param \cmsgears\core\common\models\forms\Meta $meta
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
+	public function updateDataKeyObj( $model, $meta ) {
+
+		$config = $model->getDataMeta( 'data' );
+		$key	= $meta->key;
+		$config	= !empty( $config ) ? $config : new \StdClass();
+
+		$config->$key = $meta->value;
+
+		$model->updateDataMeta( 'attributes', $config );
+
+		$model->refresh();
+
+		return $model;
+	}
+
+	/**
+	 * Update the data object using attributes key and given meta object.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param \cmsgears\core\common\models\forms\Meta $meta
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
 	public function updateDataAttributeObj( $model, $meta ) {
 
 		$config = $model->getDataMeta( 'attributes' );
@@ -155,6 +266,13 @@ trait DataTrait {
 		return $model;
 	}
 
+	/**
+	 * Update the data object using config key and given meta object.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param \cmsgears\core\common\models\forms\Meta $meta
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
 	public function updateDataConfigObj( $model, $meta ) {
 
 		$config = $model->getDataMeta( 'config' );
@@ -170,6 +288,13 @@ trait DataTrait {
 		return $model;
 	}
 
+	/**
+	 * Update the data object using settings key and given meta object.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param \cmsgears\core\common\models\forms\Meta $meta
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
 	public function updateDataSettingObj( $model, $meta ) {
 
 		$config = $model->getDataMeta( 'settings' );
@@ -187,6 +312,13 @@ trait DataTrait {
 
 	// Delete -------------
 
+	/**
+	 * Update the data object by removing the given key.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param string $key
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
 	public function removeDataMeta( $model, $key ) {
 
 		$model->removeDataMeta( $key );
@@ -196,6 +328,13 @@ trait DataTrait {
 		return $model;
 	}
 
+	/**
+	 * Update the data object by removing the given key using meta object.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param \cmsgears\core\common\models\forms\Meta $meta
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
 	public function removeDataMetaObj( $model, $meta ) {
 
 		$model->removeDataMeta( $meta->key );
@@ -205,6 +344,33 @@ trait DataTrait {
 		return $model;
 	}
 
+	/**
+	 * Update the data object by removing the given key from data.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param \cmsgears\core\common\models\forms\Meta $meta
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
+	public function removeDataKeyObj( $model, $meta ) {
+
+		$config = $model->getDataMeta( 'data' );
+
+		unset( $meta->key );
+
+		$model->updateDataMeta( 'data', $config );
+
+		$model->refresh();
+
+		return $model;
+	}
+
+	/**
+	 * Update the data object by removing the given key from attributes.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param \cmsgears\core\common\models\forms\Meta $meta
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
 	public function removeDataAttributeObj( $model, $meta ) {
 
 		$config = $model->getDataMeta( 'attributes' );
@@ -218,6 +384,13 @@ trait DataTrait {
 		return $model;
 	}
 
+	/**
+	 * Update the data object by removing the given key from config.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param \cmsgears\core\common\models\forms\Meta $meta
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
 	public function removeDataConfigObj( $model, $meta ) {
 
 		$config = $model->getDataMeta( 'config' );
@@ -231,6 +404,13 @@ trait DataTrait {
 		return $model;
 	}
 
+	/**
+	 * Update the data object by removing the given key from settings.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param \cmsgears\core\common\models\forms\Meta $meta
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
 	public function removeDataSettingObj( $model, $meta ) {
 
 		$config = $model->getDataMeta( 'settings' );

@@ -4,6 +4,9 @@ namespace cmsgears\core\common\actions\base;
 // Yii Imports
 use Yii;
 
+// CMG Improts
+use cmsgears\core\common\config\CoreGlobal;
+
 /**
  * ModelAction is the base action for model centric actions. It find the model in action using
  * id or slug parameter to perform mapper or resource specific actions.
@@ -66,7 +69,7 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 	 * Flag to identify whether model supports parentId and parentType columns. In all other cases
 	 * modelId column will be used to map mapper or resource.
 	 */
-	public $parent		= false;
+	public $parent = false;
 
 	/**
 	 * Parent type to be used by mapper or resource having parentId and parentType columns.
@@ -125,7 +128,8 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 		// Mapper or Resource Type
 		$modelType			= Yii::$app->request->get( 'model-type', null );
 		$modelType			= isset( $modelType ) ? $modelType : Yii::$app->request->post( 'model-type', null );
-		$this->modelType	= isset( $modelType ) ? $modelType : $this->modelType;
+		$modelType			= isset( $modelType ) ? $modelType : $this->modelType;
+		$this->modelType	= isset( $modelType ) ? $modelType : CoreGlobal::TYPE_DEFAULT;
 	}
 
 	// Instance methods --------------------------------------------

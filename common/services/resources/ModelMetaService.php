@@ -79,7 +79,7 @@ class ModelMetaService extends ModelResourceService implements IModelMetaService
 		return $modelClass::findByNameType( $parentId, $parentType, $name, $type );
 	}
 
-	public function initByNameType( $parentId, $parentType, $name, $type, $valueType = ModelMeta::VALUE_TYPE_TEXT ) {
+	public function initByNameType( $parentId, $parentType, $name, $type, $valueType = ModelMeta::VALUE_TYPE_TEXT, $label = null ) {
 
 		$modelClass = static::$modelClass;
 
@@ -92,8 +92,27 @@ class ModelMetaService extends ModelResourceService implements IModelMetaService
 			$meta->parentId		= $parentId;
 			$meta->parentType	= $parentType;
 			$meta->name			= $name;
+			$meta->label		= !empty( $label ) ? $label : $name;
 			$meta->type			= $type;
+			$meta->active		= true;
 			$meta->valueType	= $valueType;
+
+			switch( $valueType ) {
+
+				case ModelMeta::VALUE_TYPE_FLAG: {
+
+					$meta->value = 0;
+				}
+				default: {
+
+					$meta->value = null;
+				}
+			}
+
+			// Create & Refresh
+			$meta->save();
+
+			$meta->refresh();
 		}
 
 		return $meta;
@@ -209,13 +228,31 @@ class ModelMetaService extends ModelResourceService implements IModelMetaService
 				$meta[ 'valueType' ] = ModelMeta::VALUE_TYPE_TEXT;
 			}
 
-			$model = $this->initByNameType( $config[ 'parentId' ], $config[ 'parentType' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ] );
+			if( !isset( $meta[ 'label' ] ) ) {
 
-			$model->value	= $meta[ 'value' ];
-			$model->label	= $form->getAttributeLabel( $meta[ 'name' ] );
+				$meta[ 'label' ] = $form->getAttributeLabel( $meta[ 'name' ] );
+			}
+
+			$model = $this->initByNameType( $config[ 'parentId' ], $config[ 'parentType' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ], $meta[ 'label' ] );
+
+			$model->value = $meta[ 'value' ];
 
 			$this->update( $model );
 		}
+	}
+
+	public function toggle( $model ) {
+
+		if( $model->value ) {
+
+			$model->value = false;
+		}
+		else {
+
+			$model->value = true;
+		}
+
+		$model->update();
 	}
 
 	// Delete -------------

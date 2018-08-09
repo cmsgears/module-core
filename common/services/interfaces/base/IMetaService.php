@@ -34,7 +34,7 @@ interface IMetaService extends IResourceService {
 
 	public function getByNameType( $modelId, $type, $name );
 
-	public function initByNameType( $modelId, $name, $type, $valueType = Meta::VALUE_TYPE_TEXT );
+	public function initByNameType( $modelId, $name, $type, $valueType = Meta::VALUE_TYPE_TEXT, $label = null );
 
 	// Read - Lists ----
 
@@ -56,7 +56,7 @@ interface IMetaService extends IResourceService {
 
 	// Update -------------
 
-	public function toggle( $modelId, $type, $name, $label );
+	public function toggle( $model );
 
 	// Delete -------------
 

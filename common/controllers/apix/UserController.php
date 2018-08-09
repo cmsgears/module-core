@@ -36,12 +36,12 @@ class UserController extends Controller {
 
 	// Public -----------------
 
+	public $metaService;
+
 	// Protected --------------
 
 	protected $addressService;
 	protected $modelAddressService;
-
-	protected $modelMetaService;
 
 	// Private ----------------
 
@@ -56,7 +56,7 @@ class UserController extends Controller {
 		$this->modelService			= Yii::$app->factory->get( 'userService' );
 		$this->addressService		= Yii::$app->factory->get( 'addressService' );
 		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
-		$this->modelMetaService		= Yii::$app->factory->get( 'modelMetaService' );
+		$this->metaService			= Yii::$app->factory->get( 'modelMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -73,43 +73,56 @@ class UserController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					// Avatar
 					'avatar' => [ 'permission' => $this->crudPermission ],
 					'clear-avatar' => [ 'permission' => $this->crudPermission ],
+					// Address
 					'get-address' => [ 'permission' => $this->crudPermission ],
 					'add-address' => [ 'permission' => $this->crudPermission ],
 					'update-address' => [ 'permission' => $this->crudPermission ],
 					'delete-address' => [ 'permission' => $this->crudPermission ],
-					'profile' => [ 'permission' => $this->crudPermission ],
-					'account' => [ 'permission' => $this->crudPermission ],
-					'address' => [ 'permission' => $this->crudPermission ],
-					'settings' => [ 'permission' => $this->crudPermission ],
+					// Data Object
+					'set-data' => [ 'permission' => $this->crudPermission ],
+					'remove-data' => [ 'permission' => $this->crudPermission ],
 					'set-attribute' => [ 'permission' => $this->crudPermission ],
 					'remove-attribute' => [ 'permission' => $this->crudPermission ],
 					'set-config' => [ 'permission' => $this->crudPermission ],
 					'remove-config' => [ 'permission' => $this->crudPermission ],
 					'set-setting' => [ 'permission' => $this->crudPermission ],
-					'remove-setting' => [ 'permission' => $this->crudPermission ]
+					'remove-setting' => [ 'permission' => $this->crudPermission ],
+					// Metas
+					'settings' => [ 'permission' => $this->crudPermission ],
+					// Controller
+					'profile' => [ 'permission' => $this->crudPermission ],
+					'account' => [ 'permission' => $this->crudPermission ],
+					'address' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
+					// Avatar
 					'avatar' => [ 'post' ],
 					'clear-avatar' => [ 'post' ],
 					'get-address' => [ 'post' ],
 					'add-address' => [ 'post' ],
 					'update-address' => [ 'post' ],
 					'delete-address' => [ 'post' ],
-					'profile' => [ 'post' ],
-					'account' => [ 'post' ],
-					'address' => [ 'post' ],
-					'settings' => [ 'post' ],
+					// Data Object
+					'set-data' => [ 'post' ],
+					'remove-data' => [ 'post' ],
 					'set-attribute' => [ 'post' ],
 					'remove-attribute' => [ 'post' ],
 					'set-config' => [ 'post' ],
 					'remove-config' => [ 'post' ],
 					'set-setting' => [ 'post' ],
-					'remove-setting' => [ 'post' ]
+					'remove-setting' => [ 'post' ],
+					// Metas
+					'settings' => [ 'post' ],
+					// Controller
+					'profile' => [ 'post' ],
+					'account' => [ 'post' ],
+					'address' => [ 'post' ]
 				]
 			]
 		];
@@ -120,19 +133,24 @@ class UserController extends Controller {
 	public function actions() {
 
 		return [
+			// Avatar
 			'avatar' => [ 'class' => 'cmsgears\core\common\actions\content\Avatar' ],
 			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\ClearAvatar' ],
-			'get-address' => [ 'class' => 'cmsgears\core\common\actions\address\Read', 'parent' => true ],
-			'add-address' => [ 'class' => 'cmsgears\core\common\actions\address\Create', 'parent' => true ],
-			'update-address' => [ 'class' => 'cmsgears\core\common\actions\address\Update', 'parent' => true ],
-			'delete-address' => [ 'class' => 'cmsgears\core\common\actions\address\Delete', 'parent' => true ],
-			// Use current logged in user to update the config and settings
+			'get-address' => [ 'class' => 'cmsgears\core\common\actions\address\Read' ],
+			'add-address' => [ 'class' => 'cmsgears\core\common\actions\address\Create' ],
+			'update-address' => [ 'class' => 'cmsgears\core\common\actions\address\Update' ],
+			'delete-address' => [ 'class' => 'cmsgears\core\common\actions\address\Delete' ],
+			// Data Object - Use current logged in user to update the config and settings
+			'set-data' => [ 'class' => 'cmsgears\core\common\actions\data\SetData', 'model' => Yii::$app->user->identity ],
+			'remove-data' => [ 'class' => 'cmsgears\core\common\actions\data\RemoveData', 'model' => Yii::$app->user->identity ],
 			'set-attribute' => [ 'class' => 'cmsgears\core\common\actions\data\SetAttribute', 'model' => Yii::$app->user->identity ],
 			'remove-attribute' => [ 'class' => 'cmsgears\core\common\actions\data\RemoveAttribute', 'model' => Yii::$app->user->identity ],
 			'set-config' => [ 'class' => 'cmsgears\core\common\actions\data\SetConfig', 'model' => Yii::$app->user->identity ],
 			'remove-config' => [ 'class' => 'cmsgears\core\common\actions\data\RemoveConfig', 'model' => Yii::$app->user->identity ],
 			'set-setting' => [ 'class' => 'cmsgears\core\common\actions\data\SetSetting', 'model' => Yii::$app->user->identity ],
-			'remove-setting' => [ 'class' => 'cmsgears\core\common\actions\data\RemoveSetting', 'model' => Yii::$app->user->identity ]
+			'remove-setting' => [ 'class' => 'cmsgears\core\common\actions\data\RemoveSetting', 'model' => Yii::$app->user->identity ],
+			// Metas
+			'settings' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMultiple', 'model' => Yii::$app->user->identity, 'parent' => true ]
 		];
 	}
 
@@ -252,41 +270,6 @@ class UserController extends Controller {
 
 		// Model not found
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
-	}
-
-	public function actionSettings() {
-
-		$user		= Yii::$app->user->getIdentity();
-		$modelMetas	= Yii::$app->request->post( 'ModelMeta' );
-		$count		= count( $modelMetas );
-		$metas		= [];
-
-		for( $i = 0; $i < $count; $i++ ) {
-
-			$meta	= $modelMetas[ $i ];
-			$meta	= $this->modelMetaService->initByNameType( $user->id, CoreGlobal::TYPE_USER, $meta[ 'name' ], $meta[ 'type' ] );
-
-			$metas[] = $meta;
-		}
-
-		// Load models
-		if( ModelMeta::loadMultiple( $metas, Yii::$app->request->post(), 'ModelMeta' ) && ModelMeta::validateMultiple( $metas ) ) {
-
-			$this->modelService->updateModelMetas( $user, $metas );
-
-			$data = [];
-
-			foreach( $metas as $meta ) {
-
-				$data[]	= $meta->getFieldInfo();
-			}
-
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-		}
-
-		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
 	}
 
 }

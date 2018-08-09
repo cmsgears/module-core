@@ -40,9 +40,9 @@ class Update extends ModelAction {
 
 	// Public -----------------
 
-	public $parent		= true;
+	public $parent = true;
 
-	public $scenario	= 'location';
+	public $scenario = 'location';
 
 	// Protected --------------
 

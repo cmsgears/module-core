@@ -40,7 +40,7 @@ class Read extends ModelAction {
 
 	// Public -----------------
 
-	public $parent 	= true;
+	public $parent = true;
 
 	// Attributes having UTF-8 Encoding
 	public $returnAttributes = [

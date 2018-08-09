@@ -192,11 +192,11 @@ class ModelOptionService extends ModelMapperService implements IModelOptionServi
 		$allData	= $binder->all;
 		$activeData	= $binder->binded;
 
-		foreach ( $allData as $id ) {
+		foreach( $allData as $id ) {
 
 			$modelClass	= static::$modelClass;
 
-			$toSave = $modelClass::findByModelId( $parentId, $parentType, $id );
+			$toSave = $modelClass::findFirstByParentModelId( $parentId, $parentType, $id );
 
 			// Existing mapping
 			if( isset( $toSave ) ) {

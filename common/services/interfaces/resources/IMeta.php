@@ -38,6 +38,8 @@ interface IMeta {
 
 	// Update -------------
 
+	public function updateMetas( $model, $metas, $metaService );
+
 	// Delete -------------
 
 	// Bulk ---------------

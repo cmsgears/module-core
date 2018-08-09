@@ -57,6 +57,19 @@ trait MetaTrait {
 
 	// Update -------------
 
+	public function updateMetas( $model, $metas, $metaService ) {
+
+		foreach( $metas as $meta ) {
+
+			if( $meta->belongsTo( $model ) ) {
+
+				$metaService->update( $meta );
+			}
+		}
+
+		return true;
+	}
+
 	// Delete -------------
 
 	// Bulk ---------------

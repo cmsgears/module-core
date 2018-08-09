@@ -978,7 +978,8 @@ class FormDesigner extends \yii\base\Component {
 
 		$flag		= isset( $config[ 'flag' ] ) ? $config[ 'flag' ] : false;
 		$label		= isset( $config[ 'label' ] ) ? $config[ 'label' ] : true;
-		$disabled	= isset( $config[ 'disabled' ] ) && $config[ 'disabled' ] ? $config[ 'disabled' ] : true;
+		$disabled	= isset( $config[ 'disabled' ] ) && $config[ 'disabled' ] ? $config[ 'disabled' ] : false;
+		$disabled	= $disabled ? 'disabled' : null;
 
 		if( $flag ) {
 

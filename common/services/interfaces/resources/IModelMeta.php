@@ -36,7 +36,7 @@ interface IModelMeta {
 
 	// Update -------------
 
-	public function updateModelMetas( $model, $metas );
+	public function updateModelMetas( $model, $metas, $metaService );
 
 	// Delete -------------
 

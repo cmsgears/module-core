@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\meta;
 
 // Yii Imports
@@ -7,12 +15,16 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\actions\base\ModelAction;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Update update existing meta for given parent model.
+ * Update Action updates the meta value.
+ *
+ * @since 1.0.0
  */
-class Update extends \cmsgears\core\common\base\Action {
+class Update extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -30,8 +42,6 @@ class Update extends \cmsgears\core\common\base\Action {
 
 	// Protected --------------
 
-	protected $modelService;
-
 	protected $metaService;
 
 	// Private ----------------
@@ -44,9 +54,7 @@ class Update extends \cmsgears\core\common\base\Action {
 
 		parent::init();
 
-		$this->modelService		= $this->controller->modelService;
-
-		$this->metaService		= $this->controller->metaService;
+		$this->metaService	= $this->controller->metaService;
 	}
 
 	// Instance methods --------------------------------------------
@@ -64,24 +72,13 @@ class Update extends \cmsgears\core\common\base\Action {
 	/**
 	 * Update Meta for given Meta id, parent slug and parent type.
 	 */
-	public function run( $id, $slug, $type = null ) {
+	public function run( $cid ) {
 
-		// Find Meta parent
-		$parent	= null;
+		$parent	= $this->model;
 
-		if( isset( $type ) ) {
-
-			$parent	= $this->modelService->getBySlugType( $slug, $type );
-		}
-		else {
-
-			$parent	= $this->modelService->getBySlug( $slug );
-		}
-
-		// Delete Meta
 		if( isset( $parent ) ) {
 
-			$meta		= $this->metaService->getById( $id );
+			$meta		= $this->metaService->getById( $cid );
 			$belongsTo	= $meta->hasAttribute( 'modelId' ) ? $meta->belongsTo( $parent ) : $meta->belongsTo( $parent, $this->modelService->getParentType() );
 
 			if( isset( $meta ) && $belongsTo ) {
@@ -92,7 +89,7 @@ class Update extends \cmsgears\core\common\base\Action {
 
 					$meta->refresh();
 
-					$data	= [ 'id' => $meta->id, 'name' => $meta->name, 'value' => $meta->value ];
+					$data = [ 'id' => $meta->id, 'name' => $meta->name, 'value' => $meta->value ];
 
 					// Trigger Ajax Success
 					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
@@ -109,4 +106,5 @@ class Update extends \cmsgears\core\common\base\Action {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

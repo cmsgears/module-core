@@ -184,7 +184,7 @@ class ModelCategoryService extends ModelMapperService implements IModelCategoryS
 			$existingMapping = $modelClass::findByModelId( $parentId, $parentType, $id );
 
 			// Existing mapping
-			if( isset( $existingMapping ) ) {
+			if( !empty( $existingMapping ) ) {
 
 				if( in_array( $id, $binded ) ) {
 

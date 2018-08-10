@@ -74,16 +74,19 @@ abstract class FollowerService extends MapperService implements IFollowerService
 
 	// Read - Lists ----
 
-    public function getFollowersIdList( $parentId ) {
+    public function getFollowersIdList( $parentId, $config = [] ) {
 
-        return self::findList( [  'column' => 'modelId', 'conditions' => [ 'type' => IFollower::TYPE_FOLLOW, 'active' => true, 'parentId' => $parentId ] ] );
+	$type = $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
+
+        return self::findList( [  'column' => 'modelId', 'conditions' => [ 'type' => $type, 'active' => true, 'parentId' => $parentId ] ] );
     }
 
-    public function getFollowingIdList() {
+    public function getFollowingIdList( $config = [] ) {
 
 		$user = Yii::$app->user->identity;
+		$type = $config[ 'type' ] ?? IFollower::TYPE_FOLLOW;
 
-        return self::findList( [  'column' => 'parentId', 'conditions' => [ 'type' => IFollower::TYPE_FOLLOW, 'active' => true, 'modelId' => $user->id ] ] );
+        return self::findList( [  'column' => 'parentId', 'conditions' => [ 'type' => $type, 'active' => true, 'modelId' => $user->id ] ] );
     }
 
 	// Read - Maps -----

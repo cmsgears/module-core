@@ -31,9 +31,9 @@ interface IFollowerService extends IMapperService {
 
 	// Read - Lists ----
 
-    public function getFollowersIdList( $parentId );
+    public function getFollowersIdList( $parentId, $config );
 
-    public function getFollowingIdList();
+    public function getFollowingIdList( $config );
 
 	// Read - Maps -----
 

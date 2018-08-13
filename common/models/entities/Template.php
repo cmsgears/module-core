@@ -56,6 +56,14 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $description
  * @property boolean $active
  * @property string $classPath
+ * @property string $dataPath
+ * @property string $dataForm
+ * @property string $attributesPath
+ * @property string $attributesForm
+ * @property string $configPath
+ * @property string $configForm
+ * @property string $settingsPath
+ * @property string $settingsForm
  * @property string $renderer
  * @property boolean $fileRender
  * @property string $layout
@@ -161,7 +169,8 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 			[ [ 'icon', 'view' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ [ 'name', 'viewPath' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
-			[ [ 'title', 'classPath' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'classPath', 'dataPath', 'dataForm', 'attributesPath', 'attributesForm', 'configPath' , 'configForm', 'settingsPath', 'settingsForm' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'title', 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ [ 'active', 'fileRender', 'layoutGroup', 'gridCacheValid' ], 'boolean' ],

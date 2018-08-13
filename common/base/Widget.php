@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\base;
 
 // Yii Imports
@@ -11,6 +19,11 @@ use cmsgears\core\common\config\CacheProperties;
 
 use cmsgears\core\common\utilities\CodeGenUtil;
 
+/**
+ * The base widget class of widgets based on CMSGears.
+ *
+ * @since 1.0.0
+ */
 abstract class Widget extends BaseWidget {
 
 	// Variables ---------------------------------------------------
@@ -33,6 +46,13 @@ abstract class Widget extends BaseWidget {
 	 * @var type string
 	 */
 	public $title;
+
+	/**
+	 * The widget object from the object table.
+	 *
+	 * @var \cmsgears\core\common\models\entities\ObjectData
+	 */
+	public $widgetObj;
 
 	/**
 	 * Flag to check whether the widget html need wrapper.

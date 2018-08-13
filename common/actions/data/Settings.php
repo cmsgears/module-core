@@ -1,18 +1,25 @@
 <?php
-namespace cmsgears\core\admin\actions;
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
+namespace cmsgears\core\common\actions\data;
 
 // Yii Imports
 use Yii;
+use yii\web\NotFoundHttpException;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\base\Action;
 
 /**
- * The TemplateData action save model settings using Template Data Form to the data column.
+ * The Settings action save model settings using Settings Data Form to the data column.
  */
-class TemplateData extends Action {
+class Settings extends Action {
 
 	// Variables ---------------------------------------------------
 
@@ -46,7 +53,7 @@ class TemplateData extends Action {
 
 	// CMG parent classes --------------------
 
-	// TemplateData --------------------------
+	// Settings ------------------------------
 
 	public function run( $id ) {
 
@@ -56,26 +63,30 @@ class TemplateData extends Action {
 		$model = $modelService->getById( $id );
 
 		// Update/Render if exist
-		if( isset( $model ) ) {
+		if( isset( $model ) && isset( $model->template ) ) {
 
 			$template		= $model->template;
-			$settingsClass	= $template->dataForm;
-			$settings		= new $settingsClass( $settingsClass::$dataKey );
+			$settingsClass	= $template->settingsPath;
+			$settings		= new $settingsClass( $model->getDataMeta( 'settings' ) );
+
+			$this->controller->setViewPath( $template->settingsForm );
 
 			if( $settings->load( Yii::$app->request->post(), $settings->getClassName() ) && $settings->validate() ) {
 
-				$this->controller->model = $modelService->updateDataMeta( $model, $settingsClass::$dataKey, $settings->getDataObject() );
+				$modelService->updateDataMeta( $model, 'settings', $settings );
 
-				return $this->controller->redirect( $this->returnUrl );
+				return $this->controller->redirect( $this->controller->returnUrl );
 			}
 
-			return $this->controller->render( $settingsClass::$dataForm, [
+			return $this->controller->render( 'settings', [
 				'model' => $model,
 				'settings' => $settings
 			]);
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		//throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( 'Either model or template not found.' );
 	}
+
 }

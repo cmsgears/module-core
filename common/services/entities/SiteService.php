@@ -12,6 +12,7 @@ namespace cmsgears\core\common\services\entities;
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -149,6 +150,18 @@ class SiteService extends EntityService implements ISiteService {
 					'default' => SORT_DESC,
 					'label' => 'Active'
 				],
+				'pinned' => [
+					'asc' => [ "$modelTable.pinned" => SORT_ASC ],
+					'desc' => [ "$modelTable.pinned" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Pinned'
+				],
+				'featured' => [
+					'asc' => [ "$modelTable.featured" => SORT_ASC ],
+					'desc' => [ "$modelTable.featured" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Featured'
+				],
 				'cdate' => [
 					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
 					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
@@ -195,6 +208,18 @@ class SiteService extends EntityService implements ISiteService {
 
 					break;
 				}
+				case 'pinned': {
+
+					$config[ 'conditions' ][ "$modelTable.pinned" ] = true;
+
+					break;
+				}
+				case 'featured': {
+
+					$config[ 'conditions' ][ "$modelTable.featured" ] = true;
+
+					break;
+				}
 			}
 		}
 
@@ -220,7 +245,9 @@ class SiteService extends EntityService implements ISiteService {
 			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
 			'order' => "$modelTable.order",
-			'active' => "$modelTable.active"
+			'active' => "$modelTable.active",
+			'pinned' => "$modelTable.pinned",
+			'featured' => "$modelTable.featured"
 		];
 
 		// Result -----------
@@ -261,16 +288,20 @@ class SiteService extends EntityService implements ISiteService {
 
 	public function update( $model, $config = [] ) {
 
-		$admin		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'avatarId', 'bannerId', 'themeId', 'name', 'slug', 'title', 'description', 'order' ];
-		$avatar		= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
-		$banner		= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$admin	= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$avatar	= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner	= isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'avatarId', 'bannerId', 'themeId',
+			'name', 'slug', 'title', 'description'
+		];
 
 		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner ] );
 
 		if( $admin ) {
 
-			$attributes[] = 'active';
+			$attributes = ArrayHelper::merge( $attributes, [ 'order', 'active', 'pinned', 'featured' ] );
 		}
 
 		return parent::update( $model, [

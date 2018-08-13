@@ -20,6 +20,7 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\interfaces\base\IAuthor;
+use cmsgears\core\common\models\interfaces\base\IFeatured;
 use cmsgears\core\common\models\interfaces\base\IName;
 use cmsgears\core\common\models\interfaces\base\ISlug;
 use cmsgears\core\common\models\interfaces\resources\IContent;
@@ -32,6 +33,7 @@ use cmsgears\core\common\models\base\Entity;
 use cmsgears\core\common\models\resources\SiteMeta;
 
 use cmsgears\core\common\models\traits\base\AuthorTrait;
+use cmsgears\core\common\models\traits\base\FeaturedTrait;
 use cmsgears\core\common\models\traits\base\NameTrait;
 use cmsgears\core\common\models\traits\base\SlugTrait;
 use cmsgears\core\common\models\traits\resources\ContentTrait;
@@ -58,6 +60,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $description
  * @property integer $order
  * @property boolean $active
+ * @property boolean $pinned
+ * @property boolean $featured
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $data
@@ -67,7 +71,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Site extends Entity implements IAuthor, IContent, IData, IGridCache, IName, ISlug, IVisual {
+class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridCache, IName, ISlug, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -94,6 +98,7 @@ class Site extends Entity implements IAuthor, IContent, IData, IGridCache, IName
 	use AuthorTrait;
 	use ContentTrait;
 	use DataTrait;
+	use FeaturedTrait;
 	use GridCacheTrait;
 	use NameTrait;
 	use SlugTrait;
@@ -154,7 +159,7 @@ class Site extends Entity implements IAuthor, IContent, IData, IGridCache, IName
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'active', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'active', 'pinned', 'featured', 'gridCacheValid' ], 'boolean' ],
 			[ 'themeId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'avatarId', 'bannerId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ 'gridCachedAt', 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
@@ -186,6 +191,8 @@ class Site extends Entity implements IAuthor, IContent, IData, IGridCache, IName
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
+			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
 		];

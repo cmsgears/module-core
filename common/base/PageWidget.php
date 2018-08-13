@@ -34,7 +34,7 @@ abstract class PageWidget extends Widget {
 
 	public $wrap	= true;
 
-	public $options	= [];
+	public $options	= [ 'class' => 'widget widget-page' ];
 
 	/**
 	 * Html options to be used for all models wrapper.
@@ -82,7 +82,9 @@ abstract class PageWidget extends Widget {
 	public $pagination = true;
 
 	/*
-	 * Paging can be done using standard Yii Widget i.e. LinkPager. If paging is false, scroll/action based paging can be used to show remaining pages instead of clickable page links.
+	 * Paging can be done using standard Yii Widget i.e. LinkPager. If paging is false,
+	 * scroll/action based paging can be used to show remaining pages instead of clickable
+	 * page links.
 	 */
 	public $paging		= true;
 
@@ -92,22 +94,28 @@ abstract class PageWidget extends Widget {
 
 	public $route = null;
 
-	public $excludeParams = [];
-
-	/**
-	 * Ajaxify the paging links in case $paging is set to true. In such cases, URL params will be updated using History API if supported by browser and the page will be loaded via ajax without refreshing full page.
-	 */
-	public $ajaxifyLinks = false;
-
-	/*
-	 * Ajax url used to fetch pages. It must be a relative path for appropriate apix controller.
-	 */
-	public $ajaxUrl = null;
-
 	/**
 	 * Default page limit.
 	 */
 	public $limit = 5;
+
+	/**
+	 * Exclude params from pagination.
+	 */
+	public $excludeParams = [];
+
+	/**
+	 * Ajax Pagination - Ajaxify the paging links in case $paging is set to true. In such cases,
+	 * URL params will be updated using History API if supported by browser and the page will be
+	 * loaded via ajax without refreshing full page.
+	 */
+	public $ajaxPagination		= false;
+
+	// Ajax Pagination Handler
+	public $ajaxPageApp			= 'pagination';
+	public $ajaxPageController	= 'page';
+	public $ajaxPageAction		= 'getPage';
+	public $ajaxUrl				= null; // Ajax url used to fetch pages.
 
 	/*
 	 * Useful in case limited text is displayed for a model irrespective of total length. It will be useful in maintaining same height for all the models.

@@ -49,6 +49,38 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					</div>
 					<div class="row">
 						<div class="col col2">
+							<?= $form->field( $model, 'dataPath' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'dataForm' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'attributesPath' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'attributesForm' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'configPath' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'configForm' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'settingsPath' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'settingsForm' ) ?>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col col2">
 							<?= $form->field( $model, 'classPath' ) ?>
 						</div>
 						<div class="col col2">

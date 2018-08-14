@@ -328,16 +328,18 @@ class Category extends NestedSetModel implements IAuthor, IFeatured, IMultiSite,
 	public static function findFeaturedByType( $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : [ 'name' => SORT_ASC  ];
+
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'type=:type AND siteId=:siteId AND featured=1', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( [ 'order' => SORT_ASC ] )->all();
+			return static::find()->where( 'type=:type AND siteId=:siteId AND featured=1', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( [ $order ] )->all();
 		}
 		else {
 
-			return static::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( [ 'order' => SORT_ASC ] )->all();
+			return static::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( [ $order ] )->all();
 		}
 	}
 
@@ -351,7 +353,7 @@ class Category extends NestedSetModel implements IAuthor, IFeatured, IMultiSite,
 	public static function findL0ByType( $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
-		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : [ 'name asc' ];
+		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : [ 'name' => SORT_ASC  ];
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 

@@ -336,11 +336,11 @@ class Category extends NestedSetModel implements IAuthor, IFeatured, IMultiSite,
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'type=:type AND siteId=:siteId AND featured=1', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( [ $order ] )->limit($limit)->all();
+			return static::find()->where( 'type=:type AND siteId=:siteId AND featured=1', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( $order )->limit($limit)->all();
 		}
 		else {
 
-			return static::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( [ $order ] )->limit($limit)->all();
+			return static::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( $order )->limit($limit)->all();
 		}
 	}
 

@@ -268,21 +268,21 @@ class CategoryService extends ResourceService implements ICategoryService {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::findByParentId( $id, config );
+		return $modelClass::findByParentId( $id, $config );
 	}
 
 	public function getFeaturedByType( $type, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::findFeaturedByType( $type, config );
+		return $modelClass::findFeaturedByType( $type, $config );
 	}
 
 	public function getL0ByType( $type, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::findL0ByType( $type, config );
+		return $modelClass::findL0ByType( $type, $config );
 	}
 
 	// Read - Lists ----

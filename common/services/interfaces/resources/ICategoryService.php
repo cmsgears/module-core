@@ -29,11 +29,11 @@ interface ICategoryService extends IResourceService, IData, INameType, INestedSe
 
 	// Read - Models ---
 
-	public function getByParentId( $id );
+	public function getByParentId( $id, $config = [] );
 
-	public function getFeaturedByType( $type );
+	public function getFeaturedByType( $type, $config = [] );
 
-	public function getL0ByType( $type );
+	public function getL0ByType( $type, $config = [] );
 
 	// Read - Lists ----
 

@@ -315,7 +315,8 @@ class Category extends NestedSetModel implements IAuthor, IFeatured, IMultiSite,
 	 */
 	public static function findByParentId( $parentId, $config = [] ) {
 
-		return self::find()->where( 'parentId=:id', [ ':id' => $parentId ] )->all();
+		$limit 		= $config['limit'] ?? null;
+		return self::find()->where( 'parentId=:id', [ ':id' => $parentId ] )->limit($limit)->all();
 	}
 
 	/**
@@ -329,17 +330,17 @@ class Category extends NestedSetModel implements IAuthor, IFeatured, IMultiSite,
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : [ 'name' => SORT_ASC  ];
-
+		$limit 		= $config['limit'] ?? null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'type=:type AND siteId=:siteId AND featured=1', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( [ $order ] )->all();
+			return static::find()->where( 'type=:type AND siteId=:siteId AND featured=1', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( [ $order ] )->limit($limit)->all();
 		}
 		else {
 
-			return static::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( [ $order ] )->all();
+			return static::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( [ $order ] )->limit($limit)->all();
 		}
 	}
 
@@ -354,16 +355,17 @@ class Category extends NestedSetModel implements IAuthor, IFeatured, IMultiSite,
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : [ 'name' => SORT_ASC  ];
+		$limit 		= $config['limit'] ?? null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'type=:type AND siteId=:siteId AND parentId IS null', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( $order )->all();
+			return static::find()->where( 'type=:type AND siteId=:siteId AND parentId IS null', [ ':type' => $type, ':siteId' => $siteId ] )->orderBy( $order )->limit($limit)->all();
 		}
 		else {
 
-			return static::find()->where( 'type=:type AND parentId IS null', [ ':type' => $type ] )->orderBy( $order )->all();
+			return static::find()->where( 'type=:type AND parentId IS null', [ ':type' => $type ] )->orderBy( $order )->limit($limit)->all();
 		}
 	}
 

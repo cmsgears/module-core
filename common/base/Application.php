@@ -24,7 +24,6 @@ use cmsgears\core\common\services\entities\SiteService;
  *
  * It alter the request and read child site name in case application supports multi-site either at sub-domain or sub-directory level.
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
 class Application extends BaseApplication {
@@ -121,7 +120,7 @@ class Application extends BaseApplication {
 					// Accessed via www or localhost
 					if( strcmp( $siteName, 'www' ) == 0 || strcmp( $siteName, 'localhost' ) == 0 ) {
 
-						$siteName = 'main';
+						$siteName = Yii::$app->core->defaultSiteSlug;
 					}
 				}
 
@@ -131,6 +130,23 @@ class Application extends BaseApplication {
 				if( isset( $site ) ) {
 
 					$coreProperties	= CoreProperties::getInstance();
+
+					$theme = $site->theme;
+
+					// Site Theme
+					if( Yii::$app->id == 'app-site' ) {
+
+						// Theme Found
+						if( isset( $theme ) ) {
+
+							Yii::$app->assetManager->bundles = require( Yii::getAlias( '@themes' ) . "/$theme->slug/includes/assets/" . ( YII_ENV_PROD ? 'prod.php' : 'dev.php' ) );
+						}
+					}
+					// Admin Theme
+					else if( Yii::$app->id == 'app-admin' ) {
+
+						Yii::$app->assetManager->bundles = require( Yii::getAlias( '@themes' ) . "/admin/includes/assets/" . ( YII_ENV_PROD ? 'prod.php' : 'dev.php' ) );
+					}
 				}
 			}
 		}

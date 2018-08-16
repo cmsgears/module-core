@@ -340,7 +340,7 @@ class Category extends NestedSetModel implements IAuthor, IFeatured, IMultiSite,
 		}
 		else {
 
-			return static::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( $order )->limit($limit)->all();
+			return static::find()->where( 'type=:type AND featured=1', [ ':type' => $type ] )->orderBy( $order )->limit( $limit )->all();
 		}
 	}
 
@@ -365,7 +365,7 @@ class Category extends NestedSetModel implements IAuthor, IFeatured, IMultiSite,
 		}
 		else {
 
-			return static::find()->where( 'type=:type AND parentId IS null', [ ':type' => $type ] )->orderBy( $order )->limit($limit)->all();
+			return static::find()->where( 'type=:type AND parentId IS null', [ ':type' => $type ] )->orderBy( $order )->limit( $limit )->all();
 		}
 	}
 

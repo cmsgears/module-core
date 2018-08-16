@@ -70,7 +70,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 		if ( !Yii::$app->user->isGuest ) {
 
-			$this->layout	= AdminGlobalCore::LAYOUT_PRIVATE;
+			$this->layout = AdminGlobalCore::LAYOUT_PRIVATE;
 		}
 
 		return [

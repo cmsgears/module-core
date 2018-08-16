@@ -50,6 +50,13 @@ class Core extends \cmsgears\core\common\base\Component {
 	public $mainSiteSlug		= 'main';
 
 	/**
+	 * Used to debug multi-site.
+	 *
+	 * @var string
+	 */
+	public $defaultSiteSlug		= 'main';
+
+	/**
 	 * @var identify the currently active site based on the url request.
 	 */
 	public $siteId				= 1;
@@ -273,6 +280,11 @@ class Core extends \cmsgears\core\common\base\Component {
 	public function getMainSiteSlug() {
 
 		return $this->mainSiteSlug;
+	}
+
+	public function getDefaultSiteSlug() {
+
+		return $this->defaultSiteSlug;
 	}
 
 	/**

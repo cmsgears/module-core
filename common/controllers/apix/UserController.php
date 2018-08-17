@@ -17,7 +17,7 @@ use yii\filters\VerbFilter;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\forms\ResetPassword;
-use cmsgears\core\common\models\resources\ModelMeta;
+use cmsgears\core\common\models\resources\File;
 
 use cmsgears\core\common\controllers\base\Controller;
 
@@ -173,8 +173,11 @@ class UserController extends Controller {
 
 			if( $user->load( Yii::$app->request->post(), $user->getClassName() ) && $user->validate() ) {
 
+				// Avatar
+				$avatar = File::loadFile( $user->avatar, 'Avatar' );
+
 				// Update User
-				$this->modelService->update( $user );
+				$this->modelService->update( $user, [ 'avatar' => $avatar ] );
 
 				// Prepare response data
 				$data = [

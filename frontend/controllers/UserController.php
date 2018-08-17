@@ -40,8 +40,10 @@ class UserController extends Controller {
 	// Protected --------------
 
 	protected $optionService;
+
 	protected $countryService;
 	protected $provinceService;
+	protected $regionService;
 	protected $modelAddressService;
 
 	// Private ----------------
@@ -61,9 +63,11 @@ class UserController extends Controller {
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'userService' );
 
-		$this->optionService		= Yii::$app->factory->get( 'optionService' );
+		$this->optionService = Yii::$app->factory->get( 'optionService' );
+
 		$this->countryService		= Yii::$app->factory->get( 'countryService' );
 		$this->provinceService		= Yii::$app->factory->get( 'provinceService' );
+		$this->regionService		= Yii::$app->factory->get( 'regionService' );
 		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
 	}
 
@@ -255,4 +259,5 @@ class UserController extends Controller {
 			'reminder' => $reminder
 		]);
 	}
+
 }

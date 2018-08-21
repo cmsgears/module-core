@@ -14,6 +14,8 @@ use Yii;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\base\Action;
 
 /**
@@ -60,12 +62,12 @@ class Settings extends Action {
 		$modelService = $this->controller->modelService;
 
 		// Find Model
-		$model = $modelService->getById( $id );
+		$model		= $modelService->getById( $id );
+		$template	= isset( $model->template ) ? $model->template : Yii::$app->factory->get( 'templateService' )->getGlobalBySlugType( CoreGlobal::TEMPLATE_DEFAULT, $modelService->getParentType() );
 
 		// Update/Render if exist
-		if( isset( $model ) && isset( $model->template ) ) {
+		if( isset( $model ) && isset( $template ) ) {
 
-			$template		= $model->template;
 			$settingsClass	= $template->settingsPath;
 			$settings		= new $settingsClass( $model->getDataMeta( 'settings' ) );
 

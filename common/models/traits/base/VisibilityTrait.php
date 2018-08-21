@@ -9,6 +9,9 @@
 
 namespace cmsgears\core\common\models\traits\base;
 
+// Yii Imports
+use Yii;
+
 // CMG Imports
 use cmsgears\core\common\models\interfaces\base\IVisibility;
 

@@ -6,14 +6,16 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-$name		= Html::encode( $user->getName() );
-$email		= Html::encode( $user->email );
+$siteProperties = Yii::$app->controller->getSiteProperties();
+
+$name	= Html::encode( $user->getName() );
+$email	= Html::encode( $user->email );
 
 $siteName	= Html::encode( $coreProperties->getSiteName() );
-$logoUrl	= Url::to( "@web/images/logo-mail.png", true );
+$logoUrl	= Url::to( "@web/images/" . $siteProperties->getMailAvatar(), true );
 $siteUrl	= Html::encode( $coreProperties->getSiteUrl() );
 $homeUrl	= $siteUrl;
-$siteBkg	= "$siteUrl/images/banner-mail.jpg";
+$siteBkg	= "$siteUrl/images/" . $siteProperties->getMailBanner();
 
 if( $user->isPermitted( CoreGlobal::PERM_ADMIN ) ) {
 
@@ -26,12 +28,12 @@ $loginLink	= "$siteUrl/login";
 <table cellspacing="0" cellpadding="0" border="0" margin="0" padding="0" width="80%" align="center" class="ctmax">
 	<tr><td height="40"></td></tr>
 	<tr>
-		<td><font face="'Roboto', Arial, sans-serif">Dear <?= $name ?>,</font></td>
+		<td><font face="Roboto, Arial, sans-serif">Dear <?= $name ?>,</font></td>
 	</tr>
 	<tr><td height="20"></td></tr>
 	<tr>
 		<td>
-			<font face="'Roboto', Arial, sans-serif">Thanks for confirming your account with us. Please <a href="<?= $loginLink ?>">Click Here</a> to login.</font>
+			<font face="Roboto, Arial, sans-serif">Thanks for confirming your account with us. Please <a href="<?= $loginLink ?>">Click Here</a> to login.</font>
 		</td>
 	</tr>
 	<tr><td height="40"></td></tr>

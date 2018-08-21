@@ -75,4 +75,15 @@ abstract class Controller extends BaseController {
 		return $this->adminProperties;
 	}
 
+	// Compatibility Call
+	public function getSiteProperties() {
+
+		if( !isset( $this->adminProperties ) ) {
+
+			$this->adminProperties = AdminProperties::getInstance();
+		}
+
+		return $this->adminProperties;
+	}
+
 }

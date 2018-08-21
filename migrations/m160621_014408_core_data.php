@@ -526,7 +526,10 @@ class m160621_014408_core_data extends Migration {
 			[ $config->id, 'cmg_powered', 'CMG Powered', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Show Powered by CMSGears on login screen."}' ],
 			[ $config->id, 'default_avatar', 'Default Avatar', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Default avatar for site elements."}' ],
 			[ $config->id, 'user_avatar', 'User Avatar', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Default avatar for user."}' ],
+			[ $config->id, 'mail_avatar', 'Mail Avatar', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Default avatar for mail."}' ],
 			[ $config->id, 'default_banner', 'Default Banner', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Default banner for site elements."}' ],
+			[ $config->id, 'page_banner', 'Page Banner', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Page banner for site elements."}' ],
+			[ $config->id, 'mail_banner', 'Mail Banner', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Mail banner for site mails."}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -555,8 +558,10 @@ class m160621_014408_core_data extends Migration {
 		$fields	= [
 			[ $config->id, 'default_avatar', 'Default Avatar', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Site avatar for site elements."}' ],
 			[ $config->id, 'user_avatar', 'User Avatar', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"User avatar for user elements."}' ],
+			[ $config->id, 'mail_avatar', 'Mail Avatar', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Default avatar for mail."}' ],
 			[ $config->id, 'default_banner', 'Default Banner', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Site banner for site elements."}' ],
 			[ $config->id, 'page_banner', 'Page Banner', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Page banner for site elements."}' ],
+			[ $config->id, 'mail_banner', 'Mail Banner', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Mail banner for site mails."}' ],
 			[ $config->id, 'fonts', 'Fonts', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Fonts available for content editors."}' ]
 		];
 
@@ -627,11 +632,16 @@ class m160621_014408_core_data extends Migration {
 			[ $this->site->id, 'cmg_powered','CMG Powered','backend', 1, 'flag','1',NULL ],
 			[ $this->site->id, 'default_avatar', 'Default Avatar','backend', 1, 'text', 'avatar-site.png',NULL ],
 			[ $this->site->id, 'user_avatar','User Avatar','backend', 1, 'text', 'avatar-user.png',NULL ],
+			[ $this->site->id, 'mail_avatar','Mail Avatar','backend', 1, 'text', 'avatar-mail.png',NULL ],
 			[ $this->site->id, 'default_banner','Default Banner','backend', 1, 'text', 'banner-site.jpg',NULL ],
+			[ $this->site->id, 'page_banner','Page Banner','backend', 1, 'text', 'banner-page.jpg',NULL ],
+			[ $this->site->id, 'mail_banner','Mail Banner','backend', 1, 'text', 'banner-mail.jpg',NULL ],
 			[ $this->site->id, 'default_avatar', 'Default Avatar','frontend', 1, 'text', 'avatar-site.png',NULL ],
 			[ $this->site->id, 'user_avatar','User Avatar','frontend', 1, 'text', 'avatar-user.png',NULL ],
+			[ $this->site->id, 'mail_avatar','User Avatar','frontend', 1, 'text', 'avatar-mail.png',NULL ],
 			[ $this->site->id, 'default_banner','Default Banner','frontend', 1, 'text', 'banner-site.jpg',NULL ],
 			[ $this->site->id, 'page_banner','Page Banner','frontend', 1, 'text', 'banner-page.jpg',NULL ],
+			[ $this->site->id, 'mail_banner','Page Banner','frontend', 1, 'text', 'banner-mail.jpg',NULL ],
 			[ $this->site->id, 'fonts','Fonts','frontend', 1, 'text', 'Arial,Arial Black,Courier New,Sans Serif',NULL ]
 		];
 

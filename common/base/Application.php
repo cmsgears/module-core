@@ -139,13 +139,13 @@ class Application extends BaseApplication {
 						// Theme Found
 						if( isset( $theme ) ) {
 
-							Yii::$app->assetManager->bundles = require( Yii::getAlias( '@themes' ) . "/$theme->slug/includes/assets/" . ( YII_ENV_PROD ? 'prod.php' : 'dev.php' ) );
+							Yii::$app->assetManager->bundles = require( Yii::getAlias( '@themes' ) . "/assets/$theme->slug/" . ( YII_ENV_PROD ? 'prod.php' : 'dev.php' ) );
 						}
 					}
 					// Admin Theme
 					else if( Yii::$app->id == 'app-admin' ) {
 
-						Yii::$app->assetManager->bundles = require( Yii::getAlias( '@themes' ) . "/admin/includes/assets/" . ( YII_ENV_PROD ? 'prod.php' : 'dev.php' ) );
+						Yii::$app->assetManager->bundles = require( Yii::getAlias( '@themes' ) . "/assets/admin/" . ( YII_ENV_PROD ? 'prod.php' : 'dev.php' ) );
 					}
 				}
 			}

@@ -19,6 +19,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\forms\Login;
 use cmsgears\core\common\models\forms\ForgotPassword;
 use cmsgears\core\common\models\forms\ResetPassword;
+use cmsgears\core\common\models\forms\OtpResetPassword;
 
 use cmsgears\core\common\controllers\base\Controller;
 
@@ -72,6 +73,7 @@ class SiteController extends Controller {
 					'activate-account' => [ 'get', 'post' ],
 					'forgot-password' => [ 'get', 'post' ],
 					'reset-password' => [ 'get', 'post' ],
+					'otp-reset-password' => [ 'get', 'post' ],
 					'login' => [ 'get', 'post' ],
 					'logout' => [ 'get' ]
 				]
@@ -232,6 +234,54 @@ class SiteController extends Controller {
 		}
 
 		return $this->render( CoreGlobal::PAGE_PASSWORD_RESET, [ CoreGlobal::MODEL_GENERIC => $model ] );
+	}
+
+	public function actionOtpResetPassword() {
+
+		// Send user to home if already logged in
+		$this->checkHome();
+
+		// Unset Flash Message
+		Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, null );
+
+		$model = new OtpResetPassword();
+
+		// Load and Validate Form Model
+		if( $model->load( Yii::$app->request->post(), 'OtpResetPassword' ) && $model->validate() ) {
+
+			$user = $this->userService->getByEmail( $model->email );
+
+			// If valid user found
+			if( isset( $user ) ) {
+
+				// Valid OTP
+				if( $user->isOtpValid( $token ) ) {
+
+					if( $this->userService->resetPassword( $user, $model ) ) {
+
+						// Send Forgot Password Mail
+						Yii::$app->coreMailer->sendPasswordChangeMail( $user );
+
+						// Set Success Message
+						Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_RESET_PASSWORD ) );
+
+						return $this->render( CoreGlobal::PAGE_PASSWORD_RESET, [ CoreGlobal::MODEL_GENERIC => $model, 'updated' => true ] );
+					}
+				}
+				else {
+
+					// Set Failure Message
+					Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_PASSWORD_RESET ) );
+				}
+			}
+			else {
+
+				// Set Failure Message
+				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USER_NOT_EXIST ) );
+			}
+		}
+
+		return $this->render( CoreGlobal::PAGE_PASSWORD_RESET_OTP, [ CoreGlobal::MODEL_GENERIC => $model ] );
 	}
 
 	/**

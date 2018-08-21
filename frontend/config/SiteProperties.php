@@ -25,11 +25,17 @@ class SiteProperties extends Properties {
 
 	// Global -----------------
 
-	const PROP_AVATAR_USER		= 'user_avatar';
-
 	const PROP_AVATAR_DEFAULT	= 'default_avatar';
 
+	const PROP_AVATAR_USER		= 'user_avatar';
+
+	const PROP_AVATAR_MAIL		= 'mail_avatar';
+
 	const PROP_BANNER_DEFAULT	= 'default_banner';
+
+	const PROP_BANNER_PAGE		= 'page_banner';
+
+	const PROP_BANNER_MAIL		= 'mail_banner';
 
 	const PROP_FONTS			= 'fonts';
 
@@ -69,19 +75,34 @@ class SiteProperties extends Properties {
 
 	// Properties ----------------------------
 
-	public function getUserAvatar() {
-
-		return $this->properties[ self::PROP_AVATAR_USER ];
-	}
-
 	public function getDefaultAvatar() {
 
 		return $this->properties[ self::PROP_AVATAR_DEFAULT ];
 	}
 
+	public function getUserAvatar() {
+
+		return $this->properties[ self::PROP_AVATAR_USER ];
+	}
+
+	public function getMailAvatar() {
+
+		return $this->properties[ self::PROP_AVATAR_MAIL ];
+	}
+
 	public function getDefaultBanner() {
 
 		return $this->properties[ self::PROP_BANNER_DEFAULT ];
+	}
+
+	public function getPageBanner() {
+
+		return $this->properties[ self::PROP_BANNER_PAGE ];
+	}
+
+	public function getMailBanner() {
+
+		return $this->properties[ self::PROP_BANNER_MAIL ];
 	}
 
 	public function getFonts() {

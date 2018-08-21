@@ -475,8 +475,8 @@ class UserService extends EntityService implements IUserService {
 	public function register( $model, $config = [] ) {
 
 		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : User::STATUS_NEW;
+		$user	= isset( $config[ 'user' ] ) ? $config[ 'user' ] : $this->getModelObject();
 
-		$user	= $this->getModelObject();
 		$date	= DateUtil::getDateTime();
 
 		$user->email		= $model->email;
@@ -485,6 +485,8 @@ class UserService extends EntityService implements IUserService {
 		$user->firstName	= $model->firstName;
 		$user->middleName	= $model->middleName;
 		$user->lastName		= $model->lastName;
+		$user->phone		= $model->phone;
+		$user->dob			= $model->dob;
 		$user->registeredAt	= $date;
 		$user->status		= $status;
 		$user->type			= $model->type;

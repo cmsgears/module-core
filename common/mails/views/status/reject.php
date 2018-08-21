@@ -3,11 +3,13 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
+$siteProperties = Yii::$app->controller->getSiteProperties();
+
 $siteName	= Html::encode( $coreProperties->getSiteName() );
-$logoUrl	= Url::to( "@web/images/logo-mail.png", true );
+$logoUrl	= Url::to( "@web/images/" . $siteProperties->getMailAvatar(), true );
 $siteUrl	= Html::encode( $coreProperties->getSiteUrl() );
 $homeUrl	= $siteUrl;
-$siteBkg	= "$siteUrl/images/banner-mail.jpg";
+$siteBkg	= "$siteUrl/images/" . $siteProperties->getMailBanner();
 
 $user		= $model->holder ?? $model->creator;
 $userName	= Html::encode( $user->getName() );
@@ -22,25 +24,25 @@ if( $message == null ) {
 <table cellspacing="0" cellpadding="0" border="0" margin="0" padding="0" width="80%" align="center" class="ctmax">
 	<tr><td height="40"></td></tr>
 	<tr>
-		<td><font face="'Roboto', Arial, sans-serif">Dear Member,</font></td>
+		<td><font face="Roboto, Arial, sans-serif">Dear Member,</font></td>
 	</tr>
 	<tr><td height="20"></td></tr>
 	<tr>
 		<td>
-			<font face="'Roboto', Arial, sans-serif">Congratulations, <?= $modelName ?> has been rejected due to incomplete or inappropriate information provided while registration. The details are as mentioned below:</font>
+			<font face="Roboto, Arial, sans-serif">Congratulations, <?= $modelName ?> has been rejected due to incomplete or inappropriate information provided while registration. The details are as mentioned below:</font>
 		</td>
 	</tr>
 	<tr><td height="20"></td></tr>
 	<tr>
-		<td> <font face="'Roboto', Arial, sans-serif">Manager: <?= $userName ?></font></td>
+		<td> <font face="Roboto, Arial, sans-serif">Manager: <?= $userName ?></font></td>
 	</tr>
 	<tr><td height="10"></td></tr>
 	<tr>
-		<td> <font face="'Roboto', Arial, sans-serif">Reason: <?= $message ?></font></td>
+		<td> <font face="Roboto, Arial, sans-serif">Reason: <?= $message ?></font></td>
 	</tr>
 	<tr><td height="20"></td></tr>
 	<tr>
-		<td> <font face="'Roboto', Arial, sans-serif">Please contact <?= $siteName ?> Administrator in case it's not related to you.</font></td>
+		<td> <font face="Roboto, Arial, sans-serif">Please contact <?= $siteName ?> Administrator in case it's not related to you.</font></td>
 	</tr>
 	<tr><td height="40"></td></tr>
 </table>

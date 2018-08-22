@@ -107,7 +107,7 @@ class ModelTagService extends ModelMapperService implements IModelTagService {
 			$modelTag = $this->getByModelId( $parentId, $parentType, $tag->id );
 
 			// Create if does not exist
-			if( !isset( $modelTag ) ) {
+			if( empty( $modelTag ) ) {
 
 				$this->createByParams( [ 'modelId' => $tag->id, 'parentId' => $parentId, 'parentType' => $parentType, 'order' => 0, 'active' => true ] );
 			}

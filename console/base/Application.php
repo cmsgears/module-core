@@ -27,7 +27,9 @@ class Application extends \yii\console\Application {
 
 			// TODO: Enable multi-site similar to web app
 
-			$site	= SiteService::findBySlug( 'main' );
+			$siteSlug = Yii::$app->core->siteSlug;
+
+			$site = SiteService::findBySlug( $siteSlug );
 
 			// Site Found
 			if( isset( $site ) ) {

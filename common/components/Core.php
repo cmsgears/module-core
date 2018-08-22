@@ -596,6 +596,14 @@ class Core extends Component {
 	}
 
 	/*
+	 * @return $session - return session param
+	 */
+	public function clearSessionParam( $param ) {
+
+		return Yii::$app->session->remove( $param );
+	}
+
+	/*
 	 * @return $session - Open a session if does not exist in application.
 	 */
 	public function setSessionObject( $param, $object ) {
@@ -620,6 +628,14 @@ class Core extends Component {
 		}
 
 		return null;
+	}
+
+	/*
+	 * @return $session - return session param
+	 */
+	public function clearSessionObject( $param ) {
+
+		return Yii::$app->session->remove( $param );
 	}
 
 }

@@ -41,6 +41,10 @@ interface IUserService extends IEntityService, IApproval, IData, IModelMeta, ISo
 
 	public function isExistByUsername( $username );
 
+	public function getByMobile( $mobile );
+
+	public function isExistByMobile( $mobile );
+
 	// Read - Lists ----
 
 	public function getIdNameListByUsername( $username, $config = [] );

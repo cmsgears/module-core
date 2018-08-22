@@ -78,6 +78,8 @@ class CoreProperties extends Properties {
 
 	const PROP_CHANGE_USERNAME		= 'change_username';
 
+	const PROP_CHANGE_MOBILE		= 'change_mobile';
+
 	const PROP_FORMAT_DATE			= 'date_format';
 
 	const PROP_FORMAT_TIME			= 'time_format';
@@ -242,6 +244,14 @@ class CoreProperties extends Properties {
 	public function isChangeUsername() {
 
 		return $this->properties[ self::PROP_CHANGE_USERNAME ];
+	}
+
+	/**
+	 * Returns whether mobile number change is allowed for user profile.
+	 */
+	public function isChangeMobile() {
+
+		return $this->properties[ self::PROP_CHANGE_MOBILE ];
 	}
 
 	public function getDateFormat() {

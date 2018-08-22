@@ -509,8 +509,8 @@ class m160620_095703_core extends Migration {
 			'message' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'dob' => $this->date(),
-			'mobile' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
-			'phone' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
+			'mobile' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
+			'phone' => $this->string( Yii::$app->core->smallText )->defaultValue( null ),
 			'timeZone' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'avatarUrl' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'websiteUrl' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
@@ -523,7 +523,7 @@ class m160620_095703_core extends Migration {
 			'lastActivityAt' => $this->dateTime(),
 			'authKey' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			// Otp
-			'otp' => $this->integer( 6 )->defaultValue( null ),
+			'otp' => $this->integer( 10 )->defaultValue( null ),
 			'otpValidTill' => $this->dateTime()->defaultValue( null ),
 			// Access Token
 			'accessToken' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),

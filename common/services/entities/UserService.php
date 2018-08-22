@@ -331,7 +331,7 @@ class UserService extends EntityService implements IUserService {
 	}
 
 	/**
-	 * @param string $email
+	 * @param string $username
 	 * @return User
 	 */
 	public function getByUsername( $username ) {
@@ -350,6 +350,30 @@ class UserService extends EntityService implements IUserService {
 		$modelClass	= static::$modelClass;
 
 		$user = $modelClass::findByUsername( $username );
+
+		return isset( $user );
+	}
+
+	/**
+	 * @param string $mobile
+	 * @return User
+	 */
+	public function getByMobile( $mobile ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByMobile( $mobile );
+	}
+
+	/**
+	 * @param string $mobile
+	 * @return boolean
+	 */
+	public function isExistByMobile( $mobile ) {
+
+		$modelClass	= static::$modelClass;
+
+		$user = $modelClass::findByMobile( $mobile );
 
 		return isset( $user );
 	}
@@ -485,7 +509,7 @@ class UserService extends EntityService implements IUserService {
 		$user->firstName	= $model->firstName;
 		$user->middleName	= $model->middleName;
 		$user->lastName		= $model->lastName;
-		$user->phone		= $model->phone;
+		$user->mobile		= $model->mobile;
 		$user->dob			= $model->dob;
 		$user->registeredAt	= $date;
 		$user->status		= $status;

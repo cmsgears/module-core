@@ -211,6 +211,9 @@ class CoreGlobal {
 	const META_COMMENT_SPAM_REQUEST	   = 'spamRequest';
 	const META_COMMENT_DELETE_REQUEST  = 'deleteRequest';
 
+	// Session Params
+	const SESSION_RESET_PWD_OTP = 'pwd-reset-otp';
+
 	// Default Maps ----------------------------------------------------
 
 	// Yes/No
@@ -281,6 +284,7 @@ class CoreGlobal {
 	// Errors - Create/Register User
 	const ERROR_EMAIL_EXIST		= 'emailExistError';
 	const ERROR_USERNAME_EXIST	= 'usernameExistError';
+	const ERROR_MOBILE_EXIST	= 'mobileExistError';
 	const ERROR_PASSWORD		= 'passwordError';
 	const ERROR_TERMS			= 'termsError';
 
@@ -297,6 +301,7 @@ class CoreGlobal {
 	const ERROR_PASSWORD_RESET	= 'resetPasswordError';
 	const ERROR_CHANGE_EMAIL	= 'changeEmailError';
 	const ERROR_CHANGE_USERNAME	= 'changeUsernameError';
+	const ERROR_CHANGE_MOBILE	= 'changeMobileError';
 
 	// Errors - Apis
 	const ERROR_APIS_DISABLED = 'apisDisabledError';

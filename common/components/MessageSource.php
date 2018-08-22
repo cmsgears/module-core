@@ -92,6 +92,7 @@ class MessageSource extends \yii\base\Component {
 		// Errors - Create/Register User
 		CoreGlobal::ERROR_EMAIL_EXIST => 'A user already exist with the same Email.',
 		CoreGlobal::ERROR_USERNAME_EXIST => 'A user already exist with the same username.',
+		CoreGlobal::ERROR_MOBILE_EXIST => 'A user already exist with the same mobile number.',
 		CoreGlobal::ERROR_PASSWORD => 'Please provide a valid password having at least 5 characters.',
 		CoreGlobal::ERROR_TERMS => 'Please accept our terms and conditions to continue.',
 
@@ -108,6 +109,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::ERROR_PASSWORD_RESET => 'Either your account does not exist or the reset link is not valid. Please try to reset your password.',
 		CoreGlobal::ERROR_CHANGE_EMAIL => 'Email change is not allowed.',
 		CoreGlobal::ERROR_CHANGE_USERNAME => 'Username change is not allowed.',
+		CoreGlobal::ERROR_CHANGE_MOBILE => 'Mobile change is not allowed.',
 
 		// Errors - Apis
 		CoreGlobal::ERROR_APIS_DISABLED => 'APIs are not supported by this application.',

@@ -195,6 +195,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			// Unique
 			[ 'email', 'unique' ],
 			[ 'username', 'unique' ],
+			[ 'mobile', 'unique' ],
 			// Email
 			[ 'email', 'email' ],
 			[ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],
@@ -205,10 +206,15 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			[ 'username', 'validateUsernameCreate', 'on' => [ 'create' ] ],
 			[ 'username', 'validateUsernameUpdate', 'on' => [ 'update', 'profile' ] ],
 			[ 'username', 'validateUsernameChange', 'on' => [ 'profile' ] ],
+			// Mobile
+			[ 'mobile', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+			[ 'mobile', 'validateMobileCreate', 'on' => [ 'create' ] ],
+			[ 'mobile', 'validateMobileUpdate', 'on' => [ 'update', 'profile' ] ],
+			[ 'mobile', 'validateMobileChange', 'on' => [ 'profile' ] ],
 			// Text Limit
-			[ [ 'type', 'title' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+			[ [ 'type', 'title', 'phone' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ [ 'icon', 'accessTokenType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'username', 'passwordHash', 'mobile', 'phone', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'username', 'passwordHash', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ [ 'email', 'firstName', 'middleName', 'lastName' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'name', 'message', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
@@ -419,6 +425,65 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			$existingUser	= self::findById( $this->id );
 
 			if( isset( $existingUser ) && $existingUser->username !== $this->username  && !$properties->isChangeUsername() ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_CHANGE_USERNAME ) );
+			}
+		}
+	}
+
+	/**
+	 * Validates mobile to ensure that only one user exist with the given mobile.
+	 *
+	 * @param type $attribute
+	 * @param type $params
+	 * @return void
+	 */
+	public function validateMobileCreate( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			if( self::isExistByMobile( $this->mobile ) ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_MOBILE_EXIST ) );
+			}
+		}
+	}
+
+	/**
+	 * Validates mobile to ensure that only one user exist with the given mobile.
+	 *
+	 * @param type $attribute
+	 * @param type $params
+	 * @return void
+	 */
+	public function validateMobileUpdate( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			$existingUser = self::findByMobile( $this->mobile );
+
+			if( isset( $existingUser ) && $this->id != $existingUser->id ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_MOBILE_EXIST ) );
+			}
+		}
+	}
+
+	/**
+	 * Validates mobile to ensure that it does not allow to change while changing user profile.
+	 *
+	 * @param type $attribute
+	 * @param type $params
+	 * @return void
+	 */
+	public function validateMobileChange( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			$properties		= CoreProperties::getInstance();
+			$existingUser	= self::findById( $this->id );
+
+			if( isset( $existingUser ) && $existingUser->mobile !== $this->mobile  && !$properties->isChangeMobile() ) {
 
 				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_CHANGE_USERNAME ) );
 			}
@@ -699,6 +764,8 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 		$valid = strtotime( $valid ) + Yii::$app->core->getOtpValidity();
 
 		$this->otpValidTill = DateUtil::getDateTimeFromMillis( $valid );
+
+		return $this->otp;
 	}
 
 	/**
@@ -979,6 +1046,30 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	public static function isExistByUsername( $username ) {
 
 		$user = self::find()->where( 'username=:username', [ ':username' => $username ] )->one();
+
+		return isset( $user );
+	}
+
+	/*
+	 * Find and return the user by username.
+	 *
+	 * @param string $username
+	 * @return User
+	 */
+	public static function findByMobile( $mobile ) {
+
+		return self::find()->where( 'mobile=:mobile', [ ':mobile' => $mobile ] )->one();
+	}
+
+	/**
+	 * Check whether user exist for given username.
+	 *
+	 * @param string $username
+	 * @return boolean
+	 */
+	public static function isExistByMobile( $mobile ) {
+
+		$user = self::findByMobile( $mobile );
 
 		return isset( $user );
 	}

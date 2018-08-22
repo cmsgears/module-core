@@ -20,7 +20,6 @@ use cmsgears\core\common\models\forms\BaseForm;
 /**
  * Used to submit password reset request using otp.
  *
- * @property string $email
  * @property integer $otp
  * @property string $password
  * @property string $password_repeat
@@ -43,7 +42,6 @@ class OtpResetPassword extends BaseForm {
 
 	// Public -----------------
 
-	public $email;
 	public $otp;
 	public $password;
 	public $password_repeat;
@@ -74,18 +72,17 @@ class OtpResetPassword extends BaseForm {
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'email', 'otp', 'password', 'password_repeat' ], 'required' ],
+			[ [ 'otp', 'password', 'password_repeat' ], 'required' ],
 			[ 'password_repeat', 'compare', 'compareAttribute' => 'password' ],
 			// Others
-			[ 'email', 'email' ],
-			[ 'otp', 'number', 'integerOnly' => true ],
+			[ 'otp', 'number', 'integerOnly' => true, 'min' => 100000, 'max' => 999999 ],
 			[ 'password', 'password' ]
 		];
 
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'email', 'otp', 'password', 'password_repeat' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'otp', 'password', 'password_repeat' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -99,8 +96,7 @@ class OtpResetPassword extends BaseForm {
 	public function attributeLabels() {
 
 		return [
-			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
-			'otp' => 'OTP',
+			'otp' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_OTP ),
 			'password' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PASSWORD ),
 			'password_repeat' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PASSWORD_REPEAT )
 		];

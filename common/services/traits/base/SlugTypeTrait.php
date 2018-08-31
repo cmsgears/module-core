@@ -60,6 +60,18 @@ trait SlugTypeTrait {
 
 	// Read - Maps -----
 
+	public function getSlugNameMapByType( $type, $config = [] ) {
+
+		$config[ 'conditions' ][ 'type' ] = $type;
+
+		$config[ 'nameColumn' ]		= $config[ 'nameColumn' ] ?? 'slug';
+		$config[ 'valueColumn' ]	= $config[ 'valueColumn' ] ?? 'name';
+		$config[ 'nameAlias' ]		= 'slug';
+		$config[ 'valueAlias' ]		= 'name';
+
+		return static::generateMap( $config );
+	}
+
 	public function getSlugModelMap( $config = [] ) {
 
 		$config[ 'key' ] = 'slug';

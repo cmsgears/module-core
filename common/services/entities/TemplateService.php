@@ -12,7 +12,6 @@ namespace cmsgears\core\common\services\entities;
 // Yii Imports
 use Yii;
 use yii\data\Sort;
-use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -292,6 +291,13 @@ class TemplateService extends EntityService implements ITemplateService {
 		$modelClass = static::$modelClass;
 
 		return $modelClass::findGlobalBySlugType( $slug, $type, $config );
+	}
+
+	public function getByThemeSlugType( $slug, $type, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::findByThemeSlugType( $slug, $type, $config );
 	}
 
 	public function getActiveByType( $type ) {

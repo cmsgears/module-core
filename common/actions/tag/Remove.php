@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\tag;
 
 // Yii Imports
@@ -7,12 +15,16 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\actions\base\ModelAction;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
  * Remove action disable the tag mapping for model by de-activating it.
+ *
+ * @since 1.0.0
  */
-class Remove extends \cmsgears\core\common\actions\base\ModelAction {
+class Remove extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -28,7 +40,7 @@ class Remove extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $parent 	= true;
+	public $parent = true;
 
 	// Protected --------------
 
@@ -48,7 +60,7 @@ class Remove extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// RemoveTag -----------------------------
+	// Remove --------------------------------
 
 	public function run( $cid ) {
 

@@ -80,7 +80,7 @@ class SiteController extends Controller {
 					'register' => [ 'post' ],
 					'login' => [ 'post' ],
 					'forgot-password' => [ 'post' ],
-					'check-user' => [ 'get' ],
+					'check-user' => [ 'get' ]
 				]
 			]
 		];

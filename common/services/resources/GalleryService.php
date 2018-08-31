@@ -305,7 +305,7 @@ class GalleryService extends ResourceService implements IGalleryService {
 			$modelFile->save();
 		}
 
-		return $item;
+		return $modelFile;
 	}
 
 	// Update -------------

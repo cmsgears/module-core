@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\filters;
 
 // Yii Imports
@@ -9,25 +17,31 @@ use yii\web\NotFoundHttpException;
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
- * Discover Filter finds and set the primary model using primary service of controller. In all other cases, it ignore the action and
- * throws ForbiddenHttpException exception. It must be the first filter in case an action is configured for multiple filters.
+ * Discover Filter is an RBAC filter and works as child filter of RBAC filter. It finds and set
+ * the primary model using primary service of controller. In all other cases, it ignore the action
+ * and throws ForbiddenHttpException exception. It must be the first filter in case an action is
+ * configured for multiple filters. The subsequent filters can use the primary model identified by it.
  *
  * Ex:
  *	public function behaviors() {
  *
  *		...........
  *
- *		'actions' => [
- *			'<action name>' => [
- *				<permissions>,
- *				'filters' => [
- *					'discover' => [
- *						// It's optional and required in case controller does not provide primary model service or a different service is required to discover primary model.
- *						'service' => '<factory name> or <service object>',
- *						// Optional and required in case slug param is different than slug
- *						'slugParam' => '<Slug Param>'
- *						// Optional and required in case id param is different than id
- *						'idParam' => '<Id Param>'
+ *		'rbac' => [
+ *			'actions' => [
+ *				'<action name>' => [
+ *					<permissions>,
+ *					'filters' => [
+ *						'discover' => [
+ *							// Optional and required in case controller does not provide primary model service or a different service is required to discover primary model.
+ *							'service' => '<factory name> or <service object>',
+ *							// Optional and required in case slug param is different than slug
+ *							'slugParam' => '<Slug Param>',
+ *							// Optional and required in case id param is different than id
+ *							'idParam' => '<Id Param>',
+ *							// Optional and required to explicitly specify type column
+ *							'typed' => true or false
+ *						]
  *					]
  *				]
  *			]
@@ -35,13 +49,15 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  *		...........
  *	}
+ *
+ * @since 1.0.0
  */
 class DiscoverFilter {
 
 	public function doFilter( $args = [] ) {
 
 		// Model to be discovered
-		$model	= Yii::$app->controller->model;
+		$model = Yii::$app->controller->model;
 
 		// Model is already discovered
 		if( isset( $model ) ) {
@@ -49,8 +65,11 @@ class DiscoverFilter {
 			return true;
 		}
 
+		// Typed
+		$typed = isset( $args[ 'typed' ] ) ? $args[ 'typed' ] : false;
+
 		// Find Service
-		$modelService	= null;
+		$modelService = null;
 
 		// Use service provided exclusively for the filter
 		if( isset( $args[ 'service' ] ) ) {
@@ -69,20 +88,20 @@ class DiscoverFilter {
 		// Try to find service in controller member variables
 		else if( Yii::$app->controller->hasProperty( 'modelService' ) ) {
 
-			$modelService	= Yii::$app->controller->modelService;
+			$modelService = Yii::$app->controller->modelService;
 		}
 
 		// Proceed further if service found
 		if( isset( $modelService ) ) {
 
-			$slugParam	= 'slug';
+			$slugParam = 'slug';
 
 			if( isset( $args[ 'slugParam' ] ) ) {
 
 				$slugParam	= $args[ 'slugParam' ];
 			}
 
-			$slug	= Yii::$app->request->get( $slugParam );
+			$slug = Yii::$app->request->get( $slugParam );
 
 			// Use default column as id
 			if( empty( $slug ) ) {
@@ -107,23 +126,26 @@ class DiscoverFilter {
 			else if( isset( $slug ) ) {
 
 				// Flag to check typed models
-				$typed	= $modelService->isTyped();
+				$typed	= !$typed ? $modelService->isTyped() : false;
 				$type	= $typed ? Yii::$app->request->get( 'type', null ) : null;
 
+				// Model uses SlugTypeTrait
 				if( $typed ) {
 
+					// Notes: Make sure that the Model support unique validator either for slug or slug and type
 					if( isset( $type ) ) {
 
-						$model	= $modelService->getBySlugType( $slug, $type );
+						$model = $modelService->getBySlugType( $slug, $type );
 					}
+					// Notes: Make sure that the Model support unique validator for slug
 					else {
 
-						$model	= $modelService->getBySlug( $slug, true ); // Get first one
+						$model = $modelService->getFirstBySlug( $slug );
 					}
 				}
 				else {
 
-					$model	= $modelService->getBySlug( $slug );
+					$model = $modelService->getBySlug( $slug );
 				}
 			}
 
@@ -140,4 +162,5 @@ class DiscoverFilter {
 		// Halt action execution in case model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

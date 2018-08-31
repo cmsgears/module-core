@@ -209,7 +209,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_OWNER => 'Owner',
 		CoreGlobal::FIELD_APPROVER => 'Approver',
 		CoreGlobal::FIELD_FOLLOWER => 'Follower',
-
+		CoreGlobal::FIELD_PROFILE => 'Profile',
 		CoreGlobal::FIELD_WEBSITE => 'Website',
 		CoreGlobal::FIELD_AVATAR => 'Avatar',
 		CoreGlobal::FIELD_AVATAR_URL => 'Avatar URL',

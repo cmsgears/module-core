@@ -87,9 +87,11 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 	const TYPE_FEEDBACK		=  'feedback'; // enhancements, improvement
 	const TYPE_TESTIMONIAL	=  'testimonial'; // user satisfaction
 
-	const SCENARIO_IDENTITY	= 'identity';
-	const SCENARIO_REVIEW	= 'review';
-	const SCENARIO_CAPTCHA	= 'captcha';
+	const SCENARIO_IDENTITY		= 'identity';
+	const SCENARIO_REVIEW		= 'review';
+	const SCENARIO_FEEDBACK		= 'feedback';
+	const SCENARIO_TESTIMONIAL	= 'testimonial';
+	const SCENARIO_CAPTCHA		= 'captcha';
 
 	const STATUS_NEW		=  500;
 	const STATUS_SPAM		=  600;
@@ -184,7 +186,7 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 			[ [ 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Check captcha need for testimonial and review
 			[ [ 'name', 'email' ], 'required', 'on' => self::SCENARIO_IDENTITY ],
-			[ 'rating', 'required', 'on' => [ self::SCENARIO_REVIEW ] ],
+			[ 'rating', 'required', 'on' => [ self::SCENARIO_REVIEW, self::SCENARIO_TESTIMONIAL ] ],
 			[ 'captcha', 'captcha', 'captchaAction' => '/core/site/captcha', 'on' => self::SCENARIO_CAPTCHA ],
 			// Other
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],

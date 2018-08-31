@@ -1114,10 +1114,16 @@ class FormDesigner extends \yii\base\Component {
 		$stars		= isset( $config[ 'stars' ] ) ? $config[ 'stars' ] : 5;
 		$selected	= isset( $config[ 'selected' ] ) ? $config[ 'selected' ] : 0;
 		$disabled	= isset( $config[ 'disabled' ] ) ? $config[ 'disabled' ] : false;
+		$readonly	= isset( $config[ 'readonly' ] ) ? $config[ 'readonly' ] : false;
 
 		if( $disabled ) {
 
 			$class = "$class disabled";
+		}
+
+		if( $readonly ) {
+
+			$class = "$class read-only";
 		}
 
 		$ratingHtml	= "<div class=\"$class\"><div class=\"wrap-stars\">";

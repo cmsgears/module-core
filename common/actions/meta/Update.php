@@ -11,6 +11,7 @@ namespace cmsgears\core\common\actions\meta;
 
 // Yii Imports
 use Yii;
+use yii\helpers\HtmlPurifier;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -89,7 +90,7 @@ class Update extends ModelAction {
 
 					$meta->refresh();
 
-					$data = [ 'id' => $meta->id, 'name' => $meta->name, 'value' => $meta->value ];
+					$data = [ 'id' => $meta->id, 'name' => $meta->name, 'value' => HtmlPurifier::process( $meta->value ) ];
 
 					// Trigger Ajax Success
 					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

@@ -97,9 +97,9 @@ class CreateItem extends Action {
 
 			if( $item->load( Yii::$app->request->post(), 'File' ) && $item->validate() ) {
 
-				$item	= $galleryService->createItem( $gallery, $item );
-				$file	= $fileService->getById( $item->id );
-				$data	= [ 'id' => $item->id, 'fid' => $file->id, 'thumbUrl' => $file->getThumbUrl(), 'title' => $file->title, 'description' => $file->description, 'alt' => $file->altText, 'url' => $file->url ];
+				$modelFile	= $galleryService->createItem( $gallery, $item );
+				$file		= $modelFile->model;
+				$data		= [ 'id' => $modelFile->id, 'fid' => $file->id, 'thumbUrl' => $file->getThumbUrl(), 'title' => $file->title, 'description' => $file->description, 'alt' => $file->altText, 'url' => $file->url ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

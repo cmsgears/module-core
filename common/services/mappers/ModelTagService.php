@@ -88,7 +88,7 @@ class ModelTagService extends ModelMapperService implements IModelTagService {
 
 	public function createFromArray( $parentId, $parentType, $tags ) {
 
-		foreach ( $tags as $tagName ) {
+		foreach( $tags as $tagName ) {
 
 			$tagName = trim( $tagName );
 
@@ -104,7 +104,7 @@ class ModelTagService extends ModelMapperService implements IModelTagService {
 				$tag = $this->tagService->createByParams( [ 'siteId' => Yii::$app->core->siteId, 'name' => ucfirst( $tagName ), 'type' => $parentType ] );
 			}
 
-			$modelTag = $this->getByModelId( $parentId, $parentType, $tag->id );
+			$modelTag = $this->getFirstByParentModelId( $parentId, $parentType, $tag->id );
 
 			// Create if does not exist
 			if( empty( $modelTag ) ) {
@@ -121,7 +121,7 @@ class ModelTagService extends ModelMapperService implements IModelTagService {
 
 	public function createFromCsv( $parentId, $parentType, $tags ) {
 
-		$tags	= preg_split( "/,/", $tags );
+		$tags = preg_split( "/,/", $tags );
 
 		return $this->createFromArray( $parentId, $parentType, $tags );
 	}

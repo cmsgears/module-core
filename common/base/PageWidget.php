@@ -32,7 +32,7 @@ abstract class PageWidget extends Widget {
 
 	// Public -----------------
 
-	public $wrap	= true;
+	public $wrap = true;
 
 	public $options	= [ 'class' => 'widget widget-page' ];
 

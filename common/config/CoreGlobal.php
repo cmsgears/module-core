@@ -402,6 +402,7 @@ class CoreGlobal {
 	const FIELD_OWNER		= 'ownerField';
 	const FIELD_APPROVER	= 'approverField';
 	const FIELD_FOLLOWER	= 'followerField';
+	const FIELD_PROFILE		= 'profileField';
 
 	const FIELD_WEBSITE		= 'websiteField';
 	const FIELD_AVATAR		= 'avatarField';

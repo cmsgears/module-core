@@ -64,11 +64,11 @@ class DeleteItem extends Action {
 	// DeleteItem ----------------------------
 
 	/**
-	 * It deletes the gallery item using given $cid and $iid.
+	 * It deletes the gallery item using given $cid and $fid.
 	 *
 	 * @param type $id Parent Id
 	 * @param type $cid Gallery Id
-	 * @param type $iid Item Id
+	 * @param type $fid Item Id
 	 * @return string
 	 */
 	public function run( $id, $cid, $fid ) {
@@ -90,14 +90,14 @@ class DeleteItem extends Action {
 				}
 			}
 
-			$modelFile = $modelFileService->getFirstByParentModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $iid );
+			$modelFile = $modelFileService->getFirstByParentModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $fid );
 
 			if( isset( $modelFile ) ) {
 
 				$modelFileService->delete( $modelFile );
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $iid );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $modelFile->id );
 			}
 		}
 

@@ -506,7 +506,7 @@ class FileService extends ResourceService implements IFileService {
 
 	public function delete( $model, $config = [] ) {
 
-		$admin	= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		if( isset( $model ) ) {
 

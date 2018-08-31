@@ -89,7 +89,7 @@ class Read extends ModelAction {
 				$address = $modelAddress->model;
 
 				$adata	= $address->getAttributeArray( $this->returnAttributes );
-				$data	= [ 'address' => $adata, 'type' => $modelAddress->type ];
+				$data	= [ 'cid' => $cid, 'address' => $adata, 'type' => $modelAddress->type ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

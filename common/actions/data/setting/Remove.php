@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\data;
+namespace cmsgears\core\common\actions\data\setting;
 
 // Yii Imports
 use Yii;
@@ -22,11 +22,11 @@ use cmsgears\core\common\actions\base\ModelAction;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * RemoveAttribute remove attribute for given model supporting data trait.
+ * Remove remove setting for given model supporting data trait.
  *
  * @since 1.0.0
  */
-class RemoveAttribute extends ModelAction {
+class Remove extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -60,7 +60,7 @@ class RemoveAttribute extends ModelAction {
 
 	// CMG parent classes --------------------
 
-	// RemoveAttribute -----------------------
+	// Remove --------------------------------
 
 	public function run() {
 
@@ -69,7 +69,7 @@ class RemoveAttribute extends ModelAction {
 		if( $meta->load( Yii::$app->request->post(), 'Meta' ) && $meta->validate() ) {
 
 			// Save setting
-			$this->modelService->removeDataAttributeObj( $this->model, $meta );
+			$this->modelService->removeDataSettingObj( $this->model, $meta );
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
@@ -81,4 +81,5 @@ class RemoveAttribute extends ModelAction {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 	}
+
 }

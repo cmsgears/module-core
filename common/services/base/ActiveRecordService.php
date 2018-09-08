@@ -1251,14 +1251,14 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$modelClass	= static::$modelClass;
 		$modelTable = $modelClass::tableName();
 
-		// query generation
-		$query			= new Query();
-		$column			= $config[ 'column' ] ?? 'id';
-		$conditions		= $config[ 'conditions' ] ?? null;
-		$filters		= $config[ 'filters' ] ?? null;
+		// Query and Column
+		$query	= new Query();
+		$column	= $config[ 'column' ] ?? 'id';
 
-		// sorting
-		$order			= $config[ 'order' ] ?? null;
+		// Conditions, Filters and Sorting
+		$conditions	= $config[ 'conditions' ] ?? null;
+		$filters	= $config[ 'filters' ] ?? null;
+		$order		= $config[ 'order' ] ?? null;
 
 		// Conditions ----------
 
@@ -1350,10 +1350,13 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		// limit
 		$limit			= $config[ 'limit' ] ?? 0;
 
-		// query generation
-		$query			= $config[ 'query' ] ?? new Query();
-		$conditions		= $config[ 'conditions' ] ?? null;
-		$filters		= $config[ 'filters' ] ?? null;
+		// Query
+		$query = $config[ 'query' ] ?? new Query();
+
+		// Conditions, Filters and Sorting
+		$conditions	= $config[ 'conditions' ] ?? null;
+		$filters	= $config[ 'filters' ] ?? null;
+		$order		= $config[ 'order' ] ?? null;
 
 		// additional data
 		$prepend		= $config[ 'prepend' ] ?? [];
@@ -1396,6 +1399,13 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 				$query = $query->andFilterWhere( $filter );
 			}
+		}
+
+		// Sorting -------------
+
+		if( isset( $order ) ) {
+
+			$query->orderBy( $order );
 		}
 
 		// Limit ---------------

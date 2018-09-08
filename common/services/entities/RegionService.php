@@ -171,6 +171,8 @@ class RegionService extends EntityService implements IRegionService {
 
 		$config[ 'conditions' ][] = [ 'provinceId' => $provinceId ];
 
+		$config[ 'order' ] = 'name ASC';
+
 		return self::findIdNameMap( $config );
 	}
 

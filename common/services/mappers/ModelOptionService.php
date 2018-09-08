@@ -163,7 +163,7 @@ class ModelOptionService extends ModelMapperService implements IModelOptionServi
 
 		$modelClass	= static::$modelClass;
 
-		$toSave	= $modelClass::findByModelId( $parentId, $parentType, $modelId );
+		$toSave	= $modelClass::findFirstByParentModelId( $parentId, $parentType, $modelId );
 
 		// Existing mapping
 		if( isset( $toSave ) ) {

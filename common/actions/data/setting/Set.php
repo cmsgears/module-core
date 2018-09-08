@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\data;
+namespace cmsgears\core\common\actions\data\setting;
 
 // Yii Imports
 use Yii;
@@ -22,11 +22,11 @@ use cmsgears\core\common\actions\base\ModelAction;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * SetSetting add setting for given model supporting data trait.
+ * Set add setting for given model supporting data trait.
  *
  * @since 1.0.0
  */
-class SetSetting extends ModelAction {
+class Set extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -60,7 +60,7 @@ class SetSetting extends ModelAction {
 
 	// CMG parent classes --------------------
 
-	// SetSetting ----------------------------
+	// Set -----------------------------------
 
 	public function run() {
 
@@ -81,4 +81,5 @@ class SetSetting extends ModelAction {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 	}
+
 }

@@ -18,7 +18,7 @@ use cmsgears\core\common\validators\CoreValidator;
 
 use cmsgears\core\common\services\entities\UserService;
 
-use cmsgears\core\common\base\Component;
+use cmsgears\core\common\base\Config;
 
 /**
  * The core component for CMSGears based sites. It must be initialised for app bootstrap
@@ -32,7 +32,7 @@ use cmsgears\core\common\base\Component;
  *
  * @since 1.0.0
  */
-class Core extends Component {
+class Core extends Config {
 
 	// Variables ---------------------------------------------------
 

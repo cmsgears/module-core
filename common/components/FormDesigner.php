@@ -785,19 +785,20 @@ class FormDesigner extends \yii\base\Component {
 
 	// == Form HTML Generators =====
 
-	public function getIconInput( $form, $model, $field, $options, $icon, $label = null ) {
+	public function getIconInput( $form, $model, $field, $config = [] ) {
 
-		$right		= isset( $options[ 'right' ] ) && $options[ 'right' ] ? 'icon-right' : null;
+		$options	= isset( $config[ 'options' ] ) ? $config[ 'options' ] : [];
+		$icon		= isset( $config[ 'icon' ] ) ? $config[ 'icon' ] : 'cmti cmti-pen';
+		$label		= isset( $config[ 'label' ] ) ? $config[ 'label' ] : null;
+		$right		= isset( $config[ 'right' ] ) && $config[ 'right' ] ? 'icon-right' : null;
 
-		unset( $options[ 'right' ] );
-
-		$template	= "{label}
+		$template = "{label}
 						<span class=\"frm-icon-element $right\">
 							<i class=\"icon $icon\"></i>{input}
 						</span>
 						{hint}{error}";
 
-		$field		= $form->field( $model, $field, [ 'template' => $template ] )->textInput( $options );
+		$field = $form->field( $model, $field, [ 'template' => $template ] )->textInput( $options );
 
 		if( isset( $label ) ) {
 

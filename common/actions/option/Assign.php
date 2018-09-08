@@ -7,26 +7,20 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\data;
+namespace cmsgears\core\common\actions\option;
 
 // Yii Imports
 use Yii;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\models\forms\Meta;
-
-use cmsgears\core\common\actions\base\ModelAction;
-
-use cmsgears\core\common\utilities\AjaxUtil;
+use cmsgears\core\common\actions\mapper\Assign as BaseAssign;
 
 /**
- * RemoveSetting remove setting for given model supporting data trait.
+ * Assign action maps existing option to model in action using ModelOption mapper.
  *
  * @since 1.0.0
  */
-class RemoveSetting extends ModelAction {
+class Assign extends BaseAssign {
 
 	// Variables ---------------------------------------------------
 
@@ -50,6 +44,13 @@ class RemoveSetting extends ModelAction {
 
 	// Constructor and Initialisation ------------------------------
 
+	public function init() {
+
+		parent::init();
+
+		$this->modelMapperService = Yii::$app->factory->get( 'modelOptionService' );
+	}
+
 	// Instance methods --------------------------------------------
 
 	// Yii interfaces ------------------------
@@ -60,25 +61,6 @@ class RemoveSetting extends ModelAction {
 
 	// CMG parent classes --------------------
 
-	// RemoveSetting -------------------------
+	// Assign --------------------------------
 
-	public function run() {
-
-		$meta = new Meta();
-
-		if( $meta->load( Yii::$app->request->post(), 'Meta' ) && $meta->validate() ) {
-
-			// Save setting
-			$this->modelService->removeDataSettingObj( $this->model, $meta );
-
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
-		}
-
-		// Generate Errors
-		$errors = AjaxUtil::generateErrorMessage( $meta );
-
-		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-	}
 }

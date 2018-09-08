@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\option;
+namespace cmsgears\core\common\actions\data\config;
 
 // Yii Imports
 use Yii;
@@ -15,16 +15,18 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\forms\Meta;
+
 use cmsgears\core\common\actions\base\ModelAction;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Toggle action map/un-map existing category option to model in action using ModelOption mapper.
+ * Remove remove configuration for given model supporting data trait.
  *
  * @since 1.0.0
  */
-class Toggle extends ModelAction {
+class Remove extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -39,8 +41,6 @@ class Toggle extends ModelAction {
 	// Variables -----------------------------
 
 	// Public -----------------
-
-	public $parent = true;
 
 	// Protected --------------
 
@@ -60,22 +60,26 @@ class Toggle extends ModelAction {
 
 	// CMG parent classes --------------------
 
-	// Toggle --------------------------------
+	// Remove --------------------------------
 
-	public function run( $cid ) {
+	public function run() {
 
-		if( isset( $this->model ) && isset( $cid ) ) {
+		$meta = new Meta();
 
-			$modelOptionService	= Yii::$app->factory->get( 'modelOptionService' );
+		if( $meta->load( Yii::$app->request->post(), 'Meta' ) && $meta->validate() ) {
 
-			$modelOptionService->toggle( $this->model->id, $this->parentType, $cid );
+			// Save config
+			$this->modelService->removeDataConfigObj( $this->model, $meta );
 
 			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
 		}
 
+		// Generate Errors
+		$errors = AjaxUtil::generateErrorMessage( $meta );
+
 		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 	}
 
 }

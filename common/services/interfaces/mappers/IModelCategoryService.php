@@ -41,6 +41,8 @@ interface IModelCategoryService extends IModelMapperService {
 
 	// Update -------------
 
+	public function toggle( $parentId, $parentType, $modelId );
+
 	public function bindCategories( $parentId, $parentType, $config = [] );
 
 	// Delete -------------

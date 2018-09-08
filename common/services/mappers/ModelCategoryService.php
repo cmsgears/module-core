@@ -152,6 +152,33 @@ class ModelCategoryService extends ModelMapperService implements IModelCategoryS
 
 	// Update -------------
 
+	public function toggle( $parentId, $parentType, $modelId ) {
+
+		$modelClass	= static::$modelClass;
+
+		$toSave	= $modelClass::findFirstByParentModelId( $parentId, $parentType, $modelId );
+
+		// Existing mapping
+		if( isset( $toSave ) ) {
+
+			if( $toSave->active ) {
+
+				$toSave->active	= false;
+			}
+			else {
+
+				$toSave->active	= true;
+			}
+
+			$toSave->update();
+		}
+		// New Mapping
+		else {
+
+			$this->createByParams( [ 'modelId' => $modelId, 'parentId' => $parentId, 'parentType' => $parentType, 'active' => true ] );
+		}
+	}
+
 	public function bindCategories( $parentId, $parentType, $config = [] ) {
 
 		$modelClass	= static::$modelClass;

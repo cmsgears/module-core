@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\data;
+namespace cmsgears\core\common\actions\data\setting;
 
 // Yii Imports
 use Yii;
@@ -19,9 +19,9 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\base\Action;
 
 /**
- * The Data action save model data using Data Form to the data column.
+ * The Form action save model settings using Settings Data Form to the data column.
  */
-class Data extends Action {
+class Form extends Action {
 
 	// Variables ---------------------------------------------------
 
@@ -55,7 +55,7 @@ class Data extends Action {
 
 	// CMG parent classes --------------------
 
-	// Data ----------------------------------
+	// Form ----------------------------------
 
 	public function run( $id ) {
 
@@ -68,22 +68,21 @@ class Data extends Action {
 		// Update/Render if exist
 		if( isset( $model ) && isset( $template ) ) {
 
-			$dataClass	= $template->dataPath;
-			$dataKey	= isset( $dataClass::$dataKey ) ? $dataClass::$dataKey : 'data';
-			$data		= new $dataClass( $model->getDataMeta( $dataKey ) );
+			$settingsClass	= $template->settingsPath;
+			$settings		= new $settingsClass( $model->getDataMeta( 'settings' ) );
 
-			$this->controller->setViewPath( $template->dataForm );
+			$this->controller->setViewPath( $template->settingsForm );
 
-			if( $data->load( Yii::$app->request->post(), $data->getClassName() ) && $data->validate() ) {
+			if( $settings->load( Yii::$app->request->post(), $settings->getClassName() ) && $settings->validate() ) {
 
-				$modelService->updateDataMeta( $model, $dataKey, $data );
+				$modelService->updateDataMeta( $model, 'settings', $settings );
 
 				return $this->controller->redirect( $this->controller->returnUrl );
 			}
 
-			return $this->controller->render( 'data', [
+			return $this->controller->render( 'settings', [
 				'model' => $model,
-				'data' => $data
+				'settings' => $settings
 			]);
 		}
 

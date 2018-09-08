@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\data;
+namespace cmsgears\core\common\actions\data\attribute;
 
 // Yii Imports
 use Yii;
@@ -19,9 +19,9 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\base\Action;
 
 /**
- * The Attributes action save model attributes using Attributes Data Form to the data column.
+ * The Form action save model attributes using Attributes Data Form to the data column.
  */
-class Attributes extends Action {
+class Form extends Action {
 
 	// Variables ---------------------------------------------------
 
@@ -55,7 +55,7 @@ class Attributes extends Action {
 
 	// CMG parent classes --------------------
 
-	// Attributes ----------------------------
+	// Form ----------------------------------
 
 	public function run( $id ) {
 

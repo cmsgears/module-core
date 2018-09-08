@@ -37,6 +37,8 @@ trait TabTrait {
 
 	// Private ----------------
 
+	protected $tabs			= [];
+
 	protected $tabStatus	= [];
 
 	protected $nextStatus	= [];
@@ -58,6 +60,23 @@ trait TabTrait {
 	// Validators ----------------------------
 
 	// TabTrait ------------------------------
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getTab( $status = null ) {
+
+		if( isset( $status ) && isset( $this->tabs[ $status ] ) ) {
+
+			return $this->tabs[ $status ];
+		}
+		else if( isset( $this->tabs[ $this->status ] ) ) {
+
+			return $this->tabs[ $this->status ];
+		}
+
+		return null;
+	}
 
 	/**
 	 * @inheritdoc

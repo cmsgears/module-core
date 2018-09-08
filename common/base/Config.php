@@ -8,12 +8,15 @@
  */
 namespace cmsgears\core\common\base;
 
+// CMG Imports
+use cmsgears\core\frontend\config\CoreGlobalWeb;
+
 /**
- * The parent class for all the CMSGears based components.
+ * The configuration component to configure the module.
  *
  * @since 1.0.0
  */
-class Component extends \yii\base\Component {
+class Config extends Component {
 
 	// Variables ---------------------------------------------------
 
@@ -21,11 +24,24 @@ class Component extends \yii\base\Component {
 
 	// Public -----------------
 
+	// Default layout used for all the module controllers
+	public $defaultLayout;
+
+	// A controller can be assigned custom layout if required
+	public $customLayout = [];
+
 	// Protected --------------
 
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->defaultLayout = $this->defaultLayout ?? CoreGlobalWeb::LAYOUT_PRIVATE;
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -37,6 +53,16 @@ class Component extends \yii\base\Component {
 
 	// CMG parent classes --------------------
 
-	// Component -----------------------------
+	// Config --------------------------------
+
+	public function getDefaultLayout() {
+
+		return $this->defaultLayout;
+	}
+
+	public function getCustomLayout() {
+
+		return $this->customLayout;
+	}
 
 }

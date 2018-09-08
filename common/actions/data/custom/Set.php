@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\data;
+namespace cmsgears\core\common\actions\data\custom;
 
 // Yii Imports
 use Yii;
@@ -22,11 +22,11 @@ use cmsgears\core\common\actions\base\ModelAction;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * RemoveConfig remove configuration for given model supporting data trait.
+ * Set add data key for given model supporting data trait.
  *
  * @since 1.0.0
  */
-class RemoveConfig extends ModelAction {
+class Set extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -60,16 +60,16 @@ class RemoveConfig extends ModelAction {
 
 	// CMG parent classes --------------------
 
-	// RemoveConfig --------------------------
+	// Set -----------------------------------
 
-	public function run() {
+	public function run( $ckey ) {
 
 		$meta = new Meta();
 
 		if( $meta->load( Yii::$app->request->post(), 'Meta' ) && $meta->validate() ) {
 
-			// Save config
-			$this->modelService->removeDataConfigObj( $this->model, $meta );
+			// Save Meta
+			$this->modelService->updateDataCustomObj( $this->model, $ckey, $meta );
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
@@ -81,4 +81,5 @@ class RemoveConfig extends ModelAction {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 	}
+
 }

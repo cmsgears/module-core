@@ -182,11 +182,33 @@ trait OptionTrait {
 	/**
 	 * @inheritdoc
 	 */
-	public function getOptionsByCategoryId( $categoryId, $active = true ) {
+	public function getModelOptionsByCategoryId( $categoryId, $active = true ) {
 
 		$optionTable	= Option::tableName();
+		$mOptionTable	= ModelOption::tableName();
 
-		$options		= null;
+		$query = ModelOption::find()
+			->leftJoin( $optionTable, "$mOptionTable.modelId=$optionTable.id" )
+			->where( "$mOptionTable.parentId=$this->id AND $mOptionTable.parentType='$this->modelType' AND $optionTable.categoryId=$categoryId" );
+
+		if( $active ) {
+
+			$query->andWhere( "$mOptionTable.active=1" );
+		}
+
+		$query->orderBy( [ "$mOptionTable.order" => SORT_DESC, "$mOptionTable.id" => SORT_ASC ] );
+
+		return $query->all();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getOptionsByCategoryId( $categoryId, $active = true ) {
+
+		$optionTable = Option::tableName();
+
+		$options = null;
 
 		if( $active ) {
 

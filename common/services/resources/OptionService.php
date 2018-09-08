@@ -20,6 +20,7 @@ use cmsgears\core\common\services\interfaces\resources\IOptionService;
 
 use cmsgears\core\common\services\base\ResourceService;
 
+use cmsgears\core\common\services\traits\base\NameTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
@@ -54,6 +55,7 @@ class OptionService extends ResourceService implements IOptionService {
 	// Traits ------------------------------------------------------
 
 	use DataTrait;
+	use NameTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -176,6 +178,16 @@ class OptionService extends ResourceService implements IOptionService {
 		return $this->getIdList( $config );
 	}
 
+	public function searchByNameCategoryId( $name, $categoryId, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.categoryId" ] = $categoryId;
+
+		return $this->searchByName( $name, $config );
+	}
+
 	// Read - Maps -----
 
 	/**
@@ -212,6 +224,15 @@ class OptionService extends ResourceService implements IOptionService {
 		$category = Yii::$app->factory->get( 'categoryService' )->getBySlugType( $slug, $type, $config );
 
 		return $this->getIdNameMapByCategoryId( $category->id, $config );
+	}
+
+	public function getValueNameMapByCategorySlug( $slug, $config = [] ) {
+
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_OPTION_GROUP;
+
+		$category = Yii::$app->factory->get( 'categoryService' )->getBySlugType( $slug, $type, $config );
+
+		return $this->getValueNameMapByCategoryId( $category->id, $config );
 	}
 
 	// Read - Others ---

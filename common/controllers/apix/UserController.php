@@ -76,6 +76,17 @@ class UserController extends Controller {
 					// Avatar
 					'avatar' => [ 'permission' => $this->crudPermission ],
 					'clear-avatar' => [ 'permission' => $this->crudPermission ],
+					// Metas
+					'add-meta' => [ 'permission' => $this->crudPermission ],
+					'update-meta' => [ 'permission' => $this->crudPermission ],
+					'toggle-meta' => [ 'permission' => $this->crudPermission ],
+					'delete-meta' => [ 'permission' => $this->crudPermission ],
+					'settings' => [ 'permission' => $this->crudPermission ],
+					// Options
+					'assign-option' => [ 'permission' => $this->crudPermission ],
+					'remove-option' => [ 'permission' => $this->crudPermission ],
+					'delete-option' => [ 'permission' => $this->crudPermission ],
+					'toggle-option' => [ 'permission' => $this->crudPermission ],
 					// Address
 					'get-address' => [ 'permission' => $this->crudPermission ],
 					'add-address' => [ 'permission' => $this->crudPermission ],
@@ -90,8 +101,6 @@ class UserController extends Controller {
 					'remove-config' => [ 'permission' => $this->crudPermission ],
 					'set-setting' => [ 'permission' => $this->crudPermission ],
 					'remove-setting' => [ 'permission' => $this->crudPermission ],
-					// Metas
-					'settings' => [ 'permission' => $this->crudPermission ],
 					// Controller
 					'profile' => [ 'permission' => $this->crudPermission ],
 					'account' => [ 'permission' => $this->crudPermission ],
@@ -104,6 +113,18 @@ class UserController extends Controller {
 					// Avatar
 					'avatar' => [ 'post' ],
 					'clear-avatar' => [ 'post' ],
+					// Metas
+					'add-meta' => [ 'post' ],
+					'update-meta' => [ 'post' ],
+					'toggle-meta' => [ 'post' ],
+					'delete-meta' => [ 'post' ],
+					'settings' => [ 'post' ],
+					// Options
+					'assign-option' => [ 'post' ],
+					'remove-option' => [ 'post' ],
+					'delete-option' => [ 'post' ],
+					'toggle-option' => [ 'post' ],
+					// Address
 					'get-address' => [ 'post' ],
 					'add-address' => [ 'post' ],
 					'update-address' => [ 'post' ],
@@ -117,8 +138,6 @@ class UserController extends Controller {
 					'remove-config' => [ 'post' ],
 					'set-setting' => [ 'post' ],
 					'remove-setting' => [ 'post' ],
-					// Metas
-					'settings' => [ 'post' ],
 					// Controller
 					'profile' => [ 'post' ],
 					'account' => [ 'post' ],
@@ -136,10 +155,22 @@ class UserController extends Controller {
 			// Avatar
 			'avatar' => [ 'class' => 'cmsgears\core\common\actions\content\Avatar' ],
 			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\ClearAvatar' ],
-			'get-address' => [ 'class' => 'cmsgears\core\common\actions\address\Read' ],
-			'add-address' => [ 'class' => 'cmsgears\core\common\actions\address\Create' ],
-			'update-address' => [ 'class' => 'cmsgears\core\common\actions\address\Update' ],
-			'delete-address' => [ 'class' => 'cmsgears\core\common\actions\address\Delete' ],
+			// Metas
+			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\CreateMeta', 'model' => Yii::$app->user->identity ],
+			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMeta', 'model' => Yii::$app->user->identity ],
+			'toggle-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Toggle', 'model' => Yii::$app->user->identity ],
+			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\DeleteMeta', 'model' => Yii::$app->user->identity ],
+			'settings' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMultiple', 'model' => Yii::$app->user->identity ],
+			// Options
+			'assign-option' => [ 'class' => 'cmsgears\core\common\actions\option\Assign', 'model' => Yii::$app->user->identity ],
+			'remove-option' => [ 'class' => 'cmsgears\core\common\actions\option\Remove', 'model' => Yii::$app->user->identity ],
+			'delete-option' => [ 'class' => 'cmsgears\core\common\actions\option\Delete', 'model' => Yii::$app->user->identity ],
+			'toggle-option' => [ 'class' => 'cmsgears\core\common\actions\option\Toggle', 'model' => Yii::$app->user->identity ],
+			// Address
+			'get-address' => [ 'class' => 'cmsgears\core\common\actions\address\Read', 'model' => Yii::$app->user->identity ],
+			'add-address' => [ 'class' => 'cmsgears\core\common\actions\address\Create', 'model' => Yii::$app->user->identity ],
+			'update-address' => [ 'class' => 'cmsgears\core\common\actions\address\Update', 'model' => Yii::$app->user->identity ],
+			'delete-address' => [ 'class' => 'cmsgears\core\common\actions\address\Delete', 'model' => Yii::$app->user->identity ],
 			// Data Object - Use current logged in user to update the config and settings
 			'set-data' => [ 'class' => 'cmsgears\core\common\actions\data\SetData', 'model' => Yii::$app->user->identity ],
 			'remove-data' => [ 'class' => 'cmsgears\core\common\actions\data\RemoveData', 'model' => Yii::$app->user->identity ],
@@ -203,12 +234,12 @@ class UserController extends Controller {
 	public function actionAccount() {
 
 		// Find Model
-		$user	= Yii::$app->user->getIdentity();
+		$user = Yii::$app->user->getIdentity();
 
 		// Update/Render if exist
 		if( isset( $user ) ) {
 
-			$model	= new ResetPassword();
+			$model = new ResetPassword();
 
 			// Old password required if it was already set
 			if( !empty( $user->passwordHash ) ) {
@@ -250,8 +281,9 @@ class UserController extends Controller {
 
 			if( $address->load( Yii::$app->request->post(), $address->getClassName() ) && $address->validate() ) {
 
-				$modelAddress	= $this->modelAddressService->createOrUpdateByType( $address, [ 'parentId' => $user->id, 'parentType' => CoreGlobal::TYPE_USER, 'type' => $type ] );
-				$address		= $modelAddress->model;
+				$modelAddress = $this->modelAddressService->createOrUpdateByType( $address, [ 'parentId' => $user->id, 'parentType' => CoreGlobal::TYPE_USER, 'type' => $type ] );
+
+				$address = $modelAddress->model;
 
 				$data = [
 					'line1' => $address->line1, 'line2' => $address->line2,

@@ -7,26 +7,20 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\data;
+namespace cmsgears\core\common\actions\option;
 
 // Yii Imports
 use Yii;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\models\forms\Meta;
-
-use cmsgears\core\common\actions\base\ModelAction;
-
-use cmsgears\core\common\utilities\AjaxUtil;
+use cmsgears\core\common\actions\mapper\Remove as BaseRemove;
 
 /**
- * RemoveData remove data key for given model supporting data trait.
+ * Remove action disable the option mapping for model by de-activating it.
  *
  * @since 1.0.0
  */
-class RemoveData extends ModelAction {
+class Remove extends BaseRemove {
 
 	// Variables ---------------------------------------------------
 
@@ -50,6 +44,13 @@ class RemoveData extends ModelAction {
 
 	// Constructor and Initialisation ------------------------------
 
+	public function init() {
+
+		parent::init();
+
+		$this->modelMapperService = Yii::$app->factory->get( 'modelOptionService' );
+	}
+
 	// Instance methods --------------------------------------------
 
 	// Yii interfaces ------------------------
@@ -60,26 +61,6 @@ class RemoveData extends ModelAction {
 
 	// CMG parent classes --------------------
 
-	// RemoveConfig --------------------------
-
-	public function run() {
-
-		$meta = new Meta();
-
-		if( $meta->load( Yii::$app->request->post(), 'Meta' ) && $meta->validate() ) {
-
-			// Save config
-			$this->modelService->removeDataKeyObj( $this->model, $meta );
-
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );
-		}
-
-		// Generate Errors
-		$errors = AjaxUtil::generateErrorMessage( $meta );
-
-		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
-	}
+	// Remove --------------------------------
 
 }

@@ -73,7 +73,7 @@ class SiteController extends Controller {
 					'activate-account' => [ 'get', 'post' ],
 					'forgot-password' => [ 'get', 'post' ],
 					'reset-password' => [ 'get', 'post' ],
-					'otp-reset-password' => [ 'get', 'post' ],
+					'reset-password-otp' => [ 'get', 'post' ],
 					'login' => [ 'get', 'post' ],
 					'logout' => [ 'get' ]
 				]
@@ -236,7 +236,7 @@ class SiteController extends Controller {
 		return $this->render( CoreGlobal::PAGE_PASSWORD_RESET, [ CoreGlobal::MODEL_GENERIC => $model ] );
 	}
 
-	public function actionOtpResetPassword() {
+	public function actionResetPasswordOtp() {
 
 		// Send user to home if already logged in
 		$this->checkHome();

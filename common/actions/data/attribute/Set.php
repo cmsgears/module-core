@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\data;
+namespace cmsgears\core\common\actions\data\attribute;
 
 // Yii Imports
 use Yii;
@@ -22,11 +22,11 @@ use cmsgears\core\common\actions\base\ModelAction;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * SetData add data key for given model supporting data trait.
+ * Set add attribute for given model supporting data trait.
  *
  * @since 1.0.0
  */
-class SetData extends ModelAction {
+class Set extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -60,7 +60,7 @@ class SetData extends ModelAction {
 
 	// CMG parent classes --------------------
 
-	// SetConfig -----------------------------
+	// Set -----------------------------------
 
 	public function run() {
 
@@ -68,8 +68,8 @@ class SetData extends ModelAction {
 
 		if( $meta->load( Yii::$app->request->post(), 'Meta' ) && $meta->validate() ) {
 
-			// Save config
-			$this->modelService->updateDataKeyObj( $this->model, $meta );
+			// Save setting
+			$this->modelService->updateDataAttributeObj( $this->model, $meta );
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $meta );

@@ -251,6 +251,8 @@ class CityService extends EntityService implements ICityService {
 
 		$config[ 'columns' ] = [ "$modelTable.id", "$modelTable.name", "$modelTable.latitude", "$modelTable.longitude", "$modelTable.postal" ];
 
+		$config[ 'order' ] = 'name ASC';
+
 		return $this->baseSearchByName( $name, $config );
 	}
 

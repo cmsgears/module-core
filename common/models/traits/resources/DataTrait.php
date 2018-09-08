@@ -111,6 +111,18 @@ trait DataTrait {
 		return null;
 	}
 
+	public function getDataCustomMeta( $type, $name, $assoc = false ) {
+
+		$object	= $this->generateDataObjectFromJson( $assoc );
+
+		if( isset( $object->$type ) && isset( $object->$type->$name ) ) {
+
+			return $object->$type->$name;
+		}
+
+		return null;
+	}
+
 	/**
 	 * @inheritdoc
 	 */

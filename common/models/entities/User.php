@@ -46,6 +46,7 @@ use cmsgears\core\common\models\traits\resources\SocialLinkTrait;
 use cmsgears\core\common\models\traits\resources\VisualTrait;
 use cmsgears\core\common\models\traits\mappers\AddressTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
+use cmsgears\core\common\models\traits\mappers\OptionTrait;
 
 use cmsgears\core\common\utilities\DateUtil;
 
@@ -79,12 +80,15 @@ use cmsgears\core\common\utilities\DateUtil;
  * @property string $avatarUrl
  * @property string $websiteUrl
  * @property string $verifyToken
+ * @property datetime $verifyTokenValidTill
  * @property string $resetToken
+ * @property datetime $resetTokenValidTill
  * @property datetime $registeredAt
  * @property datetime $lastLoginAt
  * @property datetime $lastActivityAt
  * @property string $authKey
  * @property string $otp
+ * @property datetime $otpValidTill
  * @property string $accessToken
  * @property string $accessTokenType
  * @property datetime $tokenCreatedAt
@@ -140,6 +144,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	use FileTrait;
 	use GridCacheTrait;
 	use ModelMetaTrait;
+	use OptionTrait;
 	use SocialLinkTrait;
 	use VisualTrait;
 

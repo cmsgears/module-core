@@ -309,10 +309,13 @@ class FileService extends ResourceService implements IFileService {
 		if( $model->changed ) {
 
 			// Find existing file
-			$existingFile	= self::findById( $model->id );
+			$existingFile = self::findById( $model->id );
 
 			// Delete from disk
-			$existingFile->clearDisk();
+			if( isset( $existingFile ) ) {
+
+				$existingFile->clearDisk();
+			}
 
 			$attributes[] = 'size';
 		}
@@ -486,7 +489,7 @@ class FileService extends ResourceService implements IFileService {
 
 	public function saveFiles( $model, $files = [] ) {
 
-		foreach ( $files as $key => $value ) {
+		foreach( $files as $key => $value ) {
 
 			if( isset( $value ) ) {
 

@@ -7,28 +7,32 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\frontend\controllers\base;
+namespace cmsgears\core\common\actions\option;
 
 // Yii Imports
 use Yii;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\frontend\config\SiteProperties;
-
-use cmsgears\core\common\controllers\base\Controller as BaseController;
+use cmsgears\core\common\actions\mapper\Delete as BaseDelete;
 
 /**
- * Base Controller of all frontend controllers.
+ * Delete action deletes the option mapping.
  *
  * @since 1.0.0
  */
-abstract class Controller extends BaseController {
+class Delete extends BaseDelete {
 
 	// Variables ---------------------------------------------------
 
-	// Globals ----------------
+	// Globals -------------------------------
+
+	// Constants --------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Variables -----------------------------
 
 	// Public -----------------
 
@@ -36,7 +40,7 @@ abstract class Controller extends BaseController {
 
 	// Private ----------------
 
-	private $siteProperties;
+	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
 
@@ -44,11 +48,7 @@ abstract class Controller extends BaseController {
 
 		parent::init();
 
-		// Default Layout
-		$this->layout = Yii::$app->core->defaultLayout;
-
-		// Default Permission
-		$this->crudPermission = CoreGlobal::PERM_USER;
+		$this->modelMapperService = Yii::$app->factory->get( 'modelOptionService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -57,24 +57,10 @@ abstract class Controller extends BaseController {
 
 	// Yii parent classes --------------------
 
-	// yii\base\Component -----
-
-	// yii\base\Controller ----
-
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
-	// Controller ----------------------------
-
-	public function getSiteProperties() {
-
-		if( !isset( $this->siteProperties ) ) {
-
-			$this->siteProperties = SiteProperties::getInstance();
-		}
-
-		return $this->siteProperties;
-	}
+	// Delete --------------------------------
 
 }

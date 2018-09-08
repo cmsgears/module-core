@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\data;
+namespace cmsgears\core\common\actions\data\config;
 
 // Yii Imports
 use Yii;
@@ -19,9 +19,9 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\base\Action;
 
 /**
- * The Config action save model config using Config Data Form to the data column.
+ * The Form action save model config using Config Data Form to the data column.
  */
-class Config extends Action {
+class Form extends Action {
 
 	// Variables ---------------------------------------------------
 
@@ -55,7 +55,7 @@ class Config extends Action {
 
 	// CMG parent classes --------------------
 
-	// Config --------------------------------
+	// Form ----------------------------------
 
 	public function run( $id ) {
 

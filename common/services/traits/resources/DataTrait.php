@@ -159,6 +159,31 @@ trait DataTrait {
 		return false;
 	}
 
+	/**
+	 * Returns the Meta object using given type and key from data object.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param string $type
+	 * @param string $key
+	 * @param boolean $assoc
+	 * @return boolean|\cmsgears\core\common\models\forms\Meta
+	 */
+	public function getDataCustomMeta( $model, $type, $key, $assoc = false ) {
+
+		$object	= $model->generateDataObjectFromJson( $assoc );
+		$meta	= new Meta();
+
+		if( isset( $object->$type ) && isset( $object->$type->$key ) ) {
+
+			$meta->key		= $key;
+			$meta->value	= $object->$type->$key;
+
+			return $meta;
+		}
+
+		return false;
+	}
+
 	// Read - Lists ----
 
 	// Read - Maps -----
@@ -310,6 +335,29 @@ trait DataTrait {
 		return $model;
 	}
 
+	/**
+	 * Update the data object using custom key and given meta object.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param string $type
+	 * @param \cmsgears\core\common\models\forms\Meta $meta
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
+	public function updateDataCustomObj( $model, $type, $meta ) {
+
+		$config = $model->getDataMeta( $type );
+		$key	= $meta->key;
+		$config	= !empty( $config ) ? $config : new \StdClass();
+
+		$config->$key = $meta->value;
+
+		$model->updateDataMeta( $type, $config );
+
+		$model->refresh();
+
+		return $model;
+	}
+
 	// Delete -------------
 
 	/**
@@ -354,8 +402,9 @@ trait DataTrait {
 	public function removeDataKeyObj( $model, $meta ) {
 
 		$config = $model->getDataMeta( 'data' );
+		$rkey	= $meta->key;
 
-		unset( $meta->key );
+		unset( $config->$rkey );
 
 		$model->updateDataMeta( 'data', $config );
 
@@ -374,8 +423,9 @@ trait DataTrait {
 	public function removeDataAttributeObj( $model, $meta ) {
 
 		$config = $model->getDataMeta( 'attributes' );
+		$rkey	= $meta->key;
 
-		unset( $meta->key );
+		unset( $config->$rkey );
 
 		$model->updateDataMeta( 'attributes', $config );
 
@@ -394,8 +444,9 @@ trait DataTrait {
 	public function removeDataConfigObj( $model, $meta ) {
 
 		$config = $model->getDataMeta( 'config' );
+		$rkey	= $meta->key;
 
-		unset( $meta->key );
+		unset( $config->$rkey );
 
 		$model->updateDataMeta( 'config', $config );
 
@@ -414,10 +465,33 @@ trait DataTrait {
 	public function removeDataSettingObj( $model, $meta ) {
 
 		$config = $model->getDataMeta( 'settings' );
+		$rkey	= $meta->key;
 
-		unset( $meta->key );
+		unset( $config->$rkey );
 
 		$model->updateDataMeta( 'settings', $config );
+
+		$model->refresh();
+
+		return $model;
+	}
+
+	/**
+	 * Update the data object by removing the given key from settings.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
+	 * @param string $type
+	 * @param \cmsgears\core\common\models\forms\Meta $meta
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
+	public function removeDataCustomObj( $model, $key, $meta ) {
+
+		$config = $model->getDataMeta( $key );
+		$rkey	= $meta->key;
+
+		unset( $config->$rkey );
+
+		$model->updateDataMeta( $key, $config );
 
 		$model->refresh();
 

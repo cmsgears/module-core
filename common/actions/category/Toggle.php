@@ -1,13 +1,5 @@
 <?php
-/**
- * This file is part of CMSGears Framework. Please view License file distributed
- * with the source code for license details.
- *
- * @link https://www.cmsgears.org/
- * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- */
-
-namespace cmsgears\core\common\actions\option;
+namespace cmsgears\core\common\actions\category;
 
 // Yii Imports
 use Yii;
@@ -20,9 +12,7 @@ use cmsgears\core\common\actions\base\ModelAction;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Toggle action map/un-map existing category option to model in action using ModelOption mapper.
- *
- * @since 1.0.0
+ * Toggle action maps existing category to model in action using ModelCategory mapper.
  */
 class Toggle extends ModelAction {
 
@@ -66,9 +56,9 @@ class Toggle extends ModelAction {
 
 		if( isset( $this->model ) && isset( $cid ) ) {
 
-			$modelOptionService	= Yii::$app->factory->get( 'modelOptionService' );
+			$modelCategoryService = Yii::$app->factory->get( 'modelCategoryService' );
 
-			$modelOptionService->toggle( $this->model->id, $this->parentType, $cid );
+			$modelCategoryService->toggle( $this->model->id, $this->parentType, $cid );
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );

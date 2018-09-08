@@ -198,6 +198,8 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 		$config[ 'conditions' ][] = [ 'countryId' => $countryId ];
 
+		$config[ 'order' ] = 'name ASC';
+
 		return self::findIdNameMap( $config );
 	}
 

@@ -10,7 +10,6 @@
 namespace cmsgears\core\common\base;
 
 // Yii Imports
-use yii\base\Component;
 use yii\i18n\MessageFormatter;
 
 /**
@@ -19,7 +18,7 @@ use yii\i18n\MessageFormatter;
  *
  * @since 1.0.0
  */
-class MessageSource extends Component {
+class MessageSource extends \yii\base\Component\Component {
 
 	// Variables ---------------------------------------------------
 

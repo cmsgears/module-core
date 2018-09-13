@@ -18,7 +18,7 @@ use yii\i18n\MessageFormatter;
  *
  * @since 1.0.0
  */
-class MessageSource extends \yii\base\Component\Component {
+class MessageSource extends \yii\base\Component {
 
 	// Variables ---------------------------------------------------
 

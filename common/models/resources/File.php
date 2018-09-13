@@ -46,6 +46,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $name
+ * @property string $tag
  * @property string $title
  * @property string $description
  * @property string $extension
@@ -158,7 +159,7 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Text Limit
 			[ [ 'extension', 'type', 'storage' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'name', 'directory' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'name', 'tag', 'directory' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'title', 'url', 'medium', 'thumb', 'altText', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
@@ -189,6 +190,7 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'createdBy' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'tag' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TAG ),
 			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
 			'extension' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EXTENSION ),

@@ -10,6 +10,8 @@
 namespace cmsgears\core\common\services\base;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\services\interfaces\base\IModelMapperService;
 
 /**
@@ -263,6 +265,15 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 
 	// Update -------------
 
+	public function update( $model, $config = [] ) {
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'type', 'order', 'active' ];
+
+        $config[ 'attributes' ] = $attributes;
+
+		return parent::update( $model, $config );
+	}
+
 	// Models having active column
 
 	public function activate( $model ) {
@@ -283,6 +294,11 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 			return $this->activate( $model );
 		}
 		else {
+
+			if( empty( $type ) ) {
+
+				$type = CoreGlobal::TYPE_DEFAULT;
+			}
 
 			return $this->createByParams( [ 'parentId' => $parentId, 'parentType' => $parentType, 'modelId' => $modelId, 'type' => $type, 'active' => true ] );
 		}

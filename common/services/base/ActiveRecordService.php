@@ -487,6 +487,13 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	// Delete -------------
 
+	/**
+	 * Delete the model by deleting related resources and mapper.
+	 *
+	 * @param type $model
+	 * @param type $config
+	 * @return boolean
+	 */
 	public function delete( $model, $config = [] ) {
 
 		$hard	= $config[ 'hard' ] ?? true;
@@ -494,16 +501,13 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		if( isset( $model ) ) {
 
-			if( Yii::$app->core->isUpdateSelective() ) {
-
-				$model = $this->getById( $model->id );
-			}
-
+			// Permanent Delete
 			if( $hard ) {
 
 				return $model->delete();
 			}
 
+			// Soft Delete - Useful for models using status to mark model as deleted, but keep for historic purpose.
 			return $this->softDelete( $model, $notify, $config );
 		}
 

@@ -33,13 +33,11 @@ interface IModelAddressService extends IModelMapperService {
 
 	// Create -------------
 
-	public function createOrUpdate( $address, $config = [] ) ;
+	public function createPrimary( $model, $config = [] );
 
-	public function createOrUpdateByType( $address, $config = [] );
+	public function createShipping( $model, $config = [] );
 
-	public function createShipping( $address, $config = [] );
-
-	public function copyToShipping( $address, $config = [] );
+	public function createBilling( $model, $config = [] );
 
 	// Update -------------
 

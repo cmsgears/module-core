@@ -98,11 +98,19 @@ class Create extends ModelAction {
 
 				$type = isset( $this->modelType ) ? $this->modelType : Address::TYPE_DEFAULT;
 
-				// Address - Create
-				$modelAddress	= $this->modelAddressService->create( $address, [ 'parentId' => $this->model->id, 'parentType' => $this->parentType, 'type' => $type ] );
-				$address		= $modelAddress->model;
+				// Create Address
+				$address = $this->addressService->create( $address );
 
-				$data = [ 'cid' => $modelAddress->id, 'title' => $address->title, 'value' => $address->toString() ];
+				// Create Mapping
+				$modelAddress = $this->modelAddressService->activateByModelId( $this->model->id, $this->parentType, $address->id, $type );
+
+				$data = [
+					'cid' => $modelAddress->id, 'type' => $type,
+					'title' => $address->title, 'line1' => $address->line1, 'line2' => $address->line2,
+					'country' => $address->countryName, 'province' => $address->provinceName,
+					'region' => $address->regionName, 'city' => $address->cityName,
+					'zip' => $address->zip, 'value' => $address->toString()
+				];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

@@ -48,8 +48,6 @@ interface IFileService extends IResourceService, IData, IMultiSite, IVisibility 
 
 	// Delete -------------
 
-	public function deleteFiles( $files = [] );
-
 	// Bulk ---------------
 
 	// Notifications ------

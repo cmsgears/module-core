@@ -81,9 +81,11 @@ class Update extends ModelAction {
 
 		if( isset( $this->model ) ) {
 
-			$modelAddress	= $this->modelAddressService->getById( $cid );
+			$modelAddress = $this->modelAddressService->getById( $cid );
 
 			if( isset( $modelAddress ) && $modelAddress->isParentValid( $this->model->id, $this->parentType ) ) {
+
+				$type = isset( $this->modelType ) ? $this->modelType : $modelAddress->type;
 
 				$address = $modelAddress->model;
 
@@ -94,11 +96,21 @@ class Update extends ModelAction {
 
 				if( $address->load( Yii::$app->request->post(), 'Address' ) && $address->validate() ) {
 
+					$modelAddress->type = $type;
+
 					$this->addressService->update( $address );
+
+					$this->modelAddressService->update( $modelAddress );
 
 					$address->refresh();
 
-					$data	= [ 'cid' => $modelAddress->id, 'title' => $address->title, 'value' => $address->toString() ];
+					$data = [
+						'cid' => $modelAddress->id, 'type' => $type,
+						'title' => $address->title, 'line1' => $address->line1, 'line2' => $address->line2,
+						'country' => $address->countryName, 'province' => $address->provinceName,
+						'region' => $address->regionName, 'city' => $address->cityName,
+						'zip' => $address->zip, 'value' => $address->toString()
+					];
 
 					// Trigger Ajax Success
 					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

@@ -507,13 +507,20 @@ class FileService extends ResourceService implements IFileService {
 
 	// Delete -------------
 
+	/**
+	 * Delete the file and corresponding mappings.
+	 *
+	 * @param \cmsgears\core\common\models\resources\File $model
+	 * @param array $config
+	 * @return boolean
+	 */
 	public function delete( $model, $config = [] ) {
 
 		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		if( isset( $model ) ) {
 
-			// Only admin is authorised to delete a shared file
+			// Only admin is authorised to delete a shared file using file browser.
 			if( $admin || !$model->shared ) {
 
 				// Delete mappings
@@ -528,17 +535,6 @@ class FileService extends ResourceService implements IFileService {
 		}
 
 		return false;
-	}
-
-	public function deleteFiles( $files = [] ) {
-
-		foreach ( $files as $file ) {
-
-			if( isset( $file ) ) {
-
-				$this->delete( $file );
-			}
-		}
 	}
 
 	// Bulk ---------------

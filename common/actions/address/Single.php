@@ -40,7 +40,7 @@ class Single extends Action {
 
 	// Public -----------------
 
-	//public $scenario = 'location';
+	// public $scenario = 'location';
 
 	// Protected --------------
 

@@ -73,20 +73,29 @@ class ModelFileService extends ModelMapperService implements IModelFileService {
 
 	// Read - Models ---
 
-	public function getByFileTitle( $parentId, $parentType, $fileTitle ) {
+	/**
+	 * @inheritdoc
+	 */
+	public function getByFileTag( $parentId, $parentType, $fileTag ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByFileTag( $parentId, $parentType, $fileTag );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function searchByFileTitle( $parentId, $parentType, $fileTitle ) {
 
 		$modelClass	= static::$modelClass;
 
 		return $modelClass::findByFileTitle( $parentId, $parentType, $fileTitle );
 	}
 
-	public function getByFileTitleLike( $parentId, $parentType, $likeTitle ) {
-
-		$modelClass	= static::$modelClass;
-
-		return $modelClass::findByFileTitleLike( $parentId, $parentType, $likeTitle );
-	}
-
+	/**
+	 * @inheritdoc
+	 */
 	public function getByFileType( $parentId, $parentType, $fileType ) {
 
 		$modelClass	= static::$modelClass;
@@ -102,56 +111,9 @@ class ModelFileService extends ModelMapperService implements IModelFileService {
 
 	// Create -------------
 
-	public function createOrUpdateByTitle( $file, $config = [] ) {
-
-		$parent		= $config[ 'parent' ];
-		$parentType = $config[ 'parentType' ];
-
-		if( isset( $file ) && isset( $file->title ) ) {
-
-			$fileModel = $this->getByFileTitle( $parent->id, $parentType, $file->title );
-
-			if( isset( $fileModel ) ) {
-
-				$file->id = $fileModel->file->id;
-
-				$this->fileService->saveFile( $file, [ 'model' => $fileModel, 'attribute' => 'modelId' ] );
-
-				$fileModel->update();
-			}
-			else {
-
-				$fileModel = $this->getModelObject();
-
-				$fileModel->parentId	= $parent->id;
-				$fileModel->parentType	= $parentType;
-
-				$this->fileService->saveFile( $file, [ 'model' => $fileModel, 'attribute' => 'modelId' ] );
-
-				$fileModel->save();
-			}
-
-			return $fileModel;
-		}
-	}
-
 	// Update -------------
 
 	// Delete -------------
-
-	public function deleteMultiple( $models, $config = [] ) {
-
-		$files = [];
-
-		foreach( $models as $model ) {
-
-			$files[] = $model->model;
-
-			$this->delete( $model, $config );
-		}
-
-		$this->fileService->deleteMultiple( $files );
-	}
 
 	// Bulk ---------------
 

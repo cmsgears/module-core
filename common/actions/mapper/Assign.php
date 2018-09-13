@@ -28,7 +28,7 @@ class Assign extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $parent 	= true;
+	public $parent = true;
 
 	// Protected --------------
 

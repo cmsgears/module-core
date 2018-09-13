@@ -128,14 +128,14 @@ class ModelFile extends ModelMapper implements IFeatured {
 	 *
 	 * @param integer $parentId
 	 * @param string $parentType
-	 * @param string $title
+	 * @param string $fileTag
 	 * @return ModelFile
 	 */
-	public static function findByFileTitle( $parentId, $parentType, $title ) {
+	public static function findByFileTag( $parentId, $parentType, $fileTag ) {
 
 		$fileTable = CoreTables::getTableName( CoreTables::TABLE_FILE );
 
-		return self::queryByParent( $parentId, $parentType )->andWhere( "$fileTable.title=:title", [ ':title' => $title ] )->one();
+		return self::queryByParent( $parentId, $parentType )->andWhere( "$fileTable.tag=:tag", [ ':tag' => $fileTag ] )->one();
 	}
 
 	/**
@@ -143,14 +143,14 @@ class ModelFile extends ModelMapper implements IFeatured {
 	 *
 	 * @param integer $parentId
 	 * @param string $parentType
-	 * @param string $title
+	 * @param string $fileTitle
 	 * @return ModelFile[]
 	 */
-	public static function findByFileTitleLike( $parentId, $parentType, $title ) {
+	public static function findByFileTitle( $parentId, $parentType, $fileTitle ) {
 
 		$fileTable = CoreTables::getTableName( CoreTables::TABLE_FILE );
 
-		return self::queryByParent( $parentId, $parentType )->andFilterWhere( [ 'like', "$fileTable.title", $title ] )->all();
+		return self::queryByParent( $parentId, $parentType )->andFilterWhere( [ 'like', "$fileTable.title", $fileTitle ] )->all();
 	}
 
 	/**

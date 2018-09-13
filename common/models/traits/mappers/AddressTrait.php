@@ -50,7 +50,8 @@ trait AddressTrait {
 		$modelAddressTable = ModelAddress::tableName();
 
 		return $this->hasMany( ModelAddress::class, [ 'parentId' => 'id' ] )
-			->where( "$modelAddressTable.parentType='$this->modelType'" );
+			->where( "$modelAddressTable.parentType='$this->modelType'" )
+			->orderBy( "$modelAddressTable.id DESC" );
 	}
 
 	/**
@@ -61,7 +62,8 @@ trait AddressTrait {
 		$modelAddressTable = ModelAddress::tableName();
 
 		return $this->hasMany( ModelAddress::class, [ 'parentId' => 'id' ] )
-			->where( "$modelAddressTable.parentType='$this->modelType' AND $modelAddressTable.active=1" );
+			->where( "$modelAddressTable.parentType='$this->modelType' AND $modelAddressTable.active=1" )
+			->orderBy( "$modelAddressTable.id DESC" );
 	}
 
 	/**
@@ -72,7 +74,9 @@ trait AddressTrait {
 		$modelAddressTable = ModelAddress::tableName();
 
 		return $this->hasOne( ModelAddress::class, [ 'parentId' => 'id' ] )
-			->where( "$modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type AND $modelAddressTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
+			->where( "$modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type AND $modelAddressTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+			->orderBy( "$modelAddressTable.id DESC" )
+			->all();
 	}
 
 	/**
@@ -80,15 +84,13 @@ trait AddressTrait {
 	 */
 	public function getAddresses() {
 
-		$modelAddressTable = ModelAddress::tableName();
+		$addressTable		= Address::tableName();
+		$modelAddressTable	= ModelAddress::tableName();
 
-		return $this->hasMany( Address::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelAddressTable ) {
-
-					$query->onCondition( [ "$modelAddressTable.parentType" => $this->modelType ] );
-				}
-			);
+		return Address::find()
+			->leftJoin( $modelAddressTable, "$modelAddressTable.modelId=$addressTable.id" )
+			->where( "$modelAddressTable.parentId=:pid AND $modelAddressTable.parentType=:ptype", [ ':pid' => $this->id, ':ptype' => $this->modelType ] )
+			->orderBy( [ "$modelAddressTable.order" => SORT_DESC, "$modelAddressTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -96,15 +98,13 @@ trait AddressTrait {
 	 */
 	public function getActiveAddresses() {
 
-		$modelAddressTable = ModelAddress::tableName();
+		$addressTable		= Address::tableName();
+		$modelAddressTable	= ModelAddress::tableName();
 
-		return $this->hasMany( Address::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelAddressTable ) {
-
-					$query->onCondition( [ "$modelAddressTable.parentType" => $this->modelType, "$modelAddressTable.active" => true ] );
-				}
-			);
+		return Address::find()
+			->leftJoin( $modelAddressTable, "$modelAddressTable.modelId=$addressTable.id" )
+			->where( "$modelAddressTable.parentId=:pid AND $modelAddressTable.parentType=:ptype AND $modelAddressTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':active' => true ] )
+			->orderBy( [ "$modelAddressTable.order" => SORT_DESC, "$modelAddressTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -112,15 +112,14 @@ trait AddressTrait {
 	 */
 	public function getAddressesByType( $type, $active = true ) {
 
-		$modelAddressTable = ModelAddress::tableName();
+		$addressTable		= Address::tableName();
+		$modelAddressTable	= ModelAddress::tableName();
 
-		return $this->hasMany( Address::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$type, &$active, &$modelAddressTable ) {
-
-					$query->onCondition( [ "$modelAddressTable.parentType" => $this->modelType, "$modelAddressTable.type" => $type, "$modelAddressTable.active" => $active ] );
-				}
-			)->all();
+		return Address::find()
+			->leftJoin( $modelAddressTable, "$modelAddressTable.modelId=$addressTable.id" )
+			->where( "$modelAddressTable.parentId=:pid AND $modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type AND $modelAddressTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+			->orderBy( [ "$modelAddressTable.order" => SORT_DESC, "$modelAddressTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	// Some useful methods in case model allows only one address for specific address type.
@@ -134,8 +133,7 @@ trait AddressTrait {
 
 		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
-				function( $query, $type = Address::TYPE_DEFAULT ) use( &$modelAddressTable ) {
-
+				function( $query, $type = Address::TYPE_DEFAULT ) use( $modelAddressTable ) {
 					$query->onCondition( "$modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] );
 				}
 			);
@@ -150,8 +148,7 @@ trait AddressTrait {
 
 		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
-				function( $query, $type = Address::TYPE_PRIMARY ) use( &$modelAddressTable ) {
-
+				function( $query, $type = Address::TYPE_PRIMARY ) use( $modelAddressTable ) {
 					$query->onCondition( "$modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] );
 				}
 			);
@@ -166,8 +163,7 @@ trait AddressTrait {
 
 		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
-				function( $query, $type = Address::TYPE_RESIDENTIAL ) use( &$modelAddressTable ) {
-
+				function( $query, $type = Address::TYPE_RESIDENTIAL ) use( $modelAddressTable ) {
 					$query->onCondition( "$modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] );
 				}
 			);
@@ -182,8 +178,7 @@ trait AddressTrait {
 
 		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
-				function( $query, $type = Address::TYPE_SHIPPING ) use( &$modelAddressTable ) {
-
+				function( $query, $type = Address::TYPE_SHIPPING ) use( $modelAddressTable ) {
 					$query->onCondition( "$modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] );
 				}
 			);
@@ -198,8 +193,7 @@ trait AddressTrait {
 
 		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
-				function( $query, $type = Address::TYPE_BILLING ) use( &$modelAddressTable ) {
-
+				function( $query, $type = Address::TYPE_BILLING ) use( $modelAddressTable ) {
 					$query->onCondition( "$modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] );
 				}
 			);
@@ -214,8 +208,7 @@ trait AddressTrait {
 
 		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
-				function( $query, $type = Address::TYPE_OFFICE ) use( &$modelAddressTable ) {
-
+				function( $query, $type = Address::TYPE_OFFICE ) use( $modelAddressTable ) {
 					$query->onCondition( "$modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] );
 				}
 			);
@@ -230,8 +223,7 @@ trait AddressTrait {
 
 		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
-				function( $query, $type = Address::TYPE_MAILING ) use( &$modelAddressTable ) {
-
+				function( $query, $type = Address::TYPE_MAILING ) use( $modelAddressTable ) {
 					$query->onCondition( "$modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] );
 				}
 			);
@@ -246,8 +238,7 @@ trait AddressTrait {
 
 		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] )
 			->viaTable( $modelAddressTable, [ 'parentId' => 'id' ],
-				function( $query, $type = Address::TYPE_BRANCH ) use( &$modelAddressTable ) {
-
+				function( $query, $type = Address::TYPE_BRANCH ) use( $modelAddressTable ) {
 					$query->onCondition( "$modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] );
 				}
 			);

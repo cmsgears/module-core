@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\address;
+namespace cmsgears\core\common\actions\file;
 
 // Yii Imports
 use Yii;
@@ -15,17 +15,16 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\resources\File;
+
 use cmsgears\core\common\actions\base\ModelAction;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * The Delete action find model address for the given id and delete the address. The service
- * also deletes all the model addresses associated with the address.
- *
- * @since 1.0.0
+ * It assigns the uploaded file to model in action using ModelFile mapper.
  */
-class Delete extends ModelAction {
+class Assign extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -43,11 +42,13 @@ class Delete extends ModelAction {
 
 	public $parent = true;
 
+	public $fileName = 'File';
+
 	// Protected --------------
 
-	protected $addressService;
+	protected $fileService;
 
-	protected $modelAddressService;
+	protected $modelFileService;
 
 	// Private ----------------
 
@@ -59,9 +60,9 @@ class Delete extends ModelAction {
 
 		parent::init();
 
-		$this->addressService		= Yii::$app->factory->get( 'addressService' );
+		$this->fileService = Yii::$app->factory->get( 'fileService' );
 
-		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
+		$this->modelFileService = Yii::$app->factory->get( 'modelFileService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -74,25 +75,38 @@ class Delete extends ModelAction {
 
 	// CMG parent classes --------------------
 
-	// Delete --------------------------------
+	// Assign --------------------------------
 
-	public function run( $cid ) {
+	public function run( $tag ) {
+
+		// Post Data
+		$post	= yii::$app->request->post();
+		$cType	= isset( $post[ 'ctype' ] ) ? $post[ 'ctype' ] : null;
 
 		if( isset( $this->model ) ) {
 
-			$modelAddress = $this->modelAddressService->getById( $cid );
+			$model = $this->model;
 
-			if( isset( $modelAddress ) && $modelAddress->isParentValid( $this->model->id, $this->parentType ) ) {
+			// Populate File
+			$mapper	= $this->modelFileService->getByFileTag( $model->id, $this->parentType, $tag );
+			$file	= isset( $file ) ? $mapper->model : new File();
 
-				$address = $modelAddress->model;
+			// Load File
+			$file = File::loadFile( $file, $this->fileName );
 
-				$data = [ 'cid' => $modelAddress->id ];
+			// Configure File
+			$file->tag = $tag;
 
-				$this->addressService->delete( $address );
+			// Create/Update File
+			$file = $this->fileService->saveFile( $file );
 
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-			}
+			// Create/Update Mapping
+			$modelMapper = $this->modelFileService->activateByModelId( $model->id, $this->parentType, $file->id, $cType );
+
+			$data = [ 'cid' => $modelMapper->id, 'fileUrl' => $file->getFileUrl() ];
+
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 		}
 
 		// Trigger Ajax Failure

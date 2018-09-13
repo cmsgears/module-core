@@ -15,16 +15,14 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Action;
+use cmsgears\core\common\actions\base\ModelAction;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Accept and upload the file to temp directory.
- * 
- * @since 1.0.0
+ * It deletes the file from db and clear the file from disk.
  */
-class FileHandler extends Action {
+class Clear extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -40,13 +38,28 @@ class FileHandler extends Action {
 
 	// Public -----------------
 
+	public $parent = true;
+
 	// Protected --------------
+
+	protected $fileService;
+
+	protected $modelFileService;
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->fileService = Yii::$app->factory->get( 'fileService' );
+
+		$this->modelFileService = Yii::$app->factory->get( 'modelFileService' );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -58,21 +71,29 @@ class FileHandler extends Action {
 
 	// CMG parent classes --------------------
 
-	// Action --------------------------------
+	// Clear ---------------------------------
 
-	public function run( $directory, $type ) {
+	public function run( $tag ) {
 
-		$data	= Yii::$app->fileManager->handleFileUpload( $directory, $type );
-		$keys	= array_keys( $data );
+		if( isset( $this->model ) ) {
 
-		if( !in_array( 'error', array_keys( $data ) ) ) {
+			$model = $this->model;
 
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+			// Populate File
+			$mapper	= $this->modelFileService->getByFileTag( $model->id, $this->parentType, $tag );
+
+			if( isset( $mapper ) ) {
+
+				// Delete the file and mapper models
+				$this->fileService->delete( $mapper->model );
+
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+			}
 		}
 
 		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $data );
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 }

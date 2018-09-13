@@ -186,7 +186,7 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 			[ [ 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Check captcha need for testimonial and review
 			[ [ 'name', 'email' ], 'required', 'on' => self::SCENARIO_IDENTITY ],
-			[ 'rating', 'required', 'on' => [ self::SCENARIO_REVIEW, self::SCENARIO_TESTIMONIAL ] ],
+			[ 'rating', 'required', 'on' => [ self::SCENARIO_REVIEW, self::SCENARIO_TESTIMONIAL, self::SCENARIO_FEEDBACK  ] ],
 			[ 'captcha', 'captcha', 'captchaAction' => '/core/site/captcha', 'on' => self::SCENARIO_CAPTCHA ],
 			// Other
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],

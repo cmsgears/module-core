@@ -64,11 +64,11 @@ interface IFile {
 	public function getFilesByType( $type, $active = true );
 
 	/**
-	 * Return file associated with the parent for given title. It's useful only in cases
-	 * where unique title is allowed.
+	 * Return file associated with the parent for given tag.
 	 *
-	 * @param string $title
+	 * @param string $tag
 	 * @return \cmsgears\core\common\models\resources\File
 	 */
-	public function getFileByTitle( $title );
+	public function getFileByTag( $tag );
+
 }

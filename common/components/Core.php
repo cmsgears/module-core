@@ -104,6 +104,11 @@ class Core extends Config {
 	public $otpValidity			= 600000; // 10 minues by default
 
 	/**
+	 * It can be used to test token validity in milliseconds.
+	 */
+	public $tokenValidity		= 600000; // 10 minues by default
+
+	/**
 	 * @var default redirect path to be used for post login. It will be used by login action of Site Controller to redirect users
 	 * after successful login in case user role home url is not set.
 	 */
@@ -361,6 +366,11 @@ class Core extends Config {
 	public function getOtpValidity() {
 
 		return $this->otpValidity;
+	}
+
+	public function getTokenValidity() {
+
+		return $this->tokenValidity;
 	}
 
 	/**

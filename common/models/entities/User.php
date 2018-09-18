@@ -76,6 +76,8 @@ use cmsgears\core\common\utilities\DateUtil;
  * @property string $dob
  * @property string $mobile
  * @property string $phone
+ * @property boolean $emailVerified
+ * @property boolean $mobileVerified
  * @property integer $timeZone
  * @property string $avatarUrl
  * @property string $websiteUrl
@@ -229,7 +231,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			[ [ 'avatarId', 'bannerId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
 			[ 'dob', 'date' ],
-			[ 'gridCacheValid', 'boolean' ],
+			[ [ 'emailVerified', 'mobileVerified', 'gridCacheValid' ], 'boolean' ],
 			[ [ 'registeredAt', 'lastLoginAt', 'lastActivityAt', 'tokenCreatedAt', 'tokenAccessedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 

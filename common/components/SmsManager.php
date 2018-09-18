@@ -42,6 +42,19 @@ class SmsManager extends Component {
 
 	// SmsManager ----------------------------
 
+	public function generateOtp( $digits = null ) {
+
+		$otp = 0;
+
+		// Generate 6 digits OTP by default
+		if( empty( $digits ) ) {
+
+			$otp = random_int( 100000, 999999 );
+		}
+
+		return $otp;
+	}
+
 	public function sendOtp( $number, $message, $otp ) {
 
 	}

@@ -10,6 +10,7 @@
 namespace cmsgears\core\common\models\mappers;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
 
 use cmsgears\core\common\models\interfaces\base\IFeatured;
@@ -131,11 +132,17 @@ class ModelFile extends ModelMapper implements IFeatured {
 	 * @param string $fileTag
 	 * @return ModelFile
 	 */
-	public static function findByFileTag( $parentId, $parentType, $fileTag ) {
+	public static function findByFileTag( $parentId, $parentType, $fileTag, $type = null ) {
 
-		$fileTable = CoreTables::getTableName( CoreTables::TABLE_FILE );
+		$mapTable	= static::tableName();
+		$fileTable	= CoreTables::getTableName( CoreTables::TABLE_FILE );
 
-		return self::queryByParent( $parentId, $parentType )->andWhere( "$fileTable.tag=:tag", [ ':tag' => $fileTag ] )->one();
+		if( empty( $type ) ) {
+
+			$type = CoreGlobal::TYPE_DEFAULT;
+		}
+
+		return self::queryByParent( $parentId, $parentType )->andWhere( "$fileTable.tag=:tag AND $mapTable.type=:type", [ ':tag' => $fileTag, ':type' => $type ] )->one();
 	}
 
 	/**

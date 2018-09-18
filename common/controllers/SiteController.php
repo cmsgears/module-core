@@ -260,7 +260,7 @@ class SiteController extends Controller {
 		// Trigger OTP
 		else if( empty( $otp ) && isset( $user ) && !empty( $mobile ) && empty( $status ) ) {
 
-			$otp = random_int( 100000, 999999 );
+			$otp = Yii::$app->smsManager->generateOtp();
 
 			$message = "$otp is your verification code to reset password.";
 

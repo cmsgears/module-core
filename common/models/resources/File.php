@@ -160,8 +160,8 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 			// Text Limit
 			[ [ 'extension', 'type', 'storage' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'name', 'tag', 'directory' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
-			[ [ 'title', 'url', 'medium', 'thumb', 'altText', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
-			[ 'description', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
+			[ [ 'title', 'url', 'medium', 'thumb', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'description', 'altText' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ [ 'visibility', 'width', 'height', 'mwidth', 'mheight', 'twidth', 'theight' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ 'size', 'number', 'min' => 0 ],

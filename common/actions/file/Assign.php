@@ -79,10 +79,6 @@ class Assign extends ModelAction {
 
 	public function run( $tag ) {
 
-		// Post Data
-		$post	= yii::$app->request->post();
-		$cType	= isset( $post[ 'ctype' ] ) ? $post[ 'ctype' ] : null;
-
 		if( isset( $this->model ) ) {
 
 			$model = $this->model;
@@ -101,7 +97,7 @@ class Assign extends ModelAction {
 			$file = $this->fileService->saveFile( $file );
 
 			// Create/Update Mapping
-			$modelMapper = $this->modelFileService->activateByModelId( $model->id, $this->parentType, $file->id, $cType );
+			$modelMapper = $this->modelFileService->activateByModelId( $model->id, $this->parentType, $file->id, $this->modelType );
 
 			$data = [ 'cid' => $modelMapper->id, 'fileUrl' => $file->getFileUrl() ];
 

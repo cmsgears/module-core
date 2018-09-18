@@ -50,7 +50,7 @@ trait AddressTrait {
 		$modelAddressTable = ModelAddress::tableName();
 
 		return $this->hasMany( ModelAddress::class, [ 'parentId' => 'id' ] )
-			->where( "$modelAddressTable.parentType='$this->modelType'" )
+			->where( "$modelAddressTable.parentType=:ptype", [ ':ptype' => $this->modelType ] )
 			->orderBy( "$modelAddressTable.id DESC" );
 	}
 
@@ -62,7 +62,7 @@ trait AddressTrait {
 		$modelAddressTable = ModelAddress::tableName();
 
 		return $this->hasMany( ModelAddress::class, [ 'parentId' => 'id' ] )
-			->where( "$modelAddressTable.parentType='$this->modelType' AND $modelAddressTable.active=1" )
+			->where( "$modelAddressTable.parentType=:ptype AND $modelAddressTable.active=:active", [ ':ptype' => $this->modelType, ':active' => true ] )
 			->orderBy( "$modelAddressTable.id DESC" );
 	}
 

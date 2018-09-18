@@ -289,7 +289,7 @@ class GalleryService extends ResourceService implements IGalleryService {
 
 	// Create -------------
 
-	public function createItem( $gallery, $item ) {
+	public function createItem( $gallery, $item, $type = null ) {
 
 		$modelFile = Yii::$app->factory->get( 'modelFileService' )->getModelObject();
 
@@ -299,8 +299,14 @@ class GalleryService extends ResourceService implements IGalleryService {
 		// Save Gallery Item
 		if( $item->id > 0 ) {
 
+			if( empty( $type ) ) {
+
+				$type = CoreGlobal::TYPE_DEFAULT;
+			}
+
 			$modelFile->parentType	= static::$parentType;
 			$modelFile->parentId	= $gallery->id;
+			$modelFile->type		= $type;
 
 			$modelFile->save();
 		}

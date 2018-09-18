@@ -280,6 +280,16 @@ class DateUtil {
 		return $sunday;
 	}
 
+	public static function addMillis( $date, $millis ) {
+
+		$date 	= is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
+		$secs	= $millis / 1000;
+
+	    $date = strtotime( "+" . $secs ." second", $date );
+
+	    return  date( "Y-m-d H:i:s", $date );
+	}
+
 	public static function addDays( $date, $days ) {
 
 		$date 	= is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();

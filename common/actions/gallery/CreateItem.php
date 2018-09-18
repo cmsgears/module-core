@@ -70,9 +70,10 @@ class CreateItem extends Action {
 	 *
 	 * @param type $id Parent Id
 	 * @param type $cid Gallery Id
+	 * @param type $ctype Mapper type
 	 * @return string
 	 */
-	public function run( $id, $cid ) {
+	public function run( $id, $cid, $ctype = null ) {
 
 		$galleryService	= Yii::$app->factory->get( 'galleryService' );
 		$fileService	= Yii::$app->factory->get( 'fileService' );
@@ -97,7 +98,7 @@ class CreateItem extends Action {
 
 			if( $item->load( Yii::$app->request->post(), 'File' ) && $item->validate() ) {
 
-				$modelFile	= $galleryService->createItem( $gallery, $item );
+				$modelFile	= $galleryService->createItem( $gallery, $item, $ctype );
 				$file		= $modelFile->model;
 				$data		= [ 'id' => $modelFile->id, 'fid' => $file->id, 'thumbUrl' => $file->getThumbUrl(), 'title' => $file->title, 'description' => $file->description, 'alt' => $file->altText, 'url' => $file->url ];
 

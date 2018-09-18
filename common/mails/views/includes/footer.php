@@ -5,7 +5,7 @@
 			<div style="border-bottom: 1px solid #D8D8D8; font-size: 12px;">
 				<p style="margin: 0; text-align: center; margin-bottom: 10px;"><font face="'Roboto', Arial, sans-serif">This email was sent to: <span style="font-weight: bold; color: #35A7ED;"><?= $email ?></span></font></p>
 				<?php if( isset( $user ) ) { ?>
-					<p style="margin: 0; text-align: center; margin-bottom: 10px;"><font face="'Roboto', Arial, sans-serif">This email was intended for the user <?= $name ?></font></p>
+					<p style="margin: 0; text-align: center; margin-bottom: 10px;"><font face="'Roboto', Arial, sans-serif">This email was intended for the user <?= $user->getName() ?></font></p>
 				<?php } ?>
 			</div>
 		</td>

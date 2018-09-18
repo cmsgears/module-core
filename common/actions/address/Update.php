@@ -85,8 +85,6 @@ class Update extends ModelAction {
 
 			if( isset( $modelAddress ) && $modelAddress->isParentValid( $this->model->id, $this->parentType ) ) {
 
-				$type = isset( $this->modelType ) ? $this->modelType : $modelAddress->type;
-
 				$address = $modelAddress->model;
 
 				if( isset( $this->scenario ) ) {
@@ -96,7 +94,7 @@ class Update extends ModelAction {
 
 				if( $address->load( Yii::$app->request->post(), 'Address' ) && $address->validate() ) {
 
-					$modelAddress->type = $type;
+					$modelAddress->type = $this->modelType;
 
 					$this->addressService->update( $address );
 
@@ -105,7 +103,7 @@ class Update extends ModelAction {
 					$address->refresh();
 
 					$data = [
-						'cid' => $modelAddress->id, 'type' => $type,
+						'cid' => $modelAddress->id, 'type' => $modelAddress->type,
 						'title' => $address->title, 'line1' => $address->line1, 'line2' => $address->line2,
 						'country' => $address->countryName, 'province' => $address->provinceName,
 						'region' => $address->regionName, 'city' => $address->cityName,

@@ -94,10 +94,12 @@ class DeleteItem extends Action {
 
 			if( isset( $modelFile ) ) {
 
+				$data = [ 'id' => $modelFile->id ];
+
 				$modelFileService->delete( $modelFile );
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $modelFile->id );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 			}
 		}
 

@@ -16,8 +16,6 @@ use yii\db\Expression;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\Address;
-
 use cmsgears\core\common\actions\base\ModelAction;
 
 use cmsgears\core\common\utilities\AjaxUtil;
@@ -96,16 +94,14 @@ class Create extends ModelAction {
 
 			if( $address->load( Yii::$app->request->post(), 'Address' ) && $address->validate() ) {
 
-				$type = isset( $this->modelType ) ? $this->modelType : Address::TYPE_DEFAULT;
-
 				// Create Address
 				$address = $this->addressService->create( $address );
 
 				// Create Mapping
-				$modelAddress = $this->modelAddressService->activateByModelId( $this->model->id, $this->parentType, $address->id, $type );
+				$modelAddress = $this->modelAddressService->activateByModelId( $this->model->id, $this->parentType, $address->id, $this->modelType );
 
 				$data = [
-					'cid' => $modelAddress->id, 'type' => $type,
+					'cid' => $modelAddress->id, 'type' => $modelAddress->type,
 					'title' => $address->title, 'line1' => $address->line1, 'line2' => $address->line2,
 					'country' => $address->countryName, 'province' => $address->provinceName,
 					'region' => $address->regionName, 'city' => $address->cityName,

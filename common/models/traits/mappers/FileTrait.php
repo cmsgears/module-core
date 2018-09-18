@@ -51,7 +51,8 @@ trait FileTrait {
 		$modelFileTable = ModelFile::tableName();
 
 		return $this->hasMany( ModelFile::class, [ 'parentId' => 'id' ] )
-			->where( "$modelFileTable.parentType='$this->modelType'" );
+			->where( "$modelFileTable.parentType=:ptype", [ ':ptype' => $this->modelType ] )
+			->orderBy( "$modelFileTable.id DESC" );
 	}
 
 	/**
@@ -62,7 +63,8 @@ trait FileTrait {
 		$modelFileTable = ModelFile::tableName();
 
 		return $this->hasMany( ModelFile::class, [ 'parentId' => 'id' ] )
-			->where( "$modelFileTable.parentType='$this->modelType' AND $modelFileTable.active=1" );
+			->where( "$modelFileTable.parentType=:ptype AND $modelFileTable.active=:active", [ ':ptype' => $this->modelType, ':active' => true ] )
+			->orderBy( "$modelFileTable.id DESC" );
 	}
 
 	/**
@@ -73,7 +75,9 @@ trait FileTrait {
 		$modelFileTable = ModelFile::tableName();
 
 		return $this->hasOne( ModelFile::class, [ 'parentId' => 'id' ] )
-			->where( "$modelFileTable.parentType=:ptype AND $modelFileTable.type=:type AND $modelFileTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
+			->where( "$modelFileTable.parentType=:ptype AND $modelFileTable.type=:type AND $modelFileTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+			->orderBy( "$modelFileTable.id DESC" )
+			->all();
 	}
 
 	/**
@@ -81,15 +85,13 @@ trait FileTrait {
 	 */
 	public function getFiles() {
 
-		$modelFileTable = ModelFile::tableName();
+		$fileTable		= File::tableName();
+		$modelFileTable	= ModelFile::tableName();
 
-		return $this->hasMany( File::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelFileTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelFileTable ) {
-
-					$query->onCondition( [ "$modelFileTable.parentType" => $this->modelType ] );
-				}
-			);
+		return File::find()
+			->leftJoin( $modelFileTable, "$modelFileTable.modelId=$fileTable.id" )
+			->where( "$modelFileTable.parentId=:pid AND $modelFileTable.parentType=:ptype", [ ':pid' => $this->id, ':ptype' => $this->modelType ] )
+			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -97,15 +99,13 @@ trait FileTrait {
 	 */
 	public function getActiveFiles() {
 
-		$modelFileTable = ModelFile::tableName();
+		$fileTable		= File::tableName();
+		$modelFileTable	= ModelFile::tableName();
 
-		return $this->hasMany( File::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelFileTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelFileTable ) {
-
-					$query->onCondition( [ "$modelFileTable.parentType" => $this->modelType, "$modelFileTable.active" => true ] );
-				}
-			);
+		return File::find()
+			->leftJoin( $modelFileTable, "$modelFileTable.modelId=$fileTable.id" )
+			->where( "$modelFileTable.parentId=:pid AND $modelFileTable.parentType=:ptype AND $modelFileTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':active' => true ] )
+			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] );
 	}
 
 	/**
@@ -113,32 +113,29 @@ trait FileTrait {
 	 */
 	public function getFilesByType( $type, $active = true ) {
 
-		$modelFileTable = ModelFile::tableName();
+		$fileTable		= File::tableName();
+		$modelFileTable	= ModelFile::tableName();
 
-		return $this->hasMany( File::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelFileTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$type, &$active, &$modelFileTable ) {
-
-					$query->onCondition( [ "$modelFileTable.parentType" => $this->modelType, "$modelFileTable.type" => $type, "$modelFileTable.active" => $active ] );
-				}
-			)->all();
+		return File::find()
+			->leftJoin( $modelFileTable, "$modelFileTable.modelId=$fileTable.id" )
+			->where( "$modelFileTable.parentId=:pid AND $modelFileTable.parentType=:ptype AND $modelFileTable.type=:type AND $modelFileTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function getFileByTitle( $title ) {
+	public function getFileByTag( $tag ) {
 
 		$fileTable		= File::tableName();
-		$modelFileTable = ModelFile::tableName();
+		$modelFileTable	= ModelFile::tableName();
 
-		return $this->hasOne( File::class, [ 'id' => 'modelId' ] )
-			->viaTable( $modelFileTable, [ 'parentId' => 'id' ],
-				function( $query ) use( &$modelFileTable ) {
-
-					$query->onCondition( "$modelFileTable.parentType=:type", [ ':type' => $this->modelType ] );
-				}
-			)->where( "$fileTable.title=:title", [ ':title' => $title ] )->one();
+		return File::find()
+			->leftJoin( $modelFileTable, "$modelFileTable.modelId=$fileTable.id" )
+			->where( "$modelFileTable.parentId=:pid AND $modelFileTable.parentType=:ptype AND $modelFileTable.tag=:tag", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':tag' => $tag ] )
+			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] )
+			->one();
 	}
 
 	// Static Methods ----------------------------------------------

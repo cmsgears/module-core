@@ -76,11 +76,11 @@ class ModelFileService extends ModelMapperService implements IModelFileService {
 	/**
 	 * @inheritdoc
 	 */
-	public function getByFileTag( $parentId, $parentType, $fileTag ) {
+	public function getByFileTag( $parentId, $parentType, $fileTag, $type = null ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::findByFileTag( $parentId, $parentType, $fileTag );
+		return $modelClass::findByFileTag( $parentId, $parentType, $fileTag, $type );
 	}
 
 	/**

@@ -675,7 +675,7 @@ class m160620_095703_core extends Migration {
 			'url' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'medium' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'thumb' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
-			'altText' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
+			'altText' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'link' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'shared' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),

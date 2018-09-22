@@ -1004,7 +1004,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		// Search in
 		$searchModel	 	= $config[ 'searchModel' ] ?? true; // Search in model name
-		$searchCategory 	= $config[ 'searchModel' ] ?? false; // Search in category name
+		$searchCategory 	= $config[ 'searchCategory' ] ?? false; // Search in category name
 		$searchTag		 	= $config[ 'searchTag' ] ?? false; // Search in tag name
 
 		// DB Tables

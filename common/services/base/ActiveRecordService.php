@@ -516,9 +516,12 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	public function deleteMultiple( $models, $config = [] ) {
 
-		foreach( $models as $model ) {
+		if( isset( $models ) ){
 
-			$this->delete( $model, $config );
+			foreach( $models as $model ) {
+
+				$this->delete( $model, $config );
+			}
 		}
 	}
 

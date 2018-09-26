@@ -145,10 +145,13 @@ class ModelTagService extends ModelMapperService implements IModelTagService {
 	public function bindTags( $parentId, $parentType, $config = [] ) {
 
 		$binderName	= isset( $config[ 'binder' ] ) ? $config[ 'binder' ] : 'Binder';
-		$binder		= new Binder();
+		$binder		= $config[ 'tagBinder' ] ?? null;
+		
+		if( empty( $binder ) ){
 
-		$binder->load( Yii::$app->request->post(), $binderName );
-
+			$binder		= new Binder();
+			$binder->load( Yii::$app->request->post(), $binderName );
+		}
 		$all		= $binder->all;
 		$binded		= $binder->binded;
 		$process	= [];

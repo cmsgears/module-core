@@ -182,11 +182,14 @@ class ModelCategoryService extends ModelMapperService implements IModelCategoryS
 	public function bindCategories( $parentId, $parentType, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
-
 		$binderName	= isset( $config[ 'binder' ] ) ? $config[ 'binder' ] : 'Binder';
-		$binder		= new Binder();
+		$binder		= $config[ 'categoryBinder' ] ?? null;
+		
+		if( empty( $binder ) ) {
 
-		$binder->load( Yii::$app->request->post(), $binderName );
+			$binder		= new Binder();
+			$binder->load( Yii::$app->request->post(), $binderName );
+		}
 
 		$all		= $binder->all;
 		$binded		= $binder->binded;

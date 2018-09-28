@@ -11,6 +11,7 @@ namespace cmsgears\core\common\config;
 
 // Yii Imports
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * Properties is the base class for all the property classes having properties stored using
@@ -47,9 +48,10 @@ abstract class Properties {
 	 */
 	public function init( $configType ) {
 
-		$siteService = Yii::$app->factory->get( 'siteService' );
+		$siteService	= Yii::$app->factory->get( 'siteService' );
+		$siteSlug		= Yii::$app->core->getSiteSlug();
 
-		$site = $siteService->getBySlug( Yii::$app->core->getSiteSlug() );
+		$site = $siteService->getBySlug( $siteSlug );
 
 		if( Yii::$app->core->siteConfigAll ) {
 
@@ -57,9 +59,25 @@ abstract class Properties {
 
 				self::$typePropertyMap = [];
 
-				$properties	= $siteService->getIdMetaMap( $site );
+				$properties	= [];
 
-				foreach ( $properties as $property ) {
+				// Load main site properties and override with child site properties
+				if( Yii::$app->core->multiSite && !( $siteSlug == CoreGlobal::SITE_MAIN ) ) {
+
+					$mainSite = $siteService->getBySlug( CoreGlobal::SITE_MAIN );
+
+					$mainProperties = $siteService->getIdMetaMap( $mainSite );
+					$siteProperties = $siteService->getIdMetaMap( $site );
+
+					$properties = ArrayHelper::merge( $mainProperties, $siteProperties );
+				}
+				// Load main site properties
+				else {
+
+					$properties	= $siteService->getIdMetaMap( $site );
+				}
+
+				foreach( $properties as $property ) {
 
 					$type = $property->type;
 
@@ -76,14 +94,21 @@ abstract class Properties {
 		}
 		else {
 
-			$this->properties = $siteService->getMetaNameValueMapByMetaType( $site, $configType );
-		}
+			// Load main site properties and override with child site properties
+			if( Yii::$app->core->multiSite && !( $siteSlug == CoreGlobal::SITE_MAIN ) ) {
 
-		// Load main site properties in case child site does not have it's own properties
-		// TODO: Load main site properties and override with child site properties
-		if( Yii::$app->core->multiSite && count( $this->properties ) == 0 ) {
+				$mainSite = $siteService->getBySlug( CoreGlobal::SITE_MAIN );
 
-			$this->properties = $siteService->getMetaNameValueMapByMetaType( $site, $configType );
+				$mainProperties = $siteService->getMetaNameValueMapByMetaType( $mainSite, $configType );
+				$siteProperties = $siteService->getMetaNameValueMapByMetaType( $site, $configType );
+
+				$this->properties = ArrayHelper::merge( $mainProperties, $siteProperties );
+			}
+			// Load main site properties
+			else {
+
+				$this->properties = $siteService->getMetaNameValueMapByMetaType( $site, $configType );
+			}
 		}
 	}
 
@@ -112,9 +137,7 @@ abstract class Properties {
 	 */
 	public function getProperty( $key ) {
 
-		$findKey	= "$key";
-
-		return $this->properties[ $findKey ];
+		return $this->properties[ $key ];
 	}
 
 }

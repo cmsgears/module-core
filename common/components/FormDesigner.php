@@ -815,15 +815,20 @@ class FormDesigner extends \yii\base\Component {
 		return $field;
 	}
 
-	public function getIconPassword( $form, $model, $field, $options, $icon, $label = null ) {
+	public function getIconPassword( $form, $model, $field, $config = [] ) {
 
-		$template	= "{label}
+		$options	= isset( $config[ 'options' ] ) ? $config[ 'options' ] : [];
+		$icon		= isset( $config[ 'icon' ] ) ? $config[ 'icon' ] : 'cmti cmti-key';
+		$label		= isset( $config[ 'label' ] ) ? $config[ 'label' ] : null;
+		$right		= isset( $config[ 'right' ] ) && $config[ 'right' ] ? 'icon-right' : null;
+
+		$template = "{label}
 						<span class=\"frm-icon-element\">
 							<i class=\"icon $icon\"></i>{input}
 						</span>
 						{hint}{error}";
 
-		$field		= $form->field( $model, $field, [ 'template' => $template ] )->passwordInput( $options );
+		$field = $form->field( $model, $field, [ 'template' => $template ] )->passwordInput( $options );
 
 		if( isset( $label ) ) {
 

@@ -135,6 +135,11 @@ abstract class PageWidget extends Widget {
 	public $siteModels = false;
 
 	/**
+	 * Show models only from specified site ignoring all other sites.
+	 */
+	public $siteId = null;
+
+	/**
 	 * DataProvider to fetch initial page.
 	 */
 	public $dataProvider = null;
@@ -166,9 +171,9 @@ abstract class PageWidget extends Widget {
 
 		parent::init();
 
-		$cacheProperties	= CacheProperties::getInstance();
+		$cacheProperties = CacheProperties::getInstance();
 
-		$this->cache		= $cacheProperties->isCaching();
+		$this->cache = $cacheProperties->isCaching();
 
 		// Init models
 		$this->initModels();
@@ -205,7 +210,7 @@ abstract class PageWidget extends Widget {
 			}
 
 			$this->pageLinks = LinkPager::widget([
-				'pagination' => $pagination,
+				'pagination' => $pagination, 'disabledPageCssClass' => 'link-disabled',
 				'nextPageLabel' => $this->nextLabel, 'prevPageLabel' => $this->prevLabel
 			]);
 		}

@@ -13,6 +13,7 @@ namespace cmsgears\core\common\models\entities;
 use Yii;
 use yii\db\Expression;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use yii\behaviors\SluggableBehavior;
 use yii\behaviors\TimestampBehavior;
 
@@ -267,6 +268,20 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 	public function getActiveStr() {
 
 		return Yii::$app->formatter->asBoolean( $this->active );
+	}
+
+	public function getSiteUrl() {
+
+		$url = Url::base( true );
+
+		$urlParts = parse_url( $url );
+
+		if( $this->slug == 'main' ) {
+
+			return $urlParts[ 'scheme' ] . '://www.' . $urlParts[ 'host' ];
+		}
+
+		return $urlParts[ 'scheme' ] . '://' . $this->slug . '.' . $urlParts[ 'host' ];
 	}
 
 	// Static Methods ----------------------------------------------

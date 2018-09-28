@@ -28,6 +28,8 @@ interface IMultiSite {
 
 	// Read - Others ---
 
+	public function getSiteStats( $config = [] );
+
 	// Create -------------
 
 	// Update -------------

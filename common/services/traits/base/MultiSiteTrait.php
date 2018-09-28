@@ -9,6 +9,9 @@
 
 namespace cmsgears\core\common\services\traits\base;
 
+// Yii Imports
+use yii\db\Query;
+
 /**
  * MultiSiteTrait provide methods specific to multi-site models.
  *
@@ -37,6 +40,50 @@ trait MultiSiteTrait {
 	// Read - Maps -----
 
 	// Read - Others ---
+
+	/**
+	 * Returns model count of active models.
+	 *
+	 * @param type $config
+	 * @return type
+	 */
+	public function getSiteStats( $config = [] ) {
+
+		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : null;
+		$type	= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+		$limit	= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
+
+		$modelClass	= static::$modelClass;
+        $modelTable	= $modelClass::tableName();
+
+        $query = new Query();
+
+        $query->select( [ 'siteId', 'count(id) as total' ] )
+			->from( $modelTable );
+
+		// Filter Status
+		if( isset( $status ) ) {
+
+			$query->where( "$modelTable.status=:status", [ ':status' => $status ] );
+		}
+
+		// Filter Type
+		if( isset( $type ) ) {
+
+			$query->andWhere( "$modelTable.type=:type", [ ':type' => $type ] );
+		}
+
+		// Limit
+		if( $limit > 0 ) {
+
+			$query->limit( $limit );
+		}
+
+		// Group and Order
+		$query->groupBy( 'siteId' )->orderBy( 'total DESC' );
+
+        return $query->all();
+    }
 
 	// Create -------------
 

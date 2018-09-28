@@ -57,14 +57,14 @@ class m160621_014408_core_data extends Migration {
 	public function init() {
 
 		// Table prefix
-		$this->prefix			= Yii::$app->migration->cmgPrefix;
+		$this->prefix = Yii::$app->migration->cmgPrefix;
 
 		// Site config
-		$this->siteName			= Yii::$app->migration->getSiteName();
-		$this->siteTitle		= Yii::$app->migration->getSiteTitle();
-		$this->siteMaster		= Yii::$app->migration->getSiteMaster();
+		$this->siteName		= Yii::$app->migration->getSiteName();
+		$this->siteTitle	= Yii::$app->migration->getSiteTitle();
+		$this->siteMaster	= Yii::$app->migration->getSiteMaster();
 
-		$this->primaryDomain	= Yii::$app->migration->getPrimaryDomain();
+		$this->primaryDomain = Yii::$app->migration->getPrimaryDomain();
 	}
 
 	public function up() {
@@ -172,7 +172,7 @@ class m160621_014408_core_data extends Migration {
 
 		$this->insert( $this->prefix . 'core_site', [
 			'createdBy' => $this->master->id, 'modifiedBy' => $this->master->id,
-			'name' => CoreGlobal::SITE_MAIN, 'slug' => CoreGlobal::SITE_MAIN,
+			'name' => 'Main', 'slug' => CoreGlobal::SITE_MAIN,
 			'order' => 0, 'active' => true,
 			'createdAt' => DateUtil::getDateTime(),
 			'modifiedAt' => DateUtil::getDateTime()

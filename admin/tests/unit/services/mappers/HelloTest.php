@@ -1,6 +1,6 @@
 <?php
 
-namespace cmsgears\core\frontend\tests\unit\services;
+namespace cmsgears\core\admin\tests\unit\services\mappers;
 
 //use common\fixtures\UserFixture;
 //use common\models\entities\CashbackActivity;

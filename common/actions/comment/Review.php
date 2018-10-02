@@ -10,6 +10,7 @@
 namespace cmsgears\core\common\actions\comment;
 
 // CMG Imports
+use cmsgears\core\common\models\forms\Comment;
 use cmsgears\core\common\models\resources\ModelComment;
 
 /**
@@ -35,7 +36,7 @@ class Review extends Create {
 
 	public $modelType = ModelComment::TYPE_REVIEW;
 
-	public $scenario = ModelComment::SCENARIO_REVIEW;
+	public $scenario = Comment::SCENARIO_REVIEW;
 
 	// Protected --------------
 

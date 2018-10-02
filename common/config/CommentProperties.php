@@ -40,6 +40,14 @@ class CommentProperties extends Properties {
 
 	const PROP_COMMENTS_BLACKLIST	= 'comments_blacklist';
 
+	const PROP_COMMENTS_ALL_FIELDS	= 'comments_all_fields';
+
+	const PROP_COMMENTS_LABELS	= 'comments_labels';
+
+	const PROP_COMMENTS_DISQUS	= 'comments_disqus';
+
+	const PROP_COMMENTS_DISQUS_FORUM = 'comments_disqus_forum';
+
 	// Public -----------------
 
 	// Protected --------------
@@ -109,6 +117,26 @@ class CommentProperties extends Properties {
 	public function getCommentsFilter() {
 
 		return $this->properties[ self::PROP_COMMENTS_FILTER ];
+	}
+
+	public function isAllFields() {
+
+		return $this->properties[ self::PROP_COMMENTS_ALL_FIELDS ];
+	}
+
+	public function isLabels() {
+
+		return $this->properties[ self::PROP_COMMENTS_LABELS ];
+	}
+
+	public function isDisqus() {
+
+		return $this->properties[ self::PROP_COMMENTS_DISQUS ];
+	}
+
+	public function getDisqusForum() {
+
+		return $this->properties[ self::PROP_COMMENTS_DISQUS_FORUM ];
 	}
 
 }

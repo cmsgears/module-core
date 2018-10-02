@@ -75,15 +75,15 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 
 	public function actionIndex( $type ) {
 
-		$settings		= $this->modelService->getMetaMapByMetaType( Yii::$app->core->site, $type );
-		$fieldsMap		= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
-		$form			= new GenericForm( [ 'fields' => $fieldsMap ] );
+		$settings	= $this->modelService->getMetaMapByMetaType( Yii::$app->core->site, $type );
+		$fieldsMap	= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
+		$form		= new GenericForm( [ 'fields' => $fieldsMap ] );
 
-		$htmlContent	= $this->renderPartial( '@cmsgears/module-core/admin/views/settings/info', [
-								'fieldsMap' => $fieldsMap,
-								'type' => $type,
-								'form' => $form
-							]);
+		$htmlContent = $this->renderPartial( '@cmsgears/module-core/admin/views/settings/info', [
+							'fieldsMap' => $fieldsMap,
+							'type' => $type,
+							'form' => $form
+						]);
 
 		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $htmlContent );
 	}

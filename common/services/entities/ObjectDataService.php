@@ -215,7 +215,7 @@ class ObjectDataService extends EntityService implements IObjectService {
 		}
 
 		$config[ 'ignoreSite' ]		= true;
-		$config[ 'conditions' ][]	= isset( $theme ) ? "$modelTable.themeId={$theme->id} OR $modelTable.siteId={$site->id}" : "$modelTable.siteId={$site->id}";
+		$config[ 'conditions' ][]	= isset( $theme ) ? "$modelTable.themeId={$theme->id} OR $modelTable.siteId={$site->id} OR ($modelTable.themeId IS NULL AND $modelTable.siteId IS NULL)" : "$modelTable.siteId={$site->id} OR ($modelTable.themeId IS NULL AND $modelTable.siteId IS NULL)";
 
 		// Filters ----------
 

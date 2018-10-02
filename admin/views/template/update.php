@@ -24,10 +24,13 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
 					<div class="row">
-						<div class="col col2">
+						<div class="col col3">
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
-						<div class="col col2">
+						<div class="col col3">
+							<?= $form->field( $model, 'slug' ) ?>
+						</div>
+						<div class="col col3">
 							<?= $form->field( $model, 'title' ) ?>
 						</div>
 					</div>

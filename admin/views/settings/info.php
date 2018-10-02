@@ -29,7 +29,7 @@ use cmsgears\widgets\aform\AjaxFormWidget;
 		<?= AjaxFormWidget::widget([
 			'options' => [ 'class' => 'cmt-form', 'id' => "frm-setting-$type", 'cmt-keep' => 1 ],
 			'slug' => "config-$type", 'type' => CoreGlobal::TYPE_SYSTEM,
-			'label' => true, 'form' => $form, 'formName' => "setting$type",
+			'labels' => true, 'form' => $form, 'formName' => "setting$type",
 			'ajaxUrl' => "core/settings/update?type=$type",
 			'cmtApp' => 'site', 'cmtController' => 'settings', 'cmtAction' => 'update'
 		])?>

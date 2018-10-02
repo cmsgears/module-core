@@ -140,7 +140,7 @@ abstract class ActiveRecord extends \yii\db\ActiveRecord {
 
 			if( $this->hasAttribute( $attribute ) ) {
 
-				$this->setAttribute( $attribute, $model->getAttribute( $attribute ) );
+				$this->setAttribute( $attribute, $model->$attribute );
 			}
 			else {
 

@@ -63,8 +63,8 @@ class Application extends BaseApplication {
 
 		$coreProperties = null;
 
-		$site			= null;
-		$siteRoute		= null;
+		$site		= null;
+		$siteRoute	= null;
 
 		// Process multi site request
 		if( Yii::$app->core->multiSite ) {
@@ -138,6 +138,10 @@ class Application extends BaseApplication {
 
 						// Theme Found
 						if( isset( $theme ) ) {
+
+							$themePath = 'themes\\' . $theme->slug . '\\Theme';
+
+							Yii::$app->view->theme = new $themePath;
 
 							Yii::$app->assetManager->bundles = require( Yii::getAlias( '@themes' ) . "/assets/$theme->slug/" . ( YII_ENV_PROD ? 'prod.php' : 'dev.php' ) );
 						}

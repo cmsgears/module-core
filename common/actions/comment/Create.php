@@ -15,6 +15,7 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\forms\Comment;
 use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\models\resources\ModelComment;
 
@@ -62,7 +63,7 @@ class Create extends ModelAction {
 
 	/**
 	 * A comment can be created with or without scenario. The possible scenarios
-	 * are - identity, captcha, review, feedback and testimonial.
+	 * are - all, identity, captcha, review, feedback and testimonial.
 	 */
 	public $scenario;
 
@@ -96,7 +97,8 @@ class Create extends ModelAction {
 
 			$modelClass = $modelCommentService->getModelClass();
 
-			$modelComment = new $modelClass;
+			$modelComment	= new $modelClass;
+			$commentForm	= new Comment();
 
 			$modelComment->parentId		= $this->model->id;
 			$modelComment->parentType	= $this->parentType;
@@ -113,10 +115,17 @@ class Create extends ModelAction {
 
 			if( isset( $this->scenario ) ) {
 
-				$modelComment->scenario = $this->scenario;
+				$commentForm->scenario = $this->scenario;
 			}
 
-			if( $modelComment->load( Yii::$app->request->post(), $modelComment->getClassName() ) && $modelComment->validate() ) {
+			if( $commentForm->load( Yii::$app->request->post(), $commentForm->getClassName() ) && $commentForm->validate() ) {
+
+				$modelComment->copyForUpdateFrom( $commentForm, [ 'baseId', 'bannerId', 'videoId', 'avatarUrl', 'websiteUrl', 'rating', 'anonymous', 'content' ] );
+
+				if( !$this->setUser || !isset( $user ) ) {
+
+					$modelComment->copyForUpdateFrom( $commentForm, [ 'name', 'email' ] );
+				}
 
 				$modelComment = $modelCommentService->create( $modelComment );
 
@@ -153,7 +162,7 @@ class Create extends ModelAction {
 			}
 
 			// Generate Validation Errors
-			$errors = AjaxUtil::generateErrorMessage( $modelComment );
+			$errors = AjaxUtil::generateErrorMessage( $commentForm );
 
 			// Trigger Ajax Failure
 			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );

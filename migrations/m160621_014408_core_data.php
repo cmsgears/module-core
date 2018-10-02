@@ -165,7 +165,7 @@ class m160621_014408_core_data extends Migration {
 
 		$this->batchInsert( $this->prefix . 'core_user', $columns, $users );
 
-		$this->master	= User::findByUsername( $this->siteMaster );
+		$this->master = User::findByUsername( $this->siteMaster );
 	}
 
 	private function insertMainSite() {
@@ -497,7 +497,11 @@ class m160621_014408_core_data extends Migration {
 			[ $config->id, 'comments_form_top', 'Comments Form Top', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Show the comment form on top of comments."}' ],
 			[ $config->id, 'comments_auto', 'Comments Auto', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Auto approve a comment in case existing approved comment exist for user or email."}' ],
 			[ $config->id, 'comments_anonymous', 'Comments Anonymous', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Flag to allow Anonymous comments."}' ],
-			[ $config->id, 'comments_filter','Comments Filter', FormField::TYPE_TEXTAREA, false, true, true, NULL, 0, NULL, '{"title":"Comments filter having comma seperated words to trash in case words match.","placeholder":"Comments filter"}' ]
+			[ $config->id, 'comments_filter','Comments Filter', FormField::TYPE_TEXTAREA, false, true, true, NULL, 0, NULL, '{"title":"Comments filter having comma seperated words to trash in case words match.","placeholder":"Comments filter"}' ],
+			[ $config->id, 'comments_all_fields', 'Comments All Fields', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Show all fields while submitting the form."}' ],
+			[ $config->id, 'comments_labels', 'Comments Labels', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Show field labels while submitting the form."}' ],
+			[ $config->id, 'comments_disqus', 'Comments DISQUS', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Enable DISQUS."}' ],
+			[ $config->id, 'comments_disqus_forum','Comments DISQUS Forum', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"The forum id provided by DISQUS.","placeholder":"Forum Id"}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -631,6 +635,10 @@ class m160621_014408_core_data extends Migration {
 			[ $this->site->id, 'comments_auto','Comments Auto','comment', 1, 'flag','1',NULL ],
 			[ $this->site->id, 'comments_anonymous', 'Comments Anonymous','comment', 1, 'flag','0',NULL ],
 			[ $this->site->id, 'comments_filter','Comments Filter','comment', 1, 'text', NULL,NULL ],
+			[ $this->site->id, 'comments_all_fields','Comments All Fields','comment', 1, 'flag','0',NULL ],
+			[ $this->site->id, 'comments_labels','Comments Labels','comment', 1, 'flag','0',NULL ],
+			[ $this->site->id, 'comments_disqus','Comments DISQUS','comment', 1, 'flag','0',NULL ],
+			[ $this->site->id, 'comments_disqus_forum','Comments DISQUS Forum','comment', 1, 'text', NULL,NULL ],
 			[ $this->site->id, 'cmg_powered','CMG Powered','backend', 1, 'flag','1',NULL ],
 			[ $this->site->id, 'default_avatar', 'Default Avatar','backend', 1, 'text', 'avatar-site.png',NULL ],
 			[ $this->site->id, 'user_avatar','User Avatar','backend', 1, 'text', 'avatar-user.png',NULL ],

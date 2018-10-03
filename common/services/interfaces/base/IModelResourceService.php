@@ -24,11 +24,13 @@ interface IModelResourceService extends IResourceService {
 
 	// Read - Models ---
 
-	public function getByParent( $parentId, $parentType );
+	public function getByParent( $parentId, $parentType, $config = [] );
+	
+	public function getFirstByParent( $parentId, $parentType, $config = [] );
 
-	public function getByParentId( $parentId );
+	public function getByParentId( $parentId, $config = [] );
 
-	public function getByParentType( $parentType );
+	public function getByParentType( $parentType, $config = [] );
 
 	// Read - Lists ----
 

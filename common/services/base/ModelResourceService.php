@@ -67,25 +67,32 @@ abstract class ModelResourceService extends ResourceService implements IModelRes
 
 	// Read - Models ---
 
-	public function getByParent( $parentId, $parentType ) {
+	public function getByParent( $parentId, $parentType, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::findByParent( $parentId, $parentType );
+		return $modelClass::findByParent( $parentId, $parentType, $config );
+	}
+	
+	public function getFirstByParent( $parentId, $parentType, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findFirstByParent( $parentId, $parentType, $config );
 	}
 
-	public function getByParentId( $parentId ) {
+	public function getByParentId( $parentId, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::findByParentId( $parentId );
+		return $modelClass::findByParentId( $parentId, $config );
 	}
 
-	public function getByParentType( $parentType ) {
+	public function getByParentType( $parentType, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::findByParentType( $parentType );
+		return $modelClass::findByParentType( $parentType, $config );
 	}
 
 	// Read - Lists ----

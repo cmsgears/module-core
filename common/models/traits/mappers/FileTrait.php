@@ -91,7 +91,8 @@ trait FileTrait {
 		return File::find()
 			->leftJoin( $modelFileTable, "$modelFileTable.modelId=$fileTable.id" )
 			->where( "$modelFileTable.parentId=:pid AND $modelFileTable.parentType=:ptype", [ ':pid' => $this->id, ':ptype' => $this->modelType ] )
-			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] );
+			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**
@@ -105,7 +106,8 @@ trait FileTrait {
 		return File::find()
 			->leftJoin( $modelFileTable, "$modelFileTable.modelId=$fileTable.id" )
 			->where( "$modelFileTable.parentId=:pid AND $modelFileTable.parentType=:ptype AND $modelFileTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':active' => true ] )
-			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] );
+			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**

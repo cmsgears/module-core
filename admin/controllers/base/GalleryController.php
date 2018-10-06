@@ -133,10 +133,12 @@ abstract class GalleryController extends CrudController {
 				}
 			}
 
+			$items = !empty( $model->files ) ? ( count( $model->files ) == 1 ? [ $model->files ] : $model->files ) : [];
+
 			return $this->render( 'items', [
 				'parent' => $parent,
 				'gallery' => $model,
-				'items' => $model->files
+				'items' => $items
 			]);
 		}
 

@@ -77,7 +77,7 @@ $this->title	= 'Gallery Items | ' . $coreProperties->getSiteTitle();
 					?>
 						<li>
 							<?= ImageUploader::widget([
-								'directory' => 'gallery', 'showFields' => true, 'model' => $item, 'modelClass' => 'File', 'fileLabel' => true,
+								'directory' => 'gallery', 'showFields' => true, 'model' => $item, 'modelClass' => 'File', 'fileLabel' => true, 'showEmbedLink' => true,
 								'postAction' => true, 'postActionVisible' => true, 'postActionUrl' => "core/gallery/update-item?id=$parent->id&cid=$gallery->id&iid=$item->id",
 								'cmtApp' => 'main', 'cmtController' => 'gallery', 'cmtAction' => 'updateItem'
 							])?>

@@ -276,7 +276,7 @@ class Site extends Entity implements IAuthor, IContent, IData, IFeatured, IGridC
 
 		$urlParts = parse_url( $url );
 
-		if( Yii::$app->core->multiSite ) {
+		if( Yii::$app->core->multiSite && $this->slug !== 'main' ) {
 
           	$urlHost = preg_replace( '/www/', $this->slug, $urlParts[ 'host' ] );
 

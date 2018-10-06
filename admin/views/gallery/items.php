@@ -78,10 +78,10 @@ $this->title	= 'Gallery Items | ' . $coreProperties->getSiteTitle();
 						<li>
 							<?= ImageUploader::widget([
 								'directory' => 'gallery', 'showFields' => true, 'model' => $item, 'modelClass' => 'File', 'fileLabel' => true, 'showEmbedLink' => true,
-								'postAction' => true, 'postActionVisible' => true, 'postActionUrl' => "core/gallery/update-item?id=$parent->id&cid=$gallery->id&iid=$item->id",
+								'postAction' => true, 'postActionVisible' => true, 'postActionUrl' => "core/gallery/update-item?id=$parent->id&cid=$gallery->id&fid=$item->id",
 								'cmtApp' => 'main', 'cmtController' => 'gallery', 'cmtAction' => 'updateItem'
 							])?>
-							<form cmt-app="main" cmt-controller="gallery" cmt-action="deleteItem" action="core/gallery/delete-item?id=<?= $parent->id ?>&cid=<?= $gallery->id ?>&iid=<?= $item->id ?>" >
+							<form cmt-app="main" cmt-controller="gallery" cmt-action="deleteItem" action="core/gallery/delete-item?id=<?= $parent->id ?>&cid=<?= $gallery->id ?>&fid=<?= $item->id ?>" >
 								<div class="max-area-cover spinner">
 									<div class="valign-center cmti cmti-spinner-1 spin"></div>
 								</div>

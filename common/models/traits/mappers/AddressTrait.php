@@ -90,7 +90,8 @@ trait AddressTrait {
 		return Address::find()
 			->leftJoin( $modelAddressTable, "$modelAddressTable.modelId=$addressTable.id" )
 			->where( "$modelAddressTable.parentId=:pid AND $modelAddressTable.parentType=:ptype", [ ':pid' => $this->id, ':ptype' => $this->modelType ] )
-			->orderBy( [ "$modelAddressTable.order" => SORT_DESC, "$modelAddressTable.id" => SORT_DESC ] );
+			->orderBy( [ "$modelAddressTable.order" => SORT_DESC, "$modelAddressTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**
@@ -104,7 +105,8 @@ trait AddressTrait {
 		return Address::find()
 			->leftJoin( $modelAddressTable, "$modelAddressTable.modelId=$addressTable.id" )
 			->where( "$modelAddressTable.parentId=:pid AND $modelAddressTable.parentType=:ptype AND $modelAddressTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':active' => true ] )
-			->orderBy( [ "$modelAddressTable.order" => SORT_DESC, "$modelAddressTable.id" => SORT_DESC ] );
+			->orderBy( [ "$modelAddressTable.order" => SORT_DESC, "$modelAddressTable.id" => SORT_DESC ] )
+			->all();
 	}
 
 	/**

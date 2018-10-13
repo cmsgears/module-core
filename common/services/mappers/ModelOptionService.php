@@ -152,7 +152,7 @@ class ModelOptionService extends ModelMapperService implements IModelOptionServi
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'order', 'active' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'order', 'active', 'value' ];
 
 		return parent::update( $model, [
 			'attributes' => $attributes

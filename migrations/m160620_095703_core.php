@@ -861,6 +861,7 @@ class m160620_095703_core extends Migration {
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'value' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'icon' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
+			'input' => $this->boolean()->defaultValue( false ),
 			'htmlOptions' => $this->text(),
 			'content' => $this->mediumText(),
 			'data' => $this->mediumText()
@@ -1134,7 +1135,8 @@ class m160620_095703_core extends Migration {
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'type' => $this->string( Yii::$app->core->mediumText ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
-			'active' => $this->boolean()->notNull()->defaultValue( true )
+			'active' => $this->boolean()->notNull()->defaultValue( true ),
+			'value' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null )
 		], $this->options );
 
 		// Index for columns user

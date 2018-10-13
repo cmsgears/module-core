@@ -32,6 +32,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * @property string $name
  * @property string $value
  * @property string $icon
+ * @property boolean $input
  * @property string $htmlOptions
  * @property string $content
  * @property string $data
@@ -92,6 +93,7 @@ class Option extends Resource implements IData {
 			[ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'value', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
+			[ 'input', 'boolean' ],
 			[ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ]
 		];
 
@@ -116,6 +118,7 @@ class Option extends Resource implements IData {
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'input' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_INPUT ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )

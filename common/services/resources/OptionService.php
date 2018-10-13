@@ -253,7 +253,7 @@ class OptionService extends ResourceService implements IOptionService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'value', 'icon', 'htmlOptions' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'value', 'icon', 'input', 'htmlOptions' ];
 
 		return parent::update( $model, [
 			'attributes' => $attributes

@@ -24,6 +24,7 @@ use cmsgears\core\common\models\resources\Option;
  * @property string $type
  * @property integer $order
  * @property boolean $active
+ * @property string $value
  *
  * @since 1.0.0
  */
@@ -58,6 +59,18 @@ class ModelOption extends ModelMapper {
 	// Yii parent classes --------------------
 
 	// yii\base\Component -----
+
+	 /**
+	 * @inheritdoc
+	 */
+	public function rules() {
+
+		$rules = parent::rules();
+
+		$rules[] = [ 'value', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ];
+
+		return $rules;
+	}
 
 	// yii\base\Model ---------
 

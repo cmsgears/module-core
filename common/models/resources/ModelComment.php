@@ -46,8 +46,11 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property integer $createdBy
  * @property integer $modifiedBy
  * @property string $parentType
+ * @property string $title
  * @property string $name
  * @property string $email
+ * @property string $phone
+ * @property string $mobile
  * @property string $avatarUrl
  * @property string $websiteUrl
  * @property string $ip
@@ -173,9 +176,10 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 			// Email
 			[ 'email', 'email' ],
 			// Text Limit
+			[ [ 'phone', 'mobile' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ [ 'parentType', 'type', 'ip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'name', 'email', 'agent' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
-			[ [ 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ [ 'title', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			// Other
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
 			[ [ 'pinned', 'featured', 'anonymous', 'gridCacheValid' ], 'boolean' ],
@@ -187,7 +191,7 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'email', 'avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'title', 'name', 'email', 'phone', 'mobile', 'avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -205,8 +209,11 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ADDRESS_TYPE ),
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
+			'phone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
+			'mobile' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MOBILE ),
 			'avatarUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
 			'websiteUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
 			'ip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_IP ),

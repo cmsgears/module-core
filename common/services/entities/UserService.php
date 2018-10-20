@@ -717,7 +717,7 @@ class UserService extends EntityService implements IUserService {
 	public function delete( $model, $config = [] ) {
 
 		// Delete Files
-		$this->fileService->deleteFiles( [ $model->avatar, $model->banner, $model->video ] );
+		$this->fileService->deleteMultiple( [ $model->avatar, $model->banner, $model->video ] );
 
 		// Delete Notifications
 		Yii::$app->eventManager->deleteNotificationsByUserId( $model->id );

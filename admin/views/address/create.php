@@ -89,7 +89,7 @@ $returnUrl		= $this->context->returnUrl;
 		<div class="filler-height filler-height-medium"></div>
 		<div class="align align-right">
 			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
-			<input class="element-medium" type="submit" value="Add" />
+			<input class="frm-element-medium" type="submit" value="Add" />
 		</div>
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>

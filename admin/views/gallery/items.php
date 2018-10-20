@@ -86,7 +86,7 @@ $this->title	= 'Gallery Items | ' . $coreProperties->getSiteTitle();
 									<div class="valign-center cmti cmti-spinner-1 spin"></div>
 								</div>
 								<div class="frm-actions align align-center">
-									<input class="element-medium" type="submit" value="Delete" />
+									<input class="frm-element-medium" type="submit" value="Delete" />
 								</div>
 							</form>
 							<div class="filler-height"></div>

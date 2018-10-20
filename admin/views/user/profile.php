@@ -72,7 +72,7 @@ $user			= Yii::$app->user->getIdentity();
 					<div class="clear"></div>
 
 					<div class="align align-center">
-						<input class="element-medium" type="submit" value="Update" />
+						<input class="frm-element-medium" type="submit" value="Update" />
 					</div>
 
 					<?php ActiveForm::end(); ?>

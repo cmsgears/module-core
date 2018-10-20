@@ -125,7 +125,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 		<div class="filler-height filler-height-medium"></div>
 		<div class="align align-right">
 			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
-			<input class="element-medium" type="submit" value="Create" />
+			<input class="frm-element-medium" type="submit" value="Create" />
 		</div>
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>

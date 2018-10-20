@@ -9,6 +9,9 @@
 
 namespace cmsgears\core\common\models\mappers;
 
+// Yii Imports
+use Yii;
+
 // CMG Imports
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\ModelMapper;

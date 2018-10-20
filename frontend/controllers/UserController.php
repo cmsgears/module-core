@@ -59,6 +59,7 @@ class UserController extends Controller {
 
 		// Config
 		$this->basePath = '/user';
+		$this->apixBase = 'core/user';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'userService' );

@@ -74,7 +74,7 @@ class UserController extends Controller {
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
 					// Avatar
-					'avatar' => [ 'permission' => $this->crudPermission ],
+					'assign-avatar' => [ 'permission' => $this->crudPermission ],
 					'clear-avatar' => [ 'permission' => $this->crudPermission ],
 					// Metas
 					'add-meta' => [ 'permission' => $this->crudPermission ],
@@ -111,7 +111,7 @@ class UserController extends Controller {
 				'class' => VerbFilter::class,
 				'actions' => [
 					// Avatar
-					'avatar' => [ 'post' ],
+					'assign-avatar' => [ 'post' ],
 					'clear-avatar' => [ 'post' ],
 					// Metas
 					'add-meta' => [ 'post' ],
@@ -153,8 +153,8 @@ class UserController extends Controller {
 
 		return [
 			// Avatar
-			'avatar' => [ 'class' => 'cmsgears\core\common\actions\content\Avatar' ],
-			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\ClearAvatar' ],
+			'assign-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Assign' ],
+			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Clear' ],
 			// Metas
 			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\CreateMeta', 'model' => Yii::$app->user->identity ],
 			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMeta', 'model' => Yii::$app->user->identity ],
@@ -179,9 +179,7 @@ class UserController extends Controller {
 			'set-config' => [ 'class' => 'cmsgears\core\common\actions\data\SetConfig', 'model' => Yii::$app->user->identity ],
 			'remove-config' => [ 'class' => 'cmsgears\core\common\actions\data\RemoveConfig', 'model' => Yii::$app->user->identity ],
 			'set-setting' => [ 'class' => 'cmsgears\core\common\actions\data\SetSetting', 'model' => Yii::$app->user->identity ],
-			'remove-setting' => [ 'class' => 'cmsgears\core\common\actions\data\RemoveSetting', 'model' => Yii::$app->user->identity ],
-			// Metas
-			'settings' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMultiple', 'model' => Yii::$app->user->identity, 'parent' => true ]
+			'remove-setting' => [ 'class' => 'cmsgears\core\common\actions\data\RemoveSetting', 'model' => Yii::$app->user->identity ]
 		];
 	}
 

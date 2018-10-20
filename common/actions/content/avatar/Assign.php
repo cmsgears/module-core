@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\content;
+namespace cmsgears\core\common\actions\content\avatar;
 
 // Yii Imports
 use Yii;
@@ -15,16 +15,18 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\resources\File;
+
 use cmsgears\core\common\actions\base\ModelAction;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * ClearBanner action clear the banner of model having banner.
+ * Assign action configures the avatar of model having avatar.
  *
  * @since 1.0.0
  */
-class ClearBanner extends ModelAction {
+class Assign extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -39,6 +41,8 @@ class ClearBanner extends ModelAction {
 	// Variables -----------------------------
 
 	// Public -----------------
+
+	public $fileName = 'Avatar';
 
 	// Protected --------------
 
@@ -58,16 +62,20 @@ class ClearBanner extends ModelAction {
 
 	// CMG parent classes --------------------
 
-	// Avatar --------------------------------
+	// Assign --------------------------------
 
 	public function run() {
 
 		if( isset( $this->model ) ) {
 
-			if( $this->modelService->clearBanner( $this->model ) ) {
+			$avatar = File::loadFile( $this->model->avatar, $this->fileName );
+
+			if( $this->modelService->updateAvatar( $this->model, $avatar ) ) {
+
+				$response = [ 'fileUrl' => $avatar->getFileUrl(), 'mediumUrl' => $avatar->getMediumUrl(), 'thumbUrl' => $avatar->getThumbUrl() ];
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
 			}
 
 			// Trigger Ajax Failure

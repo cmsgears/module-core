@@ -69,6 +69,7 @@ class MemberController extends Controller {
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
 					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
@@ -76,6 +77,7 @@ class MemberController extends Controller {
 				'class' => VerbFilter::class,
 				'actions' => [
 					'bulk' => [ 'post' ],
+					'generic' => [ 'post' ],
 					'delete' => [ 'post' ],
 					'auto-search' => [ 'post' ]
 				]
@@ -89,6 +91,7 @@ class MemberController extends Controller {
 
 		return [
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
 	}
@@ -99,12 +102,14 @@ class MemberController extends Controller {
 		$siteId	= Yii::$app->request->get( 'sid' );
 
 		$memberTable	= $this->modelService->getModelTable();
-		$userClass		= $this->userService->getModelClass();
-		$query			= $userClass::queryWithSiteMembers();
+		$userTable		= $this->userService->getModelTable();
 
-		$query->andWhere( "$memberTable.siteId !=:sid", [ ':sid' => $siteId ] );
+		$userClass	= $this->userService->getModelClass();
+		$query		= $userClass::find();
 
-		$data	= $this->userService->getIdNameListByUsername( $name, [ 'query' => $query ] );
+		$query->andWhere( "NOT EXISTS (SELECT * FROM {$memberTable} WHERE {$memberTable}.siteId=:sid AND {$memberTable}.userId={$userTable}.id)", [ ':sid' => $siteId ] );
+
+		$data = $this->userService->getIdNameListByUsername( $name, [ 'query' => $query ] );
 
 		// Trigger Ajax Success
 		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

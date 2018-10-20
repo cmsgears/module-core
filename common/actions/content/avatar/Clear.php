@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\content;
+namespace cmsgears\core\common\actions\content\avatar;
 
 // Yii Imports
 use Yii;
@@ -20,11 +20,11 @@ use cmsgears\core\common\actions\base\ModelAction;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * ClearAvatar action clear the avatar of model having avatar.
+ * Clear action clear the avatar of model having avatar.
  *
  * @since 1.0.0
  */
-class ClearAvatar extends ModelAction {
+class Clear extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -58,7 +58,7 @@ class ClearAvatar extends ModelAction {
 
 	// CMG parent classes --------------------
 
-	// Avatar --------------------------------
+	// Clear ---------------------------------
 
 	public function run() {
 

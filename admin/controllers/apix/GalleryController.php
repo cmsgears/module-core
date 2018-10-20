@@ -70,16 +70,18 @@ class GalleryController extends Controller {
 					'update-item' => [ 'permission' => $this->crudPermission ],
 					'delete-item' => [ 'permission' => $this->crudPermission ],
 					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'create-item' => [ 'post' ],
 					'update-item' => [ 'post' ],
 					'delete-item' => [ 'post' ],
 					'bulk' => [ 'post' ],
+					'generic' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
 			]
@@ -95,6 +97,7 @@ class GalleryController extends Controller {
 			'update-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\UpdateItem' ],
 			'delete-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\DeleteItem' ],
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
 	}

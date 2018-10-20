@@ -62,8 +62,11 @@ class CategoryController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					// Searching
 					'auto-search' => [ 'permission' => CoreGlobal::PERM_ADMIN ], // Available for all admin users
+					// Model
 					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission ],
 					'create' => [ 'permission' => $this->crudPermission ],
 					'update' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
@@ -72,8 +75,11 @@ class CategoryController extends Controller {
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
+					// Searching
 					'auto-search' => [ 'post' ],
+					// Model
 					'bulk' => [ 'post' ],
+					'generic' => [ 'post' ],
 					'create' => [ 'post' ],
 					'update' => [ 'post' ],
 					'delete' => [ 'post' ]
@@ -87,8 +93,11 @@ class CategoryController extends Controller {
 	public function actions() {
 
 		return [
+			// Searching
 			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
+			// Model
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'create' => [ 'class' => 'cmsgears\core\common\actions\grid\Create' ],
 			'update' => [ 'class' => 'cmsgears\core\common\actions\grid\Update' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]

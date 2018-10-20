@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\content;
+namespace cmsgears\core\common\actions\content\video;
 
 // Yii Imports
 use Yii;
@@ -15,18 +15,16 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\File;
-
 use cmsgears\core\common\actions\base\ModelAction;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Video action configures the video of model having video.
+ * Clear action clear the video of model having video.
  *
  * @since 1.0.0
  */
-class Video extends ModelAction {
+class Clear extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -41,8 +39,6 @@ class Video extends ModelAction {
 	// Variables -----------------------------
 
 	// Public -----------------
-
-	public $fileName = 'Video';
 
 	// Protected --------------
 
@@ -62,20 +58,16 @@ class Video extends ModelAction {
 
 	// CMG parent classes --------------------
 
-	// Video ---------------------------------
+	// Avatar --------------------------------
 
 	public function run() {
 
 		if( isset( $this->model ) ) {
 
-			$video = File::loadFile( $this->model->video, $this->fileName );
-
-			if( $this->modelService->updateVideo( $this->model, $video ) ) {
-
-				$response = [ 'fileUrl' => $video->getFileUrl() ];
+			if( $this->modelService->clearVideo( $this->model ) ) {
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 			}
 
 			// Trigger Ajax Failure

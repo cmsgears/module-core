@@ -64,6 +64,7 @@ class ObjectController extends Controller {
 				'actions' => [
 					'auto-search' => [ 'permission' => CoreGlobal::PERM_ADMIN ], // Available for all admin users
 					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission ],
 					'create' => [ 'permission' => $this->crudPermission ],
 					'update' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
@@ -74,6 +75,7 @@ class ObjectController extends Controller {
 				'actions' => [
 					'auto-search' => [ 'post' ],
 					'bulk' => [ 'post' ],
+					'generic' => [ 'post' ],
 					'create' => [ 'post' ],
 					'update' => [ 'post' ],
 					'delete' => [ 'post' ]
@@ -89,6 +91,7 @@ class ObjectController extends Controller {
 		return [
 			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'create' => [ 'class' => 'cmsgears\core\common\actions\grid\Create' ],
 			'update' => [ 'class' => 'cmsgears\core\common\actions\grid\Update' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]

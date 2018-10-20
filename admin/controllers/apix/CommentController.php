@@ -25,7 +25,7 @@ class CommentController extends \cmsgears\core\admin\controllers\base\Controller
 		parent::init();
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'modelCommentService' );
+		$this->modelService = Yii::$app->factory->get( 'modelCommentService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -43,13 +43,15 @@ class CommentController extends \cmsgears\core\admin\controllers\base\Controller
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
 					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'bulk' => [ 'post' ],
+					'generic' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
 			]
@@ -62,6 +64,7 @@ class CommentController extends \cmsgears\core\admin\controllers\base\Controller
 
 		return [
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
 	}

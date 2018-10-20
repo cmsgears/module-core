@@ -58,6 +58,7 @@ class ProvinceController extends Controller {
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
 					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
@@ -65,6 +66,7 @@ class ProvinceController extends Controller {
 				'class' => VerbFilter::class,
 				'actions' => [
 					'bulk' => [ 'post' ],
+					'generic' => [ 'post' ],
 					'delete' => [ 'post' ],
 					'options-list' => [ 'post' ]
 				]
@@ -78,6 +80,7 @@ class ProvinceController extends Controller {
 
 		return [
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ],
 			'options-list' => [ 'class' => 'cmsgears\core\common\actions\location\ProvinceOptions' ]
 		];

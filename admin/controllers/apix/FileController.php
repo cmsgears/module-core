@@ -71,14 +71,16 @@ class FileController extends Controller {
 				'actions' => [
 					'file-handler' => [ 'permission' => $this->crudPermission ],
 					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'file-handler'  => [ 'post' ],
 					'bulk' => [ 'post' ],
+					'generic' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
 			]
@@ -93,6 +95,10 @@ class FileController extends Controller {
 			'file-handler' => [ 'class' => 'cmsgears\core\common\actions\file\FileHandler' ],
 			'bulk' => [
 				'class' => 'cmsgears\core\common\actions\grid\Bulk',
+				'config' => [ 'admin' => true ]
+			],
+			'generic' => [
+				'class' => 'cmsgears\core\common\actions\grid\Generic',
 				'config' => [ 'admin' => true ]
 			],
 			'delete' => [

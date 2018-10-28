@@ -67,7 +67,7 @@ class Remove extends ModelAction {
 		$meta = new Meta();
 
 		// Filter reserved keys
-		$validKey = !in_array( $ckey, [ 'data', 'attributes', 'config', 'settings' ] );
+		$validKey = !in_array( $ckey, [ 'data', 'attributes', 'config', 'settings', 'plugins' ] );
 
 		if( $validKey && $meta->load( Yii::$app->request->post(), 'Meta' ) && $meta->validate() ) {
 

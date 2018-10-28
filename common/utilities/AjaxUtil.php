@@ -83,7 +83,7 @@ class AjaxUtil {
 
 		$response[ 'result' ]	= 0;
 		$response[ 'message' ]	= $message;
-		$response[ 'errors' ]	= $errors;
+		$response[ 'errors' ]	= empty( $errors ) ? [] : $errors;
 		$response[ 'data' ]		= $data;
 
 		Yii::$app->response->format = 'json';

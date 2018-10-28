@@ -66,7 +66,10 @@ class Set extends ModelAction {
 
 		$meta = new Meta();
 
-		if( $meta->load( Yii::$app->request->post(), 'Meta' ) && $meta->validate() ) {
+		// Filter reserved keys
+		$validKey = !in_array( $ckey, [ 'data', 'attributes', 'config', 'settings' ] );
+
+		if( $validKey && $meta->load( Yii::$app->request->post(), 'Meta' ) && $meta->validate() ) {
 
 			// Save Meta
 			$this->modelService->updateDataCustomObj( $this->model, $ckey, $meta );

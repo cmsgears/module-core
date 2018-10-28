@@ -9,19 +9,17 @@
 
 namespace cmsgears\core\common\models\traits\base;
 
-// Yii Imports
+// Yii Import
 use Yii;
 
+// CMG Imports
+use cmsgears\core\common\utilities\DateUtil;
+
 /**
- * It will be useful for models whose owner is identified by userId column. Rest of the
- * models must implement the method having appropriate logic to identify the owner and must
- * not use this trait.
+ * The email verification flow of model.
  *
- * @property integer $userId
- *
- * @since 1.0.0
  */
-trait UserOwnerTrait {
+trait VerifyEmailTrait {
 
 	// Variables ---------------------------------------------------
 
@@ -45,26 +43,32 @@ trait UserOwnerTrait {
 
 	// Validators ----------------------------
 
-	// OwnerTrait ----------------------------
-
-	// IOwner -----------------
+	// VerifyEmailTrait ----------------------
 
 	/**
 	 * @inheritdoc
 	 */
-	public function isOwner( $user = null, $strict = false ) {
+	public function isEmailVerified() {
 
-		if( !isset( $user ) && !$strict ) {
+		return $this->emailVerified;
+	}
 
-			$user	= Yii::$app->user->getIdentity();
-		}
+	/**
+	 * @inheritdoc
+	 */
+	public function generateVerifyToken() {
 
-		if( isset( $user ) ) {
+		$this->verifyToken = Yii::$app->security->generateRandomString();
 
-			return $this->userId == $user->id;
-		}
+		$this->verifyTokenValidTill	= DateUtil::addMillis( DateUtil::getDateTime(), Yii::$app->core->tokenValidity );
+	}
 
-		return false;
+	/**
+	 * @inheritdoc
+	 */
+	public function isVerifyTokenValid( $token ) {
+
+		return $this->verifyToken === $token;
 	}
 
 	// Static Methods ----------------------------------------------
@@ -73,7 +77,7 @@ trait UserOwnerTrait {
 
 	// CMG classes ---------------------------
 
-	// OwnerTrait ----------------------------
+	// VerifyEmailTrait ----------------------
 
 	// Read - Query -----------
 

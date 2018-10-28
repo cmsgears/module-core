@@ -368,6 +368,11 @@ class Core extends Config {
 		return $this->otpValidity;
 	}
 
+	public function getOtpValidityMins() {
+
+		return ( $this->otpValidity / 60000 );
+	}
+
 	public function getTokenValidity() {
 
 		return $this->tokenValidity;

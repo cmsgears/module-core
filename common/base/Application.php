@@ -98,7 +98,20 @@ class Application extends BaseApplication {
 						$coreProperties	= CoreProperties::getInstance();
 
 						// Update base url to form urls
-						Yii::$app->urlManager->baseUrl	= Yii::$app->urlManager->baseUrl . "/" . $site->name;
+						Yii::$app->urlManager->baseUrl = Yii::$app->urlManager->baseUrl . "/" . $site->name;
+					}
+					// Use main site
+					else {
+
+						$site = SiteService::findBySlug( 'main' );
+
+						$siteRoute = $route;
+					}
+
+					// Site Found
+					if( isset( $site ) ) {
+
+						$this->configureSiteTheme( $site );
 					}
 				}
 			}
@@ -129,28 +142,7 @@ class Application extends BaseApplication {
 				// Site Found
 				if( isset( $site ) ) {
 
-					$coreProperties	= CoreProperties::getInstance();
-
-					$theme = $site->theme;
-
-					// Site Theme
-					if( Yii::$app->id == 'app-site' ) {
-
-						// Theme Found
-						if( isset( $theme ) ) {
-
-							$themePath = 'themes\\' . $theme->slug . '\\Theme';
-
-							Yii::$app->view->theme = new $themePath;
-
-							Yii::$app->assetManager->bundles = require( Yii::getAlias( '@themes' ) . "/assets/$theme->slug/" . ( YII_ENV_PROD ? 'prod.php' : 'dev.php' ) );
-						}
-					}
-					// Admin Theme
-					else if( Yii::$app->id == 'app-admin' ) {
-
-						Yii::$app->assetManager->bundles = require( Yii::getAlias( '@themes' ) . "/assets/admin/" . ( YII_ENV_PROD ? 'prod.php' : 'dev.php' ) );
-					}
+					$this->configureSiteTheme( $site );
 				}
 			}
 		}
@@ -199,5 +191,29 @@ class Application extends BaseApplication {
 	// CMG parent classes --------------------
 
 	// Application ---------------------------
+
+	private function configureSiteTheme( $site ) {
+
+		$theme = $site->theme;
+
+		// Site Theme
+		if( Yii::$app->id == 'app-site' ) {
+
+			// Theme Found
+			if( isset( $theme ) ) {
+
+				$themePath = 'themes\\' . $theme->slug . '\\Theme';
+
+				Yii::$app->view->theme = new $themePath;
+
+				Yii::$app->assetManager->bundles = require( Yii::getAlias( '@themes' ) . "/assets/$theme->slug/" . ( YII_ENV_PROD ? 'prod.php' : 'dev.php' ) );
+			}
+		}
+		// Admin Theme
+		else if( Yii::$app->id == 'app-admin' ) {
+
+			Yii::$app->assetManager->bundles = require( Yii::getAlias( '@themes' ) . "/assets/admin/" . ( YII_ENV_PROD ? 'prod.php' : 'dev.php' ) );
+		}
+	}
 
 }

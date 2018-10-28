@@ -47,8 +47,10 @@ trait MetaTrait {
 	public function getMetas() {
 
 		$metaClass = $this->metaClass;
+		$metaTable = $metaClass::tableName();
 
-		return $this->hasMany( $metaClass, [ 'modelId' => 'id' ] );
+		return $this->hasMany( $metaClass, [ 'modelId' => 'id' ] )
+			->orderBy( "$metaTable.id DESC" );
 	}
 
 	/**
@@ -59,7 +61,9 @@ trait MetaTrait {
 		$metaClass = $this->metaClass;
 		$metaTable = $metaClass::tableName();
 
-		return $this->hasMany( $metaClass, [ 'modelId' => 'id' ] )->where( [ "$metaTable.active" => true ] )->all();
+		return $this->hasMany( $metaClass, [ 'modelId' => 'id' ] )
+			->where( [ "$metaTable.active" => true ] )
+			->orderBy( "$metaTable.id DESC" );
 	}
 
 	/**
@@ -70,7 +74,10 @@ trait MetaTrait {
 		$metaClass = $this->metaClass;
 		$metaTable = $metaClass::tableName();
 
-		return $this->hasMany( $metaClass, [ 'modelId' => 'id' ] )->where( [ "$metaTable.type" => $type ] )->all();
+		return $this->hasMany( $metaClass, [ 'modelId' => 'id' ] )
+			->where( [ "$metaTable.type" => $type ] )
+			->orderBy( "$metaTable.id DESC" )
+			->all();
 	}
 
 	/**
@@ -81,7 +88,10 @@ trait MetaTrait {
 		$metaClass = $this->metaClass;
 		$metaTable = $metaClass::tableName();
 
-		return $this->hasMany( $metaClass, [ 'modelId' => 'id' ] )->where( [ "$metaTable.active" => true, "$metaTable.type" => $type ] )->all();
+		return $this->hasMany( $metaClass, [ 'modelId' => 'id' ] )
+			->where( [ "$metaTable.active" => true, "$metaTable.type" => $type ] )
+			->orderBy( "$metaTable.id DESC" )
+			->all();
 	}
 
 	/**
@@ -94,7 +104,9 @@ trait MetaTrait {
 
 		return $this->hasMany( $metaClass, [ 'modelId' => 'id' ] )
 			->where( [ "$metaTable.active" => true ] )
-			->filterWhere( "$metaTable.type", 'in', $types )->all();
+			->filterWhere( "$metaTable.type", 'in', $types )
+			->orderBy( "$metaTable.id DESC" )
+			->all();
 	}
 
 	/**
@@ -105,7 +117,9 @@ trait MetaTrait {
 		$metaClass = $this->metaClass;
 		$metaTable = $metaClass::tableName();
 
-		return $this->hasMany( $metaClass, [ 'modelId' => 'id' ] )->where( [ "$metaTable.type" => $type, "$metaTable.name" => $name ] )->one();
+		return $this->hasMany( $metaClass, [ 'modelId' => 'id' ] )
+			->where( [ "$metaTable.type" => $type, "$metaTable.name" => $name ] )
+			->one();
 	}
 
 	/**
@@ -113,8 +127,9 @@ trait MetaTrait {
 	 */
 	public function getMetaNameValueMap() {
 
-		$metas		= $this->metas;
-		$metasMap	= [];
+		$metas = $this->metas;
+
+		$metasMap = [];
 
 		foreach( $metas as $meta ) {
 
@@ -129,9 +144,9 @@ trait MetaTrait {
 	 */
 	public function getMetaNameValueMapByType( $type ) {
 
-		$metas		= $this->getMetasByType( $type );
+		$metas = $this->getMetasByType( $type );
 
-		$metasMap	= [];
+		$metasMap = [];
 
 		foreach( $metas as $meta ) {
 
@@ -146,9 +161,9 @@ trait MetaTrait {
 	 */
 	public function getMetaMapByType( $type ) {
 
-		$metas		= $this->getMetasByType( $type );
+		$metas = $this->getMetasByType( $type );
 
-		$metasMap	= [];
+		$metasMap = [];
 
 		foreach( $metas as $meta ) {
 

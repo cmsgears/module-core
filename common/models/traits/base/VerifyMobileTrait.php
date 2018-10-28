@@ -9,19 +9,11 @@
 
 namespace cmsgears\core\common\models\traits\base;
 
-// Yii Imports
-use Yii;
-
 /**
- * It will be useful for models whose owner is identified by userId column. Rest of the
- * models must implement the method having appropriate logic to identify the owner and must
- * not use this trait.
+ * The mobile verification flow of model.
  *
- * @property integer $userId
- *
- * @since 1.0.0
  */
-trait UserOwnerTrait {
+trait VerifyMobileTrait {
 
 	// Variables ---------------------------------------------------
 
@@ -45,26 +37,30 @@ trait UserOwnerTrait {
 
 	// Validators ----------------------------
 
-	// OwnerTrait ----------------------------
-
-	// IOwner -----------------
+	// VerifyMobileTrait ---------------------
 
 	/**
 	 * @inheritdoc
 	 */
-	public function isOwner( $user = null, $strict = false ) {
+	public function isMobileVerified() {
 
-		if( !isset( $user ) && !$strict ) {
+		return $this->mobileVerified;
+	}
 
-			$user	= Yii::$app->user->getIdentity();
+	/**
+	 * @inheritdoc
+	 */
+	public function isOtpExpired() {
+
+		if( empty( $this->otp ) ) {
+
+			return true;
 		}
 
-		if( isset( $user ) ) {
+		$now = DateUtil::getDateTime();
 
-			return $this->userId == $user->id;
-		}
-
-		return false;
+		// OTP Expired
+		return DateUtil::greaterThan( $this->otpValidTill, $now );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -73,7 +69,7 @@ trait UserOwnerTrait {
 
 	// CMG classes ---------------------------
 
-	// OwnerTrait ----------------------------
+	// VerifyMobileTrait ---------------------
 
 	// Read - Query -----------
 

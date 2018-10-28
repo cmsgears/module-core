@@ -255,6 +255,18 @@ class CodeGenUtil {
 		return $listItems;
 	}
 
+	public static function getRange( $start, $end ) {
+
+		$arr = [];
+
+		for( $i = $start; $i <= $end; $i++ ) {
+
+			$arr[ $i ] = $i;
+		}
+
+		return $arr;
+	}
+
 	public static function getRangeOptions( $start, $end, $selected = null ) {
 
 		$options = '';

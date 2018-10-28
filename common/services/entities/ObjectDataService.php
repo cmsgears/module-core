@@ -414,7 +414,7 @@ class ObjectDataService extends EntityService implements IObjectService {
 	public function delete( $model, $config = [] ) {
 
 		// Delete files
-		$this->fileService->deleteMultiple( [ 'avatarId' => $model->avatar, 'bannerId' => $model->banner, 'video' => $model->video ] );
+		$this->fileService->deleteMultiple( [ $model->avatar, $model->banner, $model->video ] );
 
 		// Delete mapping
 		Yii::$app->factory->get( 'modelObjectService' )->deleteByModelId( $model->id );

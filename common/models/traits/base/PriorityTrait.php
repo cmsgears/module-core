@@ -26,7 +26,7 @@ trait PriorityTrait {
 	// Globals ----------------
 
 	public static $priorityMap = [
-		ISeverity::PRIORITY_DEFAULT => 'Undefined',
+		IPriority::PRIORITY_DEFAULT => 'Undefined',
 		IPriority::PRIORITY_LOW => 'Low',
 		IPriority::PRIORITY_MEDIUM => 'Medium',
 		IPriority::PRIORITY_HIGH => 'High'
@@ -57,7 +57,7 @@ trait PriorityTrait {
 	 */
 	public function getPriorityStr() {
 
-		return self::$priorityMap[ $this->severity ];
+		return self::$priorityMap[ $this->priority ];
 	}
 
 	/**

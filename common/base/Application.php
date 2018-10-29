@@ -95,8 +95,6 @@ class Application extends BaseApplication {
 					// Site Found
 					if( isset( $site ) ) {
 
-						$coreProperties	= CoreProperties::getInstance();
-
 						// Update base url to form urls
 						Yii::$app->urlManager->baseUrl = Yii::$app->urlManager->baseUrl . "/" . $site->name;
 					}
@@ -110,6 +108,13 @@ class Application extends BaseApplication {
 
 					// Site Found
 					if( isset( $site ) ) {
+
+						// Configure Site
+						Yii::$app->core->site		= $site;
+						Yii::$app->core->siteId		= $site->id;
+						Yii::$app->core->siteSlug	= $site->slug;
+
+						$coreProperties	= CoreProperties::getInstance();
 
 						$this->configureSiteTheme( $site );
 					}
@@ -142,6 +147,13 @@ class Application extends BaseApplication {
 				// Site Found
 				if( isset( $site ) ) {
 
+					// Configure Site
+					Yii::$app->core->site		= $site;
+					Yii::$app->core->siteId		= $site->id;
+					Yii::$app->core->siteSlug	= $site->slug;
+
+					$coreProperties	= CoreProperties::getInstance();
+
 					$this->configureSiteTheme( $site );
 				}
 			}
@@ -154,6 +166,11 @@ class Application extends BaseApplication {
 
 			// Site Found
 			if( isset( $site ) ) {
+
+				// Configure Site
+				Yii::$app->core->site		= $site;
+				Yii::$app->core->siteId		= $site->id;
+				Yii::$app->core->siteSlug	= $site->slug;
 
 				$coreProperties	= CoreProperties::getInstance();
 			}
@@ -168,14 +185,6 @@ class Application extends BaseApplication {
 			Yii::$app->formatter->datetimeFormat = $coreProperties->getDateTimeFormat();
 
 			Yii::$app->timeZone = $coreProperties->getTimezone();
-		}
-
-		if( isset( $site ) ) {
-
-			// Configure Site
-			Yii::$app->core->site		= $site;
-			Yii::$app->core->siteId		= $site->id;
-			Yii::$app->core->siteSlug	= $site->slug;
 		}
 
 		if( isset( $siteRoute ) ) {

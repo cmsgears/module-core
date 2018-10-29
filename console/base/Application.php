@@ -17,14 +17,6 @@ class Application extends \yii\console\Application {
 
 		try {
 
-			// site config
-			$coreProperties	= CoreProperties::getInstance();
-
-			Yii::$app->formatter->dateFormat		= $coreProperties->getDateFormat();
-			Yii::$app->formatter->timeFormat		= $coreProperties->getTimeFormat();
-			Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
-			Yii::$app->timeZone						= $coreProperties->getTimezone();
-
 			// TODO: Enable multi-site similar to web app
 
 			$siteSlug = Yii::$app->core->siteSlug;
@@ -37,6 +29,13 @@ class Application extends \yii\console\Application {
 				// Configure Current Site
 				Yii::$app->core->site		= $site;
 				Yii::$app->core->siteId		= $site->id;
+
+				$coreProperties	= CoreProperties::getInstance();
+
+				Yii::$app->formatter->dateFormat		= $coreProperties->getDateFormat();
+				Yii::$app->formatter->timeFormat		= $coreProperties->getTimeFormat();
+				Yii::$app->formatter->datetimeFormat	= $coreProperties->getDateTimeFormat();
+				Yii::$app->timeZone						= $coreProperties->getTimezone();
 			}
 		}
 		catch( \yii\db\Exception $e ) {

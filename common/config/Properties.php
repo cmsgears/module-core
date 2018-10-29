@@ -49,9 +49,8 @@ abstract class Properties {
 	public function init( $configType ) {
 
 		$siteService	= Yii::$app->factory->get( 'siteService' );
-		$siteSlug		= Yii::$app->core->getSiteSlug();
 
-		$site = $siteService->getBySlug( $siteSlug );
+		$site = Yii::$app->core->site;
 
 		if( Yii::$app->core->siteConfigAll ) {
 

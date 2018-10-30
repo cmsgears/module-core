@@ -132,8 +132,10 @@ abstract class Controller extends BaseController {
 			Yii::$app->assetManager->forceCopy = true;
 		}
 
+		// TODO: Enable it carefully considering performance factors
+
 		// Log user's last activity to trace when user was last active
-		Yii::$app->factory->get( 'userService' )->logLastActivity();
+		//Yii::$app->factory->get( 'userService' )->logLastActivity();
 
 		return parent::beforeAction( $action );
 	}

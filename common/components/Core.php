@@ -41,51 +41,55 @@ class Core extends Config {
 	// Public -----------------
 
 	/**
-	 * @var main site to load configurations in case sub sites are not configured.
+	 * @var int The main site id to load configurations in case sub sites are not configured.
 	 */
 	public $mainSiteId			= 1;
 
 	/**
-	 * @var main site to load configurations in case sub sites are not configured.
+	 * @var string The main site slug to load configurations in case sub sites are not configured.
 	 */
 	public $mainSiteSlug		= 'main';
 
 	/**
-	 * Used to debug multi-site.
-	 *
-	 * @var string
+	 * @var string string Used to debug multi-site.
 	 */
 	public $defaultSiteSlug		= 'main';
 
 	/**
-	 * @var identify the currently active site based on the url request.
+	 * @var int Identifies the currently active site based on the url request.
 	 */
 	public $siteId				= 1;
 
 	/**
-	 * @var identify the currently active site based on the url request.
+	 * @var string Identifies the currently active site based on the url request.
 	 */
 	public $siteSlug			= 'main';
 
 	/**
-	 * @var currently active site based on the url request.
+	 * @var \cmsgears\core\common\models\entities\Site The currently active site based on the url request.
 	 */
 	public $site				= null;
 
 	/**
-	 * @var It identify whether all the site config need to be loaded at once or by type i.e. module or plugin.
+	 * @var boolean Identifies whether all the site config need to be loaded at once or by type i.e. module or plugin.
 	 */
 	public $siteConfigAll 		= false;
 
 	/**
-	 * @var test whether the web app is multi-site.
+	 * @var boolean Check whether the web app is multi-site.
 	 */
 	public $multiSite			= false;
 
 	/**
-	 * @var test whether the web app is sub domain or sub directory based in case $multiSite is set to true.
+	 * @var boolean Check whether the web app is sub domain or sub directory based in case $multiSite is set to true.
 	 */
 	public $subDirectory		= true;
+
+	/**
+	 *
+	 * @var \cmsgears\core\common\models\entities\User The active logged in user.
+	 */
+	public $user;
 
 	// The three type of apps.
 
@@ -109,13 +113,14 @@ class Core extends Config {
 	public $tokenValidity		= 600000; // 10 minues by default
 
 	/**
-	 * @var default redirect path to be used for post login. It will be used by login action of Site Controller to redirect users
-	 * after successful login in case user role home url is not set.
+	 * @var default redirect path to be used for post login. It will be used by login action of
+	 * Site Controller to redirect users after successful login in case user role home url is not set.
 	 */
 	public $loginRedirectPage		= '/';
 
 	/**
-	 * @var Redirect path to be used when user is newly registered and not active. $userApproval must be true for it.
+	 * @var Redirect path to be used when user is newly registered and not active. $userApproval
+	 * must be true for it.
 	 */
 	public $confirmRedirectPage		= '/';
 
@@ -125,13 +130,15 @@ class Core extends Config {
 	public $logoutRedirectPage		= '/login';
 
 	/**
-	 * @var The indicator whether CMG RBAC has to be used for the project. All the admin sites must set this to true. Though it's optional for
-	 * front end sites. The front end sites can use either CMG RBAC or Yii's RBAC system or no RBAC system based on project needs.
+	 * @var The indicator whether CMG RBAC has to be used for the project. All the admin sites must
+	 * set this to true. Though it's optional for front end sites. The front end sites can use either
+	 * CMG RBAC or Yii's RBAC system or no RBAC system based on project needs.
 	 */
 	public $rbac				= true;
 
 	/**
-	 * @var The default filter class available for CMG RBAC system. A different filter can be used based on project needs.
+	 * @var The default filter class available for CMG RBAC system. A different filter can be used
+	 * based on project needs.
 	 */
 	public $rbacFilterClass		= 'cmsgears\core\common\\filters\RbacFilter';
 
@@ -147,7 +154,8 @@ class Core extends Config {
 	 * mobile applications having same users. It's used by user class to load permissions when accessed
 	 * using access token.
 	 *
-	 * OAuth 2.0 or other authorization mechanism can be used to provide APIS to 3rd party web and mobile applications.
+	 * OAuth 2.0 or other authorization mechanism can be used to provide APIS to 3rd party
+	 * web and mobile applications.
 	 *
 	 * @var boolean
 	 */
@@ -162,7 +170,8 @@ class Core extends Config {
 	public $apisValidity		= 7;
 
 	/**
-	 * @var The WYSIWYG editor widget class. It will be used by Core Module to edit newsletter content. The dependent modules can also use it to edit the html content.
+	 * @var The WYSIWYG editor widget class. It will be used by Core Module to edit newsletter content.
+	 * The dependent modules can also use it to edit the html content.
 	 */
 	public $editorClass			= null;
 
@@ -181,12 +190,14 @@ class Core extends Config {
 	public $xtraLargeText		= CoreGlobal::TEXT_XTRALARGE;
 
 	/**
-	 * @var Switch for notification feature. If it's set to true, either Notify Module must be installed or eventManager component must be configured.
+	 * @var Switch for notification feature. If it's set to true, either Notify Module
+	 * must be installed or eventManager component must be configured.
 	 */
 	public $notifications		= false;
 
 	/**
-	 * @var Switch for activities feature. If it's set to true, either Notify Module must be installed or eventManager component must be configured.
+	 * @var Switch for activities feature. If it's set to true, either Notify Module must
+	 * be installed or eventManager component must be configured.
 	 */
 	public $activities			= false;
 
@@ -327,11 +338,27 @@ class Core extends Config {
 
 	/**
 	 * The method isMultiSite can be used to check whether multi-site feature is required.
+	 *
 	 * @return boolean
 	 */
 	public function isMultiSite() {
 
 		return $this->multiSite;
+	}
+
+	public function isGuest() {
+
+		return Yii::$app->user->isGuest();
+	}
+
+	public function getUser() {
+
+		if( empty( $this->user ) ) {
+
+			$this->user = Yii::$app->user->getIdentity();
+		}
+
+		return $this->user;
 	}
 
 	/**

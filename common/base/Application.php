@@ -92,14 +92,8 @@ class Application extends BaseApplication {
 					// Find Site
 					$site = SiteService::findBySlug( $site );
 
-					// Site Found
-					if( isset( $site ) ) {
-
-						// Update base url to form urls
-						Yii::$app->urlManager->baseUrl = Yii::$app->urlManager->baseUrl . "/" . $site->name;
-					}
-					// Use main site
-					else {
+					// Use main Site
+					if( empty( $site ) ) {
 
 						$site = SiteService::findBySlug( 'main' );
 
@@ -160,6 +154,7 @@ class Application extends BaseApplication {
 		}
 		// Process single site request
 		else {
+
 			$siteSlug = Yii::$app->core->siteSlug;
 
 			$site = SiteService::findBySlug( $siteSlug );
@@ -206,7 +201,7 @@ class Application extends BaseApplication {
 		$theme = $site->theme;
 
 		// Site Theme
-		if( Yii::$app->id == 'app-site' ) {
+		if( Yii::$app->id == Yii::$app->core->appFrontend ) {
 
 			// Theme Found
 			if( isset( $theme ) ) {
@@ -219,7 +214,7 @@ class Application extends BaseApplication {
 			}
 		}
 		// Admin Theme
-		else if( Yii::$app->id == 'app-admin' ) {
+		else if( Yii::$app->id == Yii::$app->core->appAdmin ) {
 
 			Yii::$app->assetManager->bundles = require( Yii::getAlias( '@themes' ) . "/assets/admin/" . ( YII_ENV_PROD ? 'prod.php' : 'dev.php' ) );
 		}

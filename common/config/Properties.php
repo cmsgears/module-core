@@ -48,7 +48,7 @@ abstract class Properties {
 	 */
 	public function init( $configType ) {
 
-		$siteService	= Yii::$app->factory->get( 'siteService' );
+		$siteService = Yii::$app->factory->get( 'siteService' );
 
 		$site = Yii::$app->core->site;
 

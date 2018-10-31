@@ -76,7 +76,7 @@ class Form extends Action {
 
 			if( $data->load( Yii::$app->request->post(), $data->getClassName() ) && $data->validate() ) {
 
-				$modelService->updateDataMeta( $model, $dataKey, $data );
+				$modelService->updateDataMeta( $model, $dataKey, $data->getData() );
 
 				return $this->controller->redirect( $this->controller->returnUrl );
 			}

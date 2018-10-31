@@ -35,11 +35,12 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'model' => [ 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x4', 'x4', 'x2', null, null, null, null ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x3', 'x3', 'x3', null, null, null, null, null ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'name' => 'Name',
 		'title' => 'Title',
+		'embed' => [ 'title' => 'Embed', 'generate' => function( $model ) { return $model->getFileUrl(); } ],
 		'directory' => 'Directory',
 		'extension' => 'Extension',
 		'type' => 'Type',

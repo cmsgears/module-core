@@ -164,4 +164,5 @@ class DataModel extends Model {
 
 		return $json;
 	}
+
 }

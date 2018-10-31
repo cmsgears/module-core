@@ -256,13 +256,13 @@ trait DataTrait {
 	 */
 	public function updateDataKeyObj( $model, $meta ) {
 
-		$config = $model->getDataMeta( 'data' );
+		$data	= $model->getDataMeta( 'data' );
 		$key	= $meta->key;
-		$config	= !empty( $config ) ? $config : new \StdClass();
+		$data	= !empty( $data ) ? $data : new \StdClass();
 
-		$config->$key = $meta->value;
+		$data->$key = $meta->value;
 
-		$model->updateDataMeta( 'attributes', $config );
+		$model->updateDataMeta( 'data', $data );
 
 		$model->refresh();
 
@@ -278,13 +278,13 @@ trait DataTrait {
 	 */
 	public function updateDataAttributeObj( $model, $meta ) {
 
-		$config = $model->getDataMeta( 'attributes' );
-		$key	= $meta->key;
-		$config	= !empty( $config ) ? $config : new \StdClass();
+		$attributes = $model->getDataMeta( 'attributes' );
+		$key		= $meta->key;
+		$attributes	= !empty( $attributes ) ? $attributes : new \StdClass();
 
-		$config->$key = $meta->value;
+		$attributes->$key = $meta->value;
 
-		$model->updateDataMeta( 'attributes', $config );
+		$model->updateDataMeta( 'attributes', $attributes );
 
 		$model->refresh();
 
@@ -322,13 +322,13 @@ trait DataTrait {
 	 */
 	public function updateDataSettingObj( $model, $meta ) {
 
-		$config = $model->getDataMeta( 'settings' );
-		$key	= $meta->key;
-		$config	= !empty( $config ) ? $config : new \StdClass();
+		$settings	= $model->getDataMeta( 'settings' );
+		$key		= $meta->key;
+		$settings	= !empty( $settings ) ? $settings : new \StdClass();
 
-		$config->$key = $meta->value;
+		$settings->$key = $meta->value;
 
-		$model->updateDataMeta( 'settings', $config );
+		$model->updateDataMeta( 'settings', $settings );
 
 		$model->refresh();
 
@@ -345,13 +345,13 @@ trait DataTrait {
 	 */
 	public function updateDataCustomObj( $model, $type, $meta ) {
 
-		$config = $model->getDataMeta( $type );
+		$custom = $model->getDataMeta( $type );
 		$key	= $meta->key;
-		$config	= !empty( $config ) ? $config : new \StdClass();
+		$custom	= !empty( $custom ) ? $custom : new \StdClass();
 
-		$config->$key = $meta->value;
+		$custom->$key = $meta->value;
 
-		$model->updateDataMeta( $type, $config );
+		$model->updateDataMeta( $type, $custom );
 
 		$model->refresh();
 

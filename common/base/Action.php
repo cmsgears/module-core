@@ -54,6 +54,8 @@ class Action extends \yii\base\Action {
 
 	// Public -----------------
 
+	public $viewPath;
+
 	// Protected --------------
 
 	// Private ----------------
@@ -61,6 +63,16 @@ class Action extends \yii\base\Action {
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		if( isset( $this->viewPath ) ) {
+
+			$this->controller->setViewPath( $this->viewPath );
+		}
+	}
 
 	// Instance methods --------------------------------------------
 

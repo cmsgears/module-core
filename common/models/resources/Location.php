@@ -28,10 +28,12 @@ use cmsgears\core\common\models\entities\City;
  * @property integer $id
  * @property integer $countryId
  * @property integer $provinceId
+ * @property integer $regionId
  * @property integer $cityId
  * @property string $title
  * @property string $countryName
  * @property string $provinceName
+ * @property string $regionName
  * @property string $cityName
  * @property string $zip
  * @property string $subZip
@@ -86,9 +88,10 @@ class Location extends Resource {
 		$rules = [
 			// Required, Safe
 			[ 'id', 'safe' ],
+			[ [ 'latitude', 'longitude' ], 'required', 'on' => 'location' ],
 			// Text Limit
 			[ [ 'zip', 'subZip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
-			[ [ 'countryName', 'provinceName' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'countryName', 'provinceName', 'regionName' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ [ 'title', 'cityName' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
 			[ [ 'zip', 'subZip' ], 'alphanumhyphenspace' ],
@@ -114,9 +117,13 @@ class Location extends Resource {
 
 		return [
 			'countryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
-			'provinceId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PROVINCE ),
+			'provinceId' => Yii::$app->core->provinceLabel,
+			'regionId' => Yii::$app->core->regionLabel,
 			'cityId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CITY ),
 			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
+			'countryName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
+			'provinceName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PROVINCE ),
+			'regionName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_REGION ),
 			'cityName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CITY ),
 			'zip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP ),
 			'subZip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP_SUB ),
@@ -161,11 +168,11 @@ class Location extends Resource {
 	// TODO: Use location template to return the location string.
 	public function toString() {
 
-		$countryName	= isset( $this->countryName ) ? $this->countryName : $this->country->name;
-		$provinceName	= isset( $this->provinceName ) ? $this->provinceName : $this->province->name;
-		$cityName		= isset( $this->cityName ) ? $this->cityName : $this->city->name;
+		$countryName	= !empty( $this->countryName ) ? $this->countryName : ( isset( $this->country ) ? $this->country->name : null );
+		$provinceName	= !empty( $this->provinceName ) ? $this->provinceName : ( isset( $this->province ) ? $this->province->name : null );
+		$cityName		= !empty( $this->cityName ) ? $this->cityName : ( isset( $this->city ) ? $this->city->name : null );
 
-		$location	= $this->title;
+		$location = $this->title;
 
 		if( isset( $cityName ) && strlen( $cityName ) > 0 ) {
 
@@ -177,7 +184,7 @@ class Location extends Resource {
 			$location .= ", $provinceName";
 		}
 
-		if( isset( $countryName ) && strlen( $countryName ) > 0 ) {
+		if( isset( $provinceName ) && isset( $countryName ) && strlen( $countryName ) > 0 ) {
 
 			$location .= ", $countryName";
 		}
@@ -224,7 +231,7 @@ class Location extends Resource {
 	 */
 	public static function queryWithCountry( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'country' ];
+		$config[ 'relations' ] = [ 'country' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -237,7 +244,7 @@ class Location extends Resource {
 	 */
 	public static function queryWithProvince( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'province' ];
+		$config[ 'relations' ] = [ 'province' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -250,7 +257,7 @@ class Location extends Resource {
 	 */
 	public static function queryWithCity( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'city' ];
+		$config[ 'relations' ] = [ 'city' ];
 
 		return parent::queryWithAll( $config );
 	}

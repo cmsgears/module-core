@@ -73,10 +73,9 @@ trait AddressTrait {
 
 		$modelAddressTable = ModelAddress::tableName();
 
-		return $this->hasOne( ModelAddress::class, [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelAddress::class, [ 'parentId' => 'id' ] )
 			->where( "$modelAddressTable.parentType=:ptype AND $modelAddressTable.type=:type AND $modelAddressTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
-			->orderBy( "$modelAddressTable.id DESC" )
-			->all();
+			->orderBy( "$modelAddressTable.id DESC" );
 	}
 
 	/**

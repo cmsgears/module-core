@@ -9,6 +9,9 @@
 
 namespace cmsgears\core\common\services\resources;
 
+// Yii Imports
+use Yii;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
@@ -75,11 +78,67 @@ class LocationService extends ResourceService implements ILocationService {
 
 	// Create -------------
 
+	public function create( $model, $config = [] ) {
+
+		$model->countryName		= isset( $model->country ) ? $model->country->name : null;
+		$model->provinceName	= isset( $model->province ) ? $model->province->name : null;
+		$model->regionName		= isset( $model->region ) ? $model->region->name : null;
+
+		return parent::create( $model, $config );
+	}
+
 	// Update -------------
+
+	public function update( $model, $config = [] ) {
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'countryId', 'provinceId', 'regionId', 'cityId',
+			'title', 'cityName', 'regionName', 'provinceName', 'countryName', 'zip', 'subZip',
+			'longitude', 'latitude', 'zoomLevel'
+		];
+
+		$model->countryName		= isset( $model->country ) ? $model->country->name : null;
+		$model->provinceName	= isset( $model->province ) ? $model->province->name : null;
+		$model->regionName		= isset( $model->region ) ? $model->region->name : null;
+
+        $config[ 'attributes' ] = $attributes;
+
+		return parent::update( $model, $config );
+	}
 
 	// Delete -------------
 
+	public function delete( $model, $config = [] ) {
+
+		// Delete mapping
+		Yii::$app->factory->get( 'modelLocationService' )->deleteByModelId( $model->id );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
+
 	// Bulk ---------------
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
 
 	// Notifications ------
 

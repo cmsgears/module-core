@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\address;
+namespace cmsgears\core\common\actions\location;
 
 // Yii Imports
 use Yii;
@@ -20,7 +20,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\base\Action;
 
 /**
- * The Single action creates or update the address.
+ * The Single action creates or update the location.
  *
  * @since 1.0.0
  */
@@ -47,7 +47,7 @@ class Single extends Action {
 	protected $countryService;
 	protected $provinceService;
 	protected $regionService;
-	protected $addressService;
+	protected $locationService;
 
 	// Private ----------------
 
@@ -62,7 +62,7 @@ class Single extends Action {
 		$this->countryService	= Yii::$app->factory->get( 'countryService' );
 		$this->provinceService 	= Yii::$app->factory->get( 'provinceService' );
 		$this->regionService 	= Yii::$app->factory->get( 'regionService' );
-		$this->addressService	= Yii::$app->factory->get( 'addressService' );
+		$this->locationService	= Yii::$app->factory->get( 'locationService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -84,12 +84,12 @@ class Single extends Action {
 
 		if( isset( $parent ) ) {
 
-			$model = $this->addressService->getModelObject();
+			$model = $this->locationService->getModelObject();
 
-			// Need the overriden model address, hence discarded $parent->address to get the address model.
-			if( isset( $parent->addressId ) ) {
+			// Need the overriden model location, hence discarded $parent->location to get the location model.
+			if( isset( $parent->locationId ) ) {
 
-				$model = $this->addressService->getById( $parent->addressId );
+				$model = $this->locationService->getById( $parent->locationId );
 			}
 
 			if( isset( $this->scenario ) ) {
@@ -104,17 +104,17 @@ class Single extends Action {
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				if( empty( $parent->address ) ) {
+				if( empty( $parent->location ) ) {
 
-					$address = $this->addressService->create( $model );
+					$location = $this->locationService->create( $model );
 
-					$parent->addressId = $address->id;
+					$parent->locationId = $location->id;
 
 					$parentService->update( $parent );
 				}
 				else {
 
-					$this->addressService->update( $model );
+					$this->locationService->update( $model );
 				}
 
 				return $this->controller->redirect( "all?pid=$parent->id" );

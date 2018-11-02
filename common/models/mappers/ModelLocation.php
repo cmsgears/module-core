@@ -9,6 +9,9 @@
 
 namespace cmsgears\core\common\models\mappers;
 
+// Yii Imports
+use Yii;
+
 // CMG Imports
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\ModelMapper;
@@ -22,6 +25,7 @@ use cmsgears\core\common\models\resources\Location;
  * @property integer $parentId
  * @property string $parentType
  * @property string $type
+ * @property string $key
  * @property integer $order
  * @property boolean $active
  *
@@ -60,6 +64,30 @@ class ModelLocation extends ModelMapper {
 	// yii\base\Component -----
 
 	// yii\base\Model ---------
+
+	/**
+	 * @inheritdoc
+	 */
+	public function rules() {
+
+		$rules = parent::rules();
+
+		$rules[] = [ 'key', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ];
+
+		return $rules;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
+
+		$labels = parent::attributeLabels();
+
+		$labels[ 'key' ] = 'Key';
+
+		return $labels;
+	}
 
 	// CMG interfaces ------------------------
 

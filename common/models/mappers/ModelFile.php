@@ -9,6 +9,9 @@
 
 namespace cmsgears\core\common\models\mappers;
 
+// Yii Imports
+use Yii;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\base\CoreTables;
@@ -28,6 +31,7 @@ use cmsgears\core\common\models\traits\base\FeaturedTrait;
  * @property integer $parentId
  * @property string $parentType
  * @property string $type
+ * @property string $key
  * @property integer $order
  * @property boolean $active
  * @property boolean $pinned
@@ -78,9 +82,22 @@ class ModelFile extends ModelMapper implements IFeatured {
 
 		$rules = parent::rules();
 
+		$rules[] = [ 'key', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ];
 		$rules[] = [ [ 'pinned', 'featured' ], 'boolean' ];
 
 		return $rules;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels() {
+
+		$labels = parent::attributeLabels();
+
+		$labels[ 'key' ] = 'Key';
+
+		return $labels;
 	}
 
 	// CMG interfaces ------------------------

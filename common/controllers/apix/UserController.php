@@ -156,10 +156,10 @@ class UserController extends Controller {
 			'assign-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Assign' ],
 			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Clear' ],
 			// Metas
-			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\CreateMeta', 'model' => Yii::$app->user->identity ],
-			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMeta', 'model' => Yii::$app->user->identity ],
+			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create', 'model' => Yii::$app->user->identity ],
+			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update', 'model' => Yii::$app->user->identity ],
 			'toggle-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Toggle', 'model' => Yii::$app->user->identity ],
-			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\DeleteMeta', 'model' => Yii::$app->user->identity ],
+			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete', 'model' => Yii::$app->user->identity ],
 			'settings' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMultiple', 'model' => Yii::$app->user->identity ],
 			// Options
 			'assign-option' => [ 'class' => 'cmsgears\core\common\actions\option\Assign', 'model' => Yii::$app->user->identity ],
@@ -172,14 +172,14 @@ class UserController extends Controller {
 			'update-address' => [ 'class' => 'cmsgears\core\common\actions\address\Update', 'model' => Yii::$app->user->identity ],
 			'delete-address' => [ 'class' => 'cmsgears\core\common\actions\address\Delete', 'model' => Yii::$app->user->identity ],
 			// Data Object - Use current logged in user to update the config and settings
-			'set-data' => [ 'class' => 'cmsgears\core\common\actions\data\SetData', 'model' => Yii::$app->user->identity ],
-			'remove-data' => [ 'class' => 'cmsgears\core\common\actions\data\RemoveData', 'model' => Yii::$app->user->identity ],
-			'set-attribute' => [ 'class' => 'cmsgears\core\common\actions\data\SetAttribute', 'model' => Yii::$app->user->identity ],
-			'remove-attribute' => [ 'class' => 'cmsgears\core\common\actions\data\RemoveAttribute', 'model' => Yii::$app->user->identity ],
-			'set-config' => [ 'class' => 'cmsgears\core\common\actions\data\SetConfig', 'model' => Yii::$app->user->identity ],
-			'remove-config' => [ 'class' => 'cmsgears\core\common\actions\data\RemoveConfig', 'model' => Yii::$app->user->identity ],
-			'set-setting' => [ 'class' => 'cmsgears\core\common\actions\data\SetSetting', 'model' => Yii::$app->user->identity ],
-			'remove-setting' => [ 'class' => 'cmsgears\core\common\actions\data\RemoveSetting', 'model' => Yii::$app->user->identity ]
+			'set-data' => [ 'class' => 'cmsgears\core\common\actions\data\data\Set', 'model' => Yii::$app->user->identity ],
+			'remove-data' => [ 'class' => 'cmsgears\core\common\actions\data\data\Remove', 'model' => Yii::$app->user->identity ],
+			'set-attribute' => [ 'class' => 'cmsgears\core\common\actions\data\attribute\Set', 'model' => Yii::$app->user->identity ],
+			'remove-attribute' => [ 'class' => 'cmsgears\core\common\actions\data\attribute\Remove', 'model' => Yii::$app->user->identity ],
+			'set-config' => [ 'class' => 'cmsgears\core\common\actions\data\config\Set', 'model' => Yii::$app->user->identity ],
+			'remove-config' => [ 'class' => 'cmsgears\core\common\actions\data\config\Remove', 'model' => Yii::$app->user->identity ],
+			'set-setting' => [ 'class' => 'cmsgears\core\common\actions\data\setting\Set', 'model' => Yii::$app->user->identity ],
+			'remove-setting' => [ 'class' => 'cmsgears\core\common\actions\data\setting\Remove', 'model' => Yii::$app->user->identity ]
 		];
 	}
 

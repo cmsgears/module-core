@@ -140,7 +140,7 @@ class UserController extends Controller {
 	public function actionProfile() {
 
 		// Find Model
-		$user = Yii::$app->user->getIdentity();
+		$user = Yii::$app->core->getUser();
 
 		// Scenario
 		$user->setScenario( 'profile' );
@@ -170,7 +170,7 @@ class UserController extends Controller {
 	public function actionAccount() {
 
 		// Find Model
-		$user	= Yii::$app->user->getIdentity();
+		$user	= Yii::$app->core->getUser();
 		$model	= new ResetPassword();
 
 		// Configure Model
@@ -207,7 +207,7 @@ class UserController extends Controller {
 	 */
 	public function actionAddress() {
 
-		$user		= Yii::$app->user->getIdentity();
+		$user		= Yii::$app->core->getUser();
 		$address	= $user->primaryAddress;
 
 		if( empty( $address ) ) {
@@ -242,7 +242,7 @@ class UserController extends Controller {
 	 */
 	public function actionSettings() {
 
-		$user = Yii::$app->user->getIdentity();
+		$user = Yii::$app->core->getUser();
 
 		// Load key settings
 		$privacy		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );

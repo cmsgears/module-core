@@ -9,6 +9,9 @@
 
 namespace cmsgears\core\common\models\traits\base;
 
+// CMG Imports
+use cmsgears\core\common\utilities\DateUtil;
+
 /**
  * The mobile verification flow of model.
  *

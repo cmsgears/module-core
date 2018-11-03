@@ -216,7 +216,7 @@ class SiteController extends BaseSiteController {
 	public function actionJoinSite() {
 
 		$model	= new SiteMember();
-		$user	= Yii::$app->user->getIdentity();
+		$user	= Yii::$app->core->getUser();
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 

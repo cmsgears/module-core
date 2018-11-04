@@ -39,7 +39,7 @@ interface IModelOptionService extends IModelMapperService {
 
 	// Update -------------
 
-	public function toggle( $parentId, $parentType, $modelId );
+	public function toggle( $parentId, $parentType, $modelId, $mappingType );
 
 	public function bindOptions( $binder, $parentType );
 

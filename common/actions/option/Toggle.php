@@ -68,7 +68,9 @@ class Toggle extends ModelAction {
 
 			$modelOptionService	= Yii::$app->factory->get( 'modelOptionService' );
 
-			$modelOptionService->toggle( $this->model->id, $this->parentType, $cid );
+			$mappingType = isset ( $this->modelType ) ? $this->modelType : null;
+
+			$modelOptionService->toggle( $this->model->id, $this->parentType, $cid, $mappingType );
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );

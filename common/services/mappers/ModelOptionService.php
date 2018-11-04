@@ -159,7 +159,7 @@ class ModelOptionService extends ModelMapperService implements IModelOptionServi
 		]);
 	}
 
-	public function toggle( $parentId, $parentType, $modelId ) {
+	public function toggle( $parentId, $parentType, $modelId, $mappingType ) {
 
 		$modelClass	= static::$modelClass;
 
@@ -182,7 +182,7 @@ class ModelOptionService extends ModelMapperService implements IModelOptionServi
 		// New Mapping
 		else {
 
-			$this->createByParams( [ 'modelId' => $modelId, 'parentId' => $parentId, 'parentType' => $parentType, 'active' => true ] );
+			$this->createByParams( [ 'modelId' => $modelId, 'parentId' => $parentId, 'parentType' => $parentType, 'type' => $mappingType, 'active' => true ] );
 		}
 	}
 

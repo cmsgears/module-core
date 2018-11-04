@@ -20,8 +20,8 @@ use yii\helpers\HtmlPurifier;
 
 // CMG Imports
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\interfaces\IApproval;
-use cmsgears\core\common\models\interfaces\IVisibility;
+use cmsgears\core\common\models\interfaces\base\IApproval;
+use cmsgears\core\common\models\interfaces\base\IVisibility;
 
 use cmsgears\core\common\services\interfaces\base\IActiveRecordService;
 
@@ -506,9 +506,36 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 				return $model->delete();
 			}
-
 			// Soft Delete - Useful for models using status to mark model as deleted, but keep for historic purpose.
-			return $this->softDelete( $model, $notify, $config );
+			else {
+
+				$interfaces = class_implements( static::class );
+
+				if( isset( $interfaces[ 'cmsgears\core\common\services\interfaces\base\IApproval' ] ) ) {
+
+					// Approval Trait
+					return $this->softDeleteNotify( $model, $notify, $config );
+				}
+				else {
+
+					return $this->softDelete( $model );
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public function softDelete( $model ) {
+
+		// Delete if not deleted yet
+		if( !$model->status == IApproval::STATUS_DELETED ) {
+
+			$model->status = IApproval::STATUS_DELETED;
+
+			$model->update();
+
+			return $model;
 		}
 
 		return false;
@@ -731,6 +758,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$conditions		= $config[ 'conditions' ] ?? null;
 		$filters		= $config[ 'filters' ] ?? null;
 		$random			= $config[ 'random' ] ?? false; // Be careful in using random at database level for tables having high row count
+		$softDelete		= $config[ 'softDelete' ] ?? false;
 
 		// search and sort
 		$searchParam	= $config[ 'search-param' ] ?? 'keywords';
@@ -738,12 +766,13 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$sort			= $config[ 'sort' ] ?? false;
 
 		// report
-		$reportCol		= $config[ 'report-col' ] ?? [];
+		$reportCol = $config[ 'report-col' ] ?? [];
 
 		// url generation
-		$route			= $config[ 'route' ] ?? null;
+		$route = $config[ 'route' ] ?? null;
 
-		$pagination		= [];
+		// pagination
+		$pagination = [];
 
 		// Conditions ----------
 
@@ -764,9 +793,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		$interfaces = class_implements( static::class );
 
-		if( isset( $interfaces[ 'cmsgears\core\common\services\interfaces\base\IApproval' ] ) ) {
+		if( $softDelete || isset( $interfaces[ 'cmsgears\core\common\services\interfaces\base\IApproval' ] ) ) {
 
-			$softDelete = $modelClass::STATUS_DELETED;
+			$softDelete = IApproval::STATUS_DELETED;
 
 			$query->andWhere( "$modelTable.status!=$softDelete" );
 		}

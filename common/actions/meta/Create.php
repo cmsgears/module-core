@@ -16,6 +16,8 @@ use yii\helpers\HtmlPurifier;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\base\IMeta;
+
 use cmsgears\core\common\actions\base\ModelAction;
 
 use cmsgears\core\common\utilities\AjaxUtil;
@@ -96,6 +98,11 @@ class Create extends ModelAction {
 			if( empty( $meta->type ) ) {
 
 				$meta->type = CoreGlobal::TYPE_DEFAULT;
+			}
+
+			if( empty( $meta->valueType ) ) {
+
+				$meta->valueType = IMeta::VALUE_TYPE_TEXT;
 			}
 
 			if( $meta->load( Yii::$app->request->post(), $meta->getClassName() ) && $meta->validate() ) {

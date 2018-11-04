@@ -503,7 +503,7 @@ trait ApprovalTrait {
 	/*
 	 * Soft Delete the model and trigger notification for appropriate user to take action.
 	 */
-	public function softDelete( $model, $notify = true, $config = [] ) {
+	public function softDeleteNotify( $model, $notify = true, $config = [] ) {
 
 		if( !$model->isDeleted( true ) ) {
 

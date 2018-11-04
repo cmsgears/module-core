@@ -68,7 +68,7 @@ interface IApproval {
 
 	public function terminate( $model, $notify = true, $config = [] );
 
-	public function softDelete( $model, $notify = true, $config = [] );
+	public function softDeleteNotify( $model, $notify = true, $config = [] );
 
 	public function toggleFrojen( $model, $notify = true, $config = [] );
 

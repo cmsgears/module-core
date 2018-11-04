@@ -98,7 +98,7 @@ class DiscoverFilter {
 
 			if( isset( $args[ 'slugParam' ] ) ) {
 
-				$slugParam	= $args[ 'slugParam' ];
+				$slugParam = $args[ 'slugParam' ];
 			}
 
 			$slug = Yii::$app->request->get( $slugParam );
@@ -145,6 +145,7 @@ class DiscoverFilter {
 				}
 				else {
 
+					// Notes: Make sure that the Model support unique validator for slug
 					$model = $modelService->getBySlug( $slug );
 				}
 			}

@@ -76,7 +76,10 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 	 */
 	public $parentType;
 
-	// Type of Mapper or Resource. It's different from $parentType and $type.
+	/**
+	 * Type of Mapper or Resource used to categorise mappings using mapping type column.
+	 * It's different from $parentType and $type.
+	 */
 	public $modelType;
 
 	/**

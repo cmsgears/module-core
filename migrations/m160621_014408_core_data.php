@@ -82,8 +82,8 @@ class m160621_014408_core_data extends Migration {
 		$this->insertRolePermission();
 
 		// Create permissions
-		$this->insertGalleryRolePermission();
 		$this->insertFileRolePermission();
+		$this->insertGalleryRolePermission();
 
 		// Create Site Members
 		$this->insertSiteMembers();
@@ -229,53 +229,9 @@ class m160621_014408_core_data extends Migration {
 
 		$mappings = [
 			[ $superAdminRole->id, $adminPerm->id ], [ $superAdminRole->id, $userPerm->id ], [ $superAdminRole->id, $corePerm->id ], [ $superAdminRole->id, $identityPerm->id ], [ $superAdminRole->id, $rbacPerm->id ],
-			[ $adminRole->id, $adminPerm->id ], [ $adminRole->id, $userPerm->id ], [ $adminRole->id, $corePerm->id ],
+			[ $adminRole->id, $adminPerm->id ], [ $adminRole->id, $userPerm->id ], [ $adminRole->id, $corePerm->id ], [ $adminRole->id, $identityPerm->id ],
 			[ $userRole->id, $userPerm->id ],
 			[ $userAdminRole->id, $adminPerm->id ], [ $userAdminRole->id, $userPerm->id ], [ $userAdminRole->id, $identityPerm->id ]
-		];
-
-		$this->batchInsert( $this->prefix . 'core_role_permission', $columns, $mappings );
-	}
-
-	private function insertGalleryRolePermission() {
-
-		// Roles
-
-		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'adminUrl', 'homeUrl', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
-
-		$roles = [
-			[ $this->master->id, $this->master->id, 'Gallery Admin', 'gallery-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role Gallery Admin is limited to manage galleries from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
-		];
-
-		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
-
-		$superAdminRole		= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
-		$adminRole			= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$galleryAdminRole	= Role::findBySlugType( 'gallery-admin', CoreGlobal::TYPE_SYSTEM );
-
-		// Permissions
-		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'type', 'icon', 'group', 'description', 'createdAt', 'modifiedAt' ];
-
-		$permissions = [
-			// Admin Permissions - Hard Coded
-			[ $this->master->id, $this->master->id, 'Admin Galleries', 'admin-galleries', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission admin galleries allows user to administer galleries from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
-		];
-
-		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
-
-		// Admin
-		$adminPerm			= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$userPerm			= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
-		$galleryAdminPerm	= Permission::findBySlugType( 'admin-galleries', CoreGlobal::TYPE_SYSTEM );
-
-		// RBAC Mapping
-
-		$columns = [ 'roleId', 'permissionId' ];
-
-		$mappings = [
-			[ $superAdminRole->id, $galleryAdminPerm->id ],
-			[ $adminRole->id, $galleryAdminPerm->id ],
-			[ $galleryAdminRole->id, $adminPerm->id ], [ $galleryAdminRole->id, $userPerm->id ], [ $galleryAdminRole->id, $galleryAdminPerm->id ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role_permission', $columns, $mappings );
@@ -320,6 +276,50 @@ class m160621_014408_core_data extends Migration {
 			[ $superAdminRole->id, $fileAdminPerm->id ],
 			[ $adminRole->id, $fileAdminPerm->id ],
 			[ $fileAdminRole->id, $adminPerm->id ], [ $fileAdminRole->id, $userPerm->id ], [ $fileAdminRole->id, $fileAdminPerm->id ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_role_permission', $columns, $mappings );
+	}
+
+	private function insertGalleryRolePermission() {
+
+		// Roles
+
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'adminUrl', 'homeUrl', 'type', 'icon', 'description', 'createdAt', 'modifiedAt' ];
+
+		$roles = [
+			[ $this->master->id, $this->master->id, 'Gallery Admin', 'gallery-admin', 'dashboard', NULL, CoreGlobal::TYPE_SYSTEM, NULL, 'The role Gallery Admin is limited to manage galleries from admin.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_role', $columns, $roles );
+
+		$superAdminRole		= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
+		$adminRole			= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$galleryAdminRole	= Role::findBySlugType( 'gallery-admin', CoreGlobal::TYPE_SYSTEM );
+
+		// Permissions
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'type', 'icon', 'group', 'description', 'createdAt', 'modifiedAt' ];
+
+		$permissions = [
+			// Admin Permissions - Hard Coded
+			[ $this->master->id, $this->master->id, 'Admin Galleries', 'admin-galleries', CoreGlobal::TYPE_SYSTEM, NULL, false, 'The permission admin galleries allows user to administer galleries from admin. It also need admin files permission.', DateUtil::getDateTime(), DateUtil::getDateTime() ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
+
+		// Admin
+		$adminPerm			= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$userPerm			= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
+		$galleryAdminPerm	= Permission::findBySlugType( 'admin-galleries', CoreGlobal::TYPE_SYSTEM );
+
+		// RBAC Mapping
+
+		$columns = [ 'roleId', 'permissionId' ];
+
+		$mappings = [
+			[ $superAdminRole->id, $galleryAdminPerm->id ],
+			[ $adminRole->id, $galleryAdminPerm->id ],
+			[ $galleryAdminRole->id, $adminPerm->id ], [ $galleryAdminRole->id, $userPerm->id ], [ $galleryAdminRole->id, $galleryAdminPerm->id ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_role_permission', $columns, $mappings );

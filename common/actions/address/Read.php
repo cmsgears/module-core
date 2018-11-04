@@ -44,10 +44,12 @@ class Read extends ModelAction {
 
 	// Attributes having UTF-8 Encoding
 	public $returnAttributes = [
-		'id', 'countryId', 'provinceId', 'regionId', 'cityId', 'title', 'line1', 'line2', 'line3',
+		'id', 'countryId', 'provinceId', 'regionId', 'cityId',
+		'title', 'line1', 'line2', 'line3',
 		'countryName', 'provinceName', 'cityName', 'zip', 'subZip',
 		'firstName', 'lastName', 'phone', 'email', 'fax', 'website',
-		'latitude', 'longitude', 'zoomLevel' ];
+		'latitude', 'longitude', 'zoomLevel'
+	];
 
 	// Protected --------------
 
@@ -89,7 +91,7 @@ class Read extends ModelAction {
 				$address = $modelAddress->model;
 
 				$adata	= $address->getAttributeArray( $this->returnAttributes );
-				$data	= [ 'cid' => $cid, 'address' => $adata, 'type' => $modelAddress->type ];
+				$data	= [ 'cid' => $cid, 'ctype' => $modelAddress->type, 'address' => $adata ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

@@ -60,8 +60,9 @@ class Create extends ModelAction {
 
 		parent::init();
 
-		$this->addressService		= Yii::$app->factory->get( 'addressService' );
-		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
+		$this->addressService = Yii::$app->factory->get( 'addressService' );
+
+		$this->modelAddressService = Yii::$app->factory->get( 'modelAddressService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -92,7 +93,7 @@ class Create extends ModelAction {
 				}
 			}
 
-			if( $address->load( Yii::$app->request->post(), 'Address' ) && $address->validate() ) {
+			if( $address->load( Yii::$app->request->post(), $address->getClassName() ) && $address->validate() ) {
 
 				// Create Address
 				$address = $this->addressService->create( $address );
@@ -101,7 +102,7 @@ class Create extends ModelAction {
 				$modelAddress = $this->modelAddressService->activateByModelId( $this->model->id, $this->parentType, $address->id, $this->modelType );
 
 				$data = [
-					'cid' => $modelAddress->id, 'type' => $modelAddress->type,
+					'cid' => $modelAddress->id, 'ctype' => $modelAddress->type,
 					'title' => $address->title, 'line1' => $address->line1, 'line2' => $address->line2,
 					'country' => $address->countryName, 'province' => $address->provinceName,
 					'region' => $address->regionName, 'city' => $address->cityName,

@@ -80,7 +80,7 @@ trait VisibilityTrait {
 	/**
 	 * @inheritdoc
 	 */
-	public function isVisibilityPrivate(  $strict = true ) {
+	public function isVisibilityPrivate( $strict = true ) {
 
 		if( $strict ) {
 
@@ -93,7 +93,7 @@ trait VisibilityTrait {
 	/**
 	 * @inheritdoc
 	 */
-	public function isVisibilitySecured(  $strict = true ) {
+	public function isVisibilitySecured( $strict = true ) {
 
 		if( $strict ) {
 
@@ -106,20 +106,7 @@ trait VisibilityTrait {
 	/**
 	 * @inheritdoc
 	 */
-	public function isVisibilityPublic(	 $strict = true ) {
-
-		if( $strict ) {
-
-			return $this->visibility == IVisibility::VISIBILITY_PUBLIC;
-		}
-
-		return $this->visibility >= IVisibility::VISIBILITY_PUBLIC;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function isVisibilityProtected(	$strict = true ) {
+	public function isVisibilityProtected( $strict = true ) {
 
 		if( $strict ) {
 
@@ -127,6 +114,19 @@ trait VisibilityTrait {
 		}
 
 		return $this->visibility >= IVisibility::VISIBILITY_PROTECTED;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function isVisibilityPublic( $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->visibility == IVisibility::VISIBILITY_PUBLIC;
+		}
+
+		return $this->visibility >= IVisibility::VISIBILITY_PUBLIC;
 	}
 
 	/**

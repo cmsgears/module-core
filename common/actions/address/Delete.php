@@ -59,9 +59,9 @@ class Delete extends ModelAction {
 
 		parent::init();
 
-		$this->addressService		= Yii::$app->factory->get( 'addressService' );
+		$this->addressService = Yii::$app->factory->get( 'addressService' );
 
-		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
+		$this->modelAddressService = Yii::$app->factory->get( 'modelAddressService' );
 	}
 
 	// Instance methods --------------------------------------------

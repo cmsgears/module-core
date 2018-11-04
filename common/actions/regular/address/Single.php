@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\address;
+namespace cmsgears\core\common\actions\regular\address;
 
 // Yii Imports
 use Yii;
@@ -20,7 +20,7 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\base\Action;
 
 /**
- * The Single action creates or update the address.
+ * The Single action creates or update the address of models having addressId column.
  *
  * @since 1.0.0
  */
@@ -79,8 +79,9 @@ class Single extends Action {
 
 	public function run( $pid ) {
 
-		$parentService	= $this->controller->modelService;
-		$parent			= $this->controller->modelService->getById( $pid );
+		$parentService = $this->controller->modelService;
+
+		$parent = $this->controller->modelService->getById( $pid );
 
 		if( isset( $parent ) ) {
 

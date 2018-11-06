@@ -505,7 +505,7 @@ trait NestedSetTrait {
 		$having		= isset( $config[ 'having' ] ) ? $config[ 'having' ] : null;
 
 		$modelClass	= static::$modelClass;
-		$modelTable	= $modelClass->tableName();
+		$modelTable	= $modelClass::tableName();
 		$query		= new Query();
 
 		$subSelect = "(
@@ -558,7 +558,7 @@ trait NestedSetTrait {
 		$conditions = isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 
 		$modelClass	= static::$modelClass;
-		$modelTable	= $modelClass->tableName();
+		$modelTable	= $modelClass::tableName();
 		$query		= new Query();
 
 		$query->select( 'node.id, node.name' );
@@ -592,7 +592,7 @@ trait NestedSetTrait {
 		$conditions	= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 
 		$modelClass	= static::$modelClass;
-		$modelTable	= $modelClass->tableName();
+		$modelTable	= $modelClass::tableName();
 		$query		= new Query();
 
 		$query->select( 'id, name' );
@@ -625,7 +625,7 @@ trait NestedSetTrait {
 		$conditions	= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : null;
 
 		$modelClass	= static::$modelClass;
-		$modelTable	= $modelClass->tableName();
+		$modelTable	= $modelClass::tableName();
 		$query		= new Query();
 
 		$query->select( 'parent.id, parent.name' );

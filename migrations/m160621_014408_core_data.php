@@ -264,9 +264,9 @@ class m160621_014408_core_data extends Migration {
 		$this->batchInsert( $this->prefix . 'core_permission', $columns, $permissions );
 
 		// Admin
-		$adminPerm			= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$userPerm			= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
-		$fileAdminPerm		= Permission::findBySlugType( 'admin-files', CoreGlobal::TYPE_SYSTEM );
+		$adminPerm		= Permission::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$userPerm		= Permission::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
+		$fileAdminPerm	= Permission::findBySlugType( 'admin-files', CoreGlobal::TYPE_SYSTEM );
 
 		// RBAC Mapping
 

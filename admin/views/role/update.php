@@ -59,7 +59,7 @@ $returnUrl		= $this->context->returnUrl;
 				</div>
 				<div class="box-content">
 					<div class="box-content">
-						<div class="row padding padding-small-v">
+						<div class="row rp-map padding padding-small-v">
 						<?php
 							$modelPermissions = $model->getPermissionsIdList();
 
@@ -95,7 +95,7 @@ $returnUrl		= $this->context->returnUrl;
 				</div>
 				<div class="box-content">
 					<div class="box-content">
-						<div class="row padding padding-small-v">
+						<div class="row rp-map padding padding-small-v">
 						<?php
 							$modelPermissions = $model->getPermissionsIdList();
 

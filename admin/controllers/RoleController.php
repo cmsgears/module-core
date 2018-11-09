@@ -51,6 +51,9 @@ class RoleController extends BaseRoleController {
 
 		// Breadcrumbs
 		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Roles' ] ],
 			'create' => [ [ 'label' => 'Roles', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Roles', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],

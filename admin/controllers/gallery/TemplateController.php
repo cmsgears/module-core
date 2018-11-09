@@ -57,11 +57,13 @@ class TemplateController extends BaseTemplateController {
 
 		// Breadcrumbs
 		$this->breadcrumbs	= [
-			'base' => [ [ 'label' => 'Galleries', 'url' =>  [ '/core/gallery/all' ] ] ],
-			'all' => [ [ 'label' => 'Templates' ] ],
-			'create' => [ [ 'label' => 'Templates', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Templates', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Templates', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
+			'all' => [ [ 'label' => 'Gallery Templates' ] ],
+			'create' => [ [ 'label' => 'Gallery Templates', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
+			'update' => [ [ 'label' => 'Gallery Templates', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
+			'delete' => [ [ 'label' => 'Gallery Templates', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
 		];
 	}
 

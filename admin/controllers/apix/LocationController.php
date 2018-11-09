@@ -7,11 +7,14 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\frontend\controllers\apix;
+namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
 use Yii;
 use yii\filters\VerbFilter;
+
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 
 /**
  * LocationController provides actions to get options list and search results of province,
@@ -33,6 +36,13 @@ class LocationController extends \cmsgears\core\frontend\controllers\base\Contro
 
 	// Constructor and Initialisation ------------------------------
 
+	public function init() {
+
+		parent::init();
+
+		$this->crudPermission = CoreGlobal::PERM_ADMIN;
+	}
+
 	// Instance methods --------------------------------------------
 
 	// Yii interfaces ------------------------
@@ -47,7 +57,11 @@ class LocationController extends \cmsgears\core\frontend\controllers\base\Contro
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					// add actions here
+					'province-options' => [ 'permission' => $this->crudPermission ],
+					'region-options' => [ 'permission' => $this->crudPermission ],
+					'province-map' => [ 'permission' => $this->crudPermission ],
+					'region-map' => [ 'permission' => $this->crudPermission ],
+					'city-search' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [

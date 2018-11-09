@@ -209,6 +209,7 @@ class FileService extends ResourceService implements IFileService {
 			$search = [
 				'title' => "$modelTable.title",
 				'desc' => "$modelTable.description",
+				'caption' => "$modelTable.caption",
 				'extension' => "$modelTable.extension",
 				'directory' => "$modelTable.directory"
 			];
@@ -221,6 +222,7 @@ class FileService extends ResourceService implements IFileService {
 		$config[ 'report-col' ]	= [
 			'title' => "$modelTable.title",
 			'desc' => "$modelTable.description",
+			'caption' => "$modelTable.caption",
 			'extension' => "$modelTable.extension",
 			'directory' => "$modelTable.directory",
 			'visibility' => "$modelTable.visibility"
@@ -284,7 +286,7 @@ class FileService extends ResourceService implements IFileService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'altText', 'link', 'type', 'content' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'caption', 'altText', 'link', 'type', 'content' ];
 
 		if( $model->changed ) {
 
@@ -304,7 +306,7 @@ class FileService extends ResourceService implements IFileService {
 
 	public function updateData( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'altText', 'link', 'type', 'content', 'name', 'directory', 'extension', 'url', 'medium', 'thumb' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'caption', 'altText', 'link', 'type', 'content', 'name', 'directory', 'extension', 'url', 'medium', 'thumb' ];
 
 		if( $model->changed ) {
 

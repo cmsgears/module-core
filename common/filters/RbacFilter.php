@@ -1,8 +1,15 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
 namespace cmsgears\core\common\filters;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
@@ -10,12 +17,16 @@ use yii\web\ForbiddenHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\utilities\AjaxUtil;
+
 /**
  * The class RbacFilter use the roles and permissions defined for the project using the database tables.
  * It identify whether a user is assigned a permission. It trigger ForbiddenException in case a user does not have
  * required permission and try to execute the controller action by indirect means. It only works when
  * useRbac is set for the core Component within the application config file and action is configured within the
- * controller behaviours.
+ * controller behaviors.
+ *
+ * @since 1.0.0
  */
 class RbacFilter extends \yii\base\Behavior {
 
@@ -46,7 +57,7 @@ class RbacFilter extends \yii\base\Behavior {
 				// Allow if guest permission - It expects at least one filter
 				if( strcmp( $permission, CoreGlobal::PERM_GUEST ) == 0 ) {
 
-					$filterResult	= $this->executeFilters( $actionConfig );
+					$filterResult = $this->executeFilters( $actionConfig );
 
 					// Filter might throw exception to hault execution or return true/false on successful execution
 					if( !$filterResult ) {
@@ -74,17 +85,32 @@ class RbacFilter extends \yii\base\Behavior {
 				}
 
 				// find User and Action Permission
-				$user	= Yii::$app->user->getIdentity();
+				$user = Yii::$app->core->getUser();
 
 				// Disallow action in case user is not permitted
 				if( !isset( $user ) || !isset( $permission ) || !$user->isPermitted( $permission ) ) {
 
-					throw new ForbiddenHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+					// Ajax Request
+					if( Yii::$app->request->isAjax() ) {
+
+						if( !isset( $user ) ) {
+
+							return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SESSION_EXPIRED ), [ 'session' => true ] );
+						}
+						else {
+
+							return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+						}
+					}
+					else {
+
+						throw new ForbiddenHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+					}
 				}
 
-				if( ( $user->isConfirmed( true ) || $user->isSubmitted() ) && strcmp( $action, 'logout' ) != 0 ) {
+				if( ( $user->isConfirmed( true ) || $user->isSubmitted() ) && $action !== 'logout' ) {
 
-					// Redirect to post logout page
+					// Redirect to wait zone
 					Yii::$app->response->redirect( Url::toRoute( [ Yii::$app->core->getConfirmRedirectPage() ], true ) );
 
 					// Unset event validity
@@ -94,10 +120,11 @@ class RbacFilter extends \yii\base\Behavior {
 					return $event->isValid;
 				}
 
-				// Execute filters in the order defined in controller behaviours for rbac behaviour. The filters must be configured in appropriate application config file.
+				// Execute filters in the order defined in controller behaviours for rbac behaviour.
+				// The filters must be configured in appropriate application config file.
 				if( isset( $actionConfig[ 'filters' ] ) ) {
 
-					$filterResult	= $this->executeFilters( $actionConfig );
+					$filterResult = $this->executeFilters( $actionConfig );
 
 					// Filter might throw exception to hault execution or return true/false on successful execution
 					if( !$filterResult ) {
@@ -109,10 +136,11 @@ class RbacFilter extends \yii\base\Behavior {
 					}
 				}
 
-				// Execute specific method of controller in action apart from filters. The method will check additional rules for configured actions.
+				// Execute specific method of controller in action apart from filters.
+				// The method will check additional rules for configured actions.
 				if( isset( $actionConfig[ 'dynamic' ] ) ) {
 
-					$dynamic	= $actionConfig[ 'dynamic' ];
+					$dynamic = $actionConfig[ 'dynamic' ];
 
 					// Invalidate the action if dynamic method returns false
 					if( is_string( $dynamic ) && !$this->owner->$dynamic() ) {
@@ -172,4 +200,5 @@ class RbacFilter extends \yii\base\Behavior {
 
 		return $filterResult;
 	}
+
 }

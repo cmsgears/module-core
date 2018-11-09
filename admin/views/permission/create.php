@@ -46,7 +46,7 @@ $returnUrl		= $this->context->returnUrl;
 			</div>
 			<div class="box-content">
 				<div class="box-content">
-					<div class="row padding padding-small-v">
+					<div class="row rp-map padding padding-small-v">
 					<?php foreach ( $roles as $role ) { ?>
 						<div class="col col4">
 							<input type="checkbox" name="Binder[binded][]" value="<?= $role[ 'id' ] ?>" />
@@ -65,7 +65,7 @@ $returnUrl		= $this->context->returnUrl;
 			</div>
 			<div class="box-content">
 				<div class="box-content">
-					<div class="row padding padding-small-v">
+					<div class="row rp-map padding padding-small-v">
 					<?php
 						$children = $model->getChildrenIdList();
 
@@ -100,7 +100,7 @@ $returnUrl		= $this->context->returnUrl;
 				</div>
 				<div class="box-content">
 					<div class="box-content">
-						<div class="row padding padding-small-v">
+						<div class="row rp-map padding padding-small-v">
 						<?php
 							$children = $model->getChildrenIdList();
 

@@ -72,8 +72,9 @@ class CityController extends Controller {
 		// Breadcrumbs
 		$this->breadcrumbs = [
 			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ],
 				[ 'label' => 'Countries', 'url' =>  $countryUrl ],
-				[ 'label' => 'Provinces', 'url' =>  $provinceUrl ],
+				[ 'label' => 'Provinces', 'url' =>  $provinceUrl ]
 			],
 			'all' => [ [ 'label' => 'Cities' ] ],
 			'create' => [ [ 'label' => 'Cities', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],

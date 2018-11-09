@@ -16,14 +16,12 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 /**
  * GalleryController provide actions specific to gallery model.
  *
  * @since 1.0.0
  */
-class GalleryController extends Controller {
+class GalleryController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -66,9 +64,11 @@ class GalleryController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'create-item' => [ 'permission' => $this->crudPermission ],
-					'update-item' => [ 'permission' => $this->crudPermission ],
-					'delete-item' => [ 'permission' => $this->crudPermission ],
+					'update' => [ 'permission' => $this->crudPermission ],
+					'get-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'add-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'update-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'delete-gallery-item' => [ 'permission' => $this->crudPermission ],
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'generic' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
@@ -77,9 +77,11 @@ class GalleryController extends Controller {
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
-					'create-item' => [ 'post' ],
-					'update-item' => [ 'post' ],
-					'delete-item' => [ 'post' ],
+					'update' => [ 'post' ],
+					'get-gallery-item' => [ 'post' ],
+					'add-gallery-item' => [ 'post' ],
+					'update-gallery-item' => [ 'post' ],
+					'delete-gallery-item' => [ 'post' ],
 					'bulk' => [ 'post' ],
 					'generic' => [ 'post' ],
 					'delete' => [ 'post' ]
@@ -93,9 +95,12 @@ class GalleryController extends Controller {
 	public function actions() {
 
 		return [
-			'create-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\CreateItem' ],
-			'update-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\UpdateItem' ],
-			'delete-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\DeleteItem' ],
+			// Gallery
+			'update' => [ 'class' => 'cmsgears\core\common\actions\gallery\Update', 'direct' => true ],
+			'get-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Read', 'direct' => true ],
+			'add-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Create', 'direct' => true ],
+			'update-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Update', 'direct' => true ],
+			'delete-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Delete', 'direct' => true ],
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]

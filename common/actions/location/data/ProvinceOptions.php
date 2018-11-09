@@ -7,15 +7,13 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\location;
+namespace cmsgears\core\common\actions\location\data;
 
 // Yii Imports
 use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\base\Action;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 use cmsgears\core\common\utilities\CodeGenUtil;
@@ -25,7 +23,7 @@ use cmsgears\core\common\utilities\CodeGenUtil;
  *
  * @since 1.0.0
  */
-class ProvinceOptions extends Action {
+class ProvinceOptions extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 

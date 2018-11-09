@@ -66,6 +66,9 @@ class SitesController extends CrudController {
 
 		// Breadcrumbs
 		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Sites' ] ],
 			'create' => [ [ 'label' => 'Sites', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Sites', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],

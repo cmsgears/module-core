@@ -17,6 +17,7 @@ use yii\filters\VerbFilter;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\forms\ResetPassword;
+use cmsgears\core\common\models\resources\Address;
 use cmsgears\core\common\models\resources\File;
 
 use cmsgears\core\common\controllers\base\Controller;
@@ -153,8 +154,8 @@ class UserController extends Controller {
 
 		return [
 			// Avatar
-			'assign-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Assign' ],
-			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Clear' ],
+			'assign-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Assign', 'model' => Yii::$app->user->identity ],
+			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Clear', 'model' => Yii::$app->user->identity ],
 			// Metas
 			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create', 'model' => Yii::$app->user->identity ],
 			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update', 'model' => Yii::$app->user->identity ],
@@ -192,47 +193,43 @@ class UserController extends Controller {
 	public function actionProfile() {
 
 		// Find Model
-		$user = Yii::$app->user->getIdentity();
+		$user = Yii::$app->core->getUser();
 
-		// Update/Render if exist
-		if( isset( $user ) ) {
+		// Scenario
+		$user->setScenario( 'profile' );
 
-			// Scenario
-			$user->setScenario( 'profile' );
+		if( $user->load( Yii::$app->request->post(), $user->getClassName() ) && $user->validate() ) {
 
-			if( $user->load( Yii::$app->request->post(), $user->getClassName() ) && $user->validate() ) {
+			// Avatar
+			$avatar = File::loadFile( $user->avatar, 'Avatar' );
 
-				// Avatar
-				$avatar = File::loadFile( $user->avatar, 'Avatar' );
+			// Update User
+			$this->modelService->update( $user, [ 'avatar' => $avatar ] );
 
-				// Update User
-				$this->modelService->update( $user, [ 'avatar' => $avatar ] );
+			$thumbUrl = isset( $user->avatar ) ? $user->avatar->getThumbUrl() : null;
 
-				// Prepare response data
-				$data = [
-					'email' => $user->email, 'username' => $user->username, 'firstName' => $user->firstName,
-					'lastName' => $user->lastName, 'gender' => $user->getGenderStr(), 'phone' => $user->phone
-				];
+			// Prepare response data
+			$data = [
+				'email' => $user->email, 'username' => $user->username, 'firstName' => $user->firstName,
+				'lastName' => $user->lastName, 'gender' => $user->getGenderStr(), 'phone' => $user->phone,
+				'thumbUrl' => $thumbUrl
+			];
 
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-			}
-
-			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $user );
-
-			// Trigger Ajax Failure
-			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 		}
 
-		// Model not found
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
+		// Generate Errors
+		$errors = AjaxUtil::generateErrorMessage( $user );
+
+		// Trigger Ajax Failure
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 	}
 
 	public function actionAccount() {
 
 		// Find Model
-		$user = Yii::$app->user->getIdentity();
+		$user = Yii::$app->core->getUser();
 
 		// Update/Render if exist
 		if( isset( $user ) ) {
@@ -268,41 +265,74 @@ class UserController extends Controller {
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
 	}
 
-	public function actionAddress( $type ) {
+	public function actionAddress( $ctype ) {
 
-		$user = Yii::$app->user->getIdentity();
+		$user		= Yii::$app->core->getUser();
+		$address	= null;
 
-		// Update/Render if exist
-		if( isset( $user ) ) {
+		// Accept only selected type for a user
+		if( !in_array( $ctype, [ Address::TYPE_PRIMARY, Address::TYPE_BILLING, Address::TYPE_MAILING, Address::TYPE_SHIPPING ] ) ) {
 
-			$address = $this->addressService->getModelObject();
-
-			if( $address->load( Yii::$app->request->post(), $address->getClassName() ) && $address->validate() ) {
-
-				$modelAddress = $this->modelAddressService->createOrUpdateByType( $address, [ 'parentId' => $user->id, 'parentType' => CoreGlobal::TYPE_USER, 'type' => $type ] );
-
-				$address = $modelAddress->model;
-
-				$data = [
-					'line1' => $address->line1, 'line2' => $address->line2,
-					'cityName' => $address->cityName, 'country' => $address->countryName,
-					'province' => $address->provinceName, 'phone' => $address->phone,
-					'zip' => $address->zip
-				];
-
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-			}
-
-			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $address );
-
-			// Trigger Ajax Failure
-			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
+			return AjaxUtil::generateFailure( 'Address type not allowed.' );
 		}
 
-		// Model not found
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'session' => true ] );
+		switch( $ctype ) {
+
+			case Address::TYPE_PRIMARY: {
+
+				$address = $user->primaryAddress;
+
+				break;
+			}
+			case Address::TYPE_BILLING: {
+
+				$address = $user->billingAddress;
+
+				break;
+			}
+			case Address::TYPE_MAILING: {
+
+				$address = $user->mailingAddress;
+
+				break;
+			}
+			case Address::TYPE_SHIPPING: {
+
+				$address = $user->shippingAddress;
+
+				break;
+			}
+		}
+
+		if( empty( $address ) ) {
+
+			$address = $this->addressService->getModelObject();
+		}
+
+		if( $address->load( Yii::$app->request->post(), $address->getClassName() ) && $address->validate() ) {
+
+			// Create/Update Address
+			$address = $this->addressService->createOrUpdate( $address );
+
+			// Create Mapping
+			$modelAddress = $this->modelAddressService->activateByModelId( $user->id, CoreGlobal::TYPE_USER, $address->id, $ctype );
+
+			$data = [
+				'line1' => $address->line1, 'line2' => $address->line2,
+				'cityName' => $address->cityName, 'country' => $address->countryName,
+				'province' => $address->provinceName, 'phone' => $address->phone,
+				'zip' => $address->zip
+			];
+
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+		}
+
+		// Generate Errors
+		$errors = AjaxUtil::generateErrorMessage( $address );
+
+		// Trigger Ajax Failure
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 	}
 
 }

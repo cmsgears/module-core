@@ -63,6 +63,9 @@ class TestimonialController extends CommentController {
 
 		// Breadcrumbs
 		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Testimonials' ] ],
 			'create' => [ [ 'label' => 'Testimonials', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Testimonials', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],

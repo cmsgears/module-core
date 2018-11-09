@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
@@ -14,11 +22,14 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\admin\controllers\base\Controller;
-
 use cmsgears\core\common\behaviors\ActivityBehavior;
 
-class UserController extends Controller {
+/**
+ * UserController provides actions specific to users.
+ *
+ * @since 1.0.0
+ */
+class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -35,6 +46,11 @@ class UserController extends Controller {
 	protected $optionService;
 
 	protected $superRoleId;
+
+	protected $countryService;
+	protected $provinceService;
+	protected $regionService;
+	protected $addressService;
 
 	// Private ----------------
 
@@ -60,6 +76,11 @@ class UserController extends Controller {
 		$this->roleService		= Yii::$app->factory->get( 'roleService' );
 		$this->optionService	= Yii::$app->factory->get( 'optionService' );
 
+		$this->countryService	= Yii::$app->factory->get( 'countryService' );
+		$this->provinceService	= Yii::$app->factory->get( 'provinceService' );
+		$this->regionService	= Yii::$app->factory->get( 'regionService' );
+		$this->addressService	= Yii::$app->factory->get( 'addressService' );
+
 		// Super Admin
 		$superRole = $this->roleService->getBySlugType( CoreGlobal::ROLE_SUPER_ADMIN, CoreGlobal::TYPE_SYSTEM );
 
@@ -74,10 +95,15 @@ class UserController extends Controller {
 
 		// Breadcrumbs
 		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Users' ] ],
 			'create' => [ [ 'label' => 'Users', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Users', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Users', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'delete' => [ [ 'label' => 'Users', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'profile' => [ [ 'label' => 'User Profile' ] ],
+			'settings' => [ [ 'label' => 'User Settings' ] ]
 		];
 	}
 
@@ -162,9 +188,12 @@ class UserController extends Controller {
 		$model->setScenario( 'create' );
 
 		$member->siteId = Yii::$app->core->siteId;
-		$model->type	= $this->type;
 
-		if( $model->load( Yii::$app->request->post(), 'User' ) && $member->load( Yii::$app->request->post(), 'SiteMember' ) && $model->validate() && $member->validate() ) {
+		$model->type = $this->type;
+
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) &&
+			$member->load( Yii::$app->request->post(), $member->getClassName() ) &&
+			$model->validate() && $member->validate() ) {
 
 			// Create User
 			$this->model = $this->modelService->create( $model, [ 'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video ] );
@@ -216,7 +245,9 @@ class UserController extends Controller {
 
 			$model->setScenario( 'update' );
 
-			if( $model->load( Yii::$app->request->post(), 'User' ) && $member->load( Yii::$app->request->post(), 'SiteMember' ) && $model->validate() && $member->validate() ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) &&
+				$member->load( Yii::$app->request->post(), $member->getClassName() ) &&
+				$model->validate() && $member->validate() ) {
 
 				// Update User and Site Member
 				$this->model = $this->modelService->update( $model, [ 'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video ] );
@@ -253,9 +284,9 @@ class UserController extends Controller {
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
-			$member	= $model->activeSiteMember;
+			$member = $model->activeSiteMember;
 
-			if( $model->load( Yii::$app->request->post(), 'User' ) ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
 				try {
 
@@ -291,48 +322,60 @@ class UserController extends Controller {
 	public function actionProfile() {
 
 		// Find Model
-		$user = Yii::$app->user->getIdentity();
+		$model = Yii::$app->core->getUser();
 
-		$this->sidebar = [];
+		// Avatar
+		$avatar = $model->avatar;
 
-		// Update/Render if exist
-		if( isset( $user ) ) {
+		// Address
+		$address = $model->primaryAddress;
 
-			$genderMap = $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [ 'default' => true ] );
+		if( empty( $address ) ) {
 
-			return $this->render( 'profile', [
-				'user' => $user,
-				'genderMap' => $genderMap
-			]);
+			$address = $this->addressService->getModelObject();
 		}
 
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		// Clear Sidebar
+		$this->sidebar = [];
+
+		$genderMap = $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [ 'default' => true ] );
+
+		$countryMap		= Yii::$app->factory->get( 'countryService' )->getIdNameMap();
+		$countryId		= isset( $address->country ) ? $address->country->id : array_keys( $countryMap )[ 0 ];
+		$provinceMap	= Yii::$app->factory->get( 'provinceService' )->getMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
+		$provinceId		= isset( $address->province ) ? $address->province->id : array_keys( $provinceMap )[ 0 ];
+		$regionMap		= Yii::$app->factory->get( 'regionService' )->getMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
+
+		return $this->render( 'profile', [
+			'model' => $model,
+			'avatar' => $avatar,
+			'address' => $address,
+			'genderMap' => $genderMap,
+			'countryMap' => $countryMap,
+			'provinceMap' => $provinceMap,
+			'regionMap' => $regionMap
+		]);
 	}
 
 	public function actionSettings() {
 
 		// Find Model
-		$user				= Yii::$app->user->getIdentity();
-		$this->sidebar		= [];
+		$user = Yii::$app->core->getUser();
 
-		// Update/Render if exist
-		if( isset( $user ) ) {
+		// Clear Sidebar
+		$this->sidebar = [];
 
-			$privacy		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
-			$notification	= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
-			$reminder		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
+		// Load key settings
+		$privacy		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
+		$notification	= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
+		$reminder		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
 
-			return $this->render( 'settings', [
-				'user' => $user,
-				'privacy' => $privacy,
-				'notification' => $notification,
-				'reminder' => $reminder
-			]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		return $this->render( 'settings', [
+			'user' => $user,
+			'privacy' => $privacy,
+			'notification' => $notification,
+			'reminder' => $reminder
+		]);
 	}
 
 }

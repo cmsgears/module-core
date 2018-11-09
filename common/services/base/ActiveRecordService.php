@@ -198,7 +198,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public function getModels( $config = [] ) {
 
-		$advanced	= $config[ 'advanced' ] ?? false;
+		$advanced = isset( $config[ 'advanced' ] ) ? $config[ 'advanced' ] : false;
 
 		if( $advanced ) {
 
@@ -690,13 +690,13 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 			$interfaces = class_implements( $modelClass );
 
 			// Select only active and frozen models excluding new, blocked and terminated models.
-			if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\IApproval' ] ) ) {
+			if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IApproval' ] ) ) {
 
 				$config[ 'filters' ][]	= [ 'in', "$modelTable.status", [ IApproval::STATUS_ACTIVE, IApproval::STATUS_FROJEN ] ];
 			}
 
 			// Select only publicly visible models
-			if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\IVisibility' ] ) ) {
+			if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IVisibility' ] ) ) {
 
 				$config[ 'conditions' ][ "$modelTable.visibility" ]	= IVisibility::VISIBILITY_PUBLIC;
 			}

@@ -62,6 +62,9 @@ class OptiongroupController extends CrudController {
 
 		// Breadcrumbs
 		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Option Groups' ] ],
 			'create' => [ [ 'label' => 'Option Groups', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Option Groups', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],

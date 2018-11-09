@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\gallery;
+namespace cmsgears\core\common\actions\gallery\item;
 
 // Yii Imports
 use Yii;
@@ -17,16 +17,14 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\common\base\Action;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * CreateItem creates the gallery item.
+ * Create creates the gallery item.
  *
  * @since 1.0.0
  */
-class CreateItem extends Action {
+class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -42,16 +40,29 @@ class CreateItem extends Action {
 
 	// Public -----------------
 
+	public $fileName = 'File';
+
+	public $direct = false; // Gallery Items are directly managed without gallery parent
+
 	// It allows unlimited items by default.
 	public $maxItems = 0;
 
 	// Protected --------------
+
+	protected $galleryService;
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->galleryService = Yii::$app->factory->get( 'galleryService' );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -63,23 +74,20 @@ class CreateItem extends Action {
 
 	// CMG parent classes --------------------
 
-	// CreateItem ----------------------------
+	// Create --------------------------------
 
 	/**
 	 * It creates the gallery item using given $cid.
 	 *
-	 * @param type $id Parent Id
 	 * @param type $cid Gallery Id
-	 * @param type $ctype Mapper type
-	 * @return string
+	 * @return array
 	 */
-	public function run( $id, $cid, $ctype = null ) {
+	public function run( $cid ) {
 
-		$galleryService	= Yii::$app->factory->get( 'galleryService' );
-		$fileService	= Yii::$app->factory->get( 'fileService' );
-		$gallery		= $galleryService->getById( $cid );
+		$model		= $this->model;
+		$gallery	= $this->galleryService->getById( $cid );
 
-		if( isset( $gallery ) ) {
+		if( isset( $gallery ) && ( $this->direct || $gallery->belongsTo( $model ) ) ) {
 
 			if( $this->maxItems > 0 ) {
 
@@ -92,22 +100,36 @@ class CreateItem extends Action {
 				}
 			}
 
-			$item = new File();
+			$file = new File();
 
-			$item->siteId = $gallery->siteId;
+			$file->siteId = $gallery->siteId;
 
-			if( $item->load( Yii::$app->request->post(), 'File' ) && $item->validate() ) {
+			if( $file->load( Yii::$app->request->post(), $this->fileName ) && $file->validate() ) {
 
-				$modelFile	= $galleryService->createItem( $gallery, $item, $ctype );
-				$file		= $modelFile->model;
-				$data		= [ 'id' => $modelFile->id, 'fid' => $file->id, 'thumbUrl' => $file->getThumbUrl(), 'title' => $file->title, 'description' => $file->description, 'alt' => $file->altText, 'url' => $file->url ];
+				$modelFile = $this->galleryService->createItem( $gallery, $file, $this->modelType );
+
+				$file = $modelFile->model;
+
+				$data = [
+					'mid' => $modelFile->id, 'fid' => $file->id,
+					'name' => $file->name, 'extension' => $file->extension,
+					'title' => $file->title, 'caption' => $file->caption,
+					'altText' => $file->altText, 'link' => $file->link, 'description' => $file->description,
+					'url' => $file->getFileUrl()
+				];
+
+				if( $file->type == 'image' ) {
+
+					$data[ 'mediumUrl' ]	= $file->getMediumUrl();
+					$data[ 'thumbUrl' ]		= $file->getThumbUrl();
+				}
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 			}
 
 			// Generate Errors
-			$errors = AjaxUtil::generateErrorMessage( $item );
+			$errors = AjaxUtil::generateErrorMessage( $file );
 
 			// Trigger Ajax Failure
 			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );

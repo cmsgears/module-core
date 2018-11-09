@@ -4,6 +4,9 @@ namespace cmsgears\core\common\utilities;
 // Yii Imports
 use Yii;
 
+// CMG Imports
+use cmsgears\core\common\models\resources\FormField;
+
 class FormUtil {
 
 	// Static Methods ----------------------------------------------
@@ -40,13 +43,36 @@ class FormUtil {
 
 	public static function getModelMetas( $model, $settings ) {
 
-		$metas		= $model->getFormAttributes();
-		$fields		= $metas[ 'fields' ];
+		$metas	= $model->getFormAttributes();
+		$fields	= $metas[ 'fields' ];
 
-		foreach ( $fields as $field ) {
+		foreach( $fields as $field ) {
 
-			$fieldName						= $field->name;
-			$settings[ $fieldName ]->value	= $model->$fieldName;
+			$fieldName = $field->name;
+
+			$settings[ $fieldName ]->value = $model->$fieldName;
+		}
+
+		return $settings;
+	}
+
+	public static function filterPasswordFields( $model, $settings ) {
+
+		$metas	= $model->getFormAttributes();
+		$fields	= $metas[ 'fields' ];
+
+		foreach( $fields as $field ) {
+
+			$fieldName = $field->name;
+
+			if( $field->type == FormField::TYPE_PASSWORD ) {
+
+				$settings[ $fieldName ]->value = null;
+			}
+			else {
+
+				$settings[ $fieldName ]->value = $model->$fieldName;
+			}
 		}
 
 		return $settings;

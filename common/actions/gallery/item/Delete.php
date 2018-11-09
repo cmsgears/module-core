@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\gallery;
+namespace cmsgears\core\common\actions\gallery\item;
 
 // Yii Imports
 use Yii;
@@ -15,16 +15,14 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Action;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * UpdateItem update the gallery item.
+ * Delete delete the gallery item.
  *
  * @since 1.0.0
  */
-class UpdateItem extends Action {
+class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -40,12 +38,14 @@ class UpdateItem extends Action {
 
 	// Public -----------------
 
-	public $fileName = 'File';
+	public $direct = false;
+
+	// It allows unlimited items by default.
+	public $minItems = 0;
 
 	// Protected --------------
 
 	protected $galleryService;
-	protected $fileService;
 	protected $modelFileService;
 
 	// Private ----------------
@@ -59,7 +59,6 @@ class UpdateItem extends Action {
 		parent::init();
 
 		$this->galleryService	= Yii::$app->factory->get( 'galleryService' );
-		$this->fileService		= Yii::$app->factory->get( 'fileService' );
 		$this->modelFileService = Yii::$app->factory->get( 'modelFileService' );
 	}
 
@@ -73,33 +72,43 @@ class UpdateItem extends Action {
 
 	// CMG parent classes --------------------
 
-	// DeleteItem ----------------------------
+	// Delete --------------------------------
 
-	public function run( $id, $cid, $fid ) {
+	/**
+	 * It deletes the gallery item using given $cid and $fid.
+	 *
+	 * @param type $cid Gallery Id
+	 * @param type $fid File Id
+	 * @return array
+	 */
+	public function run( $cid, $fid ) {
 
-		$gallery = $this->galleryService->getById( $cid );
+		$model		= $this->model;
+		$gallery	= $this->galleryService->getById( $cid );
 
-		if( isset( $gallery ) ) {
+		if( isset( $gallery ) && ( $this->direct || $gallery->belongsTo( $model ) ) ) {
+
+			if( $this->minItems > 0 ) {
+
+				$items = $gallery->files;
+
+				if( count( $items ) <= $this->minItems ) {
+
+					// Trigger Ajax Failure
+					return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'limit' => "Minimum $this->minItems items are required for a gallery." ] );
+				}
+			}
 
 			$modelFile = $this->modelFileService->getFirstByParentModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $fid );
 
-			if( isset( $modelFile ) && $modelFile->isParentValid( $gallery->id, CoreGlobal::TYPE_GALLERY ) ) {
+			if( isset( $modelFile ) ) {
 
-				$file = $modelFile->model;
+				$data = [ 'mid' => $modelFile->id ];
 
-				if( isset( $file ) && $file->load( Yii::$app->request->post(), $this->fileName ) ) {
+				$this->modelFileService->delete( $modelFile );
 
-					$this->fileService->saveImage( $file );
-
-					$data	= $file->getAttributeArray( [ 'title', 'altText', 'link', 'description' ] );
-
-					$data[ 'id' ]	= $modelFile->id;
-					$data[ 'fid' ]	= $file->id;
-					$data[ 'thumbUrl' ] = $file->getThumbUrl();
-
-					// Trigger Ajax Success
-					return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-				}
+				// Trigger Ajax Success
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 			}
 		}
 

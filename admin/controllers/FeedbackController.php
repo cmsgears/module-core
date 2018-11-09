@@ -63,6 +63,9 @@ class FeedbackController extends CommentController {
 
 		// Breadcrumbs
 		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Feedbacks' ] ],
 			'create' => [ [ 'label' => 'Feedbacks', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Feedbacks', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],

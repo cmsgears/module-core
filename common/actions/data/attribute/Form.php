@@ -68,8 +68,9 @@ class Form extends Action {
 		// Update/Render if exist
 		if( isset( $model ) && isset( $template ) ) {
 
-			$attributesClass	= $template->attributesPath;
-			$attributes			= new $attributesClass( $model->getDataMeta( 'attributes' ) );
+			$attributesClass = $template->attributesPath;
+
+			$attributes = new $attributesClass( $model->getDataMeta( 'attributes' ) );
 
 			$this->controller->setViewPath( $template->attributesForm );
 

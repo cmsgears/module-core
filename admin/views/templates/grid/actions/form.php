@@ -12,4 +12,4 @@ $submits		= $widget->data[ 'submits' ];
 <span title="Fields"><?= Html::a( "", [ "$controllerName/field/all?fid=$model->id" ], [ 'class' => 'cmti cmti-list-small' ] ) ?></span>
 <span title="Update"><?= Html::a( "", [ "update?id=$model->id" ], [ 'class' => 'cmti cmti-edit' ] ) ?></span>
 
-<span class="action action-pop action-delete cmti cmti-close-c" title="Delete" target="<?= $model->id ?>" popup="popup-grid-delete"></span>
+<span class="action action-pop action-delete cmti cmti-bin" title="Delete" target="<?= $model->id ?>" popup="popup-grid-delete"></span>

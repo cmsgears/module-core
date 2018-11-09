@@ -58,6 +58,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $url
  * @property string $medium
  * @property string $thumb
+ * @property string $caption
  * @property string $altText
  * @property string $link
  * @property boolean $shared
@@ -159,9 +160,11 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Text Limit
 			[ [ 'extension', 'type', 'storage' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'name', 'tag', 'directory' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
-			[ [ 'title', 'url', 'medium', 'thumb', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
-			[ [ 'description', 'altText' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
+			[ 'tag', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'directory', 'altText' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'name', 'url', 'medium', 'thumb' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'title', 'caption', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ 'description', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ [ 'visibility', 'width', 'height', 'mwidth', 'mheight', 'twidth', 'theight' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ 'size', 'number', 'min' => 0 ],

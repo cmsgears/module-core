@@ -33,15 +33,15 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'title' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'altText' )->textInput( [ 'readonly' => true ] ) ?>
+							<?= $form->field( $model, 'caption' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col col2">
 							<?= $form->field( $model, 'link' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
-						<div class="col col2 render-file">
-
+						<div class="col col2">
+							<?= $form->field( $model, 'altText' )->textInput( [ 'readonly' => true ] ) ?>
 						</div>
 					</div>
 				</div>

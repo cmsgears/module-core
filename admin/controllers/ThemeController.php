@@ -59,6 +59,9 @@ class ThemeController extends CrudController {
 
 		// Breadcrumbs
 		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Themes' ] ],
 			'create' => [ [ 'label' => 'Themes', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Themes', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],

@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\gallery;
+namespace cmsgears\core\common\actions\gallery\item;
 
 // Yii Imports
 use Yii;
@@ -15,16 +15,14 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\actions\base\ModelAction;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * The ReadItem action find gallery item for given item id and returh item data.
+ * The Read action find gallery item for given item id and returh item data.
  *
  * @since 1.0.0
  */
-class ReadItem extends ModelAction {
+class Read extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -39,6 +37,8 @@ class ReadItem extends ModelAction {
 	// Variables -----------------------------
 
 	// Public -----------------
+
+	public $direct = false;
 
 	// Protected --------------
 
@@ -71,22 +71,39 @@ class ReadItem extends ModelAction {
 
 	// Read ----------------------------------
 
-	public function run( $id, $cid, $fid ) {
+	/**
+	 * Find the gallery item using given $cid and $fid and returns the item details.
+	 *
+	 * @param type $cid Gallery Id
+	 * @param type $fid File Id
+	 * @return array
+	 */
+	public function run( $cid, $fid ) {
 
-		$gallery = $this->galleryService->getById( $cid );
+		$model		= $this->model;
+		$gallery	= $this->galleryService->getById( $cid );
 
-		if( isset( $gallery ) ) {
+		if( isset( $gallery ) && ( $this->direct || $gallery->belongsTo( $model ) ) ) {
 
 			$modelFile = $this->modelFileService->getFirstByParentModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $fid );
 
 			if( isset( $modelFile ) && $modelFile->isParentValid( $gallery->id, CoreGlobal::TYPE_GALLERY ) ) {
 
-				$file	= $modelFile->model;
+				$file = $modelFile->model;
 
-				$data	= $file->getAttributeArray( [ 'name', 'extension', 'title', 'altText', 'link', 'description' ] );
+				$data = [
+					'mid' => $modelFile->id, 'fid' => $file->id,
+					'name' => $file->name, 'extension' => $file->extension,
+					'title' => $file->title, 'caption' => $file->caption,
+					'altText' => $file->altText, 'link' => $file->link, 'description' => $file->description,
+					'url' => $file->getFileUrl()
+				];
 
-				$data[ 'id' ]	= $modelFile->id;
-				$data[ 'fid' ]	= $file->id;
+				if( $file->type == 'image' ) {
+
+					$data[ 'mediumUrl' ]	= $file->getMediumUrl();
+					$data[ 'thumbUrl' ]		= $file->getThumbUrl();
+				}
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );

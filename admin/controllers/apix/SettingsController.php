@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\apix;
 
 use Yii;
@@ -12,6 +20,11 @@ use cmsgears\core\common\models\forms\GenericForm;
 use cmsgears\core\common\utilities\FormUtil;
 use cmsgears\core\common\utilities\AjaxUtil;
 
+/**
+ * SettingsController provides actions specific to site configurations.
+ *
+ * @since 1.0.0
+ */
 class SettingsController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
@@ -32,9 +45,12 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 
 		parent::init();
 
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
-		$this->modelService		= Yii::$app->factory->get( 'siteService' );
-		$this->metaService		= Yii::$app->factory->get( 'siteMetaService' );
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_CORE;
+
+		// Services
+		$this->modelService	= Yii::$app->factory->get( 'siteService' );
+		$this->metaService	= Yii::$app->factory->get( 'siteMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -102,6 +118,8 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 				$settings = FormUtil::getModelMetas( $model, $settings );
 
 				$this->metaService->updateMultiple( $settings, [ 'parent' => Yii::$app->core->site ] );
+
+				$settings = FormUtil::filterPasswordFields( $model, $settings );
 
 				$data = [];
 

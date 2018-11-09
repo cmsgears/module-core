@@ -33,15 +33,15 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'title' ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'altText' ) ?>
+							<?= $form->field( $model, 'caption' ) ?>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col col2">
 							<?= $form->field( $model, 'link' ) ?>
 						</div>
-						<div class="col col2 render-file">
-
+						<div class="col col2">
+							<?= $form->field( $model, 'altText' ) ?>
 						</div>
 					</div>
 				</div>

@@ -15,16 +15,14 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Action;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * DeleteItem delete the gallery item.
+ * Update creates the gallery item.
  *
  * @since 1.0.0
  */
-class DeleteItem extends Action {
+class Update extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -40,16 +38,24 @@ class DeleteItem extends Action {
 
 	// Public -----------------
 
-	// It allows unlimited items by default.
-	public $minItems = 0;
+	public $direct = false;
 
 	// Protected --------------
+
+	protected $galleryService;
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->galleryService = Yii::$app->factory->get( 'galleryService' );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -61,46 +67,34 @@ class DeleteItem extends Action {
 
 	// CMG parent classes --------------------
 
-	// DeleteItem ----------------------------
+	// Update --------------------------------
 
 	/**
-	 * It deletes the gallery item using given $cid and $fid.
+	 * Updates the using given $cid.
 	 *
-	 * @param type $id Parent Id
 	 * @param type $cid Gallery Id
-	 * @param type $fid Item Id
-	 * @return string
+	 * @return array
 	 */
-	public function run( $id, $cid, $fid ) {
+	public function run( $cid ) {
 
-		$galleryService		= Yii::$app->factory->get( 'galleryService' );
-		$modelFileService	= Yii::$app->factory->get( 'modelFileService' );
-		$gallery			= $galleryService->getById( $cid );
+		$model		= $this->model;
+		$gallery	= $this->galleryService->getById( $cid );
 
-		if( isset( $gallery ) ) {
+		if( isset( $gallery ) && ( $this->direct || $gallery->belongsTo( $model ) ) ) {
 
-			if( $this->minItems > 0 ) {
+			if( $gallery->load( Yii::$app->request->post(), $gallery->getClassName() ) && $gallery->validate() ) {
 
-				$items = $gallery->files;
-
-				if( count( $items ) <= $this->minItems ) {
-
-					// Trigger Ajax Failure
-					return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), [ 'limit' => "Minimum $this->minItems items are required for a gallery." ] );
-				}
-			}
-
-			$modelFile = $modelFileService->getFirstByParentModelId( $gallery->id, CoreGlobal::TYPE_GALLERY, $fid );
-
-			if( isset( $modelFile ) ) {
-
-				$data = [ 'id' => $modelFile->id ];
-
-				$modelFileService->delete( $modelFile );
+				$this->galleryService->update( $gallery );
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 			}
+
+			// Generate Errors
+			$errors = AjaxUtil::generateErrorMessage( $gallery );
+
+			// Trigger Ajax Failure
+			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 		}
 
 		// Trigger Ajax Failure

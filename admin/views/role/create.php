@@ -54,7 +54,7 @@ $returnUrl		= $this->context->returnUrl;
 				</div>
 				<div class="box-content">
 					<div class="box-content">
-						<div class="row padding padding-small-v">
+						<div class="row rp-map padding padding-small-v">
 						<?php foreach ( $permissions as $permission ) { ?>
 							<div class="col col4">
 								<input type="checkbox" name="Binder[binded][]" value="<?= $permission[ 'id' ] ?>" />
@@ -74,7 +74,7 @@ $returnUrl		= $this->context->returnUrl;
 				</div>
 				<div class="box-content">
 					<div class="box-content">
-						<div class="row padding padding-small-v">
+						<div class="row rp-map padding padding-small-v">
 						<?php foreach ( $spermissions as $permission ) { ?>
 							<div class="col col4">
 								<input type="checkbox" name="Binder[binded][]" value="<?= $permission[ 'id' ] ?>" />

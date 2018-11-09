@@ -51,6 +51,9 @@ class PermissionController extends BasePermissionController {
 
 		// Breadcrumbs
 		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Permissions' ] ],
 			'groups' => [ [ 'label' => 'Permissions', 'url' => $this->returnUrl ], [ 'label' => 'Groups' ] ],
 			'create' => [ [ 'label' => 'Permissions', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],

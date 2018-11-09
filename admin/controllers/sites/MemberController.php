@@ -72,13 +72,16 @@ class MemberController extends CrudController {
 		$this->returnUrl = Url::previous( 'site-members' );
 		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/sites/members/all' ], true );
 
-		// Sites Url
-		$sitesUrl = Url::previous( 'sites' );
-		$sitesUrl = isset( $this->sitesUrl ) ? $this->sitesUrl : Url::toRoute( [ '/core/sites/all' ], true );
+		// All Url
+		$allUrl = Url::previous( 'sites' );
+		$allUrl = isset( $allUrl ) ? $allUrl : Url::toRoute( [ '/core/sites/all' ], true );
 
 		// Breadcrumbs
 		$this->breadcrumbs = [
-			'base' => [ [ 'label' => 'Sites', 'url' =>  $sitesUrl ] ],
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ],
+				[ 'label' => 'Sites', 'url' =>  $allUrl ]
+			],
 			'all' => [ [ 'label' => 'Site Members' ] ],
 			'create' => [ [ 'label' => 'Site Members', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Site Members', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],

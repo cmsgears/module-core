@@ -12,22 +12,21 @@ namespace cmsgears\core\frontend\controllers;
 // Yii Imports
 use Yii;
 use yii\filters\VerbFilter;
+use yii\base\InvalidArgumentException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\frontend\config\CoreGlobalWeb;
 
 use cmsgears\core\common\models\forms\ResetPassword;
-use cmsgears\core\common\models\resources\Address;
-
-use cmsgears\core\frontend\controllers\base\Controller;
+use cmsgears\core\common\models\resources\File;
 
 /**
  * UserController process the actions specific to User model.
  *
  * @since 1.0.0
  */
-class UserController extends Controller {
+class UserController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -44,6 +43,7 @@ class UserController extends Controller {
 	protected $countryService;
 	protected $provinceService;
 	protected $regionService;
+	protected $addressService;
 	protected $modelAddressService;
 
 	// Private ----------------
@@ -69,6 +69,7 @@ class UserController extends Controller {
 		$this->countryService		= Yii::$app->factory->get( 'countryService' );
 		$this->provinceService		= Yii::$app->factory->get( 'provinceService' );
 		$this->regionService		= Yii::$app->factory->get( 'regionService' );
+		$this->addressService		= Yii::$app->factory->get( 'addressService' );
 		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
 	}
 
@@ -142,13 +143,16 @@ class UserController extends Controller {
 		// Find Model
 		$user = Yii::$app->core->getUser();
 
+		// Avatar
+		$avatar = File::loadFile( $user->avatar, 'Avatar' );
+
 		// Scenario
 		$user->setScenario( 'profile' );
 
 		if( $user->load( Yii::$app->request->post(), $user->getClassName() ) && $user->validate() ) {
 
 			// Update User
-			$this->modelService->update( $user );
+			$this->modelService->update( $user, [ 'avatar' => $avatar ] );
 
 			// Refresh Page
 			return $this->refresh();
@@ -158,6 +162,7 @@ class UserController extends Controller {
 
 		return $this->render( CoreGlobalWeb::PAGE_PROFILE, [
 			'user' => $user,
+			'avatar' => $avatar,
 			'genderMap' => $genderMap
 		]);
 	}
@@ -205,31 +210,73 @@ class UserController extends Controller {
 	 *
 	 * @return string
 	 */
-	public function actionAddress() {
+	public function actionAddress( $ctype ) {
 
 		$user		= Yii::$app->core->getUser();
-		$address	= $user->primaryAddress;
+		$address	= null;
+
+		// Accept only selected type for a user
+		if( !in_array( $ctype, [ Address::TYPE_PRIMARY, Address::TYPE_BILLING, Address::TYPE_MAILING, Address::TYPE_SHIPPING ] ) ) {
+
+			throw new InvalidArgumentException( 'Address type not allowed.' );
+		}
+
+		switch( $ctype ) {
+
+			case Address::TYPE_PRIMARY: {
+
+				$address = $user->primaryAddress;
+
+				break;
+			}
+			case Address::TYPE_BILLING: {
+
+				$address = $user->billingAddress;
+
+				break;
+			}
+			case Address::TYPE_MAILING: {
+
+				$address = $user->mailingAddress;
+
+				break;
+			}
+			case Address::TYPE_SHIPPING: {
+
+				$address = $user->shippingAddress;
+
+				break;
+			}
+		}
 
 		if( empty( $address ) ) {
 
-			$address = new Address();
+			$address = $this->addressService->getModelObject();
 		}
 
 		if( $address->load( Yii::$app->request->post(), $address->getClassName() ) && $address->validate() ) {
 
-			$this->modelAddressService->createOrUpdateByType( $address, [ 'parentId' => $user->id, 'parentType' => CoreGlobal::TYPE_USER, 'type' => Address::TYPE_PRIMARY ] );
+			// Create/Update Address
+			$address = $this->addressService->createOrUpdate( $address );
+
+			// Create Mapping
+			$modelAddress = $this->modelAddressService->activateByModelId( $user->id, CoreGlobal::TYPE_USER, $address->id, $ctype );
 
 			return $this->refresh();
 		}
 
-		$countryMap		= $this->countryService->getIdNameMap();
-		$countryId		= array_keys( $countryMap )[ 0 ];
-		$provinceMap	= $this->provinceService->getMapByCountryId( $countryId );
+		$countryMap		= Yii::$app->factory->get( 'countryService' )->getIdNameMap();
+		$countryId		= isset( $address->country ) ? $address->country->id : array_keys( $countryMap )[ 0 ];
+		$provinceMap	= Yii::$app->factory->get( 'provinceService' )->getMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
+		$provinceId		= isset( $address->province ) ? $address->province->id : array_keys( $provinceMap )[ 0 ];
+		$regionMap		= Yii::$app->factory->get( 'regionService' )->getMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
 
-		return $this->render( CoreGlobalWeb::PAGE_ADDRESS, [
+		return $this->render( 'address', [
+			'user' => $user,
 			'address' => $address,
 			'countryMap' => $countryMap,
-			'provinceMap' => $provinceMap
+			'provinceMap' => $provinceMap,
+			'regionMap' => $regionMap
 		]);
 	}
 

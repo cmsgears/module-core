@@ -59,6 +59,9 @@ class CountryController extends CrudController {
 
 		// Breadcrumbs
 		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Countries' ] ],
 			'create' => [ [ 'label' => 'Countries', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Countries', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],

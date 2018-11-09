@@ -12,14 +12,12 @@ namespace cmsgears\core\admin\controllers\apix;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\controllers\apix\UserController as BaseUserController;
-
 /**
  * UserController provides actions specific to user model.
  *
  * @since 1.0.0
  */
-class UserController extends BaseUserController {
+class UserController extends \cmsgears\core\common\controllers\apix\UserController {
 
 	// Variables ---------------------------------------------------
 
@@ -37,7 +35,7 @@ class UserController extends BaseUserController {
 
 		parent::init();
 
-		$this->crudPermission = CoreGlobal::PERM_USER;
+		$this->crudPermission = CoreGlobal::PERM_ADMIN;
 	}
 
 	// Instance methods --------------------------------------------
@@ -52,10 +50,13 @@ class UserController extends BaseUserController {
 
 		$behaviors	= parent::behaviors();
 
-		$behaviors[ 'rbac' ][ 'actions' ][ 'auto-search' ] = [ 'permission' => CoreGlobal::PERM_ADMIN ]; // Available for all admin users
+		$behaviors[ 'rbac' ][ 'actions' ][ 'auto-search' ] = [ 'permission' => $this->crudPermission ]; // Available for all admin users
 		$behaviors[ 'rbac' ][ 'actions' ][ 'bulk' ] = [ 'permission' => $this->crudPermission ];
 		$behaviors[ 'rbac' ][ 'actions' ][ 'generic' ] = [ 'permission' => $this->crudPermission ];
 		$behaviors[ 'rbac' ][ 'actions' ][ 'delete' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'profile' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'account' ] = [ 'permission' => $this->crudPermission ];
+		$behaviors[ 'rbac' ][ 'actions' ][ 'address' ] = [ 'permission' => $this->crudPermission ];
 
 		$behaviors[ 'verbs' ][ 'actions' ][ 'auto-search' ] = [ 'post' ];
 		$behaviors[ 'verbs' ][ 'actions' ][ 'bulk' ] = [ 'post' ];

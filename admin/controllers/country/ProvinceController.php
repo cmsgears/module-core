@@ -53,17 +53,16 @@ class ProvinceController extends Controller {
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-core', 'child' => 'country' ];
 
-		// Return Url
-		$this->returnUrl = Url::previous( 'provinces' );
-		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/country/province/all' ], true );
-
-		// Country Url
-		$countryUrl = Url::previous( 'countries' );
-		$countryUrl = isset( $countryUrl ) ? $countryUrl : Url::toRoute( [ '/core/country/all' ], true );
+		// All Url
+		$allUrl = Url::previous( 'countries' );
+		$allUrl = isset( $allUrl ) ? $allUrl : Url::toRoute( [ '/core/country/all' ], true );
 
 		// Breadcrumbs
-		$this->breadcrumbs	= [
-			'base' => [ [ 'label' => 'Countries', 'url' =>  $countryUrl ] ],
+		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ],
+				[ 'label' => 'Countries', 'url' =>  $allUrl ]
+			],
 			'all' => [ [ 'label' => 'Provinces' ] ],
 			'create' => [ [ 'label' => 'Provinces', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Provinces', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],

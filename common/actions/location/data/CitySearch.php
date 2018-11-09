@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\location;
+namespace cmsgears\core\common\actions\location\data;
 
 // Yii Imports
 use Yii;
@@ -15,17 +15,14 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Action;
-
 use cmsgears\core\common\utilities\AjaxUtil;
-use cmsgears\core\common\utilities\CodeGenUtil;
 
 /**
- * RegionOptions action returns the province options for given province id.
+ * CitySearch action returns the search results for given country and province id.
  *
  * @since 1.0.0
  */
-class RegionOptions extends Action {
+class CitySearch extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 
@@ -55,7 +52,7 @@ class RegionOptions extends Action {
 
 		parent::init();
 
-		$this->modelService = Yii::$app->factory->get( 'regionService' );
+		$this->modelService = Yii::$app->factory->get( 'cityService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -74,19 +71,23 @@ class RegionOptions extends Action {
 
 		$provinceId	= Yii::$app->request->post( 'province-id' );
 		$regionId	= Yii::$app->request->post( 'region-id' );
+		$name		= Yii::$app->request->post( 'name' );
 
-		if( isset( $provinceId ) && $provinceId > 0 ) {
+		$conditions = [ 'provinceId' => $provinceId ];
 
-			$regions = $this->modelService->getMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
+		if( !empty( $regionId && $regionId > 0 ) ) {
 
-			$data = !empty( $regionId ) ? CodeGenUtil::generateSelectOptionsFromArray( $regions, intval( $regionId ) ) : CodeGenUtil::generateSelectOptionsFromArray( $regions );
-
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
+			$conditions[ 'regionId' ] = $regionId;
 		}
 
-		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		$cities = $this->modelService->searchByName( $name, [
+			'limit' => 5,
+			'conditions' => $conditions,
+			'columns' => [ 'id', 'name', 'latitude', 'longitude', 'postal' ]
+		]);
+
+		// Trigger Ajax Success
+		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $cities );
 	}
 
 }

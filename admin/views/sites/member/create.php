@@ -17,7 +17,7 @@ $returnUrl		= $this->context->returnUrl;
 			<div class="box-content-wrap">
 				<div class="box-content mapper mapper-auto">
 					<div class="auto-fill auto-fill-basic">
-						<div class="auto-fill-source row row-medium" cmt-app="site" cmt-controller="member" cmt-action="autoSearch" action="core/sites/member/auto-search?sid=<?= $siteId ?>" cmt-keep cmt-custom>
+						<div class="auto-fill-source row row-medium" cmt-app="core" cmt-controller="member" cmt-action="autoSearch" action="core/sites/member/auto-search?sid=<?= $siteId ?>" cmt-keep cmt-custom>
 							<div class="relative">
 								<div class="auto-fill-search clearfix">
 									<div class="frm-icon-element icon-right">

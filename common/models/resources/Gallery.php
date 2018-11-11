@@ -90,6 +90,10 @@ class Gallery extends Resource implements IApproval, IAuthor, IData, IFeatured, 
 
 	// Constants --------------
 
+	const TYPE_IMAGE	= 'image';
+	const TYPE_AUDIO	= 'audio';
+	const TYPE_VIDEO	= 'video';
+
 	// Public -----------------
 
 	// Protected --------------

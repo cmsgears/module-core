@@ -973,7 +973,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$modelClass	= static::$modelClass;
 		$modelTable = $modelClass::tableName();
 
-		$sort = $config[ 'sort' ] ?? false;
+		$sort = isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : false;
 
 		// Default sort
 		if( !$sort ) {
@@ -986,6 +986,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 						'default' => SORT_DESC,
 						'label' => 'Id'
 					]
+				],
+				'defaultOrder' => [
+					'id' => SORT_DESC
 				]
 			]);
 
@@ -1106,7 +1109,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		// Group by model id
 		$query->groupBy( "$modelTable.id" );
 
-		$config[ 'query' ]	= $query;
+		$config[ 'query' ] = $query;
 
 		return static::findPage( $config );
 	}

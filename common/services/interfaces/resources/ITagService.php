@@ -13,13 +13,14 @@ namespace cmsgears\core\common\services\interfaces\resources;
 use cmsgears\core\common\services\interfaces\base\INameType;
 use cmsgears\core\common\services\interfaces\base\IResourceService;
 use cmsgears\core\common\services\interfaces\base\ISlugType;
+use cmsgears\core\common\services\interfaces\resources\IData;
 
 /**
  * ITagService provide service methods for tag model.
  *
  * @since 1.0.0
  */
-interface ITagService extends IResourceService, INameType, ISlugType {
+interface ITagService extends IResourceService, IData, INameType, ISlugType {
 
 	// Data Provider ------
 

@@ -22,6 +22,7 @@ use cmsgears\core\common\services\base\ResourceService;
 
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
  * TagService provide service methods of tag model.
@@ -56,6 +57,7 @@ class TagService extends ResourceService implements ITagService {
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 

@@ -24,6 +24,7 @@ use cmsgears\core\common\models\interfaces\base\IFeatured;
 use cmsgears\core\common\models\interfaces\base\IMultiSite;
 use cmsgears\core\common\models\interfaces\base\INameType;
 use cmsgears\core\common\models\interfaces\base\ISlugType;
+use cmsgears\core\common\models\interfaces\resources\IData;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\hierarchy\NestedSetModel;
@@ -65,7 +66,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  *
  * @since 1.0.0
  */
-class Category extends NestedSetModel implements IAuthor, IFeatured, IMultiSite, INameType, ISlugType {
+class Category extends NestedSetModel implements IAuthor, IData, IFeatured, IMultiSite, INameType, ISlugType {
 
 	// Variables ---------------------------------------------------
 

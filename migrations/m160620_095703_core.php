@@ -809,7 +809,9 @@ class m160620_095703_core extends Migration {
 			'description' => $this->string( Yii::$app->core->xtraLargeText )->defaultValue( null ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'modifiedAt' => $this->dateTime(),
-			'htmlOptions' => $this->text()
+			'htmlOptions' => $this->text(),
+			'content' => $this->mediumText(),
+			'data' => $this->mediumText()
 		], $this->options );
 
 		// Index for columns site

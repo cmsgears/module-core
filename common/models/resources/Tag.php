@@ -23,6 +23,7 @@ use cmsgears\core\common\models\interfaces\base\IAuthor;
 use cmsgears\core\common\models\interfaces\base\IMultiSite;
 use cmsgears\core\common\models\interfaces\base\INameType;
 use cmsgears\core\common\models\interfaces\base\ISlugType;
+use cmsgears\core\common\models\interfaces\resources\IData;
 
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Resource;
@@ -31,6 +32,7 @@ use cmsgears\core\common\models\traits\base\AuthorTrait;
 use cmsgears\core\common\models\traits\base\MultiSiteTrait;
 use cmsgears\core\common\models\traits\base\NameTypeTrait;
 use cmsgears\core\common\models\traits\base\SlugTypeTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -51,10 +53,12 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $htmlOptions
  * @property datetime $createdAt
  * @property datetime $modifiedAt
+ * @property string $content
+ * @property string $data
  *
  * @since 1.0.0
  */
-class Tag extends Resource implements IAuthor, IMultiSite, INameType, ISlugType {
+class Tag extends Resource implements IAuthor, IData, IMultiSite, INameType, ISlugType {
 
 	// Variables ---------------------------------------------------
 
@@ -79,6 +83,7 @@ class Tag extends Resource implements IAuthor, IMultiSite, INameType, ISlugType 
 	// Traits ------------------------------------------------------
 
 	use AuthorTrait;
+	use DataTrait;
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
@@ -128,7 +133,7 @@ class Tag extends Resource implements IAuthor, IMultiSite, INameType, ISlugType 
 		$rules = [
 			// Required, Safe
 			[ [ 'siteId', 'name' ], 'required' ],
-			[ [ 'id', 'htmlOptions' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
 			// Unique
 			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'type', 'slug' ] ],
 			[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'type', 'name' ] ],

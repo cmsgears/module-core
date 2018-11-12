@@ -1,12 +1,11 @@
 <?php
-use \Yii;
 use yii\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= $coreProperties->getSiteTitle() . ' | Activate Account';
 ?>
 <h1>Activate Account</h1>
-<?php 
+<?php
 	if( Yii::$app->session->hasFlash( 'message' ) ) {
 ?>
 	<p><?= Yii::$app->session->getFlash( 'message' ) ?></p>

@@ -539,4 +539,210 @@ class CodeGenUtil {
 		return $compressed;
 	}
 
+	public static function generateNestedSetLists( $nestedSet, $config = [] ) {
+
+		$wrap		= isset( $config[ 'wrap' ] ) ? $config[ 'wrap' ] : false;
+		$url		= isset( $config[ 'url' ] ) ? $config[ 'url' ] : false;
+		$slug		= isset( $config[ 'slug' ] ) ? $config[ 'slug' ] : false;
+		$urlBase	= isset( $config[ 'urlBase' ] ) ? $config[ 'urlBase' ] : null;
+
+		$rootId = 0;
+		$depth	= 0;
+		$change	= false;
+		$child	= false;
+		$cstart	= false;
+
+		$result = $wrap ? '<ul>' : '';
+
+		foreach( $nestedSet as $element ) {
+
+			$entry = $element[ 'name' ];
+
+			if( $url ) {
+
+				if( $slug ) {
+
+					$eslug = $element[ 'slug' ];
+
+					$entry = "<a href=\"$urlBase/$eslug\">$entry</a>";
+				}
+				else {
+
+					$eid = $element[ 'id' ];
+
+					$entry = "<a href=\"$urlBase?id=$eid\">$entry</a>";
+				}
+			}
+
+			if( $element[ 'rootId' ] != $rootId ) {
+
+				if( $depth > 0 ) {
+
+					if( $child ) {
+
+						$result .= '</ul></li>';
+					}
+					else {
+
+						$result .= '</li>';
+					}
+				}
+
+				$depth	= 0;
+				$rootId	= $element[ 'rootId' ];
+				$change	= true;
+				$child	= false;
+			}
+			else {
+
+				if( $depth == 0 ) {
+
+					$cstart = true;
+				}
+				else {
+
+					$cstart = false;
+				}
+
+				$depth	= $element[ 'depth' ];
+				$change	= false;
+				$end	= false;
+				$child	= true;
+			}
+
+			if( $change ) {
+
+				$result .= '<li>' . $entry;
+			}
+			else {
+
+				if( $cstart ) {
+
+					$result .= '<ul>';
+				}
+
+				$result .= '<li>' . $entry . '</li>';
+			}
+		}
+
+		if( count( $nestedSet ) > 0 ) {
+
+			if( $depth > 0 ) {
+
+				$result .= '</ul></li>';
+			}
+			else {
+
+				$result .= '</li>';
+			}
+		}
+
+		$result .= $wrap ? '</ul>' : '';
+
+		return $result;
+	}
+
+	public static function generateNestedSetMenu( $nestedSet, $config = [] ) {
+
+		$wrap		= isset( $config[ 'wrap' ] ) ? $config[ 'wrap' ] : false;
+		$url		= isset( $config[ 'url' ] ) ? $config[ 'url' ] : false;
+		$slug		= isset( $config[ 'slug' ] ) ? $config[ 'slug' ] : false;
+		$urlBase	= isset( $config[ 'urlBase' ] ) ? $config[ 'urlBase' ] : null;
+
+		$rootId = 0;
+		$depth	= 0;
+		$change	= false;
+		$child	= false;
+		$cstart	= false;
+
+		$result = $wrap ? '<ul>' : '';
+
+		foreach( $nestedSet as $element ) {
+
+			$entry = $element[ 'name' ];
+
+			if( $url ) {
+
+				if( $slug ) {
+
+					$eslug = $element[ 'slug' ];
+
+					$entry = "<a href=\"$urlBase/$eslug\">$entry</a>";
+				}
+				else {
+
+					$eid = $element[ 'id' ];
+
+					$entry = "<a href=\"$urlBase?id=$eid\">$entry</a>";
+				}
+			}
+
+			if( $element[ 'rootId' ] != $rootId ) {
+
+				if( $depth > 0 ) {
+
+					if( $child ) {
+
+						$result .= '</span></li>';
+					}
+					else {
+
+						$result .= '</li>';
+					}
+				}
+
+				$depth	= 0;
+				$rootId	= $element[ 'rootId' ];
+				$change	= true;
+				$child	= false;
+			}
+			else {
+
+				if( $depth == 0 ) {
+
+					$cstart = true;
+				}
+				else {
+
+					$cstart = false;
+				}
+
+				$depth	= $element[ 'depth' ];
+				$change	= false;
+				$end	= false;
+				$child	= true;
+			}
+
+			if( $change ) {
+
+				$result .= '<li>' . $entry;
+			}
+			else {
+
+				if( $cstart ) {
+
+					$result .= '<span class="inline-block list-caret"><i class="cmti cmti-angle-down"></i></span><span class="nav-sub">';
+				}
+
+				$result .= '<span>' . $entry . '</span>';
+			}
+		}
+
+		if( count( $nestedSet ) > 0 ) {
+
+			if( $depth > 0 ) {
+
+				$result .= '</span></li>';
+			}
+			else {
+
+				$result .= '</li>';
+			}
+		}
+
+		$result .= $wrap ? '</ul>' : '';
+
+		return $result;
+	}
+
 }

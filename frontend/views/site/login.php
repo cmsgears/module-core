@@ -1,5 +1,4 @@
 <?php
-use \Yii;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -8,7 +7,7 @@ $this->title	= $coreProperties->getSiteTitle() . ' | Login';
 ?>
 <h1>Login</h1>
 <?php
-	if( $coreProperties->isPublicRegister() ) {
+	if( $coreProperties->isLogin() ) {
 
 		$form = ActiveForm::begin( [ 'id' => 'frm-login' ] );
 ?>

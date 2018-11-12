@@ -452,12 +452,13 @@ trait NestedSetTrait {
 	public static function findLevelList( $config = [] ) {
 
 		$conditions	= isset( $config[ 'conditions' ] ) ? $config[ 'conditions' ] : [];
+		$slug		= isset( $config[ 'slug' ] ) && $config[ 'slug' ] ? 'node.slug,' : '';
 
 		$modelClass	= static::$modelClass;
 		$modelTable	= $modelClass::tableName();
 		$query		= new Query();
 
-		$query->select( 'node.id, node.name, node.rootId, node.lValue, node.rValue, ( COUNT( parent.id ) - 1 ) AS depth' );
+		$query->select( "node.id, $slug node.name, node.rootId, node.lValue, node.rValue, ( COUNT( parent.id ) - 1 ) AS depth" );
 		$query->from( "$modelTable AS node, $modelTable AS parent" );
 		$query->where( 'node.lValue BETWEEN parent.lValue AND parent.rValue AND node.rootId=parent.rootId' );
 

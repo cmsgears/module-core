@@ -303,7 +303,7 @@ class CategoryService extends ResourceService implements ICategoryService {
 
 	public function getLevelListByType( $type ) {
 
-		return $this->getLevelList( [ 'conditions' => [ 'node.type' => $type ] ] );
+		return $this->getLevelList( [ 'conditions' => [ 'node.type' => $type ], 'slug' => true ] );
 	}
 
 	// Read - Maps -----

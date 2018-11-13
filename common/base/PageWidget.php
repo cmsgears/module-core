@@ -236,6 +236,12 @@ abstract class PageWidget extends Widget {
 		$models		= $this->modelPage;
 		$modelsHtml	= [];
 
+		// No models to render
+		if( count( $models ) <= 0 ) {
+
+			return;
+		}
+
 		// Views
 		$wrapperView	= $this->template . '/wrapper';
 		$singleView		= $this->template . '/single';

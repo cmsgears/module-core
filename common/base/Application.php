@@ -66,6 +66,9 @@ class Application extends BaseApplication {
 		$site		= null;
 		$siteRoute	= null;
 
+		// double slashes or leading/ending slashes may cause substr problem
+		$route = trim( $route, '/' );
+
 		// Process multi site request
 		if( Yii::$app->core->multiSite ) {
 
@@ -73,9 +76,6 @@ class Application extends BaseApplication {
 
 				$route = $this->defaultRoute;
 			}
-
-			// double slashes or leading/ending slashes may cause substr problem
-			$route = trim( $route, '/' );
 
 			if( strpos( $route, '//' ) !== false ) {
 

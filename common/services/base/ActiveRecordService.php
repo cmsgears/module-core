@@ -978,6 +978,8 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		// Default sort
 		if( !$sort ) {
 
+			$defaultSort = isset( $config[ 'defaultSort' ] ) ? $config[ 'defaultSort' ] : [ 'id' => SORT_DESC ];
+
 			$sort = new Sort([
 				'attributes' => [
 					'id' => [
@@ -987,9 +989,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 						'label' => 'Id'
 					]
 				],
-				'defaultOrder' => [
-					'id' => SORT_DESC
-				]
+				'defaultOrder' => $defaultSort
 			]);
 
 			$config[ 'sort' ] = $sort;

@@ -617,6 +617,11 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 		return $name;
 	}
 
+	public function getDisplayName() {
+
+		return $this->getFullName();
+	}
+
 	/**
 	 * Returns name of user using first name, middle name and last name.
 	 *

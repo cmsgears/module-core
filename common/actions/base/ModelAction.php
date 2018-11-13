@@ -171,7 +171,7 @@ class ModelAction extends \cmsgears\core\common\base\Action {
 					// Get first model of matched slug ... It works well for tables having unique slug
 					else {
 
-						$this->model = $this->modelService->getBySlug( $slug, true );
+						$this->model = $this->modelService->getFirstBySlug( $slug, true );
 					}
 				}
 				else {

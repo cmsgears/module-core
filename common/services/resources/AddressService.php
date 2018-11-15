@@ -94,7 +94,7 @@ class AddressService extends ResourceService implements IAddressService {
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
 			'countryId', 'provinceId', 'regionId', 'cityId',
 			'title', 'line1', 'line2', 'line3',
-			'cityName', 'regionName', 'provinceName', 'countryName', 'zip', 'subZip',
+			'cityName', 'regionName', 'provinceName', 'countryName', 'zip', 'subZip', 'lendmark',
 			'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude', 'zoomLevel'
 		];
 

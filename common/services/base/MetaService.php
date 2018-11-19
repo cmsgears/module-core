@@ -315,7 +315,14 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 	public function update( $model, $config = [] ) {
 
-		$existingModel	= $this->getByNameType( $model->modelId, $model->name, $model->type );
+		if( isset( $model->id ) ) {
+			
+			$existingModel	= $this->getById( $model->id );
+		}
+		else {
+			
+			$existingModel	= $this->getByNameType( $model->modelId, $model->name, $model->type );
+		}
 
 		// Create if it does not exist
 		if( !isset( $existingModel ) ) {

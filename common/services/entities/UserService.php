@@ -474,9 +474,14 @@ class UserService extends EntityService implements IUserService {
 		// Set Attributes
 		$model->registeredAt = DateUtil::getDateTime();
 
-		if( !isset( $model->status ) ) {
+		if( empty( $model->status ) ) {
 
 			$model->status = User::STATUS_NEW;
+		}
+
+		if( empty( $model->slug ) ) {
+
+			$model->slug = $model->username;
 		}
 
 		// Generate Tokens
@@ -540,7 +545,7 @@ class UserService extends EntityService implements IUserService {
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
 			'localeId', 'genderId', 'avatarId', 'bannerId', 'videoId', 'templateId',
-			'email', 'username', 'title', 'firstName', 'middleName', 'lastName', 'message',
+			'email', 'username', 'slug', 'title', 'firstName', 'middleName', 'lastName', 'message',
 			'description', 'dob', 'mobile', 'phone', 'timeZone', 'avatarUrl', 'websiteUrl', 'content'
 		];
 

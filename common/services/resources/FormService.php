@@ -325,7 +325,7 @@ class FormService extends ResourceService implements IFormService {
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
 			'templateId', 'name', 'slug', 'icon', 'texture', 'title', 'description',
 			'success', 'failure', 'captcha', 'visibility', 'status',
-			'userMail', 'adminMail', 'uniqueSubmit', 'updateSubmit',
+			'mailTo', 'userMail', 'adminMail', 'uniqueSubmit', 'updateSubmit',
 			'htmlOptions', 'content'
 		];
 

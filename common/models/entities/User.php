@@ -63,6 +63,7 @@ use cmsgears\core\common\utilities\DateUtil;
  * @property integer $status
  * @property string $email
  * @property string $username
+ * @property string $slug
  * @property string $passwordHash
  * @property string $type
  * @property string $icon
@@ -202,6 +203,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			// Unique
 			[ 'email', 'unique' ],
 			[ 'username', 'unique' ],
+			[ 'slug', 'unique' ],
 			[ 'mobile', 'unique' ],
 			// Email
 			[ 'email', 'email' ],
@@ -213,6 +215,11 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			[ 'username', 'validateUsernameCreate', 'on' => [ 'create' ] ],
 			[ 'username', 'validateUsernameUpdate', 'on' => [ 'update', 'profile' ] ],
 			[ 'username', 'validateUsernameChange', 'on' => [ 'profile' ] ],
+			// Slug
+			[ 'slug', 'alphanumdotu' ],
+			[ 'slug', 'validateSlugCreate', 'on' => [ 'create' ] ],
+			[ 'slug', 'validateSlugUpdate', 'on' => [ 'update', 'profile' ] ],
+			[ 'slug', 'validateSlugChange', 'on' => [ 'profile' ] ],
 			// Mobile
 			[ 'mobile', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ 'mobile', 'validateMobileCreate', 'on' => [ 'create' ] ],
@@ -220,10 +227,11 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			[ 'mobile', 'validateMobileChange', 'on' => [ 'profile' ] ],
 			// Text Limit
 			[ [ 'type', 'title', 'phone' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
-			[ [ 'icon', 'accessTokenType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'username', 'passwordHash', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'email', 'firstName', 'middleName', 'lastName' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
-			[ [ 'name', 'message', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ 'accessTokenType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'icon', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'username', 'passwordHash' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'slug', 'email', 'firstName', 'middleName', 'lastName', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'name', 'message' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ [ 'localeId', 'genderId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
@@ -434,6 +442,64 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			if( isset( $existingUser ) && $existingUser->username !== $this->username  && !$properties->isChangeUsername() ) {
 
 				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_CHANGE_USERNAME ) );
+			}
+		}
+	}
+
+	/**
+	 * Validates user email to ensure that only one user exist with the given username.
+	 *
+	 * @param type $attribute
+	 * @param type $params
+	 * @return void
+	 */
+	public function validateSlugCreate( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			if( self::isExistBySlug( $this->slug ) ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SLUG_EXIST ) );
+			}
+		}
+	}
+
+	/**
+	 * Validates user slug to ensure that only one user exist with the given slug.
+	 *
+	 * @param type $attribute
+	 * @param type $params
+	 * @return void
+	 */
+	public function validateSlugUpdate( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			$existingUser = self::findBySlug( $this->slug );
+
+			if( isset( $existingUser ) && $this->id != $existingUser->id ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SLUG_EXIST ) );
+			}
+		}
+	}
+
+	/**
+	 * Validates user email to ensure that it does not allow to change while changing user profile.
+	 *
+	 * @param type $attribute
+	 * @param type $params
+	 * @return void
+	 */
+	public function validateSlugChange( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			$existingUser = self::findById( $this->id );
+
+			if( isset( $existingUser ) && $existingUser->slug !== $this->slug ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SLUG_EXIST ) );
 			}
 		}
 	}
@@ -1058,6 +1124,30 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	public static function isExistByUsername( $username ) {
 
 		$user = self::find()->where( 'username=:username', [ ':username' => $username ] )->one();
+
+		return isset( $user );
+	}
+
+	/**
+	 * Find and return the user by slug.
+	 *
+	 * @param string $slug
+	 * @return User
+	 */
+	public static function findBySlug( $slug ) {
+
+		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+	}
+
+	/**
+	 * Check whether user exist for given slug.
+	 *
+	 * @param string $slug
+	 * @return boolean
+	 */
+	public static function isExistBySlug( $slug ) {
+
+		$user = self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
 
 		return isset( $user );
 	}

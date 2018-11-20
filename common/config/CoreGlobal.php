@@ -284,6 +284,7 @@ class CoreGlobal {
 	// Errors - Create/Register User
 	const ERROR_EMAIL_EXIST		= 'emailExistError';
 	const ERROR_USERNAME_EXIST	= 'usernameExistError';
+	const ERROR_SLUG_EXIST		= 'slugExistError';
 	const ERROR_MOBILE_EXIST	= 'mobileExistError';
 	const ERROR_PASSWORD		= 'passwordError';
 	const ERROR_TERMS			= 'termsError';

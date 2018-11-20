@@ -92,6 +92,7 @@ class MessageSource extends \yii\base\Component {
 		// Errors - Create/Register User
 		CoreGlobal::ERROR_EMAIL_EXIST => 'A user already exist with the same Email.',
 		CoreGlobal::ERROR_USERNAME_EXIST => 'A user already exist with the same username.',
+		CoreGlobal::ERROR_SLUG_EXIST => 'The slug is not available.',
 		CoreGlobal::ERROR_MOBILE_EXIST => 'A user already exist with the same mobile number.',
 		CoreGlobal::ERROR_PASSWORD => 'Please provide a valid password having at least 5 characters.',
 		CoreGlobal::ERROR_TERMS => 'Please accept our terms and conditions to continue.',

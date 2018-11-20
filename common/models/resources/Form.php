@@ -68,6 +68,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property boolean $captcha
  * @property boolean $visibility
  * @property integer $status
+ * @property string $mailTo
  * @property boolean $userMail Send mail to user if set and email field exist.
  * @property boolean $adminMail Send mail to admin if set.
  * @property boolean $uniqueSubmit
@@ -174,7 +175,7 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ [ 'icon', 'texture' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'name', 'mailTo' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'slug', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'title', 'success', 'failure' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
@@ -206,6 +207,7 @@ class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IM
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'mailTo' => 'Mail To',
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),

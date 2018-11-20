@@ -407,15 +407,16 @@ class FormDesigner extends \yii\base\Component {
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
 		$modelName	= $config[ 'modelName' ];
-		$fieldHtml	= Html::input( 'text', $modelName . "[$field->name]", $value, $fieldOptions );
+		$modelField	= $modelName . "[$field->name]";
+		$fieldHtml	= Html::input( 'text', $modelField, $value, $fieldOptions );
 
 		if( $config[ 'label' ] ) {
 
-			$fieldHtml = "<label>$field->label</label>$fieldHtml<span class='error' cmt-error='$field->name'></span>";
+			$fieldHtml = "<label>$field->label</label>$fieldHtml<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 		else {
 
-			$fieldHtml = "$fieldHtml<span class='error' cmt-error='$field->name'></span>";
+			$fieldHtml = "$fieldHtml<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 
 		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
@@ -431,9 +432,10 @@ class FormDesigner extends \yii\base\Component {
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
 		$modelName	= $config[ 'modelName' ];
-		$fieldHtml	= Html::hiddenInput( $modelName . "[$field->name]", $value, $fieldOptions );
+		$modelField	= $modelName . "[$field->name]";
+		$fieldHtml	= Html::hiddenInput( $modelField, $value, $fieldOptions );
 
-		$fieldHtml	= "$fieldHtml<span class='error' cmt-error='$field->name'></span>";
+		$fieldHtml = "$fieldHtml<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
 
 		return $fieldHtml;
@@ -447,15 +449,16 @@ class FormDesigner extends \yii\base\Component {
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
 		$modelName	= $config[ 'modelName' ];
-		$fieldHtml	= Html::passwordInput( $modelName . "[$field->name]", null, $fieldOptions );
+		$modelField	= $modelName . "[$field->name]";
+		$fieldHtml	= Html::passwordInput( $modelField, null, $fieldOptions );
 
 		if( $config[ 'label' ] ) {
 
-			$fieldHtml = "<label>$field->label</label>$fieldHtml<span class='error' cmt-error='$field->name'></span>";
+			$fieldHtml = "<label>$field->label</label>$fieldHtml<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 		else {
 
-			$fieldHtml = "$fieldHtml<span class='error' cmt-error='$field->name'></span>";
+			$fieldHtml = "$fieldHtml<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 
 		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
@@ -471,15 +474,16 @@ class FormDesigner extends \yii\base\Component {
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
 		$modelName	= $config[ 'modelName' ];
-		$fieldHtml	= Html::textarea( $modelName . "[$field->name]", $value, $fieldOptions );
+		$modelField	= $modelName . "[$field->name]";
+		$fieldHtml	= Html::textarea( $modelField, $value, $fieldOptions );
 
 		if( $config[ 'label' ] ) {
 
-			$fieldHtml = "<label>$field->label</label>$fieldHtml<span class='error' cmt-error='$field->name'></span>";
+			$fieldHtml = "<label>$field->label</label>$fieldHtml<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 		else {
 
-			$fieldHtml = "$fieldHtml<span class='error' cmt-error='$field->name'></span>";
+			$fieldHtml = "$fieldHtml<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 
 		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
@@ -495,18 +499,19 @@ class FormDesigner extends \yii\base\Component {
 		$fieldOptions	= count( $wrapperOptions ) == 0 && count( $fieldOptions ) == 0 ? $htmlOptions : $fieldOptions;
 
 		$modelName		= $config[ 'modelName' ];
-		$fieldHtml		= Html::hiddenInput( $modelName . "[$field->name]", $value );
+		$modelField		= $modelName . "[$field->name]";
+		$fieldHtml		= Html::hiddenInput( $modelField, $value );
 		$checkboxHtml	= Html::checkbox( "$field->name", $value, $fieldOptions );
 
 		if( $config[ 'label' ] ) {
 
-			$fieldHtml = "<label>$field->label</label> <span class='cmt-checkbox'>$checkboxHtml $fieldHtml</span>
-							<span class='error' cmt-error='$field->name'></span>";
+			$fieldHtml = "<label>$field->label</label> <span class=\"cmt-checkbox\">$checkboxHtml $fieldHtml</span>
+							<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 		else {
 
-			$fieldHtml = "<span class='cmt-checkbox'>$checkboxHtml $fieldHtml</span>
-							<span class='error' cmt-error='$field->name'></span>";
+			$fieldHtml = "<span class=\"cmt-checkbox\">$checkboxHtml $fieldHtml</span>
+							<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 
 		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
@@ -533,19 +538,20 @@ class FormDesigner extends \yii\base\Component {
 		$modelName				= $config[ 'modelName' ];
 		$id						= $modelName . "_$field->name";
 		$fieldOptions[ 'id' ]	= $id;
+		$modelField				= $modelName . "[$field->name]";
 		$fieldHtml				= Html::hiddenInput( $modelName . "[$field->name]", $value );
 		$checkboxHtml			= Html::checkbox( "$field->name", $value, $fieldOptions );
 
 		if( $config[ 'label' ] ) {
 
 			$fieldHtml = "<label>$field->label</label>
-							<span class='cmt-switch cmt-checkbox'>$checkboxHtml <label for='$id'></label> $fieldHtml</span>
-							<span class='error' cmt-error='$field->name'></span>";
+							<span class=\"cmt-switch cmt-checkbox\">$checkboxHtml <label for=\"$id\"></label> $fieldHtml</span>
+							<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 		else {
 
-			$fieldHtml = "<span class='cmt-switch cmt-checkbox'>$checkboxHtml <label for='$id'></label> $fieldHtml</span>
-							<span class='error' cmt-error='$field->name'></span>";
+			$fieldHtml = "<span class=\"cmt-switch cmt-checkbox\">$checkboxHtml <label for=\"$id\"></label> $fieldHtml</span>
+							<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 
 		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );
@@ -556,6 +562,7 @@ class FormDesigner extends \yii\base\Component {
 	protected function getApixCheckboxGroupHtml( $config, $field, $value ) {
 
 		$htmlOptions	= $field->htmlOptions;
+		$message		= isset( $htmlOptions[ 'message' ] ) ? $htmlOptions[ 'message' ] : null;
 		$items			= isset( $htmlOptions[ 'items' ] ) ? $htmlOptions[ 'items' ] : [];
 		$wrapperOptions	= isset( $htmlOptions[ 'wrapper' ] ) ? $htmlOptions[ 'wrapper' ] : [ 'class' => 'frm-field' ];
 		$fieldOptions	= isset( $htmlOptions[ 'field' ] ) ? $htmlOptions[ 'field' ] : [];
@@ -566,16 +573,22 @@ class FormDesigner extends \yii\base\Component {
 			$value	= preg_split( "/,/", $value );
 		}
 
+		if( isset( $message ) ) {
+
+			$message = "<div class=\"field-message\">$message</div>";
+		}
+
 		$modelName	= $config[ 'modelName' ];
-		$fieldHtml	= Html::checkboxList( $modelName . "[$field->name]", $value, $items, $fieldOptions );
+		$modelField	= $modelName . "[$field->name]";
+		$fieldHtml	= Html::checkboxList( $modelField, $value, $items, $fieldOptions );
 
 		if( $config[ 'label' ] ) {
 
-			$fieldHtml = "<label>$field->label</label>$fieldHtml<span class='error' cmt-error='$field->name'></span>";
+			$fieldHtml = "$message<label>$field->label</label>$fieldHtml<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 		else {
 
-			$fieldHtml = "$fieldHtml<span class='error' cmt-error='$field->name'></span>";
+			$fieldHtml = "{$message}{$fieldHtml}<span class=\"error\" cmt-error=\"$modelField\"></span>";
 		}
 
 		$fieldHtml	= Html::tag( 'div', $fieldHtml, $wrapperOptions );

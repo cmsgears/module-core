@@ -44,7 +44,6 @@ use cmsgears\core\common\config\CoreGlobal;
  *	<li>Class closure</li>
  * </ol>
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
 class DefaultTemplate extends BaseObject {

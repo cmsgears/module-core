@@ -69,7 +69,6 @@ use cmsgears\core\common\services\base\EntityService;
  *	<li>Class closure</li>
  * </ol>
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
 class ModelServiceTemplate extends EntityService {

@@ -51,7 +51,6 @@ use cmsgears\core\common\config\CoreGlobal;
  *	<li>Trait closure</li>
  * </ol>
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
 trait ModelServiceTraitTemplate {

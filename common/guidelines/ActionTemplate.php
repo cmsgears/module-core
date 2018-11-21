@@ -60,7 +60,6 @@ use cmsgears\core\common\base\Action;
  *	<li>Class closure</li>
  * </ol>
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
 class ActionTemplate extends Action {

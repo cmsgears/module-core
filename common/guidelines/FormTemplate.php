@@ -67,7 +67,6 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * FormTemplate Form
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  *
  * @property int - short $<short>

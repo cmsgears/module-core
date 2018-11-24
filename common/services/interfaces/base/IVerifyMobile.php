@@ -10,11 +10,11 @@
 namespace cmsgears\core\common\services\interfaces\base;
 
 /**
- * IVerifyMobileTrait declare the methods provided by service trait - [[\cmsgears\core\common\services\traits\base\VerifyMobileTrait]].
+ * IVerifyMobile declare the methods provided by service trait - [[\cmsgears\core\common\services\traits\base\VerifyMobileTrait]].
  *
  * @since 1.0.0
  */
-interface IVerifyMobileTrait {
+interface IVerifyMobile {
 
 	// Data Provider ------
 

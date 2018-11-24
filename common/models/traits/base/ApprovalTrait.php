@@ -393,6 +393,11 @@ trait ApprovalTrait {
 	 */
 	public function getRejectMessage() {
 
+		if( !$this->hasAttribute( 'data' ) ) {
+
+			return;
+		}
+
 		$reason = $this->getDataMeta( CoreGlobal::DATA_REJECT_REASON );
 		$text	= 'rejection';
 

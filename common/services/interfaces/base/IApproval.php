@@ -32,6 +32,8 @@ interface IApproval {
 
 	// Read - Lists ----
 
+	public function getByStatus( $status, $config = [] );
+
 	// Read - Maps -----
 
 	// Read - Others ---

@@ -181,6 +181,7 @@ class Core extends Config {
 	public $trimFieldValue		= true;
 
 	// Different Text Sizes - These can be overriden using config if required
+	public $tinyText			= CoreGlobal::TEXT_TINY;
 	public $smallText			= CoreGlobal::TEXT_SMALL;
 	public $mediumText			= CoreGlobal::TEXT_MEDIUM;
 	public $largeText			= CoreGlobal::TEXT_LARGE;

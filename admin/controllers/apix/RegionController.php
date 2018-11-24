@@ -74,7 +74,7 @@ class RegionController extends Controller {
 	public function actions() {
 
 		return [
-			'options-list' => [ 'class' => 'cmsgears\core\common\actions\location\RegionOptions' ]
+			'options-list' => [ 'class' => 'cmsgears\core\common\actions\location\data\RegionOptions' ]
 		];
 	}
 

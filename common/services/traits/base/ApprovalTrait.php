@@ -120,6 +120,20 @@ trait ApprovalTrait {
 
 	// Read - Lists ----
 
+	public function getByStatus( $status, $config = [] ) {
+
+		$limit = $config[ 'limit' ] ?? 10;
+
+		$modelClass	 = static::$modelClass;
+		$modelTable	 = $modelClass::tableName();
+
+		$query = $modelClass::find()->where( [ "$modelTable.status" => $status ] );
+
+		$query->limit( $limit );
+
+		return $query->orderBy( [ 'id' => SORT_DESC ] )->all();
+	}
+
 	// Read - Maps -----
 
 	// Read - Others ---

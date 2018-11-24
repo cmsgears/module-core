@@ -82,7 +82,7 @@ class ProvinceController extends Controller {
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ],
-			'options-list' => [ 'class' => 'cmsgears\core\common\actions\location\ProvinceOptions' ]
+			'options-list' => [ 'class' => 'cmsgears\core\common\actions\location\data\ProvinceOptions' ]
 		];
 	}
 

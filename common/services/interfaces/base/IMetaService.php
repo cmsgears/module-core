@@ -54,9 +54,21 @@ interface IMetaService extends IResourceService {
 
 	// Create -------------
 
+	/**
+	 * It creates or update the $metas for given $parent.
+	 * It also disable existing metas before updating in case type is provided.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $parent
+	 * @param array $metas
+	 * @param array $config
+	 */
+	public function creatOrUpdateByParent( $parent, $metas, $config = [] );
+
 	// Update -------------
 
 	public function toggle( $model );
+
+	public function disableByType( $parent, $type );
 
 	// Delete -------------
 

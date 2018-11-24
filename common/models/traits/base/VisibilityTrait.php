@@ -87,7 +87,7 @@ trait VisibilityTrait {
 			return $this->visibility == IVisibility::VISIBILITY_PRIVATE;
 		}
 
-		return $this->visibility >= IVisibility::VISIBILITY_PRIVATE;
+		return $this->visibility <= IVisibility::VISIBILITY_PRIVATE;
 	}
 
 	/**
@@ -100,7 +100,7 @@ trait VisibilityTrait {
 			return $this->visibility == IVisibility::VISIBILITY_SECURED;
 		}
 
-		return $this->visibility >= IVisibility::VISIBILITY_SECURED;
+		return $this->visibility <= IVisibility::VISIBILITY_SECURED;
 	}
 
 	/**
@@ -113,7 +113,7 @@ trait VisibilityTrait {
 			return $this->visibility == IVisibility::VISIBILITY_PROTECTED;
 		}
 
-		return $this->visibility >= IVisibility::VISIBILITY_PROTECTED;
+		return $this->visibility <= IVisibility::VISIBILITY_PROTECTED;
 	}
 
 	/**
@@ -126,7 +126,7 @@ trait VisibilityTrait {
 			return $this->visibility == IVisibility::VISIBILITY_PUBLIC;
 		}
 
-		return $this->visibility >= IVisibility::VISIBILITY_PUBLIC;
+		return $this->visibility <= IVisibility::VISIBILITY_PUBLIC;
 	}
 
 	/**
@@ -134,22 +134,20 @@ trait VisibilityTrait {
 	 */
 	public function isVisible() {
 
+		$user = Yii::$app->core->getUser();
+
 		// Always visible
-		if( $this->isVisibilityPublic(  true ) ) {
+		if( $this->isVisibilityPublic() ) {
 
 			return true;
 		}
-		// Visible to logged in users
-		else if( $this->isVisibilityProtected(  true ) ) {
+		// Visible to logged in users in protected mode
+		else if( isset( $user ) && $this->isVisibilityProtected() ) {
 
-			$user = Yii::$app->user->identity;
-
-			return isset( $user );
+			return true;
 		}
 		// Visible to owner
 		else {
-
-			$user = Yii::$app->user->identity;
 
 			return $this->createdBy == $user->id;
 		}

@@ -299,16 +299,70 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 	// Create -------------
 
+	/**
+	 * It generates the label if not set and create the meta.
+	 *
+	 * @param \cmsgears\core\common\models\base\Meta $model
+	 * @param array $config
+	 * @return \cmsgears\core\common\models\base\Meta
+	 */
 	public function create( $model, $config = [] ) {
 
-		if( !isset( $model->label ) || strlen( $model->label ) <= 0 ) {
+		if( empty( $model->label ) ) {
 
 			$model->label = $model->name;
 		}
 
-		$model->save();
+		return parent::create( $model );
+	}
 
-		return $model;
+	/**
+	 * It creates or update the $metas for given $parent.
+	 * It also disable existing metas before updating in case type is provided.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $parent
+	 * @param array $metas
+	 * @param array $config
+	 */
+	public function creatOrUpdateByParent( $parent, $metas, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		// Disable all existing metas for given type
+		if( isset( $config[ 'type' ] ) && isset( $config[ 'disable' ] ) ) {
+
+			$this->disableByType( $parent, $config[ 'type' ] );
+		}
+
+		// Create/Update given metas
+		if( !empty( $metas ) && count( $metas ) > 0 ) {
+
+			foreach( $metas as $meta ) {
+
+				$model = new $modelClass();
+
+				$model->name	= $meta[ 'name' ];
+				$model->label	= empty( $meta[ 'label' ] ) ? $meta[ 'name' ] : $meta[ 'label' ];
+				$model->value	= $meta[ 'value' ];
+				$model->type	= $meta[ 'type' ];
+				$model->active	= true;
+
+				$model->modelId	= $parent->id;
+
+				$model->valueType = empty( $meta[ 'valueType' ] ) ? $modelClass::VALUE_TYPE_TEXT : $meta[ 'valueType' ];
+
+				if( isset( $meta[ 'id' ] ) ) {
+
+					$model->id = $meta[ 'id' ];
+
+					parent::update( $model, [ 'attributes' => [ 'active', 'name' , 'value', 'type', 'valueType' ] ] );
+				}
+				else {
+
+					parent::create( $model );
+				}
+			}
+		}
 	}
 
 	// Update -------------
@@ -316,12 +370,12 @@ abstract class MetaService extends ResourceService implements IMetaService {
 	public function update( $model, $config = [] ) {
 
 		if( isset( $model->id ) ) {
-			
-			$existingModel	= $this->getById( $model->id );
+
+			$existingModel = $this->getById( $model->id );
 		}
 		else {
-			
-			$existingModel	= $this->getByNameType( $model->modelId, $model->name, $model->type );
+
+			$existingModel = $this->getByNameType( $model->modelId, $model->name, $model->type );
 		}
 
 		// Create if it does not exist
@@ -357,7 +411,7 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 		if( isset( $model ) ) {
 
-			$model->value	= $params[ 'value' ];
+			$model->value = $params[ 'value' ];
 
 			return parent::update( $model, [
 				'selective' => false,
@@ -416,6 +470,18 @@ abstract class MetaService extends ResourceService implements IMetaService {
 		}
 
 		$model->update();
+	}
+
+	public function disableByType( $parent, $type ) {
+
+		$metas = $this->getByType( $parent->id, $type );
+
+		foreach( $metas as $meta ) {
+
+			$meta->active = false;
+
+			$meta->update();
+		}
 	}
 
 	// Delete -------------

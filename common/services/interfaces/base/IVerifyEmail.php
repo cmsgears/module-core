@@ -10,11 +10,11 @@
 namespace cmsgears\core\common\services\interfaces\base;
 
 /**
- * IVerifyEmailTrait declare the methods provided by service trait - [[\cmsgears\core\common\services\traits\base\VerifyEmailTrait]].
+ * IVerifyEmail declare the methods provided by service trait - [[\cmsgears\core\common\services\traits\base\VerifyEmailTrait]].
  *
  * @since 1.0.0
  */
-interface IVerifyEmailTrait {
+interface IVerifyEmail {
 
 	// Data Provider ------
 

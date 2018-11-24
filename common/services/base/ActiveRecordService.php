@@ -683,7 +683,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$modelTable = $modelClass::tableName();
 
 		// Public models
-		$public = $config[ 'public' ] ?? false;
+		$public = isset( $config[ 'public' ] ) ? $config[ 'public' ] : false;
 
 		if( $public ) {
 
@@ -1046,16 +1046,16 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$tagTable			= CoreTables::TABLE_TAG;
 
 		// Sort
-		$sortParam			= Yii::$app->request->get( 'sort' );
-		$sortParam			= preg_replace( '/-/', '', $sortParam );
+		$sortParam	= Yii::$app->request->get( 'sort' );
+		$sortParam	= preg_replace( '/-/', '', $sortParam );
 
 		// Keywords
-		$searchParam		= isset( $config[ 'search-param' ] ) ? $config[ 'search-param' ] : 'keywords';
-		$keywords			= Yii::$app->request->getQueryParam( $searchParam );
+		$searchParam	= isset( $config[ 'search-param' ] ) ? $config[ 'search-param' ] : 'keywords';
+		$keywords		= Yii::$app->request->getQueryParam( $searchParam );
 
 		// Search Query
-		$query				= $config[ 'query' ] ?? $modelClass::find();
-		$hasOne				= $config[ 'hasOne' ] ?? false;
+		$query	= $config[ 'query' ] ?? $modelClass::find();
+		$hasOne	= $config[ 'hasOne' ] ?? false;
 
 		// Use model joins
 		if( $hasOne ) {

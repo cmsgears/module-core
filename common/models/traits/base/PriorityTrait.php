@@ -32,6 +32,27 @@ trait PriorityTrait {
 		IPriority::PRIORITY_HIGH => 'High'
 	];
 
+	public static $revPriorityMap = [
+		'Undefined' => IPriority::PRIORITY_DEFAULT,
+		'Low' => IPriority::PRIORITY_LOW,
+		'Medium' => IPriority::PRIORITY_MEDIUM,
+		'High' => IPriority::PRIORITY_HIGH
+	];
+
+	public static $filterPriorityMap = [
+		'undefined' => 'Undefined',
+		'low' => 'Low',
+		'medium' => 'Medium',
+		'high' => 'High'
+	];
+
+	public static $urlRevPriorityMap = [
+		'undefined' => IPriority::PRIORITY_DEFAULT,
+		'low' => IPriority::PRIORITY_LOW,
+		'medium' => IPriority::PRIORITY_MEDIUM,
+		'high' => IPriority::PRIORITY_HIGH
+	];
+
 	// Public -----------------
 
 	// Protected --------------

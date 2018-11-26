@@ -456,6 +456,7 @@ class CoreGlobal {
 	const FIELD_REGIONS				= 'regionsField';
 	const FIELD_ZIP_CODES			= 'zipCodesField';
 	const FIELD_LANDMARK			= 'landmarkField';
+	const FIELD_LOCATION			= 'locationField';
 
 	// User Fields
 	const FIELD_EMAIL				= 'emailField';

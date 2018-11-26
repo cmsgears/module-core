@@ -939,6 +939,7 @@ class m160620_095703_core extends Migration {
 			'approvedAt' => $this->dateTime(),
 			'content' => $this->mediumText(),
 			'data' => $this->mediumText(),
+			'userAgent' => $this->mediumText(),
 			'gridCache' => $this->longText(),
 			'gridCacheValid' => $this->boolean()->notNull()->defaultValue( false ),
 			'gridCachedAt' => $this->dateTime()
@@ -989,6 +990,7 @@ class m160620_095703_core extends Migration {
 			'agent' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'createdAt' => $this->dateTime()->notNull(),
 			'data' => $this->mediumText(),
+			'userAgent' => $this->mediumText(),
 			'gridCache' => $this->longText()
 		], $this->options );
 

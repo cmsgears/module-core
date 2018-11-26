@@ -257,6 +257,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_REGIONS => 'Regions',
 		CoreGlobal::FIELD_ZIP_CODES => 'Zip Codes',
 		CoreGlobal::FIELD_LANDMARK => 'Landmark',
+		CoreGlobal::FIELD_LOCATION => 'Location',
 
 		// User Fields
 		CoreGlobal::FIELD_EMAIL => 'Email',

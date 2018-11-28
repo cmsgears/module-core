@@ -66,11 +66,11 @@ class AutoSearch extends Action {
 		// For models having type columns
 		if( isset( $type ) ) {
 
-			$data	= $modelService->searchByNameType( $name, $type );
+			$data = $modelService->searchByNameType( $name, $type );
 		}
 		else {
 
-			$data	= $modelService->searchByName( $name );
+			$data = $modelService->searchByName( $name );
 		}
 
 		// Trigger Ajax Success

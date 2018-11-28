@@ -539,6 +539,36 @@ class CodeGenUtil {
 		return $compressed;
 	}
 
+	public static function generateRandomString( $length = 8, $uc = true, $num = true, $special = false ) {
+
+		$source = 'abcdefghijklmnopqrstuvwxyz';
+		$str	= '';
+
+		if( $uc ) {
+
+			$source .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		}
+
+		if( $num ) {
+
+			$source .= '0123456789';
+		}
+
+		if( $special ) {
+
+			$source .= '~@#$%^*()_±={}|][';
+		}
+
+		$max = strlen( $source ) - 1;
+
+		for( $i = 0; $i < $length; $i++ ) {
+
+			$str .= $source[ ( mt_rand( 0, $max ) ) ];
+		}
+
+		return $str;
+	}
+
 	public static function generateNestedSetLists( $nestedSet, $config = [] ) {
 
 		$wrap		= isset( $config[ 'wrap' ] ) ? $config[ 'wrap' ] : false;

@@ -1176,7 +1176,6 @@ class FormDesigner extends \yii\base\Component {
 
 		$class		= isset( $config[ 'class' ] ) && !empty( $config[ 'class' ] ) ? $config[ 'class' ] : 'cmt-rating';
 		$stars		= isset( $config[ 'stars' ] ) ? $config[ 'stars' ] : 5;
-		$stars		= isset( $config[ 'stars' ] ) ? $config[ 'stars' ] : 5;
 		$label		= isset( $config[ 'label' ] ) ? $config[ 'label' ] : null;
 		$readOnly	= isset( $config[ 'readOnly' ] ) ? $config[ 'readOnly' ] : false;
 		$selected	= isset( $config[ 'selected' ] ) ? $config[ 'selected' ] : 0;
@@ -1186,7 +1185,8 @@ class FormDesigner extends \yii\base\Component {
 		$starMessage = isset( $config[ 'message' ] ) ? $config[ 'message' ] : [ "Poor", "Good", "Very Good", "Perfect", "Excellent" ];
 
 		$modelName	= $config[ 'modelName' ];
-		$fieldName	= $modelName . '[' . $config[ 'fieldName' ] . ']';
+		$fieldName	= isset( $config[ 'fieldName' ] ) ? $config[ 'fieldName' ] : 'rating';
+		$fieldName	= $modelName . "[$fieldName]";
 
 		if( $readOnly ) {
 

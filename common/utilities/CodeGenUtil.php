@@ -516,6 +516,8 @@ class CodeGenUtil {
 
 			return substr( $content, 0, $limit );
 		}
+
+		return $content;
 	}
 
 	public static function isAbsolutePath( $path, $alias = true ) {

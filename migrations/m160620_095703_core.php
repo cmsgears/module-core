@@ -1012,6 +1012,9 @@ class m160620_095703_core extends Migration {
 			'value' => $this->mediumText(),
 			'data' => $this->mediumText()
 		], $this->options );
+
+		// Index for columns base, creator and modifier
+		$this->createIndex( 'idx_' . $this->prefix . 'model_meta_parent', $this->prefix . 'core_model_meta', 'parentId' );
 	}
 
 	private function upModelObject() {

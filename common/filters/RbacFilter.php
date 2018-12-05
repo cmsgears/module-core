@@ -91,7 +91,7 @@ class RbacFilter extends \yii\base\Behavior {
 				if( !isset( $user ) || !isset( $permission ) || !$user->isPermitted( $permission ) ) {
 
 					// Ajax Request
-					if( Yii::$app->request->isAjax() ) {
+					if( Yii::$app->request->getIsAjax() ) {
 
 						if( !isset( $user ) ) {
 

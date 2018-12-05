@@ -355,6 +355,30 @@ class UserService extends EntityService implements IUserService {
 	}
 
 	/**
+	 * @param string $slug
+	 * @return User
+	 */
+	public function getBySlug( $slug ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findBySlug( $slug );
+	}
+
+	/**
+	 * @param string $slug
+	 * @return boolean
+	 */
+	public function isExistBySlug( $slug ) {
+
+		$modelClass	= static::$modelClass;
+
+		$user = $modelClass::findBySlug( $slug );
+
+		return isset( $user );
+	}
+
+	/**
 	 * @param string $mobile
 	 * @return User
 	 */

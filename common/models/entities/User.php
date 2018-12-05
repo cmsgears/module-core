@@ -216,7 +216,6 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			[ 'username', 'validateUsernameUpdate', 'on' => [ 'update', 'profile' ] ],
 			[ 'username', 'validateUsernameChange', 'on' => [ 'profile' ] ],
 			// Slug
-			[ 'slug', 'alphanumdotu' ],
 			[ 'slug', 'validateSlugCreate', 'on' => [ 'create' ] ],
 			[ 'slug', 'validateSlugUpdate', 'on' => [ 'update', 'profile' ] ],
 			[ 'slug', 'validateSlugChange', 'on' => [ 'profile' ] ],

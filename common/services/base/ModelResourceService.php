@@ -63,6 +63,13 @@ abstract class ModelResourceService extends ResourceService implements IModelRes
 		return $this->getPage( $config );
 	}
 
+	public function getPageByParentType( $parentType, $config = [] ) {
+
+		$config[ 'conditions'][ 'parentType' ] = $parentType;
+
+		return $this->getPage( $config );
+	}
+
 	// Read ---------------
 
 	// Read - Models ---
@@ -73,7 +80,7 @@ abstract class ModelResourceService extends ResourceService implements IModelRes
 
 		return $modelClass::findByParent( $parentId, $parentType, $config );
 	}
-	
+
 	public function getFirstByParent( $parentId, $parentType, $config = [] ) {
 
 		$modelClass	= static::$modelClass;

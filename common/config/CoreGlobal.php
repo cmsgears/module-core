@@ -378,6 +378,9 @@ class CoreGlobal {
 	const FIELD_ROLE		= 'roleField';
 	const FIELD_PERMISSION	= 'permissionField';
 	const FIELD_GENDER		= 'genderField';
+	const FIELD_MARITAL		= 'maritalField';
+	const FIELD_NOK			= 'nokField';
+	const FIELD_NOK_RELATION = 'nokRelationField';
 	const FIELD_AGE			= 'ageField';
 	const FIELD_PARENT		= 'parentField';
 	const FIELD_PARENT_TYPE	= 'parentTypeField';
@@ -412,6 +415,7 @@ class CoreGlobal {
 	const FIELD_AVATAR_URL	= 'avatarUrlField';
 	const FIELD_BANNER		= 'bannerField';
 	const FIELD_VIDEO		= 'videoField';
+	const FIELD_DOCUMENT	= 'documentField';
 
 	const FIELD_GLOBAL		= 'globalField';
 	const FIELD_SESSION		= 'sessionField';

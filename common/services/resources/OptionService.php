@@ -232,6 +232,8 @@ class OptionService extends ResourceService implements IOptionService {
 
 		$category = Yii::$app->factory->get( 'categoryService' )->getBySlugType( $slug, $type, $config );
 
+		$config[ 'defaultValue' ] = $category->name;
+
 		return $this->getValueNameMapByCategoryId( $category->id, $config );
 	}
 

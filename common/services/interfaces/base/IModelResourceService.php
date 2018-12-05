@@ -20,12 +20,14 @@ interface IModelResourceService extends IResourceService {
 
 	public function getPageByParent( $parentId, $parentType, $config = [] );
 
+	public function getPageByParentType( $parentType, $config = [] );
+
 	// Read ---------------
 
 	// Read - Models ---
 
 	public function getByParent( $parentId, $parentType, $config = [] );
-	
+
 	public function getFirstByParent( $parentId, $parentType, $config = [] );
 
 	public function getByParentId( $parentId, $config = [] );

@@ -184,6 +184,9 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_ROLE => 'Role',
 		CoreGlobal::FIELD_PERMISSION => 'Permission',
 		CoreGlobal::FIELD_GENDER => 'Gender',
+		CoreGlobal::FIELD_MARITAL => 'Marital Status',
+		CoreGlobal::FIELD_NOK => 'Next of Kin',
+		CoreGlobal::FIELD_NOK_RELATION => 'NOK Relation',
 		CoreGlobal::FIELD_AGE => 'Age',
 		CoreGlobal::FIELD_PARENT => 'Parent',
 		CoreGlobal::FIELD_PARENT_TYPE => 'Parent Type',
@@ -217,6 +220,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_AVATAR_URL => 'Avatar URL',
 		CoreGlobal::FIELD_BANNER => 'Banner',
 		CoreGlobal::FIELD_VIDEO => 'Video',
+		CoreGlobal::FIELD_DOCUMENT => 'Document',
 
 		CoreGlobal::FIELD_GLOBAL => 'Global',
 		CoreGlobal::FIELD_SESSION => 'Session',

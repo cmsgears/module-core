@@ -369,6 +369,8 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 	public function update( $model, $config = [] ) {
 
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
 		if( isset( $model->id ) ) {
 
 			$existingModel = $this->getById( $model->id );
@@ -391,6 +393,11 @@ abstract class MetaService extends ResourceService implements IMetaService {
 		else {
 
 			$attributes	= [ 'value' ];
+		}
+
+		if( $admin && !in_array( 'type', $attributes ) ) {
+
+			$attributes[] = 'type';
 		}
 
 		if( !isset( $config[ 'attributes' ] ) ) {

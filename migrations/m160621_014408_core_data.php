@@ -677,9 +677,9 @@ class m160621_014408_core_data extends Migration {
 		$columns = [ 'categoryId', 'name', 'value', 'icon' ];
 
 		$options	= [
-			[ $category->id, 'Male', 'Male', null ],
-			[ $category->id, 'Female', 'Female', null ],
-			[ $category->id, 'Other', 'Other', null ]
+			[ $category->id, 'Male', 'male', null ],
+			[ $category->id, 'Female', 'female', null ],
+			[ $category->id, 'Other', 'other', null ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_option', $columns, $options );

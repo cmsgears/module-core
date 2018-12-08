@@ -217,7 +217,12 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		$roleMap = $this->roleService->getIdNameMapByType( CoreGlobal::TYPE_SYSTEM );
 
-		unset( $roleMap[ $this->superRoleId ] );
+		$user = Yii::$app->core->getUser();
+
+		if( $user->activeSiteMember->roleId != $this->superRoleId ) {
+
+			unset( $roleMap[ $this->superRoleId ] );
+		}
 
 		return $this->render( 'create', [
 			'model' => $model,
@@ -259,7 +264,12 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 
 			$roleMap = $this->roleService->getIdNameMapByType( CoreGlobal::TYPE_SYSTEM );
 
-			unset( $roleMap[ $this->superRoleId ] );
+			$user = Yii::$app->core->getUser();
+
+			if( $user->activeSiteMember->roleId != $this->superRoleId ) {
+
+				unset( $roleMap[ $this->superRoleId ] );
+			}
 
 			return $this->render( 'update', [
 				'model' => $model,
@@ -300,9 +310,12 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 				}
 			}
 
-			$roleMap = $this->roleService->getIdNameMapByType( CoreGlobal::TYPE_SYSTEM );
+			$user = Yii::$app->core->getUser();
 
-			unset( $roleMap[ $this->superRoleId ] );
+			if( $user->activeSiteMember->roleId != $this->superRoleId ) {
+
+				unset( $roleMap[ $this->superRoleId ] );
+			}
 
 			return $this->render( 'delete', [
 				'model' => $model,

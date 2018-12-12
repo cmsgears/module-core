@@ -15,14 +15,12 @@ use cmsgears\core\admin\config\AdminGlobalCore;
 
 use cmsgears\core\admin\config\AdminProperties;
 
-use cmsgears\core\common\controllers\base\Controller as BaseController;
-
 /**
  * Controller is base controller for all admin controllers.
  *
  * @since 1.0.0
  */
-abstract class Controller extends BaseController {
+abstract class Controller extends \cmsgears\core\common\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

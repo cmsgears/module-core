@@ -55,7 +55,7 @@ class RbacFilter extends \yii\base\Behavior {
 				$permission		= $actionConfig[ 'permission' ];
 
 				// Allow if guest permission - It expects at least one filter
-				if( strcmp( $permission, CoreGlobal::PERM_GUEST ) == 0 ) {
+				if( is_string( $permission ) && $permission == CoreGlobal::PERM_GUEST ) {
 
 					$filterResult = $this->executeFilters( $actionConfig );
 

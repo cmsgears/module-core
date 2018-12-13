@@ -683,20 +683,22 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$modelTable = $modelClass::tableName();
 
 		// Public models
-		$public = isset( $config[ 'public' ] ) ? $config[ 'public' ] : false;
+		$public		= isset( $config[ 'public' ] ) ? $config[ 'public' ] : false;
+		$status		= isset( $config[ 'filterStatus' ] ) ? $config[ 'filterStatus' ] : true;
+		$visibility = isset( $config[ 'filterVisibility' ] ) ? $config[ 'filterVisibility' ] : true;
 
 		if( $public ) {
 
 			$interfaces = class_implements( $modelClass );
 
 			// Select only active and frozen models excluding new, blocked and terminated models.
-			if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IApproval' ] ) ) {
+			if( $status && isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IApproval' ] ) ) {
 
-				$config[ 'filters' ][]	= [ 'in', "$modelTable.status", [ IApproval::STATUS_ACTIVE, IApproval::STATUS_FROJEN ] ];
+				$config[ 'filters' ][] = [ 'in', "$modelTable.status", [ IApproval::STATUS_ACTIVE, IApproval::STATUS_FROJEN ] ];
 			}
 
 			// Select only publicly visible models
-			if( isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IVisibility' ] ) ) {
+			if( $visibility && isset( $interfaces[ 'cmsgears\core\common\models\interfaces\base\IVisibility' ] ) ) {
 
 				$config[ 'conditions' ][ "$modelTable.visibility" ]	= IVisibility::VISIBILITY_PUBLIC;
 			}

@@ -908,7 +908,26 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	 */
 	public function isPermitted( $permission ) {
 
-		return in_array( $permission, $this->permissions );
+		if( is_string( $permission ) ) {
+
+			return in_array( $permission, $this->permissions );
+		}
+		else {
+
+			$permitted = false;
+
+			foreach( $permission as $perm ) {
+
+				if( in_array( $perm, $this->permissions ) ) {
+
+					$permitted = true;
+
+					break;
+				}
+			}
+
+			return $permitted;
+		}
 	}
 
 	// Static Methods ----------------------------------------------

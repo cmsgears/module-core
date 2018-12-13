@@ -750,9 +750,13 @@ class m160620_095703_core extends Migration {
 			'captcha' => $this->boolean()->notNull()->defaultValue( false ),
 			'visibility' => $this->smallInteger( 6 ),
 			'status' => $this->smallInteger( 6 )->defaultValue( 0 ),
-			'mailTo' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
-			'userMail' => $this->boolean()->notNull()->defaultValue( false ),
-			'adminMail' => $this->boolean()->notNull()->defaultValue( false ),
+			'sender' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ), // Mail sender email
+			'replyTo' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ), // Reply to in case sender is different
+			'mailTo' => $this->text()->defaultValue( null ), // Mailing list in CSV format
+			'ccTo' => $this->text()->defaultValue( null ), // CC list in CSV format
+			'bccTo' => $this->text()->defaultValue( null ), // BCC list in CSV format
+			'userMail' => $this->boolean()->notNull()->defaultValue( false ), // Trigger mail to logged in user
+			'adminMail' => $this->boolean()->notNull()->defaultValue( false ), // Trigger mail to admin
 			'uniqueSubmit' => $this->boolean()->notNull()->defaultValue( false ),
 			'updateSubmit' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),

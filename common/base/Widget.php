@@ -145,7 +145,7 @@ abstract class Widget extends BaseWidget {
 
         parent::init();
 
-        $this->autoload	= ( isset( $this->autoloadUrl ) && CoreProperties::getInstance()->isAutoLoad() ) ? true : false;
+        $this->autoload	= ( !empty( $this->autoloadUrl ) && CoreProperties::getInstance()->isAutoLoad() ) ? true : false;
 
 		$this->cache	= $this->cache ? $this->cache : CacheProperties::getInstance()->isCaching();
     }

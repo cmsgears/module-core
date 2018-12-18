@@ -631,7 +631,7 @@ trait NestedSetTrait {
 
 		$query->select( 'parent.id, parent.name' );
 		$query->from( "$modelTable AS node, $modelTable AS parent" );
-		$query->where( "where node.lValue BETWEEN parent.lValue AND parent.rValue AND parent.rootId = node.rootId AND node.id=$leafId" );
+		$query->where( "node.lValue BETWEEN parent.lValue AND parent.rValue AND parent.rootId = node.rootId AND node.id=$leafId" );
 
 		if( isset( $conditions ) && count( $conditions ) > 0 ) {
 

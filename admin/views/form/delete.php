@@ -24,13 +24,13 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 				<div class="box-content">
 					<div class="row">
 						<div class="col col3">
-							<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+							<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 						<div class="col col3">
-							<?= $form->field( $model, 'slug' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+							<?= $form->field( $model, 'slug' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 						<div class="col col3">
-							<?= $form->field( $model, 'title' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+							<?= $form->field( $model, 'title' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -51,28 +51,30 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $model, 'description' )->textarea( [ 'readonly'=> 'true' ] ) ?>
+							<?= $form->field( $model, 'description' )->textarea( [ 'readonly' => 'true' ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly'=> 'true' ] ) ?>
+							<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $model, 'success' )->textarea( [ 'readonly'=> 'true' ] ) ?>
+							<?= $form->field( $model, 'success' )->textarea( [ 'readonly' => 'true' ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'failure' )->textarea( [ 'readonly'=> 'true' ] ) ?>
+							<?= $form->field( $model, 'failure' )->textarea( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
-					<div class="row">
-						<div class="col col2">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'userMail', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
-						</div>
-						<div class="col col2">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'adminMail', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
-						</div>
-					</div>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium"></div>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Submission Policies</div>
+			</div>
+			<div class="box-content-wrap frm-split-40-60">
+				<div class="box-content">
 					<div class="row">
 						<div class="col col2">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'uniqueSubmit', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
@@ -84,6 +86,24 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="row">
 						<div class="col col2">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'captcha', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium"></div>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Mail Triggers</div>
+			</div>
+			<div class="box-content-wrap frm-split-40-60">
+				<div class="box-content">
+					<div class="row">
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'userMail', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
+						</div>
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'adminMail', [ 'disabled' => true ], 'cmti cmti-checkbox' ) ?>
 						</div>
 					</div>
 				</div>

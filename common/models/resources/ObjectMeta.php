@@ -11,7 +11,6 @@ namespace cmsgears\core\common\models\resources;
 
 // CMG Imports
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\base\Meta;
 
 use cmsgears\core\common\models\entities\ObjectData;
 
@@ -30,7 +29,7 @@ use cmsgears\core\common\models\entities\ObjectData;
  *
  * @since 1.0.0
  */
-class ObjectMeta extends Meta {
+class ObjectMeta extends \cmsgears\core\common\models\base\Meta {
 
 	// Variables ---------------------------------------------------
 

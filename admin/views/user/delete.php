@@ -13,8 +13,8 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Delete User | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
-<div class="box-crud-wrap row">
-	<div class="box-crud-wrap-main colf colf3x2">
+<div class="box-crud-wrap">
+	<div class="box-crud-wrap-main">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-user', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
 			<div class="box-header">
@@ -57,7 +57,7 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'message' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'dob' )->textInput( [ 'readonly' => 'true' ] ) ?>
+							<?= Yii::$app->formDesigner->getIconInput( $form, $model, 'dob', [ 'right' => true, 'icon' => 'cmti cmti-calendar', 'options' => [ 'class' => 'datepicker', 'disabled' => true ] ] ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -106,12 +106,9 @@ $returnUrl		= $this->context->returnUrl;
 		<div class="filler-height filler-height-medium"></div>
 		<div class="align align-right">
 			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
-			<input class="element-medium" type="submit" value="Delete" />
+			<input class="frm-element-medium" type="submit" value="Delete" />
 		</div>
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
-	</div>
-	<div class="box-crud-wrap-sidebar colf colf3">
-
 	</div>
 </div>

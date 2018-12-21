@@ -57,8 +57,8 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'status' => [ 'title' => 'Status', 'generate' => function( $model ) { return $model->getStatusStr(); } ],
 		'pinned' => [ 'title' => 'Pinned', 'generate' => function( $model ) { return $model->getPinnedStr(); } ],
 		'featured' => [ 'title' => 'Featured', 'generate' => function( $model ) { return $model->getFeaturedStr(); } ],
-		'parent' => [ 'title' => 'Parent', 'generate' => function( $model ) use( $parent, $parentUrl ) {
-			if( $parent ) {
+		'parent' => [ 'title' => 'Parent', 'generate' => function( $model ) use( $parentUrl ) {
+			if( !empty( $parentUrl ) ) {
 				return "<a href='". Url::toRoute( [ $parentUrl . $model->parentId ], true ). "'>View</a>";
 			}
 		}],

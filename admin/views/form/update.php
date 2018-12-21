@@ -65,14 +65,16 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 							<?= $form->field( $model, 'failure' )->textarea() ?>
 						</div>
 					</div>
-					<div class="row">
-						<div class="col col2">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'userMail', null, 'cmti cmti-checkbox' ) ?>
-						</div>
-						<div class="col col2">
-							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'adminMail', null, 'cmti cmti-checkbox' ) ?>
-						</div>
-					</div>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium"></div>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Submission Policies</div>
+			</div>
+			<div class="box-content-wrap frm-split-40-60">
+				<div class="box-content">
 					<div class="row">
 						<div class="col col2">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'uniqueSubmit', null, 'cmti cmti-checkbox' ) ?>
@@ -84,6 +86,24 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 					<div class="row">
 						<div class="col col2">
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'captcha', null, 'cmti cmti-checkbox' ) ?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="filler-height filler-height-medium"></div>
+		<div class="box box-crud">
+			<div class="box-header">
+				<div class="box-header-title">Mail Triggers</div>
+			</div>
+			<div class="box-content-wrap frm-split-40-60">
+				<div class="box-content">
+					<div class="row">
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'userMail', null, 'cmti cmti-checkbox' ) ?>
+						</div>
+						<div class="col col2">
+							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'adminMail', null, 'cmti cmti-checkbox' ) ?>
 						</div>
 					</div>
 				</div>

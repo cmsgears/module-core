@@ -4,15 +4,18 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
+use cmsgears\core\common\widgets\Editor;
 use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title 	= 'Update Option Group | ' . $coreProperties->getSiteTitle();
+$this->title 	= 'Add Form | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
+
+Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );
 ?>
 <div class="box-crud-wrap">
 	<div class="box-crud-wrap-main">
-		<?php $form = ActiveForm::begin( [ 'id' => 'frm-ogroup', 'options' => [ 'class' => 'form' ] ] ); ?>
+		<?php $form = ActiveForm::begin( [ 'id' => 'frm-block', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
 			<div class="box-header">
 				<div class="box-header-title">Basic Details</div>
@@ -20,38 +23,44 @@ $returnUrl		= $this->context->returnUrl;
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
 					<div class="row">
-						<div class="col col3">
+						<div class="col col2">
 							<?= $form->field( $model, 'name' ) ?>
 						</div>
-						<div class="col col3">
-							<?= $form->field( $model, 'slug' ) ?>
-						</div>
-						<div class="col col3">
+						<div class="col col2">
 							<?= $form->field( $model, 'title' ) ?>
 						</div>
 					</div>
-					<div class="filler-height"> </div>
 					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'class' => 'cmt-select' ] ) ?>
+						</div>
 						<div class="col col2">
 							<?= IconChooser::widget( [ 'model' => $model, 'options' => [ 'class' => 'icon-picker-wrap' ] ] ) ?>
 						</div>
+					</div>
+					<div class="row">
 						<div class="col col2">
 							<?= $form->field( $model, 'description' )->textarea() ?>
 						</div>
-					</div>
-					<div class="row">
 						<div class="col col2">
 							<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 						</div>
 					</div>
-					<div class="filler-height"></div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'success' )->textarea() ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'failure' )->textarea() ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 		<div class="filler-height filler-height-medium"></div>
 		<div class="align align-right">
-			<?= Html::a( 'View All', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
-			<input class="frm-element-medium" type="submit" value="Update" />
+			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
+			<input class="frm-element-medium" type="submit" value="Create" />
 		</div>
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>

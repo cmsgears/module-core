@@ -300,7 +300,9 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 
 				try {
 
-					$this->model = $this->modelService->delete( $model );
+					$this->model = $model;
+
+					$this->modelService->delete( $model );
 
 					return $this->redirect( $this->returnUrl );
 				}
@@ -309,6 +311,8 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 					throw new HttpException( 409, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
 				}
 			}
+
+			$roleMap = $this->roleService->getIdNameMapByType( CoreGlobal::TYPE_SYSTEM );
 
 			$user = Yii::$app->core->getUser();
 

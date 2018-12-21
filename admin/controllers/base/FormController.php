@@ -123,8 +123,10 @@ abstract class FormController extends Controller {
 
 		$model = new $modelClass;
 
-		$model->type	= $this->type;
-		$model->siteId	= Yii::$app->core->siteId;
+		$model->type		= $this->type;
+		$model->siteId		= Yii::$app->core->siteId;
+		$model->visibility	= $modelClass::VISIBILITY_PUBLIC;
+		$model->captcha		= false;
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 

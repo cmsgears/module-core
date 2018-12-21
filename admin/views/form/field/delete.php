@@ -10,8 +10,8 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Delete Form Field | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
-<div class="box-crud-wrap row">
-	<div class="box-crud-wrap-main colf colf3x2">
+<div class="box-crud-wrap">
+	<div class="box-crud-wrap-main">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-form-field', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
 			<div class="box-header">
@@ -20,20 +20,20 @@ $returnUrl		= $this->context->returnUrl;
 			<div class="box-content-wrap frm-split-40-60">
 				<div class="box-content">
 					<div class="row">
-						<div class="col col2">
-							<?= $form->field( $model, 'name' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+						<div class="col col2 margin margin-bottom-small">
+							<?= $form->field( $model, 'name' )->textInput( [ 'readonly' => 'true' ] ) ?>
+							<p class="note">Field name must be lower case. An underscore(_) must be used to separate words.</p>
 						</div>
-
 						<div class="col col2">
-							<?= $form->field( $model, 'label' )->textInput( [ 'readonly'=> 'true' ] ) ?>
+							<?= $form->field( $model, 'label' )->textInput( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= IconChooser::widget( [ 'model' => $model, 'disabled' => true, 'options' => [ 'class' => 'icon-picker-wrap clearfix' ] ] ) ?>
+							<?= $form->field( $model, 'type' )->dropDownList( $typeMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'type' )->dropDownList( $typeMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
+							<?= IconChooser::widget( [ 'model' => $model, 'disabled' => true, 'options' => [ 'class' => 'icon-picker-wrap clearfix' ] ] ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -46,13 +46,12 @@ $returnUrl		= $this->context->returnUrl;
 					</div>
 					<div class="row">
 						<div class="col col2">
-							<?= $form->field( $model, 'validators' )->textarea( [ 'readonly'=> 'true' ] ) ?>
+							<?= $form->field( $model, 'validators' )->textarea( [ 'readonly' => 'true' ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly'=> 'true' ] ) ?>
+							<?= $form->field( $model, 'htmlOptions' )->textarea( [ 'readonly' => 'true' ] ) ?>
 						</div>
 					</div>
-
 				</div>
 			</div>
 		</div>
@@ -63,8 +62,5 @@ $returnUrl		= $this->context->returnUrl;
 		</div>
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
-	</div>
-	<div class="box-crud-wrap-sidebar colf colf3">
-
 	</div>
 </div>

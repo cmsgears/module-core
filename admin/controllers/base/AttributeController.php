@@ -67,21 +67,21 @@ abstract class AttributeController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'index'	 => [ 'permission' => $this->crudPermission ],
-					'all'  => [ 'permission' => $this->crudPermission ],
-					'create'  => [ 'permission' => $this->crudPermission ],
-					'update'  => [ 'permission' => $this->crudPermission ],
-					'delete'  => [ 'permission' => $this->crudPermission ]
+					'index' => [ 'permission' => $this->crudPermission ],
+					'all' => [ 'permission' => $this->crudPermission ],
+					'create' => [ 'permission' => $this->crudPermission ],
+					'update' => [ 'permission' => $this->crudPermission ],
+					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
 					'index' => [ 'get', 'post' ],
-					'all'  => [ 'get' ],
-					'create'  => [ 'get', 'post' ],
-					'update'  => [ 'get', 'post' ],
-					'delete'  => [ 'get', 'post' ]
+					'all' => [ 'get' ],
+					'create' => [ 'get', 'post' ],
+					'update' => [ 'get', 'post' ],
+					'delete' => [ 'get', 'post' ]
 				]
 			]
 		];
@@ -128,6 +128,7 @@ abstract class AttributeController extends Controller {
 
 			$model->modelId	= $parent->id;
 			$model->active	= true;
+			$model->type	= CoreGlobal::TYPE_DEFAULT;
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 

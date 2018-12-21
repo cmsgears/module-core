@@ -34,7 +34,7 @@ interface IMetaService extends IResourceService {
 
 	public function getByNameType( $modelId, $type, $name );
 
-	public function initByNameType( $modelId, $name, $type, $valueType = Meta::VALUE_TYPE_TEXT, $label = null );
+	public function initByNameType( $modelId, $name, $type, $valueType = Meta::VALUE_TYPE_TEXT, $label = null, $icon = null );
 
 	// Read - Lists ----
 

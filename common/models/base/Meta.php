@@ -34,6 +34,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  *
  * @property integer $id
  * @property integer $modelId
+ * @property string $icon
  * @property string $name
  * @property string $label
  * @property string $type
@@ -89,12 +90,13 @@ abstract class Meta extends Resource implements IData, IMeta {
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'modelId', 'name' ], 'required' ],
+			[ [ 'modelId', 'name', 'type' ], 'required' ],
 			[ [ 'id', 'value', 'data' ], 'safe' ],
 			// Unique
-			[ [ 'modelId', 'type', 'name' ], 'unique', 'targetAttribute' => [ 'modelId', 'type', 'name' ], 'comboNotUnique' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_EXIST ) ],
+			[ [ 'name' ], 'unique', 'targetAttribute' => [ 'modelId', 'type', 'name' ], 'comboNotUnique' => 'Attribute with the same name and type already exist.' ],
 			// Text Limit
 			[ [ 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
@@ -120,6 +122,7 @@ abstract class Meta extends Resource implements IData, IMeta {
 
 		return [
 			'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),

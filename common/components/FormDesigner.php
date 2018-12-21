@@ -964,7 +964,7 @@ class FormDesigner extends \yii\base\Component {
 
 			$autoFill	= "<label>$label</label>
 							<div class=\"frm-icon-element icon-right\">
-								<span class=\"$icon\"></span>
+								<span class=\"icon $icon\"></span>
 								<input type=\"text\" name=\"name\" value=\"$value\" placeholder=\"$placeholder\" autocomplete=\"off\" readonly />
 							</div>";
 		}
@@ -976,7 +976,7 @@ class FormDesigner extends \yii\base\Component {
 										<div class=\"auto-fill-search clearfix\">
 											<label>$label</label>
 											<div class=\"frm-icon-element icon-right\">
-												<span class=\"$icon\"></span>
+												<span class=\"icon $icon\"></span>
 												<input class=\"cmt-key-up auto-fill-text search-name\" type=\"text\" name=\"name\" value=\"$value\" placeholder=\"$placeholder\" autocomplete=\"off\" />
 											</div>
 											$type

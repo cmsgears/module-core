@@ -21,7 +21,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'compress' => 'Compress', 'active' => 'Active', 'order' => 'Order'
 	],
 	'filters' => [
-		'status' => [ 'active' => 'Active', 'inactive' => 'Inactive', 'compress' => 'Compress' ]
+		'status' => [ 'active' => 'Active', 'inactive' => 'Disabled', 'compress' => 'Compress' ]
 	],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
@@ -33,7 +33,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'order' => [ 'title' => 'Order', 'type' => 'text' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'model' => [ 'active' => 'Activate', 'inactive' => 'Inactivate', 'compress' => 'Compress', 'delete' => 'Delete' ]
+		'model' => [ 'active' => 'Activate', 'inactive' => 'Disable', 'compress' => 'Compress', 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
 	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x3', 'x3', null, 'x3', null, null, null ] ],

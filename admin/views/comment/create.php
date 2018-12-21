@@ -13,8 +13,8 @@ $user			= isset( $model->createdBy ) ? $model->creator->getName() : null;
 
 Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );
 ?>
-<div class="box-crud-wrap row">
-	<div class="box-crud-wrap-main colf colf3x2">
+<div class="box-crud-wrap">
+	<div class="box-crud-wrap-main">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-comment', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
 			<div class="box-header">
@@ -26,6 +26,7 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 						<div class="row row-medium">
 							<?= Yii::$app->formDesigner->getAutoSuggest( $form, $model, 'createdBy', [
 								'placeholder' => 'Search Creator', 'icon' => 'cmti cmti-search',
+								'app' => 'core', 'controller' => 'user',
 								'value' => $user, 'url' => 'core/user/auto-search'
 							]) ?>
 						</div>
@@ -78,18 +79,12 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 				</div>
 			</div>
 		</div>
-
 		<div class="filler-height filler-height-medium"></div>
-
 		<div class="align align-right">
 			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
 			<input class="frm-element-medium" type="submit" value="Create" />
 		</div>
-
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
-	</div>
-	<div class="box-crud-wrap-sidebar colf colf3">
-
 	</div>
 </div>

@@ -10,8 +10,6 @@
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Migration;
-
 use cmsgears\core\common\models\base\Meta;
 
 /**
@@ -29,7 +27,7 @@ use cmsgears\core\common\models\base\Meta;
  *
  * @since 1.0.0
  */
-class m160620_095703_core extends Migration {
+class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 	// Public Variables
 
@@ -270,9 +268,10 @@ class m160620_095703_core extends Migration {
 		$this->createTable( $this->prefix . 'core_object_meta', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'modelId' => $this->bigInteger( 20 )->notNull(),
+			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'label' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
-			'type' => $this->string( Yii::$app->core->mediumText ),
+			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'active' => $this->boolean()->defaultValue( false ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'valueType' => $this->string( Yii::$app->core->mediumText )->notNull()->defaultValue( Meta::VALUE_TYPE_TEXT ),
@@ -595,9 +594,10 @@ class m160620_095703_core extends Migration {
 		$this->createTable( $this->prefix . 'core_site_meta', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'modelId' => $this->bigInteger( 20 )->notNull(),
+			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'label' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
-			'type' => $this->string( Yii::$app->core->mediumText ),
+			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'active' => $this->boolean()->defaultValue( false ),
 			'order' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'valueType' => $this->string( Yii::$app->core->mediumText )->notNull()->defaultValue( Meta::VALUE_TYPE_TEXT ),
@@ -661,7 +661,7 @@ class m160620_095703_core extends Migration {
 		$this->createTable( $this->prefix . 'core_file', [
 			'id' => $this->bigPrimaryKey( 20 ),
 			'siteId' => $this->bigInteger( 20 )->notNull(),
-			'createdBy' => $this->bigInteger( 20 )->notNull(),
+			'createdBy' => $this->bigInteger( 20 ),
 			'modifiedBy' => $this->bigInteger( 20 ),
 			'name' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
 			'tag' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
@@ -1008,9 +1008,10 @@ class m160620_095703_core extends Migration {
 			'id' => $this->bigPrimaryKey( 20 ),
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
+			'icon' => $this->string( Yii::$app->core->largeText )->defaultValue( null ),
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'label' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
-			'type' => $this->string( Yii::$app->core->mediumText ),
+			'type' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'active' => $this->boolean()->defaultValue( false ),
 			'valueType' => $this->string( Yii::$app->core->mediumText )->notNull()->defaultValue( Meta::VALUE_TYPE_TEXT ),
 			'value' => $this->mediumText(),

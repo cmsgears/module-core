@@ -8,8 +8,8 @@ $this->title 	= 'Delete Theme | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 $renderers		= Yii::$app->templateManager->renderers;
 ?>
-<div class="box-crud-wrap row">
-	<div class="box-crud-wrap-main colf colf3x2">
+<div class="box-crud-wrap">
+	<div class="box-crud-wrap-main">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-theme', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
 			<div class="box-header">
@@ -47,18 +47,12 @@ $renderers		= Yii::$app->templateManager->renderers;
 				</div>
 			</div>
 		</div>
-
 		<div class="filler-height filler-height-medium"></div>
-
 		<div class="align align-right">
 			<?= Html::a( 'Cancel', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
 			<input class="element-medium" type="submit" value="Delete" />
 		</div>
-
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
-	</div>
-	<div class="box-crud-wrap-sidebar colf colf3">
-
 	</div>
 </div>

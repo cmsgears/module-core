@@ -42,9 +42,9 @@ class ThemeService extends EntityService implements IThemeService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Theme';
+	public static $modelClass = '\cmsgears\core\common\models\entities\Theme';
 
-	public static $parentType	= CoreGlobal::TYPE_THEME;
+	public static $parentType = CoreGlobal::TYPE_THEME;
 
 	// Protected --------------
 
@@ -147,6 +147,9 @@ class ThemeService extends EntityService implements IThemeService {
 					'default' => SORT_DESC,
 					'label' => 'Updated At'
 				]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 

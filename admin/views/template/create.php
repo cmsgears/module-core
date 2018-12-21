@@ -87,6 +87,11 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 							<?= Yii::$app->formDesigner->getIconCheckbox( $form, $model, 'fileRender', [ 'class' => 'cmt-checkbox cmt-choice cmt-field-group', 'group-target' => 'render-file', 'group-alt' => 'render-content' ], 'cmti cmti-checkbox' ) ?>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
+						</div>
+					</div>
 					<div class="row render-file">
 						<div class="col col2">
 							<?= $form->field( $model, 'layout' ) ?>
@@ -101,11 +106,6 @@ Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts'
 						</div>
 						<div class="col col2">
 							<?= $form->field( $model, 'view' ) ?>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col col2">
-							<?= $form->field( $model, 'htmlOptions' )->textarea() ?>
 						</div>
 					</div>
 				</div>

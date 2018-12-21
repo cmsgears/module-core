@@ -53,6 +53,10 @@ class ProvinceController extends Controller {
 		// Sidebar
 		$this->sidebar = [ 'parent' => 'sidebar-core', 'child' => 'country' ];
 
+		// Return Url
+		$this->returnUrl = Url::previous( 'provinces' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/country/province/all' ], true );
+
 		// All Url
 		$allUrl = Url::previous( 'countries' );
 		$allUrl = isset( $allUrl ) ? $allUrl : Url::toRoute( [ '/core/country/all' ], true );

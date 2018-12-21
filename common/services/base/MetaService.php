@@ -12,6 +12,7 @@ namespace cmsgears\core\common\services\base;
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\models\base\Meta;
@@ -213,7 +214,7 @@ abstract class MetaService extends ResourceService implements IMetaService {
 		return self::findByNameType( $modelId, $name, $type );
 	}
 
-	public function initByNameType( $modelId, $name, $type, $valueType = Meta::VALUE_TYPE_TEXT, $label = null ) {
+	public function initByNameType( $modelId, $name, $type, $valueType = Meta::VALUE_TYPE_TEXT, $label = null, $icon = null ) {
 
 		$meta = $this->getByNameType( $modelId, $name, $type );
 
@@ -224,12 +225,14 @@ abstract class MetaService extends ResourceService implements IMetaService {
 			// Initialise
 			$meta = new $modelClass();
 
-			$meta->modelId		= $modelId;
-			$meta->name			= $name;
-			$meta->label		= !empty( $label ) ? $label : $name;
-			$meta->type			= $type;
-			$meta->active		= true;
-			$meta->valueType	= $valueType;
+			$meta->modelId	= $modelId;
+			$meta->name		= $name;
+			$meta->label	= !empty( $label ) ? $label : $name;
+			$meta->icon		= !empty( $icon ) ? $icon : null;
+			$meta->type		= $type;
+			$meta->active	= true;
+
+			$meta->valueType = $valueType;
 
 			switch( $valueType ) {
 
@@ -288,7 +291,8 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 	public function getNameMetaMapByType( $modelId, $type ) {
 
-		$config[ 'key' ]						= 'name';
+		$config[ 'key' ] = 'name';
+
 		$config[ 'conditions' ][ 'modelId' ]	= $modelId;
 		$config[ 'conditions' ][ 'type' ]		= $type;
 
@@ -346,6 +350,7 @@ abstract class MetaService extends ResourceService implements IMetaService {
 				$model->value	= $meta[ 'value' ];
 				$model->type	= $meta[ 'type' ];
 				$model->active	= true;
+				$model->icon	= !empty( $meta[ 'icon' ] ) ? $meta[ 'icon' ] : null;
 
 				$model->modelId	= $parent->id;
 
@@ -353,9 +358,10 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 				if( isset( $meta[ 'id' ] ) ) {
 
-					$model->id = $meta[ 'id' ];
+					$model->id		= $meta[ 'id' ];
+					$model->icon	= !empty( $meta[ 'icon' ] ) ? $meta[ 'icon' ] : $model->icon;
 
-					parent::update( $model, [ 'attributes' => [ 'active', 'name' , 'value', 'type', 'valueType' ] ] );
+					parent::update( $model, [ 'attributes' => [ 'icon', 'name', 'value', 'active', 'type', 'valueType' ] ] );
 				}
 				else {
 
@@ -371,33 +377,13 @@ abstract class MetaService extends ResourceService implements IMetaService {
 
 		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-		if( isset( $model->id ) ) {
+		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'icon', 'name', 'label', 'active', 'order', 'valueType', 'value'
+		];
 
-			$existingModel = $this->getById( $model->id );
-		}
-		else {
+		if( $admin ) {
 
-			$existingModel = $this->getByNameType( $model->modelId, $model->name, $model->type );
-		}
-
-		// Create if it does not exist
-		if( !isset( $existingModel ) ) {
-
-			return $this->create( $model );
-		}
-
-		if( isset( $model->valueType ) ) {
-
-			$attributes	= [ 'valueType', 'value' ];
-		}
-		else {
-
-			$attributes	= [ 'value' ];
-		}
-
-		if( $admin && !in_array( 'type', $attributes ) ) {
-
-			$attributes[] = 'type';
+			$attributes	= ArrayHelper::merge( $attributes, [ 'type' ] );
 		}
 
 		if( !isset( $config[ 'attributes' ] ) ) {
@@ -408,13 +394,17 @@ abstract class MetaService extends ResourceService implements IMetaService {
 		return parent::update( $model, $config );
 	}
 
+	/*
+	 * It must be used only when name and type are not changed since it discover the
+	 * model using name and type.
+	 */
 	public function updateByParams( $params = [], $config = [] ) {
 
 		$modelId	= $params[ 'modelId' ];
 		$name		= $params[ 'name' ];
 		$type		= $params[ 'type' ];
 
-		$model		= $this->getByNameType( $modelId, $name, $type );
+		$model = $this->getByNameType( $modelId, $name, $type );
 
 		if( isset( $model ) ) {
 
@@ -440,6 +430,13 @@ abstract class MetaService extends ResourceService implements IMetaService {
 		}
 	}
 
+	/**
+	 * It will be used to update the metas of a specific type using the form.
+	 * It does not expect the meta to have id and solely rely on given name and type.
+	 *
+	 * @param type $form
+	 * @param type $config
+	 */
 	public function updateMultipleByForm( $form, $config = [] ) {
 
 		$metas = $form->getArrayToStore();
@@ -456,10 +453,15 @@ abstract class MetaService extends ResourceService implements IMetaService {
 				$meta[ 'label' ] = $form->getAttributeLabel( $meta[ 'name' ] );
 			}
 
-			$model = $this->initByNameType( $config[ 'modelId' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ], $meta[ 'label' ] );
+			if( !isset( $meta[ 'icon' ] ) ) {
+
+				$meta[ 'icon' ] = null;
+			}
+
+			$model = $this->initByNameType( $config[ 'modelId' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ], $meta[ 'label' ], $meta[ 'icon' ] );
 
 			$model->value	= $meta[ 'value' ];
-			$model->label	= $form->getAttributeLabel( $meta[ 'name' ] );
+			$model->label	= $meta[ 'label' ];
 
 			$this->update( $model );
 		}

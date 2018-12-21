@@ -48,7 +48,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'name' => 'Name',
 		'title' => 'Title',
 		'frender' => [ 'title' => 'File', 'generate' => function( $model ) { return $model->getFileRenderStr(); } ],
-		'lgroup' => [ 'title' => 'Group', 'generate' => function( $model ) { return $model->getGroupLayoutStr(); } ],
+		'lgroup' => [ 'title' => 'Grouped Layout', 'generate' => function( $model ) { return $model->getGroupLayoutStr(); } ],
 		'active' => [ 'title' => 'Active', 'generate' => function( $model ) { return $model->getActiveStr(); } ],
 		'renderer' => 'Renderer',
 		'layout' => 'Layout',

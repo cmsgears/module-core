@@ -31,6 +31,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * @property integer $id
  * @property integer $parentId
  * @property string $parentType
+ * @property string $icon
  * @property string $name
  * @property string $label
  * @property string $type

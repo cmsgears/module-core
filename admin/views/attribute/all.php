@@ -35,9 +35,12 @@ $themeTemplates		= '@themes/admin/views/templates';
 		'model' => [ 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x3', 'x4', null, 'x2', 'x2', 'x2' ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x3', 'x4', null, 'x2', 'x2', null ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
+		'icon' => [ 'title' => 'Icon', 'generate' => function( $model ) {
+			return "<div class='align align-center'><i class=\"$model->icon\"></i></div>" ;
+		}],
 		'name' => 'Name',
 		'label' => 'Label',
 		'active' => [ 'title' => 'Active', 'generate' => function( $model ) { return $model->getActiveStr(); } ],

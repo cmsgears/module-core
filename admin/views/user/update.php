@@ -13,8 +13,8 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update User | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
-<div class="box-crud-wrap row">
-	<div class="box-crud-wrap-main colf colf3x2">
+<div class="box-crud-wrap">
+	<div class="box-crud-wrap-main">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-user', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
 			<div class="box-header">
@@ -60,7 +60,7 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'message' ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'dob' )->textInput( [ 'class' => 'datepicker' ] ) ?>
+							<?= Yii::$app->formDesigner->getIconInput( $form, $model, 'dob', [ 'right' => true, 'icon' => 'cmti cmti-calendar', 'options' => [ 'class' => 'datepicker' ] ] ) ?>
 						</div>
 					</div>
 					<div class="row">
@@ -111,11 +111,7 @@ $returnUrl		= $this->context->returnUrl;
 			<?= Html::a( 'View All', $returnUrl, [ 'class' => 'btn btn-medium' ] ); ?>
 			<input class="frm-element-medium" type="submit" value="Update" />
 		</div>
-
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
-	</div>
-	<div class="box-crud-wrap-sidebar colf colf3">
-
 	</div>
 </div>

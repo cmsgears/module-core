@@ -227,26 +227,41 @@ trait TagTrait {
 	/**
 	 * @inheritdoc
 	 */
-	public function getTagLinks( $baseUrl, $wrapper = 'li', $limit = 0, $active = true ) {
+	public function getTagLinks( $baseUrl, $config = [] ) {
+
+		$wrapper	= isset( $config[ 'wrapper' ] ) ? $config[ 'wrapper' ] : true;
+		$wrapperTag	= isset( $config[ 'wrapperTag' ] ) ? $config[ 'wrapperTag' ] : 'li';
+		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
+		$active		= isset( $config[ 'active' ] ) ? $config[ 'active' ] : true;
+		$csv		= isset( $config[ 'csv' ] ) ? $config[ 'csv' ] : false;
 
 		$tags		= $active ? $this->activeTags : $this->tags;
-		$tagLinks	= null;
+		$tagLinks	= [];
 
 		foreach ( $tags as $tag ) {
 
-			if( isset( $wrapper ) ) {
+			if( $wrapper ) {
 
-				$tagLinks	.= "<$wrapper><a href='$baseUrl/$tag->slug'>$tag->name</a></$wrapper>";
+				$tagLinks[] = "<$wrapperTag><a href='$baseUrl/$tag->slug'>$tag->name</a></$wrapperTag>";
 			}
 			else {
 
-				$tagLinks	.= " <a href='$baseUrl/$tag->slug'>$tag->name</a>";
+				$tagLinks[] = "<a href='$baseUrl/$tag->slug'>$tag->name</a>";
 			}
 		}
 
 		if( $limit > 0 ) {
 
 			$tagLinks = array_splice( $tagLinks, $limit );
+		}
+
+		if( $csv ) {
+
+			$tagLinks = join( ', ', $tagLinks );
+		}
+		else {
+
+			$tagLinks = join( '', $tagLinks );
 		}
 
 		return $tagLinks;

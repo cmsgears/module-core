@@ -121,5 +121,6 @@ interface ITag {
 	 * @param boolean $active
 	 * @return string
 	 */
-	public function getTagLinks( $baseUrl, $wrapper = 'li', $limit = 0, $active = true );
+	public function getTagLinks( $baseUrl, $config = [] );
+
 }

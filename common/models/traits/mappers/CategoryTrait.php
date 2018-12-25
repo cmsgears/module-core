@@ -291,10 +291,17 @@ trait CategoryTrait {
 	/**
 	 * @inheritdoc
 	 */
-	public function getCategoryLinks( $baseUrl, $wrapper = 'li', $limit = 0, $active = true, $l1 = false ) {
+	public function getCategoryLinks( $baseUrl, $config = [] ) {
+
+		$wrapper	= isset( $config[ 'wrapper' ] ) ? $config[ 'wrapper' ] : true;
+		$wrapperTag	= isset( $config[ 'wrapperTag' ] ) ? $config[ 'wrapperTag' ] : 'li';
+		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
+		$active		= isset( $config[ 'active' ] ) ? $config[ 'active' ] : true;
+		$l1			= isset( $config[ 'l1' ] ) ? $config[ 'l1' ] : false;
+		$csv		= isset( $config[ 'csv' ] ) ? $config[ 'csv' ] : false;
 
 		$categories		= $active ? $this->activeCategories : $this->categories;
-		$categoryLinks	= null;
+		$categoryLinks	= [];
 
 		foreach( $categories as $category ) {
 
@@ -312,15 +319,28 @@ trait CategoryTrait {
 				$link = "<a href='$baseUrl/$category->slug'>$category->name</a>";
 			}
 
-			if( isset( $wrapper ) ) {
+			if( $wrapper ) {
 
-				$categoryLinks	.= "<$wrapper>$link</$wrapper>";
+				$categoryLinks[] = "<$wrapperTag>$link</$wrapperTag>";
+			}
+			else {
+
+				$categoryLinks[] = $link;
 			}
 		}
 
 		if( $limit > 0 ) {
 
 			$categoryLinks = array_splice( $categoryLinks, $limit );
+		}
+
+		if( $csv ) {
+
+			$categoryLinks = join( ', ', $categoryLinks );
+		}
+		else {
+
+			$categoryLinks = join( '', $categoryLinks );
 		}
 
 		return $categoryLinks;

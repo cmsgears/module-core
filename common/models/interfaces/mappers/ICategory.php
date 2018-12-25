@@ -143,5 +143,6 @@ interface ICategory {
 	 * @param boolean $l1
 	 * @return string
 	 */
-	public function getCategoryLinks( $baseUrl, $wrapper = 'li', $limit = 0, $active = true, $l1 = false );
+	public function getCategoryLinks( $baseUrl, $config = [] );
+
 }

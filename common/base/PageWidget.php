@@ -37,7 +37,7 @@ abstract class PageWidget extends Widget {
 	public $options	= [ 'class' => 'widget widget-page' ];
 
 	/**
-	 * Html options to be used for all models wrapper.
+	 * Html options to be used for models wrapper.
 	 */
 	public $wrapperOptions = [ 'class' => 'row' ];
 
@@ -109,7 +109,7 @@ abstract class PageWidget extends Widget {
 	 * URL params will be updated using History API if supported by browser and the page will be
 	 * loaded via ajax without refreshing full page.
 	 */
-	public $ajaxPagination		= false;
+	public $ajaxPagination = false;
 
 	// Ajax Pagination Handler
 	public $ajaxPageApp			= 'pagination';

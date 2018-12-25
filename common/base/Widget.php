@@ -87,7 +87,7 @@ abstract class Widget extends BaseWidget {
 	 */
 	public $template = 'default';
 
-	// Additional content
+	// Additional Content
 	public $buffer		= false;
 	public $bufferData	= null;
 
@@ -147,7 +147,7 @@ abstract class Widget extends BaseWidget {
 
         $this->autoload	= ( !empty( $this->autoloadUrl ) && CoreProperties::getInstance()->isAutoLoad() ) ? true : false;
 
-		$this->cache	= $this->cache ? $this->cache : CacheProperties::getInstance()->isCaching();
+		$this->cache = $this->cache ? $this->cache : CacheProperties::getInstance()->isCaching();
     }
 
 	// Instance methods --------------------------------------------
@@ -198,9 +198,9 @@ abstract class Widget extends BaseWidget {
 
 	public function renderAutoload( $config = [] ) {
 
-		$autoloadView	= CodeGenUtil::isAbsolutePath( $this->autoloadTemplate ) ? $this->autoloadTemplate : "$this->template/$this->autoloadTemplate";
+		$autoloadView = CodeGenUtil::isAbsolutePath( $this->autoloadTemplate ) ? $this->autoloadTemplate : "$this->template/$this->autoloadTemplate";
 
-		$widgetHtml		= $this->render( $autoloadView, [ 'widget' => $this ] );
+		$widgetHtml = $this->render( $autoloadView, [ 'widget' => $this ] );
 
 		if( $this->wrap ) {
 

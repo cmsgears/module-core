@@ -217,7 +217,7 @@ class TagService extends \cmsgears\core\common\services\base\ResourceService imp
 	public function delete( $model, $config = [] ) {
 
 		// Delete mappings
-		Yii::$app->get( 'modelTagService' )->deleteByModelId( $model->id );
+		Yii::$app->factory->get( 'modelTagService' )->deleteByModelId( $model->id );
 
 		// Delete model
 		return parent::delete( $model, $config );

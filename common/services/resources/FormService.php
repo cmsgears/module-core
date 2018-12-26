@@ -18,8 +18,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\resources\IFormService;
 
-use cmsgears\core\common\services\base\ResourceService;
-
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
@@ -31,7 +29,7 @@ use cmsgears\core\common\services\traits\resources\DataTrait;
  *
  * @since 1.0.0
  */
-class FormService extends ResourceService implements IFormService {
+class FormService extends \cmsgears\core\common\services\base\ResourceService implements IFormService {
 
 	// Variables ---------------------------------------------------
 
@@ -41,11 +39,11 @@ class FormService extends ResourceService implements IFormService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\Form';
+	public static $modelClass = '\cmsgears\core\common\models\resources\Form';
 
-	public static $typed		= true;
+	public static $typed = true;
 
-	public static $parentType	= CoreGlobal::TYPE_FORM;
+	public static $parentType = CoreGlobal::TYPE_FORM;
 
 	// Protected --------------
 

@@ -20,15 +20,15 @@ use cmsgears\core\common\models\mappers\SiteMember;
 
 use cmsgears\core\common\services\interfaces\mappers\ISiteMemberService;
 use cmsgears\core\common\services\interfaces\entities\IRoleService;
-
-use cmsgears\core\common\services\base\MapperService;
+use cmsgears\core\common\services\interfaces\entities\ISiteService;
+use cmsgears\core\common\services\interfaces\entities\IUserService;
 
 /**
  * SiteMemberService provide service methods of site member mapper.
  *
  * @since 1.0.0
  */
-class SiteMemberService extends MapperService implements ISiteMemberService {
+class SiteMemberService extends \cmsgears\core\common\services\base\MapperService implements ISiteMemberService {
 
 	// Variables ---------------------------------------------------
 
@@ -50,15 +50,19 @@ class SiteMemberService extends MapperService implements ISiteMemberService {
 
 	// Private ----------------
 
+	private $siteService;
 	private $roleService;
+	private $userService;
 
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( IRoleService $roleService, $config = [] ) {
+	public function __construct( ISiteService $siteService, IRoleService $roleService, IUserService $userService, $config = [] ) {
 
-		$this->roleService	= $roleService;
+		$this->siteService = $siteService;
+		$this->roleService = $roleService;
+		$this->userService = $userService;
 
 		parent::__construct( $config );
 	}
@@ -82,9 +86,9 @@ class SiteMemberService extends MapperService implements ISiteMemberService {
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		$siteTable = Yii::$app->factory->get( 'siteService' )->getModelTable();
-		$roleTable = Yii::$app->factory->get( 'roleService' )->getModelTable();
-		$userTable = Yii::$app->factory->get( 'userService' )->getModelTable();
+		$siteTable = $this->siteService->getModelTable();
+		$roleTable = $this->roleService->getModelTable();
+		$userTable = $this->userService->getModelTable();
 
 		// Sorting ----------
 
@@ -266,7 +270,7 @@ class SiteMemberService extends MapperService implements ISiteMemberService {
 
 			$role = $this->roleService->getBySlugType( CoreGlobal::ROLE_USER, CoreGlobal::TYPE_SYSTEM );
 
-			$model->roleId	= $role->id;
+			$model->roleId = $role->id;
 		}
 
 		if( empty( $model->siteId ) ) {

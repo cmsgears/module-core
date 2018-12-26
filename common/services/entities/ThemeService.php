@@ -21,8 +21,6 @@ use cmsgears\core\common\models\entities\Theme;
 
 use cmsgears\core\common\services\interfaces\entities\IThemeService;
 
-use cmsgears\core\common\services\base\EntityService;
-
 use cmsgears\core\common\services\traits\base\NameTrait;
 use cmsgears\core\common\services\traits\base\SlugTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
@@ -32,7 +30,7 @@ use cmsgears\core\common\services\traits\resources\DataTrait;
  *
  * @since 1.0.0
  */
-class ThemeService extends EntityService implements IThemeService {
+class ThemeService extends \cmsgears\core\common\services\base\EntityService implements IThemeService {
 
 	// Variables ---------------------------------------------------
 

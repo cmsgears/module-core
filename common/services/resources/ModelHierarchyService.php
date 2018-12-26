@@ -14,14 +14,12 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\resources\IModelHierarchyService;
 
-use cmsgears\core\common\services\base\ModelResourceService;
-
 /**
  * ModelHierarchyService provide service methods of model hierarchy.
  *
  * @since 1.0.0
  */
-class ModelHierarchyService extends ModelResourceService implements IModelHierarchyService {
+class ModelHierarchyService extends \cmsgears\core\common\services\base\ModelResourceService implements IModelHierarchyService {
 
 	// Variables ---------------------------------------------------
 

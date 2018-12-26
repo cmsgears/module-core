@@ -12,14 +12,12 @@ namespace cmsgears\core\common\services\resources;
 // CMG Imports
 use cmsgears\core\common\services\interfaces\resources\ISiteAccessService;
 
-use cmsgears\core\common\services\base\ResourceService;
-
 /**
  * SiteAccessService provide service methods of site access model.
  *
  * @since 1.0.0
  */
-class SiteAccessService extends ResourceService implements ISiteAccessService {
+class SiteAccessService extends \cmsgears\core\common\services\base\ResourceService implements ISiteAccessService {
 
 	// Variables ---------------------------------------------------
 

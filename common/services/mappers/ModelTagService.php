@@ -55,7 +55,7 @@ class ModelTagService extends ModelMapperService implements IModelTagService {
 
 	public function __construct( ITagService $tagService, $config = [] ) {
 
-		$this->tagService	= $tagService;
+		$this->tagService = $tagService;
 
 		parent::__construct( $config );
 	}
@@ -135,7 +135,9 @@ class ModelTagService extends ModelMapperService implements IModelTagService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'order', 'active' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'order', 'active'
+		];
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -146,12 +148,14 @@ class ModelTagService extends ModelMapperService implements IModelTagService {
 
 		$binderName	= isset( $config[ 'binder' ] ) ? $config[ 'binder' ] : 'Binder';
 		$binder		= $config[ 'tagBinder' ] ?? null;
-		
-		if( empty( $binder ) ){
 
-			$binder		= new Binder();
+		if( empty( $binder ) ) {
+
+			$binder = new Binder();
+
 			$binder->load( Yii::$app->request->post(), $binderName );
 		}
+
 		$all		= $binder->all;
 		$binded		= $binder->binded;
 		$process	= [];

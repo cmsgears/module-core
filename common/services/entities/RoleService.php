@@ -41,11 +41,11 @@ class RoleService extends EntityService implements IRoleService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Role';
+	public static $modelClass = '\cmsgears\core\common\models\entities\Role';
 
-	public static $typed		= true;
+	public static $typed = true;
 
-	public static $parentType	= CoreGlobal::TYPE_ROLE;
+	public static $parentType = CoreGlobal::TYPE_ROLE;
 
 	// Protected --------------
 

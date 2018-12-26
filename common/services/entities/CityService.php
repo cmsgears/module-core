@@ -37,9 +37,9 @@ class CityService extends EntityService implements ICityService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\City';
+	public static $modelClass = '\cmsgears\core\common\models\entities\City';
 
-	public static $parentType	= CoreGlobal::TYPE_CITY;
+	public static $parentType = CoreGlobal::TYPE_CITY;
 
 	// Protected --------------
 

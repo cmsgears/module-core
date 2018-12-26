@@ -18,8 +18,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\resources\IFormFieldService;
 
-use cmsgears\core\common\services\base\ResourceService;
-
 use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
@@ -27,7 +25,7 @@ use cmsgears\core\common\services\traits\resources\DataTrait;
  *
  * @since 1.0.0
  */
-class FormFieldService extends ResourceService implements IFormFieldService {
+class FormFieldService extends \cmsgears\core\common\services\base\ResourceService implements IFormFieldService {
 
 	// Variables ---------------------------------------------------
 
@@ -37,9 +35,9 @@ class FormFieldService extends ResourceService implements IFormFieldService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\FormField';
+	public static $modelClass = '\cmsgears\core\common\models\resources\FormField';
 
-	public static $parentType	= CoreGlobal::TYPE_FORM_FIELD;
+	public static $parentType = CoreGlobal::TYPE_FORM_FIELD;
 
 	// Protected --------------
 

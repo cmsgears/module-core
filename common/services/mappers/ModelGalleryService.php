@@ -13,14 +13,12 @@ namespace cmsgears\core\common\services\mappers;
 use cmsgears\core\common\services\interfaces\resources\IGalleryService;
 use cmsgears\core\common\services\interfaces\mappers\IModelGalleryService;
 
-use cmsgears\core\common\services\base\ModelMapperService;
-
 /**
  * ModelGalleryService provide service methods of gallery mapper.
  *
  * @since 1.0.0
  */
-class ModelGalleryService extends ModelMapperService implements IModelGalleryService {
+class ModelGalleryService extends \cmsgears\core\common\services\base\ModelMapperService implements IModelGalleryService {
 
 	// Variables ---------------------------------------------------
 
@@ -81,71 +79,33 @@ class ModelGalleryService extends ModelMapperService implements IModelGallerySer
 
 	// Create -------------
 
-	public function create( $gallery, $config = [] ) {
+	public function createWithParent( $parent, $config = [] ) {
 
-		$parentId	= $config[ 'parentId' ];
-		$parentType = $config[ 'parentType' ];
-		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
-		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
-
-		// Create Gallery
-		$gallery->type	= $parentType;
-
-		$gallery->save();
-
-		// Create Model Gallery
 		$modelClass	= static::$modelClass;
 
-		$modelGallery = new $modelClass();
-
-		$modelGallery->modelId		= $gallery->id;
-		$modelGallery->parentId		= $parentId;
-		$modelGallery->parentType	= $parentType;
-		$modelGallery->type			= $type;
-		$modelGallery->order		= $order;
-		$modelGallery->active		= true;
-
-		$modelGallery->save();
-	}
-
-	public function createOrUpdate( $gallery, $config = [] ) {
-
 		$parentId	= $config[ 'parentId' ];
-		$parentType = $config[ 'parentType' ];
-		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+		$parentType	= $config[ 'parentType' ];
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_DEFAULT;
 		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
-		// Update Existing
-		if( isset( $gallery->id ) && !empty( $gallery->id ) ) {
+		$parent->type = $parentType;
 
-			$existingGallery = $this->getByModelId( $parentId, $parentType, $gallery->id );
+		$gallery = $this->galleryService->create( $parent );
 
-			if( isset( $existingGallery ) ) {
+		$model = new $modelClass;
 
-				return $this->update( $existingGallery, [ 'gallery' => $gallery ] );
-			}
-		}
-		// Create New
-		else {
+		$model->modelId		= $gallery->id;
+		$model->parentId	= $parentId;
+		$model->parentType	= $parentType;
 
-			return $this->create( $gallery, $config );
-		}
+		$model->type	= $type;
+		$model->order	= $order;
+		$model->active	= true;
+
+		return parent::create( $model );
 	}
 
 	// Update -------------
-
-	public function update( $model, $config = [] ) {
-
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'type', 'order' ];
-
-		$gallery = $config[ 'gallery' ];
-
-		$this->galleryService->update( $gallery );
-
-		return parent::update( $model, [
-			'attributes' => $attributes
-		]);
-	}
 
 	// Delete -------------
 

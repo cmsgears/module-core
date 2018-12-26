@@ -18,14 +18,12 @@ use cmsgears\core\common\models\forms\Binder;
 use cmsgears\core\common\services\interfaces\resources\ICategoryService;
 use cmsgears\core\common\services\interfaces\mappers\IModelCategoryService;
 
-use cmsgears\core\common\services\base\ModelMapperService;
-
 /**
  * ModelCategoryService provide service methods of category mapper.
  *
  * @since 1.0.0
  */
-class ModelCategoryService extends ModelMapperService implements IModelCategoryService {
+class ModelCategoryService extends \cmsgears\core\common\services\base\ModelMapperService implements IModelCategoryService {
 
 	// Variables ---------------------------------------------------
 
@@ -184,7 +182,7 @@ class ModelCategoryService extends ModelMapperService implements IModelCategoryS
 		$modelClass	= static::$modelClass;
 		$binderName	= isset( $config[ 'binder' ] ) ? $config[ 'binder' ] : 'Binder';
 		$binder		= $config[ 'categoryBinder' ] ?? null;
-		
+
 		if( empty( $binder ) ) {
 
 			$binder		= new Binder();

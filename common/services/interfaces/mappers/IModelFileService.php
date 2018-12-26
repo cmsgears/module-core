@@ -64,6 +64,8 @@ interface IModelFileService extends IModelMapperService {
 
 	// Create -------------
 
+	public function createWithParent( $parent, $config = [] );
+
 	// Update -------------
 
 	// Delete -------------

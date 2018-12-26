@@ -18,8 +18,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\resources\IOptionService;
 
-use cmsgears\core\common\services\base\ResourceService;
-
 use cmsgears\core\common\services\traits\base\NameTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 
@@ -28,7 +26,7 @@ use cmsgears\core\common\services\traits\resources\DataTrait;
  *
  * @since 1.0.0
  */
-class OptionService extends ResourceService implements IOptionService {
+class OptionService extends \cmsgears\core\common\services\base\ResourceService implements IOptionService {
 
 	// Variables ---------------------------------------------------
 
@@ -266,7 +264,7 @@ class OptionService extends ResourceService implements IOptionService {
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete mapping
+		// Delete mappings
 		Yii::$app->factory->get( 'modelOptionService' )->deleteByModelId( $model->id );
 
 		// Delete model

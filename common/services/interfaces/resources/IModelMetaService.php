@@ -31,7 +31,7 @@ interface IModelMetaService extends IModelResourceService {
 
 	public function getByNameType( $parentId, $parentType, $name, $type );
 
-	public function initByNameType( $parentId, $parentType, $name, $type, $valueType = Meta::VALUE_TYPE_TEXT, $label = null );
+	public function initByNameType( $parentId, $parentType, $name, $type, $valueType = Meta::VALUE_TYPE_TEXT, $label = null, $icon = null );
 
 	// Read - Lists ----
 

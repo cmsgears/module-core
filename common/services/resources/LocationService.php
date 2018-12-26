@@ -17,14 +17,12 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\resources\ILocationService;
 
-use cmsgears\core\common\services\base\ResourceService;
-
 /**
  * LocationService provide service methods of location model.
  *
  * @since 1.0.0
  */
-class LocationService extends ResourceService implements ILocationService {
+class LocationService extends \cmsgears\core\common\services\base\ResourceService implements ILocationService {
 
 	// Variables ---------------------------------------------------
 
@@ -34,9 +32,9 @@ class LocationService extends ResourceService implements ILocationService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\Location';
+	public static $modelClass = '\cmsgears\core\common\models\resources\Location';
 
-	public static $parentType	= CoreGlobal::TYPE_LOCATION;
+	public static $parentType = CoreGlobal::TYPE_LOCATION;
 
 	// Protected --------------
 
@@ -80,9 +78,9 @@ class LocationService extends ResourceService implements ILocationService {
 
 	public function create( $model, $config = [] ) {
 
-		$model->countryName		= isset( $model->country ) ? $model->country->name : null;
-		$model->provinceName	= isset( $model->province ) ? $model->province->name : null;
-		$model->regionName		= isset( $model->region ) ? $model->region->name : null;
+		$model->countryName		= isset( $model->country ) ? $model->country->name : $model->countryName;
+		$model->provinceName	= isset( $model->province ) ? $model->province->name : $model->provinceName;
+		$model->regionName		= isset( $model->region ) ? $model->region->name : $model->regionName;
 
 		return parent::create( $model, $config );
 	}
@@ -97,9 +95,9 @@ class LocationService extends ResourceService implements ILocationService {
 			'longitude', 'latitude', 'zoomLevel'
 		];
 
-		$model->countryName		= isset( $model->country ) ? $model->country->name : null;
-		$model->provinceName	= isset( $model->province ) ? $model->province->name : null;
-		$model->regionName		= isset( $model->region ) ? $model->region->name : null;
+		$model->countryName		= isset( $model->country ) ? $model->country->name : $model->countryName;
+		$model->provinceName	= isset( $model->province ) ? $model->province->name : $model->provinceName;
+		$model->regionName		= isset( $model->region ) ? $model->region->name : $model->regionName;
 
         $config[ 'attributes' ] = $attributes;
 
@@ -110,7 +108,7 @@ class LocationService extends ResourceService implements ILocationService {
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete mapping
+		// Delete mappings
 		Yii::$app->factory->get( 'modelLocationService' )->deleteByModelId( $model->id );
 
 		// Delete model

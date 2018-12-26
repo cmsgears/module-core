@@ -18,14 +18,12 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\admin\controllers\base\CrudController;
-
 /**
  * FileController provide actions specific to files.
  *
  * @since 1.0.0
  */
-class FileController extends CrudController {
+class FileController extends \cmsgears\core\admin\controllers\base\CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -96,7 +94,8 @@ class FileController extends CrudController {
 
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
-			'visibilityMap' => File::$visibilityMap
+			'visibilityMap' => File::$visibilityMap,
+			'typeMap' => File::$typeMap
 		]);
 	}
 

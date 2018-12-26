@@ -20,8 +20,6 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\services\interfaces\resources\IGalleryService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
-use cmsgears\core\common\services\base\ResourceService;
-
 use cmsgears\core\common\services\traits\base\ApprovalTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
@@ -32,7 +30,7 @@ use cmsgears\core\common\services\traits\resources\DataTrait;
  *
  * @since 1.0.0
  */
-class GalleryService extends ResourceService implements IGalleryService {
+class GalleryService extends \cmsgears\core\common\services\base\ResourceService implements IGalleryService {
 
 	// Variables ---------------------------------------------------
 
@@ -42,11 +40,11 @@ class GalleryService extends ResourceService implements IGalleryService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\Gallery';
+	public static $modelClass = '\cmsgears\core\common\models\resources\Gallery';
 
-	public static $typed		= true;
+	public static $typed = true;
 
-	public static $parentType	= CoreGlobal::TYPE_GALLERY;
+	public static $parentType = CoreGlobal::TYPE_GALLERY;
 
 	// Protected --------------
 
@@ -378,7 +376,7 @@ class GalleryService extends ResourceService implements IGalleryService {
 		}
 
 		// Delete Items
-		$this->fileService->deleteFiles( $model->files );
+		$this->fileService->deleteMultiple( $model->files );
 
 		// Delete mappings
 		Yii::$app->factory->get( 'modelGalleryService' )->deleteByModelId( $model->id );

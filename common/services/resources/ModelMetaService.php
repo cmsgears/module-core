@@ -14,14 +14,12 @@ use cmsgears\core\common\models\resources\ModelMeta;
 
 use cmsgears\core\common\services\interfaces\resources\IModelMetaService;
 
-use cmsgears\core\common\services\base\ModelResourceService;
-
 /**
  * ModelMetaService provide service methods of model meta.
  *
  * @since 1.0.0
  */
-class ModelMetaService extends ModelResourceService implements IModelMetaService {
+class ModelMetaService extends \cmsgears\core\common\services\base\ModelResourceService implements IModelMetaService {
 
 	// Variables ---------------------------------------------------
 
@@ -79,7 +77,7 @@ class ModelMetaService extends ModelResourceService implements IModelMetaService
 		return $modelClass::findByNameType( $parentId, $parentType, $name, $type );
 	}
 
-	public function initByNameType( $parentId, $parentType, $name, $type, $valueType = ModelMeta::VALUE_TYPE_TEXT, $label = null ) {
+	public function initByNameType( $parentId, $parentType, $name, $type, $valueType = ModelMeta::VALUE_TYPE_TEXT, $label = null, $icon = null ) {
 
 		$modelClass = static::$modelClass;
 
@@ -91,11 +89,14 @@ class ModelMetaService extends ModelResourceService implements IModelMetaService
 
 			$meta->parentId		= $parentId;
 			$meta->parentType	= $parentType;
-			$meta->name			= $name;
-			$meta->label		= !empty( $label ) ? $label : $name;
-			$meta->type			= $type;
-			$meta->active		= true;
-			$meta->valueType	= $valueType;
+
+			$meta->name		= $name;
+			$meta->label	= !empty( $label ) ? $label : $name;
+			$meta->icon		= !empty( $icon ) ? $icon : null;
+			$meta->type		= $type;
+			$meta->active	= true;
+
+			$meta->valueType = $valueType;
 
 			switch( $valueType ) {
 
@@ -163,7 +164,7 @@ class ModelMetaService extends ModelResourceService implements IModelMetaService
 
 	public function create( $model, $config = [] ) {
 
-		if( !isset( $model->label ) || strlen( $model->label ) <= 0 ) {
+		if( empty( $model->label ) ) {
 
 			$model->label = $model->name;
 		}
@@ -180,9 +181,10 @@ class ModelMetaService extends ModelResourceService implements IModelMetaService
 
 	// Update -------------
 
+	// TODO: Analyze the impact and change it to follow regualar update pattern
 	public function update( $model, $config = [] ) {
 
-		$existingModel	= $this->getByNameType( $model->parentId, $model->parentType, $model->name, $model->type );
+		$existingModel = $this->getByNameType( $model->parentId, $model->parentType, $model->name, $model->type );
 
 		// Create if it does not exist
 		if( !isset( $existingModel ) ) {
@@ -210,6 +212,7 @@ class ModelMetaService extends ModelResourceService implements IModelMetaService
 
 		foreach( $models as $model ) {
 
+			// TODO: Add a check for parentType
 			if( $model->parentId == $parent->id ) {
 
 				$this->update( $model );
@@ -233,9 +236,15 @@ class ModelMetaService extends ModelResourceService implements IModelMetaService
 				$meta[ 'label' ] = $form->getAttributeLabel( $meta[ 'name' ] );
 			}
 
-			$model = $this->initByNameType( $config[ 'parentId' ], $config[ 'parentType' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ], $meta[ 'label' ] );
+			if( !isset( $meta[ 'icon' ] ) ) {
 
-			$model->value = $meta[ 'value' ];
+				$meta[ 'icon' ] = null;
+			}
+
+			$model = $this->initByNameType( $config[ 'parentId' ], $config[ 'parentType' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ], $meta[ 'label' ], $meta[ 'icon' ] );
+
+			$model->value	= $meta[ 'value' ];
+			$model->label	= $meta[ 'label' ];
 
 			$this->update( $model );
 		}

@@ -18,8 +18,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\resources\ITagService;
 
-use cmsgears\core\common\services\base\ResourceService;
-
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
@@ -29,7 +27,7 @@ use cmsgears\core\common\services\traits\resources\DataTrait;
  *
  * @since 1.0.0
  */
-class TagService extends ResourceService implements ITagService {
+class TagService extends \cmsgears\core\common\services\base\ResourceService implements ITagService {
 
 	// Variables ---------------------------------------------------
 
@@ -39,11 +37,11 @@ class TagService extends ResourceService implements ITagService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\Tag';
+	public static $modelClass = '\cmsgears\core\common\models\resources\Tag';
 
-	public static $typed		= true;
+	public static $typed = true;
 
-	public static $parentType	= CoreGlobal::TYPE_TAG;
+	public static $parentType = CoreGlobal::TYPE_TAG;
 
 	// Protected --------------
 
@@ -218,7 +216,7 @@ class TagService extends ResourceService implements ITagService {
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete mapping
+		// Delete mappings
 		Yii::$app->get( 'modelTagService' )->deleteByModelId( $model->id );
 
 		// Delete model

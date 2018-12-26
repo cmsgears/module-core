@@ -12,14 +12,12 @@ namespace cmsgears\core\common\services\resources;
 // CMG Imports
 use cmsgears\core\common\services\interfaces\resources\IModelMessageService;
 
-use cmsgears\core\common\services\base\ModelResourceService;
-
 /**
  * ModelMessageService provide service methods of model message.
  *
  * @since 1.0.0
  */
-class ModelMessageService extends ModelResourceService implements IModelMessageService {
+class ModelMessageService extends \cmsgears\core\common\services\base\ModelResourceService implements IModelMessageService {
 
 	// Variables ---------------------------------------------------
 

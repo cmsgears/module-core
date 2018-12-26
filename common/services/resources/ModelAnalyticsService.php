@@ -12,14 +12,12 @@ namespace cmsgears\core\common\services\resources;
 // CMG Imports
 use cmsgears\core\common\services\interfaces\resources\IModelAnalyticsService;
 
-use cmsgears\core\common\services\base\ModelResourceService;
-
 /**
  * ModelAnalyticsService provide service methods of model analytics.
  *
  * @since 1.0.0
  */
-class ModelAnalyticsService extends ModelResourceService implements IModelAnalyticsService {
+class ModelAnalyticsService extends \cmsgears\core\common\services\base\ModelResourceService implements IModelAnalyticsService {
 
 	// Variables ---------------------------------------------------
 

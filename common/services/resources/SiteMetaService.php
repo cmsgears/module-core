@@ -12,14 +12,12 @@ namespace cmsgears\core\common\services\resources;
 // CMG Imports
 use cmsgears\core\common\services\interfaces\resources\ISiteMetaService;
 
-use cmsgears\core\common\services\base\MetaService;
-
 /**
  * SiteMetaService provide service methods of site meta.
  *
  * @since 1.0.0
  */
-class SiteMetaService extends MetaService implements ISiteMetaService {
+class SiteMetaService extends \cmsgears\core\common\services\base\MetaService implements ISiteMetaService {
 
 	// Variables ---------------------------------------------------
 

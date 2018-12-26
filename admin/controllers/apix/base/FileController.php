@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\admin\controllers\apix;
+namespace cmsgears\core\admin\controllers\apix\base;
 
 // Yii Imports
 use Yii;
@@ -16,14 +16,14 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\Controller;
+use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * AddressController provides actions specific to model address.
+ * FileController provides actions specific to model file.
  *
  * @since 1.0.0
  */
-abstract class AddressController extends Controller {
+abstract class FileController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -33,7 +33,9 @@ abstract class AddressController extends Controller {
 
 	// Protected --------------
 
-	protected $modelAddressService;
+	protected $parentService;
+
+	protected $fileService;
 
 	// Private ----------------
 
@@ -46,9 +48,9 @@ abstract class AddressController extends Controller {
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_CORE;
 
-		$this->modelService = Yii::$app->factory->get( 'addressService' );
+		$this->modelService = Yii::$app->factory->get( 'modelFileService' );
 
-		$this->modelAddressService = Yii::$app->factory->get( 'modelAddressService' );
+		$this->fileService = Yii::$app->factory->get( 'fileService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -65,16 +67,12 @@ abstract class AddressController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'bulk' => [ 'permission' => $this->crudPermission ],
-					'generic' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
-					'bulk' => [ 'post' ],
-					'generic' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
 			]
@@ -83,19 +81,30 @@ abstract class AddressController extends Controller {
 
 	// yii\base\Controller ----
 
-	public function actions() {
-
-		return [
-			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
-			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
-			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
-		];
-	}
-
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
-	// AttributeController -------------------
+	// FileController ------------------------
+
+	public function actionDelete( $id, $pid ) {
+
+		$model	= $this->modelService->getById( $id );
+		$parent = $this->parentService->getById( $pid );
+
+		if( isset( $model ) && isset( $parent ) ) {
+
+			$file = $this->fileService->getById( $model->modelId );
+
+			// Delete Address and Mappings
+			$this->fileService->delete( $file, [ 'admin' => true ] );
+
+			// Trigger Ajax Success
+			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+		}
+
+		// Trigger Ajax Failure
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+	}
 
 }

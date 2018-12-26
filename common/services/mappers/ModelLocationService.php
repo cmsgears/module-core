@@ -14,19 +14,15 @@ use Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\core\common\models\resources\Location;
-
-// CMG Imports
+use cmsgears\core\common\services\interfaces\resources\ILocationService;
 use cmsgears\core\common\services\interfaces\mappers\IModelLocationService;
-
-use cmsgears\core\common\services\base\ModelMapperService;
 
 /**
  * ModelLocationService provide service methods of address mapper.
  *
  * @since 1.0.0
  */
-class ModelLocationService extends ModelMapperService implements IModelLocationService {
+class ModelLocationService extends \cmsgears\core\common\services\base\ModelMapperService implements IModelLocationService {
 
 	// Variables ---------------------------------------------------
 
@@ -48,9 +44,18 @@ class ModelLocationService extends ModelMapperService implements IModelLocationS
 
 	// Private ----------------
 
+	private $locationService;
+
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	public function __construct( ILocationService $locationService, $config = [] ) {
+
+		$this->locationService = $locationService;
+
+		parent::__construct( $config );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -71,7 +76,7 @@ class ModelLocationService extends ModelMapperService implements IModelLocationS
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		$addressTable = Yii::$app->factory->get( 'addressService' )->getModelTable();
+		$locationTable = $this->locationService->getModelTable();
 
 		// Sorting ----------
 
@@ -84,32 +89,32 @@ class ModelLocationService extends ModelMapperService implements IModelLocationS
 					'label' => 'Id'
 				],
 				'title' => [
-					'asc' => [ "$addressTable.title" => SORT_ASC ],
-					'desc' => [ "$addressTable.title" => SORT_DESC ],
+					'asc' => [ "$locationTable.title" => SORT_ASC ],
+					'desc' => [ "$locationTable.title" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Title',
 				],
 				'country' => [
-					'asc' => [ "$addressTable.countryName" => SORT_ASC ],
-					'desc' => [ "$addressTable.countryName" => SORT_DESC ],
+					'asc' => [ "$locationTable.countryName" => SORT_ASC ],
+					'desc' => [ "$locationTable.countryName" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Country',
 				],
 				'province' => [
-					'asc' => [ "$addressTable.provinceName" => SORT_ASC ],
-					'desc' => [ "$addressTable.provinceName" => SORT_DESC ],
+					'asc' => [ "$locationTable.provinceName" => SORT_ASC ],
+					'desc' => [ "$locationTable.provinceName" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => Yii::$app->core->provinceLabel,
 				],
 				'region' => [
-					'asc' => [ "$addressTable.regionName" => SORT_ASC ],
-					'desc' => [ "$addressTable.regionName" => SORT_DESC ],
+					'asc' => [ "$locationTable.regionName" => SORT_ASC ],
+					'desc' => [ "$locationTable.regionName" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => Yii::$app->core->regionLabel,
 				],
 				'city' => [
-					'asc' => [ "$addressTable.cityName" => SORT_ASC ],
-					'desc' => [ "$addressTable.cityName" => SORT_DESC ],
+					'asc' => [ "$locationTable.cityName" => SORT_ASC ],
+					'desc' => [ "$locationTable.cityName" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'City',
 				],
@@ -191,7 +196,7 @@ class ModelLocationService extends ModelMapperService implements IModelLocationS
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'title' => "$addressTable.title",
+			'title' => "$locationTable.title",
 			'order' => "$modelTable.order",
 			'active' => "$modelTable.active"
 		];

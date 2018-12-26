@@ -16,16 +16,15 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\models\resources\Address;
 
+use cmsgears\core\common\services\interfaces\resources\IAddressService;
 use cmsgears\core\common\services\interfaces\mappers\IModelAddressService;
-
-use cmsgears\core\common\services\base\ModelMapperService;
 
 /**
  * ModelAddressService provide service methods of address mapper.
  *
  * @since 1.0.0
  */
-class ModelAddressService extends ModelMapperService implements IModelAddressService {
+class ModelAddressService extends \cmsgears\core\common\services\base\ModelMapperService implements IModelAddressService {
 
 	// Variables ---------------------------------------------------
 
@@ -47,9 +46,18 @@ class ModelAddressService extends ModelMapperService implements IModelAddressSer
 
 	// Private ----------------
 
+	private $addressService;
+
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	public function __construct( IAddressService $addressService, $config = [] ) {
+
+		$this->addressService = $addressService;
+
+		parent::__construct( $config );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -70,7 +78,7 @@ class ModelAddressService extends ModelMapperService implements IModelAddressSer
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		$addressTable = Yii::$app->factory->get( 'addressService' )->getModelTable();
+		$addressTable = $this->addressService->getModelTable();
 
 		// Sorting ----------
 
@@ -239,6 +247,30 @@ class ModelAddressService extends ModelMapperService implements IModelAddressSer
 		$model->type = Address::TYPE_BILLING;
 
 		return $this->create( $model, $config );
+	}
+
+	public function createWithParent( $parent, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+
+		$parentId	= $config[ 'parentId' ];
+		$parentType	= $config[ 'parentType' ];
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_DEFAULT;
+		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
+
+		$address = $this->addressService->create( $parent );
+
+		$model = new $modelClass;
+
+		$model->modelId		= $address->id;
+		$model->parentId	= $parentId;
+		$model->parentType	= $parentType;
+
+		$model->type	= $type;
+		$model->order	= $order;
+		$model->active	= true;
+
+		return parent::create( $model );
 	}
 
 	// Update -------------

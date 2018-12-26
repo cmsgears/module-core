@@ -18,8 +18,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\entities\ILocaleService;
 
-use cmsgears\core\common\services\base\EntityService;
-
 use cmsgears\core\common\services\traits\base\NameTrait;
 
 /**
@@ -27,7 +25,7 @@ use cmsgears\core\common\services\traits\base\NameTrait;
  *
  * @since 1.0.0
  */
-class LocaleService extends EntityService implements ILocaleService {
+class LocaleService extends \cmsgears\core\common\services\base\EntityService implements ILocaleService {
 
 	// Variables ---------------------------------------------------
 
@@ -37,9 +35,9 @@ class LocaleService extends EntityService implements ILocaleService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Locale';
+	public static $modelClass = '\cmsgears\core\common\models\entities\Locale';
 
-	public static $parentType	= CoreGlobal::TYPE_LOCALE;
+	public static $parentType = CoreGlobal::TYPE_LOCALE;
 
 	// Protected --------------
 

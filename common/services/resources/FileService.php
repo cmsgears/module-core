@@ -20,8 +20,6 @@ use cmsgears\core\common\models\resources\File;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
-use cmsgears\core\common\services\base\ResourceService;
-
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\VisibilityTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
@@ -31,7 +29,7 @@ use cmsgears\core\common\services\traits\resources\DataTrait;
  *
  * @since 1.0.0
  */
-class FileService extends ResourceService implements IFileService {
+class FileService extends \cmsgears\core\common\services\base\ResourceService implements IFileService {
 
 	// Variables ---------------------------------------------------
 
@@ -41,9 +39,9 @@ class FileService extends ResourceService implements IFileService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\File';
+	public static $modelClass = '\cmsgears\core\common\models\resources\File';
 
-	public static $parentType	= CoreGlobal::TYPE_FILE;
+	public static $parentType = CoreGlobal::TYPE_FILE;
 
 	// Protected --------------
 

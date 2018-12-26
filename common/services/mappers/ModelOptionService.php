@@ -78,7 +78,7 @@ class ModelOptionService extends ModelMapperService implements IModelOptionServi
 	public function getModelCounts( $parentType, $categorySlug, $active = false ) {
 
 		$categoryTable	= Yii::$app->get( 'categoryService' )->getModelTable();
-		$optionTable	= Yii::$app->get( 'optionService' )->getModelTable();
+		$optionTable	= $this->optionService->getModelTable();
 		$mOptionTable	= Yii::$app->get( 'modelOptionService' )->getModelTable();
 
 		$query = new Query();
@@ -100,7 +100,7 @@ class ModelOptionService extends ModelMapperService implements IModelOptionServi
 		$returnArr	= [];
 		$counter	= 0;
 
-		foreach ( $counts as $count ) {
+		foreach( $counts as $count ) {
 
 			$returnArr[ $count[ 'name' ] ] = $count[ 'total' ];
 
@@ -132,7 +132,8 @@ class ModelOptionService extends ModelMapperService implements IModelOptionServi
 				->where( "$mOptionTable.parentId=:pid AND $mOptionTable.parentType=:ptype AND $mOptionTable.active=:active AND $categoryTable.slug=:cslug", [ ':pid' => $parentId, ':ptype' => $parentType, ':active' => $active, ':cslug' => $categorySlug ] );
 
 		$values = $query->all();
-		$data	= [];
+
+		$data = [];
 
 		foreach( $values as $value ) {
 
@@ -152,7 +153,9 @@ class ModelOptionService extends ModelMapperService implements IModelOptionServi
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'order', 'active', 'value' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'order', 'active', 'value'
+		];
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -182,7 +185,10 @@ class ModelOptionService extends ModelMapperService implements IModelOptionServi
 		// New Mapping
 		else {
 
-			$this->createByParams( [ 'modelId' => $modelId, 'parentId' => $parentId, 'parentType' => $parentType, 'type' => $mappingType, 'active' => true ] );
+			$this->createByParams([
+				'modelId' => $modelId, 'parentId' => $parentId, 'parentType' => $parentType,
+				'type' => $mappingType, 'active' => true
+			]);
 		}
 	}
 
@@ -215,7 +221,10 @@ class ModelOptionService extends ModelMapperService implements IModelOptionServi
 			// Save only required data
 			else if( in_array( $id, $activeData ) ) {
 
-				$this->createByParams( [ 'modelId' => $id, 'parentId' => $parentId, 'parentType' => $parentType, 'active' => true ] );
+				$this->createByParams([
+					'modelId' => $id, 'parentId' => $parentId, 'parentType' => $parentType,
+					'active' => true
+				]);
 			}
 		}
 

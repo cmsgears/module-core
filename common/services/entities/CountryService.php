@@ -18,8 +18,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\entities\ICountryService;
 
-use cmsgears\core\common\services\base\EntityService;
-
 use cmsgears\core\common\services\traits\base\NameTrait;
 
 /**
@@ -27,7 +25,7 @@ use cmsgears\core\common\services\traits\base\NameTrait;
  *
  * @since 1.0.0
  */
-class CountryService extends EntityService implements ICountryService {
+class CountryService extends \cmsgears\core\common\services\base\EntityService implements ICountryService {
 
 	// Variables ---------------------------------------------------
 
@@ -37,9 +35,9 @@ class CountryService extends EntityService implements ICountryService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Country';
+	public static $modelClass = '\cmsgears\core\common\models\entities\Country';
 
-	public static $parentType	= CoreGlobal::TYPE_COUNTRY;
+	public static $parentType = CoreGlobal::TYPE_COUNTRY;
 
 	// Protected --------------
 

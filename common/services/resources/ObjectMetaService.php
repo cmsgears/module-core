@@ -12,14 +12,12 @@ namespace cmsgears\core\common\services\resources;
 // CMG Imports
 use cmsgears\core\common\services\interfaces\resources\IObjectMetaService;
 
-use cmsgears\core\common\services\base\MetaService;
-
 /**
  * ObjectMetaService provide service methods of object meta.
  *
  * @since 1.0.0
  */
-class ObjectMetaService extends MetaService implements IObjectMetaService {
+class ObjectMetaService extends \cmsgears\core\common\services\base\MetaService implements IObjectMetaService {
 
 	// Variables ---------------------------------------------------
 

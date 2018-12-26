@@ -21,8 +21,6 @@ use cmsgears\core\common\services\interfaces\entities\ISiteService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\core\common\services\interfaces\resources\ISiteMetaService;
 
-use cmsgears\core\common\services\base\EntityService;
-
 use cmsgears\core\common\services\traits\base\NameTrait;
 use cmsgears\core\common\services\traits\base\SlugTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
@@ -33,7 +31,7 @@ use cmsgears\core\common\services\traits\resources\MetaTrait;
  *
  * @since 1.0.0
  */
-class SiteService extends EntityService implements ISiteService {
+class SiteService extends \cmsgears\core\common\services\base\EntityService implements ISiteService {
 
 	// Variables ---------------------------------------------------
 
@@ -43,9 +41,9 @@ class SiteService extends EntityService implements ISiteService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Site';
+	public static $modelClass = '\cmsgears\core\common\models\entities\Site';
 
-	public static $parentType	= CoreGlobal::TYPE_SITE;
+	public static $parentType = CoreGlobal::TYPE_SITE;
 
 	// Protected --------------
 

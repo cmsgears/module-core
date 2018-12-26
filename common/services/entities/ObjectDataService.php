@@ -20,8 +20,6 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\services\interfaces\entities\IObjectService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
-use cmsgears\core\common\services\base\EntityService;
-
 use cmsgears\core\common\services\traits\base\ApprovalTrait;
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
@@ -33,7 +31,7 @@ use cmsgears\core\common\services\traits\resources\DataTrait;
  *
  * @since 1.0.0
  */
-class ObjectDataService extends EntityService implements IObjectService {
+class ObjectDataService extends \cmsgears\core\common\services\base\EntityService implements IObjectService {
 
 	// Variables ---------------------------------------------------
 
@@ -43,11 +41,11 @@ class ObjectDataService extends EntityService implements IObjectService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\ObjectData';
+	public static $modelClass = '\cmsgears\core\common\models\entities\ObjectData';
 
-	public static $typed		= true;
+	public static $typed = true;
 
-	public static $parentType	= CoreGlobal::TYPE_OBJECT;
+	public static $parentType = CoreGlobal::TYPE_OBJECT;
 
 	// Protected --------------
 
@@ -73,7 +71,7 @@ class ObjectDataService extends EntityService implements IObjectService {
 
 	public function __construct( IFileService $fileService, $config = [] ) {
 
-		$this->fileService	= $fileService;
+		$this->fileService = $fileService;
 
 		parent::__construct( $config );
 	}
@@ -385,7 +383,7 @@ class ObjectDataService extends EntityService implements IObjectService {
 
 	public function update( $model, $config = [] ) {
 
-		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
 			'templateId', 'avatarId', 'bannerId', 'videoId',
@@ -415,6 +413,10 @@ class ObjectDataService extends EntityService implements IObjectService {
 
 		// Delete files
 		$this->fileService->deleteMultiple( [ $model->avatar, $model->banner, $model->video ] );
+		$this->fileService->deleteMultiple( $model->files );
+
+		// Delete File Mappings - Shared Files
+		$this->modelFileService->deleteMultiple( $model->modelFiles );
 
 		// Delete mapping
 		Yii::$app->factory->get( 'modelObjectService' )->deleteByModelId( $model->id );

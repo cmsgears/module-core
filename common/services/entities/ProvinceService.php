@@ -18,8 +18,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\entities\IProvinceService;
 
-use cmsgears\core\common\services\base\EntityService;
-
 use cmsgears\core\common\services\traits\base\NameTrait;
 
 /**
@@ -27,7 +25,7 @@ use cmsgears\core\common\services\traits\base\NameTrait;
  *
  * @since 1.0.0
  */
-class ProvinceService extends EntityService implements IProvinceService {
+class ProvinceService extends \cmsgears\core\common\services\base\EntityService implements IProvinceService {
 
 	// Variables ---------------------------------------------------
 
@@ -37,9 +35,9 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Province';
+	public static $modelClass = '\cmsgears\core\common\models\entities\Province';
 
-	public static $parentType	= CoreGlobal::TYPE_PROVINCE;
+	public static $parentType = CoreGlobal::TYPE_PROVINCE;
 
 	// Protected --------------
 

@@ -18,8 +18,6 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\entities\ITemplateService;
 
-use cmsgears\core\common\services\base\EntityService;
-
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
@@ -31,7 +29,7 @@ use cmsgears\core\common\services\traits\resources\DataTrait;
  *
  * @since 1.0.0
  */
-class TemplateService extends EntityService implements ITemplateService {
+class TemplateService extends \cmsgears\core\common\services\base\EntityService implements ITemplateService {
 
 	// Variables ---------------------------------------------------
 
@@ -41,11 +39,11 @@ class TemplateService extends EntityService implements ITemplateService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Template';
+	public static $modelClass = '\cmsgears\core\common\models\entities\Template';
 
-	public static $typed		= true;
+	public static $typed = true;
 
-	public static $parentType	= CoreGlobal::TYPE_TEMPLATE;
+	public static $parentType = CoreGlobal::TYPE_TEMPLATE;
 
 	// Protected --------------
 

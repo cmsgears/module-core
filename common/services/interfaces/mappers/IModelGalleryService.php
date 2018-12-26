@@ -33,7 +33,7 @@ interface IModelGalleryService extends IModelMapperService {
 
 	// Create -------------
 
-	public function createOrUpdate( $model, $config = [] );
+	public function createWithParent( $parent, $config = [] );
 
 	// Update -------------
 

@@ -23,8 +23,6 @@ use cmsgears\files\components\FileManager;
 
 use cmsgears\core\common\services\interfaces\resources\IModelCommentService;
 
-use cmsgears\core\common\services\base\ModelResourceService;
-
 use cmsgears\core\common\services\traits\resources\DataTrait;
 
 use cmsgears\core\common\utilities\DateUtil;
@@ -34,7 +32,7 @@ use cmsgears\core\common\utilities\DateUtil;
  *
  * @since 1.0.0
  */
-class ModelCommentService extends ModelResourceService implements IModelCommentService {
+class ModelCommentService extends \cmsgears\core\common\services\base\ModelResourceService implements IModelCommentService {
 
 	// Variables ---------------------------------------------------
 
@@ -44,9 +42,9 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelComment';
+	public static $modelClass = '\cmsgears\core\common\models\resources\ModelComment';
 
-	public static $parentType	= CoreGlobal::TYPE_COMMENT;
+	public static $parentType = CoreGlobal::TYPE_COMMENT;
 
 	// Protected --------------
 
@@ -441,8 +439,11 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content' ];
-		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content'
+		];
 
 		if( $admin ) {
 
@@ -511,7 +512,10 @@ class ModelCommentService extends ModelResourceService implements IModelCommentS
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete files
+		// Delete Files
+		$this->fileService->deleteMultiple( $model->files );
+
+		// Delete File Mappings - Shared Files
 		$this->modelFileService->deleteMultiple( $model->modelFiles );
 
 		// Delete model

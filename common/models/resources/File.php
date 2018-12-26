@@ -36,6 +36,8 @@ use cmsgears\core\common\models\traits\base\VisibilityTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\ModelMetaTrait;
 
+use cmsgears\files\components\FileManager;
+
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
 /**
@@ -81,6 +83,13 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 	// Constants --------------
 
 	// Public -----------------
+
+	public static $typeMap = [
+		FileManager::FILE_TYPE_IMAGE => 'Image',
+		FileManager::FILE_TYPE_AUDIO => 'Audio',
+		FileManager::FILE_TYPE_VIDEO => 'Video',
+		FileManager::FILE_TYPE_DOCUMENT => 'Document'
+	];
 
 	// Protected --------------
 
@@ -390,6 +399,60 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 		}
 	}
 
+	public function isImage() {
+
+		return $this->type == FileManager::FILE_TYPE_IMAGE;
+	}
+
+	public function isAudio() {
+
+		return $this->type == FileManager::FILE_TYPE_AUDIO;
+	}
+
+	public function isVideo() {
+
+		return $this->type == FileManager::FILE_TYPE_VIDEO;
+	}
+
+	public function isDocument() {
+
+		return $this->type == FileManager::FILE_TYPE_DOCUMENT;
+	}
+
+	public function getEmbeddableCode() {
+
+		$fileUrl	= $this->getFileUrl();
+		$title		= isset( $this->title ) ? $this->title : $this->name;
+
+		switch( $this->type ) {
+
+			case FileManager::FILE_TYPE_IMAGE: {
+
+				$alt = isset( $this->altText ) ? $this->altText : $this->name;
+
+				ob_start();
+?>
+<div class="wrap-editor-image">
+	<img class="fluid" src="<?= $fileUrl ?>" title="<?= $title ?>" alt="<?= $alt ?>" />
+<?php if( !empty( $this->caption ) ) { ?>
+	<p class="image-caption"><?= $this->caption ?></p>
+<?php } ?>
+<?php if( !empty( $this->description ) ) { ?>
+	<p class="image-desc"><?= $this->description ?></p>
+<?php } ?>
+</div>
+<?php
+				$code = ob_get_clean();
+
+				return $code;
+			}
+			default: {
+
+				return null;
+			}
+		}
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------
@@ -415,8 +478,9 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}

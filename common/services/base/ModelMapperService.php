@@ -263,6 +263,16 @@ abstract class ModelMapperService extends ActiveRecordService implements IModelM
 
 	// Create -------------
 
+	public function create( $model, $config = [] ) {
+
+		if( empty( $model->type ) ) {
+
+			$model->type = CoreGlobal::TYPE_DEFAULT;
+		}
+
+		return parent::create( $model, $config );
+	}
+
 	// Update -------------
 
 	public function update( $model, $config = [] ) {

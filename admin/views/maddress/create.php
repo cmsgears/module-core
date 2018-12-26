@@ -7,8 +7,8 @@ $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Add Address | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 ?>
-<div class="box-crud-wrap row">
-	<div class="box-crud-wrap-main colf colf3x2">
+<div class="box-crud-wrap">
+	<div class="box-crud-wrap-main">
 		<?php $form = ActiveForm::begin( [ 'id' => 'frm-address', 'options' => [ 'class' => 'form' ] ] ); ?>
 		<div class="box box-crud">
 			<div class="box-header">
@@ -19,69 +19,69 @@ $returnUrl		= $this->context->returnUrl;
 					<div class="colf colf12x8">
 						<div class="row max-cols-100">
 							<div class="colf colf12x5">
-								<?= $form->field( $model, 'title' ) ?>
+								<?= $form->field( $address, 'title' ) ?>
 							</div>
 							<div class="colf colf12x2"> </div>
 							<div class="colf colf12x5">
-								<?= $form->field( $modelAddress, 'type' )->dropDownList( $typeMap, [ 'class' => 'cmt-select' ] ) ?>
+								<?= $form->field( $model, 'type' )->dropDownList( $typeMap, [ 'class' => 'cmt-select' ] ) ?>
 							</div>
 						</div>
 						<div class="row max-cols-100">
 							<div class="colf colf12x5">
-								<?= $form->field( $model, 'line1' )->textInput()->label( 'Address 1' ) ?>
+								<?= $form->field( $address, 'line1' )->textInput()->label( 'Address 1' ) ?>
 							</div>
 							<div class="colf colf12x2"> </div>
 							<div class="colf colf12x5">
-								<?= $form->field( $model, 'line2' )->textInput()->label( 'Address 2' ) ?>
+								<?= $form->field( $address, 'line2' )->textInput()->label( 'Address 2' ) ?>
 							</div>
 						</div>
 						<div class="row max-cols-100">
 							<div class="colf colf12x5 wrap-country" cmt-app="location" cmt-controller="province" cmt-action="optionsList" action="province/options-list" cmt-keep cmt-custom>
-								<?= $form->field( $model, 'countryId' )->dropDownList( $countriesMap, [ 'class' => 'cmt-select cmt-change address-country' ] ) ?>
+								<?= $form->field( $address, 'countryId' )->dropDownList( $countriesMap, [ 'class' => 'cmt-select cmt-change address-country' ] ) ?>
 							</div>
 							<div class="colf colf12x2"> </div>
 							<div class="colf colf12x5 wrap-province" cmt-app="location" cmt-controller="region" cmt-action="optionsList" action="region/options-list" cmt-keep cmt-custom>
-								<?= $form->field( $model, 'provinceId' )->dropDownList( $provincesMap, [ 'class' => 'cmt-select cmt-change address-province' ] ) ?>
+								<?= $form->field( $address, 'provinceId' )->dropDownList( $provincesMap, [ 'class' => 'cmt-select cmt-change address-province' ] ) ?>
 							</div>
 						</div>
 						<div class="row max-cols-100">
 							<div class="colf colf12x5 wrap-region">
-								<?= $form->field( $model, 'regionId' )->dropDownList( $regionsMap, [ 'class' => 'cmt-select address-region' ] ) ?>
+								<?= $form->field( $address, 'regionId' )->dropDownList( $regionsMap, [ 'class' => 'cmt-select address-region' ] ) ?>
 							</div>
 							<div class="colf colf12x2"> </div>
 							<div class="colf colf12x5 auto-fill auto-fill-basic">
 								<div class="auto-fill-source" cmt-app="location" cmt-controller="city" cmt-action="autoSearch" action="city/auto-search" cmt-keep cmt-custom>
-									<?= Yii::$app->formDesigner->getAutoFill( $form, $model, 'cityName', [ 'class' => 'cmt-key-up auto-fill-text', 'placeholder' => 'Search City', 'autocomplete' => 'off' ], 'cmti cmti-search' ) ?>
+									<?= Yii::$app->formDesigner->getAutoFill( $form, $address, 'cityName', [ 'class' => 'cmt-key-up auto-fill-text', 'placeholder' => 'Search City', 'autocomplete' => 'off' ], 'cmti cmti-search' ) ?>
 								</div>
 								<div class="auto-fill-target">
-									<?= $form->field( $model, 'cityId' )->hiddenInput( [ 'class' => 'target' ] )->label( false ) ?>
+									<?= $form->field( $address, 'cityId' )->hiddenInput( [ 'class' => 'target' ] )->label( false ) ?>
 								</div>
 							</div>
 						</div>
 						<div class="row max-cols-100">
 							<div class="colf colf12x5">
-								<?= $form->field( $model, 'zip' )->textInput( [ 'class' => 'address-zip' ] ) ?>
+								<?= $form->field( $address, 'zip' )->textInput( [ 'class' => 'address-zip' ] ) ?>
 							</div>
 							<div class="colf colf12x2"> </div>
 							<div class="colf colf12x5">
-								<?= $form->field( $model, 'phone' ) ?>
+								<?= $form->field( $address, 'phone' ) ?>
 							</div>
 						</div>
 						<div class="row max-cols-100">
 							<div class="colf colf12x5">
-								<?= $form->field( $model, 'fax' ) ?>
+								<?= $form->field( $address, 'fax' ) ?>
 							</div>
 							<div class="colf colf12x2"> </div>
 							<div class="colf colf12x5">
-								<?= $form->field( $model, 'landmark' ) ?>
+								<?= $form->field( $address, 'landmark' ) ?>
 							</div>
 						</div>
 					</div>
 					<div class="colf colf12"></div>
 					<div class="colf colf12x3 clearfix">
-						<?= $form->field( $model, 'longitude' )->textInput( [ 'class' => 'longitude' ] ) ?>
-						<?= $form->field( $model, 'latitude' )->textInput( [ 'class' => 'latitude' ] ) ?>
-						<?= $form->field( $model, 'zoomLevel' )->textInput( [ 'class' => 'zoom' ] ) ?>
+						<?= $form->field( $address, 'longitude' )->textInput( [ 'class' => 'longitude' ] ) ?>
+						<?= $form->field( $address, 'latitude' )->textInput( [ 'class' => 'latitude' ] ) ?>
+						<?= $form->field( $address, 'zoomLevel' )->textInput( [ 'class' => 'zoom' ] ) ?>
 					</div>
 				</div>
 			</div>
@@ -93,8 +93,5 @@ $returnUrl		= $this->context->returnUrl;
 		</div>
 		<div class="filler-height filler-height-medium"></div>
 		<?php ActiveForm::end(); ?>
-	</div>
-	<div class="box-crud-wrap-sidebar colf colf3">
-
 	</div>
 </div>

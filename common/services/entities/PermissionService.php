@@ -20,8 +20,6 @@ use cmsgears\core\common\models\mappers\RolePermission;
 
 use cmsgears\core\common\services\interfaces\entities\IPermissionService;
 
-use cmsgears\core\common\services\base\EntityService;
-
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
@@ -31,7 +29,7 @@ use cmsgears\core\common\services\traits\resources\DataTrait;
  *
  * @since 1.0.0
  */
-class PermissionService extends EntityService implements IPermissionService {
+class PermissionService extends \cmsgears\core\common\services\base\EntityService implements IPermissionService {
 
 	// Variables ---------------------------------------------------
 
@@ -41,11 +39,11 @@ class PermissionService extends EntityService implements IPermissionService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Permission';
+	public static $modelClass = '\cmsgears\core\common\models\entities\Permission';
 
-	public static $typed		= true;
+	public static $typed = true;
 
-	public static $parentType	= CoreGlobal::TYPE_PERMISSION;
+	public static $parentType = CoreGlobal::TYPE_PERMISSION;
 
 	// Protected --------------
 
@@ -256,8 +254,9 @@ class PermissionService extends EntityService implements IPermissionService {
 
 				$toSave	= new RolePermission();
 
-				$toSave->roleId			= $id;
-				$toSave->permissionId	= $permId;
+				$toSave->roleId = $id;
+
+				$toSave->permissionId = $permId;
 
 				$toSave->save();
 			}

@@ -39,6 +39,8 @@ interface IModelAddressService extends IModelMapperService {
 
 	public function createBilling( $model, $config = [] );
 
+	public function createWithParent( $parent, $config = [] );
+
 	// Update -------------
 
 	// Delete -------------

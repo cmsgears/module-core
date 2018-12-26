@@ -32,11 +32,13 @@ abstract class AddressController extends Controller {
 
 	// Public -----------------
 
+	public $title;
+
 	// Protected --------------
 
 	protected $parentService;
 
-	protected $modelAddressService;
+	protected $addressService;
 
 	protected $countryService;
 	protected $provinceService;
@@ -51,14 +53,14 @@ abstract class AddressController extends Controller {
 		parent::init();
 
 		// Views
-		$this->setViewPath( '@cmsgears/module-core/admin/views/address' );
+		$this->setViewPath( '@cmsgears/module-core/admin/views/maddress' );
 
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_CORE;
 
-		$this->modelService = Yii::$app->factory->get( 'addressService' );
+		$this->modelService = Yii::$app->factory->get( 'modelAddressService' );
 
-		$this->modelAddressService = Yii::$app->factory->get( 'modelAddressService' );
+		$this->addressService = Yii::$app->factory->get( 'addressService' );
 
 		$this->countryService	= Yii::$app->factory->get( 'countryService' );
 		$this->provinceService 	= Yii::$app->factory->get( 'provinceService' );
@@ -121,7 +123,7 @@ abstract class AddressController extends Controller {
 			return $this->render( 'all', [
 				'dataProvider' => $dataProvider,
 				'parent' => $parent,
-				'typeMap' => $modelClass::$typeMap,
+				'typeMap' => $modelClass::$typeMap
 			]);
 		}
 
@@ -135,31 +137,31 @@ abstract class AddressController extends Controller {
 
 		if( isset( $parent ) ) {
 
-			$modelClass = $this->modelService->getModelClass();
-			$parentType	= $this->parentService->getParentType();
+			$addressClass	= $this->addressService->getModelClass();
+			$parentType		= $this->parentService->getParentType();
 
-			$model			= new $modelClass;
-			$modelAddress	= $this->modelAddressService->getModelObject();
+			$address	= new $addressClass;
+			$model		= $this->modelService->getModelObject();
 
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $modelAddress->load( Yii::$app->request->post(), $modelAddress->getClassName() ) &&
-				$model->validate() ) {
+			if( $address->load( Yii::$app->request->post(), $address->getClassName() ) && $model->load( Yii::$app->request->post(), $model->getClassName() ) &&
+				$address->validate() ) {
 
-				$this->model = $this->modelAddressService->create( $model, [
-					'parentId' => $parent->id, 'parentType' => $parentType, 'type' => $modelAddress->type ] );
+				$this->model = $this->modelService->createByParent( $address, [
+					'parentId' => $parent->id, 'parentType' => $parentType, 'type' => $model->type ] );
 
-				return $this->redirect( "all?pid=$parent->id" );
+				return $this->redirect( $this->returnUrl );
 			}
 
 			$countriesMap	= $this->countryService->getIdNameMap( [ 'default' => true ] );
-			$countryId		= !empty( $model->countryId ) ? $model->countryId : key( $countriesMap );
+			$countryId		= !empty( $address->countryId ) ? $address->countryId : key( $countriesMap );
 			$provincesMap	= $this->provinceService->getMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
-			$provinceId		= !empty( $model->provinceId ) ? $model->provinceId : key( $provincesMap );
+			$provinceId		= !empty( $address->provinceId ) ? $address->provinceId : key( $provincesMap );
 			$regionsMap		= $this->regionService->getMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
 
 			return $this->render( 'create', [
+				'address' => $address,
 				'model' => $model,
 				'parent' => $parent,
-				'modelAddress' => $modelAddress,
 				'typeMap' => $modelClass::$typeMap,
 				'countriesMap' => $countriesMap,
 				'provincesMap' => $provincesMap,
@@ -178,28 +180,30 @@ abstract class AddressController extends Controller {
 
 		if( isset( $model ) && isset( $parent ) ) {
 
-			$modelClass		= $this->modelService->getModelClass();
+			$modelClass = $this->modelService->getModelClass();
 
-			$modelAddress	= $this->modelAddressService->getByModelId( $model->id );
+			$address = $this->addressService->getById( $model->modelId );
 
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $modelAddress->load( Yii::$app->request->post(), $modelAddress->getClassName() ) &&
-				$model->validate() && $modelAddress->validate() ) {
+			if( $address->load( Yii::$app->request->post(), $address->getClassName() ) && $model->load( Yii::$app->request->post(), $model->getClassName() ) &&
+				$address->validate() && $model->validate() ) {
 
-				$this->model = $this->modelAddressService->update( $modelAddress, [ 'address' => $model ] );
+				$this->addressService->update( $address, [ 'admin' => true ] );
 
-				return $this->redirect( "all?pid=$parent->id" );
+				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
+
+				return $this->redirect( $this->returnUrl );
 			}
 
 			$countriesMap	= $this->countryService->getIdNameMap( [ 'default' => true ] );
-			$countryId		= !empty( $model->countryId ) ? $model->countryId : key( $countriesMap );
+			$countryId		= !empty( $address->countryId ) ? $address->countryId : key( $countriesMap );
 			$provincesMap	= $this->provinceService->getMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
-			$provinceId		= !empty( $model->provinceId ) ? $model->provinceId : key( $provincesMap );
+			$provinceId		= !empty( $address->provinceId ) ? $address->provinceId : key( $provincesMap );
 			$regionsMap		= $this->regionService->getMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
 
 			return $this->render( 'update', [
+				'address' => $address,
 				'model' => $model,
 				'parent' => $parent,
-				'modelAddress' => $modelAddress,
 				'typeMap' => $modelClass::$typeMap,
 				'countriesMap' => $countriesMap,
 				'provincesMap' => $provincesMap,
@@ -218,29 +222,30 @@ abstract class AddressController extends Controller {
 
 		if( isset( $model ) && isset( $parent ) ) {
 
-			$modelClass		= $this->modelService->getModelClass();
+			$modelClass = $this->modelService->getModelClass();
 
-			$modelAddress	= $this->modelAddressService->getByModelId( $model->id );
+			$address = $this->addressService->getById( $model->modelId );
 
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
+			if( $address->load( Yii::$app->request->post(), $address->getClassName() ) && $address->validate() ) {
 
 				$this->model = $model;
 
-				$this->modelService->delete( $model, [ 'admin' => true ] );
+				// Delete Address and Mappings
+				$this->addressService->delete( $address, [ 'admin' => true ] );
 
 				return $this->redirect( $this->returnUrl );
 			}
 
 			$countriesMap	= $this->countryService->getIdNameMap( [ 'default' => true ] );
-			$countryId		= !empty( $model->countryId ) ? $model->countryId : key( $countriesMap );
+			$countryId		= !empty( $address->countryId ) ? $address->countryId : key( $countriesMap );
 			$provincesMap	= $this->provinceService->getMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
-			$provinceId		= !empty( $model->provinceId ) ? $model->provinceId : key( $provincesMap );
+			$provinceId		= !empty( $address->provinceId ) ? $address->provinceId : key( $provincesMap );
 			$regionsMap		= $this->regionService->getMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
 
 			return $this->render( 'delete', [
+				'address' => $address,
 				'model' => $model,
 				'parent' => $parent,
-				'modelAddress' => $modelAddress,
 				'typeMap' => $modelClass::$typeMap,
 				'countriesMap' => $countriesMap,
 				'provincesMap' => $provincesMap,

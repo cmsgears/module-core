@@ -75,11 +75,17 @@ abstract class MetaService extends ResourceService implements IMetaService {
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
+				'icon' => [
+					'asc' => [ "$modelTable.icon" => SORT_ASC ],
+					'desc' => [ "$modelTable.icon" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Icon'
+				],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'name'
+					'label' => 'Name'
 				],
 				'label' => [
 					'asc' => [ "$modelTable.label" => SORT_ASC ],
@@ -315,6 +321,11 @@ abstract class MetaService extends ResourceService implements IMetaService {
 		if( empty( $model->label ) ) {
 
 			$model->label = $model->name;
+		}
+
+		if( !isset( $model->valueType ) ) {
+
+			$model->valueType = Meta::VALUE_TYPE_TEXT;
 		}
 
 		return parent::create( $model );

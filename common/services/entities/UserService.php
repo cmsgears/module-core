@@ -21,8 +21,6 @@ use cmsgears\core\common\models\entities\User;
 use cmsgears\core\common\services\interfaces\entities\IUserService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
-use cmsgears\core\common\services\base\EntityService;
-
 use cmsgears\core\common\services\traits\base\ApprovalTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 use cmsgears\core\common\services\traits\resources\ModelMetaTrait;
@@ -36,7 +34,7 @@ use cmsgears\core\common\utilities\DateUtil;
  *
  * @since 1.0.0
  */
-class UserService extends EntityService implements IUserService {
+class UserService extends \cmsgears\core\common\services\base\EntityService implements IUserService {
 
 	// Variables ---------------------------------------------------
 
@@ -743,6 +741,14 @@ class UserService extends EntityService implements IUserService {
 
 	// Delete -------------
 
+	/**
+	 * The project must extend this class to delete project specific resources associated
+	 * with the user.
+	 *
+	 * @param \cmsgears\core\common\models\entities\User $model
+	 * @param array $config
+	 * @return boolean
+	 */
 	public function delete( $model, $config = [] ) {
 
 		// Delete Files

@@ -17,14 +17,12 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\resources\IAddressService;
 
-use cmsgears\core\common\services\base\ResourceService;
-
 /**
  * AddressService provide service methods of address model.
  *
  * @since 1.0.0
  */
-class AddressService extends ResourceService implements IAddressService {
+class AddressService extends \cmsgears\core\common\services\base\ResourceService implements IAddressService {
 
 	// Variables ---------------------------------------------------
 
@@ -34,9 +32,9 @@ class AddressService extends ResourceService implements IAddressService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\Address';
+	public static $modelClass = '\cmsgears\core\common\models\resources\Address';
 
-	public static $parentType	= CoreGlobal::TYPE_ADDRESS;
+	public static $parentType = CoreGlobal::TYPE_ADDRESS;
 
 	// Protected --------------
 

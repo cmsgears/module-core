@@ -37,9 +37,9 @@ class RegionService extends EntityService implements IRegionService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Region';
+	public static $modelClass = '\cmsgears\core\common\models\entities\Region';
 
-	public static $parentType	= CoreGlobal::TYPE_REGION;
+	public static $parentType = CoreGlobal::TYPE_REGION;
 
 	// Protected --------------
 

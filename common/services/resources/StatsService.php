@@ -12,14 +12,12 @@ namespace cmsgears\core\common\services\resources;
 // CMG Imports
 use cmsgears\core\common\services\interfaces\resources\IStatsService;
 
-use cmsgears\core\common\services\base\ResourceService;
-
 /**
  * StatsService provide service methods of stats model.
  *
  * @since 1.0.0
  */
-class StatsService extends ResourceService implements IStatsService {
+class StatsService extends \cmsgears\core\common\services\base\ResourceService implements IStatsService {
 
 	// Variables ---------------------------------------------------
 

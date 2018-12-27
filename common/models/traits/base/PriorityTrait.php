@@ -104,7 +104,7 @@ trait PriorityTrait {
 			return $this->priority == IPriority::PRIORITY_LOW;
 		}
 
-		return $this->priority >= IPriority::PRIORITY_LOW;
+		return $this->priority >= IPriority::PRIORITY_LOW; // At least low
 	}
 
 	/**
@@ -117,7 +117,7 @@ trait PriorityTrait {
 			return $this->priority == IPriority::PRIORITY_MEDIUM;
 		}
 
-		return $this->priority >= IPriority::PRIORITY_MEDIUM;
+		return $this->priority >= IPriority::PRIORITY_MEDIUM; // At least medium
 	}
 
 	/**
@@ -130,7 +130,7 @@ trait PriorityTrait {
 			return $this->priority == IPriority::PRIORITY_HIGH;
 		}
 
-		return $this->priority >= IPriority::PRIORITY_HIGH;
+		return $this->priority >= IPriority::PRIORITY_HIGH; // At least high
 	}
 
 	// Static Methods ----------------------------------------------

@@ -83,27 +83,27 @@ trait SeverityTrait {
 	/**
 	 * @inheritdoc
 	 */
-	public function isSeverityLow(	$strict = true ) {
+	public function isSeverityLow( $strict = true ) {
 
 		if( $strict ) {
 
 			return $this->severity == ISeverity::SEVERITY_LOW;
 		}
 
-		return $this->severity >= ISeverity::SEVERITY_LOW;
+		return $this->severity >= ISeverity::SEVERITY_LOW; // At least low
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function isSeverityMedium(  $strict = true ) {
+	public function isSeverityMedium( $strict = true ) {
 
 		if( $strict ) {
 
 			return $this->severity == ISeverity::SEVERITY_MEDIUM;
 		}
 
-		return $this->severity >= ISeverity::SEVERITY_MEDIUM;
+		return $this->severity >= ISeverity::SEVERITY_MEDIUM; // At least medium
 	}
 
 	/**
@@ -116,7 +116,7 @@ trait SeverityTrait {
 			return $this->severity == ISeverity::SEVERITY_HIGH;
 		}
 
-		return $this->severity >= ISeverity::SEVERITY_HIGH;
+		return $this->severity >= ISeverity::SEVERITY_HIGH; // At least high
 	}
 
 	// Static Methods ----------------------------------------------

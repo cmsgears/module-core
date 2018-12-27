@@ -14,8 +14,6 @@ use Yii;
 use yii\data\Sort;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 use cmsgears\core\common\services\interfaces\mappers\IModelFileService;
 
@@ -324,10 +322,23 @@ class ModelFileService extends ModelMapperService implements IModelFileService {
 
 		$parentId	= $config[ 'parentId' ];
 		$parentType	= $config[ 'parentType' ];
-		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_DEFAULT;
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : $parent->type;
 		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
-		$file = $this->fileService->saveFile( $parent );
+		$file = null;
+
+		switch( $parent->type ) {
+
+			case 'image': {
+
+				$file = $this->fileService->saveImage( $parent );
+			}
+			// TODO: Add case to save cross-browser compatible videos
+			default: {
+
+				$file = $this->fileService->saveFile( $parent );
+			}
+		}
 
 		$model = new $modelClass;
 

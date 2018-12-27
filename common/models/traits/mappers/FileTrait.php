@@ -74,9 +74,10 @@ trait FileTrait {
 
 		$modelFileTable = ModelFile::tableName();
 
-		return $this->hasOne( ModelFile::class, [ 'parentId' => 'id' ] )
+		return $this->hasMany( ModelFile::class, [ 'parentId' => 'id' ] )
 			->where( "$modelFileTable.parentType=:ptype AND $modelFileTable.type=:type AND $modelFileTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
-			->orderBy( "$modelFileTable.id DESC" );
+			->orderBy( "$modelFileTable.id DESC" )
+			->all();
 	}
 
 	/**

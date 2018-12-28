@@ -26,7 +26,7 @@ class CoreGlobal {
 
 	// System Pages ---------------------------------------------------
 
-	const PAGE_HOME				= 'home';
+	const PAGE_HOME = 'home';
 
 	const PAGE_ACCOUNT_ACTIVATE		= 'activate-account';
 	const PAGE_PASSWORD_FORGOT		= 'forgot-password';
@@ -34,11 +34,11 @@ class CoreGlobal {
 	const PAGE_PASSWORD_RESET_OTP	= 'reset-password-otp';
 	const PAGE_LOGIN				= 'login';
 
-	const PAGE_SITEMEMBER		= 'site-member';
+	const PAGE_SITEMEMBER	= 'site-member';
 
-	const FLASH_GENERIC			= 'message';
-	const MODEL_GENERIC			= 'model';
-	const MODEL_EMAIL			= 'email';
+	const FLASH_GENERIC		= 'message';
+	const MODEL_GENERIC		= 'model';
+	const MODEL_EMAIL		= 'email';
 
 	// Default Settings ------------------------------------------------
 
@@ -207,6 +207,7 @@ class CoreGlobal {
 	const META_TYPE_USER	= 'user';
 	const META_TYPE_CONFIG	= 'config'; // Configuration(no default) stored in meta table
 	const META_TYPE_SETTING	= 'setting'; // Settings(preference with default/alternate) stored in meta table
+	const META_TYPE_SOCIAL	= 'social';
 
 	// Comment Attributes
 	const META_COMMENT_SPAM_REQUEST	   = 'spamRequest';

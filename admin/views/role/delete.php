@@ -1,9 +1,9 @@
 <?php
 // Yii Imports
-use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
+use cmsgears\core\common\widgets\ActiveForm;
 use cmsgears\icons\widgets\IconChooser;
 
 $coreProperties = $this->context->getCoreProperties();

@@ -1,9 +1,6 @@
 <?php
-// Yii Imports
-use yii\widgets\ActiveForm;
-use yii\helpers\Html;
-
-// CMG Import
+// CMG Imports
+use cmsgears\core\common\widgets\ActiveForm;
 use cmsgears\files\widgets\AvatarUploader;
 
 $coreProperties = $this->context->getCoreProperties();

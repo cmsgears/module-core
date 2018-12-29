@@ -566,8 +566,7 @@ class m160621_014408_core_data extends Migration {
 			[ $config->id, 'mail_avatar', 'Mail Avatar', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Default avatar for mail."}' ],
 			[ $config->id, 'default_banner', 'Default Banner', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Site banner for site elements."}' ],
 			[ $config->id, 'page_banner', 'Page Banner', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Page banner for site elements."}' ],
-			[ $config->id, 'mail_banner', 'Mail Banner', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Mail banner for site mails."}' ],
-			[ $config->id, 'fonts', 'Fonts', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Fonts available for content editors."}' ]
+			[ $config->id, 'mail_banner', 'Mail Banner', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Mail banner for site mails."}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_form_field', $columns, $fields );
@@ -651,8 +650,7 @@ class m160621_014408_core_data extends Migration {
 			[ $this->site->id, 'mail_avatar','User Avatar','frontend', 1, 'text', 'avatar-mail.png',NULL ],
 			[ $this->site->id, 'default_banner','Default Banner','frontend', 1, 'text', 'banner-site.jpg',NULL ],
 			[ $this->site->id, 'page_banner','Page Banner','frontend', 1, 'text', 'banner-page.jpg',NULL ],
-			[ $this->site->id, 'mail_banner','Page Banner','frontend', 1, 'text', 'banner-mail.jpg',NULL ],
-			[ $this->site->id, 'fonts','Fonts','frontend', 1, 'text', 'Arial,Arial Black,Courier New,Sans Serif',NULL ]
+			[ $this->site->id, 'mail_banner','Page Banner','frontend', 1, 'text', 'banner-mail.jpg',NULL ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_site_meta', $columns, $metas );

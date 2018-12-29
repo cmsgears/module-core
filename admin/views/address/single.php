@@ -1,7 +1,9 @@
 <?php
 // Yii Imports
-use yii\widgets\ActiveForm;
 use yii\helpers\Html;
+
+// CMG Imports
+use cmsgears\core\common\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Address | ' . $coreProperties->getSiteTitle();

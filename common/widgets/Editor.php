@@ -11,10 +11,9 @@ namespace cmsgears\core\common\widgets;
 
 // Yii Imports
 use Yii;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
-use cmsgears\core\frontend\config\SiteProperties;
-
 use cmsgears\core\common\base\Widget;
 
 /**
@@ -38,11 +37,11 @@ class Editor extends Widget {
 
 	// Public -----------------
 
-	public $selector;
+	public $loadAssets = true;
 
-	public $fonts	= 'default'; // 'default' OR 'site'
+	public $selector = '.content-editor';
 
-	public $config	= [];
+	public $config = [];
 
 	// Protected --------------
 
@@ -68,15 +67,17 @@ class Editor extends Widget {
 
 	public function renderWidget( $config = [] ) {
 
-		$editorClass	= Yii::$app->core->getEditorClass();
-		$editor			= Yii::createObject( $editorClass );
+		$editorConfig = Yii::$app->core->getEditor();
 
-		if( $this->fonts == 'site' ) {
+		$editorClass	= is_string( $editorConfig ) ? $editorConfig : $editorConfig[ 'class' ];
+		$editorConfig	= is_array( $editorConfig ) && isset( $editorConfig[ 'options' ] ) ? $editorConfig[ 'options' ] : [];
 
-			$this->config[ 'fonts' ] = SiteProperties::getInstance()->getFonts();
-		}
+		$widgetConfig = [ 'loadAssets' => $this->loadAssets, 'selector' => $this->selector, 'config' => $this->config ];
 
-		$editor->widget( [ 'selector' => $this->selector, 'config' => $this->config, 'loadAssets' => $this->loadAssets ] );
+		// Override common config by instance config
+		$widgetConfig = ArrayHelper::merge( $editorConfig, $widgetConfig );
+
+		$editorClass::widget( $widgetConfig );
 	}
 
 	// Editor --------------------------------

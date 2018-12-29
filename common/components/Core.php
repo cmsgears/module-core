@@ -170,10 +170,9 @@ class Core extends Config {
 	public $apisValidity		= 7;
 
 	/**
-	 * @var The WYSIWYG editor widget class. It will be used by Core Module to edit newsletter content.
-	 * The dependent modules can also use it to edit the html content.
+	 * @var The WYSIWYG editor config to edit the html content.
 	 */
-	public $editorClass			= null;
+	public $editor = null;
 
 	/**
 	 * @var It can be used by model classes to determine the fields for trim filter.
@@ -470,12 +469,13 @@ class Core extends Config {
 	}
 
 	/**
-	 * The method getEditorClass is used by the views to make a text area to edit html. It must be set
+	 * The method getEditor is used by the views to make a text area to edit html.
+	 * 
 	 * @return the class name
 	 */
-	public function getEditorClass() {
+	public function getEditor() {
 
-		return $this->editorClass;
+		return $this->editor;
 	}
 
 	public function isTrimFieldValue() {

@@ -1,9 +1,9 @@
 <?php
 // Yii Imports
-use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
+use cmsgears\core\common\widgets\ActiveForm;
 use cmsgears\core\common\widgets\Editor;
 use cmsgears\icons\widgets\IconChooser;
 
@@ -12,7 +12,7 @@ $this->title 	= 'Update Category | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 $parent			= isset( $model->parentId ) ? $model->parent->name : null;
 
-Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );
+Editor::widget();
 ?>
 <div class="box-crud-wrap row">
 	<div class="box-crud-wrap-main colf colf3x2">

@@ -1,9 +1,9 @@
 <?php
 // Yii Imports
-use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 
 // CMG Imports
+use cmsgears\core\common\widgets\ActiveForm;
 use cmsgears\icons\widgets\IconChooser;
 use cmsgears\core\common\widgets\Editor;
 
@@ -12,7 +12,7 @@ $title			= $this->context->title;
 $this->title 	= "Add $title | " . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
 
-Editor::widget( [ 'selector' => '.content-editor', 'loadAssets' => true, 'fonts' => 'site', 'config' => [ 'controls' => 'mini' ] ] );
+Editor::widget();
 ?>
 <div class="box-crud-wrap">
 	<div class="box-crud-wrap-main">

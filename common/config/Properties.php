@@ -50,7 +50,8 @@ abstract class Properties {
 
 		$siteService = Yii::$app->factory->get( 'siteService' );
 
-		$site = Yii::$app->core->site;
+		$site		= Yii::$app->core->site;
+		$siteSlug	= Yii::$app->core->siteSlug;
 
 		if( Yii::$app->core->siteConfigAll ) {
 

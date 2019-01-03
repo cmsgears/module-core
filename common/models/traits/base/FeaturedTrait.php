@@ -72,6 +72,98 @@ trait FeaturedTrait {
 
 	// Read - Query -----------
 
+	/**
+	 * Generate and return the query to filter pinned models based on multi-site configuration.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery
+	 */
+	public static function queryByPinned( $config = [] ) {
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		if( static::isMultiSite() && !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			return static::find()->where( 'pinned=:pinned AND siteId=:siteId', [ ':pinned' => true, ':siteId' => $siteId ] );
+		}
+		else {
+
+			return static::find()->where( 'pinned=:pinned', [ ':pinned' => true ] );
+		}
+	}
+
+	/**
+	 * Generate and return the query to filter pinned models based on multi-site configuration.
+	 *
+	 * It's useful for models having type column.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery
+	 */
+	public static function queryByTypePinned( $type, $config = [] ) {
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		if( static::isMultiSite() && !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			return static::find()->where( 'type=:type AND pinned=:pinned AND siteId=:siteId', [ ':type' => $type, ':pinned' => true, ':siteId' => $siteId ] );
+		}
+		else {
+
+			return static::find()->where( 'type=:type AND pinned=:pinned', [ ':type' => $type, ':pinned' => true ] );
+		}
+	}
+
+	/**
+	 * Generate and return the query to filter featured models based on multi-site configuration.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery
+	 */
+	public static function queryByFeatured( $config = [] ) {
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		if( static::isMultiSite() && !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			return static::find()->where( 'featured=:featured AND siteId=:siteId', [ ':featured' => true, ':siteId' => $siteId ] );
+		}
+		else {
+
+			return static::find()->where( 'featured=:featured', [ ':featured' => true ] );
+		}
+	}
+
+	/**
+	 * Generate and return the query to filter featured models based on multi-site configuration.
+	 *
+	 * It's useful for models having type column.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery
+	 */
+	public static function queryByTypeFeatured( $type, $config = [] ) {
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		if( static::isMultiSite() && !$ignoreSite ) {
+
+			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+
+			return static::find()->where( 'type=:type AND featured=:featured AND siteId=:siteId', [ ':type' => $type, ':featured' => true, ':siteId' => $siteId ] );
+		}
+		else {
+
+			return static::find()->where( 'type=:type AND featured=:featured', [ ':type' => $type, ':featured' => true ] );
+		}
+	}
+
 	// Read - Find ------------
 
 	// Create -----------------

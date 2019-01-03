@@ -22,9 +22,37 @@ interface IFeatured {
 
 	// Read - Models ---
 
+	/**
+	 * Return the pinned models based on multi-site configuration.
+	 *
+	 * @param array $config
+	 * @return array
+	 */
 	public function getPinned( $config = [] );
 
+	/**
+	 * Return the pinned models based on multi-site configuration. The model must have type attribute.
+	 *
+	 * @param array $config
+	 * @return array
+	 */
+	public function getPinnedByType( $config = [] );
+
+	/**
+	 * Return the pinned models based on multi-site configuration.
+	 *
+	 * @param array $config
+	 * @return array
+	 */
 	public function getFeatured( $config = [] );
+
+	/**
+	 * Return the pinned models based on multi-site configuration. The model must have type attribute.
+	 *
+	 * @param array $config
+	 * @return array
+	 */
+	public function getFeaturedByType( $config = [] );
 
 	// Read - Lists ----
 

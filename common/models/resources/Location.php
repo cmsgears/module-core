@@ -158,6 +158,14 @@ class Location extends Resource {
 	}
 
 	/**
+	 * @return Province
+	 */
+	public function getRegion() {
+
+		return $this->hasOne( Region::class, [ 'id' => 'regionId' ] );
+	}
+
+	/**
 	 * @return City
 	 */
 	public function getCity() {

@@ -102,7 +102,7 @@ trait FeaturedTrait {
 	 * @param array $config
 	 * @return \yii\db\ActiveQuery
 	 */
-	public static function queryByTypePinned( $type, $config = [] ) {
+	public static function queryByPinnedType( $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 
@@ -148,7 +148,7 @@ trait FeaturedTrait {
 	 * @param array $config
 	 * @return \yii\db\ActiveQuery
 	 */
-	public static function queryByTypeFeatured( $type, $config = [] ) {
+	public static function queryByFeaturedType( $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
 

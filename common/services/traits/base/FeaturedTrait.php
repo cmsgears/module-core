@@ -39,11 +39,11 @@ trait FeaturedTrait {
 		return $modelClass::queryByPinned( $config )->all();
 	}
 
-	public function getPinnedByType( $config = [] ) {
+	public function getPinnedByType( $type, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::queryByPinnedType( $config )->all();
+		return $modelClass::queryByPinnedType( $type, $config )->all();
 	}
 
 	public function getFeatured( $config = [] ) {
@@ -53,11 +53,11 @@ trait FeaturedTrait {
 		return $modelClass::queryByFeatured( $config )->all();
 	}
 
-	public function getFeaturedByType( $config = [] ) {
+	public function getFeaturedByType( $type, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::queryByFeaturedType( $config )->all();
+		return $modelClass::queryByFeaturedType( $type, $config )->all();
 	}
 
 	// Read - Lists ----

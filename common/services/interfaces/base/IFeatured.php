@@ -36,7 +36,7 @@ interface IFeatured {
 	 * @param array $config
 	 * @return array
 	 */
-	public function getPinnedByType( $config = [] );
+	public function getPinnedByType( $type, $config = [] );
 
 	/**
 	 * Return the pinned models based on multi-site configuration.
@@ -52,7 +52,7 @@ interface IFeatured {
 	 * @param array $config
 	 * @return array
 	 */
-	public function getFeaturedByType( $config = [] );
+	public function getFeaturedByType( $type, $config = [] );
 
 	// Read - Lists ----
 

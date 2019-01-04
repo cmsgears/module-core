@@ -12,6 +12,7 @@ use cmsgears\icons\widgets\IconChooser;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update User | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
+$apixBase		= $this->context->apixBase;
 ?>
 <div class="box-crud-wrap">
 	<div class="box-crud-wrap-main">
@@ -92,15 +93,24 @@ $returnUrl		= $this->context->returnUrl;
 					<div class="row padding padding-small-v">
 						<div class="col col12x4">
 							<label>Avatar</label>
-							<?= AvatarUploader::widget( [ 'model' => $avatar ] ) ?>
+							<?= AvatarUploader::widget([
+								'model' => $avatar, 'clearAction' => true,
+								'clearActionUrl' => "$apixBase/clear-avatar?slug=$model->slug&type=$model->type"
+							])?>
 						</div>
 						<div class="col col12x4">
 							<label>Banner</label>
-							<?= ImageUploader::widget( [ 'model' => $banner ] ) ?>
+							<?= ImageUploader::widget([
+								'model' => $banner, 'clearAction' => true,
+								'clearActionUrl' => "$apixBase/clear-banner?slug=$model->slug&type=$model->type"
+							])?>
 						</div>
 						<div class="col col12x4">
 							<label>Video</label>
-							<?= VideoUploader::widget( [ 'model' => $video ] ) ?>
+							<?= VideoUploader::widget([
+								'model' => $video, 'clearAction' => true,
+								'clearActionUrl' => "$apixBase/clear-video?slug=$model->slug&type=$model->type"
+							])?>
 						</div>
 					</div>
 				</div>

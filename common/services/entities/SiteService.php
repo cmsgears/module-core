@@ -25,6 +25,7 @@ use cmsgears\core\common\services\traits\base\NameTrait;
 use cmsgears\core\common\services\traits\base\SlugTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
 use cmsgears\core\common\services\traits\resources\MetaTrait;
+use cmsgears\core\common\services\traits\resources\VisualTrait;
 
 /**
  * SiteService provide service methods of site model.
@@ -64,6 +65,7 @@ class SiteService extends \cmsgears\core\common\services\base\EntityService impl
 	use MetaTrait;
 	use NameTrait;
 	use SlugTrait;
+	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------
 

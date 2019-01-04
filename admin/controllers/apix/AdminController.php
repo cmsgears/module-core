@@ -7,17 +7,17 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\frontend\controllers\apix;
+namespace cmsgears\core\admin\controllers\apix;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 /**
- * UserController handles the ajax requests specific to User model.
+ * AdminController provides actions specific to user model.
  *
  * @since 1.0.0
  */
-class UserController extends \cmsgears\core\common\controllers\apix\UserController {
+class AdminController extends \cmsgears\core\common\controllers\apix\UserController {
 
 	// Variables ---------------------------------------------------
 
@@ -35,7 +35,7 @@ class UserController extends \cmsgears\core\common\controllers\apix\UserControll
 
 		parent::init();
 
-		$this->crudPermission = CoreGlobal::PERM_USER;
+		$this->crudPermission = CoreGlobal::PERM_ADMIN;
 	}
 
 	// Instance methods --------------------------------------------
@@ -52,6 +52,6 @@ class UserController extends \cmsgears\core\common\controllers\apix\UserControll
 
 	// CMG parent classes --------------------
 
-	// UserController ------------------------
+	// AdminController ------------------------
 
 }

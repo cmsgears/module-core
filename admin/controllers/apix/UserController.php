@@ -9,6 +9,10 @@
 
 namespace cmsgears\core\admin\controllers\apix;
 
+// Yii Imports
+use Yii;
+use yii\filters\VerbFilter;
+
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
@@ -17,13 +21,15 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * @since 1.0.0
  */
-class UserController extends \cmsgears\core\common\controllers\apix\UserController {
+class UserController extends \cmsgears\core\common\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
 	// Globals ----------------
 
 	// Public -----------------
+
+	public $metaService;
 
 	// Protected --------------
 
@@ -35,7 +41,10 @@ class UserController extends \cmsgears\core\common\controllers\apix\UserControll
 
 		parent::init();
 
-		$this->crudPermission = CoreGlobal::PERM_ADMIN;
+		$this->crudPermission = CoreGlobal::PERM_IDENTITY;
+
+		$this->modelService	= Yii::$app->factory->get( 'userService' );
+		$this->metaService	= Yii::$app->factory->get( 'modelMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -48,36 +57,145 @@ class UserController extends \cmsgears\core\common\controllers\apix\UserControll
 
 	public function behaviors() {
 
-		$behaviors	= parent::behaviors();
-
-		$behaviors[ 'rbac' ][ 'actions' ][ 'auto-search' ] = [ 'permission' => $this->crudPermission ]; // Available for all admin users
-		$behaviors[ 'rbac' ][ 'actions' ][ 'bulk' ] = [ 'permission' => $this->crudPermission ];
-		$behaviors[ 'rbac' ][ 'actions' ][ 'generic' ] = [ 'permission' => $this->crudPermission ];
-		$behaviors[ 'rbac' ][ 'actions' ][ 'delete' ] = [ 'permission' => $this->crudPermission ];
-		$behaviors[ 'rbac' ][ 'actions' ][ 'profile' ] = [ 'permission' => $this->crudPermission ];
-		$behaviors[ 'rbac' ][ 'actions' ][ 'account' ] = [ 'permission' => $this->crudPermission ];
-		$behaviors[ 'rbac' ][ 'actions' ][ 'address' ] = [ 'permission' => $this->crudPermission ];
-
-		$behaviors[ 'verbs' ][ 'actions' ][ 'auto-search' ] = [ 'post' ];
-		$behaviors[ 'verbs' ][ 'actions' ][ 'bulk' ] = [ 'post' ];
-		$behaviors[ 'verbs' ][ 'actions' ][ 'generic' ] = [ 'post' ];
-		$behaviors[ 'verbs' ][ 'actions' ][ 'delete' ] = [ 'post' ];
-
-		return $behaviors;
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
+					// Avatar
+					'assign-avatar' => [ 'permission' => $this->crudPermission ],
+					'clear-avatar' => [ 'permission' => $this->crudPermission ],
+					// Banner
+					'assign-banner' => [ 'permission' => $this->crudPermission ],
+					'clear-banner' => [ 'permission' => $this->crudPermission ],
+					// Video
+					'assign-video' => [ 'permission' => $this->crudPermission ],
+					'clear-video' => [ 'permission' => $this->crudPermission ],
+					// Metas
+					'add-meta' => [ 'permission' => $this->crudPermission ],
+					'update-meta' => [ 'permission' => $this->crudPermission ],
+					'toggle-meta' => [ 'permission' => $this->crudPermission ],
+					'delete-meta' => [ 'permission' => $this->crudPermission ],
+					'settings' => [ 'permission' => $this->crudPermission ],
+					// Options
+					'assign-option' => [ 'permission' => $this->crudPermission ],
+					'remove-option' => [ 'permission' => $this->crudPermission ],
+					'delete-option' => [ 'permission' => $this->crudPermission ],
+					'toggle-option' => [ 'permission' => $this->crudPermission ],
+					// Address
+					'get-address' => [ 'permission' => $this->crudPermission ],
+					'add-address' => [ 'permission' => $this->crudPermission ],
+					'update-address' => [ 'permission' => $this->crudPermission ],
+					'delete-address' => [ 'permission' => $this->crudPermission ],
+					// Data Object
+					'set-data' => [ 'permission' => $this->crudPermission ],
+					'remove-data' => [ 'permission' => $this->crudPermission ],
+					'set-attribute' => [ 'permission' => $this->crudPermission ],
+					'remove-attribute' => [ 'permission' => $this->crudPermission ],
+					'set-config' => [ 'permission' => $this->crudPermission ],
+					'remove-config' => [ 'permission' => $this->crudPermission ],
+					'set-setting' => [ 'permission' => $this->crudPermission ],
+					'remove-setting' => [ 'permission' => $this->crudPermission ],
+					// Model
+					'auto-search' => [ 'permission' => CoreGlobal::PERM_ADMIN ],
+					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission ],
+					'delete' => [ 'permission' => $this->crudPermission ]
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::class,
+				'actions' => [
+					// Avatar
+					'assign-avatar' => [ 'post' ],
+					'clear-avatar' => [ 'post' ],
+					// Banner
+					'assign-banner' => [ 'post' ],
+					'clear-banner' => [ 'post' ],
+					// Video
+					'assign-video' => [ 'post' ],
+					'clear-video' => [ 'post' ],
+					// Metas
+					'add-meta' => [ 'post' ],
+					'update-meta' => [ 'post' ],
+					'toggle-meta' => [ 'post' ],
+					'delete-meta' => [ 'post' ],
+					'settings' => [ 'post' ],
+					// Options
+					'assign-option' => [ 'post' ],
+					'remove-option' => [ 'post' ],
+					'delete-option' => [ 'post' ],
+					'toggle-option' => [ 'post' ],
+					// Address
+					'get-address' => [ 'post' ],
+					'add-address' => [ 'post' ],
+					'update-address' => [ 'post' ],
+					'delete-address' => [ 'post' ],
+					// Data Object
+					'set-data' => [ 'post' ],
+					'remove-data' => [ 'post' ],
+					'set-attribute' => [ 'post' ],
+					'remove-attribute' => [ 'post' ],
+					'set-config' => [ 'post' ],
+					'remove-config' => [ 'post' ],
+					'set-setting' => [ 'post' ],
+					'remove-setting' => [ 'post' ],
+					// Model
+					'auto-search' => [ 'post' ],
+					'bulk' => [ 'post' ],
+					'generic' => [ 'post' ],
+					'delete' => [ 'post' ]
+				]
+			]
+		];
 	}
 
 	// yii\base\Controller ----
 
 	public function actions() {
 
-		$actions = parent::actions();
+		$user = Yii::$app->core->getUser();
 
-		$actions[ 'auto-search' ] = [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ];
-		$actions[ 'bulk' ] = [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ];
-		$actions[ 'generic' ] = [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ];
-		$actions[ 'delete' ] = [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ];
-
-		return $actions;
+		return [
+			// Avatar
+			'assign-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Assign' ],
+			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Clear' ],
+			// Banner
+			'assign-banner' => [ 'class' => 'cmsgears\core\common\actions\content\banner\Assign' ],
+			'clear-banner' => [ 'class' => 'cmsgears\core\common\actions\content\banner\Clear' ],
+			// Video
+			'assign-video' => [ 'class' => 'cmsgears\core\common\actions\content\video\Assign' ],
+			'clear-video' => [ 'class' => 'cmsgears\core\common\actions\content\video\Clear' ],
+			// Metas
+			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create' ],
+			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update' ],
+			'toggle-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Toggle' ],
+			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete' ],
+			'settings' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMultiple' ],
+			// Options
+			'assign-option' => [ 'class' => 'cmsgears\core\common\actions\option\Assign' ],
+			'remove-option' => [ 'class' => 'cmsgears\core\common\actions\option\Remove' ],
+			'delete-option' => [ 'class' => 'cmsgears\core\common\actions\option\Delete' ],
+			'toggle-option' => [ 'class' => 'cmsgears\core\common\actions\option\Toggle' ],
+			// Address
+			'get-address' => [ 'class' => 'cmsgears\core\common\actions\address\Read' ],
+			'add-address' => [ 'class' => 'cmsgears\core\common\actions\address\Create' ],
+			'update-address' => [ 'class' => 'cmsgears\core\common\actions\address\Update' ],
+			'delete-address' => [ 'class' => 'cmsgears\core\common\actions\address\Delete' ],
+			// Data Object - Use current logged in user to update the config and settings
+			'set-data' => [ 'class' => 'cmsgears\core\common\actions\data\data\Set' ],
+			'remove-data' => [ 'class' => 'cmsgears\core\common\actions\data\data\Remove' ],
+			'set-attribute' => [ 'class' => 'cmsgears\core\common\actions\data\attribute\Set' ],
+			'remove-attribute' => [ 'class' => 'cmsgears\core\common\actions\data\attribute\Remove' ],
+			'set-config' => [ 'class' => 'cmsgears\core\common\actions\data\config\Set' ],
+			'remove-config' => [ 'class' => 'cmsgears\core\common\actions\data\config\Remove' ],
+			'set-setting' => [ 'class' => 'cmsgears\core\common\actions\data\setting\Set' ],
+			'remove-setting' => [ 'class' => 'cmsgears\core\common\actions\data\setting\Remove' ],
+			// Model
+			'auto-search' => [ 'class' => 'cmsgears\core\common\actions\content\AutoSearch' ],
+			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
+			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
+		];
 	}
 
 	// CMG interfaces ------------------------

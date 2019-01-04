@@ -168,8 +168,6 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		$roleMap = $this->roleService->getIdNameMapByType( CoreGlobal::TYPE_SYSTEM );
 
-		unset( $roleMap[ $this->superRoleId ] );
-
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
 			'roleMap' => $roleMap,

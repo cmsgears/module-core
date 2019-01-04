@@ -44,9 +44,9 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\User';
+	public static $modelClass = '\cmsgears\core\common\models\entities\User';
 
-	public static $parentType	= CoreGlobal::TYPE_USER;
+	public static $parentType = CoreGlobal::TYPE_USER;
 
 	// Protected --------------
 
@@ -72,7 +72,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function __construct( IFileService $fileService, $config = [] ) {
 
-		$this->fileService	= $fileService;
+		$this->fileService = $fileService;
 
 		parent::__construct( $config );
 	}
@@ -499,6 +499,11 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		if( empty( $model->status ) ) {
 
 			$model->status = User::STATUS_NEW;
+		}
+
+		if( empty( $model->type ) ) {
+
+			$model->type = CoreGlobal::TYPE_DEFAULT;
 		}
 
 		if( empty( $model->slug ) ) {

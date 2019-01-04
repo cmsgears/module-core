@@ -62,6 +62,13 @@ class SitesController extends Controller {
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
+					// Avatar
+					'assign-avatar' => [ 'permission' => $this->crudPermission ],
+					'clear-avatar' => [ 'permission' => $this->crudPermission ],
+					// Banner
+					'assign-banner' => [ 'permission' => $this->crudPermission ],
+					'clear-banner' => [ 'permission' => $this->crudPermission ],
+					// Model
 					'bulk' => [ 'permission' => $this->crudPermission ],
 					'generic' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
@@ -70,6 +77,13 @@ class SitesController extends Controller {
 			'verbs' => [
 				'class' => VerbFilter::class,
 				'actions' => [
+					// Avatar
+					'assign-avatar' => [ 'post' ],
+					'clear-avatar' => [ 'post' ],
+					// Banner
+					'assign-banner' => [ 'post' ],
+					'clear-banner' => [ 'post' ],
+					// Model
 					'bulk' => [ 'post' ],
 					'generic' => [ 'post' ],
 					'delete' => [ 'post' ]
@@ -83,6 +97,13 @@ class SitesController extends Controller {
 	public function actions() {
 
 		return [
+			// Avatar
+			'assign-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Assign' ],
+			'clear-avatar' => [ 'class' => 'cmsgears\core\common\actions\content\avatar\Clear' ],
+			// Banner
+			'assign-banner' => [ 'class' => 'cmsgears\core\common\actions\content\banner\Assign' ],
+			'clear-banner' => [ 'class' => 'cmsgears\core\common\actions\content\banner\Clear' ],
+			// Model
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]

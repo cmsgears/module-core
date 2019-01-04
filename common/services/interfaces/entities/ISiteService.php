@@ -15,13 +15,14 @@ use cmsgears\core\common\services\interfaces\base\IName;
 use cmsgears\core\common\services\interfaces\base\ISlug;
 use cmsgears\core\common\services\interfaces\resources\IData;
 use cmsgears\core\common\services\interfaces\resources\IMeta;
+use cmsgears\core\common\services\interfaces\resources\IVisual;
 
 /**
  * ISiteService provide service methods for site model.
  *
  * @since 1.0.0
  */
-interface ISiteService extends IEntityService, IData, IMeta, IName, ISlug {
+interface ISiteService extends IEntityService, IData, IMeta, IName, ISlug, IVisual {
 
 	// Data Provider ------
 

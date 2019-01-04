@@ -11,6 +11,7 @@ use cmsgears\icons\widgets\IconChooser;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= 'Update Site | ' . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
+$apixBase		= $this->context->apixBase;
 ?>
 <div class="box-crud-wrap">
 	<div class="box-crud-wrap-main">
@@ -72,13 +73,19 @@ $returnUrl		= $this->context->returnUrl;
 			<div class="box-content">
 				<div class="box-content">
 					<div class="row padding padding-small-v">
-						<div class="col col2">
+						<div class="col col12x4">
 							<label>Avatar</label>
-							<?= AvatarUploader::widget( [ 'model' => $avatar ] ) ?>
+							<?= AvatarUploader::widget([
+								'model' => $avatar, 'clearAction' => true,
+								'clearActionUrl' => "$apixBase/clear-avatar?slug=$model->slug"
+							])?>
 						</div>
-						<div class="col col2">
+						<div class="col col12x4">
 							<label>Banner</label>
-							<?= ImageUploader::widget( [ 'model' => $banner ] ) ?>
+							<?= ImageUploader::widget([
+								'model' => $banner, 'clearAction' => true,
+								'clearActionUrl' => "$apixBase/clear-banner?slug=$model->slug"
+							])?>
 						</div>
 					</div>
 				</div>

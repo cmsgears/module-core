@@ -111,19 +111,19 @@ abstract class AddressController extends Controller {
 
 	public function actionAll( $pid ) {
 
-		$modelClass = $this->modelService->getModelClass();
+		$addressClass = $this->addressService->getModelClass();
 
 		$parent		= $this->parentService->getById( $pid );
 		$parentType	= $this->parentService->getParentType();
 
 		if( isset( $parent ) ) {
 
-			$dataProvider = $this->modelAddressService->getPageByParent( $parent->id, $parentType );
+			$dataProvider = $this->modelService->getPageByParent( $parent->id, $parentType );
 
 			return $this->render( 'all', [
 				'dataProvider' => $dataProvider,
 				'parent' => $parent,
-				'typeMap' => $modelClass::$typeMap
+				'typeMap' => $addressClass::$typeMap
 			]);
 		}
 
@@ -146,7 +146,7 @@ abstract class AddressController extends Controller {
 			if( $address->load( Yii::$app->request->post(), $address->getClassName() ) && $model->load( Yii::$app->request->post(), $model->getClassName() ) &&
 				$address->validate() ) {
 
-				$this->model = $this->modelService->createByParent( $address, [
+				$this->model = $this->modelService->createWithParent( $address, [
 					'parentId' => $parent->id, 'parentType' => $parentType, 'type' => $model->type ] );
 
 				return $this->redirect( $this->returnUrl );
@@ -162,7 +162,7 @@ abstract class AddressController extends Controller {
 				'address' => $address,
 				'model' => $model,
 				'parent' => $parent,
-				'typeMap' => $modelClass::$typeMap,
+				'typeMap' => $addressClass::$typeMap,
 				'countriesMap' => $countriesMap,
 				'provincesMap' => $provincesMap,
 				'regionsMap' => $regionsMap
@@ -180,7 +180,7 @@ abstract class AddressController extends Controller {
 
 		if( isset( $model ) && isset( $parent ) ) {
 
-			$modelClass = $this->modelService->getModelClass();
+			$addressClass = $this->addressService->getModelClass();
 
 			$address = $this->addressService->getById( $model->modelId );
 
@@ -204,7 +204,7 @@ abstract class AddressController extends Controller {
 				'address' => $address,
 				'model' => $model,
 				'parent' => $parent,
-				'typeMap' => $modelClass::$typeMap,
+				'typeMap' => $addressClass::$typeMap,
 				'countriesMap' => $countriesMap,
 				'provincesMap' => $provincesMap,
 				'regionsMap' => $regionsMap

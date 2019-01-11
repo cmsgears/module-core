@@ -17,7 +17,7 @@ $returnUrl		= $this->context->returnUrl;
 				<div class="box-header-title">Address Details</div>
 			</div>
 			<div class="box-content-wrap">
-				<div class="box-content row max-cols-100 frm-address">
+				<div class="cmt-location box-content row max-cols-100">
 					<div class="colf colf12x8">
 						<div class="row max-cols-100">
 							<div class="colf colf12x5">
@@ -38,21 +38,21 @@ $returnUrl		= $this->context->returnUrl;
 							</div>
 						</div>
 						<div class="row max-cols-100">
-							<div class="colf colf12x5 wrap-country" cmt-app="location" cmt-controller="province" cmt-action="optionsList" action="province/options-list" cmt-keep cmt-custom>
-								<?= $form->field( $address, 'countryId' )->dropDownList( $countriesMap, [ 'class' => 'cmt-select cmt-change address-country' ] ) ?>
+							<div class="cmt-location-countries colf colf12x5" cmt-app="core" cmt-controller="province" cmt-action="optionsList" action="location/province-options" cmt-keep cmt-custom>
+								<?= $form->field( $address, 'countryId' )->dropDownList( $countriesMap, [ 'class' => 'cmt-location-country cmt-select cmt-change' ] ) ?>
 							</div>
 							<div class="colf colf12x2"> </div>
-							<div class="colf colf12x5 wrap-province" cmt-app="location" cmt-controller="region" cmt-action="optionsList" action="region/options-list" cmt-keep cmt-custom>
-								<?= $form->field( $address, 'provinceId' )->dropDownList( $provincesMap, [ 'class' => 'cmt-select cmt-change address-province' ] ) ?>
+							<div class="cmt-location-provinces colf colf12x5" cmt-app="core" cmt-controller="region" cmt-action="optionsList" action="location/region-options" cmt-keep cmt-custom>
+								<?= $form->field( $address, 'provinceId' )->dropDownList( $provincesMap, [ 'class' => 'cmt-location-province cmt-select cmt-change' ] ) ?>
 							</div>
 						</div>
 						<div class="row max-cols-100">
-							<div class="colf colf12x5 wrap-region">
-								<?= $form->field( $address, 'regionId' )->dropDownList( $regionsMap, [ 'class' => 'cmt-select address-region' ] ) ?>
+							<div class="cmt-location-regions colf colf12x5">
+								<?= $form->field( $address, 'regionId' )->dropDownList( $regionsMap, [ 'class' => 'cmt-location-region cmt-select cmt-change' ] ) ?>
 							</div>
 							<div class="colf colf12x2"> </div>
-							<div class="colf colf12x5 auto-fill auto-fill-basic">
-								<div class="auto-fill-source" cmt-app="location" cmt-controller="city" cmt-action="autoSearch" action="city/auto-search" cmt-keep cmt-custom>
+							<div class="cmt-location-city-fill colf colf12x5 auto-fill auto-fill-basic">
+								<div class="auto-fill-source" cmt-app="core" cmt-controller="city" cmt-action="autoSearch" action="location/city-search" cmt-keep cmt-custom>
 									<?= Yii::$app->formDesigner->getAutoFill( $form, $address, 'cityName', [ 'class' => 'cmt-key-up auto-fill-text', 'placeholder' => 'Search City', 'autocomplete' => 'off' ], 'cmti cmti-search' ) ?>
 								</div>
 								<div class="auto-fill-target">

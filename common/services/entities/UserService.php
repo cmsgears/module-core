@@ -637,9 +637,10 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	 * @param User $user
 	 * @param string $token
 	 * @param ResetPasswordForm $resetForm
+	 * @param boolean $activate - It will be true if user is invited by admin for activation.
 	 * @return boolean
 	 */
-	public function reset( $user, $token, $resetForm ) {
+	public function reset( $user, $token, $resetForm, $activate = false ) {
 
 		// Check Token
 		if( $user->isVerifyTokenValid( $token ) ) {
@@ -652,8 +653,8 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 			// Generate Password
 			$userToUpdate->generatePassword( $resetForm->password );
 
-			// User need admin approval
-			if( Yii::$app->core->isUserApproval() ) {
+			// User need admin approval if not added by admin for activation
+			if( !$activate && Yii::$app->core->isUserApproval() ) {
 
 				$userToUpdate->verify();
 			}

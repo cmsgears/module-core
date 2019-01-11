@@ -79,6 +79,9 @@ class Single extends Action {
 
 	public function run( $pid ) {
 
+		// Views
+        $this->controller->setViewPath( '@cmsgears/module-core/admin/views/address' );
+
 		$parentService = $this->controller->modelService;
 
 		$parent = $this->controller->modelService->getById( $pid );

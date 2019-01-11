@@ -124,7 +124,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 					'index'	 => [ 'permission' => $this->crudPermission ],
 					'all'  => [ 'permission' => $this->crudPermission ],
 					'create'  => [ 'permission' => $this->crudPermission ],
-					'update'  => [ 'permission' => $this->crudPermission ],
+					'update'  => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover' ] ],
 					'delete'  => [ 'permission' => $this->crudPermission ],
 					'profile'  => [ 'permission' => CoreGlobal::PERM_ADMIN ],
 					'settings'  => [ 'permission' => CoreGlobal::PERM_ADMIN ]
@@ -236,52 +236,45 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model = $this->modelService->getById( $id );
+		$model = $this->model;
 
-		// Update/Render if exist
-		if( isset( $model ) ) {
+		$member	= $model->activeSiteMember;
+		$avatar	= File::loadFile( $model->avatar, 'Avatar' );
+		$banner	= File::loadFile( $model->banner, 'Banner' );
+		$video	= File::loadFile( $model->video, 'Video' );
 
-			$member	= $model->activeSiteMember;
-			$avatar	= File::loadFile( $model->avatar, 'Avatar' );
-			$banner	= File::loadFile( $model->banner, 'Banner' );
-			$video	= File::loadFile( $model->video, 'Video' );
+		$model->setScenario( 'update' );
 
-			$model->setScenario( 'update' );
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) &&
+			$member->load( Yii::$app->request->post(), $member->getClassName() ) &&
+			$model->validate() && $member->validate() ) {
 
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) &&
-				$member->load( Yii::$app->request->post(), $member->getClassName() ) &&
-				$model->validate() && $member->validate() ) {
+			// Update User and Site Member
+			$this->model = $this->modelService->update( $model, [ 'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video ] );
 
-				// Update User and Site Member
-				$this->model = $this->modelService->update( $model, [ 'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video ] );
+			$this->memberService->update( $member );
 
-				$this->memberService->update( $member );
-
-				return $this->redirect( $this->returnUrl );
-			}
-
-			$roleMap = $this->roleService->getIdNameMapByType( CoreGlobal::TYPE_SYSTEM );
-
-			$user = Yii::$app->core->getUser();
-
-			if( $user->activeSiteMember->roleId != $this->superRoleId ) {
-
-				unset( $roleMap[ $this->superRoleId ] );
-			}
-
-			return $this->render( 'update', [
-				'model' => $model,
-				'member' => $member,
-				'avatar' => $avatar,
-				'banner' => $banner,
-				'video' => $video,
-				'roleMap' => $roleMap,
-				'statusMap' => User::$statusMap
-			]);
+			return $this->redirect( $this->returnUrl );
 		}
 
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		$roleMap = $this->roleService->getIdNameMapByType( CoreGlobal::TYPE_SYSTEM );
+
+		$user = Yii::$app->core->getUser();
+
+		if( $user->activeSiteMember->roleId != $this->superRoleId ) {
+
+			unset( $roleMap[ $this->superRoleId ] );
+		}
+
+		return $this->render( 'update', [
+			'model' => $model,
+			'member' => $member,
+			'avatar' => $avatar,
+			'banner' => $banner,
+			'video' => $video,
+			'roleMap' => $roleMap,
+			'statusMap' => User::$statusMap
+		]);
 	}
 
 	public function actionDelete( $id ) {

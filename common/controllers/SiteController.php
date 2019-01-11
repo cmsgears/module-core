@@ -116,7 +116,7 @@ class SiteController extends Controller {
 			if( isset( $user ) ) {
 
 				// Activate User
-				if( $this->userService->reset( $user, $token, $model ) ) {
+				if( $this->userService->reset( $user, $token, $model, true ) ) {
 
 					// Send Activation Mail
 					Yii::$app->coreMailer->sendActivateUserMail( $user );

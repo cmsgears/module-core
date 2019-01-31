@@ -24,13 +24,13 @@ use cmsgears\core\common\models\traits\base\FollowerTrait;
 /**
  * Follower represents interest of one model in another model.
  *
- * @property int $id
- * @property int $modelId
- * @property int $parentId
+ * @property integer $id
+ * @property integer $modelId
+ * @property integer $parentId
  * @property string $type
  * @property boolean $active
- * @property int $createdAt
- * @property int $modifiedAt
+ * @property integer $createdAt
+ * @property integer $modifiedAt
  * @property string data
  *
  * @since 1.0.0

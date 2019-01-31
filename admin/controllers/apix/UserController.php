@@ -70,17 +70,23 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 					// Video
 					'assign-video' => [ 'permission' => $this->crudPermission ],
 					'clear-video' => [ 'permission' => $this->crudPermission ],
+					// Gallery
+					'update-gallery' => [ 'permission' => $this->crudPermission ],
+					'get-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'add-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'update-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'delete-gallery-item' => [ 'permission' => $this->crudPermission ],
+					// Options
+					'assign-option' => [ 'permission' => $this->crudPermission ],
+					'remove-option' => [ 'permission' => $this->crudPermission ],
+					'delete-option' => [ 'permission' => $this->crudPermission ],
+					'toggle-option' => [ 'permission' => $this->crudPermission ],
 					// Metas
 					'add-meta' => [ 'permission' => $this->crudPermission ],
 					'update-meta' => [ 'permission' => $this->crudPermission ],
 					'toggle-meta' => [ 'permission' => $this->crudPermission ],
 					'delete-meta' => [ 'permission' => $this->crudPermission ],
 					'settings' => [ 'permission' => $this->crudPermission ],
-					// Options
-					'assign-option' => [ 'permission' => $this->crudPermission ],
-					'remove-option' => [ 'permission' => $this->crudPermission ],
-					'delete-option' => [ 'permission' => $this->crudPermission ],
-					'toggle-option' => [ 'permission' => $this->crudPermission ],
 					// Address
 					'get-address' => [ 'permission' => $this->crudPermission ],
 					'add-address' => [ 'permission' => $this->crudPermission ],
@@ -114,17 +120,23 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 					// Video
 					'assign-video' => [ 'post' ],
 					'clear-video' => [ 'post' ],
+					// Gallery
+					'update-gallery' => [ 'post' ],
+					'get-gallery-item' => [ 'post' ],
+					'add-gallery-item' => [ 'post' ],
+					'update-gallery-item' => [ 'post' ],
+					'delete-gallery-item' => [ 'post' ],
+					// Options
+					'assign-option' => [ 'post' ],
+					'remove-option' => [ 'post' ],
+					'delete-option' => [ 'post' ],
+					'toggle-option' => [ 'post' ],
 					// Metas
 					'add-meta' => [ 'post' ],
 					'update-meta' => [ 'post' ],
 					'toggle-meta' => [ 'post' ],
 					'delete-meta' => [ 'post' ],
 					'settings' => [ 'post' ],
-					// Options
-					'assign-option' => [ 'post' ],
-					'remove-option' => [ 'post' ],
-					'delete-option' => [ 'post' ],
-					'toggle-option' => [ 'post' ],
 					// Address
 					'get-address' => [ 'post' ],
 					'add-address' => [ 'post' ],
@@ -165,17 +177,23 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 			// Video
 			'assign-video' => [ 'class' => 'cmsgears\core\common\actions\content\video\Assign' ],
 			'clear-video' => [ 'class' => 'cmsgears\core\common\actions\content\video\Clear' ],
+			// Gallery
+			'update-gallery' => [ 'class' => 'cmsgears\core\common\actions\gallery\Update' ],
+			'get-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Read' ],
+			'add-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Create' ],
+			'update-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Update' ],
+			'delete-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Delete' ],
+			// Options
+			'assign-option' => [ 'class' => 'cmsgears\core\common\actions\option\Assign' ],
+			'remove-option' => [ 'class' => 'cmsgears\core\common\actions\option\Remove' ],
+			'delete-option' => [ 'class' => 'cmsgears\core\common\actions\option\Delete' ],
+			'toggle-option' => [ 'class' => 'cmsgears\core\common\actions\option\Toggle' ],
 			// Metas
 			'add-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Create' ],
 			'update-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Update' ],
 			'toggle-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Toggle' ],
 			'delete-meta' => [ 'class' => 'cmsgears\core\common\actions\meta\Delete' ],
 			'settings' => [ 'class' => 'cmsgears\core\common\actions\meta\UpdateMultiple' ],
-			// Options
-			'assign-option' => [ 'class' => 'cmsgears\core\common\actions\option\Assign' ],
-			'remove-option' => [ 'class' => 'cmsgears\core\common\actions\option\Remove' ],
-			'delete-option' => [ 'class' => 'cmsgears\core\common\actions\option\Delete' ],
-			'toggle-option' => [ 'class' => 'cmsgears\core\common\actions\option\Toggle' ],
 			// Address
 			'get-address' => [ 'class' => 'cmsgears\core\common\actions\address\Read' ],
 			'add-address' => [ 'class' => 'cmsgears\core\common\actions\address\Create' ],

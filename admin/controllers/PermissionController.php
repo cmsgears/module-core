@@ -13,15 +13,12 @@ namespace cmsgears\core\admin\controllers;
 use Yii;
 use yii\helpers\Url;
 
-// CMG Imports
-use cmsgears\core\admin\controllers\base\PermissionController as BasePermissionController;
-
 /**
  * PermissionController provides actions specific to permission model.
  *
  * @since 1.0.0
  */
-class PermissionController extends BasePermissionController {
+class PermissionController extends \cmsgears\core\admin\controllers\base\PermissionController {
 
 	// Variables ---------------------------------------------------
 

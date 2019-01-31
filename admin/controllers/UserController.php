@@ -102,6 +102,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 			'create' => [ [ 'label' => 'Users', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Users', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Users', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
+			'gallery' => [ [ 'label' => 'Users', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
 			'profile' => [ [ 'label' => 'User Profile' ] ],
 			'settings' => [ [ 'label' => 'User Settings' ] ]
 		];
@@ -126,6 +127,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 					'create'  => [ 'permission' => $this->crudPermission ],
 					'update'  => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover' ] ],
 					'delete'  => [ 'permission' => $this->crudPermission ],
+					'gallery'  => [ 'permission' => $this->crudPermission ],
 					'profile'  => [ 'permission' => CoreGlobal::PERM_ADMIN ],
 					'settings'  => [ 'permission' => CoreGlobal::PERM_ADMIN ]
 				]
@@ -138,6 +140,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 					'create'  => [ 'get', 'post' ],
 					'update'  => [ 'get', 'post' ],
 					'delete'  => [ 'get', 'post' ],
+					'gallery'  => [ 'get', 'post' ],
 					'profile'  => [ 'get', 'post' ],
 					'settings'  => [ 'get', 'post' ]
 				]
@@ -153,6 +156,13 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 	}
 
 	// yii\base\Controller ----
+
+	public function actions() {
+
+		return [
+			'gallery' => [ 'class' => 'cmsgears\core\common\actions\regular\gallery\Browse' ]
+		];
+	}
 
 	// CMG interfaces ------------------------
 

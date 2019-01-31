@@ -9,6 +9,9 @@
 
 namespace cmsgears\core\common\models\traits\resources;
 
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 /**
  * ContentTrait can be used to add content feature to relevant models.
  */
@@ -37,6 +40,48 @@ trait ContentTrait {
 	// Validators ----------------------------
 
 	// ContentTrait --------------------------
+
+	public function getSmallContent( $ellipsis = true ) {
+
+		$content = $this->content;
+
+		if( strlen( $content ) > CoreGlobal::TEXT_SMALL ) {
+
+			$content = substr( $content, 0, CoreGlobal::TEXT_SMALL );
+
+			return $ellipsis ? "$content ..." : $content;
+		}
+
+		return $content;
+	}
+
+	public function getMediumContent( $ellipsis = true ) {
+
+		$content = $this->content;
+
+		if( strlen( $content ) > CoreGlobal::TEXT_MEDIUM ) {
+
+			$content = substr( $content, 0, CoreGlobal::TEXT_MEDIUM );
+
+			return $ellipsis ? "$content ..." : $content;
+		}
+
+		return $content;
+	}
+
+	public function getLargeContent( $ellipsis = true ) {
+
+		$content = $this->content;
+
+		if( strlen( $content ) > CoreGlobal::TEXT_LARGE ) {
+
+			$content = substr( $content, 0, CoreGlobal::TEXT_LARGE );
+
+			return $ellipsis ? "$content ..." : $content;
+		}
+
+		return $content;
+	}
 
 	// Static Methods ----------------------------------------------
 

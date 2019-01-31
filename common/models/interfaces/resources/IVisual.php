@@ -57,4 +57,5 @@ interface IVisual {
 	 * @return string
 	 */
 	public function getVideoUrl();
+
 }

@@ -146,6 +146,8 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_ACTIVE => 'Active',
 		CoreGlobal::FIELD_STATUS => 'Status',
 		CoreGlobal::FIELD_ACCESS => 'Access',
+		CoreGlobal::FIELD_SENT => 'Sent',
+		CoreGlobal::FIELD_DELIVERED => 'Delivered',
 		CoreGlobal::FIELD_CONSUMED => 'Consumed',
 		CoreGlobal::FIELD_TRASH => 'Trash',
 		CoreGlobal::FIELD_VISIBILITY => 'Visibility',

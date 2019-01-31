@@ -340,6 +340,8 @@ class CoreGlobal {
 	const FIELD_ACTIVE		= 'activeField';
 	const FIELD_STATUS		= 'statusField';
 	const FIELD_ACCESS		= 'accessField';
+	const FIELD_SENT		= 'sentField';
+	const FIELD_DELIVERED	= 'deliveredField';
 	const FIELD_CONSUMED	= 'consumedField';
 	const FIELD_TRASH		= 'trashField';
 	const FIELD_VISIBILITY	= 'visibilityField';

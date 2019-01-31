@@ -13,15 +13,12 @@ namespace cmsgears\core\admin\controllers;
 use Yii;
 use yii\helpers\Url;
 
-// CMG Imports
-use cmsgears\core\admin\controllers\base\RoleController as BaseRoleController;
-
 /**
  * RoleController provides actions specific to role model.
  *
  * @since 1.0.0
  */
-class RoleController extends BaseRoleController {
+class RoleController extends \cmsgears\core\admin\controllers\base\RoleController {
 
 	// Variables ---------------------------------------------------
 

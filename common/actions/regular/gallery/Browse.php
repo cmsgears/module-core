@@ -18,14 +18,12 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\Gallery;
 
-use cmsgears\core\common\base\Action;
-
 /**
  * The Browse action create the gallery if not exist and than render the view to manage it.
  *
  * @since 1.0.0
  */
-class Browse extends Action {
+class Browse extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 
@@ -88,9 +86,12 @@ class Browse extends Action {
 
 			if( empty( $gallery ) ) {
 
+				$name	= !empty( $model->name ) ? $model->name : $model->title;
+				$title	= !empty( $model->title ) ? $model->title : $name;
+
 				$gallery = $this->galleryService->createByParams([
 					'type' => $type, 'status' => Gallery::STATUS_ACTIVE,
-					'name' => $model->name, 'title' => $model->name,
+					'name' => $name, 'title' => $title,
 					'siteId' => Yii::$app->core->siteId
 				]);
 
@@ -105,7 +106,7 @@ class Browse extends Action {
 		}
 
 		// Model not found
-		throw new NotFoundHttpException( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 }

@@ -55,10 +55,11 @@ abstract class RoleController extends CrudController {
 		$this->crudPermission = CoreGlobal::PERM_RBAC;
 
 		// Config
-		$this->type	= CoreGlobal::TYPE_SYSTEM;
+		$this->type		= CoreGlobal::TYPE_SYSTEM;
+		$this->apixBase	= 'core/role';
 
 		// Services
-		$this->modelService			= Yii::$app->factory->get( 'roleService' );
+		$this->modelService = Yii::$app->factory->get( 'roleService' );
 
 		$this->permissionService	= Yii::$app->factory->get( 'permissionService' );
 		$this->hierarchyService		= Yii::$app->factory->get( 'modelHierarchyService' );

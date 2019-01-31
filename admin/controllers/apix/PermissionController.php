@@ -14,14 +14,14 @@ use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
-use cmsgears\core\admin\controllers\base\Controller;
+use cmsgears\core\common\config\CoreGlobal;
 
 /**
  * PermissionController provides actions specific to permission model.
  *
  * @since 1.0.0
  */
-class PermissionController extends Controller {
+class PermissionController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -38,6 +38,9 @@ class PermissionController extends Controller {
 	public function init() {
 
 		parent::init();
+
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_RBAC;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'permissionService' );

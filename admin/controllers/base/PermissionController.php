@@ -56,6 +56,7 @@ abstract class PermissionController extends CrudController {
 
 		// Config
 		$this->type		= CoreGlobal::TYPE_SYSTEM;
+		$this->apixBase	= 'core/permission';
 		$this->system	= false;
 
 		// Services

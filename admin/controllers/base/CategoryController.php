@@ -30,9 +30,9 @@ abstract class CategoryController extends CrudController {
 
 	// Public -----------------
 
-	// Protected --------------
+	public $type;
 
-	protected $type;
+	// Protected --------------
 
 	// Private ----------------
 

@@ -495,6 +495,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'avatarId' => $this->bigInteger( 20 ),
 			'bannerId' => $this->bigInteger( 20 ),
 			'videoId' => $this->bigInteger( 20 ),
+			'galleryId' => $this->bigInteger( 20 ),
 			'templateId' => $this->bigInteger( 20 ),
 			'status' => $this->smallInteger( 6 )->defaultValue( 0 ),
 			'email' => $this->string( Yii::$app->core->xxLargeText )->notNull(),
@@ -549,6 +550,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'user_avatar', $this->prefix . 'core_user', 'avatarId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'user_banner', $this->prefix . 'core_user', 'bannerId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'user_video', $this->prefix . 'core_user', 'videoId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'user_gallery', $this->prefix . 'core_user', 'galleryId' );
 		$this->createIndex( 'idx_' . $this->prefix . 'user_template', $this->prefix . 'core_user', 'templateId' );
 	}
 
@@ -1271,6 +1273,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->addForeignKey( 'fk_' . $this->prefix . 'user_avatar', $this->prefix . 'core_user', 'avatarId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'user_banner', $this->prefix . 'core_user', 'bannerId', $this->prefix . 'core_file', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'user_video', $this->prefix . 'core_user', 'videoId', $this->prefix . 'core_file', 'id', 'SET NULL' );
+		$this->addForeignKey( 'fk_' . $this->prefix . 'user_gallery', $this->prefix . 'core_user', 'galleryId', $this->prefix . 'core_gallery', 'id', 'SET NULL' );
 		$this->addForeignKey( 'fk_' . $this->prefix . 'user_template', $this->prefix . 'core_user', 'templateId', $this->prefix . 'core_template', 'id', 'SET NULL' );
 
 		// Site
@@ -1495,6 +1498,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_avatar', $this->prefix . 'core_user' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_banner', $this->prefix . 'core_user' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_video', $this->prefix . 'core_user' );
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_gallery', $this->prefix . 'core_user' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'user_template', $this->prefix . 'core_user' );
 
 		// Site

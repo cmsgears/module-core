@@ -35,6 +35,7 @@ use cmsgears\core\common\models\interfaces\mappers\IFile;
 use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\base\Entity;
 use cmsgears\core\common\models\mappers\SiteMember;
+use cmsgears\core\common\models\resources\Gallery;
 use cmsgears\core\common\models\resources\Option;
 
 use cmsgears\core\common\models\traits\base\ApprovalTrait;
@@ -59,6 +60,7 @@ use cmsgears\core\common\utilities\DateUtil;
  * @property integer $avatarId
  * @property integer $bannerId
  * @property integer $videoId
+ * @property integer $galleryId
  * @property integer $templateId
  * @property integer $status
  * @property string $email
@@ -235,7 +237,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			// Other
 			[ [ 'localeId', 'genderId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'status', 'timeZone', 'otp' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'avatarId', 'bannerId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'avatarId', 'bannerId', 'videoId', 'galleryId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
 			[ 'dob', 'date' ],
 			[ [ 'emailVerified', 'mobileVerified', 'gridCacheValid' ], 'boolean' ],
@@ -264,6 +266,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
 			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
 			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
+			'galleryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GALLERY ),
 			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
 			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
@@ -641,6 +644,16 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 	public function getGender() {
 
 		return $this->hasOne( Option::class, [ 'id' => 'genderId' ] );
+	}
+
+	/**
+	 * Returns gallery associated with the user.
+	 *
+	 * @return \cmsgears\core\common\models\resources\Gallery
+	 */
+	public function getGallery() {
+
+		return $this->hasOne( Gallery::class, [ 'id' => 'galleryId' ] );
 	}
 
 	/**

@@ -49,8 +49,8 @@ class m160621_014612_core_index extends Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'theme_slug', $this->prefix . 'core_theme', 'slug' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'theme_slug', $this->prefix . 'core_theme', 'type' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'theme_rendrer', $this->prefix . 'core_theme', 'renderer' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_theme' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'theme_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_theme' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'theme_search' . '(name ASC, title ASC, description ASC, content ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_theme' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'theme_desc' . '(description)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_theme' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'theme_search' . '(name, title, description, content)' );
 
 		// Template
 		$this->createIndex( 'idx_' . $this->prefix . 'template_name', $this->prefix . 'core_template', 'name' );
@@ -59,16 +59,16 @@ class m160621_014612_core_index extends Migration {
 		//$this->createIndex( 'idx_' . $this->prefix . 'template_icon', $this->prefix . 'core_template', 'icon' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'template_rendrer', $this->prefix . 'core_template', 'renderer' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'template_layout', $this->prefix . 'core_template', 'layout' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_template' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'template_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_template' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'template_search' . '(name ASC, title ASC, description ASC, content ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_template' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'template_desc' . '(description)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_template' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'template_search' . '(name, title, description, content)' );
 
 		// Object
 		$this->createIndex( 'idx_' . $this->prefix . 'object_name', $this->prefix . 'core_object', 'name' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_slug', $this->prefix . 'core_object', 'slug' );
 		$this->createIndex( 'idx_' . $this->prefix . 'object_type', $this->prefix . 'core_object', 'type' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'object_icon', $this->prefix . 'core_object', 'icon' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_object' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'object_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_object' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'object_search' . '(name ASC, title ASC, description ASC, content ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_object' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'object_desc' . '(description)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_object' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'object_search' . '(name, title, description, content)' );
 
 		// Object Meta
 		$this->createIndex( 'idx_' . $this->prefix . 'object_meta_name', $this->prefix . 'core_object_meta', 'name' );
@@ -77,7 +77,7 @@ class m160621_014612_core_index extends Migration {
 		//$this->createIndex( 'idx_' . $this->prefix . 'object_meta_vtype', $this->prefix . 'core_object_meta', 'valueType' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'object_meta_mit', $this->prefix . 'core_object_meta', [ 'modelId', 'type' ] );
 		//$this->createIndex( 'idx_' . $this->prefix . 'object_meta_mitn', $this->prefix . 'core_object_meta', [ 'modelId', 'type', 'name' ] );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_object_meta' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'object_meta_search' . '(name ASC, value ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_object_meta' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'object_meta_search' . '(name, value)' );
 
 		// Country
 		$this->createIndex( 'idx_' . $this->prefix . 'country_name', $this->prefix . 'core_country', 'name' );
@@ -98,9 +98,9 @@ class m160621_014612_core_index extends Migration {
 		//$this->createIndex( 'idx_' . $this->prefix . 'city_lat', $this->prefix . 'core_city', 'latitude' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'city_lon', $this->prefix . 'core_city', 'longitude' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'city_lat_lon', $this->prefix . 'core_city', [ 'latitude', 'longitude' ] );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_city' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'city_reg' . '(regions ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_city' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'city_zip' . '(zipCodes ASC)' );
-		$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_city' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'city_auto' . '(autoCache ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_city' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'city_reg' . '(regions)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_city' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'city_zip' . '(zipCodes)' );
+		$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_city' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'city_auto' . '(autoCache)' );
 
 		// Address
 		//$this->createIndex( 'idx_' . $this->prefix . 'address_title', $this->prefix . 'core_address', 'title' );
@@ -120,23 +120,23 @@ class m160621_014612_core_index extends Migration {
 		//$this->createIndex( 'idx_' . $this->prefix . 'address_lat', $this->prefix . 'core_address', 'latitude' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'address_lon', $this->prefix . 'core_address', 'longitude' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'address_lat_lon', $this->prefix . 'core_address', [ 'latitude', 'longitude' ] );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_address' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'address_search' . '(title ASC, line1 ASC, line2 ASC, line3 ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_address' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'address_search' . '(title, line1, line2, line3)' );
 
 		// Role
 		$this->createIndex( 'idx_' . $this->prefix . 'role_name', $this->prefix . 'core_role', 'name' );
 		$this->createIndex( 'idx_' . $this->prefix . 'role_slug', $this->prefix . 'core_role', 'slug' );
 		$this->createIndex( 'idx_' . $this->prefix . 'role_type', $this->prefix . 'core_role', 'type' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'role_icon', $this->prefix . 'core_role', 'icon' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_role' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'role_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_role' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'role_search' . '(name ASC, description ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_role' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'role_desc' . '(description)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_role' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'role_search' . '(name, description)' );
 
 		// Permission
 		$this->createIndex( 'idx_' . $this->prefix . 'permission_name', $this->prefix . 'core_permission', 'name' );
 		$this->createIndex( 'idx_' . $this->prefix . 'permission_slug', $this->prefix . 'core_permission', 'slug' );
 		$this->createIndex( 'idx_' . $this->prefix . 'permission_type', $this->prefix . 'core_permission', 'type' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'permission_icon', $this->prefix . 'core_permission', 'icon' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_permission' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'permission_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_permission' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'permission_search' . '(name ASC, description ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_permission' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'permission_desc' . '(description)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_permission' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'permission_search' . '(name, description)' );
 
 		// User
 		$this->createIndex( 'idx_' . $this->prefix . 'user_email', $this->prefix . 'core_user', 'email' );
@@ -147,15 +147,15 @@ class m160621_014612_core_index extends Migration {
 		//$this->createIndex( 'idx_' . $this->prefix . 'user_mobile', $this->prefix . 'core_user', 'mobile' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'user_phone', $this->prefix . 'core_user', 'phone' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'user_tzone', $this->prefix . 'core_user', 'timeZone' );
-		$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_user' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'user_name' . '(name ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_user' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'user_search' . '(name ASC, message ASC, description ASC, content ASC)' );
+		$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_user' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'user_name' . '(name)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_user' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'user_search' . '(name, message, description, content)' );
 
 		// Site
 		$this->createIndex( 'idx_' . $this->prefix . 'site_name', $this->prefix . 'core_site', 'name' );
 		$this->createIndex( 'idx_' . $this->prefix . 'site_slug', $this->prefix . 'core_site', 'slug' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'site_slug', $this->prefix . 'core_site', 'icon' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_site' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'site_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_site' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'site_search' . '(name ASC, title ASC, description ASC, content ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_site' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'site_desc' . '(description)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_site' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'site_search' . '(name, title, description, content)' );
 
 		// Site Meta
 		$this->createIndex( 'idx_' . $this->prefix . 'site_meta_name', $this->prefix . 'core_site_meta', 'name' );
@@ -164,7 +164,7 @@ class m160621_014612_core_index extends Migration {
 		//$this->createIndex( 'idx_' . $this->prefix . 'site_meta_vtype', $this->prefix . 'core_site_meta', 'valueType' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'site_meta_mit', $this->prefix . 'core_site_meta', [ 'modelId', 'type' ] );
 		//$this->createIndex( 'idx_' . $this->prefix . 'site_meta_mitn', $this->prefix . 'core_site_meta', [ 'modelId', 'type', 'name' ] );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_site_meta' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'site_meta_search' . '(name ASC, value ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_site_meta' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'site_meta_search' . '(name, value)' );
 
 		// Site Access
 		$this->createIndex( 'idx_' . $this->prefix . 'site_access_ip', $this->prefix . 'core_site_access', 'ip' );
@@ -178,24 +178,24 @@ class m160621_014612_core_index extends Migration {
 		//$this->createIndex( 'idx_' . $this->prefix . 'file_dir', $this->prefix . 'core_file', 'directory' );
 		$this->createIndex( 'idx_' . $this->prefix . 'file_type', $this->prefix . 'core_file', 'type' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'file_storage', $this->prefix . 'core_file', 'storage' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_file' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'file_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_file' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'file_search' . '(name ASC, title ASC, description ASC, content ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_file' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'file_desc' . '(description)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_file' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'file_search' . '(name, title, description, content)' );
 
 		// Gallery
 		$this->createIndex( 'idx_' . $this->prefix . 'gallery_name', $this->prefix . 'core_gallery', 'name' );
 		$this->createIndex( 'idx_' . $this->prefix . 'gallery_slug', $this->prefix . 'core_gallery', 'slug' );
 		$this->createIndex( 'idx_' . $this->prefix . 'gallery_type', $this->prefix . 'core_gallery', 'type' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'gallery_icon', $this->prefix . 'core_gallery', 'icon' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_gallery' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'gallery_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_gallery' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'gallery_search' . '(name ASC, title ASC, description ASC, content ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_gallery' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'gallery_desc' . '(description)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_gallery' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'gallery_search' . '(name, title, description, content)' );
 
 		// Form
 		$this->createIndex( 'idx_' . $this->prefix . 'form_name', $this->prefix . 'core_form', 'name' );
 		$this->createIndex( 'idx_' . $this->prefix . 'form_slug', $this->prefix . 'core_form', 'slug' );
 		$this->createIndex( 'idx_' . $this->prefix . 'form_type', $this->prefix . 'core_form', 'type' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'form_icon', $this->prefix . 'core_form', 'icon' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_form' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'form_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_form' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'form_search' . '(name ASC, title ASC, description ASC, content ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_form' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'form_desc' . '(description)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_form' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'form_search' . '(name, title, description, content)' );
 
 		// Form Field
 		//$this->createIndex( 'idx_' . $this->prefix . 'form_field_icon', $this->prefix . 'core_form_field', 'icon' );
@@ -205,8 +205,8 @@ class m160621_014612_core_index extends Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'tag_slug', $this->prefix . 'core_tag', 'slug' );
 		$this->createIndex( 'idx_' . $this->prefix . 'tag_type', $this->prefix . 'core_tag', 'type' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'tag_icon', $this->prefix . 'core_tag', 'icon' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_tag' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'tag_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_tag' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'tag_search' . '(name ASC, title ASC, description ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_tag' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'tag_desc' . '(description)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_tag' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'tag_search' . '(name, title, description)' );
 
 		// Category
 		$this->createIndex( 'idx_' . $this->prefix . 'category_name', $this->prefix . 'core_category', 'name' );
@@ -214,14 +214,14 @@ class m160621_014612_core_index extends Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'category_type', $this->prefix . 'core_category', 'type' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'category_icon', $this->prefix . 'core_category', 'icon' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'category_tf', $this->prefix . 'core_category', [ 'type', 'featured' ] );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_category' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'category_desc' . '(description ASC)' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_category' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'category_search' . '(name ASC, title ASC, description ASC, content ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_category' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'category_desc' . '(description)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_category' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'category_search' . '(name, title, description, content)' );
 
 		// Option
 		$this->createIndex( 'idx_' . $this->prefix . 'option_name', $this->prefix . 'core_option', 'name' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'option_value', $this->prefix . 'core_option', 'value' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'option_icon', $this->prefix . 'core_option', 'icon' );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_option' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'option_search' . '(name ASC, title ASC, value ASC, content ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_option' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'option_search' . '(name, title, value, content)' );
 	}
 
 	private function upDependent() {
@@ -231,7 +231,7 @@ class m160621_014612_core_index extends Migration {
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_message_name', $this->prefix . 'core_model_message', 'name' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_message_type', $this->prefix . 'core_model_message', 'type' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_message_pipt', $this->prefix . 'core_model_message', [ 'parentId', 'parentType' ] );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_model_message' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'model_message_search' . '(name ASC, value ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_model_message' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'model_message_search' . '(name, value)' );
 
 		// Model Comment
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_comment_name', $this->prefix . 'core_model_comment', 'name' );
@@ -241,7 +241,7 @@ class m160621_014612_core_index extends Migration {
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_comment_agent', $this->prefix . 'core_model_comment', 'agent' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_comment_type', $this->prefix . 'core_model_comment', 'type' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_comment_pipt', $this->prefix . 'core_model_comment', [ 'parentId', 'parentType' ] );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_model_comment' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'model_comment_search' . '(name ASC, email ASC, agent ASC, content ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_model_comment' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'model_comment_search' . '(name, email, agent, content)' );
 
 		// Model Meta
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_meta_parent_t', $this->prefix . 'core_model_meta', 'parentType' );
@@ -249,13 +249,13 @@ class m160621_014612_core_index extends Migration {
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_meta_type_v', $this->prefix . 'core_model_meta', 'valueType' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_meta_piptt', $this->prefix . 'core_model_meta', [ 'parentId', 'parentType', 'type' ] );
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_meta_pipttn', $this->prefix . 'core_model_meta', [ 'parentId', 'parentType', 'type', 'name' ] );
-		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_model_meta' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'model_meta_search' . '(name ASC, value ASC)' );
+		//$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_model_meta' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'model_meta_search' . '(name, value)' );
 
 		// Model Object
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_object_parent_t', $this->prefix . 'core_model_object', 'parentType' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_object_type', $this->prefix . 'core_model_object', 'type' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_object_pipta', $this->prefix . 'core_model_object', [ 'parentId', 'parentType', 'active' ] );
-		$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_model_object' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'model_object_nodes' . '(nodes ASC)' );
+		$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_model_object' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'model_object_nodes' . '(nodes)' );
 
 		// Model Address
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_address_parent_t', $this->prefix . 'core_model_address', 'parentType' );
@@ -281,7 +281,7 @@ class m160621_014612_core_index extends Migration {
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_category_parent_t', $this->prefix . 'core_model_category', 'parentType' );
 		$this->createIndex( 'idx_' . $this->prefix . 'model_category_type', $this->prefix . 'core_model_category', 'type' );
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_category_pipta', $this->prefix . 'core_model_category', [ 'parentId', 'parentType', 'active' ] );
-		$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_model_category' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'model_category_nodes' . '(nodes ASC)' );
+		$this->execute( 'ALTER TABLE ' . $this->prefix . 'core_model_category' . ' ADD FULLTEXT ' . 'idx_' . $this->prefix . 'model_category_nodes' . '(nodes)' );
 
 		// Model Option
 		//$this->createIndex( 'idx_' . $this->prefix . 'model_option_parent_t', $this->prefix . 'core_model_option', 'parentType' );

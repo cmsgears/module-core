@@ -30,9 +30,9 @@ abstract class TagController extends CrudController {
 
 	// Public -----------------
 
-	// Protected --------------
+	public $type;
 
-	protected $type;
+	// Protected --------------
 
 	// Private ----------------
 

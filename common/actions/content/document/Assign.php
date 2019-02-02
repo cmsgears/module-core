@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\content\avatar;
+namespace cmsgears\core\common\actions\content\document;
 
 // Yii Imports
 use Yii;
@@ -20,7 +20,7 @@ use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Assign action configures the avatar of model having avatar.
+ * Assign action configures the video of model having video.
  *
  * @since 1.0.0
  */
@@ -40,7 +40,7 @@ class Assign extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $fileName = 'Avatar';
+	public $fileName = 'Video';
 
 	// Protected --------------
 
@@ -66,11 +66,11 @@ class Assign extends \cmsgears\core\common\actions\base\ModelAction {
 
 		if( isset( $this->model ) ) {
 
-			$avatar = File::loadFile( $this->model->avatar, $this->fileName );
+			$document = File::loadFile( $this->model->document, $this->fileName );
 
-			if( $this->modelService->updateAvatar( $this->model, $avatar ) ) {
+			if( $this->modelService->updateDocument( $this->model, $document ) ) {
 
-				$response = [ 'fileUrl' => $avatar->getFileUrl(), 'mediumUrl' => $avatar->getMediumUrl(), 'thumbUrl' => $avatar->getThumbUrl() ];
+				$response = [ 'fileUrl' => $document->getFileUrl() ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );

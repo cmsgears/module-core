@@ -1,49 +1,57 @@
 <?php
 // Yii Imports
 use yii\helpers\Html;
-use yii\helpers\Url;
 
 $siteProperties = Yii::$app->controller->getSiteProperties();
 
 $siteName	= Html::encode( $coreProperties->getSiteName() );
-$logoUrl	= Url::to( "@web/images/" . $siteProperties->getMailAvatar(), true );
 $siteUrl	= Html::encode( $coreProperties->getSiteUrl() );
+$logoUrl	= "$siteUrl/images/" . $siteProperties->getMailAvatar();
 $homeUrl	= $siteUrl;
 $siteBkg	= "$siteUrl/images/" . $siteProperties->getMailBanner();
 
 $user		= $model->holder ?? $model->creator;
-$userName	= Html::encode( $user->getName() );
-$modelName	= Html::encode( $model->name );
+$name		= Html::encode( $user->getName() );
+$email		= Html::encode( $user->email );
+$modelName	= Html::encode( $model->getDisplayName() );
 
 if( $message == null ) {
 
 	$message = 'No reason was mentioned.';
 }
+
+$defaultIncludes = dirname( __DIR__ ) . '/includes';
 ?>
-<?php include dirname( __DIR__ ) . '/includes/header.php'; ?>
-<table cellspacing="0" cellpadding="0" border="0" margin="0" padding="0" width="80%" align="center" class="ctmax">
-	<tr><td height="40"></td></tr>
+<table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse; ">
+	<?php include "$defaultIncludes/header.php"; ?>
 	<tr>
-		<td><font face="Roboto, Arial, sans-serif">Dear Member,</font></td>
-	</tr>
-	<tr><td height="20"></td></tr>
-	<tr>
-		<td>
-			<font face="Roboto, Arial, sans-serif">Congratulations, <?= $modelName ?> has been rejected due to incomplete or inappropriate information provided while registration. The details are as mentioned below:</font>
+		<td bgcolor="#f5f5f5" style="padding: 0; border-bottom: 1px solid #a6a7a7;">
+			<table border="0" cellpadding="0" cellspacing="0" width="100%" style="color: #767676; padding: 20px 40px 20px 40px; font-family: latolight; font-size: 16px; line-height: 1.5;">
+				<tr><td height="40"></td></tr>
+				<tr>
+					<td><font face="Roboto, Arial, sans-serif">Dear Member,</font></td>
+				</tr>
+				<tr><td height="20"></td></tr>
+				<tr>
+					<td>
+						<font face="Roboto, Arial, sans-serif">Unfortunately, <?= $modelName ?> has been rejected due to incomplete or inappropriate information provided by you. The details are as mentioned below:</font>
+					</td>
+				</tr>
+				<tr><td height="20"></td></tr>
+				<tr>
+					<td> <font face="Roboto, Arial, sans-serif">Manager: <?= $name ?></font></td>
+				</tr>
+				<tr><td height="10"></td></tr>
+				<tr>
+					<td> <font face="Roboto, Arial, sans-serif">Reason: <?= $message ?></font></td>
+				</tr>
+				<tr><td height="20"></td></tr>
+				<tr>
+					<td> <font face="Roboto, Arial, sans-serif">Please contact <?= $siteName ?> Administrator in case it's not related to you.</font></td>
+				</tr>
+				<tr><td height="40"></td></tr>
+			</table>
 		</td>
 	</tr>
-	<tr><td height="20"></td></tr>
-	<tr>
-		<td> <font face="Roboto, Arial, sans-serif">Manager: <?= $userName ?></font></td>
-	</tr>
-	<tr><td height="10"></td></tr>
-	<tr>
-		<td> <font face="Roboto, Arial, sans-serif">Reason: <?= $message ?></font></td>
-	</tr>
-	<tr><td height="20"></td></tr>
-	<tr>
-		<td> <font face="Roboto, Arial, sans-serif">Please contact <?= $siteName ?> Administrator in case it's not related to you.</font></td>
-	</tr>
-	<tr><td height="40"></td></tr>
+	<?php include "$defaultIncludes/footer.php"; ?>
 </table>
-<?php include dirname( __DIR__ ) . '/includes/footer.php'; ?>

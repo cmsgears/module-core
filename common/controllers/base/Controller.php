@@ -13,7 +13,6 @@ namespace cmsgears\core\common\controllers\base;
 use Yii;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
-use yii\web\Controller as BaseController;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -27,7 +26,7 @@ use cmsgears\core\common\config\MailProperties;
  *
  * @since 1.0.0
  */
-abstract class Controller extends BaseController {
+abstract class Controller extends \yii\web\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -58,6 +57,13 @@ abstract class Controller extends BaseController {
 	 * @var \cmsgears\core\common\models\base\ActiveRecord
 	 */
 	public $model;
+
+	/**
+	 * The base URL to form the sub relative URLs.
+	 *
+	 * @var type string
+	 */
+	public $baseUrl;
 
 	/**
 	 * The base path to process apix requests.

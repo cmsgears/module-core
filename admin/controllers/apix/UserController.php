@@ -199,7 +199,7 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 			'add-address' => [ 'class' => 'cmsgears\core\common\actions\address\Create' ],
 			'update-address' => [ 'class' => 'cmsgears\core\common\actions\address\Update' ],
 			'delete-address' => [ 'class' => 'cmsgears\core\common\actions\address\Delete' ],
-			// Data Object - Use current logged in user to update the config and settings
+			// Data Object
 			'set-data' => [ 'class' => 'cmsgears\core\common\actions\data\data\Set' ],
 			'remove-data' => [ 'class' => 'cmsgears\core\common\actions\data\data\Remove' ],
 			'set-attribute' => [ 'class' => 'cmsgears\core\common\actions\data\attribute\Set' ],

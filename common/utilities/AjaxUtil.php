@@ -99,9 +99,11 @@ class AjaxUtil {
 	public static function generateErrorMessage( $source, $config = [] ) {
 
 		$multiple		= isset( $config[ 'multiple' ] ) ? $config[ 'multiple' ] : false;
+		$variable		= isset( $config[ 'variable' ] ) ? $config[ 'variable' ] : false;
 		$modelClass		= isset( $config[ 'modelClass' ] ) ? $config[ 'modelClass' ] : null;
 		$modelErrors	= [];
 
+		// Multiple instances of same Class
 		if( $multiple ) {
 
 			foreach( $source as $idx => $model ) {
@@ -113,6 +115,21 @@ class AjaxUtil {
 				foreach( $errors as $key => $value ) {
 
 					$modelErrors[ "$modelClass[$idx][$key]" ] = $value[ 0 ];
+				}
+			}
+		}
+		// Models of different class
+		else if( $variable ) {
+
+			foreach( $source as $idx => $model ) {
+
+				$errors			= $model->getErrors();
+				$modelClass		= $model->getClassName();
+				$modelErrors	= [];
+
+				foreach( $errors as $key => $value ) {
+
+					$modelErrors[ "$modelClass[$key]" ] = $value[ 0 ];
 				}
 			}
 		}

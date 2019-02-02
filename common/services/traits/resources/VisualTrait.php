@@ -117,6 +117,30 @@ trait VisualTrait {
 		]);
 	}
 
+	public function updateDocument( $model, $document ) {
+
+		$fileService = Yii::$app->factory->get( 'fileService' );
+
+		$fileService->saveFiles( $model, [ 'documentId' => $document ] );
+
+		return parent::update( $model, [
+			'attributes' => [ 'documentId' ]
+		]);
+	}
+
+	public function clearDocument( $model ) {
+
+		$fileService = Yii::$app->factory->get( 'fileService' );
+
+		$fileService->delete( $model->document );
+
+		$model->documentId = null;
+
+		return parent::update( $model, [
+			'attributes' => [ 'documentId' ]
+		]);
+	}
+
 	// Delete -------------
 
 	// Bulk ---------------

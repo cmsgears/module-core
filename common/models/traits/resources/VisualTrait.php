@@ -60,10 +60,7 @@ trait VisualTrait {
 	 */
 	public function getAvatarUrl() {
 
-		$avatar		= $this->avatar;
-		$avatarUrl	= isset( $avatar ) ? $avatar->getFileUrl() : null;
-
-		return $avatarUrl;
+		return isset( $this->avatar ) ? $this->avatar->getFileUrl() : null;
 	}
 
 	/**
@@ -81,10 +78,7 @@ trait VisualTrait {
 	 */
 	public function getBannerUrl() {
 
-		$banner		= $this->banner;
-		$bannerUrl	= isset( $banner ) ? $banner->getFileUrl() : null;
-
-		return $bannerUrl;
+		return isset( $this->banner ) ? $this->banner->getFileUrl() : null;
 	}
 
 	/**
@@ -102,10 +96,25 @@ trait VisualTrait {
 	 */
 	public function getVideoUrl() {
 
-		$video		= $this->video;
-		$videoUrl	= isset( $video ) ? $video->getFileUrl() : null;
+		return isset( $this->video ) ? $this->video->getFileUrl() : null;
+	}
 
-		return $videoUrl;
+	/**
+	 * @inheritdoc
+	 */
+	public function getDocument() {
+
+		$fileTable = File::tableName();
+
+		return $this->hasOne( File::class, [ 'id' => 'documentId' ] )->from( "$fileTable as document" );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getDocumentUrl() {
+
+		return isset( $this->document ) ? $this->document->getFileUrl() : null;
 	}
 
 	// Static Methods ----------------------------------------------

@@ -43,14 +43,8 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	protected $memberService;
 	protected $roleService;
-	protected $optionService;
 
 	protected $superRoleId;
-
-	protected $countryService;
-	protected $provinceService;
-	protected $regionService;
-	protected $addressService;
 
 	// Private ----------------
 
@@ -74,12 +68,6 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 		$this->modelService		= Yii::$app->factory->get( 'userService' );
 		$this->memberService	= Yii::$app->factory->get( 'siteMemberService' );
 		$this->roleService		= Yii::$app->factory->get( 'roleService' );
-		$this->optionService	= Yii::$app->factory->get( 'optionService' );
-
-		$this->countryService	= Yii::$app->factory->get( 'countryService' );
-		$this->provinceService	= Yii::$app->factory->get( 'provinceService' );
-		$this->regionService	= Yii::$app->factory->get( 'regionService' );
-		$this->addressService	= Yii::$app->factory->get( 'addressService' );
 
 		// Super Admin
 		$superRole = $this->roleService->getBySlugType( CoreGlobal::ROLE_SUPER_ADMIN, CoreGlobal::TYPE_SYSTEM );
@@ -102,9 +90,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 			'create' => [ [ 'label' => 'Users', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Users', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
 			'delete' => [ [ 'label' => 'Users', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-			'gallery' => [ [ 'label' => 'Users', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ],
-			'profile' => [ [ 'label' => 'User Profile' ] ],
-			'settings' => [ [ 'label' => 'User Settings' ] ]
+			'gallery' => [ [ 'label' => 'Users', 'url' => $this->returnUrl ], [ 'label' => 'Gallery' ] ]
 		];
 	}
 
@@ -127,9 +113,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 					'create'  => [ 'permission' => $this->crudPermission ],
 					'update'  => [ 'permission' => $this->crudPermission, 'filters' => [ 'discover' ] ],
 					'delete'  => [ 'permission' => $this->crudPermission ],
-					'gallery'  => [ 'permission' => $this->crudPermission ],
-					'profile'  => [ 'permission' => CoreGlobal::PERM_ADMIN ],
-					'settings'  => [ 'permission' => CoreGlobal::PERM_ADMIN ]
+					'gallery'  => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
@@ -140,9 +124,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 					'create'  => [ 'get', 'post' ],
 					'update'  => [ 'get', 'post' ],
 					'delete'  => [ 'get', 'post' ],
-					'gallery'  => [ 'get', 'post' ],
-					'profile'  => [ 'get', 'post' ],
-					'settings'  => [ 'get', 'post' ]
+					'gallery'  => [ 'get', 'post' ]
 				]
 			],
 			'activity' => [
@@ -335,65 +317,6 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
-
-	public function actionProfile() {
-
-		// Find Model
-		$model = Yii::$app->core->getUser();
-
-		// Avatar
-		$avatar = $model->avatar;
-
-		// Address
-		$address = $model->primaryAddress;
-
-		if( empty( $address ) ) {
-
-			$address = $this->addressService->getModelObject();
-		}
-
-		// Clear Sidebar
-		$this->sidebar = [];
-
-		$genderMap = $this->optionService->getIdNameMapByCategorySlug( CoreGlobal::CATEGORY_GENDER, [ 'default' => true ] );
-
-		$countryMap		= Yii::$app->factory->get( 'countryService' )->getIdNameMap();
-		$countryId		= isset( $address->country ) ? $address->country->id : array_keys( $countryMap )[ 0 ];
-		$provinceMap	= Yii::$app->factory->get( 'provinceService' )->getMapByCountryId( $countryId, [ 'default' => true, 'defaultValue' => Yii::$app->core->provinceLabel ] );
-		$provinceId		= isset( $address->province ) ? $address->province->id : array_keys( $provinceMap )[ 0 ];
-		$regionMap		= Yii::$app->factory->get( 'regionService' )->getMapByProvinceId( $provinceId, [ 'default' => true, 'defaultValue' => Yii::$app->core->regionLabel ] );
-
-		return $this->render( 'profile', [
-			'model' => $model,
-			'avatar' => $avatar,
-			'address' => $address,
-			'genderMap' => $genderMap,
-			'countryMap' => $countryMap,
-			'provinceMap' => $provinceMap,
-			'regionMap' => $regionMap
-		]);
-	}
-
-	public function actionSettings() {
-
-		// Find Model
-		$user = Yii::$app->core->getUser();
-
-		// Clear Sidebar
-		$this->sidebar = [];
-
-		// Load key settings
-		$privacy		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_PRIVACY );
-		$notification	= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_NOTIFICATION );
-		$reminder		= $this->modelService->getNameMetaMapByType( $user, CoreGlobal::SETTINGS_REMINDER );
-
-		return $this->render( 'settings', [
-			'user' => $user,
-			'privacy' => $privacy,
-			'notification' => $notification,
-			'reminder' => $reminder
-		]);
 	}
 
 }

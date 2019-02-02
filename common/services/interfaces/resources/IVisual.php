@@ -34,9 +34,19 @@ interface IVisual {
 
 	public function updateAvatar( $model, $avatar );
 
+	public function clearAvatar( $model );
+
 	public function updateBanner( $model, $banner );
 
+	public function clearBanner( $model );
+
 	public function updateVideo( $model, $video );
+
+	public function clearVideo( $model );
+
+	public function updateDocument( $model, $document );
+
+	public function clearDocument( $model );
 
 	// Delete -------------
 

@@ -56,7 +56,10 @@ abstract class GridWidget extends Widget {
 	public $title;
 
 	// Flag to show/hide add button
-	public $add			= true;
+	public $add = true;
+
+	// Base URL to form sub URLs
+	public $baseUrl		= null;
 
 	// Url to add model
 	public $addUrl		= 'add';

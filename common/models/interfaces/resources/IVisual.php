@@ -58,4 +58,18 @@ interface IVisual {
 	 */
 	public function getVideoUrl();
 
+	/**
+	 * Returns the document associated with model.
+	 *
+	 * @return File
+	 */
+	public function getDocument();
+
+	/**
+	 * Returns the document url associated with model.
+	 *
+	 * @return string
+	 */
+	public function getDocumentUrl();
+
 }

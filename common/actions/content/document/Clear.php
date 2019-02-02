@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\common\actions\content\avatar;
+namespace cmsgears\core\common\actions\content\document;
 
 // Yii Imports
 use Yii;
@@ -15,16 +15,14 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\File;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Assign action configures the avatar of model having avatar.
+ * Clear action clear the video of model having video.
  *
  * @since 1.0.0
  */
-class Assign extends \cmsgears\core\common\actions\base\ModelAction {
+class Clear extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -39,8 +37,6 @@ class Assign extends \cmsgears\core\common\actions\base\ModelAction {
 	// Variables -----------------------------
 
 	// Public -----------------
-
-	public $fileName = 'Avatar';
 
 	// Protected --------------
 
@@ -60,20 +56,16 @@ class Assign extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// Assign --------------------------------
+	// Avatar --------------------------------
 
 	public function run() {
 
 		if( isset( $this->model ) ) {
 
-			$avatar = File::loadFile( $this->model->avatar, $this->fileName );
-
-			if( $this->modelService->updateAvatar( $this->model, $avatar ) ) {
-
-				$response = [ 'fileUrl' => $avatar->getFileUrl(), 'mediumUrl' => $avatar->getMediumUrl(), 'thumbUrl' => $avatar->getThumbUrl() ];
+			if( $this->modelService->clearDocument( $this->model ) ) {
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $response );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 			}
 
 			// Trigger Ajax Failure

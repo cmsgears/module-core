@@ -402,8 +402,16 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 	public function create( $comment, $config = [] ) {
 
+		$modelClass = static::$modelClass;
+
 		$comment->agent	= Yii::$app->request->userAgent;
 		$comment->ip	= Yii::$app->request->userIP;
+
+		// Default New
+		if( !isset( $comment->status ) ) {
+
+			$comment->status = $modelClass::STATUS_NEW;
+		}
 
 		return parent::create( $comment, $config );
 	}

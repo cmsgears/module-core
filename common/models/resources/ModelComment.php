@@ -32,6 +32,7 @@ use cmsgears\core\common\models\traits\base\FeaturedTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
 use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
+use cmsgears\core\common\models\traits\base\MultiSiteTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
@@ -127,6 +128,7 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 
 	// Traits ------------------------------------------------------
 
+   	use MultiSiteTrait;
 	use AuthorTrait;
 	use DataTrait;
 	use FeaturedTrait;

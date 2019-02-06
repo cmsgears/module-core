@@ -915,6 +915,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 
 		$this->createTable( $this->prefix . 'core_model_comment', [
 			'id' => $this->bigPrimaryKey( 20 ),
+			'siteId' => $this->bigInteger( 20 )->notNull(),
 			'baseId' => $this->bigInteger( 20 ),
 			'bannerId' => $this->bigInteger( 20 ),
 			'videoId' => $this->bigInteger( 20 ),

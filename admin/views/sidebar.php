@@ -6,7 +6,7 @@ use yii\helpers\Html;
 use cmsgears\core\common\config\CoreGlobal;
 
 $core	= Yii::$app->core;
-$user	= Yii::$app->user->getIdentity();
+$user	= Yii::$app->core->getUser();
 $siteId	= Yii::$app->core->siteId;
 ?>
 

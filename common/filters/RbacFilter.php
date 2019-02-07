@@ -170,9 +170,9 @@ class RbacFilter extends \yii\base\Behavior {
 		$filterKeys		= array_keys( $actionConfig[ 'filters' ] );
 		$filterResult	= true;
 
-		foreach ( $filterKeys as $key ) {
+		foreach( $filterKeys as $key ) {
 
-			$filterResult	= true;
+			$filterResult = true;
 
 			// Permission Filter with filter config params
 			if( is_array( $filters[ $key ] ) ) {

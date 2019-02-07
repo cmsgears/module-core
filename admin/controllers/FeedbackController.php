@@ -18,14 +18,12 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\ModelComment;
 
-use cmsgears\core\admin\controllers\base\CommentController;
-
 /**
  * FeedbackController provides actions specific to comment model categorized for application feedback.
  *
  * @since 1.0.0
  */
-class FeedbackController extends CommentController {
+class FeedbackController extends \cmsgears\core\admin\controllers\base\CommentController {
 
 	// Variables ---------------------------------------------------
 

@@ -408,10 +408,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 		$comment->ip	= Yii::$app->request->userIP;
 
 		// Default New
-		if( !isset( $comment->status ) ) {
-
-			$comment->status = $modelClass::STATUS_NEW;
-		}
+		$comment->status = $comment->status ?? $modelClass::STATUS_NEW;
 
 		return parent::create( $comment, $config );
 	}

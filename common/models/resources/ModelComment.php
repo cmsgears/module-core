@@ -40,6 +40,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * The comment model stores the comment for relevant parent models supporting comment feature.
  *
  * @property integer $id
+ * @property integer $siteId
  * @property integer $baseId
  * @property integer $bannerId
  * @property integer $videoId
@@ -173,7 +174,7 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'parentId', 'parentType', 'content' ], 'required' ],
+			[ [ 'siteId', 'parentId', 'parentType', 'content' ], 'required' ],
 			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Email
 			[ 'email', 'email' ],
@@ -186,7 +187,7 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
 			[ [ 'pinned', 'featured', 'anonymous', 'gridCacheValid' ], 'boolean' ],
 			[ [ 'ipNum', 'status', 'fragment', 'rating', 'order' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'baseId', 'bannerId', 'videoId', 'parentId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'siteId', 'baseId', 'bannerId', 'videoId', 'parentId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'createdAt', 'modifiedAt', 'approvedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
@@ -207,6 +208,7 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 	public function attributeLabels() {
 
 		return [
+			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'baseId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
@@ -295,7 +297,7 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'creator', 'modifier' ];
 
 		$config[ 'relations' ] = $relations;
 
@@ -402,11 +404,9 @@ class ModelComment extends ModelResource implements IAuthor, IData, IFeatured, I
 	 */
 	public static function isExistByUser( $parentId, $parentType, $userId, $type = ModelComment::TYPE_COMMENT ) {
 
-		$comment	= static::findByUser( $parentId, $parentType, $userId, $type );
+		$comment = static::findByUser( $parentId, $parentType, $userId, $type );
 
-		$isExist	= isset( $comment );
-
-		return $isExist;
+		return isset( $comment );
 	}
 
 	// Create -----------------

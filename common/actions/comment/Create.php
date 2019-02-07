@@ -21,8 +21,6 @@ use cmsgears\core\common\models\resources\ModelComment;
 
 use cmsgears\files\components\FileManager;
 
-use cmsgears\core\common\actions\base\ModelAction;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -31,7 +29,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class Create extends ModelAction {
+class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -100,6 +98,7 @@ class Create extends ModelAction {
 			$modelComment	= new $modelClass;
 			$commentForm	= new Comment();
 
+			$modelComment->siteId		= Yii::$app->core->getSiteId();
 			$modelComment->parentId		= $this->model->id;
 			$modelComment->parentType	= $this->parentType;
 

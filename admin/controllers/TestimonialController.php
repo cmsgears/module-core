@@ -18,14 +18,12 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\ModelComment;
 
-use cmsgears\core\admin\controllers\base\CommentController;
-
 /**
  * CommentController provides actions specific to comment model categorized for testimonials.
  *
  * @since 1.0.0
  */
-class TestimonialController extends CommentController {
+class TestimonialController extends \cmsgears\core\admin\controllers\base\CommentController {
 
 	// Variables ---------------------------------------------------
 

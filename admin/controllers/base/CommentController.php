@@ -152,6 +152,7 @@ abstract class CommentController extends Controller {
 
 		$model = new $modelClass;
 
+		$model->siteId		= Yii::$app->core->getSiteId();
 		$model->parentId	= $pid;
 		$model->parentType	= $this->parentType;
 		$model->type		= $this->commentType;

@@ -1563,6 +1563,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_message_locale', $this->prefix . 'core_model_message' );
 
 		// Model Comment
+		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_site', $this->prefix . 'core_model_comment' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_base', $this->prefix . 'core_model_comment' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_banner', $this->prefix . 'core_model_comment' );
 		$this->dropForeignKey( 'fk_' . $this->prefix . 'model_comment_video', $this->prefix . 'core_model_comment' );

@@ -81,17 +81,23 @@ trait FeaturedTrait {
 	public static function queryByPinned( $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 1;
+		$query		= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'pinned=:pinned AND siteId=:siteId', [ ':pinned' => true, ':siteId' => $siteId ] );
+			$query = static::find()->where( 'pinned=:pinned AND siteId=:siteId', [ ':pinned' => true, ':siteId' => $siteId ] );
 		}
 		else {
 
-			return static::find()->where( 'pinned=:pinned', [ ':pinned' => true ] );
+			$query = static::find()->where( 'pinned=:pinned', [ ':pinned' => true ] );
 		}
+
+		$query->limit( $limit );
+
+		return $query;
 	}
 
 	/**
@@ -105,17 +111,23 @@ trait FeaturedTrait {
 	public static function queryByPinnedType( $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 1;
+		$query		= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'type=:type AND pinned=:pinned AND siteId=:siteId', [ ':type' => $type, ':pinned' => true, ':siteId' => $siteId ] );
+			$query = static::find()->where( 'type=:type AND pinned=:pinned AND siteId=:siteId', [ ':type' => $type, ':pinned' => true, ':siteId' => $siteId ] );
 		}
 		else {
 
-			return static::find()->where( 'type=:type AND pinned=:pinned', [ ':type' => $type, ':pinned' => true ] );
+			$query = static::find()->where( 'type=:type AND pinned=:pinned', [ ':type' => $type, ':pinned' => true ] );
 		}
+
+		$query->limit( $limit );
+
+		return $query;
 	}
 
 	/**
@@ -127,17 +139,23 @@ trait FeaturedTrait {
 	public static function queryByFeatured( $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$query		= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'featured=:featured AND siteId=:siteId', [ ':featured' => true, ':siteId' => $siteId ] );
+			$query = static::find()->where( 'featured=:featured AND siteId=:siteId', [ ':featured' => true, ':siteId' => $siteId ] );
 		}
 		else {
 
-			return static::find()->where( 'featured=:featured', [ ':featured' => true ] );
+			$query = static::find()->where( 'featured=:featured', [ ':featured' => true ] );
 		}
+
+		$query->limit( $limit );
+
+		return $query;
 	}
 
 	/**
@@ -151,17 +169,23 @@ trait FeaturedTrait {
 	public static function queryByFeaturedType( $type, $config = [] ) {
 
 		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 10;
+		$query		= null;
 
 		if( static::isMultiSite() && !$ignoreSite ) {
 
 			$siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
-			return static::find()->where( 'type=:type AND featured=:featured AND siteId=:siteId', [ ':type' => $type, ':featured' => true, ':siteId' => $siteId ] );
+			$query = static::find()->where( 'type=:type AND featured=:featured AND siteId=:siteId', [ ':type' => $type, ':featured' => true, ':siteId' => $siteId ] );
 		}
 		else {
 
-			return static::find()->where( 'type=:type AND featured=:featured', [ ':type' => $type, ':featured' => true ] );
+			$query = static::find()->where( 'type=:type AND featured=:featured', [ ':type' => $type, ':featured' => true ] );
 		}
+
+		$query->limit( $limit );
+
+		return $query;
 	}
 
 	// Read - Find ------------

@@ -890,6 +890,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'parentId' => $this->bigInteger( 20 )->notNull(),
 			'parentType' => $this->string( Yii::$app->core->mediumText )->notNull(),
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
+			'module' => $this->string( Yii::$app->core->mediumText ),
 			'type' => $this->string( Yii::$app->core->mediumText ),
 			'value' => $this->mediumText()
 		], $this->options );

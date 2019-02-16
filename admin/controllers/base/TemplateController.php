@@ -30,6 +30,8 @@ abstract class TemplateController extends CrudController {
 
 	// Public -----------------
 
+	public $title;
+
 	// Protected --------------
 
 	protected $type;

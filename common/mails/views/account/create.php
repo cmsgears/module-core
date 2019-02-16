@@ -1,20 +1,21 @@
 <?php
 // Yii Imports
 use yii\helpers\Html;
-use yii\helpers\Url;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 $siteProperties = Yii::$app->controller->getSiteProperties();
 
+$defaultIncludes = Yii::getAlias( '@cmsgears' ) . '/module-core/common/mails/views/includes';
+
 $name	= Html::encode( $user->getName() );
 $email	= Html::encode( $user->email );
 $token	= Html::encode( $user->verifyToken );
 
 $siteName	= Html::encode( $coreProperties->getSiteName() );
-$logoUrl	= Url::to( "@web/images/" . $siteProperties->getMailAvatar(), true );
 $siteUrl	= Html::encode( $coreProperties->getSiteUrl() );
+$logoUrl	= "$siteUrl/images/" . $siteProperties->getMailAvatar();
 $homeUrl	= $siteUrl;
 $siteBkg	= "$siteUrl/images/" . $siteProperties->getMailBanner();
 
@@ -25,7 +26,7 @@ if( $user->isPermitted( CoreGlobal::PERM_ADMIN ) ) {
 
 $activateLink = "$siteUrl/activate-account?token=$token&email=$email";
 ?>
-<?php include dirname( __DIR__ ) . '/includes/header.php'; ?>
+<?php include "$defaultIncludes/header.php"; ?>
 <table cellspacing="0" cellpadding="0" border="0" margin="0" padding="0" width="80%" align="center" class="ctmax">
 	<tr><td height="40"></td></tr>
 	<tr>
@@ -47,4 +48,4 @@ $activateLink = "$siteUrl/activate-account?token=$token&email=$email";
 	</tr>
 	<tr><td height="40"></td></tr>
 </table>
-<?php include dirname( __DIR__ ) . '/includes/footer.php'; ?>
+<?php include "$defaultIncludes/footer.php"; ?>

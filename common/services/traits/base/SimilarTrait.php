@@ -48,17 +48,17 @@ trait SimilarTrait {
 		$modelClass	= static::$modelClass;
 		$modelTable = $modelClass::tableName();
 
-		$parentType			= isset( $config[ 'parentType' ] ) ? $config[ 'parentType' ] : static::$parentType;
-		$modelId			= isset( $config[ 'modelId' ] ) ? $config[ 'modelId' ] : null;
-		$mcategoryTable		= Yii::$app->factory->get( 'modelCategoryService' )->getModelTable();
-		$categoryTable		= Yii::$app->factory->get( 'categoryService' )->getModelTable();
-		$mtagTable			= Yii::$app->factory->get( 'modelTagService' )->getModelTable();
-		$tagTable			= Yii::$app->factory->get( 'tagService' )->getModelTable();
-		$filter				= null;
+		$parentType		= isset( $config[ 'parentType' ] ) ? $config[ 'parentType' ] : static::$parentType;
+		$modelId		= isset( $config[ 'modelId' ] ) ? $config[ 'modelId' ] : null;
+		$mcategoryTable	= Yii::$app->factory->get( 'modelCategoryService' )->getModelTable();
+		$categoryTable	= Yii::$app->factory->get( 'categoryService' )->getModelTable();
+		$mtagTable		= Yii::$app->factory->get( 'modelTagService' )->getModelTable();
+		$tagTable		= Yii::$app->factory->get( 'tagService' )->getModelTable();
+		$filter			= null;
 
 		// Search Query
-		$query				= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$hasOne				= isset( $config[ 'hasOne' ] ) ? $config[ 'hasOne' ] : false;
+		$query	= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
+		$hasOne	= isset( $config[ 'hasOne' ] ) ? $config[ 'hasOne' ] : false;
 
 		// Use model joins
 		if( $hasOne ) {

@@ -669,6 +669,24 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 	// Cache --------------
 
+	// Import/Export ------
+
+	public function exportModels( $config = [] ) {
+
+		// Apply Filters
+		// Use query params to create custom filters
+
+		return $this->searchModels( $config );
+	}
+
+	public function filterModels( $filters, $config = [] ) {
+
+		// Apply Filters
+		// Use $filters model to create custom filters
+
+		return $this->searchModels( $config );
+	}
+
 	// Additional ---------
 
 	// Static Methods ----------------------------------------------
@@ -1149,20 +1167,20 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$config	= static::applyPublicFilters( $config );
 		$config	= static::applySiteFilters( $config );
 
-		// query generation
+		// Generate Query
 		$query			= $config[ 'query' ] ?? $modelClass::find();
 		$offset			= $config[ 'offset' ] ?? 0;
 		$limit			= $config[ 'limit' ] ?? self::PAGE_LIMIT;
 		$conditions		= $config[ 'conditions' ] ?? null;
 		$filters		= $config[ 'filters' ] ?? null;
-		$sort			= $config[ 'sort' ] ?? [ 'id' => SORT_ASC ];
+		$sort			= $config[ 'sort' ] ?? [ 'id' => SORT_DESC ]; // Show latest first
 		$public			= $config[ 'public' ] ?? false;
 
-		// selected columns
-		$columns		= $config[ 'columns' ] ?? [];
+		// Result Columns
+		$columns = $config[ 'columns' ] ?? [];
 
-		// array result
-		$array			= $config[ 'array' ] ?? false;
+		// Array Result
+		$array = $config[ 'array' ] ?? false;
 
 		// Selective columns ---
 
@@ -1175,7 +1193,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		if( isset( $conditions ) ) {
 
-			foreach ( $conditions as $ckey => $condition ) {
+			foreach( $conditions as $ckey => $condition ) {
 
 				if( is_numeric( $ckey ) ) {
 
@@ -1201,9 +1219,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		if( isset( $filters ) ) {
 
-			foreach ( $filters as $filter ) {
+			foreach( $filters as $filter ) {
 
-				$query	= $query->andFilterWhere( $filter );
+				$query->andFilterWhere( $filter );
 			}
 		}
 

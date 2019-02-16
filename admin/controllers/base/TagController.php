@@ -30,6 +30,7 @@ abstract class TagController extends CrudController {
 
 	// Public -----------------
 
+	public $title;
 	public $type;
 
 	// Protected --------------
@@ -46,7 +47,8 @@ abstract class TagController extends CrudController {
 		$this->setViewPath( '@cmsgears/module-core/admin/views/tag' );
 
 		// Config
-		$this->type = CoreGlobal::TYPE_SITE;
+		$this->title	= CoreGlobal::TYPE_SITE;
+		$this->type		= CoreGlobal::TYPE_SITE;
 
 		// Permission
 		$this->crudPermission = CoreGlobal::PERM_CORE;

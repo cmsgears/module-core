@@ -30,6 +30,7 @@ abstract class CategoryController extends CrudController {
 
 	// Public -----------------
 
+	public $title;
 	public $type;
 
 	// Protected --------------
@@ -49,7 +50,8 @@ abstract class CategoryController extends CrudController {
 		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Config
-		$this->type = CoreGlobal::TYPE_SITE;
+		$this->title	= CoreGlobal::TYPE_SITE;
+		$this->type		= CoreGlobal::TYPE_SITE;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'categoryService' );

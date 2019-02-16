@@ -159,6 +159,12 @@ interface IActiveRecordService {
 
 	// Cache --------------
 
+	// Import/Export ------
+
+	public function exportModels( $config = [] );
+
+	public function filterModels( $filters, $config = [] );
+
 	// Additional ---------
 
 }

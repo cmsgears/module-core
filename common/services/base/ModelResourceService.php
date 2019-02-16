@@ -57,15 +57,19 @@ abstract class ModelResourceService extends ResourceService implements IModelRes
 
 	public function getPageByParent( $parentId, $parentType, $config = [] ) {
 
-		$config[ 'conditions'][ 'parentId' ]	= $parentId;
-		$config[ 'conditions'][ 'parentType' ]	= $parentType;
+		$modelTable = $this->getModelTable();
+
+		$config[ 'conditions'][ "$modelTable.parentId" ]	= $parentId;
+		$config[ 'conditions'][ "$modelTable.parentType" ]	= $parentType;
 
 		return $this->getPage( $config );
 	}
 
 	public function getPageByParentType( $parentType, $config = [] ) {
 
-		$config[ 'conditions'][ 'parentType' ] = $parentType;
+		$modelTable = $this->getModelTable();
+
+		$config[ 'conditions'][ "$modelTable.parentType" ] = $parentType;
 
 		return $this->getPage( $config );
 	}

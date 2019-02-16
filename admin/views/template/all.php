@@ -7,7 +7,8 @@ use cmsgears\widgets\grid\DataGrid;
 $type = ucfirst( $type );
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= "$type Templates | " . $coreProperties->getSiteTitle();
+$title			= !empty( $this->context->title ) ? $this->context->title : $type;
+$this->title	= "$title Templates | " . $coreProperties->getSiteTitle();
 $apixBase		= $this->context->apixBase;
 
 // View Templates
@@ -16,7 +17,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
-	'title' => "$type Templates", 'options' => [ 'class' => 'grid-data grid-data-admin' ],
+	'title' => "$title Templates", 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'content' => 'Content' ],
 	'sortColumns' => [
 		'name' => 'Name', 'slug' => 'Slug', 'title' => 'Title', 'active' => 'Active', 'renderer' => 'Renderer',

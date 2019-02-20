@@ -20,15 +20,13 @@ use cmsgears\core\frontend\config\CoreGlobalWeb;
 use cmsgears\core\common\models\forms\Register;
 use cmsgears\core\common\models\mappers\SiteMember;
 
-use cmsgears\core\common\controllers\SiteController as BaseSiteController;
-
 /**
  * SiteController provides application actions. Most of these actions are specific to
  * system pages.
  *
  * @since 1.0.0
  */
-class SiteController extends BaseSiteController {
+class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 	// Variables ---------------------------------------------------
 
@@ -179,7 +177,8 @@ class SiteController extends BaseSiteController {
 		if( isset( $token ) && isset( $email ) ) {
 
 			$coreProperties = $this->getCoreProperties();
-			$user			= $this->userService->getByEmail( $email );
+
+			$user = $this->userService->getByEmail( $email );
 
 			if( isset( $user ) ) {
 
@@ -231,7 +230,7 @@ class SiteController extends BaseSiteController {
 			}
 		}
 
-		return $this->render( CoreGlobal::PAGE_SITEMEMBER, [ 'user' => $user, 'model' => $model ] );
+		return $this->render( CoreGlobal::PAGE_SITE_MEMBER, [ 'user' => $user, 'model' => $model ] );
 	}
 
 	public function actionFeedback() {

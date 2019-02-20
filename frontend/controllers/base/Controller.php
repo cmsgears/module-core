@@ -17,14 +17,12 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\frontend\config\SiteProperties;
 
-use cmsgears\core\common\controllers\base\Controller as BaseController;
-
 /**
  * Base Controller of all frontend controllers.
  *
  * @since 1.0.0
  */
-abstract class Controller extends BaseController {
+abstract class Controller extends \cmsgears\core\common\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

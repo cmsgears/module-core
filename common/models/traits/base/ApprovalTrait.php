@@ -135,7 +135,7 @@ trait ApprovalTrait {
 			return $this->status == IApproval::STATUS_NEW;
 		}
 
-		return $this->status >= IApproval::STATUS_NEW;
+		return $this->status <= IApproval::STATUS_NEW;
 	}
 
 	/**

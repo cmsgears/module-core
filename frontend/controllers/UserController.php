@@ -34,8 +34,6 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 
 	// Public -----------------
 
-	public $basePath;
-
 	// Protected --------------
 
 	protected $optionService;
@@ -58,8 +56,8 @@ class UserController extends \cmsgears\core\frontend\controllers\base\Controller
 		$this->crudPermission = CoreGlobal::PERM_USER;
 
 		// Config
-		$this->basePath = '/user';
-		$this->apixBase = 'core/user';
+		$this->baseUrl	= '/user';
+		$this->apixBase	= 'core/user';
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'userService' );

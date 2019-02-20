@@ -24,6 +24,7 @@ use cmsgears\core\common\models\forms\BaseForm;
  * @property string $password
  * @property string $password_repeat
  * @property string $username
+ * @property string $type
  * @property integer $localeId
  * @property integer $genderId
  * @property integer $templateId
@@ -103,7 +104,7 @@ class Register extends BaseForm {
 
 		parent::init();
 
-		$this->userService	= Yii::$app->factory->get( 'userService' );
+		$this->userService = Yii::$app->factory->get( 'userService' );
 	}
 
 	// Instance methods --------------------------------------------

@@ -34,7 +34,7 @@ class CoreGlobal {
 	const PAGE_PASSWORD_RESET_OTP	= 'reset-password-otp';
 	const PAGE_LOGIN				= 'login';
 
-	const PAGE_SITEMEMBER	= 'site-member';
+	const PAGE_SITE_MEMBER	= 'site-member';
 
 	const FLASH_GENERIC		= 'message';
 	const MODEL_GENERIC		= 'model';

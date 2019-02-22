@@ -30,6 +30,7 @@ class CoreValidator {
         'url' => 'cmsgears\core\common\validators\yii\UrlValidator',
         'ip' => 'cmsgears\core\common\validators\yii\IpValidator',
 		// CMG
+		'alphanum' => 'cmsgears\core\common\validators\AlphaNumValidator',
 		'alphanumspace' => 'cmsgears\core\common\validators\AlphaNumWithSpaceValidator',
 		'alphanumspaceu' => 'cmsgears\core\common\validators\AlphaNumWithSpaceUndescoreValidator',
 		'alphanumpun' => 'cmsgears\core\common\validators\AlphaNumWithPunctuationValidator',

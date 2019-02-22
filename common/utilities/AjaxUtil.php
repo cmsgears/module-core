@@ -129,7 +129,7 @@ class AjaxUtil {
 
 				foreach( $errors as $key => $value ) {
 
-					$modelErrors[ "$modelClass[$key]" ] = $value[ 0 ];
+					$modelErrors[ "{$modelClass}[$key]" ] = $value[ 0 ];
 				}
 			}
 		}

@@ -160,6 +160,13 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		$roleMap = $this->roleService->getIdNameMapByType( CoreGlobal::TYPE_SYSTEM );
 
+		$user = Yii::$app->core->getUser();
+
+		if( $user->activeSiteMember->roleId != $this->superRoleId ) {
+
+			unset( $roleMap[ $this->superRoleId ] );
+		}
+
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
 			'roleMap' => $roleMap,

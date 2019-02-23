@@ -309,6 +309,16 @@ class DateUtil {
 		return $diff;
 	}
 
+	public static function getHrDifference( $startDate, $endDate ) {
+
+		$start 	= is_string( $startDate ) ? strtotime( $startDate ) : $startDate->getTimestamp();
+		$end 	= is_string( $endDate ) ? strtotime( $endDate ) : $endDate->getTimestamp();
+		$diff	= $end - $start;
+		$diff	= floor( $diff / ( 60 * 60 ) );
+
+		return $diff;
+	}
+
 	/**
 	 * Compare the target date with source date to check whether target date is lesser than or equal to source date.
 	 *

@@ -24,6 +24,7 @@ class CoreGlobalWeb {
 	const PAGE_INDEX			= 'index';
 	const PAGE_MAINTENANCE		= 'maintenance';
 	const PAGE_REGISTER			= 'register';
+	const PAGE_SIGNUP			= 'signup';
 	const PAGE_ACCOUNT_CONFIRM	= 'confirm-account';
 	const PAGE_FEEDBACK			= 'feedback';
 	const PAGE_TESTIMONIAL		= 'testimonial';

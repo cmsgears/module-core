@@ -55,12 +55,31 @@ class SmsManager extends Component {
 		return $otp;
 	}
 
+	public function isActive() {
+
+		// Adapter method
+
+		return false;
+	}
+
+	public function getOtpBalance() {
+
+		// Adapter method
+	}
+
+	public function isOTP() {
+
+		return $this->isActive() && $this->getOtpBalance() > 10;
+	}
+
 	public function sendOtp( $number, $message, $otp ) {
 
+		// Adapter method
 	}
 
 	public function reSendOtp( $number, $message, $otp ) {
 
+		// Adapter method
 	}
 
 }

@@ -52,7 +52,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::MESSAGE_ACCOUNT_ACTIVATE => null,
 		CoreGlobal::MESSAGE_ACCOUNT_CONFIRM => null,
 		CoreGlobal::MESSAGE_FORGOT_PASSWORD => 'A confirmation email having password reset link was sent to the given email address.',
-		CoreGlobal::MESSAGE_RESET_PASSWORD => 'Your password reset request was processed successfully. Please login to continue with us.',
+		CoreGlobal::MESSAGE_RESET_PASSWORD => null,
 
 		// Errors ----------------------------------------------------------
 
@@ -98,7 +98,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::ERROR_TERMS => 'Please accept our terms and conditions to continue.',
 
 		// Errors - User Login
-		CoreGlobal::ERROR_USER_NOT_EXIST => 'A user with the given email or username is not registered.',
+		CoreGlobal::ERROR_USER_NOT_EXIST => 'The given email or username is not registered.',
 		CoreGlobal::ERROR_USER_VERIFICATION => 'The account with this email or username is not confirmed yet. Please follow the mail sent while registration or try to reset password.',
 		CoreGlobal::ERROR_BLOCKED => 'The account is blocked by Admin. Please contact Admin to re-activate it.',
 		CoreGlobal::ERROR_LOGIN_FAILED => 'The provided email or username and password does not match.',
@@ -345,12 +345,17 @@ class MessageSource extends \yii\base\Component {
 
 		if( empty( $this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_ACTIVATE ] ) ) {
 
-			$this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_ACTIVATE ] = "Congratulations ! Your account has been successfully activated. <br/><br/>Please $loginLink to continue with us.";
+			$this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_ACTIVATE ] = "Congratulations! Your account has been successfully activated. <br/><br/>Please $loginLink to continue with us.";
 		}
 
 		if( empty( $this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ] ) ) {
 
-			$this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ] = "Congratulations ! Your account has been successfully confirmed. <br/><br/>Please $loginLink to continue with us.";
+			$this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_CONFIRM ] = "Congratulations! Your account has been successfully confirmed. <br/><br/>Please $loginLink to continue with us.";
+		}
+
+		if( empty( $this->messageDb[ CoreGlobal::MESSAGE_RESET_PASSWORD ] ) ) {
+
+			$this->messageDb[ CoreGlobal::MESSAGE_RESET_PASSWORD ] = "Your password reset request was processed successfully. Please $loginLink to continue with us.";
 		}
 	}
 

@@ -85,6 +85,8 @@ class Core extends Config {
 	 */
 	public $subDirectory		= true;
 
+	public $testHosts = [ 'localhost' ];
+
 	/**
 	 *
 	 * @var \cmsgears\core\common\models\entities\User The active logged in user.
@@ -370,6 +372,11 @@ class Core extends Config {
 		return $this->subDirectory;
 	}
 
+	public function getTestHosts() {
+
+		return $this->testHosts;
+	}
+
 	public function getAppAdmin() {
 
 		return $this->appAdmin;
@@ -470,7 +477,7 @@ class Core extends Config {
 
 	/**
 	 * The method getEditor is used by the views to make a text area to edit html.
-	 * 
+	 *
 	 * @return the class name
 	 */
 	public function getEditor() {

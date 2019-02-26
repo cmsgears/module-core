@@ -118,7 +118,8 @@ class Application extends BaseApplication {
 			else {
 
 				// Find Site
-				$host		= explode( ".", $_SERVER[ 'HTTP_HOST' ] );
+              	$hostname	= $_SERVER[ 'HTTP_HOST' ];
+				$host		= explode( ".", $hostname );
 				$siteName	= 'main';
 
 				if( count( $host ) == 2 ) {
@@ -130,7 +131,7 @@ class Application extends BaseApplication {
 					$siteName = array_shift( $host );
 
 					// Accessed via www or localhost
-					if( strcmp( $siteName, 'www' ) == 0 || strcmp( $siteName, 'localhost' ) == 0 ) {
+					if( strcmp( $siteName, 'www' ) == 0 || in_array( $hostname, Yii::$app->core->testHosts ) ) {
 
 						$siteName = Yii::$app->core->defaultSiteSlug;
 					}

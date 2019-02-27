@@ -1,16 +1,25 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\ModelMeta;
 
 use cmsgears\core\common\services\interfaces\resources\IModelMetaService;
 
 /**
- * The class ModelMetaService is base class to perform database activities for ModelMeta Entity.
+ * ModelMetaService provide service methods of model meta.
+ *
+ * @since 1.0.0
  */
-class ModelMetaService extends \cmsgears\core\common\services\base\EntityService implements IModelMetaService {
+class ModelMetaService extends \cmsgears\core\common\services\base\ModelResourceService implements IModelMetaService {
 
 	// Variables ---------------------------------------------------
 
@@ -20,11 +29,7 @@ class ModelMetaService extends \cmsgears\core\common\services\base\EntityService
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelMeta';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_META;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\resources\ModelMeta';
 
 	// Protected --------------
 
@@ -60,26 +65,55 @@ class ModelMetaService extends \cmsgears\core\common\services\base\EntityService
 
 	public function getByType( $parentId, $parentType, $type ) {
 
-		return ModelMeta::findByType( $parentId, $parentType, $type );
+		$modelClass = static::$modelClass;
+
+		return $modelClass::findByType( $parentId, $parentType, $type );
 	}
 
 	public function getByNameType( $parentId, $parentType, $name, $type ) {
 
-		return ModelMeta::findByNameType( $parentId, $parentType, $name, $type );
+		$modelClass = static::$modelClass;
+
+		return $modelClass::findByNameType( $parentId, $parentType, $name, $type );
 	}
 
-	public function initByNameType( $parentId, $parentType, $name, $type, $valueType = ModelMeta::VALUE_TYPE_TEXT ) {
+	public function initByNameType( $parentId, $parentType, $name, $type, $valueType = ModelMeta::VALUE_TYPE_TEXT, $label = null, $icon = null ) {
 
-		$meta	= ModelMeta::findByNameType( $parentId, $parentType, $name, $type );
+		$modelClass = static::$modelClass;
+
+		$meta = $modelClass::findByNameType( $parentId, $parentType, $name, $type );
 
 		if( !isset( $meta ) ) {
 
-			$meta				= new ModelMeta();
+			$meta = new $modelClass();
+
 			$meta->parentId		= $parentId;
 			$meta->parentType	= $parentType;
-			$meta->name			= $name;
-			$meta->type			= $type;
-			$meta->valueType	= $valueType;
+
+			$meta->name		= $name;
+			$meta->label	= !empty( $label ) ? $label : $name;
+			$meta->icon		= !empty( $icon ) ? $icon : null;
+			$meta->type		= $type;
+			$meta->active	= true;
+
+			$meta->valueType = $valueType;
+
+			switch( $valueType ) {
+
+				case ModelMeta::VALUE_TYPE_FLAG: {
+
+					$meta->value = 0;
+				}
+				default: {
+
+					$meta->value = null;
+				}
+			}
+
+			// Create & Refresh
+			$meta->save();
+
+			$meta->refresh();
 		}
 
 		return $meta;
@@ -91,6 +125,8 @@ class ModelMetaService extends \cmsgears\core\common\services\base\EntityService
 
 	public function getNameValueMapByType( $parentId, $parentType, $type ) {
 
+		$config = [];
+
 		$config[ 'conditions' ][ 'parentId' ]	= $parentId;
 		$config[ 'conditions' ][ 'parentType' ] = $parentType;
 		$config[ 'conditions' ][ 'type' ]		= $type;
@@ -100,6 +136,8 @@ class ModelMetaService extends \cmsgears\core\common\services\base\EntityService
 
 	public function getIdMetaMapByType( $parentId, $parentType, $type ) {
 
+		$config = [];
+
 		$config[ 'conditions' ][ 'parentId' ]	= $parentId;
 		$config[ 'conditions' ][ 'parentType' ] = $parentType;
 		$config[ 'conditions' ][ 'type' ]		= $type;
@@ -108,6 +146,8 @@ class ModelMetaService extends \cmsgears\core\common\services\base\EntityService
 	}
 
 	public function getNameMetaMapByType( $parentId, $parentType, $type ) {
+
+		$config = [];
 
 		$config[ 'key' ] = 'name';
 
@@ -124,7 +164,7 @@ class ModelMetaService extends \cmsgears\core\common\services\base\EntityService
 
 	public function create( $model, $config = [] ) {
 
-		if( !isset( $model->label ) || strlen( $model->label ) <= 0 ) {
+		if( empty( $model->label ) ) {
 
 			$model->label = $model->name;
 		}
@@ -141,9 +181,10 @@ class ModelMetaService extends \cmsgears\core\common\services\base\EntityService
 
 	// Update -------------
 
+	// TODO: Analyze the impact and change it to follow regualar update pattern
 	public function update( $model, $config = [] ) {
 
-		$existingModel	= $this->getByNameType( $model->parentId, $model->parentType, $model->name, $model->type );
+		$existingModel = $this->getByNameType( $model->parentId, $model->parentType, $model->name, $model->type );
 
 		// Create if it does not exist
 		if( !isset( $existingModel ) ) {
@@ -171,6 +212,7 @@ class ModelMetaService extends \cmsgears\core\common\services\base\EntityService
 
 		foreach( $models as $model ) {
 
+			// TODO: Add a check for parentType
 			if( $model->parentId == $parent->id ) {
 
 				$this->update( $model );
@@ -182,23 +224,55 @@ class ModelMetaService extends \cmsgears\core\common\services\base\EntityService
 
 		$metas = $form->getArrayToStore();
 
-		foreach ( $metas as $meta ) {
+		foreach( $metas as $meta ) {
 
 			if( !isset( $meta[ 'valueType' ] ) ) {
 
-				$meta[ 'valueType' ]	= ModelMeta::VALUE_TYPE_TEXT;
+				$meta[ 'valueType' ] = ModelMeta::VALUE_TYPE_TEXT;
 			}
 
-			$model			= $this->initByNameType( $config[ 'parentId' ], $config[ 'parentType' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ] );
+			if( !isset( $meta[ 'label' ] ) ) {
+
+				$meta[ 'label' ] = $form->getAttributeLabel( $meta[ 'name' ] );
+			}
+
+			if( !isset( $meta[ 'icon' ] ) ) {
+
+				$meta[ 'icon' ] = null;
+			}
+
+			$model = $this->initByNameType( $config[ 'parentId' ], $config[ 'parentType' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ], $meta[ 'label' ], $meta[ 'icon' ] );
 
 			$model->value	= $meta[ 'value' ];
-			$model->label	= $form->getMetaLabel( $meta[ 'name' ] );
+			$model->label	= $meta[ 'label' ];
 
 			$this->update( $model );
 		}
 	}
 
+	public function toggle( $model ) {
+
+		if( $model->value ) {
+
+			$model->value = false;
+		}
+		else {
+
+			$model->value = true;
+		}
+
+		$model->update();
+	}
+
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

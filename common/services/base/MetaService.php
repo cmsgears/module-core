@@ -1,12 +1,28 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\base;
+
+// Yii Imports
+use Yii;
+use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\models\base\Meta;
 
 use cmsgears\core\common\services\interfaces\base\IMetaService;
 
-abstract class MetaService extends EntityService implements IMetaService {
+/**
+ * MetaService is base class for all the services having [[\cmsgears\core\common\models\base\Meta]] as primary model.
+ */
+abstract class MetaService extends ResourceService implements IMetaService {
 
 	// Variables ---------------------------------------------------
 
@@ -44,18 +60,154 @@ abstract class MetaService extends EntityService implements IMetaService {
 
 	// Data Provider ------
 
+	public function getPage( $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		// Sorting ----------
+
+		$sort = new Sort([
+			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
+				'icon' => [
+					'asc' => [ "$modelTable.icon" => SORT_ASC ],
+					'desc' => [ "$modelTable.icon" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Icon'
+				],
+				'name' => [
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
+				],
+				'label' => [
+					'asc' => [ "$modelTable.label" => SORT_ASC ],
+					'desc' => [ "$modelTable.label" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Label'
+				],
+				'type' => [
+					'asc' => [ "$modelTable.type" => SORT_ASC ],
+					'desc' => [ "$modelTable.type" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Type'
+				],
+				'active' => [
+					'asc' => [ "$modelTable.active" => SORT_ASC ],
+					'desc' => [ "$modelTable.active" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Active'
+				],
+				'vtype' => [
+					'asc' => [ "$modelTable.valueType" => SORT_ASC ],
+					'desc' => [ "$modelTable.valueType" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Value Type'
+				]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
+			]
+		]);
+
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
+
+		// Filters ----------
+
+		// Params
+		$type	= Yii::$app->request->getQueryParam( 'type' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
+
+		// Filter - Type
+		if( isset( $type ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'active': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = true;
+
+					break;
+				}
+				case 'inactive': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = false;
+
+					break;
+				}
+			}
+		}
+
+		// Searching --------
+
+		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [
+				'name' => "$modelTable.name",
+				'label' => "$modelTable.label",
+				'value' => "$modelTable.value"
+			];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name",
+			'label' => "$modelTable.label",
+			'type' => "$modelTable.type",
+			'vtype' => "$modelTable.valueType",
+			'value' => "$modelTable.value"
+		];
+
+		// Result -----------
+
+		return parent::getPage( $config );
+	}
+
 	// Read ---------------
 
 	// Read - Models ---
 
-	public function getByName( $modelId, $name, $first = false ) {
-
-		return self::findByName( $modelId, $name, $first );
-	}
-
 	public function getByModelId( $modelId ) {
 
 		return self::findByModelId( $modelId );
+	}
+
+	public function getByName( $modelId, $name ) {
+
+		return self::findByName( $modelId, $name );
+	}
+
+	public function getFirstByName( $modelId, $name ) {
+
+		return self::getFirstByName( $modelId, $name );
 	}
 
 	public function getByType( $modelId, $type ) {
@@ -68,27 +220,31 @@ abstract class MetaService extends EntityService implements IMetaService {
 		return self::findByNameType( $modelId, $name, $type );
 	}
 
-	public function initByNameType( $modelId, $name, $type, $valueType = 'text' ) {
+	public function initByNameType( $modelId, $name, $type, $valueType = Meta::VALUE_TYPE_TEXT, $label = null, $icon = null ) {
 
-		$meta	= $this->getByNameType( $modelId, $name, $type );
+		$meta = $this->getByNameType( $modelId, $name, $type );
 
 		if( !isset( $meta ) ) {
 
-			$modelClass			= static::$modelClass;
+			$modelClass = static::$modelClass;
 
 			// Initialise
-			$meta				= new $modelClass();
-			$meta->modelId		= $modelId;
-			$meta->name			= $name;
-			$meta->label		= $name;
-			$meta->type			= $type;
-			$meta->valueType	= $valueType;
+			$meta = new $modelClass();
+
+			$meta->modelId	= $modelId;
+			$meta->name		= $name;
+			$meta->label	= !empty( $label ) ? $label : $name;
+			$meta->icon		= !empty( $icon ) ? $icon : null;
+			$meta->type		= $type;
+			$meta->active	= true;
+
+			$meta->valueType = $valueType;
 
 			switch( $valueType ) {
 
 				case Meta::VALUE_TYPE_FLAG: {
 
-					$meta->value = false;
+					$meta->value = 0;
 				}
 				default: {
 
@@ -111,7 +267,7 @@ abstract class MetaService extends EntityService implements IMetaService {
 
 	public function getNameValueMapByModelId( $modelId ) {
 
-		$config[ 'conditions' ][ 'modelId' ]	= $modelId;
+		$config[ 'conditions' ][ 'modelId' ] = $modelId;
 
 		return $this->getNameValueMap( $config );
 	}
@@ -126,7 +282,7 @@ abstract class MetaService extends EntityService implements IMetaService {
 
 	public function getIdMetaMapByModelId( $modelId ) {
 
-		$config[ 'conditions' ][ 'modelId' ]	= $modelId;
+		$config[ 'conditions' ][ 'modelId' ] = $modelId;
 
 		return $this->getObjectMap( $config );
 	}
@@ -141,7 +297,8 @@ abstract class MetaService extends EntityService implements IMetaService {
 
 	public function getNameMetaMapByType( $modelId, $type ) {
 
-		$config[ 'key' ]						= 'name';
+		$config[ 'key' ] = 'name';
+
 		$config[ 'conditions' ][ 'modelId' ]	= $modelId;
 		$config[ 'conditions' ][ 'type' ]		= $type;
 
@@ -152,37 +309,92 @@ abstract class MetaService extends EntityService implements IMetaService {
 
 	// Create -------------
 
+	/**
+	 * It generates the label if not set and create the meta.
+	 *
+	 * @param \cmsgears\core\common\models\base\Meta $model
+	 * @param array $config
+	 * @return \cmsgears\core\common\models\base\Meta
+	 */
 	public function create( $model, $config = [] ) {
 
-		if( !isset( $model->label ) || strlen( $model->label ) <= 0 ) {
+		if( empty( $model->label ) ) {
 
 			$model->label = $model->name;
 		}
 
-		$model->save();
+		if( !isset( $model->valueType ) ) {
 
-		return $model;
+			$model->valueType = Meta::VALUE_TYPE_TEXT;
+		}
+
+		return parent::create( $model );
+	}
+
+	/**
+	 * It creates or update the $metas for given $parent.
+	 * It also disable existing metas before updating in case type is provided.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $parent
+	 * @param array $metas
+	 * @param array $config
+	 */
+	public function creatOrUpdateByParent( $parent, $metas, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		// Disable all existing metas for given type
+		if( isset( $config[ 'type' ] ) && isset( $config[ 'disable' ] ) ) {
+
+			$this->disableByType( $parent, $config[ 'type' ] );
+		}
+
+		// Create/Update given metas
+		if( !empty( $metas ) && count( $metas ) > 0 ) {
+
+			foreach( $metas as $meta ) {
+
+				$model = new $modelClass();
+
+				$model->name	= $meta[ 'name' ];
+				$model->label	= empty( $meta[ 'label' ] ) ? $meta[ 'name' ] : $meta[ 'label' ];
+				$model->value	= $meta[ 'value' ];
+				$model->type	= $meta[ 'type' ];
+				$model->active	= true;
+				$model->icon	= !empty( $meta[ 'icon' ] ) ? $meta[ 'icon' ] : null;
+
+				$model->modelId	= $parent->id;
+
+				$model->valueType = empty( $meta[ 'valueType' ] ) ? $modelClass::VALUE_TYPE_TEXT : $meta[ 'valueType' ];
+
+				if( isset( $meta[ 'id' ] ) ) {
+
+					$model->id		= $meta[ 'id' ];
+					$model->icon	= !empty( $meta[ 'icon' ] ) ? $meta[ 'icon' ] : $model->icon;
+
+					parent::update( $model, [ 'attributes' => [ 'icon', 'name', 'value', 'active', 'type', 'valueType' ] ] );
+				}
+				else {
+
+					parent::create( $model );
+				}
+			}
+		}
 	}
 
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
 
-		$existingModel	= $this->getByNameType( $model->modelId, $model->name, $model->type );
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-		// Create if it does not exist
-		if( !isset( $existingModel ) ) {
+		$attributes	= isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'icon', 'name', 'label', 'active', 'order', 'valueType', 'value'
+		];
 
-			return $this->create( $model );
-		}
+		if( $admin ) {
 
-		if( isset( $model->valueType ) ) {
-
-			$attributes	= [ 'valueType', 'value' ];
-		}
-		else {
-
-			$attributes	= [ 'value' ];
+			$attributes	= ArrayHelper::merge( $attributes, [ 'type' ] );
 		}
 
 		if( !isset( $config[ 'attributes' ] ) ) {
@@ -193,17 +405,21 @@ abstract class MetaService extends EntityService implements IMetaService {
 		return parent::update( $model, $config );
 	}
 
+	/*
+	 * It must be used only when name and type are not changed since it discover the
+	 * model using name and type.
+	 */
 	public function updateByParams( $params = [], $config = [] ) {
 
 		$modelId	= $params[ 'modelId' ];
 		$name		= $params[ 'name' ];
 		$type		= $params[ 'type' ];
 
-		$model		= $this->getByNameType( $modelId, $name, $type );
+		$model = $this->getByNameType( $modelId, $name, $type );
 
 		if( isset( $model ) ) {
 
-			$model->value	= $params[ 'value' ];
+			$model->value = $params[ 'value' ];
 
 			return parent::update( $model, [
 				'selective' => false,
@@ -225,50 +441,66 @@ abstract class MetaService extends EntityService implements IMetaService {
 		}
 	}
 
+	/**
+	 * It will be used to update the metas of a specific type using the form.
+	 * It does not expect the meta to have id and solely rely on given name and type.
+	 *
+	 * @param type $form
+	 * @param type $config
+	 */
 	public function updateMultipleByForm( $form, $config = [] ) {
 
 		$metas = $form->getArrayToStore();
 
-		foreach ( $metas as $meta ) {
+		foreach( $metas as $meta ) {
 
 			if( !isset( $meta[ 'valueType' ] ) ) {
 
 				$meta[ 'valueType' ] = Meta::VALUE_TYPE_TEXT;
 			}
 
-			$model = $this->initByNameType( $config[ 'modelId' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ] );
+			if( !isset( $meta[ 'label' ] ) ) {
+
+				$meta[ 'label' ] = $form->getAttributeLabel( $meta[ 'name' ] );
+			}
+
+			if( !isset( $meta[ 'icon' ] ) ) {
+
+				$meta[ 'icon' ] = null;
+			}
+
+			$model = $this->initByNameType( $config[ 'modelId' ], $meta[ 'name' ], $config[ 'type' ], $meta[ 'valueType' ], $meta[ 'label' ], $meta[ 'icon' ] );
 
 			$model->value	= $meta[ 'value' ];
-			$model->label	= $form->getAttributeLabel( $meta[ 'name' ] );
+			$model->label	= $meta[ 'label' ];
 
 			$this->update( $model );
 		}
 	}
 
-	public function toggle( $modelId, $type, $name, $label ) {
+	public function toggle( $model ) {
 
-		$model	= $this->getByNameType( $modelId, $name, $type );
+		if( $model->value ) {
 
-		// Create if it does not exist
-		if( !isset( $model ) ) {
-
-			$this->createByParams([
-				'modelId' => $modelId, 'name' => $name, 'label' => $label, 'type' => $type,
-				'valueType' => Meta::VALUE_TYPE_FLAG, 'value' => true
-			]);
+			$model->value = false;
 		}
 		else {
 
-			if( $model->value ) {
+			$model->value = true;
+		}
 
-				$model->value = false;
-			}
-			else {
+		$model->update();
+	}
 
-				$model->value = true;
-			}
+	public function disableByType( $parent, $type ) {
 
-			$model->update();
+		$metas = $this->getByType( $parent->id, $type );
+
+		foreach( $metas as $meta ) {
+
+			$meta->active = false;
+
+			$meta->update();
 		}
 	}
 
@@ -280,6 +512,51 @@ abstract class MetaService extends EntityService implements IMetaService {
 
 		$modelClass::deleteAll( 'modelId=:id', [ ':id' => $modelId ] );
 	}
+
+	// Bulk ---------------
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'active': {
+
+						$model->active = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'inactive': {
+
+						$model->active = false;
+
+						$model->update();
+
+						break;
+					}
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 
@@ -293,18 +570,25 @@ abstract class MetaService extends EntityService implements IMetaService {
 
 	// Read - Models ---
 
-	public static function findByName( $modelId, $name, $first = false ) {
-
-		$modelClass	= static::$modelClass;
-
-		return $modelClass::findByName( $modelId, $name, $first );
-	}
-
 	public static function findByModelId( $modelId ) {
 
 		$modelClass	= static::$modelClass;
 
 		return $modelClass::findByModelId( $modelId );
+	}
+
+	public static function findByName( $modelId, $name ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByName( $modelId, $name );
+	}
+
+	public static function findFirstByName( $modelId, $name ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findFirstByName( $modelId, $name );
 	}
 
 	public static function findByType( $modelId, $type ) {

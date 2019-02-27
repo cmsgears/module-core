@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\option;
 
 // Yii Imports
@@ -11,6 +19,8 @@ use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
  * Toggle action map/un-map existing category option to model in action using ModelOption mapper.
+ *
+ * @since 1.0.0
  */
 class Toggle extends \cmsgears\core\common\actions\base\ModelAction {
 
@@ -28,7 +38,7 @@ class Toggle extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $parent 	= true;
+	public $parent = true;
 
 	// Protected --------------
 
@@ -48,17 +58,17 @@ class Toggle extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// Assign --------------------------------
+	// Toggle --------------------------------
 
 	public function run( $cid ) {
-
-		$post	= yii::$app->request->post();
 
 		if( isset( $this->model ) && isset( $cid ) ) {
 
 			$modelOptionService	= Yii::$app->factory->get( 'modelOptionService' );
 
-			$modelOption = $modelOptionService->toggle( $this->model->id, $this->parentType, $cid );
+			$mappingType = isset ( $this->modelType ) ? $this->modelType : null;
+
+			$modelOptionService->toggle( $this->model->id, $this->parentType, $cid, $mappingType );
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
@@ -67,4 +77,5 @@ class Toggle extends \cmsgears\core\common\actions\base\ModelAction {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

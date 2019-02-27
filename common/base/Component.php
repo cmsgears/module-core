@@ -11,7 +11,6 @@ namespace cmsgears\core\common\base;
 /**
  * The parent class for all the CMSGears based components.
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
 class Component extends \yii\base\Component {

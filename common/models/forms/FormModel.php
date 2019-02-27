@@ -1,16 +1,22 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\forms;
-
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
 
 /**
  * Useful for models which need submitted data for special processing.
+ *
+ * @property array $data
+ *
+ * @since 1.0.0
  */
-abstract class FormModel extends \cmsgears\core\common\models\forms\JsonModel {
+abstract class FormModel extends DataModel {
 
 	// Variables ---------------------------------------------------
 
@@ -26,7 +32,12 @@ abstract class FormModel extends \cmsgears\core\common\models\forms\JsonModel {
 
 	// Public -----------------
 
-	public $submittedData;
+	/**
+	 * Stores data submitted for a Form.
+	 *
+	 * @var array
+	 */
+	public $data;
 
 	// Protected --------------
 
@@ -46,11 +57,20 @@ abstract class FormModel extends \cmsgears\core\common\models\forms\JsonModel {
 
 	// yii\base\Model ---------
 
+	/**
+	 * It process the submitted form data and store the form data using given form name.
+	 *
+	 * The model attributes will be set by the parent class.
+	 *
+	 * @param array $data
+	 * @param string $formName
+	 * @return boolean
+	 */
 	public function load( $data, $formName = null ) {
 
 		if( isset( $formName ) && isset( $data[ $formName ] ) ) {
 
-			$this->submittedData	= $data[ $formName ];
+			$this->data	= $data[ $formName ];
 		}
 
 		return parent::load( $data, $formName );

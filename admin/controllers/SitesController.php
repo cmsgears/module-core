@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
@@ -11,7 +19,14 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\File;
 
-class SitesController extends \cmsgears\core\admin\controllers\base\CrudController {
+use cmsgears\core\admin\controllers\base\CrudController;
+
+/**
+ * SitesController provides actions specific to site model.
+ *
+ * @since 1.0.0
+ */
+class SitesController extends CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -32,22 +47,28 @@ class SitesController extends \cmsgears\core\admin\controllers\base\CrudControll
 		parent::init();
 
 		// Permission
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->crudPermission = CoreGlobal::PERM_CORE;
+
+		// Config
+		$this->apixBase	= 'core/sites';
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'siteService' );
+		$this->modelService	= Yii::$app->factory->get( 'siteService' );
 
-		$this->themeService		= Yii::$app->factory->get( 'themeService' );
+		$this->themeService	= Yii::$app->factory->get( 'themeService' );
 
 		// Sidebar
-		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'site' ];
+		$this->sidebar = [ 'parent' => 'sidebar-core', 'child' => 'site' ];
 
 		// Return Url
-		$this->returnUrl		= Url::previous( 'sites' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/sites/all' ], true );
+		$this->returnUrl = Url::previous( 'sites' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/sites/all' ], true );
 
 		// Breadcrumbs
-		$this->breadcrumbs		= [
+		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Sites' ] ],
 			'create' => [ [ 'label' => 'Sites', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Sites', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
@@ -71,7 +92,7 @@ class SitesController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 	// SitesController------------------------
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
 		Url::remember( Yii::$app->request->getUrl(), 'sites' );
 
@@ -82,21 +103,20 @@ class SitesController extends \cmsgears\core\admin\controllers\base\CrudControll
 		]);
 	}
 
-	public function actionCreate() {
+	public function actionCreate( $config = [] ) {
 
-		$modelClass	= $this->modelService->getModelClass();
-		$model		= new $modelClass;
-		$avatar		= File::loadFile( $model->avatar, 'Avatar' );
-		$banner		= File::loadFile( $model->banner, 'Banner' );
+		$model	= $this->modelService->getModelObject();
+		$avatar	= File::loadFile( $model->avatar, 'Avatar' );
+		$banner	= File::loadFile( $model->banner, 'Banner' );
 
-		if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->modelService->create( $model, [ 'avatar' => $avatar, 'banner' => $banner ] );
+			$this->model = $this->modelService->create( $model, [ 'admin' => true, 'avatar' => $avatar, 'banner' => $banner ] );
 
-			return $this->redirect( "update?id=$model->id" );
+			return $this->redirect( 'all' );
 		}
 
-		$themesMap = $this->themeService->getIdNameMap();
+		$themesMap = $this->themeService->getIdNameMap( [ 'default' => true ] );
 
 		return $this->render( 'create', [
 			'model' => $model,
@@ -106,25 +126,25 @@ class SitesController extends \cmsgears\core\admin\controllers\base\CrudControll
 		]);
 	}
 
-	public function actionUpdate( $id ) {
+	public function actionUpdate( $id, $config = [] ) {
 
 		// Find Model
-		$model	= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		// Update if exist
 		if( isset( $model ) ) {
 
-			$avatar		= File::loadFile( $model->avatar, 'Avatar' );
-			$banner		= File::loadFile( $model->banner, 'Banner' );
+			$avatar = File::loadFile( $model->avatar, 'Avatar' );
+			$banner = File::loadFile( $model->banner, 'Banner' );
 
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->modelService->update( $model, [ 'avatar' => $avatar, 'banner' => $banner ] );
+				$this->model = $this->modelService->update( $model, [ 'admin' => true, 'avatar' => $avatar, 'banner' => $banner ] );
 
-				return $this->refresh();
+				return $this->redirect( $this->returnUrl );
 			}
 
-			$themesMap = $this->themeService->getIdNameMap();
+			$themesMap = $this->themeService->getIdNameMap( [ 'default' => true ] );
 
 			// Render view
 			return $this->render( 'update', [
@@ -139,10 +159,10 @@ class SitesController extends \cmsgears\core\admin\controllers\base\CrudControll
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $id ) {
+	public function actionDelete( $id, $config = [] ) {
 
 		// Find Model
-		$model	= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		// Delete if exist
 		if( isset( $model ) ) {
@@ -151,7 +171,9 @@ class SitesController extends \cmsgears\core\admin\controllers\base\CrudControll
 
 				try {
 
-					$this->modelService->delete( $model );
+					$this->model = $model;
+
+					$this->modelService->delete( $model, [ 'admin' => true ] );
 
 					return $this->redirect( $this->returnUrl );
 				}
@@ -161,7 +183,7 @@ class SitesController extends \cmsgears\core\admin\controllers\base\CrudControll
 				}
 			}
 
-			$themesMap = $this->themeService->getIdNameMap();
+			$themesMap = $this->themeService->getIdNameMap( [ 'default' => true ] );
 
 			// Render view
 			return $this->render( 'delete', [
@@ -175,4 +197,5 @@ class SitesController extends \cmsgears\core\admin\controllers\base\CrudControll
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

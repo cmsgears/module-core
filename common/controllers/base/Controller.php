@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\controllers\base;
 
 // Yii Imports
@@ -13,6 +21,11 @@ use cmsgears\core\common\config\CoreProperties;
 use cmsgears\core\common\config\CacheProperties;
 use cmsgears\core\common\config\MailProperties;
 
+/**
+ * The base controller for all the application types i.e. frontend, console and backend.
+ *
+ * @since 1.0.0
+ */
 abstract class Controller extends \yii\web\Controller {
 
 	// Variables ---------------------------------------------------
@@ -21,41 +34,98 @@ abstract class Controller extends \yii\web\Controller {
 
 	// Public -----------------
 
-	// Top level CRUD permission to be applied by default on selected actions. It can be replaced by child classes.
+	/**
+	 * Top level CRUD permission to be applied by default on selected actions. It can
+	 * be replaced by child classes.
+	 *
+	 * @var string
+	 */
 	public $crudPermission;
 
-	// The model service for primary model if applicable. It can be obtained either via factory component or instantiated within controller constructor or init method.
+	/**
+	 * The model service for primary model if applicable. It can be obtained either via
+	 * factory component or instantiated within controller constructor or init method.
+	 *
+	 * @var \cmsgears\core\common\services\interfaces\base\IActiveRecordService
+	 */
 	public $modelService;
 
-	// The primary model in action. It can be discovered while applying a filter and other filters and action can use it directly.
+	/**
+	 * The primary model in action. It can be discovered while applying a filter and other
+	 * filters and action can use it directly.
+	 *
+	 * @var \cmsgears\core\common\models\base\ActiveRecord
+	 */
 	public $model;
 
-	// The base path for apix.
+	/**
+	 * The base URL to form the sub relative URLs.
+	 *
+	 * @var type string
+	 */
+	public $baseUrl;
+
+	/**
+	 * The base path to process apix requests.
+	 *
+	 * @var string
+	 */
 	public $apixBase;
 
-	// It provide information to display active tab on sidebar.
+	/**
+	 * It provide information to display active tab on sidebar.
+	 *
+	 * @var array
+	 */
 	public $sidebar;
 
-	// We need return url in cases where view need to provide links to move back to previous page. It's also useful when we need to redirect user to previous page on form success. It's an alternate to breadcrumb, but limited to single action.
+	/**
+	 * We need return url in cases where view need to provide links to move back to
+	 * previous page. It's also useful when we need to redirect user to previous page
+	 * on form success. It's an alternate to breadcrumb, but limited to single action.
+	 *
+	 * @var string
+	 */
 	public $returnUrl;
 
-	// It store the breadcrumbs for actions
+	/**
+	 * It store the breadcrumbs for actions.
+	 *
+	 * @var array
+	 */
 	public $breadcrumbs;
 
 	// Protected --------------
 
 	/**
-	 * It can be used while adding, updating or deleting the primary model. The child class must override these methods and set the scenario before calling parent class method.
+	 * It can be used while adding, updating or deleting the primary model. The child
+	 * class must override these methods and set the scenario before calling parent class method.
+	 *
+	 * @var string
 	 */
 	protected $scenario;
 
 	// Private ----------------
 
-	// Core and Mail properties.
+	/**
+	 * Core properties
+	 *
+	 * @var \cmsgears\core\common\config\CoreProperties
+	 */
 	private $coreProperties;
 
+	/**
+	 * Cache properties
+	 *
+	 * @var \cmsgears\core\common\config\CoreProperties
+	 */
 	private $cacheProperties;
 
+	/**
+	 * Mail properties
+	 *
+	 * @var \cmsgears\core\common\config\CoreProperties
+	 */
 	private $mailProperties;
 
 	// Constructor and Initialisation ------------------------------
@@ -68,8 +138,10 @@ abstract class Controller extends \yii\web\Controller {
 			Yii::$app->assetManager->forceCopy = true;
 		}
 
-		// Log user's last activity if any.
-		Yii::$app->factory->get( 'userService' )->logLastActivity();
+		// TODO: Enable it carefully considering performance factors
+
+		// Log user's last activity to trace when user was last active
+		//Yii::$app->factory->get( 'userService' )->logLastActivity();
 
 		return parent::beforeAction( $action );
 	}
@@ -94,7 +166,7 @@ abstract class Controller extends \yii\web\Controller {
 
 		if( !isset( $this->coreProperties ) ) {
 
-			$this->coreProperties	= CoreProperties::getInstance();
+			$this->coreProperties = CoreProperties::getInstance();
 		}
 
 		return $this->coreProperties;
@@ -104,7 +176,7 @@ abstract class Controller extends \yii\web\Controller {
 
 		if( !isset( $this->cacheProperties ) ) {
 
-			$this->cacheProperties	= CacheProperties::getInstance();
+			$this->cacheProperties = CacheProperties::getInstance();
 		}
 
 		return $this->cacheProperties;
@@ -114,7 +186,7 @@ abstract class Controller extends \yii\web\Controller {
 
 		if( !isset( $this->mailProperties ) ) {
 
-			$this->mailProperties	= MailProperties::getInstance();
+			$this->mailProperties = MailProperties::getInstance();
 		}
 
 		return $this->mailProperties;
@@ -148,8 +220,9 @@ abstract class Controller extends \yii\web\Controller {
 
 			$siteId		= Yii::$app->core->getSiteId();
 
-			$siteMember = Yii::$app->factory->get( 'siteMemberService' )->findBySiteIdUserId(  $siteId, $user->id );
+			$siteMember = Yii::$app->factory->get( 'siteMemberService' )->getBySiteIdUserId( $siteId, $user->id );
 
+			// Auto-Register site member
 			if( !isset( $siteMember ) ) {
 
 				Yii::$app->factory->get( 'siteMemberService' )->create( $user );
@@ -190,4 +263,5 @@ abstract class Controller extends \yii\web\Controller {
 			}
 		}
 	}
+
 }

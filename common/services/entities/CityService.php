@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
@@ -8,13 +16,18 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-
 use cmsgears\core\common\services\interfaces\entities\ICityService;
 
-use cmsgears\core\common\services\traits\NameTrait;
+use cmsgears\core\common\services\base\EntityService;
 
-class CityService extends \cmsgears\core\common\services\base\EntityService implements ICityService {
+use cmsgears\core\common\services\traits\base\NameTrait;
+
+/**
+ * CityService provide service methods of city model.
+ *
+ * @since 1.0.0
+ */
+class CityService extends EntityService implements ICityService {
 
 	// Variables ---------------------------------------------------
 
@@ -24,11 +37,9 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\City';
+	public static $modelClass = '\cmsgears\core\common\models\entities\City';
 
-	public static $modelTable	= CoreTables::TABLE_CITY;
-
-	public static $parentType	= CoreGlobal::TYPE_CITY;
+	public static $parentType = CoreGlobal::TYPE_CITY;
 
 	// Protected --------------
 
@@ -42,7 +53,10 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Traits ------------------------------------------------------
 
-	use NameTrait;
+	use NameTrait {
+
+		searchByName as baseSearchByName;
+	}
 
 	// Constructor and Initialisation ------------------------------
 
@@ -62,15 +76,22 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
-		$countryTable	= CoreTables::TABLE_COUNTRY;
-		$provinceTable	= CoreTables::TABLE_PROVINCE;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$countryTable	= Yii::$app->factory->get( 'countryService' )->getModelTable();
+		$provinceTable	= Yii::$app->factory->get( 'provinceService' )->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 				'country' => [
 					'asc' => [ "$countryTable.name" => SORT_ASC ],
 					'desc' => [ "$countryTable.name" => SORT_DESC ],
@@ -89,17 +110,35 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 					'default' => SORT_DESC,
 					'label' => 'name'
 				],
-				'zone' => [
-					'asc' => [ "$modelTable.zone" => SORT_ASC ],
-					'desc' => [ "$modelTable.zone" => SORT_DESC ],
+				'iso' => [
+					'asc' => [ "$modelTable.iso" => SORT_ASC ],
+					'desc' => [ "$modelTable.iso" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'Zone'
+					'label' => 'ISO'
+				],
+				'type' => [
+					'asc' => [ "$modelTable.type" => SORT_ASC ],
+					'desc' => [ "$modelTable.type" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Type'
 				],
 				'postal' => [
 					'asc' => [ "$modelTable.postal" => SORT_ASC ],
 					'desc' => [ "$modelTable.postal" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Postal Code'
+				],
+				'zone' => [
+					'asc' => [ "$modelTable.zone" => SORT_ASC ],
+					'desc' => [ "$modelTable.zone" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Zone'
+				],
+				'tzone' => [
+					'asc' => [ "$modelTable.timeZone" => SORT_ASC ],
+					'desc' => [ "$modelTable.timeZone" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Time Zone'
 				],
 				'latitude' => [
 					'asc' => [ "$modelTable.latitude" => SORT_ASC ],
@@ -130,13 +169,28 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 
 		// Filters ----------
 
+		// Params
+		$type = Yii::$app->request->getQueryParam( 'type' );
+
+		// Filter - Type
+		if( isset( $type ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
+
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol = Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'zone' => "$modelTable.zone" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'code' => "$modelTable.code",
+				'iso' => "$modelTable.iso",
+				'postal' => "$modelTable.postal",
+				'zone' => "$modelTable.zone"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -144,7 +198,13 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'zone' => "$modelTable.zone", 'postal' => "$modelTable.postal"
+			'name' => "$modelTable.name",
+			'code' => "$modelTable.code",
+			'iso' => "$modelTable.iso",
+			'postal' => "$modelTable.postal",
+			'zone' => "$modelTable.zone",
+			'regions' => "$modelTable.regions",
+			'zcodes' => "$modelTable.zipCodes"
 		];
 
 		// Result -----------
@@ -152,20 +212,48 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 		return parent::getPage( $config );
 	}
 
-	// Read - Lists ----
+	// Read - Models ---
 
-	public function getUnique( $name, $countryId, $provinceId, $zone = null ) {
+	public function getUnique( $name, $countryId, $provinceId ) {
 
 		$modelClass	= self::$modelClass;
 
-		return $modelClass::findUnique( $name, $countryId, $provinceId, $zone );
+		return $modelClass::findUnique( $name, $countryId, $provinceId );
 	}
 
-	public function isUniqueExist( $name, $countryId, $provinceId, $zone = null ) {
+	public function isUniqueExist( $name, $countryId, $provinceId ) {
 
 		$modelClass	= self::$modelClass;
 
-		return $modelClass::isUniqueExist( $name, $countryId, $provinceId, $zone );
+		return $modelClass::isUniqueExist( $name, $countryId, $provinceId );
+	}
+
+	public function getUniqueByZone( $name, $countryId, $provinceId, $zone ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findUniqueByZone( $name, $countryId, $provinceId, $zone );
+	}
+
+	public function isUniqueExistByZone( $name, $countryId, $provinceId, $zone ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::isUniqueExistByZone( $name, $countryId, $provinceId, $zone );
+	}
+
+	// Read - Lists ----
+
+	public function searchByName( $name, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'columns' ] = [ "$modelTable.id", "$modelTable.name", "$modelTable.latitude", "$modelTable.longitude", "$modelTable.postal" ];
+
+		$config[ 'order' ] = 'name ASC';
+
+		return $this->baseSearchByName( $name, $config );
 	}
 
 	// Read - Maps -----
@@ -175,6 +263,10 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 	// Create -------------
 
 	// Update -------------
+
+	// Delete -------------
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -197,7 +289,11 @@ class CityService extends \cmsgears\core\common\services\base\EntityService impl
 		}
 	}
 
-	// Delete -------------
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

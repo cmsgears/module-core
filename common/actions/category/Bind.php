@@ -58,7 +58,7 @@ class Bind extends \cmsgears\core\common\actions\base\ModelAction {
 
 		if( isset( $this->model ) ) {
 
-			if( $binder->load( Yii::$app->request->post(), 'Binder' ) ) {
+			if( $binder->load( Yii::$app->request->post(), 'CategoryBinder' ) ) {
 
 				$this->modelService->bindCategories( $binder );
 

@@ -7,8 +7,9 @@ use \DateTime;
  * DateUtil provide several utility methods related to date and time.
  */
 class DateUtil {
-    
+
     // Months ------------------------------------------------------
+
     const MONTH_JAN     = 1;
     const MONTH_FEB     = 2;
     const MONTH_MAR     = 3;
@@ -21,22 +22,22 @@ class DateUtil {
     const MONTH_OCT     = 10;
     const MONTH_NOV     = 11;
     const MONTH_DEC     = 12;
-    
+
     public static $monthsMap = [
-        self::MONTH_JAN => 'January',  
-        self::MONTH_FEB => 'February', 
-        self::MONTH_MAR => 'March', 
-        self::MONTH_APR => 'April', 
-        self::MONTH_MAY => 'May', 
-        self::MONTH_JUN => 'June', 
-        self::MONTH_JUL => 'July', 
-        self::MONTH_AUG => 'August', 
-        self::MONTH_SEP => 'September', 
-        self::MONTH_OCT => 'October', 
-        self::MONTH_NOV => 'November', 
-        self::MONTH_DEC =>'December' 
+        self::MONTH_JAN => 'January',
+        self::MONTH_FEB => 'February',
+        self::MONTH_MAR => 'March',
+        self::MONTH_APR => 'April',
+        self::MONTH_MAY => 'May',
+        self::MONTH_JUN => 'June',
+        self::MONTH_JUL => 'July',
+        self::MONTH_AUG => 'August',
+        self::MONTH_SEP => 'September',
+        self::MONTH_OCT => 'October',
+        self::MONTH_NOV => 'November',
+        self::MONTH_DEC =>'December'
     ];
-    
+
 
 	// Week Days ---------------------------------------------------
 
@@ -77,6 +78,27 @@ class DateUtil {
 		self::WEEK_DAY_SUN => 'Sunday'
 	];
 
+	// Time --------------------------------------------------------
+
+    // Time Duration
+    const DURATION_YEAR     =  0;
+    const DURATION_MONTH    = 10;
+	const DURATION_WEEK     = 20;
+    const DURATION_DAY      = 30;
+	const DURATION_HOUR		= 40;
+	const DURATION_MINUTE	= 50;
+	const DURATION_SECOND	= 60;
+
+    public static $durationMap = [
+		self::DURATION_YEAR => 'Year',
+		self::DURATION_MONTH => 'Month',
+		self::DURATION_WEEK => 'Week',
+		self::DURATION_DAY => 'Day',
+		self::DURATION_HOUR => 'Hour',
+		self::DURATION_MINUTE => 'Minute',
+		self::DURATION_SECOND => 'Second'
+    ];
+
 	// Hrs/Mins ----------------------------------------------------
 
 	// hours in 12 and 24 hours format
@@ -100,7 +122,17 @@ class DateUtil {
 			$format	= 'Y-m-d H:i:s';
 		}
 
-		return	date ( $format );
+		return	date( $format );
+	}
+
+	public static function getDateTimeFromMillis( $millis, $format = null ) {
+
+		if( !isset( $format ) ) {
+
+			$format	= 'Y-m-d H:i:s';
+		}
+
+	    return  date( $format, $millis );
 	}
 
 	/**
@@ -113,7 +145,7 @@ class DateUtil {
 			$format	= 'Y-m-d';
 		}
 
-		return	date ( $format );
+		return	date( $format );
 	}
 
 	/**
@@ -144,7 +176,7 @@ class DateUtil {
 
 		return $dateUTC->format( $format );
 	}
-	
+
 	/**
 	 * @return time - current time having specified format in UTC
 	 */
@@ -248,6 +280,16 @@ class DateUtil {
 		return $sunday;
 	}
 
+	public static function addMillis( $date, $millis ) {
+
+		$date 	= is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
+		$secs	= $millis / 1000;
+
+	    $date = strtotime( "+" . $secs ." second", $date );
+
+	    return  date( "Y-m-d H:i:s", $date );
+	}
+
 	public static function addDays( $date, $days ) {
 
 		$date 	= is_string( $date ) ? strtotime( $date ) : $date->getTimestamp();
@@ -267,10 +309,28 @@ class DateUtil {
 		return $diff;
 	}
 
-	public static function lessThan( $sourceDate, $toDate, $equal = false ) {
+	public static function getHrDifference( $startDate, $endDate ) {
+
+		$start 	= is_string( $startDate ) ? strtotime( $startDate ) : $startDate->getTimestamp();
+		$end 	= is_string( $endDate ) ? strtotime( $endDate ) : $endDate->getTimestamp();
+		$diff	= $end - $start;
+		$diff	= floor( $diff / ( 60 * 60 ) );
+
+		return $diff;
+	}
+
+	/**
+	 * Compare the target date with source date to check whether target date is lesser than or equal to source date.
+	 *
+	 * @param type $sourceDate
+	 * @param type $targetDate
+	 * @param type $equal
+	 * @return boolean
+	 */
+	public static function lessThan( $sourceDate, $targetDate, $equal = false ) {
 
 		$source = is_string( $sourceDate ) ? strtotime( $sourceDate ) : $sourceDate->getTimestamp();
-		$test 	= is_string( $toDate ) ? strtotime( $toDate ) : $toDate->getTimestamp();
+		$test 	= is_string( $targetDate ) ? strtotime( $targetDate ) : $targetDate->getTimestamp();
 
 		// Test less than
 		if( $equal ) {
@@ -281,6 +341,14 @@ class DateUtil {
 		return $test < $source;
 	}
 
+	/**
+	 * Compare the given date and check whether it's between the start date and end date.
+	 *
+	 * @param type $startDate
+	 * @param type $endDate
+	 * @param type $date
+	 * @return type
+	 */
 	public static function inBetween( $startDate, $endDate, $date ) {
 
 		$start 	= is_string( $startDate ) ? strtotime( $startDate ) : $startDate->getTimestamp();
@@ -291,10 +359,18 @@ class DateUtil {
 		return ( ( $test >= $start ) && ( $test <= $end ) );
 	}
 
-	public static function greaterThan( $sourceDate, $toDate, $equal = false ) {
+	/**
+	 * Compare the target date with source date to check whether target date is greater than or equal to source date.
+	 *
+	 * @param type $sourceDate
+	 * @param type $targetDate
+	 * @param type $equal
+	 * @return type
+	 */
+	public static function greaterThan( $sourceDate, $targetDate, $equal = false ) {
 
 		$source = is_string( $sourceDate ) ? strtotime( $sourceDate ) : $sourceDate->getTimestamp();
-		$test 	= is_string( $toDate ) ? strtotime( $toDate ) : $toDate->getTimestamp();
+		$test 	= is_string( $targetDate ) ? strtotime( $targetDate ) : $targetDate->getTimestamp();
 
 		// Test greater than
 		if( $equal ) {
@@ -549,24 +625,37 @@ class DateUtil {
 	    return "$hours::$minutes::$seconds";
 	}
 
-	public static function getYearsList( $start = null, $config = [] ) {
+	public static function generateYearsList( $config = [] ) {
 
-		$years	= [];
+		$years = [];
 
 		// Get Current year if year is not set
-		$currentyear	= date( "Y" );
-		$start			= $start != null ? $start : $currentyear;
+		$currentyear = date( "Y" );
 
-		$endYear		= isset( $config[ 'endYear' ] ) ? $config[ 'endYear' ] : $currentyear;
-		$increment		= isset( $config[ 'increment' ] ) ? $config[ 'increment' ] : 1;
-		$end			= $endYear != null ? $endYear : $limit;
-		$i				= $start;
+		$startYear	= isset( $config[ 'startYear' ] ) ? $config[ 'startYear' ] : $currentyear;
+		$endYear	= isset( $config[ 'endYear' ] ) ? $config[ 'endYear' ] : $currentyear;
+		$difference	= isset( $config[ 'difference' ] ) ? $config[ 'difference' ] : 1;
+		$reverse	= isset( $config[ 'reverse' ] ) ? $config[ 'reverse' ] : false;
 
-		while( $i <= $end ) {
+		if( $reverse ) {
 
-			$years[ $i ]	= $i;
+			$year = $endYear;
 
-			$i = $i + $increment;
+			while( $year >= $startYear ) {
+
+				$years[ $year ] = $year;
+
+				$year = $year - $difference;
+			}
+		}
+		else {
+
+			while( $year <= $endYear ) {
+
+				$years[ $year ] = $year;
+
+				$year = $year + $difference;
+			}
 		}
 
 		return $years;
@@ -620,17 +709,17 @@ class DateUtil {
 
 		return $timezone_list;
 	}
-    
+
     // Dates list from 1 to 31
     public static function getDatesList() {
-        
+
         $list   = [];
-        
+
         for( $i = 1; $i <= 31; $i++ ) {
-            
+
             $list[ $i ] = $i;
         }
-        
+
         return $list;
     }
 }

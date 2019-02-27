@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
@@ -8,8 +16,7 @@ use Yii;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
-
-use cmsgears\core\common\models\traits\ResourceTrait;
+use cmsgears\core\common\models\base\ModelResource;
 
 /**
  * ModelHierarchy Entity
@@ -20,9 +27,11 @@ use cmsgears\core\common\models\traits\ResourceTrait;
  * @property integer $rootId
  * @property string $parentType
  * @property string $lValue
- * @property short $rValue
+ * @property integer $rValue
+ *
+ * @since 1.0.0
  */
-class ModelHierarchy extends \cmsgears\core\common\models\base\Resource {
+class ModelHierarchy extends ModelResource {
 
 	// Variables ---------------------------------------------------
 
@@ -44,8 +53,6 @@ class ModelHierarchy extends \cmsgears\core\common\models\base\Resource {
 
 	// Traits ------------------------------------------------------
 
-	use ResourceTrait;
-
 	// Constructor and Initialisation ------------------------------
 
 	// Instance methods --------------------------------------------
@@ -63,15 +70,18 @@ class ModelHierarchy extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public function rules() {
 
-		return [
+		// Model Rules
+		$rules = [
 			// Required, Safe
 			[ [ 'rootId', 'parentType' ], 'required' ],
-			[ [ 'id' ], 'safe' ],
+			[ 'id', 'safe' ],
 			// Text Limit
 			[ 'parentType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			// Other
 			[ [ 'parentId', 'childId', 'rootId', 'lValue', 'rValue' ], 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
+
+		return $rules;
 	}
 
 	/**
@@ -104,7 +114,7 @@ class ModelHierarchy extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_MODEL_HIERARCHY;
+		return CoreTables::getTableName( CoreTables::TABLE_MODEL_HIERARCHY );
 	}
 
 	// CMG parent classes --------------------
@@ -115,11 +125,26 @@ class ModelHierarchy extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Find ------------
 
+	/**
+	 * Find and return the top level model using given root id for parent type.
+	 *
+	 * @param integer $rootId
+	 * @param string $parentType
+	 * @return ModelHierarchy
+	 */
 	public static function findRoot( $rootId, $parentType ) {
 
 		return self::find()->where( 'rootId=:rid AND parentType=:type AND parentId IS NULL', [ ':rid' => $rootId, ':type' => $parentType ] )->one();
 	}
 
+	/**
+	 * Find and return the child using parent id, parent type and child id.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param integer $childId
+	 * @return ModelHierarchy
+	 */
 	public static function findChild( $parentId, $parentType, $childId ) {
 
 		return self::find()->where( 'parentId=:pid AND parentType=:type AND childId=:cid', [ ':pid' => $parentId, ':type' => $parentType, ':cid' => $childId ] )->one();
@@ -131,6 +156,13 @@ class ModelHierarchy extends \cmsgears\core\common\models\base\Resource {
 
 	// Delete -----------------
 
+	/**
+	 * Delete entire hierarchy for given root id and parent type.
+	 *
+	 * @param integer $rootId
+	 * @param string $parentType
+	 * @return integer Number of rows deleted.
+	 */
 	public static function deleteByRootId( $rootId, $parentType ) {
 
 		return self::deleteAll( 'rootId=:rid AND parentType=:type', [ ':rid' => $rootId, ':type' => $parentType ] );

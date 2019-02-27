@@ -1,12 +1,29 @@
 <?php
-namespace cmsgears\core\common\utilities;
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
 
-use \Yii;
-use yii\helpers\Html;
+namespace cmsgears\core\common\utilities;
 
 class DataUtil {
 
 	// Static Methods ----------------------------------------------
+
+	public static function generateNumMap( $min, $max, $interval = 1, $text = false ) {
+
+		$map = [];
+
+		for( $i = $min; $i <= $max; $i += $interval ) {
+
+			$map[ $i ] = $i;
+		}
+
+		return $map;
+	}
 
 	/**
 	 * The method sort give object array using the attribute having number value. The array objects will be sorted in ascending order by default.
@@ -29,5 +46,3 @@ class DataUtil {
 		return $array;
 	}
 }
-
-?>

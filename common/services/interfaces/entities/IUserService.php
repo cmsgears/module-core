@@ -1,24 +1,31 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\interfaces\entities;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\services\interfaces\base\IApproval;
+use cmsgears\core\common\services\interfaces\base\IEntityService;
+use cmsgears\core\common\services\interfaces\resources\IData;
+use cmsgears\core\common\services\interfaces\resources\IModelMeta;
+use cmsgears\core\common\services\interfaces\resources\ISocialLink;
 
-use cmsgears\core\common\services\interfaces\base\IApprovalService;
-use cmsgears\core\common\services\interfaces\base\IModelMetaService;
-
-interface IUserService extends IApprovalService, IModelMetaService {
+/**
+ * IUserService provide service methods for user model.
+ *
+ * @since 1.0.0
+ */
+interface IUserService extends IEntityService, IApproval, IData, IModelMeta, ISocialLink {
 
 	// Data Provider ------
 
-	public function getPageByRoleType( $roleType );
-
-	public function getPageByAdmins();
-
-	public function getPageByUsers();
+	public function getPageByType( $type, $config = [] );
 
 	// Read ---------------
 
@@ -34,13 +41,27 @@ interface IUserService extends IApprovalService, IModelMetaService {
 
 	public function isExistByUsername( $username );
 
+	public function getBySlug( $slug );
+
+	public function isExistBySlug( $slug );
+
+	public function getByMobile( $mobile );
+
+	public function isExistByMobile( $mobile );
+
 	// Read - Lists ----
+
+	public function getIdNameListByUsername( $username, $config = [] );
 
 	// Read - Maps -----
 
 	public function searchByName( $name, $config = [] );
 
+	public function searchByNameType( $name, $type, $config = [] );
+
 	public function getIdNameMapByRoleSlug( $roleSlug );
+
+	// Read - Others ---
 
 	// Create -------------
 
@@ -48,14 +69,20 @@ interface IUserService extends IApprovalService, IModelMetaService {
 
 	public function verify( $user, $token );
 
-	public function activate( $user, $token, $resetForm );
+	public function reset( $user, $token, $resetForm, $activate = false );
 
 	public function forgotPassword( $user );
 
 	public function resetPassword( $user, $resetForm );
 
-	public function updateAvatar( $user, $avatar );
-
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 }

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\tag;
 
 // Yii Imports
@@ -7,14 +15,17 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\actions\base\ModelAction;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Assign action map tags for models using ModelTag mapper.
+ * Assign action map tags for models using ModelTag mapper using given csv having tag name. In
+ * case a tag does not exist for model type, it will be created and than mapping will be done.
  *
- * In case a tag does not exist for model type, it will be created and than mapping will be done.
+ * @since 1.0.0
  */
-class Assign extends \cmsgears\core\common\actions\base\ModelAction {
+class Assign extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -30,7 +41,7 @@ class Assign extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $parent 	= true;
+	public $parent = true;
 
 	// Protected --------------
 
@@ -54,21 +65,23 @@ class Assign extends \cmsgears\core\common\actions\base\ModelAction {
 
 	public function run() {
 
-		$post	= yii::$app->request->post();
+		$post = yii::$app->request->post();
 
-		if( isset( $this->model ) && isset( $post[ 'tags' ] ) ) {
+		if( isset( $this->model ) && isset( $post[ 'list' ] ) ) {
 
-			$modelTagService	= Yii::$app->factory->get( 'modelTagService' );
-			$parentId			= $this->model->id;
-			$parentType			= $this->parentType;
-			$tags				= $post[ 'tags' ];
+			$modelTagService = Yii::$app->factory->get( 'modelTagService' );
+
+			$parentId	= $this->model->id;
+			$parentType	= $this->parentType;
+			$tags		= $post[ 'list' ];
 
 			$modelTagService->createFromCsv( $parentId, $parentType, $tags );
 
-			$modelTags	= $this->model->activeModelTags;
-			$data		= [];
+			$modelTags = $this->model->activeModelTags;
 
-			foreach ( $modelTags as $modelTag ) {
+			$data = [];
+
+			foreach( $modelTags as $modelTag ) {
 
 				$data[]	= [ 'cid' => $modelTag->id, 'name' => $modelTag->model->name ];
 			}
@@ -80,4 +93,5 @@ class Assign extends \cmsgears\core\common\actions\base\ModelAction {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

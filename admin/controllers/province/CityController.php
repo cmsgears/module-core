@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\province;
 
 // Yii Imports
@@ -8,7 +16,14 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class CityController extends \cmsgears\core\admin\controllers\base\Controller {
+use cmsgears\core\admin\controllers\base\Controller;
+
+/**
+ * ProvinceController provides actions specific to province model.
+ *
+ * @since 1.0.0
+ */
+class CityController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -29,7 +44,10 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 		parent::init();
 
 		// Permission
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->crudPermission = CoreGlobal::PERM_CORE;
+
+		// Config
+		$this->apixBase = 'core/city';
 
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'cityService' );
@@ -37,25 +55,26 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 		$this->provinceService	= Yii::$app->factory->get( 'provinceService' );
 
 		// Sidebar
-		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'country' ];
+		$this->sidebar = [ 'parent' => 'sidebar-core', 'child' => 'country' ];
 
 		// Return Url
-		$this->returnUrl		= Url::previous( 'cities' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/province/city/all' ], true );
+		$this->returnUrl = Url::previous( 'cities' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/province/city/all' ], true );
 
 		// Country Url
-		$countryUrl		= Url::previous( 'countries' );
-		$countryUrl		= isset( $countryUrl ) ? $countryUrl : Url::toRoute( [ '/core/country/all' ], true );
+		$countryUrl = Url::previous( 'countries' );
+		$countryUrl = isset( $countryUrl ) ? $countryUrl : Url::toRoute( [ '/core/country/all' ], true );
 
 		// Province Url
-		$provinceUrl	= Url::previous( 'provinces' );
-		$provinceUrl	= isset( $provinceUrl ) ? $provinceUrl : Url::toRoute( [ '/core/country/province/all' ], true );
+		$provinceUrl = Url::previous( 'provinces' );
+		$provinceUrl = isset( $provinceUrl ) ? $provinceUrl : Url::toRoute( [ '/core/country/province/all' ], true );
 
 		// Breadcrumbs
-		$this->breadcrumbs	= [
+		$this->breadcrumbs = [
 			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ],
 				[ 'label' => 'Countries', 'url' =>  $countryUrl ],
-				[ 'label' => 'Provinces', 'url' =>  $provinceUrl ],
+				[ 'label' => 'Provinces', 'url' =>  $provinceUrl ]
 			],
 			'all' => [ [ 'label' => 'Cities' ] ],
 			'create' => [ [ 'label' => 'Cities', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
@@ -82,9 +101,9 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	public function actionAll( $pid ) {
 
-		$dataProvider	= $this->modelService->getPage( [ 'conditions' => [ 'provinceId' => $pid ] ] );
-
 		Url::remember( [ "province/city/all?pid=$pid" ], 'cities' );
+
+		$dataProvider = $this->modelService->getPage( [ 'conditions' => [ 'provinceId' => $pid ] ] );
 
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
@@ -98,16 +117,16 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		if( isset( $province ) ) {
 
-			$modelClass			= $this->modelService->getModelClass();
-			$model				= new $modelClass;
+			$model = $this->modelService->getModelObject();
+
 			$model->countryId	= $province->countryId;
 			$model->provinceId	= $pid;
 
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
+			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->modelService->create( $model );
+				$this->model = $this->modelService->create( $model );
 
-				return $this->redirect( $this->returnUrl );
+				return $this->redirect( "all?pid=$pid" );
 			}
 
 			return $this->render( 'create', [
@@ -122,14 +141,14 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 	public function actionUpdate( $id ) {
 
 		// Find Model
-		$model	= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		// Update if exist
 		if( isset( $model ) ) {
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->modelService->update( $model );
+				$this->model = $this->modelService->update( $model );
 
 				return $this->redirect( $this->returnUrl );
 			}
@@ -147,7 +166,7 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 	public function actionDelete( $id ) {
 
 		// Find Model
-		$model	= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		// Delete if exist
 		if( isset( $model ) ) {
@@ -155,6 +174,8 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
 				try {
+
+					$this->model = $model;
 
 					$this->modelService->delete( $model );
 
@@ -175,4 +196,5 @@ class CityController extends \cmsgears\core\admin\controllers\base\Controller {
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

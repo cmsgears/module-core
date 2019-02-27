@@ -1,8 +1,15 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\traits\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\File;
 use cmsgears\core\common\models\mappers\ModelFile;
 
@@ -12,52 +19,143 @@ use cmsgears\core\common\models\mappers\ModelFile;
  */
 trait FileTrait {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG classes ---------------------------
+
+	// Validators ----------------------------
+
+	// FileTrait -----------------------------
+
 	/**
-	 * @return array - ModelFile associated with parent
+	 * @inheritdoc
 	 */
 	public function getModelFiles() {
 
-		return $this->hasMany( ModelFile::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->modelType'" );
+		$modelFileTable = ModelFile::tableName();
+
+		return $this->hasMany( ModelFile::class, [ 'parentId' => 'id' ] )
+			->where( "$modelFileTable.parentType=:ptype", [ ':ptype' => $this->modelType ] )
+			->orderBy( "$modelFileTable.id DESC" );
 	}
 
 	/**
-	 * @return array - ModelFile associated with parent
+	 * @inheritdoc
 	 */
-	public function getModelFilesByType( $type ) {
+	public function getActiveModelFiles() {
 
-		return $this->hasMany( ModelFile::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType=:ptype AND type=:type", [ ':ptype' => $this->modelType, ':type' => $type ] )->all();
+		$modelFileTable = ModelFile::tableName();
+
+		return $this->hasMany( ModelFile::class, [ 'parentId' => 'id' ] )
+			->where( "$modelFileTable.parentType=:ptype AND $modelFileTable.active=:active", [ ':ptype' => $this->modelType, ':active' => true ] )
+			->orderBy( "$modelFileTable.id DESC" );
 	}
 
 	/**
-	 * @return array - files associated with parent
+	 * @inheritdoc
+	 */
+	public function getModelFilesByType( $type, $active = true ) {
+
+		$modelFileTable = ModelFile::tableName();
+
+		return $this->hasMany( ModelFile::class, [ 'parentId' => 'id' ] )
+			->where( "$modelFileTable.parentType=:ptype AND $modelFileTable.type=:type AND $modelFileTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+			->orderBy( "$modelFileTable.id DESC" )
+			->all();
+	}
+
+	/**
+	 * @inheritdoc
 	 */
 	public function getFiles() {
 
-		return $this->hasMany( File::className(), [ 'id' => 'modelId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_FILE, [ 'parentId' => 'id' ], function( $query ) {
+		$fileTable		= File::tableName();
+		$modelFileTable	= ModelFile::tableName();
 
-						$modelFileTable	= CoreTables::TABLE_MODEL_FILE;
-
-						$query->onCondition( "$modelFileTable.parentType=:type", [ ':type' => $this->modelType ] );
-					});
+		return File::find()
+			->leftJoin( $modelFileTable, "$modelFileTable.modelId=$fileTable.id" )
+			->where( "$modelFileTable.parentId=:pid AND $modelFileTable.parentType=:ptype", [ ':pid' => $this->id, ':ptype' => $this->modelType ] )
+			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] )
+			->all();
 	}
 
-	// Useful only in cases where unique title is allowed
-	public function getFileByTitle( $title ) {
+	/**
+	 * @inheritdoc
+	 */
+	public function getActiveFiles() {
 
-		$fileTable	= CoreTables::TABLE_FILE;
+		$fileTable		= File::tableName();
+		$modelFileTable	= ModelFile::tableName();
 
-		$file		= $this->hasOne( File::className(), [ 'id' => 'modelId' ] )
-							->where( "$fileTable.title=:title", [ ':title' => $title ] )
-							->viaTable( CoreTables::TABLE_MODEL_FILE, [ 'parentId' => 'id' ], function( $query ) {
-
-								$modelFileTable	= CoreTables::TABLE_MODEL_FILE;
-
-								$query->onCondition( "$modelFileTable.parentType=:type", [ ':type' => $this->modelType ] );
-							})->one();
-
-		return $file;
+		return File::find()
+			->leftJoin( $modelFileTable, "$modelFileTable.modelId=$fileTable.id" )
+			->where( "$modelFileTable.parentId=:pid AND $modelFileTable.parentType=:ptype AND $modelFileTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':active' => true ] )
+			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] )
+			->all();
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getFilesByType( $type, $active = true ) {
+
+		$fileTable		= File::tableName();
+		$modelFileTable	= ModelFile::tableName();
+
+		return File::find()
+			->leftJoin( $modelFileTable, "$modelFileTable.modelId=$fileTable.id" )
+			->where( "$modelFileTable.parentId=:pid AND $modelFileTable.parentType=:ptype AND $modelFileTable.type=:type AND $modelFileTable.active=:active", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )
+			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] )
+			->all();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getFileByTag( $tag ) {
+
+		$fileTable		= File::tableName();
+		$modelFileTable	= ModelFile::tableName();
+
+		return File::find()
+			->leftJoin( $modelFileTable, "$modelFileTable.modelId=$fileTable.id" )
+			->where( "$modelFileTable.parentId=:pid AND $modelFileTable.parentType=:ptype AND $modelFileTable.tag=:tag", [ ':pid' => $this->id, ':ptype' => $this->modelType, ':tag' => $tag ] )
+			->orderBy( [ "$modelFileTable.order" => SORT_DESC, "$modelFileTable.id" => SORT_DESC ] )
+			->one();
+	}
+
+	// Static Methods ----------------------------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG classes ---------------------------
+
+	// FileTrait -----------------------------
+
+	// Read - Query -----------
+
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
+
 }

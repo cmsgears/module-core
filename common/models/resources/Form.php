@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
@@ -11,24 +19,37 @@ use yii\behaviors\SluggableBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\interfaces\IVisibility;
+use cmsgears\core\common\models\interfaces\base\IApproval;
+use cmsgears\core\common\models\interfaces\base\IAuthor;
+use cmsgears\core\common\models\interfaces\base\IMultiSite;
+use cmsgears\core\common\models\interfaces\base\INameType;
+use cmsgears\core\common\models\interfaces\base\IOwner;
+use cmsgears\core\common\models\interfaces\base\ISlugType;
+use cmsgears\core\common\models\interfaces\base\IVisibility;
+use cmsgears\core\common\models\interfaces\resources\IData;
+use cmsgears\core\common\models\interfaces\resources\IGridCache;
+use cmsgears\core\common\models\interfaces\resources\IModelMeta;
+use cmsgears\core\common\models\interfaces\resources\ITemplate;
 
 use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\Site;
+use cmsgears\core\common\models\base\Resource;
 
-use cmsgears\core\common\models\traits\CreateModifyTrait;
-use cmsgears\core\common\models\traits\NameTypeTrait;
-use cmsgears\core\common\models\traits\SlugTypeTrait;
-use cmsgears\core\common\models\traits\interfaces\OwnerTrait;
-use cmsgears\core\common\models\traits\interfaces\VisibilityTrait;
-use cmsgears\core\common\models\traits\resources\MetaTrait;
+use cmsgears\core\common\models\traits\base\ApprovalTrait;
+use cmsgears\core\common\models\traits\base\AuthorTrait;
+use cmsgears\core\common\models\traits\base\MultiSiteTrait;
+use cmsgears\core\common\models\traits\base\NameTypeTrait;
+use cmsgears\core\common\models\traits\base\OwnerTrait;
+use cmsgears\core\common\models\traits\base\SlugTypeTrait;
+use cmsgears\core\common\models\traits\base\VisibilityTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
-use cmsgears\core\common\models\traits\mappers\TemplateTrait;
+use cmsgears\core\common\models\traits\resources\GridCacheTrait;
+use cmsgears\core\common\models\traits\resources\ModelMetaTrait;
+use cmsgears\core\common\models\traits\resources\TemplateTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
 /**
- * Form Entity
+ * Forms with fields can be used to collect data.
  *
  * @property integer $id
  * @property integer $siteId
@@ -39,21 +60,32 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $slug
  * @property string $type
  * @property string $icon
+ * @property string $texture
+ * @property string $title
  * @property string $description
- * @property string $successMessage
+ * @property string $success
+ * @property string $failure
  * @property boolean $captcha
  * @property boolean $visibility
- * @property boolean $active
- * @property boolean $userMail
- * @property boolean $adminMail
+ * @property integer $status
+ * @property string $mailTo
+ * @property boolean $userMail Send mail to user if set and email field exist.
+ * @property boolean $adminMail Send mail to admin if set.
+ * @property boolean $uniqueSubmit
+ * @property boolean $updateSubmit
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $htmlOptions
  * @property string $content
  * @property string $data
- * @property boolean $uniqueSubmit
+ * @property string $gridCache
+ * @property boolean $gridCacheValid
+ * @property datetime $gridCachedAt
+ *
+ * @since 1.0.0
  */
-class Form extends \cmsgears\core\common\models\base\Resource implements IVisibility {
+class Form extends Resource implements IApproval, IAuthor, IData, IGridCache, IModelMeta,
+	IMultiSite, INameType, IOwner, ISlugType, ITemplate, IVisibility {
 
 	// Variables ---------------------------------------------------
 
@@ -65,23 +97,24 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	// Protected --------------
 
-	public static $multiSite	= true;
-
 	// Variables -----------------------------
 
 	// Public -----------------
 
-	public $modelType	= CoreGlobal::TYPE_FORM;
-
 	// Protected --------------
+
+	protected $modelType = CoreGlobal::TYPE_FORM;
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
-	use MetaTrait;
-	use CreateModifyTrait;
+	use ApprovalTrait;
+	use AuthorTrait;
 	use DataTrait;
+	use GridCacheTrait;
+	use ModelMetaTrait;
+	use MultiSiteTrait;
 	use NameTypeTrait;
 	use OwnerTrait;
 	use SlugTypeTrait;
@@ -105,20 +138,21 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 		return [
 			'authorBehavior' => [
-				'class' => AuthorBehavior::className()
+				'class' => AuthorBehavior::class
 			],
 			'timestampBehavior' => [
-				'class' => TimestampBehavior::className(),
+				'class' => TimestampBehavior::class,
 				'createdAtAttribute' => 'createdAt',
 				'updatedAtAttribute' => 'modifiedAt',
 				'value' => new Expression('NOW()')
 			],
 			'sluggableBehavior' => [
-				'class' => SluggableBehavior::className(),
+				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
-				'slugAttribute' => 'slug',
+				'slugAttribute' => 'slug', // Unique for Site Id
 				'immutable' => true,
-				'ensureUnique' => false
+				'ensureUnique' => true,
+				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'slug' ] ]
 			]
 		];
 	}
@@ -130,31 +164,33 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'name', 'siteId', 'captcha', 'visibility', 'active' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
+			[ [ 'siteId', 'name', 'captcha', 'visibility', 'status' ], 'required' ],
+			[ [ 'id', 'htmlOptions', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique
-			[ [ 'siteId', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'siteId', 'name', 'type' ] ],
-			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
+			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'type', 'name' ] ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'slug', 'description', 'successMessage' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'icon', 'texture' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'name', 'mailTo' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ 'slug', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'title', 'success', 'failure' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
+			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ [ 'visibility' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'captcha', 'active', 'userMail', 'adminMail', 'uniqueSubmit' ], 'boolean' ],
-			[ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'visibility', 'status' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'captcha', 'userMail', 'adminMail', 'uniqueSubmit', 'updateSubmit', 'gridCacheValid' ], 'boolean' ],
+			[ 'templateId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
-		// trim if configured
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'description', 'successMessage', 'htmlOptions' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'title', 'description', 'success', 'failure', 'htmlOptions' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -168,25 +204,36 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 	public function attributeLabels() {
 
 		return [
+			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'mailTo' => 'Mail To',
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'texture' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEXTURE ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'successMessage' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE_SUCCESS ),
+			'success' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE_SUCCESS ),
+			'failure' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE_FAILURE ),
 			'captcha' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CAPTCHA ),
 			'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
-			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
 			'userMail' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MAIL_USER ),
 			'adminMail' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MAIL_ADMIN ),
+			'uniqueSubmit' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FORM_UNIQUE ),
+			'updateSubmit' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FORM_UPDATE ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
-			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_META )
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_META ),
+			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
 		];
 	}
 
 	// yii\db\BaseActiveRecord
 
+	/**
+	 * @inheritdoc
+	 */
 	public function beforeSave( $insert ) {
 
 		if( parent::beforeSave( $insert ) ) {
@@ -210,60 +257,92 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	// Form ----------------------------------
 
-	public function getSite() {
-
-		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
-	}
-
 	/**
-	 * @return array - array of FormField
+	 * Return all the fields associated with the form.
+	 *
+	 * @return FormField[]
 	 */
 	public function getFields() {
 
-		return $this->hasMany( FormField::className(), [ 'formId' => 'id' ] );
+		return $this->hasMany( FormField::class, [ 'formId' => 'id' ] );
 	}
 
 	/**
-	 * @return array - map of FormField having field name as key
+	 * Return map of form fields having field name as key and field itself as value.
+	 *
+	 * @return array FormField map
 	 */
 	public function getFieldsMap() {
 
-		$formFields		= $this->fields;
-		$formFieldsMap	= array();
+		$formFields = $this->fields;
+		$fieldsMap	= [];
 
-		foreach ( $formFields as $formField ) {
+		foreach( $formFields as $formField ) {
 
-			$formFieldsMap[ $formField->name ] = $formField;
+			$fieldsMap[ $formField->name ] = $formField;
 		}
 
-		return $formFieldsMap;
+		return $fieldsMap;
 	}
 
+	/**
+	 * Returns string representation of captcha flag.
+	 *
+	 * @return string
+	 */
 	public function getCaptchaStr() {
 
 		return Yii::$app->formatter->asBoolean( $this->captcha );
 	}
 
+	/**
+	 * Returns string representation of visibility.
+	 *
+	 * @return string
+	 */
 	public function getVisibilityStr() {
 
 		return self::$visibilityMap[ $this->visibility ];
 	}
 
-	public function getActiveStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->active );
-	}
-
-	// Send mail to user if set and email field exist
+	/**
+	 * Returns string representation of user mail flag.
+	 *
+	 * @return string
+	 */
 	public function getUserMailStr() {
 
 		return Yii::$app->formatter->asBoolean( $this->userMail );
 	}
 
-	// Send mail to admin if set
+	/**
+	 * Returns string representation of admin mail flag.
+	 *
+	 * @return string
+	 */
 	public function getAdminMailStr() {
 
 		return Yii::$app->formatter->asBoolean( $this->adminMail );
+	}
+
+	/**
+	 * Returns string representation of unique submit flag.
+	 *
+	 * @return string
+	 */
+	public function getUniqueSubmitStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->uniqueSubmit );
+	}
+
+	/**
+	 * Returns string representation of update submit flag.
+	 *
+	 * @return string
+	 */
+	public function getUpdateSubmitStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->updateSubmit );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -277,7 +356,7 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_FORM;
+		return CoreTables::getTableName( CoreTables::TABLE_FORM );
 	}
 
 	// CMG parent classes --------------------
@@ -286,14 +365,24 @@ class Form extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template', 'creator', 'modifier' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template', 'creator', 'modifier' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the form with fields.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with fields.
+	 */
 	public static function queryWithFields( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'fields' ];

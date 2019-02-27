@@ -1,5 +1,4 @@
 <?php
-use \Yii;
 use yii\widgets\ActiveForm;
 
 $coreProperties = $this->context->getCoreProperties();
@@ -14,7 +13,7 @@ $this->title	= $coreProperties->getSiteTitle() . ' | Reset Password';
 	}
 	else {
 
-		$form = ActiveForm::begin( [ 'id' => 'frm-reset-password' ] ); 
+		$form = ActiveForm::begin( [ 'id' => 'frm-reset-password' ] );
 ?>
 		<ul>
 			<li>

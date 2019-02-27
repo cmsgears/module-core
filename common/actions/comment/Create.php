@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\comment;
 
 // Yii Imports
@@ -7,15 +15,19 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\ModelComment;
+use cmsgears\core\common\models\forms\Comment;
 use cmsgears\core\common\models\resources\File;
+use cmsgears\core\common\models\resources\ModelComment;
 
 use cmsgears\files\components\FileManager;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Create action creates comment, review or testimonial for discovered model using ModelComment resource.
+ * Create action creates comment, review or testimonial of discovered model using
+ * ModelComment resource.
+ *
+ * @since 1.0.0
  */
 class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
@@ -33,23 +45,23 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $parent 		= true;
+	public $parent = true;
 
-	public $modelType	= null;
+	public $modelType = null;
 
-	public $status		= ModelComment::STATUS_NEW;
+	public $status = ModelComment::STATUS_NEW;
 
-	public $setUser		= true;
+	public $setUser = true;
 
-	public $media		= false;
+	public $media = false;
 
-	public $mediaType	= FileManager::FILE_TYPE_DOCUMENT;
+	public $mediaType = FileManager::FILE_TYPE_DOCUMENT;
 
-	public $mediaModel	= 'File';
+	public $mediaModel = 'File';
 
 	/**
-	 * A comment can be created with or without scenario. The possible scenarios are - comment, review and testimonial.
-	 * Controller must specify the scenario based on the type of comment.
+	 * A comment can be created with or without scenario. The possible scenarios
+	 * are - all, identity, captcha, review, feedback and testimonial.
 	 */
 	public $scenario;
 
@@ -71,18 +83,22 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// CMG parent classes --------------------
 
-	// CreateComment -------------------------
+	// Create --------------------------------
 
 	public function run() {
 
 		if( isset( $this->model ) ) {
 
-			$modelCommentService	= Yii::$app->factory->get( 'modelCommentService' );
+			$modelCommentService = Yii::$app->factory->get( 'modelCommentService' );
 
-			$user			= Yii::$app->user->getIdentity();
-			$modelClass		= $modelCommentService->getModelClass();
+			$user = Yii::$app->user->getIdentity();
+
+			$modelClass = $modelCommentService->getModelClass();
+
 			$modelComment	= new $modelClass;
+			$commentForm	= new Comment();
 
+			$modelComment->siteId		= Yii::$app->core->getSiteId();
 			$modelComment->parentId		= $this->model->id;
 			$modelComment->parentType	= $this->parentType;
 
@@ -98,12 +114,19 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 			if( isset( $this->scenario ) ) {
 
-				$modelComment->scenario = $this->scenario;
+				$commentForm->scenario = $this->scenario;
 			}
 
-			if( $modelComment->load( Yii::$app->request->post(), $modelComment->getClassName() ) && $modelComment->validate() ) {
+			if( $commentForm->load( Yii::$app->request->post(), $commentForm->getClassName() ) && $commentForm->validate() ) {
 
-				$modelComment	= $modelCommentService->create( $modelComment );
+				$modelComment->copyForUpdateFrom( $commentForm, [ 'baseId', 'bannerId', 'videoId', 'avatarUrl', 'websiteUrl', 'rating', 'anonymous', 'content' ] );
+
+				if( !$this->setUser || !isset( $user ) ) {
+
+					$modelComment->copyForUpdateFrom( $commentForm, [ 'name', 'email' ] );
+				}
+
+				$modelComment = $modelCommentService->create( $modelComment );
 
 				if( isset( $modelComment ) ) {
 
@@ -119,8 +142,9 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 					// Attach media to comment if allowed and available
 					if( $this->media ) {
 
-						$filesCount	= count( Yii::$app->request->post( $this->mediaModel ) );
-						$files		= $this->initFiles( $filesCount );
+						$filesCount = count( Yii::$app->request->post( $this->mediaModel ) );
+
+						$files = $this->initFiles( $filesCount );
 
 						if( File::loadMultiple( $files, Yii::$app->request->post(), $this->mediaModel ) && File::validateMultiple( $files ) ) {
 
@@ -137,7 +161,7 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 			}
 
 			// Generate Validation Errors
-			$errors = AjaxUtil::generateErrorMessage( $modelComment );
+			$errors = AjaxUtil::generateErrorMessage( $commentForm );
 
 			// Trigger Ajax Failure
 			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
@@ -148,13 +172,14 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	protected function initFiles( $count ) {
 
-		$files	= [];
+		$files = [];
 
 		for( $i = 0; $i < $count; $i++ ) {
 
-			$files[]	= new File();
+			$files[] = new File();
 		}
 
 		return $files;
 	}
+
 }

@@ -1,18 +1,33 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\meta;
 
 // Yii Imports
 use Yii;
+use yii\helpers\HtmlPurifier;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\base\IMeta;
+
+use cmsgears\core\common\actions\base\ModelAction;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Create add meta for given parent model.
+ * Create Action add the meta by identifying the appropriate parent.
+ *
+ * @since 1.0.0
  */
-class Create extends \cmsgears\core\common\base\Action {
+class Create extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -30,8 +45,6 @@ class Create extends \cmsgears\core\common\base\Action {
 
 	// Protected --------------
 
-	protected $modelService;
-
 	protected $metaService;
 
 	// Private ----------------
@@ -44,9 +57,7 @@ class Create extends \cmsgears\core\common\base\Action {
 
 		parent::init();
 
-		$this->modelService		= $this->controller->modelService;
-
-		$this->metaService		= $this->controller->metaService;
+		$this->metaService	= $this->controller->metaService;
 	}
 
 	// Instance methods --------------------------------------------
@@ -64,33 +75,19 @@ class Create extends \cmsgears\core\common\base\Action {
 	/**
 	 * Create Meta for given parent slug and parent type.
 	 */
-	public function run( $id = null, $slug = null, $type = null ) {
+	public function run() {
 
-		// Find Meta parent
-		$parent	= null;
+		$parent	= $this->model;
 
-		if( isset( $id ) ) {
-
-			$parent	= $this->modelService->getById( $id );
-		}
-		else if( isset( $type ) ) {
-
-			$parent	= $this->modelService->getBySlugType( $slug, $type );
-		}
-		else {
-
-			$parent	= $this->modelService->getBySlug( $slug );
-		}
-
-		// Delete meta
 		if( isset( $parent ) ) {
 
-			$metaClass		= $this->metaService->getModelClass();
-			$meta			= new $metaClass;
+			$metaClass	= $this->metaService->getModelClass();
+
+			$meta = new $metaClass;
 
 			if( $meta->hasAttribute( 'modelId' ) ) {
 
-				$meta->modelId	= $parent->id;
+				$meta->modelId = $parent->id;
 			}
 			else {
 
@@ -98,11 +95,21 @@ class Create extends \cmsgears\core\common\base\Action {
 				$meta->parentType	= $this->modelService->getParentType();
 			}
 
+			if( empty( $meta->type ) ) {
+
+				$meta->type = CoreGlobal::TYPE_DEFAULT;
+			}
+
+			if( empty( $meta->valueType ) ) {
+
+				$meta->valueType = IMeta::VALUE_TYPE_TEXT;
+			}
+
 			if( $meta->load( Yii::$app->request->post(), $meta->getClassName() ) && $meta->validate() ) {
 
 				$this->metaService->create( $meta );
 
-				$data	= [ 'id' => $meta->id, 'name' => $meta->name, 'value' => $meta->value ];
+				$data = [ 'id' => $meta->id, 'name' => $meta->name, 'value' => HtmlPurifier::process( $meta->value ) ];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
@@ -118,4 +125,5 @@ class Create extends \cmsgears\core\common\base\Action {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

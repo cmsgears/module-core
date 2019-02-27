@@ -1,27 +1,30 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\base;
 
 // Yii Imports
-use \Yii;
+use yii\base\BaseObject;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\services\interfaces\base\ISystemService;
 
-abstract class SystemService extends \yii\base\Object implements ISystemService {
+/**
+ * SystemService defines commonly used methods specific to system services.
+ *
+ * @since 1.0.0
+ */
+abstract class SystemService extends BaseObject implements ISystemService {
 
 	// Variables ---------------------------------------------------
 
-	// Globals -------------------------------
-
-	// Constants --------------
-
-	// Public -----------------
-
-	// Protected --------------
-
-	// Variables -----------------------------
+	// Globals ----------------
 
 	// Public -----------------
 
@@ -35,9 +38,9 @@ abstract class SystemService extends \yii\base\Object implements ISystemService 
 
 	// Instance methods --------------------------------------------
 
-	// Yii parent classes --------------------
+	// Yii interfaces ------------------------
 
-	// yii\base\Component -----
+	// Yii parent classes --------------------
 
 	// CMG interfaces ------------------------
 
@@ -45,46 +48,12 @@ abstract class SystemService extends \yii\base\Object implements ISystemService 
 
 	// SystemService -------------------------
 
-	// Data Provider ------
-
-	// Read ---------------
-
-	// Read - Models ---
-
-	// Read - Lists ----
-
-	// Read - Maps -----
-
-	// Read - Others ---
-
-	// Create -------------
-
-	// Update -------------
-
-	// Delete -------------
-
 	// Static Methods ----------------------------------------------
+
+	// Yii parent classes --------------------
 
 	// CMG parent classes --------------------
 
 	// SystemService -------------------------
-
-	// Data Provider ------
-
-	// Read ---------------
-
-	// Read - Models ---
-
-	// Read - Lists ----
-
-	// Read - Maps -----
-
-	// Read - Others ---
-
-	// Create -------------
-
-	// Update -------------
-
-	// Delete -------------
 
 }

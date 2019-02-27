@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\resources;
 
 // CMG Imports
@@ -7,17 +15,21 @@ use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Site;
 
 /**
- * SiteMeta Entity
+ * The meta model used to store site meta data and attributes.
  *
  * @property integer $id
  * @property integer $modelId
  * @property string $name
  * @property string $label
  * @property string $type
+ * @property boolean $active
  * @property string $valueType
  * @property string $value
+ * @property string $data
+ *
+ * @since 1.0.0
  */
-class SiteMeta extends \cmsgears\core\common\models\base\ModelMeta {
+class SiteMeta extends \cmsgears\core\common\models\base\Meta {
 
 	// Variables ---------------------------------------------------
 
@@ -59,9 +71,14 @@ class SiteMeta extends \cmsgears\core\common\models\base\ModelMeta {
 
 	// SiteMeta ------------------------------
 
+	/**
+	 * Returns the site model using one-to-one(hasOne) relationship.
+	 *
+	 * @return \cmsgears\core\common\models\entities\Site Site to which this meta belongs.
+	 */
 	public function getParent() {
 
-		return $this->hasOne( Site::className(), [ 'id' => 'modelId' ] );
+		return $this->hasOne( Site::class, [ 'id' => 'modelId' ] );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -75,7 +92,7 @@ class SiteMeta extends \cmsgears\core\common\models\base\ModelMeta {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_SITE_META;
+		return CoreTables::getTableName( CoreTables::TABLE_SITE_META );
 	}
 
 	// CMG parent classes --------------------

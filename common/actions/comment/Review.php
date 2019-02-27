@@ -1,11 +1,22 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\comment;
 
 // CMG Imports
+use cmsgears\core\common\models\forms\Comment;
 use cmsgears\core\common\models\resources\ModelComment;
 
 /**
- * Review action creates a review for discovered model using ModelComment resource.
+ * Review action creates a review of discovered model using ModelComment resource.
+ *
+ * @since 1.0.0
  */
 class Review extends Create {
 
@@ -23,9 +34,9 @@ class Review extends Create {
 
 	// Public -----------------
 
-	public $modelType	= ModelComment::TYPE_REVIEW;
+	public $modelType = ModelComment::TYPE_REVIEW;
 
-	public $scenario	= ModelComment::TYPE_REVIEW;
+	public $scenario = Comment::SCENARIO_REVIEW;
 
 	// Protected --------------
 

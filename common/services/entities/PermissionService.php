@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
@@ -8,16 +16,18 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\mappers\RolePermission;
 
 use cmsgears\core\common\services\interfaces\entities\IPermissionService;
 
-use cmsgears\core\common\services\traits\NameTypeTrait;
-use cmsgears\core\common\services\traits\SlugTypeTrait;
+use cmsgears\core\common\services\traits\base\NameTypeTrait;
+use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
- * The class PermissionService is base class to perform database activities for Permission Entity.
+ * PermissionService provide service methods of permission model.
+ *
+ * @since 1.0.0
  */
 class PermissionService extends \cmsgears\core\common\services\base\EntityService implements IPermissionService {
 
@@ -29,13 +39,11 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Permission';
+	public static $modelClass = '\cmsgears\core\common\models\entities\Permission';
 
-	public static $modelTable	= CoreTables::TABLE_PERMISSION;
+	public static $typed = true;
 
-	public static $typed		= true;
-
-	public static $parentType	= CoreGlobal::TYPE_PERMISSION;
+	public static $parentType = CoreGlobal::TYPE_PERMISSION;
 
 	// Protected --------------
 
@@ -49,6 +57,7 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 
@@ -71,12 +80,18 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 	public function getPage( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
-		$modelTable	= static::$modelTable;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
@@ -101,6 +116,12 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 	                'default' => SORT_DESC,
 	                'label' => 'Icon'
 	            ],
+	            'group' => [
+	                'asc' => [ "$modelTable.group" => SORT_ASC ],
+	                'desc' => [ "$modelTable.group" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Group'
+	            ],
 	            'cdate' => [
 	                'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
 	                'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
@@ -113,6 +134,9 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 	                'default' => SORT_DESC,
 	                'label' => 'Updated At'
 	            ]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 
@@ -130,13 +154,40 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 
 		// Filters ----------
 
+		// Params
+		$type	= Yii::$app->request->getQueryParam( 'type' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
+
+		// Filter - Type
+		if( isset( $type ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'group': {
+
+					$config[ 'conditions' ][ "$modelTable.group" ] = true;
+
+					break;
+				}
+			}
+		}
+
 		// Searching --------
 
 		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'desc' => "$modelTable.description" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'desc' => "$modelTable.description"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -144,7 +195,8 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'desc' => "$modelTable.description"
+			'name' => "$modelTable.name",
+			'desc' => "$modelTable.description"
 		];
 
 		// Result -----------
@@ -158,15 +210,15 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Read - Lists ----
 
-	// Read - Maps -----
-
-	public function getLeafIdNameListByType( $type, $config = [] ) {
+	public function getIdNameListByTypeGroup( $type, $group = false, $config = [] ) {
 
 		$config[ 'conditions' ][ 'type' ] 	= $type;
-		$config[ 'conditions' ][ 'group' ] 	= false;
+		$config[ 'conditions' ][ 'group' ] 	= $group;
 
 		return $this->getIdNameList( $config );
 	}
+
+	// Read - Maps -----
 
 	// Read - Others ---
 
@@ -176,7 +228,7 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'slug', 'icon', 'description', 'group' ];
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -200,9 +252,11 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 
 			foreach ( $binded as $id ) {
 
-				$toSave					= new RolePermission();
-				$toSave->roleId			= $id;
-				$toSave->permissionId	= $permId;
+				$toSave	= new RolePermission();
+
+				$toSave->roleId = $id;
+
+				$toSave->permissionId = $permId;
 
 				$toSave->save();
 			}
@@ -210,6 +264,10 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 
 		return true;
 	}
+
+	// Delete -------------
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -232,7 +290,11 @@ class PermissionService extends \cmsgears\core\common\services\base\EntityServic
 		}
 	}
 
-	// Delete -------------
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

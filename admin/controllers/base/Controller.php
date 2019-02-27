@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\base;
 
 // CMG Imports
@@ -7,6 +15,11 @@ use cmsgears\core\admin\config\AdminGlobalCore;
 
 use cmsgears\core\admin\config\AdminProperties;
 
+/**
+ * Controller is base controller for all admin controllers.
+ *
+ * @since 1.0.0
+ */
 abstract class Controller extends \cmsgears\core\common\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
@@ -28,10 +41,10 @@ abstract class Controller extends \cmsgears\core\common\controllers\base\Control
 		parent::init();
 
 		// Default Layout
-		$this->layout			= AdminGlobalCore::LAYOUT_PRIVATE;
+		$this->layout = AdminGlobalCore::LAYOUT_PRIVATE;
 
 		// Default Permission
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 	}
 
 	// Instance methods --------------------------------------------
@@ -54,9 +67,21 @@ abstract class Controller extends \cmsgears\core\common\controllers\base\Control
 
 		if( !isset( $this->adminProperties ) ) {
 
-			$this->adminProperties	= AdminProperties::getInstance();
+			$this->adminProperties = AdminProperties::getInstance();
 		}
 
 		return $this->adminProperties;
 	}
+
+	// Compatibility Call
+	public function getSiteProperties() {
+
+		if( !isset( $this->adminProperties ) ) {
+
+			$this->adminProperties = AdminProperties::getInstance();
+		}
+
+		return $this->adminProperties;
+	}
+
 }

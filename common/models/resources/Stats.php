@@ -1,20 +1,35 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
+
 use cmsgears\core\common\models\base\CoreTables;
 
+use cmsgears\core\common\models\base\Resource;
+
 /**
- * Stats Entity
+ * The stats stores meta data of tables.
  *
- * @property long $id
- * @property string $table
- * @property long $rows
+ * @property integer $id
+ * @property string $tableName
+ * @property string $type
+ * @property integer $count
+ *
+ * @since 1.0.0
  */
-class Stats extends \cmsgears\core\common\models\base\Resource {
+class Stats extends Resource {
 
 	// Variables ---------------------------------------------------
 
@@ -53,13 +68,14 @@ class Stats extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'table', 'rows' ], 'required' ],
+			[ [ 'tableName', 'type', 'count' ], 'required' ],
 			[ 'id', 'safe' ],
 			// Text Limit
-			[ 'table', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'type', 'string', 'min' => 0, 'max' => Yii::$app->core->mediumText ],
+			[ 'tableName', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
 			// Others
 			[ 'rows' => 'number', 'integerOnly' => true ]
 		];
@@ -73,8 +89,9 @@ class Stats extends \cmsgears\core\common\models\base\Resource {
 	public function attributeLabels() {
 
 		return [
-			'table' => 'table',
-			'rows' => 'rows'
+			'tableName' => 'Table',
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'count' => 'Count'
 		];
 	}
 
@@ -97,7 +114,7 @@ class Stats extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_STATS;
+		return CoreTables::getTableName( CoreTables::TABLE_STATS );
 	}
 
 	// CMG parent classes --------------------
@@ -108,21 +125,20 @@ class Stats extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Find ------------
 
-	public static function getRowCount( $table, $type = null ) {
+	/**
+	 * Returns row count for given table and type.
+	 *
+	 * @param string $table
+	 * @param string $type
+	 * @return integer
+	 */
+	public static function getRowCount( $table, $type = 'row' ) {
 
-		// Row count for model type
-		if( isset( $type ) ) {
+		$stat = self::find()->where( '`table`=:table AND type=:type', [ ':table' => $table, ':type' => $type ] )->one();
 
-		}
-		// Row count for model
-		else {
+		if( isset( $stat ) ) {
 
-			$query = self::find()->where( '`table`=:table AND type IS NULL', [ ':table' => $table ] )->one();
-
-			if( isset( $query ) ) {
-
-				return $query->rows();
-			}
+			return $stat->count;
 		}
 
 		return 0;
@@ -134,4 +150,13 @@ class Stats extends \cmsgears\core\common\models\base\Resource {
 
 	// Delete -----------------
 
+	/**
+	 * Delete all stats related to given table name.
+	 *
+	 * @return int the number of rows deleted.
+	 */
+	public static function deleteByTableName( $tableName ) {
+
+		return self::deleteAll( 'tableName=:tableName', [ ':tableName' => $tableName ] );
+	}
 }

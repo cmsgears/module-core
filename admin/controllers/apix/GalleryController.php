@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
@@ -8,6 +16,11 @@ use yii\filters\VerbFilter;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+/**
+ * GalleryController provide actions specific to gallery model.
+ *
+ * @since 1.0.0
+ */
 class GalleryController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
@@ -28,13 +41,13 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
 
 		parent::init();
 
-		// Permissions
-		$this->crudPermission	= CoreGlobal::PERM_GALLERY_ADMIN;
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_GALLERY_ADMIN;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'galleryService' );
+		$this->modelService	= Yii::$app->factory->get( 'galleryService' );
 
-		$this->fileService		= Yii::$app->factory->get( 'fileService' );
+		$this->fileService	= Yii::$app->factory->get( 'fileService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -51,20 +64,26 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'createItem' => [ 'permission' => $this->crudPermission ],
-					'updateItem' => [ 'permission' => $this->crudPermission ],
-					'deleteItem' => [ 'permission' => $this->crudPermission ],
+					'update' => [ 'permission' => $this->crudPermission ],
+					'get-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'add-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'update-gallery-item' => [ 'permission' => $this->crudPermission ],
+					'delete-gallery-item' => [ 'permission' => $this->crudPermission ],
 					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
-					'createItem' => [ 'post' ],
-					'updateItem' => [ 'post' ],
-					'deleteItem' => [ 'post' ],
+					'update' => [ 'post' ],
+					'get-gallery-item' => [ 'post' ],
+					'add-gallery-item' => [ 'post' ],
+					'update-gallery-item' => [ 'post' ],
+					'delete-gallery-item' => [ 'post' ],
 					'bulk' => [ 'post' ],
+					'generic' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
 			]
@@ -76,10 +95,14 @@ class GalleryController extends \cmsgears\core\admin\controllers\base\Controller
 	public function actions() {
 
 		return [
-			'create-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\CreateItem' ],
-			'update-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\UpdateItem' ],
-			'delete-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\UpdateItem' ],
+			// Gallery
+			'update' => [ 'class' => 'cmsgears\core\common\actions\gallery\Update', 'direct' => true ],
+			'get-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Read', 'direct' => true ],
+			'add-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Create', 'direct' => true ],
+			'update-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Update', 'direct' => true ],
+			'delete-gallery-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\item\Delete', 'direct' => true ],
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
 	}

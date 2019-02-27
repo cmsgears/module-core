@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
@@ -9,23 +17,27 @@ use yii\helpers\ArrayHelper;
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\Resource;
 use cmsgears\core\common\models\entities\Country;
 use cmsgears\core\common\models\entities\Province;
+use cmsgears\core\common\models\entities\Region;
 use cmsgears\core\common\models\entities\City;
 
 /**
- * Address Entity
+ * The Address model used to store the address fields, contact details and location.
  *
- * @property long $id
- * @property long $countryId
- * @property long $provinceId
- * @property long $cityId
+ * @property integer $id
+ * @property integer $countryId
+ * @property integer $provinceId
+ * @property integer $regionId
+ * @property integer $cityId
  * @property string $title
  * @property string $line1
  * @property string $line2
  * @property string $line3
  * @property string $countryName
  * @property string $provinceName
+ * @property string $regionName
  * @property string $cityName
  * @property string $zip
  * @property string $subZip
@@ -35,11 +47,14 @@ use cmsgears\core\common\models\entities\City;
  * @property string $email
  * @property string $fax
  * @property string $website
+ * @property string $landmark
  * @property integer $latitude
  * @property integer $longitude
- * @property short $zoomLevel
+ * @property integer $zoomLevel
+ *
+ * @since 1.0.0
  */
-class Address extends \cmsgears\core\common\models\base\Resource {
+class Address extends Resource {
 
 	// Variables ---------------------------------------------------
 
@@ -77,6 +92,8 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 
 	// Protected --------------
 
+	protected $modelType = CoreGlobal::TYPE_ADDRESS;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
@@ -98,29 +115,28 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'provinceId', 'countryId', 'line1', 'cityName', 'zip' ], 'required' ],
-			[ [ 'cityId' ], 'required', 'on' => 'cityId' ],
-			[ [ 'longitude', 'latitude' ], 'required', 'on' => 'location' ],
-			[ [ 'longitude', 'latitude', 'cityId' ], 'required', 'on' => 'locationWithCityId' ],
+			[ [ 'countryId', 'provinceId', 'cityName', 'line1', 'zip' ], 'required' ],
+			[ [ 'latitude', 'longitude' ], 'required', 'on' => 'location' ],
 			[ [ 'id' ], 'safe' ],
 			// Text Limit
 			[ [ 'zip', 'subZip' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ [ 'phone', 'fax' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'countryName', 'provinceName', 'cityName', 'firstName', 'lastName', 'email' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'title', 'line1', 'line2', 'line3', 'website' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'countryName', 'provinceName', 'regionName' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'title', 'line1', 'line2', 'line3', 'cityName', 'firstName', 'lastName', 'email' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'website', 'landmark' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
 			// Other
 			[ [ 'zip', 'subZip' ], 'alphanumhyphenspace' ],
-			[ [ 'countryId', 'provinceId', 'cityId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'countryId', 'provinceId', 'regionId', 'cityId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
 			[ [ 'longitude', 'latitude', 'zoomLevel' ], 'number' ]
 		];
 
-		// trim if required
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'line1', 'line2', 'line3', 'cityName', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'latitude', 'longitude' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'line1', 'line2', 'line3', 'cityName', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'landmark', 'latitude', 'longitude' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -135,12 +151,16 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 
 		return [
 			'countryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
-			'provinceId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PROVINCE ),
+			'provinceId' => Yii::$app->core->provinceLabel,
+			'regionId' => Yii::$app->core->regionLabel,
 			'cityId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CITY ),
 			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'line1' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE1 ),
 			'line2' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE2 ),
 			'line3' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINE3 ),
+			'countryName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_COUNTRY ),
+			'provinceName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PROVINCE ),
+			'regionName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_REGION ),
 			'cityName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CITY ),
 			'zip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP ),
 			'subZip' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZIP_SUB ),
@@ -150,10 +170,31 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
 			'fax' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FAX ),
 			'website' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
-			'longitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LONGITUDE ),
+			'landmark' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LANDMARK ),
 			'latitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LATITUDE ),
+			'longitude' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LONGITUDE ),
 			'zoomLevel' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ZOOM )
 		];
+	}
+
+	// yii\db\BaseActiveRecord
+
+	/**
+	 * @inheritdoc
+	 */
+	public function beforeSave( $insert ) {
+
+		if( parent::beforeSave( $insert ) ) {
+
+			if( $this->regionId <= 0 ) {
+
+				$this->regionId = null;
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 	// CMG interfaces ------------------------
@@ -169,7 +210,7 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public function getCountry() {
 
-		return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] );
+		return $this->hasOne( Country::class, [ 'id' => 'countryId' ] );
 	}
 
 	/**
@@ -177,7 +218,15 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public function getProvince() {
 
-		return $this->hasOne( Province::className(), [ 'id' => 'provinceId' ] );
+		return $this->hasOne( Province::class, [ 'id' => 'provinceId' ] );
+	}
+
+	/**
+	 * @return Region
+	 */
+	public function getRegion() {
+
+		return $this->hasOne( Region::class, [ 'id' => 'regionId' ] );
 	}
 
 	/**
@@ -185,32 +234,44 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public function getCity() {
 
-		return $this->hasOne( City::className(), [ 'id' => 'cityId' ] );
+		return $this->hasOne( City::class, [ 'id' => 'cityId' ] );
 	}
 
+	// TODO: Use address template to return the address string.
 	public function toString() {
 
-		$country	= $this->country->name;
-		$province	= $this->province->name;
+		$country	= isset( $this->countryName ) ? $this->countryName : $this->country->name;
+		$province	= isset( $this->provinceName ) ? $this->provinceName : $this->province->name;
+		$region		= isset( $this->regionName ) ? $this->regionName : ( isset( $this->region ) ? $this->region->name : null );
 		$address	= $this->line1;
 
-		if( isset( $this->line2 ) && strlen( $this->line2 ) > 0 ) {
+		if( !empty( $this->line2 ) ) {
 
 			$address .= ", $this->line2";
 		}
 
-		if( isset( $this->line3 ) && strlen( $this->line3 ) > 0 ) {
+		if( !empty( $this->line3 ) ) {
 
 			$address .= ", $this->line3";
 		}
 
-		if( isset( $this->cityName ) && strlen( $this->cityName ) > 0 ) {
+		if( !empty( $this->cityName ) ) {
 
 			$address .= ", $this->cityName";
 		}
 
-		//$address .= ", $country, $province, $this->zip";
-		$address .= ", $this->zip";
+		if( !empty( $this->zip ) ) {
+
+			$address .= ", $this->zip";
+		}
+
+		if( !empty( $region ) ) {
+
+			$address .= ", $region";
+		}
+
+		$address .= ", $province, $country";
+		//$address .= ", $this->zip";
 
 		return $address;
 	}
@@ -231,7 +292,7 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_ADDRESS;
+		return CoreTables::getTableName( CoreTables::TABLE_ADDRESS );
 	}
 
 	// CMG parent classes --------------------
@@ -240,6 +301,9 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country', 'province', 'city' ];
@@ -248,6 +312,12 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the address with country.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with country.
+	 */
 	public static function queryWithCountry( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'country' ];
@@ -255,6 +325,12 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the address with province.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with province.
+	 */
 	public static function queryWithProvince( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'province' ];
@@ -262,6 +338,12 @@ class Address extends \cmsgears\core\common\models\base\Resource {
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the address with country and province.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with country and province.
+	 */
 	public static function queryWithCountryProvince( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'country', 'province' ];

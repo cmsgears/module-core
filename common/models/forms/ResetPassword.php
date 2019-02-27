@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
@@ -7,8 +15,19 @@ use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\models\forms\BaseForm;
 
-class ResetPassword extends \yii\base\Model {
+/**
+ * Used to submit password reset request. It need a logged in user.
+ *
+ * @property string $email
+ * @property string $password
+ * @property string $password_repeat
+ * @property string $oldPassword
+ *
+ * @since 1.0.0
+ */
+class ResetPassword extends BaseForm {
 
 	// Variables ---------------------------------------------------
 
@@ -47,17 +66,23 @@ class ResetPassword extends \yii\base\Model {
 
 	// yii\base\Model ---------
 
+	/**
+	 * @inheritdoc
+	 */
 	public function rules() {
 
+		// Model Rules
 		$rules = [
+			// Required, Safe
 			[ [ 'email', 'password', 'password_repeat' ], 'required' ],
 			[ 'oldPassword', 'required', 'on' => [ 'oldPassword' ] ],
-			[ 'password_repeat', 'compare', 'compareAttribute'=>'password' ],
+			[ 'password_repeat', 'compare', 'compareAttribute' => 'password' ],
 			[ 'email', 'email' ],
 			[ 'password', 'password' ],
 			[ 'oldPassword', 'oldPasswordValidator' ]
 		];
 
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'email', 'password', 'password_repeat', 'oldPassword' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
@@ -68,6 +93,9 @@ class ResetPassword extends \yii\base\Model {
 		return $rules;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function attributeLabels() {
 
 		return [
@@ -86,11 +114,11 @@ class ResetPassword extends \yii\base\Model {
 
 	public function oldPasswordValidator( $attribute, $params ) {
 
-		$user	= Yii::$app->user->getIdentity();
+		$user = Yii::$app->user->getIdentity();
 
 		if( isset( $user ) ) {
 
-			if( !Yii::$app->getSecurity()->validatePassword( $this->oldPassword, $user->passwordHash) ) {
+			if( !Yii::$app->getSecurity()->validatePassword( $this->oldPassword, $user->passwordHash ) ) {
 
 				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_PASSWORD_OLD ) );
 			}

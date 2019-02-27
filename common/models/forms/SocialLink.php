@@ -1,14 +1,31 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
 use Yii;
 use yii\helpers\ArrayHelper;
 
-// BizzList Imports
-use bizzlist\core\common\config\CoreGlobal;
+// CMG Imports
+use cmsgears\core\common\config\CoreGlobal;
 
-class SocialLink extends \cmsgears\core\common\models\forms\JsonModel {
+/**
+ * The Social Link Form will be used to collect social links related to the model in action.
+ *
+ * @property string $sns
+ * @property string $icon
+ * @property string $link
+ *
+ * @since 1.0.0
+ */
+class SocialLink extends DataModel {
 
 	// Variables ---------------------------------------------------
 
@@ -52,7 +69,7 @@ class SocialLink extends \cmsgears\core\common\models\forms\JsonModel {
 
 	public $sns;
 	public $icon;
-	public $address;
+	public $link;
 
 	// Protected --------------
 
@@ -72,16 +89,22 @@ class SocialLink extends \cmsgears\core\common\models\forms\JsonModel {
 
 	// yii\base\Model ---------
 
+	/**
+	 * @inheritdoc
+	 */
 	public function rules() {
 
+		// Model Rules
 		$rules = [
-			[ [ 'sns', 'icon', 'address' ], 'required' ],
-			[ 'address', 'url' ]
+			// Required, Safe
+			[ [ 'sns', 'icon', 'link' ], 'required' ],
+			[ 'link', 'url' ]
 		];
 
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'sns', 'icon', 'address' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'sns', 'icon', 'link' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -89,12 +112,15 @@ class SocialLink extends \cmsgears\core\common\models\forms\JsonModel {
 		return $rules;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function attributeLabels() {
 
 		return [
 			'sns' => 'Social Network',
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
-			'address' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINK )
+			'link' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINK )
 		];
 	}
 

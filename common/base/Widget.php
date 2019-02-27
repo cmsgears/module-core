@@ -1,7 +1,16 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\base;
 
 // Yii Imports
+use yii\base\Widget as BaseWidget;
 use yii\helpers\Html;
 
 // CMG Imports
@@ -10,7 +19,12 @@ use cmsgears\core\common\config\CacheProperties;
 
 use cmsgears\core\common\utilities\CodeGenUtil;
 
-abstract class Widget extends \yii\base\Widget {
+/**
+ * The base widget class of widgets based on CMSGears.
+ *
+ * @since 1.0.0
+ */
+abstract class Widget extends BaseWidget {
 
 	// Variables ---------------------------------------------------
 
@@ -27,37 +41,55 @@ abstract class Widget extends \yii\base\Widget {
 	// Public -----------------
 
 	/**
+	 * Title can be either text or html displayed on top of widget.
+	 *
+	 * @var type string
+	 */
+	public $title;
+
+	/**
+	 * The widget object from the object table.
+	 *
+	 * @var \cmsgears\core\common\models\entities\ObjectData
+	 */
+	public $widgetObj;
+
+	/**
 	 * Flag to check whether the widget html need wrapper.
 	 */
-	public $wrap			= false;
+	public $wrap = false;
 
 	/**
 	 * The wrapper tag to be used for widget html wrapping.
 	 */
-	public $wrapper			= 'div';
+	public $wrapper = 'div';
 
 	/**
 	 * Html options to be used for wrapper.
 	 */
-	public $options			= [];
+	public $options = [];
 
 	/**
 	 * Flag to check whether assets can be loaded. We can load widget assets separately in case the
 	 * bundle is not added as dependency to layout asset bundle.
 	 */
-	public $loadAssets		= false;
+	public $loadAssets = false;
 
 	/**
 	 * The path at which view template file is located. It can have alias - ex: '@widget/my-view'.
 	 * By default it's the views folder within widget directory.
 	 */
-	public $templateDir		= null;
+	public $templateDir = null;
 
 	/**
 	 * The template directory/file used to render widget. If it's a directory, the view can be formed
 	 * using multiple files. It can be absolute path to directly access the view.
 	 */
-	public $template		= 'simple';
+	public $template = 'default';
+
+	// Additional Content
+	public $buffer		= false;
+	public $bufferData	= null;
 
 	/**
 	 * This flag can be utilised by widgets to use fallback options in case application factory having
@@ -66,22 +98,22 @@ abstract class Widget extends \yii\base\Widget {
 	 * The widgets in need of model service can utilise factory to get required service. In case factory
 	 * is not needed, widget can directly use models to query them or service in use must provided static method.
 	 */
-	public $factory		= true;
+	public $factory = true;
 
 	/**
 	 * Flag to render data from cache.
 	 */
-	public $cache		= false;
+	public $cache = false;
 
 	/**
 	 * Flag for data rendering from database based cached data.
 	 */
-	public $cacheDb		= false;
+	public $cacheDb = false;
 
 	/**
 	 * Flag for data rendering from file based cached data.
 	 */
-	public $cacheFile	= false;
+	public $cacheFile = false;
 
 	/**
 	 * Flag for widget autoloading.
@@ -99,7 +131,7 @@ abstract class Widget extends \yii\base\Widget {
 	/**
 	 * Url for autoloading.
 	 */
-	public $autoloadUrl			= null;
+	public $autoloadUrl = null;
 
 	// Protected --------------
 
@@ -113,9 +145,9 @@ abstract class Widget extends \yii\base\Widget {
 
         parent::init();
 
-        $this->autoload	= ( isset( $this->autoloadUrl ) && CoreProperties::getInstance()->isAutoLoad() ) ? true : false;
+        $this->autoload	= ( !empty( $this->autoloadUrl ) && CoreProperties::getInstance()->isAutoLoad() ) ? true : false;
 
-		$this->cache	= $this->cache ? $this->cache : CacheProperties::getInstance()->isCaching();
+		$this->cache = $this->cache ? $this->cache : CacheProperties::getInstance()->isCaching();
     }
 
 	// Instance methods --------------------------------------------
@@ -146,6 +178,8 @@ abstract class Widget extends \yii\base\Widget {
 	 */
 	public function run() {
 
+		$this->bufferData = $this->buffer ? ob_get_clean() : null;
+
 		if( $this->autoload ) {
 
 			// Render autoload widget
@@ -164,9 +198,9 @@ abstract class Widget extends \yii\base\Widget {
 
 	public function renderAutoload( $config = [] ) {
 
-		$autoloadView	= CodeGenUtil::isAbsolutePath( $this->autoloadTemplate ) ? $this->autoloadTemplate : "$this->template/$this->autoloadTemplate";
+		$autoloadView = CodeGenUtil::isAbsolutePath( $this->autoloadTemplate ) ? $this->autoloadTemplate : "$this->template/$this->autoloadTemplate";
 
-		$widgetHtml		= $this->render( $autoloadView, [ 'widget' => $this ] );
+		$widgetHtml = $this->render( $autoloadView, [ 'widget' => $this ] );
 
 		if( $this->wrap ) {
 

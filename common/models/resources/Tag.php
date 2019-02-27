@@ -1,32 +1,64 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
-use \Yii;
+use Yii;
+use yii\db\Expression;
 use yii\helpers\ArrayHelper;
 use yii\behaviors\SluggableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\Site;
+use cmsgears\core\common\models\interfaces\base\IAuthor;
+use cmsgears\core\common\models\interfaces\base\IMultiSite;
+use cmsgears\core\common\models\interfaces\base\INameType;
+use cmsgears\core\common\models\interfaces\base\ISlugType;
+use cmsgears\core\common\models\interfaces\resources\IData;
 
-use cmsgears\core\common\models\traits\NameTypeTrait;
-use cmsgears\core\common\models\traits\SlugTypeTrait;
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\Resource;
+
+use cmsgears\core\common\models\traits\base\AuthorTrait;
+use cmsgears\core\common\models\traits\base\MultiSiteTrait;
+use cmsgears\core\common\models\traits\base\NameTypeTrait;
+use cmsgears\core\common\models\traits\base\SlugTypeTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
+
+use cmsgears\core\common\behaviors\AuthorBehavior;
 
 /**
- * Tag Entity
+ * A tag can be used for user defined categories to further categorize the models. Tag
+ * does not follow hierarchy like categories.
  *
- * @property long $id
- * @property long $siteId
+ * @property integer $id
+ * @property integer $siteId
+ * @property integer $createdBy
+ * @property integer $modifiedBy
  * @property string $name
  * @property string $slug
  * @property string $type
  * @property string $icon
+ * @property string $title
  * @property string $description
+ * @property string $htmlOptions
+ * @property datetime $createdAt
+ * @property datetime $modifiedAt
+ * @property string $content
+ * @property string $data
+ *
+ * @since 1.0.0
  */
-class Tag extends \cmsgears\core\common\models\base\Resource {
+class Tag extends Resource implements IAuthor, IData, IMultiSite, INameType, ISlugType {
 
 	// Variables ---------------------------------------------------
 
@@ -36,22 +68,23 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
 
 	// Public -----------------
 
-	public static $multiSite	= true;
-
 	// Protected --------------
 
 	// Variables -----------------------------
 
 	// Public -----------------
 
-	public $modelType	= CoreGlobal::TYPE_TAG;
-
 	// Protected --------------
+
+	protected $modelType = CoreGlobal::TYPE_TAG;
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
+	use AuthorTrait;
+	use DataTrait;
+	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 
@@ -71,12 +104,20 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
 	public function behaviors() {
 
 		return [
+			AuthorBehavior::class,
 			'sluggableBehavior' => [
-				'class' => SluggableBehavior::className(),
+				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
-				'slugAttribute' => 'slug',
+				'slugAttribute' => 'slug', // Unique for Site Id and Type
 				'immutable' => true,
-				'ensureUnique' => false
+				'ensureUnique' => true,
+				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'type', 'slug' ] ]
+			],
+			'timestampBehavior' => [
+				'class' => TimestampBehavior::class,
+				'createdAtAttribute' => 'createdAt',
+				'updatedAtAttribute' => 'modifiedAt',
+				'value' => new Expression('NOW()')
 			]
 		];
 	}
@@ -88,25 +129,30 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
 			[ [ 'siteId', 'name' ], 'required' ],
-			[ 'id', 'safe' ],
+			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
 			// Unique
-			[ [ 'siteId', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'siteId', 'name', 'type' ] ],
-			[ [ 'siteId', 'slug' ], 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
+			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'type', 'slug' ] ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'siteId', 'type', 'name' ] ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ 'name', 'string', 'min' => 0, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'slug', 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ]
+			[ 'slug', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'title', 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
+			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
+			// Others
+			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
-		// trim if required
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'htmlOptions' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -121,11 +167,14 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
 
 		return [
 			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
+			'createdBy' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS )
 		];
 	}
 
@@ -136,11 +185,6 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
 	// Validators ----------------------------
 
 	// Tag -----------------------------------
-
-	public function getSite() {
-
-		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
-	}
 
 	// Static Methods ----------------------------------------------
 
@@ -153,7 +197,7 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_TAG;
+		return CoreTables::getTableName( CoreTables::TABLE_TAG );
 	}
 
 	// CMG parent classes --------------------
@@ -162,17 +206,13 @@ class Tag extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site' ];
 		$config[ 'relations' ]	= $relations;
-
-		return parent::queryWithAll( $config );
-	}
-
-	public static function queryWithSite( $config = [] ) {
-
-		$config[ 'relations' ]	= [ 'site' ];
 
 		return parent::queryWithAll( $config );
 	}

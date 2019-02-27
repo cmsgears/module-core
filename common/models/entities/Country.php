@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
@@ -8,19 +16,24 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\interfaces\base\IName;
 
-use cmsgears\core\common\models\traits\NameTrait;
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\Entity;
+
+use cmsgears\core\common\models\traits\base\NameTrait;
 
 /**
- * Country Entity
+ * It represents Country on world map.
  *
- * @property long $id
+ * @property integer $id
  * @property string $code
  * @property string $iso
  * @property string $name
+ *
+ * @since 1.0.0
  */
-class Country extends \cmsgears\core\common\models\base\Entity {
+class Country extends Entity implements IName {
 
 	// Variables ---------------------------------------------------
 
@@ -37,6 +50,8 @@ class Country extends \cmsgears\core\common\models\base\Entity {
 	// Public -----------------
 
 	// Protected --------------
+
+	protected $modelType = CoreGlobal::TYPE_COUNTRY;
 
 	// Private ----------------
 
@@ -61,20 +76,21 @@ class Country extends \cmsgears\core\common\models\base\Entity {
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
 			[ [ 'name', 'code' ], 'required' ],
 			[ 'id', 'safe' ],
 			// Unique
-			[ [ 'code' ], 'unique' ],
-			[ [ 'name' ], 'unique'],
+			[ 'code', 'unique' ],
+			[ 'name', 'unique' ],
+			[ 'iso', 'unique' ],
 			// Text Limit
 			[ [ 'code', 'iso' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ]
 		];
 
-		// trim if required
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'name', 'code' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
@@ -106,16 +122,23 @@ class Country extends \cmsgears\core\common\models\base\Entity {
 	// Country -------------------------------
 
 	/**
-	 * @return array - list of Province having all the provinces belonging to this country
+	 * Return list of provinces belonging to this country.
+	 *
+	 * @return Province[]
 	 */
 	public function getProvinces() {
 
-		return $this->hasMany( Province::className(), [ 'countryId' => 'id' ] );
+		return $this->hasMany( Province::class, [ 'countryId' => 'id' ] );
 	}
 
+	/**
+	 * Return list of cities belonging to this country.
+	 *
+	 * @return City[]
+	 */
 	public function getCities() {
 
-		return $this->hasMany( City::className(), [ 'countryId' => 'id' ] );
+		return $this->hasMany( City::class, [ 'countryId' => 'id' ] );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -129,7 +152,7 @@ class Country extends \cmsgears\core\common\models\base\Entity {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_COUNTRY;
+		return CoreTables::getTableName( CoreTables::TABLE_COUNTRY );
 	}
 
 	// CMG parent classes --------------------
@@ -138,16 +161,28 @@ class Country extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Query -----------
 
+	/**
+	 * Return query to find the country with provinces.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with provinces.
+	 */
 	public static function queryWithProvinces( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'provinces' ];
+		$config[ 'relations' ] = [ 'provinces' ];
 
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the country with cities.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with cities.
+	 */
 	public static function queryWithCities( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'cities' ];
+		$config[ 'relations' ] = [ 'cities' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -155,7 +190,10 @@ class Country extends \cmsgears\core\common\models\base\Entity {
 	// Read - Find ------------
 
 	/**
-	 * @return Country by code
+	 * Find and return the country associated with given code.
+	 *
+	 * @param string $code
+	 * @return Country
 	 */
 	public static function findByCode( $code ) {
 

@@ -1,19 +1,30 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
-use yii\helpers\ArrayHelper;
-use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\Form;
+use cmsgears\core\admin\controllers\base\Controller;
 
-abstract class FormController extends CrudController {
+/**
+ * FormController provides actions specific to form model.
+ *
+ * @since 1.0.0
+ */
+abstract class FormController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -37,31 +48,17 @@ abstract class FormController extends CrudController {
 
 		parent::init();
 
-		$this->type				= CoreGlobal::TYPE_SYSTEM;
-		$this->submits			= true;
-		$this->templateType		= CoreGlobal::TYPE_FORM;
-		
+		// Views
 		$this->setViewPath( '@cmsgears/module-core/admin/views/form' );
 
-		// Permissions
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
-		
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_CORE;
+
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'formService' );
 		$this->templateService	= Yii::$app->factory->get( 'templateService' );
 
-		// Return Url
-		$this->returnUrl		= Url::previous( 'form' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/forms/config/all' ], true );
-		
-		// Breadcrumbs
-		$this->breadcrumbs		= [
-			'all' => [ [ 'label' => 'Forms' ] ],
-			'create' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Forms', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ],
-		];
-		
+		$this->templateType = $this->modelService->getParentType();
 	}
 
 	// Instance methods --------------------------------------------
@@ -71,6 +68,32 @@ abstract class FormController extends CrudController {
 	// Yii parent classes --------------------
 
 	// yii\base\Component -----
+
+	public function behaviors() {
+
+		return [
+			'rbac' => [
+				'class' => Yii::$app->core->getRbacFilterClass(),
+				'actions' => [
+					'index'	 => [ 'permission' => $this->crudPermission ],
+					'all'  => [ 'permission' => $this->crudPermission ],
+					'create'  => [ 'permission' => $this->crudPermission ],
+					'update'  => [ 'permission' => $this->crudPermission ],
+					'delete'  => [ 'permission' => $this->crudPermission ]
+				]
+			],
+			'verbs' => [
+				'class' => VerbFilter::class,
+				'actions' => [
+					'index' => [ 'get', 'post' ],
+					'all'  => [ 'get' ],
+					'create'  => [ 'get', 'post' ],
+					'update'  => [ 'get', 'post' ],
+					'delete'  => [ 'get', 'post' ]
+				]
+			]
+		];
+	}
 
 	// yii\base\Controller ----
 
@@ -82,63 +105,70 @@ abstract class FormController extends CrudController {
 
 	public function actionAll() {
 
-		Url::remember( Yii::$app->request->getUrl(), 'form' );
+		$modelClass	= $this->modelService->getModelClass();
 
 		$dataProvider = $this->modelService->getPageByType( $this->type );
 
 		return $this->render( 'all', [
-			 'dataProvider' => $dataProvider,
-			 'submits' => $this->submits
+			'dataProvider' => $dataProvider,
+			'submits' => $this->submits,
+			'visibilityMap' => $modelClass::$visibilityMap,
+			'statusMap' => $modelClass::$statusMap
 		]);
 	}
 
 	public function actionCreate() {
 
-		$modelClass		= $this->modelService->getModelClass();
-		$model			= new $modelClass;
-		$model->type	= $this->type;
-		$model->siteId	= Yii::$app->core->siteId;
+		$modelClass	= $this->modelService->getModelClass();
+
+		$model = new $modelClass;
+
+		$model->type		= $this->type;
+		$model->siteId		= Yii::$app->core->siteId;
+		$model->visibility	= $modelClass::VISIBILITY_PUBLIC;
+		$model->captcha		= false;
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->modelService->create( $model );
+			$this->model = $this->modelService->create( $model );
 
 			return $this->redirect( $this->returnUrl );
 		}
 
-		$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
+		$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-		// Render
 		return $this->render( 'create', [
 			'model' => $model,
 			'templatesMap' => $templatesMap,
-			'visibilityMap' => $modelClass::$visibilityMap
+			'visibilityMap' => $modelClass::$visibilityMap,
+			'statusMap' => $modelClass::$statusMap
 		]);
 	}
 
 	public function actionUpdate( $id ) {
 
-		// Find Model
 		$modelClass	= $this->modelService->getModelClass();
-		$model		= $this->modelService->getById( $id );
+
+		$model = $this->modelService->getById( $id );
 
 		// Update if exist
 		if( isset( $model ) ) {
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->modelService->update( $model );
+				$this->model = $this->modelService->update( $model );
 
 				return $this->redirect( $this->returnUrl );
 			}
 
-			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
+			$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
 			// Render
 			return $this->render( 'update', [
 				'model' => $model,
 				'templatesMap' => $templatesMap,
-				'visibilityMap' => $modelClass::$visibilityMap
+				'visibilityMap' => $modelClass::$visibilityMap,
+				'statusMap' => $modelClass::$statusMap
 			]);
 		}
 
@@ -150,29 +180,33 @@ abstract class FormController extends CrudController {
 
 		// Find Model
 		$modelClass	= $this->modelService->getModelClass();
-		$model		= $this->modelService->getById( $id );
+
+		$model = $this->modelService->getById( $id );
 
 		// Delete if exist
 		if( isset( $model ) ) {
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
 
+				$this->model = $model;
+
 				$this->modelService->delete( $model );
 
 				return $this->redirect( $this->returnUrl );
 			}
 
-			$templatesMap	= $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
+			$templatesMap = $this->templateService->getIdNameMapByType( $this->templateType, [ 'default' => true ] );
 
-			// Render
 			return $this->render( 'delete', [
 				'model' => $model,
 				'templatesMap' => $templatesMap,
-				'visibilityMap' => $modelClass::$visibilityMap
+				'visibilityMap' => $modelClass::$visibilityMap,
+				'statusMap' => $modelClass::$statusMap
 			]);
 		}
 
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

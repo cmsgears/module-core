@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
@@ -8,23 +16,32 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\interfaces\base\IMeta;
+use cmsgears\core\common\models\interfaces\resources\IData;
 
-use cmsgears\core\common\models\traits\ResourceTrait;
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\ModelResource;
+
+use cmsgears\core\common\models\traits\base\MetaTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
 
 /**
  * ModelMeta Entity
  *
- * @property long $id
- * @property long $parentId
+ * @property integer $id
+ * @property integer $parentId
  * @property string $parentType
- * @property string $type
- * @property string $valueType
+ * @property string $icon
  * @property string $name
  * @property string $label
+ * @property string $type
+ * @property string $valueType
  * @property string $value
+ * @property string $data
+ *
+ * @since 1.0.0
  */
-class ModelMeta extends \cmsgears\core\common\models\base\Meta {
+class ModelMeta extends ModelResource implements IData, IMeta {
 
 	// Variables ---------------------------------------------------
 
@@ -46,7 +63,8 @@ class ModelMeta extends \cmsgears\core\common\models\base\Meta {
 
 	// Traits ------------------------------------------------------
 
-	use ResourceTrait;
+	use DataTrait;
+	use MetaTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -65,22 +83,22 @@ class ModelMeta extends \cmsgears\core\common\models\base\Meta {
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
 			[ [ 'parentId', 'parentType', 'name' ], 'required' ],
 			[ [ 'id', 'value' ], 'safe' ],
 			// Unique
-			[ [ 'parentId', 'parentType', 'name', 'type' ], 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'name', 'type' ] ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'type', 'name' ] ],
 			// Text Limit
 			[ [ 'parentType', 'type', 'valueType' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
 			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 
-		// trim if required
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'name', 'label', 'value', 'valueType', 'type' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
@@ -99,10 +117,10 @@ class ModelMeta extends \cmsgears\core\common\models\base\Meta {
 		return [
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'valueType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE_TYPE ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'valueType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE_TYPE ),
 			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE )
 		];
 	}
@@ -115,9 +133,16 @@ class ModelMeta extends \cmsgears\core\common\models\base\Meta {
 
 	// ModelMeta -----------------------------
 
-	public function belongsTo( $model, $parentType ) {
+	/**
+	 * Check whether the meta belongs to given parent model.
+	 *
+	 * @param \cmsgears\core\common\models\base\ActiveRecord $parent
+	 * @param string $parentType
+	 * @return boolean
+	 */
+	public function belongsTo( $parent, $parentType ) {
 
-		return $this->parentId == $model->id && $this->parentType == $parentType;
+		return $this->parentId == $parent->id && $this->parentType == $parentType;
 	}
 
 	// Static Methods ----------------------------------------------
@@ -131,7 +156,7 @@ class ModelMeta extends \cmsgears\core\common\models\base\Meta {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_MODEL_META;
+		return CoreTables::getTableName( CoreTables::TABLE_MODEL_META );
 	}
 
 	// CMG parent classes --------------------
@@ -140,74 +165,150 @@ class ModelMeta extends \cmsgears\core\common\models\base\Meta {
 
 	// Read - Query -----------
 
-	public static function queryByName( $parentId, $parentType, $name ) {
+	/**
+	 * Return query to find the model meta by given parent id, parent type and name.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $name
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query by parent id, parent type and name.
+	 */
+	public static function queryByName( $parentId, $parentType, $name, $config = [] ) {
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name', [ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name ] );
+		$query = static::queryByParent( $parentId, $parentType, $config );
+
+		$query->andWhere( 'name=:name', [ ':name' => $name ] );
+
+		return $query;
 	}
 
-	public static function queryByType( $parentId, $parentType, $type ) {
+	/**
+	 * Return query to find the model meta by given parent id, parent type and type.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $type
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query by parent id, parent type and name.
+	 */
+	public static function queryByType( $parentId, $parentType, $type, $config = [] ) {
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type', [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type ] );
+		$query = static::queryByParent( $parentId, $parentType, $config );
+
+		$query->andWhere( 'type=:type', [ ':type' => $type ] );
+
+		return $query;
 	}
 
-	public static function queryByNameType( $parentId, $parentType, $name, $type ) {
+	/**
+	 * Return query to find the model meta by given parent id, parent type, name and type.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $name
+	 * @param string $type
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query by parent id, parent type and name.
+	 */
+	public static function queryByNameType( $parentId, $parentType, $name, $type, $config = [] ) {
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND type=:type AND name=:name', [ ':pid' => $parentId, ':ptype' => $parentType, ':type' => $type, ':name' => $name ] );
+		$query = static::queryByParent( $parentId, $parentType, $config );
+
+		$query->andWhere( 'name=:name AND type=:type', [ ':name' => $name, ':type' => $type ] );
+
+		return $query;
 	}
 
 	// Read - Find ------------
 
 	/**
+	 * Find and return the meta associated with parent for given name.
+	 *
 	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param string $name
-	 * @return ModelMeta - by name
+	 * @param array $config
+	 * @return ModelMeta[]
 	 */
-	public static function findByName( $parentId, $parentType, $name ) {
+	public static function findByName( $parentId, $parentType, $name, $config = [] ) {
 
-		return self::queryByName( $parentId, $parentType, $name )->all();
+		return self::queryByName( $parentId, $parentType, $name, $config )->all();
 	}
 
 	/**
+	 * Find and return the meta associated with parent for given type.
+	 *
 	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param string $type
-	 * @return array - ModelMeta by type
+	 * @param array $config
+	 * @return ModelMeta[]
 	 */
-	public static function findByType( $parentId, $parentType, $type ) {
+	public static function findByType( $parentId, $parentType, $type, $config = [] ) {
 
-		return self::queryByType( $parentId, $parentType, $type )->all();
+		return self::queryByType( $parentId, $parentType, $type, $config )->all();
 	}
 
 	/**
+	 * Find and return the meta associated with parent for given name and type.
+	 *
 	 * @param integer $parentId
 	 * @param string $parentType
-	 * @param string $type
 	 * @param string $name
-	 * @return ModelMeta - by type and name
+	 * @param string $type
+	 * @param array $config
+	 * @return ModelMeta
 	 */
-	public static function findByNameType( $parentId, $parentType, $name, $type ) {
+	public static function findByNameType( $parentId, $parentType, $name, $type, $config = [] ) {
 
-		return self::queryByNameType( $parentId, $parentType, $name, $type )->one();
+		return self::queryByNameType( $parentId, $parentType, $name, $type, $config )->one();
 	}
 
 	/**
+	 * Check whether meta exist for parent using given name and type.
+	 *
 	 * @param integer $parentId
 	 * @param string $parentType
-	 * @param string $type
 	 * @param string $name
-	 * @return boolean - Check whether meta exist by type and name
+	 * @param string $type
+	 * @param array $config
+	 * @return boolean
 	 */
-	public static function isExistByNameType( $parentId, $parentType, $name, $type ) {
+	public static function isExistByNameType( $parentId, $parentType, $name, $type, $config = [] ) {
 
-		$config = self::queryByNameType( $parentId, $parentType, $name, $type )->one();
+		$meta = self::queryByNameType( $parentId, $parentType, $name, $type, $config )->one();
 
-		return isset( $config );
+		return isset( $meta );
 	}
 
 	// Create -----------------
 
 	// Update -----------------
+
+	/**
+	 * Update the meta value for given parent id, parent type, name and type.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $name
+	 * @param string $type
+	 * @param type $value
+	 * @return int|false either 1 or false if meta not found or validation fails.
+	 */
+	public static function updateByNameType( $parentId, $parentType, $name, $type, $value, $config = [] ) {
+
+		$meta = self::findByNameType( $parentId, $parentType, $name, $type, $value, $config );
+
+		if( isset( $meta ) ) {
+
+			$meta->value = $value;
+
+			return $meta->update();
+		}
+
+		return false;
+	}
 
 	// Delete -----------------
 

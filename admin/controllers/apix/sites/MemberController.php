@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\apix\sites;
 
 // Yii Imports
@@ -7,9 +15,17 @@ use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+
+use cmsgears\core\admin\controllers\base\Controller;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class MemberController extends \cmsgears\core\admin\controllers\base\Controller {
+/**
+ * MemberController provides actions specific to site members.
+ *
+ * @since 1.0.0
+ */
+class MemberController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -20,8 +36,9 @@ class MemberController extends \cmsgears\core\admin\controllers\base\Controller 
 	// Protected --------------
 
 	// Private ----------------
+
 	private $userService;
-	
+
 	// Constructor and Initialisation ------------------------------
 
 	public function init() {
@@ -29,11 +46,12 @@ class MemberController extends \cmsgears\core\admin\controllers\base\Controller 
 		parent::init();
 
 		// Permission
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Services
-		$this->userService		= Yii::$app->factory->get( 'userService' );
-		$this->modelService		= Yii::$app->factory->get( 'siteMemberService' );
+		$this->modelService	= Yii::$app->factory->get( 'siteMemberService' );
+
+		$this->userService	= Yii::$app->factory->get( 'userService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -51,14 +69,17 @@ class MemberController extends \cmsgears\core\admin\controllers\base\Controller 
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
 					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'bulk' => [ 'post' ],
-					'delete' => [ 'post' ]
+					'generic' => [ 'post' ],
+					'delete' => [ 'post' ],
+					'auto-search' => [ 'post' ]
 				]
 			]
 		];
@@ -70,32 +91,30 @@ class MemberController extends \cmsgears\core\admin\controllers\base\Controller 
 
 		return [
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
 	}
 
-	public function actionMember() {
+	public function actionAutoSearch() {
 
 		$name	= Yii::$app->request->post( 'name' );
-		$siteId	= Yii::$app->request->get( 'siteId' );
+		$siteId	= Yii::$app->request->get( 'sid' );
 
-		$data	= [];
+		$memberTable	= $this->modelService->getModelTable();
+		$userTable		= $this->userService->getModelTable();
 
-		$data			= $this->userService->getByUsername( $name );
-		$siteMember		= $this->modelService->findBySiteIdUserId( $siteId, $data->id );
+		$userClass	= $this->userService->getModelClass();
+		$query		= $userClass::find();
 
-		if( !isset( $siteMember ) ){
-			
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-		}
-		
-		$data	= [];
+		$query->andWhere( "NOT EXISTS (SELECT * FROM {$memberTable} WHERE {$memberTable}.siteId=:sid AND {$memberTable}.userId={$userTable}.id)", [ ':sid' => $siteId ] );
+
+		$data = $this->userService->getIdNameListByUsername( $name, [ 'query' => $query ] );
+
 		// Trigger Ajax Success
 		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
-		
 	}
-	
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------

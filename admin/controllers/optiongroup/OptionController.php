@@ -1,11 +1,26 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\optiongroup;
 
 // Yii Imports
 use Yii;
 use yii\helpers\Url;
 
-class OptionController extends \cmsgears\core\admin\controllers\base\category\OptionController {
+use cmsgears\core\admin\controllers\base\category\OptionController as BaseOptionController;
+
+/**
+ * OptionController provides actions specific to option model.
+ *
+ * @since 1.0.0
+ */
+class OptionController extends BaseOptionController {
 
 	// Variables ---------------------------------------------------
 
@@ -23,16 +38,26 @@ class OptionController extends \cmsgears\core\admin\controllers\base\category\Op
 
 		parent::init();
 
+		// Config
+		$this->apixBase = 'core/optiongroup/option';
+
 		// Sidebar
-		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'option-group' ];
+		$this->sidebar = [ 'parent' => 'sidebar-core', 'child' => 'option-group' ];
 
 		// Return Url
-		$this->returnUrl		= Url::previous( 'options' );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/optiongroup/option/all' ], true );
+		$this->returnUrl = Url::previous( 'options' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/optiongroup/option/all' ], true );
+
+		// All Url
+		$allUrl = Url::previous( 'ogroups' );
+		$allUrl = isset( $allUrl ) ? $allUrl : Url::toRoute( [ '/core/optiongroup/all' ], true );
 
 		// Breadcrumbs
-		$this->breadcrumbs	= [
-			'base' => [ [ 'label' => 'Option Groups', 'url' =>  [ '/core/optiongroup/all' ] ] ],
+		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ],
+				[ 'label' => 'Option Groups', 'url' =>  $allUrl ]
+			],
 			'all' => [ [ 'label' => 'Options' ] ],
 			'create' => [ [ 'label' => 'Options', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Options', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],

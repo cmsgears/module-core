@@ -1,18 +1,26 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
-
 use cmsgears\core\common\services\interfaces\resources\IFormService;
 use cmsgears\core\common\services\interfaces\mappers\IModelFormService;
 
-use cmsgears\core\common\services\traits\MapperTrait;
+use cmsgears\core\common\services\base\ModelMapperService;
 
 /**
- * The class ModelFormService is base class to perform database activities for ModelForm Entity.
+ * ModelFormService provide service methods of form mapper.
+ *
+ * @since 1.0.0
  */
-class ModelFormService extends \cmsgears\core\common\services\base\EntityService implements IModelFormService {
+class ModelFormService extends ModelMapperService implements IModelFormService {
 
 	// Variables ---------------------------------------------------
 
@@ -22,11 +30,7 @@ class ModelFormService extends \cmsgears\core\common\services\base\EntityService
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelForm';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_FORM;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\mappers\ModelForm';
 
 	// Protected --------------
 
@@ -42,13 +46,11 @@ class ModelFormService extends \cmsgears\core\common\services\base\EntityService
 
 	// Traits ------------------------------------------------------
 
-	use MapperTrait;
-
 	// Constructor and Initialisation ------------------------------
 
 	public function __construct( IFormService $formService, $config = [] ) {
 
-		$this->formService	= $formService;
+		$this->formService = $formService;
 
 		parent::__construct( $config );
 	}
@@ -82,6 +84,14 @@ class ModelFormService extends \cmsgears\core\common\services\base\EntityService
 	// Update -------------
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

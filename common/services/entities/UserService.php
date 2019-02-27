@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
@@ -8,20 +16,23 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\User;
 
 use cmsgears\core\common\services\interfaces\entities\IUserService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
-use cmsgears\core\common\services\traits\ApprovalTrait;
-use cmsgears\core\common\services\traits\DataTrait;
-use cmsgears\core\common\services\traits\ModelMetaTrait;
+use cmsgears\core\common\services\traits\base\ApprovalTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
+use cmsgears\core\common\services\traits\resources\ModelMetaTrait;
+use cmsgears\core\common\services\traits\resources\SocialLinkTrait;
+use cmsgears\core\common\services\traits\resources\VisualTrait;
 
 use cmsgears\core\common\utilities\DateUtil;
 
 /**
- * The class UserService is base class to perform database activities for User Entity.
+ * UserService provide service methods of user model.
+ *
+ * @since 1.0.0
  */
 class UserService extends \cmsgears\core\common\services\base\EntityService implements IUserService {
 
@@ -33,11 +44,9 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\User';
+	public static $modelClass = '\cmsgears\core\common\models\entities\User';
 
-	public static $modelTable	= CoreTables::TABLE_USER;
-
-	public static $parentType	= CoreGlobal::TYPE_USER;
+	public static $parentType = CoreGlobal::TYPE_USER;
 
 	// Protected --------------
 
@@ -56,12 +65,14 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	use ApprovalTrait;
 	use DataTrait;
 	use ModelMetaTrait;
+	use SocialLinkTrait;
+	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------
 
 	public function __construct( IFileService $fileService, $config = [] ) {
 
-		$this->fileService	= $fileService;
+		$this->fileService = $fileService;
 
 		parent::__construct( $config );
 	}
@@ -83,15 +94,27 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	public function getPage( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
-		$modelTable	= static::$modelTable;
+		$modelTable	= $this->getModelTable();
 
-		$siteTable			= CoreTables::TABLE_SITE;
-		$siteMemberTable	= CoreTables::TABLE_SITE_MEMBER;
+		$siteTable	= Yii::$app->factory->get( 'siteService' )->getModelTable();
+		$roleTable	= Yii::$app->factory->get( 'roleService' )->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
+				'locale' => [
+					'asc' => [ "$modelTable.localeId" => SORT_ASC ],
+					'desc' => [ "$modelTable.localeId" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Locale'
+				],
 				'gender' => [
 					'asc' => [ "$modelTable.genderId" => SORT_ASC ],
 					'desc' => [ "$modelTable.genderId" => SORT_DESC ],
@@ -99,22 +122,10 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 					'label' => 'Gender'
 				],
 				'role' => [
-					'asc' => [ "$siteMemberTable.roleId" => SORT_ASC ],
-					'desc' => [ "$siteMemberTable.roleId" => SORT_DESC ],
+					'asc' => [ "$roleTable.name" => SORT_ASC ],
+					'desc' => [ "$roleTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Role'
-				],
-				'name' => [
-					'asc' => [ "$modelTable.firstName" => SORT_ASC, "$modelTable.lastName" => SORT_ASC ],
-					'desc' => [ "$modelTable.firstName" => SORT_DESC, "$modelTable.lastName" => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'Name'
-				],
-				'username' => [
-					'asc' => [ "$modelTable.username" => SORT_ASC ],
-					'desc' => [ "$modelTable.username" => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'Username'
 				],
 				'status' => [
 					'asc' => [ "$modelTable.status" => SORT_ASC ],
@@ -128,11 +139,47 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 					'default' => SORT_DESC,
 					'label' => 'Email'
 				],
+				'username' => [
+					'asc' => [ "$modelTable.username" => SORT_ASC ],
+					'desc' => [ "$modelTable.username" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Username'
+				],
+				'type' => [
+					'asc' => [ "$modelTable.type" => SORT_ASC ],
+					'desc' => [ "$modelTable.type" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Type'
+				],
+				'icon' => [
+					'asc' => [ "$modelTable.icon" => SORT_ASC ],
+					'desc' => [ "$modelTable.icon" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Icon'
+				],
+				'title' => [
+					'asc' => [ "$modelTable.title" => SORT_ASC ],
+					'desc' => [ "$modelTable.title" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Title'
+				],
+				'name' => [
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
+				],
 				'dob' => [
 					'asc' => [ "$modelTable.dob" => SORT_ASC ],
 					'desc' => [ "$modelTable.dob" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Birth Date'
+				],
+				'mobile' => [
+					'asc' => [ "$modelTable.mobile" => SORT_ASC ],
+					'desc' => [ "$modelTable.mobile" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Mobile'
 				],
 				'phone' => [
 					'asc' => [ "$modelTable.phone" => SORT_ASC ],
@@ -140,24 +187,33 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 					'default' => SORT_DESC,
 					'label' => 'Phone'
 				],
-	            'cdate' => [
-	                'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
-	                'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+				'tzone' => [
+					'asc' => [ "$modelTable.timeZone" => SORT_ASC ],
+					'desc' => [ "$modelTable.timeZone" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Time Zone'
+				],
+	            'rdate' => [
+	                'asc' => [ "$modelTable.registeredAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.registeredAt" => SORT_DESC ],
 	                'default' => SORT_DESC,
-	                'label' => 'Created At'
-	            ],
-	            'udate' => [
-	                'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
-	                'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'Updated At'
+	                'label' => 'Registered At'
 	            ],
 	            'ldate' => [
 	                'asc' => [ "$modelTable.lastLoginAt" => SORT_ASC ],
 	                'desc' => [ "$modelTable.lastLoginAt" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Last Login'
+	            ],
+	            'adate' => [
+	                'asc' => [ "$modelTable.lastActivityAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.lastActivityAt" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Last Activity'
 	            ]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 
@@ -170,7 +226,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 		if( !isset( $config[ 'query' ] ) ) {
 
-			$config[ 'hasOne' ] = true;
+			$config[ 'query' ] = $modelClass::queryWithSiteMembers();
 		}
 
 		$config[ 'conditions' ][ "$siteTable.slug" ] = Yii::$app->core->getSiteSlug();
@@ -178,7 +234,14 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		// Filters ----------
 
 		// Filter - Status
+		$type	= Yii::$app->request->getQueryParam( 'type' );
 		$status	= Yii::$app->request->getQueryParam( 'status' );
+
+		// Filter - Type
+		if( isset( $type ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
 
 		if( isset( $status ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
 
@@ -192,8 +255,10 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		if( isset( $searchCol ) ) {
 
 			$search = [
-				'name' => "concat($modelTable.firstName,$modelTable.lastName)", 'username' => "$modelTable.username",
-				'email' => "$modelTable.email", 'phone' => "$modelTable.phone"
+				'name' => "$modelTable.name", 'message' => "$modelTable.message", 'desc' => "$modelTable.description",
+				'username' => "$modelTable.username", 'email' => "$modelTable.email",
+				'mobile' => "$modelTable.mobile", 'phone' => "$modelTable.phone",
+				'content' => "$modelTable.ontent"
 			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
@@ -202,8 +267,12 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "concat($modelTable.firstName,$modelTable.lastName)", 'username' => "$modelTable.username",
-			'email' => "$modelTable.email", 'phone' => "$modelTable.phone"
+			'locale' => "$modelTable.localeId", 'gender' => "$modelTable.genderId",
+			'name' => "$modelTable.name", 'status' => "$modelTable.status",
+			'message' => "$modelTable.message", 'desc' => "$modelTable.description",
+			'username' => "$modelTable.username", 'email' => "$modelTable.email",
+			'mobile' => "$modelTable.mobile", 'phone' => "$modelTable.phone",
+			'tzone' => "$modelTable.timeZone", 'content' => "$modelTable.ontent",
 		];
 
 		// Result -----------
@@ -211,21 +280,13 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		return parent::getPage( $config );
 	}
 
-	public function getPageByRoleType( $roleType ) {
+	public function getPageByType( $type, $config = [] ) {
 
-		$roleTable = CoreTables::TABLE_ROLE;
+		$modelTable = $this->getModelTable();
 
-		return $this->getPage( [ 'conditions' => [ "$roleTable.type" => $roleType ], 'query' => User::queryWithSiteMembers() ] );
-	}
+		$config[ 'conditions' ][ "$modelTable.type" ] = $type;
 
-	public function getPageByAdmins() {
-
-		return $this->getPageByPermissionName( CoreGlobal::PERM_ADMIN );
-	}
-
-	public function getPageByUsers() {
-
-		return $this->getPageByPermissionName( CoreGlobal::PERM_USER );
+		return $this->getPage( $config );
 	}
 
 	// Read ---------------
@@ -268,7 +329,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	}
 
 	/**
-	 * @param string $email
+	 * @param string $username
 	 * @return User
 	 */
 	public function getByUsername( $username ) {
@@ -291,20 +352,97 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		return isset( $user );
 	}
 
+	/**
+	 * @param string $slug
+	 * @return User
+	 */
+	public function getBySlug( $slug ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findBySlug( $slug );
+	}
+
+	/**
+	 * @param string $slug
+	 * @return boolean
+	 */
+	public function isExistBySlug( $slug ) {
+
+		$modelClass	= static::$modelClass;
+
+		$user = $modelClass::findBySlug( $slug );
+
+		return isset( $user );
+	}
+
+	/**
+	 * @param string $mobile
+	 * @return User
+	 */
+	public function getByMobile( $mobile ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByMobile( $mobile );
+	}
+
+	/**
+	 * @param string $mobile
+	 * @return boolean
+	 */
+	public function isExistByMobile( $mobile ) {
+
+		$modelClass	= static::$modelClass;
+
+		$user = $modelClass::findByMobile( $mobile );
+
+		return isset( $user );
+	}
+
 	// Read - Lists ----
+
+	public function getIdNameListByUsername( $username, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'query' ]	= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
+
+		$config[ 'nameColumn' ]		= "$modelTable.id";
+		$config[ 'valueColumn' ]	= "concat($modelTable.username, ', ', $modelTable.email)";
+
+		$config[ 'query' ]->andWhere( "$modelTable.username LIKE :uname", [ ':uname' => "$username%" ] );
+
+		return static::findIdNameList( $config );
+	}
 
 	// Read - Maps -----
 
 	public function searchByName( $name, $config = [] ) {
 
-		$modelClass					= static::$modelClass;
-		$modelTable					= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
-		$config[ 'query' ]			= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
-		$config[ 'columns' ]		= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "concat($modelTable.firstName, ' ', $modelTable.lastName) AS name" ];
-		$config[ 'array' ]			= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
+		$config[ 'query' ]		= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
+		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.email" ];
+		$config[ 'array' ]		= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
 
-		$config[ 'query' ]->andWhere( "concat($modelTable.firstName, $modelTable.lastName) like '$name%'" );
+		$config[ 'query' ]->andWhere( "$modelTable.name LIKE :name", [ ':name' => "$name%" ] );
+
+		return static::searchModels( $config );
+	}
+
+	public function searchByNameType( $name, $type, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'query' ]		= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
+		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.email" ];
+		$config[ 'array' ]		= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
+
+		$config[ 'query' ]->andWhere( "$modelTable.name LIKE :name AND type=:type", [ ':name' => "$name%", ':type' => $type ] );
 
 		return static::searchModels( $config );
 	}
@@ -315,19 +453,22 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	 */
 	public function getIdNameMapByRoleSlug( $roleSlug ) {
 
-		$roleTable			= CoreTables::TABLE_ROLE;
-		$userTable			= CoreTables::TABLE_USER;
-		$siteTable			= CoreTables::TABLE_SITE;
-		$siteMemberTable	= CoreTables::TABLE_SITE_MEMBER;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
-		$users				= User::find()
-								->leftJoin( $siteMemberTable, "$siteMemberTable.userId = $userTable.id" )
-								->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
-								->leftJoin( $roleTable, "$roleTable.id = $siteMemberTable.roleId" )
-								->where( "$roleTable.slug=:slug AND $siteTable.name=:name", [ ':slug' => $roleSlug, ':name' => Yii::$app->core->getSiteName() ] )->all();
-		$usersMap			= [];
+		$roleTable			= Yii::$app->get( 'roleService' )->getModelTable();
+		$siteTable			= Yii::$app->get( 'siteService' )->getModelTable();
+		$siteMemberTable	= Yii::$app->get( 'siteMemberService' )->getModelTable();
 
-		foreach ( $users as $user ) {
+		$users	= $modelClass::find()
+					->leftJoin( $siteMemberTable, "$siteMemberTable.userId = $modelTable.id" )
+					->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
+					->leftJoin( $roleTable, "$roleTable.id = $siteMemberTable.roleId" )
+					->where( "$roleTable.slug=:slug AND $siteTable.name=:name", [ ':slug' => $roleSlug, ':name' => Yii::$app->core->getSiteName() ] )->all();
+
+		$usersMap = [];
+
+		foreach( $users as $user ) {
 
 			$usersMap[ $user->id ] = $user->getName();
 		}
@@ -340,7 +481,8 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	// Create -------------
 
 	/**
-	 * The method create user.
+	 * Create the user and associate avatar, banner or video.
+	 *
 	 * @param User $model
 	 * @param array $config
 	 * @return User
@@ -348,46 +490,67 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	public function create( $model, $config = [] ) {
 
 		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 
 		// Set Attributes
-		$model->registeredAt	= DateUtil::getDateTime();
-		$model->status			= User::STATUS_NEW;
+		$model->registeredAt = DateUtil::getDateTime();
+
+		if( empty( $model->status ) ) {
+
+			$model->status = User::STATUS_NEW;
+		}
+
+		if( empty( $model->type ) ) {
+
+			$model->type = CoreGlobal::TYPE_DEFAULT;
+		}
+
+		if( empty( $model->slug ) ) {
+
+			$model->slug = $model->username;
+		}
 
 		// Generate Tokens
 		$model->generateVerifyToken();
 		$model->generateAuthKey();
+		$model->generateOtp();
 
 		// Save Files
-		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
 
-		// Create User
-		$model->save();
-
-		return $model;
+		return parent::create( $model, $config );
 	}
 
 	/**
-	 * The method registers website users and set their status to new at start. It also generate verification token.
+	 * Register User - It register the user and set status to new. It also generate verification token.
+	 *
 	 * @param RegisterForm $model
 	 * @return User
 	 */
 	public function register( $model, $config = [] ) {
 
 		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : User::STATUS_NEW;
+		$user	= isset( $config[ 'user' ] ) ? $config[ 'user' ] : $this->getModelObject();
 
-		$user	= new User();
 		$date	= DateUtil::getDateTime();
 
 		$user->email		= $model->email;
 		$user->username		= $model->username;
+		$user->title		= $model->title;
 		$user->firstName	= $model->firstName;
+		$user->middleName	= $model->middleName;
 		$user->lastName		= $model->lastName;
+		$user->mobile		= $model->mobile;
+		$user->dob			= $model->dob;
 		$user->registeredAt	= $date;
 		$user->status		= $status;
+		$user->type			= $model->type;
 
 		$user->generatePassword( $model->password );
 		$user->generateVerifyToken();
 		$user->generateAuthKey();
+		$user->generateOtp();
 
 		$user->save();
 
@@ -397,18 +560,33 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	// Update -------------
 
 	/**
-	 * The method update user including avatar.
+	 * Update the user and associate/update avatar, banner or video.
+	 *
 	 * @param User $model
 	 * @param array $config
 	 * @return User
 	 */
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'avatarId', 'genderId', 'email', 'username', 'firstName', 'lastName', 'status', 'phone', 'avatarUrl', 'websiteUrl', 'dob' ];
-		$avatar		= isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'localeId', 'genderId', 'avatarId', 'bannerId', 'videoId', 'templateId',
+			'email', 'username', 'slug', 'title', 'firstName', 'middleName', 'lastName', 'message',
+			'description', 'dob', 'mobile', 'phone', 'timeZone', 'avatarUrl', 'websiteUrl', 'content'
+		];
+
+		$avatar = isset( $config[ 'avatar' ] ) ? $config[ 'avatar' ] : null;
+		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
+		$video	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 
 		// Save Files
-		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar ] );
+		$this->fileService->saveFiles( $model, [ 'avatarId' => $avatar, 'bannerId' => $banner, 'videoId' => $video ] );
+
+		if( $admin ) {
+
+			$attributes[] = 'status';
+		}
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -416,7 +594,8 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	}
 
 	/**
-	 * The method verify and confirm user by accepting valid token sent via mail. It also set user status to active.
+	 * Confirm User - The method verify and confirm user by accepting valid token sent via mail. It also set user status to active.
+	 *
 	 * @param User $user
 	 * @param string $token
 	 * @return boolean
@@ -426,8 +605,10 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		// Check Token
 		if( $user->isVerifyTokenValid( $token ) ) {
 
+			$modelClass	= static::$modelClass;
+
 			// Find existing user
-			$userToUpdate	= User::findById( $user->id );
+			$userToUpdate = $modelClass::findById( $user->id );
 
 			// User need admin approval
 			if( Yii::$app->core->isUserApproval() ) {
@@ -451,25 +632,29 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	}
 
 	/**
-	 * Activate User created from Admin Panel.
+	 * Activate User / Reset Password - Activates the User created from Admin Panel or reset password.
+	 *
 	 * @param User $user
 	 * @param string $token
 	 * @param ResetPasswordForm $resetForm
+	 * @param boolean $activate - It will be true if user is invited by admin for activation.
 	 * @return boolean
 	 */
-	public function activate( $user, $token, $resetForm ) {
+	public function reset( $user, $token, $resetForm, $activate = false ) {
 
 		// Check Token
 		if( $user->isVerifyTokenValid( $token ) ) {
 
+			$modelClass	= static::$modelClass;
+
 			// Find existing user
-			$userToUpdate	= User::findById( $user->id );
+			$userToUpdate = $modelClass::findById( $user->id );
 
 			// Generate Password
 			$userToUpdate->generatePassword( $resetForm->password );
 
-			// User need admin approval
-			if( Yii::$app->core->isUserApproval() ) {
+			// User need admin approval if not added by admin for activation
+			if( !$activate && Yii::$app->core->isUserApproval() ) {
 
 				$userToUpdate->verify();
 			}
@@ -496,11 +681,14 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	 */
 	public function forgotPassword( $user ) {
 
+		$modelClass	= static::$modelClass;
+
 		// Find existing user
-		$userToUpdate	= User::findById( $user->id );
+		$userToUpdate = $modelClass::findById( $user->id );
 
 		// Generate Token
 		$userToUpdate->generateResetToken();
+		$userToUpdate->generateOtp();
 
 		// Update User
 		$userToUpdate->update();
@@ -517,8 +705,10 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	 */
 	public function resetPassword( $user, $resetForm ) {
 
+		$modelClass	= static::$modelClass;
+
 		// Find existing user
-		$userToUpdate	= User::findById( $user->id );
+		$userToUpdate = $modelClass::findById( $user->id );
 
 		// Generate Password
 		$userToUpdate->generatePassword( $resetForm->password );
@@ -541,22 +731,43 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		return $userToUpdate;
 	}
 
-	/**
-	 * The method create user avatar if it does not exist or save existing avatar.
-	 * @param User $model
-	 * @param CmgFile $avatar
-	 * @return User - updated User
-	 */
-	public function updateAvatar( $model, $avatar ) {
+	// Log last activity ----
 
-		// Save Avatar
-		$this->fileService->saveImage( $avatar, [ 'model' => $model, 'attribute' => 'avatarId' ] );
+	public function logLastActivity() {
 
-		// Update Model
-		return parent::update( $model, [
-			'attributes' => [ 'avatarId' ]
-		]);
+		$user = Yii::$app->user->getIdentity();
+
+		if( isset( $user ) ) {
+
+			$user->lastActivityAt = Date( 'Y-m-d h:i:s' );
+
+			$this->update( $user, [ 'attributes' => [ 'lastActivityAt' ] ] );
+		}
 	}
+
+	// Delete -------------
+
+	/**
+	 * The project must extend this class to delete project specific resources associated
+	 * with the user.
+	 *
+	 * @param \cmsgears\core\common\models\entities\User $model
+	 * @param array $config
+	 * @return boolean
+	 */
+	public function delete( $model, $config = [] ) {
+
+		// Delete Files
+		$this->fileService->deleteMultiple( [ $model->avatar, $model->banner, $model->video ] );
+
+		// Delete Notifications
+		Yii::$app->eventManager->deleteNotificationsByUserId( $model->id );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -603,34 +814,11 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		}
 	}
 
-	// Log last activity ----
+	// Notifications ------
 
-	public function logLastActivity() {
+	// Cache --------------
 
-		$user	= Yii::$app->user->getIdentity();
-
-		if( isset( $user ) ) {
-
-			$user->lastActivityAt	= Date( 'Y-m-d h:i:s' );
-
-			$this->update( $user, [ 'attributes' => [ 'lastActivityAt' ] ] );
-		}
-	}
-
-	// Delete -------------
-
-	public function delete( $model, $config = [] ) {
-
-		// Delete Files
-		$this->fileService->deleteFiles( [ $model->avatar ] );
-
-		// Delete Notifications
-		//Yii::$app->eventManager->deleteNotifications( $model->id, static::$parentType, true );
-		Yii::$app->eventManager->deleteNotifications( $model->id, static::$parentType );
-
-		// Delete model
-		return parent::delete( $model, $config );
-	}
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

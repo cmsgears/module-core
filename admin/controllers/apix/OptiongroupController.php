@@ -1,11 +1,26 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
 use Yii;
 use yii\filters\VerbFilter;
 
-class OptiongroupController extends \cmsgears\core\admin\controllers\base\Controller {
+use cmsgears\core\admin\controllers\base\Controller;
+
+/**
+ * OptiongroupController provides actions specific to category models categorized for option group.
+ *
+ * @since 1.0.0
+ */
+class OptiongroupController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -24,7 +39,7 @@ class OptiongroupController extends \cmsgears\core\admin\controllers\base\Contro
 		parent::init();
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'categoryService' );
+		$this->modelService = Yii::$app->factory->get( 'categoryService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -42,13 +57,15 @@ class OptiongroupController extends \cmsgears\core\admin\controllers\base\Contro
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
 					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'bulk' => [ 'post' ],
+					'generic' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
 			]
@@ -61,6 +78,7 @@ class OptiongroupController extends \cmsgears\core\admin\controllers\base\Contro
 
 		return [
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Generic' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
 	}

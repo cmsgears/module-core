@@ -1,5 +1,4 @@
 <?php
-use \Yii;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -8,7 +7,7 @@ $this->title	= $coreProperties->getSiteTitle() . " | Register";
 ?>
 <h1>Register</h1>
 <?php
-	if( $coreProperties->isPublicRegister() ) {
+	if( $coreProperties->isRegistration() ) {
 
 		if( Yii::$app->session->hasFlash( 'message' ) ) {
 ?>

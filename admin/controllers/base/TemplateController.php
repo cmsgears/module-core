@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
@@ -7,6 +15,13 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\behaviors\ActivityBehavior;
+
+/**
+ * TemplateController provide actions specific to template management.
+ *
+ * @since 1.0.0
+ */
 abstract class TemplateController extends CrudController {
 
 	// Variables ---------------------------------------------------
@@ -14,6 +29,8 @@ abstract class TemplateController extends CrudController {
 	// Globals ----------------
 
 	// Public -----------------
+
+	public $title;
 
 	// Protected --------------
 
@@ -30,11 +47,11 @@ abstract class TemplateController extends CrudController {
 		// Views
 		$this->setViewPath( '@cmsgears/module-core/admin/views/template' );
 
-		// Permissions
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_CORE;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'templateService' );
+		$this->modelService = Yii::$app->factory->get( 'templateService' );
 
 		// Notes: Configure type, sidebar and returnUrl exclusively in child classes.
 	}
@@ -47,6 +64,21 @@ abstract class TemplateController extends CrudController {
 
 	// yii\base\Component -----
 
+	public function behaviors() {
+
+		$behaviors = parent::behaviors();
+
+		$behaviors[ 'activity' ] = [
+			'class' => ActivityBehavior::class,
+			'admin' => true,
+			'create' => [ 'create' ],
+			'update' => [ 'update' ],
+			'delete' => [ 'delete' ]
+		];
+
+		return $behaviors;
+	}
+
 	// yii\base\Controller ----
 
 	// CMG interfaces ------------------------
@@ -55,34 +87,33 @@ abstract class TemplateController extends CrudController {
 
 	// TemplateController --------------------
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
 		$dataProvider = $this->modelService->getPageByType( $this->type );
 
 		return $this->render( 'all', [
-			'dataProvider' => $dataProvider
+			'dataProvider' => $dataProvider,
+			'type' => $this->type
 		]);
 	}
 
-	public function actionCreate() {
+	public function actionCreate( $config = [] ) {
 
-		$modelClass		= $this->modelService->getModelClass();
-		$model			= new $modelClass;
+		$model = $this->modelService->getModelObject();
+
 		$model->type	= $this->type;
+		$model->siteId	= Yii::$app->core->siteId;
 
-		if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->modelService->add( $model );
+			$this->model = $this->modelService->add( $model, [ 'admin' => true ] );
 
-			$model->refresh();
-			
-			$this->model = $model;
-			
-			return $this->redirect( "all" );
+			return $this->redirect( 'all' );
 		}
 
 		return $this->render( 'create', [
 			'model' => $model
 		]);
 	}
+
 }

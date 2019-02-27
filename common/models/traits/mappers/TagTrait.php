@@ -1,70 +1,137 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\traits\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\Tag;
 use cmsgears\core\common\models\mappers\ModelTag;
 
 /**
- * TagTrait can be used to add tagging feature to relevant models. The model must define the member variable $parentType which is unique among all the model.
+ * TagTrait can be used to add tagging feature to relevant models.
  */
 trait TagTrait {
 
+	// Variables ---------------------------------------------------
+
+	// Globals ----------------
+
+	// Public -----------------
+
+	// Protected --------------
+
+	// Private ----------------
+
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG classes ---------------------------
+
+	// Validators ----------------------------
+
+	// TagTrait ------------------------------
+
+	/**
+	 * @inheritdoc
+	 */
 	public function getModelTags() {
 
-		return $this->hasMany( ModelTag::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->modelType'" );
-	}
+		$modelTagTable = ModelTag::tableName();
 
-	public function getActiveModelTags() {
-
-		$modelTagTable	= CoreTables::TABLE_MODEL_TAG;
-
-		return $this->hasMany( ModelTag::className(), [ 'parentId' => 'id' ] )
-					->where( "parentType='$this->modelType' AND $modelTagTable.active=1" );
+		return $this->hasMany( ModelTag::class, [ 'parentId' => 'id' ] )
+			->where( "$modelTagTable.parentType='$this->modelType'" );
 	}
 
 	/**
-	 * @return array - ModelTag associated with parent
+	 * @inheritdoc
+	 */
+	public function getActiveModelTags() {
+
+		$modelTagTable = ModelTag::tableName();
+
+		return $this->hasMany( ModelTag::class, [ 'parentId' => 'id' ] )
+			->where( "$modelTagTable.parentType='$this->modelType' AND $modelTagTable.active=1" );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getModelTagsByType( $type, $active = true ) {
+
+		$modelTagTable = ModelTag::tableName();
+
+		return $this->hasOne( ModelTag::class, [ 'parentId' => 'id' ] )
+			->where( "$modelTagTable.parentType=:ptype AND $modelTagTable.type=:type AND $modelTagTable.active=:active", [ ':ptype' => $this->modelType, ':type' => $type, ':active' => $active ] )->all();
+	}
+
+	/**
+	 * @inheritdoc
 	 */
 	public function getTags() {
 
-		return $this->hasMany( Tag::className(), [ 'id' => 'modelId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_TAG, [ 'parentId' => 'id' ], function( $query ) {
+		$modelTagTable = ModelTag::tableName();
 
-						$modelTagTable	= CoreTables::TABLE_MODEL_TAG;
+		return $this->hasMany( Tag::class, [ 'id' => 'modelId' ] )
+			->viaTable( $modelTagTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelTagTable ) {
 
-						$query->onCondition( [ "$modelTagTable.parentType" => $this->modelType ] );
-					});
+					$query->onCondition( [ "$modelTagTable.parentType" => $this->modelType ] );
+				}
+			);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getActiveTags() {
 
-		return $this->hasMany( Tag::className(), [ 'id' => 'modelId' ] )
-					->viaTable( CoreTables::TABLE_MODEL_TAG, [ 'parentId' => 'id' ], function( $query ) {
+		$modelTagTable = ModelTag::tableName();
 
-						$modelTagTable	= CoreTables::TABLE_MODEL_TAG;
+		return $this->hasMany( Tag::class, [ 'id' => 'modelId' ] )
+			->viaTable( $modelTagTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$modelTagTable ) {
 
-						$query->onCondition( [ "$modelTagTable.parentType" => $this->modelType, "$modelTagTable.active" => true ] );
-					});
+					$query->onCondition( [ "$modelTagTable.parentType" => $this->modelType, "$modelTagTable.active" => true ] );
+				}
+			);
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public function getTagsByType( $type, $active = true ) {
+
+		$modelTagTable = ModelTag::tableName();
+
+		return $this->hasMany( Tag::class, [ 'id' => 'modelId' ] )
+			->viaTable( $modelTagTable, [ 'parentId' => 'id' ],
+				function( $query ) use( &$type, &$active, &$modelTagTable ) {
+
+					$query->onCondition( [ "$modelTagTable.parentType" => $this->modelType, "$modelTagTable.type" => $type, "$modelTagTable.active" => $active ] );
+				}
+			)->all();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function getTagIdList( $active = true ) {
 
-		$tags		= null;
+		$tags		= $active ? $this->activeTags : $this->tags;
 		$tagsList	= [];
 
-		if( $active ) {
-
-			$tags = $this->activeTags;
-		}
-		else {
-
-			$tags = $this->tags;
-		}
-
-		foreach ( $tags as $tag ) {
+		foreach( $tags as $tag ) {
 
 			array_push( $tagsList, $tag->id );
 		}
@@ -72,21 +139,15 @@ trait TagTrait {
 		return $tagsList;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getTagNameList( $active = true ) {
 
-		$tags		= null;
+		$tags		= $active ? $this->activeTags : $this->tags;
 		$tagsList	= [];
 
-		if( $active ) {
-
-			$tags = $this->activeTags;
-		}
-		else {
-
-			$tags = $this->tags;
-		}
-
-		foreach ( $tags as $tag ) {
+		foreach( $tags as $tag ) {
 
 			array_push( $tagsList, $tag->name );
 		}
@@ -94,21 +155,15 @@ trait TagTrait {
 		return $tagsList;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getTagIdNameList( $active = true ) {
 
-		$tags		= null;
+		$tags		= $active ? $this->activeTags : $this->tags;
 		$tagsList	= [];
 
-		if( $active ) {
-
-			$tags = $this->activeTags;
-		}
-		else {
-
-			$tags = $this->tags;
-		}
-
-		foreach ( $tags as $tag ) {
+		foreach( $tags as $tag ) {
 
 			$tagsList[] = [ 'id' => $tag->id, 'name' => $tag->name ];
 		}
@@ -117,21 +172,12 @@ trait TagTrait {
 	}
 
 	/**
-	 * @return array - map of tag name and description
+	 * @inheritdoc
 	 */
 	public function getTagIdNameMap( $active = true ) {
 
-		$tags		= null;
+		$tags		= $active ? $this->activeTags : $this->tags;
 		$tagsMap	= [];
-
-		if( $active ) {
-
-			$tags = $this->activeTags;
-		}
-		else {
-
-			$tags = $this->tags;
-		}
 
 		foreach ( $tags as $tag ) {
 
@@ -141,19 +187,13 @@ trait TagTrait {
 		return $tagsMap;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getTagSlugNameMap( $active = true ) {
 
-		$tags		= null;
+		$tags		= $active ? $this->activeTags : $this->tags;
 		$tagsMap	= [];
-
-		if( $active ) {
-
-			$tags = $this->activeTags;
-		}
-		else {
-
-			$tags = $this->tags;
-		}
 
 		foreach ( $tags as $tag ) {
 
@@ -163,70 +203,86 @@ trait TagTrait {
 		return $tagsMap;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function getTagCsv( $limit = 0, $active = true ) {
 
-		$tags		= null;
+		$tags		= $active ? $this->activeTags : $this->tags;
 		$tagsCsv	= [];
-		$count		= 1;
-
-		if( $active ) {
-
-			$tags = $this->activeTags;
-		}
-		else {
-
-			$tags = $this->tags;
-		}
 
 		foreach ( $tags as $tag ) {
 
 			$tagsCsv[] = $tag->name;
+		}
 
-			if( $limit > 0 && $count >= $limit ) {
+		if( $limit > 0 ) {
 
-				break;
-			}
-
-			$count++;
+			$tagsCsv = array_splice( $tagsCsv, $limit );
 		}
 
 		return implode( ", ", $tagsCsv );
 	}
 
-	public function getTagLinks( $baseUrl, $limit = 0, $wrapper = 'li', $active = true ) {
+	/**
+	 * @inheritdoc
+	 */
+	public function getTagLinks( $baseUrl, $config = [] ) {
 
-		$tags		= null;
-		$tagLinks	= null;
-		$count		= 1;
+		$wrapper	= isset( $config[ 'wrapper' ] ) ? $config[ 'wrapper' ] : true;
+		$wrapperTag	= isset( $config[ 'wrapperTag' ] ) ? $config[ 'wrapperTag' ] : 'li';
+		$limit		= isset( $config[ 'limit' ] ) ? $config[ 'limit' ] : 0;
+		$active		= isset( $config[ 'active' ] ) ? $config[ 'active' ] : true;
+		$csv		= isset( $config[ 'csv' ] ) ? $config[ 'csv' ] : false;
 
-		if( $active ) {
-
-			$tags = $this->activeTags;
-		}
-		else {
-
-			$tags = $this->tags;
-		}
+		$tags		= $active ? $this->activeTags : $this->tags;
+		$tagLinks	= [];
 
 		foreach ( $tags as $tag ) {
 
-			if( isset( $wrapper ) ) {
+			if( $wrapper ) {
 
-				$tagLinks	.= "<$wrapper><a href='$baseUrl/$tag->slug'>$tag->name</a></$wrapper>";
+				$tagLinks[] = "<$wrapperTag><a href='$baseUrl/$tag->slug'>$tag->name</a></$wrapperTag>";
 			}
 			else {
 
-				$tagLinks	.= " <a href='$baseUrl/$tag->slug'>$tag->name</a>";
+				$tagLinks[] = "<a href='$baseUrl/$tag->slug'>$tag->name</a>";
 			}
+		}
 
-			if( $limit > 0 && $count >= $limit ) {
+		if( $limit > 0 ) {
 
-				break;
-			}
+			$tagLinks = array_splice( $tagLinks, $limit );
+		}
 
-			$count++;
+		if( $csv ) {
+
+			$tagLinks = join( ', ', $tagLinks );
+		}
+		else {
+
+			$tagLinks = join( '', $tagLinks );
 		}
 
 		return $tagLinks;
 	}
+
+	// Static Methods ----------------------------------------------
+
+	// Yii classes ---------------------------
+
+	// CMG classes ---------------------------
+
+	// TagTrait ------------------------------
+
+	// Read - Query -----------
+
+	// Read - Find ------------
+
+	// Create -----------------
+
+	// Update -----------------
+
+	// Delete -----------------
+
 }

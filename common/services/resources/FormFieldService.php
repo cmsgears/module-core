@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
@@ -8,12 +16,16 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\FormField;
-
 use cmsgears\core\common\services\interfaces\resources\IFormFieldService;
 
-class FormFieldService extends \cmsgears\core\common\services\base\EntityService implements IFormFieldService {
+use cmsgears\core\common\services\traits\resources\DataTrait;
+
+/**
+ * FormFieldService provide service methods of form fields.
+ *
+ * @since 1.0.0
+ */
+class FormFieldService extends \cmsgears\core\common\services\base\ResourceService implements IFormFieldService {
 
 	// Variables ---------------------------------------------------
 
@@ -23,11 +35,9 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\FormField';
+	public static $modelClass = '\cmsgears\core\common\models\resources\FormField';
 
-	public static $modelTable	= CoreTables::TABLE_FORM_FIELD;
-
-	public static $parentType	= CoreGlobal::TYPE_FORM_FIELD;
+	public static $parentType = CoreGlobal::TYPE_FORM_FIELD;
 
 	// Protected --------------
 
@@ -40,6 +50,8 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use DataTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -59,22 +71,72 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$formTable = Yii::$app->factory->get( 'formService' )->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
-				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'name',
+					'label' => 'Id'
+				],
+				'form' => [
+					'asc' => [ "$formTable.name" => SORT_ASC ],
+					'desc' => [ "$formTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Form'
+				],
+				'name' => [
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
+				],
+				'label' => [
+					'asc' => [ "$modelTable.label" => SORT_ASC ],
+					'desc' => [ "$modelTable.label" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Label'
+				],
+				'type' => [
+					'asc' => [ "$modelTable.type" => SORT_ASC ],
+					'desc' => [ "$modelTable.type" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Type'
+				],
+				'icon' => [
+					'asc' => [ "$modelTable.icon" => SORT_ASC ],
+					'desc' => [ "$modelTable.icon" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Icon'
+				],
+				'compress' => [
+					'asc' => [ "$modelTable.compress" => SORT_ASC ],
+					'desc' => [ "$modelTable.compress" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Compress'
+				],
+				'active' => [
+					'asc' => [ "$modelTable.active" => SORT_ASC ],
+					'desc' => [ "$modelTable.active" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Active'
+				],
+				'order' => [
+					'asc' => [ "$modelTable.order" => SORT_ASC ],
+					'desc' => [ "$modelTable.order" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Order'
 				]
 			],
 			'defaultOrder' => [
-				'name' => SORT_DESC
+				'id' => SORT_DESC
 			]
 		]);
 
@@ -92,13 +154,54 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 
 		// Filters ----------
 
+		// Params
+		$type	= Yii::$app->request->getQueryParam( 'type' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
+
+		// Filter - Type
+		if( isset( $type ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'active': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = true;
+
+					break;
+				}
+				case 'inactive': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = false;
+
+					break;
+				}
+				case 'compress': {
+
+					$config[ 'conditions' ][ "$modelTable.compress" ] = true;
+
+					break;
+				}
+			}
+		}
+
 		// Searching --------
 
 		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'label' => "$modelTable.label",
+				'validators' => "$modelTable.validators",
+				'content' => "$modelTable.content"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -106,7 +209,13 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template",  'active' => "$modelTable.active"
+			'name' => "$modelTable.name",
+			'label' => "$modelTable.label",
+			'validators' => "$modelTable.validators",
+			'content' => "$modelTable.content",
+			'order' => "$modelTable.order",
+			'active' => "$modelTable.active",
+			'compress' => "$modelTable.compress"
 		];
 
 		// Result -----------
@@ -125,7 +234,9 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 
 	public function getByFormId( $formId ) {
 
-		return self::findByFormId( $formId );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByFormId( $formId );
 	}
 
 	// Read - Lists ----
@@ -140,12 +251,26 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'label', 'type', 'compress', 'validators', 'order', 'icon', 'htmlOptions', 'data' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'label', 'type', 'compress', 'validators',
+			'order', 'icon', 'active', 'htmlOptions', 'content'
+		];
 
 		return parent::update( $model, [
 			'attributes' => $attributes
 		]);
 	}
+
+	// Delete -------------
+
+	public function deleteByFormId( $formId, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+
+		$modelClass::deleteByFormId( $formId );
+	}
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -155,6 +280,30 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 
 				switch( $action ) {
 
+					case 'active': {
+
+						$model->active = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'inactive': {
+
+						$model->active = false;
+
+						$model->update();
+
+						break;
+					}
+					case 'compress': {
+
+						$model->comress = true;
+
+						$model->update();
+
+						break;
+					}
 					case 'delete': {
 
 						$this->delete( $model );
@@ -168,7 +317,11 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 		}
 	}
 
-	// Delete -------------
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 
@@ -181,11 +334,6 @@ class FormFieldService extends \cmsgears\core\common\services\base\EntityService
 	// Read ---------------
 
 	// Read - Models ---
-
-	public static function findByFormId( $formId ) {
-
-		return FormField::findByFormId( $formId );
-	}
 
 	// Read - Lists ----
 

@@ -2,59 +2,44 @@
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= 'Settings | ' . $coreProperties->getSiteTitle();
 
-$settings		= Yii::$app->sidebar->getConfig();
+$themeIncludes	= Yii::getAlias( '@themes/admin/views/includes' );
 
-$total	= count( $settings );
-$first	= ceil( $total / 2 );
-$last	= $total - $first;
-$count	= 0;
-
-$left	= '';
-$right	= '';
+$settings = Yii::$app->sidebar->getConfig();
 ?>
+<div class="data-crud-wrap data-crud-wrap-basic">
+	<div class="data-crud-wrap-main">
+		<div id="data-crud-settings" class="data-crud">
+			<div class="data-crud-title">
+				<div class="wrap-popout-title">
+					<span class="title">Core</span>
+					<span id="popout-settings-trigger" class="inline-block right cmt-auto-hide" ldata-target="#popout-settings">
+						<i class="btn-icon cmti cmti-list text text-micro"></i>
+					</span>
+				</div>
+				<div class="wrap-popout-settings">
+					<div id="popout-settings" class="hidden-easy">
+						<div class="row max-cols-50">
+							<?php
+								foreach( $settings as $setting ) {
 
-<?php
-	foreach ( $settings as $setting ) {
-
-		$settingTitle	= str_replace( "-", " ", $setting );
-
-		ob_start();
-?>
-	<div class="box box-collapsible box-settings">
-		<div class="box-header">
-			<div class="box-header-title">
-				<?= ucwords( $settingTitle ) ?>
+									$settingTitle = ucwords( str_replace( "-", " ", $setting ) );
+							?>
+								<div class="popout-setting popout-setting-<?= $setting ?> col col4" cmt-app="core" cmt-controller="settings" cmt-action="getContent" action="settings/index?type=<?= $setting ?>">
+									<span class="cmt-click"><?= $settingTitle ?></span>
+									<?php include "$themeIncludes/components/spinners/element.php"; ?>
+								</div>
+							<?php
+								}
+							?>
+						</div>
+					</div>
+				</div>
 			</div>
-			<span class="box-collapse-trigger cmti cmti-chevron-down"></span>
-			<span id="settings-<?= $setting ?>" content="settings-<?= $setting ?>-content" cmt-app="site" cmt-controller="settings" cmt-action="getContent" action="settings/index?type=<?= $setting ?>">
-				<span class="cmt-click collapse-trigger"></span>
-			</span>
-		</div>
-		<div id="settings-<?= $setting ?>-content" class="box-content-wrap clearfix">
-			<div class="box-content"></div>
+			<div class="data-crud-form">
+				<div class="align align-center">
+					<?php include "$themeIncludes/components/spinners/default.php"; ?>
+				</div>
+			</div>
 		</div>
 	</div>
-
-<?php
-		if( $count < $first ) {
-
-			$left .= ob_get_contents();
-		}
-		else {
-
-			$right .= ob_get_contents();
-		}
-
-		ob_get_clean();
-
-		$count++;
-	}
-?>
-
-<div class="row wrap-settings">
-	<div class="col col12x6"><?= $left ?></div>
-	<div class="col col12x6"><?= $right ?></div>
 </div>
-
-<!-- Templates -->
-<?php include_once( dirname( __FILE__ ) . "/templates/update.php" ); ?>

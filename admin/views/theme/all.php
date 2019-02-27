@@ -6,56 +6,67 @@ use cmsgears\widgets\grid\DataGrid;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= 'Themes | ' . $coreProperties->getSiteTitle();
+$apixBase		= $this->context->apixBase;
 
-// Templates
+// View Templates
 $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
+$themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
 	'title' => 'Themes', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
-	'searchColumns' => [ 'name' => 'Name', 'slug' => 'Slug', 'desc' => 'Description', 'content' => 'Content' ],
+	'searchColumns' => [ 'name' => 'Name', 'title' => 'Title', 'desc' => 'Description', 'content' => 'Content' ],
 	'sortColumns' => [
-		'name' => 'Name', 'slug' => 'Slug', 'default' => 'Default', 'renderer' => 'Renderer', 'base' => 'Base Path'
+		'name' => 'Name', 'title' => 'Title',
+		'default' => 'Default', 'renderer' => 'Renderer',
+		'base' => 'Base Path'
 	],
-	'filters' => [ 'status' => [ 'default' => 'Default' ] ],
+	'filters' => [
+		'model' => [ 'default' => 'Default' ]
+	],
 	'reportColumns' => [
-		'status' => [ 'title' => 'Active', 'type' => 'flag' ]
+		'name' => [ 'title' => 'Name', 'type' => 'text' ],
+		'title' => [ 'title' => 'Title', 'type' => 'text' ],
+		'desc' => [ 'title' => 'Description', 'type' => 'text' ],
+		'content' => [ 'title' => 'Content', 'type' => 'text' ],
+		'default' => [ 'title' => 'Default', 'type' => 'flag' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk',
 	'bulkActions' => [
 		'model' => [ 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x6', null, 'x3', 'x3', null ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x3', 'x3', null, 'x3', 'x3', null ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
 		'name' => 'Name',
+		'title' => 'Title',
 		'default' => [ 'title' => 'Default', 'generate' => function( $model ) { return $model->getDefaultStr(); } ],
 		'renderer' => 'Renderer',
 		'basePath' => 'Base Path',
 		'actions' => 'Actions'
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
-	'templateDir' => '@themes/admin/views/templates/widget/grid',
+	'templateDir' => "$themeTemplates/widget/grid",
 	//'dataView' => "$moduleTemplates/grid/data/theme",
 	//'cardView' => "$moduleTemplates/grid/cards/theme",
 	'actionView' => "$moduleTemplates/grid/actions/theme"
 ]) ?>
 
 <?= Popup::widget([
-	'title' => 'Update Themes', 'size' => 'medium',
-	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'bulk',
-	'data' => [ 'model' => 'Theme', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "core/theme/bulk" ]
+	'title' => 'Apply Bulk Action', 'size' => 'medium',
+	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
+	'data' => [ 'model' => 'Theme', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
 ]) ?>
 
 <?= Popup::widget([
 	'title' => 'Update Theme', 'size' => 'medium',
-	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'generic',
-	'data' => [ 'model' => 'Theme', 'app' => 'main', 'controller' => 'crud', 'action' => 'generic', 'url' => "core/theme/generic?id=" ]
+	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'generic',
+	'data' => [ 'model' => 'Theme', 'app' => 'grid', 'controller' => 'crud', 'action' => 'generic', 'url' => "$apixBase/generic?id=" ]
 ]) ?>
 
 <?= Popup::widget([
 	'title' => 'Delete Theme', 'size' => 'medium',
-	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'delete',
-	'data' => [ 'model' => 'Theme', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "core/theme/delete?id=" ]
+	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
+	'data' => [ 'model' => 'Theme', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
 ]) ?>

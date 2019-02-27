@@ -1,13 +1,24 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\interfaces\resources;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\services\interfaces\base\IResourceService;
+use cmsgears\core\common\services\interfaces\resources\IData;
 
-interface IOptionService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
+/**
+ * IOptionService provide service methods for option model.
+ *
+ * @since 1.0.0
+ */
+interface IOptionService extends IResourceService, IData {
 
 	// Data Provider ------
 
@@ -17,34 +28,42 @@ interface IOptionService extends \cmsgears\core\common\services\interfaces\base\
 
 	public function getByCategoryId( $categoryId );
 
-	public function getByCategorySlug( $categorySlug, $categoryType = CoreGlobal::TYPE_OPTION_GROUP );
-
 	public function getByNameCategoryId( $name, $categoryId );
 
-	public function getByNameCategoryName( $name, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP );
-
-	public function getByValueCategoryName( $value, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP );
+	public function isExistByNameCategoryId( $name, $categoryId );
 
 	// Read - Lists ----
 
 	public function getIdListByCategoryId( $categoryId, $config = [] );
 
+	public function searchByNameCategoryId( $name, $categoryId, $config = [] );
+
 	// Read - Maps -----
 
 	public function getIdNameMapByCategoryId( $categoryId, $config = [] );
 
-	public function getIdNameMapByCategorySlug( $categoryName, $config = [], $type = CoreGlobal::TYPE_OPTION_GROUP );
+	public function getValueNameMapByCategoryId( $categoryId, $config = [] );
 
-	public function getValueNameMapByCategoryId( $categoryId );
+	public function getIdNameMapByCategorySlug( $slug, $config = [] );
 
-	public function getValueNameMapByCategoryName( $categoryName, $type = CoreGlobal::TYPE_OPTION_GROUP );
+	public function getValueNameMapByCategorySlug( $slug, $config = [] );
 
-	public function getValueNameMapByCategorySlug( $categorySlug, $type = CoreGlobal::TYPE_OPTION_GROUP );
+	// Read - Others ---
 
 	// Create -------------
 
 	// Update -------------
 
 	// Delete -------------
+
+	public function deleteByCategoryId( $categoryId );
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 }

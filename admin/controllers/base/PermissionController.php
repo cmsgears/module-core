@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
@@ -10,6 +18,11 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\forms\Binder;
 
+/**
+ * PermissionController provides actions specific to permission model.
+ *
+ * @since 1.0.0
+ */
 abstract class PermissionController extends CrudController {
 
 	// Variables ---------------------------------------------------
@@ -21,6 +34,7 @@ abstract class PermissionController extends CrudController {
 	// Protected --------------
 
 	protected $type;
+	protected $system;
 
 	protected $roleService;
 
@@ -34,13 +48,16 @@ abstract class PermissionController extends CrudController {
 
 		parent::init();
 
+		// Views
 		$this->setViewPath( '@cmsgears/module-core/admin/views/permission' );
 
-		// Permissions
-		$this->crudPermission	= CoreGlobal::PERM_RBAC;
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_RBAC;
 
 		// Config
-		$this->type = CoreGlobal::TYPE_SYSTEM;
+		$this->type		= CoreGlobal::TYPE_SYSTEM;
+		$this->apixBase	= 'core/permission';
+		$this->system	= false;
 
 		// Services
 		$this->modelService		= Yii::$app->factory->get( 'permissionService' );
@@ -57,17 +74,6 @@ abstract class PermissionController extends CrudController {
 
 	// yii\base\Component -----
 
-	public function behaviors() {
-
-		$behaviors	= parent::behaviors();
-
-		$behaviors[ 'rbac' ][ 'actions' ][ 'groups' ]	= [ 'permission' => $this->crudPermission ];
-
-		$behaviors[ 'verbs' ][ 'actions' ][ 'groups' ]	= [ 'get' ];
-
-		return $behaviors;
-	}
-
 	// yii\base\Controller ----
 
 	// CMG interfaces ------------------------
@@ -76,55 +82,54 @@ abstract class PermissionController extends CrudController {
 
 	// PermissionController ------------------
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
-		$dataProvider = $this->modelService->getPageByType( $this->type, [ 'conditions' => [ 'group' => false ] ] );
+		$dataProvider = $this->modelService->getPageByType( $this->type );
 
 		return $this->render( 'all', [
 			 'dataProvider' => $dataProvider
 		]);
 	}
 
-	public function actionGroups() {
+	public function actionCreate( $config = [] ) {
 
-		$dataProvider = $this->modelService->getPageByType( $this->type, [ 'conditions' => [ 'group' => true ] ] );
+		$model = $this->modelService->getModelObject();
 
-		return $this->render( 'groups/all', [
-			 'dataProvider' => $dataProvider
-		]);
-	}
-
-	public function actionCreate() {
-
-		$modelClass		= $this->modelService->getModelClass();
-		$model			= new $modelClass;
-		$model->type	= $this->type;
+		$model->type = $this->type;
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$permission			= $this->modelService->create( $model );
+			$this->model = $this->modelService->create( $model );
 
-			$binder				= new Binder();
-			$binder->binderId	= $permission->id;
+			$binder	= new Binder( [ 'binderId' => $this->model->id ] );
 
 			$binder->load( Yii::$app->request->post(), 'Binder' );
 
 			$this->modelService->bindRoles( $binder );
 
-			return $this->redirect( "update?id=$model->id" );
+			if( $this->model->group ) {
+
+				$binder->load( Yii::$app->request->post(), 'Children' );
+				$this->hierarchyService->assignRootChildren( CoreGlobal::TYPE_PERMISSION, $binder );
+			}
+
+			return $this->redirect( 'all' );
 		}
 
 		$roles			= $this->roleService->getIdNameListByType( $this->type );
-		//$permissions	= $this->modelService->getLeafIdNameListByType( $this->type );
+		$permissions	= $this->modelService->getIdNameListByTypeGroup( $this->type );
+		$spermissions	= $this->system ? $this->modelService->getIdNameListByTypeGroup( CoreGlobal::TYPE_SYSTEM ) : [];
 
 		return $this->render( 'create', [
 			'model' => $model,
-			//'permissions' => $permissions,
-			'roles' => $roles
+			'roles' => $roles,
+			'type' => $this->type,
+			'permissions' => $permissions,
+			'spermissions' => $spermissions
 		]);
 	}
 
-	public function actionUpdate( $id ) {
+	public function actionUpdate( $id, $config = [] ) {
 
 		// Find Model
 		$model		= $this->modelService->getById( $id );
@@ -134,15 +139,15 @@ abstract class PermissionController extends CrudController {
 
 			if( $model->load( Yii::$app->request->post(), 'Permission' )  && $model->validate() ) {
 
-				$permission			= $this->modelService->update( $model );
+				$this->model = $this->modelService->update( $model );
 
-				$binder				= new Binder();
-				$binder->binderId	= $model->id;
+				$binder	= new Binder( [ 'binderId' => $this->model->id ] );
 
 				$binder->load( Yii::$app->request->post(), 'Binder' );
+
 				$this->modelService->bindRoles( $binder );
 
-				if( $model->group ) {
+				if( $this->model->group ) {
 
 					$binder->load( Yii::$app->request->post(), 'Children' );
 					$this->hierarchyService->assignRootChildren( CoreGlobal::TYPE_PERMISSION, $binder );
@@ -152,12 +157,15 @@ abstract class PermissionController extends CrudController {
 			}
 
 			$roles			= $this->roleService->getIdNameListByType( $this->type );
-			$permissions	= $this->modelService->getLeafIdNameListByType( $this->type );
+			$permissions	= $this->modelService->getIdNameListByTypeGroup( $this->type );
+			$spermissions	= $this->system ? $this->modelService->getIdNameListByTypeGroup( CoreGlobal::TYPE_SYSTEM ) : [];
 
 			return $this->render( 'update', [
 				'model' => $model,
 				'roles' => $roles,
-				'permissions' => $permissions
+				'type' => $this->type,
+				'permissions' => $permissions,
+				'spermissions' => $spermissions
 			]);
 		}
 
@@ -165,21 +173,21 @@ abstract class PermissionController extends CrudController {
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $id ) {
+	public function actionDelete( $id, $config = [] ) {
 
 		// Find Model
-		$model		= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		// Delete/Render if exist
 		if( isset( $model ) ) {
 
 			if( $model->load( Yii::$app->request->post(), 'Permission' ) ) {
 
-				if( $model->group ) {
+				$this->model = $model;
+
+				if( $this->model->group ) {
 
 					$this->hierarchyService->deleteByRootId( $model->id, CoreGlobal::TYPE_PERMISSION );
-
-					return $this->redirect( [ 'groups' ] );
 				}
 
 				$this->modelService->delete( $model );
@@ -188,16 +196,20 @@ abstract class PermissionController extends CrudController {
 			}
 
 			$roles			= $this->roleService->getIdNameListByType( $this->type );
-			$permissions	= $this->modelService->getLeafIdNameListByType( $this->type );
+			$permissions	= $this->modelService->getIdNameListByTypeGroup( $this->type );
+			$spermissions	= $this->system ? $this->modelService->getIdNameListByTypeGroup( CoreGlobal::TYPE_SYSTEM ) : [];
 
 			return $this->render( 'delete', [
 				'model' => $model,
 				'roles' => $roles,
-				'permissions' => $permissions
+				'type' => $this->type,
+				'permissions' => $permissions,
+				'spermissions' => $spermissions
 			]);
 		}
 
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

@@ -1,11 +1,27 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\apix;
 
 // Yii Imports
 use Yii;
 use yii\filters\VerbFilter;
 
-class TagController extends \cmsgears\core\admin\controllers\base\Controller {
+// CMG Imports
+use cmsgears\core\admin\controllers\base\Controller;
+
+/**
+ * TagController provides actions specific to tag model.
+ *
+ * @since 1.0.0
+ */
+class TagController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -24,7 +40,7 @@ class TagController extends \cmsgears\core\admin\controllers\base\Controller {
 		parent::init();
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'tagService' );
+		$this->modelService = Yii::$app->factory->get( 'tagService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -42,13 +58,15 @@ class TagController extends \cmsgears\core\admin\controllers\base\Controller {
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
 					'bulk' => [ 'permission' => $this->crudPermission ],
+					'generic' => [ 'permission' => $this->crudPermission ],
 					'delete' => [ 'permission' => $this->crudPermission ]
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'bulk' => [ 'post' ],
+					'generic' => [ 'post' ],
 					'delete' => [ 'post' ]
 				]
 			]
@@ -61,6 +79,7 @@ class TagController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		return [
 			'bulk' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
+			'generic' => [ 'class' => 'cmsgears\core\common\actions\grid\Bulk' ],
 			'delete' => [ 'class' => 'cmsgears\core\common\actions\grid\Delete' ]
 		];
 	}

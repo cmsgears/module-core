@@ -1,23 +1,32 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
+use Yii;
 use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\Category;
-use cmsgears\core\common\models\resources\Option;
-use cmsgears\core\common\models\mappers\ModelOption;
-
 use cmsgears\core\common\services\interfaces\resources\IOptionService;
 
+use cmsgears\core\common\services\traits\base\NameTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
+
 /**
- * The class OptionService is base class to perform database activities for Option Entity.
+ * OptionService provide service methods of option model.
+ *
+ * @since 1.0.0
  */
-class OptionService extends \cmsgears\core\common\services\base\EntityService implements IOptionService {
+class OptionService extends \cmsgears\core\common\services\base\ResourceService implements IOptionService {
 
 	// Variables ---------------------------------------------------
 
@@ -28,8 +37,6 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 	// Public -----------------
 
 	public static $modelClass	= '\cmsgears\core\common\models\resources\Option';
-
-	public static $modelTable	= CoreTables::TABLE_OPTION;
 
 	public static $parentType	= CoreGlobal::TYPE_OPTION;
 
@@ -44,6 +51,9 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
+
+	use DataTrait;
+	use NameTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -63,26 +73,73 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 
 	public function getPage( $config = [] ) {
 
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$categoryTable = Yii::$app->factory->get( 'categoryService' )->getModelTable();
+
 		$sort = new Sort([
 			'attributes' => [
-				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'name'
+					'label' => 'Id'
 				],
-				'slug' => [
-					'asc' => [ 'slug' => SORT_ASC ],
-					'desc' => ['slug' => SORT_DESC ],
+				'category' => [
+					'asc' => [ "$categoryTable.name" => SORT_ASC ],
+					'desc' => [ "$categoryTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'slug'
-				]
+					'label' => 'Category'
+				],
+				'name' => [
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Name'
+				],
+	            'icon' => [
+	                'asc' => [ "$modelTable.icon" => SORT_ASC ],
+	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Icon'
+	            ]
 			]
 		]);
 
-		$config[ 'sort' ] = $sort;
+		if( !isset( $config[ 'sort' ] ) ) {
 
-		return parent::findPage( $config );
+			$config[ 'sort' ] = $sort;
+		}
+
+		// Query ------------
+
+		// Filters ----------
+
+		// Searching --------
+
+		$searchCol = Yii::$app->request->getQueryParam( 'search' );
+
+		if( isset( $searchCol ) ) {
+
+			$search = [
+				'name' => "$modelTable.name",
+				'value' => "$modelTable.value"
+			];
+
+			$config[ 'search-col' ] = $search[ $searchCol ];
+		}
+
+		// Reporting --------
+
+		$config[ 'report-col' ]	= [
+			'name' => "$modelTable.name",
+			'value' => "$modelTable.value"
+		];
+
+		// Result -----------
+
+		return parent::getPage( $config );
 	}
 
 	// Read ---------------
@@ -91,27 +148,23 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 
 	public function getByCategoryId( $categoryId ) {
 
-		return self::findByCategoryId( $categoryId );
-	}
+		$modelClass	= static::$modelClass;
 
-	public function getByCategorySlug( $categorySlug, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
-
-		return Option::findByCategorySlugType( $categorySlug, $categoryType );
+		return $modelClass::findByCategoryId( $categoryId );
 	}
 
 	public function getByNameCategoryId( $name, $categoryId ) {
 
-		return self::findByNameCategoryId( $name, $categoryId );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByNameCategoryId( $name, $categoryId );
 	}
 
-	public function getByNameCategoryName( $name, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
+	public function isExistByNameCategoryId( $name, $categoryId ) {
 
-		return self::findByNameCategoryName( $name, $categoryName, $categoryType );
-	}
+		$modelClass	= static::$modelClass;
 
-	public function getByValueCategoryName( $value, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
-
-		return self::findByValueCategoryName( $value, $categoryName, $categoryType );
+		return $modelClass::isExistByNameCategoryId( $name, $categoryId );
 	}
 
 	// Read - Lists ----
@@ -120,7 +173,17 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 
 		$config[ 'conditions' ][ 'categoryId' ] = $categoryId;
 
-		return self::findIdList( $config );
+		return $this->getIdList( $config );
+	}
+
+	public function searchByNameCategoryId( $name, $categoryId, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$config[ 'conditions' ][ "$modelTable.categoryId" ] = $categoryId;
+
+		return $this->searchByName( $name, $config );
 	}
 
 	// Read - Maps -----
@@ -133,70 +196,43 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 
 		$config[ 'conditions' ][ 'categoryId' ] = $categoryId;
 
-		return self::findIdNameMap( $config );
-	}
-
-	/**
-	 * @param integer $categoryName - category name
-	 * @return array - an array having id as key and name as value for given category name.
-	 */
-	public function getIdNameMapByCategorySlug( $categorySlug, $config = [], $type = CoreGlobal::TYPE_OPTION_GROUP ) {
-
-		$category	= Category::findBySlugType( $categorySlug, $type );
-
-		$config[ 'conditions' ][ 'categoryId' ] = $category->id;
-
-		return self::findIdNameMap( $config );
+		return $this->getIdNameMap( $config );
 	}
 
 	/**
 	 * @param integer $categoryId - category id
 	 * @return array - an array having value as key and name as value for given category id.
 	 */
-	public function getValueNameMapByCategoryId( $categoryId ) {
+	public function getValueNameMapByCategoryId( $categoryId, $config = [] ) {
 
-		$category	= Category::findById( $categoryId );
-		$options	= $category->options;
-		$optionsMap	= array();
+		$modelTable	= $this->getModelTable();
 
-		foreach ( $options as $option ) {
+		$config[ 'nameColumn' ]		= "$modelTable.value";
+		$config[ 'valueColumn' ]	= "$modelTable.name";
 
-			$optionsMap[ $option->value ] = $option->name;
-		}
+		$config[ 'conditions' ][ 'categoryId' ] = $categoryId;
 
-		return $optionsMap;
+		return $this->getIdNameMap( $config );
 	}
 
-	/**
-	 * @param integer $categoryName - category name
-	 * @return array - an array having value as key and name as value for given category name.
-	 */
-	public function getValueNameMapByCategoryName( $categoryName, $type = CoreGlobal::TYPE_OPTION_GROUP ) {
+	public function getIdNameMapByCategorySlug( $slug, $config = [] ) {
 
-		$category	= Category::findByNameType( $categoryName, $type );
-		$options	= $category->options;
-		$optionsMap	= array();
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_OPTION_GROUP;
 
-		foreach ( $options as $option ) {
+		$category = Yii::$app->factory->get( 'categoryService' )->getBySlugType( $slug, $type, $config );
 
-			$optionsMap[ $option->value ] = $option->name;
-		}
-
-		return $optionsMap;
+		return $this->getIdNameMapByCategoryId( $category->id, $config );
 	}
 
-	public function getValueNameMapByCategorySlug( $categorySlug, $type = CoreGlobal::TYPE_OPTION_GROUP ) {
+	public function getValueNameMapByCategorySlug( $slug, $config = [] ) {
 
-		$category	= Category::findBySlugType( $categorySlug, $type );
-		$options	= $category->options;
-		$optionsMap = array();
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_OPTION_GROUP;
 
-		foreach ( $options as $option ) {
+		$category = Yii::$app->factory->get( 'categoryService' )->getBySlugType( $slug, $type, $config );
 
-			$optionsMap[ $option->value ] = $option->name;
-		}
+		$config[ 'defaultValue' ] = $category->name;
 
-		return $optionsMap;
+		return $this->getValueNameMapByCategoryId( $category->id, $config );
 	}
 
 	// Read - Others ---
@@ -205,7 +241,10 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 
 	public function create( $model, $config = [] ) {
 
-		$model->value	= $model->name;
+		if( empty( $model->value ) ) {
+
+			$model->value = $model->name;
+		}
 
 		return parent::create( $model, $config );
 	}
@@ -214,7 +253,7 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'categoryId', 'name', 'value', 'icon', 'htmlOptions' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'value', 'icon', 'input', 'htmlOptions' ];
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -225,12 +264,51 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 
 	public function delete( $model, $config = [] ) {
 
-		// Delete mapping
-		ModelOption::deleteByModelId( $model->id );
+		// Delete mappings
+		Yii::$app->factory->get( 'modelOptionService' )->deleteByModelId( $model->id );
 
 		// Delete model
 		return parent::delete( $model, $config );
 	}
+
+	public function deleteByCategoryId( $categoryId ) {
+
+		$options = $this->getByCategoryId( $categoryId );
+
+		foreach( $options as $option ) {
+
+			$this->delete( $option );
+		}
+	}
+
+	// Bulk ---------------
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 
@@ -243,26 +321,6 @@ class OptionService extends \cmsgears\core\common\services\base\EntityService im
 	// Read ---------------
 
 	// Read - Models ---
-
-	public static function findByCategoryId( $categoryId ) {
-
-		return Option::findByCategoryId( $categoryId );
-	}
-
-	public static function findByNameCategoryId( $name, $categoryId ) {
-
-		return Option::findByNameCategoryId( $name, $categoryId );
-	}
-
-	public static function findByNameCategoryName( $name, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
-
-		return Option::findByNameCategoryName( $name, $categoryName, $categoryType );
-	}
-
-	public static function findByValueCategoryName( $value, $categoryName, $categoryType = CoreGlobal::TYPE_OPTION_GROUP ) {
-
-		return Option::findByValueCategoryName( $value, $categoryName, $categoryType );
-	}
 
 	// Read - Lists ----
 

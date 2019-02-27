@@ -1,13 +1,28 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class Module extends \cmsgears\core\common\base\Module {
+use cmsgears\core\common\base\Module as BaseModule;
+
+/**
+ * The Admin Module of Core Module.
+ *
+ * @since 1.0.0
+ */
+class Module extends BaseModule {
 
 	// Variables ---------------------------------------------------
 
@@ -17,7 +32,7 @@ class Module extends \cmsgears\core\common\base\Module {
 
 	public $controllerNamespace = 'cmsgears\core\admin\controllers';
 
-	public $config				= [ CoreGlobal::CONFIG_CORE, CoreGlobal::CONFIG_CACHE, CoreGlobal::CONFIG_MAIL, CoreGlobal::CONFIG_COMMENT, CoreGlobal::CONFIG_ADMIN, CoreGlobal::CONFIG_FRONTEND ];
+	public $config = [ CoreGlobal::CONFIG_CORE, CoreGlobal::CONFIG_CACHE, CoreGlobal::CONFIG_MAIL, CoreGlobal::CONFIG_COMMENT, CoreGlobal::CONFIG_ADMIN, CoreGlobal::CONFIG_FRONTEND ];
 
 	// Protected --------------
 
@@ -52,4 +67,5 @@ class Module extends \cmsgears\core\common\base\Module {
 
 		return $path;
 	}
+
 }

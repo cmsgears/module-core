@@ -1,16 +1,24 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\frontend\controllers\apix;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
 
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\utilities\CodeGenUtil;
-use cmsgears\core\common\utilities\AjaxUtil;
-
+/**
+ * LocationController provides actions to get options list and search results of province,
+ * region and city.
+ *
+ * @since 1.0.0
+ */
 class LocationController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
@@ -21,18 +29,9 @@ class LocationController extends \cmsgears\core\frontend\controllers\base\Contro
 
 	// Protected --------------
 
-	protected $provinceService;
-
 	// Private ----------------
 
 	// Constructor and Initialisation ------------------------------
-
-	public function init() {
-
-		parent::init();
-
-		$this->provinceService	= Yii::$app->factory->get( 'provinceService' );
-	}
 
 	// Instance methods --------------------------------------------
 
@@ -52,10 +51,13 @@ class LocationController extends \cmsgears\core\frontend\controllers\base\Contro
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
-					'provinceMap' => [ 'post' ],
-					'provinceOptions' => [ 'post' ]
+					'province-options' => [ 'post' ],
+					'region-options' => [ 'post' ],
+					'province-map' => [ 'post' ],
+					'region-map' => [ 'post' ],
+					'city-search' => [ 'post' ]
 				]
 			]
 		];
@@ -63,42 +65,21 @@ class LocationController extends \cmsgears\core\frontend\controllers\base\Contro
 
 	// yii\base\Controller ----
 
+	public function actions() {
+
+		return [
+			'province-options' => [ 'class' => 'cmsgears\core\common\actions\location\data\ProvinceOptions' ],
+			'region-options' => [ 'class' => 'cmsgears\core\common\actions\location\data\RegionOptions' ],
+			'province-map' => [ 'class' => 'cmsgears\core\common\actions\location\data\ProvinceMap' ],
+			'region-map' => [ 'class' => 'cmsgears\core\common\actions\location\data\RegionMap' ],
+			'city-search' => [ 'class' => 'cmsgears\core\common\actions\location\data\CitySearch' ]
+		];
+	}
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
 
 	// LocationController --------------------
 
-	public function actionProvinceMap() {
-
-		$countryId	= Yii::$app->request->post( 'countryId' );
-
-		if( isset( $countryId ) && $countryId > 0 ) {
-
-			$provinceMap	= $this->provinceService->getListByCountryId( $countryId );
-
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $provinceMap );
-		}
-
-		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
-
-	public function actionProvinceOptions() {
-
-		$countryId	= Yii::$app->request->post( 'countryId' );
-
-		if( isset( $countryId ) && $countryId > 0 ) {
-
-			$provinceOptions	= $this->provinceService->getListByCountryId( $countryId );
-			$provinceOptions	= CodeGenUtil::generateSelectOptionsIdName( $provinceOptions );
-
-			// Trigger Ajax Success
-			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $provinceOptions );
-		}
-
-		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
 }

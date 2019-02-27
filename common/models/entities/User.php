@@ -1,61 +1,113 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\ArrayHelper;
 use yii\web\IdentityInterface;
 
 use yii\base\NotSupportedException;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\config\CoreProperties;
 
-use cmsgears\core\common\models\interfaces\IApproval;
+use cmsgears\core\common\models\interfaces\base\IApproval;
+use cmsgears\core\common\models\interfaces\resources\IContent;
+use cmsgears\core\common\models\interfaces\resources\IData;
+use cmsgears\core\common\models\interfaces\resources\IGridCache;
+use cmsgears\core\common\models\interfaces\resources\IModelMeta;
+use cmsgears\core\common\models\interfaces\resources\ISocialLink;
+use cmsgears\core\common\models\interfaces\resources\IVisual;
+use cmsgears\core\common\models\interfaces\mappers\IAddress;
+use cmsgears\core\common\models\interfaces\mappers\IFile;
 
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\Entity;
 use cmsgears\core\common\models\mappers\SiteMember;
+use cmsgears\core\common\models\resources\Gallery;
 use cmsgears\core\common\models\resources\Option;
 
-use cmsgears\core\common\models\traits\interfaces\ApprovalTrait;
+use cmsgears\core\common\models\traits\base\ApprovalTrait;
+use cmsgears\core\common\models\traits\resources\ContentTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\resources\GridCacheTrait;
+use cmsgears\core\common\models\traits\resources\ModelMetaTrait;
+use cmsgears\core\common\models\traits\resources\SocialLinkTrait;
+use cmsgears\core\common\models\traits\resources\VisualTrait;
 use cmsgears\core\common\models\traits\mappers\AddressTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
-use cmsgears\core\common\models\traits\resources\DataTrait;
-use cmsgears\core\common\models\traits\resources\MetaTrait;
-use cmsgears\core\common\models\traits\resources\VisualTrait;
+use cmsgears\core\common\models\traits\mappers\OptionTrait;
+
+use cmsgears\core\common\utilities\DateUtil;
 
 /**
  * User Entity - The primary class.
  *
- * @property long $id
- * @property long $localeId
- * @property long $genderId
- * @property long $avatarId
- * @property short $status
+ * @property integer $id
+ * @property integer $localeId
+ * @property integer $genderId
+ * @property integer $avatarId
+ * @property integer $bannerId
+ * @property integer $videoId
+ * @property integer $galleryId
+ * @property integer $templateId
+ * @property integer $status
  * @property string $email
  * @property string $username
+ * @property string $slug
  * @property string $passwordHash
+ * @property string $type
+ * @property string $icon
+ * @property string $title
  * @property string $firstName
+ * @property string $middleName
  * @property string $lastName
+ * @property string $name
+ * @property string $message
+ * @property string $description
  * @property string $dob
+ * @property string $mobile
  * @property string $phone
+ * @property boolean $emailVerified
+ * @property boolean $mobileVerified
+ * @property integer $timeZone
  * @property string $avatarUrl
  * @property string $websiteUrl
  * @property string $verifyToken
+ * @property datetime $verifyTokenValidTill
  * @property string $resetToken
- * @property string $registeredAt
+ * @property datetime $resetTokenValidTill
+ * @property datetime $registeredAt
  * @property datetime $lastLoginAt
  * @property datetime $lastActivityAt
  * @property string $authKey
+ * @property string $otp
+ * @property datetime $otpValidTill
  * @property string $accessToken
+ * @property string $accessTokenType
  * @property datetime $tokenCreatedAt
  * @property datetime $tokenAccessedAt
  * @property string $content
  * @property string $data
+ * @property string $gridCache
+ * @property boolean $gridCacheValid
+ * @property datetime $gridCachedAt
+ *
+ * @since 1.0.0
  */
-class User extends \cmsgears\core\common\models\base\Entity implements IdentityInterface, IApproval {
+class User extends Entity implements IdentityInterface, IAddress, IApproval, IContent, IData,
+	IGridCache, IFile, IModelMeta, ISocialLink, IVisual {
 
 	// Variables ---------------------------------------------------
 
@@ -63,7 +115,11 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	// Constants --------------
 
-	const STATUS_VERIFIED	= 100; // Used when user is required to submit registration application for approval process.
+	/**
+	 * It will be used when user need to go through admin approval process and required to submit
+	 * registration application for approval in order to continue with the application.
+	 */
+	const STATUS_VERIFIED	= 100;
 
 	const REG_TYPE_DEFAULT	= 0;
 	const REG_TYPE_SNS 		= 1;
@@ -76,11 +132,11 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	// Public -----------------
 
-	public $modelType	= CoreGlobal::TYPE_USER;
-
 	public $permissions = [];
 
 	// Protected --------------
+
+	protected $modelType = CoreGlobal::TYPE_USER;
 
 	// Private ----------------
 
@@ -88,9 +144,13 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	use AddressTrait;
 	use ApprovalTrait;
-	use MetaTrait;
+	use ContentTrait;
 	use DataTrait;
 	use FileTrait;
+	use GridCacheTrait;
+	use ModelMetaTrait;
+	use OptionTrait;
+	use SocialLinkTrait;
 	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -136,11 +196,17 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'email' ], 'required' ],
-			[ [ 'id', 'content', 'data' ], 'safe' ],
+			[ 'email', 'required' ],
+			[ [ 'firstName', 'email', 'username' ], 'required', 'on' => 'profile' ],
+			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
+			// Unique
+			[ 'email', 'unique' ],
+			[ 'username', 'unique' ],
+			[ 'slug', 'unique' ],
+			[ 'mobile', 'unique' ],
 			// Email
 			[ 'email', 'email' ],
 			[ 'email', 'validateEmailCreate', 'on' => [ 'create' ] ],
@@ -151,20 +217,37 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 			[ 'username', 'validateUsernameCreate', 'on' => [ 'create' ] ],
 			[ 'username', 'validateUsernameUpdate', 'on' => [ 'update', 'profile' ] ],
 			[ 'username', 'validateUsernameChange', 'on' => [ 'profile' ] ],
+			// Slug
+			[ 'slug', 'validateSlugCreate', 'on' => [ 'create' ] ],
+			[ 'slug', 'validateSlugUpdate', 'on' => [ 'update', 'profile' ] ],
+			[ 'slug', 'validateSlugChange', 'on' => [ 'profile' ] ],
+			// Mobile
+			[ 'mobile', 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+			[ 'mobile', 'validateMobileCreate', 'on' => [ 'create' ] ],
+			[ 'mobile', 'validateMobileUpdate', 'on' => [ 'update', 'profile' ] ],
+			[ 'mobile', 'validateMobileChange', 'on' => [ 'profile' ] ],
 			// Text Limit
-			[ [ 'username', 'email', 'passwordHash', 'firstName', 'lastName', 'phone', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'type', 'title', 'phone' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
+			[ 'accessTokenType', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'icon', 'verifyToken', 'resetToken', 'authKey', 'accessToken' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'username', 'passwordHash' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'slug', 'email', 'firstName', 'middleName', 'lastName', 'avatarUrl', 'websiteUrl' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'name', 'message' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ 'description', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ [ 'id', 'localeId', 'genderId', 'avatarId', 'status' ], 'number', 'integerOnly' => true ],
+			[ [ 'localeId', 'genderId', 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'status', 'timeZone', 'otp' ], 'number', 'integerOnly' => true, 'min' => 0 ],
+			[ [ 'avatarId', 'bannerId', 'videoId', 'galleryId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
 			[ [ 'avatarUrl', 'websiteUrl' ], 'url' ],
-			[ 'dob', 'date', 'format' => Yii::$app->formatter->dateFormat ],
-			[ [ 'registeredAt', 'lastLoginAt', 'lastActivityAt', 'tokenCreatedAt', 'tokenAccessedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+			[ 'dob', 'date' ],
+			[ [ 'emailVerified', 'mobileVerified', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'registeredAt', 'lastLoginAt', 'lastActivityAt', 'tokenCreatedAt', 'tokenAccessedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
-		// trim if required
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'email', 'username', 'phone', 'firstName', 'lastName', 'avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'email', 'username', 'message', 'description', 'mobile', 'phone', 'firstName', 'middleName', 'lastName', 'avatarUrl', 'websiteUrl' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -181,28 +264,59 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 			'localeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
 			'genderId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GENDER ),
 			'avatarId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR ),
+			'bannerId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BANNER ),
+			'videoId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIDEO ),
+			'galleryId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GALLERY ),
+			'templateId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TEMPLATE ),
 			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
 			'email' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL ),
 			'username' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_USERNAME ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'firstName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FIRSTNAME ),
+			'middleName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MIDDLENAME ),
 			'lastName' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LASTNAME ),
+			'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
+			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
+			'otp' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_OTP ),
 			'dob' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DOB ),
+			'mobile' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MOBILE ),
 			'phone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
+			'timeZone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TIME_ZONE ),
 			'avatarUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
-			'websiteUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE )
+			'websiteUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
+			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
 		];
 	}
 
 	// yii\db\BaseActiveRecord
 
+	/**
+	 * @inheritdoc
+	 */
 	public function beforeSave( $insert ) {
 
 		if( parent::beforeSave( $insert ) ) {
+
+			if( $this->localeId <= 0 ) {
+
+				$this->localeId = null;
+			}
 
 			if( $this->genderId <= 0 ) {
 
 				$this->genderId = null;
 			}
+
+			if( $this->timeZone <= 0 ) {
+
+				$this->timeZone = null;
+			}
+
+			$this->name = $this->getName();
 
 			return true;
 		}
@@ -218,6 +332,10 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	/**
 	 * Validates user email to ensure that only one user exist with the given email.
+	 *
+	 * @param type $attribute
+	 * @param type $params
+	 * @return void
 	 */
 	public function validateEmailCreate( $attribute, $params ) {
 
@@ -232,6 +350,10 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	/**
 	 * Validates user email to ensure that only one user exist with the given email.
+	 *
+	 * @param type $attribute
+	 * @param type $params
+	 * @return void
 	 */
 	public function validateEmailUpdate( $attribute, $params ) {
 
@@ -248,6 +370,10 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	/**
 	 * Validates user email to ensure that it does not allow to change while changing user profile.
+	 *
+	 * @param type $attribute
+	 * @param type $params
+	 * @return void
 	 */
 	public function validateEmailChange( $attribute, $params ) {
 
@@ -256,7 +382,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 			$properties		= CoreProperties::getInstance();
 			$existingUser	= self::findById( $this->id );
 
-			if( isset( $existingUser ) && strcmp( $existingUser->email, $this->email ) != 0 && !$properties->isChangeEmail() ) {
+			if( isset( $existingUser ) && $existingUser->email !== $this->email && !$properties->isChangeEmail() ) {
 
 				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_CHANGE_EMAIL ) );
 			}
@@ -265,6 +391,10 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	/**
 	 * Validates user email to ensure that only one user exist with the given username.
+	 *
+	 * @param type $attribute
+	 * @param type $params
+	 * @return void
 	 */
 	public function validateUsernameCreate( $attribute, $params ) {
 
@@ -279,6 +409,10 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	/**
 	 * Validates user email to ensure that only one user exist with the given username.
+	 *
+	 * @param type $attribute
+	 * @param type $params
+	 * @return void
 	 */
 	public function validateUsernameUpdate( $attribute, $params ) {
 
@@ -295,6 +429,10 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	/**
 	 * Validates user email to ensure that it does not allow to change while changing user profile.
+	 *
+	 * @param type $attribute
+	 * @param type $params
+	 * @return void
 	 */
 	public function validateUsernameChange( $attribute, $params ) {
 
@@ -303,7 +441,7 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 			$properties		= CoreProperties::getInstance();
 			$existingUser	= self::findById( $this->id );
 
-			if( isset( $existingUser ) && strcmp( $existingUser->username, $this->username ) != 0  && !$properties->isChangeUsername() ) {
+			if( isset( $existingUser ) && $existingUser->username !== $this->username  && !$properties->isChangeUsername() ) {
 
 				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_CHANGE_USERNAME ) );
 			}
@@ -311,7 +449,127 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	}
 
 	/**
-	 * Validates user password while login
+	 * Validates user email to ensure that only one user exist with the given username.
+	 *
+	 * @param type $attribute
+	 * @param type $params
+	 * @return void
+	 */
+	public function validateSlugCreate( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			if( self::isExistBySlug( $this->slug ) ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SLUG_EXIST ) );
+			}
+		}
+	}
+
+	/**
+	 * Validates user slug to ensure that only one user exist with the given slug.
+	 *
+	 * @param type $attribute
+	 * @param type $params
+	 * @return void
+	 */
+	public function validateSlugUpdate( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			$existingUser = self::findBySlug( $this->slug );
+
+			if( isset( $existingUser ) && $this->id != $existingUser->id ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SLUG_EXIST ) );
+			}
+		}
+	}
+
+	/**
+	 * Validates user email to ensure that it does not allow to change while changing user profile.
+	 *
+	 * @param type $attribute
+	 * @param type $params
+	 * @return void
+	 */
+	public function validateSlugChange( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			$existingUser = self::findById( $this->id );
+
+			if( isset( $existingUser ) && $existingUser->slug !== $this->slug ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SLUG_EXIST ) );
+			}
+		}
+	}
+
+	/**
+	 * Validates mobile to ensure that only one user exist with the given mobile.
+	 *
+	 * @param type $attribute
+	 * @param type $params
+	 * @return void
+	 */
+	public function validateMobileCreate( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			if( self::isExistByMobile( $this->mobile ) ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_MOBILE_EXIST ) );
+			}
+		}
+	}
+
+	/**
+	 * Validates mobile to ensure that only one user exist with the given mobile.
+	 *
+	 * @param type $attribute
+	 * @param type $params
+	 * @return void
+	 */
+	public function validateMobileUpdate( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			$existingUser = self::findByMobile( $this->mobile );
+
+			if( isset( $existingUser ) && $this->id != $existingUser->id ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_MOBILE_EXIST ) );
+			}
+		}
+	}
+
+	/**
+	 * Validates mobile to ensure that it does not allow to change while changing user profile.
+	 *
+	 * @param type $attribute
+	 * @param type $params
+	 * @return void
+	 */
+	public function validateMobileChange( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			$properties		= CoreProperties::getInstance();
+			$existingUser	= self::findById( $this->id );
+
+			if( isset( $existingUser ) && $existingUser->mobile !== $this->mobile  && !$properties->isChangeMobile() ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_CHANGE_USERNAME ) );
+			}
+		}
+	}
+
+	/**
+	 * Validates user password while login.
+	 *
+	 * @param type $password
+	 * @return boolean
 	 */
 	public function validatePassword( $password ) {
 
@@ -326,56 +584,82 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	// User ----------------------------------
 
 	/**
-	 * @return array - SiteMember
+	 * Returns all the site member mappings.
+	 *
+	 * @return \cmsgears\core\common\models\mappers\SiteMember[]
 	 */
 	public function getSiteMembers() {
 
-		return $this->hasMany( SiteMember::className(), [ "userId" => 'id' ] );
+		return $this->hasMany( SiteMember::class, [ 'userId' => 'id' ] );
 	}
 
 	/**
-	 * @return SiteMember
+	 * Returns site member mapping of active site.
+	 *
+	 * It's useful in multi-site environment to get the member of current site.
+	 *
+	 * @return \cmsgears\core\common\models\mappers\SiteMember
 	 */
 	public function getActiveSiteMember() {
 
 		$site		= Yii::$app->core->site;
 
-		return $this->hasOne( SiteMember::className(), [ "userId" => 'id' ] )->where( [ "siteId" => $site->id ] );
+		return $this->hasOne( SiteMember::class, [ "userId" => 'id' ] )->where( [ "siteId" => $site->id ] );
 	}
 
 	/**
-	 * @return Role - assigned to User.
+	 * Returns role assigned to user for active site.
+	 *
+	 * @return Role Assigned to User.
 	 */
 	public function getRole() {
 
-		$roleTable			= CoreTables::TABLE_ROLE;
-		$siteTable			= CoreTables::TABLE_SITE;
-		$siteMemberTable	= CoreTables::TABLE_SITE_MEMBER;
+		$roleTable			= CoreTables::getTableName( CoreTables::TABLE_ROLE );
+		$siteTable			= CoreTables::getTableName( CoreTables::TABLE_SITE );
+		$siteMemberTable	= CoreTables::getTableName( CoreTables::TABLE_SITE_MEMBER );
 
+		// TODO: Check why it's not working without appending one() after recent Yii Upgrade
 		return Role::find()
-					->leftJoin( $siteMemberTable, "$siteMemberTable.roleId = $roleTable.id" )
-					->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
-					->where( "$siteMemberTable.userId=:id AND $siteTable.slug=:slug", [ ':id' => $this->id, ':slug' => Yii::$app->core->getSiteSlug() ] );
+			->leftJoin( $siteMemberTable, "$siteMemberTable.roleId = $roleTable.id" )
+			->leftJoin( $siteTable, "$siteTable.id = $siteMemberTable.siteId" )
+			->where( "$siteMemberTable.userId=:id AND $siteTable.slug=:slug", [ ':id' => $this->id, ':slug' => Yii::$app->core->getSiteSlug() ] )
+			->one();
 	}
 
 	/**
-	 * @return Locale - assigned to User.
+	 * Returns locale selected by user.
+	 *
+	 * @return Locale
 	 */
 	public function getLocale() {
 
-		return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] );
+		return $this->hasOne( Locale::class, [ 'id' => 'localeId' ] );
 	}
 
 	/**
-	 * @return Option - from Category 'gender' assigned to user.
+	 * Returns gender selected by user.
+	 *
+	 * @return \cmsgears\core\common\models\resources\Option From Category 'gender'.
 	 */
 	public function getGender() {
 
-		return $this->hasOne( Option::className(), [ 'id' => 'genderId' ] );
+		return $this->hasOne( Option::class, [ 'id' => 'genderId' ] );
 	}
 
 	/**
-	 * @return string representation of gender.
+	 * Returns gallery associated with the user.
+	 *
+	 * @return \cmsgears\core\common\models\resources\Gallery
+	 */
+	public function getGallery() {
+
+		return $this->hasOne( Gallery::class, [ 'id' => 'galleryId' ] );
+	}
+
+	/**
+	 * Returns string representation of gender.
+	 *
+	 * @return string
 	 */
 	public function getGenderStr() {
 
@@ -389,23 +673,49 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 		return '';
 	}
 
+	/**
+	 * Returns full name of user using first name, middle name and last name.
+	 *
+	 * @return string
+	 */
 	public function getFullName() {
 
-		return $this->firstName . ' ' . $this->lastName;
+		$name = $this->firstName;
+
+		if( !empty( $this->middleName ) ) {
+
+			$name = "$name $this->middleName";
+		}
+
+		if( !empty( $this->lastName ) ) {
+
+			$name = "$name $this->lastName";
+		}
+
+		return $name;
+	}
+
+	public function getDisplayName() {
+
+		return $this->getFullName();
 	}
 
 	/**
-	 * @return user name from email in case it's not set by user
+	 * Returns name of user using first name, middle name and last name.
+	 *
+	 * It returns username or user id of email in case name is not set for the user.
+	 *
+	 * @return string
 	 */
 	public function getName() {
 
-		$name	= $this->firstName . ' ' . $this->lastName;
+		$name = $this->getFullName();
 
-		if( !isset( $name ) || strlen( $name ) <= 1 ) {
+		if( empty( $name ) ) {
 
 			$name	= $this->username;
 
-			if( !isset( $name ) || strlen( $name ) <= 1 ) {
+			if( empty( $name ) ) {
 
 				$name	= preg_split( '/@/', $this->email );
 				$name	= $name[ 0 ];
@@ -415,7 +725,11 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 		return $name;
 	}
 
-	// Verify only if new or verified
+	/**
+	 * Update user status to verified in case it's not done yet.
+	 *
+	 * @return void
+	 */
 	public function verify() {
 
 		if( $this->status <= User::STATUS_VERIFIED ) {
@@ -424,6 +738,12 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 		}
 	}
 
+	/**
+	 * Check whether user is verified.
+	 *
+	 * @param boolean $strict
+	 * @return boolean
+	 */
 	public function isVerified( $strict = true ) {
 
 		if( $strict ) {
@@ -435,7 +755,10 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	}
 
 	/**
-	 * Generate and set user password using the yii security mechanism.
+	 * Generate and set user password using Yii security component.
+	 *
+	 * @param string $password
+	 * @return void
 	 */
 	public function generatePassword( $password ) {
 
@@ -445,13 +768,21 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	/**
 	 * Generate and set user access token using the yii security mechanism.
 	 */
+
+	/**
+	 * Generate and set user access token using Yii security component.
+	 *
+	 * @return void
+	 */
 	public function generateAccessToken() {
 
 		$this->accessToken = Yii::$app->security->generateRandomString();
 	}
 
 	/**
-	 * Generate and set user verification token using the yii security mechanism.
+	 * Generate and set user verification token using Yii security component.
+	 *
+	 * @return void
 	 */
 	public function generateVerifyToken() {
 
@@ -459,20 +790,30 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	}
 
 	/**
-	 * unset user verification token on user verification.
+	 * Unset verification token once user verify the account.
+	 *
+	 * @return void
 	 */
 	public function unsetVerifyToken() {
 
 		$this->verifyToken = null;
 	}
 
+	/**
+	 * Check whether verification token is valid.
+	 *
+	 * @param string $token
+	 * @return boolean
+	 */
 	public function isVerifyTokenValid( $token ) {
 
-		return strcmp( $this->verifyToken, $token ) == 0;
+		return $this->verifyToken === $token;
 	}
 
 	/**
-	 * Generate and set user password reset token using the yii security mechanism.
+	 * Generate and set password reset token using Yii security component.
+	 *
+	 * @return void
 	 */
 	public function generateResetToken() {
 
@@ -480,20 +821,70 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	}
 
 	/**
-	 * unset user reset token on user password change.
+	 * Unset reset token once user verify the account.
+	 *
+	 * @return void
 	 */
 	public function unsetResetToken() {
 
 		$this->resetToken = null;
 	}
 
+	/**
+	 * Check whether reset token is valid.
+	 *
+	 * @param string $token
+	 * @return boolean
+	 */
 	public function isResetTokenValid( $token ) {
 
 		return strcmp( $this->resetToken, $token ) == 0;
 	}
 
 	/**
-	 * Generate and set user auth key using the yii security mechanism.
+	 * Generate and set 6 digit random OTP.
+	 *
+	 * @return void
+	 */
+	public function generateOtp() {
+
+		$this->otp = random_int( 100000, 999999 );
+
+		$valid = DateUtil::getDateTime();
+		$valid = strtotime( $valid ) + Yii::$app->core->getOtpValidity();
+
+		$this->otpValidTill = DateUtil::getDateTimeFromMillis( $valid );
+
+		return $this->otp;
+	}
+
+	/**
+	 * Unset OTP once user verify the account.
+	 *
+	 * @return void
+	 */
+	public function unsetOtp() {
+
+		$this->otp = null;
+	}
+
+	/**
+	 * Check whether OTP is valid.
+	 *
+	 * @param integer $otp
+	 * @return boolean
+	 */
+	public function isOtpValid( $otp ) {
+
+		$now = DateUtil::getDateTime();
+
+		return $this->otp == $otp && DateUtil::lessThan( $now, $this->otpValidTill );
+	}
+
+	/**
+	 * Generate and set authorization key using Yii security component.
+	 *
+	 * @return void
 	 */
 	public function generateAuthKey() {
 
@@ -501,7 +892,12 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	}
 
 	/**
-	 * Load the permissions assigned to user.
+	 * Load the permissions assigned to the user.
+	 *
+	 * The loaded permissions will be queried for access to specific features.
+	 *
+	 * @throws \yii\web\ForbiddenHttpException
+	 * @return void
 	 */
 	public function loadPermissions() {
 
@@ -509,20 +905,42 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 		if( isset( $role ) ) {
 
-			$this->permissions	= $role->getPermissionsSlugList();
+			$this->permissions = $role->getPermissionsSlugList();
 		}
 		else {
 
-			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_ALLOWED ) );
+			throw new ForbiddenHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NO_ACCESS ) );
 		}
 	}
 
 	/**
-	 * @return boolean whether a permission is assigned to the user.
+	 * Check whether given permission is assigned to the user.
+	 *
+	 * @param string $permission Permission slug
+	 * @return boolean
 	 */
 	public function isPermitted( $permission ) {
 
-		return in_array( $permission, $this->permissions );
+		if( is_string( $permission ) ) {
+
+			return in_array( $permission, $this->permissions );
+		}
+		else {
+
+			$permitted = false;
+
+			foreach( $permission as $perm ) {
+
+				if( in_array( $perm, $this->permissions ) ) {
+
+					$permitted = true;
+
+					break;
+				}
+			}
+
+			return $permitted;
+		}
 	}
 
 	// Static Methods ----------------------------------------------
@@ -532,14 +950,17 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	// yii\web\IdentityInterface
 
 	/**
-	 * The method finds the user identity using the given id and also loads the available permissions if rbac is enabled for the application.
+	 * Finds user identity using the given id and also loads the available permissions if
+	 * RBAC is enabled for the application.
+	 *
 	 * @param integer $id
-	 * @return a valid user based on given id.
+	 * @throws \yii\web\NotFoundHttpException
+	 * @return User based on given id.
 	 */
 	public static function findIdentity( $id ) {
 
 		// Find valid User
-		$user	= static::findById( $id );
+		$user = static::findById( $id );
 
 		// Load User Permissions
 		if( isset( $user ) ) {
@@ -548,19 +969,21 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 				$user->loadPermissions();
 			}
-		}
-		else {
 
-			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+			return $user;
 		}
 
-		return $user;
+		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
 	/**
-	 * The method finds the user identity using the given access token and also loads the available permissions if rbac is enabled for the application.
+	 * Finds user identity using the given access token and also loads the available
+	 * permissions if RBAC is enabled for the application.
+	 *
 	 * @param string $token
 	 * @param string $type
+	 * @throws \yii\web\NotFoundHttpException
+	 * @throws \yii\base\NotSupportedException
 	 * @return a valid user based on given token and type
 	 */
 	public static function findIdentityByAccessToken( $token, $type = null ) {
@@ -579,13 +1002,11 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 					$user->loadPermissions();
 				}
-			}
-			else {
 
-				throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+				return $user;
 			}
 
-			return $user;
+			throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 		}
 
 		throw new NotSupportedException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_APIS_DISABLED ) );
@@ -596,11 +1017,11 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	// yii\db\ActiveRecord ----
 
 	/**
-	 * @return string - db table name
+	 * @inheritdoc
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_USER;
+		return CoreTables::getTableName( CoreTables::TABLE_USER );
 	}
 
 	// CMG parent classes --------------------
@@ -609,42 +1030,67 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'role', 'locale', 'gender' ];
+		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'avatar', 'locale', 'gender' ];
 		$config[ 'relations' ]	= $relations;
 
 		return parent::queryWithAll( $config );
 	}
 
-	public static function queryWithRole( $config = [] ) {
-
-		$config[ 'relations' ]	= [ 'avatar', 'role' ];
-
-		return parent::queryWithAll( $config );
-	}
-
+	/**
+	 * Return query to find the user with locale.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with locale.
+	 */
 	public static function queryWithLocale( $config = [] ) {
 
+		// TODO: Check why it's not working with avatar with recent Yii Upgrade
 		$config[ 'relations' ]	= [ 'avatar', 'locale' ];
 
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the user with gender.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with gender.
+	 */
 	public static function queryWithGender( $config = [] ) {
 
+		// TODO: Check why it's not working with avatar with recent Yii Upgrade
 		$config[ 'relations' ]	= [ 'avatar', 'gender' ];
 
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the user with site members.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with site members.
+	 */
 	public static function queryWithSiteMembers( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
+		// TODO: Check why it's not working with avatar with recent Yii Upgrade
+		//$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
+
+		$config[ 'relations' ]	= [ 'siteMembers', 'siteMembers.site', 'siteMembers.role' ];
 
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the user with site members and permissions.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with site members and permissions.
+	 */
 	public static function queryWithSiteMembersPermissions( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'avatar', 'siteMembers', 'siteMembers.site', 'siteMembers.role', 'siteMembers.role.permissions' ];
@@ -655,8 +1101,10 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	// Read - Find ------------
 
 	/**
+	 * Find and return the user by access token.
+	 *
 	 * @param string $token
-	 * @return User - by accessToken
+	 * @return User
 	 */
 	public static function findByAccessToken( $token ) {
 
@@ -664,8 +1112,10 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	}
 
 	/**
+	 * Find and return the user by email.
+	 *
 	 * @param string $email
-	 * @return User - by email
+	 * @return User
 	 */
 	public static function findByEmail( $email ) {
 
@@ -673,8 +1123,10 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	}
 
 	/**
+	 * Check whether user exist for given email.
+	 *
 	 * @param string $email
-	 * @return User - check whether user exist by email
+	 * @return boolean
 	 */
 	public static function isExistByEmail( $email ) {
 
@@ -684,8 +1136,10 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	}
 
 	/**
+	 * Find and return the user by username.
+	 *
 	 * @param string $username
-	 * @return User - by username
+	 * @return User
 	 */
 	public static function findByUsername( $username ) {
 
@@ -693,12 +1147,62 @@ class User extends \cmsgears\core\common\models\base\Entity implements IdentityI
 	}
 
 	/**
+	 * Check whether user exist for given username.
+	 *
 	 * @param string $username
-	 * @return User - check whether user exist by username
+	 * @return boolean
 	 */
 	public static function isExistByUsername( $username ) {
 
 		$user = self::find()->where( 'username=:username', [ ':username' => $username ] )->one();
+
+		return isset( $user );
+	}
+
+	/**
+	 * Find and return the user by slug.
+	 *
+	 * @param string $slug
+	 * @return User
+	 */
+	public static function findBySlug( $slug ) {
+
+		return self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+	}
+
+	/**
+	 * Check whether user exist for given slug.
+	 *
+	 * @param string $slug
+	 * @return boolean
+	 */
+	public static function isExistBySlug( $slug ) {
+
+		$user = self::find()->where( 'slug=:slug', [ ':slug' => $slug ] )->one();
+
+		return isset( $user );
+	}
+
+	/*
+	 * Find and return the user by username.
+	 *
+	 * @param string $username
+	 * @return User
+	 */
+	public static function findByMobile( $mobile ) {
+
+		return self::find()->where( 'mobile=:mobile', [ ':mobile' => $mobile ] )->one();
+	}
+
+	/**
+	 * Check whether user exist for given username.
+	 *
+	 * @param string $username
+	 * @return boolean
+	 */
+	public static function isExistByMobile( $mobile ) {
+
+		$user = self::findByMobile( $mobile );
 
 		return isset( $user );
 	}

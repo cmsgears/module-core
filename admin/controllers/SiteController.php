@@ -38,6 +38,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 		// Breadcrumbs
 		$this->breadcrumbs	= [
 			'index' => [ [ 'label' => 'Dashboard' ] ],
+			'login' => [ [ 'label' => 'Login' ] ],
 			'dashboard' => [ [ 'label' => 'Dashboard' ] ]
 		];
 	}
@@ -69,7 +70,7 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 		if ( !Yii::$app->user->isGuest ) {
 
-			$this->layout	= AdminGlobalCore::LAYOUT_PRIVATE;
+			$this->layout = AdminGlobalCore::LAYOUT_PRIVATE;
 		}
 
 		return [

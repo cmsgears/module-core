@@ -1,23 +1,33 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
 use Yii;
 use yii\data\Sort;
-use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-
 use cmsgears\core\common\services\interfaces\entities\ITemplateService;
 
-use cmsgears\core\common\services\traits\NameTypeTrait;
-use cmsgears\core\common\services\traits\SlugTypeTrait;
+use cmsgears\core\common\services\traits\base\MultiSiteTrait;
+use cmsgears\core\common\services\traits\base\NameTypeTrait;
+use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\cache\GridCacheTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
- * The class TemplateService is base class to perform database activities for Template Entity.
+ * TemplateService provide service methods of template model.
+ *
+ * @since 1.0.0
  */
 class TemplateService extends \cmsgears\core\common\services\base\EntityService implements ITemplateService {
 
@@ -29,13 +39,11 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Template';
+	public static $modelClass = '\cmsgears\core\common\models\entities\Template';
 
-	public static $modelTable	= CoreTables::TABLE_TEMPLATE;
+	public static $typed = true;
 
-	public static $typed		= true;
-
-	public static $parentType	= CoreGlobal::TYPE_TEMPLATE;
+	public static $parentType = CoreGlobal::TYPE_TEMPLATE;
 
 	// Protected --------------
 
@@ -49,6 +57,9 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
+	use GridCacheTrait;
+	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 
@@ -70,82 +81,105 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$site	= Yii::$app->core->site;
+		$theme	= $site->theme;
+
+		$themeTable = Yii::$app->factory->get( 'themeService' )->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
 				'id' => [
-					'asc' => [ 'id' => SORT_ASC ],
-					'desc' => [ 'id' => SORT_DESC ],
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
+				'theme' => [
+					'asc' => [ "$themeTable.name" => SORT_ASC ],
+					'desc' => [ "$themeTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
 	            'name' => [
-	                'asc' => [ 'name' => SORT_ASC ],
-	                'desc' => ['name' => SORT_DESC ],
+	                'asc' => [ "$modelTable.name" => SORT_ASC ],
+	                'desc' => [ "$modelTable.name" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Name'
 	            ],
 	            'slug' => [
-	                'asc' => [ 'slug' => SORT_ASC ],
-	                'desc' => ['slug' => SORT_DESC ],
+	                'asc' => [ "$modelTable.slug" => SORT_ASC ],
+	                'desc' => [ "$modelTable.slug" => SORT_DESC ],
 	                'default' => SORT_DESC,
-	                'label' => 'Slug'
+	                'label' => "Slug"
 	            ],
 	            'type' => [
-	                'asc' => [ 'type' => SORT_ASC ],
-	                'desc' => ['type' => SORT_DESC ],
+	                'asc' => [ "$modelTable.type" => SORT_ASC ],
+	                'desc' => [ "$modelTable.type" => SORT_DESC ],
 	                'default' => SORT_DESC,
-	                'label' => 'Type'
+	                'label' => "Type"
 	            ],
 	            'icon' => [
-	                'asc' => [ 'icon' => SORT_ASC ],
-	                'desc' => ['icon' => SORT_DESC ],
+	                'asc' => [ "$modelTable.icon" => SORT_ASC ],
+	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Icon'
 	            ],
+	            'title' => [
+	                'asc' => [ "$modelTable.title" => SORT_ASC ],
+	                'desc' => [ "$modelTable.title" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Icon'
+	            ],
+	            'active' => [
+	                'asc' => [ "$modelTable.active" => SORT_ASC ],
+	                'desc' => [ "$modelTable.active" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Active'
+	            ],
 	            'renderer' => [
-	                'asc' => [ 'renderer' => SORT_ASC ],
-	                'desc' => ['renderer' => SORT_DESC ],
+	                'asc' => [ "$modelTable.renderer" => SORT_ASC ],
+	                'desc' => [ "$modelTable.renderer" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Renderer'
 	            ],
 	            'frender' => [
-	                'asc' => [ 'fileRender' => SORT_ASC ],
-	                'desc' => ['fileRender' => SORT_DESC ],
+	                'asc' => [  "$modelTable.fileRender" => SORT_ASC ],
+	                'desc' => [ "$modelTable.fileRender" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'File Render'
 	            ],
 	            'layout' => [
-	                'asc' => [ 'layout' => SORT_ASC ],
-	                'desc' => ['layout' => SORT_DESC ],
+	                'asc' => [ "$modelTable.layout" => SORT_ASC ],
+	                'desc' => [ "$modelTable.layout" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Layout'
 	            ],
 	            'lgroup' => [
-	                'asc' => [ 'layoutGroup' => SORT_ASC ],
-	                'desc' => ['layoutGroup' => SORT_DESC ],
+	                'asc' => [ "$modelTable.layoutGroup" => SORT_ASC ],
+	                'desc' => [ "$modelTable.layoutGroup" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Layout Group'
 	            ],
 	            'vpath' => [
-	                'asc' => [ 'viewPath' => SORT_ASC ],
-	                'desc' => ['viewPath' => SORT_DESC ],
+	                'asc' => [ "$modelTable.viewPath" => SORT_ASC ],
+	                'desc' => [ "$modelTable.viewPath" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'View Path'
 	            ],
 	            'cdate' => [
-	                'asc' => [ 'createdAt' => SORT_ASC ],
-	                'desc' => ['createdAt' => SORT_DESC ],
+	                'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Created At'
 	            ],
 	            'udate' => [
-	                'asc' => [ 'modifiedAt' => SORT_ASC ],
-	                'desc' => ['modifiedAt' => SORT_DESC ],
+	                'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Updated At'
 	            ]
@@ -162,24 +196,46 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 		// Query ------------
 
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'query' ] = $modelClass::queryWithHasOne( [ 'ignoreSite' => true ] );
+		}
+
+		$config[ 'ignoreSite' ]		= true;
+		$config[ 'conditions' ][]	= isset( $theme ) ? "$modelTable.themeId={$theme->id} OR $modelTable.siteId={$site->id} OR ($modelTable.themeId IS NULL AND $modelTable.siteId IS NULL)" : "$modelTable.siteId={$site->id} OR ($modelTable.themeId IS NULL AND $modelTable.siteId IS NULL)";
+
 		// Filters ----------
 
-		// Filter - Status
-		$status	= Yii::$app->request->getQueryParam( 'status' );
+		// Params
+		$type	= Yii::$app->request->getQueryParam( 'type' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
-		if( isset( $status ) ) {
+		// Filter - Type
+		if( isset( $type ) ) {
 
-			switch( $status ) {
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
 
-				case 'file': {
+		// Filter - Model
+		if( isset( $filter ) ) {
 
-					$config[ 'conditions' ][ "$modelTable.fileRender" ]	= true;
+			switch( $filter ) {
+
+				case 'active': {
+
+					$config[ 'conditions' ][ "$modelTable.active" ] = true;
 
 					break;
 				}
-				case 'layout': {
+				case 'frender': {
 
-					$config[ 'conditions' ][ "$modelTable.layoutGroup" ]	= true;
+					$config[ 'conditions' ][ "$modelTable.fileRender" ] = true;
+
+					break;
+				}
+				case 'lgroup': {
+
+					$config[ 'conditions' ][ "$modelTable.layoutGroup" ] = true;
 
 					break;
 				}
@@ -192,7 +248,12 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'desc' => "$modelTable.description", 'content' => "$modelTable.content" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'title' => "$modelTable.title",
+				'desc' => "$modelTable.description",
+				'content' => "$modelTable.content"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -200,8 +261,18 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'desc' => "$modelTable.description", 'content' => "$modelTable.content",
-			'file' => "$modelTable.fileRender", 'layout' => "$modelTable.layoutGroup"
+			'name' => "$modelTable.name",
+			'type' => "$modelTable.type",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'active' => "$modelTable.active",
+			'renderer' => "$modelTable.renderer",
+			'frender' => "$modelTable.fileRender",
+			'layout' => "$modelTable.layout",
+			'lgroup' => "$modelTable.layoutGroup",
+			'content' => "$modelTable.content",
+			'cdate' => "$modelTable.createdAt",
+			'udate' => "$modelTable.modifiedAt"
 		];
 
 		// Result -----------
@@ -212,6 +283,20 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 	// Read ---------------
 
 	// Read - Models ---
+
+	public function getGlobalBySlugType( $slug, $type, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::findGlobalBySlugType( $slug, $type, $config );
+	}
+
+	public function getByThemeSlugType( $slug, $type, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		return $modelClass::findByThemeSlugType( $slug, $type, $config );
+	}
 
 	public function getActiveByType( $type ) {
 
@@ -224,20 +309,6 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	// Read - Maps -----
 
-	public function getIdNameMap( $options = [] ) {
-
-		$map = parent::getIdNameMap( $options );
-
-		if( isset( $options[ 'default' ] ) && $options[ 'default' ] ) {
-
-			unset( $options[ 'default' ] );
-
-			$map = ArrayHelper::merge( [ '0' => 'Choose Template' ], $map );
-		}
-
-		return $map;
-	}
-
 	// Read - Others ---
 
 	// Create -------------
@@ -246,26 +317,51 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'icon', 'description', 'renderer', 'fileRender', 'layout', 'layoutGroup', 'viewPath', 'content' , 'active' ];
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'slug', 'icon', 'title', 'description', 'renderer', 'fileRender',
+			'layout', 'layoutGroup', 'viewPath', 'view', 'htmlOptions', 'help', 'content',
+			'classPath', 'dataPath', 'dataForm', 'attributesPath', 'attributesForm',
+			'configPath', 'configForm', 'settingsPath', 'settingsForm'
+		];
+
+		if( $admin ) {
+
+			$attributes[] = 'active';
+		}
 
 		return parent::update( $model, [
 			'attributes' => $attributes
 		]);
 	}
 
-	public function switchFileRender( $model, $config = [] ) {
+	public function toggleActive( $model, $config = [] ) {
 
-		$global			= $model->fileRender ? false : true;
-		$model->fileRender	= $global;
+		$active = $model->active ? false : true;
+
+		$model->fileRender = $active;
+
+		return parent::updateSelective( $model, [
+			'attributes' => [ 'active' ]
+		]);
+ 	}
+
+	public function toggleFileRender( $model, $config = [] ) {
+
+		$global = $model->fileRender ? false : true;
+
+		$model->fileRender = $global;
 
 		return parent::updateSelective( $model, [
 			'attributes' => [ 'fileRender' ]
 		]);
  	}
 
-	public function switchGroupLayout( $model, $config = [] ) {
+	public function toggleGroupLayout( $model, $config = [] ) {
 
-		$global			= $model->layoutGroup ? false : true;
+		$global = $model->layoutGroup ? false : true;
+
 		$model->layoutGroup	= $global;
 
 		return parent::updateSelective( $model, [
@@ -273,15 +369,35 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 		]);
  	}
 
+	// Delete -------------
+
+	// Bulk ---------------
+
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
 
-			case 'status': {
+			case 'model': {
 
 				switch( $action ) {
 
-					case 'file': {
+					case 'active': {
+
+						$model->active = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'inactive': {
+
+						$model->active = false;
+
+						$model->update();
+
+						break;
+					}
+					case 'frender': {
 
 						$model->fileRender = true;
 
@@ -289,7 +405,7 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 						break;
 					}
-					case 'cache': {
+					case 'crender': {
 
 						$model->fileRender = false;
 
@@ -313,14 +429,6 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 
 						break;
 					}
-				}
-
-				break;
-			}
-			case 'model': {
-
-				switch( $action ) {
-
 					case 'delete': {
 
 						$this->delete( $model );
@@ -334,7 +442,11 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 		}
 	}
 
-	// Delete -------------
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 
@@ -349,6 +461,21 @@ class TemplateService extends \cmsgears\core\common\services\base\EntityService 
 	// Read - Models ---
 
 	// Read - Lists ----
+
+	public static function generateNameValueList( $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+		$modelTable = $modelClass::tableName();
+
+		$site	= Yii::$app->core->site;
+		$theme	= $site->theme;
+
+		$config[ 'ignoreSite' ] = true;
+
+		$config[ 'conditions' ][] = isset( $theme ) ? "$modelTable.themeId={$theme->id} OR $modelTable.siteId={$site->id} OR ($modelTable.themeId IS NULL AND $modelTable.siteId IS NULL)" : "$modelTable.siteId={$site->id} OR ($modelTable.themeId IS NULL AND $modelTable.siteId IS NULL)";
+
+		return parent::generateNameValueList( $config );
+	}
 
 	// Read - Maps -----
 

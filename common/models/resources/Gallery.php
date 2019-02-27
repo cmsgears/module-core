@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
@@ -11,41 +19,70 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\interfaces\IOwner;
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\Site;
+use cmsgears\core\common\models\interfaces\base\IApproval;
+use cmsgears\core\common\models\interfaces\base\IAuthor;
+use cmsgears\core\common\models\interfaces\base\IFeatured;
+use cmsgears\core\common\models\interfaces\base\IMultiSite;
+use cmsgears\core\common\models\interfaces\base\INameType;
+use cmsgears\core\common\models\interfaces\base\IOwner;
+use cmsgears\core\common\models\interfaces\base\ISlugType;
+use cmsgears\core\common\models\interfaces\base\IVisibility;
+use cmsgears\core\common\models\interfaces\resources\IData;
+use cmsgears\core\common\models\interfaces\resources\IGridCache;
+use cmsgears\core\common\models\interfaces\resources\IModelMeta;
+use cmsgears\core\common\models\interfaces\resources\ITemplate;
+use cmsgears\core\common\models\interfaces\mappers\IFile;
 
-use cmsgears\core\common\models\traits\CreateModifyTrait;
-use cmsgears\core\common\models\traits\NameTypeTrait;
-use cmsgears\core\common\models\traits\SlugTypeTrait;
-use cmsgears\core\common\models\traits\interfaces\OwnerTrait;
-use cmsgears\core\common\models\traits\resources\MetaTrait;
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\Resource;
+
+use cmsgears\core\common\models\traits\base\ApprovalTrait;
+use cmsgears\core\common\models\traits\base\AuthorTrait;
+use cmsgears\core\common\models\traits\base\FeaturedTrait;
+use cmsgears\core\common\models\traits\base\MultiSiteTrait;
+use cmsgears\core\common\models\traits\base\NameTypeTrait;
+use cmsgears\core\common\models\traits\base\OwnerTrait;
+use cmsgears\core\common\models\traits\base\SlugTypeTrait;
+use cmsgears\core\common\models\traits\base\VisibilityTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\resources\GridCacheTrait;
+use cmsgears\core\common\models\traits\resources\ModelMetaTrait;
+use cmsgears\core\common\models\traits\resources\TemplateTrait;
 use cmsgears\core\common\models\traits\mappers\FileTrait;
-use cmsgears\core\common\models\traits\mappers\TemplateTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
 /**
- * Gallery Entity - The primary class.
+ * Gallery can be used to group files especially images.
  *
- * @property long $id
- * @property long $siteId
- * @property long $templateId
- * @property long $createdBy
- * @property long $modifiedBy
+ * @property integer $id
+ * @property integer $siteId
+ * @property integer $templateId
+ * @property integer $createdBy
+ * @property integer $modifiedBy
  * @property string $name
  * @property string $slug
  * @property string $type
+ * @property string $icon
  * @property string $title
  * @property string $description
- * @property short	$active
+ * @property integer $status
+ * @property integer $visibility
+ * @property integer $order
+ * @property boolean $pinned
+ * @property boolean $featured
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $content
  * @property string $data
+ * @property string $gridCache
+ * @property boolean $gridCacheValid
+ * @property datetime $gridCachedAt
+ *
+ * @since 1.0.0
  */
-class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwner {
+class Gallery extends Resource implements IApproval, IAuthor, IData, IFeatured, IFile, IGridCache, IModelMeta, IMultiSite,
+	INameType, IOwner, ISlugType, ITemplate, IVisibility {
 
 	// Variables ---------------------------------------------------
 
@@ -53,32 +90,39 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwn
 
 	// Constants --------------
 
+	const TYPE_IMAGE	= 'image';
+	const TYPE_AUDIO	= 'audio';
+	const TYPE_VIDEO	= 'video';
+
 	// Public -----------------
 
 	// Protected --------------
-
-	public static $multiSite	= true;
 
 	// Variables -----------------------------
 
 	// Public -----------------
 
-	public $modelType	= CoreGlobal::TYPE_GALLERY;
-
 	// Protected --------------
+
+	protected $modelType = CoreGlobal::TYPE_GALLERY;
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
-	use CreateModifyTrait;
+	use ApprovalTrait;
+	use AuthorTrait;
 	use DataTrait;
+	use FeaturedTrait;
 	use FileTrait;
-	use MetaTrait;
+	use GridCacheTrait;
+	use ModelMetaTrait;
+	use MultiSiteTrait;
 	use NameTypeTrait;
 	use OwnerTrait;
 	use SlugTypeTrait;
 	use TemplateTrait;
+	use VisibilityTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -97,17 +141,18 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwn
 
 		return [
 			'authorBehavior' => [
-				'class' => AuthorBehavior::className()
+				'class' => AuthorBehavior::class
 			],
 			'sluggableBehavior' => [
-				'class' => SluggableBehavior::className(),
+				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
-				'slugAttribute' => 'slug',
+				'slugAttribute' => 'slug', // Unique for Site Id
 				'immutable' => true,
-				'ensureUnique' => true
+				'ensureUnique' => true,
+				'uniqueValidator' => [ 'targetAttribute' => [ 'siteId', 'slug' ] ]
 			],
 			'timestampBehavior' => [
-				'class' => TimestampBehavior::className(),
+				'class' => TimestampBehavior::class,
 				'createdAtAttribute' => 'createdAt',
 				'updatedAtAttribute' => 'modifiedAt',
 				'value' => new Expression('NOW()')
@@ -122,27 +167,32 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwn
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'name' ], 'required' ],
-			[ [ 'id', 'content', 'data' ], 'safe' ],
+			[ [ 'siteId', 'name' ], 'required' ],
+			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
+			// Unique
+			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'slug' ] ],
 			// Text Limit
 			[ 'type', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'icon', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ [ 'name', 'title' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'slug', 'description' ], 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ 'slug', 'string', 'min' => 0, 'max' => Yii::$app->core->xxLargeText ],
+			[ 'title', 'string', 'min' => 0, 'max' => Yii::$app->core->xxxLargeText ],
+			[ 'description', 'string', 'min' => 0, 'max' => Yii::$app->core->xtraLargeText ],
 			//Other
-			[ 'active', 'boolean' ],
-			[ [ 'templateId' ], 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'pinned', 'featured', 'gridCacheValid' ], 'boolean' ],
+			[ 'templateId', 'number', 'integerOnly' => true, 'min' => 0, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ [ 'status', 'visibility' ], 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
-		// trim if required
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'description', 'title' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'title', 'description' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -161,14 +211,25 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwn
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
 			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
+			'status' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_STATUS ),
+			'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
+			'pinned' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PINNED ),
+			'featured' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FEATURED ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
+			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
 		];
 	}
 
 	// yii\db\BaseActiveRecord
 
+	/**
+	 * @inheritdoc
+	 */
 	public function beforeSave( $insert ) {
 
 		if( parent::beforeSave( $insert ) ) {
@@ -193,22 +254,6 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwn
 	// Gallery -------------------------------
 
 	/**
-	 * @return Site
-	 */
-	public function getSite() {
-
-		return $this->hasOne( Site::className(), [ 'id' => 'siteId' ] );
-	}
-
-	/**
-	 * @return string representation of flag
-	 */
-	public function getActiveStr() {
-
-		return Yii::$app->formatter->asBoolean( $this->active );
-	}
-
-	/**
 	 * THe method belongsTo check whether the gallery belongs to given model. The model must have galleryId column.
 	 * @return boolean
 	 */
@@ -228,7 +273,7 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwn
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_GALLERY;
+		return CoreTables::getTableName( CoreTables::TABLE_GALLERY );
 	}
 
 	// CMG parent classes --------------------
@@ -237,17 +282,13 @@ class Gallery extends \cmsgears\core\common\models\base\Resource implements IOwn
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'site', 'template', 'creator', 'modifier' ];
 		$config[ 'relations' ]	= $relations;
-
-		return parent::queryWithAll( $config );
-	}
-
-	public static function queryWithSite( $config = [] ) {
-
-		$config[ 'relations' ]	= [ 'site' ];
 
 		return parent::queryWithAll( $config );
 	}

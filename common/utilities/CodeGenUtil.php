@@ -2,7 +2,7 @@
 namespace cmsgears\core\common\utilities;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
 
@@ -255,6 +255,18 @@ class CodeGenUtil {
 		return $listItems;
 	}
 
+	public static function getRange( $start, $end ) {
+
+		$arr = [];
+
+		for( $i = $start; $i <= $end; $i++ ) {
+
+			$arr[ $i ] = $i;
+		}
+
+		return $arr;
+	}
+
 	public static function getRangeOptions( $start, $end, $selected = null ) {
 
 		$options = '';
@@ -329,7 +341,7 @@ class CodeGenUtil {
 
 				$image	= $options[ 'image' ];
 
-				return Yii::getAlias( '@images' ) . "/$image";
+				return Url::toRoute( [ "/images/$image" ], true );
 			}
 		}
 		else {
@@ -348,7 +360,7 @@ class CodeGenUtil {
 
 				$image	= $options[ 'image' ];
 
-				return Yii::getAlias( '@images' ) . "/$image";
+				return Url::toRoute( [ "/images/$image" ], true );
 			}
 		}
 		else {
@@ -367,7 +379,7 @@ class CodeGenUtil {
 
 				$image	= $options[ 'image' ];
 
-				return Yii::getAlias( '@images' ) . "/$image";
+				return Url::toRoute( [ "/images/$image" ], true );
 			}
 		}
 		else {
@@ -383,13 +395,13 @@ class CodeGenUtil {
 		$descLimit		= isset( $config[ 'descLimit' ] ) ? $config[ 'descLimit' ] : 160;
 		$keywordsLimit	= isset( $config[ 'keywordsLimit' ] ) ? $config[ 'keywordsLimit' ] : 10;
 
-		$metaContent	= '';
+		$metaContent = '';
 
 		if( isset( $params[ 'desc' ] ) ) {
 
-			$description	= $params[ 'desc' ];
+			$description = $params[ 'desc' ];
 
-			$description	= filter_var( $description, FILTER_SANITIZE_STRING );
+			$description = filter_var( $description, FILTER_SANITIZE_STRING );
 
 			// SEO Limit - 160
 			if( strlen( $description ) > $descLimit ) {
@@ -397,28 +409,29 @@ class CodeGenUtil {
 				$description = substr( $description, 0, $descLimit );
 			}
 
-			$metaContent	.= "<meta name='description' content='$description' />";
+			$metaContent .= "<meta name=\"description\" content=\"$description\" />";
 		}
 
 		if( isset( $params[ 'keywords' ] ) ) {
 
-			$keywords		= $params[ 'keywords' ];
-			$keywords		= preg_split( "/,/", $keywords );
+			$keywords	= $params[ 'keywords' ];
+			$keywords	= preg_split( "/,/", $keywords );
 
 			if( count( $keywords ) > $keywordsLimit ) {
 
-				$keywords	= array_slice( $keywords, 0, $keywordsLimit );
+				$keywords = array_slice( $keywords, 0, $keywordsLimit );
 			}
 
-			$keywords		= join( ',', $keywords );
+			$keywords = join( ',', $keywords );
 
-			$metaContent	.= "<meta name='keywords' content='$keywords' />";
+			$metaContent .= "<meta name=\"keywords\" content=\"$keywords\" />";
 		}
 
 		if( isset( $params[ 'robot' ] ) ) {
 
-			$robot			= $params[ 'robot' ];
-			$metaContent	.= "<meta name='robots' content='$robot' />";
+			$robot = $params[ 'robot' ];
+
+			$metaContent .= "<meta name=\"robots\" content=\"$robot\" />";
 		}
 
 		return $metaContent;
@@ -428,8 +441,9 @@ class CodeGenUtil {
 
 		if( isset( $params[ 'summary' ] ) ) {
 
-			$summary	= $params[ 'summary' ];
-			$seoH1		= "<h1 class='hidden'>$summary</h1>";
+			$summary = $params[ 'summary' ];
+
+			$seoH1 = "<h1 class=\"hidden\">$summary</h1>";
 
 			return $seoH1;
 		}
@@ -502,6 +516,8 @@ class CodeGenUtil {
 
 			return substr( $content, 0, $limit );
 		}
+
+		return $content;
 	}
 
 	public static function isAbsolutePath( $path, $alias = true ) {
@@ -513,4 +529,252 @@ class CodeGenUtil {
 
 		return $path[1] === ':' || $path[0] === '/';
 	}
+
+	public static function compressStyles( $styles ) {
+
+		$compressed = preg_replace( '!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $styles );
+		$compressed = str_replace( ': ', ':', $styles );
+		$compressed = str_replace( '; ', ';', $styles );
+		$compressed = str_replace( '{ ', '{', $styles );
+		$compressed = str_replace( array( "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ), '', $styles );
+
+		return $compressed;
+	}
+
+	public static function generateRandomString( $length = 8, $uc = true, $num = true, $special = false ) {
+
+		$source = 'abcdefghijklmnopqrstuvwxyz';
+		$str	= '';
+
+		if( $uc ) {
+
+			$source .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+		}
+
+		if( $num ) {
+
+			$source .= '0123456789';
+		}
+
+		if( $special ) {
+
+			$source .= '~@#$%^*()_±={}|][';
+		}
+
+		$max = strlen( $source ) - 1;
+
+		for( $i = 0; $i < $length; $i++ ) {
+
+			$str .= $source[ ( mt_rand( 0, $max ) ) ];
+		}
+
+		return $str;
+	}
+
+	public static function generateNestedSetLists( $nestedSet, $config = [] ) {
+
+		$wrap		= isset( $config[ 'wrap' ] ) ? $config[ 'wrap' ] : false;
+		$url		= isset( $config[ 'url' ] ) ? $config[ 'url' ] : false;
+		$slug		= isset( $config[ 'slug' ] ) ? $config[ 'slug' ] : false;
+		$urlBase	= isset( $config[ 'urlBase' ] ) ? $config[ 'urlBase' ] : null;
+
+		$rootId = 0;
+		$depth	= 0;
+		$change	= false;
+		$child	= false;
+		$cstart	= false;
+
+		$result = $wrap ? '<ul>' : '';
+
+		foreach( $nestedSet as $element ) {
+
+			$entry = $element[ 'name' ];
+
+			if( $url ) {
+
+				if( $slug ) {
+
+					$eslug = $element[ 'slug' ];
+
+					$entry = "<a href=\"$urlBase/$eslug\">$entry</a>";
+				}
+				else {
+
+					$eid = $element[ 'id' ];
+
+					$entry = "<a href=\"$urlBase?id=$eid\">$entry</a>";
+				}
+			}
+
+			if( $element[ 'rootId' ] != $rootId ) {
+
+				if( $depth > 0 ) {
+
+					if( $child ) {
+
+						$result .= '</ul></li>';
+					}
+					else {
+
+						$result .= '</li>';
+					}
+				}
+
+				$depth	= 0;
+				$rootId	= $element[ 'rootId' ];
+				$change	= true;
+				$child	= false;
+			}
+			else {
+
+				if( $depth == 0 ) {
+
+					$cstart = true;
+				}
+				else {
+
+					$cstart = false;
+				}
+
+				$depth	= $element[ 'depth' ];
+				$change	= false;
+				$end	= false;
+				$child	= true;
+			}
+
+			if( $change ) {
+
+				$result .= '<li>' . $entry;
+			}
+			else {
+
+				if( $cstart ) {
+
+					$result .= '<ul>';
+				}
+
+				$result .= '<li>' . $entry . '</li>';
+			}
+		}
+
+		if( count( $nestedSet ) > 0 ) {
+
+			if( $depth > 0 ) {
+
+				$result .= '</ul></li>';
+			}
+			else {
+
+				$result .= '</li>';
+			}
+		}
+
+		$result .= $wrap ? '</ul>' : '';
+
+		return $result;
+	}
+
+	public static function generateNestedSetMenu( $nestedSet, $config = [] ) {
+
+		$wrap		= isset( $config[ 'wrap' ] ) ? $config[ 'wrap' ] : false;
+		$url		= isset( $config[ 'url' ] ) ? $config[ 'url' ] : false;
+		$slug		= isset( $config[ 'slug' ] ) ? $config[ 'slug' ] : false;
+		$urlBase	= isset( $config[ 'urlBase' ] ) ? $config[ 'urlBase' ] : null;
+
+		$rootId = 0;
+		$depth	= 0;
+		$change	= false;
+		$child	= false;
+		$cstart	= false;
+
+		$result = $wrap ? '<ul>' : '';
+
+		foreach( $nestedSet as $element ) {
+
+			$entry = $element[ 'name' ];
+
+			if( $url ) {
+
+				if( $slug ) {
+
+					$eslug = $element[ 'slug' ];
+
+					$entry = "<a href=\"$urlBase/$eslug\">$entry</a>";
+				}
+				else {
+
+					$eid = $element[ 'id' ];
+
+					$entry = "<a href=\"$urlBase?id=$eid\">$entry</a>";
+				}
+			}
+
+			if( $element[ 'rootId' ] != $rootId ) {
+
+				if( $depth > 0 ) {
+
+					if( $child ) {
+
+						$result .= '</span></li>';
+					}
+					else {
+
+						$result .= '</li>';
+					}
+				}
+
+				$depth	= 0;
+				$rootId	= $element[ 'rootId' ];
+				$change	= true;
+				$child	= false;
+			}
+			else {
+
+				if( $depth == 0 ) {
+
+					$cstart = true;
+				}
+				else {
+
+					$cstart = false;
+				}
+
+				$depth	= $element[ 'depth' ];
+				$change	= false;
+				$end	= false;
+				$child	= true;
+			}
+
+			if( $change ) {
+
+				$result .= '<li>' . $entry;
+			}
+			else {
+
+				if( $cstart ) {
+
+					$result .= '<span class="inline-block list-caret"><i class="cmti cmti-angle-down"></i></span><span class="nav-sub">';
+				}
+
+				$result .= '<span>' . $entry . '</span>';
+			}
+		}
+
+		if( count( $nestedSet ) > 0 ) {
+
+			if( $depth > 0 ) {
+
+				$result .= '</span></li>';
+			}
+			else {
+
+				$result .= '</li>';
+			}
+		}
+
+		$result .= $wrap ? '</ul>' : '';
+
+		return $result;
+	}
+
 }

@@ -1,7 +1,24 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\interfaces\resources;
 
-interface IModelCommentService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
+// CMG Imports
+use cmsgears\core\common\services\interfaces\base\IModelResourceService;
+use cmsgears\core\common\services\interfaces\resources\IData;
+
+/**
+ * IModelCommentService provide service methods for model comment.
+ *
+ * @since 1.0.0
+ */
+interface IModelCommentService extends IModelResourceService, IData {
 
 	// Data Provider ------
 
@@ -25,19 +42,19 @@ interface IModelCommentService extends \cmsgears\core\common\services\interfaces
 
 	public function isExistByUser( $parentId, $parentType );
 
-	public function getByParentConfig( $parentId, $config = [] );
-
-	public function getByParentTypeConfig( $parentType, $config = [] );
-
 	public function getByBaseId( $baseId, $config = [] );
 
 	public function isExistByEmail( $email );
 
 	public function getByEmail( $email );
 
+	public function getFeaturedByType( $parentId, $parentType, $type, $config = [] );
+
 	// Read - Lists ----
 
 	// Read - Maps -----
+
+	// Read - Others ---
 
 	// Create -------------
 
@@ -55,10 +72,18 @@ interface IModelCommentService extends \cmsgears\core\common\services\interfaces
 
 	public function markTrash( $model );
 
-	public function updateSpamRequest( $model );
+	public function updateSpamRequest( $model, $value = true );
 
-	public function updateDeleteRequest( $model );
+	public function updateDeleteRequest( $model, $value = true );
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 }

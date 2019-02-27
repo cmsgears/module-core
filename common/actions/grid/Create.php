@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\grid;
 
 // Yii Imports
@@ -7,9 +15,16 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\base\Action;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
-class Create extends \cmsgears\core\common\base\Action {
+/**
+ * Create action adds new model.
+ *
+ * @since 1.0.0
+ */
+class Create extends Action {
 
 	// Variables ---------------------------------------------------
 
@@ -63,7 +78,7 @@ class Create extends \cmsgears\core\common\base\Action {
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->modelService->create( $model );
+			$this->controller->model = $this->modelService->create( $model );
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $model );
@@ -75,4 +90,5 @@ class Create extends \cmsgears\core\common\base\Action {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ), $errors );
 	}
+
 }

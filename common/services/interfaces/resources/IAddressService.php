@@ -1,13 +1,23 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\interfaces\resources;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\services\interfaces\base\IResourceService;
 
-interface IAddressService extends \cmsgears\core\common\services\interfaces\base\IEntityService {
+/**
+ * IAddressService provide service methods for address model.
+ *
+ * @since 1.0.0
+ */
+interface IAddressService extends IResourceService {
 
 	// Data Provider ------
 
@@ -19,10 +29,20 @@ interface IAddressService extends \cmsgears\core\common\services\interfaces\base
 
 	// Read - Maps -----
 
+	// Read - Others ---
+
 	// Create -------------
 
 	// Update -------------
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 }

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers;
 
 // Yii Imports
@@ -10,6 +18,11 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\ModelComment;
 
+/**
+ * CommentController provides actions specific to comment model categorized for testimonials.
+ *
+ * @since 1.0.0
+ */
 class TestimonialController extends \cmsgears\core\admin\controllers\base\CommentController {
 
 	// Variables ---------------------------------------------------
@@ -29,24 +42,28 @@ class TestimonialController extends \cmsgears\core\admin\controllers\base\Commen
 		parent::init();
 
 		// Config
-		$this->parentType		= CoreGlobal::TYPE_SITE;
-		$this->commentType		= ModelComment::TYPE_TESTIMONIAL;
+		$this->parentType	= CoreGlobal::TYPE_SITE;
+		$this->commentType	= ModelComment::TYPE_TESTIMONIAL;
+		$this->apixBase		= 'core/comment';
+		$this->parentUrl	= '/core/sites/update?id=';
+		$this->urlKey		= 'testimonials';
+		$this->title		= 'Testimonial';
 
 		// Services
-		$this->parentService	= Yii::$app->factory->get( 'siteService' );
-
-		// Comment Url
-		$this->commentUrl		= 'testimonial';
+		$this->parentService = Yii::$app->factory->get( 'siteService' );
 
 		// Sidebar
-		$this->sidebar			= [ 'parent' => 'sidebar-core', 'child' => 'testimonials' ];
+		$this->sidebar = [ 'parent' => 'sidebar-core', 'child' => 'testimonials' ];
 
 		// Return Url
-		$this->returnUrl		= Url::previous( $this->commentUrl );
-		$this->returnUrl		= isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/testimonial/all' ], true );
+		$this->returnUrl = Url::previous( $this->urlKey );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/testimonial/all' ], true );
 
 		// Breadcrumbs
-		$this->breadcrumbs		= [
+		$this->breadcrumbs = [
+			'base' => [
+				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
+			],
 			'all' => [ [ 'label' => 'Testimonials' ] ],
 			'create' => [ [ 'label' => 'Testimonials', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
 			'update' => [ [ 'label' => 'Testimonials', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],

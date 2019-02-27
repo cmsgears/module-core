@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
@@ -8,18 +16,18 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\mappers\ModelTag;
-
-use cmsgears\core\common\services\base\EntityService;
 use cmsgears\core\common\services\interfaces\resources\ITagService;
-use cmsgears\core\common\services\traits\NameTypeTrait;
-use cmsgears\core\common\services\traits\SlugTypeTrait;
+
+use cmsgears\core\common\services\traits\base\NameTypeTrait;
+use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
- * The class TagService is base class to perform database activities for Tag Entity.
+ * TagService provide service methods of tag model.
+ *
+ * @since 1.0.0
  */
-class TagService extends EntityService implements ITagService {
+class TagService extends \cmsgears\core\common\services\base\ResourceService implements ITagService {
 
 	// Variables ---------------------------------------------------
 
@@ -29,13 +37,11 @@ class TagService extends EntityService implements ITagService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\Tag';
+	public static $modelClass = '\cmsgears\core\common\models\resources\Tag';
 
-	public static $modelTable	= CoreTables::TABLE_TAG;
+	public static $typed = true;
 
-	public static $typed		= true;
-
-	public static $parentType	= CoreGlobal::TYPE_TAG;
+	public static $parentType = CoreGlobal::TYPE_TAG;
 
 	// Protected --------------
 
@@ -49,6 +55,7 @@ class TagService extends EntityService implements ITagService {
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 
@@ -70,24 +77,60 @@ class TagService extends EntityService implements ITagService {
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
 				'id' => [
-					'asc' => [ 'id' => SORT_ASC ],
-					'desc' => [ 'id' => SORT_DESC ],
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
 				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'Name',
+					'label' => 'Name'
+				],
+				'slug' => [
+					'asc' => [ "$modelTable.slug" => SORT_ASC ],
+					'desc' => [ "$modelTable.slug" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Slug'
+				],
+	            'type' => [
+	                'asc' => [ "$modelTable.type" => SORT_ASC ],
+	                'desc' => [ "$modelTable.type" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Type'
+	            ],
+	            'icon' => [
+	                'asc' => [ "$modelTable.icon" => SORT_ASC ],
+	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Icon'
+	            ],
+	            'title' => [
+	                'asc' => [ "$modelTable.title" => SORT_ASC ],
+	                'desc' => [ "$modelTable.title" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Title'
+	            ],
+				'cdate' => [
+					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Created At'
+				],
+				'udate' => [
+					'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Updated At'
 				]
 			],
 			'defaultOrder' => [
@@ -109,13 +152,26 @@ class TagService extends EntityService implements ITagService {
 
 		// Filters ----------
 
+		// Params
+		$type = Yii::$app->request->getQueryParam( 'type' );
+
+		// Filter - Type
+		if( isset( $type ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
+
 		// Searching --------
 
 		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name",  'title' =>  "$modelTable.title", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'title' => "$modelTable.title",
+				'desc' => "$modelTable.description"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -123,7 +179,9 @@ class TagService extends EntityService implements ITagService {
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'template' => "$modelTable.template",  'active' => "$modelTable.active"
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description"
 		];
 
 		// Result -----------
@@ -147,12 +205,25 @@ class TagService extends EntityService implements ITagService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'icon', 'description' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'slug', 'icon', 'title', 'description' ];
 
 		return parent::update( $model, [
 			'attributes' => $attributes
 		]);
 	}
+
+	// Delete -------------
+
+	public function delete( $model, $config = [] ) {
+
+		// Delete mappings
+		Yii::$app->factory->get( 'modelTagService' )->deleteByModelId( $model->id );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -175,16 +246,11 @@ class TagService extends EntityService implements ITagService {
 		}
 	}
 
-	// Delete -------------
+	// Notifications ------
 
-	public function delete( $model, $config = [] ) {
+	// Cache --------------
 
-		// Delete mapping
-		ModelTag::deleteByModelId( $model->id );
-
-		// Delete model
-		return parent::delete( $model, $config );
-	}
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

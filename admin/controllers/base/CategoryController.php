@@ -1,14 +1,28 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
 use Yii;
-use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-abstract class CategoryController extends \cmsgears\core\admin\controllers\base\CrudController {
+use cmsgears\core\admin\controllers\base\CrudController;
+
+/**
+ * CategoryController is base controller for actions specific to category model.
+ *
+ * @since 1.0.0
+ */
+abstract class CategoryController extends CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -16,9 +30,10 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 	// Public -----------------
 
-	// Protected --------------
+	public $title;
+	public $type;
 
-	protected $type;
+	// Protected --------------
 
 	// Private ----------------
 
@@ -32,13 +47,14 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 		$this->setViewPath( '@cmsgears/module-core/admin/views/category' );
 
 		// Permission
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
+		$this->crudPermission = CoreGlobal::PERM_CORE;
+
+		// Config
+		$this->title	= CoreGlobal::TYPE_SITE;
+		$this->type		= CoreGlobal::TYPE_SITE;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'categoryService' );
-
-		// Type
-		$this->type				= CoreGlobal::TYPE_SITE;
+		$this->modelService = Yii::$app->factory->get( 'categoryService' );
 
 		// Notes: Configure sidebar and returnUrl exclusively in child classes. We can also change type in child classes.
 	}
@@ -59,91 +75,32 @@ abstract class CategoryController extends \cmsgears\core\admin\controllers\base\
 
 	// CategoryController --------------------
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
 		$dataProvider = $this->modelService->getPageByType( $this->type );
 
 		return $this->render( 'all', [
-			 'dataProvider' => $dataProvider
+			'dataProvider' => $dataProvider
 		]);
 	}
 
-	public function actionCreate() {
+	public function actionCreate( $config = [] ) {
 
-		$modelClass		= $this->modelService->getModelClass();
-		$model			= new $modelClass;
+		$model = $this->modelService->getModelObject();
+
 		$model->type	= $this->type;
 		$model->siteId	= Yii::$app->core->siteId;
 
-		if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->modelService->create( $model );
+			$this->model = $this->modelService->create( $model, [ 'admin' => true ] );
 
-			return $this->redirect( "update?id=$model->id" );
+			return $this->redirect( 'all' );
 		}
 
-		$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
-
 		return $this->render( 'create', [
-			'model' => $model,
-			'categoryMap' => $categoryMap
+			'model' => $model
 		]);
 	}
 
-	public function actionUpdate( $id ) {
-
-		// Find Model
-		$model	= $this->modelService->getById( $id );
-
-		// Update/Render if exist
-		if( isset( $model ) ) {
-
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
-
-				$this->modelService->update( $model );
-
-				return $this->refresh();
-			}
-
-			$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [
-									'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ],
-									'filters' => [ [ 'not in', 'id', [ $id ] ] ]
-								]);
-
-			return $this->render( 'update', [
-				'model' => $model,
-				'categoryMap' => $categoryMap
-			]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
-
-	public function actionDelete( $id ) {
-
-		// Find Model
-		$model	= $this->modelService->getById( $id );
-
-		// Delete/Render if exist
-		if( isset( $model ) ) {
-
-			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) ) {
-
-				$this->modelService->delete( $model );
-
-				return $this->redirect( $this->returnUrl );
-			}
-
-			$categoryMap	= $this->modelService->getIdNameMapByType( $this->type, [ 'prepend' => [ [ 'name' => 'Choose Category', 'id' => 0 ] ] ] );
-
-			return $this->render( 'delete', [
-				'model' => $model,
-				'categoryMap' => $categoryMap
-			]);
-		}
-
-		// Model not found
-		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
 }

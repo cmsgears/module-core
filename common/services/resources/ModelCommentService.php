@@ -1,27 +1,38 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\ModelComment;
 
 use cmsgears\files\components\FileManager;
 
 use cmsgears\core\common\services\interfaces\resources\IModelCommentService;
-use cmsgears\core\common\services\traits\ResourceTrait;
+
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 use cmsgears\core\common\utilities\DateUtil;
 
 /**
- * The class ModelCommentService is base class to perform database activities for ModelComment Entity.
+ * ModelCommentService provide service methods of model comment.
+ *
+ * @since 1.0.0
  */
-class ModelCommentService extends \cmsgears\core\common\services\base\EntityService implements IModelCommentService {
+class ModelCommentService extends \cmsgears\core\common\services\base\ModelResourceService implements IModelCommentService {
 
 	// Variables ---------------------------------------------------
 
@@ -31,11 +42,9 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelComment';
+	public static $modelClass = '\cmsgears\core\common\models\resources\ModelComment';
 
-	public static $modelTable	= CoreTables::TABLE_MODEL_COMMENT;
-
-	public static $parentType	= CoreGlobal::TYPE_COMMENT;
+	public static $parentType = CoreGlobal::TYPE_COMMENT;
 
 	// Protected --------------
 
@@ -52,7 +61,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Traits ------------------------------------------------------
 
-	use ResourceTrait;
+	use DataTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -80,25 +89,27 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$userTable = Yii::$app->factory->get( 'userService' )->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
 				'id' => [
-					'asc' => [ 'id' => SORT_ASC ],
-					'desc' => [ 'id' => SORT_DESC ],
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
-				'user' => [
-					'asc' => [ "creator.firstName" => SORT_ASC, "creator.lastName" => SORT_ASC ],
-					'desc' => [ "creator.firstName" => SORT_DESC, "creator.lastName" => SORT_DESC ],
+	            'user' => [
+					'asc' => [ "$userTable.name" => SORT_ASC ],
+					'desc' => [ "$userTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'User'
-				],
+	                'label' => 'User'
+	            ],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
@@ -128,6 +139,12 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 					'desc' => [ "$modelTable.rating" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Rating'
+				],
+				'pinned' => [
+					'asc' => [ "$modelTable.pinned" => SORT_ASC ],
+					'desc' => [ "$modelTable.pinned" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Pinned'
 				],
 				'featured' => [
 					'asc' => [ "$modelTable.featured" => SORT_ASC ],
@@ -173,6 +190,36 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 		// Filters ----------
 
+		// Params
+		$status	= Yii::$app->request->getQueryParam( 'status' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
+
+		// Filter - Status
+		if( isset( $status ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.status" ]	= $modelClass::$urlRevStatusMap[ $status ];
+		}
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'pinned': {
+
+					$config[ 'conditions' ][ "$modelTable.pinned" ] = true;
+
+					break;
+				}
+				case 'featured': {
+
+					$config[ 'conditions' ][ "$modelTable.featured" ] = true;
+
+					break;
+				}
+			}
+		}
+
 		// Searching --------
 
 		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
@@ -180,8 +227,10 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 		if( isset( $searchCol ) ) {
 
 			$search = [
-				'user' => "concat(creator.firstName,creator.lastName)", 'name' => "$modelTable.name",
-				'email' =>  "$modelTable.email", 'content' => "$modelTable.content"
+				'user' => "concat(creator.firstName, ' ', creator.lastName)",
+				'name' => "$modelTable.name",
+				'email' =>  "$modelTable.email",
+				'content' => "$modelTable.content"
 			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
@@ -190,9 +239,13 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'user' => "concat(creator.firstName,creator.lastName)", 'name' => "$modelTable.name",
-			'email' => "$modelTable.email", 'content' => "$modelTable.content",
-			'status' => "$modelTable.status", 'rating' => "$modelTable.rating", 'featured' => "$modelTable.featured"
+			'user' => "concat(creator.firstName, ' ', creator.lastName)",
+			'name' => "$modelTable.name",
+			'email' => "$modelTable.email",
+			'content' => "$modelTable.content",
+			'status' => "$modelTable.status",
+			'rating' => "$modelTable.rating",
+			'featured' => "$modelTable.featured"
 		];
 
 		// Result -----------
@@ -216,8 +269,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 	}
 
 	public function getCommentPageByParent( $parentId, $parentType, $config = [] ) {
-        
-        $modelTable  = self::$modelTable;
+
+        $modelTable	= $this->getModelTable();
 
 		$config[ 'conditions' ][ "$modelTable.type" ] = ModelComment::TYPE_COMMENT;
 
@@ -225,8 +278,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 	}
 
 	public function getReviewPageByParent( $parentId, $parentType, $config = [] ) {
-        
-        $modelTable  = self::$modelTable;
+
+       $modelTable	= $this->getModelTable();
 
 		$config[ 'conditions' ][ "$modelTable.type" ] = ModelComment::TYPE_REVIEW;
 
@@ -259,7 +312,7 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 	 */
 	public function getPageForApproved( $config = [] ) {
 
-		$modelTable = self::$modelTable;
+		$modelTable	= $this->getModelTable();
 		$topLevel	= isset( $config[ 'topLevel' ] ) ? $config[ 'topLevel' ] : true;
 
 		if( $topLevel ) {
@@ -276,10 +329,21 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Read - Models ---
 
+	/**
+	 * It returns immediate child comments for given base id.
+	 */
+	public function getByBaseId( $baseId, $config = [] ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::queryByBaseId( $baseId, $config )->all();
+	}
+
 	public function getByUser( $parentId, $parentType ) {
 
 		$modelClass	= self::$modelClass;
-		$user		= Yii::$app->user->getIdentity();
+
+		$user = Yii::$app->user->getIdentity();
 
 		return $modelClass::findByUser( $parentId, $parentType, $user->id );
 	}
@@ -287,7 +351,8 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 	public function isExistByUser( $parentId, $parentType ) {
 
 		$modelClass	= self::$modelClass;
-		$user		= Yii::$app->user->getIdentity();
+
+		$user = Yii::$app->user->getIdentity();
 
 		if( isset( $user ) ) {
 
@@ -295,24 +360,6 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 		}
 
 		return false;
-	}
-
-	public function getByParentConfig( $parentId, $config = [] ) {
-
-		return ModelComment::queryByParentConfig( $parentId, $config )->andWhere( [ 'baseId' => null ] )->all();
-	}
-
-	public function getByParentTypeConfig( $parentType, $config = [] ) {
-
-		return ModelComment::queryByParentTypeConfig( $parentType, $config )->andWhere( [ 'baseId' => null ] )->all();
-	}
-
-	/**
-	 * It returns child comments for given base id.
-	 */
-	public function getByBaseId( $baseId, $config = [] ) {
-
-		return ModelComment::queryByBaseId( $baseId, $config )->all();
 	}
 
 	/**
@@ -325,7 +372,24 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	public function getByEmail( $email ) {
 
-		return ModelComment::queryByEmail( $email )->one();
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::queryByEmail( $email )->one();
+	}
+
+	public function getFeaturedByType( $parentId, $parentType, $type, $config = [] ) {
+
+		$modelClass	= self::$modelClass;
+		$query		= $modelClass::queryByType( $parentId, $parentType, $type, $config );
+
+		return $query->andWhere( [ 'featured' => true ] )->all();
+	}
+
+	public function getFeaturedTestimonials( $parentId, $parentType, $config = [] ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $this->getFeaturedByType( $parentId, $parentType, $modelClass::TYPE_TESTIMONIAL, $config );
 	}
 
 	// Read - Lists ----
@@ -338,8 +402,13 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	public function create( $comment, $config = [] ) {
 
+		$modelClass = static::$modelClass;
+
 		$comment->agent	= Yii::$app->request->userAgent;
 		$comment->ip	= Yii::$app->request->userIP;
+
+		// Default New
+		$comment->status = $comment->status ?? $modelClass::STATUS_NEW;
 
 		return parent::create( $comment, $config );
 	}
@@ -350,13 +419,13 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 			case FileManager::FILE_TYPE_IMAGE : {
 
-				$this->fileService->saveImage( $file );
+				$file = $this->fileService->saveImage( $file );
 
 				break;
 			}
 			default: {
 
-				$this->fileService->saveFile( $file );
+				$file = $this->fileService->saveFile( $file );
 
 				break;
 			}
@@ -375,12 +444,15 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content' ];
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-		// Allows admin to update status
-		if( isset( $config[ 'admin' ] ) && $config[ 'admin' ] ) {
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'email', 'avatarUrl', 'websiteUrl', 'rating', 'content'
+		];
 
-			$attributes[] = 'status';
+		if( $admin ) {
+
+			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'pinned', 'featured' ] );
 		}
 
 		return parent::update( $model, [
@@ -392,52 +464,70 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 	public function updateStatus( $model, $status ) {
 
-		$model->status	= $status;
+		$model->status = $status;
 
 		$model->update();
+
+		return $model;
 	}
 
 	public function approve( $model ) {
 
 		$model->approvedAt	= DateUtil::getDateTime();
 
-		$this->updateStatus( $model, ModelComment::STATUS_APPROVED );
+		return $this->updateStatus( $model, ModelComment::STATUS_APPROVED );
 	}
 
 	public function block( $model ) {
 
-		$this->updateStatus( $model, ModelComment::STATUS_BLOCKED );
+		return $this->updateStatus( $model, ModelComment::STATUS_BLOCKED );
 	}
 
 	public function markSpam( $model ) {
 
-		$this->updateStatus( $model, ModelComment::STATUS_SPAM );
+		return $this->updateStatus( $model, ModelComment::STATUS_SPAM );
 	}
 
 	public function markTrash( $model ) {
 
-		$this->updateStatus( $model, ModelComment::STATUS_TRASH );
+		return $this->updateStatus( $model, ModelComment::STATUS_TRASH );
 	}
 
 	// Attributes
 
-	public function updateSpamRequest( $model ) {
+	public function updateSpamRequest( $model, $value = true ) {
 
-		$model->setDataMeta( CoreGlobal::META_COMMENT_SPAM_REQUEST, true );
+		$model->setDataMeta( CoreGlobal::META_COMMENT_SPAM_REQUEST, $value );
+
+		$model->update();
+
+		return $model;
+	}
+
+	public function updateDeleteRequest( $model, $value = true ) {
+
+		$model->setDataMeta( CoreGlobal::META_COMMENT_DELETE_REQUEST, $value );
 
 		$model->update();
 
 		return $model;
 	}
 
-	public function updateDeleteRequest( $model ) {
+	// Delete -------------
 
-		$model->setDataMeta( CoreGlobal::META_COMMENT_DELETE_REQUEST, true );
+	public function delete( $model, $config = [] ) {
 
-		$model->update();
+		// Delete Files
+		$this->fileService->deleteMultiple( $model->files );
 
-		return $model;
+		// Delete File Mappings - Shared Files
+		$this->modelFileService->deleteMultiple( $model->modelFiles );
+
+		// Delete model
+		return parent::delete( $model, $config );
 	}
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -447,15 +537,9 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 				switch( $action ) {
 
-					case 'approve': {
+					case 'approved': {
 
 						$this->approve( $model );
-
-						break;
-					}
-					case 'block': {
-
-						$this->block( $model );
 
 						break;
 					}
@@ -471,6 +555,12 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 						break;
 					}
+					case 'blocked': {
+
+						$this->block( $model );
+
+						break;
+					}
 				}
 
 				break;
@@ -479,6 +569,22 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 
 				switch( $action ) {
 
+					case 'pinned': {
+
+						$model->pinned = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'featured': {
+
+						$model->featured = true;
+
+						$model->update();
+
+						break;
+					}
 					case 'delete': {
 
 						$this->delete( $model );
@@ -492,16 +598,11 @@ class ModelCommentService extends \cmsgears\core\common\services\base\EntityServ
 		}
 	}
 
-	// Delete -------------
+	// Notifications ------
 
-	public function delete( $model, $config = [] ) {
+	// Cache --------------
 
-		// Delete files
-		$this->modelFileService->deleteMultiple( $model->modelFiles );
-
-		// Delete model
-		return parent::delete( $model, $config );
-	}
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

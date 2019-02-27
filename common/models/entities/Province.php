@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
@@ -8,20 +16,25 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\interfaces\base\IName;
 
-use cmsgears\core\common\models\traits\NameTrait;
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\Entity;
+
+use cmsgears\core\common\models\traits\base\NameTrait;
 
 /**
  * Province Entity
  *
- * @property long $id
- * @property long $countryId
+ * @property integer $id
+ * @property integer $countryId
  * @property string $code
  * @property string $iso
  * @property string $name
+ *
+ * @since 1.0.0
  */
-class Province extends \cmsgears\core\common\models\base\Entity {
+class Province extends Entity implements IName {
 
 	// Variables ---------------------------------------------------
 
@@ -38,6 +51,8 @@ class Province extends \cmsgears\core\common\models\base\Entity {
 	// Public -----------------
 
 	// Protected --------------
+
+	protected $modelType = CoreGlobal::TYPE_PROVINCE;
 
 	// Private ----------------
 
@@ -62,14 +77,14 @@ class Province extends \cmsgears\core\common\models\base\Entity {
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
 			[ [ 'countryId', 'code', 'name' ], 'required' ],
-			[ [ 'id' ], 'safe' ],
+			[ 'id', 'safe' ],
 			// Unique
-			[ [ 'countryId', 'code' ], 'unique', 'targetAttribute' => [ 'countryId', 'code' ] ],
-			[ [ 'countryId', 'name' ], 'unique', 'targetAttribute' => [ 'countryId', 'name' ] ],
+			[ 'code', 'unique', 'targetAttribute' => [ 'countryId', 'code' ] ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'countryId', 'name' ] ],
 			// Text Limit
 			[ [ 'code', 'iso' ], 'string', 'min' => 1, 'max' => Yii::$app->core->smallText ],
 			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
@@ -77,7 +92,7 @@ class Province extends \cmsgears\core\common\models\base\Entity {
 			[ 'countryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ]
 		];
 
-		// trim if required
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'code', 'name' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
@@ -110,11 +125,13 @@ class Province extends \cmsgears\core\common\models\base\Entity {
 	// Province ------------------------------
 
 	/**
-	 * @return Country - parent country for province
+	 * Return corresponding country to which this province belongs.
+	 *
+	 * @return Country
 	 */
 	public function getCountry() {
 
-		return $this->hasOne( Country::className(), [ 'id' => 'countryId' ] );
+		return $this->hasOne( Country::class, [ 'id' => 'countryId' ] );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -128,7 +145,7 @@ class Province extends \cmsgears\core\common\models\base\Entity {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_PROVINCE;
+		return CoreTables::getTableName( CoreTables::TABLE_PROVINCE );
 	}
 
 	// CMG parent classes --------------------
@@ -137,17 +154,27 @@ class Province extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Query -----------
 
-	public static function queryWithAll( $config = [] ) {
+	/**
+	 * @inheritdoc
+	 */
+	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'country' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the province with country.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with country.
+	 */
 	public static function queryWithCountry( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'country' ];
+		$config[ 'relations' ] = [ 'country' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -155,26 +182,38 @@ class Province extends \cmsgears\core\common\models\base\Entity {
 	// Read - Find ------------
 
 	/**
-	 * @return array - by country id
+	 * Find and return the provinces associated with given country id.
+	 *
+	 * @param integer $countryId
+	 * @return Province[]
 	 */
 	public static function findByCountryId( $countryId ) {
 
 		return self::find()->where( 'countryId=:id', [ ':id' => $countryId ] )->all();
 	}
 
-	public static function findByCode( $code ) {
-
-		return self::find()->where( 'code=:code', [ ':code' => $code ] )->one();
-	}
-
-	public static function findAllByCode( $code ) {
-
-		return self::find()->where( 'code=:code', [ ':code' => $code ] )->all();
-	}
-
+	/**
+	 * Find and return the province associated with given country id and code.
+	 *
+	 * @param integer $countryId
+	 * @param string $code
+	 * @return Province
+	 */
 	public static function findByCountryIdCode( $countryId, $code ) {
 
 		return self::find()->where( 'countryId=:id AND code=:code', [ ':id' => $countryId, ':code' => $code ] )->one();
+	}
+
+	/**
+	 * Find and return the province associated with given country id and iso.
+	 *
+	 * @param integer $countryId
+	 * @param string $iso
+	 * @return Province
+	 */
+	public static function findByCountryIdIso( $countryId, $iso ) {
+
+		return self::find()->where( 'countryId=:id AND iso=:iso', [ ':id' => $countryId, ':iso' => $iso ] )->one();
 	}
 
 	// Create -----------------

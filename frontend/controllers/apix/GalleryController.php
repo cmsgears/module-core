@@ -1,16 +1,29 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\frontend\controllers\apix;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\utilities\AjaxUtil;
+use cmsgears\core\frontend\controllers\base\Controller;
 
-class GalleryController extends \cmsgears\core\frontend\controllers\base\Controller {
+/**
+ * GalleryController handles the ajax requests specific to Gallery Model.
+ *
+ * @since 1.0.0
+ */
+class GalleryController extends Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -28,9 +41,11 @@ class GalleryController extends \cmsgears\core\frontend\controllers\base\Control
 
 		parent::init();
 
-		$this->crudPermission	= CoreGlobal::PERM_USER;
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_USER;
 
-		$this->modelService		= Yii::$app->factory->get( 'galleryService' );
+		// Services
+		$this->modelService = Yii::$app->factory->get( 'galleryService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -47,14 +62,18 @@ class GalleryController extends \cmsgears\core\frontend\controllers\base\Control
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'create-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ],
+					'get-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ],
+					'add-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ],
+					'update-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ],
 					'delete-item' => [ 'permission' => $this->crudPermission, 'filters' => [ 'owner' => [ 'slug' => true ] ] ]
 				]
 			],
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'create-item' => [ 'post' ],
+					'get-item' => [ 'post' ],
+					'add-item' => [ 'post' ],
+					'update-item' => [ 'post' ],
 					'delete-item' => [ 'post' ]
 				]
 			]
@@ -66,7 +85,9 @@ class GalleryController extends \cmsgears\core\frontend\controllers\base\Control
 	public function actions() {
 
 		return [
-			'create-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\CreateItem' ],
+			'get-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\ReadItem' ],
+			'add-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\CreateItem' ],
+			'update-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\UpdateItem' ],
 			'delete-item' => [ 'class' => 'cmsgears\core\common\actions\gallery\DeleteItem' ]
 		];
 	}
@@ -76,4 +97,5 @@ class GalleryController extends \cmsgears\core\frontend\controllers\base\Control
 	// CMG parent classes --------------------
 
 	// GalleryController ---------------------
+
 }

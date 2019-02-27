@@ -2,14 +2,12 @@
 namespace cmsgears\core\common\base;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // Mail
-use \Swift_SmtpTransport;
+use Swift_SmtpTransport;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\config\CoreProperties;
 use cmsgears\core\common\config\MailProperties;
 
@@ -64,7 +62,7 @@ class Mailer extends \yii\base\Component {
 		$transport->setPassword( $mailProperties->getSmtpPassword() );
 		$transport->setEncryption( $mailProperties->getSmtpEncryption() );
 
-		$this->mailer->transport	= $transport;
+		$this->mailer->transport = $transport;
 	}
 
 	// Instance methods --------------------------------------------
@@ -88,7 +86,7 @@ class Mailer extends \yii\base\Component {
 
 		if( !isset( $this->coreProperties ) ) {
 
-			$this->coreProperties	= CoreProperties::getInstance();
+			$this->coreProperties = CoreProperties::getInstance();
 		}
 
 		return $this->coreProperties;
@@ -98,7 +96,7 @@ class Mailer extends \yii\base\Component {
 
 		if( !isset( $this->mailProperties ) ) {
 
-			$this->mailProperties	= MailProperties::getInstance();
+			$this->mailProperties = MailProperties::getInstance();
 		}
 
 		if( $this->mailProperties->isSmtp() ) {

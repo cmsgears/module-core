@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
@@ -8,18 +16,22 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\mappers\RolePermission;
 
 use cmsgears\core\common\services\interfaces\entities\IRoleService;
 
-use cmsgears\core\common\services\traits\NameTypeTrait;
-use cmsgears\core\common\services\traits\SlugTypeTrait;
+use cmsgears\core\common\services\base\EntityService;
+
+use cmsgears\core\common\services\traits\base\NameTypeTrait;
+use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
- * The class RoleService is base class to perform database activities for Role Entity.
+ * RoleService provide service methods of role model.
+ *
+ * @since 1.0.0
  */
-class RoleService extends \cmsgears\core\common\services\base\EntityService implements IRoleService {
+class RoleService extends EntityService implements IRoleService {
 
 	// Variables ---------------------------------------------------
 
@@ -29,13 +41,11 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Role';
+	public static $modelClass = '\cmsgears\core\common\models\entities\Role';
 
-	public static $modelTable	= CoreTables::TABLE_ROLE;
+	public static $typed = true;
 
-	public static $typed		= true;
-
-	public static $parentType	= CoreGlobal::TYPE_ROLE;
+	public static $parentType = CoreGlobal::TYPE_ROLE;
 
 	// Protected --------------
 
@@ -49,6 +59,7 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 
@@ -71,12 +82,18 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 	public function getPage( $config = [] ) {
 
 		$modelClass	= static::$modelClass;
-		$modelTable	= static::$modelTable;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
 					'desc' => [ "$modelTable.name" => SORT_DESC ],
@@ -131,6 +148,9 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 	                'default' => SORT_DESC,
 	                'label' => 'Updated At'
 	            ]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 
@@ -148,16 +168,24 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 
 		// Filters ----------
 
-		// Filter - Status
-		$status	= Yii::$app->request->getQueryParam( 'status' );
+		// Params
+		$type	= Yii::$app->request->getQueryParam( 'type' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
-		if( isset( $status ) ) {
+		// Filter - Type
+		if( isset( $type ) ) {
 
-			switch( $status ) {
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
 
 				case 'group': {
 
-					$config[ 'conditions' ][ "$modelTable.group" ]	= true;
+					$config[ 'conditions' ][ "$modelTable.group" ] = true;
 
 					break;
 				}
@@ -166,11 +194,14 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol = Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'desc' => "$modelTable.description" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'desc' => "$modelTable.description"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -178,7 +209,9 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'desc' => "$modelTable.description"
+			'name' => "$modelTable.name",
+			'type' => "$modelTable.type",
+			'desc' => "$modelTable.description"
 		];
 
 		// Result -----------
@@ -191,6 +224,14 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 	// Read - Models ---
 
 	// Read - Lists ----
+
+	public function getIdNameListByTypeGroup( $type, $group = false, $config = [] ) {
+
+		$config[ 'conditions' ][ 'type' ] 	= $type;
+		$config[ 'conditions' ][ 'group' ] 	= $group;
+
+		return $this->getIdNameList( $config );
+	}
 
 	// Read - Maps -----
 
@@ -207,7 +248,7 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description', 'adminUrl', 'homeUrl' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'slug', 'icon', 'description', 'group', 'adminUrl', 'homeUrl' ];
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -229,9 +270,10 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 		// Create updated mappings
 		if( count( $binded ) > 0 ) {
 
-			foreach ( $binded as $id ) {
+			foreach( $binded as $id ) {
 
-				$toSave					= new RolePermission();
+				$toSave	= new RolePermission();
+
 				$toSave->roleId			= $roleId;
 				$toSave->permissionId	= $id;
 
@@ -241,6 +283,10 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 
 		return true;
 	}
+
+	// Delete -------------
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -263,7 +309,11 @@ class RoleService extends \cmsgears\core\common\services\base\EntityService impl
 		}
 	}
 
-	// Delete -------------
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

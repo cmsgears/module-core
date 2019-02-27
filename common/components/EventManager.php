@@ -8,6 +8,9 @@
  */
 namespace cmsgears\core\common\components;
 
+// CMG Imports
+use cmsgears\core\common\base\Component;
+
 /**
  * The Event Manager component provides messages and counts for notifications, reminders
  * and activities.
@@ -19,10 +22,9 @@ namespace cmsgears\core\common\components;
  * plugin or module must extend this component in order to use notifications, reminders
  * and activities.
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
-class EventManager extends \cmsgears\core\common\base\Component {
+class EventManager extends Component {
 
 	// TODO: Add mechanism to cache stats results for specified duration
 
@@ -61,11 +63,11 @@ class EventManager extends \cmsgears\core\common\base\Component {
 	public function getAdminStats() {
 
 		return [
-					// Messages
-					'notifications' => [], 'reminders' => [], 'activities' => [],
-					// Counters - New
-					'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0
-				];
+			// Messages
+			'notifications' => [], 'reminders' => [], 'activities' => [],
+			// Counters - New
+			'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0
+		];
 	}
 
 	/**
@@ -77,31 +79,88 @@ class EventManager extends \cmsgears\core\common\base\Component {
 	public function getUserStats() {
 
 		return [
-					// Messages
-					'notifications' => [], 'reminders' => [], 'activities' => [],
-					// Counters - New
-					'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0
-				];
+			// Messages
+			'notifications' => [], 'reminders' => [], 'activities' => [],
+			// Counters - New
+			'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0
+		];
+	}
+
+	/**
+	 * It query appropriate services and collection messages and counts of notifications,
+	 * reminders and activities for frontend site or application.
+	 *
+	 * @return array having recent notifications, reminders, activities and counts.
+	 */
+	public function getModelStats( $parentId, $parentType ) {
+
+		return [
+			// Messages
+			'notifications' => [], 'reminders' => [], 'activities' => [],
+			// Counters - New
+			'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0
+		];
 	}
 
 	// Notification Trigger ---
 
-	public function triggerNotification( $template, $message, $config = [] ) {
+	public function triggerNotification( $slug, $data, $config = [] ) {
 
 		// Trigger notifications using given template, message and config
 	}
 
+	public function deleteNotificationsByUserId( $userId, $config = [] ) {
+
+		// Delete notifications triggered for a user
+	}
+
+	public function deleteNotificationsByParent( $parentId, $parentType, $config = [] ) {
+
+		// Delete notifications triggered for a model
+	}
+
 	// Reminder Trigger -------
 
-	public function triggerReminder( $template, $message, $config = [] ) {
+	public function triggerReminder( $slug, $data, $config = [] ) {
 
 		// Trigger notifications using given template, message and config
 	}
 
 	// Activity Logger --------
 
-	public function logActivity( $template, $message, $config = [] ) {
+	/**
+	 * Trigger activity log on model creation.
+	 *
+	 * @param type $model
+	 */
+	public function logCreate( $model, $service, $config = [] ) {
+
+		// Trigger create activity
+	}
+
+	/**
+	 * Trigger activity log on model update.
+	 *
+	 * @param type $model
+	 */
+	public function logUpdate( $model, $service, $config = [] ) {
+
+		// Trigger update activity
+	}
+
+	/**
+	 * Trigger activity log on model delete.
+	 *
+	 * @param type $model
+	 */
+	public function logDelete( $model, $service, $config = [] ) {
+
+		// Trigger delete activity
+	}
+
+	public function triggerActivity( $slug, $data, $config = [] ) {
 
 		// Trigger notifications using given template, message and config
 	}
+
 }

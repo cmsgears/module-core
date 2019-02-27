@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\meta;
 
 // Yii Imports
@@ -7,12 +15,18 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\base\Meta;
+
+use cmsgears\core\common\actions\base\ModelAction;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
- * Toggle action create/update meta and toggle it's value for given parent model.
+ * Toggle action create/update boolean meta and toggle it's value for given parent model.
+ *
+ * @since 1.0.0
  */
-class Toggle extends \cmsgears\core\common\actions\base\ModelAction {
+class Toggle extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -28,8 +42,6 @@ class Toggle extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $typed = true;
-
 	// Protected --------------
 
 	protected $metaService;
@@ -44,7 +56,7 @@ class Toggle extends \cmsgears\core\common\actions\base\ModelAction {
 
 		parent::init();
 
-		$this->metaService	= $this->controller->metaService;
+		$this->metaService = $this->controller->metaService;
 	}
 
 	// Instance methods --------------------------------------------
@@ -61,17 +73,33 @@ class Toggle extends \cmsgears\core\common\actions\base\ModelAction {
 
 	public function run( $ctype, $key ) {
 
-		if( isset( $this->model ) ) {
+		$parent	= $this->model;
 
-			$label	= Yii::$app->request->post( 'display' );
+		if( isset( $parent ) ) {
 
-			$this->metaService->toggle( $this->model->id, $ctype, $key, $label );
+			$metaClass	= $this->metaService->getModelClass();
+			$meta		= new $metaClass;
+			$label		= Yii::$app->request->post( 'label' );
+
+			if( $meta->hasAttribute( 'modelId' ) ) {
+
+				$meta = $this->metaService->initByNameType( $parent->id, $key, $ctype, Meta::VALUE_TYPE_FLAG, $label );
+			}
+			else {
+
+				$parentType	= $this->modelService->getParentType();
+
+				$meta = $this->metaService->initByNameType( $parent->id, $parentType, $key, $ctype, Meta::VALUE_TYPE_FLAG, $label );
+			}
+
+			$this->metaService->toggle( $meta );
 
 			// Trigger Ajax Success
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
 		}
 
 		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->cmgCoreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
+		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

@@ -1,8 +1,16 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\config;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -10,14 +18,14 @@ use cmsgears\core\common\config\CoreGlobal;
 /**
  * The CoreProperties class provides methods to access the core properties defined in database.
  * It also define the accessor methods for pre-defined properties.
+ *
+ * @since 1.0.0
  */
-class CoreProperties extends CmgProperties {
+class CoreProperties extends Properties {
 
 	// Variables ---------------------------------------------------
 
-	//TODO Add code for caching the properties
-
-	// Global -----------------
+	// Globals ----------------
 
 	const DIR_TEMP					= 'temp/';
 	const DIR_AVATAR				= 'avatar/';
@@ -70,6 +78,8 @@ class CoreProperties extends CmgProperties {
 
 	const PROP_CHANGE_USERNAME		= 'change_username';
 
+	const PROP_CHANGE_MOBILE		= 'change_mobile';
+
 	const PROP_FORMAT_DATE			= 'date_format';
 
 	const PROP_FORMAT_TIME			= 'time_format';
@@ -78,6 +88,9 @@ class CoreProperties extends CmgProperties {
 
 	const PROP_TIMEZONE				= 'timezone';
 
+	/**
+	 * It checks whether system can login user on activation.
+	 */
 	const PROP_AUTO_LOGIN			= 'auto_login';
 
 	const PROP_AUTO_LOAD			= 'auto_load';
@@ -90,17 +103,9 @@ class CoreProperties extends CmgProperties {
 
 	private static $instance;
 
+	// Traits ------------------------------------------------------
+
 	// Constructor and Initialisation ------------------------------
-
-	// Instance methods --------------------------------------------
-
-	// Yii parent classes --------------------
-
-	// CMG parent classes --------------------
-
-	// CoreProperties ------------------------
-
-	// Singleton
 
 	/**
 	 * Return Singleton instance.
@@ -117,7 +122,17 @@ class CoreProperties extends CmgProperties {
 		return self::$instance;
 	}
 
-	// Properties
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// CoreProperties ------------------------
 
 	/**
 	 * Returns Temp directory to store temporary files.
@@ -231,6 +246,14 @@ class CoreProperties extends CmgProperties {
 		return $this->properties[ self::PROP_CHANGE_USERNAME ];
 	}
 
+	/**
+	 * Returns whether mobile number change is allowed for user profile.
+	 */
+	public function isChangeMobile() {
+
+		return $this->properties[ self::PROP_CHANGE_MOBILE ];
+	}
+
 	public function getDateFormat() {
 
 		return $this->properties[ self::PROP_FORMAT_DATE ];
@@ -273,4 +296,5 @@ class CoreProperties extends CmgProperties {
 
 		return $this->properties[ self::PROP_SITE_URL ] . \Yii::getAlias( '@web' ) ;
 	}
+
 }

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\entities;
 
 // Yii Imports
@@ -11,23 +19,35 @@ use yii\behaviors\TimestampBehavior;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\interfaces\base\IAuthor;
+use cmsgears\core\common\models\interfaces\base\IName;
+use cmsgears\core\common\models\interfaces\base\ISlug;
+use cmsgears\core\common\models\interfaces\resources\IContent;
+use cmsgears\core\common\models\interfaces\resources\IData;
+use cmsgears\core\common\models\interfaces\resources\IGridCache;
 
-use cmsgears\core\common\models\traits\CreateModifyTrait;
-use cmsgears\core\common\models\traits\NameTrait;
-use cmsgears\core\common\models\traits\SlugTrait;
+use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\Entity;
+
+use cmsgears\core\common\models\traits\base\AuthorTrait;
+use cmsgears\core\common\models\traits\base\NameTrait;
+use cmsgears\core\common\models\traits\base\SlugTrait;
+use cmsgears\core\common\models\traits\resources\ContentTrait;
 use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\resources\GridCacheTrait;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
 /**
  * Theme Entity
  *
- * @property long $id
- * @property long $createdBy
- * @property long $modifiedBy
+ * @property integer $id
+ * @property integer $createdBy
+ * @property integer $modifiedBy
  * @property string $name
  * @property string $slug
+ * @property string $type Required to distinguish between admin and site themes.
+ * @property string $title
  * @property string $description
  * @property boolean $default
  * @property string $renderer
@@ -36,8 +56,13 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property datetime $modifiedAt
  * @property string $content
  * @property string $data
+ * @property string $gridCache
+ * @property boolean $gridCacheValid
+ * @property datetime $gridCachedAt
+ *
+ * @since 1.0.0
  */
-class Theme extends \cmsgears\core\common\models\base\Entity {
+class Theme extends Entity implements IAuthor, IContent, IData, IGridCache, IName, ISlug {
 
 	// Variables ---------------------------------------------------
 
@@ -53,16 +78,18 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
 
 	// Public -----------------
 
-	public $modelType	= CoreGlobal::TYPE_THEME;
-
 	// Protected --------------
+
+	protected $modelType = CoreGlobal::TYPE_THEME;
 
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
-	use CreateModifyTrait;
+	use AuthorTrait;
+	use ContentTrait;
 	use DataTrait;
+	use GridCacheTrait;
 	use NameTrait;
 	use SlugTrait;
 
@@ -82,16 +109,16 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
 	public function behaviors() {
 
 		return [
-			AuthorBehavior::className(),
+			AuthorBehavior::class,
 			'sluggableBehavior' => [
-				'class' => SluggableBehavior::className(),
+				'class' => SluggableBehavior::class,
 				'attribute' => 'name',
-				'slugAttribute' => 'slug',
+				'slugAttribute' => 'slug', // Unique irrespective of type
 				'immutable' => true,
 				'ensureUnique' => true
 			],
 			'timestampBehavior' => [
-				'class' => TimestampBehavior::className(),
+				'class' => TimestampBehavior::class,
 				'createdAtAttribute' => 'createdAt',
 				'updatedAtAttribute' => 'modifiedAt',
 				'value' => new Expression('NOW()')
@@ -106,28 +133,29 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
 			[ [ 'name' ], 'required' ],
-			[ [ 'id', 'content', 'data' ], 'safe' ],
+			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique
 			[ 'name', 'unique' ],
 			// Text Limit
-			[ [ 'renderer' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
-			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'description', 'basePath' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'type', 'renderer' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ 'slug', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'title', 'basePath' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ 'description', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
-			[ 'default', 'boolean' ],
+			[ [ 'default', 'gridCacheValid' ], 'boolean' ],
 			[ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
-		// trim if required
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'description', 'basePath', 'renderer' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'title', 'description', 'basePath', 'renderer' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -143,10 +171,15 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
 		return [
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'slug' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SLUG ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
+			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'basePath' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BASE_PATH ),
+			'default' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DEFAULT ),
 			'renderer' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_RENDERER ),
-			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )
+			'basePath' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_BASE_PATH ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
+			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
 		];
 	}
 
@@ -158,6 +191,11 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
 
 	// Theme ---------------------------------
 
+	/**
+	 * Returns string representation of default flag.
+	 *
+	 * @return string
+	 */
 	public function getDefaultStr() {
 
 		return Yii::$app->formatter->asBoolean( $this->default );
@@ -174,7 +212,7 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_THEME;
+		return CoreTables::getTableName( CoreTables::TABLE_THEME );
 	}
 
 	// CMG parent classes --------------------
@@ -183,6 +221,9 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
@@ -193,6 +234,11 @@ class Theme extends \cmsgears\core\common\models\base\Entity {
 
 	// Read - Find ------------
 
+	/**
+	 * Find and return the default theme.
+	 *
+	 * @return Theme
+	 */
 	public static function findDefault() {
 
 		return self::find()->where( 'default=1' )->one();

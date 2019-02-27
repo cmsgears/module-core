@@ -43,13 +43,13 @@ class FileController extends \cmsgears\core\frontend\controllers\base\Controller
 			'rbac' => [
 				'class' => Yii::$app->core->getRbacFilterClass(),
 				'actions' => [
-					'file-handler'	=> [ 'permission' => CoreGlobal::PERM_USER ]
+					'file-handler' => [ 'permission' => CoreGlobal::PERM_USER ]
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
-					'file-handler'	=> [ 'post' ]
+					'file-handler' => [ 'post' ]
 				]
 			]
 		];

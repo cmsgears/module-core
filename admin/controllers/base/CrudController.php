@@ -1,8 +1,16 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\base;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
 use yii\web\HttpException;
 use yii\web\NotFoundHttpException;
@@ -10,6 +18,11 @@ use yii\web\NotFoundHttpException;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+/**
+ * CrudController provide generic actions to perform CRUD operations.
+ *
+ * @since 1.0.0
+ */
 abstract class CrudController extends Controller {
 
 	// Variables ---------------------------------------------------
@@ -46,7 +59,7 @@ abstract class CrudController extends Controller {
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'index' => [ 'get', 'post' ],
 					'all'  => [ 'get' ],
@@ -71,7 +84,7 @@ abstract class CrudController extends Controller {
 		return $this->redirect( 'all' );
 	}
 
-	public function actionAll() {
+	public function actionAll( $config = [] ) {
 
 		$dataProvider = $this->modelService->getPage();
 
@@ -80,24 +93,28 @@ abstract class CrudController extends Controller {
 		]);
 	}
 
-	public function actionCreate() {
+	public function actionCreate( $config = [] ) {
 
-		$modelClass	= $this->modelService->getModelClass();
-		$model		= new $modelClass;
+		$modelClass = $this->modelService->getModelClass();
+
+		$model = new $modelClass();
+
+		$ignoreSite	= isset( $config[ 'ignoreSite' ] ) ? $config[ 'ignoreSite' ] : false;
+
+		if( $modelClass::isMultiSite() && !$ignoreSite ) {
+
+			$model->siteId = isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
+		}
 
 		if( isset( $this->scenario ) ) {
 
 			call_user_func_array( [ $model, 'setScenario' ], [ $this->scenario ] );
 		}
 
-		if( $model->load( Yii::$app->request->post(), $model->getClassName() )	&& $model->validate() ) {
+		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-			$this->modelService->create( $model );
+			$this->model = $this->modelService->add( $model, [ 'admin' => true ] );
 
-			$model->refresh();
-			
-			$this->model = $model;
-			
 			return $this->redirect( 'all' );
 		}
 
@@ -106,10 +123,10 @@ abstract class CrudController extends Controller {
 		]);
 	}
 
-	public function actionUpdate( $id ) {
+	public function actionUpdate( $id, $config = [] ) {
 
 		// Find Model
-		$model	= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		// Update if exist
 		if( isset( $model ) ) {
@@ -121,13 +138,9 @@ abstract class CrudController extends Controller {
 
 			if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 
-				$this->modelService->update( $model );
+				$this->model = $this->modelService->update( $model, [ 'admin' => true ] );
 
-				$model->refresh();
-			
-				$this->model = $model;
-
-				return $this->redirect( 'all' );
+				return $this->redirect( $this->returnUrl );
 			}
 
 			// Render view
@@ -140,10 +153,10 @@ abstract class CrudController extends Controller {
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
 
-	public function actionDelete( $id ) {
+	public function actionDelete( $id, $config = [] ) {
 
 		// Find Model
-		$model	= $this->modelService->getById( $id );
+		$model = $this->modelService->getById( $id );
 
 		// Delete if exist
 		if( isset( $model ) ) {
@@ -157,15 +170,19 @@ abstract class CrudController extends Controller {
 
 				try {
 
-					$this->modelService->delete( $model );
-
 					$this->model = $model;
-					
+
+					$this->modelService->delete( $model, [ 'admin' => true ] );
+
 					return $this->redirect( $this->returnUrl );
 				}
+				/**
+				 * Throw errors since the model is required by other models and it cannot be deleted
+				 * till all the dependent models are deleted.
+				 */
 				catch( Exception $e ) {
 
-					throw new HttpException( 409,  Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
+					throw new HttpException( 409, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_DEPENDENCY )  );
 				}
 			}
 
@@ -178,4 +195,5 @@ abstract class CrudController extends Controller {
 		// Model not found
 		throw new NotFoundHttpException( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

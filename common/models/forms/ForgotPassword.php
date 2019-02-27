@@ -1,14 +1,31 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\forms;
 
 // Yii Imports
-use \Yii;
+use Yii;
 use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\models\forms\BaseForm;
 
-class ForgotPassword extends \yii\base\Model {
+/**
+ * Form submitted by users in case they forget their account password. It does not
+ * need user to be logged in.
+ *
+ * @property string $email
+ *
+ * @since 1.0.0
+ */
+class ForgotPassword extends BaseForm {
 
 	// Variables ---------------------------------------------------
 
@@ -44,13 +61,20 @@ class ForgotPassword extends \yii\base\Model {
 
 	// yii\base\Model ---------
 
+	/**
+	 * @inheritdoc
+	 */
 	public function rules() {
 
+		// Model Rules
 		$rules = [
+			// Required, Safe
 			[ [ 'email' ], 'required' ],
-			[ 'email', 'email' ],
+			// Email
+			[ 'email', 'email' ]
 		];
 
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'email' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
@@ -61,6 +85,9 @@ class ForgotPassword extends \yii\base\Model {
 		return $rules;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function attributeLabels() {
 
 		return [

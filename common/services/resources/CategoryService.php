@@ -1,27 +1,36 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\Category;
-use cmsgears\core\common\models\resources\Option;
-use cmsgears\core\common\models\mappers\ModelCategory;
-
 use cmsgears\core\common\services\interfaces\resources\ICategoryService;
 
-use cmsgears\core\common\services\traits\NameTypeTrait;
-use cmsgears\core\common\services\traits\SlugTypeTrait;
+use cmsgears\core\common\services\traits\base\NameTypeTrait;
+use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\hierarchy\HierarchyTrait;
+use cmsgears\core\common\services\traits\hierarchy\NestedSetTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
- * The class CategoryService is base class to perform database activities for Category Entity.
+ * CategoryService provide service methods of category model.
+ *
+ * @since 1.0.0
  */
-class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSetService implements ICategoryService {
+class CategoryService extends \cmsgears\core\common\services\base\ResourceService implements ICategoryService {
 
 	// Variables ---------------------------------------------------
 
@@ -31,13 +40,11 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\Category';
+	public static $modelClass = '\cmsgears\core\common\models\resources\Category';
 
-	public static $modelTable	= CoreTables::TABLE_CATEGORY;
+	public static $typed = true;
 
-	public static $typed		= true;
-
-	public static $parentType	= CoreGlobal::TYPE_CATEGORY;
+	public static $parentType = CoreGlobal::TYPE_CATEGORY;
 
 	// Protected --------------
 
@@ -51,7 +58,10 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
+	use HierarchyTrait;
 	use NameTypeTrait;
+	use NestedSetTrait;
 	use SlugTypeTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -72,16 +82,16 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 
 	public function getPage( $config = [] ) {
 
-		$modelTable = static::$modelTable;
 		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
 				'id' => [
-					'asc' => [ 'id' => SORT_ASC ],
-					'desc' => [ 'id' => SORT_DESC ],
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
@@ -89,7 +99,13 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 					'asc' => [ 'parent.name' => SORT_ASC ],
 					'desc' => [ 'parent.name' => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'Parent',
+					'label' => 'Parent'
+				],
+				'root' => [
+					'asc' => [ 'root.name' => SORT_ASC ],
+					'desc' => [ 'root.name' => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Root'
 				],
 				'name' => [
 					'asc' => [ "$modelTable.name" => SORT_ASC ],
@@ -115,6 +131,18 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 	                'default' => SORT_DESC,
 	                'label' => 'Icon'
 	            ],
+	            'title' => [
+	                'asc' => [ "$modelTable.title" => SORT_ASC ],
+	                'desc' => [ "$modelTable.title" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Title'
+	            ],
+	            'pinned' => [
+	                'asc' => [ "$modelTable.pinned" => SORT_ASC ],
+	                'desc' => [ "$modelTable.pinned" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Pinned'
+	            ],
 	            'featured' => [
 	                'asc' => [ "$modelTable.featured" => SORT_ASC ],
 	                'desc' => [ "$modelTable.featured" => SORT_DESC ],
@@ -126,55 +154,87 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 	                'desc' => [ "$modelTable.`order`" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Order'
-	            ]
+	            ],
+				'cdate' => [
+					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Created At'
+				],
+				'udate' => [
+					'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Updated At'
+				]
 			],
 			'defaultOrder' => [
 				'id' => SORT_DESC
 			]
 		]);
 
-		$config[ 'sort' ] 	= $sort;
+		if( !isset( $config[ 'sort' ] ) ) {
+
+			$config[ 'sort' ] = $sort;
+		}
 
 		// Query ------------
 
-		$query 	= $modelClass::find()->joinWith( 'parent' );
+		if( !isset( $config[ 'query' ] ) ) {
+
+			$config[ 'hasOne' ] = true;
+		}
 
 		// Filters ----------
 
-		// Filter - Status
-		$status	= Yii::$app->request->getQueryParam( 'status' );
+		// Params
+		$type	= Yii::$app->request->getQueryParam( 'type' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
-		if( isset( $status ) ) {
+		// Filter - Type
+		if( isset( $type ) ) {
 
-			switch( $status ) {
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
 
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'pinned': {
+
+					$config[ 'conditions' ][ "$modelTable.pinned" ] = true;
+
+					break;
+				}
 				case 'featured': {
 
-					$config[ 'conditions' ][ "$modelTable.featured" ]	= true;
+					$config[ 'conditions' ][ "$modelTable.featured" ] = true;
+
+					break;
+				}
+				case 'top': {
+
+					$config[ 'conditions' ][ "$modelTable.parentId" ] = null;
 
 					break;
 				}
 			}
 		}
 
-		// Filter - Level
-		$parent	= Yii::$app->request->getQueryParam( 'parent' );
-
-		if( isset( $parent ) ) {
-
-			if( $parent === 'top' ) {
-
-				$query->andWhere( "$modelTable.parentId IS NULL" );
-			}
-		}
-
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol = Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'desc' => "$modelTable.description" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'title' => "$modelTable.title",
+				'desc' => "$modelTable.description",
+				'content' => "$modelTable.content"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -182,13 +242,18 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'desc' => "$modelTable.description",
-			'pname' => 'parent.name', 'pdesc' => 'parent.description'
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'content' => "$modelTable.content",
+			'featured' => "$modelTable.featured",
+			'pname' => 'parent.name',
+			'pdesc' => 'parent.description',
+			'rname' => 'root.name',
+			'rdesc' => 'root.description'
 		];
 
 		// Result -----------
-
-		$config[ 'query' ]	= $query;
 
 		return parent::getPage( $config );
 	}
@@ -197,42 +262,46 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 
 	// Read - Models ---
 
-	public function getByParentId( $id ) {
-
-		return Category::findByParentId( $id );
-	}
-
-	public function getFeaturedByType( $type ) {
-
-		return Category::getFeaturedByType( $type );
-	}
-
-	public function getL0ByType( $type ) {
+	public function getByParentId( $id, $config = [] ) {
 
 		$modelClass	= static::$modelClass;
 
-		return $modelClass::find()->where( [ 'type' => $type, 'lValue' => 1 ] )->all();
+		return $modelClass::findByParentId( $id, $config );
+	}
+
+	public function getFeaturedByType( $type, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findFeaturedByType( $type, $config );
+	}
+
+	public function getL0ByType( $type, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findL0ByType( $type, $config );
 	}
 
 	// Read - Lists ----
 
-	public function getTopLevelIdNameListByType( $type, $config = [] ) {
+	public function getL0IdNameListByType( $type, $config = [] ) {
 
 		$config[ 'conditions' ][ 'parentId' ] = null;
 
 		return $this->getIdNameListByType( $type, $config );
 	}
 
-	public function getTopLevelIdNameListById( $id, $config = [] ) {
+	public function getL0IdNameListById( $id, $config = [] ) {
 
-		$category	= self::findById( $id );
+		$category = self::findById( $id );
 
 		return $this->getSubLevelList( $category->id, $category->rootId, [ 'having' => 'depth = 1' ] );
 	}
 
 	public function getLevelListByType( $type ) {
 
-		return $this->getLevelList( [ 'conditions' => [ 'node.type' => $type ] ] );
+		return $this->getLevelList( [ 'conditions' => [ 'node.type' => $type ], 'slug' => true ] );
 	}
 
 	// Read - Maps -----
@@ -243,74 +312,74 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 
 	public function create( $model, $config = [] ) {
 
-		$model	= $this->createInHierarchy( $model );
-
-		return $model;
+		return $this->createInHierarchy( $model );
 	}
 
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description', 'type', 'icon', 'featured', 'htmlOptions' ];
+		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-		// Find existing model
-		$modelToUpdate	= $this->getById( $model->id );
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'slug', 'type', 'icon', 'title', 'description', 'htmlOptions', 'content' ];
 
 		// Update Hierarchy
-		$modelToUpdate	= $this->updateInHierarchy( $model, $modelToUpdate );
+		$this->updateInHierarchy( $model );
+
+		if( $admin ) {
+
+			$attributes	= ArrayHelper::merge( $attributes, [ 'order', 'pinned', 'featured' ] );
+		}
 
 		return parent::update( $model, [
 			'attributes' => $attributes
 		]);
 	}
 
-	public function markFeatured( $model ) {
+	// Delete -------------
 
-		$model->featured = true;
+	public function delete( $model, $config = [] ) {
 
-		return parent::update( $model, [
-			'attributes' => [ 'featured' ]
-		]);
+		// Delete mapping
+		Yii::$app->factory->get( 'modelCategoryService' )->deleteByModelId( $model->id );
+
+		// Delete options
+		Yii::$app->factory->get( 'optionService' )->deleteByCategoryId( $model->id );
+
+		// Update Hierarchy
+		$model = $this->deleteInHierarchy( $model );
+
+		// Delete model
+		return parent::delete( $model, $config );
 	}
 
-	public function markRegular( $model ) {
-
-		$model->featured = false;
-
-		return parent::update( $model, [
-			'attributes' => [ 'featured' ]
-		]);
-	}
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
 
-			case 'status': {
-
-				switch( $action ) {
-
-					case 'featured': {
-
-						$this->markFeatured( $model );
-
-						break;
-					}
-					case 'regular': {
-
-						$this->markRegular( $model );
-
-						break;
-					}
-				}
-
-				break;
-			}
 			case 'model': {
 
 				switch( $action ) {
 
+					case 'pinned': {
+
+						$model->pinned = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'featured': {
+
+						$model->featured = true;
+
+						$model->update();
+
+						break;
+					}
 					case 'delete': {
 
 						$this->delete( $model );
@@ -324,22 +393,11 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 		}
 	}
 
-	// Delete -------------
+	// Notifications ------
 
-	public function delete( $model, $config = [] ) {
+	// Cache --------------
 
-		// Delete mapping
-		ModelCategory::deleteByModelId( $model->id );
-
-		// Delete options and mappings - mappings will be deleted by cascade effect
-		Option::deleteByCategoryId( $model->id );
-
-		// Update Hierarchy
-		$model = $this->deleteInHierarchy( $model );
-
-		// Delete model
-		return parent::delete( $model, $config );
-	}
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 
@@ -352,16 +410,6 @@ class CategoryService extends \cmsgears\core\common\services\hierarchy\NestedSet
 	// Read ---------------
 
 	// Read - Models ---
-
-	public static function findByParentId( $id ) {
-
-		return Category::findByParentId( $id );
-	}
-
-	public static function findFeaturedByType( $type ) {
-
-		return Category::getFeaturedByType( $type );
-	}
 
 	// Read - Lists ----
 

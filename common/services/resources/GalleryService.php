@@ -1,28 +1,36 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\File;
-use cmsgears\core\common\models\mappers\ModelGallery;
-use cmsgears\core\common\models\mappers\ModelFile;
-
 use cmsgears\core\common\services\interfaces\resources\IGalleryService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
-use cmsgears\core\common\services\traits\NameTypeTrait;
-use cmsgears\core\common\services\traits\SlugTypeTrait;
+use cmsgears\core\common\services\traits\base\ApprovalTrait;
+use cmsgears\core\common\services\traits\base\NameTypeTrait;
+use cmsgears\core\common\services\traits\base\SlugTypeTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
- * The class GalleryService is base class to perform database activities for Gallery Entity.
+ * GalleryService provide service methods of gallery model.
+ *
+ * @since 1.0.0
  */
-class GalleryService extends \cmsgears\core\common\services\base\EntityService implements IGalleryService {
+class GalleryService extends \cmsgears\core\common\services\base\ResourceService implements IGalleryService {
 
 	// Variables ---------------------------------------------------
 
@@ -32,13 +40,11 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\Gallery';
+	public static $modelClass = '\cmsgears\core\common\models\resources\Gallery';
 
-	public static $modelTable	= CoreTables::TABLE_GALLERY;
+	public static $typed = true;
 
-	public static $typed		= true;
-
-	public static $parentType	= CoreGlobal::TYPE_GALLERY;
+	public static $parentType = CoreGlobal::TYPE_GALLERY;
 
 	// Protected --------------
 
@@ -54,6 +60,8 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 	// Traits ------------------------------------------------------
 
+	use ApprovalTrait;
+	use DataTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
 
@@ -61,7 +69,7 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 	public function __construct( IFileService $fileService, $config = [] ) {
 
-		$this->fileService	= $fileService;
+		$this->fileService = $fileService;
 
 		parent::__construct( $config );
 	}
@@ -82,68 +90,99 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
-		$templateTable	= CoreTables::TABLE_TEMPLATE;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$templateTable = Yii::$app->factory->get( 'templateService' )->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
 				'id' => [
-					'asc' => [ 'id' => SORT_ASC ],
-					'desc' => [ 'id' => SORT_DESC ],
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
 	            'template' => [
-	                'asc' => [ "`$templateTable`.`name`" => SORT_ASC ],
-	                'desc' => [ "`$templateTable`.`name`" => SORT_DESC ],
+	                'asc' => [ "$templateTable.name" => SORT_ASC ],
+	                'desc' => [ "$templateTable.name" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Template'
 	            ],
 				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'name'
+					'label' => 'Name'
 				],
 				'slug' => [
-					'asc' => [ 'slug' => SORT_ASC ],
-					'desc' => ['slug' => SORT_DESC ],
+					'asc' => [ "$modelTable.slug" => SORT_ASC ],
+					'desc' => [ "$modelTable.slug" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'slug'
+					'label' => 'Slug'
 				],
 	            'type' => [
-	                'asc' => [ 'type' => SORT_ASC ],
-	                'desc' => ['type' => SORT_DESC ],
+	                'asc' => [ "$modelTable.type" => SORT_ASC ],
+	                'desc' => [ "$modelTable.type" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Type'
 	            ],
+	            'icon' => [
+	                'asc' => [ "$modelTable.icon" => SORT_ASC ],
+	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Icon'
+	            ],
 				'title' => [
-					'asc' => [ 'title' => SORT_ASC ],
-					'desc' => ['title' => SORT_DESC ],
+					'asc' => [ "$modelTable.title" => SORT_ASC ],
+					'desc' => [ "$modelTable.title" => SORT_DESC ],
 					'default' => SORT_DESC,
-					'label' => 'title'
+					'label' => 'Title'
 				],
-	            'active' => [
-	                'asc' => [ 'active' => SORT_ASC ],
-	                'desc' => ['active' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'Active'
-	            ],
-	            'cdate' => [
-	                'asc' => [ 'createdAt' => SORT_ASC ],
-	                'desc' => ['createdAt' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'Created At'
-	            ],
-	            'udate' => [
-	                'asc' => [ 'modifiedAt' => SORT_ASC ],
-	                'desc' => ['modifiedAt' => SORT_DESC ],
-	                'default' => SORT_DESC,
-	                'label' => 'Updated At'
-	            ]
+				'status' => [
+					'asc' => [ "$modelTable.status" => SORT_ASC ],
+					'desc' => [ "$modelTable.status" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Status'
+				],
+				'visibility' => [
+					'asc' => [ "$modelTable.visibility" => SORT_ASC ],
+					'desc' => [ "$modelTable.visibility" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Visibility'
+				],
+				'order' => [
+					'asc' => [ "$modelTable.order" => SORT_ASC ],
+					'desc' => [ "$modelTable.order" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Order'
+				],
+				'pinned' => [
+					'asc' => [ "$modelTable.pinned" => SORT_ASC ],
+					'desc' => [ "$modelTable.pinned" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Pinned'
+				],
+				'featured' => [
+					'asc' => [ "$modelTable.featured" => SORT_ASC ],
+					'desc' => [ "$modelTable.featured" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Featured'
+				],
+				'cdate' => [
+					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Created At'
+				],
+				'udate' => [
+					'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Updated At'
+				]
 			],
 			'defaultOrder' => [
 				'id' => SORT_DESC
@@ -164,16 +203,37 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 		// Filters ----------
 
-		// Filter - Status
+		// Params
+		$type	= Yii::$app->request->getQueryParam( 'type' );
 		$status	= Yii::$app->request->getQueryParam( 'status' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
-		if( isset( $status ) ) {
+		// Filter - Type
+		if( isset( $type ) ) {
 
-			switch( $status ) {
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
 
-				case 'active': {
+		// Filter - Status
+		if( isset( $status ) && isset( $modelClass::$urlRevStatusMap[ $status ] ) ) {
 
-					$config[ 'conditions' ][ "$modelTable.active" ]	= true;
+			$config[ 'conditions' ][ "$modelTable.status" ]	= $modelClass::$urlRevStatusMap[ $status ];
+		}
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'pinned': {
+
+					$config[ 'conditions' ][ "$modelTable.pinned" ] = true;
+
+					break;
+				}
+				case 'featured': {
+
+					$config[ 'conditions' ][ "$modelTable.featured" ] = true;
 
 					break;
 				}
@@ -186,7 +246,12 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'title' => "$modelTable.title", 'desc' => "$modelTable.description" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'title' => "$modelTable.title",
+				'desc' => "$modelTable.description",
+				'content' => "$modelTable.content"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -194,8 +259,15 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'slug' => "$modelTable.slug", 'title' => "$modelTable.title", 'desc' => "$modelTable.description",
-			'content' => "$modelTable.content", 'active' => "$modelTable.active"
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'content' => "$modelTable.content",
+			'status' => "$modelTable.status",
+			'visibility' => "$modelTable.visibility",
+			'order' => "$modelTable.order",
+			'pinned' => "$modelTable.pinned",
+			'featured' => "$modelTable.featured"
 		];
 
 		// Result -----------
@@ -215,27 +287,9 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 	// Create -------------
 
-	public function createByParams( $params = [], $config = [] ) {
+	public function createItem( $gallery, $item, $type = null ) {
 
-		$autoName	= isset( $config[ 'autoName' ] ) ? $config[ 'autoName' ] : false;
-
-		if( $autoName ) {
-
-			$gallery	= $this->getByNameType( $params[ 'name' ], $params[ 'type' ] );
-
-			// Rare scenario
-			if( isset( $gallery ) ) {
-
-				$params[ 'name' ]	= Yii::$app->security->generateRandomString( 16 );
-			}
-		}
-
-		return parent::createByParams( $params, $config );
-	}
-
-	public function createItem( $gallery, $item ) {
-
-		$modelFile	= new ModelFile();
+		$modelFile = Yii::$app->factory->get( 'modelFileService' )->getModelObject();
 
 		// Save Gallery Image
 		$this->fileService->saveImage( $item, [ 'model' => $modelFile, 'attribute' => 'modelId' ] );
@@ -243,25 +297,35 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 		// Save Gallery Item
 		if( $item->id > 0 ) {
 
-			$modelFile->parentType	= CoreGlobal::TYPE_GALLERY;
+			if( empty( $type ) ) {
+
+				$type = CoreGlobal::TYPE_DEFAULT;
+			}
+
+			$modelFile->parentType	= static::$parentType;
 			$modelFile->parentId	= $gallery->id;
+			$modelFile->type		= $type;
 
 			$modelFile->save();
 		}
 
-		return $item;
+		return $modelFile;
 	}
 
 	// Update -------------
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'templateId', 'name', 'title', 'description' ];
+		$admin 		= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
 
-		// Provide activate/deactivate capability to admin
-		if( isset( $config[ 'admin' ] ) && $config[ 'admin' ] ) {
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'templateId', 'name', 'slug', 'icon', 'title',
+			'description', 'visibility', 'content'
+		];
 
-			$attributes[] = 'active';
+		if( $admin ) {
+
+			$attributes	= ArrayHelper::merge( $attributes, [ 'status', 'order', 'pinned', 'featured' ] );
 		}
 
 		return parent::update( $model, [
@@ -284,7 +348,9 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 		if( count( $items ) == 0 && isset( $name ) ) {
 
-			$items	= File::loadFiles( $name );
+			$fileClass = Yii::$app->get( 'fileService' )->getModelClass();
+
+			$items = $fileClass::loadFiles( $name );
 		}
 
 		foreach( $items as $item ) {
@@ -300,15 +366,26 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 		}
 	}
 
-	public function switchActive( $model, $config = [] ) {
+	// Delete -------------
 
-		$global			= $model->global ? false : true;
-		$model->global	= $global;
+	public function delete( $model, $config = [] ) {
 
-		return parent::updateSelective( $model, [
-			'attributes' => [ 'global' ]
-		]);
- 	}
+		if( empty( $model ) ) {
+
+			return false;
+		}
+
+		// Delete Items
+		$this->fileService->deleteMultiple( $model->files );
+
+		// Delete mappings
+		Yii::$app->factory->get( 'modelGalleryService' )->deleteByModelId( $model->id );
+
+		// Delete model
+		return parent::delete( $model, $config );
+	}
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -318,19 +395,33 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 				switch( $action ) {
 
-					case 'active': {
+					case 'confirmed': {
 
-						$model->active = true;
-
-						$model->update();
+						$this->confirm( $model );
 
 						break;
 					}
-					case 'block': {
+					case 'rejected': {
 
-						$model->active = false;
+						$this->reject( $model );
 
-						$model->update();
+						break;
+					}
+					case 'active': {
+
+						$this->approve( $model );
+
+						break;
+					}
+					case 'frozen': {
+
+						$this->freeze( $model );
+
+						break;
+					}
+					case 'blocked': {
+
+						$this->block( $model );
 
 						break;
 					}
@@ -342,6 +433,22 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 
 				switch( $action ) {
 
+					case 'pinned': {
+
+						$model->pinned = true;
+
+						$model->update();
+
+						break;
+					}
+					case 'featured': {
+
+						$model->featured = true;
+
+						$model->update();
+
+						break;
+					}
 					case 'delete': {
 
 						$this->delete( $model );
@@ -355,25 +462,11 @@ class GalleryService extends \cmsgears\core\common\services\base\EntityService i
 		}
 	}
 
-	// Delete -------------
+	// Notifications ------
 
-	public function delete( $model, $config = [] ) {
+	// Cache --------------
 
-		// Delete items
-		$items	= $model->files;
-
-		// Delete Items
-		foreach ( $items as $item ) {
-
-			$this->fileService->delete( $item );
-		}
-
-		// Delete mappings
-		ModelGallery::deleteByModelId( $model->id );
-
-		// Delete model
-		return parent::delete( $model, $config );
-	}
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

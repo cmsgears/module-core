@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
@@ -8,13 +16,15 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\entities\Country;
-
-use cmsgears\core\common\services\traits\NameTrait;
-
 use cmsgears\core\common\services\interfaces\entities\ICountryService;
 
+use cmsgears\core\common\services\traits\base\NameTrait;
+
+/**
+ * CountryService provide service methods of country model.
+ *
+ * @since 1.0.0
+ */
 class CountryService extends \cmsgears\core\common\services\base\EntityService implements ICountryService {
 
 	// Variables ---------------------------------------------------
@@ -25,11 +35,9 @@ class CountryService extends \cmsgears\core\common\services\base\EntityService i
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Country';
+	public static $modelClass = '\cmsgears\core\common\models\entities\Country';
 
-	public static $modelTable	= CoreTables::TABLE_COUNTRY;
-
-	public static $parentType	= CoreGlobal::TYPE_COUNTRY;
+	public static $parentType = CoreGlobal::TYPE_COUNTRY;
 
 	// Protected --------------
 
@@ -63,31 +71,40 @@ class CountryService extends \cmsgears\core\common\services\base\EntityService i
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'name'
 				],
 				'code' => [
-					'asc' => [ 'code' => SORT_ASC ],
-					'desc' => [ 'code' => SORT_DESC ],
+					'asc' => [ "$modelTable.code" => SORT_ASC ],
+					'desc' => [ "$modelTable.code" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Code'
 				],
 				'iso' => [
-					'asc' => [ 'iso' => SORT_ASC ],
-					'desc' => [ 'iso' => SORT_DESC ],
+					'asc' => [ "$modelTable.iso" => SORT_ASC ],
+					'desc' => [ "$modelTable.iso" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'ISO'
 				]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 
@@ -111,7 +128,11 @@ class CountryService extends \cmsgears\core\common\services\base\EntityService i
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'code' => "$modelTable.code" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'code' => "$modelTable.code",
+				'iso' => "$modelTable.iso"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -119,7 +140,9 @@ class CountryService extends \cmsgears\core\common\services\base\EntityService i
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'code' => "$modelTable.code", 'iso' => "$modelTable.iso"
+			'name' => "$modelTable.name",
+			'code' => "$modelTable.code",
+			'iso' => "$modelTable.iso"
 		];
 
 		// Result -----------
@@ -133,7 +156,16 @@ class CountryService extends \cmsgears\core\common\services\base\EntityService i
 
 	public function getByCode( $code ) {
 
-		return Country::findByCode( $code );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByCode( $code );
+	}
+
+	public function getByIso( $iso ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findByIso( $iso );
 	}
 
 	// Read - Lists ----
@@ -154,6 +186,10 @@ class CountryService extends \cmsgears\core\common\services\base\EntityService i
 			'attributes' => $attributes
 		]);
 	}
+
+	// Delete -------------
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -176,7 +212,11 @@ class CountryService extends \cmsgears\core\common\services\base\EntityService i
 		}
 	}
 
-	// Delete -------------
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

@@ -1,22 +1,30 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\mappers;
 
 // Yii Imports
+use Yii;
 use yii\db\Query;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\mappers\ModelOption;
-
 use cmsgears\core\common\services\interfaces\resources\IOptionService;
 use cmsgears\core\common\services\interfaces\mappers\IModelOptionService;
 
-use cmsgears\core\common\services\traits\MapperTrait;
+use cmsgears\core\common\services\base\ModelMapperService;
 
 /**
- * The class ModelOptionService is base class to perform database activities for ModelCategory Entity.
+ * ModelOptionService provide service methods of option mapper.
+ *
+ * @since 1.0.0
  */
-class ModelOptionService extends \cmsgears\core\common\services\base\EntityService implements IModelOptionService {
+class ModelOptionService extends ModelMapperService implements IModelOptionService {
 
 	// Variables ---------------------------------------------------
 
@@ -26,11 +34,7 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelOption';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_OPTION;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\mappers\ModelOption';
 
 	// Protected --------------
 
@@ -46,13 +50,11 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 
 	// Traits ------------------------------------------------------
 
-	use MapperTrait;
-
 	// Constructor and Initialisation ------------------------------
 
 	public function __construct( IOptionService $optionService, $config = [] ) {
 
-		$this->optionService	= $optionService;
+		$this->optionService = $optionService;
 
 		parent::__construct( $config );
 	}
@@ -75,10 +77,11 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 
 	public function getModelCounts( $parentType, $categorySlug, $active = false ) {
 
-		$categoryTable	= CoreTables::TABLE_CATEGORY;
-		$optionTable	= CoreTables::TABLE_OPTION;
-		$mOptionTable	= CoreTables::TABLE_MODEL_OPTION;
-		$query			= new Query();
+		$categoryTable	= Yii::$app->get( 'categoryService' )->getModelTable();
+		$optionTable	= $this->optionService->getModelTable();
+		$mOptionTable	= Yii::$app->get( 'modelOptionService' )->getModelTable();
+
+		$query = new Query();
 
 		$query->select( [ "$optionTable.name", "count($optionTable.id) as total" ] )
 				->from( $optionTable )
@@ -92,15 +95,16 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 			$query->andWhere( "$mOptionTable.active=$active" );
 		}
 
-		$counts		= $query->all();
+		$counts	= $query->all();
+
 		$returnArr	= [];
 		$counter	= 0;
 
-		foreach ( $counts as $count ) {
+		foreach( $counts as $count ) {
 
 			$returnArr[ $count[ 'name' ] ] = $count[ 'total' ];
 
-			$counter	= $counter + $count[ 'total' ];
+			$counter = $counter + $count[ 'total' ];
 		}
 
 		$returnArr[ 'all' ] = $counter;
@@ -113,6 +117,32 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 
 	// Read - Lists ----
 
+	public function getValueList( $parentId, $parentType, $categorySlug, $active = true ) {
+
+		$categoryTable	= Yii::$app->factory->get( 'categoryService' )->getModelTable();
+		$optionTable	= Yii::$app->factory->get( 'optionService' )->getModelTable();
+		$mOptionTable	= Yii::$app->factory->get( 'modelOptionService' )->getModelTable();
+
+		$query = new Query();
+
+		$query->select( [ "$optionTable.value" ] )
+				->from( $optionTable )
+				->leftJoin( $mOptionTable, "$mOptionTable.modelId=$optionTable.id" )
+				->leftJoin( $categoryTable, "$categoryTable.id=$optionTable.categoryId" )
+				->where( "$mOptionTable.parentId=:pid AND $mOptionTable.parentType=:ptype AND $mOptionTable.active=:active AND $categoryTable.slug=:cslug", [ ':pid' => $parentId, ':ptype' => $parentType, ':active' => $active, ':cslug' => $categorySlug ] );
+
+		$values = $query->all();
+
+		$data = [];
+
+		foreach( $values as $value ) {
+
+			$data[] = $value[ 'value' ];
+		}
+
+		return $data;
+	}
+
 	// Read - Maps -----
 
 	// Read - Others ---
@@ -123,16 +153,20 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'order', 'active' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'order', 'active', 'value'
+		];
 
 		return parent::update( $model, [
 			'attributes' => $attributes
 		]);
 	}
 
-	public function toggle( $parentId, $parentType, $modelId ) {
+	public function toggle( $parentId, $parentType, $modelId, $mappingType ) {
 
-		$toSave		= ModelOption::findByModelId( $parentId, $parentType, $modelId );
+		$modelClass	= static::$modelClass;
+
+		$toSave	= $modelClass::findFirstByParentModelId( $parentId, $parentType, $modelId );
 
 		// Existing mapping
 		if( isset( $toSave ) ) {
@@ -151,11 +185,61 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 		// New Mapping
 		else {
 
-			$this->createByParams( [ 'modelId' => $modelId, 'parentId' => $parentId, 'parentType' => $parentType, 'active' => true ] );
+			$this->createByParams([
+				'modelId' => $modelId, 'parentId' => $parentId, 'parentType' => $parentType,
+				'type' => $mappingType, 'active' => true
+			]);
 		}
 	}
 
+	public function bindOptions( $binder, $parentType ) {
+
+		$parentId	= $binder->binderId;
+		$allData	= $binder->all;
+		$activeData	= $binder->binded;
+
+		foreach( $allData as $id ) {
+
+			$modelClass	= static::$modelClass;
+
+			$toSave = $modelClass::findFirstByParentModelId( $parentId, $parentType, $id );
+
+			// Existing mapping
+			if( isset( $toSave ) ) {
+
+				if( in_array( $id, $activeData ) ) {
+
+					$toSave->active	= true;
+				}
+				else {
+
+					$toSave->active	= false;
+				}
+
+				$toSave->update();
+			}
+			// Save only required data
+			else if( in_array( $id, $activeData ) ) {
+
+				$this->createByParams([
+					'modelId' => $id, 'parentId' => $parentId, 'parentType' => $parentType,
+					'active' => true
+				]);
+			}
+		}
+
+		return true;
+	}
+
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 
@@ -178,40 +262,6 @@ class ModelOptionService extends \cmsgears\core\common\services\base\EntityServi
 	// Create -------------
 
 	// Update -------------
-
-	public function bindOptions( $binder, $parentType ) {
-
-		$parentId	= $binder->binderId;
-		$allData	= $binder->all;
-		$activeData	= $binder->binded;
-
-		foreach ( $allData as $id ) {
-
-			$toSave		= ModelOption::findByModelId( $parentId, $parentType, $id );
-
-			// Existing mapping
-			if( isset( $toSave ) ) {
-
-				if( in_array( $id, $activeData ) ) {
-
-					$toSave->active	= true;
-				}
-				else {
-
-					$toSave->active	= false;
-				}
-
-				$toSave->update();
-			}
-			// Save only required data
-			else if( in_array( $id, $activeData ) ) {
-
-				$this->createByParams( [ 'modelId' => $id, 'parentId' => $parentId, 'parentType' => $parentType, 'active' => true ] );
-			}
-		}
-
-		return true;
-	}
 
 	// Delete -------------
 

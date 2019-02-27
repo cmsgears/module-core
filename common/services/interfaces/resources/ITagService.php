@@ -1,16 +1,26 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\interfaces\resources;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\services\interfaces\base\INameType;
+use cmsgears\core\common\services\interfaces\base\IResourceService;
+use cmsgears\core\common\services\interfaces\base\ISlugType;
+use cmsgears\core\common\services\interfaces\resources\IData;
 
-use cmsgears\core\common\services\interfaces\base\INameTypeService;
-use cmsgears\core\common\services\interfaces\base\ISlugTypeService;
-
-interface ITagService extends INameTypeService, ISlugTypeService {
+/**
+ * ITagService provide service methods for tag model.
+ *
+ * @since 1.0.0
+ */
+interface ITagService extends IResourceService, IData, INameType, ISlugType {
 
 	// Data Provider ------
 
@@ -22,10 +32,20 @@ interface ITagService extends INameTypeService, ISlugTypeService {
 
 	// Read - Maps -----
 
+	// Read - Others ---
+
 	// Create -------------
 
 	// Update -------------
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 }

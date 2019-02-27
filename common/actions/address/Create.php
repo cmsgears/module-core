@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\address;
 
 // Yii Imports
@@ -8,14 +16,16 @@ use yii\db\Expression;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\resources\Address;
+use cmsgears\core\common\actions\base\ModelAction;
 
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
  * The Create action creates model address, address and associate the model address to parent.
+ *
+ * @since 1.0.0
  */
-class Create extends \cmsgears\core\common\actions\base\ModelAction {
+class Create extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -31,12 +41,13 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $parent		= true;
+	public $parent = true;
 
-	public $scenario	= 'location';
+	public $scenario = 'location';
 
 	// Protected --------------
 
+	protected $addressService;
 	protected $modelAddressService;
 
 	// Private ----------------
@@ -49,7 +60,9 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 		parent::init();
 
-		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
+		$this->addressService = Yii::$app->factory->get( 'addressService' );
+
+		$this->modelAddressService = Yii::$app->factory->get( 'modelAddressService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -68,7 +81,7 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 		if( isset( $this->model ) ) {
 
-			$address = new Address();
+			$address = $this->addressService->getModelObject();
 
 			if( isset( $this->scenario ) ) {
 
@@ -80,15 +93,21 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 				}
 			}
 
-			if( $address->load( Yii::$app->request->post(), 'Address' ) && $address->validate() ) {
+			if( $address->load( Yii::$app->request->post(), $address->getClassName() ) && $address->validate() ) {
 
-				$type	= isset( $this->modelType ) ? $this->modelType : Address::TYPE_DEFAULT;
+				// Create Address
+				$address = $this->addressService->create( $address );
 
-				// Address - Create
-				$modelAddress	= $this->modelAddressService->create( $address, [ 'parentId' => $this->model->id, 'parentType' => $this->parentType, 'type' => $type ] );
-				$address		= $modelAddress->model;
+				// Create Mapping
+				$modelAddress = $this->modelAddressService->activateByModelId( $this->model->id, $this->parentType, $address->id, $this->modelType );
 
-				$data	= [ 'cid' => $modelAddress->id, 'title' => $address->title, 'value' => $address->toString() ];
+				$data = [
+					'cid' => $modelAddress->id, 'ctype' => $modelAddress->type,
+					'title' => $address->title, 'line1' => $address->line1, 'line2' => $address->line2,
+					'country' => $address->countryName, 'province' => $address->provinceName,
+					'region' => $address->regionName, 'city' => $address->cityName,
+					'zip' => $address->zip, 'value' => $address->toString()
+				];
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
@@ -104,4 +123,5 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

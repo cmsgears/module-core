@@ -4,15 +4,10 @@ namespace cmsgears\core\common\actions\category;
 // Yii Imports
 use Yii;
 
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
-use cmsgears\core\common\utilities\AjaxUtil;
-
 /**
  * Remove action disable the category mapping for model by de-activating it.
  */
-class Remove extends \cmsgears\core\common\actions\base\ModelAction {
+class Remove extends \cmsgears\core\common\actions\mapper\Remove {
 
 	// Variables ---------------------------------------------------
 
@@ -28,8 +23,6 @@ class Remove extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $parent 	= true;
-
 	// Protected --------------
 
 	// Private ----------------
@@ -37,6 +30,13 @@ class Remove extends \cmsgears\core\common\actions\base\ModelAction {
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
+
+	public function init() {
+
+		parent::init();
+
+		$this->modelMapperService = Yii::$app->factory->get( 'modelCategoryService' );
+	}
 
 	// Instance methods --------------------------------------------
 
@@ -50,24 +50,4 @@ class Remove extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Remove --------------------------------
 
-	public function run( $cid ) {
-
-		if( isset( $this->model ) && isset( $cid ) ) {
-
-			$modelCategoryService	= Yii::$app->factory->get( 'modelCategoryService' );
-
-			$modelCategory	= $modelCategoryService->getById( $cid );
-
-			if( isset( $modelCategory ) && $modelCategory->checkParent( $this->model->id, $this->parentType ) ) {
-
-				$modelCategoryService->disable( $modelCategory );
-
-				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
-			}
-		}
-
-		// Trigger Ajax Failure
-		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
-	}
 }

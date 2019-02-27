@@ -1,20 +1,17 @@
 <?php
 namespace cmsgears\core\common\models\hierarchy;
 
-// Yii Imports
-use \Yii;
-
-// CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 /**
- * HierarchicalModel - It can be used by models which need parent child relationship. It supports two way relationship i.e. by parentId and Nested Set(left, right value).
+ * HierarchicalModel can be used by models which need parent child relationship. It supports
+ * two way relationship i.e. by parentId and Nested Set(left, right value).
  *
  * @property long $parentId
  * @property long $rootId
  * @property string $name
  * @property integer lValue
  * @property integer rValue
+ *
+ * @since 1.0.0
  */
 abstract class NestedSetModel extends HierarchicalModel {
 
@@ -57,6 +54,35 @@ abstract class NestedSetModel extends HierarchicalModel {
 	// Validators ----------------------------
 
 	// NestedSetModel ------------------------
+
+	/**
+	 * Return the corresponding root model.
+	 *
+	 * @return \cmsgears\core\common\models\base\ActiveRecord
+	 */
+	abstract public function getRoot();
+
+	/**
+	 * Check whether the model has root.
+	 *
+	 * @return boolean
+	 */
+	public function hasRoot() {
+
+		return isset( $this->rootId ) && $this->rootId > 0;
+	}
+
+	/**
+	 * Return the name of associated parent.
+	 *
+	 * @return string|null
+	 */
+	public function getRootName() {
+
+		$root = $this->root;
+
+		return isset( $root ) ? $root->name : null;
+	}
 
 	// Static Methods ----------------------------------------------
 

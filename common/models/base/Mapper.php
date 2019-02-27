@@ -1,12 +1,20 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\base;
 
 /**
- * Mapper Entity
+ * Base model of all the mapper mapping two different models.
  *
- * It's the parent entity for all the mappers.
+ * @since 1.0.0
  */
-abstract class Mapper extends Entity {
+abstract class Mapper extends ActiveRecord {
 
 	// Variables ---------------------------------------------------
 
@@ -47,8 +55,6 @@ abstract class Mapper extends Entity {
 	// Validators ----------------------------
 
 	// Mapper --------------------------------
-
-	abstract public function getModel();
 
 	// Static Methods ----------------------------------------------
 

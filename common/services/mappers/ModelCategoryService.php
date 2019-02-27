@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\mappers;
 
 // Yii Imports
@@ -6,18 +14,16 @@ use Yii;
 
 // CMG Imports
 use cmsgears\core\common\models\forms\Binder;
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\mappers\ModelCategory;
 
 use cmsgears\core\common\services\interfaces\resources\ICategoryService;
 use cmsgears\core\common\services\interfaces\mappers\IModelCategoryService;
 
-use cmsgears\core\common\services\traits\MapperTrait;
-
 /**
- * The class ModelCategoryService is base class to perform database activities for ModelCategory Entity.
+ * ModelCategoryService provide service methods of category mapper.
+ *
+ * @since 1.0.0
  */
-class ModelCategoryService extends \cmsgears\core\common\services\base\EntityService implements IModelCategoryService {
+class ModelCategoryService extends \cmsgears\core\common\services\base\ModelMapperService implements IModelCategoryService {
 
 	// Variables ---------------------------------------------------
 
@@ -27,11 +33,7 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelCategory';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_CATEGORY;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\mappers\ModelCategory';
 
 	// Protected --------------
 
@@ -47,13 +49,11 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 
 	// Traits ------------------------------------------------------
 
-	use MapperTrait;
-
 	// Constructor and Initialisation ------------------------------
 
 	public function __construct( ICategoryService $categoryService, $config = [] ) {
 
-		$this->categoryService	= $categoryService;
+		$this->categoryService = $categoryService;
 
 		parent::__construct( $config );
 	}
@@ -78,9 +78,10 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 
 	public function getModelCounts( $parentType, $categoryType ) {
 
-		$categoryTable	= CoreTables::TABLE_CATEGORY;
-		$mcategoryTable	= CoreTables::TABLE_MODEL_CATEGORY;
-		$query			= new Query();
+		$categoryTable	= Yii::$app->get( 'categoryService' )->getModelTable();
+		$mcategoryTable	= Yii::$app->get( 'modelCategoryService' )->getModelTable();
+
+		$query = new Query();
 
 		$query->select( [ 'slug', "count($categoryTable.id) as total" ] )
 				->from( $categoryTable )
@@ -88,7 +89,8 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 				->where( "$mcategoryTable.parentType='$parentType' AND $categoryTable.type='$categoryType'" )
 				->groupBy( "$categoryTable.id" );
 
-		$counts		= $query->all();
+		$counts = $query->all();
+
 		$returnArr	= [];
 		$counter	= 0;
 
@@ -96,7 +98,7 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 
 			$returnArr[ $count[ 'slug' ] ] = $count[ 'total' ];
 
-			$counter	= $counter + $count[ 'total' ];
+			$counter = $counter + $count[ 'total' ];
 		}
 
 		$returnArr[ 'all' ] = $counter;
@@ -108,14 +110,16 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 
 	public function getActiveCategoryIdList( $categoryId, $parentType ) {
 
-		$models = ModelCategory::findActiveByCategoryIdParentType( $categoryId, $parentType );
+		$modelClass	= static::$modelClass;
+
+		$models = $modelClass::findActiveByCategoryIdParentType( $categoryId, $parentType );
 		$ids	= [];
 
 		foreach ( $models as $model ) {
 
-			$category	= $model->category;
+			$category = $model->category;
 
-			$ids[]		= $category->id;
+			$ids[] = $category->id;
 		}
 
 		return $ids;
@@ -123,14 +127,16 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 
 	public function getActiveCategoryIdListByParent( $parentId, $parentType ) {
 
-		$models = ModelCategory::findActiveByParent( $parentId, $parentType );
+		$modelClass	= static::$modelClass;
+
+		$models = $modelClass::findActiveByParent( $parentId, $parentType );
 		$ids	= [];
 
 		foreach ( $models as $model ) {
 
-			$category	= $model->category;
+			$category = $model->category;
 
-			$ids[]		= $category->id;
+			$ids[] = $category->id;
 		}
 
 		return $ids;
@@ -144,12 +150,44 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 
 	// Update -------------
 
+	public function toggle( $parentId, $parentType, $modelId ) {
+
+		$modelClass	= static::$modelClass;
+
+		$toSave	= $modelClass::findFirstByParentModelId( $parentId, $parentType, $modelId );
+
+		// Existing mapping
+		if( isset( $toSave ) ) {
+
+			if( $toSave->active ) {
+
+				$toSave->active	= false;
+			}
+			else {
+
+				$toSave->active	= true;
+			}
+
+			$toSave->update();
+		}
+		// New Mapping
+		else {
+
+			$this->createByParams( [ 'modelId' => $modelId, 'parentId' => $parentId, 'parentType' => $parentType, 'active' => true ] );
+		}
+	}
+
 	public function bindCategories( $parentId, $parentType, $config = [] ) {
 
+		$modelClass	= static::$modelClass;
 		$binderName	= isset( $config[ 'binder' ] ) ? $config[ 'binder' ] : 'Binder';
-		$binder		= new Binder();
+		$binder		= $config[ 'categoryBinder' ] ?? null;
 
-		$binder->load( Yii::$app->request->post(), $binderName );
+		if( empty( $binder ) ) {
+
+			$binder		= new Binder();
+			$binder->load( Yii::$app->request->post(), $binderName );
+		}
 
 		$all		= $binder->all;
 		$binded		= $binder->binded;
@@ -165,16 +203,16 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 
 			$process = $binded;
 
-			ModelCategory::disableByParent( $parentId, $parentType );
+			$modelClass::disableByParent( $parentId, $parentType );
 		}
 
 		// Process the List
-		foreach ( $process as $id ) {
+		foreach( $process as $id ) {
 
-			$existingMapping	= ModelCategory::findByModelId( $parentId, $parentType, $id );
+			$existingMapping = $modelClass::findByModelId( $parentId, $parentType, $id );
 
 			// Existing mapping
-			if( isset( $existingMapping ) ) {
+			if( !empty( $existingMapping ) ) {
 
 				if( in_array( $id, $binded ) ) {
 
@@ -198,6 +236,14 @@ class ModelCategoryService extends \cmsgears\core\common\services\base\EntitySer
 	}
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

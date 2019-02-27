@@ -1,29 +1,45 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\mappers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\CoreTables;
+
+use cmsgears\core\common\models\interfaces\base\IFeatured;
+
+use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\common\models\traits\MapperTrait;
+use cmsgears\core\common\models\traits\base\FeaturedTrait;
 
 /**
- * ModelFile Entity - The mapper to map File Model to specific parent model for given parentId and parentType.
+ * The mapper to map File Model to specific parent model for given parentId and parentType.
  *
- * @property long $id
- * @property long $modelId
- * @property long $parentId
+ * @property integer $id
+ * @property integer $modelId
+ * @property integer $parentId
  * @property string $parentType
  * @property string $type
- * @property short $order
+ * @property string $key
+ * @property integer $order
  * @property boolean $active
+ * @property boolean $pinned
+ * @property boolean $featured
+ *
+ * @since 1.0.0
  */
-class ModelFile extends \cmsgears\core\common\models\base\Mapper {
+class ModelFile extends ModelMapper implements IFeatured {
 
 	// Variables ---------------------------------------------------
 
@@ -45,7 +61,7 @@ class ModelFile extends \cmsgears\core\common\models\base\Mapper {
 
 	// Traits ------------------------------------------------------
 
-	use MapperTrait;
+	use FeaturedTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -64,20 +80,12 @@ class ModelFile extends \cmsgears\core\common\models\base\Mapper {
 	 */
 	public function rules() {
 
-		return [
-			// Required, Safe
-			[ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
-			[ [ 'id' ], 'safe' ],
-			// Unique
-			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
-			// Text Limit
-			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			// Other
-			[ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'active' ], 'boolean' ]
-		];
+		$rules = parent::rules();
+
+		$rules[] = [ 'key', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ];
+		$rules[] = [ [ 'pinned', 'featured' ], 'boolean' ];
+
+		return $rules;
 	}
 
 	/**
@@ -85,14 +93,11 @@ class ModelFile extends \cmsgears\core\common\models\base\Mapper {
 	 */
 	public function attributeLabels() {
 
-		return [
-			'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_FILE ),
-			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
-		];
+		$labels = parent::attributeLabels();
+
+		$labels[ 'key' ] = 'Key';
+
+		return $labels;
 	}
 
 	// CMG interfaces ------------------------
@@ -104,11 +109,13 @@ class ModelFile extends \cmsgears\core\common\models\base\Mapper {
 	// ModelFile -----------------------------
 
 	/**
-	 * @return Gallery - associated files
+	 * Return the file associated with the mapping.
+	 *
+	 * @return File
 	 */
 	public function getModel() {
 
-		return $this->hasOne( File::className(), [ 'id' => 'modelId' ] );
+		return $this->hasOne( File::class, [ 'id' => 'modelId' ] );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -122,7 +129,7 @@ class ModelFile extends \cmsgears\core\common\models\base\Mapper {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_MODEL_FILE;
+		return CoreTables::getTableName( CoreTables::TABLE_MODEL_FILE );
 	}
 
 	// CMG parent classes --------------------
@@ -131,31 +138,58 @@ class ModelFile extends \cmsgears\core\common\models\base\Mapper {
 
 	// Read - Query -----------
 
-	public static function queryWithHasOne( $config = [] ) {
-
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'model' ];
-		$config[ 'relations' ]	= $relations;
-
-		return parent::queryWithAll( $config );
-	}
-
 	// Read - Find ------------
 
+	/**
+	 * Find and return the mappings for given title. It's useful in cases where unique
+	 * title is required for file.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $fileTag
+	 * @return ModelFile
+	 */
+	public static function findByFileTag( $parentId, $parentType, $fileTag, $type = null ) {
+
+		$mapTable	= static::tableName();
+		$fileTable	= CoreTables::getTableName( CoreTables::TABLE_FILE );
+
+		if( empty( $type ) ) {
+
+			$type = CoreGlobal::TYPE_DEFAULT;
+		}
+
+		return self::queryByParent( $parentId, $parentType )->andWhere( "$fileTable.tag=:tag AND $mapTable.type=:type", [ ':tag' => $fileTag, ':type' => $type ] )->one();
+	}
+
+	/**
+	 * Find and return the mappings for given title.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $fileTitle
+	 * @return ModelFile[]
+	 */
 	public static function findByFileTitle( $parentId, $parentType, $fileTitle ) {
 
-		return self::queryByParent( $parentId, $parentType )->andWhere( 'title=:title', [ ':title' => $fileTitle ] )->one();
+		$fileTable = CoreTables::getTableName( CoreTables::TABLE_FILE );
+
+		return self::queryByParent( $parentId, $parentType )->andFilterWhere( [ 'like', "$fileTable.title", $fileTitle ] )->all();
 	}
 
-	public static function findByFileTitleLike( $parentId, $parentType, $title ) {
+	/**
+	 * Find and return the mappings for file type.
+	 *
+	 * @param integer $parentId
+	 * @param string $parentType
+	 * @param string $fileType
+	 * @return ModelFile[]
+	 */
+	public static function findByFileType( $parentId, $parentType, $fileType ) {
 
-		return self::queryByParent( $parentId, $parentType )->andFilterWhere( [ 'like', 'title', $title ] )->all();
-	}
+		$fileTable = CoreTables::getTableName( CoreTables::TABLE_FILE );
 
-	public static function findByFileType( $parentId, $parentType, $type ) {
-
-		$fileTable = CoreTables::TABLE_MODEL_FILE;
-
-		return self::queryByParent( $parentId, $parentType )->andFilterWhere( [ 'like', "$fileTable.type", $type ] )->all();
+		return self::queryByParent( $parentId, $parentType )->andFilterWhere( [ 'like', "$fileTable.type", $fileType ] )->all();
 	}
 
 	// Create -----------------

@@ -1,18 +1,28 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
+
+// Yii Imports
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\mappers\ModelAddress;
-
 use cmsgears\core\common\services\interfaces\resources\IAddressService;
 
 /**
- * The class AddressService is base class to perform database activities for Address Entity.
+ * AddressService provide service methods of address model.
+ *
+ * @since 1.0.0
  */
-class AddressService extends \cmsgears\core\common\services\base\EntityService implements IAddressService {
+class AddressService extends \cmsgears\core\common\services\base\ResourceService implements IAddressService {
 
 	// Variables ---------------------------------------------------
 
@@ -22,11 +32,9 @@ class AddressService extends \cmsgears\core\common\services\base\EntityService i
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\Address';
+	public static $modelClass = '\cmsgears\core\common\models\resources\Address';
 
-	public static $modelTable	= CoreTables::TABLE_ADDRESS;
-
-	public static $parentType	= CoreGlobal::TYPE_ADDRESS;
+	public static $parentType = CoreGlobal::TYPE_ADDRESS;
 
 	// Protected --------------
 
@@ -70,8 +78,9 @@ class AddressService extends \cmsgears\core\common\services\base\EntityService i
 
 	public function create( $model, $config = [] ) {
 
-		$model->provinceName	= $model->province->name;
 		$model->countryName		= $model->country->name;
+		$model->provinceName	= $model->province->name;
+		$model->regionName		= isset( $model->region ) ? $model->region->name : null;
 
 		return parent::create( $model, $config );
 	}
@@ -80,11 +89,17 @@ class AddressService extends \cmsgears\core\common\services\base\EntityService i
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'countryId', 'provinceId', 'cityId', 'title', 'line1', 'line2', 'line3', 'cityName', 'provinceName', 'countryName', 'zip', 'subZip', 'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude', 'zoomLevel' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'countryId', 'provinceId', 'regionId', 'cityId',
+			'title', 'line1', 'line2', 'line3',
+			'cityName', 'regionName', 'provinceName', 'countryName', 'zip', 'subZip', 'landmark',
+			'firstName', 'lastName', 'phone', 'email', 'fax', 'website', 'longitude', 'latitude', 'zoomLevel'
+		];
 
 		$model->provinceName	= $model->province->name;
 		$model->countryName		= $model->country->name;
-        
+		$model->regionName		= isset( $model->region ) ? $model->region->name : null;
+
         $config[ 'attributes' ] = $attributes;
 
 		return parent::update( $model, $config );
@@ -95,11 +110,40 @@ class AddressService extends \cmsgears\core\common\services\base\EntityService i
 	public function delete( $model, $config = [] ) {
 
 		// Delete mapping
-		ModelAddress::deleteByModelId( $model->id );
+		Yii::$app->factory->get( 'modelAddressService' )->deleteByModelId( $model->id );
 
 		// Delete model
 		return parent::delete( $model, $config );
 	}
+
+	// Bulk ---------------
+
+	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
+
+		switch( $column ) {
+
+			case 'model': {
+
+				switch( $action ) {
+
+					case 'delete': {
+
+						$this->delete( $model );
+
+						break;
+					}
+				}
+
+				break;
+			}
+		}
+	}
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

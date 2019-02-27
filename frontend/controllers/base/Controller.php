@@ -1,13 +1,28 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\frontend\controllers\base;
+
+// Yii Imports
+use Yii;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
-use cmsgears\core\frontend\config\WebGlobalCore;
 
 use cmsgears\core\frontend\config\SiteProperties;
 
-class Controller extends \cmsgears\core\common\controllers\base\Controller {
+/**
+ * Base Controller of all frontend controllers.
+ *
+ * @since 1.0.0
+ */
+abstract class Controller extends \cmsgears\core\common\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -28,10 +43,10 @@ class Controller extends \cmsgears\core\common\controllers\base\Controller {
 		parent::init();
 
 		// Default Layout
-		$this->layout			= WebGlobalCore::LAYOUT_PRIVATE;
+		$this->layout = Yii::$app->core->defaultLayout;
 
 		// Default Permission
-		$this->crudPermission	= CoreGlobal::PERM_USER;
+		$this->crudPermission = CoreGlobal::PERM_USER;
 	}
 
 	// Instance methods --------------------------------------------
@@ -54,9 +69,10 @@ class Controller extends \cmsgears\core\common\controllers\base\Controller {
 
 		if( !isset( $this->siteProperties ) ) {
 
-			$this->siteProperties	= SiteProperties::getInstance();
+			$this->siteProperties = SiteProperties::getInstance();
 		}
 
 		return $this->siteProperties;
 	}
+
 }

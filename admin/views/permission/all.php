@@ -6,41 +6,45 @@ use cmsgears\widgets\grid\DataGrid;
 
 $coreProperties = $this->context->getCoreProperties();
 $this->title	= 'Permissions | ' . $coreProperties->getSiteTitle();
+$apixBase		= $this->context->apixBase;
 
-// Templates
+// View Templates
 $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
+$themeTemplates		= '@themes/admin/views/templates';
 ?>
-
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
 	'title' => 'Permissions', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [ 'name' => 'Name', 'desc' => 'Description' ],
 	'sortColumns' => [
-		'name' => 'Name', 'slug' => 'Slug',
+		'name' => 'Name',
 		'cdate' => 'Created At', 'udate' => 'Updated At'
 	],
-	//'filters' => [ 'status' => [ 'group' => 'Group' ] ],
+	'filters' => [
+		'model' => [ 'group' => 'Group' ]
+	],
 	'reportColumns' => [
 		'name' => [ 'title' => 'Name', 'type' => 'text' ],
-		'slug' => [ 'title' => 'Slug', 'type' => 'text' ],
 		'desc' => [ 'title' => 'Description', 'type' => 'text' ]
 	],
 	'bulkPopup' => 'popup-grid-bulk', 'bulkActions' => [
-		'status' => [ 'block' => 'Block', 'active' => 'Activate' ],
 		'model' => [ 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,
-	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, 'x2', null, 'x2', 'x8', null ] ],
+	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x2', 'x2', null, 'x7', null ] ],
 	'gridColumns' => [
 		'bulk' => 'Action',
+		'icon' => [ 'title' => 'Icon', 'generate' => function( $model ) {
+			return "<div class='align align-center'><i class=\"$model->icon\"></i></div>" ;
+		}],
 		'name' => 'Name',
-		'icon' => [ 'title' => 'Icon', 'generate' => function( $model ) { return "<i class=\"$model->icon\"></i>"; } ],
 		'slug' => 'Slug',
+		'group' => [ 'title' => 'Group', 'generate' => function( $model ) { return $model->getGroupStr(); } ],
 		'description' => 'Description',
 		'actions' => 'Actions'
 	],
 	'gridCards' => [ 'root' => 'col col12', 'factor' => 'x3' ],
-	'templateDir' => '@themes/admin/views/templates/widget/grid',
+	'templateDir' => "$themeTemplates/widget/grid",
 	//'dataView' => "$moduleTemplates/grid/data/permission",
 	//'cardView' => "$moduleTemplates/grid/cards/permission",
 	//'actionView' => "$moduleTemplates/grid/actions/permission"
@@ -48,12 +52,12 @@ $moduleTemplates	= '@cmsgears/module-core/admin/views/templates';
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
-	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'bulk',
-	'data' => [ 'model' => 'Permission', 'app' => 'main', 'controller' => 'crud', 'action' => 'bulk', 'url' => "core/permission/bulk" ]
+	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
+	'data' => [ 'model' => 'Permission', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
 ]) ?>
 
 <?= Popup::widget([
 	'title' => 'Delete Permission', 'size' => 'medium',
-	'templateDir' => Yii::getAlias( '@themes/admin/views/templates/widget/popup/grid' ), 'template' => 'delete',
-	'data' => [ 'model' => 'Permission', 'app' => 'main', 'controller' => 'crud', 'action' => 'delete', 'url' => "core/permission/delete?id=" ]
+	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
+	'data' => [ 'model' => 'Permission', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
 ]) ?>

@@ -1,11 +1,12 @@
 <?php
 /**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
  * @link https://www.cmsgears.org/
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- * @license https://www.cmsgears.org/license/
- * @package module
- * @subpackage core
  */
+
 namespace cmsgears\core\common\guidelines;
 
 // Yii Imports
@@ -27,7 +28,6 @@ use cmsgears\core\common\config\CoreGlobal;
  *	<li>Class closure</li>
  * </ol>
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
 class TablesTemplate {
@@ -36,5 +36,6 @@ class TablesTemplate {
 
 	// Resources ------------
 
-	// Mappers & Traits -----
+	// Mappers --------------
+
 }

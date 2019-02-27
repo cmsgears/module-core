@@ -1,18 +1,25 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\ModelHierarchy;
-
 use cmsgears\core\common\services\interfaces\resources\IModelHierarchyService;
 
 /**
- * The class ModelHierarchyService is base class to perform database activities for ModelHierarchy Entity.
+ * ModelHierarchyService provide service methods of model hierarchy.
+ *
+ * @since 1.0.0
  */
-class ModelHierarchyService extends \cmsgears\core\common\services\base\EntityService implements IModelHierarchyService {
+class ModelHierarchyService extends \cmsgears\core\common\services\base\ModelResourceService implements IModelHierarchyService {
 
 	// Variables ---------------------------------------------------
 
@@ -22,11 +29,7 @@ class ModelHierarchyService extends \cmsgears\core\common\services\base\EntitySe
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\ModelHierarchy';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_HIERARCHY;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\resources\ModelHierarchy';
 
 	// Protected --------------
 
@@ -62,12 +65,16 @@ class ModelHierarchyService extends \cmsgears\core\common\services\base\EntitySe
 
 	public function getRoot( $rootId, $parentType ) {
 
-		return ModelHierarchy::findRoot( $rootId, $parentType );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findRoot( $rootId, $parentType );
 	}
 
 	public function getChildren( $parentId, $parentType ) {
 
-		return ModelHierarchy::findByParent( $parentId, $parentType );
+		$modelClass	= static::$modelClass;
+
+		return $modelClass::findByParent( $parentId, $parentType );
 	}
 
 	// Read - Lists ----
@@ -80,12 +87,13 @@ class ModelHierarchyService extends \cmsgears\core\common\services\base\EntitySe
 
 	public function createInHierarchy( $parentId, $parentType, $rootId, $childId ) {
 
-		$root	= $this->getRoot( $rootId, $parentType );
+		$root = $this->getRoot( $rootId, $parentType );
 
 		// Add Root
 		if( !isset( $root ) ) {
 
-			$model				= new ModelHierarchy();
+			$model	= $this->getModelObject();
+
 			$model->rootId		= $rootId;
 			$model->parentType	= $parentType;
 			$model->lValue		= CoreGlobal::HIERARCHY_VALUE_L;
@@ -95,7 +103,8 @@ class ModelHierarchyService extends \cmsgears\core\common\services\base\EntitySe
 			$model->save();
 		}
 
-		$model				= new ModelHierarchy();
+		$model	= $this->getModelObject();
+
 		$model->rootId		= $rootId;
 		$model->parentType	= $parentType;
 
@@ -108,13 +117,15 @@ class ModelHierarchyService extends \cmsgears\core\common\services\base\EntitySe
 
 	public function assignRootChildren( $parentType, $binder ) {
 
+		$modelClass	= static::$modelClass;
+
 		$parentId	= $binder->binderId;
 		$binded		= $binder->binded;
 
 		// Add root children if not exist in hierarchy
-		foreach ( $binded as $id ) {
+		foreach( $binded as $id ) {
 
-			$child	= ModelHierarchy::findChild( $parentId, $parentType, $id );
+			$child	= $modelClass::findChild( $parentId, $parentType, $id );
 
 			if( !isset( $child ) ) {
 
@@ -123,9 +134,9 @@ class ModelHierarchyService extends \cmsgears\core\common\services\base\EntitySe
 		}
 
 		// Remove unmapped children
-		$existingChildren	= $this->getChildren( $parentId, $parentType );
+		$existingChildren = $this->getChildren( $parentId, $parentType );
 
-		foreach ( $existingChildren as $child ) {
+		foreach( $existingChildren as $child ) {
 
 			// Remove unmapped child
 			if( !in_array( $child->childId, $binded ) ) {
@@ -142,8 +153,18 @@ class ModelHierarchyService extends \cmsgears\core\common\services\base\EntitySe
 
 	public function deleteByRootId( $rootId, $parentType ) {
 
-		ModelHierarchy::deleteByRootId( $rootId, $parentType );
+		$modelClass	= static::$modelClass;
+
+		$modelClass::deleteByRootId( $rootId, $parentType );
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

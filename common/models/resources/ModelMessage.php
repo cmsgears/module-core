@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
@@ -8,29 +16,35 @@ use yii\helpers\ArrayHelper;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\models\interfaces\base\IModelResource;
+
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\ModelResource;
 use cmsgears\core\common\models\entities\Locale;
 
-use cmsgears\core\common\models\traits\ResourceTrait;
+use cmsgears\core\common\models\traits\base\ModelResourceTrait;
 
 /**
- * ModelMessage Entity - To store message in different languages apart from primary language.
+ * Stores messages and templates in different languages apart from primary language.
  *
- * The message can belong either to main or child sites. These messages are ideally warnings, text or errors.
+ * The message can belong either to main or child sites and other models. These messages are
+ * ideally templates, warnings, text or errors.
  *
  * Other models can also store their messages. These can be either model property or content.
  *
- * These messages can be further categorised using the type attribute.
+ * These messages can be further categorized using the type attribute.
  *
- * @property long $id
- * @property long $localeId
+ * @property integer $id
+ * @property integer $localeId
  * @property integer $parentId
  * @property string $parentType
- * @property string $type
  * @property string $name
+ * @property string $type
  * @property string $value
+ *
+ * @since 1.0.0
  */
-class ModelMessage extends \cmsgears\core\common\models\base\Resource {
+class ModelMessage extends ModelResource implements IModelResource {
 
 	// Variables ---------------------------------------------------
 
@@ -52,7 +66,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 
 	// Traits ------------------------------------------------------
 
-	use ResourceTrait;
+	use ModelResourceTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -71,22 +85,22 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
 			[ [ 'localeId', 'parentId', 'parentType', 'name' ], 'required' ],
 			[ [ 'id', 'value' ], 'safe' ],
 			// Unique
-			[ [ 'parentId', 'parentType', 'localeId', 'name' ], 'unique', 'targetAttribute' => [ 'parentId', 'parentType', 'localeId', 'name' ] ],
+			[ 'name', 'unique', 'targetAttribute' => [ 'localeId', 'parentId', 'parentType', 'name' ] ],
 			// Text Limit
 			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'name' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ 'name', 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			// Other
-			[ [ 'localeId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ]
+			[ 'localeId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
+			[ 'parentId', 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 
-		// trim if required
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
 			$trim[] = [ [ 'name', 'value' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
@@ -106,8 +120,8 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 			'localeId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LOCALE ),
 			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
 			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE )
 		];
 	}
@@ -121,11 +135,13 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 	// ModelMessage --------------------------
 
 	/**
-	 * @return Locale - parent locale.
+	 * Return the corresponding locale.
+	 *
+	 * @return Locale
 	 */
 	public function getLocale() {
 
-		return $this->hasOne( Locale::className(), [ 'id' => 'localeId' ] );
+		return $this->hasOne( Locale::class, [ 'id' => 'localeId' ] );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -139,7 +155,7 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_LOCALE_MESSAGE;
+		return CoreTables::getTableName( CoreTables::TABLE_LOCALE_MESSAGE );
 	}
 
 	// CMG parent classes --------------------
@@ -148,6 +164,9 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function queryWithHasOne( $config = [] ) {
 
 		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'locale' ];
@@ -156,6 +175,12 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 		return parent::queryWithAll( $config );
 	}
 
+	/**
+	 * Return query to find the message with locale.
+	 *
+	 * @param array $config
+	 * @return \yii\db\ActiveQuery to query with locale.
+	 */
 	public static function queryWithLocale( $config = [] ) {
 
 		$config[ 'relations' ]	= [ 'locale' ];
@@ -166,29 +191,36 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 	// Read - Find ------------
 
 	/**
+	 * Find and return the message specific to given name, type and locale id.
+	 *
 	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param string $name
+	 * @param string $type
 	 * @param int $localeId
-	 * @return ModelMessage - by name and locale id
+	 * @return ModelMessage by name, type and locale id
 	 */
-	public static function findByNameLocaleId( $parentId, $parentType, $name, $localeId ) {
+	public static function findByNameTypeLocaleId( $parentId, $parentType, $name, $type, $localeId ) {
 
-		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name AND localeId=:lid' )
-							->addParams( [ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name, ':lid' => $localeId ] )
-							->one();
+		return self::find()->where( 'parentId=:pid AND parentType=:ptype AND name=:name AND type=:type AND localeId=:lid' )
+			->addParams( [ ':pid' => $parentId, ':ptype' => $parentType, ':name' => $name, ':type' => $type, ':lid' => $localeId ] )
+			->one();
 	}
 
 	/**
+	 * Check whether the message exists for given name, type and locale id.
+	 *
 	 * @param integer $parentId
 	 * @param string $parentType
 	 * @param string $name
 	 * @param int $localeId
-	 * @return boolean - check whether message exist by name and locale id
+	 * @return boolean
 	 */
-	public static function isExistByNameLocaleId( $parentId, $parentType, $name, $localeId ) {
+	public static function isExistByNameTypeLocaleId( $parentId, $parentType, $name, $type, $localeId ) {
 
-		return isset( self::findByNameLocaleId( $parentId, $parentType, $name, $localeId ) );
+		$message = self::findByNameLocaleId( $parentId, $parentType, $name, $type, $localeId );
+
+		return isset( $message );
 	}
 
 	// Create -----------------
@@ -198,10 +230,12 @@ class ModelMessage extends \cmsgears\core\common\models\base\Resource {
 	// Delete -----------------
 
 	/**
-	 * Delete all entries related to a locale
+	 * Delete all messages related to a locale.
+	 *
+	 * @return int the number of rows deleted.
 	 */
 	public static function deleteByLocaleId( $localeId ) {
 
-		self::deleteAll( 'localeId=:id', [ ':id' => $localeId ] );
+		return self::deleteAll( 'localeId=:id', [ ':id' => $localeId ] );
 	}
 }

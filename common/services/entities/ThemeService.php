@@ -1,23 +1,34 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
 use Yii;
 use yii\data\Sort;
+use yii\helpers\ArrayHelper;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\entities\Theme;
 
 use cmsgears\core\common\services\interfaces\entities\IThemeService;
 
-use cmsgears\core\common\services\traits\NameTrait;
-use cmsgears\core\common\services\traits\SlugTrait;
+use cmsgears\core\common\services\traits\base\NameTrait;
+use cmsgears\core\common\services\traits\base\SlugTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
- * The class ThemeService is base class to perform database activities for Theme Entity.
+ * ThemeService provide service methods of theme model.
+ *
+ * @since 1.0.0
  */
 class ThemeService extends \cmsgears\core\common\services\base\EntityService implements IThemeService {
 
@@ -29,11 +40,9 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Theme';
+	public static $modelClass = '\cmsgears\core\common\models\entities\Theme';
 
-	public static $modelTable	= CoreTables::TABLE_THEME;
-
-	public static $parentType	= CoreGlobal::TYPE_THEME;
+	public static $parentType = CoreGlobal::TYPE_THEME;
 
 	// Protected --------------
 
@@ -47,6 +56,7 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
 	use NameTrait;
 	use SlugTrait;
 
@@ -68,13 +78,19 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 	            'name' => [
 	                'asc' => [ "$modelTable.name" => SORT_ASC ],
 	                'desc' => [ "$modelTable.name" => SORT_DESC ],
@@ -93,6 +109,12 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 	                'default' => SORT_DESC,
 	                'label' => "Type"
 	            ],
+	            'title' => [
+	                'asc' => [ "$modelTable.title" => SORT_ASC ],
+	                'desc' => [ "$modelTable.title" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => "Title"
+	            ],
 	            'default' => [
 	                'asc' => [ "$modelTable.default" => SORT_ASC ],
 	                'desc' => [ "$modelTable.default" => SORT_DESC ],
@@ -110,7 +132,22 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 	                'desc' => [ "$modelTable.basePath" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => "Base Path"
-	            ]
+	            ],
+				'cdate' => [
+					'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Created At'
+				],
+				'udate' => [
+					'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+					'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Updated At'
+				]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 
@@ -128,12 +165,28 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 
 		// Filters ----------
 
-		// Filter - Status
-		$status	= Yii::$app->request->getQueryParam( 'status' );
+		// Params
+		$type	= Yii::$app->request->getQueryParam( 'type' );
+		$filter	= Yii::$app->request->getQueryParam( 'model' );
 
-		if( isset( $status ) && $status === 'default' ) {
+		// Filter - Type
+		if( isset( $type ) ) {
 
-			$config[ 'conditions' ][ "$modelTable.default" ]	= true;
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
+
+		// Filter - Model
+		if( isset( $filter ) ) {
+
+			switch( $filter ) {
+
+				case 'default': {
+
+					$config[ 'conditions' ][ "$modelTable.default" ] = true;
+
+					break;
+				}
+			}
 		}
 
 		// Searching --------
@@ -142,7 +195,12 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'desc' => "$modelTable.description", 'content' => "$modelTable.content" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'title' => "$modelTable.title",
+				'desc' => "$modelTable.description",
+				'content' => "$modelTable.content"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -150,8 +208,12 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'desc' => "$modelTable.description", 'content' => "$modelTable.content",
-			'default' => "$modelTable.default", 'renderer' => "$modelTable.renderer"
+			'name' => "$modelTable.name",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'content' => "$modelTable.content",
+			'default' => "$modelTable.default",
+			'renderer' => "$modelTable.renderer"
 		];
 
 		// Result -----------
@@ -167,6 +229,20 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 
 	// Read - Maps -----
 
+	public function getIdNameMap( $options = [] ) {
+
+		$map = parent::getIdNameMap( $options );
+
+		if( isset( $options[ 'default' ] ) && $options[ 'default' ] ) {
+
+			unset( $options[ 'default' ] );
+
+			$map = ArrayHelper::merge( [ '0' => 'Choose Theme' ], $map );
+		}
+
+		return $map;
+	}
+
 	// Read - Others ---
 
 	// Create -------------
@@ -176,7 +252,9 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 		// Uncheck default for all other themes
 		if( $model->default ) {
 
-			Theme::updateAll( [ 'default' => false ], '`default`=1' );
+			$modelClass	= static::$modelClass;
+
+			$modelClass::updateAll( [ 'default' => false ], '`default`=1' );
 		}
 
 		return parent::create( $model );
@@ -186,12 +264,14 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'description', 'default', 'basePath', 'renderer' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'slug', 'title', 'description', 'default', 'basePath', 'renderer' ];
 
 		// Uncheck default for all other themes
 		if( $model->default ) {
 
-			Theme::updateAll( [ 'default' => false ], '`default`=1' );
+			$modelClass	= static::$modelClass;
+
+			$modelClass::updateAll( [ 'default' => false ], '`default`=1' );
 		}
 
 		return parent::update( $model, [
@@ -208,6 +288,8 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 	 */
 	public function makeDefault( Theme $model, $config = [] ) {
 
+		$modelClass	= static::$modelClass;
+
 		$type = CoreGlobal::TYPE_SITE;
 
 		if( $model->type !== $type ) {
@@ -216,7 +298,7 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 		}
 
 		// Disable All
-		Theme::updateAll( [ 'default' => false ], "`default`=1 AND `type`='$type'" );
+		$modelClass::updateAll( [ 'default' => false ], "`default`=1 AND `type`='$type'" );
 
 		// Make Default
 		$model->default = true;
@@ -226,6 +308,10 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 			'attributes' => [ 'default' ]
 		]);
 	}
+
+	// Delete -------------
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -248,7 +334,11 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 		}
 	}
 
-	// Delete -------------
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

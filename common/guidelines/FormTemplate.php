@@ -1,15 +1,17 @@
 <?php
 /**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
  * @link https://www.cmsgears.org/
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- * @license https://www.cmsgears.org/license/
- * @package module
- * @subpackage core
  */
+
 namespace cmsgears\core\common\guidelines;
 
 // Yii Imports
 use Yii;
+use yii\base\Model;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -65,7 +67,6 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * FormTemplate Form
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  *
  * @property int - short $<short>
@@ -77,7 +78,7 @@ use cmsgears\core\common\config\CoreGlobal;
  * @property bool $<boolean>
  * @property array $<array>
  */
-class FormTemplate extends \yii\base\Model {
+class FormTemplate extends Model {
 
 	// Variables ---------------------------------------------------
 

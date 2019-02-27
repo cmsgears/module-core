@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\entities;
 
 // Yii Imports
@@ -8,14 +16,16 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
-
-use cmsgears\core\common\services\traits\NameTrait;
-
 use cmsgears\core\common\services\interfaces\entities\IProvinceService;
-use cmsgears\core\common\services\base\EntityService;
 
-class ProvinceService extends EntityService implements IProvinceService {
+use cmsgears\core\common\services\traits\base\NameTrait;
+
+/**
+ * ProvinceService provide service methods of province model.
+ *
+ * @since 1.0.0
+ */
+class ProvinceService extends \cmsgears\core\common\services\base\EntityService implements IProvinceService {
 
 	// Variables ---------------------------------------------------
 
@@ -25,11 +35,9 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\entities\Province';
+	public static $modelClass = '\cmsgears\core\common\models\entities\Province';
 
-	public static $modelTable	= CoreTables::TABLE_PROVINCE;
-
-	public static $parentType	= CoreGlobal::TYPE_PROVINCE;
+	public static $parentType = CoreGlobal::TYPE_PROVINCE;
 
 	// Protected --------------
 
@@ -63,14 +71,21 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
-		$countryTable	= CoreTables::TABLE_COUNTRY;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
+
+		$countryTable = Yii::$app->factory->get( 'countryService' )->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				],
 				'country' => [
 					'asc' => [ "$countryTable.name" => SORT_ASC ],
 					'desc' => [ "$countryTable.name" => SORT_DESC ],
@@ -95,6 +110,9 @@ class ProvinceService extends EntityService implements IProvinceService {
 					'default' => SORT_DESC,
 					'label' => 'ISO'
 				]
+			],
+			'defaultOrder' => [
+				'id' => SORT_DESC
 			]
 		]);
 
@@ -114,11 +132,15 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol = Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'name' => "$modelTable.name", 'code' => "$modelTable.code" ];
+			$search = [
+				'name' => "$modelTable.name",
+				'code' => "$modelTable.code",
+				'iso' => "$modelTable.iso"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -126,7 +148,9 @@ class ProvinceService extends EntityService implements IProvinceService {
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'name' => "$modelTable.name", 'code' => "$modelTable.code", 'iso' => "$modelTable.iso"
+			'name' => "$modelTable.name",
+			'code' => "$modelTable.code",
+			'iso' => "$modelTable.iso"
 		];
 
 		// Result -----------
@@ -138,18 +162,11 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 	// Read - Models ---
 
-	public function getByCode( $code ) {
+	public function getByCountryId( $countryId ) {
 
 		$modelClass	= self::$modelClass;
 
-		return $modelClass::findByCode( $code );
-	}
-
-	public function getAllByCode( $code ) {
-
-		$modelClass	= self::$modelClass;
-
-		return $modelClass::findAllByCode( $code );
+		return $modelClass::findByCountryId( $countryId );
 	}
 
 	public function getByCountryIdCode( $countryId, $code ) {
@@ -157,6 +174,13 @@ class ProvinceService extends EntityService implements IProvinceService {
 		$modelClass	= self::$modelClass;
 
 		return $modelClass::findByCountryIdCode( $countryId, $code );
+	}
+
+	public function getByCountryIdIso( $countryId, $iso ) {
+
+		$modelClass	= self::$modelClass;
+
+		return $modelClass::findByCountryIdIso( $countryId, $iso );
 	}
 
 	// Read - Lists ----
@@ -168,9 +192,13 @@ class ProvinceService extends EntityService implements IProvinceService {
 
 	// Read - Maps -----
 
-	public function getMapByCountryId( $countryId ) {
+	public function getMapByCountryId( $countryId, $config = [] ) {
 
-		return self::findIdNameMap( [ 'conditions' => [ 'countryId' => $countryId ] ] );
+		$config[ 'conditions' ][] = [ 'countryId' => $countryId ];
+
+		$config[ 'order' ] = 'name ASC';
+
+		return self::findIdNameMap( $config );
 	}
 
 	public function getIsoNameMapByCountryId( $countryId ) {
@@ -193,6 +221,10 @@ class ProvinceService extends EntityService implements IProvinceService {
 		]);
 	}
 
+	// Delete -------------
+
+	// Bulk ---------------
+
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
 		switch( $column ) {
@@ -214,7 +246,11 @@ class ProvinceService extends EntityService implements IProvinceService {
 		}
 	}
 
-	// Delete -------------
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

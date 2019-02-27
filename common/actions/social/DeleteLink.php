@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\social;
 
 // Yii Imports
@@ -9,14 +17,16 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\forms\SocialLink;
 
+use cmsgears\core\common\actions\base\ModelAction;
+
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
  * DeleteLink deletes social link for given parent model.
  *
- * The controller must provide appropriate model service.
+ * @since 1.0.0
  */
-class DeleteLink extends \cmsgears\core\common\base\Action {
+class DeleteLink extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -34,20 +44,11 @@ class DeleteLink extends \cmsgears\core\common\base\Action {
 
 	// Protected --------------
 
-	protected $modelService;
-
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
 	// Constructor and Initialisation ------------------------------
-
-	public function init() {
-
-		parent::init();
-
-		$this->modelService	= $this->controller->modelService;
-	}
 
 	// Instance methods --------------------------------------------
 
@@ -59,33 +60,15 @@ class DeleteLink extends \cmsgears\core\common\base\Action {
 
 	// CMG parent classes --------------------
 
-	// UpdateLink ----------------------------
+	// DeleteLink ----------------------------
 
-	/**
-	 * Create Link for given parent slug and parent type.
-	 */
-	public function run( $id = null, $slug = null, $type = null ) {
+	public function run() {
 
-		// Find parent
-		$parent	= null;
+		$parent	= $this->model;
 
-		if( isset( $id ) ) {
-
-			$parent	= $this->modelService->getById( $id );
-		}
-		else if( isset( $type ) ) {
-
-			$parent	= $this->modelService->getBySlugType( $slug, $type );
-		}
-		else {
-
-			$parent	= $this->modelService->getBySlug( $slug );
-		}
-
-		// Create Link
 		if( isset( $parent ) ) {
 
-			$link	= new SocialLink();
+			$link = new SocialLink();
 
 			if( $link->load( Yii::$app->request->post(), 'SocialLink' ) && $link->validate() ) {
 
@@ -105,4 +88,5 @@ class DeleteLink extends \cmsgears\core\common\base\Action {
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

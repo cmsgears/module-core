@@ -19,7 +19,6 @@ use yii\di\Container;
  * It's being used to resolve the services(both system and model), but any other classes
  * can use it to dynamically resolve the dependencies.
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
 class ObjectFactory extends \yii\base\Component {

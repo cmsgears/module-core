@@ -1,15 +1,17 @@
 <?php
 /**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
  * @link https://www.cmsgears.org/
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- * @license https://www.cmsgears.org/license/
- * @package module
- * @subpackage core
  */
+
 namespace cmsgears\core\common\guidelines;
 
 // Yii Imports
 use Yii;
+use yii\base\BaseObject;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
@@ -17,9 +19,10 @@ use cmsgears\core\common\config\CoreGlobal;
 // Project Imports
 
 /**
- * MinTemplate can be used as template for classes without any special categorization and static methods.
+ * MinTemplate can be used as template for classes without any special categorization and
+ * static methods. It can be used for Module etc.
  *
- * Classes using default template can be further divided into below mentioned sections:
+ * Classes using min template can be further divided into below mentioned sections:
  * <ol>
  *	<li>Yii imports</li>
  *	<li>CMG imports</li>
@@ -47,10 +50,9 @@ use cmsgears\core\common\config\CoreGlobal;
  *	<li>Class closure</li>
  * </ol>
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
-class MinTemplate extends \yii\base\Object {
+class MinTemplate extends BaseObject {
 
 	// Variables ---------------------------------------------------
 

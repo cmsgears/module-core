@@ -1,23 +1,41 @@
 <?php
-namespace cmsgears\core\frontend\config;
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
 
-// Yii Imports
-use \Yii;
+namespace cmsgears\core\frontend\config;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-class SiteProperties extends \cmsgears\core\common\config\CmgProperties {
+use cmsgears\core\common\config\Properties;
+
+/**
+ * SiteProperties provides access to properties specific to frontend application.
+ *
+ * @since 1.0.0
+ */
+class SiteProperties extends Properties {
 
 	// Variables ---------------------------------------------------
 
 	// Global -----------------
 
-	const PROP_AVATAR_USER		= 'user_avatar';
-
 	const PROP_AVATAR_DEFAULT	= 'default_avatar';
 
+	const PROP_AVATAR_USER		= 'user_avatar';
+
+	const PROP_AVATAR_MAIL		= 'mail_avatar';
+
 	const PROP_BANNER_DEFAULT	= 'default_banner';
+
+	const PROP_BANNER_PAGE		= 'page_banner';
+
+	const PROP_BANNER_MAIL		= 'mail_banner';
 
 	const PROP_FONTS			= 'fonts';
 
@@ -29,15 +47,9 @@ class SiteProperties extends \cmsgears\core\common\config\CmgProperties {
 
 	private static $instance;
 
+	// Traits ------------------------------------------------------
+
 	// Constructor and Initialisation ------------------------------
-
-	// Instance methods --------------------------------------------
-
-	// Yii parent classes --------------------
-
-	// CMG parent classes --------------------
-
-	// WebProperties -------------------------
 
 	public static function getInstance() {
 
@@ -51,16 +63,31 @@ class SiteProperties extends \cmsgears\core\common\config\CmgProperties {
 		return self::$instance;
 	}
 
-	// Properties
+	// Instance methods --------------------------------------------
+
+	// Yii interfaces ------------------------
+
+	// Yii parent classes --------------------
+
+	// CMG interfaces ------------------------
+
+	// CMG parent classes --------------------
+
+	// Properties ----------------------------
+
+	public function getDefaultAvatar() {
+
+		return $this->properties[ self::PROP_AVATAR_DEFAULT ];
+	}
 
 	public function getUserAvatar() {
 
 		return $this->properties[ self::PROP_AVATAR_USER ];
 	}
 
-	public function getDefaultAvatar() {
+	public function getMailAvatar() {
 
-		return $this->properties[ self::PROP_AVATAR_DEFAULT ];
+		return $this->properties[ self::PROP_AVATAR_MAIL ];
 	}
 
 	public function getDefaultBanner() {
@@ -68,8 +95,19 @@ class SiteProperties extends \cmsgears\core\common\config\CmgProperties {
 		return $this->properties[ self::PROP_BANNER_DEFAULT ];
 	}
 
+	public function getPageBanner() {
+
+		return $this->properties[ self::PROP_BANNER_PAGE ];
+	}
+
+	public function getMailBanner() {
+
+		return $this->properties[ self::PROP_BANNER_MAIL ];
+	}
+
 	public function getFonts() {
 
 		return $this->properties[ self::PROP_FONTS ];
 	}
+
 }

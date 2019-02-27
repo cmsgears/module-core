@@ -2,14 +2,18 @@ Below mentioned documentation convention can be used to follow CMG. Though it's 
 mandatory or necessary to follow it, but we highly recommend it for CMG modules, 
 plugins, widgets and themes development.
 
-We follow the standard annotations specified by phpdoc(https://docs.phpdoc.org).
+We follow the standard annotations specified by [phpDocumentor](https://docs.phpdoc.org).
 
-Documentation:
+Documentation
 ========================================
 * File-Level DocBlock
 
 ```php
 /**
+ * Summary goes here.
+ *
+ * Detail goes here.
+ *
  * @link link
  * @copyright Copyright (c) year organisation
  * @license license
@@ -18,7 +22,7 @@ Documentation:
  */
 ```
 
-* Class-Level DocBlock - Example
+* Class-Level DocBlock
 
 ```php
 /**
@@ -32,6 +36,8 @@ Documentation:
 ```
 
 * Types - http://docs.phpdoc.org/guides/types.html
+
+Class Name - Fully Qualified class name or aliase
 
 Primitives - string, int, float, bool, array, resource, null, callable
 
@@ -49,7 +55,7 @@ PHPDoc Keywords - mixed, void, object, false, true, self, static $this
 
 ```php
 /**
- * @var type description of static variable
+ * @var type description of variable
  */
 ```
 
@@ -69,11 +75,11 @@ PHPDoc Keywords - mixed, void, object, false, true, self, static $this
  *
  * Detail goes here.
  *
- * @since version
  * @param type $param description
  * @return type description
  * @throws <exception classpath> exception description
  * @see <reference>
+ * @since version
  */
 public function testPublic( $param ) {
 

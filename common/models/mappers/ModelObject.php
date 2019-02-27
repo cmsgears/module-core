@@ -1,29 +1,45 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\mappers;
 
 // Yii Imports
-use \Yii;
+use Yii;
 
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
-
 use cmsgears\core\common\models\base\CoreTables;
+
+use cmsgears\core\common\models\interfaces\base\IFeatured;
+
+use cmsgears\core\common\models\base\ModelMapper;
 use cmsgears\core\common\models\entities\ObjectData;
 
-use cmsgears\core\common\models\traits\MapperTrait;
+use cmsgears\core\common\models\traits\base\FeaturedTrait;
 
 /**
- * ModelObject Entity - The mapper to map Object Model to specific parent model for given parentId and parentType.
+ * The mapper to map Object Model to specific parent model for given parentId and parentType.
  *
- * @property long $id
- * @property long $modelId
- * @property long $parentId
+ * @property integer $id
+ * @property integer $modelId
+ * @property integer $parentId
  * @property string $parentType
  * @property string $type
- * @property short $order
+ * @property string $key
+ * @property integer $order
  * @property boolean $active
+ * @property boolean $pinned
+ * @property boolean $featured
+ * @property string $nodes
+ *
+ * @since 1.0.0
  */
-class ModelObject extends \cmsgears\core\common\models\base\Resource {
+class ModelObject extends ModelMapper implements IFeatured {
 
 	// Variables ---------------------------------------------------
 
@@ -45,7 +61,7 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
 
 	// Traits ------------------------------------------------------
 
-	use MapperTrait;
+	use FeaturedTrait;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -64,20 +80,13 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public function rules() {
 
-		return [
-			// Required, Safe
-			[ [ 'modelId', 'parentId', 'parentType' ], 'required' ],
-			[ [ 'id' ], 'safe' ],
-			// Unique
-			[ [ 'modelId', 'parentId', 'parentType' ], 'unique', 'targetAttribute' => [ 'modelId', 'parentId', 'parentType' ] ],
-			// Text Limit
-			[ [ 'parentType', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			// Other
-			[ [ 'modelId' ], 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ],
-			[ [ 'parentId' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'active' ], 'boolean' ]
-		];
+		$rules = parent::rules();
+
+		$rules[] = [ 'nodes', 'safe' ];
+		$rules[] = [ 'key', 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ];
+		$rules[] = [ [ 'pinned', 'featured' ], 'boolean' ];
+
+		return $rules;
 	}
 
 	/**
@@ -85,14 +94,11 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
 	 */
 	public function attributeLabels() {
 
-		return [
-			'modelId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_OBJECT ),
-			'parentId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT ),
-			'parentType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PARENT_TYPE ),
-			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
-			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE )
-		];
+		$labels = parent::attributeLabels();
+
+		$labels[ 'key' ] = 'Key';
+
+		return $labels;
 	}
 
 	// CMG interfaces ------------------------
@@ -104,11 +110,13 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
 	// ModelObject ---------------------------
 
 	/**
-	 * @return ObjectData - associated object
+	 * Return the object associated with the mapping.
+	 *
+	 * @return ObjectData
 	 */
 	public function getModel() {
 
-		return $this->hasOne( ObjectData::className(), [ 'id' => 'modelId' ] );
+		return $this->hasOne( ObjectData::class, [ 'id' => 'modelId' ] );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -119,7 +127,7 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
 
 	public static function tableName() {
 
-		return CoreTables::TABLE_MODEL_OBJECT;
+		return CoreTables::getTableName( CoreTables::TABLE_MODEL_OBJECT );
 	}
 
 	// CMG parent classes --------------------
@@ -127,14 +135,6 @@ class ModelObject extends \cmsgears\core\common\models\base\Resource {
 	// ModelObject ---------------------------
 
 	// Read - Query -----------
-
-	public static function queryWithHasOne( $config = [] ) {
-
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'model' ];
-		$config[ 'relations' ]	= $relations;
-
-		return parent::queryWithAll( $config );
-	}
 
 	// Read - Find ------------
 

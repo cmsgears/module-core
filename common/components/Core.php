@@ -18,6 +18,8 @@ use cmsgears\core\common\validators\CoreValidator;
 
 use cmsgears\core\common\services\entities\UserService;
 
+use cmsgears\core\common\base\Config;
+
 /**
  * The core component for CMSGears based sites. It must be initialised for app bootstrap
  * using the name core.
@@ -25,13 +27,12 @@ use cmsgears\core\common\services\entities\UserService;
  * It define the post login and logout path to redirect user to a different path than the
  * default one. Though ajax based login need to specify the path within the javascript code.
  *
- * All the admin sites must set useRbac to true to get the admin functional since the admin
+ * All the admin sites must set rbac to true to get the admin functional since the admin
  * controllers use it for almost every action.
  *
- * @author Bhagwat Singh Chouhan <bhagwat.chouhan@gmail.com>
  * @since 1.0.0
  */
-class Core extends \cmsgears\core\common\base\Component {
+class Core extends Config {
 
 	// Variables ---------------------------------------------------
 
@@ -40,59 +41,59 @@ class Core extends \cmsgears\core\common\base\Component {
 	// Public -----------------
 
 	/**
-	 * @var Stats will be used to store table row count to solve pagination link issue to generate links for large tables without any joins or where conditions specially for InnoDB engine.
-	 * It provides the following features to an application:
-	 * # Create stats table when enabled.
-	 * # Stats Triggers can be enabled to update row count on addition and deletion.
-	 * # CRON job or MySQL event can be added to update row count in case triggers are not used.
-	 * # The stats table storing row counts can be avoided if pages are scrolled using previous and next buttons without having page links.
-	 */
-	public $stats				= false;
-
-	/**
-	 * @var It will add triggers while running migrations on row addition and deletion if stats is enabled. In case triggers are skipped, project specific migration can be created in order to add the relevant triggers.
-	 */
-	public $statsTriggers		= false;
-
-	/**
-	 * @var main site to load configurations in case sub sites are not configured.
+	 * @var int The main site id to load configurations in case sub sites are not configured.
 	 */
 	public $mainSiteId			= 1;
 
 	/**
-	 * @var main site to load configurations in case sub sites are not configured.
+	 * @var string The main site slug to load configurations in case sub sites are not configured.
 	 */
 	public $mainSiteSlug		= 'main';
 
 	/**
-	 * @var identify the currently active site based on the url request.
+	 * @var string string Used to debug multi-site.
+	 */
+	public $defaultSiteSlug		= 'main';
+
+	/**
+	 * @var int Identifies the currently active site based on the url request.
 	 */
 	public $siteId				= 1;
 
 	/**
-	 * @var identify the currently active site based on the url request.
+	 * @var string Identifies the currently active site based on the url request.
 	 */
 	public $siteSlug			= 'main';
 
 	/**
-	 * @var currently active site based on the url request.
+	 * @var \cmsgears\core\common\models\entities\Site The currently active site based on the url request.
 	 */
 	public $site				= null;
 
 	/**
-	 * @var It identify whether all the site config need to be loaded at once or by type i.e. module or plugin.
+	 * @var boolean Identifies whether all the site config need to be loaded at once or by type i.e. module or plugin.
 	 */
 	public $siteConfigAll 		= false;
 
 	/**
-	 * @var test whether the web app is multi-site.
+	 * @var boolean Check whether the web app is multi-site.
 	 */
 	public $multiSite			= false;
 
 	/**
-	 * @var test whether the web app is sub domain or sub directory based in case $multiSite is set to true.
+	 * @var boolean Check whether the web app is sub domain or sub directory based in case $multiSite is set to true.
 	 */
 	public $subDirectory		= true;
+
+	public $testHosts = [ 'localhost' ];
+
+	/**
+	 *
+	 * @var \cmsgears\core\common\models\entities\User The active logged in user.
+	 */
+	public $user;
+
+	// The three type of apps.
 
 	public $appAdmin			= CoreGlobal::APP_ADMIN;
 	public $appFrontend			= CoreGlobal::APP_FRONTEND;
@@ -104,13 +105,24 @@ class Core extends \cmsgears\core\common\base\Component {
 	public $userApproval		= false;
 
 	/**
-	 * @var default redirect path to be used for post login. It will be used by login action of Site Controller to redirect users
-	 * after successful login in case user role home url is not set.
+	 * It can be used to test otp validity in milliseconds.
+	 */
+	public $otpValidity			= 600000; // 10 minues by default
+
+	/**
+	 * It can be used to test token validity in milliseconds.
+	 */
+	public $tokenValidity		= 600000; // 10 minues by default
+
+	/**
+	 * @var default redirect path to be used for post login. It will be used by login action of
+	 * Site Controller to redirect users after successful login in case user role home url is not set.
 	 */
 	public $loginRedirectPage		= '/';
 
 	/**
-	 * @var Redirect path to be used when user is newly registered and not active. $userApproval must be true for it.
+	 * @var Redirect path to be used when user is newly registered and not active. $userApproval
+	 * must be true for it.
 	 */
 	public $confirmRedirectPage		= '/';
 
@@ -120,13 +132,15 @@ class Core extends \cmsgears\core\common\base\Component {
 	public $logoutRedirectPage		= '/login';
 
 	/**
-	 * @var The indicator whether CMG RBAC has to be used for the project. All the admin sites must set this to true. Though it's optional for
-	 * front end sites. The front end sites can use either CMG RBAC or Yii's RBAC system or no RBAC system based on project needs.
+	 * @var The indicator whether CMG RBAC has to be used for the project. All the admin sites must
+	 * set this to true. Though it's optional for front end sites. The front end sites can use either
+	 * CMG RBAC or Yii's RBAC system or no RBAC system based on project needs.
 	 */
-	public $useRbac				= true;
+	public $rbac				= true;
 
 	/**
-	 * @var The default filter class available for CMG RBAC system. A different filter can be used based on project needs.
+	 * @var The default filter class available for CMG RBAC system. A different filter can be used
+	 * based on project needs.
 	 */
 	public $rbacFilterClass		= 'cmsgears\core\common\\filters\RbacFilter';
 
@@ -142,7 +156,8 @@ class Core extends \cmsgears\core\common\base\Component {
 	 * mobile applications having same users. It's used by user class to load permissions when accessed
 	 * using access token.
 	 *
-	 * OAuth 2.0 can be used to provide APIS to 3rd party web and mobile applications.
+	 * OAuth 2.0 or other authorization mechanism can be used to provide APIS to 3rd party
+	 * web and mobile applications.
 	 *
 	 * @var boolean
 	 */
@@ -157,9 +172,9 @@ class Core extends \cmsgears\core\common\base\Component {
 	public $apisValidity		= 7;
 
 	/**
-	 * @var The WYSIWYG editor widget class. It will be used by Core Module to edit newsletter content. The dependent modules can also use it to edit the html content.
+	 * @var The WYSIWYG editor config to edit the html content.
 	 */
-	public $editorClass			= null;
+	public $editor = null;
 
 	/**
 	 * @var It can be used by model classes to determine the fields for trim filter.
@@ -167,6 +182,7 @@ class Core extends \cmsgears\core\common\base\Component {
 	public $trimFieldValue		= true;
 
 	// Different Text Sizes - These can be overriden using config if required
+	public $tinyText			= CoreGlobal::TEXT_TINY;
 	public $smallText			= CoreGlobal::TEXT_SMALL;
 	public $mediumText			= CoreGlobal::TEXT_MEDIUM;
 	public $largeText			= CoreGlobal::TEXT_LARGE;
@@ -176,12 +192,14 @@ class Core extends \cmsgears\core\common\base\Component {
 	public $xtraLargeText		= CoreGlobal::TEXT_XTRALARGE;
 
 	/**
-	 * @var Switch for notification feature. If it's set to true, either Notify Module must be installed or eventManager component must be configured.
+	 * @var Switch for notification feature. If it's set to true, either Notify Module
+	 * must be installed or eventManager component must be configured.
 	 */
 	public $notifications		= false;
 
 	/**
-	 * @var Switch for activities feature. If it's set to true, either Notify Module must be installed or eventManager component must be configured.
+	 * @var Switch for activities feature. If it's set to true, either Notify Module must
+	 * be installed or eventManager component must be configured.
 	 */
 	public $activities			= false;
 
@@ -189,6 +207,17 @@ class Core extends \cmsgears\core\common\base\Component {
 	 * @var Update selective allows services to update selected columns.
 	 */
 	public $updateSelective		= true;
+
+	/**
+	 *
+	 * @var boolean Check whether soft delete is enabled.
+	 */
+	public $softDelete			= true;
+
+	// Locations
+	public $provinceLabel	= 'Province';
+	public $regionLabel		= 'Region';
+	public $zipLabel		= 'Postal Code';
 
 	// Protected --------------
 
@@ -206,11 +235,10 @@ class Core extends \cmsgears\core\common\base\Component {
 		// Initialise core validators
 		CoreValidator::initValidators();
 
-		// Set CMSGears alias to be used by all modules, plugins, widgets and themes. It will be located within the vendor directory for composer.
+		/** Set CMSGears alias to be used by all modules, plugins, widgets and themes.
+		 * It will be located within the vendor directory for composer.
+		 */
 		Yii::setAlias( 'cmsgears', dirname( dirname( dirname( __DIR__ ) ) ) );
-
-		// Register application components and objects i.e. CMG and Project
-		$this->registerComponents();
 	}
 
 	// Instance methods --------------------------------------------
@@ -272,6 +300,11 @@ class Core extends \cmsgears\core\common\base\Component {
 		return $this->mainSiteSlug;
 	}
 
+	public function getDefaultSiteSlug() {
+
+		return $this->defaultSiteSlug;
+	}
+
 	/**
 	 * The method getSiteId returns the site id for default site. It's more useful in case multi-site feature is enabled.
 	 * @return string
@@ -307,11 +340,27 @@ class Core extends \cmsgears\core\common\base\Component {
 
 	/**
 	 * The method isMultiSite can be used to check whether multi-site feature is required.
+	 *
 	 * @return boolean
 	 */
 	public function isMultiSite() {
 
 		return $this->multiSite;
+	}
+
+	public function isGuest() {
+
+		return Yii::$app->user->isGuest();
+	}
+
+	public function getUser() {
+
+		if( empty( $this->user ) ) {
+
+			$this->user = Yii::$app->user->getIdentity();
+		}
+
+		return $this->user;
 	}
 
 	/**
@@ -321,6 +370,11 @@ class Core extends \cmsgears\core\common\base\Component {
 	public function isSubDirectory() {
 
 		return $this->subDirectory;
+	}
+
+	public function getTestHosts() {
+
+		return $this->testHosts;
 	}
 
 	public function getAppAdmin() {
@@ -341,6 +395,21 @@ class Core extends \cmsgears\core\common\base\Component {
 	public function isUserApproval() {
 
 		return $this->userApproval;
+	}
+
+	public function getOtpValidity() {
+
+		return $this->otpValidity;
+	}
+
+	public function getOtpValidityMins() {
+
+		return ( $this->otpValidity / 60000 );
+	}
+
+	public function getTokenValidity() {
+
+		return $this->tokenValidity;
 	}
 
 	/**
@@ -372,7 +441,7 @@ class Core extends \cmsgears\core\common\base\Component {
 	 */
 	public function isRbac() {
 
-		return $this->useRbac;
+		return $this->rbac;
 	}
 
 	/**
@@ -407,12 +476,13 @@ class Core extends \cmsgears\core\common\base\Component {
 	}
 
 	/**
-	 * The method getEditorClass is used by the views to make a text area to edit html. It must be set
+	 * The method getEditor is used by the views to make a text area to edit html.
+	 *
 	 * @return the class name
 	 */
-	public function getEditorClass() {
+	public function getEditor() {
 
-		return $this->editorClass;
+		return $this->editor;
 	}
 
 	public function isTrimFieldValue() {
@@ -461,140 +531,33 @@ class Core extends \cmsgears\core\common\base\Component {
 		return $this->updateSelective;
 	}
 
-	// Components and Objects
+	public function isSoftDelete() {
 
-	public function registerComponents() {
-
-		// Register services
-		$this->registerResourceServices();
-		$this->registerMapperServices();
-		$this->registerEntityServices();
-		$this->registerSystemServices();
-
-		// Init services
-		$this->initResourceServices();
-		$this->initMapperServices();
-		$this->initEntityServices();
-		$this->initSystemServices();
+		return $this->softDelete;
 	}
 
-	public function registerResourceServices() {
+	public function getProvinceLabel() {
 
-		$factory = Yii::$app->factory->getContainer();
-
-		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IAddressService', 'cmsgears\core\common\services\resources\AddressService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\resources\ICategoryService', 'cmsgears\core\common\services\resources\CategoryService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IFileService', 'cmsgears\core\common\services\resources\FileService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IFormFieldService', 'cmsgears\core\common\services\resources\FormFieldService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IFormService', 'cmsgears\core\common\services\resources\FormService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IGalleryService', 'cmsgears\core\common\services\resources\GalleryService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelMetaService', 'cmsgears\core\common\services\resources\ModelMetaService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelCommentService', 'cmsgears\core\common\services\resources\ModelCommentService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IModelHierarchyService', 'cmsgears\core\common\services\resources\ModelHierarchyService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\resources\IOptionService', 'cmsgears\core\common\services\resources\OptionService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\resources\ISiteMetaService', 'cmsgears\core\common\services\resources\SiteMetaService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\resources\ITagService', 'cmsgears\core\common\services\resources\TagService' );
+		return $this->provinceLabel;
 	}
 
-	public function registerMapperServices() {
+	public function getRegionLabel() {
 
-		$factory = Yii::$app->factory->getContainer();
-
-		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelAddressService', 'cmsgears\core\common\services\mappers\ModelAddressService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelCategoryService', 'cmsgears\core\common\services\mappers\ModelCategoryService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelFileService', 'cmsgears\core\common\services\mappers\ModelFileService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelFormService', 'cmsgears\core\common\services\mappers\ModelFormService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelGalleryService', 'cmsgears\core\common\services\mappers\ModelGalleryService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelOptionService', 'cmsgears\core\common\services\mappers\ModelOptionService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\IModelTagService', 'cmsgears\core\common\services\mappers\ModelTagService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\mappers\ISiteMemberService', 'cmsgears\core\common\services\mappers\SiteMemberService' );
+		return $this->regionLabel;
 	}
 
-	public function registerEntityServices() {
+	public function getZipLabel() {
 
-		$factory = Yii::$app->factory->getContainer();
-
-		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ICountryService', 'cmsgears\core\common\services\entities\CountryService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IProvinceService', 'cmsgears\core\common\services\entities\ProvinceService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ICityService', 'cmsgears\core\common\services\entities\CityService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IObjectService', 'cmsgears\core\common\services\entities\ObjectService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IPermissionService', 'cmsgears\core\common\services\entities\PermissionService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IRoleService', 'cmsgears\core\common\services\entities\RoleService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ISiteService', 'cmsgears\core\common\services\entities\SiteService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\entities\ITemplateService', 'cmsgears\core\common\services\entities\TemplateService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IThemeService', 'cmsgears\core\common\services\entities\ThemeService' );
-		$factory->set( 'cmsgears\core\common\services\interfaces\entities\IUserService', 'cmsgears\core\common\services\entities\UserService' );
-	}
-
-	public function registerSystemServices() {
-
-		$factory = Yii::$app->factory->getContainer();
-
-		//$factory->set( '<interface path>', '<classpath>' );
-	}
-
-	public function initResourceServices() {
-
-		$factory = Yii::$app->factory->getContainer();
-
-		$factory->set( 'addressService', 'cmsgears\core\common\services\resources\AddressService' );
-		$factory->set( 'categoryService', 'cmsgears\core\common\services\resources\CategoryService' );
-		$factory->set( 'fileService', 'cmsgears\core\common\services\resources\FileService' );
-		$factory->set( 'formFieldService', 'cmsgears\core\common\services\resources\FormFieldService' );
-		$factory->set( 'formService', 'cmsgears\core\common\services\resources\FormService' );
-		$factory->set( 'galleryService', 'cmsgears\core\common\services\resources\GalleryService' );
-		$factory->set( 'modelMetaService', 'cmsgears\core\common\services\resources\ModelMetaService' );
-		$factory->set( 'modelCommentService', 'cmsgears\core\common\services\resources\ModelCommentService' );
-		$factory->set( 'modelHierarchyService', 'cmsgears\core\common\services\resources\ModelHierarchyService' );
-		$factory->set( 'optionService', 'cmsgears\core\common\services\resources\OptionService' );
-		$factory->set( 'siteMetaService', 'cmsgears\core\common\services\resources\SiteMetaService' );
-		$factory->set( 'tagService', 'cmsgears\core\common\services\resources\TagService' );
-	}
-
-	public function initMapperServices() {
-
-		$factory = Yii::$app->factory->getContainer();
-
-		$factory->set( 'modelAddressService', 'cmsgears\core\common\services\mappers\ModelAddressService' );
-		$factory->set( 'modelCategoryService', 'cmsgears\core\common\services\mappers\ModelCategoryService' );
-		$factory->set( 'modelFileService', 'cmsgears\core\common\services\mappers\ModelFileService' );
-		$factory->set( 'modelFormService', 'cmsgears\core\common\services\mappers\ModelFormService' );
-		$factory->set( 'modelGalleryService', 'cmsgears\core\common\services\mappers\ModelGalleryService' );
-		$factory->set( 'modelOptionService', 'cmsgears\core\common\services\mappers\ModelOptionService' );
-		$factory->set( 'modelTagService', 'cmsgears\core\common\services\mappers\ModelTagService' );
-		$factory->set( 'siteMemberService', 'cmsgears\core\common\services\mappers\SiteMemberService' );
-	}
-
-	public function initEntityServices() {
-
-		$factory = Yii::$app->factory->getContainer();
-
-		$factory->set( 'countryService', 'cmsgears\core\common\services\entities\CountryService' );
-		$factory->set( 'provinceService', 'cmsgears\core\common\services\entities\ProvinceService' );
-		$factory->set( 'cityService', 'cmsgears\core\common\services\entities\CityService' );
-		$factory->set( 'objectService', 'cmsgears\core\common\services\entities\ObjectDataService' );
-		$factory->set( 'permissionService', 'cmsgears\core\common\services\entities\PermissionService' );
-		$factory->set( 'roleService', 'cmsgears\core\common\services\entities\RoleService' );
-		$factory->set( 'siteService', 'cmsgears\core\common\services\entities\SiteService' );
-		$factory->set( 'templateService', 'cmsgears\core\common\services\entities\TemplateService' );
-		$factory->set( 'themeService', 'cmsgears\core\common\services\entities\ThemeService' );
-		$factory->set( 'userService', 'cmsgears\core\common\services\entities\UserService' );
-	}
-
-	public function initSystemServices() {
-
-		$factory = Yii::$app->factory->getContainer();
-
-		//$factory->set( '<name>', '<classpath>' );
+		return $this->zipLabel;
 	}
 
 	// Cookies & Session
 
 	public function setAppUser( $user ) {
 
-		$cookieName				= '_app-user';
+		$cookieName = '_app-user';
 
-		$guestUser[ 'user' ]	= [ 'id' => $user->id, 'firstname' => $user->firstName, 'lastname' => $user->lastName, 'email' => $user->email ];
+		$guestUser[ 'user' ] = [ 'id' => $user->id, 'firstname' => $user->firstName, 'lastname' => $user->lastName, 'email' => $user->email ];
 
 		if( isset( $_COOKIE[ $cookieName ] ) ) {
 
@@ -628,7 +591,7 @@ class Core extends \cmsgears\core\common\base\Component {
 
 			if( isset( $data[ 'user' ] ) ) {
 
-				//$appUser	  = (object) $data[ 'user' ]['user'];
+				//$appUser = (object) $data[ 'user' ]['user'];
 
 				$appUser = UserService::findById( $data[ 'user' ][ 'id' ] );
 			}
@@ -643,9 +606,9 @@ class Core extends \cmsgears\core\common\base\Component {
 
 		if( isset( $_COOKIE[ $cookieName ] ) ) {
 
-			$data			= unserialize( $_COOKIE[ $cookieName ] );
+			$data = unserialize( $_COOKIE[ $cookieName ] );
 
-			$data[ 'user' ]	= null;
+			$data[ 'user' ] = null;
 
 			return setcookie( $cookieName, serialize( $data ), time() + ( 10 * 365 * 24 * 60 * 60 ), "/", null );
 		}
@@ -683,6 +646,14 @@ class Core extends \cmsgears\core\common\base\Component {
 	}
 
 	/*
+	 * @return $session - return session param
+	 */
+	public function clearSessionParam( $param ) {
+
+		return Yii::$app->session->remove( $param );
+	}
+
+	/*
 	 * @return $session - Open a session if does not exist in application.
 	 */
 	public function setSessionObject( $param, $object ) {
@@ -708,4 +679,13 @@ class Core extends \cmsgears\core\common\base\Component {
 
 		return null;
 	}
+
+	/*
+	 * @return $session - return session param
+	 */
+	public function clearSessionObject( $param ) {
+
+		return Yii::$app->session->remove( $param );
+	}
+
 }

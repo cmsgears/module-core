@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\models\resources;
 
 // Yii Imports
@@ -11,39 +19,62 @@ use yii\behaviors\TimestampBehavior;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\config\CoreProperties;
 
-use cmsgears\core\common\models\interfaces\IVisibility;
+use cmsgears\core\common\models\interfaces\base\IAuthor;
+use cmsgears\core\common\models\interfaces\base\IMultiSite;
+use cmsgears\core\common\models\interfaces\base\IOwner;
+use cmsgears\core\common\models\interfaces\base\IVisibility;
+use cmsgears\core\common\models\interfaces\resources\IData;
+use cmsgears\core\common\models\interfaces\resources\IModelMeta;
 
 use cmsgears\core\common\models\base\CoreTables;
+use cmsgears\core\common\models\base\Resource;
 
-use cmsgears\core\common\models\traits\CreateModifyTrait;
-use cmsgears\core\common\models\traits\interfaces\VisibilityTrait;
+use cmsgears\core\common\models\traits\base\AuthorTrait;
+use cmsgears\core\common\models\traits\base\MultiSiteTrait;
+use cmsgears\core\common\models\traits\base\OwnerTrait;
+use cmsgears\core\common\models\traits\base\VisibilityTrait;
+use cmsgears\core\common\models\traits\resources\DataTrait;
+use cmsgears\core\common\models\traits\resources\ModelMetaTrait;
+
+use cmsgears\files\components\FileManager;
 
 use cmsgears\core\common\behaviors\AuthorBehavior;
 
 /**
- * File Entity
+ * File model stores the files either locally or on file servers.
  *
- * @property long $id
- * @property long $createdBy
- * @property long $modifiedBy
+ * @property integer $id
+ * @property integer $siteId
+ * @property integer $createdBy
+ * @property integer $modifiedBy
+ * @property string $name
+ * @property string $tag
  * @property string $title
  * @property string $description
- * @property string $name
  * @property string $extension
  * @property string $directory
  * @property float $size
  * @property integer $visibility
  * @property string $type
+ * @property string $storage
  * @property string $url
  * @property string $medium
  * @property string $thumb
+ * @property string $caption
  * @property string $altText
  * @property string $link
  * @property boolean $shared
  * @property datetime $createdAt
  * @property datetime $modifiedAt
+ * @property string $content
+ * @property string $data
+ * @property string $gridCache
+ * @property boolean $gridCacheValid
+ * @property datetime $gridCachedAt
+ *
+ * @since 1.0.0
  */
-class File extends \cmsgears\core\common\models\base\Resource implements IVisibility {
+class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, IOwner, IVisibility {
 
 	// Variables ---------------------------------------------------
 
@@ -53,6 +84,13 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	// Public -----------------
 
+	public static $typeMap = [
+		FileManager::FILE_TYPE_IMAGE => 'Image',
+		FileManager::FILE_TYPE_AUDIO => 'Audio',
+		FileManager::FILE_TYPE_VIDEO => 'Video',
+		FileManager::FILE_TYPE_DOCUMENT => 'Document'
+	];
+
 	// Protected --------------
 
 	// Variables -----------------------------
@@ -60,11 +98,13 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 	// Public -----------------
 
 	/**
-	 * @property boolean - used to detect whether the file is changed by user.
+	 * Check whether the file is changed by user.
+	 *
+	 * @property boolean
 	 */
 	public $changed;
 
-	// optional properties for image processing
+	// Optional properties for image processing.
 	public $width;
 	public $height;
 	public $mwidth;
@@ -74,11 +114,17 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	// Protected --------------
 
+	protected $modelType = CoreGlobal::TYPE_FILE;
+
 	// Private ----------------
 
 	// Traits ------------------------------------------------------
 
-	use CreateModifyTrait;
+	use AuthorTrait;
+	use DataTrait;
+	use ModelMetaTrait;
+	use MultiSiteTrait;
+	use OwnerTrait;
 	use VisibilityTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -98,10 +144,10 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 		return [
 			'authorBehavior' => [
-				'class' => AuthorBehavior::className()
+				'class' => AuthorBehavior::class
 			],
 			'timestampBehavior' => [
-				'class' => TimestampBehavior::className(),
+				'class' => TimestampBehavior::class,
 				'createdAtAttribute' => 'createdAt',
 				'updatedAtAttribute' => 'modifiedAt',
 				'value' => new Expression('NOW()')
@@ -116,27 +162,30 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 	 */
 	public function rules() {
 
-		// model rules
+		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'name', 'extension', 'directory' ], 'required' ],
-			[ [ 'id' ], 'safe' ],
+			[ [ 'siteId', 'name', 'extension', 'directory' ], 'required' ],
+			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Text Limit
-			[ [ 'extension', 'type' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ [ 'title', 'name', 'directory' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'description', 'url', 'medium', 'thumb', 'altText', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'extension', 'type', 'storage' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ 'tag', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'directory', 'altText' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
+			[ [ 'name', 'url', 'medium', 'thumb' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'title', 'caption', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
+			[ 'description', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
 			[ [ 'visibility', 'width', 'height', 'mwidth', 'mheight', 'twidth', 'theight' ], 'number', 'integerOnly' => true, 'min' => 0 ],
-			[ [ 'size' ], 'number', 'min' => 0 ],
-			[ [ 'shared', 'changed' ], 'boolean' ],
-			[ [ 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
-			[ [ 'createdAt', 'modifiedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
+			[ 'size', 'number', 'min' => 0 ],
+			[ [ 'shared', 'changed', 'gridCacheValid' ], 'boolean' ],
+			[ [ 'siteId', 'createdBy', 'modifiedBy' ], 'number', 'integerOnly' => true, 'min' => 1 ],
+			[ [ 'createdAt', 'modifiedAt', 'gridCachedAt' ], 'date', 'format' => Yii::$app->formatter->datetimeFormat ]
 		];
 
-		// trim if required
+		// Trim Text
 		if( Yii::$app->core->trimFieldValue ) {
 
-			$trim[] = [ [ 'name', 'extension', 'directory', 'title', 'description', 'altText', 'url', 'medium', 'thumb', 'link' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
+			$trim[] = [ [ 'name', 'title', 'description', 'extension', 'directory', 'altText', 'url', 'medium', 'thumb', 'link' ], 'filter', 'filter' => 'trim', 'skipOnArray' => true ];
 
 			return ArrayHelper::merge( $trim, $rules );
 		}
@@ -150,17 +199,22 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 	public function attributeLabels() {
 
 		return [
+			'siteId' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SITE ),
 			'createdBy' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AUTHOR ),
+			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
+			'tag' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TAG ),
 			'title' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TITLE ),
 			'description' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DESCRIPTION ),
-			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'extension' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EXTENSION ),
 			'directory' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DIRECTORY ),
 			'size' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_SIZE ),
 			'url' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_URL ),
 			'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
-			'link' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINK )
+			'link' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINK ),
+			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
+			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
+			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
 		];
 	}
 
@@ -172,18 +226,35 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	// File ----------------------------------
 
+	/**
+	 * Returns string representation of [[$type]].
+	 *
+	 * @return boolean
+	 */
 	public function getTypeStr() {
 
 		return self::$typeMap[ $this->type ];
 	}
 
+	/**
+	 * Returns string representation of [[$shared]].
+	 *
+	 * @return boolean
+	 */
 	public function getSharedStr() {
 
 		return Yii::$app->formatter->asBoolean( $this->shared );
 	}
 
+	public function getTempUrl() {
+
+		return Yii::$app->fileManager->uploadUrl . '/' . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "." . $this->extension;
+	}
+
 	/**
-	 * The method returns the file url for the file.
+	 * Generate and Return file URL using file attributes.
+	 *
+	 * @return string
 	 */
 	public function getFileUrl() {
 
@@ -199,6 +270,11 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 		return "";
 	}
 
+	/**
+	 * Generate and Return medium file URL using file attributes.
+	 *
+	 * @return string
+	 */
 	public function getMediumUrl() {
 
 		if( $this->changed ) {
@@ -214,7 +290,9 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 	}
 
 	/**
-	 * The method returns the thumb url for the file. It's common usage is for images.
+	 * Generate and Return thumb URL using file attributes.
+	 *
+	 * @return string
 	 */
 	public function getThumbUrl() {
 
@@ -230,6 +308,11 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 		return "";
 	}
 
+	/**
+	 * Return physical storage location of the file.
+	 *
+	 * @return string|boolean
+	 */
 	public function getFilePath() {
 
 		if( isset( $this->url ) ) {
@@ -240,6 +323,11 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 		return false;
 	}
 
+	/**
+	 * Return physical storage location of the medium file.
+	 *
+	 * @return string|boolean
+	 */
 	public function getMediumPath() {
 
 		if( isset( $this->medium ) ) {
@@ -250,6 +338,11 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 		return false;
 	}
 
+	/**
+	 * Return physical storage location of thumb.
+	 *
+	 * @return string|boolean
+	 */
 	public function getThumbPath() {
 
 		if( isset( $this->thumb ) ) {
@@ -260,6 +353,11 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 		return false;
 	}
 
+	/**
+	 * Calculate and set the file size in MB.
+	 *
+	 * @return void
+	 */
 	public function resetSize() {
 
 		$filePath	= $this->getFilePath();
@@ -275,6 +373,8 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	/**
 	 * Delete all the associated files from disk. Useful while updating file.
+	 *
+	 * @return void
 	 */
 	public function clearDisk() {
 
@@ -299,6 +399,60 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 		}
 	}
 
+	public function isImage() {
+
+		return $this->type == FileManager::FILE_TYPE_IMAGE;
+	}
+
+	public function isAudio() {
+
+		return $this->type == FileManager::FILE_TYPE_AUDIO;
+	}
+
+	public function isVideo() {
+
+		return $this->type == FileManager::FILE_TYPE_VIDEO;
+	}
+
+	public function isDocument() {
+
+		return $this->type == FileManager::FILE_TYPE_DOCUMENT;
+	}
+
+	public function getEmbeddableCode() {
+
+		$fileUrl	= $this->getFileUrl();
+		$title		= isset( $this->title ) ? $this->title : $this->name;
+
+		switch( $this->type ) {
+
+			case FileManager::FILE_TYPE_IMAGE: {
+
+				$alt = isset( $this->altText ) ? $this->altText : $this->name;
+
+				ob_start();
+?>
+<div class="wrap-editor-image">
+	<img class="fluid" src="<?= $fileUrl ?>" title="<?= $title ?>" alt="<?= $alt ?>" />
+<?php if( !empty( $this->caption ) ) { ?>
+	<p class="image-caption"><?= $this->caption ?></p>
+<?php } ?>
+<?php if( !empty( $this->description ) ) { ?>
+	<p class="image-desc"><?= $this->description ?></p>
+<?php } ?>
+</div>
+<?php
+				$code = ob_get_clean();
+
+				return $code;
+			}
+			default: {
+
+				return null;
+			}
+		}
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------
@@ -310,7 +464,7 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 	 */
 	public static function tableName() {
 
-		return CoreTables::TABLE_FILE;
+		return CoreTables::getTableName( CoreTables::TABLE_FILE );
 	}
 
 	// CMG parent classes --------------------
@@ -319,10 +473,14 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 	// Read - Query -----------
 
+	/**
+	 * @inheritdoc
+	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'creator', 'modifier' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -330,6 +488,8 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 	// Read - Find ------------
 
 	/**
+	 * Load the file attributes submitted by form and return the updated file model.
+	 *
 	 * @param File $file
 	 * @param string $name
 	 * @return File - after loading from request url
@@ -346,6 +506,13 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 		return $file;
 	}
 
+	/**
+	 * Load file attributes submitted by form and return the updated file models.
+	 *
+	 * @param string $name
+	 * @param File[] $files
+	 * @return File - after loading from request url
+	 */
 	public function loadFiles( $name, $files = [] ) {
 
 		$filesToLoad	= Yii::$app->request->post( $name );
@@ -355,6 +522,7 @@ class File extends \cmsgears\core\common\models\base\Resource implements IVisibi
 
 			$filesToLoad  = [];
 
+			// TODO: Use existing file models using $files param.
 			for( $i = 0; $i < $count; $i++ ) {
 
 				$filesToLoad[] = new File();

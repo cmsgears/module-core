@@ -1,19 +1,30 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\admin\controllers\apix;
 
-use \Yii;
+use Yii;
 use yii\filters\VerbFilter;
-use yii\web\NotFoundHttpException;
 
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\forms\GenericForm;
-use cmsgears\core\common\models\mappers\ModelMeta;
 
 use cmsgears\core\common\utilities\FormUtil;
 use cmsgears\core\common\utilities\AjaxUtil;
 
+/**
+ * SettingsController provides actions specific to site configurations.
+ *
+ * @since 1.0.0
+ */
 class SettingsController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
@@ -34,9 +45,12 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 
 		parent::init();
 
-		$this->crudPermission	= CoreGlobal::PERM_CORE;
-		$this->modelService		= Yii::$app->factory->get( 'siteService' );
-		$this->metaService		= Yii::$app->factory->get( 'siteMetaService' );
+		// Permission
+		$this->crudPermission = CoreGlobal::PERM_CORE;
+
+		// Services
+		$this->modelService	= Yii::$app->factory->get( 'siteService' );
+		$this->metaService	= Yii::$app->factory->get( 'siteMetaService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -58,7 +72,7 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 				]
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'index'	 => [ 'post' ],
 					'update'  => [ 'post' ]
@@ -77,37 +91,39 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 
 	public function actionIndex( $type ) {
 
-		$settings		= $this->modelService->getMetaMapBySlugType( Yii::$app->core->getSiteSlug(), $type );
-		$fieldsMap		= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
-		$model			= new GenericForm( [ 'fields' => $fieldsMap ] );
+		$settings	= $this->modelService->getMetaMapByMetaType( Yii::$app->core->site, $type );
+		$fieldsMap	= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
+		$form		= new GenericForm( [ 'fields' => $fieldsMap ] );
 
-		$htmlContent	= $this->renderPartial( '@cmsgears/module-core/admin/views/settings/info', [
-								'fieldsMap' => $fieldsMap,
-								'type' => $type,
-								'model' => $model
-							]);
+		$htmlContent = $this->renderPartial( '@cmsgears/module-core/admin/views/settings/info', [
+							'fieldsMap' => $fieldsMap,
+							'type' => $type,
+							'form' => $form
+						]);
 
 		return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $htmlContent );
 	}
 
 	public function actionUpdate( $type ) {
 
-		$settings		= $this->modelService->getMetaMapBySlugType( Yii::$app->core->getSiteSlug(), $type );
+		$settings = $this->modelService->getMetaMapByMetaType( Yii::$app->core->site, $type );
 
 		if( count( $settings )  > 0 ) {
-		
-			$fieldsMap		= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
-			$model			= new GenericForm( [ 'fields' => $fieldsMap ] );
+
+			$fieldsMap	= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
+			$model		= new GenericForm( [ 'fields' => $fieldsMap ] );
 
 			if( $model->load( Yii::$app->request->post(), "setting$type" ) && $model->validate() ) {
 
-				$settings	= FormUtil::getModelMetas( $model, $settings );
+				$settings = FormUtil::getModelMetas( $model, $settings );
 
 				$this->metaService->updateMultiple( $settings, [ 'parent' => Yii::$app->core->site ] );
 
-				$data		= [];
+				$settings = FormUtil::filterPasswordFields( $model, $settings );
 
-				foreach ( $settings as $key => $value ) {
+				$data = [];
+
+				foreach( $settings as $key => $value ) {
 
 					$data[]	= $value->getFieldInfo();
 				}
@@ -116,16 +132,16 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 			}
 
 			return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_REQUEST ) );
-			
+
 		}
 		else {
 
-			$settings	= Yii::$app->request->post( "setting$type");
+			$settings = Yii::$app->request->post( "setting$type");
 
-			$siteId		= Yii::$app->core->getSiteId();
+			$siteId = Yii::$app->core->getSiteId();
 
-			$models		= [];
-			$data		= [];
+			$models	= [];
+			$data	= [];
 
  			foreach( $settings as $key => $value ) {
 
@@ -136,15 +152,15 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 
 				if( $value == '1' ) {
 
-					$model->valueType	= 'flag';
+					$model->valueType = 'flag';
 				}
 				else {
 
-					$model->valueType	= 'text';
+					$model->valueType = 'text';
 				}
 
-				$model->type		= $type;
-				$model->label		= $key;
+				$model->type	= $type;
+				$model->label	= $key;
 
 				if( $model->validate() ) {
 
@@ -162,4 +178,5 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 			return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 		}
 	}
+
 }

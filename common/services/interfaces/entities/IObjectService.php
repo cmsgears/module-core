@@ -1,16 +1,28 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\interfaces\entities;
 
-// Yii Imports
-use \Yii;
-
 // CMG Imports
-use cmsgears\core\common\config\CoreGlobal;
+use cmsgears\core\common\services\interfaces\base\IApproval;
+use cmsgears\core\common\services\interfaces\base\IEntityService;
+use cmsgears\core\common\services\interfaces\base\IMultiSite;
+use cmsgears\core\common\services\interfaces\base\INameType;
+use cmsgears\core\common\services\interfaces\base\ISlugType;
+use cmsgears\core\common\services\interfaces\resources\IData;
 
-use cmsgears\core\common\services\interfaces\base\INameTypeService;
-use cmsgears\core\common\services\interfaces\base\ISlugTypeService;
-
-interface IObjectService extends INameTypeService, ISlugTypeService {
+/**
+ * IObjectService provide service methods for object model.
+ *
+ * @since 1.0.0
+ */
+interface IObjectService extends IApproval, IEntityService, IData, IMultiSite, INameType, ISlugType {
 
 	// Data Provider ------
 
@@ -18,14 +30,30 @@ interface IObjectService extends INameTypeService, ISlugTypeService {
 
 	// Read - Models ---
 
+	public function getFeatured();
+
+	public function getActive( $config = [] );
+
+	public function getActiveByType( $type, $config = [] );
+
 	// Read - Lists ----
 
 	// Read - Maps -----
+
+	// Read - Others ---
 
 	// Create -------------
 
 	// Update -------------
 
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 }

@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\mappers;
 
 // Yii Imports
@@ -6,19 +14,18 @@ use Yii;
 
 // CMG Imports
 use cmsgears\core\common\models\forms\Binder;
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\resources\Tag;
-use cmsgears\core\common\models\mappers\ModelTag;
 
-use cmsgears\core\common\services\base\EntityService;
 use cmsgears\core\common\services\interfaces\mappers\IModelTagService;
 use cmsgears\core\common\services\interfaces\resources\ITagService;
-use cmsgears\core\common\services\traits\MapperTrait;
+
+use cmsgears\core\common\services\base\ModelMapperService;
 
 /**
- * The class ModelTagService is base class to perform database activities for ModelTag Entity.
+ * ModelTagService provide service methods of tag mapper.
+ *
+ * @since 1.0.0
  */
-class ModelTagService extends EntityService implements IModelTagService {
+class ModelTagService extends ModelMapperService implements IModelTagService {
 
 	// Variables ---------------------------------------------------
 
@@ -28,11 +35,7 @@ class ModelTagService extends EntityService implements IModelTagService {
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelTag';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_TAG;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\mappers\ModelTag';
 
 	// Protected --------------
 
@@ -48,13 +51,11 @@ class ModelTagService extends EntityService implements IModelTagService {
 
 	// Traits ------------------------------------------------------
 
-	use MapperTrait;
-
 	// Constructor and Initialisation ------------------------------
 
 	public function __construct( ITagService $tagService, $config = [] ) {
 
-		$this->tagService	= $tagService;
+		$this->tagService = $tagService;
 
 		parent::__construct( $config );
 	}
@@ -87,26 +88,26 @@ class ModelTagService extends EntityService implements IModelTagService {
 
 	public function createFromArray( $parentId, $parentType, $tags ) {
 
-		foreach ( $tags as $tagName ) {
+		foreach( $tags as $tagName ) {
 
-			$tagName	= trim( $tagName );
+			$tagName = trim( $tagName );
 
 			if( empty( $tagName ) ) {
 
 				continue;
 			}
 
-			$tag = Tag::findByNameType( $tagName, $parentType, true );
+			$tag = $this->tagService->getFirstByNameType( $tagName, $parentType );
 
 			if( !isset( $tag ) ) {
 
 				$tag = $this->tagService->createByParams( [ 'siteId' => Yii::$app->core->siteId, 'name' => ucfirst( $tagName ), 'type' => $parentType ] );
 			}
 
-			$modelTag = $this->getByModelId( $parentId, $parentType, $tag->id );
+			$modelTag = $this->getFirstByParentModelId( $parentId, $parentType, $tag->id );
 
 			// Create if does not exist
-			if( !isset( $modelTag ) ) {
+			if( empty( $modelTag ) ) {
 
 				$this->createByParams( [ 'modelId' => $tag->id, 'parentId' => $parentId, 'parentType' => $parentType, 'order' => 0, 'active' => true ] );
 			}
@@ -120,7 +121,7 @@ class ModelTagService extends EntityService implements IModelTagService {
 
 	public function createFromCsv( $parentId, $parentType, $tags ) {
 
-		$tags	= preg_split( "/,/", $tags );
+		$tags = preg_split( "/,/", $tags );
 
 		return $this->createFromArray( $parentId, $parentType, $tags );
 	}
@@ -134,7 +135,9 @@ class ModelTagService extends EntityService implements IModelTagService {
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'order', 'active' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'order', 'active'
+		];
 
 		return parent::update( $model, [
 			'attributes' => $attributes
@@ -144,9 +147,14 @@ class ModelTagService extends EntityService implements IModelTagService {
 	public function bindTags( $parentId, $parentType, $config = [] ) {
 
 		$binderName	= isset( $config[ 'binder' ] ) ? $config[ 'binder' ] : 'Binder';
-		$binder		= new Binder();
+		$binder		= $config[ 'tagBinder' ] ?? null;
 
-		$binder->load( Yii::$app->request->post(), $binderName );
+		if( empty( $binder ) ) {
+
+			$binder = new Binder();
+
+			$binder->load( Yii::$app->request->post(), $binderName );
+		}
 
 		$all		= $binder->all;
 		$binded		= $binder->binded;
@@ -164,7 +172,7 @@ class ModelTagService extends EntityService implements IModelTagService {
 
 			$process = $binded;
 
-			ModelTag::disableByParent( $parentId, $parentType );
+			$this->disableByParent( $parentId, $parentType );
 
 			$this->createFromArray( $parentId, $parentType, $process );
 		}
@@ -176,12 +184,20 @@ class ModelTagService extends EntityService implements IModelTagService {
 
 	public function deleteByTagSlug( $parentId, $parentType, $tagSlug, $delete = false ) {
 
-		$tag	= $this->tagService->getBySlugType( $tagSlug, $parentType );
+		$tag = $this->tagService->getBySlugType( $tagSlug, $parentType );
 
 		$this->disableByModelId( $parentId, $parentType, $tag->id, $delete = false );
 
 		return true;
 	}
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

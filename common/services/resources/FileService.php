@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\resources;
 
 // Yii Imports
@@ -8,18 +16,20 @@ use yii\data\Sort;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\models\base\CoreTables;
 use cmsgears\core\common\models\resources\File;
-use cmsgears\core\common\models\mappers\ModelFile;
 
 use cmsgears\core\common\services\interfaces\resources\IFileService;
 
-use cmsgears\core\common\services\traits\VisibilityTrait;
+use cmsgears\core\common\services\traits\base\MultiSiteTrait;
+use cmsgears\core\common\services\traits\base\VisibilityTrait;
+use cmsgears\core\common\services\traits\resources\DataTrait;
 
 /**
- * The class FileService is base class to perform database activities for CmgFile Entity.
+ * FileService provide service methods of file model.
+ *
+ * @since 1.0.0
  */
-class FileService extends \cmsgears\core\common\services\base\EntityService implements IFileService {
+class FileService extends \cmsgears\core\common\services\base\ResourceService implements IFileService {
 
 	// Variables ---------------------------------------------------
 
@@ -29,11 +39,9 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\File';
+	public static $modelClass = '\cmsgears\core\common\models\resources\File';
 
-	public static $modelTable	= CoreTables::TABLE_FILE;
-
-	public static $parentType	= CoreGlobal::TYPE_FILE;
+	public static $parentType = CoreGlobal::TYPE_FILE;
 
 	// Protected --------------
 
@@ -47,6 +55,8 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 	// Traits ------------------------------------------------------
 
+	use DataTrait;
+	use MultiSiteTrait;
 	use VisibilityTrait;
 
 	// Constructor and Initialisation ------------------------------
@@ -67,76 +77,88 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function getPage( $config = [] ) {
 
-		$modelClass		= static::$modelClass;
-		$modelTable		= static::$modelTable;
+		$modelClass	= static::$modelClass;
+		$modelTable	= $this->getModelTable();
 
 		// Sorting ----------
 
 		$sort = new Sort([
 			'attributes' => [
 				'id' => [
-					'asc' => [ 'id' => SORT_ASC ],
-					'desc' => [ 'id' => SORT_DESC ],
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Id'
 				],
 				'name' => [
-					'asc' => [ 'name' => SORT_ASC ],
-					'desc' => ['name' => SORT_DESC ],
+					'asc' => [ "$modelTable.name" => SORT_ASC ],
+					'desc' => [ "$modelTable.name" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Name'
 				],
 				'title' => [
-					'asc' => [ 'title' => SORT_ASC ],
-					'desc' => [ 'title' => SORT_DESC ],
+					'asc' => [ "$modelTable.title" => SORT_ASC ],
+					'desc' => [ "$modelTable.title" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Title'
 				],
 				'extension' => [
-					'asc' => [ 'extension' => SORT_ASC ],
-					'desc' => [ 'extension' => SORT_DESC ],
+					'asc' => [ "$modelTable.extension" => SORT_ASC ],
+					'desc' => [ "$modelTable.extension" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Extension'
 				],
 				'directory' => [
-					'asc' => [ 'directory' => SORT_ASC ],
-					'desc' => [ 'directory' => SORT_DESC ],
+					'asc' => [ "$modelTable.directory" => SORT_ASC ],
+					'desc' => [ "$modelTable.directory" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Directory'
 				],
 				'size' => [
-					'asc' => [ 'size' => SORT_ASC ],
-					'desc' => [ 'size' => SORT_DESC ],
+					'asc' => [ "$modelTable.size" => SORT_ASC ],
+					'desc' => [ "$modelTable.size" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Size'
 				],
-				'url' => [
-					'asc' => [ 'url' => SORT_ASC ],
-					'desc' => [ 'url' => SORT_DESC ],
-					'default' => SORT_DESC,
-					'label' => 'Path'
-				],
 				'visibility' => [
-					'asc' => [ 'visibility' => SORT_ASC ],
-					'desc' => [ 'visibility' => SORT_DESC ],
+					'asc' => [ "$modelTable.visibility" => SORT_ASC ],
+					'desc' => [ "$modelTable.visibility" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Visibility'
 				],
+				'type' => [
+					'asc' => [ "$modelTable.type" => SORT_ASC ],
+					'desc' => [ "$modelTable.type" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Type'
+				],
+				'storage' => [
+					'asc' => [ "$modelTable.storage" => SORT_ASC ],
+					'desc' => [ "$modelTable.storage" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Storage'
+				],
+				'url' => [
+					'asc' => [ "$modelTable.url" => SORT_ASC ],
+					'desc' => [ "$modelTable.url" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Path'
+				],
 				'shared' => [
-					'asc' => [ 'shared' => SORT_ASC ],
-					'desc' => [ 'shared' => SORT_DESC ],
+					'asc' => [ "$modelTable.shared" => SORT_ASC ],
+					'desc' => [ "$modelTable.shared" => SORT_DESC ],
 					'default' => SORT_DESC,
 					'label' => 'Shared'
 				],
 	            'cdate' => [
-	                'asc' => [ 'createdAt' => SORT_ASC ],
-	                'desc' => ['createdAt' => SORT_DESC ],
+	                'asc' => [ "$modelTable.createdAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.createdAt" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Created At'
 	            ],
 	            'udate' => [
-	                'asc' => [ 'modifiedAt' => SORT_ASC ],
-	                'desc' => ['modifiedAt' => SORT_DESC ],
+	                'asc' => [ "$modelTable.modifiedAt" => SORT_ASC ],
+	                'desc' => [ "$modelTable.modifiedAt" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Updated At'
 	            ]
@@ -160,9 +182,17 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 		// Filters ----------
 
-		// Filter - Visibility
+		// Params
+		$type		= Yii::$app->request->getQueryParam( 'type' );
 		$visibility	= Yii::$app->request->getQueryParam( 'visibility' );
 
+		// Filter - Type
+		if( isset( $type ) ) {
+
+			$config[ 'conditions' ][ "$modelTable.type" ] = $type;
+		}
+
+		// Filter - Visibility
 		if( isset( $visibility ) && isset( $modelClass::$urlRevVisibilityMap[ $visibility ] ) ) {
 
 			$config[ 'conditions' ][ "$modelTable.visibility" ]	= $modelClass::$urlRevVisibilityMap[ $visibility ];
@@ -170,11 +200,17 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 		// Searching --------
 
-		$searchCol	= Yii::$app->request->getQueryParam( 'search' );
+		$searchCol = Yii::$app->request->getQueryParam( 'search' );
 
 		if( isset( $searchCol ) ) {
 
-			$search = [ 'title' => "$modelTable.title", 'extension' => "$modelTable.extension", 'directory' => "$modelTable.directory" ];
+			$search = [
+				'title' => "$modelTable.title",
+				'desc' => "$modelTable.description",
+				'caption' => "$modelTable.caption",
+				'extension' => "$modelTable.extension",
+				'directory' => "$modelTable.directory"
+			];
 
 			$config[ 'search-col' ] = $search[ $searchCol ];
 		}
@@ -182,7 +218,11 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 		// Reporting --------
 
 		$config[ 'report-col' ]	= [
-			'title' => "$modelTable.title", 'extension' => "$modelTable.extension", 'directory' => "$modelTable.directory",
+			'title' => "$modelTable.title",
+			'desc' => "$modelTable.description",
+			'caption' => "$modelTable.caption",
+			'extension' => "$modelTable.extension",
+			'directory' => "$modelTable.directory",
 			'visibility' => "$modelTable.visibility"
 		];
 
@@ -216,11 +256,16 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 	 */
 	public function create( $model, $config = [] ) {
 
+		// model class
+		$modelClass = static::$modelClass;
+
 		// Default visibility
 		if( !isset( $model->visibility ) ) {
 
 			$model->visibility = File::VISIBILITY_PUBLIC;
 		}
+
+		$model->siteId	= isset( $config[ 'siteId' ] ) ? $config[ 'siteId' ] : Yii::$app->core->siteId;
 
 		// Default sharing
 		if( !isset( $model->shared ) ) {
@@ -239,17 +284,17 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'altText', 'link', 'type' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'caption', 'altText', 'link', 'type', 'content' ];
 
 		if( $model->changed ) {
 
 			// Find existing file
-			$existingFile	= self::findById( $model->id );
+			$existingFile = self::findById( $model->id );
 
 			// Delete from disk
 			$existingFile->clearDisk();
 
-			$attributes[]	= 'size';
+			$attributes[] = 'size';
 		}
 
 		return parent::update( $model, [
@@ -259,17 +304,20 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function updateData( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'altText', 'link', 'type', 'name', 'directory', 'extension', 'url', 'medium', 'thumb' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'caption', 'altText', 'link', 'type', 'content', 'name', 'directory', 'extension', 'url', 'medium', 'thumb' ];
 
 		if( $model->changed ) {
 
 			// Find existing file
-			$existingFile	= self::findById( $model->id );
+			$existingFile = self::findById( $model->id );
 
 			// Delete from disk
-			$existingFile->clearDisk();
+			if( isset( $existingFile ) ) {
 
-			$attributes[]	= 'size';
+				$existingFile->clearDisk();
+			}
+
+			$attributes[] = 'size';
 		}
 
 		return parent::update( $model, [
@@ -302,7 +350,7 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 			if( isset( $args[ 'attribute' ] ) ) $attribute	= $args[ 'attribute' ];
 
 			// Update Image
-			$fileId		= $file->id;
+			$fileId = $file->id;
 
 			if( $file->changed ) {
 
@@ -441,7 +489,7 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function saveFiles( $model, $files = [] ) {
 
-		foreach ( $files as $key => $value ) {
+		foreach( $files as $key => $value ) {
 
 			if( isset( $value ) ) {
 
@@ -456,6 +504,40 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 			}
 		}
 	}
+
+	// Delete -------------
+
+	/**
+	 * Delete the file and corresponding mappings.
+	 *
+	 * @param \cmsgears\core\common\models\resources\File $model
+	 * @param array $config
+	 * @return boolean
+	 */
+	public function delete( $model, $config = [] ) {
+
+		$admin = isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+
+		if( isset( $model ) ) {
+
+			// Only admin is authorised to delete a shared file using file browser.
+			if( $admin || !$model->shared ) {
+
+				// Delete mappings
+				Yii::$app->factory->get( 'modelFileService' )->deleteByModelId( $model->id );
+
+				// Delete from disk
+				$model->clearDisk();
+
+				// Delete model
+				return parent::delete( $model, $config );
+			}
+		}
+
+		return false;
+	}
+
+	// Bulk ---------------
 
 	protected function applyBulk( $model, $column, $action, $target, $config = [] ) {
 
@@ -493,46 +575,28 @@ class FileService extends \cmsgears\core\common\services\base\EntityService impl
 
 				break;
 			}
-		}
-	}
+			case 'model': {
 
-	// Delete -------------
+				switch( $action ) {
 
-	public function delete( $model, $config = [] ) {
+					case 'delete': {
 
-		$admin	= isset( $config[ 'admin' ] ) ? $config[ 'admin' ] : false;
+						$this->delete( $model, $config );
 
-		if( isset( $model ) ) {
+						break;
+					}
+				}
 
-			// Only admin is authorised to delete a shared file
-			if( $admin || $model->type !== 'shared' ) {
-
-				// Delete mapping
-				ModelFile::deleteByModelId( $model->id );
-
-				// Delete from disk
-				$model->clearDisk();
-
-				// Delete model
-				return parent::delete( $model, $config );
-			}
-
-			return true;
-		}
-
-		return false;
-	}
-
-	public function deleteFiles( $files = [] ) {
-
-		foreach ( $files as $file ) {
-
-			if( isset( $file ) ) {
-
-				$this->delete( $file );
+				break;
 			}
 		}
 	}
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

@@ -1,19 +1,24 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\services\mappers;
 
 // CMG Imports
-use cmsgears\core\common\models\base\CoreTables;
-use cmsgears\core\common\models\mappers\ModelGallery;
-
 use cmsgears\core\common\services\interfaces\resources\IGalleryService;
 use cmsgears\core\common\services\interfaces\mappers\IModelGalleryService;
 
-use cmsgears\core\common\services\traits\MapperTrait;
-
 /**
- * The class ModelGalleryService is base class to perform database activities for ModelGallery Entity.
+ * ModelGalleryService provide service methods of gallery mapper.
+ *
+ * @since 1.0.0
  */
-class ModelGalleryService extends \cmsgears\core\common\services\base\EntityService implements IModelGalleryService {
+class ModelGalleryService extends \cmsgears\core\common\services\base\ModelMapperService implements IModelGalleryService {
 
 	// Variables ---------------------------------------------------
 
@@ -23,11 +28,7 @@ class ModelGalleryService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\mappers\ModelGallery';
-
-	public static $modelTable	= CoreTables::TABLE_MODEL_GALLERY;
-
-	public static $parentType	= null;
+	public static $modelClass = '\cmsgears\core\common\models\mappers\ModelGallery';
 
 	// Protected --------------
 
@@ -43,13 +44,11 @@ class ModelGalleryService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Traits ------------------------------------------------------
 
-	use MapperTrait;
-
 	// Constructor and Initialisation ------------------------------
 
 	public function __construct( IGalleryService $galleryService, $config = [] ) {
 
-		$this->galleryService	= $galleryService;
+		$this->galleryService = $galleryService;
 
 		parent::__construct( $config );
 	}
@@ -80,71 +79,43 @@ class ModelGalleryService extends \cmsgears\core\common\services\base\EntityServ
 
 	// Create -------------
 
-	public function create( $gallery, $config = [] ) {
+	public function createWithParent( $parent, $config = [] ) {
+
+		$modelClass	= static::$modelClass;
 
 		$parentId	= $config[ 'parentId' ];
-		$parentType = $config[ 'parentType' ];
-		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
+		$parentType	= $config[ 'parentType' ];
+		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_DEFAULT;
 		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
 
-		// Create Gallery
-		$gallery->type	= $parentType;
+		$parent->type = $parentType;
 
-		$gallery->save();
+		$gallery = $this->galleryService->create( $parent );
 
-		// Create Model Gallery
-		$modelGallery				= new ModelGallery();
+		$model = new $modelClass;
 
-		$modelGallery->modelId		= $gallery->id;
-		$modelGallery->parentId		= $parentId;
-		$modelGallery->parentType	= $parentType;
-		$modelGallery->type			= $type;
-		$modelGallery->order		= $order;
-		$modelGallery->active		= true;
+		$model->modelId		= $gallery->id;
+		$model->parentId	= $parentId;
+		$model->parentType	= $parentType;
 
-		$modelGallery->save();
-	}
+		$model->type	= $type;
+		$model->order	= $order;
+		$model->active	= true;
 
-	public function createOrUpdate( $gallery, $config = [] ) {
-
-		$parentId	= $config[ 'parentId' ];
-		$parentType = $config[ 'parentType' ];
-		$type		= isset( $config[ 'type' ] ) ? $config[ 'type' ] : null;
-		$order		= isset( $config[ 'order' ] ) ? $config[ 'order' ] : 0;
-
-		// Update Existing
-		if( isset( $gallery->id ) && !empty( $gallery->id ) ) {
-
-			$existingGallery	= $this->getByModelId( $parentId, $parentType, $gallery->id );
-
-			if( isset( $existingGallery ) ) {
-
-				return $this->update( $existingGallery, [ 'gallery' => $gallery ] );
-			}
-		}
-		// Create New
-		else {
-
-			return $this->create( $gallery, $config );
-		}
+		return parent::create( $model );
 	}
 
 	// Update -------------
 
-	public function update( $model, $config = [] ) {
-
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'type', 'order' ];
-
-		$gallery	= $config[ 'gallery' ];
-
-		$this->galleryService->update( $gallery );
-
-		return parent::update( $model, [
-			'attributes' => $attributes
-		]);
-	}
-
 	// Delete -------------
+
+	// Bulk ---------------
+
+	// Notifications ------
+
+	// Cache --------------
+
+	// Additional ---------
 
 	// Static Methods ----------------------------------------------
 

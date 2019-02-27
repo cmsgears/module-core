@@ -1,4 +1,12 @@
 <?php
+/**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
+ * @link https://www.cmsgears.org/
+ * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
+ */
+
 namespace cmsgears\core\common\actions\address;
 
 // Yii Imports
@@ -7,15 +15,17 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\utilities\AjaxUtil;
+use cmsgears\core\common\actions\base\ModelAction;
 
-// TODO: We might need an additional parameter to confirm whether model address must be deleted or address and associated model addresses.
+use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
  * The Delete action find model address for the given id and delete the address. The service
  * also deletes all the model addresses associated with the address.
+ *
+ * @since 1.0.0
  */
-class Delete extends \cmsgears\core\common\actions\base\ModelAction {
+class Delete extends ModelAction {
 
 	// Variables ---------------------------------------------------
 
@@ -31,7 +41,7 @@ class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
 	// Public -----------------
 
-	public $parent 	= true;
+	public $parent = true;
 
 	// Protected --------------
 
@@ -49,9 +59,9 @@ class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
 		parent::init();
 
-		$this->addressService		= Yii::$app->factory->get( 'addressService' );
+		$this->addressService = Yii::$app->factory->get( 'addressService' );
 
-		$this->modelAddressService	= Yii::$app->factory->get( 'modelAddressService' );
+		$this->modelAddressService = Yii::$app->factory->get( 'modelAddressService' );
 	}
 
 	// Instance methods --------------------------------------------
@@ -70,20 +80,23 @@ class Delete extends \cmsgears\core\common\actions\base\ModelAction {
 
 		if( isset( $this->model ) ) {
 
-			$modelAddress	= $this->modelAddressService->getById( $cid );
+			$modelAddress = $this->modelAddressService->getById( $cid );
 
-			if( isset( $modelAddress ) && $modelAddress->checkParent( $this->model->id, $this->parentType ) ) {
+			if( isset( $modelAddress ) && $modelAddress->isParentValid( $this->model->id, $this->parentType ) ) {
 
 				$address = $modelAddress->model;
+
+				$data = [ 'cid' => $modelAddress->id ];
 
 				$this->addressService->delete( $address );
 
 				// Trigger Ajax Success
-				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ) );
+				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REQUEST ), $data );
 			}
 		}
 
 		// Trigger Ajax Failure
 		return AjaxUtil::generateFailure( Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_NOT_FOUND ) );
 	}
+
 }

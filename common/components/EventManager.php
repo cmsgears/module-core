@@ -60,7 +60,7 @@ class EventManager extends Component {
 	 *
 	 * @return array having recent notifications, reminders, activities and counts.
 	 */
-	public function getAdminStats() {
+	public function getAdminStats( $type = null ) {
 
 		return [
 			// Messages
@@ -76,13 +76,13 @@ class EventManager extends Component {
 	 *
 	 * @return array having recent notifications, reminders, activities and counts.
 	 */
-	public function getUserStats() {
+	public function getUserStats( $type = null ) {
 
 		return [
 			// Messages
-			'notifications' => [], 'reminders' => [], 'activities' => [],
+			'notifications' => [], 'reminders' => [], 'activities' => [], 'announcements' => [],
 			// Counters - New
-			'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0
+			'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0, 'announcementCount' => 0
 		];
 	}
 
@@ -92,13 +92,13 @@ class EventManager extends Component {
 	 *
 	 * @return array having recent notifications, reminders, activities and counts.
 	 */
-	public function getModelStats( $parentId, $parentType ) {
+	public function getModelStats( $parentId, $parentType, $type = null ) {
 
 		return [
 			// Messages
-			'notifications' => [], 'reminders' => [], 'activities' => [],
+			'notifications' => [], 'reminders' => [], 'activities' => [], 'announcements' => [],
 			// Counters - New
-			'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0
+			'notificationCount' => 0, 'reminderCount' => 0, 'activityCount' => 0, 'announcementCount' => 0
 		];
 	}
 

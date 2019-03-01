@@ -91,7 +91,7 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 			$modelCommentService = Yii::$app->factory->get( 'modelCommentService' );
 
-			$user = Yii::$app->user->getIdentity();
+			$user = Yii::$app->core->getUser();
 
 			$modelClass = $modelCommentService->getModelClass();
 

@@ -50,7 +50,7 @@ class UserExistFilter extends Behavior {
 		// Proceed if requested action exists
 		if ( $found ) {
 
-			$user = Yii::$app->user->identity;
+			$user = Yii::$app->core->getUser();
 
 			// Return appropriate error if user does not exist
 			if( !isset( $user ) ) {

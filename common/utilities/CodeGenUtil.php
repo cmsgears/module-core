@@ -203,7 +203,7 @@ class CodeGenUtil {
 	// Generic Select for any table
 	public static function generateSelectOptionsFromArray( $data, $selected = null ) {
 
-		$options	= "";
+		$options = "";
 
 		if( isset( $data ) ) {
 

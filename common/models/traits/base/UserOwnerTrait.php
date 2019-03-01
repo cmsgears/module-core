@@ -56,7 +56,7 @@ trait UserOwnerTrait {
 
 		if( !isset( $user ) && !$strict ) {
 
-			$user	= Yii::$app->user->getIdentity();
+			$user = Yii::$app->core->getUser();
 		}
 
 		if( isset( $user ) ) {

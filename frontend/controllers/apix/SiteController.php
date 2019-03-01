@@ -21,8 +21,6 @@ use cmsgears\core\common\models\forms\Login;
 use cmsgears\core\common\models\forms\ForgotPassword;
 use cmsgears\core\common\models\forms\Register;
 
-use cmsgears\core\frontend\controllers\base\Controller;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
@@ -30,7 +28,7 @@ use cmsgears\core\common\utilities\AjaxUtil;
  *
  * @since 1.0.0
  */
-class SiteController extends Controller {
+class SiteController extends \cmsgears\core\frontend\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -56,9 +54,10 @@ class SiteController extends Controller {
 		$this->crudPermission = CoreGlobal::PERM_USER;
 
 		// Services
-		$this->modelService			= Yii::$app->factory->get( 'siteService' );
-		$this->userService			= Yii::$app->factory->get( 'userService' );
-		$this->siteMemberService	= Yii::$app->factory->get( 'siteMemberService' );
+		$this->modelService = Yii::$app->factory->get( 'siteService' );
+		$this->userService	= Yii::$app->factory->get( 'userService' );
+
+		$this->siteMemberService = Yii::$app->factory->get( 'siteMemberService' );
 	}
 
 	// Instance methods --------------------------------------------

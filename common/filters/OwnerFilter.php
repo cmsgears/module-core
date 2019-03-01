@@ -26,7 +26,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *	public function behaviors() {
  *
  *		...........
- * 
+ *
  *		'rbac' => [
  *			'actions' => [
  *				'<action name>' => [
@@ -58,7 +58,7 @@ class OwnerFilter {
 
 		$typed = isset( $args[ 'typed' ] ) ? $args[ 'typed' ] : false;
 
-		$user	= Yii::$app->user->identity;
+		$user	= Yii::$app->core->getUser();
 		$model	= Yii::$app->controller->model; // Check whether model is already discoverd
 
 		// Find Service

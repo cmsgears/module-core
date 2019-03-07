@@ -336,6 +336,7 @@ class CoreGlobal {
 	const FIELD_DESCRIPTION	= 'descField';
 	const FIELD_OTP			= 'otp';
 	const FIELD_NOTES		= 'notesField';
+	const FIELD_GUEST		= 'guestField';
 
 	const FIELD_ACTIVE		= 'activeField';
 	const FIELD_STATUS		= 'statusField';

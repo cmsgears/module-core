@@ -142,6 +142,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_DESCRIPTION => 'Description',
 		CoreGlobal::FIELD_OTP => 'OTP',
 		CoreGlobal::FIELD_NOTES => 'Notes',
+		CoreGlobal::FIELD_GUEST => 'Guest',
 
 		CoreGlobal::FIELD_ACTIVE => 'Active',
 		CoreGlobal::FIELD_STATUS => 'Status',

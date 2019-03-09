@@ -295,6 +295,7 @@ class MessageSource extends \yii\base\Component {
 		// Notification/Reminder/Message Fields
 		CoreGlobal::FIELD_NOTIFIER => 'Notifier',
 		CoreGlobal::FIELD_SENDER => 'Sender',
+		CoreGlobal::FIELD_PUBLISHER => 'Publisher',
 		CoreGlobal::FIELD_RECIPIENT => 'Recipient',
 
 		// Site/Site Member Fields

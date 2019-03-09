@@ -31,6 +31,8 @@ abstract class CommentController extends Controller {
 
 	// Public -----------------
 
+	public $title;
+
 	public $parentUrl;
 
 	public $urlKey;
@@ -38,8 +40,6 @@ abstract class CommentController extends Controller {
 	public $commentType;
 
 	// Protected --------------
-
-	protected $title;
 
 	protected $parentType;
 
@@ -140,7 +140,6 @@ abstract class CommentController extends Controller {
 
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
-			'title' => $this->title . 's',
 			'statusMap' => $modelClass::$statusMap,
 			'parent' => $parent
 		]);

@@ -495,6 +495,7 @@ class CoreGlobal {
 	// Notification/Reminder/Message Fields
 	const FIELD_NOTIFIER		= 'notifierField';
 	const FIELD_SENDER			= 'senderField';
+	const FIELD_PUBLISHER		= 'publisherField';
 	const FIELD_RECIPIENT		= 'recipientField';
 
 	// Site/Site Member Fields

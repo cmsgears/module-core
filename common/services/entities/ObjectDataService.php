@@ -19,6 +19,7 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\services\interfaces\entities\IObjectService;
 use cmsgears\core\common\services\interfaces\resources\IFileService;
+use cmsgears\core\common\services\interfaces\mappers\IModelFileService;
 
 use cmsgears\core\common\services\traits\base\ApprovalTrait;
 use cmsgears\core\common\services\traits\base\MultiSiteTrait;
@@ -56,6 +57,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 	// Protected --------------
 
 	protected $fileService;
+	protected $modelFileService;
 
 	// Private ----------------
 
@@ -69,9 +71,10 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 
 	// Constructor and Initialisation ------------------------------
 
-	public function __construct( IFileService $fileService, $config = [] ) {
+	public function __construct( IFileService $fileService, IModelFileService $modelFileService ,$config = [] ) {
 
 		$this->fileService = $fileService;
+		$this->modelFileService = $modelFileService; 
 
 		parent::__construct( $config );
 	}

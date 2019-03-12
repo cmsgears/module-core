@@ -74,7 +74,8 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 	public function __construct( IFileService $fileService, IModelFileService $modelFileService ,$config = [] ) {
 
 		$this->fileService = $fileService;
-		$this->modelFileService = $modelFileService; 
+
+		$this->modelFileService = $modelFileService;
 
 		parent::__construct( $config );
 	}

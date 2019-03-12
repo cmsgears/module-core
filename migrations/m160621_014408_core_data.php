@@ -327,10 +327,10 @@ class m160621_014408_core_data extends Migration {
 
 	private function insertSiteMembers() {
 
-		$superAdminRole		= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
-		$adminRole			= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
-		$userRole			= Role::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
-		$userAdminRole		= Role::findBySlugType( 'user-admin', CoreGlobal::TYPE_SYSTEM );
+		$superAdminRole	= Role::findBySlugType( 'super-admin', CoreGlobal::TYPE_SYSTEM );
+		$adminRole		= Role::findBySlugType( 'admin', CoreGlobal::TYPE_SYSTEM );
+		$userRole		= Role::findBySlugType( 'user', CoreGlobal::TYPE_SYSTEM );
+		$userAdminRole	= Role::findBySlugType( 'user-admin', CoreGlobal::TYPE_SYSTEM );
 
 		$columns = [ 'siteId', 'userId', 'roleId', 'createdAt', 'modifiedAt' ];
 
@@ -381,6 +381,7 @@ class m160621_014408_core_data extends Migration {
 			[ $config->id, 'site_name','Site Name', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Site name used on footers etc.","placeholder":"Site Name"}' ],
 			[ $config->id, 'site_url','Frontend URL', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Frontend URL","placeholder":"Frontend URL"}' ],
 			[ $config->id, 'admin_url','Backend URL', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Backend URL","placeholder":"Backend URL"}' ],
+			[ $config->id, 'resource_url','Resource URL', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Resource URL","placeholder":"Resource URL"}' ],
 			[ $config->id, 'registration','Registration', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Check whether site registration is allowed."}' ],
 			[ $config->id, 'login','Login', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Check whether site login is allowed."}' ],
 			[ $config->id, 'change_email','Change Email', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Check whether email change is allowed for user profile."}' ],
@@ -582,11 +583,11 @@ class m160621_014408_core_data extends Migration {
 		$siteContact	= Yii::$app->migration->getSiteContact();
 		$siteInfo		= Yii::$app->migration->getSiteInfo();
 
-		$timezone		= Yii::$app->migration->getTimezone();
+		$timezone = Yii::$app->migration->getTimezone();
 
 		$columns = [ 'modelId', 'name', 'label', 'type', 'active', 'valueType', 'value', 'data' ];
 
-		$metas	= [
+		$metas = [
 			[ $this->site->id, 'locale_message', 'Locale Message', 'core', 1, 'flag', '0',NULL ],
 			[ $this->site->id, 'language', 'Language', 'core', 1, 'text', 'en-US',NULL ],
 			[ $this->site->id, 'locale', 'Locale', 'core', 1, 'text', 'en_US',NULL ],
@@ -595,6 +596,7 @@ class m160621_014408_core_data extends Migration {
 			[ $this->site->id, 'site_name','Site Name','core', 1, 'text', $this->siteName,NULL ],
 			[ $this->site->id, 'site_url', 'Site Url', 'core', 1, 'text', $defaultSite,NULL ],
 			[ $this->site->id, 'admin_url', 'Admin Url', 'core', 1, 'text', $defaultAdmin,NULL ],
+			[ $this->site->id, 'resource_url', 'Resource Url', 'core', 1, 'text', $defaultSite,NULL ],
 			[ $this->site->id, 'registration','Registration','core', 1, 'flag','1',NULL ],
 			[ $this->site->id, 'login','Login','core', 1, 'flag','1',NULL ],
 			[ $this->site->id, 'change_email','Change Email','core', 1, 'flag','1',NULL ],

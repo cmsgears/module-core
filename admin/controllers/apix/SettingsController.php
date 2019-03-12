@@ -108,10 +108,11 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 
 		$settings = $this->modelService->getMetaMapByMetaType( Yii::$app->core->site, $type );
 
-		if( count( $settings )  > 0 ) {
+		if( count( $settings ) > 0 ) {
 
-			$fieldsMap	= FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
-			$model		= new GenericForm( [ 'fields' => $fieldsMap ] );
+			$fieldsMap = FormUtil::fillFromModelMeta( "config-$type", CoreGlobal::TYPE_SYSTEM, $settings );
+
+			$model = new GenericForm( [ 'fields' => $fieldsMap ] );
 
 			if( $model->load( Yii::$app->request->post(), "setting$type" ) && $model->validate() ) {
 
@@ -136,7 +137,7 @@ class SettingsController extends \cmsgears\core\admin\controllers\base\Controlle
 		}
 		else {
 
-			$settings = Yii::$app->request->post( "setting$type");
+			$settings = Yii::$app->request->post( "setting$type" );
 
 			$siteId = Yii::$app->core->getSiteId();
 

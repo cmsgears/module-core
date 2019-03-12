@@ -27,73 +27,75 @@ class CoreProperties extends Properties {
 
 	// Globals ----------------
 
-	const DIR_TEMP					= 'temp/';
-	const DIR_AVATAR				= 'avatar/';
+	const DIR_TEMP		= 'temp/';
+	const DIR_AVATAR	= 'avatar/';
 
 	/**
 	 * The property will be used to decide whether database need to be searched for locale messages.
 	 */
-	const PROP_LOCALE_MESSAGE		= 'locale_message';
+	const PROP_LOCALE_MESSAGE = 'locale_message';
 
 	/**
 	 * The property defines the default language for the site.
 	 */
-	const PROP_LANGUAGE				= 'language';
+	const PROP_LANGUAGE	= 'language';
 
 	/**
 	 * The property defines the default locale for the site.
 	 */
-	const PROP_LOCALE				= 'locale';
+	const PROP_LOCALE = 'locale';
 
 	/**
 	 * The property defines the default character set for the site.
 	 */
-	const PROP_CHARSET				= 'charset';
+	const PROP_CHARSET = 'charset';
 
 	/**
 	 * The property defines site title to be used on browser title.
 	 */
-	const PROP_SITE_TITLE			= 'site_title';
+	const PROP_SITE_TITLE = 'site_title';
 
 	/**
 	 * The property defines site name to be used at various places like emails, site footer.
 	 */
-	const PROP_SITE_NAME			= 'site_name';
+	const PROP_SITE_NAME = 'site_name';
 
 	/**
 	 * The property defines site url to be used at various places like emails.
 	 */
-	const PROP_SITE_URL				= 'site_url';
+	const PROP_SITE_URL = 'site_url';
 
 	/**
 	 * The property defines admin url to be used at various places like emails.
 	 */
-	const PROP_ADMIN_URL			= 'admin_url';
+	const PROP_ADMIN_URL = 'admin_url';
 
-	const PROP_REGISTRATION			= 'registration';
+	const PROP_RESOURCE_URL = 'resource_url';
 
-	const PROP_LOGIN				= 'login';
+	const PROP_REGISTRATION = 'registration';
 
-	const PROP_CHANGE_EMAIL			= 'change_email';
+	const PROP_LOGIN = 'login';
 
-	const PROP_CHANGE_USERNAME		= 'change_username';
+	const PROP_CHANGE_EMAIL = 'change_email';
 
-	const PROP_CHANGE_MOBILE		= 'change_mobile';
+	const PROP_CHANGE_USERNAME = 'change_username';
 
-	const PROP_FORMAT_DATE			= 'date_format';
+	const PROP_CHANGE_MOBILE = 'change_mobile';
 
-	const PROP_FORMAT_TIME			= 'time_format';
+	const PROP_FORMAT_DATE = 'date_format';
 
-	const PROP_FORMAT_DATE_TIME		= 'date_time_format';
+	const PROP_FORMAT_TIME = 'time_format';
 
-	const PROP_TIMEZONE				= 'timezone';
+	const PROP_FORMAT_DATE_TIME = 'date_time_format';
+
+	const PROP_TIMEZONE = 'timezone';
 
 	/**
 	 * It checks whether system can login user on activation.
 	 */
-	const PROP_AUTO_LOGIN			= 'auto_login';
+	const PROP_AUTO_LOGIN = 'auto_login';
 
-	const PROP_AUTO_LOAD			= 'auto_load';
+	const PROP_AUTO_LOAD = 'auto_load';
 
 	// Public -----------------
 
@@ -212,6 +214,11 @@ class CoreProperties extends Properties {
 	public function getAdminUrl() {
 
 		return $this->properties[ self::PROP_ADMIN_URL ];
+	}
+
+	public function getResourceUrl() {
+
+		return $this->properties[ self::PROP_RESOURCE_URL ];
 	}
 
 	/**

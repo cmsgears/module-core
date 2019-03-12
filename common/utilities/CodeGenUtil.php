@@ -9,6 +9,8 @@ use yii\helpers\Url;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\common\config\CoreProperties;
+
 /**
  * The class CodeGenUtil provides utility methods to generate code snippets for commonly used code.
  */
@@ -339,9 +341,9 @@ class CodeGenUtil {
 
 			if( isset( $options[ 'image' ] ) ) {
 
-				$image	= $options[ 'image' ];
+				$image = $options[ 'image' ];
 
-				return Url::toRoute( [ "/images/$image" ], true );
+				return YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() . "/images/$image" : Url::toRoute( "/images/$image" );
 			}
 		}
 		else {
@@ -360,7 +362,7 @@ class CodeGenUtil {
 
 				$image	= $options[ 'image' ];
 
-				return Url::toRoute( [ "/images/$image" ], true );
+				return YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() . "/images/$image" : Url::toRoute( "/images/$image" );
 			}
 		}
 		else {
@@ -379,7 +381,7 @@ class CodeGenUtil {
 
 				$image	= $options[ 'image' ];
 
-				return Url::toRoute( [ "/images/$image" ], true );
+				return YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() . "/images/$image" : Url::toRoute( "/images/$image" );
 			}
 		}
 		else {

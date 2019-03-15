@@ -8,6 +8,8 @@ use Yii;
 use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\admin\config\AdminGlobalCore;
 
+use cmsgears\core\admin\config\AdminProperties;
+
 class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 	// Variables ---------------------------------------------------
@@ -19,6 +21,8 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 	// Protected --------------
 
 	// Private ----------------
+
+	private $siteProperties;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -108,5 +112,16 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 	public function actionLogin( $admin = false ) {
 
 		return parent::actionLogin( true );
+	}
+
+	//Site Properties
+	public function getSiteProperties() {
+
+		if( !isset( $this->siteProperties ) ) {
+
+			$this->siteProperties = AdminProperties::getInstance();
+		}
+
+		return $this->siteProperties;
 	}
 }

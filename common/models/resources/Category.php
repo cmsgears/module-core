@@ -247,6 +247,18 @@ class Category extends NestedSetModel implements IAuthor, IData, IFeatured, IMul
 		return $this->hasMany( Option::class, [ 'categoryId' => 'id' ] );
 	}
 
+	/**
+	 * Returns list of active options mapped to this category.
+	 *
+	 * @return Option[]
+	 */
+	public function getActiveOptions() {
+
+		$optionTable = Option::tableName();
+
+		return $this->hasMany( Option::class, [ 'categoryId' => 'id' ] )->where( "`$optionTable`.`active`=1" );
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------

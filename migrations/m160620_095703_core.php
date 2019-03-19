@@ -872,6 +872,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'name' => $this->string( Yii::$app->core->xLargeText )->notNull(),
 			'value' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'icon' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
+			'active' => $this->boolean()->defaultValue( false ),
 			'input' => $this->boolean()->defaultValue( false ),
 			'htmlOptions' => $this->text(),
 			'content' => $this->mediumText(),

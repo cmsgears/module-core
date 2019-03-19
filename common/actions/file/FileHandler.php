@@ -15,16 +15,14 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Action;
-
 use cmsgears\core\common\utilities\AjaxUtil;
 
 /**
  * Accept and upload the file to temp directory.
- * 
+ *
  * @since 1.0.0
  */
-class FileHandler extends Action {
+class FileHandler extends \cmsgears\core\common\base\Action {
 
 	// Variables ---------------------------------------------------
 
@@ -60,9 +58,9 @@ class FileHandler extends Action {
 
 	// Action --------------------------------
 
-	public function run( $directory, $type ) {
+	public function run( $directory, $type, $gen = false ) {
 
-		$data	= Yii::$app->fileManager->handleFileUpload( $directory, $type );
+		$data	= Yii::$app->fileManager->handleFileUpload( $directory, $type, $gen );
 		$keys	= array_keys( $data );
 
 		if( !in_array( 'error', array_keys( $data ) ) ) {

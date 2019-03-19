@@ -36,9 +36,9 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 
 	// Public -----------------
 
-	public static $modelClass	= '\cmsgears\core\common\models\resources\Option';
+	public static $modelClass = '\cmsgears\core\common\models\resources\Option';
 
-	public static $parentType	= CoreGlobal::TYPE_OPTION;
+	public static $parentType = CoreGlobal::TYPE_OPTION;
 
 	// Protected --------------
 
@@ -103,6 +103,12 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 	                'desc' => [ "$modelTable.icon" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Icon'
+	            ],
+	            'active' => [
+	                'asc' => [ "$modelTable.active" => SORT_ASC ],
+	                'desc' => [ "$modelTable.active" => SORT_DESC ],
+	                'default' => SORT_DESC,
+	                'label' => 'Active'
 	            ]
 			]
 		]);
@@ -134,7 +140,8 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 
 		$config[ 'report-col' ]	= [
 			'name' => "$modelTable.name",
-			'value' => "$modelTable.value"
+			'value' => "$modelTable.value",
+			'active' => "$modelTable.active"
 		];
 
 		// Result -----------
@@ -199,6 +206,15 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 		return $this->getIdNameMap( $config );
 	}
 
+	public function getActiveIdNameMapByCategoryId( $categoryId, $config = [] ) {
+
+		$config[ 'conditions' ][ 'categoryId' ] = $categoryId;
+
+		$config[ 'conditions' ][ 'active' ] = true;
+
+		return $this->getIdNameMap( $config );
+	}
+
 	/**
 	 * @param integer $categoryId - category id
 	 * @return array - an array having value as key and name as value for given category id.
@@ -222,6 +238,15 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 		$category = Yii::$app->factory->get( 'categoryService' )->getBySlugType( $slug, $type, $config );
 
 		return $this->getIdNameMapByCategoryId( $category->id, $config );
+	}
+
+	public function getActiveIdNameMapByCategorySlug( $slug, $config = [] ) {
+
+		$type = isset( $config[ 'type' ] ) ? $config[ 'type' ] : CoreGlobal::TYPE_OPTION_GROUP;
+
+		$category = Yii::$app->factory->get( 'categoryService' )->getBySlugType( $slug, $type, $config );
+
+		return $this->getActiveIdNameMapByCategoryId( $category->id, $config );
 	}
 
 	public function getValueNameMapByCategorySlug( $slug, $config = [] ) {
@@ -253,7 +278,9 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'name', 'value', 'icon', 'input', 'htmlOptions' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'name', 'value', 'icon', 'active', 'input', 'htmlOptions'
+		];
 
 		return parent::update( $model, [
 			'attributes' => $attributes

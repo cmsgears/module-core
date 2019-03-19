@@ -42,9 +42,13 @@ interface IOptionService extends IResourceService, IData {
 
 	public function getIdNameMapByCategoryId( $categoryId, $config = [] );
 
+	public function getActiveIdNameMapByCategoryId( $categoryId, $config = [] );
+
 	public function getValueNameMapByCategoryId( $categoryId, $config = [] );
 
 	public function getIdNameMapByCategorySlug( $slug, $config = [] );
+
+	public function getActiveIdNameMapByCategorySlug( $slug, $config = [] );
 
 	public function getValueNameMapByCategorySlug( $slug, $config = [] );
 

@@ -32,6 +32,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * @property string $name
  * @property string $value
  * @property string $icon
+ * @property boolean $active
  * @property boolean $input
  * @property string $htmlOptions
  * @property string $content
@@ -93,7 +94,7 @@ class Option extends Resource implements IData {
 			[ [ 'name', 'icon' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ 'value', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
-			[ 'input', 'boolean' ],
+			[ [ 'active', 'input' ], 'boolean' ],
 			[ 'categoryId', 'number', 'integerOnly' => true, 'min' => 1, 'tooSmall' => Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_SELECT ) ]
 		];
 
@@ -118,6 +119,7 @@ class Option extends Resource implements IData {
 			'name' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_NAME ),
 			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
 			'icon' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ICON ),
+			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
 			'input' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_INPUT ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
@@ -141,6 +143,16 @@ class Option extends Resource implements IData {
 	public function getCategory() {
 
 		return $this->hasOne( Category::class, [ 'id' => 'categoryId' ] );
+	}
+
+	public function getActiveStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->active );
+	}
+
+	public function getInputStr() {
+
+		return Yii::$app->formatter->asBoolean( $this->input );
 	}
 
 	// Static Methods ----------------------------------------------
@@ -168,8 +180,9 @@ class Option extends Resource implements IData {
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'category' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'category' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -182,7 +195,7 @@ class Option extends Resource implements IData {
 	 */
 	public static function queryWithCategory( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'category' ];
+		$config[ 'relations' ] = [ 'category' ];
 
 		return parent::queryWithAll( $config );
 	}

@@ -246,6 +246,11 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 		return Yii::$app->formatter->asBoolean( $this->shared );
 	}
 
+	public function getFileName() {
+
+		return "{$this->name}.{$this->extension}";
+	}
+
 	public function getTempUrl() {
 
 		return Yii::$app->fileManager->uploadUrl . '/' . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "." . $this->extension;

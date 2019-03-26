@@ -284,7 +284,9 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 
 	public function update( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'caption', 'altText', 'link', 'type', 'content' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'title', 'description', 'caption', 'altText', 'link', 'type', 'content'
+		];
 
 		if( $model->changed ) {
 
@@ -304,7 +306,10 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 
 	public function updateData( $model, $config = [] ) {
 
-		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [ 'title', 'description', 'caption', 'altText', 'link', 'type', 'content', 'name', 'directory', 'extension', 'url', 'medium', 'thumb' ];
+		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
+			'title', 'description', 'caption', 'altText', 'link', 'type', 'content',
+			'name', 'directory', 'extension', 'url', 'medium', 'small', 'thumb', 'placeholder'
+		];
 
 		if( $model->changed ) {
 
@@ -335,54 +340,53 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 		// Save only when filename is provided
 		if( strlen( $file->name ) > 0 ) {
 
-			$fileManager	= Yii::$app->fileManager;
-			$model			= null;
-			$attribute		= null;
-			$width			= null;
-			$height			= null;
-			$mwidth			= null;
-			$mheight		= null;
-			$twidth			= null;
-			$theight		= null;
+			$fileManager = Yii::$app->fileManager;
 
-			// The model and it's attribute used to refer to image
-			if( isset( $args[ 'model' ] ) )		$model		= $args[ 'model' ];
-			if( isset( $args[ 'attribute' ] ) ) $attribute	= $args[ 'attribute' ];
+			$args[ 'width' ]	= isset( $args[ 'width' ] ) ? isset( $args[ 'width' ] ) : null;
+			$args[ 'height' ]	= isset( $args[ 'height' ] ) ? isset( $args[ 'height' ] ) : null;
+			$args[ 'mwidth' ]	= isset( $args[ 'mwidth' ] ) ? isset( $args[ 'mwidth' ] ) : null;
+			$args[ 'mheight' ]	= isset( $args[ 'mheight' ] ) ? isset( $args[ 'mheight' ] ) : null;
+			$args[ 'swidth' ]	= isset( $args[ 'swidth' ] ) ? isset( $args[ 'swidth' ] ) : null;
+			$args[ 'sheight' ]	= isset( $args[ 'sheight' ] ) ? isset( $args[ 'sheight' ] ) : null;
+			$args[ 'twidth' ]	= isset( $args[ 'twidth' ] ) ? isset( $args[ 'twidth' ] ) : null;
+			$args[ 'theight' ]	= isset( $args[ 'theight' ] ) ? isset( $args[ 'theight' ] ) : null;
+
+			// The model and it's attribute
+			$model		= isset( $args[ 'model' ] ) ? $args[ 'model' ] : null;
+			$attribute	= isset( $args[ 'attribute' ] ) ? $args[ 'attribute' ] : null;
 
 			// Update Image
 			$fileId = $file->id;
 
 			if( $file->changed ) {
 
-				// Image dimensions to crop actual image uploaded by users
-				if( isset( $args[ 'width' ] ) )		$width		= $args[ 'width' ];
-				if( isset( $args[ 'height' ] ) )	$height		= $args[ 'height' ];
-				if( isset( $args[ 'mwidth' ] ) )	$twidth		= $args[ 'mwidth' ];
-				if( isset( $args[ 'mheight' ] ) )	$theight	= $args[ 'mheight' ];
-				if( isset( $args[ 'twidth' ] ) )	$twidth		= $args[ 'twidth' ];
-				if( isset( $args[ 'theight' ] ) )	$theight	= $args[ 'theight' ];
-
-				// override controller args
+				// Override controller args
 				if( isset( $file->width ) && isset( $file->height ) ) {
 
-					$width		= $file->width;
-					$height		= $file->height;
+					$args[ 'width' ]	= $file->width;
+					$args[ 'height' ]	= $file->height;
 				}
 
 				if( isset( $file->mwidth ) && isset( $file->mheight ) ) {
 
-					$mwidth		= $file->mwidth;
-					$mheight	= $file->mheight;
+					$args[ 'mwidth' ]	= $file->mwidth;
+					$args[ 'mheight' ]	= $file->mheight;
+				}
+
+				if( isset( $file->swidth ) && isset( $file->sheight ) ) {
+
+					$args[ 'swidth' ]	= $file->swidth;
+					$args[ 'sheight' ]	= $file->sheight;
 				}
 
 				if( isset( $file->twidth ) && isset( $file->theight ) ) {
 
-					$twidth		= $file->twidth;
-					$theight	= $file->theight;
+					$args[ 'twidth' ]	= $file->twidth;
+					$args[ 'theight' ]	= $file->theight;
 				}
 
 				// Process Image
-				$fileManager->processImage( $file, $width, $height, $mwidth, $mheight, $twidth, $theight );
+				$fileManager->processImage( $file, $args );
 			}
 
 			// New File
@@ -417,7 +421,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 				$this->update( $file );
 			}
 
-			$file->changed	= false;
+			$file->changed = false;
 		}
 
 		return $file;
@@ -433,13 +437,11 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 		// Save only when filename is provided
 		if( strlen( $file->name ) > 0 ) {
 
-			$fileManager	= Yii::$app->fileManager;
-			$model			= null;
-			$attribute		= null;
+			$fileManager = Yii::$app->fileManager;
 
-			// The model and it's attribute used to refer to image
-			if( isset( $args[ 'model' ] ) )		$model		= $args[ 'model' ];
-			if( isset( $args[ 'attribute' ] ) ) $attribute	= $args[ 'attribute' ];
+			// The model and it's attribute
+			$model		= isset( $args[ 'model' ] ) ? $args[ 'model' ] : null;
+			$attribute	= isset( $args[ 'attribute' ] ) ? $args[ 'attribute' ] : null;
 
 			// Update File
 			$fileId		= $file->id;

@@ -392,6 +392,25 @@ class CodeGenUtil {
 		return null;
 	}
 
+	public static function getPlaceholderUrl( $file, $options = [] ) {
+
+		if( $file == null ) {
+
+			if( isset( $options[ 'image' ] ) ) {
+
+				$image	= $options[ 'image' ];
+
+				return YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() . "/images/$image" : Url::toRoute( "/images/$image" );
+			}
+		}
+		else {
+
+			return $file->getPlaceholderUrl();
+		}
+
+		return null;
+	}
+
 	public static function generateMetaTags( $params, $config = [] ) {
 
 		$descLimit		= isset( $config[ 'descLimit' ] ) ? $config[ 'descLimit' ] : 160;

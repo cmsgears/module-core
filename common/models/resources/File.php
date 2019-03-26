@@ -59,7 +59,9 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $storage
  * @property string $url
  * @property string $medium
+ * @property string $small
  * @property string $thumb
+ * @property string $placeholder
  * @property string $caption
  * @property string $altText
  * @property string $link
@@ -171,7 +173,7 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 			[ [ 'extension', 'type', 'storage' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'tag', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ [ 'directory', 'altText' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'name', 'url', 'medium', 'thumb' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'name', 'url', 'medium', 'small', 'thumb', 'placeholder' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'title', 'caption', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
@@ -295,6 +297,25 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 	}
 
 	/**
+	 * Generate and Return small file URL using file attributes.
+	 *
+	 * @return string
+	 */
+	public function getSmallUrl() {
+
+		if( $this->changed ) {
+
+			return Yii::$app->fileManager->uploadUrl . '/' . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "-small." . $this->extension;
+		}
+		else if( $this->id > 0 ) {
+
+			return Yii::$app->fileManager->uploadUrl . '/' . $this->small;
+		}
+
+		return "";
+	}
+
+	/**
 	 * Generate and Return thumb URL using file attributes.
 	 *
 	 * @return string
@@ -308,6 +329,25 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 		else if( $this->id > 0 ) {
 
 			return Yii::$app->fileManager->uploadUrl . '/' . $this->thumb;
+		}
+
+		return "";
+	}
+
+	/**
+	 * Generate and Return placeholder URL using file attributes.
+	 *
+	 * @return string
+	 */
+	public function getPlaceholderUrl() {
+
+		if( $this->changed ) {
+
+			return Yii::$app->fileManager->uploadUrl . '/' . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "-pl." . $this->extension;
+		}
+		else if( $this->id > 0 ) {
+
+			return Yii::$app->fileManager->uploadUrl . '/' . $this->placeholder;
 		}
 
 		return "";
@@ -344,6 +384,21 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 	}
 
 	/**
+	 * Return physical storage location of the small file.
+	 *
+	 * @return string|boolean
+	 */
+	public function getSmallPath() {
+
+		if( isset( $this->small ) ) {
+
+			return Yii::$app->fileManager->uploadDir . '/' . $this->small;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Return physical storage location of thumb.
 	 *
 	 * @return string|boolean
@@ -353,6 +408,21 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 		if( isset( $this->thumb ) ) {
 
 			return Yii::$app->fileManager->uploadDir . '/' . $this->thumb;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Return physical storage location of placeholder.
+	 *
+	 * @return string|boolean
+	 */
+	public function getPlaceholderPath() {
+
+		if( isset( $this->placeholder ) ) {
+
+			return Yii::$app->fileManager->uploadDir . '/' . $this->placeholder;
 		}
 
 		return false;

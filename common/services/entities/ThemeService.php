@@ -229,20 +229,6 @@ class ThemeService extends \cmsgears\core\common\services\base\EntityService imp
 
 	// Read - Maps -----
 
-	public function getIdNameMap( $options = [] ) {
-
-		$map = parent::getIdNameMap( $options );
-
-		if( isset( $options[ 'default' ] ) && $options[ 'default' ] ) {
-
-			unset( $options[ 'default' ] );
-
-			$map = ArrayHelper::merge( [ '0' => 'Choose Theme' ], $map );
-		}
-
-		return $map;
-	}
-
 	// Read - Others ---
 
 	// Create -------------

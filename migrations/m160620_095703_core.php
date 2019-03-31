@@ -680,6 +680,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'small' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'thumb' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'placeholder' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
+			'smallPlaceholder' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'caption' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),
 			'altText' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'link' => $this->string( Yii::$app->core->xxxLargeText )->defaultValue( null ),

@@ -335,20 +335,20 @@ class CodeGenUtil {
 		}
 	}
 
-	public static function getThumbUrl( $file, $options = [] ) {
+	public static function getFileUrl( $file, $options = [] ) {
 
 		if( $file == null ) {
 
 			if( isset( $options[ 'image' ] ) ) {
 
-				$image = $options[ 'image' ];
+				$image	= $options[ 'image' ];
 
 				return YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() . "/images/$image" : Url::toRoute( "/images/$image" );
 			}
 		}
 		else {
 
-			return $file->getThumbUrl();
+			return $file->getFileUrl();
 		}
 
 		return null;
@@ -373,7 +373,7 @@ class CodeGenUtil {
 		return null;
 	}
 
-	public static function getFileUrl( $file, $options = [] ) {
+	public static function getSmallUrl( $file, $options = [] ) {
 
 		if( $file == null ) {
 
@@ -386,7 +386,26 @@ class CodeGenUtil {
 		}
 		else {
 
-			return $file->getFileUrl();
+			return $file->getSmallUrl();
+		}
+
+		return null;
+	}
+
+	public static function getThumbUrl( $file, $options = [] ) {
+
+		if( $file == null ) {
+
+			if( isset( $options[ 'image' ] ) ) {
+
+				$image = $options[ 'image' ];
+
+				return YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() . "/images/$image" : Url::toRoute( "/images/$image" );
+			}
+		}
+		else {
+
+			return $file->getThumbUrl();
 		}
 
 		return null;
@@ -406,6 +425,25 @@ class CodeGenUtil {
 		else {
 
 			return $file->getPlaceholderUrl();
+		}
+
+		return null;
+	}
+
+	public static function getSmallPlaceholderUrl( $file, $options = [] ) {
+
+		if( $file == null ) {
+
+			if( isset( $options[ 'image' ] ) ) {
+
+				$image	= $options[ 'image' ];
+
+				return YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() . "/images/$image" : Url::toRoute( "/images/$image" );
+			}
+		}
+		else {
+
+			return $file->getSmallPlaceholderUrl();
 		}
 
 		return null;

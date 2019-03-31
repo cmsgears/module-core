@@ -269,7 +269,7 @@ class FormDesigner extends \yii\base\Component {
 		$starMessage	= isset( $config[ 'starMessage' ] ) ? $config[ 'starMessage' ] : [ "Poor", "Good", "Very Good", "Perfect", "Excellent" ];
 		$value			= $model->$key;
 
-		$fieldName		= StringHelper::baseName( get_class( $model ) ) . '[' . $key . ']';
+		$fieldName = StringHelper::baseName( get_class( $model ) ) . '[' . $key . ']';
 
 		if( $readOnly ) {
 
@@ -1180,13 +1180,17 @@ class FormDesigner extends \yii\base\Component {
 		$readOnly	= isset( $config[ 'readOnly' ] ) ? $config[ 'readOnly' ] : false;
 		$selected	= isset( $config[ 'selected' ] ) ? $config[ 'selected' ] : 0;
 		$disabled	= isset( $config[ 'disabled' ] ) ? $config[ 'disabled' ] : false;
+		$model		= isset( $config[ 'model' ] ) ? $config[ 'model' ] : false;
 
 		// By default message provided for 5 stars
 		$starMessage = isset( $config[ 'message' ] ) ? $config[ 'message' ] : [ "Poor", "Good", "Very Good", "Perfect", "Excellent" ];
 
-		$modelName	= $config[ 'modelName' ];
+		$modelName	= isset( $model ) ? StringHelper::baseName( get_class( $model ) ) : $config[ 'modelName' ];
 		$fieldName	= isset( $config[ 'fieldName' ] ) ? $config[ 'fieldName' ] : 'rating';
-		$fieldName	= $modelName . "[$fieldName]";
+		$formField	= $modelName . "[$fieldName]";
+
+		// Get value from model
+		$selected = isset( $model ) ? $model->$fieldName : $selected;
 
 		if( $readOnly ) {
 
@@ -1246,7 +1250,7 @@ class FormDesigner extends \yii\base\Component {
 
 		$ratingHtml .= '</span>';
 
-		$ratingHtml	.= '<input class="star-selected" type="hidden" name="' . $fieldName . '" value="' . $selected . '">';
+		$ratingHtml	.= '<input class="star-selected" type="hidden" name="' . $formField . '" value="' . $selected . '">';
 
 		$ratingHtml	.= "</div>";
 

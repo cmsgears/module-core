@@ -95,9 +95,13 @@ class Core extends Config {
 
 	// The three type of apps.
 
-	public $appAdmin			= CoreGlobal::APP_ADMIN;
-	public $appFrontend			= CoreGlobal::APP_FRONTEND;
-	public $appConsole			= CoreGlobal::APP_CONSOLE;
+	public $appAdmin	= CoreGlobal::APP_ADMIN;
+	public $appFrontend	= CoreGlobal::APP_FRONTEND;
+	public $appConsole	= CoreGlobal::APP_CONSOLE;
+	public $appApi		= CoreGlobal::APP_API;
+
+	// Apps to get static resources from CDN
+	public $cdnApps	= [ CoreGlobal::APP_FRONTEND, CoreGlobal::APP_API ];
 
 	/**
 	 * It can be used in case user approval from admin is required.
@@ -390,6 +394,16 @@ class Core extends Config {
 	public function getAppConsole() {
 
 		return $this->appConsole;
+	}
+
+	public function getAppApi() {
+
+		return $this->appApi;
+	}
+
+	public function getCdnApps() {
+
+		return $this->cdnApps;
 	}
 
 	public function isUserApproval() {

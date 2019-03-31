@@ -46,7 +46,7 @@ class Theme extends \yii\base\Theme {
 		parent::init();
 
 		// The path for images directly accessed using the img tag
-		$resourceUrl = YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() : '@web';
+		$resourceUrl = YII_ENV_PROD && in_array( Yii::$app->id, Yii::$app->core->getCdnApps() ) ? CoreProperties::getInstance()->getResourceUrl() : '@web';
 
 		Yii::setAlias( '@images', "$resourceUrl/images" );
 	}

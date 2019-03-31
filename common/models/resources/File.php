@@ -62,6 +62,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $small
  * @property string $thumb
  * @property string $placeholder
+ * @property string $smallPlaceholder
  * @property string $caption
  * @property string $altText
  * @property string $link
@@ -173,7 +174,7 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 			[ [ 'extension', 'type', 'storage' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
 			[ 'tag', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ [ 'directory', 'altText' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
-			[ [ 'name', 'url', 'medium', 'small', 'thumb', 'placeholder' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
+			[ [ 'name', 'url', 'medium', 'small', 'thumb', 'placeholder', 'smallPlaceholder' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'title', 'caption', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
 			[ 'description', 'string', 'min' => 1, 'max' => Yii::$app->core->xtraLargeText ],
 			// Other
@@ -354,6 +355,25 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 	}
 
 	/**
+	 * Generate and Return small placeholder URL using file attributes.
+	 *
+	 * @return string
+	 */
+	public function getSmallPlaceholderUrl() {
+
+		if( $this->changed ) {
+
+			return Yii::$app->fileManager->uploadUrl . '/' . CoreProperties::DIR_TEMP . $this->directory . "/" . $this->name . "-small-pl." . $this->extension;
+		}
+		else if( $this->id > 0 ) {
+
+			return Yii::$app->fileManager->uploadUrl . '/' . $this->smallPlaceholder;
+		}
+
+		return "";
+	}
+
+	/**
 	 * Return physical storage location of the file.
 	 *
 	 * @return string|boolean
@@ -429,6 +449,21 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 	}
 
 	/**
+	 * Return physical storage location of small placeholder.
+	 *
+	 * @return string|boolean
+	 */
+	public function getSmallPlaceholderPath() {
+
+		if( isset( $this->smallPlaceholder ) ) {
+
+			return Yii::$app->fileManager->uploadDir . '/' . $this->smallPlaceholder;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Calculate and set the file size in MB.
 	 *
 	 * @return void
@@ -453,9 +488,12 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 	 */
 	public function clearDisk() {
 
-		$filePath		= $this->getFilePath();
-		$mediumPath		= $this->getMediumPath();
-		$thumbPath		= $this->getThumbPath();
+		$filePath	= $this->getFilePath();
+		$mediumPath	= $this->getMediumPath();
+		$smallPath	= $this->getSmallPath();
+		$thumbPath	= $this->getThumbPath();
+		$plPath		= $this->getPlaceholderPath();
+		$plsPath	= $this->getSmallPlaceholderPath();
 
 		// Delete from disk
 		if( $filePath && file_exists( $filePath ) && is_file( $filePath ) ) {
@@ -468,9 +506,24 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 			unlink( $mediumPath );
 		}
 
+		if( $smallPath && file_exists( $smallPath ) && is_file( $smallPath ) ) {
+
+			unlink( $smallPath );
+		}
+
 		if( $thumbPath && file_exists( $thumbPath ) && is_file( $thumbPath ) ) {
 
 			unlink( $thumbPath );
+		}
+
+		if( $plPath && file_exists( $plPath ) && is_file( $plPath ) ) {
+
+			unlink( $plPath );
+		}
+
+		if( $plsPath && file_exists( $plsPath ) && is_file( $plsPath ) ) {
+
+			unlink( $plsPath );
 		}
 	}
 
@@ -505,10 +558,28 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 
 				$alt = isset( $this->altText ) ? $this->altText : $this->name;
 
+				$mediumUrl	= $this->getMediumUrl();
+				$smallUrl	= $this->getSmallUrl();
+
+				$plUrl	= $this->getPlaceholderUrl();
+				$plsUrl	= $this->getSmallPlaceholderUrl();
+
 				ob_start();
 ?>
+<!-- Responsive -->
 <div class="wrap-editor-image">
-	<img class="fluid" src="<?= $fileUrl ?>" title="<?= $title ?>" alt="<?= $alt ?>" />
+	<img class="fluid" src="<?= $smallUrl ?>" srcset="<?= $smallUrl ?> 1x, <?= $mediumUrl ?> 1.5x, <?= $fileUrl ?> 2x" title="<?= $title ?>" sizes="(min-width: 1025px) 2x, (min-width: 481px) 1.5x, 1x" alt="<?= $alt ?>" />
+<?php if( !empty( $this->caption ) ) { ?>
+	<p class="image-caption"><?= $this->caption ?></p>
+<?php } ?>
+<?php if( !empty( $this->description ) ) { ?>
+	<p class="image-desc"><?= $this->description ?></p>
+<?php } ?>
+</div>
+
+<!-- Responsive & Lazy -->
+<div class="wrap-editor-image">
+	<img class="fluid" src="<?= $plsUrl ?>" data-src="<?= $smallUrl ?>" data-srcset="<?= $smallUrl ?> 1x, <?= $mediumUrl ?> 1.5x, <?= $fileUrl ?> 2x" sizes="(min-width: 1025px) 2x, (min-width: 481px) 1.5x, 1x" title="<?= $title ?>" alt="<?= $alt ?>" />
 <?php if( !empty( $this->caption ) ) { ?>
 	<p class="image-caption"><?= $this->caption ?></p>
 <?php } ?>

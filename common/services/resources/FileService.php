@@ -308,7 +308,8 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
 			'title', 'description', 'caption', 'altText', 'link', 'type', 'content',
-			'name', 'directory', 'extension', 'url', 'medium', 'small', 'thumb', 'placeholder'
+			'name', 'directory', 'extension', 'url', 'medium', 'small', 'thumb',
+			'placeholder', 'smallPlaceholder'
 		];
 
 		if( $model->changed ) {
@@ -444,11 +445,18 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 			$attribute	= isset( $args[ 'attribute' ] ) ? $args[ 'attribute' ] : null;
 
 			// Update File
-			$fileId		= $file->id;
+			$fileId = $file->id;
 
 			if( $file->changed ) {
 
-				$fileManager->processFile( $file );
+				if( $file->isImage() ) {
+
+					$fileManager->processImage( $file );
+				}
+				else {
+
+					$fileManager->processFile( $file );
+				}
 			}
 
 			// New File

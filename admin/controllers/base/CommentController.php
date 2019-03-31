@@ -39,6 +39,8 @@ abstract class CommentController extends Controller {
 
 	public $commentType;
 
+	public $stars;
+
 	// Protected --------------
 
 	protected $parentType;
@@ -62,6 +64,7 @@ abstract class CommentController extends Controller {
 		// Config
 		$this->apixBase = 'core/comment';
 		$this->title	= 'Comment';
+		$this->stars	= 5;
 
 		// Services
 		$this->modelService = Yii::$app->factory->get( 'modelCommentService' );

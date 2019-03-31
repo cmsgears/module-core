@@ -15,7 +15,7 @@ $logoUrl	= "$siteUrl/images/" . $siteProperties->getMailAvatar();
 $homeUrl	= $siteUrl;
 $siteBkg	= "$siteUrl/images/" . $siteProperties->getMailBanner();
 
-$adminUrl	= Html::encode( $coreProperties->getAdminUrl() );
+$adminUrl = Html::encode( $coreProperties->getAdminUrl() );
 ?>
 <?php include "$defaultIncludes/header.php"; ?>
 <table cellspacing="0" cellpadding="0" border="0" margin="0" padding="0" width="80%" align="center" class="ctmax">

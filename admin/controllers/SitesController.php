@@ -19,14 +19,12 @@ use cmsgears\core\common\config\CoreGlobal;
 
 use cmsgears\core\common\models\resources\File;
 
-use cmsgears\core\admin\controllers\base\CrudController;
-
 /**
  * SitesController provides actions specific to site model.
  *
  * @since 1.0.0
  */
-class SitesController extends CrudController {
+class SitesController extends \cmsgears\core\admin\controllers\base\CrudController {
 
 	// Variables ---------------------------------------------------
 

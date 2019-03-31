@@ -60,7 +60,7 @@ abstract class PermissionController extends CrudController {
 		$this->system	= false;
 
 		// Services
-		$this->modelService		= Yii::$app->factory->get( 'permissionService' );
+		$this->modelService = Yii::$app->factory->get( 'permissionService' );
 
 		$this->roleService		= Yii::$app->factory->get( 'roleService' );
 		$this->hierarchyService	= Yii::$app->factory->get( 'modelHierarchyService' );
@@ -113,7 +113,7 @@ abstract class PermissionController extends CrudController {
 				$this->hierarchyService->assignRootChildren( CoreGlobal::TYPE_PERMISSION, $binder );
 			}
 
-			return $this->redirect( 'all' );
+			return $this->redirect( $this->returnUrl );
 		}
 
 		$roles			= $this->roleService->getIdNameListByType( $this->type );
@@ -153,7 +153,7 @@ abstract class PermissionController extends CrudController {
 					$this->hierarchyService->assignRootChildren( CoreGlobal::TYPE_PERMISSION, $binder );
 				}
 
-				return $this->refresh();
+				return $this->redirect( $this->returnUrl );
 			}
 
 			$roles			= $this->roleService->getIdNameListByType( $this->type );

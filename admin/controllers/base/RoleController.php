@@ -106,7 +106,7 @@ abstract class RoleController extends CrudController {
 
 			$this->modelService->bindPermissions( $binder );
 
-			return $this->redirect( 'all' );
+			return $this->redirect( $this->returnUrl );
 		}
 
 		$permissions	= $this->permissionService->getIdNameListByType( $this->type );

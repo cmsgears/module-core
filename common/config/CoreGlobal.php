@@ -23,6 +23,7 @@ class CoreGlobal {
 	const APP_ADMIN		= 'app-admin';
 	const APP_FRONTEND	= 'app-site';
 	const APP_CONSOLE	= 'app-console';
+	const APP_API		= 'app-api';
 
 	// System Pages ---------------------------------------------------
 

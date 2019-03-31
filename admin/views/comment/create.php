@@ -9,7 +9,9 @@ use cmsgears\core\common\widgets\Editor;
 $coreProperties = $this->context->getCoreProperties();
 $this->title 	= "Create $title | " . $coreProperties->getSiteTitle();
 $returnUrl		= $this->context->returnUrl;
-$user			= isset( $model->createdBy ) ? $model->creator->getName() : null;
+
+$stars	= $this->context->stars;
+$user	= isset( $model->createdBy ) ? $model->creator->getName() : null;
 
 Editor::widget();
 ?>
@@ -54,7 +56,7 @@ Editor::widget();
 							<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'rating' ) ?>
+							<?= Yii::$app->formDesigner->getRatingField( [ 'model' => $model, 'stars' => $stars ] ) ?>
 						</div>
 					</div>
 					<div class="row">

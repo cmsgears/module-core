@@ -878,7 +878,7 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 
 		$now = DateUtil::getDateTime();
 
-		return $this->otp == $otp && DateUtil::lessThan( $now, $this->otpValidTill );
+		return $this->otp == $otp && DateUtil::lessThan( $this->otpValidTill, $now );
 	}
 
 	/**

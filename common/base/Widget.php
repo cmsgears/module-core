@@ -10,7 +10,6 @@
 namespace cmsgears\core\common\base;
 
 // Yii Imports
-use yii\base\Widget as BaseWidget;
 use yii\helpers\Html;
 
 // CMG Imports
@@ -24,7 +23,7 @@ use cmsgears\core\common\utilities\CodeGenUtil;
  *
  * @since 1.0.0
  */
-abstract class Widget extends BaseWidget {
+abstract class Widget extends \yii\base\Widget {
 
 	// Variables ---------------------------------------------------
 
@@ -131,7 +130,7 @@ abstract class Widget extends BaseWidget {
 	/**
 	 * Url for autoloading.
 	 */
-	public $autoloadUrl = null;
+	public $autoloadUrl = 'core/autoload/widget';
 
 	// Protected --------------
 
@@ -145,7 +144,7 @@ abstract class Widget extends BaseWidget {
 
         parent::init();
 
-        $this->autoload	= ( !empty( $this->autoloadUrl ) && CoreProperties::getInstance()->isAutoLoad() ) ? true : false;
+        $this->autoload	= ( $this->autoload && !empty( $this->autoloadUrl ) && CoreProperties::getInstance()->isAutoLoad() ) ? true : false;
 
 		$this->cache = $this->cache ? $this->cache : CacheProperties::getInstance()->isCaching();
     }

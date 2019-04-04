@@ -100,6 +100,9 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->upCategory();
 		$this->upOption();
 
+		// Dependent linking
+		$this->upDependency();
+
 		// Traits - Resources
 		$this->upModelMessage();
 		$this->upModelHierarchy();
@@ -886,6 +889,23 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->createIndex( 'idx_' . $this->prefix . 'option_category', $this->prefix . 'core_option', 'categoryId' );
 	}
 
+	private function upDependency() {
+
+		$this->createTable( $this->prefix . 'core_dependency', [
+			'sourceId' => $this->bigInteger( 20 )->notNull(),
+			'sourceType' => $this->string( Yii::$app->core->mediumText )->notNull(),
+			'targetId' => $this->bigInteger( 20 )->notNull(),
+			'targetType' => $this->string( Yii::$app->core->mediumText )->notNull(),
+			'PRIMARY KEY( sourceId, sourceType, targetId, targetType )',
+		], $this->options );
+
+		// Index for columns creator and modifier
+		$this->createIndex( 'idx_' . $this->prefix . 'dependency_sid', $this->prefix . 'core_dependency', 'sourceId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'dependency_stype', $this->prefix . 'core_dependency', 'sourceType' );
+		$this->createIndex( 'idx_' . $this->prefix . 'dependency_tid', $this->prefix . 'core_dependency', 'targetId' );
+		$this->createIndex( 'idx_' . $this->prefix . 'dependency_ttype', $this->prefix . 'core_dependency', 'targetType' );
+	}
+
 	private function upModelMessage() {
 
 		$this->createTable( $this->prefix . 'core_model_message', [
@@ -1420,6 +1440,8 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 		$this->dropTable( $this->prefix . 'core_tag' );
 		$this->dropTable( $this->prefix . 'core_category' );
 		$this->dropTable( $this->prefix . 'core_option' );
+
+		$this->dropTable( $this->prefix . 'core_dependency' );
 
 		$this->dropTable( $this->prefix . 'core_model_message' );
 		$this->dropTable( $this->prefix . 'core_model_hierarchy' );

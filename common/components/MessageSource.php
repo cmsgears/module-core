@@ -333,7 +333,13 @@ class MessageSource extends \yii\base\Component {
 
 		// Visibility
 		CoreGlobal::FIELD_PRIVATE => 'Private',
-		CoreGlobal::FIELD_PUBLIC => 'Public'
+		CoreGlobal::FIELD_PUBLIC => 'Public',
+
+		// Dependency - Generic Mapper
+		CoreGlobal::FIELD_SOURCE => 'sourceField',
+		CoreGlobal::FIELD_SOURCE_TYPE => 'sourceTypeField',
+		CoreGlobal::FIELD_TARGET => 'targetField',
+		CoreGlobal::FIELD_TARGET_TYPE => 'targetTypeField'
 	];
 
 	// Private ----------------

@@ -536,4 +536,10 @@ class CoreGlobal {
 	const FIELD_PRIVATE			= 'privateField';
 	const FIELD_PUBLIC			= 'publicField';
 
+	// Dependency - Generic Mapper
+	const FIELD_SOURCE		= 'sourceField';
+	const FIELD_SOURCE_TYPE	= 'sourceTypeField';
+	const FIELD_TARGET		= 'targetField';
+	const FIELD_TARGET_TYPE	= 'targetTypeField';
+
 }

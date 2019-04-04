@@ -93,16 +93,6 @@ class RolePermission extends Mapper {
 
 	// CMG parent classes --------------------
 
-	/**
-	 * @inheritdoc
-	 */
-	public function isExist() {
-
-		$mapping = self::findByCountryIdCode( $this->roleId, $this->permissionId );
-
-		return isset( $mapping );
-	}
-
 	// Validators ----------------------------
 
 	// RolePermission ------------------------
@@ -152,8 +142,9 @@ class RolePermission extends Mapper {
 	 */
 	public static function queryWithHasOne( $config = [] ) {
 
-		$relations				= isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'role', 'permission' ];
-		$config[ 'relations' ]	= $relations;
+		$relations = isset( $config[ 'relations' ] ) ? $config[ 'relations' ] : [ 'role', 'permission' ];
+
+		$config[ 'relations' ] = $relations;
 
 		return parent::queryWithAll( $config );
 	}
@@ -166,7 +157,7 @@ class RolePermission extends Mapper {
 	 */
 	public static function queryWithRole( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'role' ];
+		$config[ 'relations' ] = [ 'role' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -179,7 +170,7 @@ class RolePermission extends Mapper {
 	 */
 	public static function queryWithPermission( $config = [] ) {
 
-		$config[ 'relations' ]	= [ 'permission' ];
+		$config[ 'relations' ] = [ 'permission' ];
 
 		return parent::queryWithAll( $config );
 	}
@@ -225,4 +216,5 @@ class RolePermission extends Mapper {
 
 		return self::deleteAll( 'permissionId=:id', [ ':id' => $permissionId ] );
 	}
+
 }

@@ -73,7 +73,7 @@ class AutoloadController extends \cmsgears\core\admin\controllers\base\Controlle
 		$id		= $request[ 'widgetId' ];
 		$widget = $request[ 'widgetClass' ];
 
-		$widgetHtml = $widget::widget( [ 'wrap' => false ] );
+		$widgetHtml = $widget::widget( [ 'wrap' => false, 'autoload' => false ] );
 
 		$data = [ 'widgetId' => $id, 'widgetHtml' => $widgetHtml ];
 

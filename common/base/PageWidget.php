@@ -6,6 +6,7 @@ use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\LinkPager;
+use yii\data\Sort;
 
 // CMG Imports
 use cmsgears\core\common\config\CacheProperties;
@@ -315,6 +316,30 @@ abstract class PageWidget extends Widget {
 		$options = CodeGenUtil::generateSelectOptionsFromArray( $pageLimits, $pageLimitIdx );
 
 		return $options;
+	}
+
+	public function getSort() {
+
+		$modelTable = $this->modelService->getModelTable();
+
+		$sort = new Sort([
+			'attributes' => [
+				'id' => [
+					'asc' => [ "$modelTable.id" => SORT_ASC ],
+					'desc' => [ "$modelTable.id" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Id'
+				]
+			],
+			'defaultOrder' => [ 'id' => SORT_DESC ]
+		]);
+
+		return $sort;
+	}
+
+	public function getOrder() {
+
+		return [ 'id' => SORT_DESC ];
 	}
 
 }

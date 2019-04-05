@@ -57,6 +57,16 @@ abstract class PageWidget extends Widget {
 	 */
 	public $singleOptions = [ 'class' => 'col col1' ];
 
+	/**
+	 * Generate the columns.
+	 */
+	public $autoCols = false;
+
+	/**
+	 * Columns required to generate columns.
+	 */
+	public $autoColsCount = 4;
+
 	/*
 	 * Base path used for all and single paths.
 	 */

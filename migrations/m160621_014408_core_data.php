@@ -10,8 +10,6 @@
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\common\base\Migration;
-
 use cmsgears\core\common\models\entities\Site;
 use cmsgears\core\common\models\entities\Locale;
 use cmsgears\core\common\models\entities\User;
@@ -30,7 +28,7 @@ use cmsgears\core\common\utilities\DateUtil;
  *
  * @since 1.0.0
  */
-class m160621_014408_core_data extends Migration {
+class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 
 	// Public Variables
 
@@ -419,9 +417,9 @@ class m160621_014408_core_data extends Migration {
 		$columns = [ 'formId', 'name', 'label', 'type', 'compress', 'meta', 'active', 'validators', 'order', 'icon', 'htmlOptions' ];
 
 		$fields	= [
-			[ $config->id, 'caching','Caching', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Enable HTML Caching."}' ],
-			[ $config->id, 'cache_duration','Cache Duration', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Cache Duration in seconds. It applies only to default cache which is volatile.","placeholder":"Cache Duration"}' ],
-			[ $config->id, 'default_cache','Default Cache', FormField::TYPE_SELECT, false, true, true, NULL, 0, NULL, '{"title":"Default Cache","items":{"none":"Choose Cache Type","file":"File","database":"Database","apc":"APC","mem":"Memcached","redis":"Redis","win":"Windows Cache","xcache":"XCache"}}' ],
+			[ $config->id, 'caching', 'Caching', FormField::TYPE_TOGGLE, false, true, true, 'required', 0, NULL, '{"title":"Enable cache"}' ],
+			[ $config->id, 'cache_duration','Cache Duration', FormField::TYPE_TEXT, false, true, true, 'required', 0, NULL, '{"title":"Cache Duration in minutes for default and volatile cache","placeholder":"Cache Duration"}' ],
+			[ $config->id, 'default_cache','Default Cache', FormField::TYPE_SELECT, false, true, true, NULL, 0, NULL, '{"title":"Default Cache","items":{"none":"Choose Cache Type","file":"File","database":"Database","memcached":"Memcached","redis":"Redis"}}' ],
 			[ $config->id, 'primary_cache','Primary Cache', FormField::TYPE_SELECT, false, true, true, NULL, 0, NULL, '{"title":"Primary Cache","items":{"none":"Choose Cache Type","file":"File","database":"Database"}}' ],
 			[ $config->id, 'secondary_cache','Secondary Cache', FormField::TYPE_SELECT, false, true, true, NULL, 0, NULL, '{"title":"Secondary Cache","items":{"none":"Choose Cache Type","elastic":"Elasticsearch","redis":"Redis"}}' ]
 		];

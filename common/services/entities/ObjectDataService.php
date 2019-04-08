@@ -26,6 +26,7 @@ use cmsgears\core\common\services\traits\base\MultiSiteTrait;
 use cmsgears\core\common\services\traits\base\NameTypeTrait;
 use cmsgears\core\common\services\traits\base\SlugTypeTrait;
 use cmsgears\core\common\services\traits\resources\DataTrait;
+use cmsgears\core\common\services\traits\resources\VisualTrait;
 
 /**
  * ObjectDataService provide service methods of object model.
@@ -68,6 +69,7 @@ class ObjectDataService extends \cmsgears\core\common\services\base\EntityServic
 	use MultiSiteTrait;
 	use NameTypeTrait;
 	use SlugTypeTrait;
+	use VisualTrait;
 
 	// Constructor and Initialisation ------------------------------
 

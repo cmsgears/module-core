@@ -44,6 +44,14 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $model, 'altText' ) ?>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col col2">
+							<?= $form->field( $model, 'srcset' ) ?>
+						</div>
+						<div class="col col2">
+							<?= $form->field( $model, 'sizes' ) ?>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

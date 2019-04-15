@@ -99,6 +99,8 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 
 		// Default Categories and Options
 		$this->insertCategories();
+
+		$this->insertNotificationTemplates();
 	}
 
 	private function insertLocale() {
@@ -670,7 +672,7 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 			'modifiedAt' => DateUtil::getDateTime()
 		]);
 
-		$category	= Category::findBySlugType( 'gender', CoreGlobal::TYPE_OPTION_GROUP );
+		$category = Category::findBySlugType( 'gender', CoreGlobal::TYPE_OPTION_GROUP );
 
 		$columns = [ 'categoryId', 'name', 'value', 'icon' ];
 
@@ -681,6 +683,18 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 		];
 
 		$this->batchInsert( $this->prefix . 'core_option', $columns, $options );
+	}
+
+	private function insertNotificationTemplates() {
+
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'icon', 'type', 'description', 'active', 'renderer', 'fileRender', 'layout', 'layoutGroup', 'viewPath', 'createdAt', 'modifiedAt', 'content', 'data' ];
+
+		$templates = [
+			// Users
+			[ $this->master->id, $this->master->id, 'New User', 'new-user', null, 'notification', 'Trigger Notification to Admin, when new user is registered.', true, 'twig', 0, null, false, null, DateUtil::getDateTime(), DateUtil::getDateTime(), 'A new user "{{ $model->name, $model->email }}" has been registered.', '{"config":{"admin":"1","user":"0","adminEmail":"0","userEmail":"0"}}' ]
+		];
+
+		$this->batchInsert( $this->prefix . 'core_template', $columns, $templates );
 	}
 
 	public function down() {

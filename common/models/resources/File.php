@@ -67,6 +67,8 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property string $altText
  * @property string $link
  * @property boolean $shared
+ * @property string $srcset
+ * @property string $sizes
  * @property datetime $createdAt
  * @property datetime $modifiedAt
  * @property string $content
@@ -171,8 +173,8 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 			[ [ 'siteId', 'name', 'extension', 'directory' ], 'required' ],
 			[ [ 'id', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Text Limit
-			[ [ 'extension', 'type', 'storage' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
-			[ 'tag', 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
+			[ [ 'extension', 'type', 'storage', 'srcset' ], 'string', 'min' => 1, 'max' => Yii::$app->core->mediumText ],
+			[ [ 'tag', 'sizes' ], 'string', 'min' => 1, 'max' => Yii::$app->core->largeText ],
 			[ [ 'directory', 'altText' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xLargeText ],
 			[ [ 'name', 'url', 'medium', 'small', 'thumb', 'placeholder', 'smallPlaceholder' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			[ [ 'title', 'caption', 'link' ], 'string', 'min' => 1, 'max' => Yii::$app->core->xxxLargeText ],
@@ -215,6 +217,8 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 			'visibility' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VISIBILITY ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'link' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LINK ),
+			'srcset' => 'Srcset Breakpoints',
+			'sizes' => 'Responsive Sizes',
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
 			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )
@@ -547,6 +551,47 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 		return $this->type == FileManager::FILE_TYPE_DOCUMENT;
 	}
 
+	public function generateSrcset( $background = false ) {
+
+		$smallUrl	= !empty( $this->small ) ? $this->getSmallUrl() : null;
+		$mediumUrl	= !empty( $this->medium ) ? $this->getMediumUrl() : null;
+		$imageUrl	= $this->getFileUrl();
+
+		if( $background ) {
+
+			$srcset = [ $imageUrl ];
+
+			if( !empty( $this->medium ) ) {
+
+				$srcset[] = $mediumUrl;
+			}
+
+			if( !empty( $this->small ) ) {
+
+				$srcset[] = $smallUrl;
+			}
+
+			return join( ',', $srcset );
+		}
+		else {
+
+			$sizes	= preg_split( "/,/", $this->srcset );
+			$srcset = [ $imageUrl . ' ' . $sizes[ 0 ] . 'w' ];
+
+			if( !empty( $this->medium ) ) {
+
+				$srcset[] = $mediumUrl . ' ' . $sizes[ 1 ] . 'w';
+			}
+
+			if( !empty( $this->small ) ) {
+
+				$srcset[] = $smallUrl . ' ' . $sizes[ 2 ] . 'w';
+			}
+
+			return join( ',', $srcset );
+		}
+	}
+
 	public function getEmbeddableCode() {
 
 		$fileUrl	= $this->getFileUrl();
@@ -644,7 +689,7 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 
 		if( !isset( $file ) ) {
 
-			$file	= new File();
+			$file = new File();
 		}
 
 		$file->load( Yii::$app->request->post(), $name );
@@ -666,7 +711,7 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 
 		if ( $count > 0 ) {
 
-			$filesToLoad  = [];
+			$filesToLoad = [];
 
 			// TODO: Use existing file models using $files param.
 			for( $i = 0; $i < $count; $i++ ) {

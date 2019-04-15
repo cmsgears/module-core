@@ -7,7 +7,7 @@
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
  */
 
-namespace cmsgears\core\admin\controllers;
+namespace cmsgears\core\admin\controllers\file;
 
 // Yii Imports
 use Yii;
@@ -19,11 +19,11 @@ use cmsgears\core\common\config\CoreGlobal;
 use cmsgears\core\common\models\resources\File;
 
 /**
- * FileController provide actions specific to files.
+ * DirectController provide actions specific to files.
  *
  * @since 1.0.0
  */
-class FileController extends \cmsgears\core\admin\controllers\base\CrudController {
+class DirectController extends \cmsgears\core\admin\controllers\base\CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -51,21 +51,19 @@ class FileController extends \cmsgears\core\admin\controllers\base\CrudControlle
 		$this->modelService = Yii::$app->factory->get( 'fileService' );
 
 		// Sidebar
-		$this->sidebar = [ 'parent' => 'sidebar-file', 'child' => 'file' ];
+		$this->sidebar = [ 'parent' => 'sidebar-file', 'child' => 'dfile' ];
 
 		// Return Url
-		$this->returnUrl = Url::previous( 'files' );
-		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/file/all' ], true );
+		$this->returnUrl = Url::previous( 'dfiles' );
+		$this->returnUrl = isset( $this->returnUrl ) ? $this->returnUrl : Url::toRoute( [ '/core/file/direct/all' ], true );
 
 		// Breadcrumbs
 		$this->breadcrumbs = [
 			'base' => [
 				[ 'label' => 'Home', 'url' => Url::toRoute( '/dashboard' ) ]
 			],
-			'all' => [ [ 'label' => 'Files' ] ],
-			'create' => [ [ 'label' => 'Files', 'url' => $this->returnUrl ], [ 'label' => 'Add' ] ],
-			'update' => [ [ 'label' => 'Files', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ],
-			'delete' => [ [ 'label' => 'Files', 'url' => $this->returnUrl ], [ 'label' => 'Delete' ] ]
+			'all' => [ [ 'label' => 'Direct Files' ] ],
+			'update' => [ [ 'label' => 'Direct Files', 'url' => $this->returnUrl ], [ 'label' => 'Update' ] ]
 		];
 	}
 
@@ -83,39 +81,19 @@ class FileController extends \cmsgears\core\admin\controllers\base\CrudControlle
 
 	// CMG parent classes --------------------
 
-	// FileController ------------------------
+	// DirectController ------------------------
 
 	public function actionAll( $config = [] ) {
 
 		// Remember return url for crud
-		Url::remember( Yii::$app->request->getUrl(), 'files' );
+		Url::remember( Yii::$app->request->getUrl(), 'dfiles' );
 
-		$dataProvider = $this->modelService->getSharedPage();
+		$dataProvider = $this->modelService->getDirectPage();
 
 		return $this->render( 'all', [
 			'dataProvider' => $dataProvider,
 			'visibilityMap' => File::$visibilityMap,
 			'typeMap' => File::$typeMap
-		]);
-	}
-
-	public function actionCreate( $config = [] ) {
-
-		$model = $this->modelService->getModelObject();
-
-		$model->siteId	= Yii::$app->core->siteId;
-		$model->shared	= true;
-
-		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
-
-			$this->model = $this->modelService->saveFile( $model, [ 'admin' => true ] );
-
-			return $this->redirect( 'all' );
-		}
-
-		return $this->render( 'create', [
-			'model' => $model,
-			'visibilityMap' => File::$visibilityMap
 		]);
 	}
 
@@ -135,4 +113,5 @@ class FileController extends \cmsgears\core\admin\controllers\base\CrudControlle
 			'visibilityMap' => File::$visibilityMap
 		]);
 	}
+
 }

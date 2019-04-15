@@ -653,11 +653,11 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$templateData	= $config[ 'data' ] ?? [];
 		$templateConfig	= [];
 
-		$templateData	= ArrayHelper::merge( [ 'model' => $model, 'service' => $this ], $templateData );
+		$templateData = ArrayHelper::merge( [ 'model' => $model, 'service' => $this ], $templateData );
 
 		$templateConfig[ 'createdBy' ]	= $config[ 'createdBy' ] ?? null;
 		$templateConfig[ 'parentId' ]	= $model->id;
-		$templateConfig[ 'parentType' ]	= self::$parentType;
+		$templateConfig[ 'parentType' ]	= static::$parentType;
 		$templateConfig[ 'link' ]		= $config[ 'link' ] ?? null;
 		$templateConfig[ 'adminLink' ]	= $config[ 'adminLink' ] ?? null;
 

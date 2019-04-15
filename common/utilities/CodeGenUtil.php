@@ -341,7 +341,7 @@ class CodeGenUtil {
 
 			if( isset( $options[ 'image' ] ) ) {
 
-				$image	= $options[ 'image' ];
+				$image = $options[ 'image' ];
 
 				return YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() . "/images/$image" : Url::toRoute( "/images/$image" );
 			}
@@ -360,7 +360,7 @@ class CodeGenUtil {
 
 			if( isset( $options[ 'image' ] ) ) {
 
-				$image	= $options[ 'image' ];
+				$image = $options[ 'image' ];
 
 				return YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() . "/images/$image" : Url::toRoute( "/images/$image" );
 			}
@@ -379,7 +379,7 @@ class CodeGenUtil {
 
 			if( isset( $options[ 'image' ] ) ) {
 
-				$image	= $options[ 'image' ];
+				$image = $options[ 'image' ];
 
 				return YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() . "/images/$image" : Url::toRoute( "/images/$image" );
 			}
@@ -417,7 +417,7 @@ class CodeGenUtil {
 
 			if( isset( $options[ 'image' ] ) ) {
 
-				$image	= $options[ 'image' ];
+				$image = $options[ 'image' ];
 
 				return YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() . "/images/$image" : Url::toRoute( "/images/$image" );
 			}
@@ -436,7 +436,7 @@ class CodeGenUtil {
 
 			if( isset( $options[ 'image' ] ) ) {
 
-				$image	= $options[ 'image' ];
+				$image = $options[ 'image' ];
 
 				return YII_ENV_PROD ? CoreProperties::getInstance()->getResourceUrl() . "/images/$image" : Url::toRoute( "/images/$image" );
 			}

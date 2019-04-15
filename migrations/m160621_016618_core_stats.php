@@ -29,10 +29,10 @@ class m160621_016618_core_stats extends Migration {
 	public function init() {
 
 		// Table prefix
-		$this->prefix		= Yii::$app->migration->cmgPrefix;
+		$this->prefix = Yii::$app->migration->cmgPrefix;
 
 		// Get the values via config
-		$this->options		= Yii::$app->migration->getTableOptions();
+		$this->options = Yii::$app->migration->getTableOptions();
 
 		// Default collation
 		if( $this->db->driverName === 'mysql' ) {
@@ -61,9 +61,9 @@ class m160621_016618_core_stats extends Migration {
 
 	private function insertTables() {
 
-		$columns 	= [ 'tableName', 'type', 'count' ];
+		$columns = [ 'tableName', 'type', 'count' ];
 
-		$tableData	= [
+		$tableData = [
 			[ $this->prefix . 'core_locale', 'rows', 0 ],
 			[ $this->prefix . 'core_theme', 'rows', 0 ],
 			[ $this->prefix . 'core_template', 'rows', 0 ],

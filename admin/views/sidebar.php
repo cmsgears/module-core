@@ -60,7 +60,8 @@ $siteId	= Yii::$app->core->siteId;
 		</div>
 		<div class="tab-content clear <?= $parent === 'sidebar-file' ? 'expanded visible' : null ?>">
 			<ul>
-				<li class='file <?= $child === 'file' ? 'active' : null ?>'><?= Html::a( 'Files', [ '/core/file/all' ] ) ?></li>
+				<li class='sfile <?= $child === 'sfile' ? 'active' : null ?>'><?= Html::a( 'Shared Files', [ '/core/file/shared/all' ] ) ?></li>
+				<li class='dfile <?= $child === 'dfile' ? 'active' : null ?>'><?= Html::a( 'Direct Files', [ '/core/file/direct/all' ] ) ?></li>
 				<?php if( $user->isPermitted( CoreGlobal::PERM_GALLERY_ADMIN ) ) { ?>
 					<li class='gallery <?= $child === 'gallery' ? 'active' : null ?>'><?= Html::a( 'Galleries', [ '/core/gallery/all' ] ) ?></li>
 					<li class='gallery-template <?= $child === 'gallery-template' ? 'active' : null ?>'><?= Html::a( 'Gallery Templates', [ '/core/gallery/template/all' ] ) ?></li>

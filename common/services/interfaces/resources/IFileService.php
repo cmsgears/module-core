@@ -24,6 +24,10 @@ interface IFileService extends IResourceService, IData, IMultiSite, IVisibility 
 
 	// Data Provider ------
 
+	public function getSharedPage( $config = [] );
+
+	public function getDirectPage( $config = [] );
+
 	// Read ---------------
 
 	// Read - Models ---

@@ -5,7 +5,7 @@ use cmsgears\widgets\popup\Popup;
 use cmsgears\widgets\grid\DataGrid;
 
 $coreProperties = $this->context->getCoreProperties();
-$this->title	= 'Files | ' . $coreProperties->getSiteTitle();
+$this->title	= 'Direct Files | ' . $coreProperties->getSiteTitle();
 $apixBase		= $this->context->apixBase;
 
 // View Templates
@@ -14,7 +14,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 ?>
 <?= DataGrid::widget([
 	'dataProvider' => $dataProvider, 'add' => true, 'addUrl' => 'create', 'data' => [ ],
-	'title' => 'Templates', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
+	'title' => 'Direct Files', 'options' => [ 'class' => 'grid-data grid-data-admin' ],
 	'searchColumns' => [ 'title' => 'Title', 'desc' => 'Description', 'extension' => 'Extension', 'directory' => 'Directory' ],
 	'sortColumns' => [
 		'title' => 'Title', 'extension' => 'Extension', 'directory' => 'Directory',
@@ -35,8 +35,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 	],
 	'bulkPopup' => 'popup-grid-bulk',
 	'bulkActions' => [
-		'visibility' => [ 'public' => 'Public', 'protected' => 'Protected', 'private' => 'Private' ],
-		'model' => [ 'delete' => 'Delete' ]
+		'visibility' => [ 'public' => 'Public', 'protected' => 'Protected', 'private' => 'Private' ]
 	],
 	'header' => false, 'footer' => true,
 	'grid' => true, 'columns' => [ 'root' => 'colf colf15', 'factor' => [ null, null, 'x2', null, null, null, null, 'x2', 'x4', null ] ],
@@ -59,17 +58,11 @@ $themeTemplates		= '@themes/admin/views/templates';
 	'templateDir' => "$themeTemplates/widget/grid",
 	//'dataView' => "$moduleTemplates/grid/data/file",
 	//'cardView' => "$moduleTemplates/grid/cards/file",
-	//'actionView' => "$moduleTemplates/grid/actions/file"
+	'actionView' => "$moduleTemplates/grid/actions/dfile"
 ]) ?>
 
 <?= Popup::widget([
 	'title' => 'Apply Bulk Action', 'size' => 'medium',
 	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'bulk',
 	'data' => [ 'model' => 'File', 'app' => 'grid', 'controller' => 'crud', 'action' => 'bulk', 'url' => "$apixBase/bulk" ]
-]) ?>
-
-<?= Popup::widget([
-	'title' => 'Delete File', 'size' => 'medium',
-	'templateDir' => Yii::getAlias( "$themeTemplates/widget/popup/grid" ), 'template' => 'delete',
-	'data' => [ 'model' => 'File', 'app' => 'grid', 'controller' => 'crud', 'action' => 'delete', 'url' => "$apixBase/delete?id=" ]
-]) ?>
+])?>

@@ -238,6 +238,13 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 		return $this->getPage( $config );
 	}
 
+	public function getDirectPage( $config = [] ) {
+
+		$config[ 'conditions' ][ 'shared' ] = false;
+
+		return $this->getPage( $config );
+	}
+
 	// Read ---------------
 
 	// Read - Models ---
@@ -309,7 +316,7 @@ class FileService extends \cmsgears\core\common\services\base\ResourceService im
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
 			'title', 'description', 'caption', 'altText', 'link', 'type', 'content',
 			'name', 'directory', 'extension', 'url', 'medium', 'small', 'thumb',
-			'placeholder', 'smallPlaceholder'
+			'placeholder', 'smallPlaceholder', 'srcset', 'sizes'
 		];
 
 		if( $model->changed ) {

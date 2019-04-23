@@ -30,6 +30,7 @@ trait ApprovalTrait {
 
 	public static $statusMap = [
 		IApproval::STATUS_NEW => 'New',
+		IApproval::STATUS_ACCEPTED => 'Accepted',
 		IApproval::STATUS_SUBMITTED => 'Submitted',
 		IApproval::STATUS_REJECTED => 'Rejected',
 		IApproval::STATUS_RE_SUBMIT => 'Re Submitted',
@@ -58,6 +59,7 @@ trait ApprovalTrait {
 	// Used for external docs
 	public static $revStatusMap = [
 		'New' => IApproval::STATUS_NEW,
+		'Accepted' => IApproval::STATUS_ACCEPTED,
 		'Submitted' => IApproval::STATUS_SUBMITTED,
 		'Rejected' => IApproval::STATUS_REJECTED,
 		'Re Submitted' => IApproval::STATUS_RE_SUBMIT,
@@ -73,6 +75,7 @@ trait ApprovalTrait {
 	// Used for url params
 	public static $urlRevStatusMap = [
 		'new' => IApproval::STATUS_NEW,
+		'accepted' => IApproval::STATUS_ACCEPTED,
 		'submitted' => IApproval::STATUS_SUBMITTED,
 		'rejected' => IApproval::STATUS_REJECTED,
 		're-submitted' => IApproval::STATUS_RE_SUBMIT,
@@ -136,6 +139,16 @@ trait ApprovalTrait {
 		}
 
 		return $this->status <= IApproval::STATUS_NEW;
+	}
+
+	public function isAccepted( $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->status == IApproval::STATUS_ACCEPTED;
+		}
+
+		return $this->status >= IApproval::STATUS_ACCEPTED;
 	}
 
 	/**
@@ -397,6 +410,14 @@ trait ApprovalTrait {
 	/**
 	 * @inheritdoc
 	 */
+	public function setRejectMessage( $message ) {
+
+		$this->updateDataMeta( CoreGlobal::DATA_REJECT_REASON, $message );
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function getRejectMessage() {
 
 		if( !$this->hasAttribute( 'data' ) ) {
@@ -426,6 +447,14 @@ trait ApprovalTrait {
 		}
 
 		return $reason;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function setTerminateMessage( $message ) {
+
+		$this->updateDataMeta( CoreGlobal::DATA_TERMINATE_REASON, $message );
 	}
 
 	/**

@@ -48,6 +48,8 @@ interface IApproval {
 
 	public function updateStatus( $model, $status );
 
+	public function accept( $model, $notify = true, $config = [] );
+
 	public function submit( $model, $notify = true, $config = [] );
 
 	public function reject( $model, $notify = true, $config = [] );

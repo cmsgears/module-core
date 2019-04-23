@@ -99,6 +99,13 @@ class DateUtil {
 		self::DURATION_SECOND => 'Second'
     ];
 
+    public static $lowDurationMap = [
+		self::DURATION_DAY => 'Day',
+		self::DURATION_HOUR => 'Hour',
+		self::DURATION_MINUTE => 'Minute',
+		self::DURATION_SECOND => 'Second'
+    ];
+
 	// Hrs/Mins ----------------------------------------------------
 
 	// hours in 12 and 24 hours format

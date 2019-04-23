@@ -109,7 +109,13 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 	                'desc' => [ "$modelTable.active" => SORT_DESC ],
 	                'default' => SORT_DESC,
 	                'label' => 'Active'
-	            ]
+	            ],
+				'order' => [
+					'asc' => [ "$modelTable.order" => SORT_ASC ],
+					'desc' => [ "$modelTable.order" => SORT_DESC ],
+					'default' => SORT_DESC,
+					'label' => 'Order'
+				]
 			]
 		]);
 
@@ -141,7 +147,8 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 		$config[ 'report-col' ]	= [
 			'name' => "$modelTable.name",
 			'value' => "$modelTable.value",
-			'active' => "$modelTable.active"
+			'active' => "$modelTable.active",
+			'order' => "$modelTable.order"
 		];
 
 		// Result -----------
@@ -279,7 +286,7 @@ class OptionService extends \cmsgears\core\common\services\base\ResourceService 
 	public function update( $model, $config = [] ) {
 
 		$attributes = isset( $config[ 'attributes' ] ) ? $config[ 'attributes' ] : [
-			'name', 'value', 'icon', 'active', 'input', 'htmlOptions'
+			'name', 'value', 'icon', 'active', 'input', 'order', 'htmlOptions'
 		];
 
 		return parent::update( $model, [

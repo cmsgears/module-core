@@ -854,7 +854,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'description' => $this->string( Yii::$app->core->xxLargeText )->defaultValue( null ),
 			'lValue' => $this->smallInteger( 6 ),
 			'rValue' => $this->smallInteger( 6 ),
-			'order' => $this->smallInteger( 20 ),
+			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'pinned' => $this->boolean()->notNull()->defaultValue( false ),
 			'featured' => $this->boolean()->notNull()->defaultValue( false ),
 			'createdAt' => $this->dateTime()->notNull(),
@@ -882,6 +882,7 @@ class m160620_095703_core extends \cmsgears\core\common\base\Migration {
 			'icon' => $this->string( Yii::$app->core->xLargeText )->defaultValue( null ),
 			'active' => $this->boolean()->defaultValue( false ),
 			'input' => $this->boolean()->defaultValue( false ),
+			'order' => $this->smallInteger( 6 )->notNull()->defaultValue( 0 ),
 			'htmlOptions' => $this->text(),
 			'content' => $this->mediumText(),
 			'data' => $this->mediumText()

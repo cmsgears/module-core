@@ -237,6 +237,30 @@ trait ApprovalTrait {
 	}
 
 	/*
+	 * Update the model status to accepted and trigger notification for appropriate admin to take action.
+	 */
+	public function accept( $model, $notify = true, $config = [] ) {
+
+		if( !$model->isAccepted( true ) && $model->isNew() ) {
+
+			$model = $this->updateStatus( $model, IApproval::STATUS_ACCEPTED );
+
+			if( $notify ) {
+
+				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Submitted';
+
+				$config[ 'template' ] = $config[ 'template' ] ?? CoreGlobal::TPL_NOTIFY_STATUS_ACCEPT;
+
+				$this->notifyAdmin( $model, $config, $title );
+			}
+
+			return $model;
+		}
+
+		return false;
+	}
+
+	/*
 	 * Update the model status to submitted and trigger notification for appropriate admin to take action.
 	 */
 	public function submit( $model, $notify = true, $config = [] ) {
@@ -299,7 +323,6 @@ trait ApprovalTrait {
 				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Re-submitted';
 
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_RESUBMIT;
-				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
 
 				$this->notifyAdmin( $model, $config, $title );
 			}
@@ -428,7 +451,6 @@ trait ApprovalTrait {
 				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Uplift Freeze';
 
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_UP_FREEZE;
-				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
 
 				$this->notifyAdmin( $model, $config, $title );
 			}
@@ -478,7 +500,6 @@ trait ApprovalTrait {
 				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Uplift Block';
 
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_UP_BLOCK;
-				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
 
 				$this->notifyAdmin( $model, $config, $title );
 			}

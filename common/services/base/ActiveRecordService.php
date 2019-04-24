@@ -831,7 +831,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 
 		$searchTerms	= Yii::$app->request->getQueryParam( $searchParam );
 
-		if( isset( $searchTerms ) && strlen( $searchTerms ) > 0 && count( $searchCol ) > 0 ) {
+		if( isset( $searchTerms ) && strlen( $searchTerms ) > 0 && !empty( $searchCol ) ) {
 
 			$searchTerms	= HtmlPurifier::process( $searchTerms );
 			$searchQuery	= static::generateSearchQuery( $searchCol, $searchTerms );

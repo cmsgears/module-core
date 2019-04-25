@@ -1180,7 +1180,7 @@ class FormDesigner extends \yii\base\Component {
 		$readOnly	= isset( $config[ 'readOnly' ] ) ? $config[ 'readOnly' ] : false;
 		$selected	= isset( $config[ 'selected' ] ) ? $config[ 'selected' ] : 0;
 		$disabled	= isset( $config[ 'disabled' ] ) ? $config[ 'disabled' ] : false;
-		$model		= isset( $config[ 'model' ] ) ? $config[ 'model' ] : false;
+		$model		= isset( $config[ 'model' ] ) ? $config[ 'model' ] : null;
 
 		// By default message provided for 5 stars
 		$starMessage = isset( $config[ 'message' ] ) ? $config[ 'message' ] : [ "Poor", "Good", "Very Good", "Perfect", "Excellent" ];

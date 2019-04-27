@@ -377,6 +377,26 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 		return "";
 	}
 
+	public function getOggUrl() {
+
+		if( !empty( $this->ogg ) ) {
+
+			return Yii::$app->fileManager->uploadUrl . '/' . $this->ogg;
+		}
+
+		return "";
+	}
+
+	public function getWebmUrl() {
+
+		if( !empty( $this->ogg ) ) {
+
+			return Yii::$app->fileManager->uploadUrl . '/' . $this->webm;
+		}
+
+		return "";
+	}
+
 	/**
 	 * Return physical storage location of the file.
 	 *
@@ -462,6 +482,26 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 		if( isset( $this->smallPlaceholder ) ) {
 
 			return Yii::$app->fileManager->uploadDir . '/' . $this->smallPlaceholder;
+		}
+
+		return false;
+	}
+
+	public function getOggPath() {
+
+		if( isset( $this->ogg ) ) {
+
+			return Yii::$app->fileManager->uploadDir . '/' . $this->ogg;
+		}
+
+		return false;
+	}
+
+	public function getWebmPath() {
+
+		if( isset( $this->webm ) ) {
+
+			return Yii::$app->fileManager->uploadDir . '/' . $this->webm;
 		}
 
 		return false;
@@ -642,6 +682,36 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 				return null;
 			}
 		}
+	}
+
+	public function getVideoTag( $config = [] ) {
+
+		$class		= isset( $config[ 'class' ] ) ? 'class="' . $config[ 'class' ] . '"' : null;
+		$autoplay	= isset( $config[ 'autoplay' ] ) ? ( $config[ 'autoplay' ] ? 'autoplay' : null ) : 'autoplay';
+		$loop		= isset( $config[ 'loop' ] ) ? ( $config[ 'loop' ] ? 'loop' : null ) : 'loop';
+		$muted		= isset( $config[ 'muted' ] ) ? ( $config[ 'muted' ] ? 'muted' : null ) : 'muted';
+		$inline		= isset( $config[ 'inline' ] ) ? ( $config[ 'inline' ] ? 'plays-inline' : null ) : 'plays-inline';
+		$controls	= isset( $config[ 'controls' ] ) ? ( $config[ 'controls' ] ? 'controls' : null ) : null;
+		$poster		= isset( $config[ 'poster' ] ) ? 'poster="' . $config[ 'poster' ] . '"' : null;
+		$width		= isset( $config[ 'width' ] ) ? 'width="' . $config[ 'width' ] . '"' : null;
+		$height		= isset( $config[ 'height' ] ) ? 'height="' . $config[ 'height' ] . '"' : null;
+
+		$mp4Url		= $this->getFileUrl();
+		$oggUrl		= $this->getOggUrl();
+		$webmUrl	= $this->getWebmUrl();
+?>
+<video <?= $class ?> <?= $autoplay ?> <?= $loop ?> <?= $muted ?> <?= $inline ?> <?= $controls ?> <?= $poster ?> <?= $width ?> <?= $height ?>>
+	<?php if( !empty( $mp4Url ) ) { ?>
+		<source src="<?= $mp4Url ?>" type="video/mp4">
+	<?php } ?>
+	<?php if( !empty( $oggUrl ) ) { ?>
+		<source src="<?= $oggUrl ?>" type="video/ogg">
+	<?php } ?>
+	<?php if( !empty( $webmUrl ) ) { ?>
+		<source src="<?= $webmUrl ?>" type="video/webm">
+	<?php } ?>
+</video>
+<?php
 	}
 
 	// Static Methods ----------------------------------------------

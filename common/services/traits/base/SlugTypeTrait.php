@@ -53,7 +53,17 @@ trait SlugTypeTrait {
 
 		$modelClass = static::$modelClass;
 
-		return $modelClass::findBySlugType( $slug, $type, $config );
+		$model = $modelClass::findBySlugType( $slug, $type, $config );
+
+		// Retrieve global model as fallback in case of multisite
+		if( empty( $model ) && $modelClass::isMultiSite() ) {
+
+			$config[ 'ignoreSite' ] = true;
+
+			$model = $modelClass::findBySlugType( $slug, $type, $config );
+		}
+
+		return $model;
 	}
 
 	// Read - Lists ----

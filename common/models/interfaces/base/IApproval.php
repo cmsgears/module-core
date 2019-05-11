@@ -154,6 +154,14 @@ interface IApproval {
 	public function isConfirmed( $strict = true );
 
 	/**
+	 * Check whether model is not activated yet.
+	 *
+	 * @param boolean $strict
+	 * @return boolean
+	 */
+	public function isBelowActive( $strict = true );
+
+	/**
 	 * Check whether model is active.
 	 *
 	 * @param boolean $strict

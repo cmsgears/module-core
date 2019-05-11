@@ -28,9 +28,9 @@ class TemplateManager extends \yii\base\Component {
 
 	// Public -----------------
 
-	public $templatesPath		= null;
+	public $templatesPath = null;
 
-	public $renderers			= [ 'default' => 'Default' ];
+	public $renderers = [ 'default' => 'Default' ];
 
 	// Protected --------------
 
@@ -87,12 +87,15 @@ class TemplateManager extends \yii\base\Component {
 		return "$this->templatesPath/$template->viewPath";
 	}
 
-	protected function renderView( $template, $models, $config ) {
+	protected function renderView( $template, $data, $config ) {
 
 		$page			= isset( $config[ 'page' ] ) ? $config[ 'page' ] : false;
 		$layout			= isset( $config[ 'layout' ] ) ? $config[ 'layout' ] : true;
 		$layoutPath		= isset( $config[ 'layoutPath' ] ) ? $config[ 'layoutPath' ] : null;
 		$view			= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : null;
+
+		// Pass the config to template for some conditional messages based on the config
+		$data[ 'config' ] = empty( $data[ 'config' ] ) ? $config : $data[ 'config' ];
 
 		$fileRender		= $template->fileRender;
 		$renderEngine	= $template->renderer;
@@ -132,12 +135,12 @@ class TemplateManager extends \yii\base\Component {
 						}
 					}
 
-					return Yii::$app->controller->render( $path, $models );
+					return Yii::$app->controller->render( $path, $data );
 				}
 				// Render using view
 				else {
 
-					return Yii::$app->controller->view->render( $path, $models );
+					return Yii::$app->controller->view->render( $path, $data );
 				}
 			}
 			else {
@@ -154,7 +157,7 @@ class TemplateManager extends \yii\base\Component {
 					$tplName	= uniqid( 'string_template_', true );
 					$twig		= new \Twig_Environment( new \Twig_Loader_Array( [ $tplName => $template->content ] ) );
 
-					$content	= $twig->render( $tplName, $models );
+					$content = $twig->render( $tplName, $data );
 
 					return $content;
 
@@ -172,85 +175,115 @@ class TemplateManager extends \yii\base\Component {
 
 	// Message / Notifications
 
+	public function renderTitle( $template, $data, $config ) {
+
+		// Pass the config to template for some conditional messages based on the config
+		$data[ 'config' ] = empty( $data[ 'config' ] ) ? $config : $data[ 'config' ];
+
+		$renderEngine = $template->renderer;
+
+		switch( $renderEngine ) {
+
+			case 'twig': {
+
+				$tplName	= uniqid( 'string_template_', true );
+				$twig		= new \Twig_Environment( new \Twig_Loader_Array( [ $tplName => $template->message ] ) );
+
+				$content = $twig->render( $tplName, $data );
+
+				return $content;
+
+				break;
+			}
+			case 'smarty': {
+
+				// TODO: Add smarty support
+
+				break;
+			}
+		}
+	}
+
 	/**
 	 * Render generic message using appropriate template.
 	 */
-	public function renderMessage( $template, $models, $config = [] ) {
+	public function renderMessage( $template, $data, $config = [] ) {
 
-		return $this->renderView( $template, $models, $config );
+		return $this->renderView( $template, $data, $config );
 	}
 
 	// Default Page Views
 
-	public function renderViewGeneric( $template, $models, $viewFile, $config = [] ) {
+	public function renderViewGeneric( $template, $data, $viewFile, $config = [] ) {
 
 		$config[ 'viewFile' ]	= isset( $config[ 'viewFile' ] ) ? $config[ 'viewFile' ] : $viewFile;
 		$config[ 'page' ]		= isset( $config[ 'page' ] ) ? $config[ 'page' ] : true;
 
-		return $this->renderView( $template, $models, $config );
+		return $this->renderView( $template, $data, $config );
 	}
 
 	/**
 	 * Admin view to be used for review purpose for data created by site users. The data collected by user will be submitted for admin review as part of approval process.
 	 */
-	public function renderViewAdmin( $template, $models, $config = [] ) {
+	public function renderViewAdmin( $template, $data, $config = [] ) {
 
-		return $this->renderViewGeneric( $template, $models, CoreGlobal::TPL_VIEW_ADMIN, $config );
+		return $this->renderViewGeneric( $template, $data, CoreGlobal::TPL_VIEW_ADMIN, $config );
 	}
 
 	/**
 	 * Private view to be viewed by logged in users. It's required for specific cases where views are different for logged in vs non logged in users.
 	 */
-	public function renderViewPrivate( $template, $models, $config = [] ) {
+	public function renderViewPrivate( $template, $data, $config = [] ) {
 
-		return $this->renderViewGeneric( $template, $models, CoreGlobal::TPL_VIEW_PRIVATE, $config );
+		return $this->renderViewGeneric( $template, $data, CoreGlobal::TPL_VIEW_PRIVATE, $config );
 	}
 
 	/**
 	 * Public view to be viewed by all users. Private view might override in specific scenarios.
 	 */
-	public function renderViewPublic( $template, $models, $config = [] ) {
+	public function renderViewPublic( $template, $data, $config = [] ) {
 
-		return $this->renderViewGeneric( $template, $models, CoreGlobal::TPL_VIEW_PUBLIC, $config );
+		return $this->renderViewGeneric( $template, $data, CoreGlobal::TPL_VIEW_PUBLIC, $config );
 	}
 
 	/**
 	 * Print page for public/private views.
 	 */
-	public function renderViewPrint( $template, $models, $config = [] ) {
+	public function renderViewPrint( $template, $data, $config = [] ) {
 
-		return $this->renderViewGeneric( $template, $models, CoreGlobal::TPL_VIEW_PRINT, $config );
+		return $this->renderViewGeneric( $template, $data, CoreGlobal::TPL_VIEW_PRINT, $config );
 	}
 
 	/**
 	 * Default search page for public/private views.
 	 */
-	public function renderViewSearch( $template, $models, $config = [] ) {
+	public function renderViewSearch( $template, $data, $config = [] ) {
 
-		return $this->renderViewGeneric( $template, $models, CoreGlobal::TPL_VIEW_SEARCH, $config );
+		return $this->renderViewGeneric( $template, $data, CoreGlobal::TPL_VIEW_SEARCH, $config );
 	}
 
 	/**
 	 * Category search page for public/private views.
 	 */
-	public function renderViewCategory( $template, $models, $config = [] ) {
+	public function renderViewCategory( $template, $data, $config = [] ) {
 
-		return $this->renderViewGeneric( $template, $models, CoreGlobal::TPL_VIEW_CATEGRY, $config );
+		return $this->renderViewGeneric( $template, $data, CoreGlobal::TPL_VIEW_CATEGRY, $config );
 	}
 
 	/**
 	 * Tag search page for public/private views.
 	 */
-	public function renderViewTag( $template, $models, $config = [] ) {
+	public function renderViewTag( $template, $data, $config = [] ) {
 
-		return $this->renderViewGeneric( $template, $models, CoreGlobal::TPL_VIEW_TAG, $config );
+		return $this->renderViewGeneric( $template, $data, CoreGlobal::TPL_VIEW_TAG, $config );
 	}
 
 	/**
 	 * Author search page for public/private views.
 	 */
-	public function renderViewAuthor( $template, $models, $config = [] ) {
+	public function renderViewAuthor( $template, $data, $config = [] ) {
 
-		return $this->renderViewGeneric( $template, $models, CoreGlobal::TPL_VIEW_AUTHOR, $config );
+		return $this->renderViewGeneric( $template, $data, CoreGlobal::TPL_VIEW_AUTHOR, $config );
 	}
+
 }

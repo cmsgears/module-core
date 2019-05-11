@@ -240,6 +240,19 @@ trait ApprovalTrait {
 	/**
 	 * @inheritdoc
 	 */
+	public function isBelowActive( $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->status < IApproval::STATUS_ACTIVE;
+		}
+
+		return $this->status <= IApproval::STATUS_ACTIVE;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function isActive( $strict = true ) {
 
 		if( $strict ) {
@@ -484,6 +497,13 @@ trait ApprovalTrait {
 	// CMG classes ---------------------------
 
 	// ApprovalTrait -------------------------
+
+	public static function getStatusMap() {
+
+		ksort( static::$statusMap );
+
+		return static::$statusMap;
+	}
 
 	// Read - Query -----------
 

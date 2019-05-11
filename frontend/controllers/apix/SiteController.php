@@ -36,6 +36,8 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 
 	// Public -----------------
 
+	public $modelComment;
+
 	// Protected --------------
 
 	protected $userService;
@@ -95,6 +97,35 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 		];
 	}
 
+	public function afterAction( $action, $result ) {
+
+		$result = parent::afterAction( $action, $result );
+
+		switch( $this->action->id ) {
+
+			case 'submit-feedback': {
+
+				if( isset( $this->modelComment ) ) {
+
+					Yii::$app->coreMailer->sendFeedbackMail( $this->modelComment );
+				}
+
+				break;
+			}
+			case 'submit-testimonial': {
+
+				if( isset( $this->modelComment ) ) {
+
+					Yii::$app->coreMailer->sendTestimonialMail( $this->modelComment );
+				}
+
+				break;
+			}
+		}
+
+		return $result;
+	}
+
 	// CMG interfaces ------------------------
 
 	// CMG parent classes --------------------
@@ -121,6 +152,12 @@ class SiteController extends \cmsgears\core\frontend\controllers\base\Controller
 
 				// Send Register Mail
 				Yii::$app->coreMailer->sendRegisterMail( $user );
+
+				// Trigger New User Notification
+				$this->userService->notifyAdmin( $user, [
+					'template' => CoreGlobal::TPL_NOTIFY_USER_NEW,
+					'adminLink' => "/core/user/update?id={$user->id}"
+				]);
 
 				// Trigger Ajax Success
 				return AjaxUtil::generateSuccess( Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );

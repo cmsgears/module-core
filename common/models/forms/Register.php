@@ -127,7 +127,7 @@ class Register extends BaseForm {
 			// Required, Safe
 			[ [ 'email', 'password', 'password_repeat', 'terms' ], 'required' ],
 			[ [ 'firstName', 'lastName' ], 'required', 'on' => [ 'name' ] ],
-			[ [ 'username'], 'required', 'on' => [ 'username' ] ],
+			[ [ 'username' ], 'required', 'on' => [ 'username' ] ],
 			[ 'email', 'email' ],
 			[ 'password_repeat', 'compare', 'compareAttribute' => 'password' ],
 			[ 'password', 'password' ],

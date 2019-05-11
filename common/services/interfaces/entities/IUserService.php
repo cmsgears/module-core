@@ -81,6 +81,8 @@ interface IUserService extends IEntityService, IApproval, IData, IModelMeta, ISo
 
 	// Notifications ------
 
+	public function checkRoleChange( $model, $oldRoleId );
+
 	// Cache --------------
 
 	// Additional ---------

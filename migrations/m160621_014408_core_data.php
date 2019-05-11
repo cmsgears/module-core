@@ -687,11 +687,12 @@ class m160621_014408_core_data extends \cmsgears\core\common\base\Migration {
 
 	private function insertNotificationTemplates() {
 
-		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'icon', 'type', 'description', 'active', 'renderer', 'fileRender', 'layout', 'layoutGroup', 'viewPath', 'createdAt', 'modifiedAt', 'content', 'data' ];
+		$columns = [ 'createdBy', 'modifiedBy', 'name', 'slug', 'icon', 'type', 'description', 'active', 'renderer', 'fileRender', 'layout', 'layoutGroup', 'viewPath', 'createdAt', 'modifiedAt', 'message', 'content', 'data' ];
 
 		$templates = [
 			// Users
-			[ $this->master->id, $this->master->id, 'New User', 'new-user', null, 'notification', 'Trigger Notification to Admin, when new user is registered.', true, 'twig', 0, null, false, null, DateUtil::getDateTime(), DateUtil::getDateTime(), 'A new user "{{ $model->name, $model->email }}" has been registered.', '{"config":{"admin":"1","user":"0","adminEmail":"0","userEmail":"0"}}' ]
+			[ $this->master->id, $this->master->id, 'New User', CoreGlobal::TPL_NOTIFY_USER_NEW, null, 'notification', 'Trigger Notification to Admin, when new user is registered.', true, 'twig', 0, null, false, null, DateUtil::getDateTime(), DateUtil::getDateTime(), 'User registered - <b>{{model.email}}</b>', 'A new user <b>{{model.name}}</b>, <b>{{model.email}}</b> has been registered.', '{"config":{"admin":"1","user":"0","direct":"0","adminEmail":"0","userEmail":"0","directEmail":"0"}}' ],
+			[ $this->master->id, $this->master->id, 'Role Changed', CoreGlobal::TPL_NOTIFY_USER_ROLE, null, 'notification', 'Trigger Notification to User, when role is changed while updating user.', true, 'twig', 0, null, false, null, DateUtil::getDateTime(), DateUtil::getDateTime(), 'User role changed from <b>{{oldRole}}</b> to <b>{{newRole}}</b>', 'Your role has been changed from <b>{{oldRole}}</b> to <b>{{newRole}}</b>.', '{"config":{"admin":"0","user":"1","direct":"0","adminEmail":"0","userEmail":"1","directEmail":"0"}}' ]
 		];
 
 		$this->batchInsert( $this->prefix . 'core_template', $columns, $templates );

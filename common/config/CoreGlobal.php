@@ -96,6 +96,10 @@ class CoreGlobal {
 
 	const TEMPLATE_DEFAULT	= 'default';
 
+	// Notifications - User
+	const TPL_NOTIFY_USER_NEW	= 'new-user';
+	const TPL_NOTIFY_USER_ROLE	= 'role-changed';
+
 	// Notification - Status Templates
     const TPL_NOTIFY_STATUS_NEW			= 'status-new';
 	const TPL_NOTIFY_STATUS_ACCEPT		= 'status-accept';
@@ -111,6 +115,8 @@ class CoreGlobal {
 	const TPL_NOTIFY_STATUS_UP_BLOCK	= 'status-uplift-block';
 	const TPL_NOTIFY_STATUS_TERMINATE	= 'status-terminate';
 	const TPL_NOTIFY_STATUS_DELETE		= 'status-delete';
+
+	const TPL_NOTIFY_STATUS_CHANGE		= 'status-change';
 
 	// Template Views --------------------------------------------------
 
@@ -481,7 +487,7 @@ class CoreGlobal {
 	const FIELD_TERMS				= 'termsField';
 
 	// Verification Fields
-	const FIELD_PHONE_VERIFIED	= 'phoneVerifiedField';
+	const FIELD_MOBILE_VERIFIED	= 'mobileVerifiedField';
 	const FIELD_EMAIL_VERIFIED	= 'emailVerifiedField';
 	const FIELD_TOKEN_VERIFY	= 'verifyTokenField';
 	const FIELD_TOKEN_VERIFY_VALIDITY = 'verifyTokenValidityField';

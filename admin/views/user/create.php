@@ -65,7 +65,7 @@ $returnUrl		= $this->context->returnUrl;
 							<?= $form->field( $member, 'roleId' )->dropDownList( $roleMap, [ 'class' => 'cmt-select' ] ) ?>
 						</div>
 						<div class="col col2">
-							<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'class' => 'cmt-select' ] ) ?>
+							<?= $form->field( $model, 'status' )->dropDownList( $statusMap, [ 'class' => 'cmt-select', 'disabled' => true ] ) ?>
 						</div>
 					</div>
 					<div class="row">

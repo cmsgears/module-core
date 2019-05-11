@@ -45,7 +45,7 @@ $themeTemplates		= '@themes/admin/views/templates';
 	],
 	'bulkPopup' => 'popup-grid-bulk',
 	'bulkActions' => [
-		'status' => [ 'active' => 'Activate', 'block' => 'Block' ],
+		'status' => [ 'active' => 'Activate', 'freeze' => 'Freeze', 'block' => 'Block', 'terminate' => 'Terminate' ],
 		'model' => [ 'delete' => 'Delete' ]
 	],
 	'header' => false, 'footer' => true,

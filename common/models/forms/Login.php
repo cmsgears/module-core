@@ -71,7 +71,7 @@ class Login extends BaseForm {
 		$this->user			= null;
 		$this->userService	= Yii::$app->factory->get( 'userService' );
 
-		$this->interval		= 3600 * 24 * 30;
+		$this->interval = 3600 * 24 * 30;
 
 		parent::__construct( $config );
 	}

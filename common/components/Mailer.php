@@ -9,15 +9,12 @@
 
 namespace cmsgears\core\common\components;
 
-// CMG Imports
-use cmsgears\core\common\base\Mailer as BaseMailer;
-
 /**
  * The mail component used to send mails by Core Module.
  *
  * @since 1.0.0
  */
-class Mailer extends BaseMailer {
+class Mailer extends \cmsgears\core\common\base\Mailer {
 
 	// Variables ---------------------------------------------------
 
@@ -34,10 +31,13 @@ class Mailer extends BaseMailer {
 	const MAIL_PASSWORD_CHANGE	= 'password/change';
 
 	// Comment mails
+	const MAIL_COMMENT_FEEDBACK		= 'comment/submit/feedback';
+	const MAIL_COMMENT_TESTIMONIAL	= 'comment/submit/testimonial';
+
 	const MAIL_COMMENT_SPAM_REQUEST		= 'comment/request/spam';
 	const MAIL_COMMENT_DELETE_REQUEST	= 'comment/request/delete';
 
-	// Status mails
+	// Status mails - Approval Process
 	const MAIL_APPROVE     = 'status/approve';
 	const MAIL_REJECT      = 'status/reject';
 	const MAIL_BLOCK       = 'status/block';
@@ -88,7 +88,7 @@ class Mailer extends BaseMailer {
 	}
 
 	/**
-	 * The method sends mail for accounts created by admin and activated by the users from website.
+	 * The method sends mail for accounts created by admin and activated by the users either from the admin or website.
 	 */
 	public function sendActivateUserMail( $user ) {
 
@@ -124,7 +124,7 @@ class Mailer extends BaseMailer {
 	}
 
 	/**
-	 * The method sends mail for accounts verified by users from website.
+	 * The method sends mail for accounts confirmed by users from the website.
 	 */
 	public function sendVerifyUserMail( $user ) {
 
@@ -173,6 +173,44 @@ class Mailer extends BaseMailer {
 			->setTo( $user->email )
 			->setFrom( [ $fromEmail => "$fromName | $siteName" ] )
 			->setSubject( "Password Change | " . $this->coreProperties->getSiteName() )
+			//->setTextBody( "heroor" )
+			->send();
+	}
+
+	/**
+	 * The method sends mail for feedback by users from website.
+	 */
+	public function sendFeedbackMail( $comment ) {
+
+		$siteName		= $this->coreProperties->getSiteName();
+		$fromEmail		= $this->mailProperties->getSenderEmail();
+		$fromName		= $this->mailProperties->getSenderName();
+		$contactEmail	= $this->mailProperties->getContactEmail();
+
+		// Send Mail
+		$this->getMailer()->compose( self::MAIL_COMMENT_FEEDBACK, [ 'coreProperties' => $this->coreProperties, 'comment' => $comment ] )
+			->setTo( $contactEmail )
+			->setFrom( [ $fromEmail => "$fromName | $siteName" ] )
+			->setSubject( "Feedback received | " . $this->coreProperties->getSiteName() )
+			//->setTextBody( "heroor" )
+			->send();
+	}
+
+	/**
+	 * The method sends mail for feedback by users from website.
+	 */
+	public function sendTestimonialMail( $comment ) {
+
+		$siteName		= $this->coreProperties->getSiteName();
+		$fromEmail		= $this->mailProperties->getSenderEmail();
+		$fromName		= $this->mailProperties->getSenderName();
+		$contactEmail	= $this->mailProperties->getContactEmail();
+
+		// Send Mail
+		$this->getMailer()->compose( self::MAIL_COMMENT_TESTIMONIAL, [ 'coreProperties' => $this->coreProperties, 'comment' => $comment ] )
+			->setTo( $contactEmail )
+			->setFrom( [ $fromEmail => "$fromName | $siteName" ] )
+			->setSubject( "Testimonial received | " . $this->coreProperties->getSiteName() )
 			//->setTextBody( "heroor" )
 			->send();
 	}

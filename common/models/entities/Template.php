@@ -74,6 +74,7 @@ use cmsgears\core\common\behaviors\AuthorBehavior;
  * @property datetime $modifiedAt
  * @property string $htmlOptions
  * @property string $help
+ * @property string $message
  * @property string $content
  * @property string $data
  * @property string $gridCache
@@ -159,7 +160,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 		$rules = [
 			// Required, Safe
 			[ [ 'name', 'type' ], 'required' ],
-			[ [ 'id', 'htmlOptions', 'help', 'content', 'data', 'gridCache' ], 'safe' ],
+			[ [ 'id', 'htmlOptions', 'help', 'message', 'content', 'data', 'gridCache' ], 'safe' ],
 			// Unique
 			// Need both slug and name unique
 			[ 'slug', 'unique', 'targetAttribute' => [ 'siteId', 'themeId', 'type', 'slug' ] ],
@@ -214,6 +215,7 @@ class Template extends Entity implements IAuthor, IContent, IData, IGridCache, I
 			'view' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VIEW ),
 			'htmlOptions' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HTML_OPTIONS ),
 			'help' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_HELP ),
+			'message' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MESSAGE ),
 			'content' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_CONTENT ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA ),
 			'gridCache' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_GRID_CACHE )

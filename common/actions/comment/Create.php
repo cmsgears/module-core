@@ -55,7 +55,7 @@ class Create extends \cmsgears\core\common\actions\base\ModelAction {
 
 	public $media = false;
 
-	public $mediaType = FileManager::FILE_TYPE_DOCUMENT;
+	public $mediaType = FileManager::FILE_TYPE_MIXED;
 
 	public $mediaModel = 'File';
 

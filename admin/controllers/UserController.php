@@ -228,13 +228,13 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 			'banner' => $banner,
 			'video' => $video,
 			'roleMap' => $roleMap,
-			'statusMap' => User::$statusMap
+			'statusMap' => User::getStatusMap()
 		]);
 	}
 
 	public function actionUpdate( $id ) {
 
-		// Find Model
+		// Model from Discover Filter
 		$model = $this->model;
 
 		$member	= $model->activeSiteMember;
@@ -244,18 +244,34 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 
 		$model->setScenario( 'update' );
 
+		// Model checks
+		$oldStatus	= $model->status;
+		$oldRoleId	= $member->roleId;
+
+		// Load & Validate
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) &&
 			$member->load( Yii::$app->request->post(), $member->getClassName() ) &&
 			$model->validate() && $member->validate() ) {
 
-			// Update User and Site Member
+			// Update User
 			$this->model = $this->modelService->update( $model, [ 'admin' => true, 'avatar' => $avatar, 'banner' => $banner, 'video' => $video ] );
 
+			// Update Site Member
 			$this->memberService->update( $member );
+
+			// Refresh User
+			$model->refresh();
+
+			// Check Status Change
+			$this->modelService->checkStatusChange( $model, $oldStatus, [ 'users' => [ $model->id ] ] );
+
+			// Check Role Change
+			$this->modelService->checkRoleChange( $model, $oldRoleId );
 
 			return $this->redirect( $this->returnUrl );
 		}
 
+		// Filter Super Admin Role
 		$roleMap = $this->roleService->getIdNameMapByType( CoreGlobal::TYPE_SYSTEM );
 
 		$user = Yii::$app->core->getUser();
@@ -265,6 +281,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 			unset( $roleMap[ $this->superRoleId ] );
 		}
 
+		// Render
 		return $this->render( 'update', [
 			'model' => $model,
 			'member' => $member,
@@ -272,7 +289,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 			'banner' => $banner,
 			'video' => $video,
 			'roleMap' => $roleMap,
-			'statusMap' => User::$statusMap
+			'statusMap' => User::getStatusMap()
 		]);
 	}
 
@@ -318,7 +335,7 @@ class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 				'banner' => $model->banner,
 				'video' => $model->video,
 				'roleMap' => $roleMap,
-				'statusMap' => User::$statusMap
+				'statusMap' => User::getStatusMap()
 			]);
 		}
 

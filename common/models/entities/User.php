@@ -283,6 +283,8 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 			'dob' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DOB ),
 			'mobile' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MOBILE ),
 			'phone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_PHONE ),
+			'mobileVerified' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_MOBILE_VERIFIED ),
+			'emailVerified' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_EMAIL_VERIFIED ),
 			'timeZone' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TIME_ZONE ),
 			'avatarUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_AVATAR_URL ),
 			'websiteUrl' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_WEBSITE ),
@@ -695,11 +697,6 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 		return $name;
 	}
 
-	public function getDisplayName() {
-
-		return $this->getFullName();
-	}
-
 	/**
 	 * Returns name of user using first name, middle name and last name.
 	 *
@@ -723,6 +720,11 @@ class User extends Entity implements IdentityInterface, IAddress, IApproval, ICo
 		}
 
 		return $name;
+	}
+
+	public function getDisplayName() {
+
+		return $this->getName();
 	}
 
 	/**

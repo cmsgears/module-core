@@ -590,7 +590,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	// Notifications ------
 
     /**
-	 * Trigger Admin Notifications. The template settings will override.
+	 * Trigger Admin Notifications. It can also send direct notification where applicable.
 	 *
 	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
 	 *
@@ -601,13 +601,13 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	public function notifyAdmin( $model, $config = [] ) {
 
 		$config[ 'admin' ]	= true;
-		$config[ 'direct' ]	= false;
+		$config[ 'direct' ]	= isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : false;
 
 		$this->sendNotification( $model, $config );
 	}
 
     /**
-	 * Trigger User Notifications. The template settings will override.
+	 * Trigger User Notifications. It can also send direct notification where applicable.
 	 *
 	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
 	 *
@@ -618,13 +618,13 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
     public function notifyUser( $model, $config = [] ) {
 
 		$config[ 'admin' ]	= false;
-		$config[ 'direct' ]	= false;
+		$config[ 'direct' ]	= isset( $config[ 'direct' ] ) ? $config[ 'direct' ] : false;
 
 		$this->sendNotification( $model, $config );
 	}
 
     /**
-	 * Trigger User Notifications. The template settings will override.
+	 * Trigger only Direct Notifications specific to a model.
 	 *
 	 * @param \cmsgears\core\common\models\base\ActiveRecord $model
 	 *
@@ -654,6 +654,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$templateConfig	= [];
 
 		$templateData = ArrayHelper::merge( [ 'model' => $model, 'service' => $this ], $templateData );
+
+		$templateConfig[ 'admin' ]	= $config[ 'admin' ] ?? false;
+		$templateConfig[ 'direct' ]	= $config[ 'direct' ] ?? false;
 
 		$templateConfig[ 'createdBy' ]	= $config[ 'createdBy' ] ?? null;
 		$templateConfig[ 'parentId' ]	= $model->id;

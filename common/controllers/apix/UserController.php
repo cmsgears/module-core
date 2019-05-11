@@ -280,8 +280,11 @@ class UserController extends \cmsgears\core\common\controllers\base\Controller {
 
 			if( $model->load( Yii::$app->request->post(), 'ResetPassword' ) && $model->validate() ) {
 
-				// Update User
+				// Update Password
 				if( $this->modelService->resetPassword( $user, $model, false ) ) {
+
+					// Send Password Change Mail
+					Yii::$app->coreMailer->sendPasswordChangeMail( $user );
 
 					$data = [ 'email' => $user->email, 'username' => $user->username ];
 

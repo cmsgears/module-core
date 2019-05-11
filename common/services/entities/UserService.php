@@ -666,6 +666,8 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 			$userToUpdate->unsetResetToken();
 
+			$userToUpdate->unsetVerifyToken();
+
 			$userToUpdate->update();
 
 			return true;
@@ -735,7 +737,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 	public function logLastActivity() {
 
-		$user = Yii::$app->user->getIdentity();
+		$user = Yii::$app->core->getUser();
 
 		if( isset( $user ) ) {
 
@@ -779,17 +781,32 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 
 					case 'active': {
 
-						$this->approve( $model );
+						if( $model->isBelowActive( true ) ) {
 
-						// TODO: Trigger activate email
+							$this->approve( $model, [ 'users' => [ $model->id ] ] );
+						}
+						else {
+
+							$this->activate( $model, [ 'users' => [ $model->id ] ] );
+						}
+
+						break;
+					}
+					case 'freeze': {
+
+						$this->freeze( $model, [ 'users' => [ $model->id ] ] );
 
 						break;
 					}
 					case 'block': {
 
-						$this->block( $model );
+						$this->block( $model, [ 'users' => [ $model->id ] ] );
 
-						// TODO: Trigger block email
+						break;
+					}
+					case 'terminate': {
+
+						$this->terminate( $model, [ 'users' => [ $model->id ] ] );
 
 						break;
 					}
@@ -815,6 +832,23 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 	}
 
 	// Notifications ------
+
+	public function checkRoleChange( $model, $oldRoleId ) {
+
+		if( $model->activeSiteMember->roleId !== intval( $oldRoleId ) ) {
+
+			$roleService = Yii::$app->factory->get( 'roleService' );
+
+			$oldRole = $roleService->getById( $oldRoleId )->name;
+			$newRole = $roleService->getById( $model->activeSiteMember->roleId )->name;
+
+			// Trigger Role Change Notification
+			$this->notifyUser( $model, [
+				'template' => CoreGlobal::TPL_NOTIFY_USER_ROLE,
+				'users' => [ $model->id ], 'data' => [ 'oldRole' => $oldRole, 'newRole' => $newRole ]
+			]);
+		}
+	}
 
 	// Cache --------------
 

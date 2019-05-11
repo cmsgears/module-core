@@ -155,6 +155,12 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 				// Send Register Mail
 				Yii::$app->coreMailer->sendRegisterMail( $user );
 
+				// Trigger New User Notification
+				$this->userService->notifyAdmin( $user, [
+					'template' => CoreGlobal::TPL_NOTIFY_USER_NEW,
+					'adminLink' => "/core/user/update?id={$user->id}"
+				]);
+
 				// Set Flash Message
 				Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::MESSAGE_REGISTER ) );
 

@@ -48,35 +48,37 @@ interface IApproval {
 
 	public function updateStatus( $model, $status );
 
-	public function accept( $model, $notify = true, $config = [] );
+	public function accept( $model, $config = [] );
 
-	public function submit( $model, $notify = true, $config = [] );
+	public function submit( $model, $config = [] );
 
-	public function reject( $model, $notify = true, $config = [] );
+	public function reject( $model, $config = [] );
 
-	public function reSubmit( $model, $notify = true, $config = [] );
+	public function reSubmit( $model, $config = [] );
 
-	public function confirm( $model, $notify = true, $config = [] );
+	public function confirm( $model, $config = [] );
 
-	public function approve( $model, $notify = true, $config = [] );
+	public function approve( $model, $config = [] );
 
-	public function activate( $model, $notify = true, $config = [] );
+	public function activate( $model, $config = [] );
 
-	public function freeze( $model, $notify = true, $config = [] );
+	public function freeze( $model, $config = [] );
 
-	public function upliftFreeze( $model, $notify = true, $config = [] );
+	public function upliftFreeze( $model, $config = [] );
 
-	public function block( $model, $notify = true, $config = [] );
+	public function block( $model, $config = [] );
 
-	public function upliftBlock( $model, $notify = true, $config = [] );
+	public function upliftBlock( $model, $config = [] );
 
-	public function terminate( $model, $notify = true, $config = [] );
+	public function terminate( $model, $config = [] );
 
-	public function softDeleteNotify( $model, $notify = true, $config = [] );
+	public function checkStatusChange( $model, $oldStatus, $config = [] );
 
-	public function toggleFrojen( $model, $notify = true, $config = [] );
+	public function softDeleteNotify( $model, $config = [] );
 
-	public function toggleBlock( $model, $notify = true, $config = [] );
+	public function toggleFrojen( $model, $config = [] );
+
+	public function toggleBlock( $model, $config = [] );
 
 	public function getRejectMessage( $model );
 

@@ -21,7 +21,7 @@ use cmsgears\core\common\config\CoreGlobal;
  *
  * @since 1.0.0
  */
-class UserController extends \cmsgears\core\common\controllers\base\Controller {
+class UserController extends \cmsgears\core\admin\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 

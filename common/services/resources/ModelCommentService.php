@@ -417,9 +417,22 @@ class ModelCommentService extends \cmsgears\core\common\services\base\ModelResou
 
 		switch( $mediaType ) {
 
-			case FileManager::FILE_TYPE_IMAGE : {
+			case FileManager::FILE_TYPE_IMAGE: {
 
 				$file = $this->fileService->saveImage( $file );
+
+				break;
+			}
+			case FileManager::FILE_TYPE_MIXED: {
+
+				if( in_array( $file->extension, Yii::$app->fileManager->imageExtensions ) ) {
+
+					$file = $this->fileService->saveImage( $file );
+				}
+				else {
+
+					$file = $this->fileService->saveFile( $file );
+				}
 
 				break;
 			}

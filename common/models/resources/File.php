@@ -616,14 +616,14 @@ class File extends Resource implements IAuthor, IData, IModelMeta, IMultiSite, I
 		else {
 
 			$sizes	= preg_split( "/,/", $this->srcset );
-			$srcset = [ $imageUrl . ' ' . $sizes[ 0 ] . 'w' ];
+			$srcset = !empty( $sizes[ 0 ] ) ? [ $imageUrl . ' ' . $sizes[ 0 ] . 'w' ] : [];
 
-			if( !empty( $this->medium ) ) {
+			if( !empty( $this->medium ) && !empty( $sizes[ 1 ] ) ) {
 
 				$srcset[] = $mediumUrl . ' ' . $sizes[ 1 ] . 'w';
 			}
 
-			if( !empty( $this->small ) ) {
+			if( !empty( $this->small ) && !empty( $sizes[ 2 ] ) ) {
 
 				$srcset[] = $smallUrl . ' ' . $sizes[ 2 ] . 'w';
 			}

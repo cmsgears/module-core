@@ -1,11 +1,12 @@
 <?php
 /**
+ * This file is part of CMSGears Framework. Please view License file distributed
+ * with the source code for license details.
+ *
  * @link https://www.cmsgears.org/
  * @copyright Copyright (c) 2015 VulpineCode Technologies Pvt. Ltd.
- * @license https://www.cmsgears.org/license/
- * @package module
- * @subpackage core
  */
+
 namespace cmsgears\core\common\components;
 
 // Yii Imports
@@ -106,8 +107,8 @@ class MessageSource extends \yii\base\Component {
 
 		// Errors - User Account
 		CoreGlobal::ERROR_PASSWORD_OLD => 'Please provide valid value for old password.',
-		CoreGlobal::ERROR_ACCOUNT_CONFIRM => 'Either your account does not exist or the confirmation link is not valid. Please try to reset your password.',
-		CoreGlobal::ERROR_PASSWORD_RESET => 'Either your account does not exist or the reset link is not valid. Please try to reset your password.',
+		CoreGlobal::ERROR_ACCOUNT_CONFIRM => null,
+		CoreGlobal::ERROR_PASSWORD_RESET => null,
 		CoreGlobal::ERROR_CHANGE_EMAIL => 'Email change is not allowed.',
 		CoreGlobal::ERROR_CHANGE_USERNAME => 'Username change is not allowed.',
 		CoreGlobal::ERROR_CHANGE_MOBILE => 'Mobile change is not allowed.',
@@ -279,7 +280,7 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_TERMS => 'Terms',
 
 		// Verification Fields
-		CoreGlobal::FIELD_PHONE_VERIFIED => 'Phone Verified',
+		CoreGlobal::FIELD_MOBILE_VERIFIED => 'Mobile Verified',
 		CoreGlobal::FIELD_EMAIL_VERIFIED => 'Email Verified',
 		CoreGlobal::FIELD_TOKEN_VERIFY => 'Verify Token',
 		CoreGlobal::FIELD_TOKEN_VERIFY_VALIDITY => 'Verify Token Validity',
@@ -351,6 +352,9 @@ class MessageSource extends \yii\base\Component {
 		$loginLink = Url::toRoute( [ '/login' ] );
 		$loginLink = "<a id=\"link-login\" href=\"$loginLink\">Login</a>";
 
+		$forgotLink	= Url::toRoute( [ '/forgot-password' ] );
+		$forgotLink	= "<a id=\"link-forgot-password\" href=\"$forgotLink\">reset</a>";
+
 		if( empty( $this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_ACTIVATE ] ) ) {
 
 			$this->messageDb[ CoreGlobal::MESSAGE_ACCOUNT_ACTIVATE ] = "Congratulations! Your account has been successfully activated. <br/><br/>Please $loginLink to continue with us.";
@@ -364,6 +368,16 @@ class MessageSource extends \yii\base\Component {
 		if( empty( $this->messageDb[ CoreGlobal::MESSAGE_RESET_PASSWORD ] ) ) {
 
 			$this->messageDb[ CoreGlobal::MESSAGE_RESET_PASSWORD ] = "Your password reset request was processed successfully. Please $loginLink to continue with us.";
+		}
+
+		if( empty( $this->messageDb[ CoreGlobal::ERROR_ACCOUNT_CONFIRM ] ) ) {
+
+			$this->messageDb[ CoreGlobal::ERROR_ACCOUNT_CONFIRM ] = "Either your account does not exist or the confirmation link is not valid. Please try to $forgotLink your password.";
+		}
+
+		if( empty( $this->messageDb[ CoreGlobal::ERROR_PASSWORD_RESET ] ) ) {
+
+			$this->messageDb[ CoreGlobal::ERROR_PASSWORD_RESET ] = "Either your account does not exist or the reset link is not valid. Please try to $forgotLink your password.";
 		}
 	}
 
@@ -387,4 +401,5 @@ class MessageSource extends \yii\base\Component {
 		// TODO: Use Yii internationalisation to support languages
 		return $this->messageDb[ $messageKey ];
 	}
+
 }

@@ -239,7 +239,9 @@ trait ApprovalTrait {
 	/*
 	 * Update the model status to accepted and trigger notification for appropriate admin to take action.
 	 */
-	public function accept( $model, $notify = true, $config = [] ) {
+	public function accept( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		if( !$model->isAccepted( true ) && $model->isNew() ) {
 
@@ -247,11 +249,11 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Submitted';
+				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_ACCEPT;
 
-				$config[ 'template' ] = $config[ 'template' ] ?? CoreGlobal::TPL_NOTIFY_STATUS_ACCEPT;
+				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
 
-				$this->notifyAdmin( $model, $config, $title );
+				$this->notifyAdmin( $model, $config );
 			}
 
 			return $model;
@@ -263,7 +265,9 @@ trait ApprovalTrait {
 	/*
 	 * Update the model status to submitted and trigger notification for appropriate admin to take action.
 	 */
-	public function submit( $model, $notify = true, $config = [] ) {
+	public function submit( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		if( !$model->isSubmitted( true ) && $model->isSubmittable() ) {
 
@@ -271,11 +275,11 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Submitted';
+				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_SUBMIT;
 
-				$config[ 'template' ] = $config[ 'template' ] ?? CoreGlobal::TPL_NOTIFY_STATUS_SUBMIT;
+				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
 
-				$this->notifyAdmin( $model, $config, $title );
+				$this->notifyAdmin( $model, $config );
 			}
 
 			return $model;
@@ -287,7 +291,9 @@ trait ApprovalTrait {
 	/*
 	 * Reject the model and trigger notification for appropriate user to take action.
 	 */
-	public function reject( $model, $notify = true, $config = [] ) {
+	public function reject( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		if( !$model->isRejected( true ) ) {
 
@@ -295,12 +301,12 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Rejected';
-
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_REJECT;
-				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
 
-				$this->notifyUser( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
+				$config[ 'data' ][ 'message' ]		= $model->getRejectMessage();
+
+				$this->notifyUser( $model, $config );
 			}
 
 			return $model;
@@ -312,7 +318,9 @@ trait ApprovalTrait {
 	/*
 	 * Update the model status to re-submitted and trigger notification for appropriate admin to take action.
 	 */
-	public function reSubmit( $model, $notify = true, $config = [] ) {
+	public function reSubmit( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		if( !$model->isReSubmit( true ) ) {
 
@@ -320,11 +328,11 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Re-submitted';
-
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_RESUBMIT;
 
-				$this->notifyAdmin( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
+
+				$this->notifyAdmin( $model, $config );
 			}
 
 			return $model;
@@ -336,7 +344,9 @@ trait ApprovalTrait {
 	/*
 	 * Confirm the model and trigger notification for appropriate user to take action.
 	 */
-	public function confirm( $model, $notify = true, $config = [] ) {
+	public function confirm( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		if( !$model->isConfirmed( true ) ) {
 
@@ -344,11 +354,11 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Confirmed';
-
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_CONFIRM;
 
-				$this->notifyUser( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
+
+				$this->notifyUser( $model, $config );
 			}
 
 			return $model;
@@ -360,7 +370,9 @@ trait ApprovalTrait {
 	/*
 	 * Approve the model and trigger notification for appropriate user to take action.
 	 */
-	public function approve( $model, $notify = true, $config = [] ) {
+	public function approve( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		if( !$model->isActive( true ) && $model->isApprovable() ) {
 
@@ -368,11 +380,11 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Approved';
-
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_APPROVE;
 
-				$this->notifyUser( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
+
+				$this->notifyUser( $model, $config );
 			}
 
 			return $model;
@@ -384,7 +396,9 @@ trait ApprovalTrait {
 	/*
 	 * Activate the model and trigger notification for appropriate user to take action.
 	 */
-	public function activate( $model, $notify = true, $config = [] ) {
+	public function activate( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		if( !$model->isActive( true ) ) {
 
@@ -396,14 +410,13 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Activated';
-
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE;
 
-				$config[ 'data' ][ 'oldStatus' ] = $oldStatus;
-				$config[ 'data' ][ 'newStatus' ] = $newStatus;
+				$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
+				$config[ 'data' ][ 'oldStatus' ]	= $oldStatus;
+				$config[ 'data' ][ 'newStatus' ]	= $newStatus;
 
-				$this->notifyUser( $model, $config, $title );
+				$this->notifyUser( $model, $config );
 			}
 
 			return $model;
@@ -415,7 +428,9 @@ trait ApprovalTrait {
 	/*
 	 * Freeze the model and trigger notification for appropriate user to take action.
 	 */
-	public function freeze( $model, $notify = true, $config = [] ) {
+	public function freeze( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		if( !$model->isFrojen( true ) ) {
 
@@ -423,12 +438,12 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Frozen';
+				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_FREEZE;
 
-				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE;
-				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
+				$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
+				$config[ 'data' ][ 'message' ]		= $model->getRejectMessage();
 
-				$this->notifyUser( $model, $config, $title );
+				$this->notifyUser( $model, $config );
 			}
 
 			return $model;
@@ -440,7 +455,9 @@ trait ApprovalTrait {
 	/*
 	 * Update the model state for activation from frozen state and trigger notification for appropriate admin to take action.
 	 */
-	public function upliftFreeze( $model, $notify = true, $config = [] ) {
+	public function upliftFreeze( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		if( !$model->isUpliftFreeze( true ) ) {
 
@@ -448,11 +465,11 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Uplift Freeze';
-
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_UP_FREEZE;
 
-				$this->notifyAdmin( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
+
+				$this->notifyAdmin( $model, $config );
 			}
 
 			return $model;
@@ -464,7 +481,9 @@ trait ApprovalTrait {
 	/*
 	 * Block the model and trigger notification for appropriate user to take action.
 	 */
-	public function block( $model, $notify = true, $config = [] ) {
+	public function block( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		if( !$model->isBlocked( true ) ) {
 
@@ -472,12 +491,12 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Blocked';
-
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_BLOCK;
-				$config[ 'data' ][ 'message' ] = $model->getRejectMessage();
 
-				$this->notifyUser( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
+				$config[ 'data' ][ 'message' ]		= $model->getRejectMessage();
+
+				$this->notifyUser( $model, $config );
 			}
 
 			return $model;
@@ -489,7 +508,9 @@ trait ApprovalTrait {
 	/*
 	 * Update the model state for activation from block state and trigger notification for appropriate admin to take action.
 	 */
-	public function upliftBlock( $model, $notify = true, $config = [] ) {
+	public function upliftBlock( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		if( !$model->isUpliftBlock( true ) ) {
 
@@ -497,11 +518,11 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Uplift Block';
-
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_UP_BLOCK;
 
-				$this->notifyAdmin( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ] = ucfirst( static::$parentType );
+
+				$this->notifyAdmin( $model, $config );
 			}
 
 			return $model;
@@ -513,7 +534,9 @@ trait ApprovalTrait {
 	/*
 	 * Terminate the model and trigger notification for appropriate user to take action.
 	 */
-	public function terminate( $model, $notify = true, $config = [] ) {
+	public function terminate( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		if( !$model->isTerminated( true ) ) {
 
@@ -521,13 +544,37 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Terminated';
-
 				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_TERMINATE;
-				$config[ 'data' ][ 'message' ] = $model->getTerminateMessage();
 
-				$this->notifyUser( $model, $config, $title );
+				$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
+				$config[ 'data' ][ 'message' ]		= $model->getTerminateMessage();
+
+				$this->notifyUser( $model, $config );
 			}
+
+			return $model;
+		}
+
+		return false;
+	}
+
+	public function checkStatusChange( $model, $oldStatus, $config = [] ) {
+
+		$modelClass = static::$modelClass;
+
+		if( $model->status !== intval( $oldStatus ) ) {
+
+			$oldStatus	= $modelClass::$statusMap[ $oldStatus ];
+			$newStatus	= $modelClass::$statusMap[ $model->status ];
+
+			$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_CHANGE;
+
+			$config[ 'data' ][ 'parentType' ]	= ucfirst( static::$parentType );
+			$config[ 'data' ][ 'oldStatus' ]	= $oldStatus;
+			$config[ 'data' ][ 'newStatus' ]	= $newStatus;
+			$config[ 'data' ][ 'message' ]		= null;
+
+			$this->notifyUser( $model, $config );
 
 			return $model;
 		}
@@ -538,7 +585,9 @@ trait ApprovalTrait {
 	/*
 	 * Soft Delete the model and trigger notification for appropriate user to take action.
 	 */
-	public function softDeleteNotify( $model, $notify = true, $config = [] ) {
+	public function softDeleteNotify( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		if( !$model->isDeleted( true ) ) {
 
@@ -546,11 +595,12 @@ trait ApprovalTrait {
 
 			if( $notify ) {
 
-				$title = ucfirst( self::$parentType ) . ' - ' . $model->getClassName() . ' - Deleted';
+				$title = ucfirst( self::$parentType ) . ' - Deleted';
 
-				$config[ 'template' ] = CoreGlobal::TPL_NOTIFY_STATUS_DELETE;
+				$config[ 'template' ]	= CoreGlobal::TPL_NOTIFY_STATUS_DELETE;
+				$config[ 'title' ]		= $title;
 
-				$this->notifyUser( $model, $config, $title );
+				$this->notifyUser( $model, $config );
 			}
 
 			return $model;
@@ -567,7 +617,9 @@ trait ApprovalTrait {
 	 * @param array $config
 	 * @return \cmsgears\core\common\models\interfaces\base\IApproval
 	 */
-	public function toggleFrojen( $model, $notify = true, $config = [] ) {
+	public function toggleFrojen( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		$oldStatus = $model->getStatusStr();
 
@@ -580,12 +632,13 @@ trait ApprovalTrait {
 
 			$title = $model->isActive( true ) ? $model->getClassName() . ' Activated' : $model->getClassName() . ' Frozen';
 
-			$config[ 'template' ] = $model->isActive( true ) ? CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE : CoreGlobal::TPL_NOTIFY_STATUS_FREEZE;
+			$config[ 'template' ]	= $model->isActive( true ) ? CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE : CoreGlobal::TPL_NOTIFY_STATUS_FREEZE;
+			$config[ 'title' ]		= $title;
 
 			$config[ 'data' ][ 'oldStatus' ] = $oldStatus;
 			$config[ 'data' ][ 'newStatus' ] = $newStatus;
 
-			$this->notifyUser( $model, $config, $title );
+			$this->notifyUser( $model, $config );
 		}
 
 		return $model;
@@ -599,7 +652,9 @@ trait ApprovalTrait {
 	 * @param array $config
 	 * @return \cmsgears\core\common\models\interfaces\base\IApproval
 	 */
-	public function toggleBlock( $model, $notify = true, $config = [] ) {
+	public function toggleBlock( $model, $config = [] ) {
+
+		$notify = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
 
 		$oldStatus = $model->getStatusStr();
 
@@ -612,12 +667,13 @@ trait ApprovalTrait {
 
 			$title = $model->isActive( true ) ? $model->getClassName() . ' Activated' : $model->getClassName() . ' Blocked';
 
-			$config[ 'template' ] = $model->isActive( true ) ? CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE : CoreGlobal::TPL_NOTIFY_STATUS_BLOCK;
+			$config[ 'template' ]	= $model->isActive( true ) ? CoreGlobal::TPL_NOTIFY_STATUS_ACTIVE : CoreGlobal::TPL_NOTIFY_STATUS_BLOCK;
+			$config[ 'title' ]		= $title;
 
 			$config[ 'data' ][ 'oldStatus' ] = $oldStatus;
 			$config[ 'data' ][ 'newStatus' ] = $newStatus;
 
-			$this->notifyUser( $model, $config, $title );
+			$this->notifyUser( $model, $config );
 		}
 
 		return $model;

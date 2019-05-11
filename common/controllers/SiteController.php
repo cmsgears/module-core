@@ -21,9 +21,7 @@ use cmsgears\core\common\models\forms\ForgotPassword;
 use cmsgears\core\common\models\forms\ResetPassword;
 use cmsgears\core\common\models\forms\OtpResetPassword;
 
-use cmsgears\core\common\controllers\base\Controller;
-
-class SiteController extends Controller {
+class SiteController extends \cmsgears\core\common\controllers\base\Controller {
 
 	// Variables ---------------------------------------------------
 
@@ -105,8 +103,18 @@ class SiteController extends Controller {
 
 		$model->email = $email;
 
+		$user = $this->userService->getByEmail( $model->email );
+
 		// Load and Validate Form Model
-		if( $model->load( Yii::$app->request->post(), 'ResetPassword' ) && $model->validate() ) {
+		if( isset( $user ) && !$user->isVerifyTokenValid( $token ) ) {
+
+			// Set Failure Message
+			Yii::$app->session->setFlash( CoreGlobal::FLASH_GENERIC, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_ACCOUNT_CONFIRM ) );
+
+			return $this->render( CoreGlobal::PAGE_ACCOUNT_ACTIVATE, [ CoreGlobal::MODEL_GENERIC => $model, 'activated' => false ] );
+		}
+		// Load and Validate Form Model
+		else if( $model->load( Yii::$app->request->post(), 'ResetPassword' ) && $model->validate() ) {
 
 			$coreProperties = $this->getCoreProperties();
 
@@ -211,7 +219,7 @@ class SiteController extends Controller {
 
 					if( $this->userService->resetPassword( $user, $model ) ) {
 
-						// Send Forgot Password Mail
+						// Send Password Change Mail
 						Yii::$app->coreMailer->sendPasswordChangeMail( $user );
 
 						// Set Success Message
@@ -326,12 +334,12 @@ class SiteController extends Controller {
 		$this->checkHome();
 
 		// Create Form Model
-		$model			= new Login();
-		$model->admin	= $admin;
+		$model = new Login();
+
+		$model->admin = $admin;
 
 		// Load and Validate Form Model
 		if( $model->load( Yii::$app->request->post(), 'Login' ) && $model->login() ) {
-
 
 			// Redirect user to home
 			$this->checkHome();

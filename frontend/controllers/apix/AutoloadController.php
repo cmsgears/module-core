@@ -14,10 +14,9 @@ use Yii;
 use yii\filters\VerbFilter;
 
 // CMG Imports
-use cmsgears\core\common\utilities\AjaxUtil;
+use cmsgears\core\common\config\CoreGlobal;
 
-// CRE Imports
-use century\core\common\config\CoreGlobal;
+use cmsgears\core\common\utilities\AjaxUtil;
 
 class AutoloadController extends \cmsgears\core\admin\controllers\base\Controller {
 

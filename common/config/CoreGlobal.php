@@ -97,7 +97,7 @@ class CoreGlobal {
 	const TEMPLATE_DEFAULT	= 'default';
 
 	// Notifications - User
-	const TPL_NOTIFY_USER_NEW	= 'new-user';
+	const TPL_NOTIFY_USER_NEW	= 'user-new';
 	const TPL_NOTIFY_USER_ROLE	= 'role-changed';
 
 	// Notification - Status Templates

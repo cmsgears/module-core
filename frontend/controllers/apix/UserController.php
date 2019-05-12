@@ -12,6 +12,8 @@ namespace cmsgears\core\frontend\controllers\apix;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
+use cmsgears\core\frontend\config\SiteProperties;
+
 /**
  * UserController handles the ajax requests specific to User model.
  *
@@ -28,6 +30,8 @@ class UserController extends \cmsgears\core\common\controllers\apix\UserControll
 	// Protected --------------
 
 	// Private ----------------
+
+	private $siteProperties;
 
 	// Constructor and Initialisation ------------------------------
 
@@ -53,5 +57,15 @@ class UserController extends \cmsgears\core\common\controllers\apix\UserControll
 	// CMG parent classes --------------------
 
 	// UserController ------------------------
+
+	public function getSiteProperties() {
+
+		if( !isset( $this->siteProperties ) ) {
+
+			$this->siteProperties = SiteProperties::getInstance();
+		}
+
+		return $this->siteProperties;
+	}
 
 }

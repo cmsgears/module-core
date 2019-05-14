@@ -39,6 +39,7 @@ use cmsgears\core\common\models\traits\resources\DataTrait;
  * @property string $label
  * @property string $type
  * @property boolean $active
+ * @property integer $order
  * @property string $valueType
  * @property string $value
  * @property string $data
@@ -101,6 +102,7 @@ abstract class Meta extends Resource implements IData, IMeta {
 			[ 'label', 'string', 'min' => 1, 'max' => Yii::$app->core->xxLargeText ],
 			// Other
 			[ 'active', 'boolean' ],
+			[ 'order', 'number', 'integerOnly' => true, 'min' => 0 ],
 			[ 'modelId', 'number', 'integerOnly' => true, 'min' => 1 ]
 		];
 
@@ -127,6 +129,7 @@ abstract class Meta extends Resource implements IData, IMeta {
 			'label' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_LABEL ),
 			'type' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_TYPE ),
 			'active' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ACTIVE ),
+			'order' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_ORDER ),
 			'valueType' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE_TYPE ),
 			'value' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_VALUE ),
 			'data' => Yii::$app->coreMessage->getMessage( CoreGlobal::FIELD_DATA )

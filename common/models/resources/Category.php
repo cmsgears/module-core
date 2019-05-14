@@ -141,7 +141,7 @@ class Category extends NestedSetModel implements IAuthor, IData, IFeatured, IMul
 		// Model Rules
 		$rules = [
 			// Required, Safe
-			[ [ 'siteId', 'name' ], 'required' ],
+			[ [ 'siteId', 'name', 'order' ], 'required' ],
 			[ [ 'id', 'htmlOptions', 'content', 'data' ], 'safe' ],
 			// Unique
 			// Notes: disabled it in order to allow sub categories having same name as parent, but with different slug. It can be enable based on project needs by extending the model and service.

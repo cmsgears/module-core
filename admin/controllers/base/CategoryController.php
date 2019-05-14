@@ -15,14 +15,12 @@ use Yii;
 // CMG Imports
 use cmsgears\core\common\config\CoreGlobal;
 
-use cmsgears\core\admin\controllers\base\CrudController;
-
 /**
  * CategoryController is base controller for actions specific to category model.
  *
  * @since 1.0.0
  */
-abstract class CategoryController extends CrudController {
+abstract class CategoryController extends \cmsgears\core\admin\controllers\base\CrudController {
 
 	// Variables ---------------------------------------------------
 
@@ -90,6 +88,7 @@ abstract class CategoryController extends CrudController {
 
 		$model->type	= $this->type;
 		$model->siteId	= Yii::$app->core->siteId;
+		$model->order	= 0;
 
 		if( $model->load( Yii::$app->request->post(), $model->getClassName() ) && $model->validate() ) {
 

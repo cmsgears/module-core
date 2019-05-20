@@ -18,6 +18,7 @@ use cmsgears\core\frontend\config\SiteProperties;
 use cmsgears\core\frontend\config\CoreGlobalWeb;
 
 use cmsgears\core\common\models\forms\Register;
+use cmsgears\core\common\models\resources\ModelMeta;
 use cmsgears\core\common\models\mappers\SiteMember;
 
 /**
@@ -151,6 +152,12 @@ class SiteController extends \cmsgears\core\common\controllers\SiteController {
 
 				// Add User to current Site
 				$this->siteMemberService->createByParams( [ 'userId' => $user->id ] );
+
+				// Default Settings
+				$metaService = Yii::$app->factory->get( 'modelMetaService' );
+
+				$metaService->initByNameType( $user->id, CoreGlobal::TYPE_USER, 'receive_email', 'notification', ModelMeta::VALUE_TYPE_FLAG );
+				$metaService->initByNameType( $user->id, CoreGlobal::TYPE_USER, 'receive_email', 'reminder', ModelMeta::VALUE_TYPE_FLAG );
 
 				// Send Register Mail
 				Yii::$app->coreMailer->sendRegisterMail( $user );

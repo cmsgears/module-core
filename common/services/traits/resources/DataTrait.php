@@ -9,6 +9,9 @@
 
 namespace cmsgears\core\common\services\traits\resources;
 
+// Yii Imports
+use yii\helpers\Html;
+
 // CMG Imports
 use cmsgears\core\common\models\forms\Meta;
 
@@ -349,7 +352,7 @@ trait DataTrait {
 		$key	= $meta->key;
 		$custom	= !empty( $custom ) ? $custom : new \StdClass();
 
-		$custom->$key = $meta->value;
+		$custom->$key = Html::encode( $meta->value );
 
 		$model->updateDataMeta( $type, $custom );
 

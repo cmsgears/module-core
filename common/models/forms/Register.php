@@ -133,6 +133,7 @@ class Register extends BaseForm {
 			[ 'password', 'password' ],
 			[ 'email', 'validateEmail' ],
 			[ 'username', 'validateUsername' ],
+			[ 'mobile', 'validateMobile' ],
 			[ 'username', 'alphanumdotu' ],
 			[ [ 'mobile', 'phone' ], 'phone' ],
 			[ [ 'firstName', 'middleName', 'lastName' ], 'alphanumspace' ],
@@ -227,6 +228,23 @@ class Register extends BaseForm {
 			if( $this->userService->isExistByUsername( $this->username ) ) {
 
 				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_USERNAME_EXIST ) );
+			}
+		}
+	}
+
+	/**
+	 * Check whether the mobile number is available.
+	 *
+	 * @param string $attribute
+	 * @param array $params
+	 */
+	public function validateMobile( $attribute, $params ) {
+
+		if( !$this->hasErrors() ) {
+
+			if( $this->userService->isExistByMobile( $this->mobile ) ) {
+
+				$this->addError( $attribute, Yii::$app->coreMessage->getMessage( CoreGlobal::ERROR_MOBILE_EXIST ) );
 			}
 		}
 	}

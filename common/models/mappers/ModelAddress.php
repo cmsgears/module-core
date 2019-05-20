@@ -107,6 +107,11 @@ class ModelAddress extends ModelMapper {
 		return $this->hasOne( Address::class, [ 'id' => 'modelId' ] );
 	}
 
+	public function getTypeStr() {
+
+		return isset( Address::$typeMap[ $this->type ] ) ? Address::$typeMap[ $this->type ] : $this->type;
+	}
+
 	// Static Methods ----------------------------------------------
 
 	// Yii parent classes --------------------

@@ -249,7 +249,11 @@ class CityService extends EntityService implements ICityService {
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		$config[ 'columns' ] = [ "$modelTable.id", "$modelTable.name", "$modelTable.latitude", "$modelTable.longitude", "$modelTable.postal" ];
+		$config[ 'columns' ] = [
+			"$modelTable.id", "$modelTable.name",
+			"$modelTable.latitude", "$modelTable.longitude",
+			"$modelTable.postal"
+		];
 
 		$config[ 'order' ] = 'name ASC';
 

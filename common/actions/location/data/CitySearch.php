@@ -72,8 +72,15 @@ class CitySearch extends \cmsgears\core\common\base\Action {
 		$provinceId	= Yii::$app->request->post( 'province-id' );
 		$regionId	= Yii::$app->request->post( 'region-id' );
 		$name		= Yii::$app->request->post( 'name' );
+		$limit		= Yii::$app->request->post( 'limit' );
+		$limit		= isset( $limit ) ? $limit : 5;
 
-		$conditions = [ 'provinceId' => $provinceId ];
+		$conditions = [];
+
+		if( !empty( $provinceId && $provinceId > 0 ) ) {
+
+			$conditions[ 'provinceId' ] = $provinceId;
+		}
 
 		if( !empty( $regionId && $regionId > 0 ) ) {
 
@@ -81,8 +88,7 @@ class CitySearch extends \cmsgears\core\common\base\Action {
 		}
 
 		$cities = $this->modelService->searchByName( $name, [
-			'limit' => 5,
-			'conditions' => $conditions,
+			'limit' => $limit, 'conditions' => $conditions,
 			'columns' => [ 'id', 'name', 'latitude', 'longitude', 'postal' ]
 		]);
 

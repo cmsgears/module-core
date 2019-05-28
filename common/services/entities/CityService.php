@@ -249,15 +249,25 @@ class CityService extends EntityService implements ICityService {
 		$modelClass	= static::$modelClass;
 		$modelTable	= $this->getModelTable();
 
-		$config[ 'columns' ] = [
-			"$modelTable.id", "$modelTable.name",
-			"$modelTable.latitude", "$modelTable.longitude",
-			"$modelTable.postal"
-		];
+		$autoCache = isset( $config[ 'autoCache' ] ) ? $config[ 'autoCache' ] : false;
 
-		$config[ 'order' ] = 'name ASC';
+		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.latitude", "$modelTable.longitude", "$modelTable.postal" ];
+		$config[ 'order' ]		= 'name ASC';
 
-		return $this->baseSearchByName( $name, $config );
+		if( $autoCache ) {
+
+			$config[ 'query' ]	= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
+			$config[ 'array' ]	= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
+
+			//$config[ 'query' ]->andWhere( "MATCH(autoCache) AGAINST(:auto IN NATURAL LANGUAGE MODE)", [ ':auto' => $name ] );
+          	$config[ 'query' ]->andWhere( "$modelTable.name like :name", [ ':name' => "$name%" ] );
+
+			return static::searchModels( $config );
+		}
+		else {
+
+			return $this->baseSearchByName( $name, $config );
+		}
 	}
 
 	// Read - Maps -----

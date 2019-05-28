@@ -69,14 +69,14 @@ class CitySearch extends \cmsgears\core\common\base\Action {
 
 	public function run() {
 
-		$provinceId	= Yii::$app->request->post( 'province-id' );
-		$regionId	= Yii::$app->request->post( 'region-id' );
+		$provinceId	= Yii::$app->request->post( 'provinceId' );
+		$regionId	= Yii::$app->request->post( 'regionId' );
 		$name		= Yii::$app->request->post( 'name' );
 
 		$limit	= Yii::$app->request->post( 'limit' );
 		$limit	= isset( $limit ) ? $limit : 5;
 
-		$autoCache	= Yii::$app->request->post( 'auto-cache' );
+		$autoCache	= Yii::$app->request->post( 'autoCache' );
 		$autoCache	= isset( $autoCache ) ? $autoCache : false;
 
 		$conditions = [];

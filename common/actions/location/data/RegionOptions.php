@@ -70,8 +70,8 @@ class RegionOptions extends \cmsgears\core\common\base\Action {
 
 	public function run() {
 
-		$provinceId	= Yii::$app->request->post( 'province-id' );
-		$regionId	= Yii::$app->request->post( 'region-id' );
+		$provinceId	= Yii::$app->request->post( 'provinceId' );
+		$regionId	= Yii::$app->request->post( 'regionId' );
 
 		if( isset( $provinceId ) && $provinceId > 0 ) {
 

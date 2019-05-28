@@ -69,7 +69,7 @@ class RegionMap extends \cmsgears\core\common\base\Action {
 
 	public function run() {
 
-		$provinceId	= Yii::$app->request->post( 'province-id' );
+		$provinceId	= Yii::$app->request->post( 'provinceId' );
 
 		if( isset( $provinceId ) && $provinceId > 0 ) {
 

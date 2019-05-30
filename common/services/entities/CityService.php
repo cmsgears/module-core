@@ -251,13 +251,13 @@ class CityService extends EntityService implements ICityService {
 
 		$autoCache = isset( $config[ 'autoCache' ] ) ? $config[ 'autoCache' ] : false;
 
-		$config[ 'columns' ]	= isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.latitude", "$modelTable.longitude", "$modelTable.postal" ];
-		$config[ 'order' ]		= 'name ASC';
+		$config[ 'columns' ] = isset( $config[ 'columns' ] ) ? $config[ 'columns' ] : [ "$modelTable.id", "$modelTable.name", "$modelTable.latitude", "$modelTable.longitude", "$modelTable.postal" ];
 
 		if( $autoCache ) {
 
 			$config[ 'query' ]	= isset( $config[ 'query' ] ) ? $config[ 'query' ] : $modelClass::find();
 			$config[ 'array' ]	= isset( $config[ 'array' ] ) ? $config[ 'array' ] : true;
+			$config[ 'sort' ]	= isset( $config[ 'sort' ] ) ? $config[ 'sort' ] : [ 'name' => SORT_ASC ];
 
 			//$config[ 'query' ]->andWhere( "MATCH(autoCache) AGAINST(:auto IN NATURAL LANGUAGE MODE)", [ ':auto' => $name ] );
           	$config[ 'query' ]->andWhere( "$modelTable.name like :name", [ ':name' => "$name%" ] );

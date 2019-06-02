@@ -1259,14 +1259,15 @@ class FormDesigner extends \yii\base\Component {
 
 	public function getNumberElement( $min, $max, $name = null, $defaultValue = 1 ) {
 
-		$elementHtml	=	"<div class='clearfix max-cols-50 cmt-number-element'>
-								<div class='col12x3'><i class='btn btn-min cmti cmti-minus'></i></div>
-								<div class='col12x6'><input type='text' value='$defaultValue' name='$name'></div>
-								<div class='col12x3'><i class='btn btn-max cmti cmti-plus'></i></div>
-								<span class='hidden cmt-min'>$min</span>
-								<span class='hidden cmt-max'>$max</span>
-							</div>";
-	   return $elementHtml;
+		$elementHtml = "<div class=\"clearfix max-cols-50 cmt-number-element\">
+							<div class=\"col12x3\"><i class=\"btn btn-min cmti cmti-minus\"></i></div>
+							<div class=\"col12x6\"><input type=\"text\" value=\"$defaultValue\" name=\"$name\"></div>
+							<div class=\"col12x3\"><i class=\"btn btn-max cmti cmti-plus\"></i></div>
+							<span class=\"hidden cmt-min\">$min</span>
+							<span class=\"hidden cmt-max\">$max</span>
+						</div>";
+
+		return $elementHtml;
 	}
 
 }

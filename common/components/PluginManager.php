@@ -21,6 +21,8 @@ class PluginManager extends \cmsgears\core\common\base\Component {
 
 	// Public -----------------
 
+	public $plugins = [];
+
 	// Protected --------------
 
 	// Private ----------------
@@ -38,5 +40,28 @@ class PluginManager extends \cmsgears\core\common\base\Component {
 	// CMG parent classes --------------------
 
 	// PluginManager -------------------------
+
+	public function renderAdminForms( $model, $type, $apixBase = null ) {
+
+		$plugins = $this->plugins;
+
+		$formsHtml = "";
+
+		foreach( $plugins as $id => $plugin ) {
+
+			$pluginClass	= $plugin[ 'class' ];
+			$modelTypes		= $plugin[ 'modelTypes' ];
+
+			// Plugin configured for the model type
+			if( in_array( $type, $modelTypes ) ) {
+
+				$pluginObj = new $pluginClass( [ 'id' => $id, 'model' => $model, 'admin' => true, 'apixBase' => $apixBase ] );
+
+				$formsHtml .= $pluginObj->renderAdminForms();
+			}
+		}
+
+		return $formsHtml;
+	}
 
 }

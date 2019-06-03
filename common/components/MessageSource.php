@@ -340,7 +340,13 @@ class MessageSource extends \yii\base\Component {
 		CoreGlobal::FIELD_SOURCE => 'sourceField',
 		CoreGlobal::FIELD_SOURCE_TYPE => 'sourceTypeField',
 		CoreGlobal::FIELD_TARGET => 'targetField',
-		CoreGlobal::FIELD_TARGET_TYPE => 'targetTypeField'
+		CoreGlobal::FIELD_TARGET_TYPE => 'targetTypeField',
+
+		// SEO
+		CoreGlobal::FIELD_SEO_NAME => 'SEO Name',
+		CoreGlobal::FIELD_SEO_DESCRIPTION => 'SEO Description',
+		CoreGlobal::FIELD_SEO_KEYWORDS => 'SEO Keywords',
+		CoreGlobal::FIELD_SEO_ROBOT => 'SEO Robot'
 	];
 
 	// Private ----------------

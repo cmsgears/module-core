@@ -549,4 +549,10 @@ class CoreGlobal {
 	const FIELD_TARGET		= 'targetField';
 	const FIELD_TARGET_TYPE	= 'targetTypeField';
 
+	// SEO
+	const FIELD_SEO_NAME			= 'seoNameField';
+	const FIELD_SEO_DESCRIPTION		= 'seoDescriptionField';
+	const FIELD_SEO_KEYWORDS		= 'seoKeywordsField';
+	const FIELD_SEO_ROBOT			= 'seoRobotField';
+
 }

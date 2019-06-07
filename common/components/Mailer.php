@@ -38,12 +38,13 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 	const MAIL_COMMENT_DELETE_REQUEST	= 'comment/request/delete';
 
 	// Status mails - Approval Process
-	const MAIL_APPROVE     = 'status/approve';
-	const MAIL_REJECT      = 'status/reject';
-	const MAIL_BLOCK       = 'status/block';
-	const MAIL_FROZEN      = 'status/frozen';
-	const MAIL_ACTIVATE    = 'status/activate';
-	const MAIL_A_REQUEST   = 'status/activation-request';
+	const MAIL_ACCEPT		= 'status/accept';
+	const MAIL_APPROVE		= 'status/approve';
+	const MAIL_REJECT		= 'status/reject';
+	const MAIL_BLOCK		= 'status/block';
+	const MAIL_FROZEN		= 'status/frozen';
+	const MAIL_ACTIVATE		= 'status/activate';
+	const MAIL_A_REQUEST	= 'status/activation-request';
 
 	// Public -----------------
 
@@ -254,6 +255,19 @@ class Mailer extends \cmsgears\core\common\base\Mailer {
 	}
 
 	// == Status Mails ========
+
+	public function sendAcceptMail( $model, $email ) {
+
+		$fromEmail 	= $this->mailProperties->getSenderEmail();
+		$fromName 	= $this->mailProperties->getSenderName();
+
+		// Send Mail
+		$this->getMailer()->compose( self::MAIL_ACCEPT, [ 'coreProperties' => $this->coreProperties, 'email' => $email, 'model' => $model ] )
+			->setTo( $email )
+			->setFrom( [ $fromEmail => $fromName ] )
+			->setSubject( "Accepted $model->name | " . $this->coreProperties->getSiteName() )
+			->send();
+	}
 
 	public function sendApproveMail( $model, $email ) {
 

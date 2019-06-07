@@ -56,6 +56,12 @@ interface IApproval {
 	const STATUS_CONFIRMED = 15000;
 
 	/**
+	 * Placeholder constants to support approvalNotificationMap in ApprovalTrait.
+	 */
+	const STATUS_APPROVED	= 15001;
+	const STATUS_CHANGED	= 15005;
+
+	/**
 	 * Approver activate the model. The active models will have full access to all the
 	 * corresponding features.
 	 */
@@ -112,6 +118,14 @@ interface IApproval {
 	 * @return boolean
 	 */
 	public function isSubmitted( $strict = true );
+
+	/**
+	 * Check whether model was submitted and processed at least one by the respective admin.
+	 *
+	 * @param boolean $strict
+	 * @return boolean
+	 */
+	public function isAboveSubmitted( $strict = true );
 
 	/**
 	 * Check whether model state is below rejected.

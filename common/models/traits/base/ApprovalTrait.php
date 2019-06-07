@@ -175,6 +175,19 @@ trait ApprovalTrait {
 	/**
 	 * @inheritdoc
 	 */
+	public function isAboveSubmitted( $strict = true ) {
+
+		if( $strict ) {
+
+			return $this->status > IApproval::STATUS_SUBMITTED;
+		}
+
+		return $this->status >= IApproval::STATUS_SUBMITTED;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function isBelowRejected( $strict = true ) {
 
 		if( $strict ) {

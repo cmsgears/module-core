@@ -493,23 +493,19 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$banner = isset( $config[ 'banner' ] ) ? $config[ 'banner' ] : null;
 		$video	= isset( $config[ 'video' ] ) ? $config[ 'video' ] : null;
 
+		$modelClass	= static::$modelClass;
+
 		// Set Attributes
 		$model->registeredAt = DateUtil::getDateTime();
 
-		if( empty( $model->status ) ) {
+		// Default Status - New
+		$model->status = $model->status ?? $modelClass::STATUS_NEW;
 
-			$model->status = User::STATUS_NEW;
-		}
+		// Default Type - Default
+		$model->type = $model->type ?? CoreGlobal::TYPE_DEFAULT;
 
-		if( empty( $model->type ) ) {
-
-			$model->type = CoreGlobal::TYPE_DEFAULT;
-		}
-
-		if( empty( $model->slug ) ) {
-
-			$model->slug = $model->username;
-		}
+		// Default Slug - Username
+		$model->slug = $model->slug ?? $model->username;
 
 		// Generate Tokens
 		$model->generateVerifyToken();
@@ -533,7 +529,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$status	= isset( $config[ 'status' ] ) ? $config[ 'status' ] : User::STATUS_NEW;
 		$user	= isset( $config[ 'user' ] ) ? $config[ 'user' ] : $this->getModelObject();
 
-		$date	= DateUtil::getDateTime();
+		$date = DateUtil::getDateTime();
 
 		$user->email		= $model->email;
 		$user->username		= $model->username;
@@ -542,6 +538,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 		$user->middleName	= $model->middleName;
 		$user->lastName		= $model->lastName;
 		$user->mobile		= $model->mobile;
+		$user->phone		= $model->phone;
 		$user->dob			= $model->dob;
 		$user->registeredAt	= $date;
 		$user->status		= $status;
@@ -613,6 +610,7 @@ class UserService extends \cmsgears\core\common\services\base\EntityService impl
 			// User need admin approval
 			if( Yii::$app->core->isUserApproval() ) {
 
+				// Mark user as verified for further action from admin
 				$userToUpdate->verify();
 			}
 			// Direct approval and activation

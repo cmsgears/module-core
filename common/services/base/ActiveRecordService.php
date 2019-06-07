@@ -496,8 +496,9 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 	 */
 	public function delete( $model, $config = [] ) {
 
-		$hard	= $config[ 'hard' ] ?? true;
-		$notify = $config[ 'notify' ] ?? true;
+		$config[ 'notify' ] = isset( $config[ 'notify' ] ) ? $config[ 'notify' ] : true;
+
+		$hard = isset( $config[ 'hard' ] ) ? $config[ 'hard' ] : true;
 
 		if( isset( $model ) ) {
 
@@ -514,7 +515,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 				if( isset( $interfaces[ 'cmsgears\core\common\services\interfaces\base\IApproval' ] ) ) {
 
 					// Approval Trait
-					return $this->softDeleteNotify( $model, $notify, $config );
+					return $this->softDeleteNotify( $model, $config );
 				}
 				else {
 
@@ -664,7 +665,7 @@ abstract class ActiveRecordService extends Component implements IActiveRecordSer
 		$templateConfig[ 'link' ]		= $config[ 'link' ] ?? null;
 		$templateConfig[ 'adminLink' ]	= $config[ 'adminLink' ] ?? null;
 
-		$templateConfig[ 'title' ]	= $config[ 'title' ] ?? $model->name ?? null;
+		$templateConfig[ 'title' ]	= isset( $config[ 'title' ] ) ? $config[ 'title' ] : null;
 		$templateConfig[ 'users' ]	= $config[ 'users' ] ?? [];
 
 		return Yii::$app->eventManager->triggerNotification( $config[ 'template' ], $templateData, $templateConfig );
